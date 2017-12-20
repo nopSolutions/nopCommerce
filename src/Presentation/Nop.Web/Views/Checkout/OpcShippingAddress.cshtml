@@ -35,7 +35,7 @@
                         <div class="single-pickup-point">
                             <ul>
                                 <li class="single-pickup-point name">@point.Name</li>
-                                <li class="single-pickup-point address">@($"{point.Address} {point.City} {point.StateName} {point.CountryName}")</li>
+                                <li class="single-pickup-point address">@($"{point.Address} {point.City} {point.County} {point.StateName} {point.CountryName}")</li>
                                 @if (!string.IsNullOrEmpty(point.PickupFee))
                                 {
                                     <li class="single-pickup-point fee">@point.PickupFee</li>
@@ -58,6 +58,10 @@
                                 if (!string.IsNullOrEmpty(point.City))
                                 {
                                     addressLine.AppendFormat(", {0}", point.City);
+                                }
+                                if (!string.IsNullOrEmpty(point.County))
+                                {
+                                    addressLine.AppendFormat(", {0}", point.County);
                                 }
                                 if (!string.IsNullOrEmpty(point.StateName))
                                 {
@@ -201,6 +205,10 @@
                                 if (address.CityEnabled && !string.IsNullOrEmpty(address.City))
                                 {
                                     addressLine += ", " + address.City;
+                                }
+                                if (address.CountyEnabled && !string.IsNullOrEmpty(address.County))
+                                {
+                                    addressLine += ", " + address.County;
                                 }
                                 if (address.StateProvinceEnabled && !string.IsNullOrEmpty(address.StateProvinceName))
                                 {

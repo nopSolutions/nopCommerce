@@ -30,6 +30,10 @@
                         {
                             addressLine += ", " + address.City;
                         }
+                        if (address.CountyEnabled && !string.IsNullOrEmpty(address.County))
+                        {
+                            addressLine += ", " + address.County;
+                        }
                         if (address.StateProvinceEnabled && !string.IsNullOrEmpty(address.StateProvinceName))
                         {
                             addressLine += ", " + address.StateProvinceName;

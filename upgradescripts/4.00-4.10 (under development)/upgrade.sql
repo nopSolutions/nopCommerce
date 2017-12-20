@@ -328,6 +328,69 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="ActivityLog.EditVendorAttributeValue">
     <Value>Edited a vendor attribute value (ID = {0})</Value>
+  </LocaleResource> 
+  <LocaleResource Name="Account.Fields.County">
+    <Value>County</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Fields.County.Required">
+    <Value>County is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Address.Fields.County">
+    <Value>County</Value>
+  </LocaleResource>
+  <LocaleResource Name="Address.Fields.County.Required">
+    <Value>County is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Address.Fields.County">
+    <Value>County</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Address.Fields.County.Hint">
+    <Value>Enter county.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Address.Fields.County.Required">
+    <Value>County is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AddressFormFields.CountyEnabled">
+    <Value>''County'' enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AddressFormFields.CountyEnabled.Hint">
+    <Value>Set if ''County'' is enabled.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AddressFormFields.CountyRequired">
+    <Value>''County'' required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AddressFormFields.CountyRequired.Hint">
+    <Value>Check if ''County'' is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.CountyEnabled">
+    <Value>''County'' enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.CountyEnabled.Hint">
+    <Value>Set if ''County'' is enabled.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.CountyRequired">
+    <Value>''County'' required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.CountyRequired.Hint">
+    <Value>Check if ''County'' is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.County">
+    <Value>County</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.County.Hint">
+    <Value>The county.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.County.Required">
+    <Value>County is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Address.County">
+    <Value>County</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.List.County">
+    <Value>County</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.List.County.Hint">
+    <Value>Search by a specific county.</Value>
   </LocaleResource>
 </Language>
 '
@@ -688,5 +751,45 @@ IF NOT EXISTS (SELECT 1 FROM [ActivityLogType] WHERE [SystemKeyword] = N'DeleteV
 BEGIN
 	INSERT [ActivityLogType] ([SystemKeyword], [Name], [Enabled])
 	VALUES (N'DeleteVendorAttributeValue', N'Delete a vendor attribute value', N'true')
+END
+GO
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id = object_id('[Address]') AND NAME = 'County')
+BEGIN
+	ALTER TABLE [Address]
+	ADD [County] NVARCHAR (MAX) NULL
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'addresssettings.countyenabled')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'addresssettings.countyenabled', N'false', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'addresssettings.countyrequired')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'addresssettings.countyrequired', N'false', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'customersettings.countyenabled')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'customersettings.countyenabled', N'false', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'customersettings.countyrequired')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'customersettings.countyrequired', N'false', 0)
 END
 GO

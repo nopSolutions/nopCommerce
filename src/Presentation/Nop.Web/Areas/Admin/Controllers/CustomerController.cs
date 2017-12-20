@@ -561,6 +561,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     model.StreetAddress2 = customer.GetAttribute<string>(SystemCustomerAttributeNames.StreetAddress2);
                     model.ZipPostalCode = customer.GetAttribute<string>(SystemCustomerAttributeNames.ZipPostalCode);
                     model.City = customer.GetAttribute<string>(SystemCustomerAttributeNames.City);
+                    model.County = customer.GetAttribute<string>(SystemCustomerAttributeNames.County);
                     model.CountryId = customer.GetAttribute<int>(SystemCustomerAttributeNames.CountryId);
                     model.StateProvinceId = customer.GetAttribute<int>(SystemCustomerAttributeNames.StateProvinceId);
                     model.Phone = customer.GetAttribute<string>(SystemCustomerAttributeNames.Phone);
@@ -593,6 +594,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             model.StreetAddress2Enabled = _customerSettings.StreetAddress2Enabled;
             model.ZipPostalCodeEnabled = _customerSettings.ZipPostalCodeEnabled;
             model.CityEnabled = _customerSettings.CityEnabled;
+            model.CountyEnabled = _customerSettings.CountyEnabled;
             model.CountryEnabled = _customerSettings.CountryEnabled;
             model.StateProvinceEnabled = _customerSettings.StateProvinceEnabled;
             model.PhoneEnabled = _customerSettings.PhoneEnabled;
@@ -739,6 +741,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             model.Address.StateProvinceEnabled = _addressSettings.StateProvinceEnabled;
             model.Address.CityEnabled = _addressSettings.CityEnabled;
             model.Address.CityRequired = _addressSettings.CityRequired;
+            model.Address.CountyEnabled = _addressSettings.CountyEnabled;
+            model.Address.CountyRequired = _addressSettings.CountyRequired;
             model.Address.StreetAddressEnabled = _addressSettings.StreetAddressEnabled;
             model.Address.StreetAddressRequired = _addressSettings.StreetAddressRequired;
             model.Address.StreetAddress2Enabled = _addressSettings.StreetAddress2Enabled;
@@ -950,6 +954,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                     _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.ZipPostalCode, model.ZipPostalCode);
                 if (_customerSettings.CityEnabled)
                     _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.City, model.City);
+                if (_customerSettings.CountyEnabled)
+                    _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.County, model.County);
                 if (_customerSettings.CountryEnabled)
                     _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.CountryId, model.CountryId);
                 if (_customerSettings.CountryEnabled && _customerSettings.StateProvinceEnabled)
@@ -1204,6 +1210,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                         _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.ZipPostalCode, model.ZipPostalCode);
                     if (_customerSettings.CityEnabled)
                         _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.City, model.City);
+                    if (_customerSettings.CountyEnabled)
+                        _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.County, model.County);
                     if (_customerSettings.CountryEnabled)
                         _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.CountryId, model.CountryId);
                     if (_customerSettings.CountryEnabled && _customerSettings.StateProvinceEnabled)
@@ -1725,6 +1733,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                         addressHtmlSb.AppendFormat("{0}<br />", WebUtility.HtmlEncode(model.Address2));
                     if (_addressSettings.CityEnabled && !string.IsNullOrEmpty(model.City))
                         addressHtmlSb.AppendFormat("{0},", WebUtility.HtmlEncode(model.City));
+                    if (_addressSettings.CountyEnabled && !string.IsNullOrEmpty(model.County))
+                        addressHtmlSb.AppendFormat("{0},", WebUtility.HtmlEncode(model.County));
                     if (_addressSettings.StateProvinceEnabled && !string.IsNullOrEmpty(model.StateProvinceName))
                         addressHtmlSb.AppendFormat("{0},", WebUtility.HtmlEncode(model.StateProvinceName));
                     if (_addressSettings.ZipPostalCodeEnabled && !string.IsNullOrEmpty(model.ZipPostalCode))

@@ -52,6 +52,9 @@ namespace Nop.Plugin.Pickup.PickupInStore.Models
         public int? StateProvinceId { get; set; }
         public IList<SelectListItem> AvailableStates { get; set; }
 
+        [NopResourceDisplayName("Admin.Address.Fields.County")]
+        public string County { get; set; }
+
         [NopResourceDisplayName("Admin.Address.Fields.City")]
         public string City { get; set; }
 

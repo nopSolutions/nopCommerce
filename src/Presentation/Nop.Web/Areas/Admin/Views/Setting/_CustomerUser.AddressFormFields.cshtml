@@ -8,6 +8,7 @@
         $("#@Html.IdFor(model => model.AddressSettings.StreetAddress2Enabled)").click(toggleAddressRequiredFormField);
         $("#@Html.IdFor(model => model.AddressSettings.ZipPostalCodeEnabled)").click(toggleAddressRequiredFormField);
         $("#@Html.IdFor(model => model.AddressSettings.CityEnabled)").click(toggleAddressRequiredFormField);
+        $("#@Html.IdFor(model => model.AddressSettings.CountyEnabled)").click(toggleAddressRequiredFormField);
         $("#@Html.IdFor(model => model.AddressSettings.PhoneEnabled)").click(toggleAddressRequiredFormField);
         $("#@Html.IdFor(model => model.AddressSettings.FaxEnabled)").click(toggleAddressRequiredFormField);
 
@@ -58,6 +59,13 @@
         }
         else {
             $('#pnlAddressCityRequired').hide();
+        }
+
+        if ($('#@Html.IdFor(model => model.AddressSettings.CountyEnabled)').is(':checked')) {
+            $('#pnlAddressCountyRequired').show();
+        }
+        else {
+            $('#pnlAddressCountyRequired').hide();
         }
 
         if ($('#@Html.IdFor(model => model.AddressSettings.PhoneEnabled)').is(':checked')) {
@@ -183,6 +191,26 @@
                     <div class="col-md-9">
                         <nop-editor asp-for="AddressSettings.CityRequired" />
                         <span asp-validation-for="AddressSettings.CityRequired"></span>
+                    </div>
+                </div>
+            </nop-nested-setting>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-label asp-for="AddressSettings.CountyEnabled" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="AddressSettings.CountyEnabled" />
+                    <span asp-validation-for="AddressSettings.CountyEnabled"></span>
+                </div>
+            </div>
+            <nop-nested-setting asp-for="AddressSettings.CountyEnabled">
+                <div class="form-group" id="pnlAddressCountyRequired">
+                    <div class="col-md-3">
+                        <nop-label asp-for="AddressSettings.CountyRequired" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="AddressSettings.CountyRequired" />
+                        <span asp-validation-for="AddressSettings.CountyRequired"></span>
                     </div>
                 </div>
             </nop-nested-setting>

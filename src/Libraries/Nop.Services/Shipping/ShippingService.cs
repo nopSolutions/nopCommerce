@@ -795,6 +795,7 @@ namespace Nop.Services.Shipping
                         request.CountryFrom = originAddress.Country;
                         request.StateProvinceFrom = originAddress.StateProvince;
                         request.ZipPostalCodeFrom = originAddress.ZipPostalCode;
+                        request.CountyFrom = originAddress.County;
                         request.CityFrom = originAddress.City;
                         request.AddressFrom = originAddress.Address1;
                     }

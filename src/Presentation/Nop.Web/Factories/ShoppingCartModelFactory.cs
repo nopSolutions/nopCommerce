@@ -647,6 +647,7 @@ namespace Nop.Web.Factories
                     {
                         Address1 = pickupPoint.Address,
                         City = pickupPoint.City,
+                        County = pickupPoint.County,
                         CountryName = country?.Name ?? string.Empty,
                         StateProvinceName = state?.Name ?? string.Empty,
                         ZipPostalCode = pickupPoint.ZipPostalCode

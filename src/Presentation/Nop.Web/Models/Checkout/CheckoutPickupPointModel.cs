@@ -16,6 +16,8 @@ namespace Nop.Web.Models.Checkout
 
         public string City { get; set; }
 
+        public string County { get; set; }
+
         public string StateName { get; set; }
 
         public string CountryName { get; set; }

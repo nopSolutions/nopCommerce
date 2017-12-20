@@ -163,8 +163,12 @@
                     </div>
                 </div>
             }
-            @if (Model.StreetAddressEnabled || Model.StreetAddress2Enabled || Model.ZipPostalCodeEnabled
-             || Model.CityEnabled || Model.CountryEnabled)
+            @if (Model.StreetAddressEnabled ||
+                Model.StreetAddress2Enabled || 
+                Model.ZipPostalCodeEnabled || 
+                Model.CityEnabled || 
+                Model.CountyEnabled || 
+                Model.CountryEnabled)
             {
                 <div class="fieldset">
                     <div class="title">
@@ -205,6 +209,18 @@
                                     <nop-required />
                                 }
                                 <span asp-validation-for="ZipPostalCode"></span>
+                            </div>
+                        }
+                        @if (Model.CountyEnabled)
+                        {
+                            <div class="inputs">
+                                <label asp-for="County" asp-postfix=":"></label>
+                                <input asp-for="County" />
+                                @if (Model.CountyRequired)
+                                {
+                                    <nop-required />
+                                }
+                                <span asp-validation-for="County"></span>
                             </div>
                         }
                         @if (Model.CityEnabled)

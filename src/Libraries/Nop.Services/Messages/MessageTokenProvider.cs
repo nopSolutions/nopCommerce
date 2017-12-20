@@ -232,6 +232,7 @@ namespace Nop.Services.Messages
                     "%Order.BillingAddress1%",
                     "%Order.BillingAddress2%",
                     "%Order.BillingCity%",
+                    "%Order.BillingCounty%",
                     "%Order.BillingStateProvince%",
                     "%Order.BillingZipPostalCode%",
                     "%Order.BillingCountry%",
@@ -247,6 +248,7 @@ namespace Nop.Services.Messages
                     "%Order.ShippingAddress1%",
                     "%Order.ShippingAddress2%",
                     "%Order.ShippingCity%",
+                    "%Order.ShippingCounty%",
                     "%Order.ShippingStateProvince%",
                     "%Order.ShippingZipPostalCode%",
                     "%Order.ShippingCountry%",
@@ -940,6 +942,7 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("Order.BillingAddress1", order.BillingAddress.Address1));
             tokens.Add(new Token("Order.BillingAddress2", order.BillingAddress.Address2));
             tokens.Add(new Token("Order.BillingCity", order.BillingAddress.City));
+            tokens.Add(new Token("Order.BillingCounty", order.BillingAddress.County));
             tokens.Add(new Token("Order.BillingStateProvince", order.BillingAddress.StateProvince != null ? order.BillingAddress.StateProvince.GetLocalized(x => x.Name) : string.Empty));
             tokens.Add(new Token("Order.BillingZipPostalCode", order.BillingAddress.ZipPostalCode));
             tokens.Add(new Token("Order.BillingCountry", order.BillingAddress.Country != null ? order.BillingAddress.Country.GetLocalized(x => x.Name) : string.Empty));
@@ -956,6 +959,7 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("Order.ShippingAddress1", order.ShippingAddress != null ? order.ShippingAddress.Address1 : string.Empty));
             tokens.Add(new Token("Order.ShippingAddress2", order.ShippingAddress != null ? order.ShippingAddress.Address2 : string.Empty));
             tokens.Add(new Token("Order.ShippingCity", order.ShippingAddress != null ? order.ShippingAddress.City : string.Empty));
+            tokens.Add(new Token("Order.ShippingCounty", order.ShippingAddress != null ? order.ShippingAddress.County : string.Empty));
             tokens.Add(new Token("Order.ShippingStateProvince", order.ShippingAddress != null && order.ShippingAddress.StateProvince != null ? order.ShippingAddress.StateProvince.GetLocalized(x => x.Name) : string.Empty));
             tokens.Add(new Token("Order.ShippingZipPostalCode", order.ShippingAddress != null ? order.ShippingAddress.ZipPostalCode : string.Empty));
             tokens.Add(new Token("Order.ShippingCountry", order.ShippingAddress != null && order.ShippingAddress.Country != null ? order.ShippingAddress.Country.GetLocalized(x => x.Name) : string.Empty));

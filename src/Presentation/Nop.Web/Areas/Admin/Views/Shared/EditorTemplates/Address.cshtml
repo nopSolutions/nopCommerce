@@ -38,6 +38,8 @@
 <input asp-for="CountryEnabled" type="hidden" />
 <input asp-for="CountryRequired" type="hidden" />
 <input asp-for="StateProvinceEnabled" type="hidden" />
+<input asp-for="CountyEnabled" type="hidden" />
+<input asp-for="CountyRequired" type="hidden" />
 <input asp-for="CityEnabled" type="hidden" />
 <input asp-for="CityRequired" type="hidden" />
 <input asp-for="StreetAddressEnabled" type="hidden" />
@@ -119,6 +121,18 @@
         <div class="col-md-9">
             <nop-select asp-for="StateProvinceId" asp-items="Model.AvailableStates" />
             <span asp-validation-for="StateProvinceId"></span>
+        </div>
+    </div>
+}
+@if (Model.CountyEnabled)
+{
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-label asp-for="County" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="County" asp-required="@Model.CountyRequired" />
+            <span asp-validation-for="County"></span>
         </div>
     </div>
 }

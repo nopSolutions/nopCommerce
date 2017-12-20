@@ -35,6 +35,9 @@ namespace Nop.Web.Areas.Admin.Models.Orders
         [NopResourceDisplayName("Admin.Orders.Shipments.List.StateProvince")]
         public int StateProvinceId { get; set; }
 
+        [NopResourceDisplayName("Admin.Orders.Shipments.List.County")]
+        public string County { get; set; }
+
         [NopResourceDisplayName("Admin.Orders.Shipments.List.City")]
         public string City { get; set; }
 

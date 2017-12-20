@@ -98,6 +98,17 @@
                                 </td>
                             </tr>
                         }
+                        @if (Model.BillingAddress.CountyEnabled)
+                        {
+                            <tr>
+                                <td>
+                                    @T("Admin.Orders.Address.County")
+                                </td>
+                                <td>
+                                    @Model.BillingAddress.County
+                                </td>
+                            </tr>
+                        }
                         @if (Model.BillingAddress.StateProvinceEnabled)
                         {
                             <tr>

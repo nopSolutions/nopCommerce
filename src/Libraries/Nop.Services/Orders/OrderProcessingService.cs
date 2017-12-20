@@ -531,6 +531,7 @@ namespace Nop.Services.Orders
                     {
                         Address1 = pickupPoint.Address,
                         City = pickupPoint.City,
+                        County = pickupPoint.County,
                         Country = country,
                         StateProvince = state,
                         ZipPostalCode = pickupPoint.ZipPostalCode,
@@ -1645,6 +1646,7 @@ namespace Nop.Services.Orders
                 {
                     Address1 = updateOrderParameters.PickupPoint.Address,
                     City = updateOrderParameters.PickupPoint.City,
+                    County = updateOrderParameters.PickupPoint.County,
                     Country = _countryService.GetCountryByTwoLetterIsoCode(updateOrderParameters.PickupPoint.CountryCode),
                     ZipPostalCode = updateOrderParameters.PickupPoint.ZipPostalCode,
                     CreatedOnUtc = DateTime.UtcNow,

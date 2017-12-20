@@ -317,6 +317,18 @@
                     </div>
                 </div>
             }
+            @if (Model.CountyEnabled)
+            {
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="County" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="County" />
+                        <span asp-validation-for="County"></span>
+                    </div>
+                </div>
+            }
             @if (Model.CountryEnabled)
             {
                 <div class="form-group">

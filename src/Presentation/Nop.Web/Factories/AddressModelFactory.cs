@@ -187,6 +187,7 @@ namespace Nop.Web.Factories
                 model.StateProvinceName = address.StateProvince != null
                     ? address.StateProvince.GetLocalized(x => x.Name)
                     : null;
+                model.County = address.County;
                 model.City = address.City;
                 model.Address1 = address.Address1;
                 model.Address2 = address.Address2;
@@ -207,6 +208,7 @@ namespace Nop.Web.Factories
                 model.Address2 = customer.GetAttribute<string>(SystemCustomerAttributeNames.StreetAddress2);
                 model.ZipPostalCode = customer.GetAttribute<string>(SystemCustomerAttributeNames.ZipPostalCode);
                 model.City = customer.GetAttribute<string>(SystemCustomerAttributeNames.City);
+                model.County = customer.GetAttribute<string>(SystemCustomerAttributeNames.County);
                 //ignore country and state for prepopulation. it can cause some issues when posting pack with errors, etc
                 //model.CountryId = customer.GetAttribute<int>(SystemCustomerAttributeNames.CountryId);
                 //model.StateProvinceId = customer.GetAttribute<int>(SystemCustomerAttributeNames.StateProvinceId);
@@ -281,6 +283,8 @@ namespace Nop.Web.Factories
             model.ZipPostalCodeRequired = addressSettings.ZipPostalCodeRequired;
             model.CityEnabled = addressSettings.CityEnabled;
             model.CityRequired = addressSettings.CityRequired;
+            model.CountyEnabled = addressSettings.CountyEnabled;
+            model.CountyRequired = addressSettings.CountyRequired;
             model.CountryEnabled = addressSettings.CountryEnabled;
             model.StateProvinceEnabled = addressSettings.StateProvinceEnabled;
             model.PhoneEnabled = addressSettings.PhoneEnabled;

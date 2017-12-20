@@ -69,6 +69,10 @@ namespace Nop.Web.Validators.Common
             {
                 RuleFor(x => x.ZipPostalCode).NotEmpty().WithMessage(localizationService.GetResource("Account.Fields.ZipPostalCode.Required"));
             }
+            if (addressSettings.CountyEnabled && addressSettings.CountyRequired)
+            {
+                RuleFor(x => x.County).NotEmpty().WithMessage(localizationService.GetResource("Address.Fields.County.Required"));
+            }
             if (addressSettings.CityRequired && addressSettings.CityEnabled)
             {
                 RuleFor(x => x.City).NotEmpty().WithMessage(localizationService.GetResource("Account.Fields.City.Required"));

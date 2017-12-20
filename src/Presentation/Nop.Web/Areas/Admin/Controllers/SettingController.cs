@@ -507,6 +507,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             model.ShippingOriginAddress.CountryEnabled = true;
             model.ShippingOriginAddress.StateProvinceEnabled = true;
+            model.ShippingOriginAddress.CountyEnabled = true;
             model.ShippingOriginAddress.CityEnabled = true;
             model.ShippingOriginAddress.StreetAddressEnabled = true;
             model.ShippingOriginAddress.ZipPostalCodeEnabled = true;

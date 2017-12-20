@@ -89,6 +89,7 @@ namespace Nop.Plugin.Pickup.PickupInStore
                     Description = point.Description,
                     Address = pointAddress.Address1,
                     City = pointAddress.City,
+                    County = pointAddress.County,
                     StateAbbreviation = pointAddress.StateProvince?.Abbreviation ?? string.Empty,
                     CountryCode = pointAddress.Country?.TwoLetterIsoCode ?? string.Empty,
                     ZipPostalCode = pointAddress.ZipPostalCode,

@@ -89,6 +89,10 @@ namespace Nop.Web.Areas.Admin.Models.Customers
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.City")]
         public string City { get; set; }
 
+        public bool CountyEnabled { get; set; }
+        [NopResourceDisplayName("Admin.Customers.Customers.Fields.County")]
+        public string County { get; set; }
+
         public bool CountryEnabled { get; set; }
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.Country")]
         public int CountryId { get; set; }

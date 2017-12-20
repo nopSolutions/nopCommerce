@@ -348,7 +348,7 @@ namespace Nop.Web.Controllers
                     newAddress.FirstName, newAddress.LastName, newAddress.PhoneNumber,
                     newAddress.Email, newAddress.FaxNumber, newAddress.Company,
                     newAddress.Address1, newAddress.Address2, newAddress.City,
-                    newAddress.StateProvinceId, newAddress.ZipPostalCode,
+                    newAddress.County, newAddress.StateProvinceId, newAddress.ZipPostalCode,
                     newAddress.CountryId, customAttributes);
                 if (address == null)
                 {
@@ -510,7 +510,7 @@ namespace Nop.Web.Controllers
                     newAddress.FirstName, newAddress.LastName, newAddress.PhoneNumber,
                     newAddress.Email, newAddress.FaxNumber, newAddress.Company,
                     newAddress.Address1, newAddress.Address2, newAddress.City,
-                    newAddress.StateProvinceId, newAddress.ZipPostalCode,
+                    newAddress.County, newAddress.StateProvinceId, newAddress.ZipPostalCode,
                     newAddress.CountryId, customAttributes);
                 if (address == null)
                 {
@@ -1161,7 +1161,7 @@ namespace Nop.Web.Controllers
                         newAddress.FirstName, newAddress.LastName, newAddress.PhoneNumber,
                         newAddress.Email, newAddress.FaxNumber, newAddress.Company,
                         newAddress.Address1, newAddress.Address2, newAddress.City,
-                        newAddress.StateProvinceId, newAddress.ZipPostalCode,
+                        newAddress.County, newAddress.StateProvinceId, newAddress.ZipPostalCode,
                         newAddress.CountryId, customAttributes);
                     if (address == null)
                     {
@@ -1332,7 +1332,7 @@ namespace Nop.Web.Controllers
                         newAddress.FirstName, newAddress.LastName, newAddress.PhoneNumber,
                         newAddress.Email, newAddress.FaxNumber, newAddress.Company,
                         newAddress.Address1, newAddress.Address2, newAddress.City,
-                        newAddress.StateProvinceId, newAddress.ZipPostalCode,
+                        newAddress.County, newAddress.StateProvinceId, newAddress.ZipPostalCode,
                         newAddress.CountryId, customAttributes);
                     if (address == null)
                     {

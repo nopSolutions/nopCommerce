@@ -473,6 +473,7 @@ namespace Nop.Data.Tests
                 Email = "Email 1",
                 Company = "Company 1",
                 City = "City 1",
+                County = "County 1",
                 Address1 = "Address1a",
                 Address2 = "Address1a",
                 ZipPostalCode = "ZipPostalCode 1",

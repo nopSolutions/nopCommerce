@@ -44,11 +44,14 @@ namespace Nop.Web.Areas.Admin.Models.Common
         [NopResourceDisplayName("Admin.Address.Fields.StateProvince")]
         public string StateProvinceName { get; set; }
 
+        [NopResourceDisplayName("Admin.Address.Fields.Address1")]
+        public string Address1 { get; set; }
+
         [NopResourceDisplayName("Admin.Address.Fields.City")]
         public string City { get; set; }
 
-        [NopResourceDisplayName("Admin.Address.Fields.Address1")]
-        public string Address1 { get; set; }
+        [NopResourceDisplayName("Admin.Address.Fields.County")]
+        public string County { get; set; }
 
         [NopResourceDisplayName("Admin.Address.Fields.Address2")]
         public string Address2 { get; set; }
@@ -87,6 +90,8 @@ namespace Nop.Web.Areas.Admin.Models.Common
         public bool StateProvinceEnabled { get; set; }
         public bool CityEnabled { get; set; }
         public bool CityRequired { get; set; }
+        public bool CountyEnabled { get; set; }
+        public bool CountyRequired { get; set; }
         public bool StreetAddressEnabled { get; set; }
         public bool StreetAddressRequired { get; set; }
         public bool StreetAddress2Enabled { get; set; }

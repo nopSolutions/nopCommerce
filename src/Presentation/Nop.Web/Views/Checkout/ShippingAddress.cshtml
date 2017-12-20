@@ -60,7 +60,7 @@
                                 <input name="pickup-points-id" id="pickup-points-id" type="hidden" value="@($"{point.Id}___{point.ProviderSystemName}")"/>
                                 <ul>
                                     <li class="single-pickup-point name">@point.Name</li>
-                                    <li class="single-pickup-point address">@($"{point.Address} {point.City} {point.StateName} {point.CountryName}")</li>
+                                    <li class="single-pickup-point address">@($"{point.Address} {point.City} {point.County} {point.StateName} {point.CountryName}")</li>
                                     @if (!string.IsNullOrEmpty(point.PickupFee))
                                     {
                                         <li class="single-pickup-point fee">@point.PickupFee</li>
@@ -84,6 +84,10 @@
                                         if (!string.IsNullOrEmpty(point.City))
                                         {
                                             addressLine.AppendFormat(", {0}", point.City);
+                                        }
+                                        if (!string.IsNullOrEmpty(point.County))
+                                        {
+                                            addressLine.AppendFormat(", {0}", point.County);
                                         }
                                         if (!string.IsNullOrEmpty(point.StateName))
                                         {
@@ -259,22 +263,40 @@
                                                     @item.Address2
                                                 </li>
                                             }
-                                            @if (item.CityEnabled || item.StateProvinceEnabled || item.ZipPostalCodeEnabled)
+                                            @if (item.CityEnabled && !string.IsNullOrEmpty(item.City)|| 
+                                                item.CountyEnabled && !string.IsNullOrEmpty(item.County) || 
+                                                item.StateProvinceEnabled && !string.IsNullOrEmpty(item.StateProvinceName) || 
+                                                item.ZipPostalCodeEnabled && !string.IsNullOrEmpty(item.ZipPostalCode))
                                             {
                                                 <li class="city-state-zip">
-                                                    @if (item.CityEnabled)
+                                                    @if (item.CityEnabled && !string.IsNullOrEmpty(item.City))
                                                     {
                                                         @item.City
+                                                        @if (item.CountyEnabled && !string.IsNullOrEmpty(item.County) || 
+                                                            item.StateProvinceEnabled && !string.IsNullOrEmpty(item.StateProvinceName) || 
+                                                            item.ZipPostalCodeEnabled && !string.IsNullOrEmpty(item.ZipPostalCode))
+                                                        {
+                                                            <text>,</text>
+                                                        }
                                                     }
-                                                    @if (item.CityEnabled && (item.StateProvinceEnabled || item.ZipPostalCodeEnabled))
+                                                    @if (item.CountyEnabled && !string.IsNullOrEmpty(item.County))
                                                     {
-                                                        <text>,</text>
+                                                        @item.County
+                                                        @if (item.StateProvinceEnabled && !string.IsNullOrEmpty(item.StateProvinceName) || 
+                                                            item.ZipPostalCodeEnabled && !string.IsNullOrEmpty(item.ZipPostalCode))
+                                                        {
+                                                            <text>,</text>
+                                                        }
                                                     }
-                                                    @if (item.StateProvinceEnabled)
+                                                    @if (item.StateProvinceEnabled && !string.IsNullOrEmpty(item.StateProvinceName))
                                                     {
                                                         @item.StateProvinceName
+                                                        @if (item.ZipPostalCodeEnabled && !string.IsNullOrEmpty(item.ZipPostalCode))
+                                                        {
+                                                            <text>,</text>
+                                                        }
                                                     }
-                                                    @if (item.ZipPostalCodeEnabled)
+                                                    @if (item.ZipPostalCodeEnabled && !string.IsNullOrEmpty(item.ZipPostalCode))
                                                     {
                                                         @item.ZipPostalCode
                                                     }

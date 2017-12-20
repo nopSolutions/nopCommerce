@@ -306,6 +306,12 @@
   <LocaleResource Name="Account.Fields.Country">
     <Value>Country</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.Fields.County">
+    <Value>County</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Fields.County.Required">
+    <Value>County is required.</Value>
+  </LocaleResource>
   <LocaleResource Name="Account.Fields.Country.Required">
     <Value>Country is required</Value>
   </LocaleResource>
@@ -1137,6 +1143,12 @@
   <LocaleResource Name="Address.Fields.Country.Required">
     <Value>Country is required.</Value>
   </LocaleResource>
+  <LocaleResource Name="Address.Fields.County">
+    <Value>County</Value>
+  </LocaleResource>
+  <LocaleResource Name="Address.Fields.County.Required">
+    <Value>County is required.</Value>
+  </LocaleResource>
   <LocaleResource Name="Address.Fields.Email">
     <Value>Email</Value>
   </LocaleResource>
@@ -1331,6 +1343,15 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Address.Fields.Country.Required">
     <Value>Country is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Address.Fields.County">
+    <Value>County</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Address.Fields.County.Hint">
+    <Value>Enter county.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Address.Fields.County.Required">
+    <Value>County is required.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Address.Fields.Email">
     <Value>Email</Value>
@@ -5715,6 +5736,18 @@
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AddressFormFields.CountryEnabled.Hint">
     <Value>Set if 'Country' is enabled.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AddressFormFields.CountyEnabled">
+    <Value>'County' enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AddressFormFields.CountyEnabled.Hint">
+    <Value>Set if 'County' is enabled.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AddressFormFields.CountyRequired">
+    <Value>'County' required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AddressFormFields.CountyRequired.Hint">
+    <Value>Check if 'County' is required.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AddressFormFields.Description">
     <Value>You can create and manage the address form fields available during checkout.</Value>
   </LocaleResource>
@@ -5870,6 +5903,18 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.CountryRequired.Hint">
     <Value>Check if 'Country' is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.CountyEnabled">
+    <Value>'County' enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.CountyEnabled.Hint">
+    <Value>Set if 'County' is enabled.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.CountyRequired">
+    <Value>'County' required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.CountyRequired.Hint">
+    <Value>Check if 'County' is required.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.CustomerFormFields">
     <Value>Customer form fields</Value>
@@ -9909,6 +9954,15 @@
   <LocaleResource Name="Admin.Customers.Customers.Fields.Country.Hint">
     <Value>The country.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.County">
+    <Value>County</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.County.Hint">
+    <Value>The county.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.County.Required">
+    <Value>County is required.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.Fields.CreatedOn">
     <Value>Created on</Value>
   </LocaleResource>
@@ -10722,6 +10776,9 @@
   <LocaleResource Name="Admin.Orders.Address.Country">
     <Value>Country</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Address.County">
+    <Value>County</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Orders.Address.EditAddress">
     <Value>Edit address</Value>
   </LocaleResource>
@@ -11495,6 +11552,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Shipments.List.Country.Hint">
     <Value>Search by a specific country.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.List.County">
+    <Value>County</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.List.County.Hint">
+    <Value>Search by a specific county.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Shipments.List.EndDate">
     <Value>End date</Value>

@@ -698,6 +698,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             model.Address.CountryEnabled = true;
             model.Address.CountryRequired = true;
             model.Address.StateProvinceEnabled = true;
+            model.Address.CountyEnabled = true;
             model.Address.CityEnabled = true;
             model.Address.StreetAddressEnabled = true;
             model.Address.ZipPostalCodeEnabled = true;
@@ -790,6 +791,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             model.Address.CountryEnabled = true;
             model.Address.CountryRequired = true;
             model.Address.StateProvinceEnabled = true;
+            model.Address.CountyEnabled = true;
             model.Address.CityEnabled = true;
             model.Address.StreetAddressEnabled = true;
             model.Address.ZipPostalCodeEnabled = true;

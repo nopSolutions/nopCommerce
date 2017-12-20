@@ -79,6 +79,8 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.CountryEnabled, mo => mo.Ignore())
                 .ForMember(dest => dest.CountryRequired, mo => mo.Ignore())
                 .ForMember(dest => dest.StateProvinceEnabled, mo => mo.Ignore())
+                .ForMember(dest => dest.CountyEnabled, mo => mo.Ignore())
+                .ForMember(dest => dest.CountyRequired, mo => mo.Ignore())
                 .ForMember(dest => dest.CityEnabled, mo => mo.Ignore())
                 .ForMember(dest => dest.CityRequired, mo => mo.Ignore())
                 .ForMember(dest => dest.StreetAddressEnabled, mo => mo.Ignore())

@@ -251,6 +251,11 @@ namespace Nop.Services.Common
                 }
             }
 
+            if (_addressSettings.CountyEnabled &&
+                _addressSettings.CountyRequired &&
+                string.IsNullOrWhiteSpace(address.County))
+                return false;
+
             if (_addressSettings.CityEnabled &&
                 _addressSettings.CityRequired &&
                 string.IsNullOrWhiteSpace(address.City))

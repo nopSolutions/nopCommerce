@@ -212,6 +212,7 @@ namespace Nop.Web.Factories
                         {
                             Address1 = order.PickupAddress.Address1,
                             City = order.PickupAddress.City,
+                            County = order.PickupAddress.County,
                             CountryName = order.PickupAddress.Country != null ? order.PickupAddress.Country.Name : string.Empty,
                             ZipPostalCode = order.PickupAddress.ZipPostalCode
                         };

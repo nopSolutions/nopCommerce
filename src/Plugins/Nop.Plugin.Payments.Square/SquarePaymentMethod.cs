@@ -185,6 +185,7 @@ namespace Nop.Plugin.Payments.Square
                 AddressLine1: address.Address1,
                 AddressLine2: address.Address2,
                 AdministrativeDistrictLevel1: address.StateProvince?.Abbreviation,
+                AdministrativeDistrictLevel2: address.County,
                 Country: Enum.TryParse(address.Country?.TwoLetterIsoCode, out SquareModel.Address.CountryEnum countryCode)
                     ? (SquareModel.Address.CountryEnum?)countryCode : null,
                 FirstName: address.FirstName,

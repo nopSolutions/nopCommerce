@@ -171,6 +171,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 model.Address.CountryEnabled = true;
                 model.Address.StateProvinceEnabled = true;
+                model.Address.CountyEnabled = true;
                 model.Address.CityEnabled = true;
                 model.Address.StreetAddressEnabled = true;
                 model.Address.StreetAddress2Enabled = true;

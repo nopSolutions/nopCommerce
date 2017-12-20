@@ -44,6 +44,11 @@ namespace Nop.Web.Models.Common
         [NopResourceDisplayName("Address.Fields.StateProvince")]
         public string StateProvinceName { get; set; }
 
+        public bool CountyEnabled { get; set; }
+        public bool CountyRequired { get; set; }
+        [NopResourceDisplayName("Address.Fields.County")]
+        public string County { get; set; }
+
         public bool CityEnabled { get; set; }
         public bool CityRequired { get; set; }
         [NopResourceDisplayName("Address.Fields.City")]

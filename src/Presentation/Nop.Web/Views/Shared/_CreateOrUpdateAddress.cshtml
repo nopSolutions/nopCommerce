@@ -81,6 +81,18 @@
             <span asp-validation-for="StateProvinceId"></span>
         </div>
     }
+    @if (Model.CountyEnabled)
+    {
+        <div class="inputs">
+            <label asp-for="County" asp-postfix=":"></label>
+            <input asp-for="County" />
+            @if (Model.CountyRequired)
+            {
+                <nop-required />
+            }
+            <span asp-validation-for="County"></span>
+        </div>
+    }
     @if (Model.CityEnabled)
     {
         <div class="inputs">

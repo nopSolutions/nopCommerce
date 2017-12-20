@@ -95,24 +95,40 @@
                                 @Model.BillingAddress.Address2
                             </li>
                         }
-                        @if (Model.BillingAddress.CityEnabled ||
-                            Model.BillingAddress.StateProvinceEnabled ||
-                            Model.BillingAddress.ZipPostalCodeEnabled)
+                        @if (Model.BillingAddress.CityEnabled && !string.IsNullOrEmpty(Model.BillingAddress.City)|| 
+                            Model.BillingAddress.CountyEnabled && !string.IsNullOrEmpty(Model.BillingAddress.County) || 
+                            Model.BillingAddress.StateProvinceEnabled && !string.IsNullOrEmpty(Model.BillingAddress.StateProvinceName) || 
+                            Model.BillingAddress.ZipPostalCodeEnabled && !string.IsNullOrEmpty(Model.BillingAddress.ZipPostalCode))
                         {
                             <li class="city-state-zip">
-                                @if (Model.BillingAddress.CityEnabled)
+                                @if (Model.BillingAddress.CityEnabled && !string.IsNullOrEmpty(Model.BillingAddress.City))
                                 {
                                     @Model.BillingAddress.City
+                                    @if (Model.BillingAddress.CountyEnabled && !string.IsNullOrEmpty(Model.BillingAddress.County) || 
+                                        Model.BillingAddress.StateProvinceEnabled && !string.IsNullOrEmpty(Model.BillingAddress.StateProvinceName) || 
+                                        Model.BillingAddress.ZipPostalCodeEnabled && !string.IsNullOrEmpty(Model.BillingAddress.ZipPostalCode))
+                                    {
+                                        <text>,</text>
+                                    }
                                 }
-                                @if (Model.BillingAddress.CityEnabled && (Model.BillingAddress.StateProvinceEnabled || Model.BillingAddress.ZipPostalCodeEnabled))
+                                @if (Model.BillingAddress.CountyEnabled && !string.IsNullOrEmpty(Model.BillingAddress.County))
                                 {
-                                    <text>,</text>
+                                    @Model.BillingAddress.County
+                                    @if (Model.BillingAddress.StateProvinceEnabled && !string.IsNullOrEmpty(Model.BillingAddress.StateProvinceName) || 
+                                        Model.BillingAddress.ZipPostalCodeEnabled && !string.IsNullOrEmpty(Model.BillingAddress.ZipPostalCode))
+                                    {
+                                        <text>,</text>
+                                    }
                                 }
-                                @if (Model.BillingAddress.StateProvinceEnabled)
+                                @if (Model.BillingAddress.StateProvinceEnabled && !string.IsNullOrEmpty(Model.BillingAddress.StateProvinceName))
                                 {
                                     @Model.BillingAddress.StateProvinceName
+                                    @if (Model.BillingAddress.ZipPostalCodeEnabled && !string.IsNullOrEmpty(Model.BillingAddress.ZipPostalCode))
+                                    {
+                                        <text>,</text>
+                                    }
                                 }
-                                @if (Model.BillingAddress.ZipPostalCodeEnabled)
+                                @if (Model.BillingAddress.ZipPostalCodeEnabled && !string.IsNullOrEmpty(Model.BillingAddress.ZipPostalCode))
                                 {
                                     @Model.BillingAddress.ZipPostalCode
                                 }
@@ -245,24 +261,40 @@
                                         @Model.ShippingAddress.Address2
                                     </li>
                                 }
-                                if (Model.ShippingAddress.CityEnabled ||
-                                    Model.ShippingAddress.StateProvinceEnabled ||
-                                    Model.ShippingAddress.ZipPostalCodeEnabled)
+                                @if (Model.ShippingAddress.CityEnabled && !string.IsNullOrEmpty(Model.ShippingAddress.City)|| 
+                                    Model.ShippingAddress.CountyEnabled && !string.IsNullOrEmpty(Model.ShippingAddress.County) || 
+                                    Model.ShippingAddress.StateProvinceEnabled && !string.IsNullOrEmpty(Model.ShippingAddress.StateProvinceName) || 
+                                    Model.ShippingAddress.ZipPostalCodeEnabled && !string.IsNullOrEmpty(Model.ShippingAddress.ZipPostalCode))
                                 {
                                     <li class="city-state-zip">
-                                        @if (Model.ShippingAddress.CityEnabled)
+                                        @if (Model.ShippingAddress.CityEnabled && !string.IsNullOrEmpty(Model.ShippingAddress.City))
                                         {
                                             @Model.ShippingAddress.City
+                                            @if (Model.ShippingAddress.CountyEnabled && !string.IsNullOrEmpty(Model.ShippingAddress.County) || 
+                                                Model.ShippingAddress.StateProvinceEnabled && !string.IsNullOrEmpty(Model.ShippingAddress.StateProvinceName) || 
+                                                Model.ShippingAddress.ZipPostalCodeEnabled && !string.IsNullOrEmpty(Model.ShippingAddress.ZipPostalCode))
+                                            {
+                                                <text>,</text>
+                                            }
                                         }
-                                        @if (Model.ShippingAddress.CityEnabled && (Model.ShippingAddress.StateProvinceEnabled || Model.ShippingAddress.ZipPostalCodeEnabled))
+                                        @if (Model.ShippingAddress.CountyEnabled && !string.IsNullOrEmpty(Model.ShippingAddress.County))
                                         {
-                                            <text>,</text>
+                                            @Model.ShippingAddress.County
+                                            @if (Model.ShippingAddress.StateProvinceEnabled && !string.IsNullOrEmpty(Model.ShippingAddress.StateProvinceName) || 
+                                                Model.ShippingAddress.ZipPostalCodeEnabled && !string.IsNullOrEmpty(Model.ShippingAddress.ZipPostalCode))
+                                            {
+                                                <text>,</text>
+                                            }
                                         }
-                                        @if (Model.ShippingAddress.StateProvinceEnabled)
+                                        @if (Model.ShippingAddress.StateProvinceEnabled && !string.IsNullOrEmpty(Model.ShippingAddress.StateProvinceName))
                                         {
                                             @Model.ShippingAddress.StateProvinceName
+                                            @if (Model.ShippingAddress.ZipPostalCodeEnabled && !string.IsNullOrEmpty(Model.ShippingAddress.ZipPostalCode))
+                                            {
+                                                <text>,</text>
+                                            }
                                         }
-                                        @if (Model.ShippingAddress.ZipPostalCodeEnabled)
+                                        @if (Model.ShippingAddress.ZipPostalCodeEnabled && !string.IsNullOrEmpty(Model.ShippingAddress.ZipPostalCode))
                                         {
                                             @Model.ShippingAddress.ZipPostalCode
                                         }
@@ -289,16 +321,41 @@
                                         @Model.PickupAddress.Address1
                                     </li>
                                 }
-                                if (!string.IsNullOrEmpty(Model.PickupAddress.City) || !string.IsNullOrEmpty(Model.PickupAddress.ZipPostalCode))
+                                if (!string.IsNullOrEmpty(Model.PickupAddress.City)|| 
+                                    !string.IsNullOrEmpty(Model.PickupAddress.County) || 
+                                    !string.IsNullOrEmpty(Model.PickupAddress.StateProvinceName) || 
+                                    !string.IsNullOrEmpty(Model.PickupAddress.ZipPostalCode))
                                 {
                                     <li class="city-state-zip">
                                         @if (!string.IsNullOrEmpty(Model.PickupAddress.City))
                                         {
                                             @Model.PickupAddress.City
+                                            @if (!string.IsNullOrEmpty(Model.PickupAddress.County) || 
+                                                !string.IsNullOrEmpty(Model.PickupAddress.StateProvinceName) || 
+                                                !string.IsNullOrEmpty(Model.PickupAddress.ZipPostalCode))
+                                            {
+                                                <text>,</text>
+                                            }
+                                        }
+                                        @if (!string.IsNullOrEmpty(Model.PickupAddress.County))
+                                        {
+                                            @Model.PickupAddress.County
+                                            @if (!string.IsNullOrEmpty(Model.PickupAddress.StateProvinceName) || 
+                                                !string.IsNullOrEmpty(Model.PickupAddress.ZipPostalCode))
+                                            {
+                                                <text>,</text>
+                                            }
+                                        }
+                                        @if (!string.IsNullOrEmpty(Model.PickupAddress.StateProvinceName))
+                                        {
+                                            @Model.PickupAddress.StateProvinceName
+                                            @if (!string.IsNullOrEmpty(Model.PickupAddress.ZipPostalCode))
+                                            {
+                                                <text>,</text>
+                                            }
                                         }
                                         @if (!string.IsNullOrEmpty(Model.PickupAddress.ZipPostalCode))
                                         {
-                                            <text>,</text>
                                             @Model.PickupAddress.ZipPostalCode
                                         }
                                     </li>

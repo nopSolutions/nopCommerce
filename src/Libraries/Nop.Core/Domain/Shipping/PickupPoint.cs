@@ -43,6 +43,11 @@ namespace Nop.Core.Domain.Shipping
         public string City { get; set; }
 
         /// <summary>
+        /// Gets or sets a county
+        /// </summary>
+        public string County { get; set; }
+
+        /// <summary>
         /// Gets or sets a state abbreviation
         /// </summary>
         public string StateAbbreviation { get; set; }

@@ -43,6 +43,10 @@ namespace Nop.Core.Domain.Customers
         /// </summary>
         public static string City { get { return "City"; } }
         /// <summary>
+        /// County
+        /// </summary>
+        public static string County { get { return "County"; } }
+        /// <summary>
         /// CountryId
         /// </summary>
         public static string CountryId { get { return "CountryId"; } }

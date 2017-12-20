@@ -209,6 +209,7 @@ namespace Nop.Web.Factories
                                 ProviderSystemName = point.ProviderSystemName,
                                 Address = point.Address,
                                 City = point.City,
+                                County = point.County,
                                 StateName = state?.GetLocalized(x => x.Name, languageId) ?? string.Empty,
                                 CountryName = country?.GetLocalized(x => x.Name, languageId) ?? string.Empty,
                                 ZipPostalCode = point.ZipPostalCode,
