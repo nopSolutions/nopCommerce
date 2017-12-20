@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Seo;
 
 namespace Nop.Services.Catalog
 {
@@ -14,6 +15,12 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="category">Category</param>
         void DeleteCategory(Category category);
+
+        List<Category> GetAllCategoriesInTopMenu();
+
+        List<Category> GetCategoriesForNavigation(int CategoryId);
+
+        List<UrlRecord> LoadLocalizedNamesAndSeNames(ref IList<Category> categories);
 
         /// <summary>
         /// Gets all categories

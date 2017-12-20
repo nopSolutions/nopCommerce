@@ -96,6 +96,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 	    private readonly IPictureService _pictureService;
         private readonly ICustomerActivityService _customerActivityService;
 	    private readonly IStaticCacheManager _cacheManager;
+        private readonly CommonSettings _commonSettings;
 
         private readonly OrderSettings _orderSettings;
         private readonly CurrencySettings _currencySettings;
@@ -155,7 +156,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             TaxSettings taxSettings,
             MeasureSettings measureSettings,
             AddressSettings addressSettings,
-            ShippingSettings shippingSettings)
+            ShippingSettings shippingSettings,
+            CommonSettings commonSettings)
 		{
             this._orderService = orderService;
             this._orderReportService = orderReportService;
@@ -205,6 +207,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             this._measureSettings = measureSettings;
             this._addressSettings = addressSettings;
             this._shippingSettings = shippingSettings;
+            this._commonSettings = commonSettings;
 		}
         
         #endregion
@@ -2608,10 +2611,13 @@ namespace Nop.Web.Areas.Admin.Controllers
                 OrderId = orderId
             };
             //categories
-            model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
-            var categories = SelectListHelper.GetCategoryList(_categoryService, _cacheManager, true);
-            foreach (var c in categories)
-                model.AvailableCategories.Add(c);
+            if (!_commonSettings.LargeDatabase)
+            {
+                model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+                var categories = SelectListHelper.GetCategoryList(_categoryService, _cacheManager, true);
+                foreach (var c in categories)
+                    model.AvailableCategories.Add(c);
+            }
 
             //manufacturers
             model.AvailableManufacturers.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
@@ -3964,10 +3970,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             model.AvailablePaymentStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
 
             //categories
-            model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
-            var categories = SelectListHelper.GetCategoryList(_categoryService, _cacheManager, true);
-            foreach (var c in categories)
-                model.AvailableCategories.Add(c);
+            if (!_commonSettings.LargeDatabase)
+            {
+                model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+                var categories = SelectListHelper.GetCategoryList(_categoryService, _cacheManager, true);
+                foreach (var c in categories)
+                    model.AvailableCategories.Add(c);
+            }
 
             //manufacturers
             model.AvailableManufacturers.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
@@ -4058,10 +4067,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             };
 
             //categories
-            model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
-            var categories = SelectListHelper.GetCategoryList(_categoryService, _cacheManager, true);
-            foreach (var c in categories)
-                model.AvailableCategories.Add(c);
+            if (!_commonSettings.LargeDatabase)
+            {
+                model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+                var categories = SelectListHelper.GetCategoryList(_categoryService, _cacheManager, true);
+                foreach (var c in categories)
+                    model.AvailableCategories.Add(c);
+            }
 
             //manufacturers
             model.AvailableManufacturers.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });

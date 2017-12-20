@@ -31,6 +31,7 @@ using Nop.Web.Areas.Admin.Extensions;
 using Nop.Web.Areas.Admin.Models.Plugins;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
+using Nop.Core.Domain.Common;
 
 namespace Nop.Web.Areas.Admin.Controllers
 {
@@ -55,6 +56,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly ICustomerService _customerService;
         private readonly IUploadService _uploadService;
         private readonly IEventPublisher _eventPublisher;
+        private readonly CommonSettings _commonSettings;
 
         #endregion
 
@@ -76,7 +78,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             ICustomerActivityService customerActivityService,
             ICustomerService customerService,
             IUploadService uploadService,
-            IEventPublisher eventPublisher)
+            IEventPublisher eventPublisher,
+            CommonSettings commonSettings)
         {
             this._pluginFinder = pluginFinder;
             this._officialFeedManager = officialFeedManager;
@@ -95,6 +98,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             this._customerService = customerService;
             this._uploadService = uploadService;
             this._eventPublisher = eventPublisher;
+            this._commonSettings = commonSettings;
         }
 
 		#endregion 
@@ -667,10 +671,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             //categories
-            var categories = _officialFeedManager.GetCategories();
-            model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
-            foreach (var category in categories)
-                model.AvailableCategories.Add(new SelectListItem { Text = GetCategoryBreadCrumbName(category, categories), Value = category.Id.ToString() });
+            if (!_commonSettings.LargeDatabase)
+            {
+                var categories = _officialFeedManager.GetCategories();
+                model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+                foreach (var category in categories)
+                    model.AvailableCategories.Add(new SelectListItem { Text = GetCategoryBreadCrumbName(category, categories), Value = category.Id.ToString() });
+            }
             //prices
             model.AvailablePrices.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
             model.AvailablePrices.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Configuration.Plugins.OfficialFeed.Price.Free"), Value = "10" });

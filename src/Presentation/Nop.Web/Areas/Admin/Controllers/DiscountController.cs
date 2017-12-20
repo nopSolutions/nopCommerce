@@ -27,6 +27,7 @@ using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.Filters;
+using Nop.Core.Domain.Common;
 
 namespace Nop.Web.Areas.Admin.Controllers
 {
@@ -52,6 +53,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly IOrderService _orderService;
         private readonly IPriceFormatter _priceFormatter;
         private readonly IStaticCacheManager _cacheManager;
+        private readonly CommonSettings _commonSettings;
 
         #endregion
 
@@ -74,7 +76,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             IVendorService vendorService,
             IOrderService orderService,
             IPriceFormatter priceFormatter,
-            IStaticCacheManager cacheManager)
+            IStaticCacheManager cacheManager,
+            CommonSettings commonSettings)
         {
             this._discountService = discountService;
             this._localizationService = localizationService;
@@ -94,6 +97,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             this._orderService = orderService;
             this._priceFormatter = priceFormatter;
             this._cacheManager = cacheManager;
+            this._commonSettings = commonSettings;
         }
 
         #endregion
@@ -604,10 +608,13 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             var model = new DiscountModel.AddProductToDiscountModel();
             //categories
-            model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
-            var categories = SelectListHelper.GetCategoryList(_categoryService, _cacheManager, true);
-            foreach (var c in categories)
-                model.AvailableCategories.Add(c);
+            if (!_commonSettings.LargeDatabase)
+            {
+                model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+                var categories = SelectListHelper.GetCategoryList(_categoryService, _cacheManager, true);
+                foreach (var c in categories)
+                    model.AvailableCategories.Add(c);
+            }
 
             //manufacturers
             model.AvailableManufacturers.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });

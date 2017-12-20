@@ -1136,6 +1136,24 @@ namespace Nop.Services.Catalog
             return new PagedList<Product>(query, pageIndex, pageSize);
         }
 
+        public virtual int GetLowStockProductsCount(int vendorId = 0)
+        {
+            //Track inventory for product
+            var query = (from p in _productRepository.Table
+                        orderby p.MinStockQuantity
+                        where !p.Deleted &&
+                        p.ManageInventoryMethodId == (int)ManageInventoryMethod.ManageStock &&
+                        //ignore grouped products
+                        p.ProductTypeId != (int)ProductType.GroupedProduct &&
+                        p.MinStockQuantity >= (
+                           p.UseMultipleWarehouses ?
+                           p.ProductWarehouseInventory.Sum(pwi => pwi.StockQuantity - pwi.ReservedQuantity) :
+                           p.StockQuantity) &&
+                        (vendorId == 0 || p.VendorId == vendorId)
+                        select p).Count();
+            return query;
+        }
+
         /// <summary>
         /// Get low stock product combinations
         /// </summary>
@@ -1156,6 +1174,19 @@ namespace Nop.Services.Catalog
                          select c;
             query = query.OrderBy(c => c.ProductId);
             return new PagedList<ProductAttributeCombination>(query, pageIndex, pageSize);
+        }
+
+        public virtual int GetLowStockProductCombinationsCount(int vendorId = 0)
+        {
+            //Track inventory for product by product attributes
+            var query = (from p in _productRepository.Table
+                        from c in p.ProductAttributeCombinations
+                        where !p.Deleted &&
+                        p.ManageInventoryMethodId == (int)ManageInventoryMethod.ManageStockByAttributes &&
+                        c.StockQuantity <= 0 &&
+                        (vendorId == 0 || p.VendorId == vendorId)
+                        select c).Count();
+            return query;
         }
 
         /// <summary>
