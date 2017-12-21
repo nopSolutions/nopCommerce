@@ -43,6 +43,7 @@ namespace Nop.Web.Models.ShoppingCart
         public IList<string> ButtonPaymentMethodViewComponentNames { get; set; }
 
         public bool HideCheckoutButton { get; set; }
+        public bool ShowVendorName { get; set; }
 
         #region Nested Classes
 
@@ -56,6 +57,8 @@ namespace Nop.Web.Models.ShoppingCart
             }
 
             public string Sku { get; set; }
+
+            public string VendorName { get; set; }
 
             public PictureModel Picture {get;set;}
 

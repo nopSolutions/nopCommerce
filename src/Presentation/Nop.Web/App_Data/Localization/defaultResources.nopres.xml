@@ -7983,6 +7983,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Vendor.NotifyStoreOwnerAboutVendorInformationChange.Hint">
     <Value>Check to notify a store owner about vendor information changes.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.ShowVendorOnOrderDetailsPage">
+    <Value>Show vendor name on order details page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.ShowVendorOnOrderDetailsPage.Hint">
+    <Value>Check to show vendor name of product on the order details page.</Value>
+  </LocaleResource>  
   <LocaleResource Name="Admin.Configuration.Settings.Vendor.ShowVendorOnProductDetailsPage">
     <Value>Show vendor on product details page</Value>
   </LocaleResource>
@@ -15117,6 +15123,9 @@
   <LocaleResource Name="Order.Product(s).Total">
     <Value>Total</Value>
   </LocaleResource>
+  <LocaleResource Name="Order.Product(s).VendorName">
+    <Value>Vendor name</Value>
+  </LocaleResource>  
   <LocaleResource Name="Order.Rental.FormattedDate">
     <Value>Start date: {0}. End date: {1}.</Value>
   </LocaleResource>
@@ -15533,6 +15542,9 @@
   </LocaleResource>
   <LocaleResource Name="PDFInvoice.VATNumber">
     <Value>VAT number: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="PDFInvoice.VendorName">
+    <Value>Vendor name</Value>
   </LocaleResource>
   <LocaleResource Name="PDFPackagingSlip.Address">
     <Value>Address: {0}</Value>
@@ -16713,6 +16725,9 @@
   <LocaleResource Name="ShoppingCart.UpdateCartItem">
     <Value>Update qty</Value>
   </LocaleResource>
+  <LocaleResource Name="ShoppingCart.VendorName">
+    <Value>Vendor name</Value>
+  </LocaleResource>  
   <LocaleResource Name="ShoppingCart.WishlistDisabled">
     <Value>Wishlist is disabled for this product</Value>
   </LocaleResource>

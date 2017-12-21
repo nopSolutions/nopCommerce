@@ -771,7 +771,8 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.NotifyStoreOwnerAboutVendorInformationChange_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore())
                 .ForMember(dest => dest.MaximumProductNumber_OverrideForStore, mo => mo.Ignore())
-                .ForMember(dest => dest.AllowVendorsToImportProducts_OverrideForStore, mo => mo.Ignore());
+                .ForMember(dest => dest.AllowVendorsToImportProducts_OverrideForStore, mo => mo.Ignore())
+                .ForMember(dest => dest.ShowVendorOnOrderDetailsPage_OverrideForStore, mo => mo.Ignore());
             CreateMap<VendorSettingsModel, VendorSettings>()
                 .ForMember(dest => dest.DefaultVendorPageSizeOptions, mo => mo.Ignore());
             CreateMap<ShippingSettings, ShippingSettingsModel>()

@@ -14,6 +14,7 @@ using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
+using Nop.Core.Domain.Vendors;
 using Nop.Core.Http.Extensions;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
@@ -28,6 +29,7 @@ using Nop.Services.Security;
 using Nop.Services.Seo;
 using Nop.Services.Shipping;
 using Nop.Services.Tax;
+using Nop.Services.Vendors;
 using Nop.Web.Framework.Security.Captcha;
 using Nop.Web.Infrastructure.Cache;
 using Nop.Web.Models.Common;
@@ -84,6 +86,8 @@ namespace Nop.Web.Factories
         private readonly AddressSettings _addressSettings;
         private readonly RewardPointsSettings _rewardPointsSettings;
         private readonly CustomerSettings _customerSettings;
+        private readonly IVendorService _vendorService;
+        private readonly VendorSettings _vendorSettings;
 
         #endregion
 
@@ -127,7 +131,9 @@ namespace Nop.Web.Factories
             CaptchaSettings captchaSettings, 
             AddressSettings addressSettings,
             RewardPointsSettings rewardPointsSettings,
-            CustomerSettings customerSettings)
+            CustomerSettings customerSettings,
+            IVendorService vendorService,
+            VendorSettings vendorSettings)
         {
             this._addressModelFactory = addressModelFactory;
             this._workContext = workContext;
@@ -170,6 +176,8 @@ namespace Nop.Web.Factories
             this._addressSettings = addressSettings;
             this._rewardPointsSettings = rewardPointsSettings;
             this._customerSettings = customerSettings;
+            this._vendorService = vendorService;
+            this._vendorSettings = vendorSettings;
         }
 
         #endregion
@@ -323,7 +331,7 @@ namespace Nop.Web.Factories
         /// <param name="cart">List of the shopping cart item</param>
         /// <param name="sci">Shopping cart item</param>
         /// <returns>Shopping cart item model</returns>
-        protected virtual ShoppingCartModel.ShoppingCartItemModel PrepareShoppingCartItemModel(IList<ShoppingCartItem> cart, ShoppingCartItem sci)
+        protected virtual ShoppingCartModel.ShoppingCartItemModel PrepareShoppingCartItemModel(IList<ShoppingCartItem> cart, ShoppingCartItem sci, IList<Vendor> vendors)
         {
             if (cart == null)
                 throw new ArgumentNullException(nameof(cart));
@@ -331,11 +339,11 @@ namespace Nop.Web.Factories
             if (sci == null)
                 throw new ArgumentNullException(nameof(sci));
 
-
             var cartItemModel = new ShoppingCartModel.ShoppingCartItemModel
             {
                 Id = sci.Id,
                 Sku = sci.Product.FormatSku(sci.AttributesXml, _productAttributeParser),
+                VendorName = vendors.FirstOrDefault(v => v.Id == sci.Product.VendorId)?.Name ?? string.Empty,
                 ProductId = sci.Product.Id,
                 ProductName = sci.Product.GetLocalized(x => x.Name),
                 ProductSeName = sci.Product.GetSeName(),
@@ -795,6 +803,7 @@ namespace Nop.Web.Factories
             model.IsEditable = isEditable;
             model.ShowProductImages = _shoppingCartSettings.ShowProductImagesOnShoppingCart;
             model.ShowSku = _catalogSettings.ShowSkuOnProductDetailsPage;
+            model.ShowVendorName = _vendorSettings.ShowVendorOnOrderDetailsPage;
             var checkoutAttributesXml = _workContext.CurrentCustomer.GetAttribute<string>(SystemCustomerAttributeNames.CheckoutAttributes, _genericAttributeService, _storeContext.CurrentStore.Id);
             var minOrderSubtotalAmountOk = _orderProcessingService.ValidateMinOrderSubtotalAmount(cart);
             if (!minOrderSubtotalAmountOk)
@@ -833,11 +842,13 @@ namespace Nop.Web.Factories
 
             //checkout attributes
             model.CheckoutAttributes = PrepareCheckoutAttributeModels(cart);
+
+            var vendors = _vendorSettings.ShowVendorOnOrderDetailsPage ? _vendorService.GetVendorsByIds(cart.Select(item => item.Product.VendorId).ToArray()) : new List<Vendor>();
     
             //cart items
             foreach (var sci in cart)
             {
-                var cartItemModel = PrepareShoppingCartItemModel(cart, sci);
+                var cartItemModel = PrepareShoppingCartItemModel(cart, sci, vendors);
                 model.Items.Add(cartItemModel);
             }
             

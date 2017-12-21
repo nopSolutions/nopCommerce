@@ -64,6 +64,12 @@
                             <th class="product">
                                 @T("ShoppingCart.Product(s)")
                             </th>
+                            @if (Model.ShowVendorName)
+                            {
+                                <th class="vendor">
+                                    @T("ShoppingCart.VendorName")
+                                </th>
+                            }
                             <th class="unit-price">
                                 @T("ShoppingCart.UnitPrice")
                             </th>
@@ -146,6 +152,13 @@
                                         </div>
                                     }
                                 </td>
+                                @if (Model.ShowVendorName)
+                                {
+                                    <td class="vendor">
+                                        <label class="td-title">@T("ShoppingCart.VendorName"):</label>
+                                        <span class="vendor-name">@item.VendorName</span>
+                                    </td>
+                                }
                                 <td class="unit-price">
                                     <label class="td-title">@T("ShoppingCart.UnitPrice"):</label>
                                     <span class="product-unit-price">@item.UnitPrice</span>

@@ -494,6 +494,12 @@
                                 <th class="name">
                                     @T("Order.Product(s).Name")
                                 </th>
+                                @if (Model.ShowVendorName)
+                                {
+                                    <th class="vendor">
+                                        @T("Order.Product(s).VendorName")
+                                    </th>
+                                }
                                 <th class="price">
                                     @T("Order.Product(s).Price")
                                 </th>
@@ -551,6 +557,13 @@
                                         }
                                         @await Component.InvokeAsync("Widget", new { widgetZone = "orderdetails_product_line", additionalData = item })
                                     </td>
+                                    @if (Model.ShowVendorName)
+                                    {
+                                        <td class="vendor">
+                                            <label class="td-title">@T("Order.Product(s).VendorName"):</label>
+                                            <span class="vendor-name">@item.VendorName</span>
+                                        </td>
+                                    }
                                     <td class="unit-price">
                                         <label class="td-title">@T("Order.Product(s).Price"):</label>
                                         <span class="product-unit-price">@item.UnitPrice</span>

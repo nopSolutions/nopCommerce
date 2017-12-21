@@ -4,6 +4,7 @@ using System.Linq;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
 using Nop.Services.Catalog;
@@ -28,6 +29,9 @@ namespace Nop.Services.Tests.Discounts
         private ICategoryService _categoryService;
         private IDiscountService _discountService;
         private IStoreContext _storeContext;
+        private IRepository<Category> _categoryRepo;
+        private IRepository<Manufacturer> _manufacturerRepo;
+        private IRepository<Product> _productRepo;
 
         [SetUp]
         public new void SetUp()
@@ -65,6 +69,13 @@ namespace Nop.Services.Tests.Discounts
 
             _storeContext = MockRepository.GenerateMock<IStoreContext>();
 
+            _categoryRepo = MockRepository.GenerateMock<IRepository<Category>>();
+            _categoryRepo.Expect(x => x.Table).Return(new List<Category>().AsQueryable());
+            _manufacturerRepo = MockRepository.GenerateMock<IRepository<Manufacturer>>();
+            _manufacturerRepo.Expect(x => x.Table).Return(new List<Manufacturer>().AsQueryable());
+            _productRepo = MockRepository.GenerateMock<IRepository<Product>>();
+            _productRepo.Expect(x => x.Table).Return(new List<Product>().AsQueryable());
+
             var cacheManager = new NopNullCache();
             _discountRequirementRepo = MockRepository.GenerateMock<IRepository<DiscountRequirement>>();
             _discountRequirementRepo.Expect(x => x.Table).Return(new List<DiscountRequirement>().AsQueryable());
@@ -73,8 +84,9 @@ namespace Nop.Services.Tests.Discounts
             var pluginFinder = new PluginFinder(_eventPublisher);
             _localizationService = MockRepository.GenerateMock<ILocalizationService>();
             _categoryService = MockRepository.GenerateMock<ICategoryService>();
+
             _discountService = new DiscountService(cacheManager, _discountRepo, _discountRequirementRepo,
-                _discountUsageHistoryRepo, _storeContext,
+                _discountUsageHistoryRepo, _categoryRepo, _manufacturerRepo, _productRepo, _storeContext,
                 _localizationService, _categoryService, pluginFinder, _eventPublisher);
         }
 

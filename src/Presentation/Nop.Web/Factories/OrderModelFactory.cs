@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
@@ -7,6 +8,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
+using Nop.Core.Domain.Vendors;
 using Nop.Services.Catalog;
 using Nop.Services.Directory;
 using Nop.Services.Helpers;
@@ -17,6 +19,7 @@ using Nop.Services.Payments;
 using Nop.Services.Seo;
 using Nop.Services.Shipping;
 using Nop.Services.Shipping.Tracking;
+using Nop.Services.Vendors;
 using Nop.Web.Models.Common;
 using Nop.Web.Models.Order;
 
@@ -53,6 +56,8 @@ namespace Nop.Web.Factories
         private readonly AddressSettings _addressSettings;
         private readonly RewardPointsSettings _rewardPointsSettings;
         private readonly PdfSettings _pdfSettings;
+        private readonly IVendorService _vendorService;
+        private readonly VendorSettings _vendorSettings;
 
         #endregion
 
@@ -80,7 +85,9 @@ namespace Nop.Web.Factories
             ShippingSettings shippingSettings, 
             AddressSettings addressSettings,
             RewardPointsSettings rewardPointsSettings,
-            PdfSettings pdfSettings)
+            PdfSettings pdfSettings,
+            IVendorService vendorService,
+            VendorSettings vendorSettings)
         {
             this._addressModelFactory = addressModelFactory;
             this._orderService = orderService;
@@ -106,6 +113,8 @@ namespace Nop.Web.Factories
             this._addressSettings = addressSettings;
             this._rewardPointsSettings = rewardPointsSettings;
             this._pdfSettings = pdfSettings;
+            this._vendorService = vendorService;
+            this._vendorSettings = vendorSettings;
         }
 
         #endregion
@@ -379,7 +388,12 @@ namespace Nop.Web.Factories
 
             //purchased products
             model.ShowSku = _catalogSettings.ShowSkuOnProductDetailsPage;
+            model.ShowVendorName = _vendorSettings.ShowVendorOnOrderDetailsPage;
+
             var orderItems = order.OrderItems;
+
+            var vendors = _vendorSettings.ShowVendorOnOrderDetailsPage ? _vendorService.GetVendorsByIds(orderItems.Select(item => item.Product.VendorId).ToArray()) : new List<Vendor>();
+            
             foreach (var orderItem in orderItems)
             {
                 var orderItemModel = new OrderDetailsModel.OrderItemModel
@@ -387,6 +401,7 @@ namespace Nop.Web.Factories
                     Id = orderItem.Id,
                     OrderItemGuid = orderItem.OrderItemGuid,
                     Sku = orderItem.Product.FormatSku(orderItem.AttributesXml, _productAttributeParser),
+                    VendorName = vendors.FirstOrDefault(v => v.Id == orderItem.Product.VendorId)?.Name ?? string.Empty,
                     ProductId = orderItem.Product.Id,
                     ProductName = orderItem.Product.GetLocalized(x => x.Name),
                     ProductSeName = orderItem.Product.GetSeName(),
@@ -573,3 +588,4 @@ namespace Nop.Web.Factories
         #endregion
     }
 }
+
