@@ -67,6 +67,7 @@ namespace Nop.Services.Orders
         /// <param name="orderNotes">Search in order notes. Leave empty to load all records.</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
+        /// <param name="getOnlyTotalCount">A value in indicating whether you want to load only total number of records. Set to "true" if you don't want to load data from database</param>
         /// <returns>Orders</returns>
         IPagedList<Order> SearchOrders(int storeId = 0,
             int vendorId = 0, int customerId = 0,
@@ -75,7 +76,7 @@ namespace Nop.Services.Orders
             DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
             List<int> osIds = null, List<int> psIds = null, List<int> ssIds = null,
             string billingEmail = null, string billingLastName = "", 
-            string orderNotes = null, int pageIndex = 0, int pageSize = int.MaxValue);
+            string orderNotes = null, int pageIndex = 0, int pageSize = int.MaxValue, bool getOnlyTotalCount = false);
         
         /// <summary>
         /// Inserts an order
