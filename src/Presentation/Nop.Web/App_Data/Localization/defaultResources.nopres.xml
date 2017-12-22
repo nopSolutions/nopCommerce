@@ -15819,6 +15819,9 @@
   <LocaleResource Name="Products.Availability.OutOfStock">
     <Value>Out of stock</Value>
   </LocaleResource>
+  <LocaleResource Name="Products.Availability.SelectRequiredAttributes">
+    <Value>Please select required attribute(s)</Value>
+  </LocaleResource>
   <LocaleResource Name="Products.BasePrice">
     <Value>equates to {0} per {1} {2}</Value>
   </LocaleResource>

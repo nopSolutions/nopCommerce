@@ -17,6 +17,9 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ExportImportAllowDownloadImages.Hint">
     <Value>Check if images can be downloaded from remote server when exporting products</Value>
   </LocaleResource>  
+  <LocaleResource Name="Products.Availability.SelectRequiredAttributes">
+    <Value>Please select required attribute(s)</Value>
+  </LocaleResource>  
 </Language>
 '
 
