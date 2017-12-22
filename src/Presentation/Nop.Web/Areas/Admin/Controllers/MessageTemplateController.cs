@@ -264,7 +264,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _messageTemplateService.UpdateMessageTemplate(messageTemplate);
 
                 //activity log
-                _customerActivityService.InsertActivity("EditMessageTemplate", _localizationService.GetResource("ActivityLog.EditMessageTemplate"), messageTemplate.Id);
+                _customerActivityService.InsertActivity("EditMessageTemplate",
+                    string.Format(_localizationService.GetResource("ActivityLog.EditMessageTemplate"), messageTemplate.Id), messageTemplate);
 
                 //stores
                 SaveStoreMappings(messageTemplate, model);
@@ -327,7 +328,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             _messageTemplateService.DeleteMessageTemplate(messageTemplate);
 
             //activity log
-            _customerActivityService.InsertActivity("DeleteMessageTemplate", _localizationService.GetResource("ActivityLog.DeleteMessageTemplate"), messageTemplate.Id);
+            _customerActivityService.InsertActivity("DeleteMessageTemplate",
+                string.Format(_localizationService.GetResource("ActivityLog.DeleteMessageTemplate"), messageTemplate.Id), messageTemplate);
 
             SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.MessageTemplates.Deleted"));
             return RedirectToAction("List");

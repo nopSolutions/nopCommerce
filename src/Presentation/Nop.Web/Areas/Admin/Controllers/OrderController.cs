@@ -1058,7 +1058,8 @@ namespace Nop.Web.Areas.Admin.Controllers
         {
             var order = _orderService.GetOrderById(orderId);
 
-            _customerActivityService.InsertActivity("EditOrder", _localizationService.GetResource("ActivityLog.EditOrder"), order.CustomOrderNumber);
+            _customerActivityService.InsertActivity("EditOrder",
+                string.Format(_localizationService.GetResource("ActivityLog.EditOrder"), order.CustomOrderNumber), order);
         }
 
         protected virtual DataSourceResult GetBestsellersBriefReportModel(int pageIndex, int pageSize, int orderBy)
@@ -1935,7 +1936,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             _orderProcessingService.DeleteOrder(order);
 
             //activity log
-            _customerActivityService.InsertActivity("DeleteOrder", _localizationService.GetResource("ActivityLog.DeleteOrder"), order.Id);
+            _customerActivityService.InsertActivity("DeleteOrder",
+                string.Format(_localizationService.GetResource("ActivityLog.DeleteOrder"), order.Id), order);
 
             return RedirectToAction("List");
         }

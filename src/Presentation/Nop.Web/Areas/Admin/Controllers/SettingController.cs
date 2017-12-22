@@ -2289,7 +2289,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             _settingService.SetSetting(model.Name, model.Value, storeId);
 
             //activity log
-            _customerActivityService.InsertActivity("EditSettings", _localizationService.GetResource("ActivityLog.EditSettings"));
+            _customerActivityService.InsertActivity("EditSettings", _localizationService.GetResource("ActivityLog.EditSettings"), setting);
 
             return new NullJsonResult();
         }
@@ -2310,9 +2310,11 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
             var storeId = model.StoreId;
             _settingService.SetSetting(model.Name, model.Value, storeId);
-
+            
             //activity log
-            _customerActivityService.InsertActivity("AddNewSetting", _localizationService.GetResource("ActivityLog.AddNewSetting"), model.Name);
+            _customerActivityService.InsertActivity("AddNewSetting",
+                string.Format(_localizationService.GetResource("ActivityLog.AddNewSetting"), model.Name), 
+                _settingService.GetSetting(model.Name, storeId));
 
             return new NullJsonResult();
         }
@@ -2326,10 +2328,12 @@ namespace Nop.Web.Areas.Admin.Controllers
             var setting = _settingService.GetSettingById(id);
             if (setting == null)
                 throw new ArgumentException("No setting found with the specified id");
+
             _settingService.DeleteSetting(setting);
 
             //activity log
-            _customerActivityService.InsertActivity("DeleteSetting", _localizationService.GetResource("ActivityLog.DeleteSetting"), setting.Name);
+            _customerActivityService.InsertActivity("DeleteSetting",
+                string.Format(_localizationService.GetResource("ActivityLog.DeleteSetting"), setting.Name), setting);
 
             return new NullJsonResult();
         }

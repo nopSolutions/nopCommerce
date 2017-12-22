@@ -286,14 +286,14 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //activity log
                 foreach (var descriptor in pluginDescriptors)
                 {
-                    _customerActivityService.InsertActivity("UploadNewPlugin", 
-                        _localizationService.GetResource("ActivityLog.UploadNewPlugin"), descriptor.FriendlyName);
+                    _customerActivityService.InsertActivity("UploadNewPlugin",
+                        string.Format(_localizationService.GetResource("ActivityLog.UploadNewPlugin"), descriptor.FriendlyName));
                 }
 
                 foreach (var descriptor in themeDescriptors)
                 {
                     _customerActivityService.InsertActivity("UploadNewTheme",
-                        _localizationService.GetResource("ActivityLog.UploadNewTheme"), descriptor.FriendlyName);
+                        string.Format(_localizationService.GetResource("ActivityLog.UploadNewTheme"), descriptor.FriendlyName));
                 }
 
                 //events
@@ -345,7 +345,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 pluginDescriptor.Instance().Install();
 
                 //activity log
-                _customerActivityService.InsertActivity("InstallNewPlugin", _localizationService.GetResource("ActivityLog.InstallNewPlugin"), pluginDescriptor.FriendlyName);
+                _customerActivityService.InsertActivity("InstallNewPlugin",
+                    string.Format(_localizationService.GetResource("ActivityLog.InstallNewPlugin"), pluginDescriptor.FriendlyName));
 
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Plugins.Installed"));
 
@@ -388,7 +389,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 pluginDescriptor.Instance().Uninstall();
 
                 //activity log
-                _customerActivityService.InsertActivity("UninstallPlugin", _localizationService.GetResource("ActivityLog.UninstallPlugin"), pluginDescriptor.FriendlyName);
+                _customerActivityService.InsertActivity("UninstallPlugin",
+                    string.Format(_localizationService.GetResource("ActivityLog.UninstallPlugin"), pluginDescriptor.FriendlyName));
 
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Plugins.Uninstalled"));
 
@@ -423,7 +425,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                     return RedirectToAction("List");
 
                 //activity log
-                _customerActivityService.InsertActivity("DeletePlugin", _localizationService.GetResource("ActivityLog.DeletePlugin"), pluginDescriptor.FriendlyName);
+                _customerActivityService.InsertActivity("DeletePlugin",
+                    string.Format(_localizationService.GetResource("ActivityLog.DeletePlugin"), pluginDescriptor.FriendlyName));
 
 	            SuccessNotification(_localizationService.GetResource("Admin.Configuration.Plugins.Deleted"));
 
@@ -635,7 +638,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                     }
 
                     //activity log
-                    _customerActivityService.InsertActivity("EditPlugin", _localizationService.GetResource("ActivityLog.EditPlugin"), pluginDescriptor.FriendlyName);
+                    _customerActivityService.InsertActivity("EditPlugin",
+                        string.Format(_localizationService.GetResource("ActivityLog.EditPlugin"), pluginDescriptor.FriendlyName));
                 }
 
                 ViewBag.RefreshPage = true;

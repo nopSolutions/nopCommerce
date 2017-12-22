@@ -1416,7 +1416,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                     _localizationService.GetResource("Admin.StockQuantityHistory.Messages.Edit"));
 
                 //activity log
-                _customerActivityService.InsertActivity("AddNewProduct", _localizationService.GetResource("ActivityLog.AddNewProduct"), product.Name);
+                _customerActivityService.InsertActivity("AddNewProduct",
+                    string.Format(_localizationService.GetResource("ActivityLog.AddNewProduct"), product.Name), product);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Catalog.Products.Added"));
 
@@ -1611,7 +1612,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 }
 
                 //activity log
-                _customerActivityService.InsertActivity("EditProduct", _localizationService.GetResource("ActivityLog.EditProduct"), product.Name);
+                _customerActivityService.InsertActivity("EditProduct",
+                    string.Format(_localizationService.GetResource("ActivityLog.EditProduct"), product.Name), product);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Catalog.Products.Updated"));
 
@@ -1655,7 +1657,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             _productService.DeleteProduct(product);
 
             //activity log
-            _customerActivityService.InsertActivity("DeleteProduct", _localizationService.GetResource("ActivityLog.DeleteProduct"), product.Name);
+            _customerActivityService.InsertActivity("DeleteProduct",
+                string.Format(_localizationService.GetResource("ActivityLog.DeleteProduct"), product.Name), product);
 
             SuccessNotification(_localizationService.GetResource("Admin.Catalog.Products.Deleted"));
             return RedirectToAction("List");

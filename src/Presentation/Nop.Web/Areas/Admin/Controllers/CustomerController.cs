@@ -1041,7 +1041,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 }
 
                 //activity log
-                _customerActivityService.InsertActivity("AddNewCustomer", _localizationService.GetResource("ActivityLog.AddNewCustomer"), customer.Id);
+                _customerActivityService.InsertActivity("AddNewCustomer",
+                    string.Format(_localizationService.GetResource("ActivityLog.AddNewCustomer"), customer.Id), customer);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Customers.Customers.Added"));
 
@@ -1300,7 +1301,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                     }
 
                     //activity log
-                    _customerActivityService.InsertActivity("EditCustomer", _localizationService.GetResource("ActivityLog.EditCustomer"), customer.Id);
+                    _customerActivityService.InsertActivity("EditCustomer",
+                        string.Format(_localizationService.GetResource("ActivityLog.EditCustomer"), customer.Id), customer);
 
                     SuccessNotification(_localizationService.GetResource("Admin.Customers.Customers.Updated"));
                     if (continueEditing)
@@ -1452,7 +1454,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 }
 
                 //activity log
-                _customerActivityService.InsertActivity("DeleteCustomer", _localizationService.GetResource("ActivityLog.DeleteCustomer"), customer.Id);
+                _customerActivityService.InsertActivity("DeleteCustomer",
+                    string.Format(_localizationService.GetResource("ActivityLog.DeleteCustomer"), customer.Id), customer);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Customers.Customers.Deleted"));
                 return RedirectToAction("List");
@@ -1485,8 +1488,12 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             //activity log
-            _customerActivityService.InsertActivity("Impersonation.Started", _localizationService.GetResource("ActivityLog.Impersonation.Started.StoreOwner"), customer.Email, customer.Id);
-            _customerActivityService.InsertActivity(customer, "Impersonation.Started", _localizationService.GetResource("ActivityLog.Impersonation.Started.Customer"), _workContext.CurrentCustomer.Email, _workContext.CurrentCustomer.Id);
+            _customerActivityService.InsertActivity("Impersonation.Started",
+                string.Format(_localizationService.GetResource("ActivityLog.Impersonation.Started.StoreOwner"), 
+                    customer.Email, customer.Id), customer);
+            _customerActivityService.InsertActivity(customer, "Impersonation.Started",
+                string.Format(_localizationService.GetResource("ActivityLog.Impersonation.Started.Customer"), 
+                    _workContext.CurrentCustomer.Email, _workContext.CurrentCustomer.Id), _workContext.CurrentCustomer);
 
             //ensure login is not required
             customer.RequireReLogin = false;
@@ -2189,20 +2196,21 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedKendoGridJson();
 
-            var activityLog = _customerActivityService.GetAllActivities(null, null, customerId, 0, command.Page - 1, command.PageSize);
+            var activityLog = _customerActivityService.GetAllActivities(customerId: customerId,
+                pageIndex: command.Page - 1, pageSize: command.PageSize);
+
             var gridModel = new DataSourceResult
             {
-                Data = activityLog.Select(x =>
+                Data = activityLog.Select(logItem =>
                 {
-                    var m = new CustomerModel.ActivityLogModel
+                    return new CustomerModel.ActivityLogModel
                     {
-                        Id = x.Id,
-                        ActivityLogTypeName = x.ActivityLogType.Name,
-                        Comment = x.Comment,
-                        CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc),
-                        IpAddress = x.IpAddress
+                        Id = logItem.Id,
+                        ActivityLogTypeName = logItem.ActivityLogType.Name,
+                        Comment = logItem.Comment,
+                        CreatedOn = _dateTimeHelper.ConvertToUserTime(logItem.CreatedOnUtc, DateTimeKind.Utc),
+                        IpAddress = logItem.IpAddress
                     };
-                    return m;
 
                 }),
                 Total = activityLog.TotalCount

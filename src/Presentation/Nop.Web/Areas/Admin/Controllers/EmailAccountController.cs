@@ -123,7 +123,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _emailAccountService.InsertEmailAccount(emailAccount);
 
                 //activity log
-                _customerActivityService.InsertActivity("AddNewEmailAccount", _localizationService.GetResource("ActivityLog.AddNewEmailAccount"), emailAccount.Id);
+                _customerActivityService.InsertActivity("AddNewEmailAccount",
+                    string.Format(_localizationService.GetResource("ActivityLog.AddNewEmailAccount"), emailAccount.Id), emailAccount);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.EmailAccounts.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = emailAccount.Id }) : RedirectToAction("List");
@@ -164,7 +165,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _emailAccountService.UpdateEmailAccount(emailAccount);
 
                 //activity log
-                _customerActivityService.InsertActivity("EditEmailAccount", _localizationService.GetResource("ActivityLog.EditEmailAccount"), emailAccount.Id);
+                _customerActivityService.InsertActivity("EditEmailAccount",
+                    string.Format(_localizationService.GetResource("ActivityLog.EditEmailAccount"), emailAccount.Id), emailAccount);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.EmailAccounts.Updated"));
                 return continueEditing ? RedirectToAction("Edit", new { id = emailAccount.Id }) : RedirectToAction("List");
@@ -246,7 +248,8 @@ namespace Nop.Web.Areas.Admin.Controllers
 	            _emailAccountService.DeleteEmailAccount(emailAccount);
 
                 //activity log
-                _customerActivityService.InsertActivity("DeleteEmailAccount", _localizationService.GetResource("ActivityLog.DeleteEmailAccount"), emailAccount.Id);
+                _customerActivityService.InsertActivity("DeleteEmailAccount",
+                    string.Format(_localizationService.GetResource("ActivityLog.DeleteEmailAccount"), emailAccount.Id), emailAccount);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.EmailAccounts.Deleted"));
 

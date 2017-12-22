@@ -139,7 +139,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _customerAttributeService.InsertCustomerAttribute(customerAttribute);
 
                 //activity log
-                _customerActivityService.InsertActivity("AddNewCustomerAttribute", _localizationService.GetResource("ActivityLog.AddNewCustomerAttribute"), customerAttribute.Id);
+                _customerActivityService.InsertActivity("AddNewCustomerAttribute",
+                    string.Format(_localizationService.GetResource("ActivityLog.AddNewCustomerAttribute"), customerAttribute.Id), customerAttribute);
 
                 //locales
                 UpdateAttributeLocales(customerAttribute, model);
@@ -197,7 +198,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _customerAttributeService.UpdateCustomerAttribute(customerAttribute);
 
                 //activity log
-                _customerActivityService.InsertActivity("EditCustomerAttribute", _localizationService.GetResource("ActivityLog.EditCustomerAttribute"), customerAttribute.Id);
+                _customerActivityService.InsertActivity("EditCustomerAttribute",
+                    string.Format(_localizationService.GetResource("ActivityLog.EditCustomerAttribute"), customerAttribute.Id), customerAttribute);
 
                 //locales
                 UpdateAttributeLocales(customerAttribute, model);
@@ -228,7 +230,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             _customerAttributeService.DeleteCustomerAttribute(customerAttribute);
 
             //activity log
-            _customerActivityService.InsertActivity("DeleteCustomerAttribute", _localizationService.GetResource("ActivityLog.DeleteCustomerAttribute"), customerAttribute.Id);
+            _customerActivityService.InsertActivity("DeleteCustomerAttribute",
+                string.Format(_localizationService.GetResource("ActivityLog.DeleteCustomerAttribute"), customerAttribute.Id), customerAttribute);
 
             SuccessNotification(_localizationService.GetResource("Admin.Customers.CustomerAttributes.Deleted"));
             return RedirectToAction("List");
@@ -305,7 +308,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _customerAttributeService.InsertCustomerAttributeValue(cav);
 
                 //activity log
-                _customerActivityService.InsertActivity("AddNewCustomerAttributeValue", _localizationService.GetResource("ActivityLog.AddNewCustomerAttributeValue"), cav.Id);
+                _customerActivityService.InsertActivity("AddNewCustomerAttributeValue",
+                    string.Format(_localizationService.GetResource("ActivityLog.AddNewCustomerAttributeValue"), cav.Id), cav);
 
                 UpdateValueLocales(cav, model);
 
@@ -364,7 +368,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _customerAttributeService.UpdateCustomerAttributeValue(cav);
 
                 //activity log
-                _customerActivityService.InsertActivity("EditCustomerAttributeValue", _localizationService.GetResource("ActivityLog.EditCustomerAttributeValue"), cav.Id);
+                _customerActivityService.InsertActivity("EditCustomerAttributeValue",
+                    string.Format(_localizationService.GetResource("ActivityLog.EditCustomerAttributeValue"), cav.Id), cav);
 
                 UpdateValueLocales(cav, model);
 
@@ -389,7 +394,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             _customerAttributeService.DeleteCustomerAttributeValue(cav);
 
             //activity log
-            _customerActivityService.InsertActivity("DeleteCustomerAttributeValue", _localizationService.GetResource("ActivityLog.DeleteCustomerAttributeValue"), cav.Id);
+            _customerActivityService.InsertActivity("DeleteCustomerAttributeValue",
+                string.Format(_localizationService.GetResource("ActivityLog.DeleteCustomerAttributeValue"), cav.Id), cav);
 
             return new NullJsonResult();
         }

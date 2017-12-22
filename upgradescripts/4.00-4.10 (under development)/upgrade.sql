@@ -114,3 +114,19 @@ BEGIN
 	VALUES (N'catalogsettings.exportimportallowdownloadimages', N'false', 0)
 END
 GO
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id = object_id('[ActivityLog]') AND NAME = 'EntityId')
+BEGIN
+	ALTER TABLE [ActivityLog]
+	ADD [EntityId] INT NULL
+END
+GO
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id = object_id('[ActivityLog]') AND NAME = 'EntityName')
+BEGIN
+	ALTER TABLE [ActivityLog]
+	ADD [EntityName] NVARCHAR(400) NULL
+END
+GO

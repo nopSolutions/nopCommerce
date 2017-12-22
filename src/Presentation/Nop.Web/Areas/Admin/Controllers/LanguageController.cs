@@ -191,7 +191,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _languageService.InsertLanguage(language);
 
                 //activity log
-                _customerActivityService.InsertActivity("AddNewLanguage", _localizationService.GetResource("ActivityLog.AddNewLanguage"), language.Id);
+                _customerActivityService.InsertActivity("AddNewLanguage",
+                    string.Format(_localizationService.GetResource("ActivityLog.AddNewLanguage"), language.Id), language);
 
                 //Stores
                 SaveStoreMappings(language, model);
@@ -264,7 +265,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _languageService.UpdateLanguage(language);
 
                 //activity log
-                _customerActivityService.InsertActivity("EditLanguage", _localizationService.GetResource("ActivityLog.EditLanguage"), language.Id);
+                _customerActivityService.InsertActivity("EditLanguage",
+                    string.Format(_localizationService.GetResource("ActivityLog.EditLanguage"), language.Id), language);
 
                 //Stores
                 SaveStoreMappings(language, model);
@@ -314,7 +316,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             _languageService.DeleteLanguage(language);
 
             //activity log
-            _customerActivityService.InsertActivity("DeleteLanguage", _localizationService.GetResource("ActivityLog.DeleteLanguage"), language.Id);
+            _customerActivityService.InsertActivity("DeleteLanguage",
+                string.Format(_localizationService.GetResource("ActivityLog.DeleteLanguage"), language.Id), language);
 
             //notification
             SuccessNotification(_localizationService.GetResource("Admin.Configuration.Languages.Deleted"));

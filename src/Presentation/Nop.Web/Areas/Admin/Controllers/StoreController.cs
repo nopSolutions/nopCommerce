@@ -144,7 +144,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _storeService.InsertStore(store);
 
                 //activity log
-                _customerActivityService.InsertActivity("AddNewStore", _localizationService.GetResource("ActivityLog.AddNewStore"), store.Id);
+                _customerActivityService.InsertActivity("AddNewStore",
+                    string.Format(_localizationService.GetResource("ActivityLog.AddNewStore"), store.Id), store);
 
                 //locales
                 UpdateAttributeLocales(store, model);
@@ -202,7 +203,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _storeService.UpdateStore(store);
 
                 //activity log
-                _customerActivityService.InsertActivity("EditStore", _localizationService.GetResource("ActivityLog.EditStore"), store.Id);
+                _customerActivityService.InsertActivity("EditStore",
+                    string.Format(_localizationService.GetResource("ActivityLog.EditStore"), store.Id), store);
 
                 //locales
                 UpdateAttributeLocales(store, model);
@@ -234,7 +236,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _storeService.DeleteStore(store);
 
                 //activity log
-                _customerActivityService.InsertActivity("DeleteStore", _localizationService.GetResource("ActivityLog.DeleteStore"), store.Id);
+                _customerActivityService.InsertActivity("DeleteStore",
+                    string.Format(_localizationService.GetResource("ActivityLog.DeleteStore"), store.Id), store);
 
                 //when we delete a store we should also ensure that all "per store" settings will also be deleted
                 var settingsToDelete = _settingService

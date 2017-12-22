@@ -144,7 +144,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _addressAttributeService.InsertAddressAttribute(addressAttribute);
 
                 //activity log
-                _customerActivityService.InsertActivity("AddNewAddressAttribute", _localizationService.GetResource("ActivityLog.AddNewAddressAttribute"), addressAttribute.Id);
+                _customerActivityService.InsertActivity("AddNewAddressAttribute",
+                    string.Format(_localizationService.GetResource("ActivityLog.AddNewAddressAttribute"), addressAttribute.Id), addressAttribute);
 
                 //locales
                 UpdateAttributeLocales(addressAttribute, model);
@@ -202,7 +203,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _addressAttributeService.UpdateAddressAttribute(addressAttribute);
 
                 //activity log
-                _customerActivityService.InsertActivity("EditAddressAttribute", _localizationService.GetResource("ActivityLog.EditAddressAttribute"), addressAttribute.Id);
+                _customerActivityService.InsertActivity("EditAddressAttribute",
+                    string.Format(_localizationService.GetResource("ActivityLog.EditAddressAttribute"), addressAttribute.Id), addressAttribute);
 
                 //locales
                 UpdateAttributeLocales(addressAttribute, model);
@@ -233,7 +235,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             _addressAttributeService.DeleteAddressAttribute(addressAttribute);
 
             //activity log
-            _customerActivityService.InsertActivity("DeleteAddressAttribute", _localizationService.GetResource("ActivityLog.DeleteAddressAttribute"), addressAttribute.Id);
+            _customerActivityService.InsertActivity("DeleteAddressAttribute",
+                string.Format(_localizationService.GetResource("ActivityLog.DeleteAddressAttribute"), addressAttribute.Id), addressAttribute);
 
             SuccessNotification(_localizationService.GetResource("Admin.Address.AddressAttributes.Deleted"));
             return RedirectToAction("List");
@@ -310,7 +313,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _addressAttributeService.InsertAddressAttributeValue(cav);
 
                 //activity log
-                _customerActivityService.InsertActivity("AddNewAddressAttributeValue", _localizationService.GetResource("ActivityLog.AddNewAddressAttributeValue"), cav.Id);
+                _customerActivityService.InsertActivity("AddNewAddressAttributeValue",
+                    string.Format(_localizationService.GetResource("ActivityLog.AddNewAddressAttributeValue"), cav.Id), cav);
                 
                 UpdateValueLocales(cav, model);
 
@@ -371,8 +375,9 @@ namespace Nop.Web.Areas.Admin.Controllers
                 UpdateValueLocales(cav, model);
 
                 //activity log
-                _customerActivityService.InsertActivity("EditAddressAttributeValue", _localizationService.GetResource("ActivityLog.EditAddressAttributeValue"), cav.Id);
-                
+                _customerActivityService.InsertActivity("EditAddressAttributeValue",
+                    string.Format(_localizationService.GetResource("ActivityLog.EditAddressAttributeValue"), cav.Id), cav);
+
                 ViewBag.RefreshPage = true;
                 return View(model);
             }
@@ -394,8 +399,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             _addressAttributeService.DeleteAddressAttributeValue(cav);
             
             //activity log
-            _customerActivityService.InsertActivity("DeleteAddressAttributeValue", _localizationService.GetResource("ActivityLog.DeleteAddressAttributeValue"), cav.Id);
-            
+            _customerActivityService.InsertActivity("DeleteAddressAttributeValue",
+                string.Format(_localizationService.GetResource("ActivityLog.DeleteAddressAttributeValue"), cav.Id), cav);
+
             return new NullJsonResult();
         }
 

@@ -379,7 +379,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 SaveStoreMappings(manufacturer, model);
 
                 //activity log
-                _customerActivityService.InsertActivity("AddNewManufacturer", _localizationService.GetResource("ActivityLog.AddNewManufacturer"), manufacturer.Name);
+                _customerActivityService.InsertActivity("AddNewManufacturer",
+                    string.Format(_localizationService.GetResource("ActivityLog.AddNewManufacturer"), manufacturer.Name), manufacturer);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Catalog.Manufacturers.Added"));
 
@@ -494,7 +495,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 SaveStoreMappings(manufacturer, model);
 
                 //activity log
-                _customerActivityService.InsertActivity("EditManufacturer", _localizationService.GetResource("ActivityLog.EditManufacturer"), manufacturer.Name);
+                _customerActivityService.InsertActivity("EditManufacturer",
+                    string.Format(_localizationService.GetResource("ActivityLog.EditManufacturer"), manufacturer.Name), manufacturer);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Catalog.Manufacturers.Updated"));
 
@@ -535,7 +537,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             _manufacturerService.DeleteManufacturer(manufacturer);
 
             //activity log
-            _customerActivityService.InsertActivity("DeleteManufacturer", _localizationService.GetResource("ActivityLog.DeleteManufacturer"), manufacturer.Name);
+            _customerActivityService.InsertActivity("DeleteManufacturer",
+                string.Format(_localizationService.GetResource("ActivityLog.DeleteManufacturer"), manufacturer.Name), manufacturer);
 
             SuccessNotification(_localizationService.GetResource("Admin.Catalog.Manufacturers.Deleted"));
             return RedirectToAction("List");

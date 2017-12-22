@@ -154,7 +154,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _giftCardService.InsertGiftCard(giftCard);
 
                 //activity log
-                _customerActivityService.InsertActivity("AddNewGiftCard", _localizationService.GetResource("ActivityLog.AddNewGiftCard"), giftCard.GiftCardCouponCode);
+                _customerActivityService.InsertActivity("AddNewGiftCard",
+                    string.Format(_localizationService.GetResource("ActivityLog.AddNewGiftCard"), giftCard.GiftCardCouponCode), giftCard);
 
                 SuccessNotification(_localizationService.GetResource("Admin.GiftCards.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = giftCard.Id }) : RedirectToAction("List");
@@ -208,7 +209,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _giftCardService.UpdateGiftCard(giftCard);
 
                 //activity log
-                _customerActivityService.InsertActivity("EditGiftCard", _localizationService.GetResource("ActivityLog.EditGiftCard"), giftCard.GiftCardCouponCode);
+                _customerActivityService.InsertActivity("EditGiftCard",
+                    string.Format(_localizationService.GetResource("ActivityLog.EditGiftCard"), giftCard.GiftCardCouponCode), giftCard);
 
                 SuccessNotification(_localizationService.GetResource("Admin.GiftCards.Updated"));
 
@@ -300,7 +302,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             _giftCardService.DeleteGiftCard(giftCard);
 
             //activity log
-            _customerActivityService.InsertActivity("DeleteGiftCard", _localizationService.GetResource("ActivityLog.DeleteGiftCard"), giftCard.GiftCardCouponCode);
+            _customerActivityService.InsertActivity("DeleteGiftCard",
+                string.Format(_localizationService.GetResource("ActivityLog.DeleteGiftCard"), giftCard.GiftCardCouponCode), giftCard);
 
             SuccessNotification(_localizationService.GetResource("Admin.GiftCards.Deleted"));
             return RedirectToAction("List");

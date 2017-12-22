@@ -1534,7 +1534,8 @@ namespace Nop.Services.ExportImport
                 }
 
                 //activity log
-                _customerActivityService.InsertActivity("ImportProducts", _localizationService.GetResource("ActivityLog.ImportProducts"), countProductsInFile);
+                _customerActivityService.InsertActivity("ImportProducts",
+                    string.Format(_localizationService.GetResource("ActivityLog.ImportProducts"), countProductsInFile));
             }
         }
         
@@ -1671,7 +1672,8 @@ namespace Nop.Services.ExportImport
             }
 
             //activity log
-            _customerActivityService.InsertActivity("ImportStates", _localizationService.GetResource("ActivityLog.ImportStates"), count);
+            _customerActivityService.InsertActivity("ImportStates",
+                string.Format(_localizationService.GetResource("ActivityLog.ImportStates"), count));
 
             return count;
         }
@@ -1795,7 +1797,8 @@ namespace Nop.Services.ExportImport
                 }
 
                 //activity log
-                _customerActivityService.InsertActivity("ImportManufacturers", _localizationService.GetResource("ActivityLog.ImportManufacturers"), iRow - 2);
+                _customerActivityService.InsertActivity("ImportManufacturers",
+                    string.Format(_localizationService.GetResource("ActivityLog.ImportManufacturers"), iRow - 2));
             }
         }
 
@@ -1884,7 +1887,8 @@ namespace Nop.Services.ExportImport
                 }
 
                 //activity log
-                _customerActivityService.InsertActivity("ImportCategories", _localizationService.GetResource("ActivityLog.ImportCategories"), iRow - 2 - saveNextTime.Count);
+                _customerActivityService.InsertActivity("ImportCategories",
+                    string.Format(_localizationService.GetResource("ActivityLog.ImportCategories"), iRow - 2 - saveNextTime.Count));
 
                 if (!saveNextTime.Any())
                     return;

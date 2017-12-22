@@ -140,7 +140,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 UpdateLocales(productAttribute, model);
 
                 //activity log
-                _customerActivityService.InsertActivity("AddNewProductAttribute", _localizationService.GetResource("ActivityLog.AddNewProductAttribute"), productAttribute.Name);
+                _customerActivityService.InsertActivity("AddNewProductAttribute",
+                    string.Format(_localizationService.GetResource("ActivityLog.AddNewProductAttribute"), productAttribute.Name), productAttribute);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Catalog.Attributes.ProductAttributes.Added"));
 
@@ -200,7 +201,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 UpdateLocales(productAttribute, model);
 
                 //activity log
-                _customerActivityService.InsertActivity("EditProductAttribute", _localizationService.GetResource("ActivityLog.EditProductAttribute"), productAttribute.Name);
+                _customerActivityService.InsertActivity("EditProductAttribute",
+                    string.Format(_localizationService.GetResource("ActivityLog.EditProductAttribute"), productAttribute.Name), productAttribute);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Catalog.Attributes.ProductAttributes.Updated"));
                 if (continueEditing)
@@ -232,7 +234,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             _productAttributeService.DeleteProductAttribute(productAttribute);
 
             //activity log
-            _customerActivityService.InsertActivity("DeleteProductAttribute", _localizationService.GetResource("ActivityLog.DeleteProductAttribute"), productAttribute.Name);
+            _customerActivityService.InsertActivity("DeleteProductAttribute",
+                string.Format(_localizationService.GetResource("ActivityLog.DeleteProductAttribute"), productAttribute.Name), productAttribute);
 
             SuccessNotification(_localizationService.GetResource("Admin.Catalog.Attributes.ProductAttributes.Deleted"));
             return RedirectToAction("List");

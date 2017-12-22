@@ -92,7 +92,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             _measureService.UpdateMeasureWeight(weight);
 
             //activity log
-            _customerActivityService.InsertActivity("EditMeasureWeight", _localizationService.GetResource("ActivityLog.EditMeasureWeight"), weight.Id);
+            _customerActivityService.InsertActivity("EditMeasureWeight",
+                string.Format(_localizationService.GetResource("ActivityLog.EditMeasureWeight"), weight.Id), weight);
 
             return new NullJsonResult();
         }
@@ -113,7 +114,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             _measureService.InsertMeasureWeight(weight);
 
             //activity log
-            _customerActivityService.InsertActivity("AddNewMeasureWeight", _localizationService.GetResource("ActivityLog.AddNewMeasureWeight"), weight.Id);
+            _customerActivityService.InsertActivity("AddNewMeasureWeight",
+                string.Format(_localizationService.GetResource("ActivityLog.AddNewMeasureWeight"), weight.Id), weight);
 
             return new NullJsonResult();
         }
@@ -136,7 +138,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             _measureService.DeleteMeasureWeight(weight);
 
             //activity log
-            _customerActivityService.InsertActivity("DeleteMeasureWeight", _localizationService.GetResource("ActivityLog.DeleteMeasureWeight"), weight.Id);
+            _customerActivityService.InsertActivity("DeleteMeasureWeight",
+                string.Format(_localizationService.GetResource("ActivityLog.DeleteMeasureWeight"), weight.Id), weight);
 
             return new NullJsonResult();
         }
@@ -197,7 +200,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             _measureService.UpdateMeasureDimension(dimension);
 
             //activity log
-            _customerActivityService.InsertActivity("EditMeasureDimension", _localizationService.GetResource("ActivityLog.EditMeasureDimension"), dimension.Id);
+            _customerActivityService.InsertActivity("EditMeasureDimension",
+                string.Format(_localizationService.GetResource("ActivityLog.EditMeasureDimension"), dimension.Id), dimension);
 
             return new NullJsonResult();
         }
@@ -218,7 +222,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             _measureService.InsertMeasureDimension(dimension);
 
             //activity log
-            _customerActivityService.InsertActivity("AddNewMeasureDimension", _localizationService.GetResource("ActivityLog.AddNewMeasureDimension"), dimension.Id);
+            _customerActivityService.InsertActivity("AddNewMeasureDimension",
+                string.Format(_localizationService.GetResource("ActivityLog.AddNewMeasureDimension"), dimension.Id), dimension);
 
             return new NullJsonResult();
         }
@@ -241,7 +246,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             _measureService.DeleteMeasureDimension(dimension);
 
             //activity log
-            _customerActivityService.InsertActivity("DeleteMeasureDimension", _localizationService.GetResource("ActivityLog.DeleteMeasureDimension"), dimension.Id);
+            _customerActivityService.InsertActivity("DeleteMeasureDimension",
+                string.Format(_localizationService.GetResource("ActivityLog.DeleteMeasureDimension"), dimension.Id), dimension);
 
             return new NullJsonResult();
         }

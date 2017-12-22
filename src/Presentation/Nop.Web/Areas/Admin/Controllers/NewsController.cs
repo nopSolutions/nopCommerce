@@ -213,7 +213,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _newsService.InsertNews(newsItem);
 
                 //activity log
-                _customerActivityService.InsertActivity("AddNewNews", _localizationService.GetResource("ActivityLog.AddNewNews"), newsItem.Id);
+                _customerActivityService.InsertActivity("AddNewNews",
+                    string.Format(_localizationService.GetResource("ActivityLog.AddNewNews"), newsItem.Id), newsItem);
 
                 //search engine name
                 var seName = newsItem.ValidateSeName(model.SeName, model.Title, true);
@@ -279,7 +280,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _newsService.UpdateNews(newsItem);
 
                 //activity log
-                _customerActivityService.InsertActivity("EditNews", _localizationService.GetResource("ActivityLog.EditNews"), newsItem.Id);
+                _customerActivityService.InsertActivity("EditNews",
+                    string.Format(_localizationService.GetResource("ActivityLog.EditNews"), newsItem.Id), newsItem);
 
                 //search engine name
                 var seName = newsItem.ValidateSeName(model.SeName, model.Title, true);
@@ -320,7 +322,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             _newsService.DeleteNews(newsItem);
 
             //activity log
-            _customerActivityService.InsertActivity("DeleteNews", _localizationService.GetResource("ActivityLog.DeleteNews"), newsItem.Id);
+            _customerActivityService.InsertActivity("DeleteNews",
+                string.Format(_localizationService.GetResource("ActivityLog.DeleteNews"), newsItem.Id), newsItem);
 
             SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.News.NewsItems.Deleted"));
             return RedirectToAction("List");
@@ -413,7 +416,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             _newsService.UpdateNews(comment.NewsItem);
 
             //activity log
-            _customerActivityService.InsertActivity("EditNewsComment", _localizationService.GetResource("ActivityLog.EditNewsComment"), model.Id);
+            _customerActivityService.InsertActivity("EditNewsComment",
+                string.Format(_localizationService.GetResource("ActivityLog.EditNewsComment"), comment.Id), comment);
 
             //raise event (only if it wasn't approved before and is approved now)
             if (!previousIsApproved && comment.IsApproved)
@@ -435,7 +439,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             _newsService.DeleteNewsComment(comment);
 
             //activity log
-            _customerActivityService.InsertActivity("DeleteNewsComment", _localizationService.GetResource("ActivityLog.DeleteNewsComment"), id);
+            _customerActivityService.InsertActivity("DeleteNewsComment",
+                string.Format(_localizationService.GetResource("ActivityLog.DeleteNewsComment"), comment.Id), comment);
 
             return new NullJsonResult();
         }
@@ -455,7 +460,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //activity log
                 foreach (var newsComment in comments)
                 {
-                    _customerActivityService.InsertActivity("DeleteNewsComment", _localizationService.GetResource("ActivityLog.DeleteNewsComment"), newsComment.Id);
+                    _customerActivityService.InsertActivity("DeleteNewsComment",
+                       string.Format(_localizationService.GetResource("ActivityLog.DeleteNewsComment"), newsComment.Id), newsComment);
                 }
             }
 
@@ -482,7 +488,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                     _eventPublisher.Publish(new NewsCommentApprovedEvent(newsComment));
 
                     //activity log
-                    _customerActivityService.InsertActivity("EditNewsComment", _localizationService.GetResource("ActivityLog.EditNewsComment"), newsComment.Id);
+                    _customerActivityService.InsertActivity("EditNewsComment",
+                        string.Format(_localizationService.GetResource("ActivityLog.EditNewsComment"), newsComment.Id), newsComment);
                 }
             }
 
@@ -506,7 +513,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                     _newsService.UpdateNews(newsComment.NewsItem);
 
                     //activity log
-                    _customerActivityService.InsertActivity("EditNewsComment", _localizationService.GetResource("ActivityLog.EditNewsComment"), newsComment.Id);
+                    _customerActivityService.InsertActivity("EditNewsComment",
+                        string.Format(_localizationService.GetResource("ActivityLog.EditNewsComment"), newsComment.Id), newsComment);
                 }
             }
 
