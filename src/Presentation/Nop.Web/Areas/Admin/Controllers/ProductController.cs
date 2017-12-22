@@ -2423,6 +2423,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
                 return RedirectToAction("List");
 
+            if (_productService.GetProductPicturesByProductId(productId).Any(p => p.PictureId == pictureId))
+                return Json(new { Result = false });
+
             var picture = _pictureService.GetPictureById(pictureId);
             if (picture == null)
                 throw new ArgumentException("No picture found with the specified id");

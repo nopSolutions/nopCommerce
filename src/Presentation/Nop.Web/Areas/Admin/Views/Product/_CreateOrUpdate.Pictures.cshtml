@@ -150,10 +150,12 @@
                                 type: "POST",
                                 url: "@(Url.Action("ProductPictureAdd", "Product"))",
                                 data: postData,
-                                success: function(data) {
+                                success: function (data) {
+                                    $('#addProductPicture').attr('disabled', false);
+                                    if (!data.Result)
+                                        return;
                                     var grid = $("#productpictures-grid");
                                     grid.data('kendoGrid').dataSource.read();
-                                    $('#addProductPicture').attr('disabled', false);
                                 },
                                 error: function(xhr, ajaxOptions, thrownError) {
                                     alert('Failed to add product picture.');
