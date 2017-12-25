@@ -55,7 +55,7 @@ namespace Nop.Web.Factories
                 _workContext.CurrentCustomer.Id, _storeContext.CurrentStore.Id, widgetZone, _themeContext.WorkingThemeName);
 
             //add widget zone to view component arguments
-            additionalData = new RouteValueDictionary()
+            var componentArguments = new RouteValueDictionary
             {
                 { "widgetZone", widgetZone },
                 { "additionalData", additionalData }
@@ -72,7 +72,7 @@ namespace Nop.Web.Factories
                     model.Add(new RenderWidgetModel
                     {
                         WidgetViewComponentName = widget.GetWidgetViewComponentName(widgetZone),
-                        WidgetViewComponentArguments = additionalData
+                        WidgetViewComponentArguments = componentArguments
                     });
                 }
                 return model;
@@ -92,13 +92,8 @@ namespace Nop.Web.Factories
                 if (widgetModel.WidgetViewComponentArguments != null)
                     clonedWidgetModel.WidgetViewComponentArguments = new RouteValueDictionary(widgetModel.WidgetViewComponentArguments);
 
-                if (additionalData != null)
-                {
-                    if (clonedWidgetModel.WidgetViewComponentArguments == null)
-                        clonedWidgetModel.WidgetViewComponentArguments = new RouteValueDictionary();
-
-                    clonedWidgetModel.WidgetViewComponentArguments = additionalData;
-                }
+                if (clonedWidgetModel.WidgetViewComponentArguments == null)
+                    clonedWidgetModel.WidgetViewComponentArguments = componentArguments;
 
                 clonedModel.Add(clonedWidgetModel);
             }
