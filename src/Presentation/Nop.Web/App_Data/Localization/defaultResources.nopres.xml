@@ -9375,6 +9375,12 @@
   <LocaleResource Name="Admin.ContentManagement.Topics.Info">
     <Value>Info</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.List.SearchKeywords">
+    <Value>Search keywords</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.List.SearchKeywords.Hint">
+    <Value>Search topic(s) by specific keywords.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Topics.List.SearchStore">
     <Value>Store</Value>
   </LocaleResource>

@@ -25,7 +25,7 @@
     <div class="form-horizontal">
         <div class="panel-group">
             @*hide the entire search block if no elements are displayed*@
-            <div class="panel panel-default panel-search" @(Model.AvailableStores.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
+            <div class="panel panel-default panel-search">
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-md-6">
@@ -35,6 +35,14 @@
                                 </div>
                                 <div class="col-md-8">
                                     <nop-select asp-for="SearchStoreId" asp-items="Model.AvailableStores" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-4">
+                                    <nop-label asp-for="SearchKeywords" />
+                                </div>
+                                <div class="col-md-8">
+                                    <nop-editor asp-for="SearchKeywords" />
                                 </div>
                             </div>
                             <div class="form-group">
@@ -175,7 +183,8 @@
 
                         function additionalData() {
                             var data = {
-                                SearchStoreId: $('#SearchStoreId').val()
+                                SearchStoreId: $('#SearchStoreId').val(),
+                                SearchKeywords: $('#SearchKeywords').val()
                             };
                             addAntiForgeryToken(data);
                             return data;

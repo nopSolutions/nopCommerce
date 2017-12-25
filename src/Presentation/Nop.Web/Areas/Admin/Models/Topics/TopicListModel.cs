@@ -15,5 +15,8 @@ namespace Nop.Web.Areas.Admin.Models.Topics
         [NopResourceDisplayName("Admin.ContentManagement.Topics.List.SearchStore")]
         public int SearchStoreId { get; set; }
         public IList<SelectListItem> AvailableStores { get; set; }
+
+        [NopResourceDisplayName("Admin.ContentManagement.Topics.List.SearchKeywords")]
+        public string SearchKeywords { get; set; }
     }
 }
