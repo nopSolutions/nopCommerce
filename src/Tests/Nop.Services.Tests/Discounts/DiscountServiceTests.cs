@@ -81,7 +81,7 @@ namespace Nop.Services.Tests.Discounts
         [Test]
         public void Can_get_all_discount()
         {
-            var discounts = _discountService.GetAllDiscounts(null);
+            var discounts = _discountService.GetAllDiscounts();
             discounts.ShouldNotBeNull();
             (discounts.Any()).ShouldBeTrue();
         }

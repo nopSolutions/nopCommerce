@@ -38,6 +38,18 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.DefaultViewMode.Hint">
     <Value>Choose the default view mode for catalog pages.</Value>
   </LocaleResource>     
+  <LocaleResource Name="Admin.Promotions.Discounts.List.SearchEndDate">
+    <Value>End date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.List.SearchEndDate.Hint">
+    <Value>The end date for the search.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.List.SearchStartDate">
+    <Value>Start date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.List.SearchStartDate.Hint">
+    <Value>The start date for the search.</Value>
+  </LocaleResource> 
 </Language>
 '
 

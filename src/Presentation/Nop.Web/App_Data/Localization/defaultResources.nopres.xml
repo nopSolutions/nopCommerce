@@ -11910,6 +11910,18 @@
   <LocaleResource Name="Admin.Promotions.Discounts.List.SearchDiscountType.Hint">
     <Value>Search by discount type.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.List.SearchEndDate">
+    <Value>End date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.List.SearchEndDate.Hint">
+    <Value>The end date for the search.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.List.SearchStartDate">
+    <Value>Start date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.List.SearchStartDate.Hint">
+    <Value>The start date for the search.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Discounts.Requirements">
     <Value>Requirements</Value>
   </LocaleResource>

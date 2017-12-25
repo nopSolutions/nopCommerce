@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
@@ -28,13 +29,16 @@ namespace Nop.Services.Discounts
         /// <summary>
         /// Gets all discounts
         /// </summary>
-        /// <param name="discountType">Discount type; null to load all discount</param>
-        /// <param name="couponCode">Coupon code to find (exact match)</param>
-        /// <param name="discountName">Discount name</param>
-        /// <param name="showHidden">A value indicating whether to show hidden records</param>
+        /// <param name="discountType">Discount type; pass null to load all records</param>
+        /// <param name="couponCode">Coupon code to find (exact match); pass null or empty to load all records</param>
+        /// <param name="discountName">Discount name; pass null or empty to load all records</param>
+        /// <param name="showHidden">A value indicating whether to show expired and not started discounts</param>
+        /// <param name="startDateUtc">Discount start date; pass null to load all records</param>
+        /// <param name="endDateUtc">Discount end date; pass null to load all records</param>
         /// <returns>Discounts</returns>
-        IList<Discount> GetAllDiscounts(DiscountType? discountType = null,
-            string couponCode = "", string discountName = "", bool showHidden = false);
+        IList<Discount> GetAllDiscounts(DiscountType? discountType = null, 
+            string couponCode = null, string discountName = null, bool showHidden = false, 
+            DateTime ? startDateUtc = null, DateTime? endDateUtc = null);
 
         /// <summary>
         /// Inserts a discount
@@ -55,13 +59,13 @@ namespace Nop.Services.Discounts
         /// <summary>
         /// Gets all discounts (cachable models)
         /// </summary>
-        /// <param name="discountType">Discount type; null to load all discount</param>
-        /// <param name="couponCode">Coupon code to find (exact match)</param>
-        /// <param name="discountName">Discount name</param>
-        /// <param name="showHidden">A value indicating whether to show hidden records</param>
+        /// <param name="discountType">Discount type; pass null to load all records</param>
+        /// <param name="couponCode">Coupon code to find (exact match); pass null or empty to load all records</param>
+        /// <param name="discountName">Discount name; pass null or empty to load all records</param>
+        /// <param name="showHidden">A value indicating whether to show expired and not started discounts</param>
         /// <returns>Discounts</returns>
         IList<DiscountForCaching> GetAllDiscountsForCaching(DiscountType? discountType = null,
-            string couponCode = "", string discountName = "", bool showHidden = false);
+            string couponCode = null, string discountName = null, bool showHidden = false);
         
         /// <summary>
         /// Get category identifiers to which a discount is applied

@@ -214,42 +214,49 @@ namespace Nop.Services.Discounts
         /// <summary>
         /// Gets all discounts
         /// </summary>
-        /// <param name="discountType">Discount type; null to load all discount</param>
-        /// <param name="couponCode">Coupon code to find (exact match)</param>
-        /// <param name="discountName">Discount name</param>
-        /// <param name="showHidden">A value indicating whether to show hidden records</param>
+        /// <param name="discountType">Discount type; pass null to load all records</param>
+        /// <param name="couponCode">Coupon code to find (exact match); pass null or empty to load all records</param>
+        /// <param name="discountName">Discount name; pass null or empty to load all records</param>
+        /// <param name="showHidden">A value indicating whether to show expired and not started discounts</param>
+        /// <param name="startDateUtc">Discount start date; pass null to load all records</param>
+        /// <param name="endDateUtc">Discount end date; pass null to load all records</param>
         /// <returns>Discounts</returns>
         public virtual IList<Discount> GetAllDiscounts(DiscountType? discountType = null,
-            string couponCode = "", string discountName = "", bool showHidden = false)
+            string couponCode = null, string discountName = null, bool showHidden = false, 
+            DateTime? startDateUtc = null, DateTime? endDateUtc = null)
         {
             var query = _discountRepository.Table;
+
             if (!showHidden)
             {
-                //The function 'CurrentUtcDateTime' is not supported by SQL Server Compact. 
-                //That's why we pass the date value
+                //The function 'CurrentUtcDateTime' is not supported by SQL Server Compact, that's why we pass the date value
                 var nowUtc = DateTime.UtcNow;
-                query = query.Where(d =>
-                    (!d.StartDateUtc.HasValue || d.StartDateUtc <= nowUtc)
-                    && (!d.EndDateUtc.HasValue || d.EndDateUtc >= nowUtc));
+                query = query.Where(discount => 
+                    (!discount.StartDateUtc.HasValue || discount.StartDateUtc <= nowUtc)  && 
+                    (!discount.EndDateUtc.HasValue || discount.EndDateUtc >= nowUtc));
             }
+
+            //filter by dates
+            if (startDateUtc.HasValue)
+                query = query.Where(discount => !discount.StartDateUtc.HasValue || discount.StartDateUtc >= startDateUtc.Value);
+            if (endDateUtc.HasValue)
+                query = query.Where(discount => !discount.EndDateUtc.HasValue || discount.EndDateUtc <= endDateUtc.Value);
+
+            //filter by coupon code
             if (!string.IsNullOrEmpty(couponCode))
-            {
-                query = query.Where(d => d.CouponCode == couponCode);
-            }
+                query = query.Where(discount => discount.CouponCode == couponCode);
+
+            //filter by name
             if (!string.IsNullOrEmpty(discountName))
-            {
-                query = query.Where(d => d.Name.Contains(discountName));
-            }
+                query = query.Where(discount => discount.Name.Contains(discountName));
+
+            //filter by type
             if (discountType.HasValue)
-            {
-                var discountTypeId = (int) discountType.Value;
-                query = query.Where(d => d.DiscountTypeId == discountTypeId);
-            }
+                query = query.Where(discount => discount.DiscountTypeId == (int)discountType.Value);
 
-            query = query.OrderBy(d => d.Name);
+            query = query.OrderBy(discount => discount.Name).ThenBy(discount => discount.Id);
 
-            var discounts = query.ToList();
-            return discounts;
+            return query.ToList();
         }
 
         /// <summary>
@@ -281,7 +288,7 @@ namespace Nop.Services.Discounts
             //event notification
             _eventPublisher.EntityUpdated(discount);
         }
-        
+
         #endregion
 
         #region Discounts (caching)
@@ -289,13 +296,13 @@ namespace Nop.Services.Discounts
         /// <summary>
         /// Gets all discounts (cachable models)
         /// </summary>
-        /// <param name="discountType">Discount type; null to load all discount</param>
-        /// <param name="couponCode">Coupon code to find (exact match)</param>
-        /// <param name="discountName">Discount name</param>
-        /// <param name="showHidden">A value indicating whether to show hidden records</param>
+        /// <param name="discountType">Discount type; pass null to load all records</param>
+        /// <param name="couponCode">Coupon code to find (exact match); pass null or empty to load all records</param>
+        /// <param name="discountName">Discount name; pass null or empty to load all records</param>
+        /// <param name="showHidden">A value indicating whether to show expired and not started discounts</param>
         /// <returns>Discounts</returns>
         public virtual IList<DiscountForCaching> GetAllDiscountsForCaching(DiscountType? discountType = null,
-            string couponCode = "", string discountName = "", bool showHidden = false)
+            string couponCode = null, string discountName = null, bool showHidden = false)
         {
             //we cache discounts between requests. Otherwise, they will be loaded for almost each HTTP request
             //we have to use the following workaround with cachable model (DiscountForCaching) because
@@ -304,19 +311,20 @@ namespace Nop.Services.Discounts
             //we load all discounts, and filter them using "discountType" parameter later (in memory)
             //we do it because we know that this method is invoked several times per HTTP request with distinct "discountType" parameter
             //that's why let's access the database only once
-            var key = string.Format(DiscountEventConsumer.DISCOUNT_ALL_KEY, showHidden, couponCode, discountName);
-            var result = _cacheManager.Get(key, () =>
+            var cacheKey = string.Format(DiscountEventConsumer.DISCOUNT_ALL_KEY, 
+                showHidden, couponCode ?? string.Empty, discountName ?? string.Empty);
+            var discounts = _cacheManager.Get(cacheKey, () =>
             {
-                var discounts = GetAllDiscounts(null, couponCode, discountName, showHidden);
-                return discounts.Select(d => d.MapDiscount()).ToList();
+                return GetAllDiscounts(couponCode: couponCode, discountName: discountName, showHidden: showHidden)
+                    .Select(discount => discount.MapDiscount()).ToList();
             });
+
             //we know that this method is usually inkoved multiple times
             //that's why we filter discounts by type on the application layer
             if (discountType.HasValue)
-            {
-                result = result.Where(d => d.DiscountType == discountType.Value).ToList();
-            }
-            return result;
+                discounts = discounts.Where(discount => discount.DiscountType == discountType.Value).ToList();
+
+            return discounts;
         }
 
         /// <summary>

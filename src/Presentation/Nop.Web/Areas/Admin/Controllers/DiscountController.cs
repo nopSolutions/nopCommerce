@@ -224,22 +224,25 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
                 return AccessDeniedKendoGridJson();
 
-            DiscountType? discountType = null;
-            if (model.SearchDiscountTypeId > 0)
-                discountType = (DiscountType)model.SearchDiscountTypeId;
-            var discounts = _discountService.GetAllDiscounts(discountType,
-                model.SearchDiscountCouponCode,
-                model.SearchDiscountName,
-                true);
+            var discountType = model.SearchDiscountTypeId > 0 ? (DiscountType?)model.SearchDiscountTypeId : null;
+            var startDateUtc = model.SearchStartDate.HasValue ?
+                (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.SearchStartDate.Value, _dateTimeHelper.CurrentTimeZone) : null;
+            var endDateUtc = model.SearchEndDate.HasValue ?
+                (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.SearchEndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1) : null;
+
+            var discounts = _discountService.GetAllDiscounts(discountType, model.SearchDiscountCouponCode, 
+                model.SearchDiscountName, true, startDateUtc, endDateUtc);
 
             var gridModel = new DataSourceResult
             {
-                Data = discounts.PagedForCommand(command).Select(x =>
+                Data = discounts.PagedForCommand(command).Select(discount =>
                 {
-                    var discountModel = x.ToModel();
-                    discountModel.DiscountTypeName = x.DiscountType.GetLocalizedEnum(_localizationService, _workContext);
-                    discountModel.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
-                    discountModel.TimesUsed = _discountService.GetAllDiscountUsageHistory(x.Id, pageSize: 1).TotalCount;
+                    var discountModel = discount.ToModel();
+
+                    discountModel.DiscountTypeName = discount.DiscountType.GetLocalizedEnum(_localizationService, _workContext);
+                    discountModel.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId)?.CurrencyCode;
+                    discountModel.TimesUsed = _discountService.GetAllDiscountUsageHistory(discount.Id, pageSize: 1).TotalCount;
+
                     return discountModel;
                 }),
                 Total = discounts.Count

@@ -56,6 +56,22 @@
                                 </div>
                             </div>
                             <div class="form-group">
+                                <div class="col-md-4">
+                                    <nop-label asp-for="SearchStartDate"/>
+                                </div>
+                                <div class="col-md-8">
+                                    <nop-editor asp-for="SearchStartDate"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-4">
+                                    <nop-label asp-for="SearchEndDate"/>
+                                </div>
+                                <div class="col-md-8">
+                                    <nop-editor asp-for="SearchEndDate"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
                                 <div class="col-md-8 col-md-offset-4">
                                     <button type="button" id="search-discounts" class="btn btn-primary btn-search">
                                         <i class="fa fa-search"></i>
@@ -168,13 +184,15 @@
                                     $("#search-discounts").click();
                                     return false;
                                 }
-                            });
+                        });
 
                         function additionalData() {
                             var data = {
                                 SearchDiscountTypeId: $('#@Html.IdFor(model => model.SearchDiscountTypeId)').val(),
                                 SearchDiscountCouponCode: $('#@Html.IdFor(model => model.SearchDiscountCouponCode)').val(),
-                                SearchDiscountName: $('#@Html.IdFor(model => model.SearchDiscountName)').val()
+                                SearchDiscountName: $('#@Html.IdFor(model => model.SearchDiscountName)').val(),
+                                SearchStartDate: $('#@Html.IdFor(model => model.SearchStartDate)').val(),
+                                SearchEndDate: $('#@Html.IdFor(model => model.SearchEndDate)').val(),
                             };
                             addAntiForgeryToken(data);
                             return data;
