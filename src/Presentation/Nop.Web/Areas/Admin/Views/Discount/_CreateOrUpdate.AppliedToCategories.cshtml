@@ -1,4 +1,10 @@
 ﻿@model DiscountModel
+@inject AdminAreaSettings adminAreaSettings
+@{
+    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
+    var gridPageSizes = adminAreaSettings.GridPageSizes;
+}
+
 <div class="panel-group">
     @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_discount_details_applied_to_categories_top", additionalData = Model })
     <div class="panel panel-default">
@@ -43,15 +49,14 @@
                                     // Cancel the changes
                                     this.cancelChanges();
                                 },
+                                pageSize: @(defaultGridPageSize),
                                 serverPaging: true,
                                 serverFiltering: true,
                                 serverSorting: true
                             },
                             pageable: {
                                 refresh: true,
-                                numeric: false,
-                                previousNext: false,
-                                info: false,
+                                pageSizes: [@(gridPageSizes)],
                                 @await Html.PartialAsync("_GridPagerMessages")
                             },
                             editable: {

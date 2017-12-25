@@ -348,7 +348,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                     && discount.DiscountType != DiscountType.AssignedToSkus)
                 {
                     //applied to products
-                    var products = discount.AppliedToProducts.ToList();
+                    var products = _discountService.GetProductsWithAppliedDiscount(discount.Id, true);
+
                     discount.AppliedToProducts.Clear();
                     _discountService.UpdateDiscount(discount);
                     //update "HasDiscountsApplied" property
@@ -390,7 +391,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
 
             //applied to products
-            var products = discount.AppliedToProducts.ToList();
+            var products = _discountService.GetProductsWithAppliedDiscount(discount.Id, true);
 
             _discountService.DeleteDiscount(discount);
 
@@ -563,18 +564,16 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (discount == null)
                 throw new Exception("No discount found with the specified id");
 
-            var products = discount
-                .AppliedToProducts
-                .Where(x => !x.Deleted)
-                .ToList();
+            var products = _discountService.GetProductsWithAppliedDiscount(discount.Id, false, command.Page - 1, command.PageSize);
+
             var gridModel = new DataSourceResult
             {
-                Data = products.Select(x => new DiscountModel.AppliedToProductModel
+                Data = products.Select(product => new DiscountModel.AppliedToProductModel
                 {
-                    ProductId = x.Id,
-                    ProductName = x.Name
+                    ProductId = product.Id,
+                    ProductName = product.Name
                 }),
-                Total = products.Count
+                Total = products.TotalCount
             };
 
             return Json(gridModel);
@@ -708,18 +707,16 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (discount == null)
                 throw new Exception("No discount found with the specified id");
 
-            var categories = discount
-                .AppliedToCategories
-                .Where(x => !x.Deleted)
-                .ToList();
+            var categories = _discountService.GetCategoriesWithAppliedDiscount(discount.Id, false, command.Page - 1, command.PageSize);
+
             var gridModel = new DataSourceResult
             {
-                Data = categories.Select(x => new DiscountModel.AppliedToCategoryModel
+                Data = categories.Select(category => new DiscountModel.AppliedToCategoryModel
                 {
-                    CategoryId = x.Id,
-                    CategoryName = x.GetFormattedBreadCrumb(_categoryService)
+                    CategoryId = category.Id,
+                    CategoryName = category.GetFormattedBreadCrumb(_categoryService)
                 }),
-                Total = categories.Count
+                Total = categories.TotalCount
             };
 
             return Json(gridModel);
@@ -822,18 +819,16 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (discount == null)
                 throw new Exception("No discount found with the specified id");
 
-            var manufacturers = discount
-                .AppliedToManufacturers
-                .Where(x => !x.Deleted)
-                .ToList();
+            var manufacturers = _discountService.GetManufacturersWithAppliedDiscount(discount.Id, false, command.Page - 1, command.PageSize);
+
             var gridModel = new DataSourceResult
             {
-                Data = manufacturers.Select(x => new DiscountModel.AppliedToManufacturerModel
+                Data = manufacturers.Select(manufacturer => new DiscountModel.AppliedToManufacturerModel
                 {
-                    ManufacturerId = x.Id,
-                    ManufacturerName = x.Name
+                    ManufacturerId = manufacturer.Id,
+                    ManufacturerName = manufacturer.Name
                 }),
-                Total = manufacturers.Count
+                Total = manufacturers.TotalCount
             };
 
             return Json(gridModel);
