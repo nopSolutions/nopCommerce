@@ -12,6 +12,7 @@ using Nop.Services.Security;
 using Nop.Services.Seo;
 using Nop.Services.Stores;
 using Nop.Services.Topics;
+using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc.Filters;
 
@@ -237,9 +238,18 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageTopics))
                 return AccessDeniedKendoGridJson();
 
-            var topicModels = _topicService.GetAllTopics(model.SearchStoreId, true, true)
+            if (model.AvailableStores.SelectionIsNotPossible())
+                model.SearchStoreId = 0;
+
+            var topics = _topicService.GetAllTopics(model.SearchStoreId, true, true);
+
+            if (!string.IsNullOrEmpty(model.SearchKeywords))
+                topics = topics.Where(t => (t.Title?.Contains(model.SearchKeywords) ?? false) || (t.Body?.Contains(model.SearchKeywords) ?? false)).ToList();
+
+            var topicModels = topics
                 .Select(x =>x.ToModel())
                 .ToList();
+
             //little performance optimization: ensure that "Body" is not returned
             foreach (var topic in topicModels)
             {

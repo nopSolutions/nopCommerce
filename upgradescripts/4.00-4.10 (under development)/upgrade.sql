@@ -16,7 +16,13 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ExportImportAllowDownloadImages.Hint">
     <Value>Check if images can be downloaded from remote server when exporting products</Value>
-  </LocaleResource>  
+  </LocaleResource> 
+  <LocaleResource Name="Admin.ContentManagement.Topics.List.SearchKeywords">
+    <Value>Search keywords</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.List.SearchKeywords.Hint">
+    <Value>Search topic(s) by specific keywords.</Value>
+  </LocaleResource>
 </Language>
 '
 
