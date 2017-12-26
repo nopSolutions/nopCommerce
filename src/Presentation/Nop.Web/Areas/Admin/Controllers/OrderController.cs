@@ -4306,7 +4306,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                                     createdFromUtc: _dateTimeHelper.ConvertToUtcTime(searchYearDateUser, timeZone),
                                     createdToUtc: _dateTimeHelper.ConvertToUtcTime(searchYearDateUser.AddMonths(1), timeZone),
                                     pageIndex: 0,
-                                    pageSize: 1).TotalCount.ToString()
+                                    pageSize: 1, getOnlyTotalCount: true).TotalCount.ToString()
                             });
 
                             searchYearDateUser = searchYearDateUser.AddMonths(1);
@@ -4329,7 +4329,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                                     createdFromUtc: _dateTimeHelper.ConvertToUtcTime(searchMonthDateUser, timeZone),
                                     createdToUtc: _dateTimeHelper.ConvertToUtcTime(searchMonthDateUser.AddDays(1), timeZone),
                                     pageIndex: 0,
-                                    pageSize: 1).TotalCount.ToString()
+                                    pageSize: 1, getOnlyTotalCount: true).TotalCount.ToString()
                             });
 
                             searchMonthDateUser = searchMonthDateUser.AddDays(1);
@@ -4353,7 +4353,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                                     createdFromUtc: _dateTimeHelper.ConvertToUtcTime(searchWeekDateUser, timeZone),
                                     createdToUtc: _dateTimeHelper.ConvertToUtcTime(searchWeekDateUser.AddDays(1), timeZone),
                                     pageIndex: 0,
-                                    pageSize: 1).TotalCount.ToString()
+                                    pageSize: 1, getOnlyTotalCount: true).TotalCount.ToString()
                             });
 
                             searchWeekDateUser = searchWeekDateUser.AddDays(1);

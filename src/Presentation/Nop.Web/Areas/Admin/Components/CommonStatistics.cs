@@ -51,20 +51,23 @@ namespace Nop.Web.Areas.Admin.Components
             {
                 NumberOfOrders = _orderService.SearchOrders(
                 pageIndex: 0,
-                pageSize: 1).TotalCount,
+                pageSize: 1,
+                getOnlyTotalCount: true).TotalCount,
 
                 NumberOfCustomers = _customerService.GetAllCustomers(
                 customerRoleIds: new[] { _customerService.GetCustomerRoleBySystemName(SystemCustomerRoleNames.Registered).Id },
                 pageIndex: 0,
-                pageSize: 1).TotalCount,
+                pageSize: 1,
+                getOnlyTotalCount: true).TotalCount,
 
                 NumberOfPendingReturnRequests = _returnRequestService.SearchReturnRequests(
                 rs: ReturnRequestStatus.Pending,
                 pageIndex: 0,
-                pageSize: 1).TotalCount,
+                pageSize: 1,
+                getOnlyTotalCount: true).TotalCount,
 
-                NumberOfLowStockProducts = _productService.GetLowStockProducts(0, 0, 1).TotalCount +
-                                             _productService.GetLowStockProductCombinations(0, 0, 1).TotalCount
+                NumberOfLowStockProducts = _productService.GetLowStockProducts(0, 0, 1, true).TotalCount +
+                                             _productService.GetLowStockProductCombinations(0, 0, 1, true).TotalCount
             };
 
             return View(model);

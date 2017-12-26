@@ -272,7 +272,7 @@ namespace Nop.Services.Customers
             var totalRecordsDeleted = pTotalRecordsDeleted.Value != DBNull.Value ? Convert.ToInt32(pTotalRecordsDeleted.Value) : 0;
             return totalRecordsDeleted;
         }
-        
+
         #endregion
 
         #region Methods
@@ -301,6 +301,7 @@ namespace Nop.Services.Customers
         /// <param name="sct">Value indicating what shopping cart type to filter; userd when 'loadOnlyWithShoppingCart' param is 'true'</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
+        /// <param name="getOnlyTotalCount">A value in indicating whether you want to load only total number of records. Set to "true" if you don't want to load data from database</param>
         /// <returns>Customers</returns>
         public virtual IPagedList<Customer> GetAllCustomers(DateTime? createdFromUtc = null,
             DateTime? createdToUtc = null, int affiliateId = 0, int vendorId = 0,
@@ -309,7 +310,7 @@ namespace Nop.Services.Customers
             int dayOfBirth = 0, int monthOfBirth = 0,
             string company = null, string phone = null, string zipPostalCode = null,
             string ipAddress = null, bool loadOnlyWithShoppingCart = false, ShoppingCartType? sct = null,
-            int pageIndex = 0, int pageSize = int.MaxValue)
+            int pageIndex = 0, int pageSize = int.MaxValue, bool getOnlyTotalCount = false)
         {
             var query = _customerRepository.Table;
             if (createdFromUtc.HasValue)
@@ -443,7 +444,7 @@ namespace Nop.Services.Customers
             
             query = query.OrderByDescending(c => c.CreatedOnUtc);
 
-            var customers = new PagedList<Customer>(query, pageIndex, pageSize);
+            var customers = new PagedList<Customer>(query, pageIndex, pageSize, getOnlyTotalCount);
             return customers;
         }
 

@@ -1115,9 +1115,10 @@ namespace Nop.Services.Catalog
         /// <param name="vendorId">Vendor identifier; 0 to load all records</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
+        /// <param name="getOnlyTotalCount">A value in indicating whether you want to load only total number of records. Set to "true" if you don't want to load data from database</param>
         /// <returns>Products</returns>
         public virtual IPagedList<Product> GetLowStockProducts(int vendorId = 0,
-            int pageIndex = 0, int pageSize = int.MaxValue)
+            int pageIndex = 0, int pageSize = int.MaxValue, bool getOnlyTotalCount = false)
         {
             //Track inventory for product
             var query = from p in _productRepository.Table
@@ -1133,7 +1134,7 @@ namespace Nop.Services.Catalog
                          (vendorId == 0 || p.VendorId == vendorId)
                          select p;
 
-            return new PagedList<Product>(query, pageIndex, pageSize);
+            return new PagedList<Product>(query, pageIndex, pageSize, getOnlyTotalCount);
         }
 
         /// <summary>
@@ -1142,9 +1143,10 @@ namespace Nop.Services.Catalog
         /// <param name="vendorId">Vendor identifier; 0 to load all records</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
+        /// <param name="getOnlyTotalCount">A value in indicating whether you want to load only total number of records. Set to "true" if you don't want to load data from database</param>
         /// <returns>Product combinations</returns>
         public virtual IPagedList<ProductAttributeCombination> GetLowStockProductCombinations(int vendorId = 0,
-            int pageIndex = 0, int pageSize = int.MaxValue)
+            int pageIndex = 0, int pageSize = int.MaxValue, bool getOnlyTotalCount = false)
         {
             //Track inventory for product by product attributes
             var query = from p in _productRepository.Table
@@ -1155,7 +1157,7 @@ namespace Nop.Services.Catalog
                          (vendorId == 0 || p.VendorId == vendorId)
                          select c;
             query = query.OrderBy(c => c.ProductId);
-            return new PagedList<ProductAttributeCombination>(query, pageIndex, pageSize);
+            return new PagedList<ProductAttributeCombination>(query, pageIndex, pageSize, getOnlyTotalCount);
         }
 
         /// <summary>

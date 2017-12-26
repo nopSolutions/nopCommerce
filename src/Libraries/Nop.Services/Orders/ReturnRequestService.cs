@@ -73,7 +73,7 @@ namespace Nop.Services.Orders
 
             return _returnRequestRepository.GetById(returnRequestId);
         }
-        
+
         /// <summary>
         /// Search return requests
         /// </summary>
@@ -86,10 +86,11 @@ namespace Nop.Services.Orders
         /// <param name="createdToUtc">Created date to (UTC); null to load all records</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
+        /// <param name="getOnlyTotalCount">A value in indicating whether you want to load only total number of records. Set to "true" if you don't want to load data from database</param>
         /// <returns>Return requests</returns>
         public IPagedList<ReturnRequest> SearchReturnRequests(int storeId = 0, int customerId = 0,
             int orderItemId = 0, string customNumber = "", ReturnRequestStatus? rs = null,  DateTime? createdFromUtc = null,
-            DateTime? createdToUtc = null, int pageIndex = 0, int pageSize = int.MaxValue)
+            DateTime? createdToUtc = null, int pageIndex = 0, int pageSize = int.MaxValue, bool getOnlyTotalCount = false)
         {
             var query = _returnRequestRepository.Table;
             if (storeId > 0)
@@ -114,7 +115,7 @@ namespace Nop.Services.Orders
 
             query = query.OrderByDescending(rr => rr.CreatedOnUtc).ThenByDescending(rr=>rr.Id);
 
-            var returnRequests = new PagedList<ReturnRequest>(query, pageIndex, pageSize);
+            var returnRequests = new PagedList<ReturnRequest>(query, pageIndex, pageSize, getOnlyTotalCount);
             return returnRequests;
         }
         
