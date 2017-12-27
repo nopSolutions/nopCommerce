@@ -786,6 +786,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                     mo => mo.Ignore())
                 .ForMember(dest => dest.FreeShippingOverXEnabled_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.FreeShippingOverXValue_OverrideForStore, mo => mo.Ignore())
+                .ForMember(dest => dest.PrimaryStoreCurrencyCode, mo => mo.Ignore())
                 .ForMember(dest => dest.FreeShippingOverXIncludingTax_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.EstimateShippingEnabled_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.DisplayShipmentEventsToCustomers_OverrideForStore, mo => mo.Ignore())

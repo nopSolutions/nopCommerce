@@ -70,5 +70,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
 
         public AddressModel ShippingOriginAddress { get; set; }
         public bool ShippingOriginAddress_OverrideForStore { get; set; }
+
+        public string PrimaryStoreCurrencyCode { get; set; }
     }
 }

@@ -77,6 +77,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly ILanguageService _languageService;
         private readonly ILocalizedEntityService _localizedEntityService;
         private readonly NopConfig _config;
+	    private readonly CurrencySettings _currencySettings;
 
         #endregion
 
@@ -105,7 +106,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             IReturnRequestService returnRequestService,
             ILanguageService languageService,
             ILocalizedEntityService localizedEntityService,
-            NopConfig config)
+            NopConfig config,
+            CurrencySettings currencySettings)
         {
             this._settingService = settingService;
             this._countryService = countryService;
@@ -131,6 +133,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             this._languageService = languageService;
             this._localizedEntityService = localizedEntityService;
             this._config = config;
+            this._currencySettings = currencySettings;
         }
 
         #endregion
@@ -457,6 +460,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             var shippingSettings = _settingService.LoadSetting<ShippingSettings>(storeScope);
             var model = shippingSettings.ToModel();
             model.ActiveStoreScopeConfiguration = storeScope;
+            model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
+
             if (storeScope > 0)
             {
                 model.ShipToSameAddress_OverrideForStore = _settingService.SettingExists(shippingSettings, x => x.ShipToSameAddress, storeScope);
