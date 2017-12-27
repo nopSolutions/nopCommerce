@@ -456,6 +456,15 @@
             $('#required-product-names').text('');
         }
     }
+
+    $(document).ready(function () {
+        if ('@Model.Sku') {
+            warningValidation('@Url.Action("SkuReservedWarning")', '@Html.NameFor(model => model.Sku)', { productId: @Model.Id, sku: '@Model.Sku' });
+        }
+        $('#@Html.IdFor(model => model.Sku)').on('input propertychange paste', function () {
+            warningValidation('@Url.Action("SkuReservedWarning")', '@Html.NameFor(model => model.Sku)', { productId: @Model.Id, sku: $(this).val() });
+        });
+    });
 </script>
 
 <div class="raw clearfix">

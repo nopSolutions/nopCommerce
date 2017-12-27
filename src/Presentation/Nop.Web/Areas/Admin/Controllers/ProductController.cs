@@ -1371,7 +1371,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ErrorNotification(string.Format(_localizationService.GetResource("Admin.Catalog.Products.ExceededMaximumNumber"), _vendorSettings.MaximumProductNumber));
                 return RedirectToAction("List");
             }
-
+            
             if (ModelState.IsValid)
             {
                 //a vendor should have access only to his products
@@ -1703,6 +1703,34 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ErrorNotification(exc.Message);
                 return RedirectToAction("Edit", new { id = copyModel.Id });
             }
+        }
+
+        //action displaying notification (warning) to a store owner that entered SKU already exists
+        public virtual IActionResult SkuReservedWarning(int productId, string sku)
+        {
+            //check whether product with passed SKU already exists
+            var productBySku = _productService.GetProductBySku(sku);
+            if (productBySku != null)
+            {
+                if (productBySku.Id != productId)
+                {
+                    var message = string.Format(_localizationService.GetResource("Admin.Catalog.Products.Fields.Sku.Reserved"), productBySku.Name);
+                    return Json(new { Result = message });
+                }
+            }
+            else
+            {
+                //check whether combination with passed SKU already exists
+                var combinationBySku = _productAttributeService.GetProductAttributeCombinationBySku(sku);
+                if (combinationBySku != null)
+                {
+                    var message = string.Format(_localizationService.GetResource("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.Sku.Reserved"), 
+                        combinationBySku.Product.Name);
+                    return Json(new { Result = message });
+                }
+            }
+
+            return Json(new { Result = string.Empty });
         }
 
         #endregion

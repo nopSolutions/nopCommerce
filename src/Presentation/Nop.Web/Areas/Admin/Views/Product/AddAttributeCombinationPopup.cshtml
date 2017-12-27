@@ -17,6 +17,14 @@
     </script>
 }
 
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#@Html.IdFor(model => model.Sku)').on('input propertychange paste', function () {
+            warningValidation('@Url.Action("SkuReservedWarning")', '@Html.NameFor(model => model.Sku)', { productId: @Model.ProductId, sku: $(this).val() });
+        });
+    });
+</script>
+
 <form asp-controller="Product" asp-action="AddAttributeCombinationPopup"
       asp-route-productId="@Context.Request.Query["productId"]"
       asp-route-btnId="@Context.Request.Query["btnId"]"
