@@ -11,6 +11,8 @@ using Nop.Core.Domain.Polls;
 using Nop.Core.Domain.Topics;
 using Nop.Core.Domain.Vendors;
 using Nop.Core.Events;
+using Nop.Core.Plugins;
+using Nop.Services.Cms;
 using Nop.Services.Events;
 
 namespace Nop.Web.Infrastructure.Cache
@@ -141,7 +143,9 @@ namespace Nop.Web.Infrastructure.Cache
         IConsumer<EntityUpdatedEvent<CheckoutAttribute>>,
         IConsumer<EntityDeletedEvent<CheckoutAttribute>>,
         //shopping cart items
-        IConsumer<EntityUpdatedEvent<ShoppingCartItem>>
+        IConsumer<EntityUpdatedEvent<ShoppingCartItem>>,
+        //plugins
+        IConsumer<PluginUpdatedEvent>
     {
         #region Fields
 
@@ -1337,6 +1341,16 @@ namespace Nop.Web.Infrastructure.Cache
         public void HandleEvent(EntityDeletedEvent<ProductReview> eventMessage)
         {
             _cacheManager.RemoveByPattern(string.Format(PRODUCT_REVIEWS_PATTERN_KEY_BY_ID, eventMessage.Entity.ProductId));
+        }
+
+        /// <summary>
+        /// Handle plugin updated event
+        /// </summary>
+        /// <param name="eventMessage">Event message</param>
+        public void HandleEvent(PluginUpdatedEvent eventMessage)
+        {
+            if (eventMessage.Plugin?.Instance() is IWidgetPlugin)
+                _cacheManager.RemoveByPattern(WIDGET_PATTERN_KEY);
         }
 
         #endregion
