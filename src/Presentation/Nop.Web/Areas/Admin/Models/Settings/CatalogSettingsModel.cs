@@ -1,16 +1,23 @@
-﻿using Nop.Web.Framework.Mvc.ModelBinding;
+﻿using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Mvc.Models;
 
 namespace Nop.Web.Areas.Admin.Models.Settings
 {
     public partial class CatalogSettingsModel : BaseNopModel
     {
+        public CatalogSettingsModel()
+        {
+            AvailableViewModes = new List<SelectListItem>();
+        }
+
         public int ActiveStoreScopeConfiguration { get; set; }
         
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.AllowViewUnpublishedProductPage")]
         public bool AllowViewUnpublishedProductPage { get; set; }
         public bool AllowViewUnpublishedProductPage_OverrideForStore { get; set; }
-
+        
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.DisplayDiscontinuedMessageForUnpublishedProducts")]
         public bool DisplayDiscontinuedMessageForUnpublishedProducts { get; set; }
         public bool DisplayDiscontinuedMessageForUnpublishedProducts_OverrideForStore { get; set; }
@@ -42,6 +49,11 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.AllowProductViewModeChanging")]
         public bool AllowProductViewModeChanging { get; set; }
         public bool AllowProductViewModeChanging_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.DefaultViewMode")]
+        public string DefaultViewMode { get; set; }
+        public bool DefaultViewMode_OverrideForStore { get; set; }
+        public IList<SelectListItem> AvailableViewModes { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ShowProductsFromSubcategories")]
         public bool ShowProductsFromSubcategories { get; set; }

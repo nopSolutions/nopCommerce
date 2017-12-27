@@ -23,6 +23,18 @@ set @resources='
   <LocaleResource Name="Admin.ContentManagement.Topics.List.SearchKeywords.Hint">
     <Value>Search topic(s) by specific keywords.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ViewMode.Grid">
+    <Value>Grid</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ViewMode.List">
+    <Value>List</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.DefaultViewMode">
+    <Value>Default view mode</Value>
+  </LocaleResource>    
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.DefaultViewMode.Hint">
+    <Value>Choose the default view mode for catalog page.</Value>
+  </LocaleResource>     
 </Language>
 '
 

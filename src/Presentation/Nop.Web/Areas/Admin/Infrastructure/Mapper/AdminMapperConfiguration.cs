@@ -812,6 +812,8 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.ShowFreeShippingNotification_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.AllowProductSorting_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.AllowProductViewModeChanging_OverrideForStore, mo => mo.Ignore())
+                .ForMember(dest => dest.DefaultViewMode_OverrideForStore, mo => mo.Ignore())
+                .ForMember(dest => dest.AvailableViewModes, mo => mo.Ignore())
                 .ForMember(dest => dest.ShowProductsFromSubcategories_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.ShowCategoryProductNumber_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.ShowCategoryProductNumberIncludingSubcategories_OverrideForStore,
@@ -867,7 +869,6 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.ExportImportAllowDownloadImages_OverrideForStore, mo => mo.Ignore());
             CreateMap<CatalogSettingsModel, CatalogSettings>()
                 .ForMember(dest => dest.PublishBackProductWhenCancellingOrders, mo => mo.Ignore())
-                .ForMember(dest => dest.DefaultViewMode, mo => mo.Ignore())
                 .ForMember(dest => dest.DefaultProductRatingValue, mo => mo.Ignore())
                 .ForMember(dest => dest.IncludeFeaturedProductsInNormalLists, mo => mo.Ignore())
                 .ForMember(dest => dest.AjaxProcessAttributeChange, mo => mo.Ignore())

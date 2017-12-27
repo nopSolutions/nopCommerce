@@ -602,6 +602,16 @@
                         </div>
                         <div class="form-group">
                             <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="DefaultViewMode_OverrideForStore" asp-input="DefaultViewMode" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="DefaultViewMode" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-select asp-for="DefaultViewMode" asp-items="Model.AvailableViewModes"/>
+                                <span asp-validation-for="DefaultViewMode"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
                                 <nop-override-store-checkbox asp-for="ShowProductsFromSubcategories_OverrideForStore" asp-input="ShowProductsFromSubcategories" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
                                 <nop-label asp-for="ShowProductsFromSubcategories" />
                             </div>
