@@ -36,7 +36,7 @@ set @resources='
     <Value>Default view mode</Value>
   </LocaleResource>    
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.DefaultViewMode.Hint">
-    <Value>Choose the default view mode for catalog page.</Value>
+    <Value>Choose the default view mode for catalog pages.</Value>
   </LocaleResource>     
 </Language>
 '
