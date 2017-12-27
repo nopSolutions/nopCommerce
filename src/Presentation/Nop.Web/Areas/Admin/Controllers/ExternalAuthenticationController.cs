@@ -5,6 +5,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Plugins;
 using Nop.Services.Authentication.External;
 using Nop.Services.Configuration;
+using Nop.Services.Plugins;
 using Nop.Services.Security;
 using Nop.Web.Areas.Admin.Extensions;
 using Nop.Web.Areas.Admin.Models.ExternalAuthentication;
@@ -15,8 +16,8 @@ namespace Nop.Web.Areas.Admin.Controllers
 {
     public partial class ExternalAuthenticationController : BaseAdminController
 	{
-		#region Fields
-
+        #region Fields
+        
         private readonly IExternalAuthenticationService _externalAuthenticationService;
         private readonly ExternalAuthenticationSettings _externalAuthenticationSettings;
         private readonly ISettingService _settingService;
@@ -32,7 +33,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             ISettingService settingService,
             IPermissionService permissionService,
             IPluginFinder pluginFinder)
-		{
+        {
             this._externalAuthenticationService = externalAuthenticationService;
             this._externalAuthenticationSettings = externalAuthenticationSettings;
             this._settingService = settingService;

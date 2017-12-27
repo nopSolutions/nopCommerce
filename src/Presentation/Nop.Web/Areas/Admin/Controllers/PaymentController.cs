@@ -11,6 +11,7 @@ using Nop.Services.Configuration;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Services.Payments;
+using Nop.Services.Plugins;
 using Nop.Services.Security;
 using Nop.Web.Areas.Admin.Extensions;
 using Nop.Web.Areas.Admin.Models.Payments;
@@ -22,7 +23,7 @@ namespace Nop.Web.Areas.Admin.Controllers
     public partial class PaymentController : BaseAdminController
     {
         #region Fields
-
+        
         private readonly IPaymentService _paymentService;
         private readonly PaymentSettings _paymentSettings;
         private readonly ISettingService _settingService;

@@ -12,10 +12,10 @@ using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Infrastructure;
-using Nop.Core.Plugins;
 using Nop.Services.Catalog;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
+using Nop.Services.Plugins;
 using Nop.Services.Stores;
 using Nop.Tests;
 using NUnit.Framework;
@@ -74,6 +74,7 @@ namespace Nop.Services.Tests.Catalog
             _storeMappingService = MockRepository.GenerateMock<IStoreMappingService>();
 
             var pluginFinder = new PluginFinder();
+
             _currencyService = new CurrencyService(cacheManager, _currencyRepo, _storeMappingService,
                 _currencySettings, pluginFinder, null);
 

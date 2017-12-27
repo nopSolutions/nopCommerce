@@ -5,6 +5,7 @@ using Nop.Core.Domain.Cms;
 using Nop.Core.Plugins;
 using Nop.Services.Cms;
 using Nop.Services.Configuration;
+using Nop.Services.Plugins;
 using Nop.Services.Security;
 using Nop.Web.Areas.Admin.Extensions;
 using Nop.Web.Areas.Admin.Models.Cms;
@@ -15,8 +16,8 @@ namespace Nop.Web.Areas.Admin.Controllers
 {
     public partial class WidgetController : BaseAdminController
 	{
-		#region Fields
-
+        #region Fields
+        
         private readonly IWidgetService _widgetService;
         private readonly IPermissionService _permissionService;
         private readonly ISettingService _settingService;

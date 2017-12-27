@@ -11,7 +11,6 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Stores;
 using Nop.Core.Domain.Tax;
-using Nop.Core.Plugins;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Directory;
@@ -21,6 +20,7 @@ using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
+using Nop.Services.Plugins;
 using Nop.Services.Shipping;
 using Nop.Services.Tax;
 using Nop.Tests;
@@ -78,7 +78,6 @@ namespace Nop.Services.Tests.Orders
 
             _productService = MockRepository.GenerateMock<IProductService>();
 
-            var pluginFinder = new PluginFinder();
             var cacheManager = new NopNullCache();
 
             _discountService = MockRepository.GenerateMock<IDiscountService>();
@@ -97,6 +96,8 @@ namespace Nop.Services.Tests.Orders
 
             _eventPublisher = MockRepository.GenerateMock<IEventPublisher>();
             _eventPublisher.Expect(x => x.Publish(Arg<object>.Is.Anything));
+
+            var pluginFinder = new PluginFinder();
 
             _localizationService = MockRepository.GenerateMock<ILocalizationService>();
             _webHelper = MockRepository.GenerateMock<IWebHelper>();

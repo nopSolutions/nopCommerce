@@ -13,6 +13,7 @@ using Nop.Core.Data;
 using Nop.Core.Infrastructure;
 using Nop.Core.Plugins;
 using Nop.Services.Installation;
+using Nop.Services.Plugins;
 using Nop.Services.Security;
 using Nop.Web.Framework.Security;
 using Nop.Web.Infrastructure.Installation;

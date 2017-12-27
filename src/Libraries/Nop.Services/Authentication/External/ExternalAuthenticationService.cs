@@ -6,7 +6,6 @@ using Nop.Core;
 using Nop.Core.Data;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
-using Nop.Core.Plugins;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Events;
@@ -14,6 +13,7 @@ using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Messages;
 using Nop.Services.Orders;
+using Nop.Services.Plugins;
 
 namespace Nop.Services.Authentication.External
 {

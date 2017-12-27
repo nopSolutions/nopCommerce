@@ -7,13 +7,13 @@ using Nop.Core.Data;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Orders;
-using Nop.Core.Plugins;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Services.Discounts.Cache;
 using Nop.Services.Events;
 using Nop.Services.Localization;
 using Nop.Services.Orders;
+using Nop.Services.Plugins;
 
 namespace Nop.Services.Discounts
 {
