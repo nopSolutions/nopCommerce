@@ -26,6 +26,18 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowProductReviewsPerStore.Hint">
     <Value>Check to display reviews written in the current store only (on a product details page and on the account product reviews page).</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ViewMode.Grid">
+    <Value>Grid</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ViewMode.List">
+    <Value>List</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.DefaultViewMode">
+    <Value>Default view mode</Value>
+  </LocaleResource>    
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.DefaultViewMode.Hint">
+    <Value>Choose the default view mode for catalog page.</Value>
+  </LocaleResource>     
 </Language>
 '
 
