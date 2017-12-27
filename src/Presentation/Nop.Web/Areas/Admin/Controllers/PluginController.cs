@@ -496,7 +496,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 PluginManager.SavePluginDescriptor(pluginDescriptor);
 
                 //reset plugin cache
-                _pluginFinder.ReloadPlugins();
+                _pluginFinder.ReloadPlugins(pluginDescriptor);
 
                 //locales
                 foreach (var localized in model.Locales)

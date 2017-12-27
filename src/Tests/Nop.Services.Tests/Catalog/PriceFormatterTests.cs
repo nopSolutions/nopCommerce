@@ -14,6 +14,7 @@ using Nop.Core.Domain.Tax;
 using Nop.Core.Infrastructure;
 using Nop.Services.Catalog;
 using Nop.Services.Directory;
+using Nop.Services.Events;
 using Nop.Services.Localization;
 using Nop.Services.Plugins;
 using Nop.Services.Stores;
@@ -27,6 +28,7 @@ namespace Nop.Services.Tests.Catalog
     public class PriceFormatterTests : ServiceTest
     {
         private IRepository<Currency> _currencyRepo;
+        private IEventPublisher _eventPublisher;
         private IStoreMappingService _storeMappingService;
         private ICurrencyService _currencyService;
         private CurrencySettings _currencySettings;
@@ -73,7 +75,10 @@ namespace Nop.Services.Tests.Catalog
 
             _storeMappingService = MockRepository.GenerateMock<IStoreMappingService>();
 
-            var pluginFinder = new PluginFinder();
+            _eventPublisher = MockRepository.GenerateMock<IEventPublisher>();
+            _eventPublisher.Expect(x => x.Publish(Arg<object>.Is.Anything));
+
+            var pluginFinder = new PluginFinder(_eventPublisher);
 
             _currencyService = new CurrencyService(cacheManager, _currencyRepo, _storeMappingService,
                 _currencySettings, pluginFinder, null);

@@ -181,7 +181,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             PluginManager.SavePluginDescriptor(pluginDescriptor);
 
             //reset plugin cache
-            _pluginFinder.ReloadPlugins();
+            _pluginFinder.ReloadPlugins(pluginDescriptor);
 
             return new NullJsonResult();
         }
@@ -256,7 +256,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             PluginManager.SavePluginDescriptor(pluginDescriptor);
 
             //reset plugin cache
-            _pluginFinder.ReloadPlugins();
+            _pluginFinder.ReloadPlugins(pluginDescriptor);
 
             return new NullJsonResult();
         }

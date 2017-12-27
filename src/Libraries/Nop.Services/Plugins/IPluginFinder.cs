@@ -85,8 +85,9 @@ namespace Nop.Services.Plugins
             where T : class, IPlugin;
 
         /// <summary>
-        /// Reload plugins
+        /// Reload plugins after updating
         /// </summary>
-        void ReloadPlugins();
+        /// <param name="pluginDescriptor">Updated plugin descriptor</param>
+        void ReloadPlugins(PluginDescriptor pluginDescriptor);
     }
 }

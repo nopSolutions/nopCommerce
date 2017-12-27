@@ -54,7 +54,7 @@ namespace Nop.Services.Tests.Tax
             _eventPublisher = MockRepository.GenerateMock<IEventPublisher>();
             _eventPublisher.Expect(x => x.Publish(Arg<object>.Is.Anything));
 
-            var pluginFinder = new PluginFinder();
+            var pluginFinder = new PluginFinder(_eventPublisher);
 
             _geoLookupService = MockRepository.GenerateMock<IGeoLookupService>();
             _countryService = MockRepository.GenerateMock<ICountryService>();

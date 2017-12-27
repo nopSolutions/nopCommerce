@@ -3,6 +3,7 @@ using System.Linq;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Services.Configuration;
+using Nop.Services.Events;
 using Nop.Services.Payments;
 using Nop.Services.Plugins;
 using Nop.Tests;
@@ -16,6 +17,7 @@ namespace Nop.Services.Tests.Payments
     {
         private PaymentSettings _paymentSettings;
         private ShoppingCartSettings _shoppingCartSettings;
+        private IEventPublisher _eventPublisher;
         private ISettingService _settingService;
         private IPaymentService _paymentService;
         
@@ -28,7 +30,10 @@ namespace Nop.Services.Tests.Payments
             };
             _paymentSettings.ActivePaymentMethodSystemNames.Add("Payments.TestMethod");
 
-            var pluginFinder = new PluginFinder();
+            _eventPublisher = MockRepository.GenerateMock<IEventPublisher>();
+            _eventPublisher.Expect(x => x.Publish(Arg<object>.Is.Anything));
+
+            var pluginFinder = new PluginFinder(_eventPublisher);
 
             _shoppingCartSettings = new ShoppingCartSettings();
             _settingService = MockRepository.GenerateMock<ISettingService>();

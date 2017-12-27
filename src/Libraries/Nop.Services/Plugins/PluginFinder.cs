@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Plugins;
+using Nop.Services.Events;
 
 namespace Nop.Services.Plugins
 {
@@ -13,8 +14,19 @@ namespace Nop.Services.Plugins
     {
         #region Fields
 
+        private readonly IEventPublisher _eventPublisher;
+
         private IList<PluginDescriptor> _plugins;
         private bool _arePluginsLoaded;
+
+        #endregion
+
+        #region Ctor
+
+        public PluginFinder(IEventPublisher eventPublisher)
+        {
+            this._eventPublisher = eventPublisher;
+        }
 
         #endregion
 
@@ -206,12 +218,16 @@ namespace Nop.Services.Plugins
         }
 
         /// <summary>
-        /// Reload plugins
+        /// Reload plugins after updating
         /// </summary>
-        public virtual void ReloadPlugins()
+        /// <param name="pluginDescriptor">Updated plugin descriptor</param>
+        public virtual void ReloadPlugins(PluginDescriptor pluginDescriptor)
         {
             _arePluginsLoaded = false;
             EnsurePluginsAreLoaded();
+
+            //raise event
+            _eventPublisher.Publish(new PluginUpdatedEvent(pluginDescriptor));
         }
 
         #endregion

@@ -70,7 +70,7 @@ namespace Nop.Services.Tests.Discounts
             _discountRequirementRepo.Expect(x => x.Table).Return(new List<DiscountRequirement>().AsQueryable());
 
             _discountUsageHistoryRepo = MockRepository.GenerateMock<IRepository<DiscountUsageHistory>>();
-            var pluginFinder = new PluginFinder();
+            var pluginFinder = new PluginFinder(_eventPublisher);
             _localizationService = MockRepository.GenerateMock<ILocalizationService>();
             _categoryService = MockRepository.GenerateMock<ICategoryService>();
             _discountService = new DiscountService(cacheManager, _discountRepo, _discountRequirementRepo,
