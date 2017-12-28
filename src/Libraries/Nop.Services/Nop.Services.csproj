@@ -18,9 +18,9 @@
     <PackageReference Include="ImageResizer.Plugins.PrettyGifs" Version="4.2.0" />
     <PackageReference Include="iTextSharp" Version="5.5.12" />
     <PackageReference Include="MaxMind.GeoIP2" Version="2.9.0" />
-    <PackageReference Include="Microsoft.CSharp" Version="4.4.0" />
+    <PackageReference Include="Microsoft.CSharp" Version="4.4.1" />
     <PackageReference Include="System.Linq.Dynamic" Version="1.0.7" />
-    <PackageReference Include="WindowsAzure.Storage" Version="8.6.0" />
+    <PackageReference Include="WindowsAzure.Storage" Version="8.7.0" />
     <PackageReference Include="System.ServiceModel.Duplex" Version="4.4.0" />
     <PackageReference Include="System.ServiceModel.Http" Version="4.4.0" />
     <PackageReference Include="System.ServiceModel.NetTcp" Version="4.4.0" />
