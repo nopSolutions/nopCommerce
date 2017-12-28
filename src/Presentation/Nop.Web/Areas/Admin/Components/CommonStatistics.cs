@@ -66,8 +66,9 @@ namespace Nop.Web.Areas.Admin.Components
                 pageSize: 1,
                 getOnlyTotalCount: true).TotalCount,
 
-                NumberOfLowStockProducts = _productService.GetLowStockProducts(0, 0, 1, true).TotalCount +
-                                             _productService.GetLowStockProductCombinations(0, 0, 1, true).TotalCount
+                NumberOfLowStockProducts = 
+                    _productService.GetLowStockProducts(getOnlyTotalCount: true).TotalCount +
+                    _productService.GetLowStockProductCombinations(getOnlyTotalCount: true).TotalCount
             };
 
             return View(model);

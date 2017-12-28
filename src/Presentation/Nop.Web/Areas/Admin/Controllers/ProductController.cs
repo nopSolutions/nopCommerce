@@ -3175,52 +3175,62 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
-            return View();
+            var model = new LowStockProductListModel();
+
+            //prepare options to search by published low stock products
+            var allText = _localizationService.GetResource("Admin.Catalog.LowStockReport.SearchPublished.All");
+            model.AvailablePublishedOptions.Add(new SelectListItem { Text = allText, Value = "0" });
+            var publishedOnlyText = _localizationService.GetResource("Admin.Catalog.LowStockReport.SearchPublished.PublishedOnly");
+            model.AvailablePublishedOptions.Add(new SelectListItem { Text = publishedOnlyText, Value = "1" });
+            var unpublishedOnlyText = _localizationService.GetResource("Admin.Catalog.LowStockReport.SearchPublished.UnpublishedOnly");
+            model.AvailablePublishedOptions.Add(new SelectListItem { Text = unpublishedOnlyText, Value = "2" });
+
+            return View(model);
         }
 
         [HttpPost]
-        public virtual IActionResult LowStockReportList(DataSourceRequest command)
+        public virtual IActionResult LowStockReportList(DataSourceRequest command, LowStockProductListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedKendoGridJson();
 
-            var vendorId = 0;
             //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null)
-                vendorId = _workContext.CurrentVendor.Id;
+            var vendorId = _workContext.CurrentVendor?.Id;
 
-            IList<Product> products = _productService.GetLowStockProducts(vendorId);
-            IList<ProductAttributeCombination> combinations = _productService.GetLowStockProductCombinations(vendorId);
+            //whether to load unpublished products 
+            var loadPublishedOnly = model.SearchPublishedId == 0 ? null 
+                : model.SearchPublishedId == 1 ? true 
+                : model.SearchPublishedId == 2 ? (bool?)false 
+                : null;
 
+            //get low stock product and product combinations
+            var products = _productService.GetLowStockProducts(vendorId, loadPublishedOnly);
+            var combinations = _productService.GetLowStockProductCombinations(vendorId, loadPublishedOnly);
+
+            //prepare model
             var models = new List<LowStockProductModel>();
-            //products
-            foreach (var product in products)
+            models.AddRange(products.Select(product => new LowStockProductModel
             {
-                var lowStockModel = new LowStockProductModel
-                {
-                    Id = product.Id,
-                    Name = product.Name,
-                    ManageInventoryMethod = product.ManageInventoryMethod.GetLocalizedEnum(_localizationService, _workContext.WorkingLanguage.Id),
-                    StockQuantity = product.GetTotalStockQuantity(),
-                    Published = product.Published
-                };
-                models.Add(lowStockModel);
-            }
-            //combinations
-            foreach (var combination in combinations)
+                Id = product.Id,
+                Name = product.Name,
+                ManageInventoryMethod = product
+                    .ManageInventoryMethod.GetLocalizedEnum(_localizationService, _workContext.WorkingLanguage.Id),
+                StockQuantity = product.GetTotalStockQuantity(),
+                Published = product.Published
+            }));
+
+            models.AddRange(combinations.Select(combination => new LowStockProductModel
             {
-                var product = combination.Product;
-                var lowStockModel = new LowStockProductModel
-                {
-                    Id = product.Id,
-                    Name = product.Name,
-                    Attributes = _productAttributeFormatter.FormatAttributes(product, combination.AttributesXml, _workContext.CurrentCustomer, "<br />", true, true, true, false),
-                    ManageInventoryMethod = product.ManageInventoryMethod.GetLocalizedEnum(_localizationService, _workContext.WorkingLanguage.Id),
-                    StockQuantity = combination.StockQuantity,
-                    Published = product.Published
-                };
-                models.Add(lowStockModel);
-            }
+                Id = combination.Product.Id,
+                Name = combination.Product.Name,
+                Attributes = _productAttributeFormatter
+                    .FormatAttributes(combination.Product, combination.AttributesXml, _workContext.CurrentCustomer, "<br />", true, true, true, false),
+                ManageInventoryMethod = combination.Product
+                    .ManageInventoryMethod.GetLocalizedEnum(_localizationService, _workContext.WorkingLanguage.Id),
+                StockQuantity = combination.StockQuantity,
+                Published = combination.Product.Published
+            }));
+
             var gridModel = new DataSourceResult
             {
                 Data = models.PagedForCommand(command),

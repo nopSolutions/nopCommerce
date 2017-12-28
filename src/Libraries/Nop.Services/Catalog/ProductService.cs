@@ -1112,27 +1112,45 @@ namespace Nop.Services.Catalog
         /// <summary>
         /// Get low stock products
         /// </summary>
-        /// <param name="vendorId">Vendor identifier; 0 to load all records</param>
+        /// <param name="vendorId">Vendor identifier; pass null to load all records</param>
+        /// <param name="loadPublishedOnly">Whether to load published products only; pass null to load all products, pass true to load only published products, pass false to load only unpublished products</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <param name="getOnlyTotalCount">A value in indicating whether you want to load only total number of records. Set to "true" if you don't want to load data from database</param>
         /// <returns>Products</returns>
-        public virtual IPagedList<Product> GetLowStockProducts(int vendorId = 0,
+        public virtual IPagedList<Product> GetLowStockProducts(int? vendorId = null, bool? loadPublishedOnly = true,
             int pageIndex = 0, int pageSize = int.MaxValue, bool getOnlyTotalCount = false)
         {
-            //Track inventory for product
-            var query = from p in _productRepository.Table
-                         orderby p.MinStockQuantity
-                         where !p.Deleted &&
-                         p.ManageInventoryMethodId == (int)ManageInventoryMethod.ManageStock &&
-                         //ignore grouped products
-                         p.ProductTypeId != (int)ProductType.GroupedProduct &&
-                         p.MinStockQuantity >= (
-                            p.UseMultipleWarehouses ?
-                            p.ProductWarehouseInventory.Sum(pwi => pwi.StockQuantity - pwi.ReservedQuantity) : 
-                            p.StockQuantity) &&
-                         (vendorId == 0 || p.VendorId == vendorId)
-                         select p;
+            var query = _productRepository.Table;
+            
+            //filter by products with tracking inventory
+            query = query.Where(product => product.ManageInventoryMethodId == (int)ManageInventoryMethod.ManageStock);
+
+            //filter by products with stock quantity less than the minimum
+            query = query.Where(product => 
+                (product.UseMultipleWarehouses ? product.ProductWarehouseInventory.Sum(pwi => pwi.StockQuantity - pwi.ReservedQuantity) 
+                    : product.StockQuantity) <= product.MinStockQuantity);
+
+            //ignore deleted products
+            query = query.Where(product => !product.Deleted);
+
+            //ignore grouped products
+            query = query.Where(product => product.ProductTypeId != (int)ProductType.GroupedProduct);
+
+            //filter by vendor
+            if (vendorId.HasValue && vendorId.Value > 0)
+                query = query.Where(product => product.VendorId == vendorId.Value);
+
+            //whether to load published products only
+            if (loadPublishedOnly.HasValue)
+            {
+                if (loadPublishedOnly.Value)
+                    query = query.Where(product => product.Published);
+                else
+                    query = query.Where(product => !product.Published);
+            }
+
+            query = query.OrderBy(product => product.MinStockQuantity).ThenBy(product => product.DisplayOrder).ThenBy(product => product.Id);
 
             return new PagedList<Product>(query, pageIndex, pageSize, getOnlyTotalCount);
         }
@@ -1140,24 +1158,47 @@ namespace Nop.Services.Catalog
         /// <summary>
         /// Get low stock product combinations
         /// </summary>
-        /// <param name="vendorId">Vendor identifier; 0 to load all records</param>
+        /// <param name="vendorId">Vendor identifier; pass null to load all records</param>
+        /// <param name="loadPublishedOnly">Whether to load combinations of published products only; pass null to load all products, pass true to load only published products, pass false to load only unpublished products</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <param name="getOnlyTotalCount">A value in indicating whether you want to load only total number of records. Set to "true" if you don't want to load data from database</param>
         /// <returns>Product combinations</returns>
-        public virtual IPagedList<ProductAttributeCombination> GetLowStockProductCombinations(int vendorId = 0,
+        public virtual IPagedList<ProductAttributeCombination> GetLowStockProductCombinations(int? vendorId = null, bool? loadPublishedOnly = true,
             int pageIndex = 0, int pageSize = int.MaxValue, bool getOnlyTotalCount = false)
         {
-            //Track inventory for product by product attributes
-            var query = from p in _productRepository.Table
-                         from c in p.ProductAttributeCombinations
-                         where !p.Deleted &&
-                         p.ManageInventoryMethodId == (int)ManageInventoryMethod.ManageStockByAttributes &&
-                         c.StockQuantity <= 0 &&
-                         (vendorId == 0 || p.VendorId == vendorId)
-                         select c;
-            query = query.OrderBy(c => c.ProductId);
-            return new PagedList<ProductAttributeCombination>(query, pageIndex, pageSize, getOnlyTotalCount);
+            var products = _productRepository.Table;
+
+            //filter by products with tracking inventory by attributes
+            products = products.Where(product => product.ManageInventoryMethodId == (int)ManageInventoryMethod.ManageStockByAttributes);
+
+            //ignore deleted products
+            products = products.Where(product => !product.Deleted);
+
+            //ignore grouped products
+            products = products.Where(product => product.ProductTypeId != (int)ProductType.GroupedProduct);
+
+            //filter by vendor
+            if (vendorId.HasValue && vendorId.Value > 0)
+                products = products.Where(product => product.VendorId == vendorId.Value);
+
+            //whether to load published products only
+            if (loadPublishedOnly.HasValue)
+            {
+                if (loadPublishedOnly.Value)
+                    products = products.Where(product => product.Published);
+                else
+                    products = products.Where(product => !product.Published);
+            }
+
+            var combinations = products.SelectMany(product => product.ProductAttributeCombinations);
+
+            //filter by combinations with stock quantity less than the minimum
+            combinations = combinations.Where(combination => combination.StockQuantity <= 0);
+
+            combinations = combinations.OrderBy(combination => combination.ProductId).ThenBy(combination => combination.Id);
+
+            return new PagedList<ProductAttributeCombination>(combinations, pageIndex, pageSize, getOnlyTotalCount);
         }
 
         /// <summary>
