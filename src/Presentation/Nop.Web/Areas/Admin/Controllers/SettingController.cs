@@ -2049,7 +2049,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             localizationSettings.LoadAllUrlRecordsOnStartup = model.LocalizationSettings.LoadAllUrlRecordsOnStartup;
             _settingService.SaveSetting(localizationSettings);
 
-            //full-text
+            //full-text (not overridable)
+            commonSettings = _settingService.LoadSetting<CommonSettings>();
             commonSettings.FullTextMode = (FulltextSearchMode)model.FullTextSettings.SearchMode;
             _settingService.SaveSetting(commonSettings);
 
