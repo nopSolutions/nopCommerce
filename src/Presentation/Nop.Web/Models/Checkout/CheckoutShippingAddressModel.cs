@@ -1,13 +1,10 @@
 ﻿using System.Collections.Generic;
-using FluentValidation.Attributes;
 using Microsoft.AspNetCore.Http;
 using Nop.Web.Framework.Mvc.Models;
 using Nop.Web.Models.Common;
-using Nop.Web.Validators.Checkout;
 
 namespace Nop.Web.Models.Checkout
 {
-    [Validator(typeof(CheckoutShippingAddressValidator))]
     public partial class CheckoutShippingAddressModel : BaseNopModel
     {
         public CheckoutShippingAddressModel()

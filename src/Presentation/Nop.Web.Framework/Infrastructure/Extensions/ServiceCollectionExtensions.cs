@@ -235,7 +235,12 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             mvcBuilder.AddMvcOptions(options => options.ModelBinderProviders.Insert(0, new NopModelBinderProvider()));
 
             //add fluent validation
-            mvcBuilder.AddFluentValidation(configuration => configuration.ValidatorFactoryType = typeof(NopValidatorFactory));
+            mvcBuilder.AddFluentValidation(configuration =>
+            {
+                configuration.ValidatorFactoryType = typeof(NopValidatorFactory);
+                //implicit/automatic validation of child properties
+                configuration.ImplicitlyValidateChildProperties = true;
+            });
 
             return mvcBuilder;
         }
