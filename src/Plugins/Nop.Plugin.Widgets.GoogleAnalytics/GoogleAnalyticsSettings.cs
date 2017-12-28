@@ -9,5 +9,10 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
         public bool EnableEcommerce { get; set; }
         public bool IncludingTax { get; set; }
         public string WidgetZone { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to include customer identifier to script
+        /// </summary>
+        public bool IncludeCustomerId { get; set; }
     }
 }

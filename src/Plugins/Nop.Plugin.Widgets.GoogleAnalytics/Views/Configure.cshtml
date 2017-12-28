@@ -11,6 +11,7 @@
         "<script type=\"text/javascript\">" + "\r\n" +
         "var _gaq = _gaq || [];" + "\r\n" +
         "_gaq.push(['_setAccount', '{GOOGLEID}']);" + "\r\n" +
+        "{CustomerID}" +
         "_gaq.push(['_trackPageview']);" + "\r\n" +
         "(function() {" + "\r\n" +
         "var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;" + "\r\n" +
@@ -27,6 +28,7 @@
         "m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)" + "\r\n" +
         "})(window,document,'script','//www.google-analytics.com/analytics.js','ga');" + "\r\n" +
         "ga('create', '{GOOGLEID}', 'auto');" + "\r\n" +
+        "{CustomerID}" +
         "ga('send', 'pageview');" + "\r\n" +
         "</script>"));
 }
@@ -90,6 +92,16 @@
                     <div class="col-md-9">
                         <nop-editor asp-for="EnableEcommerce" />
                         <span asp-validation-for="EnableEcommerce"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="IncludeCustomerId_OverrideForStore" asp-input="IncludeCustomerId" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="IncludeCustomerId" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="IncludeCustomerId" />
+                        <span asp-validation-for="IncludeCustomerId"></span>
                     </div>
                 </div>
                 <div class="form-group">

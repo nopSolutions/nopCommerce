@@ -34,5 +34,9 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Models
         [NopResourceDisplayName("Plugins.Widgets.GoogleAnalytics.IncludingTax")]
         public bool IncludingTax { get; set; }
         public bool IncludingTax_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Plugins.Widgets.GoogleAnalytics.IncludeCustomerId")]
+        public bool IncludeCustomerId { get; set; }
+        public bool IncludeCustomerId_OverrideForStore { get; set; }
     }
 }
