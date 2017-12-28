@@ -14157,6 +14157,18 @@
   <LocaleResource Name="Enums.Nop.Core.Domain.Customers.RewardPointsActivatingDelayPeriod.Hours">
     <Value>Hours</Value>
   </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Customers.UserRegistrationType.AdminApproval">
+    <Value>A customer should be approved by administrator</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Customers.UserRegistrationType.Disabled">
+    <Value>Registration is disabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Customers.UserRegistrationType.EmailValidation">
+    <Value>Email validation is required after registration</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Customers.UserRegistrationType.Standard">
+    <Value>Standard account creation</Value>
+  </LocaleResource>
   <LocaleResource Name="Enums.Nop.Core.Domain.Directory.RoundingType.Rounding001">
     <Value>Default rounding</Value>
   </LocaleResource>
@@ -14327,18 +14339,6 @@
   </LocaleResource>
   <LocaleResource Name="Enums.Nop.Core.Domain.Security.PasswordFormat.Hashed">
     <Value>Hashed</Value>
-  </LocaleResource>
-  <LocaleResource Name="Enums.Nop.Core.Domain.Security.UserRegistrationType.AdminApproval">
-    <Value>A customer should be approved by administrator</Value>
-  </LocaleResource>
-  <LocaleResource Name="Enums.Nop.Core.Domain.Security.UserRegistrationType.Disabled">
-    <Value>Registration is disabled</Value>
-  </LocaleResource>
-  <LocaleResource Name="Enums.Nop.Core.Domain.Security.UserRegistrationType.EmailValidation">
-    <Value>Email validation is required after registration</Value>
-  </LocaleResource>
-  <LocaleResource Name="Enums.Nop.Core.Domain.Security.UserRegistrationType.Standard">
-    <Value>Standard account creation</Value>
   </LocaleResource>
   <LocaleResource Name="Enums.Nop.Core.Domain.Seo.PageTitleSeoAdjustment.PagenameAfterStorename">
     <Value>Page name comes after store name</Value>

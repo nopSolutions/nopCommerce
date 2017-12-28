@@ -49,7 +49,31 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Discounts.List.SearchStartDate.Hint">
     <Value>The start date for the search.</Value>
-  </LocaleResource> 
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Security.UserRegistrationType.AdminApproval">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Security.UserRegistrationType.Disabled">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Security.UserRegistrationType.EmailValidation">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Security.UserRegistrationType.Standard">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Customers.UserRegistrationType.AdminApproval">
+    <Value>A customer should be approved by administrator</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Customers.UserRegistrationType.Disabled">
+    <Value>Registration is disabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Customers.UserRegistrationType.EmailValidation">
+    <Value>Email validation is required after registration</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Customers.UserRegistrationType.Standard">
+    <Value>Standard account creation</Value>
+  </LocaleResource>
 </Language>
 '
 
