@@ -12,6 +12,12 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
         //MVC is suppressing further validation if the IFormCollection is passed to a controller method. That's why we add to the model
         public IFormCollection Form { get; set; }
 
+        [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.PictureId")]
+        public int PictureId { get; set; }
+
+        [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.Id")]
+        public int Id { get; set; }
+
         public AddProductAttributeCombinationModel()
         {
             ProductAttributes = new List<ProductAttributeModel>();
@@ -44,6 +50,7 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
 
         public IList<string> Warnings { get; set; }
 
+        [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.ProductId")]
         public int ProductId { get; set; }
 
         #region Nested classes

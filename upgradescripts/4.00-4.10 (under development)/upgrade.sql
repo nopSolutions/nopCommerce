@@ -1,5 +1,10 @@
 ﻿--upgrade scripts from nopCommerce 4.00 to 4.10
 
+-- Product Attribute Combination PictureId
+ALTER TABLE ProductAttributeCombination
+ADD PictureId int not null default(0);
+GO
+
 --new locale resources
 declare @resources xml
 --a resource will be deleted if its value is empty
