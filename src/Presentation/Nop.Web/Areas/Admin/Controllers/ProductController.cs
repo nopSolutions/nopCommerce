@@ -4386,8 +4386,17 @@ namespace Nop.Web.Areas.Admin.Controllers
             var combinationsModel = combinations
                 .Select(x =>
                 {
+                    var url = "blank";
+                    var picture = _pictureService.GetPictureById(x.PictureId);
+                    if (picture != null)
+                    {
+                        url = _pictureService.GetPictureUrl(picture);
+                    }
+
                     var pacModel = new ProductModel.ProductAttributeCombinationModel
                     {
+                        PictureId = x.PictureId,
+                        PictureUrl = url,
                         Id = x.Id,
                         ProductId = x.ProductId,
                         AttributesXml = _productAttributeFormatter.FormatAttributes(x.Product, x.AttributesXml, _workContext.CurrentCustomer, "<br />", true, true, true, false),
@@ -4442,6 +4451,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             var previousSrockQuantity = combination.StockQuantity;
 
+            combination.PictureId = model.PictureId;
             combination.StockQuantity = model.StockQuantity;
             combination.AllowOutOfStockOrders = model.AllowOutOfStockOrders;
             combination.Sku = model.Sku;
@@ -4674,6 +4684,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //save combination
                 var combination = new ProductAttributeCombination
                 {
+                    PictureId = model.PictureId,
                     ProductId = product.Id,
                     AttributesXml = attributesXml,
                     StockQuantity = model.StockQuantity,
@@ -4733,6 +4744,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //save combination
                 var combination = new ProductAttributeCombination
                 {
+                    PictureId = 0,
                     ProductId = product.Id,
                     AttributesXml = attributesXml,
                     StockQuantity = 0,

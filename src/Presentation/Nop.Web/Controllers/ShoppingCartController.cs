@@ -1008,31 +1008,48 @@ namespace Nop.Web.Controllers
             var pictureDefaultSizeUrl = "";
             if (loadPicture)
             {
-                //just load (return) the first found picture (in case if we have several distinct attributes with associated pictures)
-                //actually we're going to support pictures associated to attribute combinations (not attribute values) soon. it'll more flexible approach
-                var attributeValues = _productAttributeParser.ParseProductAttributeValues(attributeXml);
-                var attributeValueWithPicture = attributeValues.FirstOrDefault(x => x.PictureId > 0);
-                if (attributeValueWithPicture != null)
+                // SEQ: First check our new Combo PIC!!!
+                bool gotPicture = false;
+                var combination = _productAttributeParser.FindProductAttributeCombination(product, attributeXml);
+                if (combination != null && combination.PictureId>0)
                 {
-                    var productAttributePictureCacheKey = string.Format(ModelCacheEventConsumer.PRODUCTATTRIBUTE_PICTURE_MODEL_KEY,
-                                    attributeValueWithPicture.PictureId,
-                                    _webHelper.IsCurrentConnectionSecured(),
-                                    _storeContext.CurrentStore.Id);
-                    var pictureModel = _cacheManager.Get(productAttributePictureCacheKey, () =>
+                    var valuePicture = _pictureService.GetPictureById(combination.PictureId);
+                    if (valuePicture != null)
                     {
-                        var valuePicture = _pictureService.GetPictureById(attributeValueWithPicture.PictureId);
-                        if (valuePicture != null)
+                        pictureFullSizeUrl = _pictureService.GetPictureUrl(valuePicture);
+                        pictureDefaultSizeUrl = _pictureService.GetPictureUrl(valuePicture, _mediaSettings.ProductDetailsPictureSize);
+                        gotPicture = true;
+                    }
+                }
+                
+                if (!gotPicture)
+                {
+                    //just load (return) the first found picture (in case if we have several distinct attributes with associated pictures)
+                    //actually we're going to support pictures associated to attribute combinations (not attribute values) soon. it'll more flexible approach
+                    var attributeValues = _productAttributeParser.ParseProductAttributeValues(attributeXml);
+                    var attributeValueWithPicture = attributeValues.FirstOrDefault(x => x.PictureId > 0);
+                    if (attributeValueWithPicture != null)
+                    {
+                        var productAttributePictureCacheKey = string.Format(ModelCacheEventConsumer.PRODUCTATTRIBUTE_PICTURE_MODEL_KEY,
+                                        attributeValueWithPicture.PictureId,
+                                        _webHelper.IsCurrentConnectionSecured(),
+                                        _storeContext.CurrentStore.Id);
+                        var pictureModel = _cacheManager.Get(productAttributePictureCacheKey, () =>
                         {
-                            return new PictureModel
+                            var valuePicture = _pictureService.GetPictureById(attributeValueWithPicture.PictureId);
+                            if (valuePicture != null)
                             {
-                                FullSizeImageUrl = _pictureService.GetPictureUrl(valuePicture),
-                                ImageUrl = _pictureService.GetPictureUrl(valuePicture, _mediaSettings.ProductDetailsPictureSize)
-                            };
-                        }
-                        return new PictureModel();
-                    });
-                    pictureFullSizeUrl = pictureModel.FullSizeImageUrl;
-                    pictureDefaultSizeUrl = pictureModel.ImageUrl;
+                                return new PictureModel
+                                {
+                                    FullSizeImageUrl = _pictureService.GetPictureUrl(valuePicture),
+                                    ImageUrl = _pictureService.GetPictureUrl(valuePicture, _mediaSettings.ProductDetailsPictureSize)
+                                };
+                            }
+                            return new PictureModel();
+                        });
+                        pictureFullSizeUrl = pictureModel.FullSizeImageUrl;
+                        pictureDefaultSizeUrl = pictureModel.ImageUrl;
+                    }
                 }
 
             }

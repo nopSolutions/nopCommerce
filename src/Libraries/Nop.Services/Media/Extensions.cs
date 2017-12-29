@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Media;
 using Nop.Services.Catalog;
+using System.Collections.Generic;
 
 namespace Nop.Services.Media
 {
@@ -60,15 +61,25 @@ namespace Nop.Services.Media
 
             Picture picture = null;
 
-            //first, let's see whether we have some attribute values with custom pictures
-            var attributeValues = productAttributeParser.ParseProductAttributeValues(attributesXml);
-            foreach (var attributeValue in attributeValues)
+            // SEQ: Really first, lets get the COMBO
+            ProductAttributeCombination pac = productAttributeParser.FindProductAttributeCombination(product, attributesXml, true);
+            if (pac != null)
             {
-                var attributePicture = pictureService.GetPictureById(attributeValue.PictureId);
-                if (attributePicture != null)
+                picture = pictureService.GetPictureById(pac.PictureId);
+            }
+
+            //first, let's see whether we have some attribute values with custom pictures
+            if (picture == null)
+            {
+                var attributeValues = productAttributeParser.ParseProductAttributeValues(attributesXml);
+                foreach (var attributeValue in attributeValues)
                 {
-                    picture = attributePicture;
-                    break;
+                    var attributePicture = pictureService.GetPictureById(attributeValue.PictureId);
+                    if (attributePicture != null)
+                    {
+                        picture = attributePicture;
+                        break;
+                    }
                 }
             }
 

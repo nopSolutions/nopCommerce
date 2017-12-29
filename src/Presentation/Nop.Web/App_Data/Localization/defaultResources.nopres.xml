@@ -3150,6 +3150,9 @@
   <LocaleResource Name="Admin.Catalog.Products.Fields.StockQuantity">
     <Value>Stock quantity</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.PictureId">
+    <Value>Picture ID</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.StockQuantity.Hint">
     <Value>The current stock quantity of this product.</Value>
   </LocaleResource>
@@ -3380,6 +3383,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.Attributes">
     <Value>Attributes</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.ProductId">
+    <Value>Product Id</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.GTIN">
     <Value>GTIN</Value>

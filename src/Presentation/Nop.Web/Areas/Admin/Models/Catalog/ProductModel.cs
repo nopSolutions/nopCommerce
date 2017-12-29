@@ -890,7 +890,12 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
 
         public partial class ProductAttributeCombinationModel : BaseNopEntityModel
         {
+            public string PictureUrl { get; set; }
+
             public int ProductId { get; set; }
+
+            [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.PictureId")]
+            public int PictureId { get; set; }
 
             [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.Attributes")]
             public string AttributesXml { get; set; }
