@@ -35,6 +35,12 @@
                                         id: "Id"
                                     }
                                 },
+                                requestEnd: function (e) {
+                                    if (e.type === "destroy") {
+                                        var grid = $("#specificationattributemappedproducts-grid").data('kendoGrid');
+                                        grid.dataSource.read();
+                                    }
+                                },
                                 error: function (e) {
                                     display_kendoui_grid_error(e);
                                     // Cancel the changes
