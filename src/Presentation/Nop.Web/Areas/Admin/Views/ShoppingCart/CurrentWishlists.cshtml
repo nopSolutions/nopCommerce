@@ -92,12 +92,21 @@
                                             type: "POST",
                                             dataType: "json",
                                             data: addAntiForgeryToken
+                                        },
+                                        destroy: {
+                                            url: "@Html.Raw(Url.Action("DeleteItem", "ShoppingCart"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: addAntiForgeryToken
                                         }
                                     },
                                     schema: {
                                         data: "Data",
                                         total: "Total",
-                                        errors: "Errors"
+                                        errors: "Errors",
+                                        model: {
+                                            id: "Id"
+                                        }
                                     },
                                     error: function(e) {
                                         display_kendoui_grid_error(e);
@@ -107,6 +116,10 @@
                                     serverPaging: true,
                                     serverFiltering: true,
                                     serverSorting: true
+                                },
+                                editable: {
+                                    confirmation: "@T("Admin.Common.DeleteConfirmation")",
+                                    mode: "inline"
                                 },
                                 scrollable: false,
                                 sortable: true,
@@ -147,6 +160,10 @@
                                         width: 150,
                                         type: "date",
                                         format: "{0:G}"
+                                    },{
+                                        command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
+                                        title: "@T("Admin.Common.Delete")",
+                                        width: 100
                                     }
                                 ]
                             });
