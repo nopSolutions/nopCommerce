@@ -3720,6 +3720,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     AttributeValueType = AttributeValueType.Simple,
                     Name = predefinedValue.Name,
                     PriceAdjustment = predefinedValue.PriceAdjustment,
+                    PriceAdjustmentUsePercentage = predefinedValue.PriceAdjustmentUsePercentage,
                     WeightAdjustment = predefinedValue.WeightAdjustment,
                     Cost = predefinedValue.Cost,
                     IsPreSelected = predefinedValue.IsPreSelected,
@@ -3917,7 +3918,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                         ColorSquaresRgb = x.ColorSquaresRgb,
                         ImageSquaresPictureId = x.ImageSquaresPictureId,
                         PriceAdjustment = x.PriceAdjustment,
-                        PriceAdjustmentStr = x.AttributeValueType == AttributeValueType.Simple ? x.PriceAdjustment.ToString("G29") : "",
+                        PriceAdjustmentStr = x.AttributeValueType == AttributeValueType.Simple ? x.PriceAdjustment.ToString("G29") + (x.PriceAdjustmentUsePercentage ? " %" : "") : "",
+                        PriceAdjustmentUsePercentage = x.PriceAdjustmentUsePercentage,
                         WeightAdjustment = x.WeightAdjustment,
                         WeightAdjustmentStr = x.AttributeValueType == AttributeValueType.Simple ? x.WeightAdjustment.ToString("G29") : "",
                         Cost = x.Cost,
@@ -4034,6 +4036,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     ColorSquaresRgb = model.ColorSquaresRgb,
                     ImageSquaresPictureId = model.ImageSquaresPictureId,
                     PriceAdjustment = model.PriceAdjustment,
+                    PriceAdjustmentUsePercentage = model.PriceAdjustmentUsePercentage,
                     WeightAdjustment = model.WeightAdjustment,
                     Cost = model.Cost,
                     CustomerEntersQty = model.CustomerEntersQty,
@@ -4103,6 +4106,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ImageSquaresPictureId = pav.ImageSquaresPictureId,
                 DisplayImageSquaresPicture = pav.ProductAttributeMapping.AttributeControlType == AttributeControlType.ImageSquares,
                 PriceAdjustment = pav.PriceAdjustment,
+                PriceAdjustmentUsePercentage = pav.PriceAdjustmentUsePercentage,
                 WeightAdjustment = pav.WeightAdjustment,
                 Cost = pav.Cost,
                 CustomerEntersQty = pav.CustomerEntersQty,
@@ -4179,6 +4183,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 pav.ColorSquaresRgb = model.ColorSquaresRgb;
                 pav.ImageSquaresPictureId = model.ImageSquaresPictureId;
                 pav.PriceAdjustment = model.PriceAdjustment;
+                pav.PriceAdjustmentUsePercentage = model.PriceAdjustmentUsePercentage;
                 pav.WeightAdjustment = model.WeightAdjustment;
                 pav.Cost = model.Cost;
                 pav.CustomerEntersQty = model.CustomerEntersQty;

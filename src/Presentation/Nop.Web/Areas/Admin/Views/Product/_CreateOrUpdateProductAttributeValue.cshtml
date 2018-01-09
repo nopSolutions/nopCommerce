@@ -37,12 +37,14 @@
         $('#group-customer-enters-qty').hide();
         $('#group-quantity').hide();
         $('#group-price-adjustment').show();
+        $('#group-price-adjustment-percentage').show();
         $('#group-weight-adjustment').show();
         $('#group-cost').show();
     } else if (selectedProductTypeId == @(((int) AttributeValueType.AssociatedToProduct).ToString())) {
         $('#group-associated-product').show();
         $('#group-customer-enters-qty').show();
         $('#group-price-adjustment').hide();
+        $('#group-price-adjustment-percentage').hide();
         $('#group-weight-adjustment').hide();
         $('#group-cost').hide();
         toggleCustomerEntersQty();
@@ -185,6 +187,15 @@
                         <div class="col-sm-9">
                             <nop-editor asp-for="PriceAdjustment" />
                             <span asp-validation-for="PriceAdjustment"></span>
+                        </div>
+                    </div>
+                    <div class="form-group" id="group-price-adjustment-percentage">
+                        <div class="col-sm-3">
+                            <nop-label asp-for="PriceAdjustmentUsePercentage" />
+                        </div>
+                        <div class="col-sm-9">
+                            <nop-editor asp-for="PriceAdjustmentUsePercentage" />
+                            <span asp-validation-for="PriceAdjustmentUsePercentage"></span>
                         </div>
                     </div>
                     <div class="form-group" id="group-weight-adjustment">

@@ -1792,8 +1792,14 @@
     <Value>Price adjustment</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.PriceAdjustment.Hint">
-    <Value>The price adjustment applied when choosing this attribute value e.g. '10' to add 10 dollars.</Value>
+    <Value>The price adjustment applied when choosing this attribute value. For example '10' to add 10 dollars. Or 10% if 'Use percentage' is ticked.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.PriceAdjustmentUsePercentage">
+    <Value>Price adjustment. Use percentage</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.PriceAdjustmentUsePercentage.Hint">
+    <Value>Determines whether to apply a percentage to the product. If not enabled, a fixed value is used.</Value>
+  </LocaleResource>   
   <LocaleResource Name="Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.WeightAdjustment">
     <Value>Weight adjustment</Value>
   </LocaleResource>
@@ -3634,7 +3640,13 @@
     <Value>Price adjustment</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.PriceAdjustment.Hint">
-    <Value>The price adjustment applied when choosing this attribute value e.g. '10' to add 10 dollars.</Value>
+    <Value>The price adjustment applied when choosing this attribute value. For example '10' to add 10 dollars. Or 10% if 'Use percentage' is ticked.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.PriceAdjustmentUsePercentage">
+    <Value>Price adjustment. Use percentage</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.PriceAdjustmentUsePercentage.Hint">
+    <Value>Determines whether to apply a percentage to the product. If not enabled, a fixed value is used.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.Quantity">
     <Value>Product quantity</Value>

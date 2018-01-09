@@ -369,6 +369,7 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<ExportProductAttribute>("ColorSquaresRgb", p => p.ColorSquaresRgb),
                 new PropertyByName<ExportProductAttribute>("ImageSquaresPictureId", p => p.ImageSquaresPictureId),
                 new PropertyByName<ExportProductAttribute>("PriceAdjustment", p => p.PriceAdjustment),
+                new PropertyByName<ExportProductAttribute>("PriceAdjustmentUsePercentage", p => p.PriceAdjustmentUsePercentage),
                 new PropertyByName<ExportProductAttribute>("WeightAdjustment", p => p.WeightAdjustment),
                 new PropertyByName<ExportProductAttribute>("Cost", p => p.Cost),
                 new PropertyByName<ExportProductAttribute>("CustomerEntersQty", p => p.CustomerEntersQty),
@@ -471,6 +472,7 @@ namespace Nop.Services.ExportImport
                     ColorSquaresRgb = pav.ColorSquaresRgb,
                     ImageSquaresPictureId = pav.ImageSquaresPictureId,
                     PriceAdjustment = pav.PriceAdjustment,
+                    PriceAdjustmentUsePercentage = pav.PriceAdjustmentUsePercentage,
                     WeightAdjustment = pav.WeightAdjustment,
                     Cost = pav.Cost,
                     CustomerEntersQty = pav.CustomerEntersQty,
@@ -987,6 +989,7 @@ namespace Nop.Services.ExportImport
                             xmlWriter.WriteString("ColorSquaresRgb", productAttributeValue.ColorSquaresRgb);
                             xmlWriter.WriteString("ImageSquaresPictureId", productAttributeValue.ImageSquaresPictureId);
                             xmlWriter.WriteString("PriceAdjustment", productAttributeValue.PriceAdjustment);
+                            xmlWriter.WriteString("PriceAdjustmentUsePercentage", productAttributeValue.PriceAdjustmentUsePercentage);
                             xmlWriter.WriteString("WeightAdjustment", productAttributeValue.WeightAdjustment);
                             xmlWriter.WriteString("Cost", productAttributeValue.Cost);
                             xmlWriter.WriteString("CustomerEntersQty", productAttributeValue.CustomerEntersQty);
