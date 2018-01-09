@@ -95,6 +95,9 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.LowStockReport.SearchPublished.UnpublishedOnly">
     <Value>Unpublished only</Value>
   </LocaleResource>
+  <LocaleResource Name="Products.Availability.SelectRequiredAttributes">
+    <Value>Please select required attribute(s)</Value>
+  </LocaleResource>
 </Language>
 '
 

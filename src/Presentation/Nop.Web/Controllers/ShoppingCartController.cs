@@ -982,7 +982,7 @@ namespace Nop.Web.Controllers
             }
 
             //stock
-            var stockAvailability = product.FormatStockMessage(attributeXml, _localizationService, _productAttributeParser, _dateRangeService);
+            var stockAvailability = product.FormatStockMessage(attributeXml, _localizationService, _productAttributeParser, _dateRangeService, _productAttributeService);
 
             //conditional attributes
             var enabledAttributeMappingIds = new List<int>();
