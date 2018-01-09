@@ -628,7 +628,7 @@ namespace Nop.Plugin.Shipping.UPS
             return Convert.ToInt32(Math.Ceiling(_measureService.ConvertFromPrimaryMeasureWeight(quantity, usedMeasureWeighht)));
         }
 
-        private IEnumerable<ShippingOption> ParseResponse(string response, bool saturdayDelivery, ref string error)
+        private IEnumerable<ShippingOption> ParseResponse(string response, ref string error)
         {
             var shippingOptions = new List<ShippingOption>();
 
@@ -737,7 +737,7 @@ namespace Nop.Plugin.Shipping.UPS
                         var serviceId = $"[{serviceCode}]";
 
                         // Go to the next rate if the service ID is not in the list of services to offer
-                        if (!saturdayDelivery && !string.IsNullOrEmpty(carrierServicesOffered) && !carrierServicesOffered.Contains(serviceId))
+                        if (!string.IsNullOrEmpty(carrierServicesOffered) && !carrierServicesOffered.Contains(serviceId))
                         {
                             continue;
                         }
@@ -810,7 +810,7 @@ namespace Nop.Plugin.Shipping.UPS
                     _traceMessages.AppendLine("Response:").AppendLine(responseXml);
 
                 var error = "";
-                var shippingOptions = ParseResponse(responseXml, false, ref error);
+                var shippingOptions = ParseResponse(responseXml, ref error);
                 if (string.IsNullOrEmpty(error))
                 {
                     foreach (var shippingOption in shippingOptions)
@@ -839,7 +839,7 @@ namespace Nop.Plugin.Shipping.UPS
                         _traceMessages.AppendLine("Response:").AppendLine(responseXml);
 
                     error = string.Empty;
-                    var saturdayDeliveryShippingOptions = ParseResponse(responseXml, true, ref error);
+                    var saturdayDeliveryShippingOptions = ParseResponse(responseXml, ref error);
                     if (string.IsNullOrEmpty(error))
                     {
                         foreach (var shippingOption in saturdayDeliveryShippingOptions)
