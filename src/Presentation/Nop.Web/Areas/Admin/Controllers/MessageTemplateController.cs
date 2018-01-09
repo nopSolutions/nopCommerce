@@ -402,7 +402,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 if (formKey.StartsWith("token_", StringComparison.InvariantCultureIgnoreCase))
                 {
                     var tokenKey = formKey.Substring("token_".Length).Replace("%", "");
-                    var stringValue = form[formKey];
+                    var stringValue = form[formKey].ToString();
 
                     //try get non-string value
                     object tokenValue;
