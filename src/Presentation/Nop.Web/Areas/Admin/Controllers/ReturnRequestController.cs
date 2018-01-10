@@ -240,9 +240,10 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return RedirectToAction("Edit", new { id = returnRequest.Id });
             }
             
-            var queuedEmailId = _workflowMessageService.SendReturnRequestStatusChangedCustomerNotification(returnRequest, orderItem, orderItem.Order.CustomerLanguageId);
-            if (queuedEmailId > 0)
+            var queuedEmailIds = _workflowMessageService.SendReturnRequestStatusChangedCustomerNotification(returnRequest, orderItem, orderItem.Order.CustomerLanguageId);
+            if (queuedEmailIds.Any())
                 SuccessNotification(_localizationService.GetResource("Admin.ReturnRequests.Notified"));
+
             return RedirectToAction("Edit",  new {id = returnRequest.Id});
         }
 

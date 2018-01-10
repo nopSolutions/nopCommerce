@@ -155,33 +155,29 @@ namespace Nop.Services.Messages
         }
 
         /// <summary>
-        /// Gets a message template
+        /// Gets message templates by the name
         /// </summary>
         /// <param name="messageTemplateName">Message template name</param>
-        /// <param name="storeId">Store identifier</param>
-        /// <returns>Message template</returns>
-        public virtual MessageTemplate GetMessageTemplateByName(string messageTemplateName, int storeId)
+        /// <param name="storeId">Store identifier; pass null to load all records</param>
+        /// <returns>List of message templates</returns>
+        public virtual IList<MessageTemplate> GetMessageTemplatesByName(string messageTemplateName, int? storeId = null)
         {
             if (string.IsNullOrWhiteSpace(messageTemplateName))
-                throw new ArgumentException("messageTemplateName");
+                throw new ArgumentException(nameof(messageTemplateName));
 
-            var key = string.Format(MESSAGETEMPLATES_BY_NAME_KEY, messageTemplateName, storeId);
+            var key = string.Format(MESSAGETEMPLATES_BY_NAME_KEY, messageTemplateName, storeId ?? 0);
             return _cacheManager.Get(key, () =>
             {
-                var query = _messageTemplateRepository.Table;
-                query = query.Where(t => t.Name == messageTemplateName);
-                query = query.OrderBy(t => t.Id);
-                var templates = query.ToList();
+                //get message templates with the passed name
+                var templates = _messageTemplateRepository.Table
+                    .Where(messageTemplate => messageTemplate.Name.Equals(messageTemplateName))
+                    .OrderBy(messageTemplate => messageTemplate.Id).ToList();
 
-                //store mapping
-                if (storeId > 0)
-                {
-                    templates = templates
-                        .Where(t => _storeMappingService.Authorize(t, storeId))
-                        .ToList();
-                }
+                //filter by the store
+                if (storeId.HasValue && storeId.Value > 0)
+                    templates = templates.Where(messageTemplate => _storeMappingService.Authorize(messageTemplate, storeId.Value)).ToList();
 
-                return templates.FirstOrDefault();
+                return templates;
             });
         }
 
