@@ -225,10 +225,10 @@ namespace Nop.Web.Controllers
                 //parse database name
                 var builder = new MySql.Data.MySqlClient.MySqlConnectionStringBuilder(connectionString);
                 var databaseName = builder.Database;
-                //now create connection string to 'master' dabatase. It always exists.
-                builder.Database = "master";
+                //now create connection string to 'sys' dabatase. It always exists.
+                builder.Database = "sys";
                 var masterCatalogConnectionString = builder.ToString();
-                string query = $"CREATE DATABASE [{databaseName}]";
+                string query = $"CREATE DATABASE {databaseName}";
                 if (!String.IsNullOrWhiteSpace(collation))
                     query = $"{query} COLLATE {collation}";
                 using (var conn = new MySql.Data.MySqlClient.MySqlConnection(masterCatalogConnectionString))
@@ -528,13 +528,15 @@ namespace Nop.Web.Controllers
                         }
                         else
                         {
-                            var builder = new MySql.Data.MySqlClient.MySqlConnectionStringBuilder();
-                            builder.UserID = model.SqlServerUsername;
-                            builder.Password = model.SqlServerPassword;
-                            builder.Database = model.SqlDatabaseName;
-                            builder.Server = model.SqlServerName;
-                            builder.IntegratedSecurity = model.SqlAuthenticationType == "windowsauthentication";
-                            builder.SslMode = MySql.Data.MySqlClient.MySqlSslMode.VerifyFull;
+                            var builder = new MySql.Data.MySqlClient.MySqlConnectionStringBuilder
+                            {
+                                UserID = model.SqlServerUsername,
+                                Password = model.SqlServerPassword,
+                                Database = model.SqlDatabaseName,
+                                Server = model.SqlServerName,
+                                //builder.IntegratedSecurity = model.SqlAuthenticationType == "windowsauthentication";
+                                SslMode = MySql.Data.MySqlClient.MySqlSslMode.None
+                            };
                             connectionString = builder.ConnectionString;
                         }
 

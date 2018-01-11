@@ -12,7 +12,7 @@
     				<RepositoryType>Git</RepositoryType>
   			</PropertyGroup>
   			<ItemGroup>
-  			  <PackageReference Include="NUnit" Version="3.8.1" />
+  			  <PackageReference Include="NUnit" Version="3.9.0" />
   			  <PackageReference Include="RhinoMocks" Version="3.6.1" />
   			</ItemGroup>
   			<ItemGroup>

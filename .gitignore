@@ -182,3 +182,4 @@ src/Presentation/Nop.Web/wwwroot/files/exportimport/*
 src/packages/*
 *.sqlite
 *.sqlite-journal
+/.vscode

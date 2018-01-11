@@ -23,10 +23,10 @@ namespace Nop.Data.Mapping.Forums
                 .HasForeignKey(fp => fp.TopicId);
 
             builder.HasOne(fp => fp.Customer)
-               .WithMany()
-               .IsRequired(true)
-               .HasForeignKey(fp => fp.CustomerId)
-               .OnDelete(DeleteBehavior.SetNull);
+                .WithMany()
+                .IsRequired(true)
+                .HasForeignKey(fp => fp.CustomerId);
+            //.OnDelete(DeleteBehavior.SetNull);
         }
     }
 }

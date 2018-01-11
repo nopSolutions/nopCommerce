@@ -18,7 +18,7 @@ namespace Nop.Data
         {
             this.dataConnectionString = dataConnectionString;
             DbContextOptionsBuilder<DbContext> builder2 = new DbContextOptionsBuilder<DbContext>();
-            builder2.UseMySQL(dataConnectionString);
+            builder2.UseMySql(dataConnectionString);
             _options = builder2.Options;
         }
 
