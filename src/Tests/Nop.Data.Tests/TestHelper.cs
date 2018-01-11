@@ -316,6 +316,7 @@ namespace Nop.Data.Tests
                 Gtin = "Gtin1",
                 OverriddenPrice = 0.01M,
                 NotifyAdminForQuantityBelow = 3,
+                PictureId = 1,
                 Product = test.GetTestProduct()
             };
         }

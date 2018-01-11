@@ -6,14 +6,20 @@ using Nop.Web.Framework.Mvc.Models;
 
 namespace Nop.Web.Areas.Admin.Models.Catalog
 {
-    public partial class AddProductAttributeCombinationModel : BaseNopModel
+    public partial class ProductAttributeCombinationModel : BaseNopEntityModel
     {
-        public AddProductAttributeCombinationModel()
+        public ProductAttributeCombinationModel()
         {
             ProductAttributes = new List<ProductAttributeModel>();
+            ProductPictureModels = new List<ProductModel.ProductPictureModel>();
             Warnings = new List<string>();
         }
-        
+
+        public int ProductId { get; set; }
+
+        [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.Attributes")]
+        public string AttributesXml { get; set; }
+
         [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.StockQuantity")]
         public int StockQuantity { get; set; }
 
@@ -36,11 +42,14 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
         [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.NotifyAdminForQuantityBelow")]
         public int NotifyAdminForQuantityBelow { get; set; }
 
+        [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.Picture")]
+        public int PictureId { get; set; }
+        public string PictureThumbnailUrl { get; set; }
+
         public IList<ProductAttributeModel> ProductAttributes { get; set; }
+        public IList<ProductModel.ProductPictureModel> ProductPictureModels { get; set; }
 
         public IList<string> Warnings { get; set; }
-
-        public int ProductId { get; set; }
 
         #region Nested classes
 

@@ -21,12 +21,6 @@
                                 dataType: "json",
                                 data: addAntiForgeryToken
                             },
-                            update: {
-                                url: "@Html.Raw(Url.Action("ProductAttributeCombinationUpdate", "Product"))",
-                                type: "POST",
-                                dataType: "json",
-                                data: addAntiForgeryToken
-                            },
                             destroy: {
                                 url: "@Html.Raw(Url.Action("ProductAttributeCombinationDelete", "Product"))",
                                 type: "POST",
@@ -41,7 +35,6 @@
                             model: {
                                 id: "Id",
                                 fields: {
-                                    //ProductId: { editable: false, type: "number" },
                                     AttributesXml: { editable: false, type: "string" },
                                     Warnings: { editable: false, type: "string" },
                                     StockQuantity: { editable: true, type: "number" },
@@ -53,11 +46,6 @@
                                     NotifyAdminForQuantityBelow: { editable: true, type: "number" },
                                     Id: { editable: false, type: "number" }
                                 }
-                            }
-                        },
-                        requestEnd: function(e) {
-                            if (e.type == "update") {
-                                this.read();
                             }
                         },
                         error: function(e) {
@@ -132,30 +120,38 @@
                             //integer format
                             format: "{0:0}"
                         }, {
-                            command: [
-                                {
-                                    name: "edit",
-                                    text: {
-                                        edit: "@T("Admin.Common.Edit")",
-                                        update: "@T("Admin.Common.Update")",
-                                        cancel: "@T("Admin.Common.Cancel")"
-                                    }
-                                }, {
-                                    name: "destroy",
-                                    text: "@T("Admin.Common.Delete")"
-                                }
-                            ],
+                            field: "PictureThumbnailUrl",
+                            title: "@T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.Picture")",
+                            template: '<img src="#=PictureThumbnailUrl#" />',
                             width: 200
+                        }, {
+                            field: "Id",
+                            title: "@T("Admin.Common.Edit")",
+                            width: 100,
+                            headerAttributes: { style: "text-align:center" },
+                            attributes: { style: "text-align:center" },
+                            template:
+                                "<button onclick=\"javascript:OpenWindow('@Url.Content("~/Admin/Product/ProductAttributeCombinationEditPopup/")#=Id#?btnId=btnRefreshCombinations&formId=product-form', 800, 700, true); return false;\" class='btn btn-default'><i class=\"fa fa-pencil\"></i>@T("Admin.Common.Edit")</button>"
+                        }, {
+                            command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
+                            title: "@T("Admin.Common.Delete")",
+                            width: 150
                         }
                     ]
                 });
             });
         </script>
-
-        <input type="submit" id="btnRefreshCombinations" style="display: none" />
+    </div>
+    <div class="panel-footer">
+        <button type="submit" id="btnAddNewCombination" onclick="javascript:OpenWindow('@(Url.Action("ProductAttributeCombinationCreatePopup", "Product", new {productId = Model.Id, btnId = "btnRefreshCombinations", formId = "product-form"}))', 800, 700, true); return false;" class="btn btn-primary">
+            @T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.AddNew")
+        </button>
+        <button type="button" id="btnGenerateAllCombinations" class="btn bg-aqua">
+            @T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.GenerateAll")
+        </button>
+        <input type="submit" id="btnRefreshCombinations" style="display: none"/>
         <script type="text/javascript">
             $(document).ready(function() {
-                //refresh button
                 $('#btnRefreshCombinations').click(function() {
                     //refresh grid
                     var grid = $("#attributecombinations-grid").data('kendoGrid');
@@ -164,7 +160,7 @@
                     //return false to don't reload a page
                     return false;
                 });
-                
+
                 //generate combinations
                 $('#btnGenerateAllCombinations').click(function() {
                     if (confirm('@T("Admin.Common.AreYouSure")')) {
@@ -194,12 +190,6 @@
                 });
             });
         </script>
-    </div>
-    <div class="panel-footer">
-        <button type="submit" id="btnAddNewCombination" onclick="javascript:OpenWindow('@(Url.Action("AddAttributeCombinationPopup", "Product", new {productId = Model.Id, btnId = "btnRefreshCombinations", formId = "product-form"}))', 800, 700, true); return false;" class="btn btn-primary">
-            @T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.AddNew")
-        </button>
-        <button type="button" id="btnGenerateAllCombinations" class="btn bg-aqua">@T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.GenerateAll")</button>
     </div>
 </div>
 @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_product_details_product_attributes_combinations_bottom", additionalData = Model })

@@ -113,6 +113,18 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.Vendor.ShowVendorOnOrderDetailsPage.Hint">
     <Value>Check to show vendor name of product on the order details page.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Edit">
+    <Value>Edit combination</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.Picture">
+    <Value>Picture</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.Picture.Hint">
+    <Value>Choose a picture associated to this attribute combination. This picture will replace the main product image when this product attribute combination is selected.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.Picture.NoPicture">
+    <Value>No picture</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -232,4 +244,19 @@ BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId])
 	VALUES (N'addresssettings.preselectcountryifonlyone', N'false', 0)
 END
+GO
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id = object_id('[ProductAttributeCombination]') AND NAME = 'PictureId')
+BEGIN
+	ALTER TABLE [ProductAttributeCombination]
+	ADD [PictureId] INT NULL
+END
+GO
+
+UPDATE [ProductAttributeCombination]
+SET [PictureId] = 0
+WHERE [PictureId] IS NULL
+
+ALTER TABLE [ProductAttributeCombination] ALTER COLUMN [PictureId] INT NOT NULL
 GO

@@ -1004,32 +1004,32 @@ namespace Nop.Web.Controllers
             }
 
             //picture. used when we want to override a default product picture when some attribute is selected
-            var pictureFullSizeUrl = "";
-            var pictureDefaultSizeUrl = "";
+            var pictureFullSizeUrl = string.Empty;
+            var pictureDefaultSizeUrl = string.Empty;
             if (loadPicture)
             {
-                //just load (return) the first found picture (in case if we have several distinct attributes with associated pictures)
-                //actually we're going to support pictures associated to attribute combinations (not attribute values) soon. it'll more flexible approach
-                var attributeValues = _productAttributeParser.ParseProductAttributeValues(attributeXml);
-                var attributeValueWithPicture = attributeValues.FirstOrDefault(x => x.PictureId > 0);
-                if (attributeValueWithPicture != null)
+                //first, try to get product attribute combination picture
+                var pictureId = _productAttributeParser.FindProductAttributeCombination(product, attributeXml)?.PictureId ?? 0;
+
+                //then, let's see whether we have attribute values with pictures
+                if (pictureId == 0)
                 {
-                    var productAttributePictureCacheKey = string.Format(ModelCacheEventConsumer.PRODUCTATTRIBUTE_PICTURE_MODEL_KEY,
-                                    attributeValueWithPicture.PictureId,
-                                    _webHelper.IsCurrentConnectionSecured(),
-                                    _storeContext.CurrentStore.Id);
+                    pictureId = _productAttributeParser.ParseProductAttributeValues(attributeXml)
+                        .FirstOrDefault(attributeValue => attributeValue.PictureId > 0)?.PictureId ?? 0;
+                }
+
+                if (pictureId > 0)
+                {
+                    var productAttributePictureCacheKey = string.Format(ModelCacheEventConsumer.PRODUCTATTRIBUTE_PICTURE_MODEL_KEY, 
+                        pictureId, _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore.Id);
                     var pictureModel = _cacheManager.Get(productAttributePictureCacheKey, () =>
                     {
-                        var valuePicture = _pictureService.GetPictureById(attributeValueWithPicture.PictureId);
-                        if (valuePicture != null)
+                        var picture = _pictureService.GetPictureById(pictureId);
+                        return picture == null ? new PictureModel() : new PictureModel
                         {
-                            return new PictureModel
-                            {
-                                FullSizeImageUrl = _pictureService.GetPictureUrl(valuePicture),
-                                ImageUrl = _pictureService.GetPictureUrl(valuePicture, _mediaSettings.ProductDetailsPictureSize)
-                            };
-                        }
-                        return new PictureModel();
+                            FullSizeImageUrl = _pictureService.GetPictureUrl(picture),
+                            ImageUrl = _pictureService.GetPictureUrl(picture, _mediaSettings.ProductDetailsPictureSize)
+                        };
                     });
                     pictureFullSizeUrl = pictureModel.FullSizeImageUrl;
                     pictureDefaultSizeUrl = pictureModel.ImageUrl;
