@@ -225,3 +225,11 @@ BEGIN
 	VALUES (N'vendorsettings.showvendoronorderdetailspage', N'false', 0)
 END
 GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'addresssettings.preselectcountryifonlyone')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'addresssettings.preselectcountryifonlyone', N'false', 0)
+END
+GO

@@ -27,6 +27,7 @@ namespace Nop.Web.Factories
         private readonly ILocalizationService _localizationService;
         private readonly IStateProvinceService _stateProvinceService;
         private readonly IAddressAttributeFormatter _addressAttributeFormatter;
+        private readonly AddressSettings _addressSettings;
 
         #endregion
 
@@ -36,13 +37,15 @@ namespace Nop.Web.Factories
             IAddressAttributeParser addressAttributeParser,
             ILocalizationService localizationService,
             IStateProvinceService stateProvinceService,
-            IAddressAttributeFormatter addressAttributeFormatter)
+            IAddressAttributeFormatter addressAttributeFormatter,
+            AddressSettings addressSettings)
         {
             this._addressAttributeService = addressAttributeService;
             this._addressAttributeParser = addressAttributeParser;
             this._localizationService = localizationService;
             this._stateProvinceService = stateProvinceService;
             this._addressAttributeFormatter = addressAttributeFormatter;
+            this._addressSettings = addressSettings;
         }
 
         #endregion
@@ -214,8 +217,18 @@ namespace Nop.Web.Factories
             //countries and states
             if (addressSettings.CountryEnabled && loadCountries != null)
             {
-                model.AvailableCountries.Add(new SelectListItem { Text = _localizationService.GetResource("Address.SelectCountry"), Value = "0" });
-                foreach (var c in loadCountries())
+                var countries = loadCountries();
+
+                if (_addressSettings.PreselectCountryIfOnlyOne && countries.Count == 1)
+                {
+                    model.CountryId = countries[0].Id;
+                }
+                else
+                {
+                    model.AvailableCountries.Add(new SelectListItem { Text = _localizationService.GetResource("Address.SelectCountry"), Value = "0" });
+                }
+
+                foreach (var c in countries)
                 {
                     model.AvailableCountries.Add(new SelectListItem
                     {
