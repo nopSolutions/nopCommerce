@@ -354,7 +354,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     _discountService.UpdateDiscount(discount);
                     //update "HasDiscountsApplied" property
                     foreach (var p in products)
-                        _productService.UpdateHasDiscountsApplied(p.Product);
+                        _productService.UpdateHasDiscountsApplied(p);
                 }
 
                 //activity log
@@ -397,7 +397,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //update "HasDiscountsApplied" properties
             foreach (var p in products)
-                _productService.UpdateHasDiscountsApplied(p.Product);
+                _productService.UpdateHasDiscountsApplied(p);
 
             //activity log
             _customerActivityService.InsertActivity("DeleteDiscount",

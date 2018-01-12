@@ -317,7 +317,7 @@ namespace Nop.Services.Discounts
             var categories = _categoryRepository.Table;
 
             if (discountId.HasValue)
-                categories = categories.Where(category => category.AppliedDiscounts.Any(discount => discount.Id == discountId.Value));
+                categories = categories.Where(category => category.AppliedDiscounts.Any(discount => discount.DiscountId == discountId.Value));
 
             if (!showHidden)
                 categories = categories.Where(category => !category.Deleted);
@@ -341,7 +341,7 @@ namespace Nop.Services.Discounts
             var manufacturers = _manufacturerRepository.Table;
 
             if (discountId.HasValue)
-                manufacturers = manufacturers.Where(manufacturer => manufacturer.AppliedDiscounts.Any(discount => discount.Id == discountId.Value));
+                manufacturers = manufacturers.Where(manufacturer => manufacturer.AppliedDiscounts.Any(discount => discount.DiscountId == discountId.Value));
 
             if (!showHidden)
                 manufacturers = manufacturers.Where(manufacturer => !manufacturer.Deleted);
@@ -366,7 +366,7 @@ namespace Nop.Services.Discounts
             var products = _productRepository.Table.Where(product => product.HasDiscountsApplied);
 
             if (discountId.HasValue)
-                products = products.Where(product => product.AppliedDiscounts.Any(discount => discount.Id == discountId.Value));
+                products = products.Where(product => product.AppliedDiscounts.Any(discount => discount.DiscountId == discountId.Value));
 
             if (!showHidden)
                 products = products.Where(product => !product.Deleted);
