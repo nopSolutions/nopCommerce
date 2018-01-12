@@ -1,6 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc.Routing;
 using Nop.Core;
 using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
@@ -14,6 +18,7 @@ using Nop.Services.Events;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Security;
+using Nop.Services.Seo;
 using Nop.Services.Shipping.Date;
 using Nop.Services.Stores;
 
@@ -37,6 +42,7 @@ namespace Nop.Services.Orders
         private readonly ICheckoutAttributeParser _checkoutAttributeParser;
         private readonly IPriceFormatter _priceFormatter;
         private readonly ICustomerService _customerService;
+        private readonly CatalogSettings _catalogSettings;
         private readonly OrderSettings _orderSettings;
         private readonly ShoppingCartSettings _shoppingCartSettings;
         private readonly IEventPublisher _eventPublisher;
@@ -47,6 +53,8 @@ namespace Nop.Services.Orders
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IProductAttributeService _productAttributeService;
         private readonly IDateTimeHelper _dateTimeHelper;
+        private readonly IActionContextAccessor _actionContextAccessor;
+        private readonly IUrlHelperFactory _urlHelperFactory;
 
         #endregion
 
@@ -66,6 +74,7 @@ namespace Nop.Services.Orders
         /// <param name="checkoutAttributeParser">Checkout attribute parser</param>
         /// <param name="priceFormatter">Price formatter</param>
         /// <param name="customerService">Customer service</param>
+        /// <param name="catalogSettings">Catalog settings</param>
         /// <param name="orderSettings">Order settings</param>
         /// <param name="shoppingCartSettings">Shopping cart settings</param>
         /// <param name="eventPublisher">Event publisher</param>
@@ -76,6 +85,8 @@ namespace Nop.Services.Orders
         /// <param name="genericAttributeService">Generic attribute service</param>
         /// <param name="productAttributeService">Product attribute service</param>
         /// <param name="dateTimeHelper">Datetime helper</param>
+        /// <param name="actionContextAccessor">Action context accessor</param>
+        /// <param name="urlHelperFactory">Url helper factory</param>
         public ShoppingCartService(IRepository<ShoppingCartItem> sciRepository,
             IWorkContext workContext, 
             IStoreContext storeContext,
@@ -87,6 +98,7 @@ namespace Nop.Services.Orders
             ICheckoutAttributeParser checkoutAttributeParser,
             IPriceFormatter priceFormatter,
             ICustomerService customerService,
+            CatalogSettings catalogSettings,
             OrderSettings orderSettings,
             ShoppingCartSettings shoppingCartSettings,
             IEventPublisher eventPublisher,
@@ -96,7 +108,9 @@ namespace Nop.Services.Orders
             IStoreMappingService storeMappingService,
             IGenericAttributeService genericAttributeService,
             IProductAttributeService productAttributeService,
-            IDateTimeHelper dateTimeHelper)
+            IDateTimeHelper dateTimeHelper,
+            IActionContextAccessor actionContextAccessor,
+            IUrlHelperFactory urlHelperFactory)
         {
             this._sciRepository = sciRepository;
             this._workContext = workContext;
@@ -109,6 +123,7 @@ namespace Nop.Services.Orders
             this._checkoutAttributeParser = checkoutAttributeParser;
             this._priceFormatter = priceFormatter;
             this._customerService = customerService;
+            this._catalogSettings = catalogSettings;
             this._orderSettings = orderSettings;
             this._shoppingCartSettings = shoppingCartSettings;
             this._eventPublisher = eventPublisher;
@@ -119,6 +134,8 @@ namespace Nop.Services.Orders
             this._genericAttributeService = genericAttributeService;
             this._productAttributeService = productAttributeService;
             this._dateTimeHelper = dateTimeHelper;
+            this._actionContextAccessor = actionContextAccessor;
+            this._urlHelperFactory = urlHelperFactory;
         }
 
         #endregion
@@ -238,7 +255,10 @@ namespace Nop.Services.Orders
                     if (rp != null)
                         requiredProducts.Add(rp);
                 }
-                
+
+                //get URL helper
+                var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
+
                 foreach (var rp in requiredProducts)
                 {
                     //ensure that product is in the cart
@@ -254,7 +274,11 @@ namespace Nop.Services.Orders
                     //not in the cart
                     if (!alreadyInTheCart)
                     {
-
+                        var requiredProductName = WebUtility.HtmlEncode(rp.GetLocalized(x => x.Name));
+                        var requiredProductLink = $"<a href=\"{(urlHelper.RouteUrl("Product", new { SeName = rp.GetSeName()}))}\">{requiredProductName}</a>";
+                        var requiredProductWarning = _catalogSettings.UseLinksInRequiredProductWarnings ?
+                            string.Format(_localizationService.GetResource("ShoppingCart.RequiredProductWarning"), requiredProductLink) :
+                            string.Format(_localizationService.GetResource("ShoppingCart.RequiredProductWarning"), requiredProductName);
                         if (product.AutomaticallyAddRequiredProducts)
                         {
                             //add to cart (if possible)
@@ -272,17 +296,17 @@ namespace Nop.Services.Orders
 
                                     //don't display specific errors from 'addToCartWarnings' variable
                                     //display only generic error
-                                    warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.RequiredProductWarning"), rp.GetLocalized(x => x.Name)));
+                                    warnings.Add(requiredProductWarning);
                                 }
                             }
                             else
                             {
-                                warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.RequiredProductWarning"), rp.GetLocalized(x => x.Name)));
+                                warnings.Add(requiredProductWarning);
                             }
                         }
                         else
                         {
-                            warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.RequiredProductWarning"), rp.GetLocalized(x => x.Name)));
+                            warnings.Add(requiredProductWarning);
                         }
                     }
                 }

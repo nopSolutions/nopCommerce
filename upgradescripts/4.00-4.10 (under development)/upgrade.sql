@@ -307,3 +307,11 @@ BEGIN
 	VALUES (N'catalogsettings.notifycustomeraboutproductreviewreply', N'false', 0)
 END
 GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'catalogsettings.uselinksinrequiredproductwarnings')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'catalogsettings.uselinksinrequiredproductwarnings', N'true', 0)
+END
+GO

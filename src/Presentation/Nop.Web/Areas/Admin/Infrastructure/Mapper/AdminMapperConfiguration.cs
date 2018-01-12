@@ -929,6 +929,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.PublishBackProductWhenCancellingOrders, mo => mo.Ignore())
                 .ForMember(dest => dest.DefaultProductRatingValue, mo => mo.Ignore())
                 .ForMember(dest => dest.IncludeFeaturedProductsInNormalLists, mo => mo.Ignore())
+                .ForMember(dest => dest.UseLinksInRequiredProductWarnings, mo => mo.Ignore())
                 .ForMember(dest => dest.AjaxProcessAttributeChange, mo => mo.Ignore())
                 .ForMember(dest => dest.MaximumBackInStockSubscriptions, mo => mo.Ignore())
                 .ForMember(dest => dest.DisplayTierPricesWithDiscounts, mo => mo.Ignore())

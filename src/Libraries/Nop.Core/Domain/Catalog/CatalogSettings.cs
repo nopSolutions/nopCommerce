@@ -284,6 +284,11 @@ namespace Nop.Core.Domain.Catalog
         public bool IncludeFeaturedProductsInNormalLists { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether to render link to required products in "Require other products added to the cart" warning
+        /// </summary>
+        public bool UseLinksInRequiredProductWarnings { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether tier prices should be displayed with applied discounts (if available)
         /// </summary>
         public bool DisplayTierPricesWithDiscounts { get; set; }
