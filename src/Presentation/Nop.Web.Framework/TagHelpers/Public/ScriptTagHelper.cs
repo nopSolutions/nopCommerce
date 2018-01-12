@@ -82,7 +82,7 @@ namespace Nop.Web.Framework.TagHelpers.Public
                 if (!attribute.Name.StartsWith("asp-"))
                     scriptTag.Attributes.Add(attribute.Name, attribute.Value.ToString());
 
-            _htmlHelper.AppendInlineScriptParts(Location, scriptTag.RenderHtmlContent());
+            _htmlHelper.AddInlineScriptParts(Location, scriptTag.RenderHtmlContent());
 
             //generate nothing
             output.SuppressOutput();
