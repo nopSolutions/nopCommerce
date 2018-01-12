@@ -1371,7 +1371,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ErrorNotification(string.Format(_localizationService.GetResource("Admin.Catalog.Products.ExceededMaximumNumber"), _vendorSettings.MaximumProductNumber));
                 return RedirectToAction("List");
             }
-
+            
             if (ModelState.IsValid)
             {
                 //a vendor should have access only to his products
@@ -1416,7 +1416,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                     _localizationService.GetResource("Admin.StockQuantityHistory.Messages.Edit"));
 
                 //activity log
-                _customerActivityService.InsertActivity("AddNewProduct", _localizationService.GetResource("ActivityLog.AddNewProduct"), product.Name);
+                _customerActivityService.InsertActivity("AddNewProduct",
+                    string.Format(_localizationService.GetResource("ActivityLog.AddNewProduct"), product.Name), product);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Catalog.Products.Added"));
 
@@ -1611,7 +1612,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 }
 
                 //activity log
-                _customerActivityService.InsertActivity("EditProduct", _localizationService.GetResource("ActivityLog.EditProduct"), product.Name);
+                _customerActivityService.InsertActivity("EditProduct",
+                    string.Format(_localizationService.GetResource("ActivityLog.EditProduct"), product.Name), product);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Catalog.Products.Updated"));
 
@@ -1655,7 +1657,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             _productService.DeleteProduct(product);
 
             //activity log
-            _customerActivityService.InsertActivity("DeleteProduct", _localizationService.GetResource("ActivityLog.DeleteProduct"), product.Name);
+            _customerActivityService.InsertActivity("DeleteProduct",
+                string.Format(_localizationService.GetResource("ActivityLog.DeleteProduct"), product.Name), product);
 
             SuccessNotification(_localizationService.GetResource("Admin.Catalog.Products.Deleted"));
             return RedirectToAction("List");
@@ -1700,6 +1703,34 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ErrorNotification(exc.Message);
                 return RedirectToAction("Edit", new { id = copyModel.Id });
             }
+        }
+
+        //action displaying notification (warning) to a store owner that entered SKU already exists
+        public virtual IActionResult SkuReservedWarning(int productId, string sku)
+        {
+            //check whether product with passed SKU already exists
+            var productBySku = _productService.GetProductBySku(sku);
+            if (productBySku != null)
+            {
+                if (productBySku.Id != productId)
+                {
+                    var message = string.Format(_localizationService.GetResource("Admin.Catalog.Products.Fields.Sku.Reserved"), productBySku.Name);
+                    return Json(new { Result = message });
+                }
+            }
+            else
+            {
+                //check whether combination with passed SKU already exists
+                var combinationBySku = _productAttributeService.GetProductAttributeCombinationBySku(sku);
+                if (combinationBySku != null)
+                {
+                    var message = string.Format(_localizationService.GetResource("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.Sku.Reserved"), 
+                        combinationBySku.Product.Name);
+                    return Json(new { Result = message });
+                }
+            }
+
+            return Json(new { Result = string.Empty });
         }
 
         #endregion
@@ -2423,6 +2454,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
                 return RedirectToAction("List");
 
+            if (_productService.GetProductPicturesByProductId(productId).Any(p => p.PictureId == pictureId))
+                return Json(new { Result = false });
+
             var picture = _pictureService.GetPictureById(pictureId);
             if (picture == null)
                 throw new ArgumentException("No picture found with the specified id");
@@ -3141,52 +3175,62 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
-            return View();
+            var model = new LowStockProductListModel();
+
+            //prepare options to search by published low stock products
+            var allText = _localizationService.GetResource("Admin.Catalog.LowStockReport.SearchPublished.All");
+            model.AvailablePublishedOptions.Add(new SelectListItem { Text = allText, Value = "0" });
+            var publishedOnlyText = _localizationService.GetResource("Admin.Catalog.LowStockReport.SearchPublished.PublishedOnly");
+            model.AvailablePublishedOptions.Add(new SelectListItem { Text = publishedOnlyText, Value = "1" });
+            var unpublishedOnlyText = _localizationService.GetResource("Admin.Catalog.LowStockReport.SearchPublished.UnpublishedOnly");
+            model.AvailablePublishedOptions.Add(new SelectListItem { Text = unpublishedOnlyText, Value = "2" });
+
+            return View(model);
         }
 
         [HttpPost]
-        public virtual IActionResult LowStockReportList(DataSourceRequest command)
+        public virtual IActionResult LowStockReportList(DataSourceRequest command, LowStockProductListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedKendoGridJson();
 
-            var vendorId = 0;
             //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null)
-                vendorId = _workContext.CurrentVendor.Id;
+            var vendorId = _workContext.CurrentVendor?.Id;
 
-            IList<Product> products = _productService.GetLowStockProducts(vendorId);
-            IList<ProductAttributeCombination> combinations = _productService.GetLowStockProductCombinations(vendorId);
+            //whether to load unpublished products 
+            var loadPublishedOnly = model.SearchPublishedId == 0 ? null 
+                : model.SearchPublishedId == 1 ? true 
+                : model.SearchPublishedId == 2 ? (bool?)false 
+                : null;
 
+            //get low stock product and product combinations
+            var products = _productService.GetLowStockProducts(vendorId, loadPublishedOnly);
+            var combinations = _productService.GetLowStockProductCombinations(vendorId, loadPublishedOnly);
+
+            //prepare model
             var models = new List<LowStockProductModel>();
-            //products
-            foreach (var product in products)
+            models.AddRange(products.Select(product => new LowStockProductModel
             {
-                var lowStockModel = new LowStockProductModel
-                {
-                    Id = product.Id,
-                    Name = product.Name,
-                    ManageInventoryMethod = product.ManageInventoryMethod.GetLocalizedEnum(_localizationService, _workContext.WorkingLanguage.Id),
-                    StockQuantity = product.GetTotalStockQuantity(),
-                    Published = product.Published
-                };
-                models.Add(lowStockModel);
-            }
-            //combinations
-            foreach (var combination in combinations)
+                Id = product.Id,
+                Name = product.Name,
+                ManageInventoryMethod = product
+                    .ManageInventoryMethod.GetLocalizedEnum(_localizationService, _workContext.WorkingLanguage.Id),
+                StockQuantity = product.GetTotalStockQuantity(),
+                Published = product.Published
+            }));
+
+            models.AddRange(combinations.Select(combination => new LowStockProductModel
             {
-                var product = combination.Product;
-                var lowStockModel = new LowStockProductModel
-                {
-                    Id = product.Id,
-                    Name = product.Name,
-                    Attributes = _productAttributeFormatter.FormatAttributes(product, combination.AttributesXml, _workContext.CurrentCustomer, "<br />", true, true, true, false),
-                    ManageInventoryMethod = product.ManageInventoryMethod.GetLocalizedEnum(_localizationService, _workContext.WorkingLanguage.Id),
-                    StockQuantity = combination.StockQuantity,
-                    Published = product.Published
-                };
-                models.Add(lowStockModel);
-            }
+                Id = combination.Product.Id,
+                Name = combination.Product.Name,
+                Attributes = _productAttributeFormatter
+                    .FormatAttributes(combination.Product, combination.AttributesXml, _workContext.CurrentCustomer, "<br />", true, true, true, false),
+                ManageInventoryMethod = combination.Product
+                    .ManageInventoryMethod.GetLocalizedEnum(_localizationService, _workContext.WorkingLanguage.Id),
+                StockQuantity = combination.StockQuantity,
+                Published = combination.Product.Published
+            }));
+
             var gridModel = new DataSourceResult
             {
                 Data = models.PagedForCommand(command),

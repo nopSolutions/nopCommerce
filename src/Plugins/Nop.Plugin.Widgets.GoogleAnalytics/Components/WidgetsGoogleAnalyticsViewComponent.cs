@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
-using Nop.Core.Domain.Orders;
+using Nop.Core.Domain.Customers;
 using Nop.Services.Configuration;
 using Nop.Services.Logging;
 using Nop.Services.Orders;
@@ -13,25 +12,37 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Components
     [ViewComponent(Name = "WidgetsGoogleAnalytics")]
     public class WidgetsGoogleAnalyticsViewComponent : NopViewComponent
     {
+        #region Fields
+
+        private readonly GoogleAnalyticsSettings _googleAnalyticsSettings;
         private readonly IWorkContext _workContext;
         private readonly IStoreContext _storeContext;
         private readonly ISettingService _settingService;
         private readonly IOrderService _orderService;
         private readonly ILogger _logger;
 
-        public WidgetsGoogleAnalyticsViewComponent(
+        #endregion
+
+        #region Ctor
+
+        public WidgetsGoogleAnalyticsViewComponent(GoogleAnalyticsSettings googleAnalyticsSettings,
             IWorkContext workContext,
             IStoreContext storeContext,
             ISettingService settingService,
             IOrderService orderService,
             ILogger logger)
         {
+            this._googleAnalyticsSettings = googleAnalyticsSettings;
             this._workContext = workContext;
             this._storeContext = storeContext;
             this._settingService = settingService;
             this._orderService = orderService;
             this._logger = logger;
         }
+
+        #endregion
+
+        #region Methods
 
         public IViewComponentResult Invoke(string widgetZone, object additionalData)
         {
@@ -78,13 +89,26 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Components
 
         private string GetEcommerceScript()
         {
-            var googleAnalyticsSettings = _settingService.LoadSetting<GoogleAnalyticsSettings>(_storeContext.CurrentStore.Id);
-            var analyticsTrackingScript = googleAnalyticsSettings.TrackingScript + "\n";
-            analyticsTrackingScript = analyticsTrackingScript.Replace("{GOOGLEID}", googleAnalyticsSettings.GoogleId);
+            var analyticsTrackingScript = _googleAnalyticsSettings.TrackingScript + "\n";
+            analyticsTrackingScript = analyticsTrackingScript.Replace("{GOOGLEID}", _googleAnalyticsSettings.GoogleId);
             //remove {ECOMMERCE} (used in previous versions of the plugin)
             analyticsTrackingScript = analyticsTrackingScript.Replace("{ECOMMERCE}", "");
 
+            //whether to include customer identifier
+            var customerIdCode = string.Empty;
+            if (_googleAnalyticsSettings.IncludeCustomerId && !_workContext.CurrentCustomer.IsGuest())
+            {
+                //is it an universal or ga script
+                if (analyticsTrackingScript.Contains("google-analytics.com/ga.js"))
+                    customerIdCode = $"_gaq.push(['_setCustomVar', 1, 'UserID', '{_workContext.CurrentCustomer.Id}', 1]);{Environment.NewLine}";
+                else
+                    customerIdCode = $"ga('set', 'userId', '{_workContext.CurrentCustomer.Id}');{Environment.NewLine}";
+            }
+            analyticsTrackingScript = analyticsTrackingScript.Replace("{CustomerID}", customerIdCode);
+
             return analyticsTrackingScript;
         }
+
+        #endregion
     }
 }

@@ -10,7 +10,6 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Http.Extensions;
-using Nop.Core.Plugins;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -19,6 +18,7 @@ using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
+using Nop.Services.Plugins;
 using Nop.Services.Shipping;
 using Nop.Web.Extensions;
 using Nop.Web.Factories;
@@ -299,7 +299,7 @@ namespace Nop.Web.Controllers
                 .ToList();
 
             //ship to the same address?
-            if (_shippingSettings.ShipToSameAddress && shipToSameAddress && cart.RequiresShipping(_productService, _productAttributeParser))
+            if (_shippingSettings.ShipToSameAddress && shipToSameAddress && cart.RequiresShipping(_productService, _productAttributeParser) && address.Country.AllowsShipping)
             {
                 _workContext.CurrentCustomer.ShippingAddress = _workContext.CurrentCustomer.BillingAddress;
                 _customerService.UpdateCustomer(_workContext.CurrentCustomer);
@@ -1187,7 +1187,7 @@ namespace Nop.Web.Controllers
                 if (cart.RequiresShipping(_productService, _productAttributeParser))
                 {
                     //shipping is required
-                    if (_shippingSettings.ShipToSameAddress && model.ShipToSameAddress)
+                    if (_shippingSettings.ShipToSameAddress && model.ShipToSameAddress && _workContext.CurrentCustomer.BillingAddress.Country.AllowsShipping)
                     {
                         //ship to the same address
                         _workContext.CurrentCustomer.ShippingAddress = _workContext.CurrentCustomer.BillingAddress;

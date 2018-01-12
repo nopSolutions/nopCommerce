@@ -135,6 +135,12 @@ namespace Nop.Services.Tests.ExportImport
             _exportManager = new ExportManager(_categoryService, _manufacturerService, _customerService, _productAttributeService, _pictureService, _newsLetterSubscriptionService, _storeService, _workContext, _productEditorSettings, _vendorService, _productTemplateService, _dateRangeService, _taxCategoryService, _measureService, _catalogSettings, _genericAttributeService, _customerAttributeFormatter, _orderSettings, _specificationAttributeService);
         }
 
+        [OneTimeTearDown]
+        public void TearDown()
+        {
+            EngineContext.Replace(null);
+        }
+
         #region Utilities
 
         protected static T PropertiesShouldEqual<T, Tp>(T actual, PropertyManager<Tp> manager, IDictionary<string, string> replacePairs, params string[] filter)

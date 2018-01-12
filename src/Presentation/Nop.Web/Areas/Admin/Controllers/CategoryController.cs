@@ -398,7 +398,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 SaveStoreMappings(category, model);
 
                 //activity log
-                _customerActivityService.InsertActivity("AddNewCategory", _localizationService.GetResource("ActivityLog.AddNewCategory"), category.Name);
+                _customerActivityService.InsertActivity("AddNewCategory",
+                    string.Format(_localizationService.GetResource("ActivityLog.AddNewCategory"), category.Name), category);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Catalog.Categories.Added"));
 
@@ -516,7 +517,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 SaveStoreMappings(category, model);
 
                 //activity log
-                _customerActivityService.InsertActivity("EditCategory", _localizationService.GetResource("ActivityLog.EditCategory"), category.Name);
+                _customerActivityService.InsertActivity("EditCategory",
+                    string.Format(_localizationService.GetResource("ActivityLog.EditCategory"), category.Name), category);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Catalog.Categories.Updated"));
                 if (continueEditing)
@@ -559,7 +561,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             _categoryService.DeleteCategory(category);
 
             //activity log
-            _customerActivityService.InsertActivity("DeleteCategory", _localizationService.GetResource("ActivityLog.DeleteCategory"), category.Name);
+            _customerActivityService.InsertActivity("DeleteCategory",
+                string.Format(_localizationService.GetResource("ActivityLog.DeleteCategory"), category.Name), category);
 
             SuccessNotification(_localizationService.GetResource("Admin.Catalog.Categories.Deleted"));
             return RedirectToAction("List");

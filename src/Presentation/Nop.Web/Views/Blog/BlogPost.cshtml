@@ -18,7 +18,7 @@
     @await Component.InvokeAsync("Widget", new { widgetZone = "left_side_column_blog_after" })
 }
 <div class="page blogpost-page">
-    @await Component.InvokeAsync("Widget", new { widgetZone = "blogpost_page_top", additionalData = Model.Id })
+    @await Component.InvokeAsync("Widget", new { widgetZone = "blogpost_page_top", additionalData = Model })
     <div class="page-title">
         <h1>@Model.Title</h1>
     </div>
@@ -26,7 +26,7 @@
         <div class="post-date">
             @Model.CreatedOn.ToString("D")
         </div>
-        @await Component.InvokeAsync("Widget", new { widgetZone = "blogpost_page_before_body", additionalData = Model.Id })
+        @await Component.InvokeAsync("Widget", new { widgetZone = "blogpost_page_before_body", additionalData = Model })
         <div class="post-body">
             @Html.Raw(Model.Body)
         </div>
@@ -47,7 +47,7 @@
                 </ul>
             </div>
         }
-        @await Component.InvokeAsync("Widget", new { widgetZone = "blogpost_page_before_comments", additionalData = Model.Id })
+        @await Component.InvokeAsync("Widget", new { widgetZone = "blogpost_page_before_comments", additionalData = Model })
         @if (Model.AllowComments)
         {
             <div class="fieldset new-comment" id="comments">
@@ -131,14 +131,14 @@
                                         @Html.Raw(Nop.Core.Html.HtmlHelper.FormatText(comment.CommentText, false, true, false, false, false, false))
                                     </div>
                                 </div>
-                                @await Component.InvokeAsync("Widget", new { widgetZone = "blogpost_page_inside_comment", additionalData = comment.Id })
+                                @await Component.InvokeAsync("Widget", new { widgetZone = "blogpost_page_inside_comment", additionalData = comment })
                             </div>
                         }
                     </div>
                 </div>
             }
         }
-        @await Component.InvokeAsync("Widget", new { widgetZone = "blogpost_page_after_comments", additionalData = Model.Id })
+        @await Component.InvokeAsync("Widget", new { widgetZone = "blogpost_page_after_comments", additionalData = Model })
     </div>
-    @await Component.InvokeAsync("Widget", new { widgetZone = "blogpost_page_bottom", additionalData = Model.Id })
+    @await Component.InvokeAsync("Widget", new { widgetZone = "blogpost_page_bottom", additionalData = Model })
 </div>

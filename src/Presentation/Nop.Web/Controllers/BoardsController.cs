@@ -832,7 +832,7 @@ namespace Nop.Web.Controllers
                     var url = string.Empty;
                     if (pageIndex > 1)
                     {
-                        url = Url.RouteUrl("TopicSlugPaged", new { id = forumPost.TopicId, slug = forumPost.ForumTopic.GetSeName(), page = pageIndex });
+                        url = Url.RouteUrl("TopicSlugPaged", new { id = forumPost.TopicId, slug = forumPost.ForumTopic.GetSeName(), pageNumber = pageIndex });
                     }
                     else
                     {
@@ -955,7 +955,7 @@ namespace Nop.Web.Controllers
                     var url = string.Empty;
                     if (pageIndex > 1)
                     {
-                        url = Url.RouteUrl("TopicSlugPaged", new { id = forumPost.TopicId, slug = forumPost.ForumTopic.GetSeName(), page = pageIndex });
+                        url = Url.RouteUrl("TopicSlugPaged", new { id = forumPost.TopicId, slug = forumPost.ForumTopic.GetSeName(), pageNumber = pageIndex });
                     }
                     else
                     {

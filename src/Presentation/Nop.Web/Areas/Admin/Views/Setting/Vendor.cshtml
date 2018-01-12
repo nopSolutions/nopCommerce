@@ -162,6 +162,16 @@
                         </div>
                         <div class="form-group advanced-setting">
                             <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="ShowVendorOnOrderDetailsPage_OverrideForStore" asp-input="ShowVendorOnOrderDetailsPage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="ShowVendorOnOrderDetailsPage" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="ShowVendorOnOrderDetailsPage" />
+                                <span asp-validation-for="ShowVendorOnOrderDetailsPage"></span>
+                            </div>
+                        </div>
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
                                 <nop-override-store-checkbox asp-for="VendorsBlockItemsToDisplay_OverrideForStore" asp-input="VendorsBlockItemsToDisplay" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
                                 <nop-label asp-for="VendorsBlockItemsToDisplay" />
                             </div>

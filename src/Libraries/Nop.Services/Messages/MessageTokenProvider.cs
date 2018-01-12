@@ -1278,7 +1278,7 @@ namespace Nop.Services.Messages
         {
             string topicUrl;
             if (friendlyForumTopicPageIndex.HasValue && friendlyForumTopicPageIndex.Value > 1)
-                topicUrl = $"{GetStoreUrl()}{GetUrlHelper().RouteUrl("TopicSlugPaged", new { id = forumTopic.Id, slug = forumTopic.GetSeName(), page = friendlyForumTopicPageIndex.Value })}";
+                topicUrl = $"{GetStoreUrl()}{GetUrlHelper().RouteUrl("TopicSlugPaged", new { id = forumTopic.Id, slug = forumTopic.GetSeName(), pageNumber = friendlyForumTopicPageIndex.Value })}";
             else
                 topicUrl = $"{GetStoreUrl()}{GetUrlHelper().RouteUrl("TopicSlug", new { id = forumTopic.Id, slug = forumTopic.GetSeName()})}";
             if (appendedPostIdentifierAnchor.HasValue && appendedPostIdentifierAnchor.Value > 0)

@@ -16,7 +16,7 @@
 <div class="content">
     <div class="form-horizontal">
         <div class="panel-group">
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_product_attribute_predefined_values_details_top", additionalData = Model.Id })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_product_attribute_predefined_values_details_top", additionalData = Model })
             <div class="panel panel-default panel-popup">
                 <div class="panel-body">
                     @(Html.LocalizedEditor<PredefinedProductAttributeValueModel, PredefinedProductAttributeValueLocalizedModel>("productattributevalue-localized",
@@ -92,7 +92,7 @@
                     </div>
                 </div>
             </div>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_product_attribute_predefined_values_details_bottom", additionalData = Model.Id })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_product_attribute_predefined_values_details_bottom", additionalData = Model })
         </div>
     </div>
 </div>

@@ -14,6 +14,7 @@ using Nop.Services.Configuration;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
+using Nop.Services.Plugins;
 using Nop.Services.Security;
 using Nop.Services.Shipping;
 using Nop.Services.Shipping.Date;
@@ -28,8 +29,8 @@ namespace Nop.Web.Areas.Admin.Controllers
 {
     public partial class ShippingController : BaseAdminController
 	{
-		#region Fields
-
+        #region Fields
+        
         private readonly IShippingService _shippingService;
         private readonly ShippingSettings _shippingSettings;
         private readonly ISettingService _settingService;
@@ -180,7 +181,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             PluginManager.SavePluginDescriptor(pluginDescriptor);
 
             //reset plugin cache
-            _pluginFinder.ReloadPlugins();
+            _pluginFinder.ReloadPlugins(pluginDescriptor);
 
             return new NullJsonResult();
         }
@@ -255,7 +256,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             PluginManager.SavePluginDescriptor(pluginDescriptor);
 
             //reset plugin cache
-            _pluginFinder.ReloadPlugins();
+            _pluginFinder.ReloadPlugins(pluginDescriptor);
 
             return new NullJsonResult();
         }
@@ -726,7 +727,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _shippingService.InsertWarehouse(warehouse);
                 
                 //activity log
-                _customerActivityService.InsertActivity("AddNewWarehouse", _localizationService.GetResource("ActivityLog.AddNewWarehouse"), warehouse.Id);
+                _customerActivityService.InsertActivity("AddNewWarehouse",
+                    string.Format(_localizationService.GetResource("ActivityLog.AddNewWarehouse"), warehouse.Id), warehouse);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Shipping.Warehouses.Added"));
                 return continueEditing ? RedirectToAction("EditWarehouse", new { id = warehouse.Id }) : RedirectToAction("Warehouses");
@@ -827,7 +829,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _shippingService.UpdateWarehouse(warehouse);
 
                 //activity log
-                _customerActivityService.InsertActivity("EditWarehouse", _localizationService.GetResource("ActivityLog.EditWarehouse"), warehouse.Id);
+                _customerActivityService.InsertActivity("EditWarehouse",
+                    string.Format(_localizationService.GetResource("ActivityLog.EditWarehouse"), warehouse.Id), warehouse);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Shipping.Warehouses.Updated"));
                 return continueEditing ? RedirectToAction("EditWarehouse", warehouse.Id) : RedirectToAction("Warehouses");
@@ -866,7 +869,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             _shippingService.DeleteWarehouse(warehouse);
 
             //activity log
-            _customerActivityService.InsertActivity("DeleteWarehouse", _localizationService.GetResource("ActivityLog.DeleteWarehouse"), warehouse.Id);
+            _customerActivityService.InsertActivity("DeleteWarehouse",
+                string.Format(_localizationService.GetResource("ActivityLog.DeleteWarehouse"), warehouse.Id), warehouse);
 
             SuccessNotification(_localizationService.GetResource("Admin.Configuration.Shipping.warehouses.Deleted"));
             return RedirectToAction("Warehouses");

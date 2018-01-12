@@ -7,7 +7,7 @@ namespace Nop.Data.Mapping.Shipping
     /// <summary>
     /// Mapping class
     /// </summary>
-    public class ProductAvailabilityRangeMap : NopEntityTypeConfiguration<ProductAvailabilityRange>
+    public partial class ProductAvailabilityRangeMap : NopEntityTypeConfiguration<ProductAvailabilityRange>
     {
         public override void Configure(EntityTypeBuilder<ProductAvailabilityRange> builder)
         {

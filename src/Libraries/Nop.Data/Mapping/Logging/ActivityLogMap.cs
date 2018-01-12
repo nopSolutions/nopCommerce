@@ -16,7 +16,7 @@ namespace Nop.Data.Mapping.Logging
             builder.HasKey(al => al.Id);
             builder.Property(al => al.Comment).IsRequired();
             builder.Property(al => al.IpAddress).HasMaxLength(200);
-
+            builder.Property(al => al.EntityName).HasMaxLength(400);
             builder.HasOne(al => al.ActivityLogType)
                 .WithMany()
                 .IsRequired(true)

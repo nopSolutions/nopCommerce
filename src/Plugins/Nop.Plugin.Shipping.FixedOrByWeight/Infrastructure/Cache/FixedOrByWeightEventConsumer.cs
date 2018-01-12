@@ -8,7 +8,7 @@ namespace Nop.Plugin.Shipping.FixedOrByWeight.Infrastructure.Cache
     /// <summary>
     /// Event consumer of the "Fixed or by weight" shipping plugin (used for removing unused settings)
     /// </summary>
-    public partial class FixedOrByWeightEventConsumer : IConsumer<EntityDeleted<ShippingMethod>>
+    public partial class FixedOrByWeightEventConsumer : IConsumer<EntityDeletedEvent<ShippingMethod>>
     {
         #region Fields
         
@@ -31,7 +31,7 @@ namespace Nop.Plugin.Shipping.FixedOrByWeight.Infrastructure.Cache
         /// Handle shipping method deleted event
         /// </summary>
         /// <param name="eventMessage">Event message</param>
-        public void HandleEvent(EntityDeleted<ShippingMethod> eventMessage)
+        public void HandleEvent(EntityDeletedEvent<ShippingMethod> eventMessage)
         {
             var shippingMethod = eventMessage?.Entity;
             if (shippingMethod == null)

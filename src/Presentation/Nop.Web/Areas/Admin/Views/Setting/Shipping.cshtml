@@ -85,7 +85,7 @@
                                     <nop-label asp-for="FreeShippingOverXValue" />
                                 </div>
                                 <div class="col-md-9">
-                                    <nop-editor asp-for="FreeShippingOverXValue" />
+                                    <nop-editor asp-for="FreeShippingOverXValue" asp-postfix="@Model.PrimaryStoreCurrencyCode"/>
                                     <span asp-validation-for="FreeShippingOverXValue"></span>
                                 </div>
                             </div>

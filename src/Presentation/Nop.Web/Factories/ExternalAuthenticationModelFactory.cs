@@ -40,19 +40,12 @@ namespace Nop.Web.Factories
         /// <returns>List of the external authentication method model</returns>
         public virtual List<ExternalAuthenticationMethodModel> PrepareExternalMethodsModel()
         {
-            var models = _externalAuthenticationService
+            return _externalAuthenticationService
                 .LoadActiveExternalAuthenticationMethods(_workContext.CurrentCustomer, _storeContext.CurrentStore.Id)
-                .Select(authenticationMethod =>
+                .Select(authenticationMethod => new ExternalAuthenticationMethodModel
                 {
-                    authenticationMethod.GetPublicViewComponent(out string viewComponentName);
-
-                    return new ExternalAuthenticationMethodModel
-                    {
-                        ViewComponentName = viewComponentName
-                    };
+                    ViewComponentName = authenticationMethod.GetPublicViewComponentName()
                 }).ToList();
-
-            return models;
         }
 
         #endregion

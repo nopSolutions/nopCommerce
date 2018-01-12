@@ -6,7 +6,6 @@ using Nop.Core;
 using Nop.Core.Data;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
-using Nop.Core.Plugins;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Events;
@@ -14,6 +13,7 @@ using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Messages;
 using Nop.Services.Orders;
+using Nop.Services.Plugins;
 
 namespace Nop.Services.Authentication.External
 {
@@ -238,7 +238,8 @@ namespace Nop.Services.Authentication.External
             _eventPublisher.Publish(new CustomerLoggedinEvent(user));
 
             //activity log
-            _customerActivityService.InsertActivity("PublicStore.Login", _localizationService.GetResource("ActivityLog.PublicStore.Login"), user);
+            _customerActivityService.InsertActivity(user, "PublicStore.Login", 
+                _localizationService.GetResource("ActivityLog.PublicStore.Login"), user);
 
             return SuccessfulAuthentication(returnUrl);
         }

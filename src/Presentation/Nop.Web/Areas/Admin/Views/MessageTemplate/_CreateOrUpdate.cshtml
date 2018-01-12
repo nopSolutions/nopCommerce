@@ -10,7 +10,7 @@
     <div class="form-horizontal">
         @await Component.InvokeAsync("SettingMode", new { modeName = "messagetemplate-advanced-mode" })
         <div class="panel-group">
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_message_template_details_top", additionalData = Model.Id })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_message_template_details_top", additionalData = Model })
             <div class="panel panel-default">
                 <div class="panel-body">
                     <div class="margin-bottom">
@@ -282,7 +282,7 @@
                     </div>
                 </div>
             </div>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_message_template_details_bottom", additionalData = Model.Id })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_message_template_details_bottom", additionalData = Model })
         </div>
         <script type="text/javascript">
     $(document).ready(function() {

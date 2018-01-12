@@ -1,11 +1,12 @@
-﻿
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+
 namespace Nop.Web.Framework.Events
 {
     /// <summary>
-    /// Represents an event that occurs after the model is prepared for view
+    /// Represents an event that occurs after the model is received from the view
     /// </summary>
     /// <typeparam name="T">Type of the model</typeparam>
-    public class ModelPrepared<T>
+    public class ModelReceivedEvent<T>
     {
         #region Ctor
 
@@ -13,9 +14,11 @@ namespace Nop.Web.Framework.Events
         /// Ctor
         /// </summary>
         /// <param name="model">Model</param>
-        public ModelPrepared(T model)
+        /// <param name="modelState">Model state</param>
+        public ModelReceivedEvent(T model, ModelStateDictionary modelState)
         {
             this.Model = model;
+            this.ModelState = modelState;
         }
 
         #endregion
@@ -26,6 +29,11 @@ namespace Nop.Web.Framework.Events
         /// Gets a model
         /// </summary>
         public T Model { get; private set; }
+
+        /// <summary>
+        /// Gets a model state
+        /// </summary>
+        public ModelStateDictionary ModelState { get; private set; }
 
         #endregion
     }

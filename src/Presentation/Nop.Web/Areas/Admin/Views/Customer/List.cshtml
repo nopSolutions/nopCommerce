@@ -2,6 +2,9 @@
 @inject AdminAreaSettings adminAreaSettings
 
 @using System.Globalization;
+@using Nop.Core.Domain.Media
+
+@inject MediaSettings _mediaSettings
 
 @{
     var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
@@ -278,6 +281,15 @@
                     title: "@T("Admin.Customers.Customers.Fields.Email")",
                     width: 200
                 },
+                @if (Model.AvatarEnabled)
+                {
+                   <text>{
+                    field: "AvatarUrl",
+                    title: "@T("Admin.Customers.Customers.Fields.Avatar")",
+                    width: @(_mediaSettings.AvatarPictureSize),
+                    template: "<img src='#=AvatarUrl#' class='avatar-img' alt='@T("Admin.Customers.Customers.Fields.Avatar")'/>"
+                },</text>
+                }
                 @if (Model.UsernamesEnabled)
                 {
                     <text>{

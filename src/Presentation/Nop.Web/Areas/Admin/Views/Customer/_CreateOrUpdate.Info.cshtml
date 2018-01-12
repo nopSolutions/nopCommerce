@@ -33,7 +33,7 @@
     </script>
 }
 <div class="panel-group">
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_customer_details_info_top", additionalData = Model.Id })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_customer_details_info_top", additionalData = Model })
     <div class="panel panel-default">
         <div class="panel-body">
             @if (Model.UsernamesEnabled)
@@ -521,5 +521,5 @@
             }
         </div>
     </div>
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_customer_details_info_bottom", additionalData = Model.Id })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_customer_details_info_bottom", additionalData = Model })
 </div>

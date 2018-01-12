@@ -77,6 +77,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly ILanguageService _languageService;
         private readonly ILocalizedEntityService _localizedEntityService;
         private readonly NopConfig _config;
+	    private readonly CurrencySettings _currencySettings;
 
         #endregion
 
@@ -105,7 +106,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             IReturnRequestService returnRequestService,
             ILanguageService languageService,
             ILocalizedEntityService localizedEntityService,
-            NopConfig config)
+            NopConfig config,
+            CurrencySettings currencySettings)
         {
             this._settingService = settingService;
             this._countryService = countryService;
@@ -131,6 +133,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             this._languageService = languageService;
             this._localizedEntityService = localizedEntityService;
             this._config = config;
+            this._currencySettings = currencySettings;
         }
 
         #endregion
@@ -252,6 +255,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 model.VendorsBlockItemsToDisplay_OverrideForStore = _settingService.SettingExists(vendorSettings, x => x.VendorsBlockItemsToDisplay, storeScope);
                 model.ShowVendorOnProductDetailsPage_OverrideForStore = _settingService.SettingExists(vendorSettings, x => x.ShowVendorOnProductDetailsPage, storeScope);
+                model.ShowVendorOnOrderDetailsPage_OverrideForStore = _settingService.SettingExists(vendorSettings, x => x.ShowVendorOnOrderDetailsPage, storeScope);
                 model.AllowCustomersToContactVendors_OverrideForStore = _settingService.SettingExists(vendorSettings, x => x.AllowCustomersToContactVendors, storeScope);
                 model.AllowCustomersToApplyForVendorAccount_OverrideForStore = _settingService.SettingExists(vendorSettings, x => x.AllowCustomersToApplyForVendorAccount, storeScope);
                 model.TermsOfServiceEnabled_OverrideForStore = _settingService.SettingExists(vendorSettings, x => x.TermsOfServiceEnabled, storeScope);
@@ -281,6 +285,7 @@ namespace Nop.Web.Areas.Admin.Controllers
              * and loaded from database after each update */
             _settingService.SaveSettingOverridablePerStore(vendorSettings, x => x.VendorsBlockItemsToDisplay, model.VendorsBlockItemsToDisplay_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(vendorSettings, x => x.ShowVendorOnProductDetailsPage, model.ShowVendorOnProductDetailsPage_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(vendorSettings, x => x.ShowVendorOnOrderDetailsPage, model.ShowVendorOnOrderDetailsPage_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(vendorSettings, x => x.AllowCustomersToContactVendors, model.AllowCustomersToContactVendors_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(vendorSettings, x => x.AllowCustomersToApplyForVendorAccount, model.AllowCustomersToApplyForVendorAccount_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(vendorSettings, x => x.TermsOfServiceEnabled, model.TermsOfServiceEnabled_OverrideForStore, storeScope, false);
@@ -457,6 +462,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             var shippingSettings = _settingService.LoadSetting<ShippingSettings>(storeScope);
             var model = shippingSettings.ToModel();
             model.ActiveStoreScopeConfiguration = storeScope;
+            model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
+
             if (storeScope > 0)
             {
                 model.ShipToSameAddress_OverrideForStore = _settingService.SettingExists(shippingSettings, x => x.ShipToSameAddress, storeScope);
@@ -737,10 +744,22 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
             
             //load settings for a chosen store scope
-            var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var storeScope = GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var catalogSettings = _settingService.LoadSetting<CatalogSettings>(storeScope);
             var model = catalogSettings.ToModel();
             model.ActiveStoreScopeConfiguration = storeScope;
+
+            model.AvailableViewModes.Add(new SelectListItem
+            {
+                Text = _localizationService.GetResource("Admin.Catalog.ViewMode.Grid"),
+                Value = "grid"
+            });
+            model.AvailableViewModes.Add(new SelectListItem
+            {
+                Text = _localizationService.GetResource("Admin.Catalog.ViewMode.List"),
+                Value = "list"
+            });
+
             if (storeScope > 0)
             {
                 model.AllowViewUnpublishedProductPage_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.AllowViewUnpublishedProductPage, storeScope);
@@ -752,6 +771,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 model.ShowFreeShippingNotification_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.ShowFreeShippingNotification, storeScope);
                 model.AllowProductSorting_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.AllowProductSorting, storeScope);
                 model.AllowProductViewModeChanging_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.AllowProductViewModeChanging, storeScope);
+                model.DefaultViewMode_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.DefaultViewMode, storeScope);
                 model.ShowProductsFromSubcategories_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.ShowProductsFromSubcategories, storeScope);
                 model.ShowCategoryProductNumber_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.ShowCategoryProductNumber, storeScope);
                 model.ShowCategoryProductNumberIncludingSubcategories_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.ShowCategoryProductNumberIncludingSubcategories, storeScope);
@@ -800,6 +820,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 model.ExportImportProductSpecificationAttributes_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.ExportImportProductSpecificationAttributes, storeScope);
                 model.ExportImportProductCategoryBreadcrumb_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.ExportImportProductCategoryBreadcrumb, storeScope);
                 model.ExportImportCategoriesUsingCategoryName_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.ExportImportCategoriesUsingCategoryName, storeScope);
+                model.ExportImportAllowDownloadImages_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.ExportImportAllowDownloadImages, storeScope);
             }
 
             return View(model);
@@ -828,6 +849,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             _settingService.SaveSettingOverridablePerStore(catalogSettings, x => x.ShowFreeShippingNotification, model.ShowFreeShippingNotification_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(catalogSettings, x => x.AllowProductSorting, model.AllowProductSorting_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(catalogSettings, x => x.AllowProductViewModeChanging, model.AllowProductViewModeChanging_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(catalogSettings, x => x.DefaultViewMode, model.DefaultViewMode_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(catalogSettings, x => x.ShowProductsFromSubcategories, model.ShowProductsFromSubcategories_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(catalogSettings, x => x.ShowCategoryProductNumber, model.ShowCategoryProductNumber_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(catalogSettings, x => x.ShowCategoryProductNumberIncludingSubcategories, model.ShowCategoryProductNumberIncludingSubcategories_OverrideForStore, storeScope, false);
@@ -876,6 +898,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             _settingService.SaveSettingOverridablePerStore(catalogSettings, x => x.ExportImportProductSpecificationAttributes, model.ExportImportProductSpecificationAttributes_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(catalogSettings, x => x.ExportImportProductCategoryBreadcrumb, model.ExportImportProductCategoryBreadcrumb_OverrideForStore, storeScope, false); 
             _settingService.SaveSettingOverridablePerStore(catalogSettings, x => x.ExportImportCategoriesUsingCategoryName, model.ExportImportCategoriesUsingCategoryName_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(catalogSettings, x => x.ExportImportAllowDownloadImages, model.ExportImportAllowDownloadImages_OverrideForStore, storeScope, false);
 
             //now settings not overridable per store
             _settingService.SaveSetting(catalogSettings, x => x.IgnoreDiscounts, 0, false);
@@ -2028,7 +2051,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             localizationSettings.LoadAllUrlRecordsOnStartup = model.LocalizationSettings.LoadAllUrlRecordsOnStartup;
             _settingService.SaveSetting(localizationSettings);
 
-            //full-text
+            //full-text (not overridable)
+            commonSettings = _settingService.LoadSetting<CommonSettings>();
             commonSettings.FullTextMode = (FulltextSearchMode)model.FullTextSettings.SearchMode;
             _settingService.SaveSetting(commonSettings);
 
@@ -2287,7 +2311,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             _settingService.SetSetting(model.Name, model.Value, storeId);
 
             //activity log
-            _customerActivityService.InsertActivity("EditSettings", _localizationService.GetResource("ActivityLog.EditSettings"));
+            _customerActivityService.InsertActivity("EditSettings", _localizationService.GetResource("ActivityLog.EditSettings"), setting);
 
             return new NullJsonResult();
         }
@@ -2308,9 +2332,11 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
             var storeId = model.StoreId;
             _settingService.SetSetting(model.Name, model.Value, storeId);
-
+            
             //activity log
-            _customerActivityService.InsertActivity("AddNewSetting", _localizationService.GetResource("ActivityLog.AddNewSetting"), model.Name);
+            _customerActivityService.InsertActivity("AddNewSetting",
+                string.Format(_localizationService.GetResource("ActivityLog.AddNewSetting"), model.Name), 
+                _settingService.GetSetting(model.Name, storeId));
 
             return new NullJsonResult();
         }
@@ -2324,10 +2350,12 @@ namespace Nop.Web.Areas.Admin.Controllers
             var setting = _settingService.GetSettingById(id);
             if (setting == null)
                 throw new ArgumentException("No setting found with the specified id");
+
             _settingService.DeleteSetting(setting);
 
             //activity log
-            _customerActivityService.InsertActivity("DeleteSetting", _localizationService.GetResource("ActivityLog.DeleteSetting"), setting.Name);
+            _customerActivityService.InsertActivity("DeleteSetting",
+                string.Format(_localizationService.GetResource("ActivityLog.DeleteSetting"), setting.Name), setting);
 
             return new NullJsonResult();
         }

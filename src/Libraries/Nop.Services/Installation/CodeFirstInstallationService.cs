@@ -4000,7 +4000,7 @@ namespace Nop.Services.Installation
                 {
                     Name = "Next Day Air",
                     Description = "The one day air shipping",
-                    DisplayOrder = 3
+                    DisplayOrder = 2
                 },
                 new ShippingMethod
                 {

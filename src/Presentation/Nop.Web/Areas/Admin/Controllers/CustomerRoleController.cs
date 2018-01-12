@@ -152,7 +152,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _customerService.InsertCustomerRole(customerRole);
 
                 //activity log
-                _customerActivityService.InsertActivity("AddNewCustomerRole", _localizationService.GetResource("ActivityLog.AddNewCustomerRole"), customerRole.Name);
+                _customerActivityService.InsertActivity("AddNewCustomerRole",
+                    string.Format(_localizationService.GetResource("ActivityLog.AddNewCustomerRole"), customerRole.Name), customerRole);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Customers.CustomerRoles.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = customerRole.Id }) : RedirectToAction("List");
@@ -207,7 +208,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                     _customerService.UpdateCustomerRole(customerRole);
 
                     //activity log
-                    _customerActivityService.InsertActivity("EditCustomerRole", _localizationService.GetResource("ActivityLog.EditCustomerRole"), customerRole.Name);
+                    _customerActivityService.InsertActivity("EditCustomerRole",
+                        string.Format(_localizationService.GetResource("ActivityLog.EditCustomerRole"), customerRole.Name), customerRole);
 
                     SuccessNotification(_localizationService.GetResource("Admin.Customers.CustomerRoles.Updated"));
                     return continueEditing ? RedirectToAction("Edit", new { id = customerRole.Id}) : RedirectToAction("List");
@@ -240,7 +242,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _customerService.DeleteCustomerRole(customerRole);
 
                 //activity log
-                _customerActivityService.InsertActivity("DeleteCustomerRole", _localizationService.GetResource("ActivityLog.DeleteCustomerRole"), customerRole.Name);
+                _customerActivityService.InsertActivity("DeleteCustomerRole",
+                    string.Format(_localizationService.GetResource("ActivityLog.DeleteCustomerRole"), customerRole.Name), customerRole);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Customers.CustomerRoles.Deleted"));
                 return RedirectToAction("List");

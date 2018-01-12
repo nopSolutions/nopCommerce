@@ -444,15 +444,11 @@ namespace Nop.Web.Factories
         /// <returns>Payment info model</returns>
         public virtual CheckoutPaymentInfoModel PreparePaymentInfoModel(IPaymentMethod paymentMethod)
         {
-            paymentMethod.GetPublicViewComponent(out string viewComponentName);
-
-            var model = new CheckoutPaymentInfoModel
+            return new CheckoutPaymentInfoModel
             {
-                PaymentViewComponentName = viewComponentName,
+                PaymentViewComponentName = paymentMethod.GetPublicViewComponentName(),
                 DisplayOrderTotals = _orderSettings.OnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab
             };
-            
-            return model;
         }
 
         /// <summary>

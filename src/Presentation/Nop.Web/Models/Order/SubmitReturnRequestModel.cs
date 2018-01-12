@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Microsoft.AspNetCore.Http;
 using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Mvc.Models;
 
@@ -14,10 +13,7 @@ namespace Nop.Web.Models.Order
             AvailableReturnReasons = new List<ReturnRequestReasonModel>();
             AvailableReturnActions= new List<ReturnRequestActionModel>();
         }
-
-        //MVC is suppressing further validation if the IFormCollection is passed to a controller method. That's why we add to the model
-        public IFormCollection Form { get; set; }
-
+        
         public int OrderId { get; set; }
         public string CustomOrderNumber { get; set; }
 

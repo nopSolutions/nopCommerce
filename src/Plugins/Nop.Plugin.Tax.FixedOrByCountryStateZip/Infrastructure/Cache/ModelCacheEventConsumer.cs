@@ -14,11 +14,11 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Infrastructure.Cache
     /// </summary>
     public partial class ModelCacheEventConsumer : 
         //tax rates
-        IConsumer<EntityInserted<TaxRate>>,
-        IConsumer<EntityUpdated<TaxRate>>,
-        IConsumer<EntityDeleted<TaxRate>>,
+        IConsumer<EntityInsertedEvent<TaxRate>>,
+        IConsumer<EntityUpdatedEvent<TaxRate>>,
+        IConsumer<EntityDeletedEvent<TaxRate>>,
         //tax category
-        IConsumer<EntityDeleted<TaxCategory>>
+        IConsumer<EntityDeletedEvent<TaxCategory>>
     {
         #region Constants
 
@@ -58,7 +58,7 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Infrastructure.Cache
         /// Handle tax rate inserted event
         /// </summary>
         /// <param name="eventMessage">Event message</param>
-        public void HandleEvent(EntityInserted<TaxRate> eventMessage)
+        public void HandleEvent(EntityInsertedEvent<TaxRate> eventMessage)
         {
             //clear cache
             _cacheManager.RemoveByPattern(TAXRATE_PATTERN_KEY);
@@ -68,7 +68,7 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Infrastructure.Cache
         /// Handle tax rate updated event
         /// </summary>
         /// <param name="eventMessage">Event message</param>
-        public void HandleEvent(EntityUpdated<TaxRate> eventMessage)
+        public void HandleEvent(EntityUpdatedEvent<TaxRate> eventMessage)
         {
             //clear cache
             _cacheManager.RemoveByPattern(TAXRATE_PATTERN_KEY);
@@ -78,7 +78,7 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Infrastructure.Cache
         /// Handle tax rate deleted event
         /// </summary>
         /// <param name="eventMessage">Event message</param>
-        public void HandleEvent(EntityDeleted<TaxRate> eventMessage)
+        public void HandleEvent(EntityDeletedEvent<TaxRate> eventMessage)
         {
             //clear cache
             _cacheManager.RemoveByPattern(TAXRATE_PATTERN_KEY);
@@ -88,7 +88,7 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Infrastructure.Cache
         /// Handle tax category deleted event
         /// </summary>
         /// <param name="eventMessage">Event message</param>
-        public void HandleEvent(EntityDeleted<TaxCategory> eventMessage)
+        public void HandleEvent(EntityDeletedEvent<TaxCategory> eventMessage)
         {
             var taxCategory = eventMessage?.Entity;
             if (taxCategory == null)

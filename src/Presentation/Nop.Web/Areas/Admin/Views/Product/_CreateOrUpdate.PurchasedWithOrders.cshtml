@@ -10,7 +10,7 @@
     <p>
         @T("Admin.Catalog.Products.PurchasedWithOrders.Hint")
     </p>
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_product_details_purchased_with_orders_top", additionalData = Model.Id })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_product_details_purchased_with_orders_top", additionalData = Model })
     <div class="panel panel-default">
         <div class="panel-body">
             <div id="purchased-with-orders-grid"></div>
@@ -101,5 +101,5 @@
             </script>
         </div>
     </div>
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_product_details_purchased_with_orders_bottom", additionalData = Model.Id })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_product_details_purchased_with_orders_bottom", additionalData = Model })
 </div>

@@ -17,7 +17,8 @@ namespace Nop.Core
         /// <param name="source">source</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
-        public PagedList(IQueryable<T> source, int pageIndex, int pageSize)
+        /// <param name="getOnlyTotalCount">A value in indicating whether you want to load only total number of records. Set to "true" if you don't want to load data from database</param>
+        public PagedList(IQueryable<T> source, int pageIndex, int pageSize, bool getOnlyTotalCount = false)
         {
             var total = source.Count();
             this.TotalCount = total;
@@ -28,6 +29,8 @@ namespace Nop.Core
 
             this.PageSize = pageSize;
             this.PageIndex = pageIndex;
+            if(getOnlyTotalCount)
+                return;
             this.AddRange(source.Skip(pageIndex * pageSize).Take(pageSize).ToList());
         }
 

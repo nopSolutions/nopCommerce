@@ -159,7 +159,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             var productReviews = _productService.GetAllProductReviews(0, approved, 
                 createdOnFromValue, createdToFromValue, model.SearchText, 
-                model.SearchStoreId, model.SearchProductId, vendorId, 
+                model.SearchStoreId, model.SearchProductId, vendorId, true,
                 command.Page - 1, command.PageSize);
 
             var gridModel = new DataSourceResult
@@ -228,7 +228,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _productService.UpdateProduct(productReview.Product);
 
                 //activity log
-                _customerActivityService.InsertActivity("EditProductReview", _localizationService.GetResource("ActivityLog.EditProductReview"), productReview.Id);
+                _customerActivityService.InsertActivity("EditProductReview",
+                   string.Format(_localizationService.GetResource("ActivityLog.EditProductReview"), productReview.Id), productReview);
 
                 //vendor can edit "Reply text" only
                 if (!isLoggedInAsVendor)
@@ -273,7 +274,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             _productService.DeleteProductReview(productReview);
 
             //activity log
-            _customerActivityService.InsertActivity("DeleteProductReview", _localizationService.GetResource("ActivityLog.DeleteProductReview"), productReview.Id);
+            _customerActivityService.InsertActivity("DeleteProductReview",
+                string.Format(_localizationService.GetResource("ActivityLog.DeleteProductReview"), productReview.Id), productReview);
 
             //update product totals
             _productService.UpdateProductReviewTotals(product);

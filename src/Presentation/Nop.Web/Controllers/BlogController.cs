@@ -204,7 +204,8 @@ namespace Nop.Web.Controllers
                     _workflowMessageService.SendBlogCommentNotificationMessage(comment, _localizationSettings.DefaultAdminLanguageId);
 
                 //activity log
-                _customerActivityService.InsertActivity("PublicStore.AddBlogComment", _localizationService.GetResource("ActivityLog.PublicStore.AddBlogComment"));
+                _customerActivityService.InsertActivity("PublicStore.AddBlogComment",
+                    _localizationService.GetResource("ActivityLog.PublicStore.AddBlogComment"), comment);
 
                 //raise event
                 if (comment.IsApproved)

@@ -46,5 +46,9 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.Vendor.AllowVendorsToImportProducts")]
         public bool AllowVendorsToImportProducts { get; set; }
         public bool AllowVendorsToImportProducts_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Vendor.ShowVendorOnOrderDetailsPage")]
+        public bool ShowVendorOnOrderDetailsPage { get; set; }
+        public bool ShowVendorOnOrderDetailsPage_OverrideForStore { get; set; }
     }
 }

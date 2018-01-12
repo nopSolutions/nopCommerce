@@ -224,22 +224,25 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
                 return AccessDeniedKendoGridJson();
 
-            DiscountType? discountType = null;
-            if (model.SearchDiscountTypeId > 0)
-                discountType = (DiscountType)model.SearchDiscountTypeId;
-            var discounts = _discountService.GetAllDiscounts(discountType,
-                model.SearchDiscountCouponCode,
-                model.SearchDiscountName,
-                true);
+            var discountType = model.SearchDiscountTypeId > 0 ? (DiscountType?)model.SearchDiscountTypeId : null;
+            var startDateUtc = model.SearchStartDate.HasValue ?
+                (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.SearchStartDate.Value, _dateTimeHelper.CurrentTimeZone) : null;
+            var endDateUtc = model.SearchEndDate.HasValue ?
+                (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.SearchEndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1) : null;
+
+            var discounts = _discountService.GetAllDiscounts(discountType, model.SearchDiscountCouponCode, 
+                model.SearchDiscountName, true, startDateUtc, endDateUtc);
 
             var gridModel = new DataSourceResult
             {
-                Data = discounts.PagedForCommand(command).Select(x =>
+                Data = discounts.PagedForCommand(command).Select(discount =>
                 {
-                    var discountModel = x.ToModel();
-                    discountModel.DiscountTypeName = x.DiscountType.GetLocalizedEnum(_localizationService, _workContext);
-                    discountModel.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
-                    discountModel.TimesUsed = _discountService.GetAllDiscountUsageHistory(x.Id, pageSize: 1).TotalCount;
+                    var discountModel = discount.ToModel();
+
+                    discountModel.DiscountTypeName = discount.DiscountType.GetLocalizedEnum(_localizationService, _workContext);
+                    discountModel.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId)?.CurrencyCode;
+                    discountModel.TimesUsed = _discountService.GetAllDiscountUsageHistory(discount.Id, pageSize: 1).TotalCount;
+
                     return discountModel;
                 }),
                 Total = discounts.Count
@@ -273,7 +276,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _discountService.InsertDiscount(discount);
 
                 //activity log
-                _customerActivityService.InsertActivity("AddNewDiscount", _localizationService.GetResource("ActivityLog.AddNewDiscount"), discount.Name);
+                _customerActivityService.InsertActivity("AddNewDiscount",
+                    string.Format(_localizationService.GetResource("ActivityLog.AddNewDiscount"), discount.Name), discount);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Promotions.Discounts.Added"));
 
@@ -344,7 +348,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                     && discount.DiscountType != DiscountType.AssignedToSkus)
                 {
                     //applied to products
-                    var products = discount.AppliedToProducts.ToList();
+                    var products = _discountService.GetProductsWithAppliedDiscount(discount.Id, true);
+
                     discount.AppliedToProducts.Clear();
                     _discountService.UpdateDiscount(discount);
                     //update "HasDiscountsApplied" property
@@ -353,7 +358,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 }
 
                 //activity log
-                _customerActivityService.InsertActivity("EditDiscount", _localizationService.GetResource("ActivityLog.EditDiscount"), discount.Name);
+                _customerActivityService.InsertActivity("EditDiscount",
+                    string.Format(_localizationService.GetResource("ActivityLog.EditDiscount"), discount.Name), discount);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Promotions.Discounts.Updated"));
 
@@ -385,7 +391,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
 
             //applied to products
-            var products = discount.AppliedToProducts.ToList();
+            var products = _discountService.GetProductsWithAppliedDiscount(discount.Id, true);
 
             _discountService.DeleteDiscount(discount);
 
@@ -394,7 +400,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _productService.UpdateHasDiscountsApplied(p.Product);
 
             //activity log
-            _customerActivityService.InsertActivity("DeleteDiscount", _localizationService.GetResource("ActivityLog.DeleteDiscount"), discount.Name);
+            _customerActivityService.InsertActivity("DeleteDiscount",
+                string.Format(_localizationService.GetResource("ActivityLog.DeleteDiscount"), discount.Name), discount);
 
             SuccessNotification(_localizationService.GetResource("Admin.Promotions.Discounts.Deleted"));
             return RedirectToAction("List");
@@ -557,18 +564,16 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (discount == null)
                 throw new Exception("No discount found with the specified id");
 
-            var products = discount
-                .AppliedToProducts
-                .Where(x => !x.Product.Deleted)
-                .ToList();
+            var products = _discountService.GetProductsWithAppliedDiscount(discount.Id, false, command.Page - 1, command.PageSize);
+
             var gridModel = new DataSourceResult
             {
-                Data = products.Select(x => new DiscountModel.AppliedToProductModel
+                Data = products.Select(product => new DiscountModel.AppliedToProductModel
                 {
-                    ProductId = x.ProductId,
-                    ProductName = x.Product.Name
+                    ProductId = product.Id,
+                    ProductName = product.Name
                 }),
-                Total = products.Count
+                Total = products.TotalCount
             };
 
             return Json(gridModel);
@@ -702,18 +707,16 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (discount == null)
                 throw new Exception("No discount found with the specified id");
 
-            var categories = discount
-                .AppliedToCategories
-                .Where(x => !x.Category.Deleted)
-                .ToList();
+            var categories = _discountService.GetCategoriesWithAppliedDiscount(discount.Id, false, command.Page - 1, command.PageSize);
+
             var gridModel = new DataSourceResult
             {
-                Data = categories.Select(x => new DiscountModel.AppliedToCategoryModel
+                Data = categories.Select(category => new DiscountModel.AppliedToCategoryModel
                 {
-                    CategoryId = x.CategoryId,
-                    CategoryName = x.Category.GetFormattedBreadCrumb(_categoryService)
+                    CategoryId = category.Id,
+                    CategoryName = category.GetFormattedBreadCrumb(_categoryService)
                 }),
-                Total = categories.Count()
+                Total = categories.TotalCount
             };
 
             return Json(gridModel);
@@ -816,18 +819,16 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (discount == null)
                 throw new Exception("No discount found with the specified id");
 
-            var manufacturers = discount
-                .AppliedToManufacturers
-                .Where(x => !x.Manufacturer.Deleted)
-                .ToList();
+            var manufacturers = _discountService.GetManufacturersWithAppliedDiscount(discount.Id, false, command.Page - 1, command.PageSize);
+
             var gridModel = new DataSourceResult
             {
-                Data = manufacturers.Select(x => new DiscountModel.AppliedToManufacturerModel
+                Data = manufacturers.Select(manufacturer => new DiscountModel.AppliedToManufacturerModel
                 {
-                    ManufacturerId = x.ManufacturerId,
-                    ManufacturerName = x.Manufacturer.Name
+                    ManufacturerId = manufacturer.Id,
+                    ManufacturerName = manufacturer.Name
                 }),
-                Total = manufacturers.Count
+                Total = manufacturers.TotalCount
             };
 
             return Json(gridModel);

@@ -163,7 +163,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             _logger.DeleteLog(log);
 
             //activity log
-            _customerActivityService.InsertActivity("DeleteSystemLog", _localizationService.GetResource("ActivityLog.DeleteSystemLog"));
+            _customerActivityService.InsertActivity("DeleteSystemLog", _localizationService.GetResource("ActivityLog.DeleteSystemLog"), log);
 
             SuccessNotification(_localizationService.GetResource("Admin.System.Log.Deleted"));
             return RedirectToAction("List");

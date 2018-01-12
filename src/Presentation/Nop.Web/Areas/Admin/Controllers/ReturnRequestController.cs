@@ -209,7 +209,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _customerService.UpdateCustomer(returnRequest.Customer);
 
                 //activity log
-                _customerActivityService.InsertActivity("EditReturnRequest", _localizationService.GetResource("ActivityLog.EditReturnRequest"), returnRequest.Id);
+                _customerActivityService.InsertActivity("EditReturnRequest",
+                    string.Format(_localizationService.GetResource("ActivityLog.EditReturnRequest"), returnRequest.Id), returnRequest);
 
                 SuccessNotification(_localizationService.GetResource("Admin.ReturnRequests.Updated"));
                 return continueEditing ? RedirectToAction("Edit", new { id = returnRequest.Id}) : RedirectToAction("List");
@@ -239,9 +240,10 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return RedirectToAction("Edit", new { id = returnRequest.Id });
             }
             
-            var queuedEmailId = _workflowMessageService.SendReturnRequestStatusChangedCustomerNotification(returnRequest, orderItem, orderItem.Order.CustomerLanguageId);
-            if (queuedEmailId > 0)
+            var queuedEmailIds = _workflowMessageService.SendReturnRequestStatusChangedCustomerNotification(returnRequest, orderItem, orderItem.Order.CustomerLanguageId);
+            if (queuedEmailIds.Any())
                 SuccessNotification(_localizationService.GetResource("Admin.ReturnRequests.Notified"));
+
             return RedirectToAction("Edit",  new {id = returnRequest.Id});
         }
 
@@ -259,7 +261,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             _returnRequestService.DeleteReturnRequest(returnRequest);
 
             //activity log
-            _customerActivityService.InsertActivity("DeleteReturnRequest", _localizationService.GetResource("ActivityLog.DeleteReturnRequest"), returnRequest.Id);
+            _customerActivityService.InsertActivity("DeleteReturnRequest",
+                string.Format(_localizationService.GetResource("ActivityLog.DeleteReturnRequest"), returnRequest.Id), returnRequest);
 
             SuccessNotification(_localizationService.GetResource("Admin.ReturnRequests.Deleted"));
             return RedirectToAction("List");

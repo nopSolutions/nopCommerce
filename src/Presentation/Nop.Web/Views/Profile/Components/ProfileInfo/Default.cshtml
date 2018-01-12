@@ -10,7 +10,7 @@
         <div class="title">
             <strong>@T("Profile.Statistics")</strong>
         </div>
-        @await Component.InvokeAsync("Widget", new { widgetZone = "profile_page_info_userdetails", additionalData = Model.CustomerProfileId })
+        @await Component.InvokeAsync("Widget", new { widgetZone = "profile_page_info_userdetails", additionalData = Model })
         <ul class="stats">
             @if (Model.LocationEnabled)
             {
@@ -41,7 +41,7 @@
                 </li>
             }
         </ul>
-        @await Component.InvokeAsync("Widget", new { widgetZone = "profile_page_info_userstats", additionalData = Model.CustomerProfileId })
+        @await Component.InvokeAsync("Widget", new { widgetZone = "profile_page_info_userstats", additionalData = Model })
     </div>
     @if (Model.PMEnabled)
     {

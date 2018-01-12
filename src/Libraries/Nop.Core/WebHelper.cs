@@ -159,8 +159,12 @@ namespace Nop.Core
             if (result != null && result.Equals("::1", StringComparison.InvariantCultureIgnoreCase))
                 result = "127.0.0.1";
 
-            //remove port
-            if (!string.IsNullOrEmpty(result))
+            //"TryParse" doesn't support IPv4 with port number
+            if (IPAddress.TryParse(result ?? string.Empty, out IPAddress ip))
+                //IP address is valid 
+                result = ip.ToString();
+            else if (!string.IsNullOrEmpty(result))
+                //remove port
                 result = result.Split(':').FirstOrDefault();
 
             return result;

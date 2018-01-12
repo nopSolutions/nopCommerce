@@ -69,7 +69,7 @@ namespace Nop.Core.Domain.Catalog
         public bool AllowProductViewModeChanging { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether customers are allowed to change product view mode
+        /// Gets or sets a default view mode
         /// </summary>
         public string DefaultViewMode { get; set; }
 
@@ -402,5 +402,10 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets a value indicating whether the categories need to be exported/imported using name of category
         /// </summary>
         public bool ExportImportCategoriesUsingCategoryName { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the images can be downloaded from remote server
+        /// </summary>
+        public bool ExportImportAllowDownloadImages { get; set; }
     }
 }

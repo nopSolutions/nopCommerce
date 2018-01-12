@@ -19,7 +19,7 @@
                 <i class="fa fa-floppy-o"></i>
                 @T("Admin.Common.Save")
             </button>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_checkout_attribute_value_details_buttons", additionalData = Model.Id })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_checkout_attribute_value_details_buttons", additionalData = Model })
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdateValue", Model)

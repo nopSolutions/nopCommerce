@@ -1190,7 +1190,7 @@ namespace Nop.Web.Factories
                 ShowGtin = _catalogSettings.ShowGtin,
                 Gtin = product.Gtin,
                 ManageInventoryMethod = product.ManageInventoryMethod,
-                StockAvailability = product.FormatStockMessage("", _localizationService, _productAttributeParser, _dateRangeService),
+                StockAvailability = product.FormatStockMessage("", _localizationService, _productAttributeParser, _dateRangeService, _productAttributeService),
                 HasSampleDownload = product.IsDownload && product.HasSampleDownload,
                 DisplayDiscontinuedMessage = !product.Published && _catalogSettings.DisplayDiscontinuedMessageForUnpublishedProducts
             };
@@ -1431,6 +1431,7 @@ namespace Nop.Web.Factories
 
             var list = _productService.GetAllProductReviews(customerId: _workContext.CurrentCustomer.Id, 
                 approved: null, 
+                storeId: _storeContext.CurrentStore.Id,
                 pageIndex: pageIndex, 
                 pageSize: pageSize);
 

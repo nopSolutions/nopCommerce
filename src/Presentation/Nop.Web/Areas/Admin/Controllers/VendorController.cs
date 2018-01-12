@@ -254,7 +254,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _vendorService.InsertVendor(vendor);
 
                 //activity log
-                _customerActivityService.InsertActivity("AddNewVendor", _localizationService.GetResource("ActivityLog.AddNewVendor"), vendor.Id);
+                _customerActivityService.InsertActivity("AddNewVendor",
+                    string.Format(_localizationService.GetResource("ActivityLog.AddNewVendor"), vendor.Id), vendor);
 
                 //search engine name
                 model.SeName = vendor.ValidateSeName(model.SeName, vendor.Name, true);
@@ -339,7 +340,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _vendorService.UpdateVendor(vendor);
 
                 //activity log
-                _customerActivityService.InsertActivity("EditVendor", _localizationService.GetResource("ActivityLog.EditVendor"), vendor.Id);
+                _customerActivityService.InsertActivity("EditVendor",
+                    string.Format(_localizationService.GetResource("ActivityLog.EditVendor"), vendor.Id), vendor);
 
                 //search engine name
                 model.SeName = vendor.ValidateSeName(model.SeName, vendor.Name, true);
@@ -427,7 +429,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             _vendorService.DeleteVendor(vendor);
 
             //activity log
-            _customerActivityService.InsertActivity("DeleteVendor", _localizationService.GetResource("ActivityLog.DeleteVendor"), vendor.Id);
+            _customerActivityService.InsertActivity("DeleteVendor",
+                string.Format(_localizationService.GetResource("ActivityLog.DeleteVendor"), vendor.Id), vendor);
 
             SuccessNotification(_localizationService.GetResource("Admin.Vendors.Deleted"));
             return RedirectToAction("List");

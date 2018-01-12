@@ -20,6 +20,7 @@ using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Forums;
+using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
@@ -37,6 +38,7 @@ using Nop.Services.Forums;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
+using Nop.Services.Media;
 using Nop.Services.Messages;
 using Nop.Services.Orders;
 using Nop.Services.Security;
@@ -99,6 +101,8 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly IRewardPointService _rewardPointService;
         private readonly IStaticCacheManager _cacheManager;
+        private readonly IPictureService _pictureService;
+        private readonly MediaSettings _mediaSettings;
         
         #endregion
         
@@ -146,7 +150,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             IAffiliateService affiliateService,
             IWorkflowMessageService workflowMessageService,
             IRewardPointService rewardPointService,
-            IStaticCacheManager cacheManager)
+            IStaticCacheManager cacheManager,
+            IPictureService pictureService,
+            MediaSettings mediaSettings)
         {
             this._customerService = customerService;
             this._newsLetterSubscriptionService = newsLetterSubscriptionService;
@@ -191,6 +197,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             this._workflowMessageService = workflowMessageService;
             this._rewardPointService = rewardPointService;
             this._cacheManager = cacheManager;
+            this._mediaSettings = mediaSettings;
+            this._pictureService = pictureService;
         }
         
         #endregion
@@ -266,7 +274,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         
         protected virtual CustomerModel PrepareCustomerModelForList(Customer customer)
         {
-            return new CustomerModel
+            var model = new CustomerModel
             {
                 Id = customer.Id,
                 Email = customer.IsRegistered() ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest"),
@@ -278,8 +286,19 @@ namespace Nop.Web.Areas.Admin.Controllers
                 CustomerRoleNames = GetCustomerRolesNames(customer.CustomerRoles.ToList()),
                 Active = customer.Active,
                 CreatedOn = _dateTimeHelper.ConvertToUserTime(customer.CreatedOnUtc, DateTimeKind.Utc),
-                LastActivityDate = _dateTimeHelper.ConvertToUserTime(customer.LastActivityDateUtc, DateTimeKind.Utc),
+                LastActivityDate = _dateTimeHelper.ConvertToUserTime(customer.LastActivityDateUtc, DateTimeKind.Utc)
             };
+
+            if (_customerSettings.AllowCustomersToUploadAvatars)
+            {
+                model.AvatarUrl = _pictureService.GetPictureUrl(
+                    customer.GetAttribute<int>(SystemCustomerAttributeNames.AvatarPictureId),
+                    _mediaSettings.AvatarPictureSize,
+                    _customerSettings.DefaultAvatarEnabled,
+                    defaultPictureType: PictureType.Avatar);
+            }
+
+            return model;
         }
         
         protected virtual string ValidateCustomerRoles(IList<CustomerRole> customerRoles)
@@ -770,6 +789,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             var model = new CustomerListModel
             {
                 UsernamesEnabled = _customerSettings.UsernamesEnabled,
+                AvatarEnabled = _customerSettings.AllowCustomersToUploadAvatars,
                 DateOfBirthEnabled = _customerSettings.DateOfBirthEnabled,
                 CompanyEnabled = _customerSettings.CompanyEnabled,
                 PhoneEnabled = _customerSettings.PhoneEnabled,
@@ -1021,7 +1041,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 }
 
                 //activity log
-                _customerActivityService.InsertActivity("AddNewCustomer", _localizationService.GetResource("ActivityLog.AddNewCustomer"), customer.Id);
+                _customerActivityService.InsertActivity("AddNewCustomer",
+                    string.Format(_localizationService.GetResource("ActivityLog.AddNewCustomer"), customer.Id), customer);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Customers.Customers.Added"));
 
@@ -1280,7 +1301,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                     }
 
                     //activity log
-                    _customerActivityService.InsertActivity("EditCustomer", _localizationService.GetResource("ActivityLog.EditCustomer"), customer.Id);
+                    _customerActivityService.InsertActivity("EditCustomer",
+                        string.Format(_localizationService.GetResource("ActivityLog.EditCustomer"), customer.Id), customer);
 
                     SuccessNotification(_localizationService.GetResource("Admin.Customers.Customers.Updated"));
                     if (continueEditing)
@@ -1432,7 +1454,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 }
 
                 //activity log
-                _customerActivityService.InsertActivity("DeleteCustomer", _localizationService.GetResource("ActivityLog.DeleteCustomer"), customer.Id);
+                _customerActivityService.InsertActivity("DeleteCustomer",
+                    string.Format(_localizationService.GetResource("ActivityLog.DeleteCustomer"), customer.Id), customer);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Customers.Customers.Deleted"));
                 return RedirectToAction("List");
@@ -1465,8 +1488,12 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             //activity log
-            _customerActivityService.InsertActivity("Impersonation.Started", _localizationService.GetResource("ActivityLog.Impersonation.Started.StoreOwner"), customer.Email, customer.Id);
-            _customerActivityService.InsertActivity(customer, "Impersonation.Started", _localizationService.GetResource("ActivityLog.Impersonation.Started.Customer"), _workContext.CurrentCustomer.Email, _workContext.CurrentCustomer.Id);
+            _customerActivityService.InsertActivity("Impersonation.Started",
+                string.Format(_localizationService.GetResource("ActivityLog.Impersonation.Started.StoreOwner"), 
+                    customer.Email, customer.Id), customer);
+            _customerActivityService.InsertActivity(customer, "Impersonation.Started",
+                string.Format(_localizationService.GetResource("ActivityLog.Impersonation.Started.Customer"), 
+                    _workContext.CurrentCustomer.Email, _workContext.CurrentCustomer.Id), _workContext.CurrentCustomer);
 
             //ensure login is not required
             customer.RequireReLogin = false;
@@ -2061,7 +2088,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                                     createdToUtc: _dateTimeHelper.ConvertToUtcTime(searchYearDateUser.AddMonths(1), timeZone),
                                     customerRoleIds: searchCustomerRoleIds,
                                     pageIndex: 0,
-                                    pageSize: 1).TotalCount.ToString()
+                                    pageSize: 1, getOnlyTotalCount: true).TotalCount.ToString()
                             });
 
                             searchYearDateUser = searchYearDateUser.AddMonths(1);
@@ -2085,7 +2112,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                                     createdToUtc: _dateTimeHelper.ConvertToUtcTime(searchMonthDateUser.AddDays(1), timeZone),
                                     customerRoleIds: searchCustomerRoleIds,
                                     pageIndex: 0,
-                                    pageSize: 1).TotalCount.ToString()
+                                    pageSize: 1, getOnlyTotalCount: true).TotalCount.ToString()
                             });
 
                             searchMonthDateUser = searchMonthDateUser.AddDays(1);
@@ -2109,7 +2136,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                                     createdToUtc: _dateTimeHelper.ConvertToUtcTime(searchWeekDateUser.AddDays(1), timeZone),
                                     customerRoleIds: searchCustomerRoleIds,
                                     pageIndex: 0,
-                                    pageSize: 1).TotalCount.ToString()
+                                    pageSize: 1, getOnlyTotalCount: true).TotalCount.ToString()
                             });
 
                             searchWeekDateUser = searchWeekDateUser.AddDays(1);
@@ -2169,20 +2196,21 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedKendoGridJson();
 
-            var activityLog = _customerActivityService.GetAllActivities(null, null, customerId, 0, command.Page - 1, command.PageSize);
+            var activityLog = _customerActivityService.GetAllActivities(customerId: customerId,
+                pageIndex: command.Page - 1, pageSize: command.PageSize);
+
             var gridModel = new DataSourceResult
             {
-                Data = activityLog.Select(x =>
+                Data = activityLog.Select(logItem =>
                 {
-                    var m = new CustomerModel.ActivityLogModel
+                    return new CustomerModel.ActivityLogModel
                     {
-                        Id = x.Id,
-                        ActivityLogTypeName = x.ActivityLogType.Name,
-                        Comment = x.Comment,
-                        CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc),
-                        IpAddress = x.IpAddress
+                        Id = logItem.Id,
+                        ActivityLogTypeName = logItem.ActivityLogType.Name,
+                        Comment = logItem.Comment,
+                        CreatedOn = _dateTimeHelper.ConvertToUserTime(logItem.CreatedOnUtc, DateTimeKind.Utc),
+                        IpAddress = logItem.IpAddress
                     };
-                    return m;
 
                 }),
                 Total = activityLog.TotalCount

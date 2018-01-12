@@ -299,7 +299,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _currencyService.InsertCurrency(currency);
 
                 //activity log
-                _customerActivityService.InsertActivity("AddNewCurrency", _localizationService.GetResource("ActivityLog.AddNewCurrency"), currency.Id);
+                _customerActivityService.InsertActivity("AddNewCurrency",
+                    string.Format(_localizationService.GetResource("ActivityLog.AddNewCurrency"), currency.Id), currency);
 
                 //locales
                 UpdateLocales(currency, model);
@@ -373,7 +374,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _currencyService.UpdateCurrency(currency);
 
                 //activity log
-                _customerActivityService.InsertActivity("EditCurrency", _localizationService.GetResource("ActivityLog.EditCurrency"), currency.Id);
+                _customerActivityService.InsertActivity("EditCurrency",
+                    string.Format(_localizationService.GetResource("ActivityLog.EditCurrency"), currency.Id), currency);
 
                 //locales
                 UpdateLocales(currency, model);
@@ -429,7 +431,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _currencyService.DeleteCurrency(currency);
 
                 //activity log
-                _customerActivityService.InsertActivity("DeleteCurrency", _localizationService.GetResource("ActivityLog.DeleteCurrency"), currency.Id);
+                _customerActivityService.InsertActivity("DeleteCurrency",
+                    string.Format(_localizationService.GetResource("ActivityLog.DeleteCurrency"), currency.Id), currency);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Currencies.Deleted"));
                 return RedirectToAction("List");

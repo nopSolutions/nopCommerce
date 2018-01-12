@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using FluentValidation.Attributes;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Mvc.Models;
@@ -21,10 +20,7 @@ namespace Nop.Web.Models.Customer
             this.AssociatedExternalAuthRecords = new List<AssociatedExternalAuthModel>();
             this.CustomerAttributes = new List<CustomerAttributeModel>();
         }
-
-        //MVC is suppressing further validation if the IFormCollection is passed to a controller method. That's why we add to the model
-        public IFormCollection Form { get; set; }
-
+        
         [DataType(DataType.EmailAddress)]
         [NopResourceDisplayName("Account.Fields.Email")]
         public string Email { get; set; }

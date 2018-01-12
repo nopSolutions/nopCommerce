@@ -2163,6 +2163,21 @@
   <LocaleResource Name="Admin.Catalog.LowStockReport">
     <Value>Low stock report</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.LowStockReport.SearchPublished">
+    <Value>Published</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.LowStockReport.SearchPublished.Hint">
+    <Value>Search by a "Published" property.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.LowStockReport.SearchPublished.All">
+    <Value>All</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.LowStockReport.SearchPublished.PublishedOnly">
+    <Value>Published only</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.LowStockReport.SearchPublished.UnpublishedOnly">
+    <Value>Unpublished only</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers">
     <Value>Manufacturers</Value>
   </LocaleResource>
@@ -3147,6 +3162,9 @@
   <LocaleResource Name="Admin.Catalog.Products.Fields.Sku.Hint">
     <Value>Product stock keeping unit (SKU). Your internal unique identifier that can be used to track this product.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.Sku.Reserved">
+    <Value>The entered SKU is already reserved for the product '{0}'</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.StockQuantity">
     <Value>Stock quantity</Value>
   </LocaleResource>
@@ -3410,6 +3428,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.Sku.Hint">
     <Value>Product stock keeping unit (SKU). Your internal unique identifier that can be used to track this attribute combination.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.Sku.Reserved">
+    <Value>The entered SKU is already reserved for one of combinations of the product '{0}'</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.StockQuantity">
     <Value>Stock quantity</Value>
@@ -3909,6 +3930,12 @@
   <LocaleResource Name="Admin.Catalog.ProductTags.Fields.ProductCount">
     <Value>Tagged products</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ViewMode.Grid">
+    <Value>Grid</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ViewMode.List">
+    <Value>List</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Common.ActionConfirmation">
     <Value>Are you sure you want to perform this action?</Value>
   </LocaleResource>
@@ -4327,7 +4354,7 @@
     <Value>Currency code</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Currencies.Fields.CurrencyCode.Hint">
-    <Value>The currency code. For a list of currency codes, go to: http://www.iso.org/iso/support/currency_codes_list-1.htm.</Value>
+    <Value>The currency code. For a list of currency codes, go to: https://en.wikipedia.org/wiki/ISO_4217</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Currencies.Fields.CurrencyCode.Range">
     <Value>Currency code must be less than or equal to 5 characters.</Value>
@@ -5226,6 +5253,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.CompareProductsEnabled.Hint">
     <Value>Check to allow customers to use the 'Compare Products' option in your store.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.DefaultViewMode">
+    <Value>Default view mode</Value>
+  </LocaleResource>    
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.DefaultViewMode.Hint">
+    <Value>Choose the default view mode for catalog pages.</Value>
+  </LocaleResource>    
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.DisplayDiscontinuedMessageForUnpublishedProducts">
     <Value>Discontinued message for unpublished products</Value>
   </LocaleResource>
@@ -5274,6 +5307,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.EmailAFriendEnabled.Hint">
     <Value>Check to allow customers to use the 'Email a friend' option in your store.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ExportImportAllowDownloadImages">
+    <Value>Export/Import products. Allow download images</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ExportImportAllowDownloadImages.Hint">
+    <Value>Check if images can be downloaded from remote server when exporting products</Value>
+  </LocaleResource>   
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ExportImportCategoriesUsingCategoryName">
     <Value>Export/Import categories using name of category</Value>
   </LocaleResource>
@@ -5530,7 +5569,7 @@
     <Value>Reviews per store</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowProductReviewsPerStore.Hint">
-    <Value>Check to display reviews written in the current store only (on a product details page).</Value>
+    <Value>Check to display reviews written in the current store only (on a product details page and on the account product reviews page).</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowProductReviewsTabOnAccountPage">
     <Value>Show product reviews tab on 'My account' page</Value>
@@ -7944,6 +7983,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Vendor.NotifyStoreOwnerAboutVendorInformationChange.Hint">
     <Value>Check to notify a store owner about vendor information changes.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.ShowVendorOnOrderDetailsPage">
+    <Value>Show vendor name on order details page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.ShowVendorOnOrderDetailsPage.Hint">
+    <Value>Check to show vendor name of product on the order details page.</Value>
+  </LocaleResource>  
   <LocaleResource Name="Admin.Configuration.Settings.Vendor.ShowVendorOnProductDetailsPage">
     <Value>Show vendor on product details page</Value>
   </LocaleResource>
@@ -9369,6 +9414,12 @@
   <LocaleResource Name="Admin.ContentManagement.Topics.Info">
     <Value>Info</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.List.SearchKeywords">
+    <Value>Search keywords</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.List.SearchKeywords.Hint">
+    <Value>Search topic(s) by specific keywords.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Topics.List.SearchStore">
     <Value>Store</Value>
   </LocaleResource>
@@ -9758,6 +9809,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.Fields.Affiliate.Remove">
     <Value>Remove affiliate</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.Avatar">
+    <Value>Avatar</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.Fields.City">
     <Value>City</Value>
@@ -11882,6 +11936,18 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Discounts.List.SearchDiscountType.Hint">
     <Value>Search by discount type.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.List.SearchEndDate">
+    <Value>End date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.List.SearchEndDate.Hint">
+    <Value>The end date for the search.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.List.SearchStartDate">
+    <Value>Start date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.List.SearchStartDate.Hint">
+    <Value>The start date for the search.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Discounts.Requirements">
     <Value>Requirements</Value>
@@ -14118,6 +14184,18 @@
   <LocaleResource Name="Enums.Nop.Core.Domain.Customers.RewardPointsActivatingDelayPeriod.Hours">
     <Value>Hours</Value>
   </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Customers.UserRegistrationType.AdminApproval">
+    <Value>A customer should be approved by administrator</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Customers.UserRegistrationType.Disabled">
+    <Value>Registration is disabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Customers.UserRegistrationType.EmailValidation">
+    <Value>Email validation is required after registration</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Customers.UserRegistrationType.Standard">
+    <Value>Standard account creation</Value>
+  </LocaleResource>
   <LocaleResource Name="Enums.Nop.Core.Domain.Directory.RoundingType.Rounding001">
     <Value>Default rounding</Value>
   </LocaleResource>
@@ -14288,18 +14366,6 @@
   </LocaleResource>
   <LocaleResource Name="Enums.Nop.Core.Domain.Security.PasswordFormat.Hashed">
     <Value>Hashed</Value>
-  </LocaleResource>
-  <LocaleResource Name="Enums.Nop.Core.Domain.Security.UserRegistrationType.AdminApproval">
-    <Value>A customer should be approved by administrator</Value>
-  </LocaleResource>
-  <LocaleResource Name="Enums.Nop.Core.Domain.Security.UserRegistrationType.Disabled">
-    <Value>Registration is disabled</Value>
-  </LocaleResource>
-  <LocaleResource Name="Enums.Nop.Core.Domain.Security.UserRegistrationType.EmailValidation">
-    <Value>Email validation is required after registration</Value>
-  </LocaleResource>
-  <LocaleResource Name="Enums.Nop.Core.Domain.Security.UserRegistrationType.Standard">
-    <Value>Standard account creation</Value>
   </LocaleResource>
   <LocaleResource Name="Enums.Nop.Core.Domain.Seo.PageTitleSeoAdjustment.PagenameAfterStorename">
     <Value>Page name comes after store name</Value>
@@ -15057,6 +15123,9 @@
   <LocaleResource Name="Order.Product(s).Total">
     <Value>Total</Value>
   </LocaleResource>
+  <LocaleResource Name="Order.Product(s).VendorName">
+    <Value>Vendor name</Value>
+  </LocaleResource>  
   <LocaleResource Name="Order.Rental.FormattedDate">
     <Value>Start date: {0}. End date: {1}.</Value>
   </LocaleResource>
@@ -15474,6 +15543,9 @@
   <LocaleResource Name="PDFInvoice.VATNumber">
     <Value>VAT number: {0}</Value>
   </LocaleResource>
+  <LocaleResource Name="PDFInvoice.VendorName">
+    <Value>Vendor name</Value>
+  </LocaleResource>
   <LocaleResource Name="PDFPackagingSlip.Address">
     <Value>Address: {0}</Value>
   </LocaleResource>
@@ -15809,6 +15881,9 @@
   </LocaleResource>
   <LocaleResource Name="Products.Availability.OutOfStock">
     <Value>Out of stock</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.Availability.SelectRequiredAttributes">
+    <Value>Please select required attribute(s)</Value>
   </LocaleResource>
   <LocaleResource Name="Products.BasePrice">
     <Value>equates to {0} per {1} {2}</Value>
@@ -16650,6 +16725,9 @@
   <LocaleResource Name="ShoppingCart.UpdateCartItem">
     <Value>Update qty</Value>
   </LocaleResource>
+  <LocaleResource Name="ShoppingCart.VendorName">
+    <Value>Vendor name</Value>
+  </LocaleResource>  
   <LocaleResource Name="ShoppingCart.WishlistDisabled">
     <Value>Wishlist is disabled for this product</Value>
   </LocaleResource>

@@ -5,7 +5,7 @@
     var gridPageSizes = adminAreaSettings.GridPageSizes;
 }
 <div class="panel-group">
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_discount_details_history_top", additionalData = Model.Id })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_discount_details_history_top", additionalData = Model })
     <div class="panel panel-default">
         <div class="panel-body">
             <div id="usagehistory-grid"></div>
@@ -92,5 +92,5 @@
             </script>
         </div>
     </div>
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_discount_details_history_bottom", additionalData = Model.Id })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_discount_details_history_bottom", additionalData = Model })
 </div>
