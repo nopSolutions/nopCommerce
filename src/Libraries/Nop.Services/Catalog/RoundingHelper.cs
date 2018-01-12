@@ -2,6 +2,7 @@ using System;
 using Nop.Core;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Infrastructure;
+using Nop.Services.Directory;
 
 namespace Nop.Services.Catalog
 {
@@ -11,7 +12,7 @@ namespace Nop.Services.Catalog
     public static class RoundingHelper
     {
         /// <summary>
-        /// Round a product or order total
+        /// Round a product or order total for the primary store currency
         /// </summary>
         /// <param name="value">Value to round</param>
         /// <returns>Rounded value</returns>
@@ -20,9 +21,11 @@ namespace Nop.Services.Catalog
             //we use this method because some currencies (e.g. Gungarian Forint or Swiss Franc) use non-standard rules for rounding
             //you can implement any rounding logic here
 
-            var workContext = EngineContext.Current.Resolve<IWorkContext>();
+            var currencySettings = EngineContext.Current.Resolve<CurrencySettings>();
+            var currencyService = EngineContext.Current.Resolve<ICurrencyService>();
+            var primaryStoreCurrency = currencyService.GetCurrencyById(currencySettings.PrimaryStoreCurrencyId);
 
-            return value.Round(workContext.WorkingCurrency.RoundingType);
+            return value.Round(primaryStoreCurrency.RoundingType);
         }
 
         /// <summary>

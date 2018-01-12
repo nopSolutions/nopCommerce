@@ -217,7 +217,7 @@ namespace Nop.Services.Catalog
             Currency targetCurrency, Language language, bool priceIncludesTax, bool showTax)
         {
             //we should round it no matter of "ShoppingCartSettings.RoundPricesDuringCalculation" setting
-            price = RoundingHelper.RoundPrice(price);
+            price = RoundingHelper.RoundPrice(price, targetCurrency);
             
             var currencyString = GetCurrencyString(price, showCurrency, targetCurrency);
             if (showTax)
