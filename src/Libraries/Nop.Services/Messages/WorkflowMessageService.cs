@@ -1655,7 +1655,7 @@ namespace Nop.Services.Messages
             var store = _storeContext.CurrentStore;
             languageId = EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplates = GetActiveMessageTemplates(MessageTemplateSystemNames.ProductReviewNotification, store.Id);
+            var messageTemplates = GetActiveMessageTemplates(MessageTemplateSystemNames.ProductReviewStoreOwnerNotification, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
@@ -1677,6 +1677,47 @@ namespace Nop.Services.Messages
 
                 var toEmail = emailAccount.Email;
                 var toName = emailAccount.DisplayName;
+
+                return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
+            }).ToList();
+        }
+
+        /// <summary>
+        /// Sends a product review reply notification message to a customer
+        /// </summary>
+        /// <param name="productReview">Product review</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <returns>Queued email identifier</returns>
+        public virtual IList<int> SendProductReviewReplyCustomerNotificationMessage(ProductReview productReview, int languageId)
+        {
+            if (productReview == null)
+                throw new ArgumentNullException(nameof(productReview));
+
+            var store = productReview.Store ?? _storeContext.CurrentStore;
+            languageId = EnsureLanguageIsActive(languageId, store.Id);
+
+            var messageTemplates = GetActiveMessageTemplates(MessageTemplateSystemNames.ProductReviewReplyCustomerNotification, store.Id);
+            if (!messageTemplates.Any())
+                return new List<int>();
+
+            //tokens
+            var commonTokens = new List<Token>();
+            _messageTokenProvider.AddProductReviewTokens(commonTokens, productReview);
+            _messageTokenProvider.AddCustomerTokens(commonTokens, productReview.Customer);
+
+            return messageTemplates.Select(messageTemplate =>
+            {
+                //email account
+                var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+
+                var tokens = new List<Token>(commonTokens);
+                _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
+
+                //event notification
+                _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+
+                var toEmail = productReview.Customer.Email;
+                var toName = productReview.Customer.GetFullName();
 
                 return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
             }).ToList();

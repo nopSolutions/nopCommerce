@@ -204,7 +204,12 @@ namespace Nop.Core.Domain.Messages
         /// <summary>
         /// Represents system name of notification store owner about new product review
         /// </summary>
-        public const string ProductReviewNotification = "Product.ProductReview";
+        public const string ProductReviewStoreOwnerNotification = "Product.ProductReview";
+
+        /// <summary>
+        /// Represents system name of notification customer about product review reply
+        /// </summary>
+        public const string ProductReviewReplyCustomerNotification = "ProductReview.Reply.CustomerNotification";
 
         /// <summary>
         /// Represents system name of notification store owner about below quantity of product

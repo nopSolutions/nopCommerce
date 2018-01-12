@@ -348,6 +348,14 @@ namespace Nop.Services.Messages
         IList<int> SendProductReviewNotificationMessage(ProductReview productReview, int languageId);
 
         /// <summary>
+        /// Sends a product review reply notification message to a customer
+        /// </summary>
+        /// <param name="productReview">Product review</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <returns>Queued email identifier</returns>
+        IList<int> SendProductReviewReplyCustomerNotificationMessage(ProductReview productReview, int languageId);
+
+        /// <summary>
         /// Sends a gift card notification
         /// </summary>
         /// <param name="giftCard">Gift card</param>

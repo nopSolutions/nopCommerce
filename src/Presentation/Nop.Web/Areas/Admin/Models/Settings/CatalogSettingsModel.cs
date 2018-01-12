@@ -95,6 +95,10 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public bool NotifyStoreOwnerAboutNewProductReviews { get; set; }
         public bool NotifyStoreOwnerAboutNewProductReviews_OverrideForStore { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.NotifyCustomerAboutProductReviewReply")]
+        public bool NotifyCustomerAboutProductReviewReply { get; set; }
+        public bool NotifyCustomerAboutProductReviewReply_OverrideForStore { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ShowProductReviewsPerStore")]
         public bool ShowProductReviewsPerStore { get; set; }
         public bool ShowProductReviewsPerStore_OverrideForStore { get; set; }

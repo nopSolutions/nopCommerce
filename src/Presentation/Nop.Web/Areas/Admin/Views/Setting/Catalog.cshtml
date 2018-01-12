@@ -185,6 +185,16 @@
                                 <span asp-validation-for="NotifyStoreOwnerAboutNewProductReviews"></span>
                             </div>
                         </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="NotifyCustomerAboutProductReviewReply_OverrideForStore" asp-input="NotifyCustomerAboutProductReviewReply" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="NotifyCustomerAboutProductReviewReply" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="NotifyCustomerAboutProductReviewReply" />
+                                <span asp-validation-for="NotifyCustomerAboutProductReviewReply"></span>
+                            </div>
+                        </div>
                         <div class="form-group advanced-setting">
                             <div class="col-md-3">
                                 <nop-override-store-checkbox asp-for="ShowProductReviewsPerStore_OverrideForStore" asp-input="ShowProductReviewsPerStore" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />

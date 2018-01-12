@@ -84,7 +84,8 @@ namespace Nop.Services.Messages
                 case MessageTemplateSystemNames.GiftCardNotification:
                     return new[] { TokenGroupNames.StoreTokens, TokenGroupNames.GiftCardTokens};
 
-                case MessageTemplateSystemNames.ProductReviewNotification:
+                case MessageTemplateSystemNames.ProductReviewStoreOwnerNotification:
+                case MessageTemplateSystemNames.ProductReviewReplyCustomerNotification:
                     return new[] { TokenGroupNames.StoreTokens, TokenGroupNames.ProductReviewTokens, TokenGroupNames.CustomerTokens };
 
                 case MessageTemplateSystemNames.QuantityBelowStoreOwnerNotification:
