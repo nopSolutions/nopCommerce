@@ -11853,6 +11853,12 @@
   <LocaleResource Name="Admin.Promotions.Discounts.Fields.DiscountType.Hint">
     <Value>The type of discount.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Fields.DiscountUrl">
+    <Value>URL with coupon code</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Fields.DiscountUrl.Hint">
+    <Value>The sample link that includes a discount coupon code, so that customers do not have to input the coupon code at checkout. You can also use this query parameter with any other link to your store, for example link to certain product or category.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Discounts.Fields.EndDate">
     <Value>End date</Value>
   </LocaleResource>

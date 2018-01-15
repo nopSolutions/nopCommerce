@@ -27,6 +27,7 @@ using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.Filters;
+using Microsoft.AspNetCore.WebUtilities;
 
 namespace Nop.Web.Areas.Admin.Controllers
 {
@@ -134,6 +135,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             var requirementGroups = discount.DiscountRequirements.Where(requirement => requirement.IsGroup);
             model.AvailableRequirementGroups = requirementGroups.Select(requirement => 
                 new SelectListItem { Value = requirement.Id.ToString(), Text = requirement.DiscountRequirementRuleSystemName }).ToList();
+
+            //get URL of discount with coupon code
+            if (model.RequiresCouponCode && !string.IsNullOrEmpty(model.CouponCode))
+            {
+                model.DiscountUrl = QueryHelpers
+                    .AddQueryString(_webHelper.GetStoreLocation().TrimEnd('/'), NopServicesDefaults.DiscountCouponQueryParameter, model.CouponCode);
+            }
         }
         
         protected IList<DiscountModel.DiscountRequirementMetaInfo> GetReqirements(IEnumerable<DiscountRequirement> requirements,

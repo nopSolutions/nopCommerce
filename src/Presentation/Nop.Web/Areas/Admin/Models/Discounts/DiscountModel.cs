@@ -56,6 +56,9 @@ namespace Nop.Web.Areas.Admin.Models.Discounts
         [NopResourceDisplayName("Admin.Promotions.Discounts.Fields.RequiresCouponCode")]
         public bool RequiresCouponCode { get; set; }
 
+        [NopResourceDisplayName("Admin.Promotions.Discounts.Fields.DiscountUrl")]
+        public string DiscountUrl { get; set; }
+
         [NopResourceDisplayName("Admin.Promotions.Discounts.Fields.CouponCode")]
         public string CouponCode { get; set; }
 
