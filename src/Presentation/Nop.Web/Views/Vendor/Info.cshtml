@@ -52,6 +52,14 @@
                     </div>
                 </div>
             </div>
+        @if (Model.VendorAttributes.Count > 0)
+        {
+            <div class="fieldset">
+                <div class="form-fields">
+                    @await Html.PartialAsync("_VendorAttributes", Model.VendorAttributes)
+                </div>
+            </div>
+        }
             <div class="buttons">
                 <input type="submit" value="@T("Common.Save")" name="save-info-button" class="button-1 save-vendorinfo-button" />
             </div>

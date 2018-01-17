@@ -41,6 +41,7 @@ using Nop.Services.Seo;
 using Nop.Services.Shipping;
 using Nop.Services.Shipping.Tracking;
 using Nop.Services.Stores;
+using Nop.Services.Vendors;
 
 namespace Nop.Services.Messages
 {
@@ -63,6 +64,7 @@ namespace Nop.Services.Messages
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly IAddressAttributeFormatter _addressAttributeFormatter;
         private readonly ICustomerAttributeFormatter _customerAttributeFormatter;
+        private readonly IVendorAttributeFormatter _vendorAttributeFormatter;
         private readonly IStoreService _storeService;
         private readonly IStoreContext _storeContext;
         private readonly IUrlHelperFactory _urlHelperFactory;
@@ -101,6 +103,7 @@ namespace Nop.Services.Messages
         /// <param name="productAttributeParser">Product attribute parser</param>
         /// <param name="addressAttributeFormatter">Address attribute formatter</param>
         /// <param name="customerAttributeFormatter">Customer attribute formatter</param>
+        /// <param name="vendorAttributeFormatter">Vendor attribute formatter</param>
         /// <param name="urlHelperFactory">URL Helper factory</param>
         /// <param name="actionContextAccessor">Action context accessor</param>
         /// <param name="templatesSettings">Templates settings</param>
@@ -125,6 +128,7 @@ namespace Nop.Services.Messages
             IProductAttributeParser productAttributeParser,
             IAddressAttributeFormatter addressAttributeFormatter,
             ICustomerAttributeFormatter customerAttributeFormatter,
+            IVendorAttributeFormatter vendorAttributeFormatter,
             IUrlHelperFactory urlHelperFactory,
             IActionContextAccessor actionContextAccessor,
             MessageTemplatesSettings templatesSettings,
@@ -148,6 +152,7 @@ namespace Nop.Services.Messages
             this._productAttributeParser = productAttributeParser;
             this._addressAttributeFormatter = addressAttributeFormatter;
             this._customerAttributeFormatter = customerAttributeFormatter;
+            this._vendorAttributeFormatter = vendorAttributeFormatter;
             this._urlHelperFactory = urlHelperFactory;
             this._actionContextAccessor = actionContextAccessor;
             this._storeService = storeService;
@@ -350,7 +355,8 @@ namespace Nop.Services.Messages
                 _allowedTokens.Add(TokenGroupNames.VendorTokens, new[]
                 {
                     "%Vendor.Name%",
-                    "%Vendor.Email%"
+                    "%Vendor.Email%",
+                    "%Vendor.VendorAttributes%"
                 });
 
                 //gift card tokens
@@ -1159,6 +1165,9 @@ namespace Nop.Services.Messages
         {
             tokens.Add(new Token("Vendor.Name", vendor.Name));
             tokens.Add(new Token("Vendor.Email", vendor.Email));
+
+            var vendorAttributesXml = vendor.GetAttribute<string>(VendorAttributeNames.VendorAttributes);
+            tokens.Add(new Token("Vendor.VendorAttributes", _vendorAttributeFormatter.FormatAttributes(vendorAttributesXml), true));
 
             //event notification
             _eventPublisher.EntityTokensAdded(vendor, tokens);

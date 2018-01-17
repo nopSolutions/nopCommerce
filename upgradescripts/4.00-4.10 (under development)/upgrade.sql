@@ -224,6 +224,111 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.PriceAdjustment.Hint">
     <Value>The price adjustment applied when choosing this attribute value. For example ''10'' to add 10 dollars. Or 10% if ''Use percentage'' is ticked.</Value>
   </LocaleResource> 
+  <LocaleResource Name="Admin.Vendors.VendorAttributes">
+    <Value>Vendor attributes</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.VendorAttributes.Added">
+    <Value>The new attribute has been added successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.VendorAttributes.AddNew">
+    <Value>Add new vendor attribute</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.VendorAttributes.BackToList">
+    <Value>back to vendor settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.VendorAttributes.Deleted">
+    <Value>The attribute has been deleted successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.VendorAttributes.Description">
+    <Value>You can manage additional vendor attributes below.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.VendorAttributes.EditAttributeDetails">
+    <Value>Edit vendor attribute details</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.VendorAttributes.Fields.AttributeControlType">
+    <Value>Control type</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.VendorAttributes.Fields.AttributeControlType.Hint">
+    <Value>Choose how to display your attribute values.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.VendorAttributes.Fields.DisplayOrder">
+    <Value>Display order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.VendorAttributes.Fields.DisplayOrder.Hint">
+    <Value>The vendor attribute display order. 1 represents the first item in the list.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.VendorAttributes.Fields.IsRequired">
+    <Value>Required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.VendorAttributes.Fields.IsRequired.Hint">
+    <Value>When an attribute is required, vendors must choose an appropriate attribute value before they can continue.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.VendorAttributes.Fields.Name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.VendorAttributes.Fields.Name.Hint">
+    <Value>The name of the vendor attribute.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.VendorAttributes.Fields.Name.Required">
+    <Value>Please provide a name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.VendorAttributes.Info">
+    <Value>Attribute info</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.VendorAttributes.Updated">
+    <Value>The attribute has been updated successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.VendorAttributes.Values">
+    <Value>Attribute values</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.VendorAttributes.Values.AddNew">
+    <Value>Add a new attribute value</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.VendorAttributes.Values.EditValueDetails">
+    <Value>Edit attribute value details</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.VendorAttributes.Values.Fields.DisplayOrder">
+    <Value>Display order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.VendorAttributes.Values.Fields.DisplayOrder.Hint">
+    <Value>The display order of the attribute value. 1 represents the first item in attribute value list.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.VendorAttributes.Values.Fields.IsPreSelected">
+    <Value>Pre-selected</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.VendorAttributes.Values.Fields.IsPreSelected.Hint">
+    <Value>Determines whether this attribute value is pre-selected.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.VendorAttributes.Values.Fields.Name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.VendorAttributes.Values.Fields.Name.Hint">
+    <Value>The name of the vendor attribute value.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.VendorAttributes.Values.Fields.Name.Required">
+    <Value>Please provide a name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.VendorAttributes.Values.SaveBeforeEdit">
+    <Value>You need to save the vendor attribute before you can add values for it.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.AddNewVendorAttribute">
+    <Value>Added a new vendor attribute (ID = {0})</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.AddNewVendorAttributeValue">
+    <Value>Added a new vendor attribute value (ID = {0})</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.DeleteVendorAttribute">
+    <Value>Deleted a vendor attribute (ID = {0})</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.DeleteVendorAttributeValue">
+    <Value>Deleted a vendor attribute value (ID = {0})</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.EditVendorAttribute">
+    <Value>Edited a vendor attribute (ID = {0})</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.EditVendorAttributeValue">
+    <Value>Edited a vendor attribute value (ID = {0})</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -493,4 +598,95 @@ GO
 UPDATE [Setting]
 SET [Value] = N'true'
 WHERE [Name] = N'commonsettings.usestoredprocedureforloadingcategories'
+GO
+
+--vendor attributes
+IF NOT EXISTS (SELECT 1 FROM sys.objects WHERE object_id = object_id(N'[VendorAttribute]') AND objectproperty(object_id, N'IsUserTable') = 1)
+BEGIN
+	CREATE TABLE [dbo].[VendorAttribute]
+	(
+		[Id] INT IDENTITY(1,1) NOT NULL,
+		[Name] NVARCHAR(400) NOT NULL,
+		[IsRequired] BIT NOT NULL,
+		[AttributeControlTypeId] INT NOT NULL,
+		[DisplayOrder] INT NOT NULL,
+
+		PRIMARY KEY CLUSTERED ( [Id] ASC ) 
+			WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON)
+	)
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM sys.objects WHERE object_id = object_id(N'[VendorAttributeValue]') and objectproperty(object_id, N'IsUserTable') = 1)
+BEGIN
+	CREATE TABLE [dbo].[VendorAttributeValue]
+	(
+		[Id] INT IDENTITY(1,1) NOT NULL,
+		[VendorAttributeId] INT NOT NULL,
+		[Name] NVARCHAR(400) NOT NULL,
+		[IsPreSelected] BIT NOT NULL,
+		[DisplayOrder] INT NOT NULL,
+
+		PRIMARY KEY CLUSTERED ( [Id] ASC ) 
+			WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON)
+	)
+END
+GO
+
+IF EXISTS (SELECT 1 FROM sys.objects WHERE NAME = 'VendorAttributeValue_VendorAttribute' AND PARENT_OBJECT_ID = object_id('VendorAttributeValue') AND objectproperty(object_id, N'IsForeignKey') = 1)
+BEGIN
+	ALTER TABLE dbo.VendorAttributeValue DROP CONSTRAINT [VendorAttributeValue_VendorAttribute]
+END
+GO
+
+ALTER TABLE [dbo].[VendorAttributeValue] WITH CHECK 
+	ADD CONSTRAINT [VendorAttributeValue_VendorAttribute] FOREIGN KEY([VendorAttributeId]) REFERENCES [dbo].[VendorAttribute] ([Id]) ON DELETE CASCADE
+GO
+
+--new activity type
+IF NOT EXISTS (SELECT 1 FROM [ActivityLogType] WHERE [SystemKeyword] = N'AddNewVendorAttribute')
+BEGIN
+	INSERT [ActivityLogType] ([SystemKeyword], [Name], [Enabled])
+	VALUES (N'AddNewVendorAttribute', N'Add a new vendor attribute', N'true')
+END
+GO
+
+--new activity type
+IF NOT EXISTS (SELECT 1 FROM [ActivityLogType] WHERE [SystemKeyword] = N'EditVendorAttribute')
+BEGIN
+	INSERT [ActivityLogType] ([SystemKeyword], [Name], [Enabled])
+	VALUES (N'EditVendorAttribute', N'Edit a vendor attribute', N'true')
+END
+GO
+
+--new activity type
+IF NOT EXISTS (SELECT 1 FROM [ActivityLogType] WHERE [SystemKeyword] = N'DeleteVendorAttribute')
+BEGIN
+	INSERT [ActivityLogType] ([SystemKeyword], [Name], [Enabled])
+	VALUES (N'DeleteVendorAttribute', N'Delete a vendor attribute', N'true')
+END
+GO
+
+--new activity type
+IF NOT EXISTS (SELECT 1 FROM [ActivityLogType] WHERE [SystemKeyword] = N'AddNewVendorAttributeValue')
+BEGIN
+	INSERT [ActivityLogType] ([SystemKeyword], [Name], [Enabled])
+	VALUES (N'AddNewVendorAttributeValue', N'Add a new vendor attribute value', N'true')
+END
+GO
+
+--new activity type
+IF NOT EXISTS (SELECT 1 FROM [ActivityLogType] WHERE [SystemKeyword] = N'EditVendorAttributeValue')
+BEGIN
+	INSERT [ActivityLogType] ([SystemKeyword], [Name], [Enabled])
+	VALUES (N'EditVendorAttributeValue', N'Edit a vendor attribute value', N'true')
+END
+GO
+
+--new activity type
+IF NOT EXISTS (SELECT 1 FROM [ActivityLogType] WHERE [SystemKeyword] = N'DeleteVendorAttributeValue')
+BEGIN
+	INSERT [ActivityLogType] ([SystemKeyword], [Name], [Enabled])
+	VALUES (N'DeleteVendorAttributeValue', N'Delete a vendor attribute value', N'true')
+END
 GO

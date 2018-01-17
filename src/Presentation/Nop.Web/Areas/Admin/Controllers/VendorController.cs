@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Nop.Web.Areas.Admin.Extensions;
-using Nop.Web.Areas.Admin.Models.Vendors;
+using Microsoft.Extensions.Primitives;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Vendors;
 using Nop.Services.Common;
@@ -17,6 +18,8 @@ using Nop.Services.Media;
 using Nop.Services.Security;
 using Nop.Services.Seo;
 using Nop.Services.Vendors;
+using Nop.Web.Areas.Admin.Extensions;
+using Nop.Web.Areas.Admin.Models.Vendors;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
@@ -42,14 +45,17 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly IAddressService _addressService;
         private readonly ICountryService _countryService;
         private readonly IStateProvinceService _stateProvinceService;
+        private readonly IGenericAttributeService _genericAttributeService;
+        private readonly IVendorAttributeParser _vendorAttributeParser;
+        private readonly IVendorAttributeService _vendorAttributeService;
 
         #endregion
 
         #region Ctor
 
-        public VendorController(ICustomerService customerService, 
+        public VendorController(ICustomerService customerService,
             ILocalizationService localizationService,
-            IVendorService vendorService, 
+            IVendorService vendorService,
             IPermissionService permissionService,
             IUrlRecordService urlRecordService,
             ILanguageService languageService,
@@ -60,7 +66,10 @@ namespace Nop.Web.Areas.Admin.Controllers
             ICustomerActivityService customerActivityService,
             IAddressService addressService,
             ICountryService countryService,
-            IStateProvinceService stateProvinceService)
+            IStateProvinceService stateProvinceService,
+            IGenericAttributeService genericAttributeService,
+            IVendorAttributeParser vendorAttributeParser,
+            IVendorAttributeService vendorAttributeService)
         {
             this._customerService = customerService;
             this._localizationService = localizationService;
@@ -76,6 +85,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             this._addressService = addressService;
             this._countryService = countryService;
             this._stateProvinceService = stateProvinceService;
+            this._genericAttributeService = genericAttributeService;
+            this._vendorAttributeParser = vendorAttributeParser;
+            this._vendorAttributeService = vendorAttributeService;
         }
 
         #endregion
@@ -152,6 +164,9 @@ namespace Nop.Web.Areas.Admin.Controllers
                     .ToList();
             }
 
+            //vendor attributes
+            PrepareVendorAttributesModel(model, vendor);
+
             if (prepareEntireAddressModel)
             {
                 model.Address.CountryEnabled = true;
@@ -177,6 +192,171 @@ namespace Nop.Web.Areas.Admin.Controllers
                 else
                     model.Address.AvailableStates.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.OtherNonUS"), Value = "0" });
             }
+        }
+
+        protected virtual void PrepareVendorAttributesModel(VendorModel model, Vendor vendor)
+        {
+            var vendorAttributes = _vendorAttributeService.GetAllVendorAttributes();
+            foreach (var attribute in vendorAttributes)
+            {
+                var attributeModel = new VendorModel.VendorAttributeModel
+                {
+                    Id = attribute.Id,
+                    Name = attribute.Name,
+                    IsRequired = attribute.IsRequired,
+                    AttributeControlType = attribute.AttributeControlType,
+                };
+
+                if (attribute.ShouldHaveValues())
+                {
+                    //values
+                    var attributeValues = _vendorAttributeService.GetVendorAttributeValues(attribute.Id);
+                    foreach (var attributeValue in attributeValues)
+                    {
+                        var attributeValueModel = new VendorModel.VendorAttributeValueModel
+                        {
+                            Id = attributeValue.Id,
+                            Name = attributeValue.Name,
+                            IsPreSelected = attributeValue.IsPreSelected
+                        };
+                        attributeModel.Values.Add(attributeValueModel);
+                    }
+                }
+
+
+                //set already selected attributes
+                if (vendor != null)
+                {
+                    var selectedVendorAttributes = vendor.GetAttribute<string>(VendorAttributeNames.VendorAttributes, _genericAttributeService);
+                    switch (attribute.AttributeControlType)
+                    {
+                        case AttributeControlType.DropdownList:
+                        case AttributeControlType.RadioList:
+                        case AttributeControlType.Checkboxes:
+                            {
+                                if (!string.IsNullOrEmpty(selectedVendorAttributes))
+                                {
+                                    //clear default selection
+                                    foreach (var item in attributeModel.Values)
+                                        item.IsPreSelected = false;
+
+                                    //select new values
+                                    var selectedValues = _vendorAttributeParser.ParseVendorAttributeValues(selectedVendorAttributes);
+                                    foreach (var attributeValue in selectedValues)
+                                        foreach (var item in attributeModel.Values)
+                                            if (attributeValue.Id == item.Id)
+                                                item.IsPreSelected = true;
+                                }
+                            }
+                            break;
+                        case AttributeControlType.ReadonlyCheckboxes:
+                            {
+                                //do nothing
+                                //values are already pre-set
+                            }
+                            break;
+                        case AttributeControlType.TextBox:
+                        case AttributeControlType.MultilineTextbox:
+                            {
+                                if (!string.IsNullOrEmpty(selectedVendorAttributes))
+                                {
+                                    var enteredText = _vendorAttributeParser.ParseValues(selectedVendorAttributes, attribute.Id);
+                                    if (enteredText.Any())
+                                        attributeModel.DefaultValue = enteredText[0];
+                                }
+                            }
+                            break;
+                        case AttributeControlType.Datepicker:
+                        case AttributeControlType.ColorSquares:
+                        case AttributeControlType.ImageSquares:
+                        case AttributeControlType.FileUpload:
+                        default:
+                            //not supported attribute control types
+                            break;
+                    }
+                }
+
+                model.VendorAttributes.Add(attributeModel);
+            }
+        }
+
+        protected virtual string ParseVendorAttributes(IFormCollection form)
+        {
+            if (form == null)
+                throw new ArgumentNullException(nameof(form));
+
+            var attributesXml = "";
+            var vendorAttributes = _vendorAttributeService.GetAllVendorAttributes();
+            foreach (var attribute in vendorAttributes)
+            {
+                var controlId = $"vendor_attribute_{attribute.Id}";
+                switch (attribute.AttributeControlType)
+                {
+                    case AttributeControlType.DropdownList:
+                    case AttributeControlType.RadioList:
+                        {
+                            var ctrlAttributes = form[controlId];
+                            if (!StringValues.IsNullOrEmpty(ctrlAttributes))
+                            {
+                                var selectedAttributeId = int.Parse(ctrlAttributes);
+                                if (selectedAttributeId > 0)
+                                    attributesXml = _vendorAttributeParser.AddVendorAttribute(attributesXml,
+                                        attribute, selectedAttributeId.ToString());
+                            }
+                        }
+                        break;
+                    case AttributeControlType.Checkboxes:
+                        {
+                            var cblAttributes = form[controlId];
+                            if (!StringValues.IsNullOrEmpty(cblAttributes))
+                            {
+                                foreach (var item in cblAttributes.ToString().Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                                {
+                                    var selectedAttributeId = int.Parse(item);
+                                    if (selectedAttributeId > 0)
+                                        attributesXml = _vendorAttributeParser.AddVendorAttribute(attributesXml,
+                                            attribute, selectedAttributeId.ToString());
+                                }
+                            }
+                        }
+                        break;
+                    case AttributeControlType.ReadonlyCheckboxes:
+                        {
+                            //load read-only (already server-side selected) values
+                            var attributeValues = _vendorAttributeService.GetVendorAttributeValues(attribute.Id);
+                            foreach (var selectedAttributeId in attributeValues
+                                .Where(v => v.IsPreSelected)
+                                .Select(v => v.Id)
+                                .ToList())
+                            {
+                                attributesXml = _vendorAttributeParser.AddVendorAttribute(attributesXml,
+                                            attribute, selectedAttributeId.ToString());
+                            }
+                        }
+                        break;
+                    case AttributeControlType.TextBox:
+                    case AttributeControlType.MultilineTextbox:
+                        {
+                            var ctrlAttributes = form[controlId];
+                            if (!StringValues.IsNullOrEmpty(ctrlAttributes))
+                            {
+                                var enteredText = ctrlAttributes.ToString().Trim();
+                                attributesXml = _vendorAttributeParser.AddVendorAttribute(attributesXml,
+                                    attribute, enteredText);
+                            }
+                        }
+                        break;
+                    case AttributeControlType.Datepicker:
+                    case AttributeControlType.ColorSquares:
+                    case AttributeControlType.ImageSquares:
+                    case AttributeControlType.FileUpload:
+                    //not supported vendor attributes
+                    default:
+                        break;
+                }
+            }
+
+            return attributesXml;
         }
 
         #endregion
@@ -248,6 +428,11 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageVendors))
                 return AccessDeniedView();
 
+            //parse vendor attributes
+            var vendorAttributesXml = ParseVendorAttributes(model.Form);
+            _vendorAttributeParser.GetAttributeWarnings(vendorAttributesXml).ToList()
+                .ForEach(warning => ModelState.AddModelError(string.Empty, warning));
+
             if (ModelState.IsValid)
             {
                 var vendor = model.ToEntity();
@@ -272,6 +457,9 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _addressService.InsertAddress(address);
                 vendor.AddressId = address.Id;
                 _vendorService.UpdateVendor(vendor);
+
+                //vendor attributes
+                _genericAttributeService.SaveAttribute(vendor, VendorAttributeNames.VendorAttributes, vendorAttributesXml);
 
                 //locales
                 UpdateLocales(vendor, model);
@@ -333,11 +521,19 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //No vendor found with the specified id
                 return RedirectToAction("List");
 
+            //parse vendor attributes
+            var vendorAttributesXml = ParseVendorAttributes(model.Form);
+            _vendorAttributeParser.GetAttributeWarnings(vendorAttributesXml).ToList()
+                .ForEach(warning => ModelState.AddModelError(string.Empty, warning));
+
             if (ModelState.IsValid)
             {
                 var prevPictureId = vendor.PictureId;
                 vendor = model.ToEntity(vendor);
                 _vendorService.UpdateVendor(vendor);
+
+                //vendor attributes
+                _genericAttributeService.SaveAttribute(vendor, VendorAttributeNames.VendorAttributes, vendorAttributesXml);
 
                 //activity log
                 _customerActivityService.InsertActivity("EditVendor",

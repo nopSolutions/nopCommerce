@@ -151,6 +151,10 @@
             </div>
         </div>
     </div>
+    @if (Model.VendorAttributes.Count > 0)
+    {
+        @await Html.PartialAsync("_VendorAttributes", Model.VendorAttributes)
+    }
     <div class="panel panel-default advanced-setting">
         <div class="panel-heading">
             @T("Admin.Vendors.Address")

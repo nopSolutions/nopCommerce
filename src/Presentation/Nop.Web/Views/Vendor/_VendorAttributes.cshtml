@@ -1,0 +1,80 @@
+﻿@model IList<VendorAttributeModel>
+
+@using Nop.Core.Domain.Catalog
+
+@foreach (var attribute in Model)
+{
+    var controlId = $"vendor_attribute_{attribute.Id}";
+    var textPrompt = attribute.Name;
+
+    <div class="inputs vendor-attributes">
+        <label>@textPrompt:</label>
+        
+        @switch (attribute.AttributeControlType)
+        {
+            case AttributeControlType.DropdownList:
+            {
+            <select name="@(controlId)" id="@(controlId)">
+                @if (!attribute.IsRequired)
+                    {
+                    <option value="0">---</option>
+                    }
+                @foreach (var attributeValue in attribute.Values)
+                    {
+                    <option selected="@attributeValue.IsPreSelected" value="@attributeValue.Id">@attributeValue.Name</option>
+                    }
+            </select>
+            }
+                break;
+            case AttributeControlType.RadioList:
+            {
+            <ul class="option-list">
+                @foreach (var attributeValue in attribute.Values)
+                    {
+                    <li>
+                        <input id="@(controlId)_@(attributeValue.Id)" type="radio" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" />
+                        <label for="@(controlId)_@(attributeValue.Id)">@attributeValue.Name</label>
+                    </li>
+                    }
+            </ul>
+            }
+                break;
+            case AttributeControlType.Checkboxes:
+            case AttributeControlType.ReadonlyCheckboxes:
+            {
+            <ul class="option-list">
+                @foreach (var attributeValue in attribute.Values)
+                    {
+                    <li>
+                        <input id="@(controlId)_@(attributeValue.Id)" type="checkbox" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" @(attribute.AttributeControlType == AttributeControlType.ReadonlyCheckboxes ? Html.Raw(" disabled=\"disabled\"") : null) />
+                        <label for="@(controlId)_@(attributeValue.Id)">@attributeValue.Name</label>
+                    </li>
+                    }
+            </ul>
+            }
+            break;
+            case AttributeControlType.TextBox:
+            {
+                <input name="@(controlId)" type="text" class="textbox" id="@(controlId)" value="@attribute.DefaultValue" />
+            }
+            break;
+            case AttributeControlType.MultilineTextbox:
+            {
+            <textarea id="@(controlId)" name="@(controlId)">@attribute.DefaultValue</textarea>
+                }
+                break;
+            case AttributeControlType.Datepicker:
+            case AttributeControlType.FileUpload:
+            case AttributeControlType.ColorSquares:
+            case AttributeControlType.ImageSquares:
+                {
+                    //not support attribute type
+                }
+                break;
+        }
+        @if (attribute.IsRequired)
+        {
+            <nop-required />
+        }
+    </div>
+}
