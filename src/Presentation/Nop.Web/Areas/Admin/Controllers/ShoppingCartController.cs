@@ -13,6 +13,7 @@ using Nop.Services.Security;
 using Nop.Services.Stores;
 using Nop.Services.Tax;
 using Nop.Web.Framework.Kendoui;
+using Nop.Web.Framework.Mvc;
 
 namespace Nop.Web.Areas.Admin.Controllers
 {
@@ -29,6 +30,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly IPermissionService _permissionService;
         private readonly ILocalizationService _localizationService;
         private readonly IProductAttributeFormatter _productAttributeFormatter;
+        private readonly IShoppingCartService _shoppingCartService;
 
         #endregion
 
@@ -42,7 +44,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             IPriceCalculationService priceCalculationService,
             IPermissionService permissionService, 
             ILocalizationService localizationService,
-            IProductAttributeFormatter productAttributeFormatter)
+            IProductAttributeFormatter productAttributeFormatter,
+            IShoppingCartService shoppingCartService)
         {
             this._customerService = customerService;
             this._dateTimeHelper = dateTimeHelper;
@@ -53,6 +56,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             this._permissionService = permissionService;
             this._localizationService = localizationService;
             this._productAttributeFormatter = productAttributeFormatter;
+            this._shoppingCartService = shoppingCartService;
         }
 
         #endregion
@@ -195,6 +199,17 @@ namespace Nop.Web.Areas.Admin.Controllers
             };
 
             return Json(gridModel);
+        }
+
+        [HttpPost]
+        public virtual IActionResult DeleteItem(int id)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrentCarts))
+                return AccessDeniedKendoGridJson();
+
+            _shoppingCartService.DeleteShoppingCartItem(id);
+
+            return new NullJsonResult();
         }
 
         #endregion
