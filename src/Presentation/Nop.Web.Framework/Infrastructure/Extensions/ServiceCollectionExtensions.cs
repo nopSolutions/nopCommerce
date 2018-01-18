@@ -4,6 +4,7 @@ using System.Linq;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Internal;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,8 +20,8 @@ using Nop.Services.Authentication.External;
 using Nop.Services.Logging;
 using Nop.Services.Tasks;
 using Nop.Web.Framework.FluentValidation;
-using Nop.Web.Framework.Mvc.Filters;
 using Nop.Web.Framework.Mvc.ModelBinding;
+using Nop.Web.Framework.Mvc.Routing;
 using Nop.Web.Framework.Themes;
 
 namespace Nop.Web.Framework.Infrastructure.Extensions
@@ -243,6 +244,16 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             });
 
             return mvcBuilder;
+        }
+
+        /// <summary>
+        /// Register custom RedirectResultExecutor
+        /// </summary>
+        /// <param name="services">Collection of service descriptors</param>
+        public static void AddNopRedirectResultExecutor(this IServiceCollection services)
+        {
+            //we use custom redirect executor as a workaround to allow using non-ASCII characters in redirect URLs
+            services.AddSingleton<RedirectResultExecutor, NopRedirectResultExecutor>();
         }
     }
 }
