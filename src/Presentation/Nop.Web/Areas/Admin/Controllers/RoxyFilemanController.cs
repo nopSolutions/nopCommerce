@@ -6,6 +6,7 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
 using System.IO.Compression;
+using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
@@ -795,7 +796,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             ZipFile.CreateFromDirectory(fullPath, zipPath, CompressionLevel.Fastest, true);
 
             HttpContext.Response.Clear();
-            HttpContext.Response.Headers.Add("Content-Disposition", $"attachment; filename=\"{zipName}\"");
+            HttpContext.Response.Headers.Add("Content-Disposition", $"attachment; filename=\"{WebUtility.UrlEncode(zipName)}\"");
             HttpContext.Response.ContentType = MimeTypes.ApplicationForceDownload;
             await HttpContext.Response.SendFileAsync(zipPath);
 
@@ -814,7 +815,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (file.Exists)
             {
                 HttpContext.Response.Clear();
-                HttpContext.Response.Headers.Add("Content-Disposition", $"attachment; filename=\"{file.Name}\"");
+                HttpContext.Response.Headers.Add("Content-Disposition", $"attachment; filename=\"{WebUtility.UrlEncode(file.Name)}\"");
                 HttpContext.Response.ContentType = MimeTypes.ApplicationForceDownload;
                 await HttpContext.Response.SendFileAsync(file.FullName);
             }
