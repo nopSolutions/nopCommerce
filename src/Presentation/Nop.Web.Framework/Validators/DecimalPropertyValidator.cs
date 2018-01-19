@@ -1,4 +1,5 @@
 ﻿using FluentValidation.Validators;
+using Nop.Core.Domain.Directory;
 using Nop.Services.Catalog;
 
 namespace Nop.Web.Framework.Validators
@@ -29,7 +30,7 @@ namespace Nop.Web.Framework.Validators
         {
             if (decimal.TryParse(context.PropertyValue.ToString(), out decimal value))
             {
-                return RoundingHelper.RoundPrice(value) < _maxValue;
+                return value.Round(RoundingType.Rounding001) < _maxValue;
             }
             return false;
         }
