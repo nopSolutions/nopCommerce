@@ -80,6 +80,14 @@ namespace Nop.Services.Messages
         IList<int> SendOrderPlacedStoreOwnerNotification(Order order, int languageId);
 
         /// <summary>
+        /// Sends an order placed notification to an affiliate
+        /// </summary>
+        /// <param name="order">Order instance</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <returns>Queued email identifier</returns>
+        IList<int> SendOrderPlacedAffiliateNotification(Order order, int languageId);
+
+        /// <summary>
         /// Sends an order paid notification to a store owner
         /// </summary>
         /// <param name="order">Order instance</param>
@@ -106,6 +114,14 @@ namespace Nop.Services.Messages
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
         IList<int> SendOrderPaidVendorNotification(Order order, Vendor vendor, int languageId);
+
+        /// <summary>
+        /// Sends an order paid notification to an affiliate
+        /// </summary>
+        /// <param name="order">Order instance</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <returns>Queued email identifier</returns>
+        IList<int> SendOrderPaidAffiliateNotification(Order order, int languageId);
 
         /// <summary>
         /// Sends an order placed notification to a customer

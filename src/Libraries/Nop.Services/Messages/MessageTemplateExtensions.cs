@@ -27,9 +27,11 @@ namespace Nop.Services.Messages
 
                 case MessageTemplateSystemNames.OrderPlacedVendorNotification:
                 case MessageTemplateSystemNames.OrderPlacedStoreOwnerNotification:
+                case MessageTemplateSystemNames.OrderPlacedAffiliateNotification:
                 case MessageTemplateSystemNames.OrderPaidStoreOwnerNotification:
                 case MessageTemplateSystemNames.OrderPaidCustomerNotification:
                 case MessageTemplateSystemNames.OrderPaidVendorNotification:
+                case MessageTemplateSystemNames.OrderPaidAffiliateNotification:
                 case MessageTemplateSystemNames.OrderPlacedCustomerNotification:
                 case MessageTemplateSystemNames.OrderCompletedCustomerNotification:
                 case MessageTemplateSystemNames.OrderCancelledCustomerNotification:

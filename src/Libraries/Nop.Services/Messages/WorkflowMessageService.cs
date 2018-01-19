@@ -13,6 +13,7 @@ using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Vendors;
+using Nop.Services.Affiliates;
 using Nop.Services.Customers;
 using Nop.Services.Events;
 using Nop.Services.Localization;
@@ -38,6 +39,7 @@ namespace Nop.Services.Messages
         private readonly CommonSettings _commonSettings;
         private readonly EmailAccountSettings _emailAccountSettings;
         private readonly IEventPublisher _eventPublisher;
+        private readonly IAffiliateService _affiliateService;
 
         #endregion
 
@@ -57,6 +59,7 @@ namespace Nop.Services.Messages
         /// <param name="commonSettings">Common settings</param>
         /// <param name="emailAccountSettings">Email account settings</param>
         /// <param name="eventPublisher">Event publisher</param>
+        /// <param name="affiliateService">Affiliate service</param>
         public WorkflowMessageService(IMessageTemplateService messageTemplateService,
             IQueuedEmailService queuedEmailService,
             ILanguageService languageService,
@@ -67,7 +70,8 @@ namespace Nop.Services.Messages
             IStoreContext storeContext,
             CommonSettings commonSettings,
             EmailAccountSettings emailAccountSettings,
-            IEventPublisher eventPublisher)
+            IEventPublisher eventPublisher,
+            IAffiliateService affiliateService)
         {
             this._messageTemplateService = messageTemplateService;
             this._queuedEmailService = queuedEmailService;
@@ -80,6 +84,7 @@ namespace Nop.Services.Messages
             this._commonSettings = commonSettings;
             this._emailAccountSettings = emailAccountSettings;
             this._eventPublisher = eventPublisher;
+            this._affiliateService = affiliateService;
         }
 
         #endregion
@@ -453,6 +458,52 @@ namespace Nop.Services.Messages
         }
 
         /// <summary>
+        /// Sends an order placed notification to an affiliate
+        /// </summary>
+        /// <param name="order">Order instance</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <returns>Queued email identifier</returns>
+        public virtual IList<int> SendOrderPlacedAffiliateNotification(Order order, int languageId)
+        {
+            if (order == null)
+                throw new ArgumentNullException(nameof(order));
+
+            var affiliate = _affiliateService.GetAffiliateById(order.AffiliateId);
+
+            if (affiliate == null)
+                throw new ArgumentNullException(nameof(affiliate));
+
+            var store = _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
+            languageId = EnsureLanguageIsActive(languageId, store.Id);
+
+            var messageTemplates = GetActiveMessageTemplates(MessageTemplateSystemNames.OrderPlacedAffiliateNotification, store.Id);
+            if (!messageTemplates.Any())
+                return new List<int>();
+
+            //tokens
+            var commonTokens = new List<Token>();
+            _messageTokenProvider.AddOrderTokens(commonTokens, order, languageId);
+            _messageTokenProvider.AddCustomerTokens(commonTokens, order.Customer);
+
+            return messageTemplates.Select(messageTemplate =>
+            {
+                //email account
+                var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+
+                var tokens = new List<Token>(commonTokens);
+                _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
+
+                //event notification
+                _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+
+                var toEmail = affiliate.Address.Email;
+                var toName = $"{affiliate.Address.FirstName} {affiliate.Address.LastName}";
+
+                return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
+            }).ToList();
+        }
+
+        /// <summary>
         /// Sends an order paid notification to a store owner
         /// </summary>
         /// <param name="order">Order instance</param>
@@ -488,6 +539,52 @@ namespace Nop.Services.Messages
 
                 var toEmail = emailAccount.Email;
                 var toName = emailAccount.DisplayName;
+
+                return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
+            }).ToList();
+        }
+
+        /// <summary>
+        /// Sends an order paid notification to an affiliate
+        /// </summary>
+        /// <param name="order">Order instance</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <returns>Queued email identifier</returns>
+        public virtual IList<int> SendOrderPaidAffiliateNotification(Order order, int languageId)
+        {
+            if (order == null)
+                throw new ArgumentNullException(nameof(order));
+
+            var affiliate = _affiliateService.GetAffiliateById(order.AffiliateId);
+
+            if(affiliate == null)
+                throw new ArgumentNullException(nameof(affiliate));
+
+            var store = _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
+            languageId = EnsureLanguageIsActive(languageId, store.Id);
+
+            var messageTemplates = GetActiveMessageTemplates(MessageTemplateSystemNames.OrderPaidAffiliateNotification, store.Id);
+            if (!messageTemplates.Any())
+                return new List<int>();
+
+            //tokens
+            var commonTokens = new List<Token>();
+            _messageTokenProvider.AddOrderTokens(commonTokens, order, languageId);
+            _messageTokenProvider.AddCustomerTokens(commonTokens, order.Customer);
+
+            return messageTemplates.Select(messageTemplate =>
+            {
+                //email account
+                var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+
+                var tokens = new List<Token>(commonTokens);
+                _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
+
+                //event notification
+                _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+
+                var toEmail = affiliate.Address.Email;
+                var toName = $"{affiliate.Address.FirstName} {affiliate.Address.LastName}";
 
                 return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
             }).ToList();
