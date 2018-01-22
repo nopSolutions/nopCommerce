@@ -189,7 +189,7 @@ namespace Nop.Core
             var url = GetStoreHost(useSsl.Value).TrimEnd('/');
 
             //get full URL with or without query string
-            url += includeQueryString ? GetRawUrl(_httpContextAccessor.HttpContext.Request) 
+            url += includeQueryString ? GetRawUrl(_httpContextAccessor.HttpContext.Request)
                 : $"{_httpContextAccessor.HttpContext.Request.PathBase}{_httpContextAccessor.HttpContext.Request.Path}";
 
             if (lowercaseUrl)
@@ -233,44 +233,17 @@ namespace Nop.Core
             if (!StringValues.IsNullOrEmpty(hostHeader))
                 result = "http://" + hostHeader.FirstOrDefault();
 
-            //whether database is installed
-            if (DataSettingsHelper.DatabaseIsInstalled())
+            //if HOST header is empty (it is possible only when HttpContext is not available), use URL of a store entity configured in admin area
+            if (string.IsNullOrEmpty(result) && DataSettingsHelper.DatabaseIsInstalled())
             {
-                //get current store (do not inject IWorkContext via constructor because it'll cause circular references)
-                var currentStore = EngineContext.Current.Resolve<IStoreContext>().CurrentStore;
-                if (currentStore == null)
-                    throw new Exception("Current store cannot be loaded");
-
-                if (string.IsNullOrEmpty(result))
-                {
-                    //HOST header is not available, it is possible only when HttpContext is not available (for example, running in a schedule task)
-                    //in this case use URL of a store entity configured in admin area
-                    result = currentStore.Url;
-                }
-
-                if (useSsl)
-                {
-                    //if secure URL specified let's use this URL, otherwise a store owner wants it to be detected automatically
-                    result = !string.IsNullOrWhiteSpace(currentStore.SecureUrl) ? currentStore.SecureUrl : result.Replace("http://", "https://");
-                }
-                else
-                {
-                    if (currentStore.SslEnabled && !string.IsNullOrWhiteSpace(currentStore.SecureUrl))
-                    {
-                        //SSL is enabled in this store and secure URL is specified, so a store owner don't want it to be detected automatically.
-                        //in this case let's use the specified non-secure URL
-                        result = currentStore.Url;
-                    }
-                }
+                //do not inject IWorkContext via constructor because it'll cause circular references
+                result = EngineContext.Current.Resolve<IStoreContext>().CurrentStore?.Url
+                    ?? throw new Exception("Current store cannot be loaded");
             }
-            else
-            {
-                if (!string.IsNullOrEmpty(result) && useSsl)
-                {
-                    //use secure connection
-                    result = result.Replace("http://", "https://");
-                }
-            }
+
+            //whether to use secure connection
+            if (useSsl)
+                result = result.Replace("http://", "https://");
 
             if (!result.EndsWith("/"))
                 result += "/";
@@ -301,7 +274,7 @@ namespace Nop.Core
 
             return host;
         }
-        
+
         /// <summary>
         /// Returns true if the requested resource is one of the typical resources that needn't be processed by the cms engine.
         /// </summary>

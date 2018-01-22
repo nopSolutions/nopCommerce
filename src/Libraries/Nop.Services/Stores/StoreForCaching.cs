@@ -32,7 +32,6 @@ namespace Nop.Services.Stores
             Name = s.Name;
             Url = s.Url;
             SslEnabled = s.SslEnabled;
-            SecureUrl = s.SecureUrl;
             Hosts = s.Hosts;
             DefaultLanguageId = s.DefaultLanguageId;
             DisplayOrder = s.DisplayOrder;

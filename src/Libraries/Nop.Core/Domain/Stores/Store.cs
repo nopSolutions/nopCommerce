@@ -23,11 +23,6 @@ namespace Nop.Core.Domain.Stores
         public bool SslEnabled { get; set; }
 
         /// <summary>
-        /// Gets or sets the store secure URL (HTTPS)
-        /// </summary>
-        public string SecureUrl { get; set; }
-
-        /// <summary>
         /// Gets or sets the comma separated list of possible HTTP_HOST values
         /// </summary>
         public string Hosts { get; set; }

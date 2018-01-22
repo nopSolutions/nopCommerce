@@ -8370,12 +8370,6 @@
   <LocaleResource Name="Admin.Configuration.Stores.Fields.Name.Required">
     <Value>Please provide a name.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Stores.Fields.SecureUrl">
-    <Value>Secure URL</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Stores.Fields.SecureUrl.Hint">
-    <Value>The secure URL of your store e.g. https://www.yourstore.com/ or http://sharedssl.yourstore.com/. Leave it empty if you want nopCommerce to detect secure URL automatically.</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Stores.Fields.SslEnabled">
     <Value>SSL enabled</Value>
   </LocaleResource>

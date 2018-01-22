@@ -3,21 +3,6 @@
 <div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
 
-<script type="text/javascript">
-    $(document).ready(function () {
-        $("#@Html.IdFor(model => model.SslEnabled)").click(toggleSslEnabled);
-        toggleSslEnabled();
-    });
-
-    function toggleSslEnabled() {
-        if ($('#@Html.IdFor(model => model.SslEnabled)').is(':checked')) {
-            $('#pnlSecureUrl').show();
-        } else {
-            $('#pnlSecureUrl').hide();
-        }
-    }
-</script>
-
 <div class="content">
     <div class="form-horizontal">
         <div class="panel-group">
@@ -69,17 +54,6 @@
                             <span asp-validation-for="SslEnabled"></span>
                         </div>
                     </div>
-                    <nop-nested-setting asp-for="SslEnabled">
-                        <div class="form-group" id="pnlSecureUrl">
-                            <div class="col-md-3">
-                                <nop-label asp-for="SecureUrl" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="SecureUrl" />
-                                <span asp-validation-for="SecureUrl"></span>
-                            </div>
-                        </div>
-                    </nop-nested-setting>
                     <div class="form-group">
                         <div class="col-md-3">
                             <nop-label asp-for="Hosts" />

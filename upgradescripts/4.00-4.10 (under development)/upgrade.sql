@@ -161,6 +161,12 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.UsedByProducts.Published">
     <Value>Published</Value>
   </LocaleResource>   
+  <LocaleResource Name="Admin.Configuration.Stores.Fields.SecureUrl">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Stores.Fields.SecureUrl.Hint">
+    <Value></Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -360,5 +366,12 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'securitysettings.allowno
 BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId])
 	VALUES (N'securitysettings.allownonasciicharactersinheaders', N'true', 0)
+END
+GO
+
+--drop column
+IF EXISTS (SELECT 1 FROM sys.columns WHERE object_id = object_id('[Store]') AND NAME='SecureUrl')
+BEGIN
+	ALTER TABLE [Store] DROP COLUMN [SecureUrl]
 END
 GO

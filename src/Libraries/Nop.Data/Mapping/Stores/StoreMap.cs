@@ -16,7 +16,6 @@ namespace Nop.Data.Mapping.Stores
             this.HasKey(s => s.Id);
             this.Property(s => s.Name).IsRequired().HasMaxLength(400);
             this.Property(s => s.Url).IsRequired().HasMaxLength(400);
-            this.Property(s => s.SecureUrl).HasMaxLength(400);
             this.Property(s => s.Hosts).HasMaxLength(1000);
 
             this.Property(s => s.CompanyName).HasMaxLength(1000);
