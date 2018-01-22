@@ -8793,6 +8793,9 @@
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.OrderCompleted.CustomerNotification">
 	  <Value>This message template is used to notify a customer that the certain order was completed. The order gets the order status Complete when it''s paid and delivered, or it can be changed manually to Complete in Sales - Orders.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.OrderPaid.AffiliateNotification">
+    <Value>This message template is used to notify an affiliate that the certain order was paid. The order gets the status Paid when the amount was charged.</Value>
+  </LocaleResource>   
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.OrderPaid.CustomerNotification">
 	  <Value>This message template is used to notify a customer that the certain order was paid. The order gets the payment status Paid when the amount was charged, or it can be changed manually Sales - Orders by clicking Mark as paid button in Payment status.</Value>
   </LocaleResource>
@@ -8802,6 +8805,9 @@
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.OrderPaid.VendorNotification">
 	  <Value>This message template is used to notify a vendor that the certain order was paid. The order gets the status Paid when the amount was charged.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.OrderPlaced.AffiliateNotification">
+    <Value>This message template is used to notify an affiliate that the certain order was placed.</Value>
+  </LocaleResource>    
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.OrderPlaced.CustomerNotification">
 	  <Value>This message template is used to notify a customer that the certain order was placed. Orders can be viewed by a customer on the account page.</Value>
   </LocaleResource>
