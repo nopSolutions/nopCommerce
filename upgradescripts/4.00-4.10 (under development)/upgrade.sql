@@ -167,6 +167,9 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Stores.Fields.SecureUrl.Hint">
     <Value></Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Stores.Fields.Url.Hint">
+    <Value>The URL of your store e.g. http://www.yourstore.com/ or https://www.yourstore.com/mystore/.</Value>
+  </LocaleResource>
 </Language>
 '
 

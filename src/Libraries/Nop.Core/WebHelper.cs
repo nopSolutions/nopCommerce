@@ -181,21 +181,22 @@ namespace Nop.Core
         {
             if (!IsRequestAvailable())
                 return string.Empty;
+            
+            //get store location
+            var storeLocation = GetStoreLocation(useSsl ?? IsCurrentConnectionSecured());
 
-            if (!useSsl.HasValue)
-                useSsl = IsCurrentConnectionSecured();
+            //add local path to the URL
+            var pageUrl = $"{storeLocation.TrimEnd('/')}{_httpContextAccessor.HttpContext.Request.Path}";
 
-            //get the host considering using SSL
-            var url = GetStoreHost(useSsl.Value).TrimEnd('/');
-
-            //get full URL with or without query string
-            url += includeQueryString ? GetRawUrl(_httpContextAccessor.HttpContext.Request)
-                : $"{_httpContextAccessor.HttpContext.Request.PathBase}{_httpContextAccessor.HttpContext.Request.Path}";
-
+            //add query string to the URL
+            if (includeQueryString)
+                pageUrl = $"{pageUrl}{_httpContextAccessor.HttpContext.Request.QueryString}";
+            
+            //whether to convert the URL to lower case
             if (lowercaseUrl)
-                url = url.ToLowerInvariant();
+                pageUrl = pageUrl.ToLowerInvariant();
 
-            return url;
+            return pageUrl;
         }
 
         /// <summary>
@@ -226,29 +227,21 @@ namespace Nop.Core
         /// <returns>Store host location</returns>
         public virtual string GetStoreHost(bool useSsl)
         {
-            var result = string.Empty;
+            if (!IsRequestAvailable())
+                return string.Empty;
 
             //try to get host from the request HOST header
             var hostHeader = _httpContextAccessor.HttpContext.Request.Headers[HeaderNames.Host];
-            if (!StringValues.IsNullOrEmpty(hostHeader))
-                result = "http://" + hostHeader.FirstOrDefault();
+            if (StringValues.IsNullOrEmpty(hostHeader))
+                return string.Empty;
 
-            //if HOST header is empty (it is possible only when HttpContext is not available), use URL of a store entity configured in admin area
-            if (string.IsNullOrEmpty(result) && DataSettingsHelper.DatabaseIsInstalled())
-            {
-                //do not inject IWorkContext via constructor because it'll cause circular references
-                result = EngineContext.Current.Resolve<IStoreContext>().CurrentStore?.Url
-                    ?? throw new Exception("Current store cannot be loaded");
-            }
+            //add scheme to the URL
+            var storeHost = $"{(useSsl ? Uri.UriSchemeHttps : Uri.UriSchemeHttp)}://{hostHeader.FirstOrDefault()}";
+            
+            //ensure that host is ended with slash
+            storeHost = $"{storeHost.TrimEnd('/')}/";
 
-            //whether to use secure connection
-            if (useSsl)
-                result = result.Replace("http://", "https://");
-
-            if (!result.EndsWith("/"))
-                result += "/";
-
-            return result;
+            return storeHost;
         }
 
         /// <summary>
@@ -258,23 +251,30 @@ namespace Nop.Core
         /// <returns>Store location</returns>
         public virtual string GetStoreLocation(bool? useSsl = null)
         {
-            //whether connection is secured
-            if (!useSsl.HasValue)
-                useSsl = IsCurrentConnectionSecured();
+            var storeLocation = string.Empty;
 
             //get store host
-            var host = GetStoreHost(useSsl.Value).TrimEnd('/');
+            var storeHost = GetStoreHost(useSsl ?? IsCurrentConnectionSecured());
+            if (!string.IsNullOrEmpty(storeHost))
+            {
+                //add application path base if exists
+                storeLocation = IsRequestAvailable() ? $"{storeHost.TrimEnd('/')}{_httpContextAccessor.HttpContext.Request.PathBase}" : storeHost;
+            }
 
-            //add application path base if exists
-            if (IsRequestAvailable())
-                host += _httpContextAccessor.HttpContext.Request.PathBase;
+            //if host is empty (it is possible only when HttpContext is not available), use URL of a store entity configured in admin area
+            if (string.IsNullOrEmpty(storeHost) && DataSettingsHelper.DatabaseIsInstalled())
+            {
+                //do not inject IWorkContext via constructor because it'll cause circular references
+                storeLocation = EngineContext.Current.Resolve<IStoreContext>().CurrentStore?.Url
+                    ?? throw new Exception("Current store cannot be loaded");
+            }
 
-            if (!host.EndsWith("/"))
-                host += "/";
+            //ensure that URL is ended with slash
+            storeLocation = $"{storeLocation.TrimEnd('/')}/";
 
-            return host;
+            return storeLocation;
         }
-
+        
         /// <summary>
         /// Returns true if the requested resource is one of the typical resources that needn't be processed by the cms engine.
         /// </summary>
