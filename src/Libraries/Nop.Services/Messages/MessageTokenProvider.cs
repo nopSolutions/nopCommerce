@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Text;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
@@ -445,16 +446,7 @@ namespace Nop.Services.Messages
         #endregion
 
         #region Utilities
-
-        /// <summary>
-        /// Get UrlHelper
-        /// </summary>
-        /// <returns>UrlHelper</returns>
-        protected virtual IUrlHelper GetUrlHelper()
-        {
-            return _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
-        }
-
+        
         /// <summary>
         /// Convert a collection to a HTML table
         /// </summary>
@@ -496,7 +488,7 @@ namespace Nop.Services.Messages
                 //add download link
                 if (_downloadService.IsDownloadAllowed(orderItem))
                 {
-                    var downloadUrl = $"{GetStoreUrl(order.StoreId)}{GetUrlHelper().RouteUrl("GetDownload", new { orderItemId = orderItem.OrderItemGuid })}";
+                    var downloadUrl = RouteUrl(order.StoreId, "GetDownload", new { orderItemId = orderItem.OrderItemGuid });
                     var downloadLink = $"<a class=\"link\" href=\"{downloadUrl}\">{_localizationService.GetResource("Messages.Order.Product(s).Download", languageId)}</a>";
                     sb.AppendLine("<br />");
                     sb.AppendLine(downloadLink);
@@ -504,7 +496,7 @@ namespace Nop.Services.Messages
                 //add download link
                 if (_downloadService.IsLicenseDownloadAllowed(orderItem))
                 {
-                    var licenseUrl = $"{GetStoreUrl(order.StoreId)}{GetUrlHelper().RouteUrl("GetLicense", new { orderItemId = orderItem.OrderItemGuid })}";
+                    var licenseUrl = RouteUrl(order.StoreId, "GetLicense", new { orderItemId = orderItem.OrderItemGuid });
                     var licenseLink = $"<a class=\"link\" href=\"{licenseUrl}\">{_localizationService.GetResource("Messages.Order.Product(s).License", languageId)}</a>";
                     sb.AppendLine("<br />");
                     sb.AppendLine(licenseLink);
@@ -859,26 +851,34 @@ namespace Nop.Services.Messages
         }
 
         /// <summary>
-        /// Get store URL
+        /// Generates an absolute URL for the specified store, routeName and route values
         /// </summary>
         /// <param name="storeId">Store identifier; Pass 0 to load URL of the current store</param>
-        /// <param name="removeTailingSlash">A value indicating whether to remove a tailing slash</param>
-        /// <returns>Store URL</returns>
-        protected virtual string GetStoreUrl(int storeId = 0, bool removeTailingSlash = true)
+        /// <param name="routeName">The name of the route that is used to generate URL</param>
+        /// <param name="routeValues">An object that contains route values</param>
+        /// <returns>Generated URL</returns>
+        protected virtual string RouteUrl(int storeId = 0, string routeName = null, object routeValues = null)
         {
-            var store = _storeService.GetStoreById(storeId) ?? _storeContext.CurrentStore;
+            //try to get a store by the passed identifier
+            var store = _storeService.GetStoreById(storeId) ?? _storeContext.CurrentStore
+                ?? throw new Exception("No store could be loaded");
 
-            if (store == null)
-                throw new Exception("No store could be loaded");
-
-            var url = store.Url;
-            if (string.IsNullOrEmpty(url))
+            //ensure that the store URL is specified
+            if (string.IsNullOrEmpty(store.Url))
                 throw new Exception("URL cannot be null");
 
-            if (url.EndsWith("/"))
-                url = url.Remove(url.Length - 1);
+            var storeUrl = WebUtility.UrlDecode(store.Url.TrimEnd('/'));
 
-            return url;
+            //generate a URL with an absolute path
+            var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
+            var url = new PathString(urlHelper.RouteUrl(routeName, routeValues));
+
+            //remove the application path from the generated URL if exists
+            var pathBase = _actionContextAccessor.ActionContext?.HttpContext?.Request?.PathBase ?? PathString.Empty;
+            url.StartsWithSegments(pathBase, out url);
+            
+            //compose the result
+            return $"{storeUrl}{url}";
         }
 
         #endregion
@@ -986,7 +986,7 @@ namespace Nop.Services.Messages
                 tokens.Add(new Token("Order.CreatedOn", order.CreatedOnUtc.ToString("D")));
             }
             
-            var orderUrl = $"{GetStoreUrl(order.StoreId)}{GetUrlHelper().RouteUrl("OrderDetails", new { orderId = order.Id })}";
+            var orderUrl = RouteUrl(order.StoreId, "OrderDetails", new { orderId = order.Id });
             tokens.Add(new Token("Order.OrderURLForCustomer", orderUrl, true));
 
             //event notification
@@ -1036,7 +1036,7 @@ namespace Nop.Services.Messages
             }
             tokens.Add(new Token("Shipment.TrackingNumberURL", trackingNumberUrl, true));
             tokens.Add(new Token("Shipment.Product(s)", ProductListToHtmlTable(shipment, languageId), true));
-            var shipmentUrl = $"{GetStoreUrl(shipment.Order.StoreId)}{GetUrlHelper().RouteUrl("ShipmentDetails", new { shipmentId = shipment.Id })}";
+            var shipmentUrl = RouteUrl(shipment.Order.StoreId, "ShipmentDetails", new { shipmentId = shipment.Id });
             tokens.Add(new Token("Shipment.URLForCustomer", shipmentUrl, true));
 
             //event notification
@@ -1051,7 +1051,7 @@ namespace Nop.Services.Messages
         public virtual void AddOrderNoteTokens(IList<Token> tokens, OrderNote orderNote)
         {
             tokens.Add(new Token("Order.NewNoteText", orderNote.FormatOrderNoteText(), true));
-            var orderNoteAttachmentUrl = $"{GetStoreUrl(orderNote.Order.StoreId)}{GetUrlHelper().RouteUrl("GetOrderNoteFile", new { ordernoteid = orderNote.Id })}";
+            var orderNoteAttachmentUrl = RouteUrl(orderNote.Order.StoreId, "GetOrderNoteFile", new { ordernoteid = orderNote.Id });
             tokens.Add(new Token("Order.OrderNoteAttachmentUrl", orderNoteAttachmentUrl, true));
 
             //event notification
@@ -1139,10 +1139,10 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("Customer.CustomAttributes", _customerAttributeFormatter.FormatAttributes(customAttributesXml), true));
             
             //note: we do not use SEO friendly URLS for these links because we can get errors caused by having .(dot) in the URL (from the email address)
-            var passwordRecoveryUrl = $"{GetStoreUrl()}{GetUrlHelper().RouteUrl("PasswordRecoveryConfirm", new { token = customer.GetAttribute<string>(SystemCustomerAttributeNames.PasswordRecoveryToken), email = customer.Email })}";
-            var accountActivationUrl = $"{GetStoreUrl()}{GetUrlHelper().RouteUrl("AccountActivation", new { token = customer.GetAttribute<string>(SystemCustomerAttributeNames.AccountActivationToken), email = customer.Email })}";
-            var emailRevalidationUrl = $"{GetStoreUrl()}{GetUrlHelper().RouteUrl("EmailRevalidation", new { token = customer.GetAttribute<string>(SystemCustomerAttributeNames.EmailRevalidationToken), email = customer.Email })}";
-            var wishlistUrl = $"{GetStoreUrl()}{GetUrlHelper().RouteUrl("Wishlist", new { customerGuid = customer.CustomerGuid })}";
+            var passwordRecoveryUrl = RouteUrl(routeName: "PasswordRecoveryConfirm", routeValues: new { token = customer.GetAttribute<string>(SystemCustomerAttributeNames.PasswordRecoveryToken), email = customer.Email });
+            var accountActivationUrl = RouteUrl(routeName: "AccountActivation", routeValues: new { token = customer.GetAttribute<string>(SystemCustomerAttributeNames.AccountActivationToken), email = customer.Email });
+            var emailRevalidationUrl = RouteUrl(routeName: "EmailRevalidation", routeValues: new { token = customer.GetAttribute<string>(SystemCustomerAttributeNames.EmailRevalidationToken), email = customer.Email });
+            var wishlistUrl = RouteUrl(routeName: "Wishlist", routeValues: new { customerGuid = customer.CustomerGuid });
             tokens.Add(new Token("Customer.PasswordRecoveryURL", passwordRecoveryUrl, true));
             tokens.Add(new Token("Customer.AccountActivationURL", accountActivationUrl, true));
             tokens.Add(new Token("Customer.EmailRevalidationURL", emailRevalidationUrl, true));
@@ -1175,10 +1175,10 @@ namespace Nop.Services.Messages
         {
             tokens.Add(new Token("NewsLetterSubscription.Email", subscription.Email));
 
-            var activationUrl = $"{GetStoreUrl()}{GetUrlHelper().RouteUrl("NewsletterActivation", new { token = subscription.NewsLetterSubscriptionGuid, active = "true" })}";
+            var activationUrl = RouteUrl(routeName: "NewsletterActivation", routeValues: new { token = subscription.NewsLetterSubscriptionGuid, active = "true" });
             tokens.Add(new Token("NewsLetterSubscription.ActivationUrl", activationUrl, true));
 
-            var deactivationUrl = $"{GetStoreUrl()}{GetUrlHelper().RouteUrl("NewsletterActivation", new { token = subscription.NewsLetterSubscriptionGuid, active = "false" })}";
+            var deactivationUrl = RouteUrl(routeName: "NewsletterActivation", routeValues: new { token = subscription.NewsLetterSubscriptionGuid, active = "false" });
             tokens.Add(new Token("NewsLetterSubscription.DeactivationUrl", deactivationUrl, true));
 
             //event notification
@@ -1242,7 +1242,7 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("Product.SKU", product.Sku));
             tokens.Add(new Token("Product.StockQuantity", product.GetTotalStockQuantity()));
             
-            var productUrl = $"{GetStoreUrl()}{GetUrlHelper().RouteUrl("Product", new { SeName = product.GetSeName() })}";
+            var productUrl = RouteUrl(routeName: "Product", routeValues: new { SeName = product.GetSeName() });
             tokens.Add(new Token("Product.ProductURLForCustomer", productUrl, true));
 
             //event notification
@@ -1286,9 +1286,9 @@ namespace Nop.Services.Messages
         {
             string topicUrl;
             if (friendlyForumTopicPageIndex.HasValue && friendlyForumTopicPageIndex.Value > 1)
-                topicUrl = $"{GetStoreUrl()}{GetUrlHelper().RouteUrl("TopicSlugPaged", new { id = forumTopic.Id, slug = forumTopic.GetSeName(), pageNumber = friendlyForumTopicPageIndex.Value })}";
+                topicUrl = RouteUrl(routeName: "TopicSlugPaged", routeValues: new { id = forumTopic.Id, slug = forumTopic.GetSeName(), pageNumber = friendlyForumTopicPageIndex.Value });
             else
-                topicUrl = $"{GetStoreUrl()}{GetUrlHelper().RouteUrl("TopicSlug", new { id = forumTopic.Id, slug = forumTopic.GetSeName()})}";
+                topicUrl = RouteUrl(routeName: "TopicSlug", routeValues: new { id = forumTopic.Id, slug = forumTopic.GetSeName()});
             if (appendedPostIdentifierAnchor.HasValue && appendedPostIdentifierAnchor.Value > 0)
                 topicUrl = $"{topicUrl}#{appendedPostIdentifierAnchor.Value}";
             tokens.Add(new Token("Forums.TopicURL", topicUrl, true));
@@ -1319,7 +1319,7 @@ namespace Nop.Services.Messages
         /// <param name="forum">Forum</param>
         public virtual void AddForumTokens(IList<Token> tokens, Forum forum)
         {
-            var forumUrl = $"{GetStoreUrl()}{GetUrlHelper().RouteUrl("ForumSlug", new { id = forum.Id, slug = forum.GetSeName()})}";
+            var forumUrl = RouteUrl(routeName: "ForumSlug", routeValues: new { id = forum.Id, slug = forum.GetSeName()});
             tokens.Add(new Token("Forums.ForumURL", forumUrl, true));
             tokens.Add(new Token("Forums.ForumName", forum.Name));
 
@@ -1349,7 +1349,7 @@ namespace Nop.Services.Messages
         public virtual void AddBackInStockTokens(IList<Token> tokens, BackInStockSubscription subscription)
         {
             tokens.Add(new Token("BackInStockSubscription.ProductName", subscription.Product.Name));
-            var productUrl = $"{GetStoreUrl(subscription.StoreId)}{GetUrlHelper().RouteUrl("Product", new { SeName = subscription.Product.GetSeName()})}";
+            var productUrl = RouteUrl(subscription.StoreId, "Product", new { SeName = subscription.Product.GetSeName()});
             tokens.Add(new Token("BackInStockSubscription.ProductUrl", productUrl, true));
 
             //event notification
