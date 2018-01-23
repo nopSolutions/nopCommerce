@@ -9483,8 +9483,8 @@
   <LocaleResource Name="Admin.ContentManagement.Widgets.Fields.SystemName">
     <Value>System name</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.CurrentCarts">
-    <Value>Current shopping carts</Value>
+  <LocaleResource Name="Admin.CurrentCarts.CartsAndWishlists">
+    <Value>Shopping carts and wishlists</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.CurrentCarts.Customer">
     <Value>Customer</Value>
@@ -9497,7 +9497,7 @@
   </LocaleResource>
   <LocaleResource Name="Admin.CurrentCarts.Store">
     <Value>Store</Value>
-  </LocaleResource>
+  </LocaleResource>  
   <LocaleResource Name="Admin.CurrentCarts.Total">
     <Value>Total</Value>
   </LocaleResource>
@@ -9509,9 +9509,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.CurrentCarts.UpdatedOn">
     <Value>Updated on</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.CurrentWishlists">
-    <Value>Current wishlists</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Customers">
     <Value>Customers</Value>
@@ -9804,11 +9801,8 @@
   <LocaleResource Name="Admin.Customers.Customers.OnlyAdminCanDeleteAdmin">
     <Value>You're not allowed to delete administrators. Only administrators can do it.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Customers.Customers.CurrentShoppingCart">
+  <LocaleResource Name="Admin.Customers.Customers.ShoppingCartAndWishlist">
     <Value>Current shopping cart</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Customers.Customers.CurrentWishlist">
-    <Value>Current wishlist</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.Deleted">
     <Value>The customer has been deleted successfully.</Value>
@@ -12597,6 +12591,12 @@
   <LocaleResource Name="Admin.SearchTermReport.Keyword">
     <Value>Keyword</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ShoppingCartType.ShoppingCartType">
+    <Value>Shopping cart type</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ShoppingCartType.ShoppingCartType.Hint">
+    <Value>Choose a shopping cart type.</Value>
+  </LocaleResource>    
   <LocaleResource Name="Admin.StockQuantityHistory.Messages.CancelOrder">
     <Value>The stock quantity has been increased by canceling the order #{0}</Value>
   </LocaleResource>

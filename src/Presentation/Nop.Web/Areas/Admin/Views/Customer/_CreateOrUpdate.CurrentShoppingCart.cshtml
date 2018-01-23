@@ -3,11 +3,29 @@
 @using Nop.Services.Stores
 @inject IStoreService storeService
 @{
-      var stores = storeService.GetAllStores();
-}  
+    var stores = storeService.GetAllStores();
+}
 
 <div class="panel-group">
     @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_customer_details_shopping_cart_top", additionalData = Model })
+
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <div class="col-md-4">
+                            <nop-label asp-for="ShoppingCartTypeModel.ShoppingCartType" />
+                        </div>
+                        <div class="col-md-8">
+                            <nop-select asp-for="ShoppingCartTypeModel.ShoppingCartType" asp-items="@Model.ShoppingCartTypeModel.AvailableShoppingCartTypes" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="panel panel-default">
         <div class="panel-body">
             <div id="currentshoppingcart-grid"></div>
@@ -18,10 +36,10 @@
                             type: "json",
                             transport: {
                                 read: {
-                                    url: "@Html.Raw(Url.Action("GetCartList", "Customer", new { customerId = Model.Id, cartTypeId = (int)ShoppingCartType.ShoppingCart }))",
+                                    url: "@Html.Raw(Url.Action("GetCartList", "Customer", new { customerId = Model.Id }))",
                                     type: "POST",
                                     dataType: "json",
-                                    data: addAntiForgeryToken
+                                    data: additionalData
                                 }
                             },
                             schema: {
@@ -87,3 +105,21 @@
     </div>
     @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_customer_details_shopping_cart_bottom", additionalData = Model })
 </div>
+
+<script type="text/javascript">
+    function additionalData() {
+        var data = {
+            ShoppingCartType: $('#@Html.IdFor(model => model.ShoppingCartTypeModel.ShoppingCartType)').val()
+        };
+        addAntiForgeryToken(data);
+        return data;
+    }
+
+    $(document)
+        .ready(function() {
+            $("#ShoppingCartTypeModel_ShoppingCartType")
+                .change(function() {
+                    $("#currentshoppingcart-grid").data('kendoGrid').dataSource.read();
+                });
+        });
+</script>

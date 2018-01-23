@@ -704,6 +704,9 @@ namespace Nop.Web.Areas.Admin.Controllers
                 customer != null &&
                 customer.IsRegistered() &&
                 !customer.Active;
+
+            model.ShoppingCartTypeModel.ShoppingCartType = ShoppingCartType.ShoppingCart;
+            model.ShoppingCartTypeModel.AvailableShoppingCartTypes = ShoppingCartType.ShoppingCart.ToSelectList().ToList();
         }
 
         protected virtual void PrepareAddressModel(CustomerAddressModel model, Address address, Customer customer, bool excludeProperties)
@@ -2153,13 +2156,13 @@ namespace Nop.Web.Areas.Admin.Controllers
         #region Current shopping cart/ wishlist
 
         [HttpPost]
-        public virtual IActionResult GetCartList(int customerId, int cartTypeId)
+        public virtual IActionResult GetCartList(int customerId, ShoppingCartTypeModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedKendoGridJson();
 
             var customer = _customerService.GetCustomerById(customerId);
-            var cart = customer.ShoppingCartItems.Where(x => x.ShoppingCartTypeId == cartTypeId).ToList();
+            var cart = customer.ShoppingCartItems.Where(x => x.ShoppingCartTypeId == (int)model.ShoppingCartType).ToList();
 
             var gridModel = new DataSourceResult
             {

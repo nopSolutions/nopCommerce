@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Nop.Web.Areas.Admin.Models.ShoppingCart;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
+using Nop.Services;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Services.Helpers;
@@ -69,18 +70,22 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrentCarts))
                 return AccessDeniedView();
 
-            return View();
+            return View(new ShoppingCartTypeModel
+            {
+                ShoppingCartType = ShoppingCartType.ShoppingCart,
+                AvailableShoppingCartTypes = ShoppingCartType.ShoppingCart.ToSelectList().ToList()
+            });
         }
 
         [HttpPost]
-        public virtual IActionResult CurrentCarts(DataSourceRequest command)
+        public virtual IActionResult CurrentCarts(DataSourceRequest command, ShoppingCartTypeModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrentCarts))
                 return AccessDeniedKendoGridJson();
 
             var customers = _customerService.GetAllCustomers(
                 loadOnlyWithShoppingCart: true,
-                sct: ShoppingCartType.ShoppingCart,
+                sct: model.ShoppingCartType,
                 pageIndex: command.Page - 1,
                 pageSize: command.PageSize);
 
@@ -90,7 +95,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 {
                     CustomerId = x.Id,
                     CustomerEmail = x.IsRegistered() ? x.Email : _localizationService.GetResource("Admin.Customers.Guest"),
-                    TotalItems = x.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList().GetTotalProducts()
+                    TotalItems = x.ShoppingCartItems.Where(sci => sci.ShoppingCartType == model.ShoppingCartType).ToList().GetTotalProducts()
                 }),
                 Total = customers.TotalCount
             };
@@ -99,13 +104,13 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual IActionResult GetCartDetails(int customerId)
+        public virtual IActionResult GetCartDetails(int customerId, ShoppingCartTypeModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrentCarts))
                 return AccessDeniedKendoGridJson();
 
             var customer = _customerService.GetCustomerById(customerId);
-            var cart = customer.ShoppingCartItems.Where(x => x.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList();
+            var cart = customer.ShoppingCartItems.Where(x => x.ShoppingCartType == model.ShoppingCartType).ToList();
 
             var gridModel = new DataSourceResult
             {
@@ -127,41 +132,6 @@ namespace Nop.Web.Areas.Admin.Controllers
                     return sciModel;
                 }),
                 Total = cart.Count
-            };
-
-            return Json(gridModel);
-        }
-
-        //wishlists
-        public virtual IActionResult CurrentWishlists()
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrentCarts))
-                return AccessDeniedView();
-
-            return View();
-        }
-
-        [HttpPost]
-        public virtual IActionResult CurrentWishlists(DataSourceRequest command)
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrentCarts))
-                return AccessDeniedKendoGridJson();
-
-            var customers = _customerService.GetAllCustomers(
-                loadOnlyWithShoppingCart: true,
-                sct: ShoppingCartType.Wishlist,
-                pageIndex: command.Page - 1,
-                pageSize: command.PageSize);
-
-            var gridModel = new DataSourceResult
-            {
-                Data = customers.Select(x => new ShoppingCartModel
-                {
-                    CustomerId = x.Id,
-                    CustomerEmail = x.IsRegistered() ? x.Email : _localizationService.GetResource("Admin.Customers.Guest"),
-                    TotalItems = x.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist).ToList().GetTotalProducts()
-                }),
-                Total = customers.TotalCount
             };
 
             return Json(gridModel);

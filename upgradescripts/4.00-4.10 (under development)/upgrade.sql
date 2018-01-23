@@ -146,6 +146,30 @@ set @resources='
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.OrderPlaced.AffiliateNotification">
 	  <Value>This message template is used to notify an affiliate that the certain order was placed.</Value>
   </LocaleResource>  
+  <LocaleResource Name="Admin.CurrentCarts.CartsAndWishlists">
+    <Value>Shopping carts and wishlists</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.CurrentCarts">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.CurrentWishlists">
+    <Value></Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.ShoppingCartType.ShoppingCartType">
+    <Value>Shopping cart type</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ShoppingCartType.ShoppingCartType.Hint">
+    <Value>Choose a shopping cart type.</Value>
+  </LocaleResource> 
+  <LocaleResource Name="Admin.Customers.Customers.CurrentShoppingCart">
+    <Value></Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Customers.Customers.ShoppingCartAndWishlist">
+    <Value>Shopping cart and wishlist</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.CurrentWishlist">
+    <Value></Value>
+  </LocaleResource>    
 </Language>
 '
 
