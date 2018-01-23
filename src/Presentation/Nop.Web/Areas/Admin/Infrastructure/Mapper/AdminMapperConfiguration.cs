@@ -919,6 +919,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore())
                 .ForMember(dest => dest.ShowProductReviewsOnAccountPage_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.ProductReviewsPageSizeOnAccountPage_OverrideForStore, mo => mo.Ignore())
+                .ForMember(dest => dest.ProductReviewsSortByCreatedDateAscending_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.ExportImportProductAttributes_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.ExportImportProductSpecificationAttributes_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.ExportImportProductCategoryBreadcrumb_OverrideForStore, mo => mo.Ignore())

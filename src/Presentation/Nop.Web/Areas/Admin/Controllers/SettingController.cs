@@ -817,6 +817,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 model.ShowProductReviewsPerStore_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.ShowProductReviewsPerStore, storeScope);
                 model.ShowProductReviewsOnAccountPage_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.ShowProductReviewsTabOnAccountPage, storeScope);
                 model.ProductReviewsPageSizeOnAccountPage_OverrideForStore = _settingService.SettingExists(catalogSettings, x=> x.ProductReviewsPageSizeOnAccountPage, storeScope);
+                model.ProductReviewsSortByCreatedDateAscending_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.ProductReviewsSortByCreatedDateAscending, storeScope);
                 model.ExportImportProductAttributes_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.ExportImportProductAttributes, storeScope);
                 model.ExportImportProductSpecificationAttributes_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.ExportImportProductSpecificationAttributes, storeScope);
                 model.ExportImportProductCategoryBreadcrumb_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.ExportImportProductCategoryBreadcrumb, storeScope);
@@ -896,6 +897,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             _settingService.SaveSettingOverridablePerStore(catalogSettings, x => x.ShowProductReviewsPerStore, model.ShowProductReviewsPerStore_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(catalogSettings, x => x.ShowProductReviewsTabOnAccountPage, model.ShowProductReviewsOnAccountPage_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(catalogSettings, x => x.ProductReviewsPageSizeOnAccountPage, model.ProductReviewsPageSizeOnAccountPage_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(catalogSettings, x => x.ProductReviewsSortByCreatedDateAscending, model.ProductReviewsSortByCreatedDateAscending_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(catalogSettings, x => x.ExportImportProductAttributes, model.ExportImportProductAttributes_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(catalogSettings, x => x.ExportImportProductSpecificationAttributes, model.ExportImportProductSpecificationAttributes_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(catalogSettings, x => x.ExportImportProductCategoryBreadcrumb, model.ExportImportProductCategoryBreadcrumb_OverrideForStore, storeScope, false); 

@@ -146,6 +146,12 @@ set @resources='
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.OrderPlaced.AffiliateNotification">
 	  <Value>This message template is used to notify an affiliate that the certain order was placed.</Value>
   </LocaleResource>  
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductReviewsSortByCreatedDateAscending">
+	  <Value>Sort by ascending</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductReviewsSortByCreatedDateAscending.Hint">
+	  <Value>Check if the product reviews should be sorted by creation date as ascending</Value>
+  </LocaleResource>      
 </Language>
 '
 
@@ -337,5 +343,13 @@ BEGIN
     DECLARE @NewLine AS CHAR(2) = CHAR(13) + CHAR(10)
     INSERT [dbo].[MessageTemplate] ([Name], [BccEmailAddresses], [Subject], [Body], [IsActive], [AttachedDownloadId], [EmailAccountId], [LimitedToStores], [DelayPeriodId]) 
     VALUES (N'OrderPaid.AffiliateNotification', NULL, N'%Store.Name%. Order #%Order.OrderNumber% paid', N'<p>' + @NewLine + '<a href=\"%Store.URL%\">%Store.Name%</a>' + @NewLine + '<br />' + @NewLine + '<br />' + @NewLine + 'Order #%Order.OrderNumber% has been just paid.' + @NewLine + '<br />' + @NewLine + '<br />' + @NewLine + 'Order Number: %Order.OrderNumber%' + @NewLine + '<br />' + @NewLine + 'Date Ordered: %Order.CreatedOn%' + @NewLine + '<br />' + @NewLine + '<br />' + @NewLine + '%Order.Product(s)%' + @NewLine + '</p>' + @NewLine, 0, 0, 0, 0, 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'catalogsettings.productreviewssortbycreateddateascending')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'catalogsettings.productreviewssortbycreateddateascending', N'true', 0)
 END
 GO

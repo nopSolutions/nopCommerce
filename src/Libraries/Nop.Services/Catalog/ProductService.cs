@@ -2028,7 +2028,9 @@ namespace Nop.Services.Catalog
                         select productReview;
             }
 
-            query = query.OrderBy(pr => pr.CreatedOnUtc).ThenBy(pr => pr.Id);
+            query = _catalogSettings.ProductReviewsSortByCreatedDateAscending
+                ? query.OrderBy(pr => pr.CreatedOnUtc).ThenBy(pr => pr.Id)
+                : query.OrderByDescending(pr => pr.CreatedOnUtc).ThenBy(pr => pr.Id);
 
             var productReviews = new PagedList<ProductReview>(query, pageIndex, pageSize);
 

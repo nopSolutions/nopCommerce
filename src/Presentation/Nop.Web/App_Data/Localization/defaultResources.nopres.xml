@@ -5445,6 +5445,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductReviewsMustBeApproved.Hint">
     <Value>Check if product reviews must be approved by administrator.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductReviewsSortByCreatedDateAscending">
+    <Value>Sort by ascending</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductReviewsSortByCreatedDateAscending.Hint">
+    <Value>Check if the product reviews should be sorted by creation date as ascending</Value>
+  </LocaleResource>      
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductsAlsoPurchasedEnabled">
     <Value>'Products also purchased' enabled</Value>
   </LocaleResource>
