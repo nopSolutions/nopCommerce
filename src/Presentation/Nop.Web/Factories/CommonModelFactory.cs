@@ -730,14 +730,14 @@ namespace Nop.Web.Factories
                     //URLs are localizable. Append SEO code
                     foreach (var language in _languageService.GetAllLanguages(storeId: _storeContext.CurrentStore.Id))
                     {
-                        sb.AppendFormat("Sitemap: {0}{1}/sitemap.xml", _storeContext.CurrentStore.Url, language.UniqueSeoCode);
+                        sb.AppendFormat("Sitemap: {0}{1}/sitemap.xml", _webHelper.GetStoreLocation(), language.UniqueSeoCode);
                         sb.Append(newLine);
                     }
                 }
                 else
                 {
                     //localizable paths (without SEO code)
-                    sb.AppendFormat("Sitemap: {0}sitemap.xml", _storeContext.CurrentStore.Url);
+                    sb.AppendFormat("Sitemap: {0}sitemap.xml", _webHelper.GetStoreLocation());
                     sb.Append(newLine);
                 }
 

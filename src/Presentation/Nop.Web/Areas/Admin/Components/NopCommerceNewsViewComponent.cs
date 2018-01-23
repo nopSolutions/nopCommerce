@@ -15,11 +15,17 @@ namespace Nop.Web.Areas.Admin.Components
 {
     public class NopCommerceNewsViewComponent : NopViewComponent
     {
+        #region Fields
+
         private readonly AdminAreaSettings _adminAreaSettings;
         private readonly IStoreContext _storeContext;
         private readonly IStaticCacheManager _cacheManager;
         private readonly ISettingService _settingService;
         private readonly IWebHelper _webHelper;
+
+        #endregion
+
+        #region Ctor
 
         public NopCommerceNewsViewComponent(IStoreContext storeContext,
             AdminAreaSettings adminAreaSettings,
@@ -34,11 +40,15 @@ namespace Nop.Web.Areas.Admin.Components
             this._webHelper = webHelper;
         }
 
+        #endregion
+
+        #region Methods
+
         public IViewComponentResult Invoke()
         {
             try
             {
-                var feedUrl = $"http://www.nopCommerce.com/NewsRSS.aspx?Version={NopVersion.CurrentVersion}&Localhost={_webHelper.IsLocalRequest(Request)}&HideAdvertisements={_adminAreaSettings.HideAdvertisementsOnAdminArea}&StoreURL={_storeContext.CurrentStore.Url}"
+                var feedUrl = $"http://www.nopCommerce.com/NewsRSS.aspx?Version={NopVersion.CurrentVersion}&Localhost={_webHelper.IsLocalRequest(Request)}&HideAdvertisements={_adminAreaSettings.HideAdvertisementsOnAdminArea}&StoreURL={_webHelper.GetStoreLocation()}"
                         .ToLowerInvariant();
 
                 var rssData = _cacheManager.Get(ModelCacheEventConsumer.OFFICIAL_NEWS_MODEL_KEY, () =>
@@ -94,5 +104,7 @@ namespace Nop.Web.Areas.Admin.Components
                 return Content("");
             }
         }
+
+        #endregion
     }
 }

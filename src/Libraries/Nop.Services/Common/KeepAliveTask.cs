@@ -9,27 +9,39 @@ namespace Nop.Services.Common
     /// </summary>
     public partial class KeepAliveTask : IScheduleTask
     {
-        private readonly IStoreContext _storeContext;
+        #region Fields
+
+        private readonly IWebHelper _webHelper;
+
+        #endregion
+
+        #region Ctor
 
         /// <summary>
         /// Ctor
         /// </summary>
-        /// <param name="storeContext">Store context</param>
-        public KeepAliveTask(IStoreContext storeContext)
+        /// <param name="webHelper">Web helper</param>
+        public KeepAliveTask(IWebHelper webHelper)
         {
-            this._storeContext = storeContext;
+            this._webHelper = webHelper;
         }
+
+        #endregion
+
+        #region Methods
 
         /// <summary>
         /// Executes a task
         /// </summary>
         public void Execute()
         {
-            var url = _storeContext.CurrentStore.Url + "keepalive/index";
+            var keepAliveUrl = $"{_webHelper.GetStoreLocation()}keepalive/index";
             using (var wc = new WebClient())
             {
-                wc.DownloadString(url);
+                wc.DownloadString(keepAliveUrl);
             }
         }
+
+        #endregion
     }
 }

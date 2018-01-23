@@ -28,9 +28,9 @@ namespace Nop.Services.Tasks
 
         static TaskThread()
         {
-            var storeContext = EngineContext.Current.Resolve<IStoreContext>();
+            var webHelper = EngineContext.Current.Resolve<IWebHelper>();
             
-            _scheduleTaskUrl = storeContext.CurrentStore.Url + TaskManager.ScheduleTaskPath;
+            _scheduleTaskUrl = $"{webHelper.GetStoreLocation()}{TaskManager.ScheduleTaskPath}";
         }
 
         internal TaskThread()
