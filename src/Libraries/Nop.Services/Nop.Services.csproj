@@ -17,7 +17,7 @@
     <PackageReference Include="EPPlus" Version="4.1.1" />
     <PackageReference Include="ImageResizer.Plugins.PrettyGifs" Version="4.2.0" />
     <PackageReference Include="iTextSharp" Version="5.5.12" />
-    <PackageReference Include="MaxMind.GeoIP2" Version="2.9.0" />
+    <PackageReference Include="MaxMind.GeoIP2" Version="2.10.0" />
     <PackageReference Include="Microsoft.CSharp" Version="4.4.1" />
     <PackageReference Include="System.Linq.Dynamic" Version="1.0.7" />
     <PackageReference Include="WindowsAzure.Storage" Version="8.7.0" />
