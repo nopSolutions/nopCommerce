@@ -167,7 +167,7 @@
                                         pageSizes: [@(gridPageSizes)],
                                         @await Html.PartialAsync("_GridPagerMessages")
                                     },
-                                    toolbar: ["save", "cancel"],
+                                    toolbar: [{ name: "save", text: "@T("Admin.Common.SaveChanges")" }, { name: "cancel", text: "@T("Admin.Common.CancelChanges")" }],
                                     editable: {
                                         confirmation: "@T("Admin.Common.DeleteConfirmation")",
                                         //bulk editing

@@ -146,6 +146,12 @@ set @resources='
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.OrderPlaced.AffiliateNotification">
 	  <Value>This message template is used to notify an affiliate that the certain order was placed.</Value>
   </LocaleResource>  
+  <LocaleResource Name="Admin.Common.SaveChanges">
+	  <Value>Save changes</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Common.CancelChanges">
+	  <Value>Cancel changes</Value>
+  </LocaleResource>      
 </Language>
 '
 

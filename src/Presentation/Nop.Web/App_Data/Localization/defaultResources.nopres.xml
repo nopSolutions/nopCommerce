@@ -3966,6 +3966,9 @@
   <LocaleResource Name="Admin.Common.Cancel">
     <Value>Cancel</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Common.CancelChanges">
+    <Value>Cancel changes</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Common.Change">
     <Value>Change</Value>
   </LocaleResource>
@@ -4058,6 +4061,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Common.Save">
     <Value>Save</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Common.SaveChanges">
+    <Value>Save changes</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Common.SaveContinue">
     <Value>Save and Continue Edit</Value>
