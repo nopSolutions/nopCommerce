@@ -5,14 +5,14 @@
     </div>
     <div class="listbox">
         <ul class="list">
-            @await Component.InvokeAsync("Widget", new { widgetZone = "account_navigation_before" })
+            @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.AccountNavigationBefore })
             @foreach (var item in Model.CustomerNavigationItems)
             {
                 <li class="@item.ItemClass">
                     <a href="@Url.RouteUrl(item.RouteName)" class="@(Model.SelectedTab == item.Tab ? "active" : "inactive")">@(item.Title)</a>
                 </li>
             }
-            @await Component.InvokeAsync("Widget", new { widgetZone = "account_navigation_after" })
+            @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.AccountNavigationAfter })
         </ul>
     </div>
 </div>

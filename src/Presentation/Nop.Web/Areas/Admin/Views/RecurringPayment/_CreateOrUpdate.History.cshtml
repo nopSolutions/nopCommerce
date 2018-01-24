@@ -1,7 +1,7 @@
-﻿@model RecurringPaymentModel
+@model RecurringPaymentModel
 
 <div class="panel-group">
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_reccuring_payment_details_history_top", additionalData = Model })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ReccuringPaymentDetailsHistoryTop, additionalData = Model })
     <div class="panel panel-default">
         <div class="panel-body">
             @if (Model.LastPaymentFailed)
@@ -116,5 +116,5 @@
             </script>
         </div>
     </div>
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_reccuring_payment_details_history_bottom", additionalData = Model })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ReccuringPaymentDetailsHistoryBottom, additionalData = Model })
 </div>

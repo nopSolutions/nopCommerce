@@ -1,4 +1,4 @@
-﻿@model SystemInfoModel
+@model SystemInfoModel
 
 @{
     //page title
@@ -13,7 +13,7 @@
     </h1>
     <div class="pull-right">
         &nbsp;
-        @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_system_info_buttons" })
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.SystemInfoButtons })
     </div>
 </div>
 
@@ -42,7 +42,7 @@
 <div class="content">
     <div class="form-horizontal">
         <div class="panel-group">
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_system_info_top" })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.SystemInfoTop })
             <div class="panel panel-default">
                 <div class="panel-body">
                     <div class="form-group">
@@ -177,7 +177,7 @@
                     </div>  
                 </div>           
             </div>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_system_info_bottom" })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.SystemInfoBottom })
         </div>
     </div>
 </div>

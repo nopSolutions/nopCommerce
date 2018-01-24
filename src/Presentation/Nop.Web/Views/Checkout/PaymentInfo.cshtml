@@ -14,7 +14,7 @@
         <h1>@T("Checkout.PaymentInfo")</h1>
     </div>
     <div class="page-body checkout-data">
-        @await Component.InvokeAsync("Widget", new { widgetZone = "checkout_payment_info_top" })
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.CheckoutPaymentInfoTop })
         <div class="section payment-info">
             <form asp-route="CheckoutPaymentInfo" method="post">
                 <div asp-validation-summary="ModelOnly" class="message-error"></div>
@@ -26,7 +26,7 @@
                 </div>
             </form>
         </div>
-        @await Component.InvokeAsync("Widget", new { widgetZone = "checkout_payment_info_bottom" })
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.CheckoutPaymentInfoBottom })
         <div class="section order-summary">
             <div class="title">
                 <strong>@T("Checkout.OrderSummary")</strong>

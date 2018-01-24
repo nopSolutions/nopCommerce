@@ -1,4 +1,4 @@
-﻿@model PermissionMappingModel
+@model PermissionMappingModel
 
 @{
     //page title
@@ -17,7 +17,7 @@
                 <i class="fa fa-floppy-o"></i>
                 @T("Admin.Common.Save")
             </button>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_permission_list_buttons" })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.PermissionListButtons })
         </div>
     </div>
 

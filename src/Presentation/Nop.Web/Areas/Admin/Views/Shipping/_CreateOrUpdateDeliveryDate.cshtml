@@ -1,4 +1,4 @@
-﻿@model DeliveryDateModel
+@model DeliveryDateModel
 
 <div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
@@ -6,7 +6,7 @@
 <div class="content">
     <div class="form-horizontal">
         <div class="panel-group">
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_delivery_date_details_top", additionalData = Model })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.DeliveryDateDetailsTop, additionalData = Model })
             <div class="panel panel-default">
                 <div class="panel-body">
                     @(Html.LocalizedEditor<DeliveryDateModel, DeliveryDateLocalizedModel>("delivery-date-localized",
@@ -46,7 +46,7 @@
                     </div>
                 </div>
             </div>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_delivery_date_details_bottomp", additionalData = Model })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.DeliveryDateDetailsBottomp, additionalData = Model })
         </div>
     </div>
 </div>

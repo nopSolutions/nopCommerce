@@ -19,6 +19,7 @@
 @using Nop.Services.Customers
 @using Nop.Services.Helpers
 @using Nop.Services.Security;
+
 @{
     var rawUrl = webHelper.GetRawUrl(httpContextAccessor.HttpContext.Request);
     
@@ -123,7 +124,7 @@
             }
             else
             {
-                @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_header_before" })
+                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.HeaderBefore })
                 <div class="main-header">
                     <a href="@Url.Content("~/Admin")" class="logo">
                         <!-- mini logo for sidebar mini 50x50 pixels -->
@@ -135,9 +136,9 @@
                         <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
                             <span class="sr-only">&nbsp;</span>
                         </a>
-                        @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_header_toggle_after" })
+                        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.HeaderToggleAfter })
                         <div class="navbar-custom-menu">
-                            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_header_navbar_before" })
+                            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.HeaderNavbarBefore })
                             <ul class="nav navbar-nav">
                                 <li>
                                     @await Component.InvokeAsync("AdminLanguageSelector")
@@ -152,7 +153,7 @@
                                     </li>
                                 }
                                 <li>
-                                    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_header_middle" })
+                                    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.HeaderMiddle })
                                 </li>
                                 <li>
                                     <a asp-controller="Home" asp-action="Index" asp-area="">@T("Admin.Header.PublicStore")</a>
@@ -189,11 +190,11 @@
                                     </li>
                                 }
                             </ul>
-                            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_header_navbar_after" })
+                            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.HeaderNavbarAfter })
                         </div>
                     </div>
                 </div>
-                @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_header_after" })
+                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.HeaderAfter })
             }
             @if (IsSectionDefined("headermenu"))
             {
@@ -203,7 +204,7 @@
             {
                 <div class="main-sidebar">
                     <div class="sidebar">
-                        @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_searchbox_before" })
+                        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.SearchboxBefore })
                         <div class="sidebar-form">
                             <div id="search-box">
                                 <input type="text" class="form-control admin-search-box typeahead" placeholder="@T("Admin.Menu.Search")">
@@ -214,7 +215,7 @@
                                 Admin.Search.init();
                             });
                         </script>
-                        @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_menu_before" })
+                        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.MenuBefore })
                         @await Html.PartialAsync("Menu")
                     </div>
                 </div>

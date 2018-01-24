@@ -1,4 +1,4 @@
-﻿@model WarehouseModel
+@model WarehouseModel
 
 @{
     //page title
@@ -25,7 +25,7 @@
                 <i class="fa fa-floppy-o"></i>
                 @T("Admin.Common.SaveContinue")
             </button>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_warehouse_details_buttons" })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.WarehouseDetailsButtons })
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdateWarehouse", Model)

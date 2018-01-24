@@ -1,4 +1,4 @@
-﻿@model ShipmentListModel
+@model ShipmentListModel
 @inject AdminAreaSettings adminAreaSettings
 
 @{
@@ -49,7 +49,7 @@
                 <i class="fa fa-check-square-o"></i>
                 @T("Admin.Orders.Shipments.DeliverySelected")
             </button>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_order_shipment_list_buttons" })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.OrderShipmentListButtons })
         </div>
     </div>
     <div class="content">

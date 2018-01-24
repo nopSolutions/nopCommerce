@@ -1,4 +1,4 @@
-﻿@model QueuedEmailModel
+@model QueuedEmailModel
 
 <div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
@@ -6,7 +6,7 @@
 <div class="content">
     <div class="form-horizontal">
         <div class="panel-group">
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_queued_email_details_top", additionalData = Model })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.QueuedEmailDetailsTop, additionalData = Model })
             <div class="panel panel-default">
                 <div class="panel-body">
                     <div class="form-group">
@@ -211,7 +211,7 @@
                     }
                 </script>
             </div>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_queued_email_details_bottom", additionalData = Model })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.QueuedEmailDetailsBottom, additionalData = Model })
         </div>
     </div>
 </div>

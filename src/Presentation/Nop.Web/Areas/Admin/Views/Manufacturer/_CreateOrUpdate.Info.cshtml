@@ -1,4 +1,4 @@
-﻿@model ManufacturerModel
+@model ManufacturerModel
 
 <script type="text/javascript">
     $(document).ready(function () {
@@ -18,7 +18,7 @@
 </script>
 
 <div class="panel-group">
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_manufacturer_details_info_top", additionalData = Model })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ManufacturerDetailsInfoTop, additionalData = Model })
     <div class="panel panel-default">
         <div class="panel-body">
             @(Html.LocalizedEditor<ManufacturerModel, ManufacturerLocalizedModel>("manufacturer-info-localized",
@@ -242,5 +242,5 @@
             </div>
         </div>
     </div>
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_manufacturer_details_info_bottom", additionalData = Model })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ManufacturerDetailsInfoBottom, additionalData = Model })
 </div>

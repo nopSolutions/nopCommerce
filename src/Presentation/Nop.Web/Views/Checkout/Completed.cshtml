@@ -17,7 +17,7 @@
         <h1>@T("Checkout.ThankYou")</h1>
     </div>
     <div class="page-body checkout-data">
-        @await Component.InvokeAsync("Widget", new { widgetZone = "checkout_completed_top", additionalData = Model })
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.CheckoutCompletedTop, additionalData = Model })
         <div class="section order-completed">
             <div class="title">
                 <strong>@T("Checkout.YourOrderHasBeenSuccessfullyProcessed")</strong>
@@ -34,6 +34,6 @@
                 <input type="button" value="@T("Checkout.ThankYou.Continue")" class="button-1 order-completed-continue-button" onclick="setLocation('@Url.RouteUrl("HomePage")')" />
             </div>
         </div>
-        @await Component.InvokeAsync("Widget", new { widgetZone = "checkout_completed_bottom", additionalData = Model })
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.CheckoutCompletedBottom, additionalData = Model })
     </div>
 </div>

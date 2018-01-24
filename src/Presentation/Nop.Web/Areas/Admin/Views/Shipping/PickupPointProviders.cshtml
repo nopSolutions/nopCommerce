@@ -1,4 +1,4 @@
-﻿@{    
+@{    
     //page title
     ViewBag.Title = T("Admin.Configuration.Shipping.PickupPointProviders").Text;
     //active menu item (system name)
@@ -12,7 +12,7 @@
     </h1>
     <div class="pull-right">
         &nbsp;
-        @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_pickup_point_provider_list_buttons" })
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.PickupPointProviderListButtons })
     </div>
 </div>
 

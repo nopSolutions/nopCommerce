@@ -1,4 +1,4 @@
-﻿@model OrderModel.UploadLicenseModel
+@model OrderModel.UploadLicenseModel
 
 @{
     Layout = "_AdminPopupLayout";
@@ -26,7 +26,7 @@
         </h1>
         <div class="pull-right">
             &nbsp;
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_order_upload_license_buttons" })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.OrderUploadLicenseButtons })
         </div>
     </div>
 

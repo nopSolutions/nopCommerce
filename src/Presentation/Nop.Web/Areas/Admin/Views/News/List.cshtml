@@ -1,4 +1,4 @@
-﻿@model NewsItemListModel
+@model NewsItemListModel
 @inject AdminAreaSettings adminAreaSettings
 
 @{
@@ -21,7 +21,7 @@
             <i class="fa fa-plus-square"></i>
             @T("Admin.Common.AddNew")
         </a>
-        @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_news_list_buttons" })
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.NewsListButtons })
     </div>
 </div>
 

@@ -1,8 +1,8 @@
-﻿@model LanguageModel
+@model LanguageModel
 @inject AdminAreaSettings adminAreaSettings
 
 <div class="panel-group">
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_language_details_resources_top", additionalData = Model })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.LanguageDetailsResourcesTop, additionalData = Model })
     <div class="panel panel-default panel-search">
         <div class="panel-body">
             <div class="row">
@@ -188,5 +188,5 @@
             </div>
         </div>
     }
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_language_details_resources_bottom", additionalData = Model })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.LanguageDetailsResourcesBottom, additionalData = Model })
 </div>

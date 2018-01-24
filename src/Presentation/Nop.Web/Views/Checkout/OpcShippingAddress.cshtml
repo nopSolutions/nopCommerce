@@ -181,7 +181,7 @@
     @if (!Model.PickUpInStoreOnly)
     {
         <div class="shipping-addresses" id="shipping-addresses-form">
-            @await Component.InvokeAsync("Widget", new { widgetZone = "op_checkout_shipping_address_top" })
+            @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OpCheckoutShippingAddressTop })
             @if (Model.ExistingAddresses.Count > 0)
             {
                 <div class="section select-shipping-address">
@@ -222,7 +222,7 @@
                     </div>
                 </div>
             }
-            @await Component.InvokeAsync("Widget", new { widgetZone = "op_checkout_shipping_address_middle" })
+            @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OpCheckoutShippingAddressMiddle })
             <div class="section new-shipping-address" id="shipping-new-address-form">
                 <div class="enter-address">
                     <div asp-validation-summary="ModelOnly" class="message-error"></div>
@@ -233,7 +233,7 @@
                     }
                 </div>
             </div>
-            @await Component.InvokeAsync("Widget", new { widgetZone = "op_checkout_shipping_address_bottom" })
+            @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OpCheckoutShippingAddressBottom })
         </div>
     }
 </div>

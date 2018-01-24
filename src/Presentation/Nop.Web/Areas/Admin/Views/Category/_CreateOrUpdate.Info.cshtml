@@ -1,4 +1,4 @@
-﻿@model CategoryModel
+@model CategoryModel
 
 <script type="text/javascript">
     $(document).ready(function () {
@@ -17,7 +17,7 @@
     }
 </script>
 <div class="panel-group">
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_category_details_info_top", additionalData = Model })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CategoryDetailsInfoTop, additionalData = Model })
     <div class="panel panel-default">
         <div class="panel-body">
         @(Html.LocalizedEditor<CategoryModel, CategoryLocalizedModel>("category-info-localized",
@@ -271,5 +271,5 @@
             </div>
         </div>
     </div>
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_category_details_info_bottom", additionalData = Model })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CategoryDetailsInfoBottom, additionalData = Model })
 </div>

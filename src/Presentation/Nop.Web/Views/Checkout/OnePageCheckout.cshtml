@@ -43,7 +43,7 @@
         <h1>@T("Checkout")</h1>
     </div>
     <div class="page-body checkout-data">
-        @await Component.InvokeAsync("Widget", new { widgetZone = "opc_content_before" })
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OpcContentBefore })
         <ol class="opc" id="checkout-steps">
             <li id="opc-billing" class="tab-section allow">
                 <div class="step-title">
@@ -188,7 +188,7 @@
                 </div>
             </li>
         </ol>
-        @await Component.InvokeAsync("Widget", new { widgetZone = "opc_content_after" })
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OpcContentAfter })
     </div>
     <script type="text/javascript" asp-location="Footer">
         Accordion.init('checkout-steps', '.step-title', true);

@@ -1,4 +1,4 @@
-﻿@model CatalogSettingsModel
+@model CatalogSettingsModel
 
 @{
     //page title
@@ -18,7 +18,7 @@
                 <i class="fa fa-floppy-o"></i>
                 @T("Admin.Common.Save")
             </button>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_catalog_settings_buttons" })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CatalogSettingsButtons })
         </div>
     </div>
 
@@ -29,7 +29,7 @@
             <div asp-validation-summary="All"></div>
 
             <div class="panel-group">
-                @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_catalog_settings_top" })
+                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CatalogSettingsTop })
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         @T("Admin.Configuration.Settings.Catalog.BlockTitle.Search")
@@ -1037,7 +1037,7 @@
                         </script>
                     </div>
                 </div>
-                @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_catalog_settings_bottom" })
+                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CatalogSettingsBottom })
             </div>
         </div>
     </div>

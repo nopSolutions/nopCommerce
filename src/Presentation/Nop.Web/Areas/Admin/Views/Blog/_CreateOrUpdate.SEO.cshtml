@@ -1,6 +1,6 @@
-﻿@model BlogPostModel
+@model BlogPostModel
 <div class="panel-group">
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_blog_details_seo_top", additionalData = Model })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.BlogDetailsSeoTop, additionalData = Model })
     <div class="panel panel-default">
         <div class="panel-body">
             <div class="form-group">
@@ -53,5 +53,5 @@
             </script>
         </div>
     </div>
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_blog_details_seo_bottom", additionalData = Model })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.BlogDetailsSeoBottom, additionalData = Model })
 </div>

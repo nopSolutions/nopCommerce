@@ -11,7 +11,7 @@
 <div class="page forum-page">
     @await Component.InvokeAsync("ForumBreadcrumb", new { forumId = Model.Id })
     @await Html.PartialAsync("_ForumHeader")
-    @await Component.InvokeAsync("Widget", new { widgetZone = "boards_forum_after_header", additionalData = Model })
+    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BoardsForumAfterHeader, additionalData = Model })
     <div class="forum-info">
         <div class="forum-name">
             @if (Model.ForumFeedsEnabled)
@@ -50,7 +50,7 @@
                 </script>
             }
         </div>
-        @await Component.InvokeAsync("Widget", new { widgetZone = "boards_forum_top", additionalData = Model })
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BoardsForumTop, additionalData = Model })
         @{
             var pager = Html.Pager(new PagerModel
             {
@@ -187,5 +187,5 @@
             @pager
         </div>
     }
-    @await Component.InvokeAsync("Widget", new { widgetZone = "boards_forum_bottom", additionalData = Model })
+    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BoardsForumBottom, additionalData = Model })
 </div>

@@ -1,6 +1,6 @@
 ﻿@model CheckoutBillingAddressModel
 <div class="checkout-data">
-    @await Component.InvokeAsync("Widget", new { widgetZone = "op_checkout_billing_address_top" })
+    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OpCheckoutBillingAddressTop })
     @if (Model.ShipToSameAddressAllowed)
     {
         <div class="section ship-to-same-address">
@@ -50,7 +50,7 @@
             </div>
         </div>
     }
-    @await Component.InvokeAsync("Widget", new { widgetZone = "op_checkout_billing_address_middle" })
+    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OpCheckoutBillingAddressMiddle })
     <div class="section new-billing-address" id="billing-new-address-form">
         <div class="enter-address">
             <div asp-validation-summary="ModelOnly" class="message-error"></div>
@@ -61,5 +61,5 @@
             }
         </div>
     </div>
-    @await Component.InvokeAsync("Widget", new { widgetZone = "op_checkout_billing_address_bottom" })
+    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OpCheckoutBillingAddressBottom })
 </div>

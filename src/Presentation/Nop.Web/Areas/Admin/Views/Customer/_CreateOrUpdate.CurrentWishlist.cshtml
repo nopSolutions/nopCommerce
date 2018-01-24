@@ -7,7 +7,7 @@
 }
 
     <div class="panel-group">
-        @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_customer_details_wishlist_top", additionalData = Model })
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CustomerDetailsWishlistTop, additionalData = Model })
         <div class="panel panel-default">
             <div class="panel-body">
                 <div id="currentwishlist-grid"></div>
@@ -86,5 +86,5 @@
                 </script>
             </div>
         </div>
-        @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_customer_details_wishlist_bottom", additionalData = Model })
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CustomerDetailsWishlistBottom, additionalData = Model })
     </div>

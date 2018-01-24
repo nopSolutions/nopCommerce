@@ -18,11 +18,11 @@
         <div class="news-date">
             @Model.CreatedOn.ToString("D")
         </div>
-        @await Component.InvokeAsync("Widget", new { widgetZone = "newsitem_page_before_body", additionalData = Model })
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.NewsitemPageBeforeBody, additionalData = Model })
         <div class="news-body">
             @Html.Raw(Model.Full)
         </div>
-        @await Component.InvokeAsync("Widget", new { widgetZone = "newsitem_page_before_comments", additionalData = Model })
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.NewsitemPageBeforeComments, additionalData = Model })
         @if (Model.AllowComments)
         {
             <div class="fieldset new-comment" id="comments">
@@ -113,13 +113,13 @@
                                         <p class="comment-text">@Html.Raw(Nop.Core.Html.HtmlHelper.FormatText(comment.CommentText, false, true, false, false, false, false))</p>
                                     </div>
                                 </div>
-                                @await Component.InvokeAsync("Widget", new { widgetZone = "newsitem_page_inside_comment", additionalData = comment })
+                                @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.NewsitemPageInsideComment, additionalData = comment })
                             </div>
                         }
                     </div>
                 </div>
             }
         }
-        @await Component.InvokeAsync("Widget", new { widgetZone = "newsitem_page_after_comments", additionalData = Model })
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.NewsitemPageAfterComments, additionalData = Model })
     </div>
 </div>

@@ -1,4 +1,4 @@
-﻿@model OrderModel
+@model OrderModel
 
 @{
     Layout = "_AdminPopupLayout";
@@ -27,7 +27,7 @@
         </h1>
         <div class="pull-right">
             &nbsp;
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_order_partially_refund_buttons", additionalData = Model })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.OrderPartiallyRefundButtons, additionalData = Model })
         </div>
     </div>
 

@@ -1,10 +1,10 @@
-﻿@model ReturnRequestActionModel
+@model ReturnRequestActionModel
 
 <div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
 
 <div class="panel-group">
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_return_request_action_settings_top" })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ReturnRequestActionSettingsTop })
     <div class="panel panel-default">
         <div class="panel-body">
             @(Html.LocalizedEditor<ReturnRequestActionModel, ReturnRequestActionLocalizedModel>("returnrequestaction-localized",
@@ -44,5 +44,5 @@
             </div>
         </div>
     </div>
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_return_request_action_settings_bottom" })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ReturnRequestActionSettingsBottom })
 </div>

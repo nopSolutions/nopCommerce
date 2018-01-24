@@ -30,7 +30,7 @@
         <h1>@T("Forum.Search")</h1>
     </div>
     <div class="page-body">
-        @await Component.InvokeAsync("Widget", new { widgetZone = "boards_search_before_searchform" })
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BoardsSearchBeforeSearchform })
         <div class="search-input">
             <form asp-route="Search" method="get">
                 <div class="fieldset">
@@ -66,7 +66,7 @@
                 </div>
             </form>
         </div>
-        @await Component.InvokeAsync("Widget", new { widgetZone = "boards_search_after_searchform" })
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BoardsSearchAfterSearchform })
         <div class="search-error">
             @Model.Error
         </div>
@@ -96,7 +96,7 @@
                     RouteValues = new ForumSearchRouteValues { adv = adv, searchterms = searchterms, forumId = forumId, within = within, limitDays = limitDays },
                 });
             }
-            @await Component.InvokeAsync("Widget", new { widgetZone = "boards_search_before_results" })
+            @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BoardsSearchBeforeResults })
             @if (!string.IsNullOrEmpty(pager.ToHtmlString()))
             {
                 <div class="pager upper">
@@ -226,7 +226,7 @@
                     @pager
                 </div>
             }
-            @await Component.InvokeAsync("Widget", new { widgetZone = "boards_search_after_results" })
+            @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BoardsSearchAfterResults })
         </div>
     </div>
 </div>

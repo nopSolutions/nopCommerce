@@ -1,4 +1,4 @@
-﻿@model ForumModel
+@model ForumModel
 
 @{
     //page title
@@ -25,7 +25,7 @@
                 <i class="fa fa-floppy-o"></i>
                 @T("Admin.Common.SaveContinue")
             </button>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_forum_details_buttons" })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ForumDetailsButtons })
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdateForum", Model)

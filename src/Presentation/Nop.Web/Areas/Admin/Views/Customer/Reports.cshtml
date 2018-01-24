@@ -1,4 +1,4 @@
-﻿@model CustomerReportsModel
+@model CustomerReportsModel
 @inject IEventPublisher eventPublisher
 
 @{
@@ -16,7 +16,7 @@
     </h1>
     <div class="pull-right">
         &nbsp;
-        @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_customer_reports_buttons" })
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CustomerReportsButtons })
     </div>
 </div>
 

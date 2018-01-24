@@ -14,7 +14,7 @@
     </h1>
     <div class="pull-right">
         &nbsp;
-        @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_maintenance_buttons" })
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.MaintenanceButtons })
     </div>
 </div>
 
@@ -22,7 +22,7 @@
     <div class="content">
         <div class="form-horizontal">
             <div class="panel-group">
-                @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_maintenance_top" })
+                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.MaintenanceTop })
                 <div class="panel panel-default">
                     <div class="panel-body">
                         <div class="row">
@@ -269,7 +269,7 @@
                         });
                     });
                 </script>
-                @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_maintenance_bottom" })
+                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.MaintenanceBottom })
             </div>
         </div>
     </div>

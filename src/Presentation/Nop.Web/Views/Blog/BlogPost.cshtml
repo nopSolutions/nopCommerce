@@ -11,14 +11,14 @@
     Html.AppendPageCssClassParts("html-blogpost-page");
 }
 @section left {
-    @await Component.InvokeAsync("Widget", new { widgetZone = "left_side_column_blog_before" })
+    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.LeftSideColumnBlogBefore })
     @await Component.InvokeAsync("BlogMonths")
-    @await Component.InvokeAsync("Widget", new { widgetZone = "left_side_column_after_blog_archive" })
+    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.LeftSideColumnAfterBlogArchive })
     @await Component.InvokeAsync("BlogTags")
-    @await Component.InvokeAsync("Widget", new { widgetZone = "left_side_column_blog_after" })
+    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.LeftSideColumnBlogAfter })
 }
 <div class="page blogpost-page">
-    @await Component.InvokeAsync("Widget", new { widgetZone = "blogpost_page_top", additionalData = Model })
+    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BlogpostPageTop, additionalData = Model })
     <div class="page-title">
         <h1>@Model.Title</h1>
     </div>
@@ -26,7 +26,7 @@
         <div class="post-date">
             @Model.CreatedOn.ToString("D")
         </div>
-        @await Component.InvokeAsync("Widget", new { widgetZone = "blogpost_page_before_body", additionalData = Model })
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BlogpostPageBeforeBody, additionalData = Model })
         <div class="post-body">
             @Html.Raw(Model.Body)
         </div>
@@ -47,7 +47,7 @@
                 </ul>
             </div>
         }
-        @await Component.InvokeAsync("Widget", new { widgetZone = "blogpost_page_before_comments", additionalData = Model })
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BlogpostPageBeforeComments, additionalData = Model })
         @if (Model.AllowComments)
         {
             <div class="fieldset new-comment" id="comments">
@@ -131,14 +131,14 @@
                                         @Html.Raw(Nop.Core.Html.HtmlHelper.FormatText(comment.CommentText, false, true, false, false, false, false))
                                     </div>
                                 </div>
-                                @await Component.InvokeAsync("Widget", new { widgetZone = "blogpost_page_inside_comment", additionalData = comment })
+                                @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BlogpostPageInsideComment, additionalData = comment })
                             </div>
                         }
                     </div>
                 </div>
             }
         }
-        @await Component.InvokeAsync("Widget", new { widgetZone = "blogpost_page_after_comments", additionalData = Model })
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BlogpostPageAfterComments, additionalData = Model })
     </div>
-    @await Component.InvokeAsync("Widget", new { widgetZone = "blogpost_page_bottom", additionalData = Model })
+    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BlogpostPageBottom, additionalData = Model })
 </div>

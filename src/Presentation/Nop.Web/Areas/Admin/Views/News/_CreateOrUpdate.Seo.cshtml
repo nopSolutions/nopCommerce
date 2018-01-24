@@ -1,7 +1,7 @@
-﻿@model NewsItemModel
+@model NewsItemModel
 
 <div class="panel-group">
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_news_details_seo_top", additionalData = Model })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.NewsDetailsSeoTop, additionalData = Model })
     <div class="panel panel-default">
         <div class="panel-body">
             <div class="form-group">
@@ -54,5 +54,5 @@
             </script>
         </div>
     </div>
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_news_details_seo_bottom", additionalData = Model })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.NewsDetailsSeoBottom, additionalData = Model })
 </div>

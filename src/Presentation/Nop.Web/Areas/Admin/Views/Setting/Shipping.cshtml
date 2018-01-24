@@ -1,4 +1,4 @@
-﻿@model ShippingSettingsModel
+@model ShippingSettingsModel
 
 @{
     //page title
@@ -17,7 +17,7 @@
                 <i class="fa fa-floppy-o"></i>
                 @T("Admin.Common.Save")
             </button>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_shipping_settings_buttons" })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ShippingSettingsButtons })
         </div>
     </div>
 
@@ -28,7 +28,7 @@
             <div asp-validation-summary="All"></div>
 
             <div class="panel-group">
-                @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_shipping_settings_top" })
+                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ShippingSettingsTop })
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         @T("Admin.Configuration.Settings.Shipping.BlockTitle.Common")
@@ -251,7 +251,7 @@
                         </div>
                     </div>
                 </div>
-                @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_shipping_settings_bottom" })
+                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ShippingSettingsBottom })
             </div>
         </div>
     </div>

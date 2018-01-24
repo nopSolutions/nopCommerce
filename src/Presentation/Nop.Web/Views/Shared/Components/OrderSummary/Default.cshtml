@@ -4,7 +4,7 @@
 @inject IWebHelper webHelper
 @inject IWorkContext workContext
 <div class="order-summary-content">
-    @await Component.InvokeAsync("Widget", new { widgetZone = "order_summary_content_before" })
+    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OrderSummaryContentBefore })
     @await Html.PartialAsync("_OrderReviewData", Model.OrderReviewData)
     @if (Model.Items.Count > 0)
     {
@@ -232,14 +232,14 @@
                 @await Component.InvokeAsync("SelectedCheckoutAttributes")
             </div>
             <div class="cart-footer">
-                @await Component.InvokeAsync("Widget", new { widgetZone = "order_summary_cart_footer" })
+                @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OrderSummaryCartFooter })
                 @if (Model.IsEditable)
                 {
                     <div class="cart-collaterals">
                         <div class="deals">
                             @await Html.PartialAsync("_DiscountBox", Model.DiscountBox)
                             @await Html.PartialAsync("_GiftCardBox", Model.GiftCardBox)
-                            @await Component.InvokeAsync("Widget", new { widgetZone = "order_summary_content_deals" })
+                            @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OrderSummaryContentDeals })
                         </div>
                         @await Component.InvokeAsync("EstimateShipping")
                     </div>
@@ -334,5 +334,5 @@
             @T("ShoppingCart.CartIsEmpty")
         </div>
     }
-    @await Component.InvokeAsync("Widget", new { widgetZone = "order_summary_content_after" })
+    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OrderSummaryContentAfter })
 </div>

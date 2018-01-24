@@ -1,6 +1,6 @@
 ﻿@model CheckoutConfirmModel
 <div class="checkout-data">
-    @await Component.InvokeAsync("Widget", new { widgetZone = "op_checkout_confirm_top" })
+    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OpCheckoutConfirmTop })
     @if (!string.IsNullOrEmpty(Model.MinOrderTotalWarning) || Model.Warnings.Count > 0)
     {
         <div class="section confirm-order">
@@ -23,7 +23,7 @@
             }
         </div>
     }
-    @await Component.InvokeAsync("Widget", new { widgetZone = "op_checkout_confirm_bottom" })
+    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OpCheckoutConfirmBottom })
     <div class="section order-summary">
         @await Component.InvokeAsync("OrderSummary", new { prepareAndDisplayOrderReviewData = true })
     </div>

@@ -8,7 +8,7 @@
 {
     <div class="breadcrumb">
         <ul>
-            @await Component.InvokeAsync("Widget", new { widgetZone = "productbreadcrumb_before", additionalData = Model })
+            @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProductbreadcrumbBefore, additionalData = Model })
             <li>
                 <span itemscope itemtype="http://data-vocabulary.org/Breadcrumb">
                     <a href="@Url.RouteUrl("HomePage")" itemprop="url">
@@ -31,7 +31,7 @@
             <li>
                 <strong class="current-item">@Model.ProductName</strong>
                 @*<strong class="current-item"><a href="@Url.RouteUrl("Product", new { SeName = Model.ProductSeName })" itemprop="url">@Model.ProductName</a></strong>*@
-                @await Component.InvokeAsync("Widget", new { widgetZone = "productbreadcrumb_after", additionalData = Model })
+                @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProductbreadcrumbAfter, additionalData = Model })
             </li>
         </ul>
     </div>

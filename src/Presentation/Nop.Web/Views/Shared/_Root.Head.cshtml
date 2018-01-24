@@ -47,7 +47,7 @@
         @Html.NopHeadCustom()
         @*This is used so that themes can inject content into the header*@
         @await Html.PartialAsync("Head")
-        @await Component.InvokeAsync("Widget", new { widgetZone = "head_html_tag" })
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.HeadHtmlTag })
         @Html.NopCssFiles(this.Url, ResourceLocation.Head)
         @Html.NopScripts(this.Url, ResourceLocation.Head)
         @Html.NopCanonicalUrls()
