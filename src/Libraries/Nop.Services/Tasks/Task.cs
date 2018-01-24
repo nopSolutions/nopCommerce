@@ -125,8 +125,7 @@ namespace Nop.Services.Tasks
                     return;
 
                 //validation (so nobody else can invoke this method when he wants)
-                if (ScheduleTask.LastEndUtc.HasValue && (DateTime.UtcNow - ScheduleTask.LastEndUtc).Value.TotalSeconds <
-                    ScheduleTask.Seconds)
+                if (ScheduleTask.LastStartUtc.HasValue && (DateTime.UtcNow - ScheduleTask.LastStartUtc).Value.TotalSeconds < ScheduleTask.Seconds)
                     //too early
                     return;
             }

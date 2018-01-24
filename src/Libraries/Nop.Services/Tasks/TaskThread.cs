@@ -28,9 +28,8 @@ namespace Nop.Services.Tasks
 
         static TaskThread()
         {
-            var webHelper = EngineContext.Current.Resolve<IWebHelper>();
-            
-            _scheduleTaskUrl = $"{webHelper.GetStoreLocation()}{TaskManager.ScheduleTaskPath}";
+            var storeContext = EngineContext.Current.Resolve<IStoreContext>();
+            _scheduleTaskUrl = storeContext.CurrentStore.Url + TaskManager.ScheduleTaskPath;
         }
 
         internal TaskThread()
@@ -70,7 +69,6 @@ namespace Nop.Services.Tasks
                     var logger = EngineContext.Current.Resolve<ILogger>();
                     logger.Error(ex.Message, ex);
                 }
-               
             }
             IsRunning = false;
         }
@@ -116,7 +114,7 @@ namespace Nop.Services.Tasks
         {
             if (_timer == null)
             {
-                _timer = new Timer(TimerHandler, null, Interval, Interval);
+                _timer = new Timer(TimerHandler, null, InitInterval, Interval);
             }
         }
 
@@ -140,7 +138,10 @@ namespace Nop.Services.Tasks
         /// Gets or sets the interval in seconds at which to run the tasks
         /// </summary>
         public int Seconds { get; set; }
-
+        /// <summary>
+        /// Get or set the interval before timer first start 
+        /// </summary>
+        public int InitSeconds { get; set; }
         /// <summary>
         /// Get or sets a datetime when thread has been started
         /// </summary>
@@ -162,6 +163,20 @@ namespace Nop.Services.Tasks
                 var interval = Seconds * 1000;
                 if (interval <= 0)
                     interval = int.MaxValue;
+                return interval;
+            }
+        }
+        /// <summary>
+        /// Gets the due time interval (in milliseconds) at which to begin start the task
+        /// </summary>
+        public int InitInterval
+        {
+            get
+            {
+                //if somebody entered less than "0" seconds, then an exception could be thrown
+                var interval = InitSeconds * 1000;
+                if (interval <= 0)
+                    interval = 0;
                 return interval;
             }
         }
