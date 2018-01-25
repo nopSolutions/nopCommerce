@@ -866,9 +866,7 @@ namespace Nop.Services.Messages
             //ensure that the store URL is specified
             if (string.IsNullOrEmpty(store.Url))
                 throw new Exception("URL cannot be null");
-
-            var storeUrl = WebUtility.UrlDecode(store.Url.TrimEnd('/'));
-
+            
             //generate a URL with an absolute path
             var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
             var url = new PathString(urlHelper.RouteUrl(routeName, routeValues));
@@ -878,7 +876,7 @@ namespace Nop.Services.Messages
             url.StartsWithSegments(pathBase, out url);
             
             //compose the result
-            return $"{storeUrl}{url}";
+            return Uri.EscapeUriString(WebUtility.UrlDecode($"{store.Url.TrimEnd('/')}{url}"));
         }
 
         #endregion
