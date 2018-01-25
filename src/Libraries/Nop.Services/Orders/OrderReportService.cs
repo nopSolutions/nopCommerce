@@ -125,6 +125,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="storeId">Store identifier; pass 0 to ignore this parameter</param>
         /// <param name="vendorId">Vendor identifier; pass 0 to ignore this parameter</param>
+        /// <param name="productId">Product identifier which was purchased in an order; 0 to load all orders</param>
         /// <param name="billingCountryId">Billing country identifier; 0 to load all orders</param>
         /// <param name="orderId">Order identifier; pass 0 to ignore this parameter</param>
         /// <param name="paymentMethodSystemName">Payment method system name; null to load all records</param>
@@ -138,7 +139,7 @@ namespace Nop.Services.Orders
         /// <param name="orderNotes">Search in order notes. Leave empty to load all records.</param>
         /// <returns>Result</returns>
         public virtual OrderAverageReportLine GetOrderAverageReportLine(int storeId = 0,
-            int vendorId = 0, int billingCountryId = 0, 
+            int vendorId = 0, int productId = 0, int billingCountryId = 0, 
             int orderId = 0, string paymentMethodSystemName = null,
             List<int> osIds = null, List<int> psIds = null, List<int> ssIds = null,
             DateTime? startTimeUtc = null, DateTime? endTimeUtc = null,
@@ -152,9 +153,11 @@ namespace Nop.Services.Orders
                 query = query.Where(o => o.Id == orderId);
             if (vendorId > 0)
             {
-                query = query
-                    .Where(o => o.OrderItems
-                    .Any(orderItem => orderItem.Product.VendorId == vendorId));
+                query = query.Where(o => o.OrderItems.Any(orderItem => orderItem.Product.VendorId == vendorId));
+            }
+            if (productId > 0)
+            {
+                query = query.Where(o => o.OrderItems.Any(orderItem => orderItem.ProductId == productId));
             }
             if (billingCountryId > 0)
                 query = query.Where(o => o.BillingAddress != null && o.BillingAddress.CountryId == billingCountryId);
@@ -483,6 +486,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="storeId">Store identifier; pass 0 to ignore this parameter</param>
         /// <param name="vendorId">Vendor identifier; pass 0 to ignore this parameter</param>
+        /// <param name="productId">Product identifier which was purchased in an order; 0 to load all orders</param>
         /// <param name="orderId">Order identifier; pass 0 to ignore this parameter</param>
         /// <param name="billingCountryId">Billing country identifier; 0 to load all orders</param>
         /// <param name="paymentMethodSystemName">Payment method system name; null to load all records</param>
@@ -495,7 +499,7 @@ namespace Nop.Services.Orders
         /// <param name="billingLastName">Billing last name. Leave empty to load all records.</param>
         /// <param name="orderNotes">Search in order notes. Leave empty to load all records.</param>
         /// <returns>Result</returns>
-        public virtual decimal ProfitReport(int storeId = 0, int vendorId = 0,
+        public virtual decimal ProfitReport(int storeId = 0, int vendorId = 0, int productId = 0,
             int billingCountryId = 0, int orderId = 0, string paymentMethodSystemName = null,
             List<int> osIds = null, List<int> psIds = null, List<int> ssIds = null,
             DateTime? startTimeUtc = null, DateTime? endTimeUtc = null,
@@ -522,12 +526,13 @@ namespace Nop.Services.Orders
                         join o in orders on orderItem.OrderId equals o.Id
                         where (storeId == 0 || storeId == o.StoreId) &&
                               (orderId == 0 || orderId == o.Id) &&
-                              (billingCountryId ==0 || (o.BillingAddress != null && o.BillingAddress.CountryId == billingCountryId)) &&
+                              (billingCountryId == 0 || (o.BillingAddress != null && o.BillingAddress.CountryId == billingCountryId)) &&
                               (dontSearchPaymentMethods || paymentMethodSystemName == o.PaymentMethodSystemName) &&
                               (!startTimeUtc.HasValue || startTimeUtc.Value <= o.CreatedOnUtc) &&
                               (!endTimeUtc.HasValue || endTimeUtc.Value >= o.CreatedOnUtc) &&
                               (!o.Deleted) &&
                               (vendorId == 0 || orderItem.Product.VendorId == vendorId) &&
+                              (productId == 0 || orderItem.ProductId == productId) &&
                               //we do not ignore deleted products when calculating order reports
                               //(!p.Deleted)
                               (dontSearchEmail || (o.BillingAddress != null && !string.IsNullOrEmpty(o.BillingAddress.Email) && o.BillingAddress.Email.Contains(billingEmail))) &&
@@ -540,6 +545,7 @@ namespace Nop.Services.Orders
             var reportSummary = GetOrderAverageReportLine(
                 storeId: storeId,
                 vendorId: vendorId,
+                productId: productId,
                 billingCountryId: billingCountryId,
                 orderId: orderId,
                 paymentMethodSystemName: paymentMethodSystemName,

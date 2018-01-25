@@ -1255,10 +1255,10 @@ namespace Nop.Web.Areas.Admin.Controllers
             };
 
             //summary report
-            //currently we do not support productId and warehouseId parameters for this report
             var reportSummary = _orderReportService.GetOrderAverageReportLine(
                 storeId: model.StoreId,
                 vendorId: model.VendorId,
+                productId: filterByProductId,
                 orderId: 0,
                 paymentMethodSystemName: model.PaymentMethodSystemName,
                 osIds: orderStatusIds,
@@ -1274,6 +1274,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             var profit = _orderReportService.ProfitReport(
                 storeId: model.StoreId,
                 vendorId: model.VendorId,
+                productId: filterByProductId,
                 paymentMethodSystemName: model.PaymentMethodSystemName,
                 osIds: orderStatusIds,
                 psIds: paymentStatusIds,

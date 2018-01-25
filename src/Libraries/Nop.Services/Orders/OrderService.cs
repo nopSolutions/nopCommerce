@@ -183,17 +183,13 @@ namespace Nop.Services.Orders
                 query = query.Where(o => o.StoreId == storeId);
             if (vendorId > 0)
             {
-                query = query
-                    .Where(o => o.OrderItems
-                    .Any(orderItem => orderItem.Product.VendorId == vendorId));
+                query = query.Where(o => o.OrderItems.Any(orderItem => orderItem.Product.VendorId == vendorId));
             }
             if (customerId > 0)
                 query = query.Where(o => o.CustomerId == customerId);
             if (productId > 0)
             {
-                query = query
-                    .Where(o => o.OrderItems
-                    .Any(orderItem => orderItem.Product.Id == productId));
+                query = query.Where(o => o.OrderItems.Any(orderItem => orderItem.Product.Id == productId));
             }
             if (warehouseId > 0)
             {
