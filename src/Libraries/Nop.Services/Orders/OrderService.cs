@@ -189,7 +189,7 @@ namespace Nop.Services.Orders
                 query = query.Where(o => o.CustomerId == customerId);
             if (productId > 0)
             {
-                query = query.Where(o => o.OrderItems.Any(orderItem => orderItem.Product.Id == productId));
+                query = query.Where(o => o.OrderItems.Any(orderItem => orderItem.ProductId == productId));
             }
             if (warehouseId > 0)
             {
