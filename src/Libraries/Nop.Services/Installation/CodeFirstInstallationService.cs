@@ -6088,6 +6088,7 @@ namespace Nop.Services.Installation
                 DefaultManufacturerPageSize = 6,
                 ShowProductReviewsTabOnAccountPage = true,
                 ProductReviewsPageSizeOnAccountPage = 10,
+                ProductReviewsSortByCreatedDateAscending = true,
                 ExportImportProductAttributes = true,
                 ExportImportProductSpecificationAttributes = true,
                 ExportImportUseDropdownlistsForAssociatedEntities = true

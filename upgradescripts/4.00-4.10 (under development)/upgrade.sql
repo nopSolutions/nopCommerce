@@ -170,6 +170,12 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Stores.Fields.Url.Hint">
     <Value>The URL of your store e.g. http://www.yourstore.com/ or https://www.yourstore.com/mystore/.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductReviewsSortByCreatedDateAscending">
+	  <Value>Sort by ascending</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductReviewsSortByCreatedDateAscending.Hint">
+	  <Value>Check if the product reviews should be sorted by creation date as ascending</Value>
+  </LocaleResource> 
 </Language>
 '
 
@@ -376,5 +382,13 @@ GO
 IF EXISTS (SELECT 1 FROM sys.columns WHERE object_id = object_id('[Store]') AND NAME='SecureUrl')
 BEGIN
 	ALTER TABLE [Store] DROP COLUMN [SecureUrl]
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'catalogsettings.productreviewssortbycreateddateascending')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'catalogsettings.productreviewssortbycreateddateascending', N'true', 0)
 END
 GO

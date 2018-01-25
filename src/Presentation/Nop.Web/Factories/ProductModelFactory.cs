@@ -1383,8 +1383,13 @@ namespace Nop.Web.Factories
             model.ProductSeName = product.GetSeName();
 
             var productReviews = _catalogSettings.ShowProductReviewsPerStore
-                ? product.ProductReviews.Where(pr => pr.IsApproved && pr.StoreId == _storeContext.CurrentStore.Id).OrderBy(pr => pr.CreatedOnUtc)
-                : product.ProductReviews.Where(pr => pr.IsApproved).OrderBy(pr => pr.CreatedOnUtc);
+                ? product.ProductReviews.Where(pr => pr.IsApproved && pr.StoreId == _storeContext.CurrentStore.Id)
+                : product.ProductReviews.Where(pr => pr.IsApproved);
+
+            productReviews = _catalogSettings.ProductReviewsSortByCreatedDateAscending
+                ? productReviews.OrderBy(pr => pr.CreatedOnUtc)
+                : productReviews.OrderByDescending(pr => pr.CreatedOnUtc);
+
             foreach (var pr in productReviews)
             {
                 var customer = pr.Customer;

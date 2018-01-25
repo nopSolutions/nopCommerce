@@ -227,6 +227,16 @@
                                 </div>
                             </div>
                         </nop-nested-setting>
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="ProductReviewsSortByCreatedDateAscending_OverrideForStore" asp-input="ProductReviewsSortByCreatedDateAscending" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="ProductReviewsSortByCreatedDateAscending" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="ProductReviewsSortByCreatedDateAscending" />
+                                <span asp-validation-for="ProductReviewsSortByCreatedDateAscending"></span>
+                            </div>
+                        </div>
                     </div>
                     <script type="text/javascript">
                         $(document).ready(function () {
