@@ -182,6 +182,30 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ExportImportSplitProductsFile.Hint">
     <Value>Check if you want to import products from individual files of the optimal size, which were automatically created from the main file. This function will help you import a large amount of data with a smaller delay.</Value>
   </LocaleResource>  
+  <LocaleResource Name="Admin.CurrentCarts.CartsAndWishlists">
+    <Value>Shopping carts and wishlists</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.CurrentCarts">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.CurrentWishlists">
+    <Value></Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.ShoppingCartType.ShoppingCartType">
+    <Value>Shopping cart type</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ShoppingCartType.ShoppingCartType.Hint">
+    <Value>Choose a shopping cart type.</Value>
+  </LocaleResource> 
+  <LocaleResource Name="Admin.Customers.Customers.CurrentShoppingCart">
+    <Value></Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Customers.Customers.ShoppingCartAndWishlist">
+    <Value>Shopping cart and wishlist</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.CurrentWishlist">
+    <Value></Value>
+  </LocaleResource> 
 </Language>
 '
 

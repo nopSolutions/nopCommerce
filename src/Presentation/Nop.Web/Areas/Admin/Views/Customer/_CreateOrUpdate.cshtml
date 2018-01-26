@@ -12,8 +12,7 @@
             {
                 <nop-tab asp-name="tab-orders" asp-title="@T("Admin.Customers.Customers.Orders")">@await Html.PartialAsync("_CreateOrUpdate.Orders", Model)</nop-tab>
                 <nop-tab asp-name="tab-address" asp-title="@T("Admin.Customers.Customers.Addresses")">@await Html.PartialAsync("_CreateOrUpdate.Addresses", Model)</nop-tab>
-                <nop-tab asp-name="tab-cart" asp-title="@T("Admin.Customers.Customers.CurrentShoppingCart")">@await Html.PartialAsync("_CreateOrUpdate.CurrentShoppingCart", Model)</nop-tab>
-                <nop-tab asp-name="tab-wishlist" asp-title="@T("Admin.Customers.Customers.CurrentWishlist")">@await Html.PartialAsync("_CreateOrUpdate.CurrentWishlist", Model)</nop-tab>
+                <nop-tab asp-name="tab-cart" asp-title="@T("Admin.Customers.Customers.ShoppingCartAndWishlist")">@await Html.PartialAsync("_CreateOrUpdate.CurrentShoppingCart", Model)</nop-tab>
                 <nop-tab asp-name="tab-activitylog" asp-title="@T("Admin.Customers.Customers.ActivityLog")">@await Html.PartialAsync("_CreateOrUpdate.ActivityLog", Model)</nop-tab>
                 <nop-tab asp-name="tab-impersonate" asp-title="@T("Admin.Customers.Customers.Impersonate")">@await Html.PartialAsync("_CreateOrUpdate.Impersonate", Model)</nop-tab>
                 <nop-tab asp-name="tab-backinstock" asp-title="@T("Admin.Customers.Customers.BackInStockSubscriptions")">@await Html.PartialAsync("_CreateOrUpdate.BackInStockSubscriptions", Model)</nop-tab>

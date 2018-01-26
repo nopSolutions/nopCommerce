@@ -1,6 +1,7 @@
 ﻿@using Nop.Services.Stores
 @inject AdminAreaSettings adminAreaSettings
 @inject IStoreService storeService
+@model ShoppingCartTypeModel
 
 @{
     var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
@@ -16,7 +17,7 @@
 <nop-antiforgery-token />
 <div class="content-header clearfix">
     <h1 class="pull-left">
-        @T("Admin.CurrentCarts")
+        @T("Admin.CurrentCarts.CartsAndWishlists")
     </h1>
     <div class="pull-right">
         &nbsp;
@@ -27,6 +28,22 @@
 <div class="content">
     <div class="form-horizontal">
         <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <div class="col-md-4">
+                                    <nop-label asp-for="ShoppingCartType" />
+                                </div>
+                                <div class="col-md-8">
+                                    <nop-select asp-for="ShoppingCartType" asp-items="@Model.AvailableShoppingCartTypes" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="panel panel-default">
                 <div class="panel-body">
                     <div id="carts-grid"></div>
@@ -41,7 +58,7 @@
                                             url: "@Html.Raw(Url.Action("CurrentCarts", "ShoppingCart"))",
                                             type: "POST",
                                             dataType: "json",
-                                            data: addAntiForgeryToken
+                                            data: additionalData
                                         }
                                     },
                                     schema: {
@@ -71,7 +88,8 @@
                                     {
                                         field: "CustomerId",
                                         title: "@T("Admin.CurrentCarts.Customer")",
-                                        template: '<a href="@Url.Content("~/Admin/Customer/Edit/")#=CustomerId#">#:CustomerEmail#</a>'
+                                        template:
+                                            '<a href="@Url.Content("~/Admin/Customer/Edit/")#=CustomerId#">#:CustomerEmail#</a>'
                                     }, {
                                         field: "TotalItems",
                                         title: "@T("Admin.CurrentCarts.TotalItems")",
@@ -88,10 +106,11 @@
                                     type: "json",
                                     transport: {
                                         read: {
-                                            url: "@Html.Raw(Url.Action("GetCartDetails", "ShoppingCart"))?customerId="+e.data.CustomerId,
+                                            url: "@Html.Raw(Url.Action("GetCartDetails", "ShoppingCart"))?customerId=" +
+                                                e.data.CustomerId,
                                             type: "POST",
                                             dataType: "json",
-                                            data: addAntiForgeryToken
+                                            data: additionalData
                                         },
                                         destroy: {
                                             url: "@Html.Raw(Url.Action("DeleteItem", "ShoppingCart"))",
@@ -134,33 +153,34 @@
                                     {
                                         field: "ProductName",
                                         title: "@T("Admin.CurrentCarts.Product")",
-                                        template: '<a href="@Url.Content("~/Admin/Product/Edit/")#=ProductId#">#:ProductName#</a>' +
-                                            '# if(AttributeInfo && AttributeInfo.length > 0) {# <div>#=AttributeInfo#</div> #} #',
+                                        template:
+                                            '<a href="@Url.Content("~/Admin/Product/Edit/")#=ProductId#">#:ProductName#</a>' +
+                                                '# if(AttributeInfo && AttributeInfo.length > 0) {# <div>#=AttributeInfo#</div> #} #',
                                         width: 400
-                                    },{
+                                    }, {
                                         field: "Quantity",
                                         title: "@T("Admin.CurrentCarts.Quantity")",
                                         width: 150
-                                    },{
+                                    }, {
                                         field: "UnitPrice",
                                         title: "@T("Admin.CurrentCarts.UnitPrice")",
                                         width: 150
-                                    },{
+                                    }, {
                                         field: "Total",
                                         title: "@T("Admin.CurrentCarts.Total")",
                                         width: 150
-                                    },{
+                                    }, {
                                         field: "Store",
                                         hidden: @(stores.Count > 1 ? "false" : "true"),
                                         title: "@T("Admin.CurrentCarts.Store")",
                                         width: 150
-                                    },{
+                                    }, {
                                         field: "UpdatedOn",
                                         title: "@T("Admin.CurrentCarts.UpdatedOn")",
                                         width: 150,
                                         type: "date",
                                         format: "{0:G}"
-                                    },{
+                                    }, {
                                         command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
                                         title: "@T("Admin.Common.Delete")",
                                         width: 100
@@ -173,4 +193,22 @@
             </div>
         </div>
     </div>
+
+    <script type="text/javascript">
+        function additionalData() {
+            var data = {
+                ShoppingCartType: $('#@Html.IdFor(model => model.ShoppingCartType)').val()
+            };
+            addAntiForgeryToken(data);
+            return data;
+        }
+
+        $(document)
+            .ready(function() {
+                $("#@Html.IdFor(model => model.ShoppingCartType)")
+                    .change(function() {
+                        $("#carts-grid").data('kendoGrid').dataSource.read();
+                    });
+            });
+    </script>
 </div>
