@@ -208,7 +208,7 @@ namespace Nop.Services.Seo
 
             //categories
             if (_commonSettings.SitemapIncludeCategories)
-                sitemapUrls.AddRange(GetCategoryUrls(0));
+                sitemapUrls.AddRange(GetCategoryUrls());
 
             //manufacturers
             if (_commonSettings.SitemapIncludeManufacturers)
@@ -234,19 +234,14 @@ namespace Nop.Services.Seo
         /// <summary>
         /// Get category URLs for the sitemap
         /// </summary>
-        /// <param name="parentCategoryId">Parent category identifier</param>
         /// <returns>Sitemap URLs</returns>
-        protected virtual IEnumerable<SitemapUrl> GetCategoryUrls(int parentCategoryId)
+        protected virtual IEnumerable<SitemapUrl> GetCategoryUrls()
         {
             var urlHelper = GetUrlHelper();
-            return _categoryService.GetAllCategoriesByParentCategoryId(parentCategoryId).SelectMany(category =>
+            return _categoryService.GetAllCategories().Select(category =>
             {
-                var sitemapUrls = new List<SitemapUrl>();
                 var url = urlHelper.RouteUrl("Category", new { SeName = category.GetSeName() }, GetHttpProtocol());
-                sitemapUrls.Add(new SitemapUrl(url, UpdateFrequency.Weekly, category.UpdatedOnUtc));
-                sitemapUrls.AddRange(GetCategoryUrls(category.Id));
-
-                return sitemapUrls;
+                return new SitemapUrl(url, UpdateFrequency.Weekly, category.UpdatedOnUtc);
             });
         }
 
