@@ -176,6 +176,12 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductReviewsSortByCreatedDateAscending.Hint">
 	  <Value>Check if the product reviews should be sorted by creation date as ascending</Value>
   </LocaleResource> 
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ExportImportSplitProductsFile">
+    <Value>Export/Import products. Allow splitting file</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ExportImportSplitProductsFile.Hint">
+    <Value>Check if you want to import products from individual files of the optimal size, which were automatically created from the main file. This function will help you import a large amount of data with a smaller delay.</Value>
+  </LocaleResource>  
 </Language>
 '
 
@@ -386,9 +392,25 @@ END
 GO
 
 --new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'catalogsettings.exportimportsplitproductsfile')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'catalogsettings.exportimportsplitproductsfile', N'false', 0)
+END
+GO
+
+--new setting
 IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'catalogsettings.productreviewssortbycreateddateascending')
 BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId])
 	VALUES (N'catalogsettings.productreviewssortbycreateddateascending', N'true', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'catalogsettings.exportimportproductscountinonefile')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'catalogsettings.exportimportproductscountinonefile', N'500', 0)
 END
 GO

@@ -5364,6 +5364,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ExportImportProductCategoryBreadcrumb.Hint">
     <Value>Check if products should be exported/imported with a full category name including names of all its parents.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ExportImportSplitProductsFile">
+    <Value>Export/Import products. Allow splitting file</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ExportImportSplitProductsFile.Hint">
+    <Value>Check if you want to import products from individual files of the optimal size, which were automatically created from the main file. This function will help you import a large amount of data with a smaller delay.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.IgnoreDiscounts">
     <Value>Ignore discounts (sitewide)</Value>
   </LocaleResource>

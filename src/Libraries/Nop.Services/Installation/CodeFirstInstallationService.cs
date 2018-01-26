@@ -6091,7 +6091,9 @@ namespace Nop.Services.Installation
                 ProductReviewsSortByCreatedDateAscending = true,
                 ExportImportProductAttributes = true,
                 ExportImportProductSpecificationAttributes = true,
-                ExportImportUseDropdownlistsForAssociatedEntities = true
+                ExportImportUseDropdownlistsForAssociatedEntities = true,
+                ExportImportProductsCountInOneFile = 500,
+                ExportImportSplitProductsFile = false
             });
 
             settingService.SaveSetting(new LocalizationSettings

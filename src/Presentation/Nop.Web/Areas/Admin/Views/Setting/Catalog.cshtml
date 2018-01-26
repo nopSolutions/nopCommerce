@@ -934,6 +934,16 @@
                                 <span asp-validation-for="ExportImportAllowDownloadImages"></span>
                             </div>
                         </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="ExportImportSplitProductsFile_OverrideForStore" asp-input="ExportImportSplitProductsFile" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="ExportImportSplitProductsFile" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="ExportImportSplitProductsFile" />
+                                <span asp-validation-for="ExportImportSplitProductsFile"></span>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="panel panel-default advanced-setting">
