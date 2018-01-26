@@ -5,8 +5,6 @@
     <Copyright>Copyright © Nop Solutions, Ltd</Copyright> 
     <Company>Nop Solutions, Ltd</Company> 
     <Authors>Nop Solutions, Ltd</Authors> 
-    <Version>1.43</Version> 
-    <Description>This plugin enables credit card payment (stored into database)</Description> 
     <PackageLicenseUrl></PackageLicenseUrl> 
     <PackageProjectUrl>http://www.nopcommerce.com/</PackageProjectUrl> 
     <RepositoryUrl>https://github.com/nopSolutions/nopCommerce</RepositoryUrl> 
