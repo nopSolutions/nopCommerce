@@ -696,13 +696,9 @@ namespace Nop.Web.Factories
             //it'll load all categories anyway.
             //so there's no need to invoke "GetAllCategoriesByParentCategoryId" multiple times (extra SQL commands) to load childs
             //so we load all categories at once
-            //if you don't like this implementation if you can uncomment the line below (old behavior) and comment several next lines (before foreach)
-            //var categories = _categoryService.GetAllCategoriesByParentCategoryId(rootCategoryId);
             if (allCategories == null)
             {
-                //load categories if null passed
-                //we implemeneted it this way for performance optimization - recursive iterations (below)
-                //this way all categories are loaded only once
+                //first invocation
                 allCategories = _categoryService.GetAllCategories(storeId: _storeContext.CurrentStore.Id);
             }
             var categories = allCategories.Where(c => c.ParentCategoryId == rootCategoryId).ToList();
