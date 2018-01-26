@@ -260,6 +260,7 @@ namespace Nop.Web.Controllers
         [CheckAccessClosedStore(true)]
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
+        [PublicAntiForgery]
         public virtual IActionResult Login(LoginModel model, string returnUrl, bool captchaValid)
         {
             //validate CAPTCHA
