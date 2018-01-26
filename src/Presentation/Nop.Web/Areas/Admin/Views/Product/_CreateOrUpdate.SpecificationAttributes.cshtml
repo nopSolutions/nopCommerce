@@ -6,7 +6,7 @@
     <p>
         @T("Admin.Catalog.Products.SpecificationAttributes.Hint")
     </p>
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_product_details_specification_attributes_top", additionalData = Model })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductDetailsSpecificationAttributesTop, additionalData = Model })
     @if (Model.Id > 0)
     {
         /*hide "add spec" table if no attributes are defined*/
@@ -364,5 +364,5 @@
             </div>
         </div>
     }
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_product_details_specification_attributes_bottom", additionalData = Model })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductDetailsSpecificationAttributesBottom, additionalData = Model })
 </div>

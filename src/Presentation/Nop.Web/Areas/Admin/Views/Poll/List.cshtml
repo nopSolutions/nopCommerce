@@ -1,4 +1,4 @@
-﻿@inject AdminAreaSettings adminAreaSettings
+@inject AdminAreaSettings adminAreaSettings
 
 @{
     var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
@@ -20,7 +20,7 @@
             <i class="fa fa-plus-square"></i>
             @T("Admin.Common.AddNew")
         </a>
-        @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_poll_list_buttons" })
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.PollListButtons })
     </div>
 </div>
 

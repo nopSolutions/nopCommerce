@@ -1,4 +1,4 @@
-﻿@model EmailAccountModel
+@model EmailAccountModel
 
 <div asp-validation-summary="ModelOnly"></div>
 <input asp-for="Id" type="hidden" />
@@ -6,7 +6,7 @@
 <div class="content">
     <div class="form-horizontal">
         <div class="panel-group">
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_email_account_details_top", additionalData = Model })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.EmailAccountDetailsTop, additionalData = Model })
             <div class="panel panel-default">
                 <div class="panel-body">
                     <div class="form-group">
@@ -119,7 +119,7 @@
                     </div>
                 </div>
             }
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_email_account_details_bottom", additionalData = Model })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.EmailAccountDetailsBottom, additionalData = Model })
         </div>
     </div>
 </div>

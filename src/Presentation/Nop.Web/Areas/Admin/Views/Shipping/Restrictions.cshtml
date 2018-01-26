@@ -1,4 +1,4 @@
-﻿@model ShippingMethodRestrictionModel
+@model ShippingMethodRestrictionModel
 
 @{
     //page title
@@ -18,7 +18,7 @@
                 <i class="fa fa-floppy-o"></i>
                 @T("Admin.Common.Save")
             </button>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_shipping_restriction_list_buttons" })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ShippingRestrictionListButtons })
         </div>
     </div>
 

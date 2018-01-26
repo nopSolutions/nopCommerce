@@ -4,7 +4,7 @@
     Html.AddScriptParts("~/lib/jquery.tmpl.min.js");
 }
 <div class="panel-group">
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_discount_details_requirements_top", additionalData = Model })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.DiscountDetailsRequirementsTop, additionalData = Model })
     @if (Model.Id > 0)
     {
         <p>
@@ -282,5 +282,5 @@
             </div>
         </div>
     }
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_discount_details_requirements_bottom", additionalData = Model })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.DiscountDetailsRequirementsBottom, additionalData = Model })
 </div>

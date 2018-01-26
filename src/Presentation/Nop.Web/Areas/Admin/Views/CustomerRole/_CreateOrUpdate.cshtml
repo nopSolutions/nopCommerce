@@ -1,4 +1,4 @@
-﻿@model CustomerRoleModel
+@model CustomerRoleModel
 
 <div asp-validation-summary="ModelOnly"></div>
 <input asp-for="Id" type="hidden" />
@@ -31,7 +31,7 @@
 <div class="content">
     <div class="form-horizontal">
         <div class="panel-group">
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_customer_role_details_top", additionalData = Model })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CustomerRoleDetailsTop, additionalData = Model })
             <div class="panel panel-default">
                 <div class="panel-body">
                     <div class="form-group">
@@ -156,7 +156,7 @@
                     </div>
                 </div>
             </div>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_customer_role_details_bottom", additionalData = Model })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CustomerRoleDetailsBottom, additionalData = Model })
         </div>
     </div>
 </div>

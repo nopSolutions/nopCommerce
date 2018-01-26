@@ -1,4 +1,4 @@
-﻿@model CampaignListModel
+@model CampaignListModel
 @{
     //page title
     ViewBag.Title = T("Admin.Promotions.Campaigns").Text;
@@ -16,7 +16,7 @@
             <i class="fa fa-plus-square"></i>
             @T("Admin.Common.AddNew")
         </a>
-        @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_campaign_list_buttons" })
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CampaignListButtons })
     </div>
 </div>
 

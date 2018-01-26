@@ -1,4 +1,4 @@
-﻿@inject AdminAreaSettings adminAreaSettings
+@inject AdminAreaSettings adminAreaSettings
 
 @{
     var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
@@ -17,7 +17,7 @@
         </h1>
         <div class="pull-right">
             &nbsp;
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_product_tag_list_buttons" })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductTagListButtons })
         </div>
     </div>
 

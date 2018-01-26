@@ -1,7 +1,7 @@
-﻿@model CountryModel
+@model CountryModel
 
 <div class="panel-group">
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_country_details_states_top", additionalData = Model })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CountryDetailsStatesTop, additionalData = Model })
     <div class="panel panel-default">
         @if (Model.Id > 0)
         {
@@ -123,5 +123,5 @@
             </div>
         }
     </div>
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_country_details_states_bottom", additionalData = Model })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CountryDetailsStatesBottom, additionalData = Model })
 </div>

@@ -1,4 +1,4 @@
-﻿@{
+@{
     //page title
     ViewBag.Title = T("Admin.Configuration.Shipping.Methods").Text;
     //active menu item (system name)
@@ -15,7 +15,7 @@
             <i class="fa fa-plus-square"></i>
             @T("Admin.Common.AddNew")
         </a>
-        @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_shipping_method_list_buttons" })
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ShippingMethodListButtons })
     </div>
 </div>
 

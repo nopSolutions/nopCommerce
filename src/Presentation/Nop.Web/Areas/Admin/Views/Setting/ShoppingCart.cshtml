@@ -1,4 +1,4 @@
-﻿@model ShoppingCartSettingsModel
+@model ShoppingCartSettingsModel
 
 @{
     //page title
@@ -17,7 +17,7 @@
                 <i class="fa fa-floppy-o"></i>
                 @T("Admin.Common.Save")
             </button>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_shopping_cart_settings_buttons" })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ShoppingCartSettingsButtons })
         </div>
     </div>
     
@@ -28,7 +28,7 @@
             <div asp-validation-summary="All"></div>
 
             <div class="panel-group">
-                @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_shopping_cart_settings_top" })
+                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ShoppingCartSettingsTop })
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         @T("Admin.Configuration.Settings.ShoppingCart.BlockTitle.Common")
@@ -263,7 +263,7 @@
 
                     </script>
                 </div>
-                @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_shopping_cart_settings_bottom" })
+                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ShoppingCartSettingsBottom })
             </div>
         </div>
     </div>

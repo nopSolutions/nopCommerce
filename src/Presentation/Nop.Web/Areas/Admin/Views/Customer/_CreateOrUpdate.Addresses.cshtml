@@ -1,6 +1,6 @@
-﻿@model CustomerModel
+@model CustomerModel
 <div class="panel-group">
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_customer_details_addresses_top", additionalData = Model })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CustomerDetailsAddressesTop, additionalData = Model })
     <div class="panel panel-default">
         <div class="panel-body">
             <div id="customer-addresses-grid"></div>
@@ -96,5 +96,5 @@
             </button>
         </div>
     </div>
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_customer_details_addresses_bottom", additionalData = Model })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CustomerDetailsAddressesBottom, additionalData = Model })
 </div>

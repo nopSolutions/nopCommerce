@@ -1,4 +1,4 @@
-﻿@{    
+@{    
     //page title
     ViewBag.Title = T("Admin.Configuration.Shipping.DatesAndRanges").Text;
     //active menu item (system name)
@@ -12,7 +12,7 @@
     </h1>
     <div class="pull-right">
         &nbsp;
-        @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_dates_and_ranges_buttons" })
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.DatesAndRangesButtons })
     </div>
 </div>
 

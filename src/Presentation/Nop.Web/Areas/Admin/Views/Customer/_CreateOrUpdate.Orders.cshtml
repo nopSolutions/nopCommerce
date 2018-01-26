@@ -8,7 +8,7 @@
     var stores = storeService.GetAllStores();
 }
 <div class="panel-group">
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_customer_details_orders_top", additionalData = Model })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CustomerDetailsOrdersTop, additionalData = Model })
     <div class="panel panel-default">
         <div class="panel-body">
             <div id="order-grid"></div>
@@ -101,5 +101,5 @@
             </script>
         </div>
     </div>
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_customer_details_orders_bottom", additionalData = Model })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CustomerDetailsOrdersBottom, additionalData = Model })
 </div>

@@ -1,4 +1,4 @@
-﻿@model ReturnRequestListModel
+@model ReturnRequestListModel
 @inject AdminAreaSettings adminAreaSettings
 
 @{
@@ -18,7 +18,7 @@
     </h1>
     <div class="pull-right">
         &nbsp;
-        @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_return_request_list_buttons" })
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ReturnRequestListButtons })
     </div>
 </div>
 <div class="content">

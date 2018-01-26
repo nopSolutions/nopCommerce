@@ -1,7 +1,7 @@
-﻿@model TopicModel
+@model TopicModel
 
 <div class="panel-group">
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_topic_details_info_top", additionalData = Model })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.TopicDetailsInfoTop, additionalData = Model })
     <div class="panel panel-default">
         <div class="panel-body">
             @(Html.LocalizedEditor<TopicModel, TopicLocalizedModel>("topic-info-localized",
@@ -243,7 +243,7 @@
             </div>
         </div>
     </div>
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_topic_details_info_bottom", additionalData = Model })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.TopicDetailsInfoBottom, additionalData = Model })
 </div>
 
 <script type="text/javascript">

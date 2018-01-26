@@ -1,4 +1,4 @@
-﻿@model QueuedEmailListModel
+@model QueuedEmailListModel
 @inject AdminAreaSettings adminAreaSettings
 
 @{
@@ -26,7 +26,7 @@
                 @T("Admin.System.QueuedEmails.DeleteAll")
             </button>
             <nop-action-confirmation asp-button-id="delete-all" />
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_queued_email_list_buttons" })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.QueuedEmailListButtons })
         </div>
     </div>
 

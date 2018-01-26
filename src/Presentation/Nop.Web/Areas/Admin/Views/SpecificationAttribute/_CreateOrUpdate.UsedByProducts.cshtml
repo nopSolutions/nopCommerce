@@ -1,12 +1,13 @@
-﻿@model SpecificationAttributeModel
+@model SpecificationAttributeModel
 @inject AdminAreaSettings adminAreaSettings
+
 @{
     var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
     var gridPageSizes = adminAreaSettings.GridPageSizes;
 }
 
 <div class="panel-group">
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_specification_attribute_details_used_by_products_top", additionalData = Model })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.SpecificationAttributeDetailsUsedByProductsTop, additionalData = Model })
     <div class="panel panel-default">
         <div class="panel-body">
             <div id="used-by-products-grid"></div>
@@ -78,5 +79,5 @@
             </script>
         </div>
     </div>
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_specification_attribute_details_used_by_products_bottom", additionalData = Model })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.SpecificationAttributeDetailsUsedByProductsBottom, additionalData = Model })
 </div>

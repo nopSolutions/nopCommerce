@@ -1,4 +1,4 @@
-﻿@model MessageTemplateListModel
+@model MessageTemplateListModel
 
 @{
     //page title
@@ -14,7 +14,7 @@
     </h1>
     <div class="pull-right">
         &nbsp;
-        @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_message_template_list_buttons" })
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.MessageTemplateListButtons })
     </div>
 </div>
 

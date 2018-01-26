@@ -1,4 +1,4 @@
-﻿@model UrlRecordListModel
+@model UrlRecordListModel
 @inject AdminAreaSettings adminAreaSettings
 @{
     var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
@@ -20,14 +20,14 @@
             <i class="fa fa-trash-o"></i>
             @T("Admin.System.SeNames.DeleteSelected")
         </button>
-        @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_senames_buttons" })
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.SenamesButtons })
     </div>
 </div>
 
 <div class="content">
     <div class="form-horizontal">
         <div class="panel-group">
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_senames_top" })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.SenamesTop })
             <div class="panel panel-default panel-search">
                 <div class="panel-body">
                     <div class="row">
@@ -135,7 +135,7 @@
                     </script>
                 </div>
             </div>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_senames_bottom" })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.SenamesBottom })
         </div>
     </div>
 </div>

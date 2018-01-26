@@ -1,4 +1,4 @@
-﻿@model OrderModel
+@model OrderModel
 @inject IEventPublisher eventPublisher
 
 @{
@@ -38,7 +38,7 @@
                     });
                 });
             </script>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_order_details_buttons", additionalData = Model })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.OrderDetailsButtons, additionalData = Model })
         </div>
     </div>
 

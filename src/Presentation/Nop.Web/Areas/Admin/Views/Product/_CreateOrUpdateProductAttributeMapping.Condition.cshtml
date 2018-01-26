@@ -4,7 +4,7 @@
 @using Nop.Core.Domain.Catalog
 
 <div class="panel-group">
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_product_attribute_mapping_details_condition_top", additionalData = Model })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductAttributeMappingDetailsConditionTop, additionalData = Model })
     <div class="panel panel-default">
         @if(Model.Id > 0)
         {
@@ -154,5 +154,5 @@
             </div>
         }
     </div>
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_product_attribute_mapping_details_condition_bottom", additionalData = Model })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductAttributeMappingDetailsConditionBottom, additionalData = Model })
 </div>

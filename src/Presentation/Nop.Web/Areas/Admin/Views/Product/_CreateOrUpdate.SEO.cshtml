@@ -1,7 +1,7 @@
-﻿@model ProductModel
+@model ProductModel
 
 <div class="panel-group">
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_product_details_seo_top", additionalData = Model })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductDetailsSeoTop, additionalData = Model })
     <div class="panel panel-default">
         <div class="panel-body">
             @(Html.LocalizedEditor<ProductModel, ProductLocalizedModel>("product-seo-localized",
@@ -111,5 +111,5 @@
             </div>))
         </div>
     </div>
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_product_details_seo_bottom", additionalData = Model })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductDetailsSeoBottom, additionalData = Model })
 </div>

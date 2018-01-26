@@ -1,4 +1,4 @@
-﻿@{
+@{
     //page title
     ViewBag.Title = T("Admin.Configuration.Countries").Text;
     //active menu item (system name)
@@ -31,7 +31,7 @@
             <i class="fa fa-upload"></i>
             @T("Admin.Configuration.Countries.ImportFromCsv")
         </button>
-        @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_country_list_buttons" })
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CountryListButtons })
     </div>
 </div>
 

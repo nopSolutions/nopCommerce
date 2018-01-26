@@ -1,6 +1,6 @@
-﻿@model ProductModel
+@model ProductModel
 
-@await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_product_details_product_attributes_info_top", additionalData = Model })
+@await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductDetailsProductAttributesInfoTop, additionalData = Model })
 <div class="panel panel-default">
     <div class="panel-body">
         <div id="productattributemappings-grid"></div>
@@ -108,4 +108,4 @@
         </a>
     </div>
 </div>
-@await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_product_details_product_attributes_info_bottom", additionalData = Model })
+@await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductDetailsProductAttributesInfoBottom, additionalData = Model })

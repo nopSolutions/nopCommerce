@@ -1,4 +1,4 @@
-﻿@model PredefinedProductAttributeValueModel
+@model PredefinedProductAttributeValueModel
 
 <div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
@@ -16,7 +16,7 @@
 <div class="content">
     <div class="form-horizontal">
         <div class="panel-group">
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_product_attribute_predefined_values_details_top", additionalData = Model })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductAttributePredefinedValuesDetailsTop, additionalData = Model })
             <div class="panel panel-default panel-popup">
                 <div class="panel-body">
                     @(Html.LocalizedEditor<PredefinedProductAttributeValueModel, PredefinedProductAttributeValueLocalizedModel>("productattributevalue-localized",
@@ -92,7 +92,7 @@
                     </div>
                 </div>
             </div>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_product_attribute_predefined_values_details_bottom", additionalData = Model })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductAttributePredefinedValuesDetailsBottom, additionalData = Model })
         </div>
     </div>
 </div>

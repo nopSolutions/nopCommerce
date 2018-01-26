@@ -1,4 +1,4 @@
-﻿@{
+@{
     //page title
     ViewBag.Title = T("Admin.ContentManagement.Forums.Manage").Text;
     //active menu item (system name)
@@ -13,7 +13,7 @@
     <div class="pull-right">
         <a asp-action="CreateForumGroup" class="btn btn-primary">@T("Admin.ContentManagement.Forums.ForumGroup.CreateForumGroup")</a>
         <a asp-action="CreateForum" class="btn btn-primary">@T("Admin.ContentManagement.Forums.Forum.CreateForum")</a>
-        @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_forum_list_buttons" })
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ForumListButtons })
     </div>
 </div>
 

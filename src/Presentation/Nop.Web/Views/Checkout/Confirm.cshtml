@@ -14,7 +14,7 @@
         <h1>@T("Checkout.ConfirmYourOrder")</h1>
     </div>
     <div class="page-body checkout-data">
-        @await Component.InvokeAsync("Widget", new { widgetZone = "checkout_confirm_top" })
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.CheckoutConfirmTop })
         <div class="section confirm-order">
             <form asp-route="CheckoutConfirm" method="post" id="confirm-order-form">
                 <script type="text/javascript" asp-location="Footer">
@@ -101,7 +101,7 @@
                 }
             </form>
         </div>
-        @await Component.InvokeAsync("Widget", new { widgetZone = "checkout_confirm_bottom" })
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.CheckoutConfirmBottom })
         <div class="section order-summary">
             @await Component.InvokeAsync("OrderSummary", new { prepareAndDisplayOrderReviewData = true })
         </div>

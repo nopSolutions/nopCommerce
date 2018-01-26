@@ -1,4 +1,4 @@
-﻿@model OrderSettingsModel
+@model OrderSettingsModel
 
 <script type="text/javascript">
     $(document).ready(function () {
@@ -17,7 +17,7 @@
 </script>
 
 <div class="panel-group">
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_order_settings_settings_top" })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.OrderSettingsSettingsTop })
     <div class="panel panel-default">
         <div class="panel-heading">
             @T("Admin.Configuration.Settings.Order.BlockTitle.Checkout")
@@ -299,5 +299,5 @@
             </div>
         </div>
     </div>
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_order_settings_settings_bottom" })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.OrderSettingsSettingsBottom })
 </div>

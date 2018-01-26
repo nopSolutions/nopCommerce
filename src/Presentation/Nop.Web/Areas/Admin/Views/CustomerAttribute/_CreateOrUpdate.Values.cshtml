@@ -1,6 +1,6 @@
-﻿@model CustomerAttributeModel
+@model CustomerAttributeModel
 <div class="panel-group">
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_customer_attribute_details_values_top", additionalData = Model })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CustomerAttributeDetailsValuesTop, additionalData = Model })
     <div class="panel panel-default">
         @if (Model.Id > 0)
         {
@@ -115,6 +115,6 @@
             </div>
         }
     </div>
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_customer_attribute_details_values_bottom", additionalData = Model })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CustomerAttributeDetailsValuesBottom, additionalData = Model })
 </div>
 

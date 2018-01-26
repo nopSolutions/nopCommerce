@@ -1,4 +1,4 @@
-﻿@model BulkEditListModel
+@model BulkEditListModel
 @inject AdminAreaSettings adminAreaSettings
 
 @{
@@ -18,7 +18,7 @@
             </h1>
             <div class="pull-right">
                 &nbsp;
-                @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_product_bulk_edit_buttons" })
+                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductBulkEditButtons })
             </div>
         </div>
 

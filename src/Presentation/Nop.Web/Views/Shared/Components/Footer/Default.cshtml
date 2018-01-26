@@ -113,7 +113,7 @@
         }
         @await Component.InvokeAsync("StoreThemeSelector")
     </div>
-    @await Component.InvokeAsync("Widget", new { widgetZone = "footer" })
+    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.Footer })
 </div>
 <script type="text/javascript" asp-location="Footer">
     $(document).ready(function () {
