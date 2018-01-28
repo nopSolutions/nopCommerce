@@ -506,7 +506,7 @@ namespace Nop.Web.Factories
 
             //specs
             model.PagingFilteringContext.SpecificationFilter.PrepareSpecsFilters(alreadyFilteredSpecOptionIds,
-                filterableSpecificationAttributeOptionIds != null ? filterableSpecificationAttributeOptionIds.ToArray() : null, 
+                filterableSpecificationAttributeOptionIds?.ToArray(), 
                 _specificationAttributeService, 
                 _webHelper, 
                 _workContext,
