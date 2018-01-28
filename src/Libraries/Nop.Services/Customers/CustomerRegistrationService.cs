@@ -291,9 +291,6 @@ namespace Nop.Services.Customers
 
             _customerService.UpdateCustomer(request.Customer);
 
-            //publish event
-            _eventPublisher.Publish(new CustomerPasswordChangedEvent(customerPassword));
-
             return result;
         }
         
