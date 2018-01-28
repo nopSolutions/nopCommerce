@@ -495,7 +495,7 @@ namespace Nop.Web.Factories
                 {
                     BlogEnabled = _blogSettings.Enabled,
                     ForumEnabled = _forumSettings.ForumsEnabled,
-                    NewsEnabled = _newsSettings.Enabled,
+                    NewsEnabled = _newsSettings.Enabled
                 };
                 //categories
                 if (_commonSettings.SitemapIncludeCategories)
@@ -505,7 +505,7 @@ namespace Nop.Web.Factories
                     {
                         Id = category.Id,
                         Name = category.GetLocalized(x => x.Name),
-                        SeName = category.GetSeName(),
+                        SeName = category.GetSeName()
                     }).ToList();
                 }
                 //manufacturers
@@ -532,7 +532,7 @@ namespace Nop.Web.Factories
                         Name = product.GetLocalized(x => x.Name),
                         ShortDescription = product.GetLocalized(x => x.ShortDescription),
                         FullDescription = product.GetLocalized(x => x.FullDescription),
-                        SeName = product.GetSeName(),
+                        SeName = product.GetSeName()
                     }).ToList();
                 }
                 //product tags
@@ -556,7 +556,7 @@ namespace Nop.Web.Factories
                     SystemName = topic.SystemName,
                     IncludeInSitemap = topic.IncludeInSitemap,
                     IsPasswordProtected = topic.IsPasswordProtected,
-                    Title = topic.GetLocalized(x => x.Title),
+                    Title = topic.GetLocalized(x => x.Title)
                 })
                 .ToList();
                 return model;
