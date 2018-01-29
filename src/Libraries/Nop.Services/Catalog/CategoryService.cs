@@ -467,7 +467,6 @@ namespace Nop.Services.Catalog
             _productCategoryRepository.Delete(productCategory);
 
             //cache
-            _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTCATEGORIES_PATTERN_KEY);
 
             //event notification
@@ -619,7 +618,6 @@ namespace Nop.Services.Catalog
             _productCategoryRepository.Insert(productCategory);
 
             //cache
-            _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTCATEGORIES_PATTERN_KEY);
 
             //event notification
@@ -638,7 +636,6 @@ namespace Nop.Services.Catalog
             _productCategoryRepository.Update(productCategory);
 
             //cache
-            _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTCATEGORIES_PATTERN_KEY);
 
             //event notification
