@@ -1421,7 +1421,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             var categoryIds = new List<int> { model.SearchCategoryId };
             //include subcategories
             if (model.SearchIncludeSubCategories && model.SearchCategoryId > 0)
-                categoryIds.AddRange(_categoryService.GetChildCategoryIds(model.SearchCategoryId, true));
+                categoryIds.AddRange(_categoryService.GetChildCategoryIds(parentCategoryId: model.SearchCategoryId, showHidden: true));
 
             //0 - all (according to "ShowHidden" parameter)
             //1 - published only
@@ -3106,7 +3106,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             var categoryIds = new List<int> { model.SearchCategoryId };
             //include subcategories
             if (model.SearchIncludeSubCategories && model.SearchCategoryId > 0)
-                categoryIds.AddRange(_categoryService.GetChildCategoryIds(model.SearchCategoryId, true));
+                categoryIds.AddRange(_categoryService.GetChildCategoryIds(parentCategoryId: model.SearchCategoryId, showHidden: true));
 
             //0 - all (according to "ShowHidden" parameter)
             //1 - published only
@@ -3162,7 +3162,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             var categoryIds = new List<int> { model.SearchCategoryId };
             //include subcategories
             if (model.SearchIncludeSubCategories && model.SearchCategoryId > 0)
-                categoryIds.AddRange(_categoryService.GetChildCategoryIds(model.SearchCategoryId, true));
+                categoryIds.AddRange(_categoryService.GetChildCategoryIds(parentCategoryId: model.SearchCategoryId, showHidden: true));
 
             //0 - all (according to "ShowHidden" parameter)
             //1 - published only
@@ -3240,7 +3240,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             var categoryIds = new List<int> { model.SearchCategoryId };
             //include subcategories
             if (model.SearchIncludeSubCategories && model.SearchCategoryId > 0)
-                categoryIds.AddRange(_categoryService.GetChildCategoryIds(model.SearchCategoryId, true));
+                categoryIds.AddRange(_categoryService.GetChildCategoryIds(parentCategoryId: model.SearchCategoryId, showHidden: true));
 
             //0 - all (according to "ShowHidden" parameter)
             //1 - published only

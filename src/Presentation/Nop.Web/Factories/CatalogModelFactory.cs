@@ -456,7 +456,7 @@ namespace Nop.Web.Factories
             if (_catalogSettings.ShowProductsFromSubcategories)
             {
                 //include subcategories
-                categoryIds.AddRange(_categoryService.GetChildCategoryIds(category.Id));
+                categoryIds.AddRange(_categoryService.GetChildCategoryIds(category.Id, _storeContext.CurrentStore.Id));
             }
             //products
             IList<int> alreadyFilteredSpecOptionIds = model.PagingFilteringContext.SpecificationFilter.GetAlreadyFilteredSpecOptionIds(_webHelper);
@@ -691,7 +691,7 @@ namespace Nop.Web.Factories
                         categoryIds.Add(category.Id);
                         //include subcategories
                         if (_catalogSettings.ShowCategoryProductNumberIncludingSubcategories)
-                            categoryIds.AddRange(_categoryService.GetChildCategoryIds(category.Id));
+                            categoryIds.AddRange(_categoryService.GetChildCategoryIds(category.Id, _storeContext.CurrentStore.Id));
                         return _productService.GetNumberOfProductsInCategory(categoryIds, _storeContext.CurrentStore.Id);
                     });
                 }
@@ -1305,7 +1305,7 @@ namespace Nop.Web.Factories
                             if (model.isc)
                             {
                                 //include subcategories
-                                categoryIds.AddRange(_categoryService.GetChildCategoryIds(categoryId));
+                                categoryIds.AddRange(_categoryService.GetChildCategoryIds(categoryId, _storeContext.CurrentStore.Id));
                             }
                         }
 

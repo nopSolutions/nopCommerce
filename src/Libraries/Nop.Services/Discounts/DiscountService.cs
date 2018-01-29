@@ -442,7 +442,7 @@ namespace Nop.Services.Discounts
                     if (discount.AppliedToSubCategories)
                     {
                         //include subcategories
-                        foreach (var childCategoryId in _categoryService.GetChildCategoryIds(categoryId))
+                        foreach (var childCategoryId in _categoryService.GetChildCategoryIds(categoryId, _storeContext.CurrentStore.Id))
                         {
                             if (!ids.Contains(childCategoryId))
                                 ids.Add(childCategoryId);

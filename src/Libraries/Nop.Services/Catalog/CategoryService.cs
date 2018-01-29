@@ -416,9 +416,10 @@ namespace Nop.Services.Catalog
         /// Gets child category identifiers
         /// </summary>
         /// <param name="parentCategoryId">Parent category identifier</param>
+        /// <param name="storeId">Store identifier; 0 if you want to get all records</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Category identifiers</returns>
-        public virtual IList<int> GetChildCategoryIds(int parentCategoryId, bool showHidden = false)
+        public virtual IList<int> GetChildCategoryIds(int parentCategoryId, int storeId = 0, bool showHidden = false)
         {
             var cacheKey = string.Format(CATEGORIES_CHILD_IDENTIFIERS_KEY,
                 parentCategoryId,
@@ -427,14 +428,17 @@ namespace Nop.Services.Catalog
                 showHidden);
             return _staticCacheManager.Get(cacheKey, () =>
             {
+                //little hack for performance optimization
+                //there's no need to invoke "GetAllCategoriesByParentCategoryId" multiple times (extra SQL commands) to load childs
+                //so we load all categories at once (we know they are cached) and process them server-side
                 var categoriesIds = new List<int>();
-                var categories = GetAllCategoriesByParentCategoryId(parentCategoryId, showHidden);
+                var categories = GetAllCategories(storeId: storeId, showHidden: showHidden)
+                    .Where(c => c.ParentCategoryId == parentCategoryId);
                 foreach (var category in categories)
                 {
                     categoriesIds.Add(category.Id);
-                    categoriesIds.AddRange(GetChildCategoryIds(category.Id, showHidden));
+                    categoriesIds.AddRange(GetChildCategoryIds(category.Id, storeId, showHidden));
                 }
-
                 return categoriesIds;
             });
         }

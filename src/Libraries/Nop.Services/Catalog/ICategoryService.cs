@@ -50,14 +50,15 @@ namespace Nop.Services.Catalog
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Categories</returns>
         IList<Category> GetAllCategoriesDisplayedOnHomePage(bool showHidden = false);
-
+        
         /// <summary>
         /// Gets child category identifiers
         /// </summary>
         /// <param name="parentCategoryId">Parent category identifier</param>
+        /// <param name="storeId">Store identifier; 0 if you want to get all records</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Category identifiers</returns>
-        IList<int> GetChildCategoryIds(int parentCategoryId, bool showHidden = false);
+        IList<int> GetChildCategoryIds(int parentCategoryId, int storeId = 0, bool showHidden = false);
 
         /// <summary>
         /// Gets a category
