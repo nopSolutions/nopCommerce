@@ -45,12 +45,20 @@ namespace Nop.Services.Catalog
         /// Key for caching
         /// </summary>
         /// <remarks>
+        /// {0} : current store ID
+        /// {1} : show hidden records?
+        /// </remarks>
+        private const string CATEGORIES_ALL_KEY = "Nop.category.all-{0}-{1}";
+        /// <summary>
+        /// Key for caching
+        /// </summary>
+        /// <remarks>
         /// {0} : parent category id
         /// {1} : comma separated list of customer roles
         /// {2} : current store ID
         /// {3} : show hidden records?
         /// </remarks>
-        private const string CATEGORIES_CHILD_IDENTIFIERS_MODEL_KEY = "Nop.category.childidentifiers-{0}-{1}-{2}-{3}";
+        private const string CATEGORIES_CHILD_IDENTIFIERS_KEY = "Nop.category.childidentifiers-{0}-{1}-{2}-{3}";
         /// <summary>
         /// Key for caching
         /// </summary>
@@ -174,6 +182,9 @@ namespace Nop.Services.Catalog
             if (category == null)
                 throw new ArgumentNullException(nameof(category));
 
+            if (category is IEntityForCaching)
+                throw new ArgumentException("Cacheable entities are not supported by Entity Framework");
+
             category.Deleted = true;
             UpdateCategory(category);
 
@@ -188,6 +199,41 @@ namespace Nop.Services.Catalog
                 UpdateCategory(subcategory);
             }
         }
+
+        /// <summary>
+        /// Gets all categories
+        /// </summary>
+        /// <param name="storeId">Store identifier; 0 if you want to get all records</param>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
+        /// <param name="loadCacheableCopy">A value indicating whether to load a copy that could be cached (workaround until Entity Framework supports 2-level caching)</param>
+        /// <returns>Categories</returns>
+        public virtual IList<Category> GetAllCategories(int storeId = 0, bool showHidden = false, bool loadCacheableCopy = true)
+        {
+            Func<IList<Category>> loadCategoriesFunc = () =>
+            {
+                return GetAllCategories("", storeId: storeId, showHidden: showHidden);
+            };
+
+            IList<Category> categories;
+            if (loadCacheableCopy)
+            {
+                //cacheable copy
+                var key = string.Format(CATEGORIES_ALL_KEY, storeId, showHidden);
+                categories = _staticCacheManager.Get(key, () =>
+                {
+                    var result = new List<Category>();
+                    foreach (var category in loadCategoriesFunc())
+                        result.Add(new CategoryForCaching(category));
+                    return result;
+                });
+            }
+            else
+            {
+                categories = loadCategoriesFunc();
+            }
+
+            return categories;
+        }
         
         /// <summary>
         /// Gets all categories
@@ -198,7 +244,7 @@ namespace Nop.Services.Catalog
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Categories</returns>
-        public virtual IPagedList<Category> GetAllCategories(string categoryName = "", int storeId = 0, 
+        public virtual IPagedList<Category> GetAllCategories(string categoryName, int storeId = 0, 
             int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false)
         {
             if (_commonSettings.UseStoredProcedureForLoadingCategories &&
@@ -370,7 +416,7 @@ namespace Nop.Services.Catalog
         /// <returns>Category identifiers</returns>
         public virtual IList<int> GetChildCategoryIds(int parentCategoryId, bool showHidden = false)
         {
-            var cacheKey = string.Format(CATEGORIES_CHILD_IDENTIFIERS_MODEL_KEY,
+            var cacheKey = string.Format(CATEGORIES_CHILD_IDENTIFIERS_KEY,
                 parentCategoryId,
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                 _storeContext.CurrentStore.Id,
@@ -412,6 +458,9 @@ namespace Nop.Services.Catalog
             if (category == null)
                 throw new ArgumentNullException(nameof(category));
 
+            if (category is IEntityForCaching)
+                throw new ArgumentException("Cacheable entities are not supported by Entity Framework");
+
             _categoryRepository.Insert(category);
 
             //cache
@@ -431,6 +480,9 @@ namespace Nop.Services.Catalog
         {
             if (category == null)
                 throw new ArgumentNullException(nameof(category));
+
+            if (category is IEntityForCaching)
+                throw new ArgumentException("Cacheable entities are not supported by Entity Framework");
 
             //validate category hierarchy
             var parentCategory = GetCategoryById(category.ParentCategoryId);

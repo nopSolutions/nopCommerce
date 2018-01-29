@@ -1185,7 +1185,9 @@ namespace Nop.Services.ExportImport
                 var allProductsCategoryIds = _categoryService.GetProductCategoryIds(allProductsBySku.Select(p => p.Id).ToArray());
 
                 //performance optimization, load all categories in one SQL request
-                var allCategories = _categoryService.GetAllCategories(showHidden: true).ToDictionary(c => c.GetFormattedBreadCrumb(_categoryService), c => c);
+                var allCategories = _categoryService
+                    .GetAllCategories(showHidden: true, loadCacheableCopy: false)
+                    .ToDictionary(c => c.GetFormattedBreadCrumb(_categoryService), c => c);
 
                 //performance optimization, load all manufacturers IDs for products in one SQL request
                 var allProductsManufacturerIds = _manufacturerService.GetProductManufacturerIds(allProductsBySku.Select(p => p.Id).ToArray());
@@ -1988,7 +1990,8 @@ namespace Nop.Services.ExportImport
                 var setSeName = properties.Any(p => p.PropertyName == "SeName");
 
                 //performance optimization, load all categories in one SQL request
-                var allCategories = _categoryService.GetAllCategories()
+                var allCategories = _categoryService
+                    .GetAllCategories(showHidden: true, loadCacheableCopy: false)
                     .GroupBy(c => c.GetFormattedBreadCrumb(_categoryService))
                     .ToDictionary(c => c.Key, c => c.First());
 
