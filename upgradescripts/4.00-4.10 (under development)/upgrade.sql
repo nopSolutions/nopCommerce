@@ -206,6 +206,24 @@ set @resources='
   <LocaleResource Name="Admin.Customers.Customers.CurrentWishlist">
     <Value></Value>
   </LocaleResource> 
+  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.PriceAdjustmentUsePercentage">
+    <Value>Price adjustment. Use percentage</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.PriceAdjustmentUsePercentage.Hint">
+    <Value>Determines whether to apply a percentage to the product. If not enabled, a fixed value is used.</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.PriceAdjustmentUsePercentage">
+    <Value>Price adjustment. Use percentage</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.PriceAdjustmentUsePercentage.Hint">
+    <Value>Determines whether to apply a percentage to the product. If not enabled, a fixed value is used.</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.PriceAdjustment.Hint">
+    <Value>The price adjustment applied when choosing this attribute value. For example ''10'' to add 10 dollars. Or 10% if ''Use percentage'' is ticked.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.PriceAdjustment.Hint">
+    <Value>The price adjustment applied when choosing this attribute value. For example ''10'' to add 10 dollars. Or 10% if ''Use percentage'' is ticked.</Value>
+  </LocaleResource> 
 </Language>
 '
 
@@ -437,4 +455,36 @@ BEGIN
     INSERT [Setting] ([Name], [Value], [StoreId])
     VALUES (N'catalogsettings.exportimportproductscountinonefile', N'500', 0)
 END
+GO
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[ProductAttributeValue]') and NAME='PriceAdjustmentUsePercentage')
+BEGIN
+	ALTER TABLE [ProductAttributeValue]
+	ADD [PriceAdjustmentUsePercentage] bit NULL
+END
+GO
+
+UPDATE [ProductAttributeValue]
+SET [PriceAdjustmentUsePercentage] = 0
+WHERE [PriceAdjustmentUsePercentage] IS NULL
+GO
+
+ALTER TABLE [ProductAttributeValue] ALTER COLUMN [PriceAdjustmentUsePercentage] bit NOT NULL
+GO
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[PredefinedProductAttributeValue]') and NAME='PriceAdjustmentUsePercentage')
+BEGIN
+	ALTER TABLE PredefinedProductAttributeValue
+	ADD [PriceAdjustmentUsePercentage] bit NULL
+END
+GO
+
+UPDATE [PredefinedProductAttributeValue]
+SET [PriceAdjustmentUsePercentage] = 0
+WHERE [PriceAdjustmentUsePercentage] IS NULL
+GO
+
+ALTER TABLE [PredefinedProductAttributeValue] ALTER COLUMN [PriceAdjustmentUsePercentage] bit NOT NULL
 GO

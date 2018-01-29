@@ -565,6 +565,7 @@ namespace Nop.Services.ExportImport
             var colorSquaresRgb = productAttributeManager.GetProperty("ColorSquaresRgb").StringValue;
             var imageSquaresPictureId = productAttributeManager.GetProperty("ImageSquaresPictureId").IntValue;
             var priceAdjustment = productAttributeManager.GetProperty("PriceAdjustment").DecimalValue;
+            var priceAdjustmentUsePercentage = productAttributeManager.GetProperty("PriceAdjustmentUsePercentage").BooleanValue;
             var weightAdjustment = productAttributeManager.GetProperty("WeightAdjustment").DecimalValue;
             var cost = productAttributeManager.GetProperty("Cost").DecimalValue;
             var customerEntersQty = productAttributeManager.GetProperty("CustomerEntersQty").BooleanValue;
@@ -625,6 +626,7 @@ namespace Nop.Services.ExportImport
                     AssociatedProductId = associatedProductId,
                     Name = valueName,
                     PriceAdjustment = priceAdjustment,
+                    PriceAdjustmentUsePercentage = priceAdjustmentUsePercentage,
                     WeightAdjustment = weightAdjustment,
                     Cost = cost,
                     IsPreSelected = isPreSelected,
@@ -646,6 +648,7 @@ namespace Nop.Services.ExportImport
                 pav.ColorSquaresRgb = colorSquaresRgb;
                 pav.ImageSquaresPictureId = imageSquaresPictureId;
                 pav.PriceAdjustment = priceAdjustment;
+                pav.PriceAdjustmentUsePercentage = priceAdjustmentUsePercentage;
                 pav.WeightAdjustment = weightAdjustment;
                 pav.Cost = cost;
                 pav.CustomerEntersQty = customerEntersQty;
@@ -800,6 +803,7 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<ExportProductAttribute>("ColorSquaresRgb"),
                 new PropertyByName<ExportProductAttribute>("ImageSquaresPictureId"),
                 new PropertyByName<ExportProductAttribute>("PriceAdjustment"),
+                new PropertyByName<ExportProductAttribute>("PriceAdjustmentUsePercentage"),
                 new PropertyByName<ExportProductAttribute>("WeightAdjustment"),
                 new PropertyByName<ExportProductAttribute>("Cost"),
                 new PropertyByName<ExportProductAttribute>("CustomerEntersQty"),
@@ -1157,7 +1161,7 @@ namespace Nop.Services.ExportImport
                 
                 var downloadedFiles = new List<string>();
 
-               var metadata = PrepareImportProductData(worksheet);
+                var metadata = PrepareImportProductData(worksheet);
 
                 if (_catalogSettings.ExportImportSplitProductsFile && metadata.CountProductsInFile > _catalogSettings.ExportImportProductsCountInOneFile)
                 {

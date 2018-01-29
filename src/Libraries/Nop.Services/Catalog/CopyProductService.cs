@@ -215,6 +215,7 @@ namespace Nop.Services.Catalog
                         Name = productAttributeValue.Name,
                         ColorSquaresRgb = productAttributeValue.ColorSquaresRgb,
                         PriceAdjustment = productAttributeValue.PriceAdjustment,
+                        PriceAdjustmentUsePercentage = productAttributeValue.PriceAdjustmentUsePercentage,
                         WeightAdjustment = productAttributeValue.WeightAdjustment,
                         Cost = productAttributeValue.Cost,
                         CustomerEntersQty = productAttributeValue.CustomerEntersQty,

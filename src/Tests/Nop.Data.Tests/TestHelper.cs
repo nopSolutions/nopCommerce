@@ -177,6 +177,7 @@ namespace Nop.Data.Tests
             {
                 Name = "Name 1",
                 PriceAdjustment = 1.1M,
+                PriceAdjustmentUsePercentage = true,
                 WeightAdjustment = 2.1M,
                 Cost = 3.1M,
                 IsPreSelected = true,
@@ -350,6 +351,7 @@ namespace Nop.Data.Tests
                 ColorSquaresRgb = "12FF33",
                 ImageSquaresPictureId = 1,
                 PriceAdjustment = 1.1M,
+                PriceAdjustmentUsePercentage = true,
                 WeightAdjustment = 2.1M,
                 Cost = 3.1M,
                 Quantity = 2,

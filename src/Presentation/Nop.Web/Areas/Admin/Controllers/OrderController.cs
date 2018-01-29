@@ -921,7 +921,21 @@ namespace Nop.Web.Areas.Admin.Controllers
                     {
                         //price adjustment
                         var priceAdjustment = _taxService.GetProductPrice(product,
-                            _priceCalculationService.GetProductAttributeValuePriceAdjustment(attributeValue), out taxRate);
+                            _priceCalculationService.GetProductAttributeValuePriceAdjustment(attributeValue, order.Customer), out taxRate);
+
+                        var priceAdjustmentStr = string.Empty;
+                        if (priceAdjustment != 0)
+                        {
+                            if (attributeValue.PriceAdjustmentUsePercentage)
+                            {
+                                priceAdjustmentStr = attributeValue.PriceAdjustment.ToString("G29");
+                                priceAdjustmentStr = priceAdjustment > 0 ? $"+{priceAdjustmentStr}%" : $"{priceAdjustmentStr}%";
+                            }
+                            else
+                            {
+                                priceAdjustmentStr = priceAdjustment > 0 ? $"+{_priceFormatter.FormatPrice(priceAdjustment, false, false)}" : $"-{_priceFormatter.FormatPrice(-priceAdjustment, false, false)}";
+                            }
+                        }
 
                         attributeModel.Values.Add(new OrderModel.AddOrderProductModel.ProductAttributeValueModel
                         {
@@ -930,9 +944,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                             IsPreSelected = attributeValue.IsPreSelected,
                             CustomerEntersQty = attributeValue.CustomerEntersQty,
                             Quantity = attributeValue.Quantity,
-                            PriceAdjustment = priceAdjustment == decimal.Zero ? string.Empty : priceAdjustment > decimal.Zero
-                                ? string.Concat("+", _priceFormatter.FormatPrice(priceAdjustment, false, false))
-                                : string.Concat("-", _priceFormatter.FormatPrice(-priceAdjustment, false, false)),
+                            PriceAdjustment = priceAdjustmentStr,
                             PriceAdjustmentValue = priceAdjustment
                         });
                     }
