@@ -46,9 +46,10 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <remarks>
         /// {0} : current store ID
-        /// {1} : show hidden records?
+        /// {1} : comma separated list of customer roles
+        /// {2} : show hidden records?
         /// </remarks>
-        private const string CATEGORIES_ALL_KEY = "Nop.category.all-{0}-{1}";
+        private const string CATEGORIES_ALL_KEY = "Nop.category.all-{0}-{1}-{2}";
         /// <summary>
         /// Key for caching
         /// </summary>
@@ -218,7 +219,10 @@ namespace Nop.Services.Catalog
             if (loadCacheableCopy)
             {
                 //cacheable copy
-                var key = string.Format(CATEGORIES_ALL_KEY, storeId, showHidden);
+                var key = string.Format(CATEGORIES_ALL_KEY, 
+                    storeId,
+                    string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()), 
+                    showHidden);
                 categories = _staticCacheManager.Get(key, () =>
                 {
                     var result = new List<Category>();
