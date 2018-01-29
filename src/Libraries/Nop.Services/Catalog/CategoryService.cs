@@ -39,9 +39,8 @@ namespace Nop.Services.Catalog
         /// {1} : show hidden records?
         /// {2} : current customer ID
         /// {3} : store ID
-        /// {4} : include all levels (child)
         /// </remarks>
-        private const string CATEGORIES_BY_PARENT_CATEGORY_ID_KEY = "Nop.category.byparent-{0}-{1}-{2}-{3}-{4}";
+        private const string CATEGORIES_BY_PARENT_CATEGORY_ID_KEY = "Nop.category.byparent-{0}-{1}-{2}-{3}";
         /// <summary>
         /// Key for caching
         /// </summary>
@@ -288,9 +287,9 @@ namespace Nop.Services.Catalog
         /// <param name="includeAllLevels">A value indicating whether we should load all child levels</param>
         /// <returns>Categories</returns>
         public virtual IList<Category> GetAllCategoriesByParentCategoryId(int parentCategoryId,
-            bool showHidden = false, bool includeAllLevels = false)
+            bool showHidden = false)
         {
-            var key = string.Format(CATEGORIES_BY_PARENT_CATEGORY_ID_KEY, parentCategoryId, showHidden, _workContext.CurrentCustomer.Id, _storeContext.CurrentStore.Id, includeAllLevels);
+            var key = string.Format(CATEGORIES_BY_PARENT_CATEGORY_ID_KEY, parentCategoryId, showHidden, _workContext.CurrentCustomer.Id, _storeContext.CurrentStore.Id);
             return _cacheManager.Get(key, () =>
             {
                 var query = _categoryRepository.Table;
@@ -334,17 +333,6 @@ namespace Nop.Services.Catalog
                 }
 
                 var categories = query.ToList();
-
-                if (!includeAllLevels)
-                    return categories;
-
-                var childCategories = new List<Category>();
-                //add child levels
-                foreach (var category in categories)
-                {
-                    childCategories.AddRange(GetAllCategoriesByParentCategoryId(category.Id, showHidden, true));
-                }
-                categories.AddRange(childCategories);
                 return categories;
             });
         }

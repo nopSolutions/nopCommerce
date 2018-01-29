@@ -32,10 +32,8 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="parentCategoryId">Parent category identifier</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <param name="includeAllLevels">A value indicating whether we should load all child levels</param>
         /// <returns>Categories</returns>
-        IList<Category> GetAllCategoriesByParentCategoryId(int parentCategoryId,
-            bool showHidden = false, bool includeAllLevels = false);
+        IList<Category> GetAllCategoriesByParentCategoryId(int parentCategoryId, bool showHidden = false);
 
         /// <summary>
         /// Gets all categories displayed on the home page
