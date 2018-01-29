@@ -4,8 +4,8 @@
     {
         public static string AccountNavigationAfter => "account_navigation_after";
         public static string AccountNavigationBefore => "account_navigation_before";
-        public static string ApplyvendorBottom => "applyvendor_bottom";
-        public static string ApplyvendorTop => "applyvendor_top";
+        public static string ApplyVendorBottom => "applyvendor_bottom";
+        public static string ApplyVendorTop => "applyvendor_top";
         public static string BloglistPageAfterPost => "bloglist_page_after_post";
         public static string BloglistPageAfterPostBody => "bloglist_page_after_post_body";
         public static string BloglistPageAfterPosts => "bloglist_page_after_posts";

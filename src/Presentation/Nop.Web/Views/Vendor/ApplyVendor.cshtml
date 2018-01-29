@@ -15,7 +15,7 @@
     </div>
     <div class="page-body">
         @await Component.InvokeAsync("TopicBlock", new { systemName = "ApplyVendor" })
-        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ApplyvendorTop })
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ApplyVendorTop })
         @if (Model.DisableFormInput)
         {
             <div class="result">
@@ -100,6 +100,6 @@
                 </div>
             </form>
         }
-        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ApplyvendorBottom })
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ApplyVendorBottom })
     </div>
 </div>
