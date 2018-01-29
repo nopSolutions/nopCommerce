@@ -372,7 +372,7 @@ namespace Nop.Services.Seo
 
                     writer.WriteElementString("loc", location);
                     writer.WriteElementString("changefreq", url.UpdateFrequency.ToString().ToLowerInvariant());
-                    writer.WriteElementString("lastmod", url.UpdatedOn.ToString(DateFormat));
+                    writer.WriteElementString("lastmod", url.UpdatedOn.ToString(DateFormat, CultureInfo.InvariantCulture));
                     writer.WriteEndElement();
                 }
 
