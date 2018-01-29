@@ -965,18 +965,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             model.ProductEditorSettingsModel = productEditorSettings.ToModel();
         }
 
-        protected virtual List<int> GetChildCategoryIds(int parentCategoryId)
-        {
-            var categoriesIds = new List<int>();
-            var categories = _categoryService.GetAllCategoriesByParentCategoryId(parentCategoryId, true);
-            foreach (var category in categories)
-            {
-                categoriesIds.Add(category.Id);
-                categoriesIds.AddRange(GetChildCategoryIds(category.Id));
-            }
-            return categoriesIds;
-        }
-
         protected virtual void SaveProductWarehouseInventory(Product product, ProductModel model)
         {
             if (product == null)
@@ -1433,7 +1421,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             var categoryIds = new List<int> { model.SearchCategoryId };
             //include subcategories
             if (model.SearchIncludeSubCategories && model.SearchCategoryId > 0)
-                categoryIds.AddRange(GetChildCategoryIds(model.SearchCategoryId));
+                categoryIds.AddRange(_categoryService.GetChildCategoryIds(model.SearchCategoryId, true));
 
             //0 - all (according to "ShowHidden" parameter)
             //1 - published only
@@ -3118,7 +3106,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             var categoryIds = new List<int> { model.SearchCategoryId };
             //include subcategories
             if (model.SearchIncludeSubCategories && model.SearchCategoryId > 0)
-                categoryIds.AddRange(GetChildCategoryIds(model.SearchCategoryId));
+                categoryIds.AddRange(_categoryService.GetChildCategoryIds(model.SearchCategoryId, true));
 
             //0 - all (according to "ShowHidden" parameter)
             //1 - published only
@@ -3174,7 +3162,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             var categoryIds = new List<int> { model.SearchCategoryId };
             //include subcategories
             if (model.SearchIncludeSubCategories && model.SearchCategoryId > 0)
-                categoryIds.AddRange(GetChildCategoryIds(model.SearchCategoryId));
+                categoryIds.AddRange(_categoryService.GetChildCategoryIds(model.SearchCategoryId, true));
 
             //0 - all (according to "ShowHidden" parameter)
             //1 - published only
@@ -3252,7 +3240,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             var categoryIds = new List<int> { model.SearchCategoryId };
             //include subcategories
             if (model.SearchIncludeSubCategories && model.SearchCategoryId > 0)
-                categoryIds.AddRange(GetChildCategoryIds(model.SearchCategoryId));
+                categoryIds.AddRange(_categoryService.GetChildCategoryIds(model.SearchCategoryId, true));
 
             //0 - all (according to "ShowHidden" parameter)
             //1 - published only

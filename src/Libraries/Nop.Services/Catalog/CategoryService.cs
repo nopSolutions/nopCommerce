@@ -46,6 +46,16 @@ namespace Nop.Services.Catalog
         /// Key for caching
         /// </summary>
         /// <remarks>
+        /// {0} : parent category id
+        /// {1} : comma separated list of customer roles
+        /// {2} : current store ID
+        /// {3} : show hidden records?
+        /// </remarks>
+        private const string CATEGORIES_CHILD_IDENTIFIERS_MODEL_KEY = "Nop.category.childidentifiers-{0}-{1}-{2}-{3}";
+        /// <summary>
+        /// Key for caching
+        /// </summary>
+        /// <remarks>
         /// {0} : show hidden records?
         /// {1} : category ID
         /// {2} : page index
@@ -88,19 +98,21 @@ namespace Nop.Services.Catalog
         private readonly IStoreContext _storeContext;
         private readonly IEventPublisher _eventPublisher;
         private readonly ICacheManager _cacheManager;
+        private readonly IStaticCacheManager _staticCacheManager;
         private readonly IStoreMappingService _storeMappingService;
         private readonly IAclService _aclService;
         private readonly CommonSettings _commonSettings;
         private readonly CatalogSettings _catalogSettings;
 
         #endregion
-        
+
         #region Ctor
 
         /// <summary>
         /// Ctor
         /// </summary>
         /// <param name="cacheManager">Cache manager</param>
+        /// <param name="staticCacheManager">Static cache manager</param>
         /// <param name="categoryRepository">Category repository</param>
         /// <param name="productCategoryRepository">ProductCategory repository</param>
         /// <param name="productRepository">Product repository</param>
@@ -116,6 +128,7 @@ namespace Nop.Services.Catalog
         /// <param name="commonSettings">Common settings</param>
         /// <param name="catalogSettings">Catalog settings</param>
         public CategoryService(ICacheManager cacheManager,
+            IStaticCacheManager staticCacheManager,
             IRepository<Category> categoryRepository,
             IRepository<ProductCategory> productCategoryRepository,
             IRepository<Product> productRepository,
@@ -132,6 +145,7 @@ namespace Nop.Services.Catalog
             CatalogSettings catalogSettings)
         {
             this._cacheManager = cacheManager;
+            this._staticCacheManager = staticCacheManager;
             this._categoryRepository = categoryRepository;
             this._productCategoryRepository = productCategoryRepository;
             this._productRepository = productRepository;
@@ -359,7 +373,34 @@ namespace Nop.Services.Catalog
 
             return categories;
         }
-                
+
+        /// <summary>
+        /// Gets child category identifiers
+        /// </summary>
+        /// <param name="parentCategoryId">Parent category identifier</param>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
+        /// <returns>Category identifiers</returns>
+        public virtual IList<int> GetChildCategoryIds(int parentCategoryId, bool showHidden = false)
+        {
+            var cacheKey = string.Format(CATEGORIES_CHILD_IDENTIFIERS_MODEL_KEY,
+                parentCategoryId,
+                string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
+                _storeContext.CurrentStore.Id,
+                showHidden);
+            return _staticCacheManager.Get(cacheKey, () =>
+            {
+                var categoriesIds = new List<int>();
+                var categories = GetAllCategoriesByParentCategoryId(parentCategoryId, showHidden);
+                foreach (var category in categories)
+                {
+                    categoriesIds.Add(category.Id);
+                    categoriesIds.AddRange(GetChildCategoryIds(category.Id, showHidden));
+                }
+
+                return categoriesIds;
+            });
+        }
+
         /// <summary>
         /// Gets a category
         /// </summary>
@@ -387,6 +428,7 @@ namespace Nop.Services.Catalog
 
             //cache
             _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
+            _staticCacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTCATEGORIES_PATTERN_KEY);
 
             //event notification
@@ -418,6 +460,7 @@ namespace Nop.Services.Catalog
 
             //cache
             _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
+            _staticCacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTCATEGORIES_PATTERN_KEY);
 
             //event notification
