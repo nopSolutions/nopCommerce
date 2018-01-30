@@ -5903,7 +5903,7 @@ namespace Nop.Services.Installation
             {
                 UseSystemEmailForContactUsForm = true,
                 UseStoredProceduresIfSupported = true,
-                UseStoredProcedureForLoadingCategories = false,
+                UseStoredProcedureForLoadingCategories = true,
                 SitemapEnabled = true,
                 SitemapIncludeCategories = true,
                 SitemapIncludeManufacturers = true,

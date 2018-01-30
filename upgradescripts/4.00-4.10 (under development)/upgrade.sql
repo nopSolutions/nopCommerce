@@ -488,3 +488,9 @@ GO
 
 ALTER TABLE [PredefinedProductAttributeValue] ALTER COLUMN [PriceAdjustmentUsePercentage] bit NOT NULL
 GO
+
+--updated setting
+UPDATE [Setting]
+SET [Value] = N'true'
+WHERE [Name] = N'commonsettings.usestoredprocedureforloadingcategories'
+GO
