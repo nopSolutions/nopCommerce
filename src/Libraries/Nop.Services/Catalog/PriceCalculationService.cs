@@ -275,7 +275,7 @@ namespace Nop.Services.Catalog
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
-            appliedDiscounts = null;
+            appliedDiscounts = new List<DiscountForCaching>();
             var appliedDiscountAmount = decimal.Zero;
 
             //we don't apply discounts to products with price entered by a customer
@@ -442,7 +442,7 @@ namespace Nop.Services.Catalog
                     var tmpDiscountAmount = GetDiscountAmount(product, customer, price, out List<DiscountForCaching> tmpAppliedDiscounts);
                     price = price - tmpDiscountAmount;
 
-                    if (tmpAppliedDiscounts != null)
+                    if (tmpAppliedDiscounts?.Any() ?? false)
                     {
                         result.AppliedDiscounts = tmpAppliedDiscounts;
                         result.AppliedDiscountAmount = tmpDiscountAmount;
