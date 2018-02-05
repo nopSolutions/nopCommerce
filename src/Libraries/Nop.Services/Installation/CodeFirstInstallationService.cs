@@ -5905,6 +5905,7 @@ namespace Nop.Services.Installation
                 UseStoredProceduresIfSupported = true,
                 UseStoredProcedureForLoadingCategories = true,
                 SitemapEnabled = true,
+                SitemapPageSize = 200,
                 SitemapIncludeCategories = true,
                 SitemapIncludeManufacturers = true,
                 SitemapIncludeProducts = false,

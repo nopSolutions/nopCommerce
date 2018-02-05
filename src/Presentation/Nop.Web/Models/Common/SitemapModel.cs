@@ -1,28 +1,37 @@
 ﻿using System.Collections.Generic;
 using Nop.Web.Framework.Mvc.Models;
-using Nop.Web.Models.Catalog;
-using Nop.Web.Models.Topics;
 
 namespace Nop.Web.Models.Common
 {
     public partial class SitemapModel : BaseNopModel
     {
+        #region Ctor
+
         public SitemapModel()
         {
-            Products = new List<ProductOverviewModel>();
-            Categories = new List<CategorySimpleModel>();
-            Manufacturers = new List<ManufacturerBriefInfoModel>();
-            Topics = new List<TopicModel>();
-            ProductTags = new List<ProductTagModel>();
+            Items = new List<SitemapItemModel>();
+            PageModel = new SitemapPageModel();
         }
-        public IList<ProductOverviewModel> Products { get; set; }
-        public IList<CategorySimpleModel> Categories { get; set; }
-        public IList<ManufacturerBriefInfoModel> Manufacturers { get; set; }
-        public IList<TopicModel> Topics { get; set; }
-        public IList<ProductTagModel> ProductTags { get; set; }
 
-        public bool NewsEnabled { get; set; }
-        public bool BlogEnabled { get; set; }
-        public bool ForumEnabled { get; set; }
+        #endregion
+
+        #region Properties
+
+        public List<SitemapItemModel> Items { get; set; }
+
+        public SitemapPageModel PageModel { get; set; }
+
+        #endregion
+
+        #region Nested classes
+
+        public class SitemapItemModel
+        {
+            public string GroupTitle { get; set; }
+            public string Url { get; set; }
+            public string Name { get; set; }
+        }
+
+        #endregion
     }
 }

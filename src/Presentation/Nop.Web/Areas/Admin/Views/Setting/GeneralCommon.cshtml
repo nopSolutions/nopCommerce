@@ -31,10 +31,10 @@
 
         function toggleSitemapSettings() {
             if ($('#@Html.IdFor(model => model.StoreInformationSettings.SitemapEnabled)').is(':checked')) {
-                $("#pnlSitemapIncludeCategories, #pnlSitemapIncludeManufacturers, #pnlSitemapIncludeProducts, #pnlSitemapIncludeProductTags").show();
+                $("#pnlSitemapPageSize, #pnlSitemapIncludeCategories, #pnlSitemapIncludeManufacturers, #pnlSitemapIncludeProducts, #pnlSitemapIncludeProductTags").show();
             }
             else {
-                $("#pnlSitemapIncludeCategories, #pnlSitemapIncludeManufacturers, #pnlSitemapIncludeProducts, #pnlSitemapIncludeProductTags").hide();
+                $("#pnlSitemapPageSize, #pnlSitemapIncludeCategories, #pnlSitemapIncludeManufacturers, #pnlSitemapIncludeProducts, #pnlSitemapIncludeProductTags").hide();
             }
         }
 
@@ -459,6 +459,16 @@
                             </div>
                         </div>
                         <nop-nested-setting asp-for="StoreInformationSettings.SitemapEnabled">
+                            <div class="form-group advanced-setting" id="pnlSitemapPageSize">
+                                <div class="col-md-3">
+                                    <nop-override-store-checkbox asp-for="StoreInformationSettings.SitemapPageSize_OverrideForStore" asp-input="StoreInformationSettings.SitemapPageSize" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                    <nop-label asp-for="StoreInformationSettings.SitemapPageSize" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-editor asp-for="StoreInformationSettings.SitemapPageSize" />
+                                    <span asp-validation-for="StoreInformationSettings.SitemapPageSize"></span>
+                                </div>
+                            </div>
                             <div class="form-group advanced-setting" id="pnlSitemapIncludeCategories">
                                 <div class="col-md-3">
                                     <nop-override-store-checkbox asp-for="StoreInformationSettings.SitemapIncludeCategories_OverrideForStore" asp-input="StoreInformationSettings.SitemapIncludeCategories" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />

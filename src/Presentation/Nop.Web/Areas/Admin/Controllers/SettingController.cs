@@ -1721,6 +1721,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             model.StoreInformationSettings.PopupForTermsOfServiceLinks = commonSettings.PopupForTermsOfServiceLinks;
             //sitemap
             model.StoreInformationSettings.SitemapEnabled = commonSettings.SitemapEnabled;
+            model.StoreInformationSettings.SitemapPageSize = commonSettings.SitemapPageSize;
             model.StoreInformationSettings.SitemapIncludeCategories = commonSettings.SitemapIncludeCategories;
             model.StoreInformationSettings.SitemapIncludeManufacturers = commonSettings.SitemapIncludeManufacturers;
             model.StoreInformationSettings.SitemapIncludeProducts = commonSettings.SitemapIncludeProducts;
@@ -1742,6 +1743,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 model.StoreInformationSettings.UseSystemEmailForContactUsForm_OverrideForStore = _settingService.SettingExists(commonSettings, x => x.UseSystemEmailForContactUsForm, storeScope);
                 model.StoreInformationSettings.PopupForTermsOfServiceLinks_OverrideForStore = _settingService.SettingExists(commonSettings, x => x.PopupForTermsOfServiceLinks, storeScope);
                 model.StoreInformationSettings.SitemapEnabled_OverrideForStore = _settingService.SettingExists(commonSettings, x => x.SitemapEnabled, storeScope);
+                model.StoreInformationSettings.SitemapPageSize_OverrideForStore = _settingService.SettingExists(commonSettings, x => x.SitemapPageSize, storeScope);
                 model.StoreInformationSettings.SitemapIncludeCategories_OverrideForStore = _settingService.SettingExists(commonSettings, x => x.SitemapIncludeCategories, storeScope);
                 model.StoreInformationSettings.SitemapIncludeManufacturers_OverrideForStore = _settingService.SettingExists(commonSettings, x => x.SitemapIncludeManufacturers, storeScope);
                 model.StoreInformationSettings.SitemapIncludeProducts_OverrideForStore = _settingService.SettingExists(commonSettings, x => x.SitemapIncludeProducts, storeScope);
@@ -1929,6 +1931,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             commonSettings.PopupForTermsOfServiceLinks = model.StoreInformationSettings.PopupForTermsOfServiceLinks;
             //sitemap
             commonSettings.SitemapEnabled = model.StoreInformationSettings.SitemapEnabled;
+            commonSettings.SitemapPageSize = model.StoreInformationSettings.SitemapPageSize;
             commonSettings.SitemapIncludeCategories = model.StoreInformationSettings.SitemapIncludeCategories;
             commonSettings.SitemapIncludeManufacturers = model.StoreInformationSettings.SitemapIncludeManufacturers;
             commonSettings.SitemapIncludeProducts = model.StoreInformationSettings.SitemapIncludeProducts;
@@ -1950,6 +1953,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             _settingService.SaveSettingOverridablePerStore(commonSettings, x => x.UseSystemEmailForContactUsForm, model.StoreInformationSettings.UseSystemEmailForContactUsForm_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(commonSettings, x => x.PopupForTermsOfServiceLinks, model.StoreInformationSettings.PopupForTermsOfServiceLinks_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(commonSettings, x => x.SitemapEnabled, model.StoreInformationSettings.SitemapEnabled_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(commonSettings, x => x.SitemapPageSize, model.StoreInformationSettings.SitemapPageSize_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(commonSettings, x => x.SitemapIncludeCategories, model.StoreInformationSettings.SitemapIncludeCategories_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(commonSettings, x => x.SitemapIncludeManufacturers, model.StoreInformationSettings.SitemapIncludeManufacturers_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(commonSettings, x => x.SitemapIncludeProducts, model.StoreInformationSettings.SitemapIncludeProducts_OverrideForStore, storeScope, false);

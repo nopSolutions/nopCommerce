@@ -42,6 +42,11 @@ namespace Nop.Core.Domain.Common
         public bool SitemapEnabled { get; set; }
 
         /// <summary>
+        /// Gets or sets the page size for sitemap
+        /// </summary>
+        public int SitemapPageSize { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether to include categories to sitemap
         /// </summary>
         public bool SitemapIncludeCategories { get; set; }

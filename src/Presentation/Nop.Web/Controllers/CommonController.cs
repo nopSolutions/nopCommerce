@@ -282,12 +282,12 @@ namespace Nop.Web.Controllers
 
         //sitemap page
         [HttpsRequirement(SslRequirement.No)]
-        public virtual IActionResult Sitemap()
+        public virtual IActionResult Sitemap(SitemapPageModel pageModel)
         {
             if (!_commonSettings.SitemapEnabled)
                 return RedirectToRoute("HomePage");
 
-            var model = _commonModelFactory.PrepareSitemapModel();
+            var model = _commonModelFactory.PrepareSitemapModel(pageModel);
             return View(model);
         }
 

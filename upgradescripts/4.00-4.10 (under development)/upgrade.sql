@@ -494,6 +494,12 @@ set @resources='
   <LocaleResource Name="Admin.Orders.List.BillingPhone.Hint">
     <Value>Filter by customer billing phone number.</Value>
   </LocaleResource>  
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SitemapPageSize">
+    <Value>Sitemap page size</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SitemapPageSize.Hint">
+    <Value>A number of items displayed on one sitemap page.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -1021,5 +1027,13 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'displaydefaultfooteritem
 BEGIN
     INSERT [Setting] ([Name], [Value], [StoreId])
     VALUES (N'displaydefaultfooteritemsettings.DisplayWishlistFooterItem', N'true', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'commonsettings.sitemappagesize')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'commonsettings.sitemappagesize', N'200', 0)
 END
 GO
