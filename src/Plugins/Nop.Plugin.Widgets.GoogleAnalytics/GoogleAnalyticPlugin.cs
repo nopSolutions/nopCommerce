@@ -4,6 +4,7 @@ using Nop.Core.Plugins;
 using Nop.Services.Cms;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
+using Nop.Web.Framework.Infrastructure;
 
 namespace Nop.Plugin.Widgets.GoogleAnalytics
 {
@@ -41,8 +42,8 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
         public IList<string> GetWidgetZones()
         {
             return !string.IsNullOrWhiteSpace(_googleAnalyticsSettings.WidgetZone)
-                ? new List<string>() { _googleAnalyticsSettings.WidgetZone }
-                : new List<string>() { "body_end_html_tag_before" };
+                ? new List<string> { _googleAnalyticsSettings.WidgetZone }
+                : new List<string> { PublicWidgetZones.BodyEndHtmlTagBefore };
         }
 
         /// <summary>

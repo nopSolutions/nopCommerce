@@ -13,7 +13,7 @@
         <h1>@T("Reviews.ProductReviewsFor") <a href="@Url.RouteUrl("Product", new { SeName = Model.ProductSeName })">@Model.ProductName</a></h1>
     </div>
     <div class="page-body">
-        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProductreviewsPageTop, additionalData = Model })
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProductReviewsPageTop, additionalData = Model })
         @if (Model.AddProductReview.SuccessfullyAdded)
         {
             <div class="result">
@@ -114,7 +114,7 @@
                                 </span>
                             </div>
                             @await Html.PartialAsync("_ProductReviewHelpfulness", review.Helpfulness)
-                            @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProductreviewsPageInsideReview, additionalData = review })
+                            @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProductReviewsPageInsideReview, additionalData = review })
                             @if (!string.IsNullOrEmpty(review.ReplyText))
                             {
                                 <div class="reply">
@@ -131,6 +131,6 @@
                 }
             </div>
         }
-        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProductreviewsPageBottom, additionalData = Model })
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProductReviewsPageBottom, additionalData = Model })
     </div>
 </div>

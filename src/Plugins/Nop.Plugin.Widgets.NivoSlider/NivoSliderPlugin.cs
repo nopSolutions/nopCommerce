@@ -6,6 +6,7 @@ using Nop.Services.Cms;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Services.Media;
+using Nop.Web.Framework.Infrastructure;
 
 namespace Nop.Plugin.Widgets.NivoSlider
 {
@@ -32,7 +33,7 @@ namespace Nop.Plugin.Widgets.NivoSlider
         /// <returns>Widget zones</returns>
         public IList<string> GetWidgetZones()
         {
-            return new List<string> { "home_page_top" };
+            return new List<string> { PublicWidgetZones.HomePageTop };
         }
 
         /// <summary>

@@ -4,8 +4,8 @@
 
     Html.AddTitleParts(T("Forum.PageTitle.TopicEdit").Text);
 }
-@await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BoardsTopiceditBefore, additionalData = Model })
+@await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BoardsTopicEditBefore, additionalData = Model })
 <form asp-route="TopicEdit" method="post">
     @await Html.PartialAsync("_CreateUpdateTopic", Model)
 </form>
-@await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BoardsTopiceditAfter, additionalData = Model })
+@await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BoardsTopicEditAfter, additionalData = Model })

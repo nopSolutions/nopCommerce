@@ -1,4 +1,4 @@
-﻿namespace Nop.Web.Areas.Admin.Infrastructure
+﻿namespace Nop.Web.Framework.Infrastructure
 {
     public static partial class AdminWidgetZones
     {
@@ -208,7 +208,7 @@
         public static string NewsDetailsInfoTop => "admin_news_details_info_top";
         public static string NewsDetailsSeoBottom => "admin_news_details_seo_bottom";
         public static string NewsDetailsSeoTop => "admin_news_details_seo_top";
-        public static string NewsletterSubscriptionListButtons => "admin_newsletter_subscription_list_buttons";
+        public static string NewsLetterSubscriptionListButtons => "admin_newsletter_subscription_list_buttons";
         public static string NewsListButtons => "admin_news_list_buttons";
         public static string NewsSettingsBottom => "admin_news_settings_bottom";
         public static string NewsSettingsButtons => "admin_news_settings_buttons";
@@ -236,7 +236,7 @@
         public static string OrderSettingsSettingsBottom => "admin_order_settings_settings_bottom";
         public static string OrderSettingsSettingsTop => "admin_order_settings_settings_top";
         public static string OrderShipmentAddButtons => "admin_order_shipment_add_buttons";
-        public static string Ordershipmentdetailsbuttons => "admin_order_shipment_details_buttons";
+        public static string OrderShipmentDetailsButtons => "admin_order_shipment_details_buttons";
         public static string OrderShipmentListButtons => "admin_order_shipment_list_buttons";
         public static string OrderUploadLicenseButtons => "admin_order_upload_license_buttons";
         public static string PaymentMethodListButtons => "admin_payment_method_list_buttons";
@@ -293,7 +293,7 @@
         public static string ProductDetailsProductAttributesCombinationsTop => "admin_product_details_product_attributes_combinations_top";
         public static string ProductDetailsProductAttributesInfoBottom => "admin_product_details_product_attributes_info_bottom";
         public static string ProductDetailsProductAttributesInfoTop => "admin_product_details_product_attributes_info_top";
-        public static string Productdetailsproductattributestop => "admin_product_details_product_attributes_top";
+        public static string ProductDetailsProductAttributesTop => "admin_product_details_product_attributes_top";
         public static string ProductDetailsPurchasedWithOrdersBottom => "admin_product_details_purchased_with_orders_bottom";
         public static string ProductDetailsPurchasedWithOrdersTop => "admin_product_details_purchased_with_orders_top";
         public static string ProductDetailsSeoBottom => "admin_product_details_seo_bottom";
@@ -339,7 +339,7 @@
         public static string RewardPointsSettingsButtons => "admin_reward_points_settings_buttons";
         public static string RewardPointsSettingsTop => "admin_reward_points_settings_top";
         public static string ScheduleTaskListButtons => "admin_schedule_task_list_buttons";
-        public static string SearchboxBefore => "admin_searchbox_before";
+        public static string SearchBoxBefore => "admin_searchbox_before";
         public static string SenamesBottom => "admin_senames_bottom";
         public static string SenamesButtons => "admin_senames_buttons";
         public static string SenamesTop => "admin_senames_top";
