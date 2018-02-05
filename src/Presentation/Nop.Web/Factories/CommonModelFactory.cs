@@ -76,6 +76,7 @@ namespace Nop.Web.Factories
         private readonly LocalizationSettings _localizationSettings;
         private readonly CaptchaSettings _captchaSettings;
         private readonly VendorSettings _vendorSettings;
+        private readonly DisplayDefaultFooterItemSettings _displayDefaultFooterItemSettings;
 
         #endregion
 
@@ -110,7 +111,8 @@ namespace Nop.Web.Factories
             LocalizationSettings localizationSettings,
             CaptchaSettings captchaSettings,
             VendorSettings vendorSettings,
-            IProductTagService productTagService)
+            IProductTagService productTagService,
+            DisplayDefaultFooterItemSettings displayDefaultFooterItemSettings)
         {
             this._categoryService = categoryService;
             this._productService = productService;
@@ -142,6 +144,7 @@ namespace Nop.Web.Factories
             this._captchaSettings = captchaSettings;
             this._vendorSettings = vendorSettings;
             this._productTagService = productTagService;
+            this._displayDefaultFooterItemSettings = displayDefaultFooterItemSettings;
         }
 
         #endregion
@@ -422,7 +425,22 @@ namespace Nop.Web.Factories
                 DisplayTaxShippingInfoFooter = _catalogSettings.DisplayTaxShippingInfoFooter,
                 HidePoweredByNopCommerce = _storeInformationSettings.HidePoweredByNopCommerce,
                 AllowCustomersToApplyForVendorAccount = _vendorSettings.AllowCustomersToApplyForVendorAccount,
-                Topics = cachedTopicModel
+                Topics = cachedTopicModel,
+                DisplaySitemapFooterItem = _displayDefaultFooterItemSettings.DisplaySitemapFooterItem,
+                DisplayContactUsFooterItem = _displayDefaultFooterItemSettings.DisplayContactUsFooterItem,
+                DisplayProductSearchFooterItem = _displayDefaultFooterItemSettings.DisplayProductSearchFooterItem,
+                DisplayNewsFooterItem = _displayDefaultFooterItemSettings.DisplayNewsFooterItem,
+                DisplayBlogFooterItem = _displayDefaultFooterItemSettings.DisplayBlogFooterItem,
+                DisplayForumsFooterItem = _displayDefaultFooterItemSettings.DisplayForumsFooterItem,
+                DisplayRecentlyViewedProductsFooterItem = _displayDefaultFooterItemSettings.DisplayRecentlyViewedProductsFooterItem,
+                DisplayCompareProductsFooterItem = _displayDefaultFooterItemSettings.DisplayCompareProductsFooterItem,
+                DisplayNewProductsFooterItem = _displayDefaultFooterItemSettings.DisplayNewProductsFooterItem,
+                DisplayCustomerInfoFooterItem = _displayDefaultFooterItemSettings.DisplayCustomerInfoFooterItem,
+                DisplayCustomerOrdersFooterItem = _displayDefaultFooterItemSettings.DisplayCustomerOrdersFooterItem,
+                DisplayCustomerAddressesFooterItem = _displayDefaultFooterItemSettings.DisplayCustomerAddressesFooterItem,
+                DisplayShoppingCartFooterItem = _displayDefaultFooterItemSettings.DisplayShoppingCartFooterItem,
+                DisplayWishlistFooterItem = _displayDefaultFooterItemSettings.DisplayWishlistFooterItem,
+                DisplayApplyVendorAccountFooterItem = _displayDefaultFooterItemSettings.DisplayApplyVendorAccountFooterItem
             };
 
             return model;

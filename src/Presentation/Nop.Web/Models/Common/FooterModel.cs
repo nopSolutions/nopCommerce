@@ -28,6 +28,22 @@ namespace Nop.Web.Models.Common
 
         public IList<FooterTopicModel> Topics { get; set; }
 
+        public bool DisplaySitemapFooterItem { get; set; }
+        public bool DisplayContactUsFooterItem { get; set; }
+        public bool DisplayProductSearchFooterItem { get; set; }
+        public bool DisplayNewsFooterItem { get; set; }
+        public bool DisplayBlogFooterItem { get; set; }
+        public bool DisplayForumsFooterItem { get; set; }
+        public bool DisplayRecentlyViewedProductsFooterItem { get; set; }
+        public bool DisplayCompareProductsFooterItem { get; set; }
+        public bool DisplayNewProductsFooterItem { get; set; }
+        public bool DisplayCustomerInfoFooterItem { get; set; }
+        public bool DisplayCustomerOrdersFooterItem { get; set; }
+        public bool DisplayCustomerAddressesFooterItem { get; set; }
+        public bool DisplayShoppingCartFooterItem { get; set; }
+        public bool DisplayWishlistFooterItem { get; set; }
+        public bool DisplayApplyVendorAccountFooterItem { get; set; }
+
         #region Nested classes
 
         public class FooterTopicModel : BaseNopEntityModel
@@ -39,7 +55,7 @@ namespace Nop.Web.Models.Common
             public bool IncludeInFooterColumn2 { get; set; }
             public bool IncludeInFooterColumn3 { get; set; }
         }
-
+        
         #endregion
     }
 }
