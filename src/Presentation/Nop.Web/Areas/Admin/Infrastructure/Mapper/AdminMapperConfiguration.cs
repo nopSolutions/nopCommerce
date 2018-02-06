@@ -866,7 +866,8 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.ActiveShippingRateComputationMethodSystemNames, mo => mo.Ignore())
                 .ForMember(dest => dest.ActivePickupPointProviderSystemNames, mo => mo.Ignore())
                 .ForMember(dest => dest.ReturnValidOptionsIfThereAreAny, mo => mo.Ignore())
-                .ForMember(dest => dest.UseCubeRootMethod, mo => mo.Ignore());
+                .ForMember(dest => dest.UseCubeRootMethod, mo => mo.Ignore())
+                .ForMember(dest => dest.ShipSeparatelyOneItemEach, mo => mo.Ignore());
             CreateMap<CatalogSettings, CatalogSettingsModel>()
                 .ForMember(dest => dest.ActiveStoreScopeConfiguration, mo => mo.Ignore())
                 .ForMember(dest => dest.AllowViewUnpublishedProductPage_OverrideForStore, mo => mo.Ignore())

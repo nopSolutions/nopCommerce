@@ -793,3 +793,11 @@ BEGIN
 	VALUES (N'customersettings.countyrequired', N'false', 0)
 END
 GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'shippingsettings.shipseparatelyoneitemeach')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'shippingsettings.shipseparatelyoneitemeach', N'true', 0)
+END
+GO
