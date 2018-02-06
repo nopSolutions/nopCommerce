@@ -224,6 +224,15 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.PriceAdjustment.Hint">
     <Value>The price adjustment applied when choosing this attribute value. For example ''10'' to add 10 dollars. Or 10% if ''Use percentage'' is ticked.</Value>
   </LocaleResource> 
+  <LocaleResource Name="Admin.Configuration.Settings.Order.CheckoutDisabled">
+    <Value>Checkout disabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.CheckoutDisabled.Hint">
+    <Value>Check to disable the checkout process (a read-only mode where ordering is turned off temporarily).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Checkout.Disabled">
+    <Value>Sorry, checkout process is temporary disabled</Value>
+  </LocaleResource>    
 </Language>
 '
 
@@ -493,4 +502,12 @@ GO
 UPDATE [Setting]
 SET [Value] = N'true'
 WHERE [Name] = N'commonsettings.usestoredprocedureforloadingcategories'
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'ordersettings.checkoutdisabled')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'ordersettings.checkoutdisabled', N'false', 0)
+END
 GO

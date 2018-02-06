@@ -1,8 +1,10 @@
 @model ShoppingCartModel
 @using Nop.Core
+@using Nop.Core.Domain.Orders
 @using Nop.Core.Domain.Tax
 @inject IWebHelper webHelper
 @inject IWorkContext workContext
+@inject OrderSettings orderSettings
 <div class="order-summary-content">
     @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OrderSummaryContentBefore })
     @await Html.PartialAsync("_OrderReviewData", Model.OrderReviewData)
@@ -307,9 +309,18 @@
                                         });
                                     });
                                 </script>
-                                <button type="submit" id="checkout" name="checkout" value="checkout" class="button-1 checkout-button">
-                                    @T("Checkout.Button")
-                                </button>
+                                if (orderSettings.CheckoutDisabled)
+                                {
+                                    <div class="checkout-disabled">
+                                        @T("Checkout.Disabled")
+                                    </div>
+                                }
+                                else
+                                {
+                                    <button type="submit" id="checkout" name="checkout" value="checkout" class="button-1 checkout-button">
+                                        @T("Checkout.Button")
+                                    </button>
+                                }
                             }
                         </div>
                         <div class="addon-buttons">

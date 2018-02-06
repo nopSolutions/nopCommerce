@@ -31,6 +31,10 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public bool AnonymousCheckoutAllowed { get; set; }
         public bool AnonymousCheckoutAllowed_OverrideForStore { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.Order.CheckoutDisabled")]
+        public bool CheckoutDisabled { get; set; }
+        public bool CheckoutDisabled_OverrideForStore { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.Order.TermsOfServiceOnShoppingCartPage")]
         public bool TermsOfServiceOnShoppingCartPage { get; set; }
         public bool TermsOfServiceOnShoppingCartPage_OverrideForStore { get; set; }

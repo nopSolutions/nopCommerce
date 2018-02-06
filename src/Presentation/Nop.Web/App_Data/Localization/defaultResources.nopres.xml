@@ -7023,6 +7023,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Order.BlockTitle.PdfInvoice">
     <Value>Pdf invoice</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.CheckoutDisabled">
+    <Value>Checkout disabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.CheckoutDisabled.Hint">
+    <Value>Check to disable the checkout process (a read-only mode where ordering is turned off temporarily).</Value>
+  </LocaleResource>  
   <LocaleResource Name="Admin.Configuration.Settings.Order.CompleteOrderWhenDelivered">
     <Value>Complete order when delivered</Value>
   </LocaleResource>
@@ -13667,6 +13673,9 @@
   </LocaleResource>
   <LocaleResource Name="Checkout.ConfirmYourOrder">
     <Value>Confirm your order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Checkout.Disabled">
+    <Value>Sorry, checkout process is temporary disabled</Value>
   </LocaleResource>
   <LocaleResource Name="Checkout.EnterBillingAddress">
     <Value>Enter billing address</Value>
