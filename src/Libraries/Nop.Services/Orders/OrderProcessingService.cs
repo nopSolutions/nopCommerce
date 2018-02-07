@@ -725,6 +725,9 @@ namespace Nop.Services.Orders
             //tax total
             details.OrderTaxTotal = details.InitialOrder.OrderTax;
 
+            //tax rates
+            details.TaxRates = details.InitialOrder.TaxRates;
+
             //VAT number
             details.VatNumber = details.InitialOrder.VatNumber;
 
