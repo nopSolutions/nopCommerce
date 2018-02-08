@@ -1339,6 +1339,42 @@ namespace Nop.Web.Areas.Admin.Controllers
             _productAttributeService.UpdateProductAttributeMapping(productAttributeMapping);
         }
 
+        protected virtual void GenerateAttributeCombinations(Product product, IList<int> allowedAttributeIds = null)
+        {
+            var allAttributesXml = _productAttributeParser.GenerateAllCombinations(product, true, allowedAttributeIds);
+            foreach (var attributesXml in allAttributesXml)
+            {
+                var existingCombination = _productAttributeParser.FindProductAttributeCombination(product, attributesXml);
+
+                //already exists?
+                if (existingCombination != null)
+                    continue;
+
+                //new one
+                var warnings = new List<string>();
+                warnings.AddRange(_shoppingCartService.GetShoppingCartItemAttributeWarnings(_workContext.CurrentCustomer,
+                    ShoppingCartType.ShoppingCart, product, 1, attributesXml, true));
+                if (warnings.Count != 0)
+                    continue;
+
+                //save combination
+                var combination = new ProductAttributeCombination
+                {
+                    ProductId = product.Id,
+                    AttributesXml = attributesXml,
+                    StockQuantity = 0,
+                    AllowOutOfStockOrders = false,
+                    Sku = null,
+                    ManufacturerPartNumber = null,
+                    Gtin = null,
+                    OverriddenPrice = null,
+                    NotifyAdminForQuantityBelow = 1,
+                    PictureId = 0
+                };
+                _productAttributeService.InsertProductAttributeCombination(combination);
+            }
+        }
+
         #endregion
 
         #region Methods
@@ -4738,6 +4774,65 @@ namespace Nop.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        public virtual IActionResult ProductAttributeCombinationGeneratePopup(int productId)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
+                return AccessDeniedView();
+
+            var product = _productService.GetProductById(productId);
+            if (product == null)
+                //No product found with the specified id
+                return RedirectToAction("List", "Product");
+
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
+                return RedirectToAction("List", "Product");
+
+            var model = new ProductAttributeCombinationModel();
+            PrepareProductAttributeCombinationModel(model, product);
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public virtual IActionResult ProductAttributeCombinationGeneratePopup(IFormCollection form, ProductAttributeCombinationModel model)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
+                return AccessDeniedView();
+
+            var product = _productService.GetProductById(model.ProductId);
+            if (product == null)
+                //No product found with the specified id
+                return RedirectToAction("List", "Product");
+
+            var allowedAttributeIds = form.Keys.Where(key => key.Contains("attribute_value_"))
+                .Select(key => int.TryParse(form[key], out int id) ? id : 0).Where(id => id > 0).ToList();
+
+            var requiredAttributeNames = _productAttributeService.GetProductAttributeMappingsByProductId(product.Id)
+                .Where(pam => pam.IsRequired)
+                .Where(pam => !pam.IsNonCombinable())
+                .Where(pam => !pam.ProductAttributeValues.Any(v => allowedAttributeIds.Any(id => id == v.Id)))
+                .Select(pam => pam.ProductAttribute.Name).ToList();
+            
+            if (requiredAttributeNames.Any())
+            {
+                model = new ProductAttributeCombinationModel();
+                PrepareProductAttributeCombinationModel(model, product);
+                model.ProductAttributes.SelectMany(pa => pa.Values)
+                    .Where(v => allowedAttributeIds.Any(id => id == v.Id))
+                    .ToList().ForEach(v => v.Checked = "checked");
+
+                model.Warnings.Add(string.Format(_localizationService.GetResource("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.SelectRequiredAttributes"), string.Join(", ", requiredAttributeNames)));
+                
+                return View(model);
+            }
+
+            GenerateAttributeCombinations(product, allowedAttributeIds);
+
+            ViewBag.RefreshPage = true;
+            return View(new ProductAttributeCombinationModel());
+        }
+        
         public virtual IActionResult ProductAttributeCombinationEditPopup(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
@@ -4826,38 +4921,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
                 return Content("This is not your product");
 
-            var allAttributesXml = _productAttributeParser.GenerateAllCombinations(product, true);
-            foreach (var attributesXml in allAttributesXml)
-            {
-                var existingCombination = _productAttributeParser.FindProductAttributeCombination(product, attributesXml);
-
-                //already exists?
-                if (existingCombination != null)
-                    continue;
-
-                //new one
-                var warnings = new List<string>();
-                warnings.AddRange(_shoppingCartService.GetShoppingCartItemAttributeWarnings(_workContext.CurrentCustomer,
-                    ShoppingCartType.ShoppingCart, product, 1, attributesXml, true));
-                if (warnings.Count != 0)
-                    continue;
-
-                //save combination
-                var combination = new ProductAttributeCombination
-                {
-                    ProductId = product.Id,
-                    AttributesXml = attributesXml,
-                    StockQuantity = 0,
-                    AllowOutOfStockOrders = false,
-                    Sku = null,
-                    ManufacturerPartNumber = null,
-                    Gtin = null,
-                    OverriddenPrice = null,
-                    NotifyAdminForQuantityBelow = 1,
-                    PictureId = 0
-                };
-                _productAttributeService.InsertProductAttributeCombination(combination);
-            }
+            GenerateAttributeCombinations(product);
             return Json(new { Success = true });
         }
 

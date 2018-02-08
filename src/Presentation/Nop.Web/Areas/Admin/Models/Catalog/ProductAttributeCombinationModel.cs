@@ -78,6 +78,8 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
             public string Name { get; set; }
 
             public bool IsPreSelected { get; set; }
+
+            public string Checked { get; set; }
         }
 
         #endregion
