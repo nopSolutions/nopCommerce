@@ -4063,10 +4063,10 @@ label, label + * {
     padding: 30px 15px;
 	text-align: center;
 }
-.sitemap-page ul {
+.sitemap-page .entity ul {
 	font-size: 0;
 }
-.sitemap-page li {
+.sitemap-page .entity li {
 	display: inline-block;
 	position: relative;
 	margin: 0 8px;
@@ -4074,7 +4074,7 @@ label, label + * {
 	line-height: 50px;
 	font-size: 14px; /*reset zeroing*/
 }
-.sitemap-page li:before {
+.sitemap-page .entity li:before {
 	content: "";
 	position: absolute;
 	top: 23px;
@@ -4083,13 +4083,13 @@ label, label + * {
 	height: 5px;
 	background-color: #ddd;
 }
-.sitemap-page a {
+.sitemap-page .entity a {
 	color: #444;
 }
-.sitemap-page a:hover {
+.sitemap-page .entity a:hover {
 	color: #4ab2f1;
 }
-.sitemap-page a:empty {
+.sitemap-page .entity a:empty {
 	display: none;
 }
 
