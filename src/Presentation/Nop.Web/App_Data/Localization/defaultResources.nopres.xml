@@ -3297,6 +3297,9 @@
   <LocaleResource Name="Admin.Catalog.Products.Import.CategoriesDontExist">
     <Value>Categories with the following names don''t exist: {0}</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Import.CategoriesWithSameNameNotSupported">
+    <Value>Categories with the same name are not supported in the same category level. Check your category list in "Catalog -> Categories" page</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Import.ManufacturersDontExist">
     <Value>Manufacturers with the following names don''t exist: {0}</Value>
   </LocaleResource>  

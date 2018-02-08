@@ -392,6 +392,9 @@ set @resources='
   <LocaleResource Name="Admin.Orders.Shipments.List.County.Hint">
     <Value>Search by a specific county.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Import.CategoriesWithSameNameNotSupported">
+    <Value>Categories with the same name are not supported in the same category level. Check your category list in "Catalog -> Categories" page</Value>
+  </LocaleResource> 
 </Language>
 '
 

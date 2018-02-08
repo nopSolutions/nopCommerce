@@ -1185,9 +1185,19 @@ namespace Nop.Services.ExportImport
                 var allProductsCategoryIds = _categoryService.GetProductCategoryIds(allProductsBySku.Select(p => p.Id).ToArray());
 
                 //performance optimization, load all categories in one SQL request
-                var allCategories = _categoryService
-                    .GetAllCategories(showHidden: true, loadCacheableCopy: false)
-                    .ToDictionary(c => c.GetFormattedBreadCrumb(_categoryService), c => c);
+                Dictionary<string, Category> allCategories;
+                try
+                {
+                    allCategories = _categoryService
+                        .GetAllCategories(showHidden: true, loadCacheableCopy: false)
+                        .ToDictionary(c => c.GetFormattedBreadCrumb(_categoryService), c => c);
+                }
+                catch (ArgumentException)
+                {
+                    //categories with the same name are not supported in the same category level
+                    throw new ArgumentException(_localizationService.GetResource("Admin.Catalog.Products.Import.CategoriesWithSameNameNotSupported"));
+                }
+                
 
                 //performance optimization, load all manufacturers IDs for products in one SQL request
                 var allProductsManufacturerIds = _manufacturerService.GetProductManufacturerIds(allProductsBySku.Select(p => p.Id).ToArray());
