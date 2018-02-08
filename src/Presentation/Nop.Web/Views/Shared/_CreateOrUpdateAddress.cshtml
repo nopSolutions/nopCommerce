@@ -2,7 +2,7 @@
 @if (Model.CountryEnabled && Model.StateProvinceEnabled)
 {
     //we don't move this script to the footer as it's used in Ajax requests where footer is not available
-    <script type="text/javascript">
+    <script>
         $(document).ready(function () {
             $("#@Html.IdFor(model => model.CountryId)").change(function () {
             var selectedItem = $(this).val();

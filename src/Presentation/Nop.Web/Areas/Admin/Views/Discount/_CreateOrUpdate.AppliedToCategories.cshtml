@@ -13,7 +13,7 @@
             <div class="panel-body">
                 <div id="categories-grid"></div>
 
-                <script type="text/javascript">
+                <script>
                     $(document).ready(function() {
                         $("#categories-grid").kendoGrid({
                             dataSource: {
@@ -94,7 +94,7 @@
                     @T("Admin.Promotions.Discounts.AppliedToCategories.AddNew")
                 </button>
                 <input type="submit" id="btnRefreshCategories" style="display: none" />
-                <script type="text/javascript">
+                <script>
                     $(document).ready(function() {
                         $('#btnRefreshCategories').click(function() {
                             //refresh grid

@@ -177,7 +177,7 @@
                                                     <button id="restart-application" type="submit" class="bg-light-blue">
                                                         <span>@T("Admin.Header.RestartApplication")</span>
                                                     </button>
-                                                    <script type="text/javascript">
+                                                    <script>
                                                         $(document).ready(function () {
                                                             $("#restart-application").click(function (e) {
                                                                 showThrobber('@Html.Raw(JavaScriptEncoder.Default.Encode(T("Admin.Header.RestartApplication.Progress").Text))');
@@ -210,7 +210,7 @@
                                 <input type="text" class="form-control admin-search-box typeahead" placeholder="@T("Admin.Menu.Search")">
                             </div>
                         </div>
-                        <script type="text/javascript">
+                        <script>
                             $(document).ready(function () {
                                 Admin.Search.init();
                             });
@@ -246,7 +246,7 @@
                 </div>
             </div>
         </div>
-        <script type="text/javascript">
+        <script>
             var AdminLTEOptions = {
                 boxWidgetOptions: {
                     boxWidgetIcons: {
@@ -259,7 +259,7 @@
         @Html.NopCssFiles(this.Url, ResourceLocation.Footer)
         @Html.NopScripts(this.Url, ResourceLocation.Footer)
         <a id="backTop" class="btn btn-back-top bg-teal"></a>
-        <script type="text/javascript">
+        <script>
             $(document).ready(function () {
                 $('#backTop').backTop();
 

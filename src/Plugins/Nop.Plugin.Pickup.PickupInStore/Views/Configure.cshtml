@@ -11,7 +11,7 @@
         <div class="panel panel-default">
             <div class="panel-body">
                 <div id="pickup-points-grid"></div>
-                <script type="text/javascript">
+                <script>
                     $(document).ready(function() {
                         $("#pickup-points-grid").kendoGrid({
                             dataSource: {
@@ -105,7 +105,7 @@
                 <input type="submit" id="btnAddNewOption" class="btn btn-primary" value="@T("Plugins.Pickup.PickupInStore.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("Create", "PickupInStore",  new { btnId = "btnRefresh", formId = "pickup-instore-form" }))', 800, 800, true); return false;"/>
                 <input type="submit" id="btnRefresh" class="btn btn-default" style="display: none" />
             </div>
-            <script type="text/javascript">
+            <script>
                 $(document).ready(function () {
                     $('#btnRefresh').click(function () {
                         //refresh grid

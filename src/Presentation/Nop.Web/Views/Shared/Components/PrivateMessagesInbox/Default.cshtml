@@ -1,6 +1,6 @@
 ﻿@model PrivateMessageListModel 
 <div class="private-messages-box">
-    <script type="text/javascript" asp-location="Footer">
+    <script asp-location="Footer">
         $(document).ready(function () {
             $('#select-all-inbox').click(function () {
                 $('#pm-inbox-table .rowcheckbox').attr('checked', $(this).is(':checked')).change();

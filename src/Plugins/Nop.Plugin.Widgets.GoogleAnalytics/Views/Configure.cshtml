@@ -8,7 +8,7 @@
 @{
     //default values
     var googleAnalytics_trackingScript = Html.Raw(JavaScriptEncoder.Default.Encode("<!-- Google code for Analytics tracking -->" + "\r\n" +
-        "<script type=\"text/javascript\">" + "\r\n" +
+        "<script>" + "\r\n" +
         "var _gaq = _gaq || [];" + "\r\n" +
         "_gaq.push(['_setAccount', '{GOOGLEID}']);" + "\r\n" +
         "{CustomerID}" +
@@ -43,7 +43,7 @@
                 <input type="button" id="pre-configure-google-analytics" class="btn btn-primary" value="Pre-configure Google Analytics" />
                 <input type="button" id="pre-configure-universal-analytics" class="btn bg-aqua" value="Pre-configure Universal Analytics" />
 
-                <script type="text/javascript">
+                <script>
                     $(document).ready(function () {
 
                         $("#pre-configure-google-analytics").click(preConfigureGoogleAnalytic);

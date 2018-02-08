@@ -5,7 +5,7 @@
 
 @if (ViewBag.RefreshPage == true)
 {
-    <script type="text/javascript">
+    <script>
         try {window.opener.document.forms['@(Context.Request.Query["formId"])'].@(Context.Request.Query["btnId"]).click();}
         catch (e){}
         window.close();
@@ -15,7 +15,7 @@
 <div class="panel-group">
     <div class="panel panel-default panel-popup">
 
-        <script type="text/javascript">
+        <script>
             $(document).ready(function() {
                 $("#@Html.IdFor(model => model.Address.CountryId)").change(function(){
                     var selectedItem = $(this).val();

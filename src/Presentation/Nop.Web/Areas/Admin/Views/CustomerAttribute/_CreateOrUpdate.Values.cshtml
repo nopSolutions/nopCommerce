@@ -9,7 +9,7 @@
             <div class="panel-body">
                 <div id="customerattributevalues-grid"></div>
 
-                <script type="text/javascript">
+                <script>
                     $(document).ready(function () {
                         $("#customerattributevalues-grid").kendoGrid({
                             dataSource: {
@@ -94,7 +94,7 @@
                     @T("Admin.Customers.CustomerAttributes.Values.AddNew")
                 </button>
                 <input type="submit" id="btnRefresh" style="display: none" />
-                <script type="text/javascript">
+                <script>
                     $(document).ready(function () {
                         $('#btnRefresh').click(function () {
                             //refresh grid

@@ -21,7 +21,7 @@
         </div>
     </div>
 
-    <script type="text/javascript">
+    <script>
         $(document).ready(function () {
             $("#@Html.IdFor(model => model.StoreInformationSettings.SitemapEnabled)").click(toggleSitemapSettings);
             $("#@Html.IdFor(model => model.LocalizationSettings.LoadAllLocaleRecordsOnStartup)").click(toggleLoadAllLocaleRecordsOnStartup);
@@ -858,7 +858,7 @@
                             </div>
                         </nop-nested-setting>
                     </div>
-                    <script type="text/javascript">
+                    <script>
                         $(document).ready(function () {
                             $("#@Html.IdFor(model => model.CaptchaSettings.Enabled)").click(toggleReCaptcha);
                             toggleReCaptcha();

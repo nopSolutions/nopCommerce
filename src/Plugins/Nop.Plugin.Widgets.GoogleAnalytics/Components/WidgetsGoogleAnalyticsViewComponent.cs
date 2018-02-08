@@ -50,7 +50,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Components
             return View("~/Plugins/Widgets.GoogleAnalytics/Views/PublicInfo.cshtml", globalScript);
         }
 
-        //<script type="text/javascript"> 
+        //<script> 
 
         //var _gaq = _gaq || []; 
         //_gaq.push(['_setAccount', 'UA-XXXXX-X']); 

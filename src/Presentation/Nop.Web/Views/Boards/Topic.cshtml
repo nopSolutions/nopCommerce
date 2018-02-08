@@ -24,7 +24,7 @@
             @if (Model.IsCustomerAllowedToDeleteTopic)
             {
                 <a href="#" class="delete-topic-button" onclick="return deletetopic(@(Model.Id))">@T("Forum.DeleteTopic").Text</a>
-                <script type="text/javascript" asp-location="Footer">
+                <script asp-location="Footer">
                     function deletetopic(topicId) {
                         if (confirm('@T("Common.AreYouSure")')) {
                             var postData = {
@@ -57,7 +57,7 @@
             @if (Model.IsCustomerAllowedToSubscribe)
             {
                 <a class="watch-topic-button" href="#" id="watch-topic-top">@Model.WatchTopicText</a>
-                <script type="text/javascript" asp-location="Footer">
+                <script asp-location="Footer">
                     $(document).ready(function () {
                         $('#watch-topic-top').click(function () {
                             $.ajax({
@@ -112,7 +112,7 @@
             @if (Model.IsCustomerAllowedToSubscribe)
             {
                 <a class="watch-topic-button" href="#" id="watch-topic-bottom">@Model.WatchTopicText</a>
-                <script type="text/javascript" asp-location="Footer">
+                <script asp-location="Footer">
                     $(document).ready(function() {
                         $('#watch-topic-bottom').click(function() {
                             var postData = {};
@@ -146,7 +146,7 @@
     </div>
     @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BoardsTopicBottom, additionalData = Model })
 </div>
-<script type="text/javascript" asp-location="Footer">
+<script asp-location="Footer">
     function deletepost(postId) {
         if (confirm('@T("Common.AreYouSure")')) {
             var postData = {

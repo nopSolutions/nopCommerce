@@ -6,7 +6,7 @@
     <div class="panel panel-default">
         @if (Model.Id > 0)
         {
-            <script type="text/javascript">
+            <script>
                 $(document).ready(function () {
                     $("#@Html.IdFor(model => model.ConditionModel.EnableCondition)").click(toggleEnableCondition);
                     toggleEnableCondition();
@@ -41,7 +41,7 @@
                             <div class="col-md-9">
                                 <nop-select asp-for="ConditionModel.SelectedAttributeId" asp-items="@(Model.ConditionModel.ConditionAttributes.Select(x => new SelectListItem() {Text = x.Name, Value = x.Id.ToString()}))"/>
                                 
-                                <script type="text/javascript">
+                                <script>
                                     $(document).ready(function() {
                                         $("#@Html.IdFor(model => model.ConditionModel.SelectedAttributeId)")
                                             .change(toggleConditionAttributes);

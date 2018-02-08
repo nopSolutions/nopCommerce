@@ -7,7 +7,7 @@
 @inject WorldpayPaymentSettings worldpayPaymentSettings
 @inject Nop.Core.Domain.Orders.OrderSettings orderSettings
 
-<script type="text/javascript">
+<script>
     $(document).ready(function () {
         $('#@Html.IdFor(model => model.StoredCardId)').change(toggleStoredCard);
         toggleStoredCard();

@@ -10,7 +10,7 @@
     Html.AppendScriptParts("~/lib/tagEditor/jquery.tag-editor.min.js");
     Html.AppendScriptParts("~/lib/tagEditor/jquery.caret.min.js");
 }
-<script type="text/javascript">
+<script>
     @{
         //TODO move to Model
         var blogTags = blogService.GetAllBlogPostTags(0, 0, true);
@@ -130,7 +130,7 @@
                 </div>
                 <div class="col-md-9">
                     <nop-select asp-for="SelectedStoreIds" asp-items="Model.AvailableStores" asp-multiple="true" />
-                    <script type="text/javascript">
+                    <script>
                             $(document).ready(function() {
                                 var storesIdsInput = $('#@Html.IdFor(model => model.SelectedStoreIds)').data("kendoMultiSelect");
                                 storesIdsInput.setOptions({

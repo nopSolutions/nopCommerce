@@ -96,7 +96,7 @@
         }
         @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.MobHeaderMenuAfter })
     </ul>
-    <script type="text/javascript" asp-location="Footer">
+    <script asp-location="Footer">
         $(document).ready(function () {
             $('.menu-toggle').click(function () {
                 $(this).siblings('.top-menu.mobile').slideToggle('slow');

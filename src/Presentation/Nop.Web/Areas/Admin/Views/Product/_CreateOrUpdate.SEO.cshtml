@@ -42,7 +42,7 @@
                         <span asp-validation-for="@Model.Locales[item].SeName"></span>
                     </div>
                 </div>
-                <script type="text/javascript">
+                <script>
                     $(document).ready(function () {
                         $('#@Html.IdFor(model => model.Locales[item].SeName)').on('input propertychange paste', function () {
                             var parameters = {
@@ -96,7 +96,7 @@
                         <span asp-validation-for="SeName"></span>
                     </div>
                 </div>
-                <script type="text/javascript">
+                <script>
                     $(document).ready(function () {
                         $('#@Html.IdFor(model => model.SeName)').on('input propertychange paste', function () {
                             var parameters = {

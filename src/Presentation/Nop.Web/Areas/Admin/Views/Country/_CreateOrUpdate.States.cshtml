@@ -8,7 +8,7 @@
             <div class="panel-body">
                 <div id="states-grid"></div>
 
-                <script type="text/javascript">
+                <script>
                     $(document).ready(function () {
                         $("#states-grid").kendoGrid({
                             dataSource: {
@@ -101,7 +101,7 @@
                         @T("Admin.Configuration.Countries.States.AddNew")
                     </button>
                     <input type="submit" id="btnRefresh" style="display: none" />
-                    <script type="text/javascript">
+                    <script>
                         $(document).ready(function () {
                             $('#btnRefresh').click(function () {
                                 //refresh grid

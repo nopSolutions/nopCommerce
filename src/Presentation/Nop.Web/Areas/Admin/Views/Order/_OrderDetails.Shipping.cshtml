@@ -256,7 +256,7 @@
                     <div class="col-md-9">
                         @if (!Model.IsLoggedInAsVendor)
                         {
-                            <script type="text/javascript">
+                            <script>
                                 $(document).ready(function () {
                                     toggleEditShippingMethod(false);
                                 });
@@ -330,7 +330,7 @@
             <div class="panel-body">
                 <div id="shipments-grid"></div>
 
-                <script type="text/javascript">
+                <script>
                     $(document).ready(function () {
                         $("#shipments-grid").kendoGrid({
                             dataSource: {

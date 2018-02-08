@@ -2,7 +2,7 @@
 @using Nop.Core.Domain.Discounts
 @using Nop.Services
 
-<script type="text/javascript">
+<script>
     $(document).ready(function() {
         $("#@Html.IdFor(model => model.DiscountTypeId)").change(toggleDiscountType);
         $("#@Html.IdFor(model => model.UsePercentage)").click(toggleUsePercentage);

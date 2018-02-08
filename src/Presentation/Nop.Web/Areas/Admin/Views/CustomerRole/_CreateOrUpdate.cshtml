@@ -3,7 +3,7 @@
 <div asp-validation-summary="ModelOnly"></div>
 <input asp-for="Id" type="hidden" />
 
-<script type="text/javascript">
+<script>
     $(document).ready(function() {
         $("#@Html.IdFor(model => model.OverrideTaxDisplayType)").click(toggleTaxDisplayType);
         toggleTaxDisplayType();
@@ -134,7 +134,7 @@
                             </button>
                             <input type="submit" id="btnRefreshPurchasedWithProduct" style="display: none" />
                             
-                            <script type="text/javascript">
+                            <script>
                                 $(document).ready(function () {
                                     $('#purchased-with-product-name-remove').click(function () {
                                         $('#purchased-with-product-name').text('');

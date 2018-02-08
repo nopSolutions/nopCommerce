@@ -2,7 +2,7 @@
 @using Nop.Services
 @model GiftCardModel
 
-<script type="text/javascript">
+<script>
     $(document).ready(function() {
         $("#@Html.IdFor(model => model.GiftCardTypeId)").change(toggleGiftCardType);
         toggleGiftCardType();
@@ -84,7 +84,7 @@
                         <span asp-validation-for="GiftCardCouponCode"></span>
                         <div class="input-group-btn">
                             <button type="button" id="generateCouponCode" class="btn btn-info">@T("Admin.GiftCards.Fields.GiftCardCouponCode.Generate")</button>
-                            <script type="text/javascript">
+                            <script>
                                 $(document).ready(function() {
                                     $('#generateCouponCode').click(function() {
                                         var postData = {};

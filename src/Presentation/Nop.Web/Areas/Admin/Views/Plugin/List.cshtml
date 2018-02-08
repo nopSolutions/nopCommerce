@@ -16,7 +16,7 @@
         </h1>
         <div class="pull-right">
             <button type="submit" name="plugin-reload-grid" class="btn bg-blue">@T("Admin.Configuration.Plugins.ReloadList")</button>
-            <script type="text/javascript">
+            <script>
                 $(document).ready(function() {
                     $("button[name='plugin-reload-grid']").on("click", function (e) {
                         showThrobber('@Html.Raw(JavaScriptEncoder.Default.Encode(T("Admin.Configuration.Plugins.ReloadList.Progress").Text))');
@@ -33,7 +33,7 @@
 
     <div class="content">
         <div class="form-horizontal">
-            <script type="text/javascript">
+            <script>
                 $(document).ready(function () {
                     //install a plugin
                     $("#plugins-grid").on("click", ".install-plugin-link", function (e) {
@@ -108,7 +108,7 @@
                     <div class="panel-body">
                         <div id="plugins-grid"></div>
 
-                        <script type="text/javascript">
+                        <script>
                             $(document).ready(function () {
                                 $("#plugins-grid").kendoGrid({
                                     dataSource: {
@@ -213,7 +213,7 @@
                                     </div>                                    
                             </div>
                         </div>
-                        <script type="text/javascript">
+                        <script>
                             function onDataBound(e) {
                                 $('button[name^="delete-plugin-link-"]')
                                     .attr("data-toggle", "modal")
@@ -235,7 +235,7 @@
 
                     <div>
                         <input type="submit" id="btnRefresh" style="display: none" />
-                        <script type="text/javascript">
+                        <script>
                             $(document).ready(function () {
                                 $('#btnRefresh').click(function () {
                                     //refresh grid
@@ -248,7 +248,7 @@
                             });
                         </script>
 
-                        <script type="text/javascript">
+                        <script>
                             $(document).ready(function () {
                                 //search button
                                 $('#search-plugins').click(function () {

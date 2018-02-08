@@ -85,7 +85,7 @@
                                 </div>
                                 <div class="col-md-8">
                                     <input type="text" class="form-control" id="search-product-name" autocomplete="off" />
-                                    <script type="text/javascript">
+                                    <script>
                                     $(document).ready(function() {
                                         $('#search-product-name').autocomplete({
                                             delay: 500,
@@ -105,7 +105,7 @@
                                     <button type="button" id="search-product-clear" class="btn bg-gray" style="display: none; margin-top: 5px;">@T("Admin.Common.Clear")</button>
                                     <input asp-for="SearchProductId" autocomplete = "off" style = "display:none;" />
 
-                                    <script type="text/javascript">
+                                    <script>
                                     //remove button
                                     $('#search-product-clear').click(function() {
                                         $('#@Html.IdFor(model => model.SearchProductId)').val('0');
@@ -141,7 +141,7 @@
                 <div class="panel-body">
                     <div id="productreviews-grid"></div>
 
-                    <script type="text/javascript">
+                    <script>
                         $(document).ready(function() {
                             $("#productreviews-grid").kendoGrid({
                                 dataSource: {
@@ -246,7 +246,7 @@
                         });
                     </script>
 
-                    <script type="text/javascript">
+                    <script>
                         var selectedIds = [];
 
                         $(document).ready(function() {

@@ -41,7 +41,7 @@
         <div class="panel-body">
             <div id="stock-quantity-history-grid"></div>
 
-            <script type="text/javascript">
+            <script>
                 $(document).ready(function() {
                     $("#stock-quantity-history-grid").kendoGrid({
                         dataSource: {
@@ -109,7 +109,7 @@
                 });
             </script>
 
-            <script type="text/javascript">
+            <script>
                 $(document).ready(function() {
                     $('#search-stock-quantity-history').click(function() {
                         $('#stock-quantity-history-grid').data('kendoGrid').dataSource.page(1);

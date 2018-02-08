@@ -190,7 +190,7 @@
                                     </div>
                                     <div class="col-md-8">
                                         <nop-select asp-for="SearchCustomerRoleIds" asp-items="Model.AvailableCustomerRoles" asp-multiple="true" />
-                                        <script type="text/javascript">
+                                        <script>
                                             $(document).ready(function() {
                                                 var rolesIdsInput =
                                                     $('#@Html.IdFor(model => model.SearchCustomerRoleIds)')
@@ -233,7 +233,7 @@
                     <div class="panel-body">
                         <div id="customers-grid"></div>
 
-                        <script type="text/javascript">
+                        <script>
     $(document).ready(function() {
         $("#customers-grid").kendoGrid({
             dataSource: {
@@ -366,7 +366,7 @@
     });
                         </script>
 
-                        <script type="text/javascript">
+                        <script>
     var selectedIds = [];
 
     $(document).ready(function() {
@@ -467,7 +467,7 @@
 <form asp-controller="Customer" asp-action="ExportXmlSelected" method="post" id="export-xml-selected-form">
     <input type="hidden" id="selectedIds" name="selectedIds" value="" />
 </form>
-<script type="text/javascript">
+<script>
     $(document).ready(function () {
         $('#exportxml-selected').click(function (e) {
             e.preventDefault();
@@ -483,7 +483,7 @@
 <form asp-controller="Customer" asp-action="ExportExcelSelected" method="post" id="export-excel-selected-form">
     <input type="hidden" id="selectedIds" name="selectedIds" value="" />
 </form>
-<script type="text/javascript">
+<script>
     $(document).ready(function () {
         $('#exportexcel-selected').click(function (e) {
             e.preventDefault();

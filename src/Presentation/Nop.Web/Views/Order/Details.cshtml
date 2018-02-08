@@ -15,7 +15,7 @@
 }
 @if (Model.PrintMode)
 {
-    <script type="text/javascript" asp-location="Footer">
+    <script asp-location="Footer">
         $(document).ready(function () {
             window.print();
         });

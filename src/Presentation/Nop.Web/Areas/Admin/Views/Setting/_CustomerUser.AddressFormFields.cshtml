@@ -1,6 +1,6 @@
 @model CustomerUserSettingsModel
 
-<script type="text/javascript">
+<script>
     $(document).ready(function () {
         $("#@Html.IdFor(model => model.AddressSettings.CountryEnabled)").click(toggleAddressCountryFormField);
         $("#@Html.IdFor(model => model.AddressSettings.CompanyEnabled)").click(toggleAddressRequiredFormField);

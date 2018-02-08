@@ -22,7 +22,7 @@
             <div class="description">
                 @T("Account.ForumSubscriptions.Description")
             </div>
-            <script type="text/javascript" asp-location="Footer">
+            <script asp-location="Footer">
                 $(document).ready(function () {
                     $('#selectall').click(function () {
                         $('.subscription-list .rowcheckbox').attr('checked', $(this).is(':checked')).change();
