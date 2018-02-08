@@ -6504,6 +6504,25 @@ namespace Nop.Services.Installation
                 DisplayForumsMenuItem = !installSampleData,
                 DisplayContactUsMenuItem = !installSampleData
             });
+
+            settingService.SaveSetting(new DisplayDefaultFooterItemSettings
+            {
+                DisplaySitemapFooterItem = true,
+                DisplayContactUsFooterItem = true,
+                DisplayProductSearchFooterItem = true,
+                DisplayNewsFooterItem = true,
+                DisplayBlogFooterItem = true,
+                DisplayForumsFooterItem = true,
+                DisplayRecentlyViewedProductsFooterItem = true,
+                DisplayCompareProductsFooterItem = true,
+                DisplayNewProductsFooterItem = true,
+                DisplayCustomerInfoFooterItem = true,
+                DisplayCustomerOrdersFooterItem = true,
+                DisplayCustomerAddressesFooterItem = true,
+                DisplayShoppingCartFooterItem = true,
+                DisplayWishlistFooterItem = true,
+                DisplayApplyVendorAccountFooterItem = true
+            });
         }
 
         protected virtual void InstallCheckoutAttributes()

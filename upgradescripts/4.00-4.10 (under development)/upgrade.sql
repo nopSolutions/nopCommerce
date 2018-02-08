@@ -395,6 +395,99 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Products.Import.CategoriesWithSameNameNotSupported">
     <Value>Categories with the same name are not supported in the same category level. Check your category list in "Catalog -> Categories" page</Value>
   </LocaleResource> 
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayDefaultFooterItemSettingsModel.DisplayApplyVendorAccountFooterItem">
+    <Value>Display "Apply for vendor account"</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayDefaultFooterItemSettingsModel.DisplayApplyVendorAccountFooterItem.Hint">
+    <Value>Check if "Apply for vendor account" menu item should be displayed in the footer. Vendor functionality should be also enabled in this case.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayDefaultFooterItemSettingsModel.DisplayBlogFooterItem">
+    <Value>Display "Blog"</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayDefaultFooterItemSettingsModel.DisplayBlogFooterItem.Hint">
+    <Value>Check if "Blog" menu item should be displayed in the footer. Blog functionality should be also enabled in this case.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayDefaultFooterItemSettingsModel.DisplayCompareProductsFooterItem">
+    <Value>Display "Compare products list"</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayDefaultFooterItemSettingsModel.DisplayCompareProductsFooterItem.Hint">
+    <Value>Check if "Compare products list" menu item should be displayed in the footer. Compare products functionality should be also enabled in this case.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayDefaultFooterItemSettingsModel.DisplayContactUsFooterItem">
+    <Value>Display "Contact us"</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayDefaultFooterItemSettingsModel.DisplayContactUsFooterItem.Hint">
+    <Value>Check if "Contact us" menu item should be displayed in the footer.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayDefaultFooterItemSettingsModel.DisplayCustomerAddressesFooterItem">
+    <Value>Display "Addresses"</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayDefaultFooterItemSettingsModel.DisplayCustomerAddressesFooterItem.Hint">
+    <Value>Check if "Addresses" menu item should be displayed in the footer.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayDefaultFooterItemSettingsModel.DisplayCustomerInfoFooterItem">
+    <Value>Display "My account"</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayDefaultFooterItemSettingsModel.DisplayCustomerInfoFooterItem.Hint">
+    <Value>Check if "My account" menu item should be displayed in the footer.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayDefaultFooterItemSettingsModel.DisplayCustomerOrdersFooterItem">
+    <Value>Display "Orders"</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayDefaultFooterItemSettingsModel.DisplayCustomerOrdersFooterItem.Hint">
+    <Value>Check if "Orders" menu item should be displayed in the footer.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayDefaultFooterItemSettingsModel.DisplayForumsFooterItem">
+    <Value>Display "Forums"</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayDefaultFooterItemSettingsModel.DisplayForumsFooterItem.Hint">
+    <Value>Check if "Forums" menu item should be displayed in the footer.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayDefaultFooterItemSettingsModel.DisplayNewProductsFooterItem">
+    <Value>Display "New products"</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayDefaultFooterItemSettingsModel.DisplayNewProductsFooterItem.Hint">
+    <Value>Check if "New products" menu item should be displayed in the footer.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayDefaultFooterItemSettingsModel.DisplayNewsFooterItem">
+    <Value>Display "News"</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayDefaultFooterItemSettingsModel.DisplayNewsFooterItem.Hint">
+    <Value>Check if "News" menu item should be displayed in the footer.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayDefaultFooterItemSettingsModel.DisplayProductSearchFooterItem">
+    <Value>Display "Search"</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayDefaultFooterItemSettingsModel.DisplayProductSearchFooterItem.Hint">
+    <Value>Check if "Search" menu item should be displayed in the footer.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayDefaultFooterItemSettingsModel.DisplayRecentlyViewedProductsFooterItem">
+    <Value>Display "Recently viewed products"</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayDefaultFooterItemSettingsModel.DisplayRecentlyViewedProductsFooterItem.Hint">
+    <Value>Check if "Recently viewed products" menu item should be displayed in the footer.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayDefaultFooterItemSettingsModel.DisplayShoppingCartFooterItem">
+    <Value>Display "Shopping cart"</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayDefaultFooterItemSettingsModel.DisplayShoppingCartFooterItem.Hint">
+    <Value>Check if "Shopping cart" menu item should be displayed in the footer.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayDefaultFooterItemSettingsModel.DisplaySitemapFooterItem">
+    <Value>Display "Sitemap"</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayDefaultFooterItemSettingsModel.DisplaySitemapFooterItem.Hint">
+    <Value>Check if "Sitemap" menu item should be displayed in the footer.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayDefaultFooterItemSettingsModel.DisplayWishlistFooterItem">
+    <Value>Display "Wishlist"</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayDefaultFooterItemSettingsModel.DisplayWishlistFooterItem.Hint">
+    <Value>Check if "Wishlist" menu item should be displayed in the footer.</Value>
+  </LocaleResource> 
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.BlockTitle.FooterItems">
+    <Value>Footer items</Value>
+  </LocaleResource> 
 </Language>
 '
 
@@ -766,10 +859,98 @@ END
 GO
 
 --new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'displaydefaultfooteritemsettings.DisplayApplyVendorAccountFooterItem')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'displaydefaultfooteritemsettings.DisplayApplyVendorAccountFooterItem', N'true', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'displaydefaultfooteritemsettings.DisplayBlogFooterItem')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'displaydefaultfooteritemsettings.DisplayBlogFooterItem', N'true', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'displaydefaultfooteritemsettings.DisplayCompareProductsFooterItem')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'displaydefaultfooteritemsettings.DisplayCompareProductsFooterItem', N'true', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'displaydefaultfooteritemsettings.DisplayContactUsFooterItem')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'displaydefaultfooteritemsettings.DisplayContactUsFooterItem', N'true', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'displaydefaultfooteritemsettings.DisplayCustomerAddressesFooterItem')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'displaydefaultfooteritemsettings.DisplayCustomerAddressesFooterItem', N'true', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'displaydefaultfooteritemsettings.DisplayCustomerInfoFooterItem')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'displaydefaultfooteritemsettings.DisplayCustomerInfoFooterItem', N'true', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'displaydefaultfooteritemsettings.DisplayCustomerOrdersFooterItem')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'displaydefaultfooteritemsettings.DisplayCustomerOrdersFooterItem', N'true', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'displaydefaultfooteritemsettings.DisplayForumsFooterItem')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'displaydefaultfooteritemsettings.DisplayForumsFooterItem', N'true', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'displaydefaultfooteritemsettings.DisplayNewProductsFooterItem')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'displaydefaultfooteritemsettings.DisplayNewProductsFooterItem', N'true', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'displaydefaultfooteritemsettings.DisplayNewsFooterItem')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'displaydefaultfooteritemsettings.DisplayNewsFooterItem', N'true', 0)
+END
+GO
+
+--new setting
 IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'addresssettings.countyenabled')
 BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId])
 	VALUES (N'addresssettings.countyenabled', N'false', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'displaydefaultfooteritemsettings.DisplayProductSearchFooterItem')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'displaydefaultfooteritemsettings.DisplayProductSearchFooterItem', N'true', 0)
 END
 GO
 
@@ -782,10 +963,26 @@ END
 GO
 
 --new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'displaydefaultfooteritemsettings.DisplayRecentlyViewedProductsFooterItem')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'displaydefaultfooteritemsettings.DisplayRecentlyViewedProductsFooterItem', N'true', 0)
+END
+GO
+
+--new setting
 IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'customersettings.countyenabled')
 BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId])
 	VALUES (N'customersettings.countyenabled', N'false', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'displaydefaultfooteritemsettings.DisplayShoppingCartFooterItem')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'displaydefaultfooteritemsettings.DisplayShoppingCartFooterItem', N'true', 0)
 END
 GO
 
@@ -797,10 +994,26 @@ BEGIN
 END
 GO
 
+--new setting    
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'displaydefaultfooteritemsettings.DisplaySitemapFooterItem')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'displaydefaultfooteritemsettings.DisplaySitemapFooterItem', N'true', 0)
+END
+GO
+
 --new setting
 IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'shippingsettings.shipseparatelyoneitemeach')
 BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId])
 	VALUES (N'shippingsettings.shipseparatelyoneitemeach', N'true', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'displaydefaultfooteritemsettings.DisplayWishlistFooterItem')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'displaydefaultfooteritemsettings.DisplayWishlistFooterItem', N'true', 0)
 END
 GO
