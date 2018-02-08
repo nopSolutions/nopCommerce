@@ -5586,6 +5586,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.RecentlyViewedProductsNumber.Hint">
     <Value>The number of 'Recently viewed products' to display when 'Recently viewed products' option is enabled.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.RemoveRequiredProducts">
+    <Value>Remove required products</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.RemoveRequiredProducts.Hint">
+    <Value>Remove required products from the cart if the main one is removed.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.SearchPageAllowCustomersToSelectPageSize">
     <Value>Search page. Allow customers to select page size</Value>
   </LocaleResource>

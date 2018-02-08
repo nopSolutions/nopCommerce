@@ -119,6 +119,11 @@
                                             data: addAntiForgeryToken
                                         }
                                     },
+                                    requestEnd: function(e) {
+                                        if (e.type == "destroy") {
+                                            this.read();
+                                        }
+                                    },
                                     schema: {
                                         data: "Data",
                                         total: "Total",
