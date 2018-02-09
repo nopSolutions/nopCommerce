@@ -4320,22 +4320,19 @@ namespace Nop.Web.Areas.Admin.Controllers
                     //year statistics
                     var yearAgoDt = nowDt.AddYears(-1).AddMonths(1);
                     var searchYearDateUser = new DateTime(yearAgoDt.Year, yearAgoDt.Month, 1);
-                    if (!timeZone.IsInvalidTime(searchYearDateUser))
+                    for (var i = 0; i <= 12; i++)
                     {
-                        for (var i = 0; i <= 12; i++)
+                        result.Add(new
                         {
-                            result.Add(new
-                            {
-                                date = searchYearDateUser.Date.ToString("Y", culture),
-                                value = _orderService.SearchOrders(
-                                    createdFromUtc: _dateTimeHelper.ConvertToUtcTime(searchYearDateUser, timeZone),
-                                    createdToUtc: _dateTimeHelper.ConvertToUtcTime(searchYearDateUser.AddMonths(1), timeZone),
-                                    pageIndex: 0,
-                                    pageSize: 1, getOnlyTotalCount: true).TotalCount.ToString()
-                            });
+                            date = searchYearDateUser.Date.ToString("Y", culture),
+                            value = _orderService.SearchOrders(
+                                createdFromUtc: _dateTimeHelper.ConvertToUtcTime(searchYearDateUser, timeZone),
+                                createdToUtc: _dateTimeHelper.ConvertToUtcTime(searchYearDateUser.AddMonths(1), timeZone),
+                                pageIndex: 0,
+                                pageSize: 1, getOnlyTotalCount: true).TotalCount.ToString()
+                        });
 
-                            searchYearDateUser = searchYearDateUser.AddMonths(1);
-                        }
+                        searchYearDateUser = searchYearDateUser.AddMonths(1);
                     }
                     break;
 
@@ -4343,22 +4340,19 @@ namespace Nop.Web.Areas.Admin.Controllers
                     //month statistics
                     var monthAgoDt = nowDt.AddDays(-30);
                     var searchMonthDateUser = new DateTime(monthAgoDt.Year, monthAgoDt.Month, monthAgoDt.Day);
-                    if (!timeZone.IsInvalidTime(searchMonthDateUser))
+                    for (var i = 0; i <= 30; i++)
                     {
-                        for (var i = 0; i <= 30; i++)
+                        result.Add(new
                         {
-                            result.Add(new
-                            {
-                                date = searchMonthDateUser.Date.ToString("M", culture),
-                                value = _orderService.SearchOrders(
-                                    createdFromUtc: _dateTimeHelper.ConvertToUtcTime(searchMonthDateUser, timeZone),
-                                    createdToUtc: _dateTimeHelper.ConvertToUtcTime(searchMonthDateUser.AddDays(1), timeZone),
-                                    pageIndex: 0,
-                                    pageSize: 1, getOnlyTotalCount: true).TotalCount.ToString()
-                            });
+                            date = searchMonthDateUser.Date.ToString("M", culture),
+                            value = _orderService.SearchOrders(
+                                createdFromUtc: _dateTimeHelper.ConvertToUtcTime(searchMonthDateUser, timeZone),
+                                createdToUtc: _dateTimeHelper.ConvertToUtcTime(searchMonthDateUser.AddDays(1), timeZone),
+                                pageIndex: 0,
+                                pageSize: 1, getOnlyTotalCount: true).TotalCount.ToString()
+                        });
 
-                            searchMonthDateUser = searchMonthDateUser.AddDays(1);
-                        }
+                        searchMonthDateUser = searchMonthDateUser.AddDays(1);
                     }
                     break;
 
@@ -4367,22 +4361,19 @@ namespace Nop.Web.Areas.Admin.Controllers
                     //week statistics
                     var weekAgoDt = nowDt.AddDays(-7);
                     var searchWeekDateUser = new DateTime(weekAgoDt.Year, weekAgoDt.Month, weekAgoDt.Day);
-                    if (!timeZone.IsInvalidTime(searchWeekDateUser))
+                    for (var i = 0; i <= 7; i++)
                     {
-                        for (var i = 0; i <= 7; i++)
+                        result.Add(new
                         {
-                            result.Add(new
-                            {
-                                date = searchWeekDateUser.Date.ToString("d dddd", culture),
-                                value = _orderService.SearchOrders(
-                                    createdFromUtc: _dateTimeHelper.ConvertToUtcTime(searchWeekDateUser, timeZone),
-                                    createdToUtc: _dateTimeHelper.ConvertToUtcTime(searchWeekDateUser.AddDays(1), timeZone),
-                                    pageIndex: 0,
-                                    pageSize: 1, getOnlyTotalCount: true).TotalCount.ToString()
-                            });
+                            date = searchWeekDateUser.Date.ToString("d dddd", culture),
+                            value = _orderService.SearchOrders(
+                                createdFromUtc: _dateTimeHelper.ConvertToUtcTime(searchWeekDateUser, timeZone),
+                                createdToUtc: _dateTimeHelper.ConvertToUtcTime(searchWeekDateUser.AddDays(1), timeZone),
+                                pageIndex: 0,
+                                pageSize: 1, getOnlyTotalCount: true).TotalCount.ToString()
+                        });
 
-                            searchWeekDateUser = searchWeekDateUser.AddDays(1);
-                        }
+                        searchWeekDateUser = searchWeekDateUser.AddDays(1);
                     }
                     break;
             }
