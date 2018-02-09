@@ -1190,6 +1190,8 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //a vendor should have access only to orders with his products
             model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
+
+            model.BillingPhoneEnabled = _addressSettings.PhoneEnabled;
             
             return View(model);
         }
@@ -1238,6 +1240,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 osIds: orderStatusIds,
                 psIds: paymentStatusIds,
                 ssIds: shippingStatusIds,
+                billingPhone: model.BillingPhone,
                 billingEmail: model.BillingEmail,
                 billingLastName: model.BillingLastName,
                 billingCountryId: model.BillingCountryId,
@@ -1282,6 +1285,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ssIds: shippingStatusIds,
                 startTimeUtc: startDateValue,
                 endTimeUtc: endDateValue,
+                billingPhone: model.BillingPhone,
                 billingEmail: model.BillingEmail,
                 billingLastName: model.BillingLastName,
                 billingCountryId: model.BillingCountryId,
@@ -1297,6 +1301,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ssIds: shippingStatusIds,
                 startTimeUtc: startDateValue, 
                 endTimeUtc: endDateValue,
+                billingPhone: model.BillingPhone,
                 billingEmail: model.BillingEmail,
                 billingLastName: model.BillingLastName,
                 billingCountryId: model.BillingCountryId,
@@ -1408,6 +1413,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 osIds: orderStatusIds,
                 psIds: paymentStatusIds,
                 ssIds: shippingStatusIds,
+                billingPhone: model.BillingPhone,
                 billingEmail: model.BillingEmail,
                 billingLastName: model.BillingLastName,
                 billingCountryId: model.BillingCountryId,
@@ -1492,6 +1498,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 osIds: orderStatusIds,
                 psIds: paymentStatusIds,
                 ssIds: shippingStatusIds,
+                billingPhone: model.BillingPhone,
                 billingEmail: model.BillingEmail,
                 billingLastName: model.BillingLastName,
                 billingCountryId: model.BillingCountryId,
@@ -2028,6 +2035,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 osIds: orderStatusIds,
                 psIds: paymentStatusIds,
                 ssIds: shippingStatusIds,
+                billingPhone: model.BillingPhone,
                 billingEmail: model.BillingEmail,
                 billingLastName: model.BillingLastName,
                 billingCountryId: model.BillingCountryId,

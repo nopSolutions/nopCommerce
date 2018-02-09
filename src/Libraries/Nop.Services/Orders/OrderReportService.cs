@@ -134,6 +134,7 @@ namespace Nop.Services.Orders
         /// <param name="ssIds">Shipping status identifiers</param>
         /// <param name="startTimeUtc">Start date</param>
         /// <param name="endTimeUtc">End date</param>
+        /// <param name="billingPhone">Billing phone. Leave empty to load all records.</param>
         /// <param name="billingEmail">Billing email. Leave empty to load all records.</param>
         /// <param name="billingLastName">Billing last name. Leave empty to load all records.</param>
         /// <param name="orderNotes">Search in order notes. Leave empty to load all records.</param>
@@ -143,7 +144,7 @@ namespace Nop.Services.Orders
             int orderId = 0, string paymentMethodSystemName = null,
             List<int> osIds = null, List<int> psIds = null, List<int> ssIds = null,
             DateTime? startTimeUtc = null, DateTime? endTimeUtc = null,
-            string billingEmail = null, string billingLastName = "", string orderNotes = null)
+            string billingPhone = null, string billingEmail = null, string billingLastName = "", string orderNotes = null)
         {
             var query = _orderRepository.Table;
             query = query.Where(o => !o.Deleted);
@@ -173,6 +174,8 @@ namespace Nop.Services.Orders
                 query = query.Where(o => startTimeUtc.Value <= o.CreatedOnUtc);
             if (endTimeUtc.HasValue)
                 query = query.Where(o => endTimeUtc.Value >= o.CreatedOnUtc);
+            if (!string.IsNullOrEmpty(billingPhone))
+                query = query.Where(o => o.BillingAddress != null && !string.IsNullOrEmpty(o.BillingAddress.PhoneNumber) && o.BillingAddress.PhoneNumber.Contains(billingPhone));
             if (!string.IsNullOrEmpty(billingEmail))
                 query = query.Where(o => o.BillingAddress != null && !string.IsNullOrEmpty(o.BillingAddress.Email) && o.BillingAddress.Email.Contains(billingEmail));
             if (!string.IsNullOrEmpty(billingLastName))
@@ -495,6 +498,7 @@ namespace Nop.Services.Orders
         /// <param name="osIds">Order status identifiers; null to load all records</param>
         /// <param name="psIds">Payment status identifiers; null to load all records</param>
         /// <param name="ssIds">Shipping status identifiers; null to load all records</param>
+        /// <param name="billingPhone">Billing phone. Leave empty to load all records.</param>
         /// <param name="billingEmail">Billing email. Leave empty to load all records.</param>
         /// <param name="billingLastName">Billing last name. Leave empty to load all records.</param>
         /// <param name="orderNotes">Search in order notes. Leave empty to load all records.</param>
@@ -503,15 +507,17 @@ namespace Nop.Services.Orders
             int billingCountryId = 0, int orderId = 0, string paymentMethodSystemName = null,
             List<int> osIds = null, List<int> psIds = null, List<int> ssIds = null,
             DateTime? startTimeUtc = null, DateTime? endTimeUtc = null,
-            string billingEmail = null, string billingLastName = "", string orderNotes = null)
+            string billingPhone = null, string billingEmail = null, string billingLastName = "", string orderNotes = null)
         {
-            //We cannot use string.IsNullOrEmpty() in SQL Compact
+            //we cannot use string.IsNullOrEmpty() in SQL Compact
+            var dontSearchPhone = string.IsNullOrEmpty(billingPhone);
+            //we cannot use string.IsNullOrEmpty() in SQL Compact
             var dontSearchEmail = string.IsNullOrEmpty(billingEmail);
-            //We cannot use string.IsNullOrEmpty() in SQL Compact
+            //we cannot use string.IsNullOrEmpty() in SQL Compact
             var dontSearchLastName = string.IsNullOrEmpty(billingLastName);
-            //We cannot use string.IsNullOrEmpty() in SQL Compact
+            //we cannot use string.IsNullOrEmpty() in SQL Compact
             var dontSearchOrderNotes = string.IsNullOrEmpty(orderNotes);
-            //We cannot use string.IsNullOrEmpty() in SQL Compact
+            //we cannot use string.IsNullOrEmpty() in SQL Compact
             var dontSearchPaymentMethods = string.IsNullOrEmpty(paymentMethodSystemName);
 
             var orders = _orderRepository.Table;
@@ -535,6 +541,7 @@ namespace Nop.Services.Orders
                               (productId == 0 || orderItem.ProductId == productId) &&
                               //we do not ignore deleted products when calculating order reports
                               //(!p.Deleted)
+                              (dontSearchPhone || (o.BillingAddress != null && !string.IsNullOrEmpty(o.BillingAddress.PhoneNumber) && o.BillingAddress.PhoneNumber.Contains(billingPhone))) &&
                               (dontSearchEmail || (o.BillingAddress != null && !string.IsNullOrEmpty(o.BillingAddress.Email) && o.BillingAddress.Email.Contains(billingEmail))) &&
                               (dontSearchLastName || (o.BillingAddress != null && !string.IsNullOrEmpty(o.BillingAddress.LastName) && o.BillingAddress.LastName.Contains(billingLastName))) &&
                               (dontSearchOrderNotes || o.OrderNotes.Any(oNote => oNote.Note.Contains(orderNotes)))
@@ -554,6 +561,7 @@ namespace Nop.Services.Orders
                 ssIds: ssIds,
                 startTimeUtc: startTimeUtc,
                 endTimeUtc: endTimeUtc,
+                billingPhone:billingPhone,
                 billingEmail: billingEmail,
                 billingLastName: billingLastName,
                 orderNotes: orderNotes);
