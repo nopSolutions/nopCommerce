@@ -115,7 +115,7 @@ namespace Nop.Plugin.Payments.Worldpay.Services
             //compose script to create a new tab
             var worldpayCustomerTabElementId = "tab-worldpay";
             var worldpayCustomerTab = new HtmlString($@"
-                <script type='text/javascript'>
+                <script>
                     $(document).ready(function() {{
                         $(`
                             <li>

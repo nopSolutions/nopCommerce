@@ -2,7 +2,7 @@
 @using Nop.Core.Domain.Catalog
 @using Nop.Services
 
-<script type="text/javascript">
+<script>
     $(document).ready(function() {
 
         $("#@Html.IdFor(model => model.IsTaxExempt)").click(toggleTax);
@@ -224,7 +224,7 @@
                     <div class="row">
                         <div class="col-md-4">
                             <nop-select asp-for="SelectedStoreIds" asp-items="Model.AvailableStores" asp-multiple="true"/>
-                            <script type="text/javascript">
+                            <script>
                                 $(document).ready(function() {
                                     var storesIdsInput = $('#@Html.IdFor(model => model.SelectedStoreIds)')
                                         .data("kendoMultiSelect");

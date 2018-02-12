@@ -28,7 +28,7 @@
             @await Component.InvokeAsync("SettingMode")
             <div asp-validation-summary="All"></div>
 
-            <script type="text/javascript">
+            <script>
                 $(document).ready(function () {
                     $("#@Html.IdFor(model => model.AllowPostVoting)").click(toggleAllowVoting);
                     $("#@Html.IdFor(model => model.AllowPrivateMessages)").click(toggleAllowPrivateMessages);

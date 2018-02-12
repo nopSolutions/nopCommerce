@@ -176,7 +176,7 @@
                 </div>
                 <div id="backup-data" style="display: none"></div>
 
-                <script type="text/javascript">
+                <script>
                     function submitBackupAction(fileName, action) {
                         $("#backup-data").children().remove();
                         $("#backup-data").append('<input type="hidden" name="backupFileName" value="' + fileName + '"/>');
@@ -196,7 +196,7 @@
                     });
                 </script>
 
-                <script type="text/javascript">
+                <script>
                     $(document).ready(function () {
                         $("#backup-list").kendoGrid({
                             dataSource: {

@@ -6,7 +6,7 @@
         <div class="panel-body">
             <div id="ordernotes-grid"></div>
 
-            <script type="text/javascript">
+            <script>
                 $(document).ready(function() {
                     $("#ordernotes-grid").kendoGrid({
                         dataSource: {
@@ -98,7 +98,7 @@
     </div>
 
     <div class="panel panel-default">
-        <script type="text/javascript">
+        <script>
             $(document).ready(function () {
                 $("#@Html.IdFor(model => model.AddOrderNoteHasDownload)").change(toggleAddOrderNoteHasDownload);
                 toggleAddOrderNoteHasDownload();
@@ -164,7 +164,7 @@
     @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.OrderDetailsNotesBottom, additionalData = Model })
 </div>
 
-<script type="text/javascript">
+<script>
     $(document).ready(function () {
         $('#addOrderNote').click(function () {
             var orderNoteMessage = $("#@Html.IdFor(model => model.AddOrderNoteMessage)").val();

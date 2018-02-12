@@ -29,7 +29,7 @@
     <div class="panel panel-default">
         <div class="panel-body">
             <div id="currentshoppingcart-grid"></div>
-            <script type="text/javascript">
+            <script>
                 $(document).ready(function () {
                     $("#currentshoppingcart-grid").kendoGrid({
                         dataSource: {
@@ -106,7 +106,7 @@
     @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CustomerDetailsShoppingCartBottom, additionalData = Model })
 </div>
 
-<script type="text/javascript">
+<script>
     function additionalData() {
         var data = {
             ShoppingCartType: $('#@Html.IdFor(model => model.ShoppingCartTypeModel.ShoppingCartType)').val()

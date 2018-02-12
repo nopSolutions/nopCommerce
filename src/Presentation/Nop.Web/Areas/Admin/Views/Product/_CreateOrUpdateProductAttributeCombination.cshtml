@@ -2,14 +2,14 @@
 
 @if (ViewBag.RefreshPage == true)
 {
-    <script type="text/javascript">
+    <script>
         try {window.opener.document.forms['@(Context.Request.Query["formId"])'].@(Context.Request.Query["btnId"]).click();}
         catch (e){}
         window.close();
     </script>
 }
 
-<script type="text/javascript">
+<script>
     $(document).ready(function () {
         $('#@Html.IdFor(model => model.Sku)').on('input propertychange paste', function () {
             warningValidation('@Url.Action("SkuReservedWarning")', '@Html.NameFor(model => model.Sku)', { productId: @Model.ProductId, sku: $(this).val() });

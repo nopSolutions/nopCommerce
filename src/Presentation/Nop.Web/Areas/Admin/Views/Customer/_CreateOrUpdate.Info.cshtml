@@ -2,7 +2,7 @@
 @model CustomerModel
 @if (Model.CountryEnabled && Model.StateProvinceEnabled)
 {
-    <script type="text/javascript">
+    <script>
         $(document).ready(function() {
             $("#@Html.IdFor(model => model.CountryId)").change(function() {
                 var selectedItem = $(this).val();
@@ -85,7 +85,7 @@
                     <div class="col-md-9">
                         <div id="externalauthrecords-grid"></div>
 
-                        <script type="text/javascript">
+                        <script>
 
                             //local datasource
                             var externalauthrecords = [
@@ -166,7 +166,7 @@
                         <nop-required />
                     </div>
                 </div>
-                <script type="text/javascript">
+                <script>
                     $(document).ready(function() {
                         var customerRolesIdsInput = $('#@Html.IdFor(model => model.SelectedCustomerRoleIds)').data("kendoMultiSelect");
                         customerRolesIdsInput.setOptions({

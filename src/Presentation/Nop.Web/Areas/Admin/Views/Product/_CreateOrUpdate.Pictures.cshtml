@@ -8,7 +8,7 @@
             <div class="panel-body">
                 <div id="productpictures-grid"></div>
 
-                <script type="text/javascript">
+                <script>
                     $(document).ready(function() {
                         $("#productpictures-grid").kendoGrid({
                             dataSource: {
@@ -121,7 +121,7 @@
                 @T("Admin.Catalog.Products.Pictures.AddNew")
             </div>
             <div class="panel-body">
-                <script type="text/javascript">
+                <script>
                     $(document).ready(function() {
                         $('#addProductPicture').click(function() {
                             var pictureId = $("#@Html.IdFor(model => model.AddPictureModel.PictureId)").val();

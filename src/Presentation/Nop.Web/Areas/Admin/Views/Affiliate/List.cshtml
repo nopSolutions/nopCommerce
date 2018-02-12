@@ -24,7 +24,7 @@
     </div>
 </div>
 
-<script type="text/javascript">
+<script>
     $(document).ready(function() {
         $("#@Html.IdFor(model => model.LoadOnlyWithOrders)").click(toggleLoadOnlyWithOrders);
         toggleLoadOnlyWithOrders();
@@ -118,7 +118,7 @@
                 <div class="panel-body">
                     <div id="affiliates-grid"></div>
 
-                    <script type="text/javascript">
+                    <script>
                         $(document).ready(function() {
                             $("#affiliates-grid").kendoGrid({
                                 dataSource: {
@@ -185,7 +185,7 @@
                         });
                     </script>
 
-                    <script type="text/javascript">
+                    <script>
                         $(document).ready(function() {
                             $('#search-affiliates').click(function() {
                                 var grid = $('#affiliates-grid').data('kendoGrid');

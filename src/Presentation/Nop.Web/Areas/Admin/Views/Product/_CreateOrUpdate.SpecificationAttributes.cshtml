@@ -16,7 +16,7 @@
                 <div class="panel-body">
                     <div id="specificationattributes-grid"></div>
 
-                    <script type="text/javascript">
+                    <script>
                         $(document).ready(function() {
                             $("#specificationattributes-grid").kendoGrid({
                                 dataSource: {
@@ -174,7 +174,7 @@
                     @T("Admin.Catalog.Products.SpecificationAttributes.AddNew")
                 </div>
                 <div class="panel-body">
-                    <script type="text/javascript">
+                    <script>
                         $(document).ready(function() {
                             $("#@Html.IdFor(model => model.AddSpecificationAttributeModel.SpecificationAttributeId)").change(function() {
                                 var selectedAttributeId = $(this).val();

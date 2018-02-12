@@ -125,7 +125,7 @@
                                         <span id="search-product-friendly-name"></span>
                                         <button type="button" id="search-product-clear" class="btn bg-gray" style="display: none; margin-top: 5px;">@T("Admin.Common.Clear")</button>
                                         <input asp-for="ProductId" autocomplete="off" style="display:none;" />
-                                        <script type="text/javascript">
+                                        <script>
                             $(document).ready(function() {
                                 $('#search-product-name').autocomplete({
                                     delay: 500,
@@ -276,7 +276,7 @@
                     <div class="panel-body">
                         <div id="orders-grid"></div>
 
-                        <script type="text/javascript">
+                        <script>
     $(document).ready(function() {
         $("#orders-grid").kendoGrid({
             dataSource: {
@@ -411,7 +411,7 @@
     });
                         </script>
 
-                        <script type="text/javascript">
+                        <script>
     var selectedIds = [];
     var reportAggregates = "";
 
@@ -529,7 +529,7 @@
     <input type="hidden" id="selectedIds" name="selectedIds" value="" />
 </form>
 
-<script type="text/javascript">
+<script>
     $(document).ready(function () {
         $('#exportxml-selected').click(function (e) {
             e.preventDefault();
@@ -546,7 +546,7 @@
     <input type="hidden" id="selectedIds" name="selectedIds" value="" />
 </form>
 
-<script type="text/javascript">
+<script>
     $(document).ready(function () {
         $('#exportexcel-selected').click(function (e) {
             e.preventDefault();
@@ -563,7 +563,7 @@
     <input type="hidden" id="selectedIds" name="selectedIds" value="" />
 </form>
 
-<script type="text/javascript">
+<script>
     $(document).ready(function () {
         $('#pdf-invoice-selected').click(function (e) {
             e.preventDefault();

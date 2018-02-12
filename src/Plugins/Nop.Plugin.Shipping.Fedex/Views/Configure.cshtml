@@ -6,7 +6,7 @@
 @using Nop.Plugin.Shipping.Fedex;
 
 <form asp-controller="ShippingFedex" asp-action="Configure" method="post">
-    <script type="text/javascript">
+    <script>
         $(document).ready(function () {
             $("#PackingType").change(togglePackingType);
             togglePackingType();

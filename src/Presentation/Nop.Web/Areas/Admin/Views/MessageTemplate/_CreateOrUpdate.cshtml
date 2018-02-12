@@ -36,7 +36,7 @@
                             <input asp-for="Name" type="hidden" />
                         </div>
                     </div>
-                    <script type="text/javascript">
+                    <script>
                         function toggleLoadedAllowedTokens() {
                             $('#pnlAllowedTokens').toggle();
                             if ($('#pnlAllowedTokens').css('display') == 'none') {
@@ -71,7 +71,7 @@
                                 {
                                     <nop-textarea asp-for="@Model.Locales[item].Body"/>
                                     <text>
-                                    <script type="text/javascript">
+                                    <script>
                                           $(document).ready(function() {
                                               $('#@Html.IdFor(model => model.Locales[item].Body)')
                                                   .height($('#@Html.IdFor(model => model.Body)')[0].scrollHeight);
@@ -143,7 +143,7 @@
                                 {
                                     <nop-textarea asp-for="Body" asp-required="true" />
                                     <text>
-                                    <script type="text/javascript">
+                                    <script>
                               $(document).ready(function() {
                                   $('#@Html.IdFor(model => model.Body)')
                                       .height($('#@Html.IdFor(model => model.Body)')[0].scrollHeight);
@@ -251,7 +251,7 @@
                             <div class="row">
                                 <div class="col-md-4">
                                     <nop-select asp-for="SelectedStoreIds" asp-items="Model.AvailableStores" asp-multiple="true" />
-                                    <script type="text/javascript">
+                                    <script>
                                         $(document).ready(function() {
                                             var storesIdsInput = $('#@Html.IdFor(model => model.SelectedStoreIds)')
                                                 .data("kendoMultiSelect");
@@ -284,7 +284,7 @@
             </div>
             @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.MessageTemplateDetailsBottom, additionalData = Model })
         </div>
-        <script type="text/javascript">
+        <script>
     $(document).ready(function() {
         $("#@Html.IdFor(model => model.HasAttachedDownload)").change(toggleHasAttachedDownload);
         $("#@Html.IdFor(model => model.SendImmediately)").click(sendImmediately);

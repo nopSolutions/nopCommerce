@@ -6,7 +6,7 @@
 @using Nop.Plugin.Shipping.UPS;
 
 <form asp-controller="ShippingUPS" asp-action="Configure" method="post">
-    <script type="text/javascript">
+    <script>
         $(document).ready(function () {
             $("#PackingType").change(togglePackingType);
             togglePackingType();

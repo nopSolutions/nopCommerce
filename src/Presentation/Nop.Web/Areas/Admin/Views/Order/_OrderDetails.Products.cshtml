@@ -11,13 +11,13 @@
                 <div class="col-md-12" style="overflow-x: auto;">
                     @foreach (var item in Model.Items)
                     {
-                        <script type="text/javascript">
+                        <script>
                             $(document).ready(function () {
                                 toggleOrderItemEdit@(item.Id)(false);
                             });
                         </script>
 
-                        <script type="text/javascript">
+                        <script>
                             function toggleOrderItemEdit@(item.Id)(editMode) {
                                 if (editMode) {
                                     $('#pnlEditPvUnitPrice@(item.Id)').show();

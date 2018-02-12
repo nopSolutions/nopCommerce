@@ -130,7 +130,7 @@
     </div>
     @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.Footer })
 </div>
-<script type="text/javascript" asp-location="Footer">
+<script asp-location="Footer">
     $(document).ready(function () {
         $('.footer-block .title').click(function () {
             var e = window, a = 'inner';
@@ -145,7 +145,7 @@
         });
     });
 </script>
-<script type="text/javascript" asp-location="Footer">
+<script asp-location="Footer">
     $(document).ready(function () {
         $('.block .title').click(function () {
             var e = window, a = 'inner';

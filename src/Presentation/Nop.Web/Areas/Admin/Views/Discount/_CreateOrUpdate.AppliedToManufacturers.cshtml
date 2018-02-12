@@ -13,7 +13,7 @@
             <div class="panel-body">
                 <div id="manufacturers-grid"></div>
 
-                <script type="text/javascript">
+                <script>
                     $(document).ready(function() {
                         $("#manufacturers-grid").kendoGrid({
                             dataSource: {
@@ -94,7 +94,7 @@
                     @T("Admin.Promotions.Discounts.AppliedToManufacturers.AddNew")
                 </button>
                 <input type="submit" id="btnRefreshManufacturers" style="display: none" />
-                <script type="text/javascript">
+                <script>
                     $(document).ready(function() {
                         $('#btnRefreshManufacturers').click(function() {
                             //refresh grid

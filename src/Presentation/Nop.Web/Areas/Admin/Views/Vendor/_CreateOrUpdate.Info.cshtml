@@ -166,7 +166,7 @@
     @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.VendorDetailsInfoBottom, additionalData = Model })
 </div>
 
-<script type="text/javascript">
+<script>
     $(document).ready(function() {
         $("#@Html.IdFor(model => model.AllowCustomersToSelectPageSize)").click(togglePageSize);
         togglePageSize();

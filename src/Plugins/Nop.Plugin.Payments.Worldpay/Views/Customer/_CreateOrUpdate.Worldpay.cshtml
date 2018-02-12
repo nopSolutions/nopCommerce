@@ -23,7 +23,7 @@
                                     <button type="button" id="WorldpayCustomerCreate" class="btn btn-info">
                                         @T("Plugins.Payments.Worldpay.WorldpayCustomer.Create")
                                     </button>
-                                    <script type="text/javascript">
+                                    <script>
                                         $(document).ready(function () {
                                             $('#WorldpayCustomerCreate').click(function () {
                                                 var worldpayCustomerId = $("#@Html.IdFor(model => model.WorldpayCustomerId)").val();
@@ -67,7 +67,7 @@
             <div class="panel-body">
                 <div id="worldpay-customer-cards-grid"></div>
 
-                <script type="text/javascript">
+                <script>
                     $(document).ready(function () {
                         $("#worldpay-customer-cards-grid").kendoGrid({
                             dataSource: {
