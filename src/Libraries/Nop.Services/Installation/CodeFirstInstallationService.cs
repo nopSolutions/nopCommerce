@@ -6093,7 +6093,8 @@ namespace Nop.Services.Installation
                 ExportImportProductSpecificationAttributes = true,
                 ExportImportUseDropdownlistsForAssociatedEntities = true,
                 ExportImportProductsCountInOneFile = 500,
-                ExportImportSplitProductsFile = false
+                ExportImportSplitProductsFile = false,
+                ExportImportRelatedEntitiesByName = true
             });
 
             settingService.SaveSetting(new LocalizationSettings

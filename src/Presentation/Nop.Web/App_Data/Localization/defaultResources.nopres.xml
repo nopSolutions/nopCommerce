@@ -3295,13 +3295,13 @@
     <Value>Products have been imported successfully.</Value>
   </LocaleResource>  
   <LocaleResource Name="Admin.Catalog.Products.Import.CategoriesDontExist">
-    <Value>Categories with the following names don''t exist: {0}</Value>
+    <Value>Categories with the following names and/or IDs don't exist: {0}</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Import.CategoriesWithSameNameNotSupported">
     <Value>Categories with the same name are not supported in the same category level. Check your category list in "Catalog -> Categories" page</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Import.ManufacturersDontExist">
-    <Value>Manufacturers with the following names don''t exist: {0}</Value>
+    <Value>Manufacturers with the following names and/or IDs don't exist: {0}</Value>
   </LocaleResource>  
   <LocaleResource Name="Admin.Catalog.Products.Import.ProductAttributesDontExist">
     <Value>Product attributes with the following IDs don''t exist: {0}</Value>
@@ -5418,6 +5418,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ExportImportProductCategoryBreadcrumb.Hint">
     <Value>Check if products should be exported/imported with a full category name including names of all its parents.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ExportImportRelatedEntitiesByName">
+    <Value>Export/Import related entities using name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ExportImportRelatedEntitiesByName.Hint">
+    <Value>Check if related entities should be exported/imported using name.</Value>
+  </LocaleResource>    
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ExportImportSplitProductsFile">
     <Value>Export/Import products. Allow splitting file</Value>
   </LocaleResource>

@@ -432,5 +432,10 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets a value of max products count in one file 
         /// </summary>
         public int ExportImportProductsCountInOneFile { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the related entities need to be exported/imported using name
+        /// </summary>
+        public bool ExportImportRelatedEntitiesByName { get; set; }
     }
 }

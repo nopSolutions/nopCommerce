@@ -263,6 +263,10 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public bool ExportImportSplitProductsFile { get; set; }
         public bool ExportImportSplitProductsFile_OverrideForStore { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ExportImportRelatedEntitiesByName")]
+        public bool ExportImportRelatedEntitiesByName { get; set; }
+        public bool ExportImportRelatedEntitiesByName_OverrideForStore { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.IgnoreDiscounts")]
         public bool IgnoreDiscounts { get; set; }
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.IgnoreFeaturedProducts")]

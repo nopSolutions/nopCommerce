@@ -912,8 +912,8 @@
                             <div class="col-md-9">
                                 <nop-editor asp-for="ExportImportProductCategoryBreadcrumb" />
                                 <span asp-validation-for="ExportImportProductCategoryBreadcrumb"></span>
-							</div>
-						</div>
+                            </div>
+                        </div>
                         <div class="form-group">
                             <div class="col-md-3">
                                 <nop-override-store-checkbox asp-for="ExportImportCategoriesUsingCategoryName_OverrideForStore" asp-input="ExportImportCategoriesUsingCategoryName" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
@@ -942,6 +942,16 @@
                             <div class="col-md-9">
                                 <nop-editor asp-for="ExportImportSplitProductsFile" />
                                 <span asp-validation-for="ExportImportSplitProductsFile"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="ExportImportRelatedEntitiesByName_OverrideForStore" asp-input="ExportImportRelatedEntitiesByName" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="ExportImportRelatedEntitiesByName" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="ExportImportRelatedEntitiesByName" />
+                                <span asp-validation-for="ExportImportRelatedEntitiesByName"></span>
                             </div>
                         </div>
                     </div>

@@ -16,10 +16,6 @@ namespace Nop.Services.ExportImport
         public PropertyManager<ExportSpecificationAttribute> SpecificationAttributeManager { get; internal set; }
         public int SkuCellNum { get; internal set; }
         public List<string> AllSku { get; set; }
-        public List<string> AllCategoriesNames { get; internal set; }
-        public List<string> AllManufacturersNames { get; internal set; }
-        public List<int> AllAttributeIds { get; internal set; }
-        public List<int> AllSpecificationAttributeOptionIds { get; internal set; }
         public List<int> ProductsInFile { get; set; }
     }
 }
