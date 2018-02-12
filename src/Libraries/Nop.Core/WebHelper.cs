@@ -526,6 +526,11 @@ namespace Nop.Core
         }
 
         /// <summary>
+        /// Gets current HTTP request protocol
+        /// </summary>
+        public virtual string CurrentRequestProtocol => IsCurrentConnectionSecured() ? Uri.UriSchemeHttps : Uri.UriSchemeHttp;
+
+        /// <summary>
         /// Gets whether the specified HTTP request URI references the local host.
         /// </summary>
         /// <param name="req">HTTP request</param>

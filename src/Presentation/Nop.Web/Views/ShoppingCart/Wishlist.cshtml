@@ -257,9 +257,10 @@
         }
         @if (Model.IsEditable && Model.Items.Count > 0)
         {
+            var wishlistUrl = Url.RouteUrl("Wishlist", new { customerGuid = Model.CustomerGuid }, webHelper.CurrentRequestProtocol);
             <div class="share-info">
                 <span class="share-label">@T("Wishlist.YourWishlistURL"):</span>
-                <a href="@Url.RouteUrl("Wishlist", new { customerGuid = Model.CustomerGuid })" class="share-link">@Url.RouteUrl("Wishlist", new { customerGuid = Model.CustomerGuid }, "http")</a>
+                <a href="@wishlistUrl" class="share-link">@wishlistUrl</a>
             </div>
         }
     </div>

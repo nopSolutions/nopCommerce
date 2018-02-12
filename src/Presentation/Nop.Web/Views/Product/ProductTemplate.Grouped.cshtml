@@ -1,7 +1,7 @@
 ﻿@model ProductDetailsModel
 @using Microsoft.AspNetCore.Http.Extensions
 @using Nop.Core.Domain.Seo
-
+@inject Nop.Core.IWebHelper webHelper
 @inject SeoSettings seoSettings
 @{
     Layout = "_ColumnsOne";
@@ -17,7 +17,7 @@
     //canonical URL
     if (seoSettings.CanonicalUrlsEnabled)
     {
-        var productUrl = Url.RouteUrl("Product", new { SeName = Model.SeName }, this.Url.ActionContext.HttpContext.Request.Scheme);
+        var productUrl = Url.RouteUrl("Product", new { SeName = Model.SeName }, webHelper.CurrentRequestProtocol);
         Html.AddCanonicalUrlParts(productUrl, seoSettings.QueryStringInCanonicalUrlsEnabled);
     }
 
@@ -45,7 +45,7 @@
 }
 <!--product breadcrumb-->
 @section Breadcrumb
-{
+    {
     @await Html.PartialAsync("_ProductBreadcrumb", Model.Breadcrumb)
 }
 @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProductDetailsAfterBreadcrumb, additionalData = Model })
@@ -168,7 +168,7 @@
                                     }
                                 </div>
                             </div>
-                                        }
+                        }
                         @if (Model.AssociatedProducts.Count == 0)
                         {
                             <div class="no-associated-products">

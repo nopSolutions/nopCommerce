@@ -241,7 +241,7 @@ namespace Nop.Web.Controllers
                 pageSize: _catalogSettings.NewProductsNumber);
             foreach (var product in products)
             {
-                var productUrl = Url.RouteUrl("Product", new { SeName = product.GetSeName() }, _webHelper.IsCurrentConnectionSecured() ? "https" : "http");
+                var productUrl = Url.RouteUrl("Product", new { SeName = product.GetSeName() }, _webHelper.CurrentRequestProtocol);
                 var productName = product.GetLocalized(x => x.Name);
                 var productDescription = product.GetLocalized(x => x.ShortDescription);
                 var item = new RssItem(productName, productDescription, new Uri(productUrl), $"urn:store:{_storeContext.CurrentStore.Id}:newProducts:product:{product.Id}", product.CreatedOnUtc);

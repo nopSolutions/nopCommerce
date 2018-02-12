@@ -1,5 +1,6 @@
 ﻿@model TopicModel
 @using Nop.Core.Domain.Seo
+@inject Nop.Core.IWebHelper webHelper
 @inject SeoSettings seoSettings
 @{
     var isPopup = ViewBag.IsPopup;
@@ -19,7 +20,7 @@
 
     if (seoSettings.CanonicalUrlsEnabled)
     {
-        var topicUrl = Url.RouteUrl("Topic", new { SeName = Model.SeName }, this.Url.ActionContext.HttpContext.Request.Scheme);
+        var topicUrl = Url.RouteUrl("Topic", new { SeName = Model.SeName }, webHelper.CurrentRequestProtocol);
         Html.AddCanonicalUrlParts(topicUrl, seoSettings.QueryStringInCanonicalUrlsEnabled);
     }
 

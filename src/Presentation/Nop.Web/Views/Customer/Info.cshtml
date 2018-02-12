@@ -1,5 +1,6 @@
 ﻿@using Nop.Core
 @model CustomerInfoModel
+@inject Nop.Core.IWebHelper webHelper 
 @{
     Layout = "_ColumnsTwo";
 
@@ -428,11 +429,10 @@
                     @if (Model.NumberOfExternalAuthenticationProviders > Model.AssociatedExternalAuthRecords.Count)
                     {
                         //we can add more external records
+                        var loginUrl = Url.RouteUrl("Login", null, webHelper.CurrentRequestProtocol);
                         <div class="form-fields add-more-external-records">
                             @T("Account.AssociatedExternalAuth.AddMoreRecords")
-                            <a href="@Url.RouteUrl("Login", null, "http")">
-                                @Url.RouteUrl("Login", null, "http")
-                            </a>
+                            <a href="@loginUrl">@loginUrl</a>
                         </div>
                     }
                 </div>
