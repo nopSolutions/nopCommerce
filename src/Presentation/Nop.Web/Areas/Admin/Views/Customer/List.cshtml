@@ -402,20 +402,17 @@
         //wire up checkboxes.
         $('#customers-grid').on('change', 'input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]', function(e) {
             var $check = $(this);
+            var checked = jQuery.inArray($check.val(), selectedIds);
             if ($check.is(":checked") == true) {
-                var checked = jQuery.inArray($check.val(), selectedIds);
                 if (checked == -1) {
                     //add id to selectedIds.
                     selectedIds.push($check.val());
                 }
-            } else {
-                var checked = jQuery.inArray($check.val(), selectedIds);
-                if (checked > -1) {
-                    //remove id from selectedIds.
-                    selectedIds = $.grep(selectedIds, function(item, index) {
-                        return item != $check.val();
-                    });
-                }
+            } else if (checked > -1) {
+                //remove id from selectedIds.
+                selectedIds = $.grep(selectedIds, function (item, index) {
+                    return item != $check.val();
+                });
             }
             updateMasterCheckbox();
         });
