@@ -56,6 +56,10 @@ namespace Nop.Web.Areas.Admin.Models.Orders
         [NopResourceDisplayName("Admin.Orders.List.BillingEmail")]
         public string BillingEmail { get; set; }
 
+        [NopResourceDisplayName("Admin.Orders.List.BillingPhone")]
+        public string BillingPhone { get; set; }
+        public bool BillingPhoneEnabled { get; set; }
+
         [NopResourceDisplayName("Admin.Orders.List.BillingLastName")]
         public string BillingLastName { get; set; }
 

@@ -488,6 +488,12 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.BlockTitle.FooterItems">
     <Value>Footer items</Value>
   </LocaleResource> 
+  <LocaleResource Name="Admin.Orders.List.BillingPhone">
+    <Value>Billing phone number</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.List.BillingPhone.Hint">
+    <Value>Filter by customer billing phone number.</Value>
+  </LocaleResource>  
 </Language>
 '
 

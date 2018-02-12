@@ -193,6 +193,17 @@
                                         <nop-select asp-for="VendorId" asp-items="Model.AvailableVendors" />
                                     </div>
                                 </div>
+                                @if (Model.BillingPhoneEnabled)
+                                {
+                                    <div class="form-group">
+                                        <div class="col-md-4">
+                                            <nop-label asp-for="BillingPhone"/>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <nop-editor asp-for="BillingPhone"/>
+                                        </div>
+                                    </div>
+                                }
                                 <div class="form-group">
                                     <div class="col-md-4">
                                         <nop-label asp-for="BillingEmail" />
@@ -419,6 +430,7 @@
 
         $("".concat("#@Html.IdFor(model => model.BillingEmail),",
             "#@Html.IdFor(model => model.BillingLastName),",
+            "#@Html.IdFor(model => model.BillingPhone),",
             "#@Html.IdFor(model => model.OrderNotes)")).keydown(function (event) {
             if (event.keyCode === 13) {
                 $("#search-orders").click();
@@ -471,6 +483,7 @@
             VendorId: $('#@Html.IdFor(model => model.VendorId)').val(),
             WarehouseId: $('#@Html.IdFor(model => model.WarehouseId)').val(),
             BillingEmail: $('#@Html.IdFor(model => model.BillingEmail)').val(),
+            BillingPhone: $('#@Html.IdFor(model => model.BillingPhone)').val(),
             BillingLastName: $('#@Html.IdFor(model => model.BillingLastName)').val(),
             BillingCountryId: $('#@Html.IdFor(model => model.BillingCountryId)').val(),
             PaymentMethodSystemName: $('#@Html.IdFor(model => model.PaymentMethodSystemName)').val(),
