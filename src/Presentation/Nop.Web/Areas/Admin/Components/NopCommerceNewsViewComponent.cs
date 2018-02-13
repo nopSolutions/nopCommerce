@@ -48,7 +48,7 @@ namespace Nop.Web.Areas.Admin.Components
         {
             try
             {
-                var feedUrl = $"http://www.nopCommerce.com/NewsRSS.aspx?Version={NopVersion.CurrentVersion}&Localhost={_webHelper.IsLocalRequest(Request)}&HideAdvertisements={_adminAreaSettings.HideAdvertisementsOnAdminArea}&StoreURL={_webHelper.GetStoreLocation()}"
+                var feedUrl = $"https://www.nopCommerce.com/NewsRSS.aspx?Version={NopVersion.CurrentVersion}&Localhost={_webHelper.IsLocalRequest(Request)}&HideAdvertisements={_adminAreaSettings.HideAdvertisementsOnAdminArea}&StoreURL={_webHelper.GetStoreLocation()}"
                         .ToLowerInvariant();
 
                 var rssData = _cacheManager.Get(ModelCacheEventConsumer.OFFICIAL_NEWS_MODEL_KEY, () =>

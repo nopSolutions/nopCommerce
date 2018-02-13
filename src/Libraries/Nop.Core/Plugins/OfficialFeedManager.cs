@@ -14,7 +14,7 @@ namespace Nop.Core.Plugins
     {
         private static string MakeUrl(string query, params object[] args)
         {
-            var url = "http://www.nopcommerce.com/extensionsxml.aspx?" + query;
+            var url = "https://www.nopcommerce.com/extensionsxml.aspx?" + query;
 
             return string.Format(url, args);
         }
