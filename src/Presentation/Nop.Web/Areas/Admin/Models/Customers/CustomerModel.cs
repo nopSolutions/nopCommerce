@@ -29,7 +29,8 @@ namespace Nop.Web.Areas.Admin.Models.Customers
             this.AvailableVendors = new List<SelectListItem>();
             this.CustomerAttributes = new List<CustomerAttributeModel>();
             this.AvailableNewsletterSubscriptionStores = new List<StoreModel>();
-            this.RewardPointsAvailableStores = new List<SelectListItem>();
+
+            this.AddRewardPoints = new AddRewardPointsModel();
 
             this.ShoppingCartTypeModel = new ShoppingCartTypeModel();
         }
@@ -176,14 +177,7 @@ namespace Nop.Web.Areas.Admin.Models.Customers
 
         //reward points history
         public bool DisplayRewardPointsHistory { get; set; }
-        [NopResourceDisplayName("Admin.Customers.Customers.RewardPoints.Fields.AddRewardPointsValue")]
-        public int AddRewardPointsValue { get; set; }
-        [NopResourceDisplayName("Admin.Customers.Customers.RewardPoints.Fields.AddRewardPointsMessage")]
-        public string AddRewardPointsMessage { get; set; }
-        [NopResourceDisplayName("Admin.Customers.Customers.RewardPoints.Fields.AddRewardPointsStore")]
-        public int AddRewardPointsStoreId { get; set; }
-        [NopResourceDisplayName("Admin.Customers.Customers.RewardPoints.Fields.AddRewardPointsStore")]
-        public IList<SelectListItem> RewardPointsAvailableStores { get; set; }
+        public AddRewardPointsModel AddRewardPoints { get; set; }
 
         //send email model
         public SendEmailModel SendEmail { get; set; }
@@ -218,6 +212,33 @@ namespace Nop.Web.Areas.Admin.Models.Customers
 
             [NopResourceDisplayName("Admin.Customers.Customers.AssociatedExternalAuth.Fields.AuthMethodName")]
             public string AuthMethodName { get; set; }
+        }
+
+        public partial class AddRewardPointsModel : BaseNopModel
+        {
+            public AddRewardPointsModel()
+            {
+                this.AvailableStores = new List<SelectListItem>();
+            }
+
+            public int CustomerId { get; set; }
+
+            [NopResourceDisplayName("Admin.Customers.Customers.RewardPoints.Fields.Points")]
+            public int Points { get; set; }
+
+            [NopResourceDisplayName("Admin.Customers.Customers.RewardPoints.Fields.Message")]
+            public string Message { get; set; }
+
+            [NopResourceDisplayName("Admin.Customers.Customers.RewardPoints.Fields.Store")]
+            public int StoreId { get; set; }
+            public IList<SelectListItem> AvailableStores { get; set; }
+
+            [NopResourceDisplayName("Admin.Customers.Customers.RewardPoints.Fields.ActivatePointsImmediately")]
+            public bool ActivatePointsImmediately { get; set; }
+
+            [NopResourceDisplayName("Admin.Customers.Customers.RewardPoints.Fields.ActivationDelay")]
+            public int ActivationDelay { get; set; }
+            public int ActivationDelayPeriodId { get; set; }
         }
 
         public partial class RewardPointsHistoryModel : BaseNopEntityModel

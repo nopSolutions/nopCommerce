@@ -663,28 +663,17 @@ namespace Nop.Web.Areas.Admin.Controllers
                 });
             }
 
-            //reward points history
-            if (customer != null)
+            //reward points
+            model.DisplayRewardPointsHistory = customer != null ? _rewardPointsSettings.Enabled : false;
+            if (model.DisplayRewardPointsHistory)
             {
-                model.DisplayRewardPointsHistory = _rewardPointsSettings.Enabled;
-                model.AddRewardPointsValue = 0;
-                model.AddRewardPointsMessage = _localizationService.GetResource("Admin.Customers.Customers.SomeComment");
-
-                //stores
+                model.AddRewardPoints.Message = _localizationService.GetResource("Admin.Customers.Customers.SomeComment");
+                model.AddRewardPoints.ActivatePointsImmediately = true;
+                model.AddRewardPoints.StoreId = _storeContext.CurrentStore.Id;
                 foreach (var store in allStores)
-                {
-                    model.RewardPointsAvailableStores.Add(new SelectListItem
-                    {
-                        Text = store.Name,
-                        Value = store.Id.ToString(),
-                        Selected = (store.Id == _storeContext.CurrentStore.Id)
-                    });
-                }
+                    model.AddRewardPoints.AvailableStores.Add(new SelectListItem { Text = store.Name, Value = store.Id.ToString() });
             }
-            else
-            {
-                model.DisplayRewardPointsHistory = false;
-            }
+
             //external authentication records
             if (customer != null)
             {
@@ -776,7 +765,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             return customers.Any(c => c.Active && c.Id != customer.Id);
         }
-        
+
         #endregion
         
         #region Customers
@@ -1689,17 +1678,27 @@ namespace Nop.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
-        public virtual IActionResult RewardPointsHistoryAdd(int customerId, int storeId, int addRewardPointsValue, string addRewardPointsMessage)
+        public virtual IActionResult RewardPointsHistoryAdd(CustomerModel.AddRewardPointsModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
 
-            var customer = _customerService.GetCustomerById(customerId);
+            var customer = _customerService.GetCustomerById(model.CustomerId);
             if (customer == null)
                 return Json(new { Result = false });
 
+            //check whether delay is set
+            DateTime? activatingDate = null;
+            if (!model.ActivatePointsImmediately && model.ActivationDelay > 0)
+            {
+                var delayPeriod = (RewardPointsActivatingDelayPeriod)model.ActivationDelayPeriodId;
+                var delayInHours = delayPeriod.ToHours(model.ActivationDelay);
+                activatingDate = DateTime.UtcNow.AddHours(delayInHours);
+            }
+
+            //add reward points
             _rewardPointService.AddRewardPointsHistoryEntry(customer,
-                addRewardPointsValue, storeId, addRewardPointsMessage);
+                model.Points, model.StoreId, model.Message, activatingDate: activatingDate);
 
             return Json(new { Result = true });
         }

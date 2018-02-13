@@ -1,4 +1,6 @@
 ﻿@model CustomerModel
+@using Nop.Core.Domain.Customers
+@using Nop.Services
 @using Nop.Services.Stores
 @inject AdminAreaSettings adminAreaSettings
 @inject IStoreService storeService
@@ -86,29 +88,55 @@
         <div class="panel-body">
             <div class="form-group">
                 <div class="col-md-3">
-                    <nop-label asp-for="AddRewardPointsValue" />
+                    <nop-label asp-for="@Model.AddRewardPoints.Points" />
                 </div>
                 <div class="col-md-9">
-                    <nop-editor asp-for="AddRewardPointsValue" />
-                    <span asp-validation-for="AddRewardPointsValue"></span>
+                    <nop-editor asp-for="@Model.AddRewardPoints.Points" />
+                    <span asp-validation-for="@Model.AddRewardPoints.Points"></span>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-md-3">
-                    <nop-label asp-for="AddRewardPointsMessage" />
+                    <nop-label asp-for="@Model.AddRewardPoints.Message" />
                 </div>
                 <div class="col-md-9">
-                    <nop-editor asp-for="AddRewardPointsMessage" />
-                    <span asp-validation-for="AddRewardPointsMessage"></span>
+                    <nop-editor asp-for="@Model.AddRewardPoints.Message" />
+                    <span asp-validation-for="@Model.AddRewardPoints.Message"></span>
                 </div>
             </div>
-            <div class="form-group" @(Model.RewardPointsAvailableStores.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
+            <div class="form-group" @(Model.AddRewardPoints.AvailableStores.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
                 <div class="col-md-3">
-                    <nop-label asp-for="AddRewardPointsStoreId" />
+                    <nop-label asp-for="@Model.AddRewardPoints.StoreId" />
                 </div>
                 <div class="col-md-9">
-                    <nop-select asp-for="AddRewardPointsStoreId" asp-items="Model.RewardPointsAvailableStores" />
-                    <span asp-validation-for="AddRewardPointsStoreId"></span>
+                    <nop-select asp-for="@Model.AddRewardPoints.StoreId" asp-items="@Model.AddRewardPoints.AvailableStores" />
+                    <span asp-validation-for="@Model.AddRewardPoints.StoreId"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-label asp-for="@Model.AddRewardPoints.ActivatePointsImmediately" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="@Model.AddRewardPoints.ActivatePointsImmediately" />
+                    <span asp-validation-for="@Model.AddRewardPoints.ActivatePointsImmediately"></span>
+                </div>
+            </div>
+            <div class="form-group" id="pnl-activating-delay">
+                <div class="col-md-3">
+                    <nop-label asp-for="@Model.AddRewardPoints.ActivationDelay" />
+                </div>
+                <div class="col-md-9">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <nop-editor asp-for="@Model.AddRewardPoints.ActivationDelay" />
+                            <span asp-validation-for="@Model.AddRewardPoints.ActivationDelay"></span>
+                        </div>
+                        <div class="col-md-3">
+                            <nop-select asp-for="@Model.AddRewardPoints.ActivationDelayPeriodId" asp-items="@(((RewardPointsActivatingDelayPeriod) Model.AddRewardPoints.ActivationDelayPeriodId).ToSelectList())" style="max-width: 200px;" />
+                            <span asp-validation-for="@Model.AddRewardPoints.ActivationDelayPeriodId"></span>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="form-group">
@@ -119,17 +147,18 @@
         </div>
         <script>
             $(document).ready(function () {
+                $("#@Html.IdFor(model => Model.AddRewardPoints.ActivatePointsImmediately)").click(activatePointsImmediately);
+                activatePointsImmediately();
                 $('#addRewardPoints').click(function () {
-                    var rewardPointsValue = $("#@Html.IdFor(model => model.AddRewardPointsValue)").val();
-                    var rewardPointsMessage = $("#@Html.IdFor(model => model.AddRewardPointsMessage)").val();
-                    var rewardPointsStoreId = $("#@Html.IdFor(model => model.AddRewardPointsStoreId)").val();
                     $('#addRewardPoints').attr('disabled', true);
-
                     var postData = {
-                        addRewardPointsValue: rewardPointsValue,
-                        addRewardPointsMessage: rewardPointsMessage,
-                        storeId: rewardPointsStoreId,
-                        customerId: @Model.Id
+                        Points: $("#@Html.IdFor(model => model.AddRewardPoints.Points)").val(),
+                        Message: $("#@Html.IdFor(model => model.AddRewardPoints.Message)").val(),
+                        StoreId: $("#@Html.IdFor(model => model.AddRewardPoints.StoreId)").val(),
+                        ActivatePointsImmediately: $("#@Html.IdFor(model => model.AddRewardPoints.ActivatePointsImmediately)").is(':checked'),
+                        ActivationDelayPeriodId: $("#@Html.IdFor(model => model.AddRewardPoints.ActivationDelayPeriodId)").val(),
+                        ActivationDelay: $("#@Html.IdFor(model => model.AddRewardPoints.ActivationDelay)").val(),
+                        CustomerId: '@Model.Id'
                     };
                     addAntiForgeryToken(postData);
 
@@ -150,6 +179,13 @@
                     });
                 });
             });
+
+            function activatePointsImmediately() {
+                if ($('#@Html.IdFor(model => Model.AddRewardPoints.ActivatePointsImmediately)').is(':checked'))
+                    $('#pnl-activating-delay').hide();
+                else
+                    $('#pnl-activating-delay').show();
+            }
         </script>
     </div>
     @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CustomerDetailsRewardPointsBottom, additionalData = Model })
