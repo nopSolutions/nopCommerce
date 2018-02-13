@@ -500,6 +500,21 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SitemapPageSize.Hint">
     <Value>A number of items displayed on one sitemap page.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.AttributeCombinations.GenerateSeveral">
+    <Value>Generate several combinations</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.AttributeCombinations.GenerateSeveralTitle">
+    <Value>Choose some attribute values to generate necessary combinations</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Generate">
+    <Value>Generate</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.AttributeCombinations.RequiredAttribute">
+    <Value>* - required attribute</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.AttributeCombinations.SelectRequiredAttributes">
+    <Value>There are required attributes: {0}</Value>
+  </LocaleResource> 
 </Language>
 '
 

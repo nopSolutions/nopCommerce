@@ -149,8 +149,11 @@
         <button type="button" id="btnGenerateAllCombinations" class="btn bg-aqua">
             @T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.GenerateAll")
         </button>
+        <button type="submit" id="btnGenerateSeveralCombination" onclick="javascript:OpenWindow('@(Url.Action("ProductAttributeCombinationGeneratePopup", "Product", new {productId = Model.Id, btnId = "btnRefreshCombinations", formId = "product-form"}))', 800, 700, true); return false;" class="btn bg-aqua">
+            @T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.GenerateSeveral")
+        </button>
         <input type="submit" id="btnRefreshCombinations" style="display: none"/>
-        <script>
+        <script type="text/javascript">
             $(document).ready(function() {
                 $('#btnRefreshCombinations').click(function() {
                     //refresh grid

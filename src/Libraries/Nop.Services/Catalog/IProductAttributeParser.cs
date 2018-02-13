@@ -84,8 +84,9 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="ignoreNonCombinableAttributes">A value indicating whether we should ignore non-combinable attributes</param>
+        /// <param name="allowedAttributeIds">List of allowed attribute identifiers. If null or empty then all attributes would be used.</param>
         /// <returns>Attribute combinations in XML format</returns>
-        IList<string> GenerateAllCombinations(Product product, bool ignoreNonCombinableAttributes = false);
+        IList<string> GenerateAllCombinations(Product product, bool ignoreNonCombinableAttributes = false, IList<int> allowedAttributeIds = null);
 
         #endregion
 

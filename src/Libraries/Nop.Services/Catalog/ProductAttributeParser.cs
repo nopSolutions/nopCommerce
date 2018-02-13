@@ -504,8 +504,9 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="ignoreNonCombinableAttributes">A value indicating whether we should ignore non-combinable attributes</param>
+        /// <param name="allowedAttributeIds">List of allowed attribute identifiers. If null or empty then all attributes would be used.</param>
         /// <returns>Attribute combinations in XML format</returns>
-        public virtual IList<string> GenerateAllCombinations(Product product, bool ignoreNonCombinableAttributes = false)
+        public virtual IList<string> GenerateAllCombinations(Product product, bool ignoreNonCombinableAttributes = false, IList<int> allowedAttributeIds = null)
         {
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
@@ -540,6 +541,11 @@ namespace Nop.Services.Catalog
                         continue;
 
                     var attributeValues = _productAttributeService.GetProductAttributeValues(pam.Id);
+                    if (allowedAttributeIds?.Any() ?? false)
+                    {
+                        attributeValues = attributeValues.Where(attributeValue => allowedAttributeIds.Contains(attributeValue.Id)).ToList();
+                    }
+
                     if (!attributeValues.Any())
                         continue;
 
