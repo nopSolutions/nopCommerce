@@ -1052,3 +1052,9 @@ BEGIN
     VALUES (N'commonsettings.sitemappagesize', N'200', 0)
 END
 GO
+
+--rename setting
+UPDATE [Setting] 
+SET [Name] = N'adminareasettings.useisodateformatinjsonresult' 
+WHERE [Name] = N'adminareasettings.useisodatetimeconverterinjson'
+GO
