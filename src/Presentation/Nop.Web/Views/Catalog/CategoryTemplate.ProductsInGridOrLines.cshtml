@@ -17,7 +17,7 @@
 
     if (seoSettings.CanonicalUrlsEnabled)
     {
-        var categoryUrl = Url.RouteUrl("Category", new { SeName = Model.SeName }, webHelper.CurrentRequestProtocol);
+        var categoryUrl = Url.RouteUrl("Category", new { SeName = Model.SeName }, webHelper.CurrentRequestProtocol).ToLowerInvariant();
         Html.AddCanonicalUrlParts(categoryUrl, seoSettings.QueryStringInCanonicalUrlsEnabled);
     }
 

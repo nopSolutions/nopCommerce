@@ -20,7 +20,7 @@
 
     if (seoSettings.CanonicalUrlsEnabled)
     {
-        var topicUrl = Url.RouteUrl("Topic", new { SeName = Model.SeName }, webHelper.CurrentRequestProtocol);
+        var topicUrl = Url.RouteUrl("Topic", new { SeName = Model.SeName }, webHelper.CurrentRequestProtocol).ToLowerInvariant();
         Html.AddCanonicalUrlParts(topicUrl, seoSettings.QueryStringInCanonicalUrlsEnabled);
     }
 
