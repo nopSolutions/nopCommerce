@@ -1,4 +1,5 @@
-﻿using Nop.Web.Framework.Mvc.ModelBinding;
+﻿using System.ComponentModel.DataAnnotations;
+using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Mvc.Models;
 
 namespace Nop.Web.Areas.Admin.Models.Settings
@@ -22,6 +23,11 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.RewardPoints.PointsForRegistration")]
         public int PointsForRegistration { get; set; }
         public bool PointsForRegistration_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.RewardPoints.RegistrationPointsValidity")]
+        [UIHint("Int32Nullable")]
+        public int? RegistrationPointsValidity { get; set; }
+        public bool RegistrationPointsValidity_OverrideForStore { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.RewardPoints.PointsForPurchases_Amount")]
         public decimal PointsForPurchases_Amount { get; set; }

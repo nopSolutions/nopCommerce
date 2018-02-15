@@ -578,6 +578,15 @@ set @resources='
   <LocaleResource Name="RewardPoints.Message.Expired">
     <Value>Unused reward points from {0} have expired</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.RegistrationPointsValidity">
+    <Value>Registration points validity</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.RegistrationPointsValidity.Hint">
+    <Value>Specify number of days when the points awarded for registration will be valid.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.RegistrationPointsValidity.Postfix">
+    <Value>Days</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -1135,5 +1144,13 @@ IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id = object_id('[RewardPoi
 BEGIN
 	ALTER TABLE [RewardPointsHistory]
 	ADD [ValidPoints] INT NULL
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'rewardpointssettings.registrationpointsvalidity')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'rewardpointssettings.registrationpointsvalidity', N'30', 0)
 END
 GO

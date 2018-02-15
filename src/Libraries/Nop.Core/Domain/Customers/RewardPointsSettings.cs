@@ -28,6 +28,11 @@ namespace Nop.Core.Domain.Customers
         public int PointsForRegistration { get; set; }
 
         /// <summary>
+        /// Gets or sets a number of days when the points awarded for registration will be valid 
+        /// </summary>
+        public int? RegistrationPointsValidity { get; set; }
+
+        /// <summary>
         /// Gets or sets a number of points awarded for purchases (amount in primary store currency)
         /// </summary>
         public decimal PointsForPurchases_Amount { get; set; }
