@@ -1650,26 +1650,25 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedKendoGridJson();
 
-            var customer = _customerService.GetCustomerById(customerId);
-            if (customer == null)
-                throw new ArgumentException("No customer found with the specified id");
+            var customer = _customerService.GetCustomerById(customerId)
+                ?? throw new ArgumentException("No customer found with the specified id");
 
-            var rewardPoints = _rewardPointService.GetRewardPointsHistory(customer.Id, true, true, command.Page - 1, command.PageSize);
+            var rewardPoints = _rewardPointService.GetRewardPointsHistory(customer.Id, null, true, command.Page - 1, command.PageSize);
             var gridModel = new DataSourceResult
             {
-                Data = rewardPoints.Select(rph =>
+                Data = rewardPoints.Select(historyEntry =>
                 {
-                    var store = _storeService.GetStoreById(rph.StoreId);
-                    var activatingDate = _dateTimeHelper.ConvertToUserTime(rph.CreatedOnUtc, DateTimeKind.Utc);
-
+                    var activatingDate = _dateTimeHelper.ConvertToUserTime(historyEntry.CreatedOnUtc, DateTimeKind.Utc);
                     return new CustomerModel.RewardPointsHistoryModel
                     {
-                        StoreName = store != null ? store.Name : "Unknown",
-                        Points = rph.Points,
-                        PointsBalance = rph.PointsBalance.HasValue ? rph.PointsBalance.ToString()
-                            : string.Format(_localizationService.GetResource("Admin.Customers.Customers.RewardPoints.ActivatedLater"), activatingDate),
-                        Message = rph.Message,
-                        CreatedOn = activatingDate
+                        StoreName = _storeService.GetStoreById(historyEntry.StoreId)?.Name ?? "Unknown",
+                        Points = historyEntry.Points,
+                        PointsBalance = historyEntry.PointsBalance.HasValue ? historyEntry.PointsBalance.ToString() : 
+                            string.Format(_localizationService.GetResource("Admin.Customers.Customers.RewardPoints.ActivatedLater"), activatingDate),
+                        Message = historyEntry.Message,
+                        CreatedOn = activatingDate,
+                        EndDate = !historyEntry.EndDateUtc.HasValue ? null : 
+                            (DateTime?)_dateTimeHelper.ConvertToUserTime(historyEntry.EndDateUtc.Value, DateTimeKind.Utc)
                     };
                 }),
                 Total = rewardPoints.TotalCount

@@ -10428,8 +10428,11 @@
   <LocaleResource Name="Admin.Customers.Customers.RewardPoints.Fields.ActivationDelay.Hint">
     <Value>Specify how many days (hours) must elapse before earned points become active.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Customers.Customers.RewardPoints.Fields.Date">
+  <LocaleResource Name="Admin.Customers.Customers.RewardPoints.Fields.CreatedDate">
     <Value>Date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.RewardPoints.Fields.EndDate">
+    <Value>End date</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.RewardPoints.Fields.Message">
     <Value>Message</Value>
@@ -16677,8 +16680,11 @@
   <LocaleResource Name="RewardPoints.CurrentBalance">
     <Value>Your current balance is {0} reward points ({1}).</Value>
   </LocaleResource>
-  <LocaleResource Name="RewardPoints.Fields.Date">
+  <LocaleResource Name="RewardPoints.Fields.CreatedDate">
     <Value>Date</Value>
+  </LocaleResource>
+  <LocaleResource Name="RewardPoints.Fields.EndDate">
+    <Value>End date</Value>
   </LocaleResource>
   <LocaleResource Name="RewardPoints.Fields.Message">
     <Value>Message</Value>
@@ -16697,6 +16703,9 @@
   </LocaleResource>
   <LocaleResource Name="RewardPoints.Message.EarnedForRegistration">
     <Value>Registered as customer</Value>
+  </LocaleResource>
+  <LocaleResource Name="RewardPoints.Message.Expired">
+    <Value>Unused reward points from {0} have expired</Value>
   </LocaleResource>
   <LocaleResource Name="RewardPoints.Message.RedeemedForOrder">
     <Value>Redeemed for order #{0}</Value>

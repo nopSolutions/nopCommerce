@@ -251,7 +251,7 @@ namespace Nop.Services.Orders
             }
 
             //reward points
-            var rewardPointsOfOrder = _rewardPointService.GetRewardPointsHistory(customer.Id, true)
+            var rewardPointsOfOrder = _rewardPointService.GetRewardPointsHistory(customer.Id)
                 .FirstOrDefault(history => history.UsedWithOrder == updatedOrder);
             if (rewardPointsOfOrder != null)
             {

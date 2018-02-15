@@ -70,8 +70,12 @@
                             title: "@T("Admin.Customers.Customers.RewardPoints.Fields.Message")"
                         }, {
                             field: "CreatedOn",
-                            title: "@T("Admin.Promotions.Campaigns.Fields.CreatedOn")",
-                            width: 200,
+                            title: "@T("Admin.Customers.Customers.RewardPoints.Fields.CreatedDate")",
+                            type: "date",
+                            format: "{0:G}"
+                        }, {
+                            field: "EndDate",
+                            title: "@T("Admin.Customers.Customers.RewardPoints.Fields.EndDate")",
                             type: "date",
                             format: "{0:G}"
                         }

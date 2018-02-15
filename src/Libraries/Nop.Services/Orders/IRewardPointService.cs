@@ -14,13 +14,21 @@ namespace Nop.Services.Orders
         /// Load reward point history records
         /// </summary>
         /// <param name="customerId">Customer identifier; 0 to load all records</param>
-        /// <param name="showHidden">A value indicating whether to show hidden records (filter by current store if possible)</param>
+        /// <param name="storeId">Store identifier; pass null to load all records</param>
         /// <param name="showNotActivated">A value indicating whether to show reward points that did not yet activated</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Reward point history records</returns>
-        IPagedList<RewardPointsHistory> GetRewardPointsHistory(int customerId = 0, bool showHidden = false, 
+        IPagedList<RewardPointsHistory> GetRewardPointsHistory(int customerId = 0, int? storeId = null,
             bool showNotActivated = false, int pageIndex = 0, int pageSize = int.MaxValue);
+
+        /// <summary>
+        /// Gets reward points balance
+        /// </summary>
+        /// <param name="customerId">Customer identifier</param>
+        /// <param name="storeId">Store identifier</param>
+        /// <returns>Balance</returns>
+        int GetRewardPointsBalance(int customerId, int storeId);
 
         /// <summary>
         /// Add reward points history record
@@ -32,18 +40,10 @@ namespace Nop.Services.Orders
         /// <param name="usedWithOrder">the order for which points were redeemed as a payment</param>
         /// <param name="usedAmount">Used amount</param>
         /// <param name="activatingDate">Date and time of activating reward points; pass null to immediately activating</param>
+        /// <param name="endDate">Date and time when the reward points will no longer be valid; pass null to add date termless points</param>
         /// <returns>Reward points history entry identifier</returns>
-        int AddRewardPointsHistoryEntry(Customer customer,
-            int points, int storeId, string message = "",
-            Order usedWithOrder = null, decimal usedAmount = 0M, DateTime? activatingDate = null);
-
-        /// <summary>
-        /// Gets reward points balance
-        /// </summary>
-        /// <param name="customerId">Customer identifier</param>
-        /// <param name="storeId">Store identifier; pass </param>
-        /// <returns>Balance</returns>
-        int GetRewardPointsBalance(int customerId, int storeId);
+        int AddRewardPointsHistoryEntry(Customer customer, int points, int storeId, string message = "",
+            Order usedWithOrder = null, decimal usedAmount = 0M, DateTime? activatingDate = null, DateTime? endDate = null);
 
         /// <summary>
         /// Gets a reward point history entry
@@ -53,15 +53,21 @@ namespace Nop.Services.Orders
         RewardPointsHistory GetRewardPointsHistoryEntryById(int rewardPointsHistoryId);
 
         /// <summary>
-        /// Delete the reward point history entry
+        /// Insert the reward point history entry
         /// </summary>
         /// <param name="rewardPointsHistory">Reward point history entry</param>
-        void DeleteRewardPointsHistoryEntry(RewardPointsHistory rewardPointsHistory);
+        void InsertRewardPointsHistoryEntry(RewardPointsHistory rewardPointsHistory);
         
         /// <summary>
         /// Updates the reward point history entry
         /// </summary>
         /// <param name="rewardPointsHistory">Reward point history entry</param>
         void UpdateRewardPointsHistoryEntry(RewardPointsHistory rewardPointsHistory);
+
+        /// <summary>
+        /// Delete the reward point history entry
+        /// </summary>
+        /// <param name="rewardPointsHistory">Reward point history entry</param>
+        void DeleteRewardPointsHistoryEntry(RewardPointsHistory rewardPointsHistory);
     }
 }

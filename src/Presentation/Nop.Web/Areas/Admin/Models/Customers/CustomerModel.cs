@@ -243,20 +243,17 @@ namespace Nop.Web.Areas.Admin.Models.Customers
 
         public partial class RewardPointsHistoryModel : BaseNopEntityModel
         {
-            [NopResourceDisplayName("Admin.Customers.Customers.RewardPoints.Fields.Store")]
             public string StoreName { get; set; }
 
-            [NopResourceDisplayName("Admin.Customers.Customers.RewardPoints.Fields.Points")]
             public int Points { get; set; }
 
-            [NopResourceDisplayName("Admin.Customers.Customers.RewardPoints.Fields.PointsBalance")]
             public string PointsBalance { get; set; }
 
-            [NopResourceDisplayName("Admin.Customers.Customers.RewardPoints.Fields.Message")]
             public string Message { get; set; }
 
-            [NopResourceDisplayName("Admin.Customers.Customers.RewardPoints.Fields.Date")]
             public DateTime CreatedOn { get; set; }
+
+            public DateTime? EndDate { get; set; }
         }
 
         public partial class SendEmailModel : BaseNopModel
