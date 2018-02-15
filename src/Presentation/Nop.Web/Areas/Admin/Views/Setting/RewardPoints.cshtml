@@ -97,6 +97,16 @@
                         </div>
                         <div class="form-group advanced-setting">
                             <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="PurchasesPointsValidity_OverrideForStore" asp-input="PurchasesPointsValidity" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="PurchasesPointsValidity" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="PurchasesPointsValidity" asp-postfix="@T("Admin.Configuration.Settings.RewardPoints.PurchasesPointsValidity.Postfix")" />
+                                <span asp-validation-for="PurchasesPointsValidity"></span>
+                            </div>
+                        </div>
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
                                 <nop-override-store-checkbox asp-for="PointsForRegistration_OverrideForStore" asp-input="PointsForRegistration" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
                                 <nop-label asp-for="PointsForRegistration" />
                             </div>

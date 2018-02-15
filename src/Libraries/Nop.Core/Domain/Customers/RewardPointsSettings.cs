@@ -43,6 +43,11 @@ namespace Nop.Core.Domain.Customers
         public int PointsForPurchases_Points { get; set; }
 
         /// <summary>
+        /// Gets or sets a number of days when the points awarded for purchases will be valid 
+        /// </summary>
+        public int? PurchasesPointsValidity { get; set; }
+
+        /// <summary>
         /// Gets or sets a delay before activation points
         /// </summary>
         public int ActivationDelay { get; set; }

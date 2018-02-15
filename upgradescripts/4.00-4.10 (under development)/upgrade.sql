@@ -587,6 +587,15 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.RegistrationPointsValidity.Postfix">
     <Value>Days</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.PurchasesPointsValidity">
+    <Value>Purchases points validity</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.PurchasesPointsValidity.Hint">
+    <Value>Specify number of days when the points awarded for purchases will be valid.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.PurchasesPointsValidity.Postfix">
+    <Value>Days</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -1152,5 +1161,13 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'rewardpointssettings.reg
 BEGIN
     INSERT [Setting] ([Name], [Value], [StoreId])
     VALUES (N'rewardpointssettings.registrationpointsvalidity', N'30', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'rewardpointssettings.purchasespointsvalidity')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'rewardpointssettings.purchasespointsvalidity', N'45', 0)
 END
 GO

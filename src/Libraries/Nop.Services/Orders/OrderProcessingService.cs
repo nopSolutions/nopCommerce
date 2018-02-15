@@ -897,9 +897,15 @@ namespace Nop.Services.Orders
                 activatingDate = DateTime.UtcNow.AddHours(delayInHours);
             }
 
+            //whether points validity is set
+            DateTime? endDate = null;
+            if (_rewardPointsSettings.PurchasesPointsValidity > 0)
+                endDate = (activatingDate ?? DateTime.UtcNow).AddDays(_rewardPointsSettings.PurchasesPointsValidity.Value);
+
             //add reward points
             order.RewardPointsHistoryEntryId = _rewardPointService.AddRewardPointsHistoryEntry(order.Customer, points, order.StoreId,
-                string.Format(_localizationService.GetResource("RewardPoints.Message.EarnedForOrder"), order.CustomOrderNumber), activatingDate: activatingDate);
+                string.Format(_localizationService.GetResource("RewardPoints.Message.EarnedForOrder"), order.CustomOrderNumber), 
+                activatingDate: activatingDate, endDate: endDate);
 
             _orderService.UpdateOrder(order);
         }

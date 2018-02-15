@@ -7770,6 +7770,15 @@
   <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.PointsForRegistration.Hint">
     <Value>Specify number of points awarded for registration.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.PurchasesPointsValidity">
+    <Value>Purchases points validity</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.PurchasesPointsValidity.Hint">
+    <Value>Specify number of days when the points awarded for purchases will be valid.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.PurchasesPointsValidity.Postfix">
+    <Value>Days</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.RegistrationPointsValidity">
     <Value>Registration points validity</Value>
   </LocaleResource>
