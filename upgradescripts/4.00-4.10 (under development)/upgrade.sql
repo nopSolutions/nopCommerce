@@ -605,6 +605,12 @@ set @resources='
   <LocaleResource Name="Admin.Customers.Customers.RewardPoints.Fields.PointsValidity.Postfix">
     <Value>Days</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.MinOrderTotalToAwardPoints">
+    <Value>Minimum order total</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.MinOrderTotalToAwardPoints.Hint">
+    <Value>Specify the minimum order total (exclude shipping cost) to award points for purchases.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -1178,5 +1184,13 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'rewardpointssettings.pur
 BEGIN
     INSERT [Setting] ([Name], [Value], [StoreId])
     VALUES (N'rewardpointssettings.purchasespointsvalidity', N'45', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'rewardpointssettings.minordertotaltoawardpoints')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'rewardpointssettings.minordertotaltoawardpoints', N'0', 0)
 END
 GO

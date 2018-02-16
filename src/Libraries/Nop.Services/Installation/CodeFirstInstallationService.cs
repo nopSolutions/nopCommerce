@@ -6235,6 +6235,7 @@ namespace Nop.Services.Installation
                 RegistrationPointsValidity = 30,
                 PointsForPurchases_Amount = 10,
                 PointsForPurchases_Points = 1,
+                MinOrderTotalToAwardPoints = 0,
                 PurchasesPointsValidity = 45,
                 ActivationDelay = 0,
                 ActivationDelayPeriodId = 0,

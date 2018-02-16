@@ -48,6 +48,11 @@ namespace Nop.Core.Domain.Customers
         public int? PurchasesPointsValidity { get; set; }
 
         /// <summary>
+        /// Gets or sets the minimum order total (exclude shipping cost) to award points for purchases
+        /// </summary>
+        public decimal MinOrderTotalToAwardPoints { get; set; }
+
+        /// <summary>
         /// Gets or sets a delay before activation points
         /// </summary>
         public int ActivationDelay { get; set; }

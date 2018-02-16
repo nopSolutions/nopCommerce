@@ -7764,6 +7764,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.ActivationDelay.Hint">
     <Value>Specify how many days (hours) must elapse before earned points become active. Points earned by purchase cannot be redeemed until activated. For example, you may set the days before the points become available to 7. In this case, the points earned will be available for spending only 7 days after the purchase.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.MinOrderTotalToAwardPoints">
+    <Value>Minimum order total</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.MinOrderTotalToAwardPoints.Hint">
+    <Value>Specify the minimum order total (exclude shipping cost) to award points for purchases.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.PointsForRegistration">
     <Value>Points for registration</Value>
   </LocaleResource>

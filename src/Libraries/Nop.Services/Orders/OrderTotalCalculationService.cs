@@ -1418,7 +1418,13 @@ namespace Nop.Services.Orders
             //do you give reward points for order total? or do you exclude shipping?
             //since shipping costs vary some of store owners don't give reward points based on shipping total
             //you can put your custom logic here
-            return orderTotal - orderShippingInclTax;
+            var totalForRewardPoints = orderTotal - orderShippingInclTax;
+
+            //check the minimum total to award points
+            if (totalForRewardPoints < _rewardPointsSettings.MinOrderTotalToAwardPoints)
+                return decimal.Zero;
+
+            return totalForRewardPoints;
         }
 
         /// <summary>

@@ -34,6 +34,10 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public int PointsForPurchases_Points { get; set; }
         public bool PointsForPurchases_OverrideForStore { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.RewardPoints.MinOrderTotalToAwardPoints")]
+        public decimal MinOrderTotalToAwardPoints { get; set; }
+        public bool MinOrderTotalToAwardPoints_OverrideForStore { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.RewardPoints.PurchasesPointsValidity")]
         [UIHint("Int32Nullable")]
         public int? PurchasesPointsValidity { get; set; }
