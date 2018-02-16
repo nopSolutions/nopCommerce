@@ -263,7 +263,8 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.Locales, mo => mo.Ignore())
                 .ForMember(dest => dest.SeName, mo => mo.MapFrom(src => src.GetSeName(0, true, false)))
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore())
-                .ForMember(dest => dest.Form, mo => mo.Ignore());
+                .ForMember(dest => dest.Form, mo => mo.Ignore())
+                .ForMember(dest => dest.VendorAttributes, mo => mo.Ignore());
             CreateMap<VendorModel, Vendor>()
                 .ForMember(dest => dest.VendorNotes, mo => mo.Ignore())
                 .ForMember(dest => dest.Deleted, mo => mo.Ignore());
