@@ -239,6 +239,10 @@ namespace Nop.Web.Areas.Admin.Models.Customers
             [NopResourceDisplayName("Admin.Customers.Customers.RewardPoints.Fields.ActivationDelay")]
             public int ActivationDelay { get; set; }
             public int ActivationDelayPeriodId { get; set; }
+
+            [NopResourceDisplayName("Admin.Customers.Customers.RewardPoints.Fields.PointsValidity")]
+            [UIHint("Int32Nullable")]
+            public int? PointsValidity { get; set; }
         }
 
         public partial class RewardPointsHistoryModel : BaseNopEntityModel

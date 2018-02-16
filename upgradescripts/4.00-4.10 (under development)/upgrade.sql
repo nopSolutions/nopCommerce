@@ -596,6 +596,15 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.PurchasesPointsValidity.Postfix">
     <Value>Days</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.RewardPoints.Fields.PointsValidity">
+    <Value>Points validity</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.RewardPoints.Fields.PointsValidity.Hint">
+    <Value>Specify number of days when the awarded points will be valid (only for positive amount of points).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.RewardPoints.Fields.PointsValidity.Postfix">
+    <Value>Days</Value>
+  </LocaleResource>
 </Language>
 '
 

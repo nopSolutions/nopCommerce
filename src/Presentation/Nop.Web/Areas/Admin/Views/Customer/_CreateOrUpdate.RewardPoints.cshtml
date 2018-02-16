@@ -101,6 +101,15 @@
             </div>
             <div class="form-group">
                 <div class="col-md-3">
+                    <nop-label asp-for="@Model.AddRewardPoints.PointsValidity" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="@Model.AddRewardPoints.PointsValidity" asp-postfix="@T("Admin.Customers.Customers.RewardPoints.Fields.PointsValidity.Postfix")" />
+                    <span asp-validation-for="@Model.AddRewardPoints.PointsValidity"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
                     <nop-label asp-for="@Model.AddRewardPoints.Message" />
                 </div>
                 <div class="col-md-9">
@@ -162,6 +171,7 @@
                         ActivatePointsImmediately: $("#@Html.IdFor(model => model.AddRewardPoints.ActivatePointsImmediately)").is(':checked'),
                         ActivationDelayPeriodId: $("#@Html.IdFor(model => model.AddRewardPoints.ActivationDelayPeriodId)").val(),
                         ActivationDelay: $("#@Html.IdFor(model => model.AddRewardPoints.ActivationDelay)").val(),
+                        PointsValidity: $("#@Html.IdFor(model => model.AddRewardPoints.PointsValidity)").val(),
                         CustomerId: '@Model.Id'
                     };
                     addAntiForgeryToken(postData);

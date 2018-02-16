@@ -1695,9 +1695,14 @@ namespace Nop.Web.Areas.Admin.Controllers
                 activatingDate = DateTime.UtcNow.AddHours(delayInHours);
             }
 
+            //whether points validity is set
+            DateTime? endDate = null;
+            if (model.PointsValidity > 0)
+                endDate = (activatingDate ?? DateTime.UtcNow).AddDays(model.PointsValidity.Value);
+            
             //add reward points
-            _rewardPointService.AddRewardPointsHistoryEntry(customer,
-                model.Points, model.StoreId, model.Message, activatingDate: activatingDate);
+            _rewardPointService.AddRewardPointsHistoryEntry(customer, model.Points, model.StoreId, model.Message, 
+                activatingDate: activatingDate, endDate: endDate);
 
             return Json(new { Result = true });
         }
