@@ -235,9 +235,17 @@ namespace Nop.Web.Framework.TagHelpers.Shared
             
             if (bool.TryParse(WrapTags, out bool wrapTags) && wrapTags)
             {
-                var wrapDaysList = "<span class=\"days-list select-wrapper\">" + daysList + "</span>";
-                var wrapMonthsList = "<span class=\"months-list select-wrapper\">" + monthsList + "</span>";
-                var wrapYearsList = "<span class=\"years-list select-wrapper\">" + yearsList + "</span>";
+                var wrapDaysList = new TagBuilder("span");
+                wrapDaysList.AddCssClass("days-list select-wrapper");
+                wrapDaysList.InnerHtml.AppendHtml(daysList);
+
+                var wrapMonthsList = new TagBuilder("span");
+                wrapMonthsList.AddCssClass("months-list select-wrapper");
+                wrapMonthsList.InnerHtml.AppendHtml(monthsList);
+
+                var wrapYearsList = new TagBuilder("span");
+                wrapYearsList.AddCssClass("years-list select-wrapper");
+                wrapYearsList.InnerHtml.AppendHtml(yearsList);
 
                 output.Content.AppendHtml(wrapDaysList);
                 output.Content.AppendHtml(wrapMonthsList);
