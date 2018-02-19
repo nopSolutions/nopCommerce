@@ -6718,7 +6718,7 @@
     <Value>Force SSL for all site pages</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.ForceSslForAllPages.Hint">
-    <Value>By default not all site pages are SSL protected. Check to force SSL for the entire site. This setting is useful only when you have SSL enabled on your store details pages.</Value>
+    <Value>By default not all site pages are SSL protected. Check to force SSL for the entire site. This setting is highly recommended when you have SSL enabled on your store.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.FullTextSettings.CurrenlyDisabled">
     <Value>Full-Text is disabled</Value>

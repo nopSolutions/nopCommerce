@@ -554,6 +554,9 @@ set @resources='
   <LocaleResource Name="Admin.Customers.Customers.RewardPoints.Fields.Store.Hint">
     <Value>Choose a store. It''s useful only when you have "Points accumulated for all stores" setting disabled.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.ForceSslForAllPages.Hint">
+    <Value>By default not all site pages are SSL protected. Check to force SSL for the entire site. This setting is highly recommended when you have SSL enabled on your store.</Value>
+  </LocaleResource>
 </Language>
 '
 

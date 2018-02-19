@@ -13,6 +13,7 @@ using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Configuration;
 using Nop.Core.Data;
+using Nop.Core.Domain.Security;
 using Nop.Core.Infrastructure;
 using Nop.Core.Plugins;
 using Nop.Services.Authentication;
@@ -50,7 +51,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             var engine = EngineContext.Create();
             engine.Initialize(services);
             var serviceProvider = engine.ConfigureServices(services, configuration);
-            
+
             if (DataSettingsHelper.DatabaseIsInstalled())
             {
                 //implement schedule tasks
@@ -111,6 +112,10 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             services.AddAntiforgery(options =>
             {
                 options.Cookie.Name = ".Nop.Antiforgery";
+
+                //whether to allow the use of anti-forgery cookies from SSL protected page on the other store pages which are not
+                options.Cookie.SecurePolicy = EngineContext.Current.Resolve<SecuritySettings>().ForceSslForAllPages
+                    ? CookieSecurePolicy.SameAsRequest : CookieSecurePolicy.None;
             });
         }
 
@@ -124,6 +129,10 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             {
                 options.Cookie.Name = ".Nop.Session";
                 options.Cookie.HttpOnly = true;
+
+                //whether to allow the use of session values from SSL protected page on the other store pages which are not
+                options.Cookie.SecurePolicy = EngineContext.Current.Resolve<SecuritySettings>().ForceSslForAllPages
+                    ? CookieSecurePolicy.SameAsRequest : CookieSecurePolicy.None;
             });
         }
 
@@ -191,16 +200,24 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 options.Cookie.HttpOnly = true;
                 options.LoginPath = NopCookieAuthenticationDefaults.LoginPath;
                 options.AccessDeniedPath = NopCookieAuthenticationDefaults.AccessDeniedPath;
+
+                //whether to allow the use of authentication cookies from SSL protected page on the other store pages which are not
+                options.Cookie.SecurePolicy = EngineContext.Current.Resolve<SecuritySettings>().ForceSslForAllPages
+                    ? CookieSecurePolicy.SameAsRequest : CookieSecurePolicy.None;
             });
 
             //add external authentication
             authenticationBuilder.AddCookie(NopCookieAuthenticationDefaults.ExternalAuthenticationScheme, options =>
-             {
-                 options.Cookie.Name = NopCookieAuthenticationDefaults.CookiePrefix + NopCookieAuthenticationDefaults.ExternalAuthenticationScheme;
-                 options.Cookie.HttpOnly = true;
-                 options.LoginPath = NopCookieAuthenticationDefaults.LoginPath;
-                 options.AccessDeniedPath = NopCookieAuthenticationDefaults.AccessDeniedPath;
-             });
+            {
+                options.Cookie.Name = NopCookieAuthenticationDefaults.CookiePrefix + NopCookieAuthenticationDefaults.ExternalAuthenticationScheme;
+                options.Cookie.HttpOnly = true;
+                options.LoginPath = NopCookieAuthenticationDefaults.LoginPath;
+                options.AccessDeniedPath = NopCookieAuthenticationDefaults.AccessDeniedPath;
+
+                //whether to allow the use of authentication cookies from SSL protected page on the other store pages which are not
+                options.Cookie.SecurePolicy = EngineContext.Current.Resolve<SecuritySettings>().ForceSslForAllPages
+                    ? CookieSecurePolicy.SameAsRequest : CookieSecurePolicy.None;
+            });
 
             //register and configure external authentication plugins now
             var typeFinder = new WebAppTypeFinder();
