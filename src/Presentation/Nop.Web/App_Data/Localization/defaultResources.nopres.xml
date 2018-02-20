@@ -9489,6 +9489,12 @@
   <LocaleResource Name="Admin.ContentManagement.Polls.Fields.Language.Hint">
     <Value>The language of this poll. A customer will only see the polls for their selected language.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Polls.Fields.LimitedToStores">
+    <Value>Limited to stores</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Polls.Fields.LimitedToStores.Hint">
+    <Value>Option to limit this poll to a certain store. If you have multiple stores, choose one or several from the list. If you don't use this option just leave this field empty.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Polls.Fields.Name">
     <Value>Name</Value>
   </LocaleResource>
@@ -9524,6 +9530,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Polls.Info">
     <Value>Poll Info</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Polls.List.SearchStore">
+    <Value>Store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Polls.List.SearchStore.Hint">
+    <Value>Search by a specific store.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Polls.Updated">
     <Value>The poll has been updated successfully.</Value>

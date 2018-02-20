@@ -620,6 +620,18 @@ set @resources='
   <LocaleResource Name="Checkout.Disabled">
     <Value>Sorry, checkout process is temporary disabled</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Polls.Fields.LimitedToStores">
+    <Value>Limited to stores</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Polls.Fields.LimitedToStores.Hint">
+    <Value>Option to limit this poll to a certain store. If you have multiple stores, choose one or several from the list. If you don''t use this option just leave this field empty.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Polls.List.SearchStore">
+    <Value>Store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Polls.List.SearchStore.Hint">
+    <Value>Search by a specific store.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -1210,4 +1222,20 @@ BEGIN
     INSERT [Setting] ([Name], [Value], [StoreId])
     VALUES (N'ordersettings.checkoutdisabled', N'false', 0)
 END
+GO
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id = object_id('[Poll]') and NAME = 'LimitedToStores')
+BEGIN
+	ALTER TABLE [Poll]
+	ADD [LimitedToStores] BIT NULL
+END
+GO
+
+UPDATE [Poll]
+SET [LimitedToStores] = 0
+WHERE [LimitedToStores] IS NULL
+GO
+
+ALTER TABLE [Poll] ALTER COLUMN [LimitedToStores] BIT NOT NULL
 GO

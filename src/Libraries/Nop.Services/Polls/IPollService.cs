@@ -18,15 +18,17 @@ namespace Nop.Services.Polls
         /// <summary>
         /// Gets polls
         /// </summary>
-        /// <param name="languageId">Language identifier. 0 if you want to get all polls</param>
+        /// <param name="storeId">The store identifier; pass 0 to load all records</param>
+        /// <param name="languageId">Language identifier; pass 0 to load all records</param>
+        /// <param name="showHidden">Whether to show hidden records (not published, not started and expired)</param>
         /// <param name="loadShownOnHomePageOnly">Retrieve only shown on home page polls</param>
-        /// <param name="systemKeyword">The poll system keyword. Pass null if you want to get all polls</param>
+        /// <param name="systemKeyword">The poll system keyword; pass null to load all records</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
-        /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Polls</returns>
-        IPagedList<Poll> GetPolls(int languageId = 0, bool loadShownOnHomePageOnly = false,
-            string systemKeyword = null, int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false);
+        IPagedList<Poll> GetPolls(int storeId, int languageId = 0, bool
+            showHidden = false, bool loadShownOnHomePageOnly = false, string systemKeyword = null,
+            int pageIndex = 0, int pageSize = int.MaxValue);
 
         /// <summary>
         /// Deletes a poll
