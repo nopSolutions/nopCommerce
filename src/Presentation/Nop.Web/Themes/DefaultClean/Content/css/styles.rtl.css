@@ -2854,6 +2854,9 @@ label, label + * {
 .date-of-birth select + select {
 	margin: 0 10px 0 0;
 }
+.date-of-birth .select-wrapper + .select-wrapper {
+	margin: 0 10px 0 0;
+}
 #check-availability-button {
 	margin: 10px 0 0;
 	border: none;
