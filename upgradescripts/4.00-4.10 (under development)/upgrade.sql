@@ -637,7 +637,13 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.RemoveRequiredProducts.Hint">
     <Value>Remove required products from the cart if the main one is removed.</Value>
-  </LocaleResource> 
+  </LocaleResource>  
+  <LocaleResource Name="ShoppingCart.RequiredProductWarning">
+    <Value>This product requires the following product is added to the cart in the quantity of {1}: {0}</Value>
+  </LocaleResource>  
+  <LocaleResource Name="ShoppingCart.RequiredProductUpdateWarning">
+    <Value>This product is required in the quantity of {0}</Value>
+  </LocaleResource>
 </Language>
 '
 

@@ -730,7 +730,7 @@ namespace Nop.Web.Controllers
             var addToCartWarnings = _shoppingCartService
                 .GetShoppingCartItemWarnings(_workContext.CurrentCustomer, cartType,
                 product, _storeContext.CurrentStore.Id, string.Empty, 
-                decimal.Zero, null, null, quantityToValidate, false, true, false, false, false);
+                decimal.Zero, null, null, quantityToValidate, false, shoppingCartItem?.Id ?? 0, true, false, false, false);
             if (addToCartWarnings.Any())
             {
                 //cannot be added to the cart
@@ -1294,35 +1294,37 @@ namespace Nop.Web.Controllers
                 .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
 
-            var allIdsToRemove = form.ContainsKey("removefromcart") ?
-                form["removefromcart"].ToString().Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(x => int.Parse(x)).ToList() :
-                new List<int>();
+            //get identifiers of items to remove
+            var itemIdsToRemove = form["removefromcart"]
+                .SelectMany(value => value.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                .Select(idString => int.TryParse(idString, out int id) ? id : 0)
+                .Distinct().ToList();
 
-            //current warnings <cart item identifier, warnings>
-            var innerWarnings = new Dictionary<int, IList<string>>();
-            foreach (var sci in cart)
+            //get order items with changed quantity
+            var itemsWithNewQuantity = cart.Select(item => new
             {
-                var remove = allIdsToRemove.Contains(sci.Id);
-                if (remove)
-                    _shoppingCartService.DeleteShoppingCartItem(sci, ensureOnlyActiveCheckoutAttributes: true);
-                else
-                {
-                    foreach (var formKey in form.Keys)
-                        if (formKey.Equals($"itemquantity{sci.Id}", StringComparison.InvariantCultureIgnoreCase))
-                        {
-                            int newQuantity;
-                            if (int.TryParse(form[formKey], out newQuantity))
-                            {
-                                var currSciWarnings = _shoppingCartService.UpdateShoppingCartItem(_workContext.CurrentCustomer,
-                                    sci.Id, sci.AttributesXml, sci.CustomerEnteredPrice,
-                                    sci.RentalStartDateUtc, sci.RentalEndDateUtc,
-                                    newQuantity, true);
-                                innerWarnings.Add(sci.Id, currSciWarnings);
-                            }
-                            break;
-                        }
-                }
-            }
+                //try to get a new quantity for the item, set 0 for items to remove
+                NewQuantity = itemIdsToRemove.Contains(item.Id) ? 0 : int.TryParse(form[$"itemquantity{item.Id}"], out int quantity) ? quantity : item.Quantity,
+                Item = item
+            }).Where(item => item.NewQuantity != item.Item.Quantity);
+
+            //order cart items
+            //first should be items with a reduced quantity and that require other products; or items with an increased quantity and are required for other products
+            var orderedCart = itemsWithNewQuantity
+                .OrderByDescending(cartItem =>
+                    (cartItem.NewQuantity < cartItem.Item.Quantity && (cartItem.Item.Product?.RequireOtherProducts ?? false)) ||
+                    (cartItem.NewQuantity > cartItem.Item.Quantity && 
+                        cart.Any(item => item.Product != null && item.Product.RequireOtherProducts && item.Product.ParseRequiredProductIds().Contains(cartItem.Item.ProductId))))
+                .ToList();
+
+            //try to update cart items with new quantities and get warnings
+            var warnings = orderedCart.Select(cartItem => new
+            {
+                ItemId = cartItem.Item.Id,
+                Warnings = _shoppingCartService.UpdateShoppingCartItem(_workContext.CurrentCustomer,
+                    cartItem.Item.Id, cartItem.Item.AttributesXml, cartItem.Item.CustomerEnteredPrice,
+                    cartItem.Item.RentalStartDateUtc, cartItem.Item.RentalEndDateUtc, cartItem.NewQuantity, true)
+            }).ToList();
             
             //parse and save checkout attributes
             ParseAndSaveCheckoutAttributes(cart, form);
@@ -1332,21 +1334,20 @@ namespace Nop.Web.Controllers
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
                 .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
+
+            //prepare model
             var model = new ShoppingCartModel();
             model = _shoppingCartModelFactory.PrepareShoppingCartModel(model, cart);
+
             //update current warnings
-            foreach (var kvp in innerWarnings)
+            foreach (var warningItem in warnings.Where(warningItem => warningItem.Warnings.Any()))
             {
-                //kvp = <cart item identifier, warnings>
-                var sciId = kvp.Key;
-                var warnings = kvp.Value;
-                //find model
-                var sciModel = model.Items.FirstOrDefault(x => x.Id == sciId);
-                if (sciModel != null)
-                    foreach (var w in warnings)
-                        if (!sciModel.Warnings.Contains(w))
-                            sciModel.Warnings.Add(w);
+                //find shopping cart item model to display appropriate warnings
+                var itemModel = model.Items.FirstOrDefault(item => item.Id == warningItem.ItemId);
+                if (itemModel != null)
+                    itemModel.Warnings = warningItem.Warnings.Concat(itemModel.Warnings).Distinct().ToList();
             }
+
             return View(model);
         }
 

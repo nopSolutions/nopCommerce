@@ -148,7 +148,7 @@
                                             <ul>
                                                 @foreach (var warning in item.Warnings)
                                                 {
-                                                    <li>@warning</li>
+                                                    <li>@Html.Raw(warning)</li>
                                                 }
                                             </ul>
                                         </div>

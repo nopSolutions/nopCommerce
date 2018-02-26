@@ -456,7 +456,8 @@ namespace Nop.Web.Factories
                 sci.RentalStartDateUtc,
                 sci.RentalEndDateUtc,
                 sci.Quantity,
-                false);
+                false,
+                sci.Id);
             foreach (var warning in itemWarnings)
                 cartItemModel.Warnings.Add(warning);
 
@@ -589,7 +590,8 @@ namespace Nop.Web.Factories
                 sci.RentalStartDateUtc,
                 sci.RentalEndDateUtc,
                 sci.Quantity,
-                false);
+                false,
+                sci.Id);
             foreach (var warning in itemWarnings)
                 cartItemModel.Warnings.Add(warning);
 
