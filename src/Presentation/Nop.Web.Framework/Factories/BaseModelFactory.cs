@@ -1,0 +1,60 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Nop.Services.Localization;
+using Nop.Web.Framework.Localization;
+
+namespace Nop.Web.Framework.Factories
+{
+    public abstract partial class BaseModelFactory : ILocalizedModelFactory
+    {
+        #region Fields
+
+        private readonly ILanguageService _languageService;
+
+        #endregion
+
+        #region Ctor
+
+        public BaseModelFactory(ILanguageService languageService)
+        {
+            this._languageService = languageService;
+        }
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Prepare localized model for localizable entities
+        /// </summary>
+        /// <typeparam name="T">Localized model type</typeparam>
+        /// <param name="configure">Model configuration action</param>
+        /// <returns>List of localized model</returns>
+        public virtual IList<T> PrepareLocalizedModels<T>(Action<T, int> configure = null) where T : ILocalizedModelLocal
+        {
+            //get all available languages
+            var availableLanguages = _languageService.GetAllLanguages(showHidden: true);
+
+            //prepare models
+            var localizedModels = availableLanguages.Select(language =>
+            {
+                //create localized model
+                var localizedModel = Activator.CreateInstance<T>();
+
+                //set language
+                localizedModel.LanguageId = language.Id;
+
+                //invoke the model configuration action
+                if (configure != null)
+                    configure.Invoke(localizedModel, localizedModel.LanguageId);
+
+                return localizedModel;
+            }).ToList();
+
+            return localizedModels;
+        }
+
+        #endregion
+    }
+}
