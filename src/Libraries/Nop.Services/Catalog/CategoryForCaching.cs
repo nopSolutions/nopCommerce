@@ -54,7 +54,7 @@ namespace Nop.Services.Catalog
             UpdatedOnUtc = c.UpdatedOnUtc;
         }
 
-        public override ICollection<Discount> AppliedDiscounts
+        public override ICollection<Discount_AppliedToCategories> AppliedDiscounts
         {
             get { throw new Exception("Entity for caching doesn't support navigation properties"); }
             protected set { throw new Exception("Entity for caching doesn't support navigation properties"); }

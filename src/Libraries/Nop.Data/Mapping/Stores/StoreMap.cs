@@ -16,7 +16,6 @@ namespace Nop.Data.Mapping.Stores
             builder.HasKey(s => s.Id);
             builder.Property(s => s.Name).IsRequired().HasMaxLength(400);
             builder.Property(s => s.Url).IsRequired().HasMaxLength(400);
-            builder.Property(s => s.SecureUrl).HasMaxLength(400);
             builder.Property(s => s.Hosts).HasMaxLength(1000);
 
             builder.Property(s => s.CompanyName).HasMaxLength(1000);

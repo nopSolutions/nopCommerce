@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Vendors;
 
 namespace Nop.Data.Mapping.Vendors
@@ -7,15 +9,16 @@ namespace Nop.Data.Mapping.Vendors
     /// </summary>
     public partial class VendorAttributeValueMap : NopEntityTypeConfiguration<VendorAttributeValue>
     {
-        public VendorAttributeValueMap()
+        public override void Configure(EntityTypeBuilder<VendorAttributeValue> builder)
         {
-            this.ToTable("VendorAttributeValue");
-            this.HasKey(vendorAttributeValue => vendorAttributeValue.Id);
-            this.Property(vendorAttributeValue => vendorAttributeValue.Name).IsRequired().HasMaxLength(400);
-
-            this.HasRequired(vendorAttributeValue => vendorAttributeValue.VendorAttribute)
+            base.Configure(builder);
+            builder.ToTable("VendorAttributeValue");
+            builder.HasKey(vendorAttributeValue => vendorAttributeValue.Id);
+            builder.Property(vendorAttributeValue => vendorAttributeValue.Name).IsRequired().HasMaxLength(400);
+            builder.HasOne(vendorAttributeValue => vendorAttributeValue.VendorAttribute)
                 .WithMany(vendorAttribute => vendorAttribute.VendorAttributeValues)
-                .HasForeignKey(vendorAttributeValue => vendorAttributeValue.VendorAttributeId);
+                .HasForeignKey(vendorAttributeValue => vendorAttributeValue.VendorAttributeId)
+                .IsRequired();
         }
     }
 }
