@@ -635,6 +635,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 model.ShippingAddress.CountryEnabled = _addressSettings.CountryEnabled;
                 model.ShippingAddress.CountryRequired = _addressSettings.CountryEnabled; //country is required when enabled
                 model.ShippingAddress.StateProvinceEnabled = _addressSettings.StateProvinceEnabled;
+                model.ShippingAddress.CountyEnabled = _addressSettings.CountyEnabled;
+                model.ShippingAddress.CountyRequired = _addressSettings.CountyRequired;
                 model.ShippingAddress.CityEnabled = _addressSettings.CityEnabled;
                 model.ShippingAddress.CityRequired = _addressSettings.CityRequired;
                 model.ShippingAddress.StreetAddressEnabled = _addressSettings.StreetAddressEnabled;
@@ -679,6 +681,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             model.BillingAddress.CountryEnabled = _addressSettings.CountryEnabled;
             model.BillingAddress.CountryRequired = _addressSettings.CountryEnabled; //country is required when enabled
             model.BillingAddress.StateProvinceEnabled = _addressSettings.StateProvinceEnabled;
+            model.BillingAddress.CountyEnabled = _addressSettings.CountyEnabled;
+            model.BillingAddress.CountyRequired = _addressSettings.CountyRequired;
             model.BillingAddress.CityEnabled = _addressSettings.CityEnabled;
             model.BillingAddress.CityRequired = _addressSettings.CityRequired;
             model.BillingAddress.StreetAddressEnabled = _addressSettings.StreetAddressEnabled;
@@ -921,7 +925,21 @@ namespace Nop.Web.Areas.Admin.Controllers
                     {
                         //price adjustment
                         var priceAdjustment = _taxService.GetProductPrice(product,
-                            _priceCalculationService.GetProductAttributeValuePriceAdjustment(attributeValue), out taxRate);
+                            _priceCalculationService.GetProductAttributeValuePriceAdjustment(attributeValue, order.Customer), out taxRate);
+
+                        var priceAdjustmentStr = string.Empty;
+                        if (priceAdjustment != 0)
+                        {
+                            if (attributeValue.PriceAdjustmentUsePercentage)
+                            {
+                                priceAdjustmentStr = attributeValue.PriceAdjustment.ToString("G29");
+                                priceAdjustmentStr = priceAdjustment > 0 ? $"+{priceAdjustmentStr}%" : $"{priceAdjustmentStr}%";
+                            }
+                            else
+                            {
+                                priceAdjustmentStr = priceAdjustment > 0 ? $"+{_priceFormatter.FormatPrice(priceAdjustment, false, false)}" : $"-{_priceFormatter.FormatPrice(-priceAdjustment, false, false)}";
+                            }
+                        }
 
                         attributeModel.Values.Add(new OrderModel.AddOrderProductModel.ProductAttributeValueModel
                         {
@@ -930,9 +948,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                             IsPreSelected = attributeValue.IsPreSelected,
                             CustomerEntersQty = attributeValue.CustomerEntersQty,
                             Quantity = attributeValue.Quantity,
-                            PriceAdjustment = priceAdjustment == decimal.Zero ? string.Empty : priceAdjustment > decimal.Zero
-                                ? string.Concat("+", _priceFormatter.FormatPrice(priceAdjustment, false, false))
-                                : string.Concat("-", _priceFormatter.FormatPrice(-priceAdjustment, false, false)),
+                            PriceAdjustment = priceAdjustmentStr,
                             PriceAdjustmentValue = priceAdjustment
                         });
                     }
@@ -1174,6 +1190,8 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //a vendor should have access only to orders with his products
             model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
+
+            model.BillingPhoneEnabled = _addressSettings.PhoneEnabled;
             
             return View(model);
         }
@@ -1222,6 +1240,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 osIds: orderStatusIds,
                 psIds: paymentStatusIds,
                 ssIds: shippingStatusIds,
+                billingPhone: model.BillingPhone,
                 billingEmail: model.BillingEmail,
                 billingLastName: model.BillingLastName,
                 billingCountryId: model.BillingCountryId,
@@ -1255,10 +1274,10 @@ namespace Nop.Web.Areas.Admin.Controllers
             };
 
             //summary report
-            //currently we do not support productId and warehouseId parameters for this report
             var reportSummary = _orderReportService.GetOrderAverageReportLine(
                 storeId: model.StoreId,
                 vendorId: model.VendorId,
+                productId: filterByProductId,
                 orderId: 0,
                 paymentMethodSystemName: model.PaymentMethodSystemName,
                 osIds: orderStatusIds,
@@ -1266,6 +1285,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ssIds: shippingStatusIds,
                 startTimeUtc: startDateValue,
                 endTimeUtc: endDateValue,
+                billingPhone: model.BillingPhone,
                 billingEmail: model.BillingEmail,
                 billingLastName: model.BillingLastName,
                 billingCountryId: model.BillingCountryId,
@@ -1274,12 +1294,14 @@ namespace Nop.Web.Areas.Admin.Controllers
             var profit = _orderReportService.ProfitReport(
                 storeId: model.StoreId,
                 vendorId: model.VendorId,
+                productId: filterByProductId,
                 paymentMethodSystemName: model.PaymentMethodSystemName,
                 osIds: orderStatusIds,
                 psIds: paymentStatusIds,
                 ssIds: shippingStatusIds,
                 startTimeUtc: startDateValue, 
                 endTimeUtc: endDateValue,
+                billingPhone: model.BillingPhone,
                 billingEmail: model.BillingEmail,
                 billingLastName: model.BillingLastName,
                 billingCountryId: model.BillingCountryId,
@@ -1391,6 +1413,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 osIds: orderStatusIds,
                 psIds: paymentStatusIds,
                 ssIds: shippingStatusIds,
+                billingPhone: model.BillingPhone,
                 billingEmail: model.BillingEmail,
                 billingLastName: model.BillingLastName,
                 billingCountryId: model.BillingCountryId,
@@ -1475,6 +1498,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 osIds: orderStatusIds,
                 psIds: paymentStatusIds,
                 ssIds: shippingStatusIds,
+                billingPhone: model.BillingPhone,
                 billingEmail: model.BillingEmail,
                 billingLastName: model.BillingLastName,
                 billingCountryId: model.BillingCountryId,
@@ -2011,6 +2035,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 osIds: orderStatusIds,
                 psIds: paymentStatusIds,
                 ssIds: shippingStatusIds,
+                billingPhone: model.BillingPhone,
                 billingEmail: model.BillingEmail,
                 billingLastName: model.BillingLastName,
                 billingCountryId: model.BillingCountryId,
@@ -2901,6 +2926,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             model.Address.CountryEnabled = _addressSettings.CountryEnabled;
             model.Address.CountryRequired = _addressSettings.CountryEnabled; //country is required when enabled
             model.Address.StateProvinceEnabled = _addressSettings.StateProvinceEnabled;
+            model.Address.CountyEnabled = _addressSettings.CountyEnabled;
+            model.Address.CountyRequired = _addressSettings.CountyRequired;
             model.Address.CityEnabled = _addressSettings.CityEnabled;
             model.Address.CityRequired = _addressSettings.CityRequired;
             model.Address.StreetAddressEnabled = _addressSettings.StreetAddressEnabled;
@@ -2993,6 +3020,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             model.Address.CountryEnabled = _addressSettings.CountryEnabled;
             model.Address.CountryRequired = _addressSettings.CountryEnabled; //country is required when enabled
             model.Address.StateProvinceEnabled = _addressSettings.StateProvinceEnabled;
+            model.Address.CountyEnabled = _addressSettings.CountyEnabled;
+            model.Address.CountyRequired = _addressSettings.CountyRequired;
             model.Address.CityEnabled = _addressSettings.CityEnabled;
             model.Address.CityRequired = _addressSettings.CityRequired;
             model.Address.StreetAddressEnabled = _addressSettings.StreetAddressEnabled;
@@ -3070,7 +3099,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             var shipments = _shipmentService.GetAllShipments(vendorId: vendorId,
                 warehouseId: model.WarehouseId, 
                 shippingCountryId: model.CountryId, 
-                shippingStateId: model.StateProvinceId, 
+                shippingStateId: model.StateProvinceId,
+                shippingCounty: model.County,
                 shippingCity: model.City,
                 trackingNumber: model.TrackingNumber, 
                 loadNotShipped: model.LoadNotShipped,
@@ -3688,6 +3718,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 warehouseId: model.WarehouseId,
                 shippingCountryId: model.CountryId,
                 shippingStateId: model.StateProvinceId,
+                shippingCounty: model.County,
                 shippingCity: model.City,
                 trackingNumber: model.TrackingNumber,
                 loadNotShipped: model.LoadNotShipped,
@@ -4297,22 +4328,19 @@ namespace Nop.Web.Areas.Admin.Controllers
                     //year statistics
                     var yearAgoDt = nowDt.AddYears(-1).AddMonths(1);
                     var searchYearDateUser = new DateTime(yearAgoDt.Year, yearAgoDt.Month, 1);
-                    if (!timeZone.IsInvalidTime(searchYearDateUser))
+                    for (var i = 0; i <= 12; i++)
                     {
-                        for (var i = 0; i <= 12; i++)
+                        result.Add(new
                         {
-                            result.Add(new
-                            {
-                                date = searchYearDateUser.Date.ToString("Y", culture),
-                                value = _orderService.SearchOrders(
-                                    createdFromUtc: _dateTimeHelper.ConvertToUtcTime(searchYearDateUser, timeZone),
-                                    createdToUtc: _dateTimeHelper.ConvertToUtcTime(searchYearDateUser.AddMonths(1), timeZone),
-                                    pageIndex: 0,
-                                    pageSize: 1, getOnlyTotalCount: true).TotalCount.ToString()
-                            });
+                            date = searchYearDateUser.Date.ToString("Y", culture),
+                            value = _orderService.SearchOrders(
+                                createdFromUtc: _dateTimeHelper.ConvertToUtcTime(searchYearDateUser, timeZone),
+                                createdToUtc: _dateTimeHelper.ConvertToUtcTime(searchYearDateUser.AddMonths(1), timeZone),
+                                pageIndex: 0,
+                                pageSize: 1, getOnlyTotalCount: true).TotalCount.ToString()
+                        });
 
-                            searchYearDateUser = searchYearDateUser.AddMonths(1);
-                        }
+                        searchYearDateUser = searchYearDateUser.AddMonths(1);
                     }
                     break;
 
@@ -4320,22 +4348,19 @@ namespace Nop.Web.Areas.Admin.Controllers
                     //month statistics
                     var monthAgoDt = nowDt.AddDays(-30);
                     var searchMonthDateUser = new DateTime(monthAgoDt.Year, monthAgoDt.Month, monthAgoDt.Day);
-                    if (!timeZone.IsInvalidTime(searchMonthDateUser))
+                    for (var i = 0; i <= 30; i++)
                     {
-                        for (var i = 0; i <= 30; i++)
+                        result.Add(new
                         {
-                            result.Add(new
-                            {
-                                date = searchMonthDateUser.Date.ToString("M", culture),
-                                value = _orderService.SearchOrders(
-                                    createdFromUtc: _dateTimeHelper.ConvertToUtcTime(searchMonthDateUser, timeZone),
-                                    createdToUtc: _dateTimeHelper.ConvertToUtcTime(searchMonthDateUser.AddDays(1), timeZone),
-                                    pageIndex: 0,
-                                    pageSize: 1, getOnlyTotalCount: true).TotalCount.ToString()
-                            });
+                            date = searchMonthDateUser.Date.ToString("M", culture),
+                            value = _orderService.SearchOrders(
+                                createdFromUtc: _dateTimeHelper.ConvertToUtcTime(searchMonthDateUser, timeZone),
+                                createdToUtc: _dateTimeHelper.ConvertToUtcTime(searchMonthDateUser.AddDays(1), timeZone),
+                                pageIndex: 0,
+                                pageSize: 1, getOnlyTotalCount: true).TotalCount.ToString()
+                        });
 
-                            searchMonthDateUser = searchMonthDateUser.AddDays(1);
-                        }
+                        searchMonthDateUser = searchMonthDateUser.AddDays(1);
                     }
                     break;
 
@@ -4344,22 +4369,19 @@ namespace Nop.Web.Areas.Admin.Controllers
                     //week statistics
                     var weekAgoDt = nowDt.AddDays(-7);
                     var searchWeekDateUser = new DateTime(weekAgoDt.Year, weekAgoDt.Month, weekAgoDt.Day);
-                    if (!timeZone.IsInvalidTime(searchWeekDateUser))
+                    for (var i = 0; i <= 7; i++)
                     {
-                        for (var i = 0; i <= 7; i++)
+                        result.Add(new
                         {
-                            result.Add(new
-                            {
-                                date = searchWeekDateUser.Date.ToString("d dddd", culture),
-                                value = _orderService.SearchOrders(
-                                    createdFromUtc: _dateTimeHelper.ConvertToUtcTime(searchWeekDateUser, timeZone),
-                                    createdToUtc: _dateTimeHelper.ConvertToUtcTime(searchWeekDateUser.AddDays(1), timeZone),
-                                    pageIndex: 0,
-                                    pageSize: 1, getOnlyTotalCount: true).TotalCount.ToString()
-                            });
+                            date = searchWeekDateUser.Date.ToString("d dddd", culture),
+                            value = _orderService.SearchOrders(
+                                createdFromUtc: _dateTimeHelper.ConvertToUtcTime(searchWeekDateUser, timeZone),
+                                createdToUtc: _dateTimeHelper.ConvertToUtcTime(searchWeekDateUser.AddDays(1), timeZone),
+                                pageIndex: 0,
+                                pageSize: 1, getOnlyTotalCount: true).TotalCount.ToString()
+                        });
 
-                            searchWeekDateUser = searchWeekDateUser.AddDays(1);
-                        }
+                        searchWeekDateUser = searchWeekDateUser.AddDays(1);
                     }
                     break;
             }

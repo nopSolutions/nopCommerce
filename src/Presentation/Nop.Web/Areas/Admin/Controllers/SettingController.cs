@@ -507,6 +507,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             model.ShippingOriginAddress.CountryEnabled = true;
             model.ShippingOriginAddress.StateProvinceEnabled = true;
+            model.ShippingOriginAddress.CountyEnabled = true;
             model.ShippingOriginAddress.CityEnabled = true;
             model.ShippingOriginAddress.StreetAddressEnabled = true;
             model.ShippingOriginAddress.ZipPostalCodeEnabled = true;
@@ -782,6 +783,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 model.AllowAnonymousUsersToReviewProduct_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.AllowAnonymousUsersToReviewProduct, storeScope);
                 model.ProductReviewPossibleOnlyAfterPurchasing_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.ProductReviewPossibleOnlyAfterPurchasing, storeScope);
                 model.NotifyStoreOwnerAboutNewProductReviews_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.NotifyStoreOwnerAboutNewProductReviews, storeScope);
+                model.NotifyCustomerAboutProductReviewReply_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.NotifyCustomerAboutProductReviewReply, storeScope);
                 model.EmailAFriendEnabled_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.EmailAFriendEnabled, storeScope);
                 model.AllowAnonymousUsersToEmailAFriend_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.AllowAnonymousUsersToEmailAFriend, storeScope);
                 model.RecentlyViewedProductsNumber_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.RecentlyViewedProductsNumber, storeScope);
@@ -816,11 +818,13 @@ namespace Nop.Web.Areas.Admin.Controllers
                 model.ShowProductReviewsPerStore_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.ShowProductReviewsPerStore, storeScope);
                 model.ShowProductReviewsOnAccountPage_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.ShowProductReviewsTabOnAccountPage, storeScope);
                 model.ProductReviewsPageSizeOnAccountPage_OverrideForStore = _settingService.SettingExists(catalogSettings, x=> x.ProductReviewsPageSizeOnAccountPage, storeScope);
+                model.ProductReviewsSortByCreatedDateAscending_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.ProductReviewsSortByCreatedDateAscending, storeScope);
                 model.ExportImportProductAttributes_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.ExportImportProductAttributes, storeScope);
                 model.ExportImportProductSpecificationAttributes_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.ExportImportProductSpecificationAttributes, storeScope);
                 model.ExportImportProductCategoryBreadcrumb_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.ExportImportProductCategoryBreadcrumb, storeScope);
                 model.ExportImportCategoriesUsingCategoryName_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.ExportImportCategoriesUsingCategoryName, storeScope);
                 model.ExportImportAllowDownloadImages_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.ExportImportAllowDownloadImages, storeScope);
+                model.ExportImportSplitProductsFile_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.ExportImportSplitProductsFile, storeScope);
             }
 
             return View(model);
@@ -860,6 +864,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             _settingService.SaveSettingOverridablePerStore(catalogSettings, x => x.AllowAnonymousUsersToReviewProduct, model.AllowAnonymousUsersToReviewProduct_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(catalogSettings, x => x.ProductReviewPossibleOnlyAfterPurchasing, model.ProductReviewPossibleOnlyAfterPurchasing_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(catalogSettings, x => x.NotifyStoreOwnerAboutNewProductReviews, model.NotifyStoreOwnerAboutNewProductReviews_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(catalogSettings, x => x.NotifyCustomerAboutProductReviewReply, model.NotifyCustomerAboutProductReviewReply_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(catalogSettings, x => x.EmailAFriendEnabled, model.EmailAFriendEnabled_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(catalogSettings, x => x.AllowAnonymousUsersToEmailAFriend, model.AllowAnonymousUsersToEmailAFriend_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(catalogSettings, x => x.RecentlyViewedProductsNumber, model.RecentlyViewedProductsNumber_OverrideForStore, storeScope, false);
@@ -894,12 +899,14 @@ namespace Nop.Web.Areas.Admin.Controllers
             _settingService.SaveSettingOverridablePerStore(catalogSettings, x => x.ShowProductReviewsPerStore, model.ShowProductReviewsPerStore_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(catalogSettings, x => x.ShowProductReviewsTabOnAccountPage, model.ShowProductReviewsOnAccountPage_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(catalogSettings, x => x.ProductReviewsPageSizeOnAccountPage, model.ProductReviewsPageSizeOnAccountPage_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(catalogSettings, x => x.ProductReviewsSortByCreatedDateAscending, model.ProductReviewsSortByCreatedDateAscending_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(catalogSettings, x => x.ExportImportProductAttributes, model.ExportImportProductAttributes_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(catalogSettings, x => x.ExportImportProductSpecificationAttributes, model.ExportImportProductSpecificationAttributes_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(catalogSettings, x => x.ExportImportProductCategoryBreadcrumb, model.ExportImportProductCategoryBreadcrumb_OverrideForStore, storeScope, false); 
             _settingService.SaveSettingOverridablePerStore(catalogSettings, x => x.ExportImportCategoriesUsingCategoryName, model.ExportImportCategoriesUsingCategoryName_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(catalogSettings, x => x.ExportImportAllowDownloadImages, model.ExportImportAllowDownloadImages_OverrideForStore, storeScope, false);
-
+            _settingService.SaveSettingOverridablePerStore(catalogSettings, x => x.ExportImportSplitProductsFile, model.ExportImportSplitProductsFile_OverrideForStore, storeScope, false);
+            
             //now settings not overridable per store
             _settingService.SaveSetting(catalogSettings, x => x.IgnoreDiscounts, 0, false);
             _settingService.SaveSetting(catalogSettings, x => x.IgnoreFeaturedProducts, 0, false);
@@ -1714,6 +1721,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             model.StoreInformationSettings.PopupForTermsOfServiceLinks = commonSettings.PopupForTermsOfServiceLinks;
             //sitemap
             model.StoreInformationSettings.SitemapEnabled = commonSettings.SitemapEnabled;
+            model.StoreInformationSettings.SitemapPageSize = commonSettings.SitemapPageSize;
             model.StoreInformationSettings.SitemapIncludeCategories = commonSettings.SitemapIncludeCategories;
             model.StoreInformationSettings.SitemapIncludeManufacturers = commonSettings.SitemapIncludeManufacturers;
             model.StoreInformationSettings.SitemapIncludeProducts = commonSettings.SitemapIncludeProducts;
@@ -1735,6 +1743,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 model.StoreInformationSettings.UseSystemEmailForContactUsForm_OverrideForStore = _settingService.SettingExists(commonSettings, x => x.UseSystemEmailForContactUsForm, storeScope);
                 model.StoreInformationSettings.PopupForTermsOfServiceLinks_OverrideForStore = _settingService.SettingExists(commonSettings, x => x.PopupForTermsOfServiceLinks, storeScope);
                 model.StoreInformationSettings.SitemapEnabled_OverrideForStore = _settingService.SettingExists(commonSettings, x => x.SitemapEnabled, storeScope);
+                model.StoreInformationSettings.SitemapPageSize_OverrideForStore = _settingService.SettingExists(commonSettings, x => x.SitemapPageSize, storeScope);
                 model.StoreInformationSettings.SitemapIncludeCategories_OverrideForStore = _settingService.SettingExists(commonSettings, x => x.SitemapIncludeCategories, storeScope);
                 model.StoreInformationSettings.SitemapIncludeManufacturers_OverrideForStore = _settingService.SettingExists(commonSettings, x => x.SitemapIncludeManufacturers, storeScope);
                 model.StoreInformationSettings.SitemapIncludeProducts_OverrideForStore = _settingService.SettingExists(commonSettings, x => x.SitemapIncludeProducts, storeScope);
@@ -1842,7 +1851,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             model.DisplayDefaultMenuItemSettings.DisplayBlogMenuItem = displayDefaultMenuItemSettings.DisplayBlogMenuItem;
             model.DisplayDefaultMenuItemSettings.DisplayForumsMenuItem = displayDefaultMenuItemSettings.DisplayForumsMenuItem;
             model.DisplayDefaultMenuItemSettings.DisplayContactUsMenuItem = displayDefaultMenuItemSettings.DisplayContactUsMenuItem;
-
             model.DisplayDefaultMenuItemSettings.DisplayHomePageMenuItem_OverrideForStore = _settingService.SettingExists(displayDefaultMenuItemSettings, x => x.DisplayHomePageMenuItem, storeScope);
             model.DisplayDefaultMenuItemSettings.DisplayNewProductsMenuItem_OverrideForStore = _settingService.SettingExists(displayDefaultMenuItemSettings, x => x.DisplayNewProductsMenuItem, storeScope);
             model.DisplayDefaultMenuItemSettings.DisplayProductSearchMenuItem_OverrideForStore = _settingService.SettingExists(displayDefaultMenuItemSettings, x => x.DisplayProductSearchMenuItem, storeScope);
@@ -1850,6 +1858,39 @@ namespace Nop.Web.Areas.Admin.Controllers
             model.DisplayDefaultMenuItemSettings.DisplayBlogMenuItem_OverrideForStore = _settingService.SettingExists(displayDefaultMenuItemSettings, x => x.DisplayBlogMenuItem, storeScope);
             model.DisplayDefaultMenuItemSettings.DisplayForumsMenuItem_OverrideForStore = _settingService.SettingExists(displayDefaultMenuItemSettings, x => x.DisplayForumsMenuItem, storeScope);
             model.DisplayDefaultMenuItemSettings.DisplayContactUsMenuItem_OverrideForStore = _settingService.SettingExists(displayDefaultMenuItemSettings, x => x.DisplayContactUsMenuItem, storeScope);
+
+            //display default footer item
+            var displayDefaultFooterItemSettings = _settingService.LoadSetting<DisplayDefaultFooterItemSettings>(storeScope);
+            model.DisplayDefaultFooterItemSettings.DisplaySitemapFooterItem = displayDefaultFooterItemSettings.DisplaySitemapFooterItem;
+            model.DisplayDefaultFooterItemSettings.DisplayContactUsFooterItem = displayDefaultFooterItemSettings.DisplayContactUsFooterItem;
+            model.DisplayDefaultFooterItemSettings.DisplayProductSearchFooterItem = displayDefaultFooterItemSettings.DisplayProductSearchFooterItem;
+            model.DisplayDefaultFooterItemSettings.DisplayNewsFooterItem = displayDefaultFooterItemSettings.DisplayNewsFooterItem;
+            model.DisplayDefaultFooterItemSettings.DisplayBlogFooterItem = displayDefaultFooterItemSettings.DisplayBlogFooterItem;
+            model.DisplayDefaultFooterItemSettings.DisplayForumsFooterItem = displayDefaultFooterItemSettings.DisplayForumsFooterItem;
+            model.DisplayDefaultFooterItemSettings.DisplayRecentlyViewedProductsFooterItem = displayDefaultFooterItemSettings.DisplayRecentlyViewedProductsFooterItem;
+            model.DisplayDefaultFooterItemSettings.DisplayCompareProductsFooterItem = displayDefaultFooterItemSettings.DisplayCompareProductsFooterItem;
+            model.DisplayDefaultFooterItemSettings.DisplayNewProductsFooterItem = displayDefaultFooterItemSettings.DisplayNewProductsFooterItem;
+            model.DisplayDefaultFooterItemSettings.DisplayCustomerInfoFooterItem = displayDefaultFooterItemSettings.DisplayCustomerInfoFooterItem;
+            model.DisplayDefaultFooterItemSettings.DisplayCustomerOrdersFooterItem = displayDefaultFooterItemSettings.DisplayCustomerOrdersFooterItem;
+            model.DisplayDefaultFooterItemSettings.DisplayCustomerAddressesFooterItem = displayDefaultFooterItemSettings.DisplayCustomerAddressesFooterItem;
+            model.DisplayDefaultFooterItemSettings.DisplayShoppingCartFooterItem = displayDefaultFooterItemSettings.DisplayShoppingCartFooterItem;
+            model.DisplayDefaultFooterItemSettings.DisplayWishlistFooterItem = displayDefaultFooterItemSettings.DisplayWishlistFooterItem;
+            model.DisplayDefaultFooterItemSettings.DisplayApplyVendorAccountFooterItem = displayDefaultFooterItemSettings.DisplayApplyVendorAccountFooterItem;
+            model.DisplayDefaultFooterItemSettings.DisplaySitemapFooterItem_OverrideForStore = _settingService.SettingExists(displayDefaultFooterItemSettings, x => x.DisplaySitemapFooterItem, storeScope);
+            model.DisplayDefaultFooterItemSettings.DisplayContactUsFooterItem_OverrideForStore = _settingService.SettingExists(displayDefaultFooterItemSettings, x => x.DisplayContactUsFooterItem, storeScope);
+            model.DisplayDefaultFooterItemSettings.DisplayProductSearchFooterItem_OverrideForStore = _settingService.SettingExists(displayDefaultFooterItemSettings, x => x.DisplayProductSearchFooterItem, storeScope);
+            model.DisplayDefaultFooterItemSettings.DisplayNewsFooterItem_OverrideForStore = _settingService.SettingExists(displayDefaultFooterItemSettings, x => x.DisplayNewsFooterItem, storeScope);
+            model.DisplayDefaultFooterItemSettings.DisplayBlogFooterItem_OverrideForStore = _settingService.SettingExists(displayDefaultFooterItemSettings, x => x.DisplayBlogFooterItem, storeScope);
+            model.DisplayDefaultFooterItemSettings.DisplayForumsFooterItem_OverrideForStore = _settingService.SettingExists(displayDefaultFooterItemSettings, x => x.DisplayForumsFooterItem, storeScope);
+            model.DisplayDefaultFooterItemSettings.DisplayRecentlyViewedProductsFooterItem_OverrideForStore = _settingService.SettingExists(displayDefaultFooterItemSettings, x => x.DisplayRecentlyViewedProductsFooterItem, storeScope);
+            model.DisplayDefaultFooterItemSettings.DisplayCompareProductsFooterItem_OverrideForStore = _settingService.SettingExists(displayDefaultFooterItemSettings, x => x.DisplayCompareProductsFooterItem, storeScope);
+            model.DisplayDefaultFooterItemSettings.DisplayNewProductsFooterItem_OverrideForStore = _settingService.SettingExists(displayDefaultFooterItemSettings, x => x.DisplayNewProductsFooterItem, storeScope);
+            model.DisplayDefaultFooterItemSettings.DisplayCustomerInfoFooterItem_OverrideForStore = _settingService.SettingExists(displayDefaultFooterItemSettings, x => x.DisplayCustomerInfoFooterItem, storeScope);
+            model.DisplayDefaultFooterItemSettings.DisplayCustomerOrdersFooterItem_OverrideForStore = _settingService.SettingExists(displayDefaultFooterItemSettings, x => x.DisplayCustomerOrdersFooterItem, storeScope);
+            model.DisplayDefaultFooterItemSettings.DisplayCustomerAddressesFooterItem_OverrideForStore = _settingService.SettingExists(displayDefaultFooterItemSettings, x => x.DisplayCustomerAddressesFooterItem, storeScope);
+            model.DisplayDefaultFooterItemSettings.DisplayShoppingCartFooterItem_OverrideForStore = _settingService.SettingExists(displayDefaultFooterItemSettings, x => x.DisplayShoppingCartFooterItem, storeScope);
+            model.DisplayDefaultFooterItemSettings.DisplayWishlistFooterItem_OverrideForStore = _settingService.SettingExists(displayDefaultFooterItemSettings, x => x.DisplayWishlistFooterItem, storeScope);
+            model.DisplayDefaultFooterItemSettings.DisplayApplyVendorAccountFooterItem_OverrideForStore = _settingService.SettingExists(displayDefaultFooterItemSettings, x => x.DisplayApplyVendorAccountFooterItem, storeScope);
 
             //admin area
             var adminAreaSettings = _settingService.LoadSetting<AdminAreaSettings>(storeScope);
@@ -1890,6 +1931,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             commonSettings.PopupForTermsOfServiceLinks = model.StoreInformationSettings.PopupForTermsOfServiceLinks;
             //sitemap
             commonSettings.SitemapEnabled = model.StoreInformationSettings.SitemapEnabled;
+            commonSettings.SitemapPageSize = model.StoreInformationSettings.SitemapPageSize;
             commonSettings.SitemapIncludeCategories = model.StoreInformationSettings.SitemapIncludeCategories;
             commonSettings.SitemapIncludeManufacturers = model.StoreInformationSettings.SitemapIncludeManufacturers;
             commonSettings.SitemapIncludeProducts = model.StoreInformationSettings.SitemapIncludeProducts;
@@ -1911,6 +1953,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             _settingService.SaveSettingOverridablePerStore(commonSettings, x => x.UseSystemEmailForContactUsForm, model.StoreInformationSettings.UseSystemEmailForContactUsForm_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(commonSettings, x => x.PopupForTermsOfServiceLinks, model.StoreInformationSettings.PopupForTermsOfServiceLinks_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(commonSettings, x => x.SitemapEnabled, model.StoreInformationSettings.SitemapEnabled_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(commonSettings, x => x.SitemapPageSize, model.StoreInformationSettings.SitemapPageSize_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(commonSettings, x => x.SitemapIncludeCategories, model.StoreInformationSettings.SitemapIncludeCategories_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(commonSettings, x => x.SitemapIncludeManufacturers, model.StoreInformationSettings.SitemapIncludeManufacturers_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(commonSettings, x => x.SitemapIncludeProducts, model.StoreInformationSettings.SitemapIncludeProducts_OverrideForStore, storeScope, false);
@@ -2077,6 +2120,47 @@ namespace Nop.Web.Areas.Admin.Controllers
             _settingService.SaveSettingOverridablePerStore(displayDefaultMenuItemSettings, x => x.DisplayBlogMenuItem, model.DisplayDefaultMenuItemSettings.DisplayBlogMenuItem_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(displayDefaultMenuItemSettings, x => x.DisplayForumsMenuItem, model.DisplayDefaultMenuItemSettings.DisplayForumsMenuItem_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(displayDefaultMenuItemSettings, x => x.DisplayContactUsMenuItem, model.DisplayDefaultMenuItemSettings.DisplayContactUsMenuItem_OverrideForStore, storeScope, false);
+
+            //now clear settings cache
+            _settingService.ClearCache();
+
+            //display default footer item
+            var displayDefaultFooterItemSettings = _settingService.LoadSetting<DisplayDefaultFooterItemSettings>(storeScope);
+
+            /* We do not clear cache after each setting update.
+            * This behavior can increase performance because cached settings will not be cleared 
+            * and loaded from database after each update */
+            displayDefaultFooterItemSettings.DisplaySitemapFooterItem = model.DisplayDefaultFooterItemSettings.DisplaySitemapFooterItem;
+            displayDefaultFooterItemSettings.DisplayContactUsFooterItem = model.DisplayDefaultFooterItemSettings.DisplayContactUsFooterItem;
+            displayDefaultFooterItemSettings.DisplayProductSearchFooterItem = model.DisplayDefaultFooterItemSettings.DisplayProductSearchFooterItem;
+            displayDefaultFooterItemSettings.DisplayNewsFooterItem = model.DisplayDefaultFooterItemSettings.DisplayNewsFooterItem;
+            displayDefaultFooterItemSettings.DisplayBlogFooterItem = model.DisplayDefaultFooterItemSettings.DisplayBlogFooterItem;
+            displayDefaultFooterItemSettings.DisplayForumsFooterItem = model.DisplayDefaultFooterItemSettings.DisplayForumsFooterItem;
+            displayDefaultFooterItemSettings.DisplayRecentlyViewedProductsFooterItem = model.DisplayDefaultFooterItemSettings.DisplayRecentlyViewedProductsFooterItem;
+            displayDefaultFooterItemSettings.DisplayCompareProductsFooterItem = model.DisplayDefaultFooterItemSettings.DisplayCompareProductsFooterItem;
+            displayDefaultFooterItemSettings.DisplayNewProductsFooterItem = model.DisplayDefaultFooterItemSettings.DisplayNewProductsFooterItem;
+            displayDefaultFooterItemSettings.DisplayCustomerInfoFooterItem = model.DisplayDefaultFooterItemSettings.DisplayCustomerInfoFooterItem;
+            displayDefaultFooterItemSettings.DisplayCustomerOrdersFooterItem = model.DisplayDefaultFooterItemSettings.DisplayCustomerOrdersFooterItem;
+            displayDefaultFooterItemSettings.DisplayCustomerAddressesFooterItem = model.DisplayDefaultFooterItemSettings.DisplayCustomerAddressesFooterItem;
+            displayDefaultFooterItemSettings.DisplayShoppingCartFooterItem = model.DisplayDefaultFooterItemSettings.DisplayShoppingCartFooterItem;
+            displayDefaultFooterItemSettings.DisplayWishlistFooterItem = model.DisplayDefaultFooterItemSettings.DisplayWishlistFooterItem;
+            displayDefaultFooterItemSettings.DisplayApplyVendorAccountFooterItem = model.DisplayDefaultFooterItemSettings.DisplayApplyVendorAccountFooterItem;
+            
+            _settingService.SaveSettingOverridablePerStore(displayDefaultFooterItemSettings, x => x.DisplaySitemapFooterItem, model.DisplayDefaultFooterItemSettings.DisplaySitemapFooterItem_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(displayDefaultFooterItemSettings, x => x.DisplayContactUsFooterItem, model.DisplayDefaultFooterItemSettings.DisplayContactUsFooterItem_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(displayDefaultFooterItemSettings, x => x.DisplayProductSearchFooterItem, model.DisplayDefaultFooterItemSettings.DisplayProductSearchFooterItem_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(displayDefaultFooterItemSettings, x => x.DisplayNewsFooterItem, model.DisplayDefaultFooterItemSettings.DisplayNewsFooterItem_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(displayDefaultFooterItemSettings, x => x.DisplayBlogFooterItem, model.DisplayDefaultFooterItemSettings.DisplayBlogFooterItem_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(displayDefaultFooterItemSettings, x => x.DisplayForumsFooterItem, model.DisplayDefaultFooterItemSettings.DisplayForumsFooterItem_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(displayDefaultFooterItemSettings, x => x.DisplayRecentlyViewedProductsFooterItem, model.DisplayDefaultFooterItemSettings.DisplayRecentlyViewedProductsFooterItem_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(displayDefaultFooterItemSettings, x => x.DisplayCompareProductsFooterItem, model.DisplayDefaultFooterItemSettings.DisplayCompareProductsFooterItem_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(displayDefaultFooterItemSettings, x => x.DisplayNewProductsFooterItem, model.DisplayDefaultFooterItemSettings.DisplayNewProductsFooterItem_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(displayDefaultFooterItemSettings, x => x.DisplayCustomerInfoFooterItem, model.DisplayDefaultFooterItemSettings.DisplayCustomerInfoFooterItem_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(displayDefaultFooterItemSettings, x => x.DisplayCustomerOrdersFooterItem, model.DisplayDefaultFooterItemSettings.DisplayCustomerOrdersFooterItem_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(displayDefaultFooterItemSettings, x => x.DisplayCustomerAddressesFooterItem, model.DisplayDefaultFooterItemSettings.DisplayCustomerAddressesFooterItem_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(displayDefaultFooterItemSettings, x => x.DisplayShoppingCartFooterItem, model.DisplayDefaultFooterItemSettings.DisplayShoppingCartFooterItem_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(displayDefaultFooterItemSettings, x => x.DisplayWishlistFooterItem, model.DisplayDefaultFooterItemSettings.DisplayWishlistFooterItem_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(displayDefaultFooterItemSettings, x => x.DisplayApplyVendorAccountFooterItem, model.DisplayDefaultFooterItemSettings.DisplayApplyVendorAccountFooterItem_OverrideForStore, storeScope, false);
 
             //now clear settings cache
             _settingService.ClearCache();

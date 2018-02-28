@@ -396,5 +396,33 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         #endregion
+
+        #region Mapped products
+
+        [HttpPost]
+        public virtual IActionResult UsedByProducts(int specificationAttributeId, DataSourceRequest command)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
+                return AccessDeniedKendoGridJson();
+
+            var products = _specificationAttributeService.GetProductsBySpecificationAttributeId(specificationAttributeId, command.Page - 1,
+                command.PageSize);
+           
+            var gridModel = new DataSourceResult
+            {
+                Data = products.Select(product => new SpecificationAttributeOptionModel.UsedByProducts
+                {
+                    SpecificationAttributeId = specificationAttributeId,
+                    ProductId = product.Id,
+                    ProductName = product.Name,
+                    Published = product.Published
+                }),
+                Total = products.TotalCount
+            };
+
+            return Json(gridModel);
+        }
+        
+        #endregion
     }
 }

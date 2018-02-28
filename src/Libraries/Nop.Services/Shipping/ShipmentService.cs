@@ -62,7 +62,7 @@ namespace Nop.Services.Shipping
             //event notification
             _eventPublisher.EntityDeleted(shipment);
         }
-        
+
         /// <summary>
         /// Search shipments
         /// </summary>
@@ -70,6 +70,7 @@ namespace Nop.Services.Shipping
         /// <param name="warehouseId">Warehouse identifier, only shipments with products from a specified warehouse will be loaded; 0 to load all orders</param>
         /// <param name="shippingCountryId">Shipping country identifier; 0 to load all records</param>
         /// <param name="shippingStateId">Shipping state identifier; 0 to load all records</param>
+        /// <param name="shippingCounty">Shipping county; null to load all records</param>
         /// <param name="shippingCity">Shipping city; null to load all records</param>
         /// <param name="trackingNumber">Search by tracking number</param>
         /// <param name="loadNotShipped">A value indicating whether we should load only not shipped shipments</param>
@@ -81,6 +82,7 @@ namespace Nop.Services.Shipping
         public virtual IPagedList<Shipment> GetAllShipments(int vendorId = 0, int warehouseId = 0,
             int shippingCountryId = 0,
             int shippingStateId = 0,
+            string shippingCounty = null,
             string shippingCity = null,
             string trackingNumber = null,
             bool loadNotShipped = false,
@@ -94,6 +96,8 @@ namespace Nop.Services.Shipping
                 query = query.Where(s => s.Order.ShippingAddress.CountryId == shippingCountryId);
             if (shippingStateId > 0)
                 query = query.Where(s => s.Order.ShippingAddress.StateProvinceId == shippingStateId);
+            if (!string.IsNullOrWhiteSpace(shippingCounty))
+                query = query.Where(s => s.Order.ShippingAddress.County.Contains(shippingCounty));
             if (!string.IsNullOrWhiteSpace(shippingCity))
                 query = query.Where(s => s.Order.ShippingAddress.City.Contains(shippingCity));
             if (loadNotShipped)

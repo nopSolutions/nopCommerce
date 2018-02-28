@@ -82,7 +82,7 @@
                     </li>
                 </ul>
             </div>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_order_list_buttons" })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.OrderListButtons })
         </div>
     </div>
     <div class="content">
@@ -125,7 +125,7 @@
                                         <span id="search-product-friendly-name"></span>
                                         <button type="button" id="search-product-clear" class="btn bg-gray" style="display: none; margin-top: 5px;">@T("Admin.Common.Clear")</button>
                                         <input asp-for="ProductId" autocomplete="off" style="display:none;" />
-                                        <script type="text/javascript">
+                                        <script>
                             $(document).ready(function() {
                                 $('#search-product-name').autocomplete({
                                     delay: 500,
@@ -193,6 +193,17 @@
                                         <nop-select asp-for="VendorId" asp-items="Model.AvailableVendors" />
                                     </div>
                                 </div>
+                                @if (Model.BillingPhoneEnabled)
+                                {
+                                    <div class="form-group">
+                                        <div class="col-md-4">
+                                            <nop-label asp-for="BillingPhone"/>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <nop-editor asp-for="BillingPhone"/>
+                                        </div>
+                                    </div>
+                                }
                                 <div class="form-group">
                                     <div class="col-md-4">
                                         <nop-label asp-for="BillingEmail" />
@@ -265,7 +276,7 @@
                     <div class="panel-body">
                         <div id="orders-grid"></div>
 
-                        <script type="text/javascript">
+                        <script>
     $(document).ready(function() {
         $("#orders-grid").kendoGrid({
             dataSource: {
@@ -400,7 +411,7 @@
     });
                         </script>
 
-                        <script type="text/javascript">
+                        <script>
     var selectedIds = [];
     var reportAggregates = "";
 
@@ -419,6 +430,7 @@
 
         $("".concat("#@Html.IdFor(model => model.BillingEmail),",
             "#@Html.IdFor(model => model.BillingLastName),",
+            "#@Html.IdFor(model => model.BillingPhone),",
             "#@Html.IdFor(model => model.OrderNotes)")).keydown(function (event) {
             if (event.keyCode === 13) {
                 $("#search-orders").click();
@@ -440,21 +452,17 @@
         //wire up checkboxes.
         $('#orders-grid').on('change', 'input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]', function (e) {
             var $check = $(this);
+            var checked = jQuery.inArray($check.val(), selectedIds);
             if ($check.is(":checked") == true) {
-                var checked = jQuery.inArray($check.val(), selectedIds);
                 if (checked == -1) {
                     //add id to selectedIds.
                     selectedIds.push($check.val());
                 }
-            }
-            else {
-                var checked = jQuery.inArray($check.val(), selectedIds);
-                if (checked > -1) {
-                    //remove id from selectedIds.
-                    selectedIds = $.grep(selectedIds, function (item, index) {
-                        return item != $check.val();
-                    });
-                }
+            } else if (checked > -1) {
+                //remove id from selectedIds.
+                selectedIds = $.grep(selectedIds, function (item, index) {
+                    return item != $check.val();
+                });
             }
             updateMasterCheckbox();
         });
@@ -471,6 +479,7 @@
             VendorId: $('#@Html.IdFor(model => model.VendorId)').val(),
             WarehouseId: $('#@Html.IdFor(model => model.WarehouseId)').val(),
             BillingEmail: $('#@Html.IdFor(model => model.BillingEmail)').val(),
+            BillingPhone: $('#@Html.IdFor(model => model.BillingPhone)').val(),
             BillingLastName: $('#@Html.IdFor(model => model.BillingLastName)').val(),
             BillingCountryId: $('#@Html.IdFor(model => model.BillingCountryId)').val(),
             PaymentMethodSystemName: $('#@Html.IdFor(model => model.PaymentMethodSystemName)').val(),
@@ -520,7 +529,7 @@
     <input type="hidden" id="selectedIds" name="selectedIds" value="" />
 </form>
 
-<script type="text/javascript">
+<script>
     $(document).ready(function () {
         $('#exportxml-selected').click(function (e) {
             e.preventDefault();
@@ -537,7 +546,7 @@
     <input type="hidden" id="selectedIds" name="selectedIds" value="" />
 </form>
 
-<script type="text/javascript">
+<script>
     $(document).ready(function () {
         $('#exportexcel-selected').click(function (e) {
             e.preventDefault();
@@ -554,7 +563,7 @@
     <input type="hidden" id="selectedIds" name="selectedIds" value="" />
 </form>
 
-<script type="text/javascript">
+<script>
     $(document).ready(function () {
         $('#pdf-invoice-selected').click(function (e) {
             e.preventDefault();

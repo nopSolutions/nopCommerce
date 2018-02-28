@@ -62,7 +62,7 @@
                         </button>
                     </li>
                 </ul>
-                @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_customer_list_buttons" })
+                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CustomerListButtons })
             </div>
         </div>
     </div>
@@ -190,7 +190,7 @@
                                     </div>
                                     <div class="col-md-8">
                                         <nop-select asp-for="SearchCustomerRoleIds" asp-items="Model.AvailableCustomerRoles" asp-multiple="true" />
-                                        <script type="text/javascript">
+                                        <script>
                                             $(document).ready(function() {
                                                 var rolesIdsInput =
                                                     $('#@Html.IdFor(model => model.SearchCustomerRoleIds)')
@@ -233,7 +233,7 @@
                     <div class="panel-body">
                         <div id="customers-grid"></div>
 
-                        <script type="text/javascript">
+                        <script>
     $(document).ready(function() {
         $("#customers-grid").kendoGrid({
             dataSource: {
@@ -366,7 +366,7 @@
     });
                         </script>
 
-                        <script type="text/javascript">
+                        <script>
     var selectedIds = [];
 
     $(document).ready(function() {
@@ -402,20 +402,17 @@
         //wire up checkboxes.
         $('#customers-grid').on('change', 'input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]', function(e) {
             var $check = $(this);
+            var checked = jQuery.inArray($check.val(), selectedIds);
             if ($check.is(":checked") == true) {
-                var checked = jQuery.inArray($check.val(), selectedIds);
                 if (checked == -1) {
                     //add id to selectedIds.
                     selectedIds.push($check.val());
                 }
-            } else {
-                var checked = jQuery.inArray($check.val(), selectedIds);
-                if (checked > -1) {
-                    //remove id from selectedIds.
-                    selectedIds = $.grep(selectedIds, function(item, index) {
-                        return item != $check.val();
-                    });
-                }
+            } else if (checked > -1) {
+                //remove id from selectedIds.
+                selectedIds = $.grep(selectedIds, function (item, index) {
+                    return item != $check.val();
+                });
             }
             updateMasterCheckbox();
         });
@@ -467,7 +464,7 @@
 <form asp-controller="Customer" asp-action="ExportXmlSelected" method="post" id="export-xml-selected-form">
     <input type="hidden" id="selectedIds" name="selectedIds" value="" />
 </form>
-<script type="text/javascript">
+<script>
     $(document).ready(function () {
         $('#exportxml-selected').click(function (e) {
             e.preventDefault();
@@ -483,7 +480,7 @@
 <form asp-controller="Customer" asp-action="ExportExcelSelected" method="post" id="export-excel-selected-form">
     <input type="hidden" id="selectedIds" name="selectedIds" value="" />
 </form>
-<script type="text/javascript">
+<script>
     $(document).ready(function () {
         $('#exportexcel-selected').click(function (e) {
             e.preventDefault();

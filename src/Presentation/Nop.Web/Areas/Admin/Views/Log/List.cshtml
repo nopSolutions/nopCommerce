@@ -1,5 +1,6 @@
-﻿@model LogListModel
+@model LogListModel
 @inject AdminAreaSettings adminAreaSettings
+
 @{
     var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
     var gridPageSizes = adminAreaSettings.GridPageSizes;
@@ -26,7 +27,7 @@
                 @T("Admin.System.Log.ClearLog")
             </button>
             <nop-action-confirmation asp-button-id="clearall" />
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_log_list_buttons" })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.LogListButtons })
         </div>
     </div>
 
@@ -86,7 +87,7 @@
                     <div class="panel-body">
                         <div id="log-grid"></div>
 
-                        <script type="text/javascript">
+                        <script>
                             $(document).ready(function() {
                                 $("#log-grid").kendoGrid({
                                     dataSource: {
@@ -156,7 +157,7 @@
                             });
                         </script>
 
-                        <script type="text/javascript">
+                        <script>
                             var selectedIds = [];
 
                             $(document).ready(function() {
@@ -217,20 +218,17 @@
                                 //wire up checkboxes.
                                 $('#log-grid').on('change', 'input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]', function(e) {
                                     var $check = $(this);
+                                    var checked = jQuery.inArray($check.val(), selectedIds);
                                     if ($check.is(":checked") == true) {
-                                        var checked = jQuery.inArray($check.val(), selectedIds);
                                         if (checked == -1) {
                                             //add id to selectedIds.
                                             selectedIds.push($check.val());
                                         }
-                                    } else {
-                                        var checked = jQuery.inArray($check.val(), selectedIds);
-                                        if (checked > -1) {
-                                            //remove id from selectedIds.
-                                            selectedIds = $.grep(selectedIds, function(item, index) {
-                                                return item != $check.val();
-                                            });
-                                        }
+                                    } else if (checked > -1) {
+                                        //remove id from selectedIds.
+                                        selectedIds = $.grep(selectedIds, function (item, index) {
+                                            return item != $check.val();
+                                        });
                                     }
                                     updateMasterCheckbox();
                                 });

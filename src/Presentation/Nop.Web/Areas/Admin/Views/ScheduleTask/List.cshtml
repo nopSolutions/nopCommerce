@@ -1,4 +1,5 @@
 ﻿@using System.Text.Encodings.Web
+
 @{
     //page title
     ViewBag.Title = T("Admin.System.ScheduleTasks").Text;
@@ -13,11 +14,11 @@
     </h1>
     <div class="pull-right">
         &nbsp;
-        @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_schedule_task_list_buttons" })
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ScheduleTaskListButtons })
     </div>
 </div>
 
-<script type="text/javascript">
+<script>
     $(document).ready(function () {
         $("#schedule-tasks-grid").on("click", ".run-now", function (e) {
             showThrobber('@Html.Raw(JavaScriptEncoder.Default.Encode(T("Admin.System.ScheduleTasks.RunNow.Progress").Text))');
@@ -38,7 +39,7 @@
                     </p>
                     <div id="schedule-tasks-grid"></div>
 
-                    <script type="text/javascript">
+                    <script>
                         $(document).ready(function () {
                             $("#schedule-tasks-grid").kendoGrid({
                                 dataSource: {

@@ -278,6 +278,7 @@ namespace Nop.Web.Factories
                 model.StreetAddress2 = customer.GetAttribute<string>(SystemCustomerAttributeNames.StreetAddress2);
                 model.ZipPostalCode = customer.GetAttribute<string>(SystemCustomerAttributeNames.ZipPostalCode);
                 model.City = customer.GetAttribute<string>(SystemCustomerAttributeNames.City);
+                model.County = customer.GetAttribute<string>(SystemCustomerAttributeNames.County);
                 model.CountryId = customer.GetAttribute<int>(SystemCustomerAttributeNames.CountryId);
                 model.StateProvinceId = customer.GetAttribute<int>(SystemCustomerAttributeNames.StateProvinceId);
                 model.Phone = customer.GetAttribute<string>(SystemCustomerAttributeNames.Phone);
@@ -358,6 +359,8 @@ namespace Nop.Web.Factories
             model.ZipPostalCodeRequired = _customerSettings.ZipPostalCodeRequired;
             model.CityEnabled = _customerSettings.CityEnabled;
             model.CityRequired = _customerSettings.CityRequired;
+            model.CountyEnabled = _customerSettings.CountyEnabled;
+            model.CountyRequired = _customerSettings.CountyRequired;
             model.CountryEnabled = _customerSettings.CountryEnabled;
             model.CountryRequired = _customerSettings.CountryRequired;
             model.StateProvinceEnabled = _customerSettings.StateProvinceEnabled;
@@ -432,6 +435,8 @@ namespace Nop.Web.Factories
             model.ZipPostalCodeRequired = _customerSettings.ZipPostalCodeRequired;
             model.CityEnabled = _customerSettings.CityEnabled;
             model.CityRequired = _customerSettings.CityRequired;
+            model.CountyEnabled = _customerSettings.CountyEnabled;
+            model.CountyRequired = _customerSettings.CountyRequired;
             model.CountryEnabled = _customerSettings.CountryEnabled;
             model.CountryRequired = _customerSettings.CountryRequired;
             model.StateProvinceEnabled = _customerSettings.StateProvinceEnabled;

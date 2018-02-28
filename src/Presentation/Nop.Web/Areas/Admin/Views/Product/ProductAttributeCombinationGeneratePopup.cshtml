@@ -1,0 +1,75 @@
+@model ProductAttributeCombinationModel
+
+@{
+    Layout = "_AdminPopupLayout";
+
+    //page title
+    ViewBag.Title = T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.GenerateSeveralTitle").Text;
+}
+
+@if (ViewBag.RefreshPage == true)
+{
+<script type="text/javascript">
+        try {window.opener.document.forms['@(Context.Request.Query["formId"])'].@(Context.Request.Query["btnId"]).click();}
+        catch (e){}
+        window.close();
+</script>
+}
+
+@if (Model.Warnings.Count > 0)
+{
+    <div class="callout callout-danger">
+        <ul>
+            @foreach (var warning in Model.Warnings)
+            {
+                <li>@warning</li>
+            }
+        </ul>
+    </div>
+}
+
+<form asp-controller="Product" asp-action="ProductAttributeCombinationGeneratePopup"
+      asp-route-productId="@Context.Request.Query["productId"]"
+      asp-route-btnId="@Context.Request.Query["btnId"]"
+      asp-route-formId="@Context.Request.Query["formId"]">
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.GenerateSeveralTitle")
+        </h1>
+        <div class="pull-right">
+            <button type="submit" name="save" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Generate")
+            </button>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductAttributeCombinationDetailsButtons })
+        </div>
+    </div>
+    <div class="content">
+        <h4>@T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.RequiredAttribute")</h4>
+        <div class="form-horizontal">
+            @foreach (var attribute in Model.ProductAttributes)
+            {
+                <div class="panel-group">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            @attribute.Name
+                            @if (attribute.IsRequired)
+                            {
+                                <span>*</span>
+                            }
+                        </div>
+                        <div class="panel-body">
+                            @foreach (var attributeValue in attribute.Values)
+                            {
+                                <div>
+                                    <input id="attribute_value_@(attributeValue.Id)" type="checkbox" value="@(attributeValue.Id)" name="attribute_value_@(attributeValue.Id)" @(attributeValue.Checked)/>
+                                    <label for="attribute_value_@(attributeValue.Id)">@(attributeValue.Name)</label>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</form>

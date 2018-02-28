@@ -1,5 +1,6 @@
 ﻿@model VendorModel
 @using Nop.Core.Domain.Seo
+@inject Nop.Core.IWebHelper webHelper
 @inject SeoSettings seoSettings
 @{
     Layout = "_ColumnsTwo";
@@ -14,7 +15,7 @@
 
     if (seoSettings.CanonicalUrlsEnabled)
     {
-        var vendorUrl = Url.RouteUrl("Vendor", new { SeName = Model.SeName }, this.Url.ActionContext.HttpContext.Request.Scheme);
+        var vendorUrl = Url.RouteUrl("Vendor", new { SeName = Model.SeName }, webHelper.CurrentRequestProtocol).ToLowerInvariant();
         Html.AddCanonicalUrlParts(vendorUrl, seoSettings.QueryStringInCanonicalUrlsEnabled);
     }
 }
@@ -23,7 +24,7 @@
         <h1>@Model.Name</h1>
     </div>
     <div class="page-body">
-        @await Component.InvokeAsync("Widget", new { widgetZone = "vendordetails_top", additionalData = Model })
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.VendorDetailsTop, additionalData = Model })
         @*description*@
         @if (!string.IsNullOrWhiteSpace(Model.Description))
         {
@@ -65,6 +66,6 @@
                 @pager
             </div>
         }
-        @await Component.InvokeAsync("Widget", new { widgetZone = "vendordetails_bottom", additionalData = Model })
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.VendorDetailsBottom, additionalData = Model })
     </div>
 </div>

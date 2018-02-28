@@ -2,8 +2,9 @@
 @{
     Layout = "_ConfigurePlugin";
 }
+@inject Nop.Core.IWebHelper webHelper
 
-<script type="text/javascript">
+<script>
     $(document).ready(function () {
         $('#@Html.IdFor(model => model.UseSandbox)').click(toggleUseSandbox);
         toggleUseSandbox();
@@ -30,7 +31,7 @@
     <div class="panel-group">
         <div class="panel panel-default">
             <div class="panel-body">
-                @Html.Raw(string.Format(T("Plugins.Payments.Square.Instructions").Text, Url.RouteUrl(SquarePaymentDefaults.AccessTokenRoute, null, Context.Request.Scheme)))
+                @Html.Raw(string.Format(T("Plugins.Payments.Square.Instructions").Text, Url.RouteUrl(SquarePaymentDefaults.AccessTokenRoute, null, webHelper.CurrentRequestProtocol)))
                 <div class="form-group">
                     <div class="col-md-3">
                         <nop-label asp-for="UseSandbox" />

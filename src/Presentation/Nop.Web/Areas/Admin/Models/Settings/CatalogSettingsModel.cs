@@ -95,6 +95,10 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public bool NotifyStoreOwnerAboutNewProductReviews { get; set; }
         public bool NotifyStoreOwnerAboutNewProductReviews_OverrideForStore { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.NotifyCustomerAboutProductReviewReply")]
+        public bool NotifyCustomerAboutProductReviewReply { get; set; }
+        public bool NotifyCustomerAboutProductReviewReply_OverrideForStore { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ShowProductReviewsPerStore")]
         public bool ShowProductReviewsPerStore { get; set; }
         public bool ShowProductReviewsPerStore_OverrideForStore { get; set; }
@@ -106,6 +110,10 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ProductReviewsPageSizeOnAccountPage")]
         public int ProductReviewsPageSizeOnAccountPage { get; set; }
         public bool ProductReviewsPageSizeOnAccountPage_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ProductReviewsSortByCreatedDateAscending")]
+        public bool ProductReviewsSortByCreatedDateAscending { get; set; }
+        public bool ProductReviewsSortByCreatedDateAscending_OverrideForStore { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.EmailAFriendEnabled")]
         public bool EmailAFriendEnabled { get; set; }
@@ -250,6 +258,10 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ExportImportAllowDownloadImages")]
         public bool ExportImportAllowDownloadImages { get; set; }
         public bool ExportImportAllowDownloadImages_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ExportImportSplitProductsFile")]
+        public bool ExportImportSplitProductsFile { get; set; }
+        public bool ExportImportSplitProductsFile_OverrideForStore { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.IgnoreDiscounts")]
         public bool IgnoreDiscounts { get; set; }

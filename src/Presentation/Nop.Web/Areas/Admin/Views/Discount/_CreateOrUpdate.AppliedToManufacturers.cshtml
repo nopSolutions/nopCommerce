@@ -1,4 +1,4 @@
-﻿@model DiscountModel
+@model DiscountModel
 @inject AdminAreaSettings adminAreaSettings
 @{
     var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
@@ -6,14 +6,14 @@
 }
 
 <div class="panel-group">
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_discount_details_applied_to_manufacturers_top", additionalData = Model })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.DiscountDetailsAppliedToManufacturersTop, additionalData = Model })
     <div class="panel panel-default">
         @if (Model.Id > 0)
         {
             <div class="panel-body">
                 <div id="manufacturers-grid"></div>
 
-                <script type="text/javascript">
+                <script>
                     $(document).ready(function() {
                         $("#manufacturers-grid").kendoGrid({
                             dataSource: {
@@ -94,7 +94,7 @@
                     @T("Admin.Promotions.Discounts.AppliedToManufacturers.AddNew")
                 </button>
                 <input type="submit" id="btnRefreshManufacturers" style="display: none" />
-                <script type="text/javascript">
+                <script>
                     $(document).ready(function() {
                         $('#btnRefreshManufacturers').click(function() {
                             //refresh grid
@@ -115,5 +115,5 @@
             </div>
         }
     </div>
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_discount_details_applied_to_manufacturers_bottom", additionalData = Model })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.DiscountDetailsAppliedToManufacturersBottom, additionalData = Model })
 </div>

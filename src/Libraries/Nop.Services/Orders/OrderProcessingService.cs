@@ -531,6 +531,7 @@ namespace Nop.Services.Orders
                     {
                         Address1 = pickupPoint.Address,
                         City = pickupPoint.City,
+                        County = pickupPoint.County,
                         Country = country,
                         StateProvince = state,
                         ZipPostalCode = pickupPoint.ZipPostalCode,
@@ -725,6 +726,9 @@ namespace Nop.Services.Orders
             //tax total
             details.OrderTaxTotal = details.InitialOrder.OrderTax;
 
+            //tax rates
+            details.TaxRates = details.InitialOrder.TaxRates;
+
             //VAT number
             details.VatNumber = details.InitialOrder.VatNumber;
 
@@ -861,6 +865,13 @@ namespace Nop.Services.Orders
                 if (orderPlacedVendorNotificationQueuedEmailIds.Any())
                     AddOrderNote(order, $"\"Order placed\" email (to vendor) has been queued. Queued email identifiers: {string.Join(", ", orderPlacedVendorNotificationQueuedEmailIds)}.");
             }
+
+            if (order.AffiliateId == 0)
+                return;
+
+            var orderPlacedAffiliateNotificationQueuedEmailIds = _workflowMessageService.SendOrderPlacedAffiliateNotification(order, _localizationSettings.DefaultAdminLanguageId);
+            if (orderPlacedAffiliateNotificationQueuedEmailIds.Any())
+                AddOrderNote(order, $"\"Order placed\" email (to affiliate) has been queued. Queued email identifiers: {string.Join(", ", orderPlacedAffiliateNotificationQueuedEmailIds)}.");
         }
         /// <summary>
         /// Award (earn) reward points (for placing a new order)
@@ -1087,6 +1098,10 @@ namespace Nop.Services.Orders
                 {
                     _workflowMessageService.SendOrderPaidVendorNotification(order, vendor, _localizationSettings.DefaultAdminLanguageId);
                 }
+
+                if(order.AffiliateId != 0)
+                    _workflowMessageService.SendOrderPaidAffiliateNotification(order, _localizationSettings.DefaultAdminLanguageId);
+
                 //TODO add "order paid email sent" order note
             }
 
@@ -1631,6 +1646,7 @@ namespace Nop.Services.Orders
                 {
                     Address1 = updateOrderParameters.PickupPoint.Address,
                     City = updateOrderParameters.PickupPoint.City,
+                    County = updateOrderParameters.PickupPoint.County,
                     Country = _countryService.GetCountryByTwoLetterIsoCode(updateOrderParameters.PickupPoint.CountryCode),
                     ZipPostalCode = updateOrderParameters.PickupPoint.ZipPostalCode,
                     CreatedOnUtc = DateTime.UtcNow,

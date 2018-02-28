@@ -142,6 +142,15 @@ namespace Nop.Services.Catalog
         /// <returns>Count</returns>
         int GetProductSpecificationAttributeCount(int productId = 0, int specificationAttributeOptionId = 0);
 
+        /// <summary>
+        /// Get mapped products for specification attribute
+        /// </summary>
+        /// <param name="specificationAttributeId">The specification attribute identifier</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
+        /// <returns>Products</returns>
+        IPagedList<Product> GetProductsBySpecificationAttributeId(int specificationAttributeId, int pageIndex, int pageSize);
+
         #endregion
 
     }

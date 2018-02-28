@@ -1,4 +1,4 @@
-﻿@model StateProvinceModel
+@model StateProvinceModel
 
 @{
     Layout = "_AdminPopupLayout";
@@ -19,7 +19,7 @@
                 <i class="fa fa-floppy-o"></i>
                 @T("Admin.Common.Save")
             </button>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_country_state_details_buttons", additionalData = Model })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CountryStateDetailsButtons, additionalData = Model })
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdateState", Model)

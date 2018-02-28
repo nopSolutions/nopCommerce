@@ -1,4 +1,4 @@
-﻿@model QueuedEmailListModel
+@model QueuedEmailListModel
 @inject AdminAreaSettings adminAreaSettings
 
 @{
@@ -26,7 +26,7 @@
                 @T("Admin.System.QueuedEmails.DeleteAll")
             </button>
             <nop-action-confirmation asp-button-id="delete-all" />
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_queued_email_list_buttons" })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.QueuedEmailListButtons })
         </div>
     </div>
 
@@ -117,7 +117,7 @@
                     <div class="panel-body">
                         <div id="queuedEmails-grid"></div>
 
-                        <script type="text/javascript">
+                        <script>
                             $(document).ready(function() {
                                 $("#queuedEmails-grid").kendoGrid({
                                     dataSource: {
@@ -210,7 +210,7 @@
                             });
                         </script>
 
-                        <script type="text/javascript">
+                        <script>
                             var selectedIds = [];
 
                             $(document).ready(function() {
@@ -280,20 +280,17 @@
                                 //wire up checkboxes.
                                 $('#queuedEmails-grid').on('change', 'input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]', function(e) {
                                     var $check = $(this);
+                                    var checked = jQuery.inArray($check.val(), selectedIds);
                                     if ($check.is(":checked") == true) {
-                                        var checked = jQuery.inArray($check.val(), selectedIds);
                                         if (checked == -1) {
                                             //add id to selectedIds.
                                             selectedIds.push($check.val());
                                         }
-                                    } else {
-                                        var checked = jQuery.inArray($check.val(), selectedIds);
-                                        if (checked > -1) {
-                                            //remove id from selectedIds.
-                                            selectedIds = $.grep(selectedIds, function(item, index) {
-                                                return item != $check.val();
-                                            });
-                                        }
+                                    } else if (checked > -1) {
+                                        //remove id from selectedIds.
+                                        selectedIds = $.grep(selectedIds, function (item, index) {
+                                            return item != $check.val();
+                                        });
                                     }
                                     updateMasterCheckbox();
                                 });

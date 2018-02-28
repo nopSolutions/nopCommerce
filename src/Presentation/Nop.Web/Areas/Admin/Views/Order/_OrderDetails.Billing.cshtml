@@ -1,7 +1,7 @@
-﻿@model OrderModel
+@model OrderModel
 
 <div class="panel-group">
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_order_details_billing_top", additionalData = Model })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.OrderDetailsBillingTop, additionalData = Model })
     <div class="panel panel-default">
         <div class="panel-body">
             <div class="form-group">
@@ -98,6 +98,17 @@
                                 </td>
                             </tr>
                         }
+                        @if (Model.BillingAddress.CountyEnabled)
+                        {
+                            <tr>
+                                <td>
+                                    @T("Admin.Orders.Address.County")
+                                </td>
+                                <td>
+                                    @Model.BillingAddress.County
+                                </td>
+                            </tr>
+                        }
                         @if (Model.BillingAddress.StateProvinceEnabled)
                         {
                             <tr>
@@ -154,5 +165,5 @@
             }
         </div>
     </div>
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_order_details_billing_bottom", additionalData = Model })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.OrderDetailsBillingBottom, additionalData = Model })
 </div>

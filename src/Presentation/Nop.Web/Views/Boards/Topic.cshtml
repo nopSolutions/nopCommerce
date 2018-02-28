@@ -10,7 +10,7 @@
 <div class="page forum-topic-page">
     @await Component.InvokeAsync("ForumBreadcrumb", new { forumTopicId = Model.Id })
     @await Html.PartialAsync("_ForumHeader")
-    @await Component.InvokeAsync("Widget", new { widgetZone = "boards_topic_after_header", additionalData = Model })
+    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BoardsTopicAfterHeader, additionalData = Model })
     <nop-antiforgery-token />
     <div class="topic-name">
         <h1>@Model.Subject</h1>
@@ -24,7 +24,7 @@
             @if (Model.IsCustomerAllowedToDeleteTopic)
             {
                 <a href="#" class="delete-topic-button" onclick="return deletetopic(@(Model.Id))">@T("Forum.DeleteTopic").Text</a>
-                <script type="text/javascript" asp-location="Footer">
+                <script asp-location="Footer">
                     function deletetopic(topicId) {
                         if (confirm('@T("Common.AreYouSure")')) {
                             var postData = {
@@ -57,7 +57,7 @@
             @if (Model.IsCustomerAllowedToSubscribe)
             {
                 <a class="watch-topic-button" href="#" id="watch-topic-top">@Model.WatchTopicText</a>
-                <script type="text/javascript" asp-location="Footer">
+                <script asp-location="Footer">
                     $(document).ready(function () {
                         $('#watch-topic-top').click(function () {
                             $.ajax({
@@ -90,7 +90,7 @@
                 RouteValues = new RouteValues { id = Model.Id, slug = Model.SeName }
             });
         }
-        @await Component.InvokeAsync("Widget", new { widgetZone = "boards_topic_top", additionalData = Model })
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BoardsTopicTop, additionalData = Model })
         @if (!string.IsNullOrEmpty(pager.ToHtmlString()))
         {
             <div class="pager upper">
@@ -112,7 +112,7 @@
             @if (Model.IsCustomerAllowedToSubscribe)
             {
                 <a class="watch-topic-button" href="#" id="watch-topic-bottom">@Model.WatchTopicText</a>
-                <script type="text/javascript" asp-location="Footer">
+                <script asp-location="Footer">
                     $(document).ready(function() {
                         $('#watch-topic-bottom').click(function() {
                             var postData = {};
@@ -144,9 +144,9 @@
             </div>
         }
     </div>
-    @await Component.InvokeAsync("Widget", new { widgetZone = "boards_topic_bottom", additionalData = Model })
+    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BoardsTopicBottom, additionalData = Model })
 </div>
-<script type="text/javascript" asp-location="Footer">
+<script asp-location="Footer">
     function deletepost(postId) {
         if (confirm('@T("Common.AreYouSure")')) {
             var postData = {

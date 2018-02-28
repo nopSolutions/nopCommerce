@@ -1,4 +1,4 @@
-﻿@model GiftCardListModel
+@model GiftCardListModel
 @inject AdminAreaSettings adminAreaSettings
 
 @{
@@ -21,7 +21,7 @@
             <i class="fa fa-plus-square"></i>
             @T("Admin.Common.AddNew")
         </a>
-        @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_gift_card_list_buttons" })
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.GiftCardListButtons })
     </div>
 </div>
 
@@ -73,7 +73,7 @@
                 <div class="panel-body">
                     <div id="giftcards-grid"></div>
 
-                    <script type="text/javascript">
+                    <script>
                         $(document).ready(function () {
                             $("#giftcards-grid").kendoGrid({
                                 dataSource: {
@@ -148,7 +148,7 @@
                         });
                     </script>
 
-                    <script type="text/javascript">
+                    <script>
                         $(document).ready(function () {
                             $('#search-giftcards').click(function () {
                                 var grid = $('#giftcards-grid').data('kendoGrid');

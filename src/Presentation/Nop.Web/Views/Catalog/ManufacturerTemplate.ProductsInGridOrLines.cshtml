@@ -1,5 +1,6 @@
 ﻿@model ManufacturerModel
 @using Nop.Core.Domain.Seo
+@inject Nop.Core.IWebHelper webHelper
 @inject SeoSettings seoSettings
 @{
     Layout = "_ColumnsTwo";
@@ -14,7 +15,7 @@
 
     if (seoSettings.CanonicalUrlsEnabled)
     {
-        var manufacturerUrl = Url.RouteUrl("Manufacturer", new { SeName = Model.SeName }, this.Url.ActionContext.HttpContext.Request.Scheme);
+        var manufacturerUrl = Url.RouteUrl("Manufacturer", new { SeName = Model.SeName }, webHelper.CurrentRequestProtocol).ToLowerInvariant();
         Html.AddCanonicalUrlParts(manufacturerUrl, seoSettings.QueryStringInCanonicalUrlsEnabled);
     }
 }
@@ -23,7 +24,7 @@
         <h1>@Model.Name</h1>
     </div>
     <div class="page-body">
-        @await Component.InvokeAsync("Widget", new { widgetZone = "manufacturerdetails_top", additionalData = Model })
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ManufacturerDetailsTop, additionalData = Model })
         @*description*@
         @if (!string.IsNullOrWhiteSpace(Model.Description))
         {
@@ -31,7 +32,7 @@
                 @Html.Raw(Model.Description)
             </div>
         }
-        @await Component.InvokeAsync("Widget", new { widgetZone = "manufacturerdetails_before_featured_products", additionalData = Model })
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ManufacturerDetailsBeforeFeaturedProducts, additionalData = Model })
         @*featured products*@
         @if (Model.FeaturedProducts.Count > 0)
         {
@@ -49,18 +50,18 @@
                 </div>
             </div>
         }
-        @await Component.InvokeAsync("Widget", new { widgetZone = "manufacturerdetails_after_featured_products", additionalData = Model })
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ManufacturerDetailsAfterFeaturedProducts, additionalData = Model })
         @if (Model.Products.Count > 0)
         {
             @await Html.PartialAsync("_CatalogSelectors", Model.PagingFilteringContext)
         }
-        @await Component.InvokeAsync("Widget", new { widgetZone = "manufacturerdetails_before_filters", additionalData = Model })
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ManufacturerDetailsBeforeFilters, additionalData = Model })
         @*filtering*@
         @if (Model.PagingFilteringContext.PriceRangeFilter.Enabled)
         {
             @await Html.PartialAsync("_FilterPriceBox", Model.PagingFilteringContext.PriceRangeFilter)
         }
-        @await Component.InvokeAsync("Widget", new { widgetZone = "manufacturerdetails_before_product_list", additionalData = Model })
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ManufacturerDetailsBeforeProductList, additionalData = Model })
 
         @if (Model.Products.Count > 0)
         {
@@ -84,6 +85,6 @@
                 @pager
             </div>
         }
-        @await Component.InvokeAsync("Widget", new { widgetZone = "manufacturerdetails_bottom", additionalData = Model })
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ManufacturerDetailsBottom, additionalData = Model })
     </div>
 </div>

@@ -1,6 +1,6 @@
 ﻿@model CheckoutPaymentMethodModel
 <div class="checkout-data">
-    @await Component.InvokeAsync("Widget", new { widgetZone = "op_checkout_payment_method_top" })
+    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OpCheckoutPaymentMethodTop })
     <div class="section payment-method">
         @if (Model.DisplayRewardPoints && Model.PaymentMethods.Count > 0)
         {
@@ -16,7 +16,7 @@
                 <label asp-for="UseRewardPoints">@string.Format(T("Checkout.UseRewardPoints").Text, Model.RewardPointsBalance, Model.RewardPointsAmount)</label>
                 @if (Model.RewardPointsEnoughToPayForOrder)
                 {
-                    <script type="text/javascript">
+                    <script>
                         $(document).ready(function() {
                             PaymentMethod.toggleUseRewardPoints($('#@Html.IdFor(model => model.UseRewardPoints)'));
                         });
@@ -65,5 +65,5 @@
             </div>
         }
     </div>
-    @await Component.InvokeAsync("Widget", new { widgetZone = "op_checkout_payment_method_bottom" })
+    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OpCheckoutPaymentMethodBottom })
 </div>

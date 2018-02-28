@@ -1,14 +1,14 @@
-﻿@model ProductModel
+@model ProductModel
 
 <div class="panel-group">
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_product_details_pictures_top", additionalData = Model })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductDetailsPicturesTop, additionalData = Model })
     @if (Model.Id > 0)
     {
         <div class="panel panel-default">
             <div class="panel-body">
                 <div id="productpictures-grid"></div>
 
-                <script type="text/javascript">
+                <script>
                     $(document).ready(function() {
                         $("#productpictures-grid").kendoGrid({
                             dataSource: {
@@ -121,7 +121,7 @@
                 @T("Admin.Catalog.Products.Pictures.AddNew")
             </div>
             <div class="panel-body">
-                <script type="text/javascript">
+                <script>
                     $(document).ready(function() {
                         $('#addProductPicture').click(function() {
                             var pictureId = $("#@Html.IdFor(model => model.AddPictureModel.PictureId)").val();
@@ -217,5 +217,5 @@
             </div>
         </div>
     }
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_product_details_pictures_bottom", additionalData = Model })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductDetailsPicturesBottom, additionalData = Model })
 </div>

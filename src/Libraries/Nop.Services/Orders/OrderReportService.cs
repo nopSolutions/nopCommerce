@@ -125,6 +125,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="storeId">Store identifier; pass 0 to ignore this parameter</param>
         /// <param name="vendorId">Vendor identifier; pass 0 to ignore this parameter</param>
+        /// <param name="productId">Product identifier which was purchased in an order; 0 to load all orders</param>
         /// <param name="billingCountryId">Billing country identifier; 0 to load all orders</param>
         /// <param name="orderId">Order identifier; pass 0 to ignore this parameter</param>
         /// <param name="paymentMethodSystemName">Payment method system name; null to load all records</param>
@@ -133,16 +134,17 @@ namespace Nop.Services.Orders
         /// <param name="ssIds">Shipping status identifiers</param>
         /// <param name="startTimeUtc">Start date</param>
         /// <param name="endTimeUtc">End date</param>
+        /// <param name="billingPhone">Billing phone. Leave empty to load all records.</param>
         /// <param name="billingEmail">Billing email. Leave empty to load all records.</param>
         /// <param name="billingLastName">Billing last name. Leave empty to load all records.</param>
         /// <param name="orderNotes">Search in order notes. Leave empty to load all records.</param>
         /// <returns>Result</returns>
         public virtual OrderAverageReportLine GetOrderAverageReportLine(int storeId = 0,
-            int vendorId = 0, int billingCountryId = 0, 
+            int vendorId = 0, int productId = 0, int billingCountryId = 0, 
             int orderId = 0, string paymentMethodSystemName = null,
             List<int> osIds = null, List<int> psIds = null, List<int> ssIds = null,
             DateTime? startTimeUtc = null, DateTime? endTimeUtc = null,
-            string billingEmail = null, string billingLastName = "", string orderNotes = null)
+            string billingPhone = null, string billingEmail = null, string billingLastName = "", string orderNotes = null)
         {
             var query = _orderRepository.Table;
             query = query.Where(o => !o.Deleted);
@@ -152,9 +154,11 @@ namespace Nop.Services.Orders
                 query = query.Where(o => o.Id == orderId);
             if (vendorId > 0)
             {
-                query = query
-                    .Where(o => o.OrderItems
-                    .Any(orderItem => orderItem.Product.VendorId == vendorId));
+                query = query.Where(o => o.OrderItems.Any(orderItem => orderItem.Product.VendorId == vendorId));
+            }
+            if (productId > 0)
+            {
+                query = query.Where(o => o.OrderItems.Any(orderItem => orderItem.ProductId == productId));
             }
             if (billingCountryId > 0)
                 query = query.Where(o => o.BillingAddress != null && o.BillingAddress.CountryId == billingCountryId);
@@ -170,6 +174,8 @@ namespace Nop.Services.Orders
                 query = query.Where(o => startTimeUtc.Value <= o.CreatedOnUtc);
             if (endTimeUtc.HasValue)
                 query = query.Where(o => endTimeUtc.Value >= o.CreatedOnUtc);
+            if (!string.IsNullOrEmpty(billingPhone))
+                query = query.Where(o => o.BillingAddress != null && !string.IsNullOrEmpty(o.BillingAddress.PhoneNumber) && o.BillingAddress.PhoneNumber.Contains(billingPhone));
             if (!string.IsNullOrEmpty(billingEmail))
                 query = query.Where(o => o.BillingAddress != null && !string.IsNullOrEmpty(o.BillingAddress.Email) && o.BillingAddress.Email.Contains(billingEmail));
             if (!string.IsNullOrEmpty(billingLastName))
@@ -224,50 +230,42 @@ namespace Nop.Services.Orders
 
             //today
             var t1 = new DateTime(nowDt.Year, nowDt.Month, nowDt.Day);
-            if (!timeZone.IsInvalidTime(t1))
-            {
-                DateTime? startTime1 = _dateTimeHelper.ConvertToUtcTime(t1, timeZone);
-                var todayResult = GetOrderAverageReportLine(storeId: storeId,
-                    osIds: orderStatuses, 
-                    startTimeUtc: startTime1);
-                item.SumTodayOrders = todayResult.SumOrders;
-                item.CountTodayOrders = todayResult.CountOrders;
-            }
+            DateTime? startTime1 = _dateTimeHelper.ConvertToUtcTime(t1, timeZone);
+            var todayResult = GetOrderAverageReportLine(storeId: storeId,
+                osIds: orderStatuses, 
+                startTimeUtc: startTime1);
+            item.SumTodayOrders = todayResult.SumOrders;
+            item.CountTodayOrders = todayResult.CountOrders;
+
             //week
             var fdow = CultureInfo.CurrentCulture.DateTimeFormat.FirstDayOfWeek;
             var today = new DateTime(nowDt.Year, nowDt.Month, nowDt.Day);
             var t2 = today.AddDays(-(today.DayOfWeek - fdow));
-            if (!timeZone.IsInvalidTime(t2))
-            {
-                DateTime? startTime2 = _dateTimeHelper.ConvertToUtcTime(t2, timeZone);
-                var weekResult = GetOrderAverageReportLine(storeId: storeId,
-                    osIds: orderStatuses,
-                    startTimeUtc: startTime2);
-                item.SumThisWeekOrders = weekResult.SumOrders;
-                item.CountThisWeekOrders = weekResult.CountOrders;
-            }
+            DateTime? startTime2 = _dateTimeHelper.ConvertToUtcTime(t2, timeZone);
+            var weekResult = GetOrderAverageReportLine(storeId: storeId,
+                osIds: orderStatuses,
+                startTimeUtc: startTime2);
+            item.SumThisWeekOrders = weekResult.SumOrders;
+            item.CountThisWeekOrders = weekResult.CountOrders;
+
             //month
             var t3 = new DateTime(nowDt.Year, nowDt.Month, 1);
-            if (!timeZone.IsInvalidTime(t3))
-            {
-                DateTime? startTime3 = _dateTimeHelper.ConvertToUtcTime(t3, timeZone);
-                var monthResult = GetOrderAverageReportLine(storeId: storeId,
-                    osIds: orderStatuses,
-                    startTimeUtc: startTime3);
-                item.SumThisMonthOrders = monthResult.SumOrders;
-                item.CountThisMonthOrders = monthResult.CountOrders;
-            }
+            DateTime? startTime3 = _dateTimeHelper.ConvertToUtcTime(t3, timeZone);
+            var monthResult = GetOrderAverageReportLine(storeId: storeId,
+                osIds: orderStatuses,
+                startTimeUtc: startTime3);
+            item.SumThisMonthOrders = monthResult.SumOrders;
+            item.CountThisMonthOrders = monthResult.CountOrders;
+
             //year
             var t4 = new DateTime(nowDt.Year, 1, 1);
-            if (!timeZone.IsInvalidTime(t4))
-            {
-                DateTime? startTime4 = _dateTimeHelper.ConvertToUtcTime(t4, timeZone);
-                var yearResult = GetOrderAverageReportLine(storeId: storeId,
-                    osIds: orderStatuses,
-                    startTimeUtc: startTime4);
-                item.SumThisYearOrders = yearResult.SumOrders;
-                item.CountThisYearOrders = yearResult.CountOrders;
-            }
+            DateTime? startTime4 = _dateTimeHelper.ConvertToUtcTime(t4, timeZone);
+            var yearResult = GetOrderAverageReportLine(storeId: storeId,
+                osIds: orderStatuses,
+                startTimeUtc: startTime4);
+            item.SumThisYearOrders = yearResult.SumOrders;
+            item.CountThisYearOrders = yearResult.CountOrders;
+
             //all time
             var allTimeResult = GetOrderAverageReportLine(storeId: storeId, osIds: orderStatuses);
             item.SumAllTimeOrders = allTimeResult.SumOrders;
@@ -483,6 +481,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="storeId">Store identifier; pass 0 to ignore this parameter</param>
         /// <param name="vendorId">Vendor identifier; pass 0 to ignore this parameter</param>
+        /// <param name="productId">Product identifier which was purchased in an order; 0 to load all orders</param>
         /// <param name="orderId">Order identifier; pass 0 to ignore this parameter</param>
         /// <param name="billingCountryId">Billing country identifier; 0 to load all orders</param>
         /// <param name="paymentMethodSystemName">Payment method system name; null to load all records</param>
@@ -491,23 +490,26 @@ namespace Nop.Services.Orders
         /// <param name="osIds">Order status identifiers; null to load all records</param>
         /// <param name="psIds">Payment status identifiers; null to load all records</param>
         /// <param name="ssIds">Shipping status identifiers; null to load all records</param>
+        /// <param name="billingPhone">Billing phone. Leave empty to load all records.</param>
         /// <param name="billingEmail">Billing email. Leave empty to load all records.</param>
         /// <param name="billingLastName">Billing last name. Leave empty to load all records.</param>
         /// <param name="orderNotes">Search in order notes. Leave empty to load all records.</param>
         /// <returns>Result</returns>
-        public virtual decimal ProfitReport(int storeId = 0, int vendorId = 0,
+        public virtual decimal ProfitReport(int storeId = 0, int vendorId = 0, int productId = 0,
             int billingCountryId = 0, int orderId = 0, string paymentMethodSystemName = null,
             List<int> osIds = null, List<int> psIds = null, List<int> ssIds = null,
             DateTime? startTimeUtc = null, DateTime? endTimeUtc = null,
-            string billingEmail = null, string billingLastName = "", string orderNotes = null)
+            string billingPhone = null, string billingEmail = null, string billingLastName = "", string orderNotes = null)
         {
-            //We cannot use string.IsNullOrEmpty() in SQL Compact
+            //we cannot use string.IsNullOrEmpty() in SQL Compact
+            var dontSearchPhone = string.IsNullOrEmpty(billingPhone);
+            //we cannot use string.IsNullOrEmpty() in SQL Compact
             var dontSearchEmail = string.IsNullOrEmpty(billingEmail);
-            //We cannot use string.IsNullOrEmpty() in SQL Compact
+            //we cannot use string.IsNullOrEmpty() in SQL Compact
             var dontSearchLastName = string.IsNullOrEmpty(billingLastName);
-            //We cannot use string.IsNullOrEmpty() in SQL Compact
+            //we cannot use string.IsNullOrEmpty() in SQL Compact
             var dontSearchOrderNotes = string.IsNullOrEmpty(orderNotes);
-            //We cannot use string.IsNullOrEmpty() in SQL Compact
+            //we cannot use string.IsNullOrEmpty() in SQL Compact
             var dontSearchPaymentMethods = string.IsNullOrEmpty(paymentMethodSystemName);
 
             var orders = _orderRepository.Table;
@@ -522,14 +524,16 @@ namespace Nop.Services.Orders
                         join o in orders on orderItem.OrderId equals o.Id
                         where (storeId == 0 || storeId == o.StoreId) &&
                               (orderId == 0 || orderId == o.Id) &&
-                              (billingCountryId ==0 || (o.BillingAddress != null && o.BillingAddress.CountryId == billingCountryId)) &&
+                              (billingCountryId == 0 || (o.BillingAddress != null && o.BillingAddress.CountryId == billingCountryId)) &&
                               (dontSearchPaymentMethods || paymentMethodSystemName == o.PaymentMethodSystemName) &&
                               (!startTimeUtc.HasValue || startTimeUtc.Value <= o.CreatedOnUtc) &&
                               (!endTimeUtc.HasValue || endTimeUtc.Value >= o.CreatedOnUtc) &&
                               (!o.Deleted) &&
                               (vendorId == 0 || orderItem.Product.VendorId == vendorId) &&
+                              (productId == 0 || orderItem.ProductId == productId) &&
                               //we do not ignore deleted products when calculating order reports
                               //(!p.Deleted)
+                              (dontSearchPhone || (o.BillingAddress != null && !string.IsNullOrEmpty(o.BillingAddress.PhoneNumber) && o.BillingAddress.PhoneNumber.Contains(billingPhone))) &&
                               (dontSearchEmail || (o.BillingAddress != null && !string.IsNullOrEmpty(o.BillingAddress.Email) && o.BillingAddress.Email.Contains(billingEmail))) &&
                               (dontSearchLastName || (o.BillingAddress != null && !string.IsNullOrEmpty(o.BillingAddress.LastName) && o.BillingAddress.LastName.Contains(billingLastName))) &&
                               (dontSearchOrderNotes || o.OrderNotes.Any(oNote => oNote.Note.Contains(orderNotes)))
@@ -540,6 +544,7 @@ namespace Nop.Services.Orders
             var reportSummary = GetOrderAverageReportLine(
                 storeId: storeId,
                 vendorId: vendorId,
+                productId: productId,
                 billingCountryId: billingCountryId,
                 orderId: orderId,
                 paymentMethodSystemName: paymentMethodSystemName,
@@ -548,6 +553,7 @@ namespace Nop.Services.Orders
                 ssIds: ssIds,
                 startTimeUtc: startTimeUtc,
                 endTimeUtc: endTimeUtc,
+                billingPhone:billingPhone,
                 billingEmail: billingEmail,
                 billingLastName: billingLastName,
                 orderNotes: orderNotes);

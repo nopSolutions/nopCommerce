@@ -1,4 +1,4 @@
-﻿@model ProductAvailabilityRangeModel
+@model ProductAvailabilityRangeModel
 
 @{
     //page title
@@ -30,7 +30,7 @@
                 <i class="fa fa-trash-o"></i>
                 @T("Admin.Common.Delete")
             </span>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_product_availability_range_details_buttons", additionalData = Model })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductAvailabilityRangeDetailsButtons, additionalData = Model })
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdateProductAvailabilityRange", Model)

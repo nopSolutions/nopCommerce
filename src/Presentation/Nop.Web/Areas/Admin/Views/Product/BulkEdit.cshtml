@@ -1,4 +1,4 @@
-﻿@model BulkEditListModel
+@model BulkEditListModel
 @inject AdminAreaSettings adminAreaSettings
 
 @{
@@ -18,7 +18,7 @@
             </h1>
             <div class="pull-right">
                 &nbsp;
-                @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_product_bulk_edit_buttons" })
+                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductBulkEditButtons })
             </div>
         </div>
 
@@ -78,7 +78,7 @@
                         <div class="panel-body">
                             <div id="products-grid"></div>
 
-                            <script type="text/javascript">
+                            <script>
                             $(document).ready(function() {
                                 $("#products-grid").kendoGrid({
                                     dataSource: {
@@ -167,7 +167,7 @@
                                         pageSizes: [@(gridPageSizes)],
                                         @await Html.PartialAsync("_GridPagerMessages")
                                     },
-                                    toolbar: ["save", "cancel"],
+                                    toolbar: [{ name: "save", text: "@T("Admin.Common.SaveChanges")" }, { name: "cancel", text: "@T("Admin.Common.CancelChanges")" }],
                                     editable: {
                                         confirmation: "@T("Admin.Common.DeleteConfirmation")",
                                         //bulk editing
@@ -237,7 +237,7 @@
                             });
                             </script>
 
-                            <script type="text/javascript">
+                            <script>
                             $(document).ready(function () {
                                 $('#search-products').click(function () {
                                     var grid = $('#products-grid').data('kendoGrid');

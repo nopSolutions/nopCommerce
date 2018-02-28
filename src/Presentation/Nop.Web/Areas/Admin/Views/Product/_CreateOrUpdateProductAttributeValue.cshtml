@@ -16,14 +16,14 @@
 
 @if (ViewBag.RefreshPage == true)
 {
-    <script type="text/javascript">
+    <script>
         try {window.opener.document.forms['@(Context.Request.Query["formId"])'].@(Context.Request.Query["btnId"]).click();}
         catch (e){}
         window.close();
     </script>
 }
 
-<script type="text/javascript">
+<script>
     $(document).ready(function() {
         $("#@Html.IdFor(model => model.AttributeValueTypeId)").change(toggleProductType);
         $("#@Html.IdFor(model => model.CustomerEntersQty)").change(toggleCustomerEntersQty);
@@ -37,12 +37,14 @@
         $('#group-customer-enters-qty').hide();
         $('#group-quantity').hide();
         $('#group-price-adjustment').show();
+        $('#group-price-adjustment-percentage').show();
         $('#group-weight-adjustment').show();
         $('#group-cost').show();
     } else if (selectedProductTypeId == @(((int) AttributeValueType.AssociatedToProduct).ToString())) {
         $('#group-associated-product').show();
         $('#group-customer-enters-qty').show();
         $('#group-price-adjustment').hide();
+        $('#group-price-adjustment-percentage').hide();
         $('#group-weight-adjustment').hide();
         $('#group-cost').hide();
         toggleCustomerEntersQty();
@@ -62,7 +64,7 @@
 <div class="content">
     <div class="form-horizontal">
         <div class="panel-group">
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_product_attribute_value_details_top", additionalData = Model })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductAttributeValueDetailsTop, additionalData = Model })
             <div class="panel panel-default panel-popup panel-popup">
                 <div class="panel-body">
                     <div class="form-group">
@@ -85,7 +87,7 @@
                             <button type="submit" onclick="javascript:OpenWindow('@(Url.Action("AssociateProductToAttributeValuePopup", "Product", new {productIdInput = Html.IdFor(model => model.AssociatedProductId), productNameInput = "associate-product-name"}))', 800, 850, true); return false;" class="btn btn-primary">
                                 @T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.AssociatedProduct.AddNew")
                             </button>
-                            <script type="text/javascript">
+                            <script>
                                 $(document).ready(function () {
                                     if (@Model.AssociatedProductId > 0) {
                                         warningValidation('@Url.Action("AssociatedProductGetWarnings", "Product")', '@Html.NameFor(model => model.AssociatedProductId)', { productId: '@Model.AssociatedProductId' });
@@ -157,7 +159,7 @@
                             <div class="col-sm-9">
                                 <nop-editor asp-for="ColorSquaresRgb" />
                                 <div id="color-picker"></div>
-                                <script type="text/javascript">
+                                <script>
                                     $(document).ready(function(){
                                         $('#color-picker').farbtastic('#@Html.IdFor(model => model.ColorSquaresRgb)');
                                     });
@@ -185,6 +187,15 @@
                         <div class="col-sm-9">
                             <nop-editor asp-for="PriceAdjustment" />
                             <span asp-validation-for="PriceAdjustment"></span>
+                        </div>
+                    </div>
+                    <div class="form-group" id="group-price-adjustment-percentage">
+                        <div class="col-sm-3">
+                            <nop-label asp-for="PriceAdjustmentUsePercentage" />
+                        </div>
+                        <div class="col-sm-9">
+                            <nop-editor asp-for="PriceAdjustmentUsePercentage" />
+                            <span asp-validation-for="PriceAdjustmentUsePercentage"></span>
                         </div>
                     </div>
                     <div class="form-group" id="group-weight-adjustment">
@@ -255,7 +266,7 @@
                     </div>
                 </div>
             </div>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_product_attribute_value_details_bottom", additionalData = Model })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductAttributeValueDetailsBottom, additionalData = Model })
         </div>
     </div>
 </div>

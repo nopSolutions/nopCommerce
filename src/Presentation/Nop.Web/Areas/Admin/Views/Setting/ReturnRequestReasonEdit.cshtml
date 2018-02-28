@@ -1,4 +1,4 @@
-﻿@model ReturnRequestReasonModel
+@model ReturnRequestReasonModel
 
 @{
     //page title
@@ -29,7 +29,7 @@
                 <i class="fa fa-trash-o"></i>
                 @T("Admin.Common.Delete")
             </span>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_return_request_reason_details_buttons", additionalData = Model })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ReturnRequestReasonDetailsButtons, additionalData = Model })
         </div>
     </div>
 

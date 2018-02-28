@@ -129,6 +129,11 @@ namespace Nop.Core.Domain.Catalog
         public bool NotifyStoreOwnerAboutNewProductReviews { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether customer notification about product review reply is enabled
+        /// </summary>
+        public bool NotifyCustomerAboutProductReviewReply { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether the product reviews will be filtered per store
         /// </summary>
         public bool ShowProductReviewsPerStore { get; set; }
@@ -142,6 +147,11 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets the page size for product reviews in account page
         /// </summary>
         public int ProductReviewsPageSizeOnAccountPage { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the product reviews should be sorted by creation date as ascending
+        /// </summary>
+        public bool ProductReviewsSortByCreatedDateAscending { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether product 'Email a friend' feature is enabled
@@ -279,6 +289,11 @@ namespace Nop.Core.Domain.Catalog
         public bool IncludeFeaturedProductsInNormalLists { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether to render link to required products in "Require other products added to the cart" warning
+        /// </summary>
+        public bool UseLinksInRequiredProductWarnings { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether tier prices should be displayed with applied discounts (if available)
         /// </summary>
         public bool DisplayTierPricesWithDiscounts { get; set; }
@@ -407,5 +422,15 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets a value indicating whether the images can be downloaded from remote server
         /// </summary>
         public bool ExportImportAllowDownloadImages { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether products must be importing by separated files
+        /// </summary>
+        public bool ExportImportSplitProductsFile { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value of max products count in one file 
+        /// </summary>
+        public int ExportImportProductsCountInOneFile { get; set; }
     }
 }

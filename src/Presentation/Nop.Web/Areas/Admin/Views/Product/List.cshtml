@@ -77,7 +77,7 @@
                 <i class="fa fa-trash-o"></i>
                 @T("Admin.Common.Delete.Selected")
             </button>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_product_list_buttons" })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductListButtons })
         </div>
     </div>
 
@@ -194,7 +194,7 @@
                     <div class="panel-body">
                         <div id="products-grid"></div>
 
-                        <script type="text/javascript">
+                        <script>
                             $(document).ready(function() {
                                 $("#products-grid").kendoGrid({
                                     dataSource: {
@@ -293,7 +293,7 @@
         </div>
     </div>
 
-    <script type="text/javascript">
+    <script>
         var selectedIds = [];
 
         $(document).ready(function () {
@@ -356,21 +356,17 @@
             //wire up checkboxes.
             $('#products-grid').on('change', 'input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]', function (e) {
                 var $check = $(this);
+                var checked = jQuery.inArray($check.val(), selectedIds);
                 if ($check.is(":checked") == true) {
-                    var checked = jQuery.inArray($check.val(), selectedIds);
                     if (checked == -1) {
                         //add id to selectedIds.
                         selectedIds.push($check.val());
                     }
-                }
-                else {
-                    var checked = jQuery.inArray($check.val(), selectedIds);
-                    if (checked > -1) {
-                        //remove id from selectedIds.
-                        selectedIds = $.grep(selectedIds, function (item, index) {
-                            return item != $check.val();
-                        });
-                    }
+                } else if (checked > -1) {
+                    //remove id from selectedIds.
+                    selectedIds = $.grep(selectedIds, function (item, index) {
+                        return item != $check.val();
+                    });
                 }
                 updateMasterCheckbox();
             });
@@ -459,7 +455,7 @@
     <input type="hidden" id="selectedIds" name="selectedIds" value="" />
 </form>
 
-<script type="text/javascript">
+<script>
     $(document).ready(function () {
         $('#exportxml-selected').click(function (e) {
             e.preventDefault();
@@ -476,7 +472,7 @@
     <input type="hidden" id="selectedIds" name="selectedIds" value="" />
 </form>
 
-<script type="text/javascript">
+<script>
     $(document).ready(function () {
         $('#exportexcel-selected').click(function (e) {
             e.preventDefault();

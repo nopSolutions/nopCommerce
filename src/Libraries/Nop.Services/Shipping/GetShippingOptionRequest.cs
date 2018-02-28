@@ -58,6 +58,10 @@ namespace Nop.Services.Shipping
         /// </summary>
         public string ZipPostalCodeFrom { get; set; }
         /// <summary>
+        /// Shipped from county
+        /// </summary>
+        public string CountyFrom { get; set; }
+        /// <summary>
         /// Shipped from city
         /// </summary>
         public string CityFrom { get; set; }

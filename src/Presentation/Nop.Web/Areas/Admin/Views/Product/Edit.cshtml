@@ -1,4 +1,4 @@
-﻿@model ProductModel
+@model ProductModel
 
 @{
     //page title
@@ -37,7 +37,7 @@
                 <i class="fa fa-trash-o"></i>
                 @T("Admin.Common.Delete")
             </span>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_product_details_buttons", additionalData = Model })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductDetailsButtons, additionalData = Model })
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdate", Model)

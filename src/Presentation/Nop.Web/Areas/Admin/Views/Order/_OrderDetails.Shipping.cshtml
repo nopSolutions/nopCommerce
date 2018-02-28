@@ -1,7 +1,7 @@
-﻿@model OrderModel
+@model OrderModel
 
 <div class="panel-group">
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_order_details_shipping_top", additionalData = Model })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.OrderDetailsShippingTop, additionalData = Model })
     @if (Model.IsShippable)
     {
         if (Model.ShippingAddress != null)
@@ -105,6 +105,17 @@
                                         </td>
                                     </tr>
                                 }
+                                @if (Model.ShippingAddress.CountyEnabled)
+                                {
+                                    <tr>
+                                        <td>
+                                            @T("Admin.Orders.Address.County")
+                                        </td>
+                                        <td>
+                                            @Model.ShippingAddress.County
+                                        </td>
+                                    </tr>
+                                }
                                 @if (Model.ShippingAddress.StateProvinceEnabled)
                                 {
                                     <tr>
@@ -196,6 +207,17 @@
                                         </td>
                                     </tr>
                                 }
+                                @if (!string.IsNullOrEmpty(Model.PickupAddress.County))
+                                {
+                                    <tr>
+                                        <td>
+                                            @T("Admin.Orders.Address.County")
+                                        </td>
+                                        <td>
+                                            @Model.PickupAddress.County
+                                        </td>
+                                    </tr>
+                                }
                                 @if (!string.IsNullOrEmpty(Model.PickupAddress.CountryName))
                                 {
                                     <tr>
@@ -234,7 +256,7 @@
                     <div class="col-md-9">
                         @if (!Model.IsLoggedInAsVendor)
                         {
-                            <script type="text/javascript">
+                            <script>
                                 $(document).ready(function () {
                                     toggleEditShippingMethod(false);
                                 });
@@ -308,7 +330,7 @@
             <div class="panel-body">
                 <div id="shipments-grid"></div>
 
-                <script type="text/javascript">
+                <script>
                     $(document).ready(function () {
                         $("#shipments-grid").kendoGrid({
                             dataSource: {
@@ -468,5 +490,5 @@
             </div>
         </div>
     }
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_order_details_shipping_bottom", additionalData = Model })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.OrderDetailsShippingBottom, additionalData = Model })
 </div>

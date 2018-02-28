@@ -1,7 +1,7 @@
-﻿@model ProductAttributeModel
+@model ProductAttributeModel
 
 <div class="panel-group">
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_product_attribute_details_predefined_values_top", additionalData = Model })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductAttributeDetailsPredefinedValuesTop, additionalData = Model })
     <div class="panel panel-default">
         @if (Model.Id > 0)
         {
@@ -11,7 +11,7 @@
                 </p>
                 <div id="productattributevalues-grid"></div>
 
-                <script type="text/javascript">
+                <script>
                     $(document).ready(function() {
                         $("#productattributevalues-grid").kendoGrid({
                             dataSource: {
@@ -109,7 +109,7 @@
                     @T("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.AddNew")
                 </button>
                 <input type="submit" id="btnRefresh" style="display:none" />
-                <script type="text/javascript">
+                <script>
                     $(document).ready(function() {
                         $('#btnRefresh').click(function() {
                             //refresh grid
@@ -130,5 +130,5 @@
             </div>
         }
     </div>
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_product_attribute_details_predefined_values_bottom", additionalData = Model })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductAttributeDetailsPredefinedValuesBottom, additionalData = Model })
 </div>

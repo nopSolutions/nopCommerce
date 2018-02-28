@@ -1,11 +1,11 @@
-﻿@model PluginModel
+@model PluginModel
 
 <div asp-validation-summary="All"></div>
 <input asp-for="SystemName" type="hidden" />
 
 @if (ViewBag.RefreshPage == true)
 {
-    <script type="text/javascript">
+    <script>
         try {window.opener.document.forms['@(Context.Request.Query["formId"])'].@(Context.Request.Query["btnId"]).click();}
         catch (e){}
         window.close();
@@ -15,7 +15,7 @@
 <div class="content">
     <div class="form-horizontal">
         <div class="panel-group">
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_plugin_details_top", additionalData = Model })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.PluginDetailsTop, additionalData = Model })
             <div class="panel panel-default panel-popup">
                 <div class="panel-body">
                     @(Html.LocalizedEditor<PluginModel, PluginLocalizedModel>("plugin-localized",
@@ -72,7 +72,7 @@
                         </div>
                         <div class="col-sm-9">
                             <nop-select asp-for="SelectedCustomerRoleIds" asp-items="Model.AvailableCustomerRoles" asp-multiple="true" />
-                            <script type="text/javascript">
+                            <script>
                                 $(document).ready(function() {
                                     var rolesIdsInput = $('#@Html.IdFor(model => model.SelectedCustomerRoleIds)').data("kendoMultiSelect");
                                     rolesIdsInput.setOptions({
@@ -103,7 +103,7 @@
                             <div class="row">
                                 <div class="col-sm-4">
                                     <nop-select asp-for="SelectedStoreIds" asp-items="Model.AvailableStores" asp-multiple="true" />
-                                    <script type="text/javascript">
+                                    <script>
                                         $(document).ready(function() {
                                             var storesIdsInput = $('#@Html.IdFor(model => model.SelectedStoreIds)').data("kendoMultiSelect");
                                             storesIdsInput.setOptions({
@@ -133,7 +133,7 @@
                     </div>
                 </div>
             </div>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_plugin_details_bottom", additionalData = Model })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.PluginDetailsBottom, additionalData = Model })
         </div>
     </div>
 </div>

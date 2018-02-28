@@ -144,6 +144,11 @@ namespace Nop.Web.Areas.Admin.Models.Settings
             [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.CityRequired")]
             public bool CityRequired { get; set; }
 
+            [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.CountyEnabled")]
+            public bool CountyEnabled { get; set; }
+            [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.CountyRequired")]
+            public bool CountyRequired { get; set; }
+
             [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.CountryEnabled")]
             public bool CountryEnabled { get; set; }
             [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.CountryRequired")]
@@ -194,6 +199,11 @@ namespace Nop.Web.Areas.Admin.Models.Settings
             public bool CityEnabled { get; set; }
             [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.AddressFormFields.CityRequired")]
             public bool CityRequired { get; set; }
+
+            [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.AddressFormFields.CountyEnabled")]
+            public bool CountyEnabled { get; set; }
+            [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.AddressFormFields.CountyRequired")]
+            public bool CountyRequired { get; set; }
 
             [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.AddressFormFields.CountryEnabled")]
             public bool CountryEnabled { get; set; }

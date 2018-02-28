@@ -177,6 +177,7 @@ namespace Nop.Data.Tests
             {
                 Name = "Name 1",
                 PriceAdjustment = 1.1M,
+                PriceAdjustmentUsePercentage = true,
                 WeightAdjustment = 2.1M,
                 Cost = 3.1M,
                 IsPreSelected = true,
@@ -316,6 +317,7 @@ namespace Nop.Data.Tests
                 Gtin = "Gtin1",
                 OverriddenPrice = 0.01M,
                 NotifyAdminForQuantityBelow = 3,
+                PictureId = 1,
                 Product = test.GetTestProduct()
             };
         }
@@ -349,6 +351,7 @@ namespace Nop.Data.Tests
                 ColorSquaresRgb = "12FF33",
                 ImageSquaresPictureId = 1,
                 PriceAdjustment = 1.1M,
+                PriceAdjustmentUsePercentage = true,
                 WeightAdjustment = 2.1M,
                 Cost = 3.1M,
                 Quantity = 2,
@@ -470,6 +473,7 @@ namespace Nop.Data.Tests
                 Email = "Email 1",
                 Company = "Company 1",
                 City = "City 1",
+                County = "County 1",
                 Address1 = "Address1a",
                 Address2 = "Address1a",
                 ZipPostalCode = "ZipPostalCode 1",

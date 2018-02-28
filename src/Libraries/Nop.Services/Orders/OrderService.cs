@@ -198,6 +198,7 @@ namespace Nop.Services.Orders
         /// <param name="osIds">Order status identifiers; null to load all orders</param>
         /// <param name="psIds">Payment status identifiers; null to load all orders</param>
         /// <param name="ssIds">Shipping status identifiers; null to load all orders</param>
+        /// <param name="billingPhone">Billing phone. Leave empty to load all records.</param>
         /// <param name="billingEmail">Billing email. Leave empty to load all records.</param>
         /// <param name="billingLastName">Billing last name. Leave empty to load all records.</param>
         /// <param name="orderNotes">Search in order notes. Leave empty to load all records.</param>
@@ -211,7 +212,7 @@ namespace Nop.Services.Orders
             int billingCountryId = 0, string paymentMethodSystemName = null,
             DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
             List<int> osIds = null, List<int> psIds = null, List<int> ssIds = null,
-            string billingEmail = null, string billingLastName = "",
+            string billingPhone = null, string billingEmail = null, string billingLastName = "",
             string orderNotes = null, int pageIndex = 0, int pageSize = int.MaxValue, bool getOnlyTotalCount = false)
         {
             var query = _orderRepository.Table
@@ -227,17 +228,13 @@ namespace Nop.Services.Orders
                 query = query.Where(o => o.StoreId == storeId);
             if (vendorId > 0)
             {
-                query = query
-                    .Where(o => o.OrderItems
-                    .Any(orderItem => orderItem.Product.VendorId == vendorId));
+                query = query.Where(o => o.OrderItems.Any(orderItem => orderItem.Product.VendorId == vendorId));
             }
             if (customerId > 0)
                 query = query.Where(o => o.CustomerId == customerId);
             if (productId > 0)
             {
-                query = query
-                    .Where(o => o.OrderItems
-                    .Any(orderItem => orderItem.Product.Id == productId));
+                query = query.Where(o => o.OrderItems.Any(orderItem => orderItem.ProductId == productId));
             }
             if (warehouseId > 0)
             {
@@ -274,6 +271,8 @@ namespace Nop.Services.Orders
                 query = query.Where(o => psIds.Contains(o.PaymentStatusId));
             if (ssIds != null && ssIds.Any())
                 query = query.Where(o => ssIds.Contains(o.ShippingStatusId));
+            if (!string.IsNullOrEmpty(billingPhone))
+                query = query.Where(o => o.BillingAddress != null && !string.IsNullOrEmpty(o.BillingAddress.PhoneNumber) && o.BillingAddress.PhoneNumber.Contains(billingPhone));
             if (!string.IsNullOrEmpty(billingEmail))
                 query = query.Where(o => o.BillingAddress != null && !string.IsNullOrEmpty(o.BillingAddress.Email) && o.BillingAddress.Email.Contains(billingEmail));
             if (!string.IsNullOrEmpty(billingLastName))

@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Nop.Core;
@@ -227,7 +226,7 @@ namespace Nop.Plugin.Payments.PayPalDirect
                 //item price
                 var unitPrice = _priceCalculationService.GetUnitPrice(shoppingCartItem);
                 var price = _taxService.GetProductPrice(shoppingCartItem.Product, unitPrice, false, shoppingCartItem.Customer, out decimal _);
-                item.price = price.ToString("N", new CultureInfo("en-US"));
+                item.price = Math.Round(price, 2).ToString();
 
                 //quantity
                 item.quantity = shoppingCartItem.Quantity.ToString();
@@ -263,7 +262,7 @@ namespace Nop.Plugin.Payments.PayPalDirect
                 return new Item
                 {
                     name = $"{checkoutAttributeValue.CheckoutAttribute.Name} ({checkoutAttributeValue.Name})",
-                    price = attributePrice.ToString("N", new CultureInfo("en-US")),
+                    price = Math.Round(attributePrice, 2).ToString(),
                     quantity = "1"
                 };
             });
@@ -288,7 +287,7 @@ namespace Nop.Plugin.Payments.PayPalDirect
             return new Item
             {
                 name = $"Payment method ({PluginDescriptor.FriendlyName}) additional fee",
-                price = paymentPrice.ToString("N", new CultureInfo("en-US")),
+                price = Math.Round(paymentPrice, 2).ToString(),
                 quantity = "1"
             };
         }
@@ -310,7 +309,7 @@ namespace Nop.Plugin.Payments.PayPalDirect
             return new Item
             {
                 name = "Discount for the subtotal of order",
-                price = (-discountAmount).ToString("N", new CultureInfo("en-US")),
+                price = Math.Round(-discountAmount, 2).ToString(),
                 quantity = "1"
             };
         }
@@ -334,7 +333,7 @@ namespace Nop.Plugin.Payments.PayPalDirect
             return new Item
             {
                 name = "Discount for the total of order",
-                price = (-discountAmount).ToString("N", new CultureInfo("en-US")),
+                price = Math.Round(-discountAmount, 2).ToString(),
                 quantity = "1"
             };
         }
@@ -352,30 +351,30 @@ namespace Nop.Plugin.Payments.PayPalDirect
         {
             //get shipping total
             var shipping = _orderTotalCalculationService.GetShoppingCartShippingTotal(shoppingCart, false);
-            var shippingTotal = shipping ?? 0;
+            var shippingTotal = Math.Round(shipping ?? 0, 2);
 
             //get tax total
-            var taxTotal = _orderTotalCalculationService.GetTaxTotal(shoppingCart, out SortedDictionary<decimal, decimal> _);
+            var taxTotal = Math.Round(_orderTotalCalculationService.GetTaxTotal(shoppingCart, out SortedDictionary<decimal, decimal> _), 2);
 
             //get subtotal
             decimal subTotal;
             if (items != null && items.Any())
             {
                 //items passed to PayPal, so calculate subtotal based on them
-                subTotal = items.Sum(item => !decimal.TryParse(item.price, out decimal tmpPrice) || !int.TryParse(item.quantity, out int tmpQuantity) ? 0 : tmpPrice * tmpQuantity);
+                subTotal = Math.Round(items.Sum(item => !decimal.TryParse(item.price, out decimal tmpPrice) || !int.TryParse(item.quantity, out int tmpQuantity) ? 0 : tmpPrice * tmpQuantity), 2);
             }
             else
-                subTotal = paymentRequest.OrderTotal - shippingTotal - taxTotal;
+                subTotal = Math.Round(paymentRequest.OrderTotal - shippingTotal - taxTotal, 2);
 
             //adjust order total to avoid PayPal payment error: "Transaction amount details (subtotal, tax, shipping) must add up to specified amount total"
-            paymentRequest.OrderTotal = Math.Round(shippingTotal, 2) + Math.Round(subTotal, 2) + Math.Round(taxTotal, 2);
+            paymentRequest.OrderTotal = shippingTotal + subTotal + taxTotal;
 
             //create amount details
             return new Details
             {
-                shipping = shippingTotal.ToString("N", new CultureInfo("en-US")),
-                subtotal = subTotal.ToString("N", new CultureInfo("en-US")),
-                tax = taxTotal.ToString("N", new CultureInfo("en-US"))
+                shipping = shippingTotal.ToString(),
+                subtotal = subTotal.ToString(),
+                tax = taxTotal.ToString()
             };
         }
 
@@ -482,7 +481,7 @@ namespace Nop.Plugin.Payments.PayPalDirect
                             amount = new Amount
                             {
                                 details = amountDetails,
-                                total = processPaymentRequest.OrderTotal.ToString("N", new CultureInfo("en-US")),
+                                total = Math.Round(processPaymentRequest.OrderTotal, 2).ToString(),
                                 currency = currency != null ? currency.CurrencyCode : null
                             },
 
@@ -636,7 +635,7 @@ namespace Nop.Plugin.Payments.PayPalDirect
                 {
                     amount = new Amount
                     {
-                        total = capturePaymentRequest.Order.OrderTotal.ToString("N", new CultureInfo("en-US")),
+                        total = Math.Round(capturePaymentRequest.Order.OrderTotal, 2).ToString(),
                         currency = currency != null ? currency.CurrencyCode : null
                     },
                     is_final_capture = true
@@ -685,7 +684,7 @@ namespace Nop.Plugin.Payments.PayPalDirect
                 {
                     amount = new Amount
                     {
-                        total = refundPaymentRequest.AmountToRefund.ToString("N", new CultureInfo("en-US")),
+                        total = Math.Round(refundPaymentRequest.AmountToRefund, 2).ToString(),
                         currency = currency != null ? currency.CurrencyCode : null
                     }
                 };
@@ -795,7 +794,7 @@ namespace Nop.Plugin.Payments.PayPalDirect
                         setup_fee = new PayPal.Api.Currency
                         {
                             currency = currency != null ? currency.CurrencyCode : null,
-                            value = processPaymentRequest.OrderTotal.ToString("N", new CultureInfo("en-US"))
+                            value = Math.Round(processPaymentRequest.OrderTotal, 2).ToString()
                         }
                     },
                     payment_definitions = new List<PaymentDefinition>
@@ -810,7 +809,7 @@ namespace Nop.Plugin.Payments.PayPalDirect
                              amount = new PayPal.Api.Currency
                              {
                                  currency = currency != null ? currency.CurrencyCode : null,
-                                 value = processPaymentRequest.OrderTotal.ToString("N", new CultureInfo("en-US"))
+                                 value = Math.Round(processPaymentRequest.OrderTotal, 2).ToString()
                              }
                         }
                     }

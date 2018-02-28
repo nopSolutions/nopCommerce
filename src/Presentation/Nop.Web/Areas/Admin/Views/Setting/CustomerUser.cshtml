@@ -1,4 +1,4 @@
-﻿@model CustomerUserSettingsModel
+@model CustomerUserSettingsModel
 @inject IEventPublisher eventPublisher
 
 @{
@@ -18,7 +18,7 @@
                 <i class="fa fa-floppy-o"></i>
                 @T("Admin.Common.Save")
             </button>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_customer_user_settings_buttons" })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CustomerUserSettingsButtons })
         </div>
     </div>
     <div asp-validation-summary="All"></div>

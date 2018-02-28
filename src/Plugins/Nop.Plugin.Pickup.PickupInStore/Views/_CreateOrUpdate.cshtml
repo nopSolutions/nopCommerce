@@ -5,7 +5,7 @@
 
 @if (ViewBag.RefreshPage == true)
 {
-    <script type="text/javascript">
+    <script>
         try {window.opener.document.forms['@(Context.Request.Query["formId"])'].@(Context.Request.Query["btnId"]).click();}
         catch (e){}
         window.close();
@@ -15,7 +15,7 @@
 <div class="panel-group">
     <div class="panel panel-default panel-popup">
 
-        <script type="text/javascript">
+        <script>
             $(document).ready(function() {
                 $("#@Html.IdFor(model => model.Address.CountryId)").change(function(){
                     var selectedItem = $(this).val();
@@ -74,6 +74,15 @@
                 <div class="col-sm-9">
                     <nop-select asp-for="Address.StateProvinceId" asp-items="Model.Address.AvailableStates" />
                     <span asp-validation-for="Address.StateProvinceId"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-3">
+                    <nop-label asp-for="Address.County" />
+                </div>
+                <div class="col-sm-9">
+                    <nop-editor asp-for="Address.County" />
+                    <span asp-validation-for="Address.County"></span>
                 </div>
             </div>
             <div class="form-group">

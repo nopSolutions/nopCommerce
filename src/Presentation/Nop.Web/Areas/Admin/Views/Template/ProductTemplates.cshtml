@@ -1,4 +1,4 @@
-﻿@{
+@{
     //page title
     ViewBag.Title = T("Admin.System.Templates.Product").Text;
     //active menu item (system name)
@@ -12,7 +12,7 @@
     </h1>
     <div class="pull-right">
         &nbsp;
-        @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_product_template_list_buttons" })
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductTemplateListButtons })
     </div>
 </div>
 
@@ -23,7 +23,7 @@
                 <div class="panel-body">
                     <div id="templates-grid"></div>
 
-                    <script type="text/javascript">
+                    <script>
                         $(document).ready(function () {
                             $("#templates-grid").kendoGrid({
                                 dataSource: {

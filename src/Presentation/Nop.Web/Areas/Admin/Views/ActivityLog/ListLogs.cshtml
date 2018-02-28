@@ -1,4 +1,4 @@
-﻿@model ActivityLogSearchModel
+@model ActivityLogSearchModel
 @inject AdminAreaSettings adminAreaSettings
 @{
     var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
@@ -20,7 +20,7 @@
             <i class="fa fa-trash-o"></i>
             @T("Admin.Common.Clear")
         </a>
-        @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_activity_log_list_buttons" })
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ActivityLogListButtons })
     </div>
 </div>
 
@@ -80,7 +80,7 @@
                 <div class="panel-body">
                     <div id="activityLog-grid"></div>
 
-                    <script type="text/javascript">
+                    <script>
                         $(document).ready(function() {
                             $("#activityLog-grid").kendoGrid({
                                 dataSource: {
@@ -165,7 +165,7 @@
                             });
                         });
                     </script>
-                    <script type="text/javascript">
+                    <script>
                         $(document).ready(function() {
                             $('#search-log').click(function() {
                                 var grid = $('#activityLog-grid').data('kendoGrid');

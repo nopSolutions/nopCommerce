@@ -1,4 +1,4 @@
-﻿@model BlogCommentListModel
+@model BlogCommentListModel
 @inject AdminAreaSettings adminAreaSettings
 @{
     var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
@@ -30,7 +30,7 @@
             <i class="fa fa-trash-o"></i>
             @T("Admin.ContentManagement.Blog.Comments.DeleteSelected")
         </button>
-        @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_blog_comment_list_buttons" })
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.BlogCommentListButtons })
     </div>
 </div>
 
@@ -90,7 +90,7 @@
                 <div class="panel-body">
                     <div id="comments-grid"></div>
 
-                    <script type="text/javascript">
+                    <script>
                         $(document).ready(function() {
                             $("#comments-grid").kendoGrid({
                                 dataSource: {
@@ -221,7 +221,7 @@
                         });
                     </script>
 
-                    <script type="text/javascript">
+                    <script>
                         var selectedIds = [];
 
                         $(document).ready(function() {
@@ -328,20 +328,17 @@
                             //wire up checkboxes.
                             $('#comments-grid').on('change', 'input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]', function(e) {
                                 var $check = $(this);
+                                var checked = jQuery.inArray($check.val(), selectedIds);
                                 if ($check.is(":checked") == true) {
-                                    var checked = jQuery.inArray($check.val(), selectedIds);
                                     if (checked == -1) {
                                         //add id to selectedIds.
                                         selectedIds.push($check.val());
                                     }
-                                } else {
-                                    var checked = jQuery.inArray($check.val(), selectedIds);
-                                    if (checked > -1) {
-                                        //remove id from selectedIds.
-                                        selectedIds = $.grep(selectedIds, function(item, index) {
-                                            return item != $check.val();
-                                        });
-                                    }
+                                } else if (checked > -1) {
+                                    //remove id from selectedIds.
+                                    selectedIds = $.grep(selectedIds, function (item, index) {
+                                        return item != $check.val();
+                                    });
                                 }
                                 updateMasterCheckbox();
                             });

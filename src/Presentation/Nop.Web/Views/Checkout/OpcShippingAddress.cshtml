@@ -11,7 +11,7 @@
             <p class="description">
                 <i>@T("Checkout.PickupPoints.Description")</i>
             </p>
-            <script type="text/javascript">
+            <script>
                 $(document).ready(function () {
                     Shipping.togglePickUpInStore($('#@Html.IdFor(model => model.PickUpInStore)'));
                 });
@@ -35,7 +35,7 @@
                         <div class="single-pickup-point">
                             <ul>
                                 <li class="single-pickup-point name">@point.Name</li>
-                                <li class="single-pickup-point address">@($"{point.Address} {point.City} {point.StateName} {point.CountryName}")</li>
+                                <li class="single-pickup-point address">@($"{point.Address} {point.City} {point.County} {point.StateName} {point.CountryName}")</li>
                                 @if (!string.IsNullOrEmpty(point.PickupFee))
                                 {
                                     <li class="single-pickup-point fee">@point.PickupFee</li>
@@ -59,6 +59,10 @@
                                 {
                                     addressLine.AppendFormat(", {0}", point.City);
                                 }
+                                if (!string.IsNullOrEmpty(point.County))
+                                {
+                                    addressLine.AppendFormat(", {0}", point.County);
+                                }
                                 if (!string.IsNullOrEmpty(point.StateName))
                                 {
                                     addressLine.AppendFormat(", {0}", point.StateName);
@@ -80,7 +84,7 @@
                 {
                     var src = $"https://maps.googleapis.com/maps/api/js{(string.IsNullOrEmpty(Model.GoogleMapsApiKey) ? string.Empty : $"?key={Model.GoogleMapsApiKey}")}";
                     <div class="pickup-points-map" id="map">
-                        <script type="text/javascript">
+                        <script>
                             var markers = new Map();
                             var googleMap = null;
                             $(document).ready(function () {
@@ -181,7 +185,7 @@
     @if (!Model.PickUpInStoreOnly)
     {
         <div class="shipping-addresses" id="shipping-addresses-form">
-            @await Component.InvokeAsync("Widget", new { widgetZone = "op_checkout_shipping_address_top" })
+            @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OpCheckoutShippingAddressTop })
             @if (Model.ExistingAddresses.Count > 0)
             {
                 <div class="section select-shipping-address">
@@ -201,6 +205,10 @@
                                 if (address.CityEnabled && !string.IsNullOrEmpty(address.City))
                                 {
                                     addressLine += ", " + address.City;
+                                }
+                                if (address.CountyEnabled && !string.IsNullOrEmpty(address.County))
+                                {
+                                    addressLine += ", " + address.County;
                                 }
                                 if (address.StateProvinceEnabled && !string.IsNullOrEmpty(address.StateProvinceName))
                                 {
@@ -222,7 +230,7 @@
                     </div>
                 </div>
             }
-            @await Component.InvokeAsync("Widget", new { widgetZone = "op_checkout_shipping_address_middle" })
+            @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OpCheckoutShippingAddressMiddle })
             <div class="section new-shipping-address" id="shipping-new-address-form">
                 <div class="enter-address">
                     <div asp-validation-summary="ModelOnly" class="message-error"></div>
@@ -233,7 +241,7 @@
                     }
                 </div>
             </div>
-            @await Component.InvokeAsync("Widget", new { widgetZone = "op_checkout_shipping_address_bottom" })
+            @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OpCheckoutShippingAddressBottom })
         </div>
     }
 </div>

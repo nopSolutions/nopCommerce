@@ -130,35 +130,7 @@ namespace Nop.Web.Factories
         }
 
         #endregion
-
-        #region Utilities
-
-        /// <summary>
-        /// Get child category identifiers
-        /// </summary>
-        /// <param name="parentCategoryId">Parent category identifier</param>
-        /// <returns>List of child category identifiers</returns>
-        protected virtual List<int> GetChildCategoryIds(int parentCategoryId)
-        {
-            var cacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_CHILD_IDENTIFIERS_MODEL_KEY, 
-                parentCategoryId, 
-                string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()), 
-                _storeContext.CurrentStore.Id);
-            return _cacheManager.Get(cacheKey, () =>
-            {
-                var categoriesIds = new List<int>();
-                var categories = _categoryService.GetAllCategoriesByParentCategoryId(parentCategoryId);
-                foreach (var category in categories)
-                {
-                    categoriesIds.Add(category.Id);
-                    categoriesIds.AddRange(GetChildCategoryIds(category.Id));
-                }
-                return categoriesIds;
-            });
-        }
-
-        #endregion
-
+        
         #region Common
 
         /// <summary>
@@ -484,7 +456,7 @@ namespace Nop.Web.Factories
             if (_catalogSettings.ShowProductsFromSubcategories)
             {
                 //include subcategories
-                categoryIds.AddRange(GetChildCategoryIds(category.Id));
+                categoryIds.AddRange(_categoryService.GetChildCategoryIds(category.Id, _storeContext.CurrentStore.Id));
             }
             //products
             IList<int> alreadyFilteredSpecOptionIds = model.PagingFilteringContext.SpecificationFilter.GetAlreadyFilteredSpecOptionIds(_webHelper);
@@ -506,7 +478,7 @@ namespace Nop.Web.Factories
 
             //specs
             model.PagingFilteringContext.SpecificationFilter.PrepareSpecsFilters(alreadyFilteredSpecOptionIds,
-                filterableSpecificationAttributeOptionIds != null ? filterableSpecificationAttributeOptionIds.ToArray() : null, 
+                filterableSpecificationAttributeOptionIds?.ToArray(), 
                 _specificationAttributeService, 
                 _webHelper, 
                 _workContext,
@@ -684,27 +656,17 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="rootCategoryId">Root category identifier</param>
         /// <param name="loadSubCategories">A value indicating whether subcategories should be loaded</param>
-        /// <param name="allCategories">All available categories; pass null to load them internally</param>
         /// <returns>List of category (simple) models</returns>
-        public virtual List<CategorySimpleModel> PrepareCategorySimpleModels(int rootCategoryId,
-            bool loadSubCategories = true, IList<Category> allCategories = null)
+        protected virtual List<CategorySimpleModel> PrepareCategorySimpleModels(int rootCategoryId, bool loadSubCategories = true)
         {
             var result = new List<CategorySimpleModel>();
 
-            //little hack for performance optimization.
+            //little hack for performance optimization
             //we know that this method is used to load top and left menu for categories.
             //it'll load all categories anyway.
             //so there's no need to invoke "GetAllCategoriesByParentCategoryId" multiple times (extra SQL commands) to load childs
-            //so we load all categories at once
-            //if you don't like this implementation if you can uncomment the line below (old behavior) and comment several next lines (before foreach)
-            //var categories = _categoryService.GetAllCategoriesByParentCategoryId(rootCategoryId);
-            if (allCategories == null)
-            {
-                //load categories if null passed
-                //we implemeneted it this way for performance optimization - recursive iterations (below)
-                //this way all categories are loaded only once
-                allCategories = _categoryService.GetAllCategories(storeId: _storeContext.CurrentStore.Id);
-            }
+            //so we load all categories at once (we know they are cached)
+            var allCategories = _categoryService.GetAllCategories(storeId: _storeContext.CurrentStore.Id);
             var categories = allCategories.Where(c => c.ParentCategoryId == rootCategoryId).ToList();
             foreach (var category in categories)
             {
@@ -729,14 +691,14 @@ namespace Nop.Web.Factories
                         categoryIds.Add(category.Id);
                         //include subcategories
                         if (_catalogSettings.ShowCategoryProductNumberIncludingSubcategories)
-                            categoryIds.AddRange(GetChildCategoryIds(category.Id));
+                            categoryIds.AddRange(_categoryService.GetChildCategoryIds(category.Id, _storeContext.CurrentStore.Id));
                         return _productService.GetNumberOfProductsInCategory(categoryIds, _storeContext.CurrentStore.Id);
                     });
                 }
 
                 if (loadSubCategories)
                 {
-                    var subCategories = PrepareCategorySimpleModels(category.Id, loadSubCategories, allCategories);
+                    var subCategories = PrepareCategorySimpleModels(category.Id, loadSubCategories);
                     categoryModel.SubCategories.AddRange(subCategories);
                 }
                 result.Add(categoryModel);
@@ -1343,7 +1305,7 @@ namespace Nop.Web.Factories
                             if (model.isc)
                             {
                                 //include subcategories
-                                categoryIds.AddRange(GetChildCategoryIds(categoryId));
+                                categoryIds.AddRange(_categoryService.GetChildCategoryIds(categoryId, _storeContext.CurrentStore.Id));
                             }
                         }
 

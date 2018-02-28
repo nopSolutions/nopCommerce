@@ -1,6 +1,6 @@
 ﻿@model List<int>
 <select asp-for="@Model" asp-items="@((IEnumerable<SelectListItem>)ViewData["SelectList"])"></select>
-<script type="text/javascript">
+<script>
     $(document).ready(function () {
         $("#@Html.IdForModel()").kendoMultiSelect({
             select: function (e) {

@@ -1,6 +1,6 @@
-﻿@model CustomerUserSettingsModel
+@model CustomerUserSettingsModel
 
-<script type="text/javascript">
+<script>
     $(document).ready(function () {
         $("#@Html.IdFor(model => model.AddressSettings.CountryEnabled)").click(toggleAddressCountryFormField);
         $("#@Html.IdFor(model => model.AddressSettings.CompanyEnabled)").click(toggleAddressRequiredFormField);
@@ -8,6 +8,7 @@
         $("#@Html.IdFor(model => model.AddressSettings.StreetAddress2Enabled)").click(toggleAddressRequiredFormField);
         $("#@Html.IdFor(model => model.AddressSettings.ZipPostalCodeEnabled)").click(toggleAddressRequiredFormField);
         $("#@Html.IdFor(model => model.AddressSettings.CityEnabled)").click(toggleAddressRequiredFormField);
+        $("#@Html.IdFor(model => model.AddressSettings.CountyEnabled)").click(toggleAddressRequiredFormField);
         $("#@Html.IdFor(model => model.AddressSettings.PhoneEnabled)").click(toggleAddressRequiredFormField);
         $("#@Html.IdFor(model => model.AddressSettings.FaxEnabled)").click(toggleAddressRequiredFormField);
 
@@ -60,6 +61,13 @@
             $('#pnlAddressCityRequired').hide();
         }
 
+        if ($('#@Html.IdFor(model => model.AddressSettings.CountyEnabled)').is(':checked')) {
+            $('#pnlAddressCountyRequired').show();
+        }
+        else {
+            $('#pnlAddressCountyRequired').hide();
+        }
+
         if ($('#@Html.IdFor(model => model.AddressSettings.PhoneEnabled)').is(':checked')) {
             $('#pnlAddressPhoneRequired').show();
         }
@@ -77,7 +85,7 @@
 </script>
 
 <div class="panel-group">
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_customer_user_settings_address_form_fields_top" })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CustomerUserSettingsAddressFormFieldsTop })
     <div class="panel panel-default">
         <div class="panel-heading">
             @T("Admin.Configuration.Settings.CustomerUser.BlockTitle.DefaultFields")
@@ -188,6 +196,26 @@
             </nop-nested-setting>
             <div class="form-group">
                 <div class="col-md-3">
+                    <nop-label asp-for="AddressSettings.CountyEnabled" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="AddressSettings.CountyEnabled" />
+                    <span asp-validation-for="AddressSettings.CountyEnabled"></span>
+                </div>
+            </div>
+            <nop-nested-setting asp-for="AddressSettings.CountyEnabled">
+                <div class="form-group" id="pnlAddressCountyRequired">
+                    <div class="col-md-3">
+                        <nop-label asp-for="AddressSettings.CountyRequired" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="AddressSettings.CountyRequired" />
+                        <span asp-validation-for="AddressSettings.CountyRequired"></span>
+                    </div>
+                </div>
+            </nop-nested-setting>
+            <div class="form-group">
+                <div class="col-md-3">
                     <nop-label asp-for="AddressSettings.CountryEnabled" />
                 </div>
                 <div class="col-md-9">
@@ -250,5 +278,5 @@
     </div>
     @*render custom address attributes*@
     @await Html.PartialAsync("../AddressAttribute/ListBlock.cshtml")
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_customer_user_settings_address_form_fields_bottom" })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CustomerUserSettingsAddressFormFieldsBottom })
 </div>

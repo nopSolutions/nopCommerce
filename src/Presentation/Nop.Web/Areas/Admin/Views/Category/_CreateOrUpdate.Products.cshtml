@@ -1,18 +1,18 @@
-﻿@model CategoryModel
+@model CategoryModel
 @inject AdminAreaSettings adminAreaSettings
 @{
     var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
     var gridPageSizes = adminAreaSettings.GridPageSizes;
 }
 <div class="panel-group">
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_category_details_products_top", additionalData = Model })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CategoryDetailsProductsTop, additionalData = Model })
     @if (Model.Id > 0)
     {
         <div class="panel panel-default">
             <div class="panel-body">
                 <div id="products-grid"></div>
 
-                <script type="text/javascript">
+                <script>
                     $(document).ready(function() {
                         $("#products-grid").kendoGrid({
                             dataSource: {
@@ -129,7 +129,7 @@
                     @T("Admin.Catalog.Categories.Products.AddNew")
                 </button>
                 <input type="submit" id="btnRefreshProducts" style="display: none" />
-                <script type="text/javascript">
+                <script>
                     $(document).ready(function () {
                         $('#btnRefreshProducts').click(function () {
                             //refresh grid
@@ -152,5 +152,5 @@
             </div>
         </div>
     }
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_category_details_products_bottom", additionalData = Model })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CategoryDetailsProductsBottom, additionalData = Model })
 </div>

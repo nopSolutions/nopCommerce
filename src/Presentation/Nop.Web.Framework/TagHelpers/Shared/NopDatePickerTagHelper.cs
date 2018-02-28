@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using Nop.Core.Infrastructure;
 using Nop.Services.Localization;
+using Nop.Web.Framework.Extensions;
 
 namespace Nop.Web.Framework.TagHelpers.Shared
 {
@@ -235,9 +236,9 @@ namespace Nop.Web.Framework.TagHelpers.Shared
             
             if (bool.TryParse(WrapTags, out bool wrapTags) && wrapTags)
             {
-                var wrapDaysList = "<span class=\"days-list select-wrapper\">" + daysList + "</span>";
-                var wrapMonthsList = "<span class=\"months-list select-wrapper\">" + monthsList + "</span>";
-                var wrapYearsList = "<span class=\"years-list select-wrapper\">" + yearsList + "</span>";
+                var wrapDaysList = "<span class=\"days-list select-wrapper\">" + daysList.RenderHtmlContent() + "</span>";
+                var wrapMonthsList = "<span class=\"months-list select-wrapper\">" + monthsList.RenderHtmlContent() + "</span>";
+                var wrapYearsList = "<span class=\"years-list select-wrapper\">" + yearsList.RenderHtmlContent() + "</span>";
 
                 output.Content.AppendHtml(wrapDaysList);
                 output.Content.AppendHtml(wrapMonthsList);

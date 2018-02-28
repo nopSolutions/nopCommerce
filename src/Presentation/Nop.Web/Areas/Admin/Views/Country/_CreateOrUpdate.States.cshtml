@@ -1,14 +1,14 @@
-﻿@model CountryModel
+@model CountryModel
 
 <div class="panel-group">
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_country_details_states_top", additionalData = Model })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CountryDetailsStatesTop, additionalData = Model })
     <div class="panel panel-default">
         @if (Model.Id > 0)
         {
             <div class="panel-body">
                 <div id="states-grid"></div>
 
-                <script type="text/javascript">
+                <script>
                     $(document).ready(function () {
                         $("#states-grid").kendoGrid({
                             dataSource: {
@@ -101,7 +101,7 @@
                         @T("Admin.Configuration.Countries.States.AddNew")
                     </button>
                     <input type="submit" id="btnRefresh" style="display: none" />
-                    <script type="text/javascript">
+                    <script>
                         $(document).ready(function () {
                             $('#btnRefresh').click(function () {
                                 //refresh grid
@@ -123,5 +123,5 @@
             </div>
         }
     </div>
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_country_details_states_bottom", additionalData = Model })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CountryDetailsStatesBottom, additionalData = Model })
 </div>

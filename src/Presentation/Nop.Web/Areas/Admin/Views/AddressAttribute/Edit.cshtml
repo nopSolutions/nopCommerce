@@ -1,4 +1,4 @@
-﻿@model AddressAttributeModel
+@model AddressAttributeModel
 @{
     //page title
     ViewBag.Title = T("Admin.Address.AddressAttributes.EditAttributeDetails").Text;
@@ -28,7 +28,7 @@
                 <i class="fa fa-trash-o"></i>
                 @T("Admin.Common.Delete")
             </span>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_address_attribute_details_buttons", additionalData = Model })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.AddressAttributeDetailsButtons, additionalData = Model })
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdate", Model)

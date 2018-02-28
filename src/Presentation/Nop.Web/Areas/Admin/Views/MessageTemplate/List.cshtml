@@ -1,4 +1,4 @@
-﻿@model MessageTemplateListModel
+@model MessageTemplateListModel
 
 @{
     //page title
@@ -14,7 +14,7 @@
     </h1>
     <div class="pull-right">
         &nbsp;
-        @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_message_template_list_buttons" })
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.MessageTemplateListButtons })
     </div>
 </div>
 
@@ -51,7 +51,7 @@
                 <div class="panel-body">
                     <div id="templates-grid"></div>
 
-                    <script type="text/javascript">
+                    <script>
                         $(document).ready(function () {
                             $("#templates-grid").kendoGrid({
                                 dataSource: {
@@ -121,7 +121,7 @@
                         });
                     </script>
 
-                    <script type="text/javascript">
+                    <script>
                         $(document).ready(function () {
                             //search button
                             $('#search-templates').click(function () {

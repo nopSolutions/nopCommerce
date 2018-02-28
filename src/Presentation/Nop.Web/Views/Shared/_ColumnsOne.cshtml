@@ -8,7 +8,7 @@
     }
 }
 <div class="center-1">
-    @await Component.InvokeAsync("Widget", new { widgetZone = "main_column_before" })
+    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.MainColumnBefore })
     @RenderBody()
-    @await Component.InvokeAsync("Widget", new { widgetZone = "main_column_after" })
+    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.MainColumnAfter })
 </div>

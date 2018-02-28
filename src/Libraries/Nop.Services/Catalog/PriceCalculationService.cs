@@ -275,7 +275,7 @@ namespace Nop.Services.Catalog
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
-            appliedDiscounts = null;
+            appliedDiscounts = new List<DiscountForCaching>();
             var appliedDiscountAmount = decimal.Zero;
 
             //we don't apply discounts to products with price entered by a customer
@@ -442,7 +442,7 @@ namespace Nop.Services.Catalog
                     var tmpDiscountAmount = GetDiscountAmount(product, customer, price, out List<DiscountForCaching> tmpAppliedDiscounts);
                     price = price - tmpDiscountAmount;
 
-                    if (tmpAppliedDiscounts != null)
+                    if (tmpAppliedDiscounts?.Any() ?? false)
                     {
                         result.AppliedDiscounts = tmpAppliedDiscounts;
                         result.AppliedDiscountAmount = tmpDiscountAmount;
@@ -571,7 +571,7 @@ namespace Nop.Services.Catalog
                 {
                     foreach (var attributeValue in attributeValues)
                     {
-                        attributesTotalPrice += GetProductAttributeValuePriceAdjustment(attributeValue);
+                        attributesTotalPrice += GetProductAttributeValuePriceAdjustment(attributeValue, customer, product.CustomerEntersPrice ? (decimal?)customerEnteredPrice : null);
                     }
                 }
 
@@ -734,23 +734,29 @@ namespace Nop.Services.Catalog
             return cost;
         }
 
-        /// <summary>
-        /// Get a price adjustment of a product attribute value
-        /// </summary>
-        /// <param name="value">Product attribute value</param>
-        /// <returns>Price adjustment</returns>
-        public virtual decimal GetProductAttributeValuePriceAdjustment(ProductAttributeValue value)
+        public virtual decimal GetProductAttributeValuePriceAdjustment(ProductAttributeValue value, Customer customer, decimal? productPrice = null)
         {
             if (value == null)
                 throw new ArgumentNullException(nameof(value));
 
+           
             var adjustment = decimal.Zero;
             switch (value.AttributeValueType)
             {
                 case AttributeValueType.Simple:
                     {
                         //simple attribute
-                        adjustment = value.PriceAdjustment;
+                        if (value.PriceAdjustmentUsePercentage)
+                        {
+                            if (!productPrice.HasValue)
+                                productPrice = GetFinalPrice(value.ProductAttributeMapping.Product, customer);
+
+                            adjustment = (decimal) ((float) productPrice * (float) value.PriceAdjustment / 100f);
+                        }
+                        else
+                        {
+                            adjustment = value.PriceAdjustment;
+                        }
                     }
                     break;
                 case AttributeValueType.AssociatedToProduct:

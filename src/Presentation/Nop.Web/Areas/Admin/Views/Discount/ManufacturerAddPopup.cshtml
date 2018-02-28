@@ -25,7 +25,7 @@
 
     @if (ViewBag.RefreshPage == true)
     {
-        <script type="text/javascript">
+        <script>
             try {window.opener.document.forms['@(Context.Request.Query["formId"])'].@(Context.Request.Query["btnId"]).click();}
             catch (e){}
             window.close();
@@ -64,7 +64,7 @@
                     <div class="panel-body">
                         <div id="manufacturers-grid"></div>
 
-                        <script type="text/javascript">
+                        <script>
                             $(document).ready(function () {
                                 $("#manufacturers-grid").kendoGrid({
                                     dataSource: {
@@ -123,7 +123,7 @@
                             });
                         </script>
 
-                        <script type="text/javascript">
+                        <script>
                             $(document).ready(function() {
                                 $('#search-manufacturers').click(function() {
                                     var grid = $('#manufacturers-grid').data('kendoGrid');

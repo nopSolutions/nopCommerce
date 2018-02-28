@@ -1,4 +1,4 @@
-﻿@model ShipmentModel
+@model ShipmentModel
 
 @{
     //page title
@@ -10,7 +10,7 @@
 
 
 <form asp-controller="Order" asp-action="ShipmentDetails" method="post">
-    <script type="text/javascript">
+    <script>
         $(document).ready(function() {
             toggleShippedDate(false);
             toggleDeliveryDate(false);
@@ -66,7 +66,7 @@
                 <i class="fa fa-trash-o"></i>
                 @T("Admin.Common.Delete")
             </span>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_order_shipment_details_buttons", additionalData = Model })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.OrderShipmentDetailsButtons, additionalData = Model })
         </div>
     </div>
 

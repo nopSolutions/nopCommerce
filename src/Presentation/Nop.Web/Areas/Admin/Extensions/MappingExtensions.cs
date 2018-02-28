@@ -125,6 +125,26 @@ namespace Nop.Web.Areas.Admin.Extensions
 
         #endregion
 
+        #region Vendor attributes
+
+        //attributes
+        public static VendorAttributeModel ToModel(this VendorAttribute entity)
+        {
+            return entity.MapTo<VendorAttribute, VendorAttributeModel>();
+        }
+
+        public static VendorAttribute ToEntity(this VendorAttributeModel model)
+        {
+            return model.MapTo<VendorAttributeModel, VendorAttribute>();
+        }
+
+        public static VendorAttribute ToEntity(this VendorAttributeModel model, VendorAttribute destination)
+        {
+            return model.MapTo(destination);
+        }
+
+        #endregion
+
         #region Products
 
         public static ProductModel ToModel(this Product entity)

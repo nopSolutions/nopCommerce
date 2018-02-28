@@ -6,7 +6,7 @@
 
 @await Component.InvokeAsync("StoreScopeConfiguration")
 
-<script type="text/javascript">
+<script>
 	$(document).ready(function () {
         $("#@Html.IdFor(model => model.PassProductNamesAndTotals)").click(togglePassProductNamesAndTotals);
 	    togglePassProductNamesAndTotals();

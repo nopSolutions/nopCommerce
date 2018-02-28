@@ -6,7 +6,7 @@
     <p>
         @T("Admin.Catalog.Products.SpecificationAttributes.Hint")
     </p>
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_product_details_specification_attributes_top", additionalData = Model })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductDetailsSpecificationAttributesTop, additionalData = Model })
     @if (Model.Id > 0)
     {
         /*hide "add spec" table if no attributes are defined*/
@@ -16,7 +16,7 @@
                 <div class="panel-body">
                     <div id="specificationattributes-grid"></div>
 
-                    <script type="text/javascript">
+                    <script>
                         $(document).ready(function() {
                             $("#specificationattributes-grid").kendoGrid({
                                 dataSource: {
@@ -174,7 +174,7 @@
                     @T("Admin.Catalog.Products.SpecificationAttributes.AddNew")
                 </div>
                 <div class="panel-body">
-                    <script type="text/javascript">
+                    <script>
                         $(document).ready(function() {
                             $("#@Html.IdFor(model => model.AddSpecificationAttributeModel.SpecificationAttributeId)").change(function() {
                                 var selectedAttributeId = $(this).val();
@@ -364,5 +364,5 @@
             </div>
         </div>
     }
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_product_details_specification_attributes_bottom", additionalData = Model })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductDetailsSpecificationAttributesBottom, additionalData = Model })
 </div>

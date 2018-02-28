@@ -1,8 +1,8 @@
-﻿@model ManufacturerModel
+@model ManufacturerModel
 @inject AdminAreaSettings adminAreaSettings
 
 <div class="panel-group">
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_manufacturer_details_products_top", additionalData = Model })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ManufacturerDetailsProductsTop, additionalData = Model })
     @if (Model.Id > 0)
     {
         <div class="panel panel-default">
@@ -14,7 +14,7 @@
 
                 <div id="products-grid"></div>
 
-                <script type="text/javascript">
+                <script>
                     $(document).ready(function() {
                         $("#products-grid").kendoGrid({
                             dataSource: {
@@ -131,7 +131,7 @@
                     @T("Admin.Catalog.Manufacturers.Products.AddNew")
                 </button>
                 <input type="submit" id="btnRefreshProducts" style="display: none" />
-                <script type="text/javascript">
+                <script>
                     $(document).ready(function () {
                         $('#btnRefreshProducts').click(function () {
                             //refresh grid
@@ -155,5 +155,5 @@
         </div>
 
     }
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_manufacturer_details_products_bottom", additionalData = Model })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ManufacturerDetailsProductsBottom, additionalData = Model })
 </div>

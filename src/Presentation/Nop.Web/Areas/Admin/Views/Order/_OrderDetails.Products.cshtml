@@ -4,20 +4,20 @@
 @using Nop.Core.Domain.Catalog;
 
 <div class="panel-group">
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_order_details_products_top", additionalData = Model })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.OrderDetailsProductsTop, additionalData = Model })
     <div class="panel panel-default">
         <div class="panel-body">
             <div class="form-group">
                 <div class="col-md-12" style="overflow-x: auto;">
                     @foreach (var item in Model.Items)
                     {
-                        <script type="text/javascript">
+                        <script>
                             $(document).ready(function () {
                                 toggleOrderItemEdit@(item.Id)(false);
                             });
                         </script>
 
-                        <script type="text/javascript">
+                        <script>
                             function toggleOrderItemEdit@(item.Id)(editMode) {
                                 if (editMode) {
                                     $('#pnlEditPvUnitPrice@(item.Id)').show();
@@ -393,5 +393,5 @@
             }
         </div>
     </div>
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_order_details_products_bottom", additionalData = Model })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.OrderDetailsProductsBottom, additionalData = Model })
 </div>

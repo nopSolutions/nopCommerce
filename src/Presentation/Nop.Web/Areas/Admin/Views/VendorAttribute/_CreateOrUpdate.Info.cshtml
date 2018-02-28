@@ -1,0 +1,93 @@
+﻿@model VendorAttributeModel
+@using Nop.Core.Domain.Catalog
+@using Nop.Services
+
+<script>
+    $(document).ready(function() {
+        $("#@Html.IdFor(model => model.AttributeControlTypeId)").change(toggleAttributeControlType);
+        toggleAttributeControlType();
+    });
+
+    function toggleAttributeControlType() {
+        var selectedAttributeControlTypeId = $("#@Html.IdFor(model => model.AttributeControlTypeId)").val();
+           
+        //values
+        if (selectedAttributeControlTypeId == @(((int) AttributeControlType.DropdownList).ToString()) ||
+            selectedAttributeControlTypeId == @(((int) AttributeControlType.RadioList).ToString()) ||
+            selectedAttributeControlTypeId == @(((int) AttributeControlType.Checkboxes).ToString()) ||
+            selectedAttributeControlTypeId == @(((int) AttributeControlType.ColorSquares).ToString()) ||
+            selectedAttributeControlTypeId == @(((int) AttributeControlType.ImageSquares).ToString()) ||
+            selectedAttributeControlTypeId == @(((int) AttributeControlType.ReadonlyCheckboxes).ToString())) {
+                $('[data-tab-name=tab-values]').show();
+        } else {
+            $('[data-tab-name=tab-values]').hide();
+        }
+    }
+</script>
+<div class="panel-group">
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_vendor_attribute_details_info_top", additionalData = Model })
+    <div class="panel panel-default">
+        <div class="panel-body">
+            @(Html.LocalizedEditor<VendorAttributeModel, VendorAttributeLocalizedModel>("vendorattribute-localized",
+            @<div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="@Model.Locales[item].Name"/>
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="@Model.Locales[item].Name"/>
+                        <span asp-validation-for="@Model.Locales[item].Name"></span>
+                    </div>
+                </div>
+                 <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
+            </div>
+,
+            @<div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="Name" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="Name" asp-required="true" />
+                        <span asp-validation-for="Name"></span>
+                    </div>
+                </div>
+            </div>
+        ))
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-label asp-for="IsRequired" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="IsRequired" />
+                    <span asp-validation-for="IsRequired"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-label asp-for="AttributeControlTypeId" />
+                </div>
+                <div class="col-md-9">
+                    @{
+                        var attributeControlTypes = ((AttributeControlType)Model.AttributeControlTypeId)
+                            .ToSelectList(valuesToExclude:
+                            //these attributes don't support some control types
+                            new[] { (int)AttributeControlType.FileUpload, (int)AttributeControlType.Datepicker, (int)AttributeControlType.ColorSquares, (int)AttributeControlType.ImageSquares });
+                    }
+                    <nop-select asp-for="AttributeControlTypeId" asp-items="@attributeControlTypes" />
+                    <span asp-validation-for="AttributeControlTypeId"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-label asp-for="DisplayOrder" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="DisplayOrder" />
+                    <span asp-validation-for="DisplayOrder"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_vendor_attribute_details_info_bottom", additionalData = Model })
+</div>

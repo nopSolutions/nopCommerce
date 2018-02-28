@@ -190,6 +190,7 @@ namespace Nop.Services.Tax
                     {
                         Address1 = pickupPoint.Address,
                         City = pickupPoint.City,
+                        County = pickupPoint.County,
                         Country = country,
                         CountryId = country?.Id ?? 0,
                         StateProvince = state,

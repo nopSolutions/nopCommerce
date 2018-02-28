@@ -294,7 +294,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                         ProductAttributeId = x.ProductAttributeId,
                         Name = x.Name,
                         PriceAdjustment = x.PriceAdjustment,
-                        PriceAdjustmentStr = x.PriceAdjustment.ToString("G29"),
+                        PriceAdjustmentUsePercentage = x.PriceAdjustmentUsePercentage,
+                        PriceAdjustmentStr = x.PriceAdjustment.ToString("G29") + (x.PriceAdjustmentUsePercentage ? " %" : ""),
                         WeightAdjustment = x.WeightAdjustment,
                         WeightAdjustmentStr = x.WeightAdjustment.ToString("G29"),
                         Cost = x.Cost,
@@ -346,6 +347,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     ProductAttributeId = model.ProductAttributeId,
                     Name = model.Name,
                     PriceAdjustment = model.PriceAdjustment,
+                    PriceAdjustmentUsePercentage = model.PriceAdjustmentUsePercentage,
                     WeightAdjustment = model.WeightAdjustment,
                     Cost = model.Cost,
                     IsPreSelected = model.IsPreSelected,
@@ -378,6 +380,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ProductAttributeId = ppav.ProductAttributeId,
                 Name = ppav.Name,
                 PriceAdjustment = ppav.PriceAdjustment,
+                PriceAdjustmentUsePercentage = ppav.PriceAdjustmentUsePercentage,
                 WeightAdjustment = ppav.WeightAdjustment,
                 Cost = ppav.Cost,
                 IsPreSelected = ppav.IsPreSelected,
@@ -405,6 +408,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 ppav.Name = model.Name;
                 ppav.PriceAdjustment = model.PriceAdjustment;
+                ppav.PriceAdjustmentUsePercentage = model.PriceAdjustmentUsePercentage;
                 ppav.WeightAdjustment = model.WeightAdjustment;
                 ppav.Cost = model.Cost;
                 ppav.IsPreSelected = model.IsPreSelected;

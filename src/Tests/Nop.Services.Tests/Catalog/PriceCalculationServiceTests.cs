@@ -12,6 +12,7 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Stores;
 using Nop.Core.Infrastructure;
 using Nop.Services.Catalog;
+using Nop.Services.Directory;
 using Nop.Services.Discounts;
 using Nop.Tests;
 using NUnit.Framework;
@@ -74,6 +75,12 @@ namespace Nop.Services.Tests.Catalog
             var httpContextAccessor = MockRepository.GenerateMock<IHttpContextAccessor>();
             serviceProvider.Expect(x => x.GetRequiredService(typeof(IHttpContextAccessor))).Return(httpContextAccessor);
             serviceProvider.Expect(x => x.GetRequiredService(typeof(IWorkContext))).Return(_workContext);
+
+            serviceProvider.Expect(x => x.GetRequiredService(typeof(CurrencySettings))).Return(new CurrencySettings{PrimaryStoreCurrencyId = 1});
+            var currencyService = MockRepository.GenerateMock<ICurrencyService>();
+            currencyService.Expect(x => x.GetCurrencyById(1)).Return(new Currency {Id = 1, RoundingTypeId = 0});
+            serviceProvider.Expect(x => x.GetRequiredService(typeof(ICurrencyService))).Return(currencyService);
+
             nopEngine.Expect(x => x.ServiceProvider).Return(serviceProvider);
             EngineContext.Replace(nopEngine);
         }

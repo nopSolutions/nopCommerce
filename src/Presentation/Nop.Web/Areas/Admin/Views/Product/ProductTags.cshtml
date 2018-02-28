@@ -1,4 +1,4 @@
-﻿@inject AdminAreaSettings adminAreaSettings
+@inject AdminAreaSettings adminAreaSettings
 
 @{
     var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
@@ -17,7 +17,7 @@
         </h1>
         <div class="pull-right">
             &nbsp;
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_product_tag_list_buttons" })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductTagListButtons })
         </div>
     </div>
 
@@ -27,7 +27,7 @@
                 <div class="panel-body">
                     <div id="product-tags-grid"></div>
 
-                    <script type="text/javascript">
+                    <script>
                         $(document).ready(function() {
                             $("#product-tags-grid").kendoGrid({
                                 dataSource: {
@@ -114,7 +114,7 @@
                         });
                     </script>
                     <input type="submit" id="btnRefresh" style="display: none"/>
-                    <script type="text/javascript">
+                    <script>
                         $(document).ready(function() {
                             $('#btnRefresh').click(function() {
                                 //refresh grid

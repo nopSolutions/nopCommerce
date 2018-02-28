@@ -1,6 +1,6 @@
 ﻿<div id="measuredimension-grid"></div>
 
-<script type="text/javascript">
+<script>
     $(document).ready(function() {
         $("#measuredimension-grid").kendoGrid({
             dataSource: {
@@ -133,7 +133,7 @@
         });
     });
 </script>
-<script type="text/javascript">
+<script>
     function markAsPrimaryDimension(id) {
         if (confirm('@T("Admin.Common.AreYouSure")')) {
             var postData = {

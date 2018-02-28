@@ -2,7 +2,7 @@
 @model CustomerModel
 @if (Model.CountryEnabled && Model.StateProvinceEnabled)
 {
-    <script type="text/javascript">
+    <script>
         $(document).ready(function() {
             $("#@Html.IdFor(model => model.CountryId)").change(function() {
                 var selectedItem = $(this).val();
@@ -33,7 +33,7 @@
     </script>
 }
 <div class="panel-group">
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_customer_details_info_top", additionalData = Model })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CustomerDetailsInfoTop, additionalData = Model })
     <div class="panel panel-default">
         <div class="panel-body">
             @if (Model.UsernamesEnabled)
@@ -85,7 +85,7 @@
                     <div class="col-md-9">
                         <div id="externalauthrecords-grid"></div>
 
-                        <script type="text/javascript">
+                        <script>
 
                             //local datasource
                             var externalauthrecords = [
@@ -166,7 +166,7 @@
                         <nop-required />
                     </div>
                 </div>
-                <script type="text/javascript">
+                <script>
                     $(document).ready(function() {
                         var customerRolesIdsInput = $('#@Html.IdFor(model => model.SelectedCustomerRoleIds)').data("kendoMultiSelect");
                         customerRolesIdsInput.setOptions({
@@ -314,6 +314,18 @@
                     <div class="col-md-9">
                         <nop-editor asp-for="City"/>
                         <span asp-validation-for="City"></span>
+                    </div>
+                </div>
+            }
+            @if (Model.CountyEnabled)
+            {
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="County" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="County" />
+                        <span asp-validation-for="County"></span>
                     </div>
                 </div>
             }
@@ -521,5 +533,5 @@
             }
         </div>
     </div>
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_customer_details_info_bottom", additionalData = Model })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CustomerDetailsInfoBottom, additionalData = Model })
 </div>

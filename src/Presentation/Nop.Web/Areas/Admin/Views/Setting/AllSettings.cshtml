@@ -22,14 +22,14 @@
     </h1>
     <div class="pull-right">
         &nbsp;
-        @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_all_setting_list_buttons" })
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.AllSettingListButtons })
     </div>
 </div>
 
 <div class="content">
     <div class="form-horizontal">
         <div class="panel-group">
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_all_settings_top" })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.AllSettingsTop })
             <div class="panel panel-default panel-search">
                 <div class="panel-body">
                     <div class="row">
@@ -67,7 +67,7 @@
                 <div class="panel-body">
                     <div id="settings-grid"></div>
 
-                    <script type="text/javascript">
+                    <script>
                         $(document).ready(function() {
                             $("#settings-grid").kendoGrid({
                                 dataSource: {
@@ -204,7 +204,7 @@
                         }
                     </script>
 
-                    <script type="text/javascript">
+                    <script>
                         $(document).ready(function() {
                             $('#search-settings').click(function() {
                                 var grid = $('#settings-grid').data('kendoGrid');
@@ -232,7 +232,7 @@
                     </script>
                 </div>
             </div>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_all_settings_bottom" })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.AllSettingsBottom })
         </div>
     </div>
 </div>

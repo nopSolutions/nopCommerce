@@ -3,17 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Services.Catalog;
+using Nop.Services.Common;
 using Nop.Services.Events;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
+using Nop.Services.Messages;
 using Nop.Services.Security;
 using Nop.Services.Stores;
+using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc.Filters;
 
@@ -23,6 +25,7 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
+        private readonly CatalogSettings _catalogSettings;
         private readonly IProductService _productService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ILocalizationService _localizationService;
@@ -31,20 +34,24 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly IStoreService _storeService;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly IWorkContext _workContext;
+        private readonly IWorkflowMessageService _workflowMessageService;
 
         #endregion Fields
 
         #region Ctor
 
-        public ProductReviewController(IProductService productService, 
+        public ProductReviewController(CatalogSettings catalogSettings,
+            IProductService productService, 
             IDateTimeHelper dateTimeHelper,
             ILocalizationService localizationService, 
             IPermissionService permissionService,
             IEventPublisher eventPublisher,
             IStoreService storeService,
             ICustomerActivityService customerActivityService,
-            IWorkContext workContext)
+            IWorkContext workContext,
+            IWorkflowMessageService workflowMessageService)
         {
+            this._catalogSettings = catalogSettings;
             this._productService = productService;
             this._dateTimeHelper = dateTimeHelper;
             this._localizationService = localizationService;
@@ -53,6 +60,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             this._storeService = storeService;
             this._customerActivityService = customerActivityService;
             this._workContext = workContext;
+            this._workflowMessageService = workflowMessageService;
         }
 
         #endregion
@@ -225,6 +233,17 @@ namespace Nop.Web.Areas.Admin.Controllers
                 }
 
                 productReview.ReplyText = model.ReplyText;
+
+                //notify customer about reply
+                if (productReview.IsApproved && !string.IsNullOrEmpty(productReview.ReplyText) 
+                    && _catalogSettings.NotifyCustomerAboutProductReviewReply && !productReview.CustomerNotifiedOfReply)
+                {
+                    var customerLanguageId = productReview.Customer.GetAttribute<int>(SystemCustomerAttributeNames.LanguageId, productReview.StoreId);
+                    var queuedEmailIds = _workflowMessageService.SendProductReviewReplyCustomerNotificationMessage(productReview, customerLanguageId);
+                    if (queuedEmailIds.Any())
+                        productReview.CustomerNotifiedOfReply = true;
+                }
+
                 _productService.UpdateProduct(productReview.Product);
 
                 //activity log

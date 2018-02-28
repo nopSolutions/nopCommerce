@@ -1,4 +1,4 @@
-﻿@model ForumModel
+@model ForumModel
 
 <div asp-validation-summary="ModelOnly"></div>
 <input asp-for="Id" type="hidden" />
@@ -6,7 +6,7 @@
 <div class="content">
     <div class="form-horizontal">
         <div class="panel-group">
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_forum_details_top", additionalData = Model })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ForumDetailsTop, additionalData = Model })
             <div class="panel panel-default">
                 <div class="panel-body">
                     <div class="form-group">
@@ -47,7 +47,7 @@
                     </div>
                 </div>
             </div>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_forum_details_bottom", additionalData = Model })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ForumDetailsBottom, additionalData = Model })
         </div>
     </div>
 </div>

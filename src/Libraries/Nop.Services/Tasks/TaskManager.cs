@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using Nop.Core.Infrastructure;
+using Nop.Services.Logging;
 
 namespace Nop.Services.Tasks
 {
@@ -45,46 +46,44 @@ namespace Nop.Services.Tasks
             _taskThreads.Clear();
 
             var taskService = EngineContext.Current.Resolve<IScheduleTaskService>();
+            
             var scheduleTasks = taskService
                 .GetAllTasks()
                 .OrderBy(x => x.Seconds)
                 .ToList();
-
-            //group by threads with the same seconds
-            foreach (var scheduleTaskGrouped in scheduleTasks.GroupBy(x => x.Seconds))
-            {
-                //create a thread
-                var taskThread = new TaskThread
-                {
-                    Seconds = scheduleTaskGrouped.Key
-                };
-                foreach (var scheduleTask in scheduleTaskGrouped)
-                {
-                    taskThread.AddTask(scheduleTask);
-                }
-                _taskThreads.Add(taskThread);
-            }
-
-            //sometimes a task period could be set to several hours (or even days).
-            //in this case a probability that it'll be run is quite small (an application could be restarted)
-            //we should manually run the tasks which weren't run for a long time
-            var notRunTasks = scheduleTasks
-                //find tasks with "run period" more than 30 minutes
-                .Where(x => x.Seconds >= _notRunTasksInterval)
-                .Where(x => !x.LastStartUtc.HasValue || x.LastStartUtc.Value.AddSeconds(x.Seconds) < DateTime.UtcNow)
-                .ToList();
-            //create a thread for the tasks which weren't run for a long time
-            if (notRunTasks.Any())
+            
+            foreach (var scheduleTask in scheduleTasks)
             {
                 var taskThread = new TaskThread
                 {
-                    RunOnlyOnce = true,
-                    Seconds = 60 * 5 //let's run such tasks in 5 minutes after application start
+                    Seconds = scheduleTask.Seconds
                 };
-                foreach (var scheduleTask in notRunTasks)
+
+                //sometimes a task period could be set to several hours (or even days)
+                //in this case a probability that it'll be run is quite small (an application could be restarted)
+                //calculate time before start an interrupted task
+                if (scheduleTask.LastStartUtc.HasValue)
                 {
-                    taskThread.AddTask(scheduleTask);
+                    //seconds left since the last start
+                    var secondsLeft = (DateTime.UtcNow - scheduleTask.LastStartUtc).Value.TotalSeconds;
+
+
+                    if (secondsLeft >= scheduleTask.Seconds)
+                        //run now (immediately)
+                        taskThread.InitSeconds = 0;
+
+                    else 
+                        //calculate start time
+                        //and round it (so "ensureRunOncePerPeriod" parameter wors fine)
+                        taskThread.InitSeconds = (int)(scheduleTask.Seconds - secondsLeft) + 1;
                 }
+                else
+                {
+                    //first start of a task
+                    taskThread.InitSeconds = scheduleTask.Seconds;
+                }
+
+                taskThread.AddTask(scheduleTask);
                 _taskThreads.Add(taskThread);
             }
         }

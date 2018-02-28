@@ -1,4 +1,4 @@
-﻿@model AffiliateModel.AffiliatedOrderListModel
+@model AffiliateModel.AffiliatedOrderListModel
 @inject AdminAreaSettings adminAreaSettings
 @{
     var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
@@ -6,7 +6,7 @@
 }
 
 <div class="panel-group">
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_affiliate_details_orders_top", additionalData = Model })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.AffiliateDetailsOrdersTop, additionalData = Model })
     <div class="panel panel-default panel-search">
         <div class="panel-body">
             <div class="row">
@@ -68,7 +68,7 @@
         <div class="panel-body">
             <div id="orders-grid"></div>
 
-            <script type="text/javascript">
+            <script>
                 $(document).ready(function () {
                     $("#orders-grid").kendoGrid({
                         dataSource: {
@@ -145,7 +145,7 @@
                 });
             </script>
 
-            <script type="text/javascript">
+            <script>
                 var selectedIds = [];
                 var reportAggregates = "";
 
@@ -175,5 +175,5 @@
             </script>
         </div>
     </div>
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_affiliate_details_orders_bottom", additionalData = Model })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.AffiliateDetailsOrdersBottom, additionalData = Model })
 </div>

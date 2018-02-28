@@ -1,4 +1,4 @@
-﻿@{
+@{
     //page title
     ViewBag.Title = T("Admin.Configuration.Countries").Text;
     //active menu item (system name)
@@ -31,7 +31,7 @@
             <i class="fa fa-upload"></i>
             @T("Admin.Configuration.Countries.ImportFromCsv")
         </button>
-        @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_country_list_buttons" })
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CountryListButtons })
     </div>
 </div>
 
@@ -42,7 +42,7 @@
                 <div class="panel-body">
                     <div id="countries-grid"></div>
 
-                    <script type="text/javascript">
+                    <script>
                         $(document).ready(function () {
                             $("#countries-grid").kendoGrid({
                                 dataSource: {
@@ -151,7 +151,7 @@
                         });
                     </script>
 
-                    <script type="text/javascript">
+                    <script>
                         var selectedIds = [];
 
                         $(document).ready(function () {
@@ -216,20 +216,17 @@
                             //wire up checkboxes.
                             $('#countries-grid').on('change', 'input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]', function (e) {
                                 var $check = $(this);
+                                var checked = jQuery.inArray($check.val(), selectedIds);
                                 if ($check.is(":checked") == true) {
-                                    var checked = jQuery.inArray($check.val(), selectedIds);
                                     if (checked == -1) {
                                         //add id to selectedIds.
                                         selectedIds.push($check.val());
                                     }
-                                } else {
-                                    var checked = jQuery.inArray($check.val(), selectedIds);
-                                    if (checked > -1) {
-                                        //remove id from selectedIds.
-                                        selectedIds = $.grep(selectedIds, function (item, index) {
-                                            return item != $check.val();
-                                        });
-                                    }
+                                } else if (checked > -1) {
+                                    //remove id from selectedIds.
+                                    selectedIds = $.grep(selectedIds, function (item, index) {
+                                        return item != $check.val();
+                                    });
                                 }
                                 updateMasterCheckbox();
                             });

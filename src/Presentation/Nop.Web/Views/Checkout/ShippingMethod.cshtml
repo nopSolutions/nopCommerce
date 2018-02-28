@@ -16,7 +16,7 @@
     <div class="page-body checkout-data">
         <div class="section shipping-method">
             <form asp-route="CheckoutShippingMethod" method="post">
-                @await Component.InvokeAsync("Widget", new { widgetZone = "checkout_shipping_method_top" })
+                @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.CheckoutShippingMethodTop })
                 @if (Model.Warnings.Count == 0)
                 {
                     <ul class="method-list">
@@ -58,7 +58,7 @@
                         </ul>
                     </div>
                 }
-                @await Component.InvokeAsync("Widget", new { widgetZone = "checkout_shipping_method_bottom" })
+                @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.CheckoutShippingMethodBottom })
             </form>
         </div>
         <div class="section order-summary">

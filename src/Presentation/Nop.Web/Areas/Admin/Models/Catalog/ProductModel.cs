@@ -810,6 +810,9 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
             //used only on the values list page
             public string PriceAdjustmentStr { get; set; }
 
+            [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.PriceAdjustmentUsePercentage")]
+            public bool PriceAdjustmentUsePercentage { get; set; }
+
             [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.WeightAdjustment")]
             public decimal WeightAdjustment { get; set; }
             [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.WeightAdjustment")]
@@ -886,38 +889,6 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
 
             [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.Name")]
             public string Name { get; set; }
-        }
-
-        public partial class ProductAttributeCombinationModel : BaseNopEntityModel
-        {
-            public int ProductId { get; set; }
-
-            [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.Attributes")]
-            public string AttributesXml { get; set; }
-            
-            public string Warnings { get; set; }
-
-            [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.StockQuantity")]
-            public int StockQuantity { get; set; }
-
-            [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.AllowOutOfStockOrders")]
-            public bool AllowOutOfStockOrders { get; set; }
-
-            [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.Sku")]
-            public string Sku { get; set; }
-
-            [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.ManufacturerPartNumber")]
-            public string ManufacturerPartNumber { get; set; }
-
-            [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.Gtin")]
-            public string Gtin { get; set; }
-
-            [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.OverriddenPrice")]
-            [UIHint("DecimalNullable")]
-            public decimal? OverriddenPrice { get; set; }
-
-            [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.NotifyAdminForQuantityBelow")]
-            public int NotifyAdminForQuantityBelow { get; set; }
         }
 
         #region Stock quantity history

@@ -215,6 +215,7 @@ namespace Nop.Services.Catalog
                         Name = productAttributeValue.Name,
                         ColorSquaresRgb = productAttributeValue.ColorSquaresRgb,
                         PriceAdjustment = productAttributeValue.PriceAdjustment,
+                        PriceAdjustmentUsePercentage = productAttributeValue.PriceAdjustmentUsePercentage,
                         WeightAdjustment = productAttributeValue.WeightAdjustment,
                         Cost = productAttributeValue.Cost,
                         CustomerEntersQty = productAttributeValue.CustomerEntersQty,
@@ -334,6 +335,10 @@ namespace Nop.Services.Catalog
                         }
                     }
                 }
+
+                //picture
+                originalNewPictureIdentifiers.TryGetValue(combination.PictureId, out int combinationPictureId);
+
                 var combinationCopy = new ProductAttributeCombination
                 {
                     ProductId = productCopy.Id,
@@ -344,7 +349,8 @@ namespace Nop.Services.Catalog
                     ManufacturerPartNumber = combination.ManufacturerPartNumber,
                     Gtin = combination.Gtin,
                     OverriddenPrice = combination.OverriddenPrice,
-                    NotifyAdminForQuantityBelow = combination.NotifyAdminForQuantityBelow
+                    NotifyAdminForQuantityBelow = combination.NotifyAdminForQuantityBelow,
+                    PictureId = combinationPictureId
                 };
                 _productAttributeService.InsertProductAttributeCombination(combinationCopy);
 

@@ -12,7 +12,7 @@
 
 @if (ViewBag.RefreshPage == true)
 {
-    <script type="text/javascript">
+    <script>
         try {
             window.opener.$('#@(Context.Request.Query["productIdInput"])').val('@(ViewBag.productId)').trigger('change');
             window.opener.document.getElementById('@(Context.Request.Query["productNameInput"])').innerHTML = '@(ViewBag.productName)';
@@ -109,7 +109,7 @@
                     <div class="panel-body">
                         <div id="products-grid"></div>
 
-                        <script type="text/javascript">
+                        <script>
                             $(document).ready(function () {
                                 $("#products-grid").kendoGrid({
                                     dataSource: {
@@ -172,7 +172,7 @@
                         </button>
                     </div>
 
-                    <script type="text/javascript">
+                    <script>
                         $(document).ready(function () {
                             $('#search-products').click(function () {
                                 var grid = $('#products-grid').data('kendoGrid');
