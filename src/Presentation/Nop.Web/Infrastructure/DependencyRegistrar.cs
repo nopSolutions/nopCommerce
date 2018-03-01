@@ -29,6 +29,7 @@ namespace Nop.Web.Infrastructure
             builder.RegisterType<AffiliateModelFactory>().As<IAffiliateModelFactory>().InstancePerLifetimeScope();
             builder.RegisterType<BlogModelFactory>().As<IBlogModelFactory>().InstancePerLifetimeScope();
             builder.RegisterType<CampaignModelFactory>().As<ICampaignModelFactory>().InstancePerLifetimeScope();
+            builder.RegisterType<CategoryModelFactory>().As<ICategoryModelFactory>().InstancePerLifetimeScope();
 
             //factories
             builder.RegisterType<Factories.AddressModelFactory>().As<Factories.IAddressModelFactory>().InstancePerLifetimeScope();
