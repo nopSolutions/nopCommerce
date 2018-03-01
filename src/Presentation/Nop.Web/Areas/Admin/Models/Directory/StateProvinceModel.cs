@@ -3,7 +3,7 @@ using FluentValidation.Attributes;
 using Nop.Web.Areas.Admin.Validators.Directory;
 using Nop.Web.Framework.Localization;
 using Nop.Web.Framework.Mvc.ModelBinding;
-using Nop.Web.Framework.Mvc.Models;
+using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Areas.Admin.Models.Directory
 {

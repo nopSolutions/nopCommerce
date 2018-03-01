@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
-namespace Nop.Web.Framework.Mvc.Models
+namespace Nop.Web.Framework.Models
 {
     /// <summary>
     /// Represents base nopCommerce model

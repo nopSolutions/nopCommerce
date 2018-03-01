@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Nop.Web.Framework.Mvc.ModelBinding;
-using Nop.Web.Framework.Mvc.Models;
+using Nop.Web.Framework.Models;
 
 namespace Nop.Plugin.Widgets.NivoSlider.Models
 {

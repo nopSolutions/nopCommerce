@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using Nop.Web.Areas.Admin.Models.Directory;
-using Nop.Web.Framework.Mvc.Models;
+using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Areas.Admin.Models.Shipping
 {

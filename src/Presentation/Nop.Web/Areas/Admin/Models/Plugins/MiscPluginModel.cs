@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Routing;
-using Nop.Web.Framework.Mvc.Models;
+using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Areas.Admin.Models.Plugins
 {

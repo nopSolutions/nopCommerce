@@ -6,7 +6,7 @@ using Nop.Services.Payments;
 using Nop.Services.Tasks;
 using Nop.Web.Areas.Admin.Models.Tasks;
 using Nop.Web.Framework.Events;
-using Nop.Web.Framework.Mvc.Models;
+using Nop.Web.Framework.Models;
 using Nop.Web.Framework.UI;
 
 namespace Nop.Plugin.Payments.Square.Services

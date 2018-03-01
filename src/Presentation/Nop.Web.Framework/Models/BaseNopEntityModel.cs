@@ -1,5 +1,5 @@
 ﻿
-namespace Nop.Web.Framework.Mvc.Models
+namespace Nop.Web.Framework.Models
 {
     /// <summary>
     /// Represents base nopCommerce entity model
