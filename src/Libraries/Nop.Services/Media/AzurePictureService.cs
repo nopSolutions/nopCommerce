@@ -115,7 +115,7 @@ namespace Nop.Services.Media
         {
             var storageAccount = CloudStorageAccount.Parse(_config.AzureBlobStorageConnectionString);
             if (storageAccount == null)
-                throw new Exception("Azure connection string for BLOB is not wrong");
+                throw new Exception("Azure connection string for BLOB is not working");
 
             //should we do it for each HTTP request?
             var blobClient = storageAccount.CreateCloudBlobClient();
