@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using Nop.Core;
 using Nop.Core.Infrastructure;
 using Nop.Services.Localization;
 using Nop.Web.Areas.Admin.Validators.Common;
@@ -13,7 +14,9 @@ namespace Nop.Web.MVC.Tests.Public.Validators
     public abstract class BaseValidatorTests
     {
         protected ILocalizationService _localizationService;
-        
+
+        protected IWorkContext _workContext;
+
         [SetUp]
         public void Setup()
         {
@@ -27,6 +30,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators
             serviceProvider.Expect(x => x.GetRequiredService(typeof(ILocalizationService))).Return(_localizationService);
             nopEngine.Expect(x => x.ServiceProvider).Return(serviceProvider);
             nopEngine.Expect(x => x.ResolveUnregistered(typeof(AddressValidator))).Return(new AddressValidator(_localizationService));
+            _workContext = MockRepository.GenerateMock<IWorkContext>();
             EngineContext.Replace(nopEngine);
         }
     }
