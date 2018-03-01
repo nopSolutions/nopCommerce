@@ -414,6 +414,9 @@
   <LocaleResource Name="Account.Fields.Username">
     <Value>Username</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.Fields.Username.NotValid">
+    <Value>Username is not valid</Value>
+  </LocaleResource>  
   <LocaleResource Name="Account.Fields.Username.Required">
     <Value>Username is required.</Value>
   </LocaleResource>
@@ -5712,6 +5715,9 @@
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.SortOptions.Name">
     <Value>Name</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerSettings.RegexValidationRule.Error">
+    <Value>The regular expression for username validation is incorrect</Value>
+  </LocaleResource>   
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser">
     <Value>Customer settings</Value>
   </LocaleResource>
@@ -6177,6 +6183,24 @@
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.UsernamesEnabled.Hint">
     <Value>Check to use usernames for login/registration instead of emails. WARNING: not recommended to change in production environment.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.UsernameValidationRule">
+    <Value>Username validation rule</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.UsernameValidationRule.Hint">
+    <Value>Set the validation rule for username. You can specify a list of allowed characters or a regular expression. If you use a regular expression check the "Use regex for username validation" setting.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.UsernameValidationEnabled">
+    <Value>Username validation is enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.UsernameValidationEnabled.Hint">
+    <Value>Check to enable username validation (when registering or changing on the "My Account" page)</Value>
+  </LocaleResource> 
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.UsernameValidationUseRegex">
+    <Value>Use regex for username validation</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.UsernameValidationUseRegex.Hint">
+    <Value>Check to use a regular expression for username validation (when registering or changing on the "My Account" page)</Value>
+  </LocaleResource>    
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.UserRegistrationType">
     <Value>Registration method</Value>
   </LocaleResource>
