@@ -3,9 +3,8 @@ using System.ComponentModel.DataAnnotations;
 using FluentValidation.Attributes;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Web.Areas.Admin.Validators.Catalog;
-using Nop.Web.Framework.Localization;
-using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Models;
+using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Models.Catalog
 {
@@ -151,7 +150,7 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
         #endregion
     }
 
-    public partial class ManufacturerLocalizedModel : ILocalizedModelLocal
+    public partial class ManufacturerLocalizedModel : ILocalizedLocaleModel
     {
         public int LanguageId { get; set; }
 

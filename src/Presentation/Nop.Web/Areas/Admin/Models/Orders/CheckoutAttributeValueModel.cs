@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using FluentValidation.Attributes;
 using Nop.Web.Areas.Admin.Validators.Orders;
-using Nop.Web.Framework.Localization;
-using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Models;
+using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Models.Orders
 {
@@ -41,7 +40,7 @@ namespace Nop.Web.Areas.Admin.Models.Orders
         public IList<CheckoutAttributeValueLocalizedModel> Locales { get; set; }
     }
 
-    public partial class CheckoutAttributeValueLocalizedModel : ILocalizedModelLocal
+    public partial class CheckoutAttributeValueLocalizedModel : ILocalizedLocaleModel
     {
         public int LanguageId { get; set; }
 

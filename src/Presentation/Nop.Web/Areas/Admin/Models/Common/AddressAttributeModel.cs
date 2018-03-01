@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using FluentValidation.Attributes;
 using Nop.Web.Areas.Admin.Validators.Common;
-using Nop.Web.Framework.Localization;
-using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Models;
+using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Models.Common
 {
@@ -32,7 +31,7 @@ namespace Nop.Web.Areas.Admin.Models.Common
         public IList<AddressAttributeLocalizedModel> Locales { get; set; }
     }
 
-    public partial class AddressAttributeLocalizedModel : ILocalizedModelLocal
+    public partial class AddressAttributeLocalizedModel : ILocalizedLocaleModel
     {
         public int LanguageId { get; set; }
 

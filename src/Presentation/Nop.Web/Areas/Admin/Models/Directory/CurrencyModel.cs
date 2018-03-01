@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using FluentValidation.Attributes;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Web.Areas.Admin.Validators.Directory;
-using Nop.Web.Framework.Localization;
-using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Models;
+using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Models.Directory
 {
@@ -61,7 +60,7 @@ namespace Nop.Web.Areas.Admin.Models.Directory
         public int RoundingTypeId { get; set; }
     }
 
-    public partial class CurrencyLocalizedModel : ILocalizedModelLocal
+    public partial class CurrencyLocalizedModel : ILocalizedLocaleModel
     {
         public int LanguageId { get; set; }
 

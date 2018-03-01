@@ -2,9 +2,8 @@
 using FluentValidation.Attributes;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Web.Areas.Admin.Validators.Stores;
-using Nop.Web.Framework.Localization;
-using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Models;
+using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Models.Stores
 {
@@ -52,7 +51,7 @@ namespace Nop.Web.Areas.Admin.Models.Stores
         public IList<StoreLocalizedModel> Locales { get; set; }
     }
 
-    public partial class StoreLocalizedModel : ILocalizedModelLocal
+    public partial class StoreLocalizedModel : ILocalizedLocaleModel
     {
         public int LanguageId { get; set; }
 

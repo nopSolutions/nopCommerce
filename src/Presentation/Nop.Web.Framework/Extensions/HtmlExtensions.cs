@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Globalization;
 using System.IO;
 using System.Net;
 using System.Text;
@@ -11,7 +10,7 @@ using Microsoft.AspNetCore.Mvc.Routing;
 using Nop.Core.Infrastructure;
 using Nop.Services.Localization;
 using Nop.Services.Stores;
-using Nop.Web.Framework.Localization;
+using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Framework.Extensions
 {
@@ -39,7 +38,7 @@ namespace Nop.Web.Framework.Extensions
             Func<T, HelperResult> standardTemplate,
             bool ignoreIfSeveralStores = false)
             where T : ILocalizedModel<TLocalizedModelLocal>
-            where TLocalizedModelLocal : ILocalizedModelLocal
+            where TLocalizedModelLocal : ILocalizedLocaleModel
         {
             var localizationSupported = helper.ViewData.Model.Locales.Count > 1;
             if (ignoreIfSeveralStores)

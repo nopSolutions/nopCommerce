@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using FluentValidation.Attributes;
 using Nop.Web.Areas.Admin.Validators.Directory;
-using Nop.Web.Framework.Localization;
-using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Models;
+using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Models.Directory
 {
@@ -31,7 +30,7 @@ namespace Nop.Web.Areas.Admin.Models.Directory
         public IList<StateProvinceLocalizedModel> Locales { get; set; }
     }
 
-    public partial class StateProvinceLocalizedModel : ILocalizedModelLocal
+    public partial class StateProvinceLocalizedModel : ILocalizedLocaleModel
     {
         public int LanguageId { get; set; }
         

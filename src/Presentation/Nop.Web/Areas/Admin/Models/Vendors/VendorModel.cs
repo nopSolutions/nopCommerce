@@ -5,9 +5,8 @@ using FluentValidation.Attributes;
 using Nop.Core.Domain.Catalog;
 using Nop.Web.Areas.Admin.Models.Common;
 using Nop.Web.Areas.Admin.Validators.Vendors;
-using Nop.Web.Framework.Localization;
-using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Models;
+using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Models.Vendors
 {
@@ -130,7 +129,7 @@ namespace Nop.Web.Areas.Admin.Models.Vendors
         #endregion
     }
 
-    public partial class VendorLocalizedModel : ILocalizedModelLocal
+    public partial class VendorLocalizedModel : ILocalizedLocaleModel
     {
         public int LanguageId { get; set; }
 

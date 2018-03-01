@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using FluentValidation.Attributes;
 using Nop.Web.Areas.Admin.Validators.Vendors;
-using Nop.Web.Framework.Localization;
-using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Models;
+using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Models.Vendors
 {
@@ -29,7 +28,7 @@ namespace Nop.Web.Areas.Admin.Models.Vendors
         public IList<VendorAttributeValueLocalizedModel> Locales { get; set; }
     }
 
-    public partial class VendorAttributeValueLocalizedModel : ILocalizedModelLocal
+    public partial class VendorAttributeValueLocalizedModel : ILocalizedLocaleModel
     {
         public int LanguageId { get; set; }
 

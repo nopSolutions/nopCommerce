@@ -3,9 +3,8 @@ using System.ComponentModel.DataAnnotations;
 using FluentValidation.Attributes;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Web.Areas.Admin.Validators.Messages;
-using Nop.Web.Framework.Localization;
-using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Models;
+using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Models.Messages
 {
@@ -67,7 +66,7 @@ namespace Nop.Web.Areas.Admin.Models.Messages
         public IList<MessageTemplateLocalizedModel> Locales { get; set; }
     }
 
-    public partial class MessageTemplateLocalizedModel : ILocalizedModelLocal
+    public partial class MessageTemplateLocalizedModel : ILocalizedLocaleModel
     {
         public MessageTemplateLocalizedModel()
         {

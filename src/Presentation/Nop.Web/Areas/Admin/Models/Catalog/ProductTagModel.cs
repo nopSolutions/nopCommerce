@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using FluentValidation.Attributes;
 using Nop.Web.Areas.Admin.Validators.Catalog;
-using Nop.Web.Framework.Localization;
-using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Models;
+using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Models.Catalog
 {
@@ -23,7 +22,7 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
         public IList<ProductTagLocalizedModel> Locales { get; set; }
     }
 
-    public partial class ProductTagLocalizedModel : ILocalizedModelLocal
+    public partial class ProductTagLocalizedModel : ILocalizedLocaleModel
     {
         public int LanguageId { get; set; }
 

@@ -2,9 +2,8 @@
 using FluentValidation.Attributes;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Web.Areas.Admin.Validators.Plugins;
-using Nop.Web.Framework.Localization;
-using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Models;
+using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Models.Plugins
 {
@@ -67,7 +66,7 @@ namespace Nop.Web.Areas.Admin.Models.Plugins
         public IList<SelectListItem> AvailableStores { get; set; }
     }
 
-    public partial class PluginLocalizedModel : ILocalizedModelLocal
+    public partial class PluginLocalizedModel : ILocalizedLocaleModel
     {
         public int LanguageId { get; set; }
 

@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using FluentValidation.Attributes;
 using Nop.Web.Areas.Admin.Validators.Shipping;
-using Nop.Web.Framework.Localization;
-using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Models;
+using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Models.Shipping
 {
@@ -27,7 +26,7 @@ namespace Nop.Web.Areas.Admin.Models.Shipping
         public IList<ShippingMethodLocalizedModel> Locales { get; set; }
     }
 
-    public partial class ShippingMethodLocalizedModel : ILocalizedModelLocal
+    public partial class ShippingMethodLocalizedModel : ILocalizedLocaleModel
     {
         public int LanguageId { get; set; }
 

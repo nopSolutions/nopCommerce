@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Nop.Web.Framework.Localization;
 using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Models;
 
@@ -34,7 +33,7 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder.Models
 
         #region Nested class
 
-        public partial class ConfigurationLocalizedModel : ILocalizedModelLocal
+        public partial class ConfigurationLocalizedModel : ILocalizedLocaleModel
         {
             public int LanguageId { get; set; }
             

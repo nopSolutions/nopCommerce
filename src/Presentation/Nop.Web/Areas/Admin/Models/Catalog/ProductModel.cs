@@ -5,9 +5,8 @@ using FluentValidation.Attributes;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Web.Areas.Admin.Models.Settings;
 using Nop.Web.Areas.Admin.Validators.Catalog;
-using Nop.Web.Framework.Localization;
-using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Models;
+using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Models.Catalog
 {
@@ -763,7 +762,7 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
             public IList<ProductAttributeMappingLocalizedModel> Locales { get; set; }
         }
 
-        public partial class ProductAttributeMappingLocalizedModel : ILocalizedModelLocal
+        public partial class ProductAttributeMappingLocalizedModel : ILocalizedLocaleModel
         {
             public int LanguageId { get; set; }
 
@@ -883,7 +882,7 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
             #endregion
         }
 
-        public partial class ProductAttributeValueLocalizedModel : ILocalizedModelLocal
+        public partial class ProductAttributeValueLocalizedModel : ILocalizedLocaleModel
         {
             public int LanguageId { get; set; }
 
@@ -923,7 +922,7 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
         #endregion
     }
 
-    public partial class ProductLocalizedModel : ILocalizedModelLocal
+    public partial class ProductLocalizedModel : ILocalizedLocaleModel
     {
         public int LanguageId { get; set; }
 
