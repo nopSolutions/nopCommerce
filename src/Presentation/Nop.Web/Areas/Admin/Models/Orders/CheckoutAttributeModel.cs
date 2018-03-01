@@ -17,7 +17,7 @@ namespace Nop.Web.Areas.Admin.Models.Orders
         {
             Locales = new List<CheckoutAttributeLocalizedModel>();
             AvailableTaxCategories = new List<SelectListItem>();
-
+            ConditionModel = new ConditionModel();
             SelectedStoreIds = new List<int>();
             AvailableStores = new List<SelectListItem>();
         }
@@ -81,6 +81,11 @@ namespace Nop.Web.Areas.Admin.Models.Orders
 
     public partial class ConditionModel : BaseNopEntityModel
     {
+        public ConditionModel()
+        {
+            ConditionAttributes = new List<AttributeConditionModel>();
+        }
+
         [NopResourceDisplayName("Admin.Catalog.Attributes.CheckoutAttributes.Condition.EnableCondition")]
         public bool EnableCondition { get; set; }
 
