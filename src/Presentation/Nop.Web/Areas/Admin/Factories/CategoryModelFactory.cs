@@ -39,7 +39,6 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IManufacturerService _manufacturerService;
         private readonly IProductService _productService;
         private readonly IStaticCacheManager _cacheManager;
-        private readonly IStoreMappingService _storeMappingService;
         private readonly IStoreService _storeService;
         private readonly IVendorService _vendorService;
 
@@ -60,7 +59,9 @@ namespace Nop.Web.Areas.Admin.Factories
             IStaticCacheManager cacheManager,
             IStoreMappingService storeMappingService,
             IStoreService storeService,
-            IVendorService vendorService) : base(languageService)
+            IVendorService vendorService) : base(languageService,
+                storeMappingService,
+                storeService)
         {
             this._aclService = aclService;
             this._catalogSettings = catalogSettings;
@@ -72,7 +73,6 @@ namespace Nop.Web.Areas.Admin.Factories
             this._manufacturerService = manufacturerService;
             this._productService = productService;
             this._cacheManager = cacheManager;
-            this._storeMappingService = storeMappingService;
             this._storeService = storeService;
             this._vendorService = vendorService;
         }
@@ -165,31 +165,6 @@ namespace Nop.Web.Areas.Admin.Factories
                 Text = role.Name,
                 Value = role.Id.ToString(),
                 Selected = model.SelectedCustomerRoleIds.Contains(role.Id)
-            }).ToList();
-        }
-
-        /// <summary>
-        /// Prepare selected and all available stores for the passed model
-        /// </summary>
-        /// <param name="model">Category model</param>
-        /// <param name="category">Category</param>
-        /// <param name="ignoreStoreMappings">Whether to ignore existing store mappings</param>
-        protected virtual void PrepareModelStores(CategoryModel model, Category category, bool ignoreStoreMappings)
-        {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
-
-            //try to get store identifiers with granted access
-            if (!ignoreStoreMappings && category != null)
-                model.SelectedStoreIds = _storeMappingService.GetStoresIdsWithAccess(category).ToList();
-
-            //prepare available stores
-            var availableStores = _storeService.GetAllStores();
-            model.AvailableStores = availableStores.Select(store => new SelectListItem
-            {
-                Text = store.Name,
-                Value = store.Id.ToString(),
-                Selected = model.SelectedStoreIds.Contains(store.Id)
             }).ToList();
         }
 

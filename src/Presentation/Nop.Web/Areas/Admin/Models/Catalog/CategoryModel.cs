@@ -9,7 +9,8 @@ using Nop.Web.Framework.Mvc.ModelBinding;
 namespace Nop.Web.Areas.Admin.Models.Catalog
 {
     [Validator(typeof(CategoryValidator))]
-    public partial class CategoryModel : BaseNopEntityModel, ILocalizedModel<CategoryLocalizedModel>
+    public partial class CategoryModel : BaseNopEntityModel, 
+        ILocalizedModel<CategoryLocalizedModel>, IStoreMappingSupportedModel
     {
         public CategoryModel()
         {

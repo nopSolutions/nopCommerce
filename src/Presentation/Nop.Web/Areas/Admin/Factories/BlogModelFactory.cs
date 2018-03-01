@@ -11,6 +11,7 @@ using Nop.Services.Stores;
 using Nop.Web.Areas.Admin.Extensions;
 using Nop.Web.Areas.Admin.Models.Blogs;
 using Nop.Web.Framework.Extensions;
+using Nop.Web.Framework.Factories;
 using Nop.Web.Framework.Kendoui;
 
 namespace Nop.Web.Areas.Admin.Factories
@@ -18,7 +19,7 @@ namespace Nop.Web.Areas.Admin.Factories
     /// <summary>
     /// Represents the blog model factory implementation
     /// </summary>
-    public partial class BlogModelFactory : IBlogModelFactory
+    public partial class BlogModelFactory : BaseModelFactory, IBlogModelFactory
     {
         #region Fields
 
@@ -27,7 +28,6 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
         private readonly IStoreService _storeService;
-        private readonly IStoreMappingService _storeMappingService;
 
         #endregion
 
@@ -38,14 +38,15 @@ namespace Nop.Web.Areas.Admin.Factories
             ILanguageService languageService,
             ILocalizationService localizationService,
             IStoreService storeService,
-            IStoreMappingService storeMappingService)
+            IStoreMappingService storeMappingService) : base(languageService,
+                storeMappingService,
+                storeService)
         {
             this._blogService = blogService;
             this._languageService = languageService;
             this._dateTimeHelper = dateTimeHelper;
             this._localizationService = localizationService;
             this._storeService = storeService;
-            this._storeMappingService = storeMappingService;
         }
 
         #endregion
@@ -68,31 +69,6 @@ namespace Nop.Web.Areas.Admin.Factories
             {
                 Text = language.Name,
                 Value = language.Id.ToString()
-            }).ToList();
-        }
-
-        /// <summary>
-        /// Prepare selected and all available stores for the passed model
-        /// </summary>
-        /// <param name="model">Blog post model</param>
-        /// <param name="blogPost">Blog post</param>
-        /// <param name="ignoreStoreMappings">Whether to ignore existing store mappings</param>
-        protected virtual void PrepareModelStores(BlogPostModel model, BlogPost blogPost, bool ignoreStoreMappings)
-        {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
-
-            //try to get store identifiers with granted access
-            if (!ignoreStoreMappings && blogPost != null)
-                model.SelectedStoreIds = _storeMappingService.GetStoresIdsWithAccess(blogPost).ToList();
-
-            //prepare available stores
-            var availableStores = _storeService.GetAllStores();
-            model.AvailableStores = availableStores.Select(store => new SelectListItem
-            {
-                Text = store.Name,
-                Value = store.Id.ToString(),
-                Selected = model.SelectedStoreIds.Contains(store.Id)
             }).ToList();
         }
 

@@ -10,7 +10,8 @@ using Nop.Web.Framework.Mvc.ModelBinding;
 namespace Nop.Web.Areas.Admin.Models.Orders
 {
     [Validator(typeof(CheckoutAttributeValidator))]
-    public partial class CheckoutAttributeModel : BaseNopEntityModel, ILocalizedModel<CheckoutAttributeLocalizedModel>
+    public partial class CheckoutAttributeModel : BaseNopEntityModel, 
+        ILocalizedModel<CheckoutAttributeLocalizedModel>, IStoreMappingSupportedModel
     {
         public CheckoutAttributeModel()
         {

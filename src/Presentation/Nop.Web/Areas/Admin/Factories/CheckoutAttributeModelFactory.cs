@@ -31,8 +31,6 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly ICurrencyService _currencyService;
         private readonly ILocalizationService _localizationService;
         private readonly IMeasureService _measureService;
-        private readonly IStoreMappingService _storeMappingService;
-        private readonly IStoreService _storeService;
         private readonly ITaxCategoryService _taxCategoryService;
         private readonly IWorkContext _workContext;
         private readonly MeasureSettings _measureSettings;
@@ -52,7 +50,9 @@ namespace Nop.Web.Areas.Admin.Factories
             IStoreService storeService,
             ITaxCategoryService taxCategoryService,
             IWorkContext workContext,
-            MeasureSettings measureSettings) : base(languageService)
+            MeasureSettings measureSettings) : base(languageService,
+                storeMappingService,
+                storeService)
         {
             this._checkoutAttributeParser = checkoutAttributeParser;
             this._checkoutAttributeService = checkoutAttributeService;
@@ -61,8 +61,6 @@ namespace Nop.Web.Areas.Admin.Factories
             this._localizationService = localizationService;
             this._measureService = measureService;
             this._measureSettings = measureSettings;
-            this._storeMappingService = storeMappingService;
-            this._storeService = storeService;
             this._taxCategoryService = taxCategoryService;
             this._workContext = workContext;
         }
@@ -138,31 +136,6 @@ namespace Nop.Web.Areas.Admin.Factories
             }).ToList();
 
             return model;
-        }
-
-        /// <summary>
-        /// Prepare selected and all available stores for the passed model
-        /// </summary>
-        /// <param name="model">Checkout attribute model</param>
-        /// <param name="checkoutAttribute">Checkout attribute</param>
-        /// <param name="ignoreStoreMappings">Whether to ignore existing store mappings</param>
-        protected virtual void PrepareModelStores(CheckoutAttributeModel model, CheckoutAttribute checkoutAttribute, bool ignoreStoreMappings)
-        {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
-
-            //try to get store identifiers with granted access
-            if (!ignoreStoreMappings && checkoutAttribute != null)
-                model.SelectedStoreIds = _storeMappingService.GetStoresIdsWithAccess(checkoutAttribute).ToList();
-
-            //prepare available stores
-            var availableStores = _storeService.GetAllStores();
-            model.AvailableStores = availableStores.Select(store => new SelectListItem
-            {
-                Text = store.Name,
-                Value = store.Id.ToString(),
-                Selected = model.SelectedStoreIds.Contains(store.Id)
-            }).ToList();
         }
 
         #endregion

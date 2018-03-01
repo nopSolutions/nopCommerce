@@ -4,6 +4,7 @@ using Nop.Core;
 using Nop.Core.Domain.Common;
 using Nop.Services.Common;
 using Nop.Services.Localization;
+using Nop.Services.Stores;
 using Nop.Web.Areas.Admin.Extensions;
 using Nop.Web.Areas.Admin.Models.Common;
 using Nop.Web.Framework.Extensions;
@@ -30,7 +31,11 @@ namespace Nop.Web.Areas.Admin.Factories
         public AddressAttributeModelFactory(IAddressAttributeService addressAttributeService,
             ILanguageService languageService,
             ILocalizationService localizationService,
-            IWorkContext workContext) : base(languageService)
+            IStoreMappingService storeMappingService,
+            IStoreService storeService,
+            IWorkContext workContext) : base(languageService,
+                storeMappingService,
+                storeService)
         {
             this._addressAttributeService = addressAttributeService;
             this._localizationService = localizationService;

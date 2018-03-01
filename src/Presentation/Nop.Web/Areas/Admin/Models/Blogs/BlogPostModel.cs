@@ -10,7 +10,7 @@ using Nop.Web.Framework.Models;
 namespace Nop.Web.Areas.Admin.Models.Blogs
 {
     [Validator(typeof(BlogPostValidator))]
-    public partial class BlogPostModel : BaseNopEntityModel
+    public partial class BlogPostModel : BaseNopEntityModel, IStoreMappingSupportedModel
     {
         public BlogPostModel()
         {
