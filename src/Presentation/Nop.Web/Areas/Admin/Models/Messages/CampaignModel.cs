@@ -9,15 +9,24 @@ using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Areas.Admin.Models.Messages
 {
+    /// <summary>
+    /// Represents a campaign model
+    /// </summary>
     [Validator(typeof(CampaignValidator))]
     public partial class CampaignModel : BaseNopEntityModel
     {
+        #region Ctor
+
         public CampaignModel()
         {
             this.AvailableStores = new List<SelectListItem>();
             this.AvailableCustomerRoles = new List<SelectListItem>();
             this.AvailableEmailAccounts = new List<SelectListItem>();
         }
+
+        #endregion
+
+        #region Properties
 
         [NopResourceDisplayName("Admin.Promotions.Campaigns.Fields.Name")]
         public string Name { get; set; }
@@ -53,5 +62,7 @@ namespace Nop.Web.Areas.Admin.Models.Messages
         [DataType(DataType.EmailAddress)]
         [NopResourceDisplayName("Admin.Promotions.Campaigns.Fields.TestEmail")]
         public string TestEmail { get; set; }
+
+        #endregion
     }
 }

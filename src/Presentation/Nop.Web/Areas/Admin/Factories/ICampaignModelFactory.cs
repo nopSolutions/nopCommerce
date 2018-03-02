@@ -1,6 +1,5 @@
 ﻿using Nop.Core.Domain.Messages;
 using Nop.Web.Areas.Admin.Models.Messages;
-using Nop.Web.Framework.Kendoui;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -10,19 +9,18 @@ namespace Nop.Web.Areas.Admin.Factories
     public partial interface ICampaignModelFactory
     {
         /// <summary>
-        /// Prepare campaign list model
+        /// Prepare campaign search model
         /// </summary>
-        /// <param name="model">Campaign list model</param>
-        /// <returns>Campaign list model</returns>
-        CampaignListModel PrepareCampaignListModel(CampaignListModel model);
+        /// <param name="model">Campaign search model</param>
+        /// <returns>Campaign search model</returns>
+        CampaignSearchModel PrepareCampaignSearchModel(CampaignSearchModel model);
 
         /// <summary>
-        /// Prepare paged campaign list model for the grid
+        /// Prepare paged campaign list model
         /// </summary>
-        /// <param name="listModel">Campaign list model</param>
-        /// <param name="command">Pagination parameters</param>
-        /// <returns>Grid model</returns>
-        DataSourceResult PrepareCampaignListGridModel(CampaignListModel listModel, DataSourceRequest command);
+        /// <param name="searchModel">Campaign search model</param>
+        /// <returns>Campaign list model</returns>
+        CampaignListModel PrepareCampaignListModel(CampaignSearchModel searchModel);
 
         /// <summary>
         /// Prepare campaign model

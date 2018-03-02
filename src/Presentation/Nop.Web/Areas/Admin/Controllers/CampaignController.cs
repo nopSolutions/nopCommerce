@@ -13,7 +13,6 @@ using Nop.Web.Areas.Admin.Extensions;
 using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Areas.Admin.Models.Messages;
 using Nop.Web.Framework.Controllers;
-using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Web.Areas.Admin.Controllers
@@ -89,19 +88,19 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             //prepare model
-            var model = _campaignModelFactory.PrepareCampaignListModel(new CampaignListModel());
+            var model = _campaignModelFactory.PrepareCampaignSearchModel(new CampaignSearchModel());
 
             return View(model);
         }
 
         [HttpPost]
-        public virtual IActionResult List(CampaignListModel listModel, DataSourceRequest command)
+        public virtual IActionResult List(CampaignSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCampaigns))
                 return AccessDeniedKendoGridJson();
 
             //prepare model
-            var model = _campaignModelFactory.PrepareCampaignListGridModel(listModel, command);
+            var model = _campaignModelFactory.PrepareCampaignListModel(searchModel);
 
             return Json(model);
         }

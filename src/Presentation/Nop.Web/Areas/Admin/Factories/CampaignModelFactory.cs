@@ -10,7 +10,6 @@ using Nop.Services.Stores;
 using Nop.Web.Areas.Admin.Extensions;
 using Nop.Web.Areas.Admin.Models.Messages;
 using Nop.Web.Framework.Extensions;
-using Nop.Web.Framework.Kendoui;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -121,11 +120,11 @@ namespace Nop.Web.Areas.Admin.Factories
         #region Methods
 
         /// <summary>
-        /// Prepare campaign list model
+        /// Prepare campaign search model
         /// </summary>
-        /// <param name="model">Campaign list model</param>
-        /// <returns>Campaign list model</returns>
-        public virtual CampaignListModel PrepareCampaignListModel(CampaignListModel model)
+        /// <param name="model">Campaign search model</param>
+        /// <returns>Campaign search model</returns>
+        public virtual CampaignSearchModel PrepareCampaignSearchModel(CampaignSearchModel model)
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
@@ -143,26 +142,22 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         /// <summary>
-        /// Prepare paged campaign list model for the grid
+        /// Prepare paged campaign list model
         /// </summary>
-        /// <param name="listModel">Campaign list model</param>
-        /// <param name="command">Pagination parameters</param>
-        /// <returns>Grid model</returns>
-        public virtual DataSourceResult PrepareCampaignListGridModel(CampaignListModel listModel, DataSourceRequest command)
+        /// <param name="searchModel">Campaign search model</param>
+        /// <returns>Campaign list model</returns>
+        public virtual CampaignListModel PrepareCampaignListModel(CampaignSearchModel searchModel)
         {
-            if (listModel == null)
-                throw new ArgumentNullException(nameof(listModel));
-
-            if (command == null)
-                throw new ArgumentNullException(nameof(command));
-
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+            
             //get campaigns
-            var campaigns = _campaignService.GetAllCampaigns(listModel.StoreId);
+            var campaigns = _campaignService.GetAllCampaigns(searchModel.StoreId);
 
             //prepare grid model
-            var model = new DataSourceResult
+            var model = new CampaignListModel
             {
-                Data = campaigns.PagedForCommand(command).Select(campaign =>
+                Data = campaigns.PaginationByRequestModel(searchModel).Select(campaign =>
                 {
                     //fill in model values from the entity
                     var campaignModel = campaign.ToModel();
