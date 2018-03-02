@@ -7,12 +7,21 @@ using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Areas.Admin.Models.Logging
 {
-    public partial class ActivityLogSearchModel : BaseNopModel
+    /// <summary>
+    /// Represents an activity log search model
+    /// </summary>
+    public partial class ActivityLogSearchModel : BaseSearchModel
     {
+        #region Ctor
+
         public ActivityLogSearchModel()
         {
             ActivityLogType = new List<SelectListItem>();
         }
+
+        #endregion
+
+        #region Properties
 
         [NopResourceDisplayName("Admin.Configuration.ActivityLog.ActivityLog.Fields.CreatedOnFrom")]
         [UIHint("DateNullable")]
@@ -30,5 +39,7 @@ namespace Nop.Web.Areas.Admin.Models.Logging
         
         [NopResourceDisplayName("Admin.Customers.Customers.ActivityLog.IpAddress")]
         public string IpAddress { get; set; }
+
+        #endregion
     }
 }

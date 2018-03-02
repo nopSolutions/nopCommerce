@@ -7,7 +7,6 @@ using Nop.Services.Logging;
 using Nop.Services.Security;
 using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Areas.Admin.Models.Logging;
-using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
 
 namespace Nop.Web.Areas.Admin.Controllers
@@ -91,13 +90,13 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual IActionResult ListLogs(ActivityLogSearchModel searchModel, DataSourceRequest command)
+        public virtual IActionResult ListLogs(ActivityLogSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageActivityLog))
                 return AccessDeniedKendoGridJson();
 
             //prepare model
-            var model = _activityLogModelFactory.PrepareActivityLogListGridModel(searchModel, command);
+            var model = _activityLogModelFactory.PrepareActivityLogListModel(searchModel);
 
             return Json(model);
         }

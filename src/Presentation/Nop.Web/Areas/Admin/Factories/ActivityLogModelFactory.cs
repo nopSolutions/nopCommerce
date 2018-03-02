@@ -7,7 +7,6 @@ using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Web.Areas.Admin.Extensions;
 using Nop.Web.Areas.Admin.Models.Logging;
-using Nop.Web.Framework.Kendoui;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -77,19 +76,15 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         /// <summary>
-        /// Prepare paged activity log list model for the grid
+        /// Prepare paged activity log list model
         /// </summary>
         /// <param name="searchModel">Activity log search model</param>
-        /// <param name="command">Pagination parameters</param>
-        /// <returns>Grid model</returns>
-        public virtual DataSourceResult PrepareActivityLogListGridModel(ActivityLogSearchModel searchModel, DataSourceRequest command)
+        /// <returns>Activity log list model</returns>
+        public virtual ActivityLogListModel PrepareActivityLogListModel(ActivityLogSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
-
-            if (command == null)
-                throw new ArgumentNullException(nameof(command));
-
+            
             //get parameters to filter log
             var startDateValue = searchModel.CreatedOnFrom == null ? null
                 : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.CreatedOnFrom.Value, _dateTimeHelper.CurrentTimeZone);
@@ -101,10 +96,10 @@ namespace Nop.Web.Areas.Admin.Factories
                 createdOnTo: endDateValue,
                 activityLogTypeId: searchModel.ActivityLogTypeId,
                 ipAddress: searchModel.IpAddress,
-                pageIndex: command.Page - 1, pageSize: command.PageSize);
+                pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
-            //prepare grid model
-            var model = new DataSourceResult
+            //prepare list model
+            var model = new ActivityLogListModel
             {
                 Data = activityLog.Select(logItem =>
                 {

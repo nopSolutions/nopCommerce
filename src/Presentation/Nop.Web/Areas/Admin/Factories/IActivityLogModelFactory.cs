@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Nop.Web.Areas.Admin.Models.Logging;
-using Nop.Web.Framework.Kendoui;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -23,11 +22,10 @@ namespace Nop.Web.Areas.Admin.Factories
         ActivityLogSearchModel PrepareActivityLogSearchModel(ActivityLogSearchModel model);
 
         /// <summary>
-        /// Prepare paged activity log list model for the grid
+        /// Prepare paged activity log list model
         /// </summary>
         /// <param name="searchModel">Activity log search model</param>
-        /// <param name="command">Pagination parameters</param>
-        /// <returns>Grid model</returns>
-        DataSourceResult PrepareActivityLogListGridModel(ActivityLogSearchModel searchModel, DataSourceRequest command);
+        /// <returns>Activity log list model</returns>
+        ActivityLogListModel PrepareActivityLogListModel(ActivityLogSearchModel searchModel);
     }
 }
