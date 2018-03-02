@@ -5,9 +5,11 @@ using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
+using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Services.Orders;
+using Nop.Services.Security;
 using Nop.Services.Stores;
 using Nop.Services.Tax;
 using Nop.Web.Areas.Admin.Extensions;
@@ -39,9 +41,11 @@ namespace Nop.Web.Areas.Admin.Factories
         #region Ctor
 
         public CheckoutAttributeModelFactory(CurrencySettings currencySettings,
+            IAclService aclService,
             ICheckoutAttributeParser checkoutAttributeParser,
             ICheckoutAttributeService checkoutAttributeService,
             ICurrencyService currencyService,
+            ICustomerService customerService,
             ILanguageService languageService,
             ILocalizationService localizationService,
             IMeasureService measureService,
@@ -49,7 +53,9 @@ namespace Nop.Web.Areas.Admin.Factories
             IStoreService storeService,
             ITaxCategoryService taxCategoryService,
             IWorkContext workContext,
-            MeasureSettings measureSettings) : base(languageService,
+            MeasureSettings measureSettings) : base(aclService,
+                customerService,
+                languageService,
                 storeMappingService,
                 storeService)
         {

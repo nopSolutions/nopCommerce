@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
+using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Stores;
+using Nop.Services.Customers;
 using Nop.Services.Localization;
+using Nop.Services.Security;
 using Nop.Services.Stores;
 using Nop.Web.Framework.Models;
 
@@ -13,10 +16,12 @@ namespace Nop.Web.Framework.Factories
     /// <summary>
     /// Represents base model factory that implements a most common factory interfaces
     /// </summary>
-    public abstract partial class BaseModelFactory : ILocalizedModelFactory
+    public abstract partial class BaseModelFactory : ILocalizedModelFactory, IStoreMappingSupportedModelFactory, IAclSupportedModelFactory
     {
         #region Fields
 
+        private readonly IAclService _aclService;
+        private readonly ICustomerService _customerService;
         private readonly ILanguageService _languageService;
         private readonly IStoreMappingService _storeMappingService;
         private readonly IStoreService _storeService;
@@ -25,10 +30,14 @@ namespace Nop.Web.Framework.Factories
 
         #region Ctor
 
-        public BaseModelFactory(ILanguageService languageService,
+        public BaseModelFactory(IAclService aclService,
+            ICustomerService customerService,
+            ILanguageService languageService,
             IStoreMappingService storeMappingService,
             IStoreService storeService)
         {
+            this._aclService = aclService;
+            this._customerService = customerService;
             this._languageService = languageService;
             this._storeMappingService = storeMappingService;
             this._storeService = storeService;
@@ -93,6 +102,34 @@ namespace Nop.Web.Framework.Factories
                 Text = store.Name,
                 Value = store.Id.ToString(),
                 Selected = model.SelectedStoreIds.Contains(store.Id)
+            }).ToList();
+        }
+
+        /// <summary>
+        /// Prepare selected and all available customer roles for the passed model
+        /// </summary>
+        /// <typeparam name="TModel">ACL supported model type</typeparam>
+        /// <typeparam name="TEntity">ACL supported entity type</typeparam>
+        /// <param name="model">Model</param>
+        /// <param name="entity">Entity</param>
+        /// <param name="ignoreAclMappings">Whether to ignore existing ACL mappings</param>
+        public virtual void PrepareModelCustomerRoles<TModel, TEntity>(TModel model, TEntity entity, bool ignoreAclMappings)
+            where TModel : IAclSupportedModel where TEntity : BaseEntity, IAclSupported
+        {
+            if (model == null)
+                throw new ArgumentNullException(nameof(model));
+
+            //try to get customer role identifiers with granted access
+            if (!ignoreAclMappings && entity != null)
+                model.SelectedCustomerRoleIds = _aclService.GetCustomerRoleIdsWithAccess(entity).ToList();
+
+            //prepare available customer roles
+            var availableRoles = _customerService.GetAllCustomerRoles(showHidden: true);
+            model.AvailableCustomerRoles = availableRoles.Select(role => new SelectListItem
+            {
+                Text = role.Name,
+                Value = role.Id.ToString(),
+                Selected = model.SelectedCustomerRoleIds.Contains(role.Id)
             }).ToList();
         }
 

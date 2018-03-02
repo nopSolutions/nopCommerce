@@ -12,7 +12,8 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
     /// Represents a category model
     /// </summary>
     [Validator(typeof(CategoryValidator))]
-    public partial class CategoryModel : BaseNopEntityModel, ILocalizedModel<CategoryLocalizedModel>, IStoreMappingSupportedModel
+    public partial class CategoryModel : BaseNopEntityModel, 
+        ILocalizedModel<CategoryLocalizedModel>, IStoreMappingSupportedModel, IAclSupportedModel
     {
         #region Ctor
 

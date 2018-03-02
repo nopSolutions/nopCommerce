@@ -3,7 +3,9 @@ using System.Linq;
 using Nop.Core;
 using Nop.Core.Domain.Common;
 using Nop.Services.Common;
+using Nop.Services.Customers;
 using Nop.Services.Localization;
+using Nop.Services.Security;
 using Nop.Services.Stores;
 using Nop.Web.Areas.Admin.Extensions;
 using Nop.Web.Areas.Admin.Models.Common;
@@ -27,12 +29,16 @@ namespace Nop.Web.Areas.Admin.Factories
 
         #region Ctor
 
-        public AddressAttributeModelFactory(IAddressAttributeService addressAttributeService,
+        public AddressAttributeModelFactory(IAclService aclService,
+            IAddressAttributeService addressAttributeService,
+            ICustomerService customerService,
             ILanguageService languageService,
             ILocalizationService localizationService,
             IStoreMappingService storeMappingService,
             IStoreService storeService,
-            IWorkContext workContext) : base(languageService,
+            IWorkContext workContext) : base(aclService,
+                customerService,
+                languageService,
                 storeMappingService,
                 storeService)
         {

@@ -5,8 +5,10 @@ using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Html;
 using Nop.Services.Blogs;
+using Nop.Services.Customers;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
+using Nop.Services.Security;
 using Nop.Services.Stores;
 using Nop.Web.Areas.Admin.Extensions;
 using Nop.Web.Areas.Admin.Models.Blogs;
@@ -32,12 +34,16 @@ namespace Nop.Web.Areas.Admin.Factories
 
         #region Ctor
 
-        public BlogModelFactory(IBlogService blogService,
+        public BlogModelFactory(IAclService aclService,
+            IBlogService blogService,
+            ICustomerService customerService,
             IDateTimeHelper dateTimeHelper,
             ILanguageService languageService,
             ILocalizationService localizationService,
             IStoreService storeService,
-            IStoreMappingService storeMappingService) : base(languageService,
+            IStoreMappingService storeMappingService) : base(aclService,
+                customerService,
+                languageService,
                 storeMappingService,
                 storeService)
         {

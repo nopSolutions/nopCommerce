@@ -29,10 +29,8 @@ namespace Nop.Web.Areas.Admin.Factories
         #region Fields
 
         private readonly CatalogSettings _catalogSettings;
-        private readonly IAclService _aclService;
         private readonly ICategoryService _categoryService;
         private readonly ICategoryTemplateService _categoryTemplateService;
-        private readonly ICustomerService _customerService;
         private readonly IDiscountService _discountService;
         private readonly ILocalizationService _localizationService;
         private readonly IManufacturerService _manufacturerService;
@@ -58,15 +56,15 @@ namespace Nop.Web.Areas.Admin.Factories
             IStaticCacheManager cacheManager,
             IStoreMappingService storeMappingService,
             IStoreService storeService,
-            IVendorService vendorService) : base(languageService,
+            IVendorService vendorService) : base(aclService,
+                customerService,
+                languageService,
                 storeMappingService,
                 storeService)
         {
-            this._aclService = aclService;
             this._catalogSettings = catalogSettings;
             this._categoryService = categoryService;
             this._categoryTemplateService = categoryTemplateService;
-            this._customerService = customerService;
             this._discountService = discountService;
             this._localizationService = localizationService;
             this._manufacturerService = manufacturerService;
@@ -139,31 +137,6 @@ namespace Nop.Web.Areas.Admin.Factories
                 Text = discount.Name,
                 Value = discount.Id.ToString(),
                 Selected = model.SelectedDiscountIds.Contains(discount.Id)
-            }).ToList();
-        }
-
-        /// <summary>
-        /// Prepare selected and all available customer roles for the passed model
-        /// </summary>
-        /// <param name="model">Category model</param>
-        /// <param name="category">Category</param>
-        /// <param name="ignoreAclMappings">Whether to ignore existing acl mappings</param>
-        protected virtual void PrepareModelCustomerRoles(CategoryModel model, Category category, bool ignoreAclMappings)
-        {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
-
-            //try to get customer role identifiers with granted access
-            if (!ignoreAclMappings && category != null)
-                model.SelectedCustomerRoleIds = _aclService.GetCustomerRoleIdsWithAccess(category).ToList();
-
-            //prepare available customer roles
-            var availableRoles = _customerService.GetAllCustomerRoles(showHidden: true);
-            model.AvailableCustomerRoles = availableRoles.Select(role => new SelectListItem
-            {
-                Text = role.Name,
-                Value = role.Id.ToString(),
-                Selected = model.SelectedCustomerRoleIds.Contains(role.Id)
             }).ToList();
         }
 
