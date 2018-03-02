@@ -132,56 +132,6 @@ namespace Nop.Web.Areas.Admin.Factories
             return model;
         }
 
-        /// <summary>
-        /// Prepare affiliated order search model
-        /// </summary>
-        /// <param name="model">Affiliated order search model</param>
-        /// <param name="affiliate">Affiliate</param>
-        /// <returns>Affiliated order search model</returns>
-        protected virtual AffiliatedOrderSearchModel PrepareAffiliatedOrderSearchModel(AffiliatedOrderSearchModel model, Affiliate affiliate)
-        {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
-
-            if (affiliate == null)
-                throw new ArgumentNullException(nameof(affiliate));
-
-            model.AffliateId = affiliate.Id;
-
-            //prepare order, payment and shipping statuses
-            model.AvailableOrderStatuses = OrderStatus.Pending.ToSelectList(false).ToList();
-            model.AvailablePaymentStatuses = PaymentStatus.Pending.ToSelectList(false).ToList();
-            model.AvailableShippingStatuses = ShippingStatus.NotYetShipped.ToSelectList(false).ToList();
-
-            //insert special status item for the "all" value
-            var allSelectListItem = new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" };
-            model.AvailableOrderStatuses.Insert(0, allSelectListItem);
-            model.AvailablePaymentStatuses.Insert(0, allSelectListItem);
-            model.AvailableShippingStatuses.Insert(0, allSelectListItem);
-
-            return model;
-        }
-
-        /// <summary>
-        /// Prepare affiliated customer search model
-        /// </summary>
-        /// <param name="model">Affiliated customer search model</param>
-        /// <param name="affiliate">Affiliate</param>
-        /// <returns>Affiliated customer search model</returns>
-        protected virtual AffiliatedCustomerSearchModel PrepareAffiliatedCustomerSearchModel(AffiliatedCustomerSearchModel model,
-            Affiliate affiliate)
-        {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
-
-            if (affiliate == null)
-                throw new ArgumentNullException(nameof(affiliate));
-
-            model.AffliateId = affiliate.Id;
-
-            return model;
-        }
-
         #endregion
 
         #region Methods
@@ -273,6 +223,36 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         /// <summary>
+        /// Prepare affiliated order search model
+        /// </summary>
+        /// <param name="model">Affiliated order search model</param>
+        /// <param name="affiliate">Affiliate</param>
+        /// <returns>Affiliated order search model</returns>
+        public virtual AffiliatedOrderSearchModel PrepareAffiliatedOrderSearchModel(AffiliatedOrderSearchModel model, Affiliate affiliate)
+        {
+            if (model == null)
+                throw new ArgumentNullException(nameof(model));
+
+            if (affiliate == null)
+                throw new ArgumentNullException(nameof(affiliate));
+
+            model.AffliateId = affiliate.Id;
+
+            //prepare order, payment and shipping statuses
+            model.AvailableOrderStatuses = OrderStatus.Pending.ToSelectList(false).ToList();
+            model.AvailablePaymentStatuses = PaymentStatus.Pending.ToSelectList(false).ToList();
+            model.AvailableShippingStatuses = ShippingStatus.NotYetShipped.ToSelectList(false).ToList();
+
+            //insert special status item for the "all" value
+            var allSelectListItem = new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" };
+            model.AvailableOrderStatuses.Insert(0, allSelectListItem);
+            model.AvailablePaymentStatuses.Insert(0, allSelectListItem);
+            model.AvailableShippingStatuses.Insert(0, allSelectListItem);
+
+            return model;
+        }
+
+        /// <summary>
         /// Prepare paged affiliated order list model
         /// </summary>
         /// <param name="searchModel">Affiliated order search model</param>
@@ -326,12 +306,33 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         /// <summary>
+        /// Prepare affiliated customer search model
+        /// </summary>
+        /// <param name="model">Affiliated customer search model</param>
+        /// <param name="affiliate">Affiliate</param>
+        /// <returns>Affiliated customer search model</returns>
+        public virtual AffiliatedCustomerSearchModel PrepareAffiliatedCustomerSearchModel(AffiliatedCustomerSearchModel model, 
+            Affiliate affiliate)
+        {
+            if (model == null)
+                throw new ArgumentNullException(nameof(model));
+
+            if (affiliate == null)
+                throw new ArgumentNullException(nameof(affiliate));
+
+            model.AffliateId = affiliate.Id;
+
+            return model;
+        }
+
+        /// <summary>
         /// Prepare paged affiliated customer list model
         /// </summary>
         /// <param name="searchModel">Affiliated customer search model</param>
         /// <param name="affiliate">Affiliate</param>
         /// <returns>Affiliated customer list model</returns>
-        public virtual AffiliatedCustomerListModel PrepareAffiliatedCustomerListModel(AffiliatedCustomerSearchModel searchModel, Affiliate affiliate)
+        public virtual AffiliatedCustomerListModel PrepareAffiliatedCustomerListModel(AffiliatedCustomerSearchModel searchModel, 
+            Affiliate affiliate)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
