@@ -134,13 +134,12 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         /// <summary>
-        /// Prepare affiliated order list model
+        /// Prepare affiliated order search model
         /// </summary>
-        /// <param name="model">Affiliated order list model</param>
+        /// <param name="model">Affiliated order search model</param>
         /// <param name="affiliate">Affiliate</param>
-        /// <returns>Affiliated order list model</returns>
-        protected virtual AffiliateModel.AffiliatedOrderListModel PrepareAffiliatedOrderListModel(AffiliateModel.AffiliatedOrderListModel model,
-            Affiliate affiliate)
+        /// <returns>Affiliated order search model</returns>
+        protected virtual AffiliatedOrderSearchModel PrepareAffiliatedOrderSearchModel(AffiliatedOrderSearchModel model, Affiliate affiliate)
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
@@ -164,16 +163,36 @@ namespace Nop.Web.Areas.Admin.Factories
             return model;
         }
 
+        /// <summary>
+        /// Prepare affiliated customer search model
+        /// </summary>
+        /// <param name="model">Affiliated customer search model</param>
+        /// <param name="affiliate">Affiliate</param>
+        /// <returns>Affiliated customer search model</returns>
+        protected virtual AffiliatedCustomerSearchModel PrepareAffiliatedCustomerSearchModel(AffiliatedCustomerSearchModel model, 
+            Affiliate affiliate)
+        {
+            if (model == null)
+                throw new ArgumentNullException(nameof(model));
+
+            if (affiliate == null)
+                throw new ArgumentNullException(nameof(affiliate));
+
+            model.AffliateId = affiliate.Id;
+
+            return model;
+        }
+
         #endregion
 
         #region Methods
 
         /// <summary>
-        /// Prepare affiliate list model
+        /// Prepare affiliate search model
         /// </summary>
-        /// <param name="model">Affiliate list model</param>
-        /// <returns>Affiliate list model</returns>
-        public virtual AffiliateListModel PrepareAffiliateListModel(AffiliateListModel model)
+        /// <param name="model">Affiliate search model</param>
+        /// <returns>Affiliate search model</returns>
+        public virtual AffiliateSearchModel PrepareAffiliateSearchModel(AffiliateSearchModel model)
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
@@ -184,25 +203,21 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare paged affiliate list model for the grid
         /// </summary>
-        /// <param name="listModel">Affiliate list model</param>
-        /// <param name="command">Pagination parameters</param>
+        /// <param name="searchModel">Affiliate search model</param>
         /// <returns>Grid model</returns>
-        public virtual DataSourceResult PrepareAffiliateListGridModel(AffiliateListModel listModel, DataSourceRequest command)
+        public virtual DataSourceResult PrepareAffiliateListGridModel(AffiliateSearchModel searchModel)
         {
-            if (listModel == null)
-                throw new ArgumentNullException(nameof(listModel));
-
-            if (command == null)
-                throw new ArgumentNullException(nameof(command));
-
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+            
             //get affiliates
-            var affiliates = _affiliateService.GetAllAffiliates(listModel.SearchFriendlyUrlName,
-                listModel.SearchFirstName,
-                listModel.SearchLastName,
-                listModel.LoadOnlyWithOrders,
-                listModel.OrdersCreatedFromUtc,
-                listModel.OrdersCreatedToUtc,
-                command.Page - 1, command.PageSize, true);
+            var affiliates = _affiliateService.GetAllAffiliates(searchModel.SearchFriendlyUrlName,
+                searchModel.SearchFirstName,
+                searchModel.SearchLastName,
+                searchModel.LoadOnlyWithOrders,
+                searchModel.OrdersCreatedFromUtc,
+                searchModel.OrdersCreatedToUtc,
+                searchModel.Page - 1, searchModel.PageSize, true);
 
             //prepare grid model
             var model = new DataSourceResult
@@ -236,8 +251,11 @@ namespace Nop.Web.Areas.Admin.Factories
                 model.Id = affiliate.Id;
                 model.Url = affiliate.GenerateUrl(_webHelper);
 
-                //prepare order list model
-                model.AffiliatedOrderList = PrepareAffiliatedOrderListModel(model.AffiliatedOrderList, affiliate);
+                //prepare order search model
+                model.AffiliatedOrderSearch = PrepareAffiliatedOrderSearchModel(model.AffiliatedOrderSearch, affiliate);
+
+                //prepare customer search model
+                model.AffiliatedCustomerSearch = PrepareAffiliatedCustomerSearchModel(model.AffiliatedCustomerSearch, affiliate);
 
                 //whether to fill in some of properties
                 if (!excludeProperties)
@@ -258,30 +276,25 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare paged affiliated order list model for the grid
         /// </summary>
-        /// <param name="listModel">Affiliated order list model</param>
-        /// <param name="command">Pagination parameters</param>
+        /// <param name="searchModel">Affiliated order search model</param>
         /// <param name="affiliate">Affiliate</param>
         /// <returns>Grid model</returns>
-        public virtual DataSourceResult PrepareAffiliatedOrderListGridModel(AffiliateModel.AffiliatedOrderListModel listModel,
-            DataSourceRequest command, Affiliate affiliate)
+        public virtual DataSourceResult PrepareAffiliatedOrderListGridModel(AffiliatedOrderSearchModel searchModel, Affiliate affiliate)
         {
-            if (listModel == null)
-                throw new ArgumentNullException(nameof(listModel));
-
-            if (command == null)
-                throw new ArgumentNullException(nameof(command));
-
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+            
             if (affiliate == null)
                 throw new ArgumentNullException(nameof(affiliate));
 
             //get parameters to filter orders
-            var startDateValue = !listModel.StartDate.HasValue ? null
-                : (DateTime?)_dateTimeHelper.ConvertToUtcTime(listModel.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
-            var endDateValue = !listModel.EndDate.HasValue ? null
-                : (DateTime?)_dateTimeHelper.ConvertToUtcTime(listModel.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
-            var orderStatusIds = listModel.OrderStatusId > 0 ? new List<int>() { listModel.OrderStatusId } : null;
-            var paymentStatusIds = listModel.PaymentStatusId > 0 ? new List<int>() { listModel.PaymentStatusId } : null;
-            var shippingStatusIds = listModel.ShippingStatusId > 0 ? new List<int>() { listModel.ShippingStatusId } : null;
+            var startDateValue = !searchModel.StartDate.HasValue ? null
+                : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
+            var endDateValue = !searchModel.EndDate.HasValue ? null
+                : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
+            var orderStatusIds = searchModel.OrderStatusId > 0 ? new List<int>() { searchModel.OrderStatusId } : null;
+            var paymentStatusIds = searchModel.PaymentStatusId > 0 ? new List<int>() { searchModel.PaymentStatusId } : null;
+            var shippingStatusIds = searchModel.ShippingStatusId > 0 ? new List<int>() { searchModel.ShippingStatusId } : null;
 
             //get orders
             var orders = _orderService.SearchOrders(createdFromUtc: startDateValue,
@@ -290,13 +303,13 @@ namespace Nop.Web.Areas.Admin.Factories
                 psIds: paymentStatusIds,
                 ssIds: shippingStatusIds,
                 affiliateId: affiliate.Id,
-                pageIndex: command.Page - 1, pageSize: command.PageSize);
+                pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare grid model
             var model = new DataSourceResult
             {
                 //fill in model values from the entity
-                Data = orders.Select(order => new AffiliateModel.AffiliatedOrderModel
+                Data = orders.Select(order => new AffiliatedOrderModel
                 {
                     Id = order.Id,
                     OrderStatus = order.OrderStatus.GetLocalizedEnum(_localizationService, _workContext),
@@ -312,30 +325,30 @@ namespace Nop.Web.Areas.Admin.Factories
 
             return model;
         }
-
+        
         /// <summary>
         /// Prepare paged affiliated customer list model for the grid
         /// </summary>
-        /// <param name="command">Pagination parameters</param>
+        /// <param name="searchModel">Affiliated customer search model</param>
         /// <param name="affiliate">Affiliate</param>
         /// <returns>Grid model</returns>
-        public virtual DataSourceResult PrepareAffiliatedCustomerListGridModel(DataSourceRequest command, Affiliate affiliate)
+        public virtual DataSourceResult PrepareAffiliatedCustomerListGridModel(AffiliatedCustomerSearchModel searchModel, Affiliate affiliate)
         {
-            if (command == null)
-                throw new ArgumentNullException(nameof(command));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             if (affiliate == null)
                 throw new ArgumentNullException(nameof(affiliate));
 
             //get customers
             var customers = _customerService.GetAllCustomers(affiliateId: affiliate.Id,
-                pageIndex: command.Page - 1, pageSize: command.PageSize);
+                pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare grid model
             var model = new DataSourceResult
             {
                 //fill in model values from the entity
-                Data = customers.Select(customer => new AffiliateModel.AffiliatedCustomerModel
+                Data = customers.Select(customer => new AffiliatedCustomerModel
                 {
                     Id = customer.Id,
                     Name = customer.Email

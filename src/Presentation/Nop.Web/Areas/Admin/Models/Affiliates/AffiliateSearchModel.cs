@@ -5,8 +5,13 @@ using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Areas.Admin.Models.Affiliates
 {
-    public partial class AffiliateListModel : BaseNopModel
+    /// <summary>
+    /// Represents an affiliate search model
+    /// </summary>
+    public partial class AffiliateSearchModel : BaseSearchModel
     {
+        #region Properties
+
         [NopResourceDisplayName("Admin.Affiliates.List.SearchFirstName")]
         public string SearchFirstName { get; set; }
 
@@ -18,11 +23,15 @@ namespace Nop.Web.Areas.Admin.Models.Affiliates
 
         [NopResourceDisplayName("Admin.Affiliates.List.LoadOnlyWithOrders")]
         public bool LoadOnlyWithOrders { get; set; }
+
         [NopResourceDisplayName("Admin.Affiliates.List.OrdersCreatedFromUtc")]
         [UIHint("DateNullable")]
         public DateTime? OrdersCreatedFromUtc { get; set; }
+
         [NopResourceDisplayName("Admin.Affiliates.List.OrdersCreatedToUtc")]
         [UIHint("DateNullable")]
         public DateTime? OrdersCreatedToUtc { get; set; }
+
+        #endregion
     }
 }

@@ -10,19 +10,18 @@ namespace Nop.Web.Areas.Admin.Factories
     public partial interface IAffiliateModelFactory
     {
         /// <summary>
-        /// Prepare affiliate list model
+        /// Prepare affiliate search model
         /// </summary>
-        /// <param name="model">Affiliate list model</param>
-        /// <returns>Affiliate list model</returns>
-        AffiliateListModel PrepareAffiliateListModel(AffiliateListModel model);
+        /// <param name="model">Affiliate search model</param>
+        /// <returns>Affiliate search model</returns>
+        AffiliateSearchModel PrepareAffiliateSearchModel(AffiliateSearchModel model);
 
         /// <summary>
         /// Prepare paged affiliate list model for the grid
         /// </summary>
-        /// <param name="listModel">Affiliate list model</param>
-        /// <param name="command">Pagination parameters</param>
+        /// <param name="searchModel">Affiliate search model</param>
         /// <returns>Grid model</returns>
-        DataSourceResult PrepareAffiliateListGridModel(AffiliateListModel listModel, DataSourceRequest command);
+        DataSourceResult PrepareAffiliateListGridModel(AffiliateSearchModel searchModel);
 
         /// <summary>
         /// Prepare affiliate model
@@ -36,19 +35,17 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare paged affiliated order list model for the grid
         /// </summary>
-        /// <param name="listModel">Affiliated order list model</param>
-        /// <param name="command">Pagination parameters</param>
+        /// <param name="searchModel">Affiliated order search model</param>
         /// <param name="affiliate">Affiliate</param>
         /// <returns>Grid model</returns>
-        DataSourceResult PrepareAffiliatedOrderListGridModel(AffiliateModel.AffiliatedOrderListModel listModel,
-            DataSourceRequest command, Affiliate affiliate);
+        DataSourceResult PrepareAffiliatedOrderListGridModel(AffiliatedOrderSearchModel searchModel, Affiliate affiliate);
 
         /// <summary>
         /// Prepare paged affiliated customer list model for the grid
         /// </summary>
-        /// <param name="command">Pagination parameters</param>
+        /// <param name="searchModel">Affiliated customer search model</param>
         /// <param name="affiliate">Affiliate</param>
         /// <returns>Grid model</returns>
-        DataSourceResult PrepareAffiliatedCustomerListGridModel(DataSourceRequest command, Affiliate affiliate);
+        DataSourceResult PrepareAffiliatedCustomerListGridModel(AffiliatedCustomerSearchModel searchModel, Affiliate affiliate);
     }
 }

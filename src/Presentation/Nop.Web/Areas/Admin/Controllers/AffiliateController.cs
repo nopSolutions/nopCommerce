@@ -56,19 +56,19 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             //prepare model
-            var model = _affiliateModelFactory.PrepareAffiliateListModel(new AffiliateListModel());
+            var model = _affiliateModelFactory.PrepareAffiliateSearchModel(new AffiliateSearchModel());
 
             return View(model);
         }
 
         [HttpPost]
-        public virtual IActionResult List(AffiliateListModel listModel, DataSourceRequest command)
+        public virtual IActionResult List(AffiliateSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAffiliates))
                 return AccessDeniedKendoGridJson();
 
             //prepare model
-            var model = _affiliateModelFactory.PrepareAffiliateListGridModel(listModel, command);
+            var model = _affiliateModelFactory.PrepareAffiliateListGridModel(searchModel);
 
             return Json(model);
         }
@@ -221,24 +221,24 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual IActionResult AffiliatedOrderListGrid(AffiliateModel.AffiliatedOrderListModel listModel, DataSourceRequest command)
+        public virtual IActionResult AffiliatedOrderListGrid(AffiliatedOrderSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAffiliates))
                 return AccessDeniedKendoGridJson();
 
             //try to get an affiliate with the specified id
-            var affiliate = _affiliateService.GetAffiliateById(listModel.AffliateId)
+            var affiliate = _affiliateService.GetAffiliateById(searchModel.AffliateId)
                 ?? throw new ArgumentException("No affiliate found with the specified id");
 
             //prepare model
-            var model = _affiliateModelFactory.PrepareAffiliatedOrderListGridModel(listModel, command, affiliate);
+            var model = _affiliateModelFactory.PrepareAffiliatedOrderListGridModel(searchModel, affiliate);
 
             return Json(model);
         }
 
 
         [HttpPost]
-        public virtual IActionResult AffiliatedCustomerList(DataSourceRequest command, int affiliateId)
+        public virtual IActionResult AffiliatedCustomerList(AffiliatedCustomerSearchModel searchModel, int affiliateId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAffiliates))
                 return AccessDeniedKendoGridJson();
@@ -248,7 +248,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ?? throw new ArgumentException("No affiliate found with the specified id", nameof(affiliateId));
 
             //prepare model
-            var model = _affiliateModelFactory.PrepareAffiliatedCustomerListGridModel(command, affiliate);
+            var model = _affiliateModelFactory.PrepareAffiliatedCustomerListGridModel(searchModel, affiliate);
 
             return Json(model);
         }
