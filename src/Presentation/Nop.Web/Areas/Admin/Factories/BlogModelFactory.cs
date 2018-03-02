@@ -5,10 +5,8 @@ using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Html;
 using Nop.Services.Blogs;
-using Nop.Services.Customers;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
-using Nop.Services.Security;
 using Nop.Services.Stores;
 using Nop.Web.Areas.Admin.Extensions;
 using Nop.Web.Areas.Admin.Models.Blogs;
@@ -20,7 +18,7 @@ namespace Nop.Web.Areas.Admin.Factories
     /// <summary>
     /// Represents the blog model factory implementation
     /// </summary>
-    public partial class BlogModelFactory : BaseModelFactory, IBlogModelFactory
+    public partial class BlogModelFactory : IBlogModelFactory
     {
         #region Fields
 
@@ -28,29 +26,25 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
+        private readonly IStoreMappingSupportedModelFactory _storeMappingSupportedModelFactory;
         private readonly IStoreService _storeService;
 
         #endregion
 
         #region Ctor
 
-        public BlogModelFactory(IAclService aclService,
-            IBlogService blogService,
-            ICustomerService customerService,
+        public BlogModelFactory(IBlogService blogService,
             IDateTimeHelper dateTimeHelper,
             ILanguageService languageService,
             ILocalizationService localizationService,
-            IStoreService storeService,
-            IStoreMappingService storeMappingService) : base(aclService,
-                customerService,
-                languageService,
-                storeMappingService,
-                storeService)
+            IStoreMappingSupportedModelFactory storeMappingSupportedModelFactory,
+            IStoreService storeService)
         {
             this._blogService = blogService;
             this._languageService = languageService;
             this._dateTimeHelper = dateTimeHelper;
             this._localizationService = localizationService;
+            this._storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
             this._storeService = storeService;
         }
 
@@ -172,7 +166,7 @@ namespace Nop.Web.Areas.Admin.Factories
             PrepareModelLanguages(model, blogPost);
 
             //prepare model stores
-            PrepareModelStores(model, blogPost, excludeProperties);
+            _storeMappingSupportedModelFactory.PrepareModelStores(model, blogPost, excludeProperties);
 
             return model;
         }

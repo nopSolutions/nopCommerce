@@ -3,6 +3,7 @@ using Nop.Core.Configuration;
 using Nop.Core.Infrastructure;
 using Nop.Core.Infrastructure.DependencyManagement;
 using Nop.Web.Areas.Admin.Factories;
+using Nop.Web.Framework.Factories;
 using Nop.Web.Infrastructure.Installation;
 
 namespace Nop.Web.Infrastructure
@@ -22,6 +23,11 @@ namespace Nop.Web.Infrastructure
         {
             //installation localization service
             builder.RegisterType<InstallationLocalizationService>().As<IInstallationLocalizationService>().InstancePerLifetimeScope();
+
+            //common factories
+            builder.RegisterType<AclSupportedModelFactory>().As<IAclSupportedModelFactory>().InstancePerLifetimeScope();
+            builder.RegisterType<LocalizedModelFactory>().As<ILocalizedModelFactory>().InstancePerLifetimeScope();
+            builder.RegisterType<StoreMappingSupportedModelFactory>().As<IStoreMappingSupportedModelFactory>().InstancePerLifetimeScope();
 
             //admin factories
             builder.RegisterType<ActivityLogModelFactory>().As<IActivityLogModelFactory>().InstancePerLifetimeScope();

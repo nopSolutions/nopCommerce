@@ -7,10 +7,8 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Discounts;
 using Nop.Services;
 using Nop.Services.Catalog;
-using Nop.Services.Customers;
 using Nop.Services.Discounts;
 using Nop.Services.Localization;
-using Nop.Services.Security;
 using Nop.Services.Seo;
 using Nop.Services.Stores;
 using Nop.Services.Vendors;
@@ -24,18 +22,21 @@ namespace Nop.Web.Areas.Admin.Factories
     /// <summary>
     /// Represents the category model factory implementation
     /// </summary>
-    public partial class CategoryModelFactory : BaseModelFactory, ICategoryModelFactory
+    public partial class CategoryModelFactory : ICategoryModelFactory
     {
         #region Fields
 
         private readonly CatalogSettings _catalogSettings;
+        private readonly IAclSupportedModelFactory _aclSupportedModelFactory;
         private readonly ICategoryService _categoryService;
         private readonly ICategoryTemplateService _categoryTemplateService;
         private readonly IDiscountService _discountService;
         private readonly ILocalizationService _localizationService;
+        private readonly ILocalizedModelFactory _localizedModelFactory;
         private readonly IManufacturerService _manufacturerService;
         private readonly IProductService _productService;
         private readonly IStaticCacheManager _cacheManager;
+        private readonly IStoreMappingSupportedModelFactory _storeMappingSupportedModelFactory;
         private readonly IStoreService _storeService;
         private readonly IVendorService _vendorService;
 
@@ -44,32 +45,30 @@ namespace Nop.Web.Areas.Admin.Factories
         #region Ctor
 
         public CategoryModelFactory(CatalogSettings catalogSettings,
-            IAclService aclService,
+            IAclSupportedModelFactory aclSupportedModelFactory,
             ICategoryService categoryService,
             ICategoryTemplateService categoryTemplateService,
-            ICustomerService customerService,
             IDiscountService discountService,
-            ILanguageService languageService,
             ILocalizationService localizationService,
+            ILocalizedModelFactory localizedModelFactory,
             IManufacturerService manufacturerService,
             IProductService productService,
             IStaticCacheManager cacheManager,
-            IStoreMappingService storeMappingService,
+            IStoreMappingSupportedModelFactory storeMappingSupportedModelFactory,
             IStoreService storeService,
-            IVendorService vendorService) : base(aclService,
-                customerService,
-                languageService,
-                storeMappingService,
-                storeService)
+            IVendorService vendorService)
         {
             this._catalogSettings = catalogSettings;
+            this._aclSupportedModelFactory = aclSupportedModelFactory;
             this._categoryService = categoryService;
             this._categoryTemplateService = categoryTemplateService;
             this._discountService = discountService;
             this._localizationService = localizationService;
+            this._localizedModelFactory = localizedModelFactory;
             this._manufacturerService = manufacturerService;
             this._productService = productService;
             this._cacheManager = cacheManager;
+            this._storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
             this._storeService = storeService;
             this._vendorService = vendorService;
         }
@@ -243,7 +242,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare localized models
             if (!excludeProperties)
-                model.Locales = PrepareLocalizedModels(localizedModelConfiguration);
+                model.Locales = _localizedModelFactory.PrepareLocalizedModels(localizedModelConfiguration);
 
             //prepare model templates
             PrepareModelTemplates(model, category);
@@ -255,10 +254,10 @@ namespace Nop.Web.Areas.Admin.Factories
             PrepareDiscountModel(model, category, excludeProperties);
 
             //prepare model customer roles
-            PrepareModelCustomerRoles(model, category, excludeProperties);
+            _aclSupportedModelFactory.PrepareModelCustomerRoles(model, category, excludeProperties);
 
             //prepare model stores
-            PrepareModelStores(model, category, excludeProperties);
+            _storeMappingSupportedModelFactory.PrepareModelStores(model, category, excludeProperties);
 
             return model;
         }

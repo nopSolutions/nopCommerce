@@ -3,10 +3,7 @@ using System.Linq;
 using Nop.Core;
 using Nop.Core.Domain.Common;
 using Nop.Services.Common;
-using Nop.Services.Customers;
 using Nop.Services.Localization;
-using Nop.Services.Security;
-using Nop.Services.Stores;
 using Nop.Web.Areas.Admin.Extensions;
 using Nop.Web.Areas.Admin.Models.Common;
 using Nop.Web.Framework.Extensions;
@@ -17,33 +14,27 @@ namespace Nop.Web.Areas.Admin.Factories
     /// <summary>
     /// Represents the address attribute model factory implementation
     /// </summary>
-    public partial class AddressAttributeModelFactory : BaseModelFactory, IAddressAttributeModelFactory
+    public partial class AddressAttributeModelFactory : IAddressAttributeModelFactory
     {
         #region Fields
 
         private readonly IAddressAttributeService _addressAttributeService;
         private readonly ILocalizationService _localizationService;
+        private readonly ILocalizedModelFactory _localizedModelFactory;
         private readonly IWorkContext _workContext;
 
         #endregion
 
         #region Ctor
 
-        public AddressAttributeModelFactory(IAclService aclService,
-            IAddressAttributeService addressAttributeService,
-            ICustomerService customerService,
-            ILanguageService languageService,
+        public AddressAttributeModelFactory(IAddressAttributeService addressAttributeService,
             ILocalizationService localizationService,
-            IStoreMappingService storeMappingService,
-            IStoreService storeService,
-            IWorkContext workContext) : base(aclService,
-                customerService,
-                languageService,
-                storeMappingService,
-                storeService)
+            ILocalizedModelFactory localizedModelFactory,
+            IWorkContext workContext)
         {
             this._addressAttributeService = addressAttributeService;
             this._localizationService = localizationService;
+            this._localizedModelFactory = localizedModelFactory;
             this._workContext = workContext;
         }
 
@@ -125,7 +116,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare localized models
             if (!excludeProperties)
-                model.Locales = PrepareLocalizedModels(localizedModelConfiguration);
+                model.Locales = _localizedModelFactory.PrepareLocalizedModels(localizedModelConfiguration);
 
             return model;
         }
@@ -218,7 +209,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare localized models
             if (!excludeProperties)
-                model.Locales = PrepareLocalizedModels(localizedModelConfiguration);
+                model.Locales = _localizedModelFactory.PrepareLocalizedModels(localizedModelConfiguration);
 
             return model;
         }

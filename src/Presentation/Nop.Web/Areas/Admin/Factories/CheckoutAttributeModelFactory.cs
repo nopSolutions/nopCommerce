@@ -5,12 +5,9 @@ using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
-using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Services.Orders;
-using Nop.Services.Security;
-using Nop.Services.Stores;
 using Nop.Services.Tax;
 using Nop.Web.Areas.Admin.Extensions;
 using Nop.Web.Areas.Admin.Models.Orders;
@@ -22,7 +19,7 @@ namespace Nop.Web.Areas.Admin.Factories
     /// <summary>
     /// Represents the checkout attribute model factory implementation
     /// </summary>
-    public partial class CheckoutAttributeModelFactory : BaseModelFactory, ICheckoutAttributeModelFactory
+    public partial class CheckoutAttributeModelFactory : ICheckoutAttributeModelFactory
     {
         #region Fields
 
@@ -31,7 +28,9 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly ICheckoutAttributeService _checkoutAttributeService;
         private readonly ICurrencyService _currencyService;
         private readonly ILocalizationService _localizationService;
+        private readonly ILocalizedModelFactory _localizedModelFactory;
         private readonly IMeasureService _measureService;
+        private readonly IStoreMappingSupportedModelFactory _storeMappingSupportedModelFactory;
         private readonly ITaxCategoryService _taxCategoryService;
         private readonly IWorkContext _workContext;
         private readonly MeasureSettings _measureSettings;
@@ -41,33 +40,28 @@ namespace Nop.Web.Areas.Admin.Factories
         #region Ctor
 
         public CheckoutAttributeModelFactory(CurrencySettings currencySettings,
-            IAclService aclService,
             ICheckoutAttributeParser checkoutAttributeParser,
             ICheckoutAttributeService checkoutAttributeService,
             ICurrencyService currencyService,
-            ICustomerService customerService,
-            ILanguageService languageService,
             ILocalizationService localizationService,
+            ILocalizedModelFactory localizedModelFactory,
             IMeasureService measureService,
-            IStoreMappingService storeMappingService,
-            IStoreService storeService,
+            IStoreMappingSupportedModelFactory storeMappingSupportedModelFactory,
             ITaxCategoryService taxCategoryService,
             IWorkContext workContext,
-            MeasureSettings measureSettings) : base(aclService,
-                customerService,
-                languageService,
-                storeMappingService,
-                storeService)
+            MeasureSettings measureSettings)
         {
+            this._currencySettings = currencySettings;
             this._checkoutAttributeParser = checkoutAttributeParser;
             this._checkoutAttributeService = checkoutAttributeService;
             this._currencyService = currencyService;
-            this._currencySettings = currencySettings;
             this._localizationService = localizationService;
+            this._localizedModelFactory = localizedModelFactory;
             this._measureService = measureService;
-            this._measureSettings = measureSettings;
+            this._storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
             this._taxCategoryService = taxCategoryService;
             this._workContext = workContext;
+            this._measureSettings = measureSettings;
         }
 
         #endregion
@@ -232,13 +226,13 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare localized models
             if (!excludeProperties)
-                model.Locales = PrepareLocalizedModels(localizedModelConfiguration);
+                model.Locales = _localizedModelFactory.PrepareLocalizedModels(localizedModelConfiguration);
 
             //prepare model tax categories
             PrepareModelTaxCategories(model, checkoutAttribute);
 
             //prepare model stores
-            PrepareModelStores(model, checkoutAttribute, excludeProperties);
+            _storeMappingSupportedModelFactory.PrepareModelStores(model, checkoutAttribute, excludeProperties);
 
             return model;
         }
@@ -341,7 +335,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare localized models
             if (!excludeProperties)
-                model.Locales = PrepareLocalizedModels(localizedModelConfiguration);
+                model.Locales = _localizedModelFactory.PrepareLocalizedModels(localizedModelConfiguration);
 
             return model;
         }
