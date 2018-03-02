@@ -634,6 +634,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.SelectedStoreIds, mo => mo.Ignore())
                 .ForMember(dest => dest.ConditionAllowed, mo => mo.Ignore())
                 .ForMember(dest => dest.ConditionModel, mo => mo.Ignore())
+                .ForMember(dest => dest.CheckoutAttributeValueSearchModel, mo => mo.Ignore())
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore())
                 .ForMember(dest => dest.Form, mo => mo.Ignore());
             CreateMap<CheckoutAttributeModel, CheckoutAttribute>()

@@ -13,7 +13,6 @@ using Nop.Services.Stores;
 using Nop.Web.Areas.Admin.Extensions;
 using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Areas.Admin.Models.Orders;
-using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.Filters;
 
@@ -192,17 +191,20 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
 
+            //prepare model
+            _checkoutAttributeModelFactory.PrepareCheckoutAttributeSearchModel(new CheckoutAttributeSearchModel());
+
             return View();
         }
 
         [HttpPost]
-        public virtual IActionResult List(DataSourceRequest command)
+        public virtual IActionResult List(CheckoutAttributeSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedKendoGridJson();
 
             //prepare model
-            var model = _checkoutAttributeModelFactory.PrepareCheckoutAttributeListGridModel(command);
+            var model = _checkoutAttributeModelFactory.PrepareCheckoutAttributeListModel(searchModel);
 
             return Json(model);
         }
@@ -347,7 +349,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         #region Checkout attribute values
 
         [HttpPost]
-        public virtual IActionResult ValueList(DataSourceRequest command, int checkoutAttributeId)
+        public virtual IActionResult ValueList(CheckoutAttributeValueSearchModel searchModel, int checkoutAttributeId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedKendoGridJson();
@@ -357,7 +359,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ?? throw new ArgumentException("No checkout attribute found with the specified id", nameof(checkoutAttributeId));
 
             //prepare model
-            var model = _checkoutAttributeModelFactory.PrepareCheckoutAttributeValueListGridModel(command, checkoutAttribute);
+            var model = _checkoutAttributeModelFactory.PrepareCheckoutAttributeValueListModel(searchModel, checkoutAttribute);
 
             return Json(model);
         }

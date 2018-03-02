@@ -9,10 +9,15 @@ using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Models.Orders
 {
+    /// <summary>
+    /// Represents a checkout attribute model
+    /// </summary>
     [Validator(typeof(CheckoutAttributeValidator))]
     public partial class CheckoutAttributeModel : BaseNopEntityModel, 
         ILocalizedModel<CheckoutAttributeLocalizedModel>, IStoreMappingSupportedModel
     {
+        #region Ctor
+
         public CheckoutAttributeModel()
         {
             Locales = new List<CheckoutAttributeLocalizedModel>();
@@ -20,7 +25,12 @@ namespace Nop.Web.Areas.Admin.Models.Orders
             ConditionModel = new ConditionModel();
             SelectedStoreIds = new List<int>();
             AvailableStores = new List<SelectListItem>();
+            CheckoutAttributeValueSearchModel = new CheckoutAttributeValueSearchModel();
         }
+
+        #endregion
+
+        #region Properties
 
         [NopResourceDisplayName("Admin.Catalog.Attributes.CheckoutAttributes.Fields.Name")]
         public string Name { get; set; }
@@ -77,6 +87,10 @@ namespace Nop.Web.Areas.Admin.Models.Orders
         [NopResourceDisplayName("Admin.Catalog.Attributes.CheckoutAttributes.Fields.LimitedToStores")]
         public IList<int> SelectedStoreIds { get; set; }
         public IList<SelectListItem> AvailableStores { get; set; }
+
+        public CheckoutAttributeValueSearchModel CheckoutAttributeValueSearchModel { get; set; }
+
+        #endregion
     }
 
     public partial class ConditionModel : BaseNopEntityModel

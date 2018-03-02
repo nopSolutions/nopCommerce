@@ -14,7 +14,6 @@ using Nop.Web.Areas.Admin.Extensions;
 using Nop.Web.Areas.Admin.Models.Orders;
 using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Factories;
-using Nop.Web.Framework.Kendoui;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -143,22 +142,35 @@ namespace Nop.Web.Areas.Admin.Factories
         #region Methods
 
         /// <summary>
-        /// Prepare paged checkout attribute list model for the grid
+        /// Prepare checkout attribute search model
         /// </summary>
-        /// <param name="command">Pagination parameters</param>
-        /// <returns>Grid model</returns>
-        public virtual DataSourceResult PrepareCheckoutAttributeListGridModel(DataSourceRequest command)
+        /// <param name="model">Checkout attribute search model</param>
+        /// <returns>Checkout attribute search model</returns>
+        public virtual CheckoutAttributeSearchModel PrepareCheckoutAttributeSearchModel(CheckoutAttributeSearchModel model)
         {
-            if (command == null)
-                throw new ArgumentNullException(nameof(command));
+            if (model == null)
+                throw new ArgumentNullException(nameof(model));
+
+            return model;
+        }
+
+        /// <summary>
+        /// Prepare paged checkout attribute list model
+        /// </summary>
+        /// <param name="searchModel">Checkout attribute search model</param>
+        /// <returns>Checkout attribute list model</returns>
+        public virtual CheckoutAttributeListModel PrepareCheckoutAttributeListModel(CheckoutAttributeSearchModel searchModel)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             //get checkout attributes
             var checkoutAttributes = _checkoutAttributeService.GetAllCheckoutAttributes();
 
-            //prepare grid model
-            var model = new DataSourceResult
+            //prepare list model
+            var model = new CheckoutAttributeListModel
             {
-                Data = checkoutAttributes.PagedForCommand(command).Select(attribute =>
+                Data = checkoutAttributes.PaginationByRequestModel(searchModel).Select(attribute =>
                 {
                     //fill in model values from the entity
                     var attributeModel = attribute.ToModel();
@@ -190,6 +202,9 @@ namespace Nop.Web.Areas.Admin.Factories
             {
                 //fill in model values from the entity
                 model = model ?? checkoutAttribute.ToModel();
+
+                //prepare nested search model
+                PrepareCheckoutAttributeValueSearchModel(model.CheckoutAttributeValueSearchModel, checkoutAttribute);
 
                 //define localized model configuration action
                 localizedModelConfiguration = (locale, languageId) =>
@@ -223,16 +238,31 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         /// <summary>
-        /// Prepare paged checkout attribute value list model for the grid
+        /// Prepare checkout attribute value search model
         /// </summary>
-        /// <param name="command">Pagination parameters</param>
-        /// <param name="CheckoutAttribute">Checkout attribute</param>
-        /// <returns>Grid model</returns>
-        public virtual DataSourceResult PrepareCheckoutAttributeValueListGridModel(DataSourceRequest command,
+        /// <param name="model">Checkout attribute value search model</param>
+        /// <param name="checkoutAttribute">Checkout attribute</param>
+        /// <returns>Checkout attribute value search model</returns>
+        public virtual CheckoutAttributeValueSearchModel PrepareCheckoutAttributeValueSearchModel(CheckoutAttributeValueSearchModel model,
             CheckoutAttribute checkoutAttribute)
         {
-            if (command == null)
-                throw new ArgumentNullException(nameof(command));
+            if (model == null)
+                throw new ArgumentNullException(nameof(model));
+
+            return model;
+        }
+
+        /// <summary>
+        /// Prepare paged checkout attribute value list model
+        /// </summary>
+        /// <param name="searchModel">Checkout attribute value search model</param>
+        /// <param name="checkoutAttribute">Checkout attribute</param>
+        /// <returns>Checkout attribute value list model</returns>
+        public virtual CheckoutAttributeValueListModel PrepareCheckoutAttributeValueListModel(CheckoutAttributeValueSearchModel searchModel,
+            CheckoutAttribute checkoutAttribute)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             if (checkoutAttribute == null)
                 throw new ArgumentNullException(nameof(checkoutAttribute));
@@ -240,11 +270,11 @@ namespace Nop.Web.Areas.Admin.Factories
             //get checkout attribute values
             var checkoutAttributeValues = _checkoutAttributeService.GetCheckoutAttributeValues(checkoutAttribute.Id);
 
-            //prepare grid model
-            var model = new DataSourceResult
+            //prepare list model
+            var model = new CheckoutAttributeValueListModel
             {
                 //fill in model values from the entity
-                Data = checkoutAttributeValues.PagedForCommand(command).Select(value => new CheckoutAttributeValueModel
+                Data = checkoutAttributeValues.PaginationByRequestModel(searchModel).Select(value => new CheckoutAttributeValueModel
                 {
                     Id = value.Id,
                     CheckoutAttributeId = value.CheckoutAttributeId,

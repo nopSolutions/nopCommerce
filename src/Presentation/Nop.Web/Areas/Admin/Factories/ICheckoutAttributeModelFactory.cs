@@ -1,6 +1,5 @@
 ﻿using Nop.Core.Domain.Orders;
 using Nop.Web.Areas.Admin.Models.Orders;
-using Nop.Web.Framework.Kendoui;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -10,11 +9,18 @@ namespace Nop.Web.Areas.Admin.Factories
     public partial interface ICheckoutAttributeModelFactory
     {
         /// <summary>
-        /// Prepare paged checkout attribute list model for the grid
+        /// Prepare checkout attribute search model
         /// </summary>
-        /// <param name="command">Pagination parameters</param>
-        /// <returns>Grid model</returns>
-        DataSourceResult PrepareCheckoutAttributeListGridModel(DataSourceRequest command);
+        /// <param name="model">Checkout attribute search model</param>
+        /// <returns>Checkout attribute search model</returns>
+        CheckoutAttributeSearchModel PrepareCheckoutAttributeSearchModel(CheckoutAttributeSearchModel model);
+
+        /// <summary>
+        /// Prepare paged checkout attribute list model
+        /// </summary>
+        /// <param name="searchModel">Checkout attribute search model</param>
+        /// <returns>Checkout attribute list model</returns>
+        CheckoutAttributeListModel PrepareCheckoutAttributeListModel(CheckoutAttributeSearchModel searchModel);
 
         /// <summary>
         /// Prepare checkout attribute model
@@ -27,12 +33,21 @@ namespace Nop.Web.Areas.Admin.Factories
             CheckoutAttribute checkoutAttribute, bool excludeProperties = false);
 
         /// <summary>
-        /// Prepare paged checkout attribute value list model for the grid
+        /// Prepare checkout attribute value search model
         /// </summary>
-        /// <param name="command">Pagination parameters</param>
-        /// <param name="CheckoutAttribute">Checkout attribute</param>
-        /// <returns>Grid model</returns>
-        DataSourceResult PrepareCheckoutAttributeValueListGridModel(DataSourceRequest command,
+        /// <param name="model">Checkout attribute value search model</param>
+        /// <param name="checkoutAttribute">Checkout attribute</param>
+        /// <returns>Checkout attribute value search model</returns>
+        CheckoutAttributeValueSearchModel PrepareCheckoutAttributeValueSearchModel(CheckoutAttributeValueSearchModel model,
+            CheckoutAttribute checkoutAttribute);
+
+        /// <summary>
+        /// Prepare paged checkout attribute value list model
+        /// </summary>
+        /// <param name="searchModel">Checkout attribute value search model</param>
+        /// <param name="checkoutAttribute">Checkout attribute</param>
+        /// <returns>Checkout attribute value list model</returns>
+        CheckoutAttributeValueListModel PrepareCheckoutAttributeValueListModel(CheckoutAttributeValueSearchModel searchModel,
             CheckoutAttribute checkoutAttribute);
 
         /// <summary>

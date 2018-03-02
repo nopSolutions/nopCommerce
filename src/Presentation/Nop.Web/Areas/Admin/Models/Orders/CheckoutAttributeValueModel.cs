@@ -6,13 +6,22 @@ using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Models.Orders
 {
+    /// <summary>
+    /// Represents a checkout attribute value model
+    /// </summary>
     [Validator(typeof(CheckoutAttributeValueValidator))]
     public partial class CheckoutAttributeValueModel : BaseNopEntityModel, ILocalizedModel<CheckoutAttributeValueLocalizedModel>
     {
+        #region Ctor
+
         public CheckoutAttributeValueModel()
         {
             Locales = new List<CheckoutAttributeValueLocalizedModel>();
         }
+
+        #endregion
+
+        #region Properties
 
         public int CheckoutAttributeId { get; set; }
 
@@ -38,6 +47,8 @@ namespace Nop.Web.Areas.Admin.Models.Orders
         public int DisplayOrder {get;set;}
 
         public IList<CheckoutAttributeValueLocalizedModel> Locales { get; set; }
+
+        #endregion
     }
 
     public partial class CheckoutAttributeValueLocalizedModel : ILocalizedLocaleModel
