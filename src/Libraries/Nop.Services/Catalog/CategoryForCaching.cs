@@ -57,7 +57,7 @@ namespace Nop.Services.Catalog
         public override ICollection<Discount> AppliedDiscounts
         {
             get { throw new Exception("Entity for caching doesn't support navigation properties"); }
-            protected set { throw new Exception("Entity for caching doesn't support navigation properties"); }
+            set { throw new Exception("Entity for caching doesn't support navigation properties"); }
         }
     }
 }

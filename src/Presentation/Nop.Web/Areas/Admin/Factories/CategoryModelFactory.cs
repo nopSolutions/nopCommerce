@@ -31,6 +31,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly ICategoryService _categoryService;
         private readonly ICategoryTemplateService _categoryTemplateService;
         private readonly IDiscountService _discountService;
+        private readonly IDiscountSupportedModelFactory _discountSupportedModelFactory;
         private readonly ILocalizationService _localizationService;
         private readonly ILocalizedModelFactory _localizedModelFactory;
         private readonly IManufacturerService _manufacturerService;
@@ -49,6 +50,7 @@ namespace Nop.Web.Areas.Admin.Factories
             ICategoryService categoryService,
             ICategoryTemplateService categoryTemplateService,
             IDiscountService discountService,
+            IDiscountSupportedModelFactory discountSupportedModelFactory,
             ILocalizationService localizationService,
             ILocalizedModelFactory localizedModelFactory,
             IManufacturerService manufacturerService,
@@ -63,6 +65,7 @@ namespace Nop.Web.Areas.Admin.Factories
             this._categoryService = categoryService;
             this._categoryTemplateService = categoryTemplateService;
             this._discountService = discountService;
+            this._discountSupportedModelFactory = discountSupportedModelFactory;
             this._localizationService = localizationService;
             this._localizedModelFactory = localizedModelFactory;
             this._manufacturerService = manufacturerService;
@@ -113,32 +116,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Value = "0"
             });
         }
-
-        /// <summary>
-        /// Prepare selected and all available discounts for the passed model
-        /// </summary>
-        /// <param name="model">Category model</param>
-        /// <param name="category">Category</param>
-        /// <param name="ignoreAppliedDiscounts">Whether to ignore existing applied discounts</param>
-        protected virtual void PrepareDiscountModel(CategoryModel model, Category category, bool ignoreAppliedDiscounts)
-        {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
-
-            //try to get already applied discounts
-            if (!ignoreAppliedDiscounts && category != null)
-                model.SelectedDiscountIds = category.AppliedDiscounts.Select(discount => discount.Id).ToList();
-
-            //prepare available discounts
-            var availableDiscounts = _discountService.GetAllDiscounts(DiscountType.AssignedToCategories, showHidden: true);
-            model.AvailableDiscounts = availableDiscounts.Select(discount => new SelectListItem
-            {
-                Text = discount.Name,
-                Value = discount.Id.ToString(),
-                Selected = model.SelectedDiscountIds.Contains(discount.Id)
-            }).ToList();
-        }
-
+        
         #endregion
 
         #region Methods
@@ -251,7 +229,8 @@ namespace Nop.Web.Areas.Admin.Factories
             PrepareModelCategories(model, category);
 
             //prepare model discounts
-            PrepareDiscountModel(model, category, excludeProperties);
+            var availableDiscounts = _discountService.GetAllDiscounts(DiscountType.AssignedToCategories, showHidden: true);
+            _discountSupportedModelFactory.PrepareDiscountModel(model, category, availableDiscounts, excludeProperties);
 
             //prepare model customer roles
             _aclSupportedModelFactory.PrepareModelCustomerRoles(model, category, excludeProperties);
