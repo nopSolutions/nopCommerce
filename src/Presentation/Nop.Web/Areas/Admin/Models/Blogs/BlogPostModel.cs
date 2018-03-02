@@ -9,19 +9,28 @@ using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Areas.Admin.Models.Blogs
 {
+    /// <summary>
+    /// Represents a blog post model
+    /// </summary>
     [Validator(typeof(BlogPostValidator))]
     public partial class BlogPostModel : BaseNopEntityModel, IStoreMappingSupportedModel
     {
+        #region Ctor
+
         public BlogPostModel()
         {
             AvailableLanguages = new List<SelectListItem>();
-
             SelectedStoreIds = new List<int>();
             AvailableStores = new List<SelectListItem>();
         }
 
+        #endregion
+
+        #region Properties
+
         [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.Language")]
         public int LanguageId { get; set; }
+
         public IList<SelectListItem> AvailableLanguages { get; set; }
 
         [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.Language")]
@@ -43,6 +52,7 @@ namespace Nop.Web.Areas.Admin.Models.Blogs
         public string Tags { get; set; }
 
         public int ApprovedComments { get; set; }
+
         public int NotApprovedComments { get; set; }
 
         [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.StartDate")]
@@ -72,5 +82,7 @@ namespace Nop.Web.Areas.Admin.Models.Blogs
         [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.LimitedToStores")]
         public IList<int> SelectedStoreIds { get; set; }
         public IList<SelectListItem> AvailableStores { get; set; }
+
+        #endregion
     }
 }

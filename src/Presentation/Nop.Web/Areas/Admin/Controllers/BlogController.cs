@@ -13,7 +13,6 @@ using Nop.Services.Stores;
 using Nop.Web.Areas.Admin.Extensions;
 using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Areas.Admin.Models.Blogs;
-using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.Filters;
 
@@ -101,19 +100,19 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             //prepare model
-            var model = _blogModelFactory.PrepareBlogPostListModel(new BlogPostListModel());
+            var model = _blogModelFactory.PrepareBlogPostSearchModel(new BlogPostSearchModel());
 
             return View(model);
         }
 
         [HttpPost]
-        public virtual IActionResult List(BlogPostListModel listModel, DataSourceRequest command)
+        public virtual IActionResult List(BlogPostSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageBlog))
                 return AccessDeniedKendoGridJson();
 
             //prepare model
-            var model = _blogModelFactory.PrepareBlogPostListGridModel(listModel, command);
+            var model = _blogModelFactory.PrepareBlogPostListModel(searchModel);
 
             return Json(model);
         }
@@ -272,13 +271,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             ViewBag.FilterByBlogPostId = filterByBlogPostId;
 
             //prepare model
-            var model = _blogModelFactory.PrepareBlogCommentListModel(new BlogCommentListModel(), blogPost);
+            var model = _blogModelFactory.PrepareBlogCommentSearchModel(new BlogCommentSearchModel(), blogPost);
 
             return View(model);
         }
 
         [HttpPost]
-        public virtual IActionResult Comments(BlogCommentListModel listModel, DataSourceRequest command, int? filterByBlogPostId)
+        public virtual IActionResult Comments(BlogCommentSearchModel searchModel, int? filterByBlogPostId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageBlog))
                 return AccessDeniedKendoGridJson();
@@ -289,7 +288,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 throw new ArgumentException("No blog post found with the specified id", nameof(filterByBlogPostId));
 
             //prepare model
-            var model = _blogModelFactory.PrepareBlogCommentListGridModel(listModel, command, blogPost);
+            var model = _blogModelFactory.PrepareBlogCommentListModel(searchModel, blogPost);
 
             return Json(model);
         }

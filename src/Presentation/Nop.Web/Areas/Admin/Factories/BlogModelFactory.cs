@@ -12,7 +12,6 @@ using Nop.Web.Areas.Admin.Extensions;
 using Nop.Web.Areas.Admin.Models.Blogs;
 using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Factories;
-using Nop.Web.Framework.Kendoui;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -77,11 +76,11 @@ namespace Nop.Web.Areas.Admin.Factories
         #region Methods
 
         /// <summary>
-        /// Prepare blog post list model
+        /// Prepare blog post search model
         /// </summary>
-        /// <param name="model">Blog post list model</param>
-        /// <returns>Blog post list model</returns>
-        public virtual BlogPostListModel PrepareBlogPostListModel(BlogPostListModel model)
+        /// <param name="model">Blog post search model</param>
+        /// <returns>Blog post search model</returns>
+        public virtual BlogPostSearchModel PrepareBlogPostSearchModel(BlogPostSearchModel model)
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
@@ -98,25 +97,21 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         /// <summary>
-        /// Prepare paged blog post list model for the grid
+        /// Prepare paged blog post list model
         /// </summary>
-        /// <param name="listModel">Blog post list model</param>
-        /// <param name="command">Pagination parameters</param>
-        /// <returns>Grid model</returns>
-        public virtual DataSourceResult PrepareBlogPostListGridModel(BlogPostListModel listModel, DataSourceRequest command)
+        /// <param name="searchModel">Blog post search model</param>
+        /// <returns>Blog post list model</returns>
+        public virtual BlogPostListModel PrepareBlogPostListModel(BlogPostSearchModel searchModel)
         {
-            if (listModel == null)
-                throw new ArgumentNullException(nameof(listModel));
-
-            if (command == null)
-                throw new ArgumentNullException(nameof(command));
-
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+            
             //get blog posts
-            var blogPosts = _blogService.GetAllBlogPosts(listModel.SearchStoreId, showHidden: true,
-                pageIndex: command.Page - 1, pageSize: command.PageSize);
+            var blogPosts = _blogService.GetAllBlogPosts(searchModel.SearchStoreId, showHidden: true,
+                pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
-            //prepare grid model
-            var model = new DataSourceResult
+            //prepare list model
+            var model = new BlogPostListModel
             {
                 Data = blogPosts.Select(blogPost =>
                 {
@@ -177,12 +172,12 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         /// <summary>
-        /// Prepare blog comment list model
+        /// Prepare blog comment search model
         /// </summary>
-        /// <param name="model">Blog comment list model</param>
+        /// <param name="model">Blog comment search model</param>
         /// <param name="blogPost">Blog post</param>
-        /// <returns>Blog comment list model</returns>
-        public virtual BlogCommentListModel PrepareBlogCommentListModel(BlogCommentListModel model, BlogPost blogPost)
+        /// <returns>Blog comment search model</returns>
+        public virtual BlogCommentSearchModel PrepareBlogCommentSearchModel(BlogCommentSearchModel model, BlogPost blogPost)
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
@@ -208,42 +203,37 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         /// <summary>
-        /// Prepare paged blog comment list model for the grid
+        /// Prepare paged blog comment list model
         /// </summary>
-        /// <param name="listModel">Blog comment list model</param>
-        /// <param name="command">Pagination parameters</param>
-        /// <param name="blogPost">Blog post; pass null to load comments of all posts</param>
-        /// <returns>Grid model</returns>
-        public virtual DataSourceResult PrepareBlogCommentListGridModel(BlogCommentListModel listModel,
-            DataSourceRequest command, BlogPost blogPost)
+        /// <param name="searchModel">Blog comment search model</param>
+        /// <param name="blogPost">Blog post; pass null to prepare comment models for all blog posts</param>
+        /// <returns>Blog comment list model</returns>
+        public virtual BlogCommentListModel PrepareBlogCommentListModel(BlogCommentSearchModel searchModel, BlogPost blogPost)
         {
-            if (listModel == null)
-                throw new ArgumentNullException(nameof(listModel));
-
-            if (command == null)
-                throw new ArgumentNullException(nameof(command));
-
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+            
             //get parameters to filter comments
-            var createdOnFromValue = listModel.CreatedOnFrom == null ? null
-                : (DateTime?)_dateTimeHelper.ConvertToUtcTime(listModel.CreatedOnFrom.Value, _dateTimeHelper.CurrentTimeZone);
-            var createdOnToValue = listModel.CreatedOnTo == null ? null
-                : (DateTime?)_dateTimeHelper.ConvertToUtcTime(listModel.CreatedOnTo.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
-            var isApprovedOnly = listModel.SearchApprovedId == 0 ? null : listModel.SearchApprovedId == 1 ? true : (bool?)false;
+            var createdOnFromValue = searchModel.CreatedOnFrom == null ? null
+                : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.CreatedOnFrom.Value, _dateTimeHelper.CurrentTimeZone);
+            var createdOnToValue = searchModel.CreatedOnTo == null ? null
+                : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.CreatedOnTo.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
+            var isApprovedOnly = searchModel.SearchApprovedId == 0 ? null : searchModel.SearchApprovedId == 1 ? true : (bool?)false;
 
             //get comments
             var comments = _blogService.GetAllComments(blogPostId: blogPost?.Id,
                 approved: isApprovedOnly,
                 fromUtc: createdOnFromValue,
                 toUtc: createdOnToValue,
-                commentText: listModel.SearchText);
+                commentText: searchModel.SearchText);
 
             //prepare store names (to avoid loading for each comment)
             var storeNames = _storeService.GetAllStores().ToDictionary(store => store.Id, store => store.Name);
 
-            //prepare grid model
-            var model = new DataSourceResult
+            //prepare list model
+            var model = new BlogCommentListModel
             {
-                Data = comments.PagedForCommand(command).Select(blogComment =>
+                Data = comments.PaginationByRequestModel(searchModel).Select(blogComment =>
                 {
                     //fill in model values from the entity
                     var commentModel = new BlogCommentModel
