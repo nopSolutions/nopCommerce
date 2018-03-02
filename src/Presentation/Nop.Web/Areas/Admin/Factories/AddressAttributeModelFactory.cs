@@ -9,7 +9,6 @@ using Nop.Web.Areas.Admin.Extensions;
 using Nop.Web.Areas.Admin.Models.Common;
 using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Factories;
-using Nop.Web.Framework.Kendoui;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -47,22 +46,35 @@ namespace Nop.Web.Areas.Admin.Factories
         #region Methods
 
         /// <summary>
-        /// Prepare paged address attribute list model for the grid
+        /// Prepare address attribute search model
         /// </summary>
-        /// <param name="command">Pagination parameters</param>
-        /// <returns>Grid model</returns>
-        public virtual DataSourceResult PrepareAddressAttributeListGridModel(DataSourceRequest command)
+        /// <param name="model">Address attribute search model</param>
+        /// <returns>Address attribute search model</returns>
+        public virtual AddressAttributeSearchModel PrepareAddressAttributeSearchModel(AddressAttributeSearchModel model)
         {
-            if (command == null)
-                throw new ArgumentNullException(nameof(command));
+            if (model == null)
+                throw new ArgumentNullException(nameof(model));
+
+            return model;
+        }
+
+        /// <summary>
+        /// Prepare paged address attribute list model
+        /// </summary>
+        /// <param name="searchModel">Address attribute search model</param>
+        /// <returns>Address attribute list model</returns>
+        public virtual AddressAttributeListModel PrepareAddressAttributeListModel(AddressAttributeSearchModel searchModel)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             //get address attributes
             var addressAttributes = _addressAttributeService.GetAllAddressAttributes();
 
             //prepare grid model
-            var model = new DataSourceResult
+            var model = new AddressAttributeListModel
             {
-                Data = addressAttributes.PagedForCommand(command).Select(attribute =>
+                Data = addressAttributes.PaginationByRequestModel(searchModel).Select(attribute =>
                 {
                     //fill in model values from the entity
                     var attributeModel = attribute.ToModel();
@@ -95,6 +107,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 //fill in model values from the entity
                 model = model ?? addressAttribute.ToModel();
 
+                //prepare nested search model
+                PrepareAddressAttributeValueSearchModel(model.AddressAttributeValueSearchModel, addressAttribute);
+
                 //define localized model configuration action
                 localizedModelConfiguration = (locale, languageId) =>
                 {
@@ -110,15 +125,31 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         /// <summary>
-        /// Prepare paged address attribute value list model for the grid
+        /// Prepare address attribute value search model
         /// </summary>
-        /// <param name="command">Pagination parameters</param>
-        /// <param name="AddressAttribute">Address attribute</param>
-        /// <returns>Grid model</returns>
-        public virtual DataSourceResult PrepareAddressAttributeValueListGridModel(DataSourceRequest command, AddressAttribute addressAttribute)
+        /// <param name="model">Address attribute value search model</param>
+        /// <param name="addressAttribute">Address attribute</param>
+        /// <returns>Address attribute value search model</returns>
+        public virtual AddressAttributeValueSearchModel PrepareAddressAttributeValueSearchModel(AddressAttributeValueSearchModel model,
+            AddressAttribute addressAttribute)
         {
-            if (command == null)
-                throw new ArgumentNullException(nameof(command));
+            if (model == null)
+                throw new ArgumentNullException(nameof(model));
+
+            return model;
+        }
+
+        /// <summary>
+        /// Prepare paged address attribute value list model
+        /// </summary>
+        /// <param name="searchModel">Address attribute value search model</param>
+        /// <param name="AddressAttribute">Address attribute</param>
+        /// <returns>Address attribute value list model</returns>
+        public virtual AddressAttributeValueListModel PrepareAddressAttributeValueListModel(AddressAttributeValueSearchModel searchModel,
+            AddressAttribute addressAttribute)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             if (addressAttribute == null)
                 throw new ArgumentNullException(nameof(addressAttribute));
@@ -127,10 +158,10 @@ namespace Nop.Web.Areas.Admin.Factories
             var addressAttributeValues = _addressAttributeService.GetAddressAttributeValues(addressAttribute.Id);
 
             //prepare grid model
-            var model = new DataSourceResult
+            var model = new AddressAttributeValueListModel
             {
                 //fill in model values from the entity
-                Data = addressAttributeValues.PagedForCommand(command).Select(value => new AddressAttributeValueModel
+                Data = addressAttributeValues.PaginationByRequestModel(searchModel).Select(value => new AddressAttributeValueModel
                 {
                     Id = value.Id,
                     AddressAttributeId = value.AddressAttributeId,

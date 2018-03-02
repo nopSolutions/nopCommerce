@@ -37,6 +37,7 @@ using Nop.Services.Stores;
 using Nop.Services.Tax;
 using Nop.Services.Themes;
 using Nop.Web.Areas.Admin.Extensions;
+using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Areas.Admin.Models.Common;
 using Nop.Web.Areas.Admin.Models.Settings;
 using Nop.Web.Framework;
@@ -52,8 +53,9 @@ namespace Nop.Web.Areas.Admin.Controllers
 {
     public partial class SettingController : BaseAdminController
 	{
-		#region Fields
+        #region Fields
 
+        private readonly IAddressAttributeModelFactory _addressAttributeModelFactory;
         private readonly ISettingService _settingService;
         private readonly ICountryService _countryService;
         private readonly IStateProvinceService _stateProvinceService;
@@ -84,7 +86,8 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Ctor
 
-        public SettingController(ISettingService settingService,
+        public SettingController(IAddressAttributeModelFactory addressAttributeModelFactory,
+            ISettingService settingService,
             ICountryService countryService, 
             IStateProvinceService stateProvinceService,
             IAddressService addressService, 
@@ -110,6 +113,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             NopConfig config,
             CurrencySettings currencySettings)
         {
+            this._addressAttributeModelFactory = addressAttributeModelFactory;
             this._settingService = settingService;
             this._countryService = countryService;
             this._stateProvinceService = stateProvinceService;
@@ -1639,6 +1643,10 @@ namespace Nop.Web.Areas.Admin.Controllers
                 CustomerSettings = customerSettings.ToModel(),
                 AddressSettings = addressSettings.ToModel()
             };
+
+            //prepare nested search model
+            model.AddressAttributeSearchModel = _addressAttributeModelFactory
+                .PrepareAddressAttributeSearchModel(model.AddressAttributeSearchModel);
 
             model.DateTimeSettings.AllowCustomersToSetTimeZone = dateTimeSettings.AllowCustomersToSetTimeZone;
             model.DateTimeSettings.DefaultStoreTimeZoneId = _dateTimeHelper.DefaultStoreTimeZone.Id;

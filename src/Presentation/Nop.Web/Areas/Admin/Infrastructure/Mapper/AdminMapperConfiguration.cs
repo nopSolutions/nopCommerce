@@ -654,6 +654,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
             CreateMap<AddressAttribute, AddressAttributeModel>()
                 .ForMember(dest => dest.AttributeControlTypeName, mo => mo.Ignore())
                 .ForMember(dest => dest.Locales, mo => mo.Ignore())
+                .ForMember(dest => dest.AddressAttributeValueSearchModel, mo => mo.Ignore())
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore())
                 .ForMember(dest => dest.Form, mo => mo.Ignore());
             CreateMap<AddressAttributeModel, AddressAttribute>()

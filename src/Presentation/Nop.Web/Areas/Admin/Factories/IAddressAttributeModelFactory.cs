@@ -1,6 +1,5 @@
 ﻿using Nop.Core.Domain.Common;
 using Nop.Web.Areas.Admin.Models.Common;
-using Nop.Web.Framework.Kendoui;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -10,11 +9,18 @@ namespace Nop.Web.Areas.Admin.Factories
     public partial interface IAddressAttributeModelFactory
     {
         /// <summary>
-        /// Prepare paged address attribute list model for the grid
+        /// Prepare address attribute search model
         /// </summary>
-        /// <param name="command">Pagination parameters</param>
-        /// <returns>Grid model</returns>
-        DataSourceResult PrepareAddressAttributeListGridModel(DataSourceRequest command);
+        /// <param name="model">Address attribute search model</param>
+        /// <returns>Address attribute search model</returns>
+        AddressAttributeSearchModel PrepareAddressAttributeSearchModel(AddressAttributeSearchModel model);
+
+        /// <summary>
+        /// Prepare paged address attribute list model
+        /// </summary>
+        /// <param name="searchModel">Address attribute search model</param>
+        /// <returns>Address attribute list model</returns>
+        AddressAttributeListModel PrepareAddressAttributeListModel(AddressAttributeSearchModel searchModel);
 
         /// <summary>
         /// Prepare address attribute model
@@ -27,12 +33,22 @@ namespace Nop.Web.Areas.Admin.Factories
             AddressAttribute addressAttribute, bool excludeProperties = false);
 
         /// <summary>
-        /// Prepare paged address attribute value list model for the grid
+        /// Prepare address attribute value search model
         /// </summary>
-        /// <param name="command">Pagination parameters</param>
+        /// <param name="model">Address attribute value search model</param>
+        /// <param name="addressAttribute">Address attribute</param>
+        /// <returns>Address attribute value search model</returns>
+        AddressAttributeValueSearchModel PrepareAddressAttributeValueSearchModel(AddressAttributeValueSearchModel model,
+            AddressAttribute addressAttribute);
+
+        /// <summary>
+        /// Prepare paged address attribute value list model
+        /// </summary>
+        /// <param name="searchModel">Address attribute value search model</param>
         /// <param name="AddressAttribute">Address attribute</param>
-        /// <returns>Grid model</returns>
-        DataSourceResult PrepareAddressAttributeValueListGridModel(DataSourceRequest command, AddressAttribute addressAttribute);
+        /// <returns>Address attribute value list model</returns>
+        AddressAttributeValueListModel PrepareAddressAttributeValueListModel(AddressAttributeValueSearchModel searchModel, 
+            AddressAttribute addressAttribute);
 
         /// <summary>
         /// Prepare address attribute value model

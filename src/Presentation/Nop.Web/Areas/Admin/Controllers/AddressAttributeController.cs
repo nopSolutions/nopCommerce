@@ -8,7 +8,6 @@ using Nop.Services.Security;
 using Nop.Web.Areas.Admin.Extensions;
 using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Areas.Admin.Models.Common;
-using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.Filters;
 
@@ -97,13 +96,13 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual IActionResult List(DataSourceRequest command)
+        public virtual IActionResult List(AddressAttributeSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedKendoGridJson();
 
             //prepare model
-            var model = _addressAttributeModelFactory.PrepareAddressAttributeListGridModel(command);
+            var model = _addressAttributeModelFactory.PrepareAddressAttributeListModel(searchModel);
 
             return Json(model);
         }
@@ -244,7 +243,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         #region Address attribute values
 
         [HttpPost]
-        public virtual IActionResult ValueList(DataSourceRequest command, int addressAttributeId)
+        public virtual IActionResult ValueList(AddressAttributeValueSearchModel searchModel, int addressAttributeId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedKendoGridJson();
@@ -254,7 +253,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ?? throw new ArgumentException("No address attribute found with the specified id", nameof(addressAttributeId));
 
             //prepare model
-            var model = _addressAttributeModelFactory.PrepareAddressAttributeValueListGridModel(command, addressAttribute);
+            var model = _addressAttributeModelFactory.PrepareAddressAttributeValueListModel(searchModel, addressAttribute);
 
             return Json(model);
         }
