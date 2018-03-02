@@ -9,7 +9,6 @@ using Nop.Web.Areas.Admin.Extensions;
 using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Areas.Admin.Models.Affiliates;
 using Nop.Web.Framework.Controllers;
-using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Web.Areas.Admin.Controllers
@@ -68,7 +67,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedKendoGridJson();
 
             //prepare model
-            var model = _affiliateModelFactory.PrepareAffiliateListGridModel(searchModel);
+            var model = _affiliateModelFactory.PrepareAffiliateListModel(searchModel);
 
             return Json(model);
         }
@@ -231,11 +230,10 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ?? throw new ArgumentException("No affiliate found with the specified id");
 
             //prepare model
-            var model = _affiliateModelFactory.PrepareAffiliatedOrderListGridModel(searchModel, affiliate);
+            var model = _affiliateModelFactory.PrepareAffiliatedOrderListModel(searchModel, affiliate);
 
             return Json(model);
         }
-
 
         [HttpPost]
         public virtual IActionResult AffiliatedCustomerList(AffiliatedCustomerSearchModel searchModel, int affiliateId)
@@ -248,7 +246,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ?? throw new ArgumentException("No affiliate found with the specified id", nameof(affiliateId));
 
             //prepare model
-            var model = _affiliateModelFactory.PrepareAffiliatedCustomerListGridModel(searchModel, affiliate);
+            var model = _affiliateModelFactory.PrepareAffiliatedCustomerListModel(searchModel, affiliate);
 
             return Json(model);
         }
