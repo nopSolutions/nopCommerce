@@ -8,16 +8,21 @@ using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Models.Catalog
 {
+    /// <summary>
+    /// Represents a category model
+    /// </summary>
     [Validator(typeof(CategoryValidator))]
-    public partial class CategoryModel : BaseNopEntityModel, 
-        ILocalizedModel<CategoryLocalizedModel>, IStoreMappingSupportedModel
+    public partial class CategoryModel : BaseNopEntityModel, ILocalizedModel<CategoryLocalizedModel>, IStoreMappingSupportedModel
     {
+        #region Ctor
+
         public CategoryModel()
         {
             if (PageSize < 1)
             {
                 PageSize = 5;
             }
+
             Locales = new List<CategoryLocalizedModel>();
             AvailableCategoryTemplates = new List<SelectListItem>();
             AvailableCategories = new List<SelectListItem>();
@@ -29,7 +34,13 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
 
             SelectedStoreIds = new List<int>();
             AvailableStores = new List<SelectListItem>();
+
+            CategoryProductSearchModel = new CategoryProductSearchModel();
         }
+
+        #endregion
+
+        #region Properties
 
         [NopResourceDisplayName("Admin.Catalog.Categories.Fields.Name")]
         public string Name { get; set; }
@@ -108,58 +119,7 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
         public IList<int> SelectedDiscountIds { get; set; }
         public IList<SelectListItem> AvailableDiscounts { get; set; }
 
-        #region Nested classes
-
-        public partial class CategoryProductModel : BaseNopEntityModel
-        {
-            public int CategoryId { get; set; }
-
-            public int ProductId { get; set; }
-
-            [NopResourceDisplayName("Admin.Catalog.Categories.Products.Fields.Product")]
-            public string ProductName { get; set; }
-
-            [NopResourceDisplayName("Admin.Catalog.Categories.Products.Fields.IsFeaturedProduct")]
-            public bool IsFeaturedProduct { get; set; }
-
-            [NopResourceDisplayName("Admin.Catalog.Categories.Products.Fields.DisplayOrder")]
-            public int DisplayOrder { get; set; }
-        }
-
-        public partial class AddCategoryProductModel : BaseNopModel
-        {
-            public AddCategoryProductModel()
-            {
-                AvailableCategories = new List<SelectListItem>();
-                AvailableManufacturers = new List<SelectListItem>();
-                AvailableStores = new List<SelectListItem>();
-                AvailableVendors = new List<SelectListItem>();
-                AvailableProductTypes = new List<SelectListItem>();
-            }
-
-            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchProductName")]
-            public string SearchProductName { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchCategory")]
-            public int SearchCategoryId { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchManufacturer")]
-            public int SearchManufacturerId { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchStore")]
-            public int SearchStoreId { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchVendor")]
-            public int SearchVendorId { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchProductType")]
-            public int SearchProductTypeId { get; set; }
-
-            public IList<SelectListItem> AvailableCategories { get; set; }
-            public IList<SelectListItem> AvailableManufacturers { get; set; }
-            public IList<SelectListItem> AvailableStores { get; set; }
-            public IList<SelectListItem> AvailableVendors { get; set; }
-            public IList<SelectListItem> AvailableProductTypes { get; set; }
-
-            public int CategoryId { get; set; }
-
-            public int[] SelectedProductIds { get; set; }
-        }
+        public CategoryProductSearchModel CategoryProductSearchModel { get; set; }
 
         #endregion
     }

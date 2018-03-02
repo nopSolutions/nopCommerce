@@ -3,9 +3,9 @@
 namespace Nop.Web.Areas.Admin.Models.Catalog
 {
     /// <summary>
-    /// Represents a category list model
+    /// Represents a category product search model
     /// </summary>
-    public partial class CategoryListModel : BasePagedListModel<CategoryModel>
+    public partial class CategoryProductSearchModel : BaseSearchModel
     {
     }
 }

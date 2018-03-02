@@ -20,7 +20,6 @@ using Nop.Web.Areas.Admin.Extensions;
 using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Web.Framework.Controllers;
-using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.Filters;
 
@@ -198,19 +197,19 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             //prepare model
-            var model = _categoryModelFactory.PrepareCategoryListModel(new CategoryListModel());
+            var model = _categoryModelFactory.PrepareCategorySearchModel(new CategorySearchModel());
 
             return View(model);
         }
 
         [HttpPost]
-        public virtual IActionResult List(CategoryListModel listModel, DataSourceRequest command)
+        public virtual IActionResult List(CategorySearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
                 return AccessDeniedKendoGridJson();
 
             //prepare model
-            var model = _categoryModelFactory.PrepareCategoryListGridModel(listModel, command);
+            var model = _categoryModelFactory.PrepareCategoryListModel(searchModel);
 
             return Json(model);
         }
@@ -493,7 +492,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         #region Products
 
         [HttpPost]
-        public virtual IActionResult ProductList(DataSourceRequest command, int categoryId)
+        public virtual IActionResult ProductList(CategoryProductSearchModel searchModel, int categoryId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
                 return AccessDeniedKendoGridJson();
@@ -503,12 +502,12 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ?? throw new ArgumentException("No category found with the specified id", nameof(categoryId));
 
             //prepare model
-            var model = _categoryModelFactory.PrepareCategoryProductListGridModel(command, category);
+            var model = _categoryModelFactory.PrepareCategoryProductListModel(searchModel, category);
 
             return Json(model);
         }
 
-        public virtual IActionResult ProductUpdate(CategoryModel.CategoryProductModel model)
+        public virtual IActionResult ProductUpdate(CategoryProductModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
                 return AccessDeniedView();
@@ -544,56 +543,55 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             //prepare model
-            var model = _categoryModelFactory.PrepareAddCategoryProductListModel(new CategoryModel.AddCategoryProductModel());
+            var model = _categoryModelFactory.PrepareAddProductToCategorySearchModel(new AddProductToCategorySearchModel());
 
             return View(model);
         }
 
         [HttpPost]
-        public virtual IActionResult ProductAddPopupList(CategoryModel.AddCategoryProductModel listModel, DataSourceRequest command)
+        public virtual IActionResult ProductAddPopupList(AddProductToCategorySearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
                 return AccessDeniedKendoGridJson();
 
             //prepare model
-            var model = _categoryModelFactory.PrepareAddCategoryProductListGridModel(listModel, command);
+            var model = _categoryModelFactory.PrepareAddProductToCategoryListModel(searchModel);
 
             return Json(model);
         }
 
         [HttpPost]
         [FormValueRequired("save")]
-        public virtual IActionResult ProductAddPopup(CategoryModel.AddCategoryProductModel model)
+        public virtual IActionResult ProductAddPopup(AddProductToCategoryModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
                 return AccessDeniedView();
 
-            if (model.SelectedProductIds != null)
+            //get selected products
+            var selectedProducts = _productService.GetProductsByIds(model.SelectedProductIds.ToArray());
+            if (selectedProducts.Any())
             {
-                foreach (var id in model.SelectedProductIds)
+                var existingProductCategories = _categoryService.GetProductCategoriesByCategoryId(model.CategoryId, showHidden: true);
+                foreach (var product in selectedProducts)
                 {
-                    var product = _productService.GetProductById(id);
-                    if (product != null)
+                    //whether product category with such parameters already exists
+                    if (existingProductCategories.FindProductCategory(product.Id, model.CategoryId) != null)
+                        continue;
+
+                    //insert the new product category mapping
+                    _categoryService.InsertProductCategory(new ProductCategory
                     {
-                        var existingProductCategories = _categoryService.GetProductCategoriesByCategoryId(model.CategoryId, showHidden: true);
-                        if (existingProductCategories.FindProductCategory(id, model.CategoryId) == null)
-                        {
-                            _categoryService.InsertProductCategory(
-                                new ProductCategory
-                                {
-                                    CategoryId = model.CategoryId,
-                                    ProductId = id,
-                                    IsFeaturedProduct = false,
-                                    DisplayOrder = 1
-                                });
-                        }
-                    }
+                        CategoryId = model.CategoryId,
+                        ProductId = product.Id,
+                        IsFeaturedProduct = false,
+                        DisplayOrder = 1
+                    });
                 }
             }
 
             ViewBag.RefreshPage = true;
-
-            return View(model);
+            
+            return View(new AddProductToCategorySearchModel());
         }
 
         #endregion

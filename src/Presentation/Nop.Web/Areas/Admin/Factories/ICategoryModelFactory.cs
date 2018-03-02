@@ -1,6 +1,5 @@
 ﻿using Nop.Core.Domain.Catalog;
 using Nop.Web.Areas.Admin.Models.Catalog;
-using Nop.Web.Framework.Kendoui;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -10,19 +9,18 @@ namespace Nop.Web.Areas.Admin.Factories
     public partial interface ICategoryModelFactory
     {
         /// <summary>
-        /// Prepare category list model
+        /// Prepare category search model
         /// </summary>
-        /// <param name="model">Category list model</param>
-        /// <returns>Category list model</returns>
-        CategoryListModel PrepareCategoryListModel(CategoryListModel model);
+        /// <param name="model">Category search model</param>
+        /// <returns>Category search model</returns>
+        CategorySearchModel PrepareCategorySearchModel(CategorySearchModel model);
 
         /// <summary>
-        /// Prepare paged category list model for the grid
+        /// Prepare paged category list model
         /// </summary>
-        /// <param name="listModel">Category list model</param>
-        /// <param name="command">Pagination parameters</param>
-        /// <returns>Grid model</returns>
-        DataSourceResult PrepareCategoryListGridModel(CategoryListModel listModel, DataSourceRequest command);
+        /// <param name="searchModel">Category search model</param>
+        /// <returns>Category list model</returns>
+        CategoryListModel PrepareCategoryListModel(CategorySearchModel searchModel);
 
         /// <summary>
         /// Prepare category model
@@ -34,27 +32,33 @@ namespace Nop.Web.Areas.Admin.Factories
         CategoryModel PrepareCategoryModel(CategoryModel model, Category category, bool excludeProperties = false);
 
         /// <summary>
-        /// Prepare paged category product list model for the grid
+        /// Prepare category product search model
         /// </summary>
-        /// <param name="command">Pagination parameters</param>
+        /// <param name="model">Category product search model</param>
         /// <param name="category">Category</param>
-        /// <returns>Grid model</returns>
-        DataSourceResult PrepareCategoryProductListGridModel(DataSourceRequest command, Category category);
+        /// <returns>Category product search model</returns>
+        CategoryProductSearchModel PrepareCategoryProductSearchModel(CategoryProductSearchModel model, Category category);
 
         /// <summary>
-        /// Prepare add category product list model
+        /// Prepare paged category product list model
         /// </summary>
-        /// <param name="model">Add category product list model</param>
-        /// <returns>Add category product list model</returns>
-        CategoryModel.AddCategoryProductModel PrepareAddCategoryProductListModel(CategoryModel.AddCategoryProductModel model);
+        /// <param name="searchModel">Category product search model</param>
+        /// <param name="category">Category</param>
+        /// <returns>Category product list model</returns>
+        CategoryProductListModel PrepareCategoryProductListModel(CategoryProductSearchModel searchModel, Category category);
 
         /// <summary>
-        /// Prepare paged add category product list model for the grid
+        /// Prepare product search model to add to the category
         /// </summary>
-        /// <param name="model">Add category product list model</param>
-        /// <param name="command">Pagination parameters</param>
-        /// <returns>Grid model</returns>
-        DataSourceResult PrepareAddCategoryProductListGridModel(CategoryModel.AddCategoryProductModel listModel,
-            DataSourceRequest command);
+        /// <param name="model">Product search model to add to the category</param>
+        /// <returns>Product search model to add to the category</returns>
+        AddProductToCategorySearchModel PrepareAddProductToCategorySearchModel(AddProductToCategorySearchModel model);
+
+        /// <summary>
+        /// Prepare paged product list model to add to the category
+        /// </summary>
+        /// <param name="searchModel">Product search model to add to the category</param>
+        /// <returns>Product list model to add to the category</returns>
+        AddProductToCategoryListModel PrepareAddProductToCategoryListModel(AddProductToCategorySearchModel searchModel);
     }
 }

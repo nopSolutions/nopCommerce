@@ -18,7 +18,6 @@ using Nop.Web.Areas.Admin.Extensions;
 using Nop.Web.Areas.Admin.Helpers;
 using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Web.Framework.Factories;
-using Nop.Web.Framework.Kendoui;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -173,11 +172,11 @@ namespace Nop.Web.Areas.Admin.Factories
         #region Methods
 
         /// <summary>
-        /// Prepare category list model
+        /// Prepare category search model
         /// </summary>
-        /// <param name="model">Category list model</param>
-        /// <returns>Category list model</returns>
-        public virtual CategoryListModel PrepareCategoryListModel(CategoryListModel model)
+        /// <param name="model">Category search model</param>
+        /// <returns>Category search model</returns>
+        public virtual CategorySearchModel PrepareCategorySearchModel(CategorySearchModel model)
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
@@ -194,28 +193,23 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         /// <summary>
-        /// Prepare paged category list model for the grid
+        /// Prepare paged category list model
         /// </summary>
-        /// <param name="listModel">Category list model</param>
-        /// <param name="command">Pagination parameters</param>
-        /// <returns>Grid model</returns>
-        public virtual DataSourceResult PrepareCategoryListGridModel(CategoryListModel listModel, DataSourceRequest command)
+        /// <param name="searchModel">Category search model</param>
+        /// <returns>Category list model</returns>
+        public virtual CategoryListModel PrepareCategoryListModel(CategorySearchModel searchModel)
         {
-            if (listModel == null)
-                throw new ArgumentNullException(nameof(listModel));
-
-            if (command == null)
-                throw new ArgumentNullException(nameof(command));
-
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+            
             //get categories
-            var categories = _categoryService.GetAllCategories(categoryName: listModel.SearchCategoryName,
+            var categories = _categoryService.GetAllCategories(categoryName: searchModel.SearchCategoryName,
                 showHidden: true,
-                storeId: listModel.SearchStoreId,
-                pageIndex: command.Page - 1,
-                pageSize: command.PageSize);
+                storeId: searchModel.SearchStoreId,
+                pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare grid model
-            var model = new DataSourceResult
+            var model = new CategoryListModel
             {
                 Data = categories.Select(category =>
                 {
@@ -248,6 +242,9 @@ namespace Nop.Web.Areas.Admin.Factories
             {
                 //fill in model values from the entity
                 model = model ?? category.ToModel();
+
+                //prepare nested search model
+                PrepareCategoryProductSearchModel(model.CategoryProductSearchModel, category);
 
                 //define localized model configuration action
                 localizedModelConfiguration = (locale, languageId) =>
@@ -294,15 +291,29 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         /// <summary>
-        /// Prepare paged category product list model for the grid
+        /// Prepare category product search model
         /// </summary>
-        /// <param name="command">Pagination parameters</param>
+        /// <param name="model">Category product search model</param>
         /// <param name="category">Category</param>
-        /// <returns>Grid model</returns>
-        public virtual DataSourceResult PrepareCategoryProductListGridModel(DataSourceRequest command, Category category)
+        /// <returns>Category product search model</returns>
+        public virtual CategoryProductSearchModel PrepareCategoryProductSearchModel(CategoryProductSearchModel model, Category category)
         {
-            if (command == null)
-                throw new ArgumentNullException(nameof(command));
+            if (model == null)
+                throw new ArgumentNullException(nameof(model));
+
+            return model;
+        }
+
+        /// <summary>
+        /// Prepare paged category product list model
+        /// </summary>
+        /// <param name="searchModel">Category product search model</param>
+        /// <param name="category">Category</param>
+        /// <returns>Category product list model</returns>
+        public virtual CategoryProductListModel PrepareCategoryProductListModel(CategoryProductSearchModel searchModel, Category category)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             if (category == null)
                 throw new ArgumentNullException(nameof(category));
@@ -310,13 +321,13 @@ namespace Nop.Web.Areas.Admin.Factories
             //get product categories
             var productCategories = _categoryService.GetProductCategoriesByCategoryId(category.Id,
                 showHidden: true,
-                pageIndex: command.Page - 1, pageSize: command.PageSize);
+                pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare grid model
-            var model = new DataSourceResult
+            var model = new CategoryProductListModel
             {
                 //fill in model values from the entity
-                Data = productCategories.Select(productCategory => new CategoryModel.CategoryProductModel
+                Data = productCategories.Select(productCategory => new CategoryProductModel
                 {
                     Id = productCategory.Id,
                     CategoryId = productCategory.CategoryId,
@@ -332,11 +343,11 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         /// <summary>
-        /// Prepare add category product list model
+        /// Prepare product search model to add to the category
         /// </summary>
-        /// <param name="model">Add category product list model</param>
-        /// <returns>Add category product list model</returns>
-        public virtual CategoryModel.AddCategoryProductModel PrepareAddCategoryProductListModel(CategoryModel.AddCategoryProductModel model)
+        /// <param name="model">Product search model to add to the category</param>
+        /// <returns>Product search model to add to the category</returns>
+        public virtual AddProductToCategorySearchModel PrepareAddProductToCategorySearchModel(AddProductToCategorySearchModel model)
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
@@ -370,32 +381,27 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         /// <summary>
-        /// Prepare paged add category product list model for the grid
+        /// Prepare paged product list model to add to the category
         /// </summary>
-        /// <param name="model">Add category product list model</param>
-        /// <param name="command">Pagination parameters</param>
-        /// <returns>Grid model</returns>
-        public virtual DataSourceResult PrepareAddCategoryProductListGridModel(CategoryModel.AddCategoryProductModel listModel,
-            DataSourceRequest command)
+        /// <param name="searchModel">Product search model to add to the category</param>
+        /// <returns>Product list model to add to the category</returns>
+        public virtual AddProductToCategoryListModel PrepareAddProductToCategoryListModel(AddProductToCategorySearchModel searchModel)
         {
-            if (listModel == null)
-                throw new ArgumentNullException(nameof(listModel));
-
-            if (command == null)
-                throw new ArgumentNullException(nameof(command));
-
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+            
             //get products
             var products = _productService.SearchProducts(showHidden: true,
-                categoryIds: new List<int> { listModel.SearchCategoryId },
-                manufacturerId: listModel.SearchManufacturerId,
-                storeId: listModel.SearchStoreId,
-                vendorId: listModel.SearchVendorId,
-                productType: listModel.SearchProductTypeId > 0 ? (ProductType?)listModel.SearchProductTypeId : null,
-                keywords: listModel.SearchProductName,
-                pageIndex: command.Page - 1, pageSize: command.PageSize);
+                categoryIds: new List<int> { searchModel.SearchCategoryId },
+                manufacturerId: searchModel.SearchManufacturerId,
+                storeId: searchModel.SearchStoreId,
+                vendorId: searchModel.SearchVendorId,
+                productType: searchModel.SearchProductTypeId > 0 ? (ProductType?)searchModel.SearchProductTypeId : null,
+                keywords: searchModel.SearchProductName,
+                pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare grid model
-            var model = new DataSourceResult
+            var model = new AddProductToCategoryListModel
             {
                 //fill in model values from the entity
                 Data = products.Select(product => product.ToModel()),
