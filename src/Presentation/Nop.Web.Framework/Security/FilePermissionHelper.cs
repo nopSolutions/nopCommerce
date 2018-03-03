@@ -159,6 +159,7 @@ namespace Nop.Web.Framework.Security
             //dirsToCheck.Add(rootDir);
             dirsToCheck.Add(Path.Combine(rootDir, "App_Data"));
             dirsToCheck.Add(Path.Combine(rootDir, "bin"));
+            dirsToCheck.Add(Path.Combine(rootDir, "log"));
             dirsToCheck.Add(Path.Combine(rootDir, "plugins"));
             dirsToCheck.Add(Path.Combine(rootDir, "plugins\\bin"));
             dirsToCheck.Add(Path.Combine(rootDir, "wwwroot\\bundles"));
