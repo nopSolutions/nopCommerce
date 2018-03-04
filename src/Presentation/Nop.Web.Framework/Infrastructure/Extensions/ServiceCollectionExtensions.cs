@@ -4,6 +4,7 @@ using System.Linq;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Internal;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.Configuration;
@@ -114,10 +115,6 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             services.AddAntiforgery(options =>
             {
                 options.Cookie.Name = ".Nop.Antiforgery";
-
-                //whether to allow the use of anti-forgery cookies from SSL protected page on the other store pages which are not
-                options.Cookie.SecurePolicy = EngineContext.Current.Resolve<SecuritySettings>().ForceSslForAllPages
-                    ? CookieSecurePolicy.SameAsRequest : CookieSecurePolicy.None;
             });
         }
 
@@ -131,10 +128,6 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             {
                 options.Cookie.Name = ".Nop.Session";
                 options.Cookie.HttpOnly = true;
-
-                //whether to allow the use of session values from SSL protected page on the other store pages which are not
-                options.Cookie.SecurePolicy = EngineContext.Current.Resolve<SecuritySettings>().ForceSslForAllPages
-                    ? CookieSecurePolicy.SameAsRequest : CookieSecurePolicy.None;
             });
         }
 
@@ -203,10 +196,6 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 options.Cookie.HttpOnly = true;
                 options.LoginPath = NopCookieAuthenticationDefaults.LoginPath;
                 options.AccessDeniedPath = NopCookieAuthenticationDefaults.AccessDeniedPath;
-
-                //whether to allow the use of authentication cookies from SSL protected page on the other store pages which are not
-                options.Cookie.SecurePolicy = EngineContext.Current.Resolve<SecuritySettings>().ForceSslForAllPages
-                    ? CookieSecurePolicy.SameAsRequest : CookieSecurePolicy.None;
             });
 
             //add external authentication
@@ -216,10 +205,6 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 options.Cookie.HttpOnly = true;
                 options.LoginPath = NopCookieAuthenticationDefaults.LoginPath;
                 options.AccessDeniedPath = NopCookieAuthenticationDefaults.AccessDeniedPath;
-
-                //whether to allow the use of authentication cookies from SSL protected page on the other store pages which are not
-                options.Cookie.SecurePolicy = EngineContext.Current.Resolve<SecuritySettings>().ForceSslForAllPages
-                    ? CookieSecurePolicy.SameAsRequest : CookieSecurePolicy.None;
             });
 
             //register and configure external authentication plugins now
@@ -241,7 +226,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         public static IMvcBuilder AddNopMvc(this IServiceCollection services)
         {
             //add basic MVC feature
-            var mvcBuilder = services.AddMvc();
+            var mvcBuilder = services.AddMvc().SetCompatibilityVersion(Microsoft.AspNetCore.Mvc.CompatibilityVersion.Version_2_1);
 
             //use session temp data provider
             mvcBuilder.AddSessionStateTempDataProvider();

@@ -82,6 +82,8 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                     }
                 });
             });
+
+            application.UseHsts();
         }
 
         /// <summary>
@@ -221,16 +223,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             //whether MiniProfiler should be displayed
             if (EngineContext.Current.Resolve<StoreInformationSettings>().DisplayMiniProfilerInPublicStore)
             {
-                application.UseMiniProfiler(miniProfilerOptions =>
-                {
-                    //use memory cache provider for storing each result
-                    //(miniProfilerOptions.Storage as MemoryCacheStorage).CacheDuration
-
-                    //determine who can access the MiniProfiler results
-                    miniProfilerOptions.ResultsAuthorize = request =>
-                        !EngineContext.Current.Resolve<StoreInformationSettings>().DisplayMiniProfilerForAdminOnly ||
-                        EngineContext.Current.Resolve<IPermissionService>().Authorize(StandardPermissionProvider.AccessAdminPanel);
-                });
+                application.UseMiniProfiler();
             }
         }
     }

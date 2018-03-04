@@ -411,11 +411,11 @@ namespace Nop.Services.Catalog
             //only distinct products (group by ID)
             //if we use standard Distinct() method, then all fields will be compared (low performance)
             //it'll not work in SQL Server Compact when searching products by a keyword)
-            query = from p in query
+            /*query = from p in query
                     group p by p.Id
                 into pGroup
                     orderby pGroup.Key
-                    select pGroup.FirstOrDefault();
+                    select pGroup.FirstOrDefault();*/
 
             //sort products
             if (orderBy == ProductSortingEnum.Position && categoryIds != null && categoryIds.Any())

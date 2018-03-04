@@ -72,6 +72,9 @@ namespace Nop.Web.Framework.Infrastructure
                 application.UseMiddleware<ResponseCompressionVaryWorkaroundMiddleware>();
             }
 
+            //use https redirection
+            application.UseHttpsRedirection();
+
             //static files
             application.UseStaticFiles(new StaticFileOptions
             {

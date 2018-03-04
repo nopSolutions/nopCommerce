@@ -23,7 +23,15 @@ namespace Nop.Web.Framework.Infrastructure
         public void ConfigureServices(IServiceCollection services, IConfigurationRoot configuration)
         {
             //add MiniProfiler services
-            services.AddMiniProfiler();
+            services.AddMiniProfiler(miniProfilerOptions => {
+                //use memory cache provider for storing each result
+                //(miniProfilerOptions.Storage as MemoryCacheStorage).CacheDuration
+
+                //determine who can access the MiniProfiler results
+                miniProfilerOptions.ResultsAuthorize = request =>
+                    !EngineContext.Current.Resolve<StoreInformationSettings>().DisplayMiniProfilerForAdminOnly ||
+                    EngineContext.Current.Resolve<IPermissionService>().Authorize(StandardPermissionProvider.AccessAdminPanel);
+            });
 
 
 

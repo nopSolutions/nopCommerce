@@ -11,6 +11,7 @@ namespace Nop.Web
             var host = WebHost.CreateDefaultBuilder(args)
                 .UseKestrel(options => options.AddServerHeader = false)
                 .ConfigureServices(services => services.AddAutofac())
+                .UseSockets()
                 .UseStartup<Startup>()
                 .Build();
 

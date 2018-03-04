@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
     <Copyright>Copyright © Nop Solutions, Ltd</Copyright>
     <Company>Nop Solutions, Ltd</Company>
     <Authors>Nop Solutions, Ltd</Authors>
@@ -14,17 +14,17 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="EPPlus" Version="4.5.0.1-beta" />
-    <PackageReference Include="iTextSharp" Version="5.5.12" />
-    <PackageReference Include="MaxMind.GeoIP2" Version="2.9.0" />
-    <PackageReference Include="Microsoft.CSharp" Version="4.4.1" />
-    <PackageReference Include="SixLabors.ImageSharp" Version="1.0.0-dev000621" />
+    <PackageReference Include="EPPlus" Version="4.5.0.2-rc" />
+    <PackageReference Include="iTextSharp" Version="5.5.13" />
+    <PackageReference Include="MaxMind.GeoIP2" Version="2.10.0" />
+    <PackageReference Include="Microsoft.CSharp" Version="4.5.0-preview1-26216-02" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="1.0.0-dev000873" />
     <PackageReference Include="System.Linq.Dynamic" Version="1.0.7" />
     <PackageReference Include="WindowsAzure.Storage" Version="8.7.0" />
-    <PackageReference Include="System.ServiceModel.Duplex" Version="4.4.1" />
-    <PackageReference Include="System.ServiceModel.Http" Version="4.4.1" />
-    <PackageReference Include="System.ServiceModel.NetTcp" Version="4.4.1" />
-    <PackageReference Include="System.ServiceModel.Security" Version="4.4.1" />
+    <PackageReference Include="System.ServiceModel.Duplex" Version="4.5.0-preview1-26228-01" />
+    <PackageReference Include="System.ServiceModel.Http" Version="4.5.0-preview1-26228-01" />
+    <PackageReference Include="System.ServiceModel.NetTcp" Version="4.5.0-preview1-26228-01" />
+    <PackageReference Include="System.ServiceModel.Security" Version="4.5.0-preview1-26228-01" />
     <PackageReference Include="System.Xml.XmlSerializer" Version="4.3.0" />
   </ItemGroup>
 

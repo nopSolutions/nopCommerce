@@ -4,7 +4,7 @@
     "anonymousAuthentication": true,
     "iisExpress": {
       "applicationUrl": "http://localhost:15536/",
-      "sslPort": 0
+      "sslPort": 44349
     }
   },
   "profiles": {
@@ -12,14 +12,16 @@
       "commandName": "IISExpress",
       "launchBrowser": true,
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+		"ASPNETCORE_HTTPS_PORT": "44349"
       }
     },
     "Nop.Web": {
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+		"ASPNETCORE_HTTPS_PORT": "44349"
       },
       "applicationUrl": "http://localhost:55390"
     }
