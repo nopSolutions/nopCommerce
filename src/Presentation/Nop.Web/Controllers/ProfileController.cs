@@ -9,7 +9,6 @@ using Nop.Web.Framework.Security;
 
 namespace Nop.Web.Controllers
 {
-    [HttpsRequirement(SslRequirement.No)]
     public partial class ProfileController : BasePublicController
     {
         private readonly IProfileModelFactory _profileModelFactory;

@@ -25,7 +25,6 @@ using Nop.Web.Models.Blogs;
 
 namespace Nop.Web.Controllers
 {
-    [HttpsRequirement(SslRequirement.No)]
     public partial class BlogController : BasePublicController
     {
         #region Fields

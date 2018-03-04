@@ -44,7 +44,6 @@ namespace Nop.Web.Controllers
         
         #region Methods
         
-        [HttpsRequirement(SslRequirement.No)]
         public virtual IActionResult TopicDetails(int topicId)
         {
             var model = _topicModelFactory.PrepareTopicModelById(topicId);

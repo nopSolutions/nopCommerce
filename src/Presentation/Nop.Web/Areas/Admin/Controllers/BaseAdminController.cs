@@ -13,7 +13,6 @@ using Nop.Web.Framework.Security;
 namespace Nop.Web.Areas.Admin.Controllers
 {
     [Area(AreaNames.Admin)]
-    [HttpsRequirement(SslRequirement.Yes)]
     [AdminAntiForgery]
     [ValidateIpAddress]
     [AuthorizeAdmin]

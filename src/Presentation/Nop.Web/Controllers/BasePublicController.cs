@@ -5,7 +5,6 @@ using Nop.Web.Framework.Security;
 
 namespace Nop.Web.Controllers
 {
-    [HttpsRequirement(SslRequirement.NoMatter)]
     [WwwRequirement]
     [CheckAccessPublicStore]
     [CheckAccessClosedStore]

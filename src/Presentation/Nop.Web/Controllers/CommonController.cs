@@ -181,7 +181,6 @@ namespace Nop.Web.Controllers
         }
 
         //contact us page
-        [HttpsRequirement(SslRequirement.Yes)]
         //available even when a store is closed
         [CheckAccessClosedStore(true)]
         public virtual IActionResult ContactUs()
@@ -228,7 +227,6 @@ namespace Nop.Web.Controllers
         }
 
         //contact vendor page
-        [HttpsRequirement(SslRequirement.Yes)]
         public virtual IActionResult ContactVendor(int vendorId)
         {
             if (!_vendorSettings.AllowCustomersToContactVendors)
@@ -281,7 +279,6 @@ namespace Nop.Web.Controllers
         }
 
         //sitemap page
-        [HttpsRequirement(SslRequirement.No)]
         public virtual IActionResult Sitemap(SitemapPageModel pageModel)
         {
             if (!_commonSettings.SitemapEnabled)
@@ -292,7 +289,6 @@ namespace Nop.Web.Controllers
         }
 
         //SEO sitemap page
-        [HttpsRequirement(SslRequirement.No)]
         //available even when a store is closed
         [CheckAccessClosedStore(true)]
         public virtual IActionResult SitemapXml(int? id)

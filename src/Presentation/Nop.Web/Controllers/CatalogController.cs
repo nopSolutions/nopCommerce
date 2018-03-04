@@ -93,7 +93,6 @@ namespace Nop.Web.Controllers
         
         #region Categories
         
-        [HttpsRequirement(SslRequirement.No)]
         public virtual IActionResult Category(int categoryId, CatalogPagingFilteringModel command)
         {
             var category = _categoryService.GetCategoryById(categoryId);
@@ -138,7 +137,6 @@ namespace Nop.Web.Controllers
 
         #region Manufacturers
 
-        [HttpsRequirement(SslRequirement.No)]
         public virtual IActionResult Manufacturer(int manufacturerId, CatalogPagingFilteringModel command)
         {
             var manufacturer = _manufacturerService.GetManufacturerById(manufacturerId);
@@ -179,7 +177,6 @@ namespace Nop.Web.Controllers
             return View(templateViewPath, model);
         }
 
-        [HttpsRequirement(SslRequirement.No)]
         public virtual IActionResult ManufacturerAll()
         {
             var model = _catalogModelFactory.PrepareManufacturerAllModels();
@@ -190,7 +187,6 @@ namespace Nop.Web.Controllers
 
         #region Vendors
 
-        [HttpsRequirement(SslRequirement.No)]
         public virtual IActionResult Vendor(int vendorId, CatalogPagingFilteringModel command)
         {
             var vendor = _vendorService.GetVendorById(vendorId);
@@ -213,7 +209,6 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        [HttpsRequirement(SslRequirement.No)]
         public virtual IActionResult VendorAll()
         {
             //we don't allow viewing of vendors if "vendors" block is hidden
@@ -228,7 +223,6 @@ namespace Nop.Web.Controllers
 
         #region Product tags
         
-        [HttpsRequirement(SslRequirement.No)]
         public virtual IActionResult ProductsByTag(int productTagId, CatalogPagingFilteringModel command)
         {
             var productTag = _productTagService.GetProductTagById(productTagId);
@@ -239,7 +233,6 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        [HttpsRequirement(SslRequirement.No)]
         public virtual IActionResult ProductTagsAll()
         {
             var model = _catalogModelFactory.PrepareProductTagsAllModel();
@@ -250,7 +243,6 @@ namespace Nop.Web.Controllers
 
         #region Searching
 
-        [HttpsRequirement(SslRequirement.No)]
         public virtual IActionResult Search(SearchModel model, CatalogPagingFilteringModel command)
         {
             //'Continue shopping' URL
