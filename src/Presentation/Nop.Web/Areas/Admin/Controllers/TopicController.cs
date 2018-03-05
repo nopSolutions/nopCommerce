@@ -242,9 +242,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageTopics))
                 return AccessDeniedKendoGridJson();
 
-            if (model.AvailableStores.SelectionIsNotPossible())
-                model.SearchStoreId = 0;
-
             var topics = _topicService.GetAllTopics(model.SearchStoreId, true, true);
 
             if (!string.IsNullOrEmpty(model.SearchKeywords))
