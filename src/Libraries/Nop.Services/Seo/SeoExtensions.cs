@@ -136,6 +136,7 @@ namespace Nop.Services.Seo
                 throw new ArgumentNullException(nameof(entity));
 
             var entityName = entity.GetUnproxiedEntityType().Name;
+            entityName = entityName.Replace("ForCaching","");
             return GetSeName(entity.Id, entityName, languageId, returnDefaultValue, ensureTwoPublishedLanguages);
         }
 
