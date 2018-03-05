@@ -4,9 +4,6 @@ using System.Linq;
 using System.Text;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Nop.Web.Areas.Admin.Extensions;
-using Nop.Web.Areas.Admin.Models.Directory;
 using Nop.Core;
 using Nop.Core.Domain.Directory;
 using Nop.Services.Common;
@@ -16,6 +13,9 @@ using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Security;
 using Nop.Services.Stores;
+using Nop.Web.Areas.Admin.Extensions;
+using Nop.Web.Areas.Admin.Factories;
+using Nop.Web.Areas.Admin.Models.Directory;
 using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.Filters;
@@ -23,57 +23,57 @@ using Nop.Web.Framework.Mvc.Filters;
 namespace Nop.Web.Areas.Admin.Controllers
 {
     public partial class CountryController : BaseAdminController
-	{
-		#region Fields
+    {
+        #region Fields
 
+        private readonly IAddressService _addressService;
+        private readonly ICountryModelFactory _countryModelFactory;
         private readonly ICountryService _countryService;
-        private readonly IStateProvinceService _stateProvinceService;
-        private readonly ILocalizationService _localizationService;
-	    private readonly IAddressService _addressService;
-        private readonly IPermissionService _permissionService;
-	    private readonly ILocalizedEntityService _localizedEntityService;
-        private readonly ILanguageService _languageService;
-        private readonly IStoreService _storeService;
-        private readonly IStoreMappingService _storeMappingService;
+        private readonly ICustomerActivityService _customerActivityService;
         private readonly IExportManager _exportManager;
         private readonly IImportManager _importManager;
-        private readonly ICustomerActivityService _customerActivityService;
+        private readonly ILocalizationService _localizationService;
+        private readonly ILocalizedEntityService _localizedEntityService;
+        private readonly IPermissionService _permissionService;
+        private readonly IStateProvinceService _stateProvinceService;
+        private readonly IStoreMappingService _storeMappingService;
+        private readonly IStoreService _storeService;
 
         #endregion
 
         #region Ctor
 
-        public CountryController(ICountryService countryService,
-            IStateProvinceService stateProvinceService, 
-            ILocalizationService localizationService,
-            IAddressService addressService, 
-            IPermissionService permissionService,
-            ILocalizedEntityService localizedEntityService, 
-            ILanguageService languageService,
-            IStoreService storeService,
-            IStoreMappingService storeMappingService,
+        public CountryController(IAddressService addressService,
+            ICountryModelFactory countryModelFactory,
+            ICountryService countryService,
+            ICustomerActivityService customerActivityService,
             IExportManager exportManager,
             IImportManager importManager,
-            ICustomerActivityService customerActivityService)
+            ILocalizationService localizationService,
+            ILocalizedEntityService localizedEntityService,
+            IPermissionService permissionService,
+            IStateProvinceService stateProvinceService,
+            IStoreMappingService storeMappingService,
+            IStoreService storeService)
         {
-            this._countryService = countryService;
-            this._stateProvinceService = stateProvinceService;
-            this._localizationService = localizationService;
             this._addressService = addressService;
-            this._permissionService = permissionService;
-            this._localizedEntityService = localizedEntityService;
-            this._languageService = languageService;
-            this._storeService = storeService;
-            this._storeMappingService = storeMappingService;
+            this._countryModelFactory = countryModelFactory;
+            this._countryService = countryService;
+            this._customerActivityService = customerActivityService;
             this._exportManager = exportManager;
             this._importManager = importManager;
-            this._customerActivityService = customerActivityService;
+            this._localizationService = localizationService;
+            this._localizedEntityService = localizedEntityService;
+            this._permissionService = permissionService;
+            this._stateProvinceService = stateProvinceService;
+            this._storeMappingService = storeMappingService;
+            this._storeService = storeService;
         }
 
-		#endregion 
+        #endregion
 
         #region Utilities
-        
+
         protected virtual void UpdateLocales(Country country, CountryModel model)
         {
             foreach (var localized in model.Locales)
@@ -85,37 +85,17 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
         }
 
-	    protected virtual void UpdateLocales(StateProvince stateProvince, StateProvinceModel model)
-	    {
-	        foreach (var localized in model.Locales)
-	        {
-	            _localizedEntityService.SaveLocalizedValue(stateProvince,
-	                x => x.Name,
-	                localized.Name,
-	                localized.LanguageId);
-	        }
-	    }
-
-	    protected virtual void PrepareStoresMappingModel(CountryModel model, Country country, bool excludeProperties)
+        protected virtual void UpdateLocales(StateProvince stateProvince, StateProvinceModel model)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
-
-            if (!excludeProperties && country != null)
-                model.SelectedStoreIds = _storeMappingService.GetStoresIdsWithAccess(country).ToList();
-
-            var allStores = _storeService.GetAllStores();
-            foreach (var store in allStores)
+            foreach (var localized in model.Locales)
             {
-                model.AvailableStores.Add(new SelectListItem
-                {
-                    Text = store.Name,
-                    Value = store.Id.ToString(),
-                    Selected = model.SelectedStoreIds.Contains(store.Id)
-                });
+                _localizedEntityService.SaveLocalizedValue(stateProvince,
+                    x => x.Name,
+                    localized.Name,
+                    localized.LanguageId);
             }
         }
-        
+
         protected virtual void SaveStoreMappings(Country country, CountryModel model)
         {
             country.LimitedToStores = model.SelectedStoreIds.Any();
@@ -154,39 +134,32 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
                 return AccessDeniedView();
 
+            //prepare model
+            var model = _countryModelFactory.PrepareCountrySearchModel(new CountrySearchModel());
+
             return View();
         }
 
         [HttpPost]
-        public virtual IActionResult CountryList(DataSourceRequest command)
+        public virtual IActionResult CountryList(CountrySearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
                 return AccessDeniedKendoGridJson();
 
-            var countries = _countryService.GetAllCountries(showHidden: true);
-            var gridModel = new DataSourceResult
-            {
-                Data = countries.Select(x => x.ToModel()),
-                Total = countries.Count
-            };
+            //prepare model
+            var model = _countryModelFactory.PrepareCountryListModel(searchModel);
 
-            return Json(gridModel);
+            return Json(model);
         }
-        
+
         public virtual IActionResult Create()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
                 return AccessDeniedView();
 
-            var model = new CountryModel();
-            //locales
-            AddLocales(_languageService, model.Locales);
-            //Stores
-            PrepareStoresMappingModel(model, null, false);
-            //default values
-            model.Published = true;
-            model.AllowsBilling = true;
-            model.AllowsShipping = true;
+            //prepare model
+            var model = _countryModelFactory.PrepareCountryModel(new CountryModel(), null);
+
             return View(model);
         }
 
@@ -207,6 +180,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 //locales
                 UpdateLocales(country, model);
+
                 //Stores
                 SaveStoreMappings(country, model);
 
@@ -219,13 +193,13 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                     return RedirectToAction("Edit", new { id = country.Id });
                 }
+
                 return RedirectToAction("List");
             }
 
             //If we got this far, something failed, redisplay form
+            model = _countryModelFactory.PrepareCountryModel(model, null, true);
 
-            //Stores
-            PrepareStoresMappingModel(model, null, true);
             return View(model);
         }
 
@@ -234,19 +208,14 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
                 return AccessDeniedView();
 
+            //try to get a country with the specified id
             var country = _countryService.GetCountryById(id);
             if (country == null)
-                //No country found with the specified id
                 return RedirectToAction("List");
 
-            var model = country.ToModel();
-            //locales
-            AddLocales(_languageService, model.Locales, (locale, languageId) =>
-            {
-                locale.Name = country.GetLocalized(x => x.Name, languageId, false, false);
-            });
-            //Stores
-            PrepareStoresMappingModel(model, country, false);
+            //prepare model
+            var model = _countryModelFactory.PrepareCountryModel(null, country);
+
             return View(model);
         }
 
@@ -256,9 +225,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
                 return AccessDeniedView();
 
+            //try to get a country with the specified id
             var country = _countryService.GetCountryById(model.Id);
             if (country == null)
-                //No country found with the specified id
                 return RedirectToAction("List");
 
             if (ModelState.IsValid)
@@ -272,6 +241,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 //locales
                 UpdateLocales(country, model);
+
                 //Stores
                 SaveStoreMappings(country, model);
 
@@ -282,15 +252,15 @@ namespace Nop.Web.Areas.Admin.Controllers
                     //selected tab
                     SaveSelectedTabName();
 
-                    return RedirectToAction("Edit", new {id = country.Id});
+                    return RedirectToAction("Edit", new { id = country.Id });
                 }
+
                 return RedirectToAction("List");
             }
 
             //If we got this far, something failed, redisplay form
+            model = _countryModelFactory.PrepareCountryModel(model, country, true);
 
-            //Stores
-            PrepareStoresMappingModel(model, country, true);
             return View(model);
         }
 
@@ -300,9 +270,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
                 return AccessDeniedView();
 
+            //try to get a country with the specified id
             var country = _countryService.GetCountryById(id);
             if (country == null)
-                //No country found with the specified id
                 return RedirectToAction("List");
 
             try
@@ -317,6 +287,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     string.Format(_localizationService.GetResource("ActivityLog.DeleteCountry"), country.Id), country);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Countries.Deleted"));
+
                 return RedirectToAction("List");
             }
             catch (Exception exc)
@@ -368,35 +339,34 @@ namespace Nop.Web.Areas.Admin.Controllers
         #region States / provinces
 
         [HttpPost]
-        public virtual IActionResult States(int countryId, DataSourceRequest command)
+        public virtual IActionResult States(StateProvinceSearchModel searchModel, int countryId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
                 return AccessDeniedKendoGridJson();
 
-            var states = _stateProvinceService.GetStateProvincesByCountryId(countryId, showHidden: true);
+            //try to get a country with the specified id
+            var country = _countryService.GetCountryById(countryId)
+                ?? throw new ArgumentException("No country found with the specified id", nameof(countryId));
 
-            var gridModel = new DataSourceResult
-            {
-                Data = states.Select(x => x.ToModel()),
-                Total = states.Count
-            };
-            return Json(gridModel);
+            //prepare model
+            var model = _countryModelFactory.PrepareStateProvinceListModel(searchModel, country);
+
+            return Json(model);
         }
 
-        //create
         public virtual IActionResult StateCreatePopup(int countryId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
                 return AccessDeniedView();
 
-            var model = new StateProvinceModel
-            {
-                CountryId = countryId,
-                //default value
-                Published = true
-            };
-            //locales
-            AddLocales(_languageService, model.Locales);
+            //try to get a country with the specified id
+            var country = _countryService.GetCountryById(countryId);
+            if (country == null)
+                return RedirectToAction("List");
+
+            //prepare model
+            var model = _countryModelFactory.PrepareStateProvinceModel(new StateProvinceModel(), country, null);
+
             return View(model);
         }
 
@@ -406,9 +376,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
                 return AccessDeniedView();
 
+            //try to get a country with the specified id
             var country = _countryService.GetCountryById(model.CountryId);
             if (country == null)
-                //No country found with the specified id
                 return RedirectToAction("List");
 
             if (ModelState.IsValid)
@@ -424,30 +394,33 @@ namespace Nop.Web.Areas.Admin.Controllers
                 UpdateLocales(sp, model);
 
                 ViewBag.RefreshPage = true;
+
                 return View(model);
             }
 
             //If we got this far, something failed, redisplay form
+            model = _countryModelFactory.PrepareStateProvinceModel(model, country, null, true);
+
             return View(model);
         }
 
-        //edit
         public virtual IActionResult StateEditPopup(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
                 return AccessDeniedView();
 
-            var sp = _stateProvinceService.GetStateProvinceById(id);
-            if (sp == null)
-                //No state found with the specified id
+            //try to get a state with the specified id
+            var state = _stateProvinceService.GetStateProvinceById(id);
+            if (state == null)
                 return RedirectToAction("List");
 
-            var model = sp.ToModel();
-            //locales
-            AddLocales(_languageService, model.Locales, (locale, languageId) =>
-            {
-                locale.Name = sp.GetLocalized(x => x.Name, languageId, false, false);
-            });
+            //try to get a country with the specified id
+            var country = _countryService.GetCountryById(state.CountryId);
+            if (country == null)
+                return RedirectToAction("List");
+
+            //prepare model
+            var model = _countryModelFactory.PrepareStateProvinceModel(null, country, state);
 
             return View(model);
         }
@@ -458,27 +431,35 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
                 return AccessDeniedView();
 
-            var sp = _stateProvinceService.GetStateProvinceById(model.Id);
-            if (sp == null)
-                //No state found with the specified id
+            //try to get a state with the specified id
+            var state = _stateProvinceService.GetStateProvinceById(model.Id);
+            if (state == null)
+                return RedirectToAction("List");
+
+            //try to get a country with the specified id
+            var country = _countryService.GetCountryById(state.CountryId);
+            if (country == null)
                 return RedirectToAction("List");
 
             if (ModelState.IsValid)
             {
-                sp = model.ToEntity(sp);
-                _stateProvinceService.UpdateStateProvince(sp);
+                state = model.ToEntity(state);
+                _stateProvinceService.UpdateStateProvince(state);
 
                 //activity log
                 _customerActivityService.InsertActivity("EditStateProvince",
-                    string.Format(_localizationService.GetResource("ActivityLog.EditStateProvince"), sp.Id), sp);
+                    string.Format(_localizationService.GetResource("ActivityLog.EditStateProvince"), state.Id), state);
 
-                UpdateLocales(sp, model);
+                UpdateLocales(state, model);
 
                 ViewBag.RefreshPage = true;
+
                 return View(model);
             }
 
             //If we got this far, something failed, redisplay form
+            model = _countryModelFactory.PrepareStateProvinceModel(model, country, state, true);
+
             return View(model);
         }
 
@@ -488,9 +469,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
                 return AccessDeniedView();
 
-            var state = _stateProvinceService.GetStateProvinceById(id);
-            if (state == null)
-                throw new ArgumentException("No state found with the specified id");
+            //try to get a state with the specified id
+            var state = _stateProvinceService.GetStateProvinceById(id)
+                ?? throw new ArgumentException("No state found with the specified id");
 
             if (_addressService.GetAddressTotalByStateProvinceId(state.Id) > 0)
             {
@@ -506,12 +487,10 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             return new NullJsonResult();
         }
-        
-        public virtual IActionResult GetStatesByCountryId(string countryId,
-            bool? addSelectStateItem, bool? addAsterisk)
+
+        public virtual IActionResult GetStatesByCountryId(string countryId, bool? addSelectStateItem, bool? addAsterisk)
         {
             //permission validation is not required here
-
 
             // This action method gets called via an ajax request
             if (string.IsNullOrEmpty(countryId))
@@ -520,7 +499,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             var country = _countryService.GetCountryById(Convert.ToInt32(countryId));
             var states = country != null ? _stateProvinceService.GetStateProvincesByCountryId(country.Id, showHidden: true).ToList() : new List<StateProvince>();
             var result = (from s in states
-                         select new { id = s.Id, name = s.Name }).ToList();
+                          select new { id = s.Id, name = s.Name }).ToList();
             if (addAsterisk.HasValue && addAsterisk.Value)
             {
                 //asterisk
@@ -589,10 +568,14 @@ namespace Nop.Web.Areas.Admin.Controllers
                 if (importcsvfile != null && importcsvfile.Length > 0)
                 {
                     var count = _importManager.ImportStatesFromTxt(importcsvfile.OpenReadStream());
+
                     SuccessNotification(string.Format(_localizationService.GetResource("Admin.Configuration.Countries.ImportSuccess"), count));
+
                     return RedirectToAction("List");
                 }
+
                 ErrorNotification(_localizationService.GetResource("Admin.Common.UploadFile"));
+
                 return RedirectToAction("List");
             }
             catch (Exception exc)
