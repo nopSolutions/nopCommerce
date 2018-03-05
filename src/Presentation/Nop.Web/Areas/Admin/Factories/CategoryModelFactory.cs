@@ -1,19 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Discounts;
-using Nop.Services;
 using Nop.Services.Catalog;
 using Nop.Services.Discounts;
 using Nop.Services.Localization;
 using Nop.Services.Seo;
-using Nop.Services.Stores;
-using Nop.Services.Vendors;
 using Nop.Web.Areas.Admin.Extensions;
-using Nop.Web.Areas.Admin.Helpers;
 using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Web.Framework.Factories;
 
@@ -28,18 +22,13 @@ namespace Nop.Web.Areas.Admin.Factories
 
         private readonly CatalogSettings _catalogSettings;
         private readonly IAclSupportedModelFactory _aclSupportedModelFactory;
+        private readonly IBaseAdminModelFactory _baseAdminModelFactory;
         private readonly ICategoryService _categoryService;
-        private readonly ICategoryTemplateService _categoryTemplateService;
         private readonly IDiscountService _discountService;
         private readonly IDiscountSupportedModelFactory _discountSupportedModelFactory;
-        private readonly ILocalizationService _localizationService;
         private readonly ILocalizedModelFactory _localizedModelFactory;
-        private readonly IManufacturerService _manufacturerService;
         private readonly IProductService _productService;
-        private readonly IStaticCacheManager _cacheManager;
         private readonly IStoreMappingSupportedModelFactory _storeMappingSupportedModelFactory;
-        private readonly IStoreService _storeService;
-        private readonly IVendorService _vendorService;
 
         #endregion
 
@@ -47,78 +36,27 @@ namespace Nop.Web.Areas.Admin.Factories
 
         public CategoryModelFactory(CatalogSettings catalogSettings,
             IAclSupportedModelFactory aclSupportedModelFactory,
+            IBaseAdminModelFactory baseAdminModelFactory,
             ICategoryService categoryService,
-            ICategoryTemplateService categoryTemplateService,
             IDiscountService discountService,
             IDiscountSupportedModelFactory discountSupportedModelFactory,
-            ILocalizationService localizationService,
             ILocalizedModelFactory localizedModelFactory,
-            IManufacturerService manufacturerService,
             IProductService productService,
-            IStaticCacheManager cacheManager,
-            IStoreMappingSupportedModelFactory storeMappingSupportedModelFactory,
-            IStoreService storeService,
-            IVendorService vendorService)
+            IStoreMappingSupportedModelFactory storeMappingSupportedModelFactory)
         {
             this._catalogSettings = catalogSettings;
             this._aclSupportedModelFactory = aclSupportedModelFactory;
+            this._baseAdminModelFactory = baseAdminModelFactory;
             this._categoryService = categoryService;
-            this._categoryTemplateService = categoryTemplateService;
             this._discountService = discountService;
             this._discountSupportedModelFactory = discountSupportedModelFactory;
-            this._localizationService = localizationService;
             this._localizedModelFactory = localizedModelFactory;
-            this._manufacturerService = manufacturerService;
             this._productService = productService;
-            this._cacheManager = cacheManager;
             this._storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
-            this._storeService = storeService;
-            this._vendorService = vendorService;
         }
 
         #endregion
-
-        #region Utilities
-
-        /// <summary>
-        /// Prepare available templates for the passed model
-        /// </summary>
-        /// <param name="model">Category model</param>
-        /// <param name="category">Category</param>
-        protected virtual void PrepareModelTemplates(CategoryModel model, Category category)
-        {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
-
-            //prepare available category templates
-            var availableTemplates = _categoryTemplateService.GetAllCategoryTemplates();
-            model.AvailableCategoryTemplates = availableTemplates
-                .Select(template => new SelectListItem { Text = template.Name, Value = template.Id.ToString() }).ToList();
-        }
-
-        /// <summary>
-        /// Prepare available categories for the passed model
-        /// </summary>
-        /// <param name="model">Category model</param>
-        /// <param name="category">Category</param>
-        protected virtual void PrepareModelCategories(CategoryModel model, Category category)
-        {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
-
-            //prepare available categories
-            model.AvailableCategories = SelectListHelper.GetCategoryList(_categoryService, _cacheManager, showHidden: true);
-
-            //insert special category item for the "none" value
-            model.AvailableCategories.Insert(0, new SelectListItem
-            {
-                Text = _localizationService.GetResource("Admin.Catalog.Categories.Fields.Parent.None"),
-                Value = "0"
-            });
-        }
         
-        #endregion
-
         #region Methods
 
         /// <summary>
@@ -132,12 +70,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(model));
 
             //prepare available stores
-            var availableStores = _storeService.GetAllStores();
-            model.AvailableStores = availableStores
-                .Select(store => new SelectListItem { Text = store.Name, Value = store.Id.ToString() }).ToList();
-
-            //insert special store item for the "all" value
-            model.AvailableStores.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            _baseAdminModelFactory.PrepareStores(model.AvailableStores);
 
             return model;
         }
@@ -222,11 +155,11 @@ namespace Nop.Web.Areas.Admin.Factories
             if (!excludeProperties)
                 model.Locales = _localizedModelFactory.PrepareLocalizedModels(localizedModelConfiguration);
 
-            //prepare model templates
-            PrepareModelTemplates(model, category);
+            //prepare available category templates
+            _baseAdminModelFactory.PrepareCategoryTemplates(model.AvailableCategoryTemplates);
 
-            //prepare available model categories
-            PrepareModelCategories(model, category);
+            //prepare available parent categories
+            _baseAdminModelFactory.PrepareParentCategories(model.AvailableCategories);
 
             //prepare model discounts
             var availableDiscounts = _discountService.GetAllDiscounts(DiscountType.AssignedToCategories, showHidden: true);
@@ -304,29 +237,19 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(model));
 
             //prepare available categories
-            model.AvailableCategories = SelectListHelper.GetCategoryList(_categoryService, _cacheManager, true);
+            _baseAdminModelFactory.PrepareCategories(model.AvailableCategories);
 
             //prepare available manufacturers
-            model.AvailableManufacturers = SelectListHelper.GetManufacturerList(_manufacturerService, _cacheManager, true);
+            _baseAdminModelFactory.PrepareManufacturers(model.AvailableManufacturers);
 
             //prepare available stores
-            var availableStores = _storeService.GetAllStores();
-            model.AvailableStores = availableStores
-                .Select(store => new SelectListItem { Text = store.Name, Value = store.Id.ToString() }).ToList();
+            _baseAdminModelFactory.PrepareStores(model.AvailableStores);
 
             //prepare available vendors
-            model.AvailableStores = SelectListHelper.GetVendorList(_vendorService, _cacheManager, true);
+            _baseAdminModelFactory.PrepareVendors(model.AvailableVendors);
 
             //prepare available product types
-            model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList(false).ToList();
-
-            //insert special item for the "all" value
-            var allSelectListItem = new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" };
-            model.AvailableCategories.Insert(0, allSelectListItem);
-            model.AvailableManufacturers.Insert(0, allSelectListItem);
-            model.AvailableStores.Insert(0, allSelectListItem);
-            model.AvailableVendors.Insert(0, allSelectListItem);
-            model.AvailableProductTypes.Insert(0, allSelectListItem);
+            _baseAdminModelFactory.PrepareProductTypes(model.AvailableProductTypes);
 
             return model;
         }

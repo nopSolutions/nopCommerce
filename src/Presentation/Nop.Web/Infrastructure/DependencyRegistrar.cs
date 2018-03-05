@@ -31,6 +31,7 @@ namespace Nop.Web.Infrastructure
             builder.RegisterType<StoreMappingSupportedModelFactory>().As<IStoreMappingSupportedModelFactory>().InstancePerLifetimeScope();
 
             //admin factories
+            builder.RegisterType<BaseAdminModelFactory>().As<IBaseAdminModelFactory>().InstancePerLifetimeScope();
             builder.RegisterType<ActivityLogModelFactory>().As<IActivityLogModelFactory>().InstancePerLifetimeScope();
             builder.RegisterType<AddressAttributeModelFactory>().As<IAddressAttributeModelFactory>().InstancePerLifetimeScope();
             builder.RegisterType<AffiliateModelFactory>().As<IAffiliateModelFactory>().InstancePerLifetimeScope();

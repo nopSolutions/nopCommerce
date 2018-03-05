@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Services.Helpers;
-using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Web.Areas.Admin.Extensions;
 using Nop.Web.Areas.Admin.Models.Logging;
@@ -17,21 +15,21 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
+        private readonly IBaseAdminModelFactory _baseAdminModelFactory;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly ILocalizationService _localizationService;
 
         #endregion
 
         #region Ctor
 
-        public ActivityLogModelFactory(ICustomerActivityService customerActivityService,
-            IDateTimeHelper dateTimeHelper,
-            ILocalizationService localizationService)
+        public ActivityLogModelFactory(IBaseAdminModelFactory baseAdminModelFactory,
+            ICustomerActivityService customerActivityService,
+            IDateTimeHelper dateTimeHelper)
         {
+            this._baseAdminModelFactory = baseAdminModelFactory;
             this._customerActivityService = customerActivityService;
             this._dateTimeHelper = dateTimeHelper;
-            this._localizationService = localizationService;
         }
 
         #endregion
@@ -62,15 +60,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(model));
 
             //prepare available activity log types
-            var availableActivityTypes = _customerActivityService.GetAllActivityTypes();
-            model.ActivityLogType = availableActivityTypes.Select(activityType => new SelectListItem
-            {
-                Value = activityType.Id.ToString(),
-                Text = activityType.Name
-            }).ToList();
-
-            //insert special type item for the "all" value
-            model.ActivityLogType.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            _baseAdminModelFactory.PrepareActivityLogTypes(model.ActivityLogType);
 
             return model;
         }

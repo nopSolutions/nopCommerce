@@ -8,7 +8,6 @@ using Nop.Core.Domain.Orders;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Services.Orders;
-using Nop.Services.Tax;
 using Nop.Web.Areas.Admin.Extensions;
 using Nop.Web.Areas.Admin.Models.Orders;
 using Nop.Web.Framework.Extensions;
@@ -24,6 +23,7 @@ namespace Nop.Web.Areas.Admin.Factories
         #region Fields
 
         private readonly CurrencySettings _currencySettings;
+        private readonly IBaseAdminModelFactory _baseAdminModelFactory;
         private readonly ICheckoutAttributeParser _checkoutAttributeParser;
         private readonly ICheckoutAttributeService _checkoutAttributeService;
         private readonly ICurrencyService _currencyService;
@@ -31,7 +31,6 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly ILocalizedModelFactory _localizedModelFactory;
         private readonly IMeasureService _measureService;
         private readonly IStoreMappingSupportedModelFactory _storeMappingSupportedModelFactory;
-        private readonly ITaxCategoryService _taxCategoryService;
         private readonly IWorkContext _workContext;
         private readonly MeasureSettings _measureSettings;
 
@@ -40,6 +39,7 @@ namespace Nop.Web.Areas.Admin.Factories
         #region Ctor
 
         public CheckoutAttributeModelFactory(CurrencySettings currencySettings,
+            IBaseAdminModelFactory baseAdminModelFactory,
             ICheckoutAttributeParser checkoutAttributeParser,
             ICheckoutAttributeService checkoutAttributeService,
             ICurrencyService currencyService,
@@ -47,11 +47,11 @@ namespace Nop.Web.Areas.Admin.Factories
             ILocalizedModelFactory localizedModelFactory,
             IMeasureService measureService,
             IStoreMappingSupportedModelFactory storeMappingSupportedModelFactory,
-            ITaxCategoryService taxCategoryService,
             IWorkContext workContext,
             MeasureSettings measureSettings)
         {
             this._currencySettings = currencySettings;
+            this._baseAdminModelFactory = baseAdminModelFactory;
             this._checkoutAttributeParser = checkoutAttributeParser;
             this._checkoutAttributeService = checkoutAttributeService;
             this._currencyService = currencyService;
@@ -59,7 +59,6 @@ namespace Nop.Web.Areas.Admin.Factories
             this._localizedModelFactory = localizedModelFactory;
             this._measureService = measureService;
             this._storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
-            this._taxCategoryService = taxCategoryService;
             this._workContext = workContext;
             this._measureSettings = measureSettings;
         }
@@ -67,29 +66,6 @@ namespace Nop.Web.Areas.Admin.Factories
         #endregion
 
         #region Utilities
-
-        /// <summary>
-        /// Prepare available tax categories for the passed model
-        /// </summary>
-        /// <param name="model">Checkout attribute model</param>
-        /// <param name="checkoutAttribute">Checkout attribute</param>
-        protected virtual void PrepareModelTaxCategories(CheckoutAttributeModel model, CheckoutAttribute checkoutAttribute)
-        {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
-
-            //prepare available tax categories
-            var availableTaxCategories = _taxCategoryService.GetAllTaxCategories();
-            model.AvailableTaxCategories = availableTaxCategories
-                .Select(taxCategory => new SelectListItem { Text = taxCategory.Name, Value = taxCategory.Id.ToString() }).ToList();
-
-            //insert special tax category item for the "none" value
-            model.AvailableTaxCategories.Insert(0, new SelectListItem
-            {
-                Text = _localizationService.GetResource("Admin.Configuration.Settings.Tax.TaxCategories.None"),
-                Value = "0"
-            });
-        }
 
         /// <summary>
         /// Prepare condition attributes model
@@ -228,8 +204,8 @@ namespace Nop.Web.Areas.Admin.Factories
             if (!excludeProperties)
                 model.Locales = _localizedModelFactory.PrepareLocalizedModels(localizedModelConfiguration);
 
-            //prepare model tax categories
-            PrepareModelTaxCategories(model, checkoutAttribute);
+            //prepare available tax categories
+            _baseAdminModelFactory.PrepareTaxCategories(model.AvailableTaxCategories);
 
             //prepare model stores
             _storeMappingSupportedModelFactory.PrepareModelStores(model, checkoutAttribute, excludeProperties);

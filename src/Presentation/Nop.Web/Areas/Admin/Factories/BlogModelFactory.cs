@@ -22,6 +22,7 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
+        private readonly IBaseAdminModelFactory _baseAdminModelFactory;
         private readonly IBlogService _blogService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ILanguageService _languageService;
@@ -33,42 +34,21 @@ namespace Nop.Web.Areas.Admin.Factories
 
         #region Ctor
 
-        public BlogModelFactory(IBlogService blogService,
+        public BlogModelFactory(IBaseAdminModelFactory baseAdminModelFactory,
+            IBlogService blogService,
             IDateTimeHelper dateTimeHelper,
             ILanguageService languageService,
             ILocalizationService localizationService,
             IStoreMappingSupportedModelFactory storeMappingSupportedModelFactory,
             IStoreService storeService)
         {
+            this._baseAdminModelFactory = baseAdminModelFactory;
             this._blogService = blogService;
-            this._languageService = languageService;
             this._dateTimeHelper = dateTimeHelper;
+            this._languageService = languageService;
             this._localizationService = localizationService;
             this._storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
             this._storeService = storeService;
-        }
-
-        #endregion
-
-        #region Utilities
-
-        /// <summary>
-        /// Prepare available languages for the passed model
-        /// </summary>
-        /// <param name="model">Blog post model</param>
-        /// <param name="blogPost">Blog post</param>
-        protected virtual void PrepareModelLanguages(BlogPostModel model, BlogPost blogPost)
-        {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
-
-            //prepare available languages
-            var availableLanguages = _languageService.GetAllLanguages(showHidden: true);
-            model.AvailableLanguages = availableLanguages.Select(language => new SelectListItem
-            {
-                Text = language.Name,
-                Value = language.Id.ToString()
-            }).ToList();
         }
 
         #endregion
@@ -86,12 +66,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(model));
 
             //prepare available stores
-            var availableStores = _storeService.GetAllStores();
-            model.AvailableStores = availableStores
-                .Select(store => new SelectListItem { Text = store.Name, Value = store.Id.ToString() }).ToList();
-
-            //insert special store item for the "all" value
-            model.AvailableStores.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            _baseAdminModelFactory.PrepareStores(model.AvailableStores);
 
             return model;
         }
@@ -162,10 +137,10 @@ namespace Nop.Web.Areas.Admin.Factories
             if (blogPost == null)
                 model.AllowComments = true;
 
-            //prepare model languages
-            PrepareModelLanguages(model, blogPost);
+            //prepare available languages
+            _baseAdminModelFactory.PrepareLanguages(model.AvailableLanguages);
 
-            //prepare model stores
+            //prepare available stores
             _storeMappingSupportedModelFactory.PrepareModelStores(model, blogPost, excludeProperties);
 
             return model;

@@ -1,19 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Domain.Affiliates;
 using Nop.Core.Domain.Common;
-using Nop.Core.Domain.Directory;
-using Nop.Core.Domain.Orders;
-using Nop.Core.Domain.Payments;
-using Nop.Core.Domain.Shipping;
-using Nop.Services;
 using Nop.Services.Affiliates;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
-using Nop.Services.Directory;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Orders;
@@ -31,13 +24,12 @@ namespace Nop.Web.Areas.Admin.Factories
         #region Fields
 
         private readonly IAffiliateService _affiliateService;
-        private readonly ICountryService _countryService;
+        private readonly IBaseAdminModelFactory _baseAdminModelFactory;
         private readonly ICustomerService _customerService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ILocalizationService _localizationService;
         private readonly IOrderService _orderService;
         private readonly IPriceFormatter _priceFormatter;
-        private readonly IStateProvinceService _stateProvinceService;
         private readonly IWebHelper _webHelper;
         private readonly IWorkContext _workContext;
 
@@ -46,24 +38,22 @@ namespace Nop.Web.Areas.Admin.Factories
         #region Ctor
 
         public AffiliateModelFactory(IAffiliateService affiliateService,
-            ICountryService countryService,
+            IBaseAdminModelFactory baseAdminModelFactory,
             ICustomerService customerService,
             IDateTimeHelper dateTimeHelper,
             ILocalizationService localizationService,
             IOrderService orderService,
             IPriceFormatter priceFormatter,
-            IStateProvinceService stateProvinceService,
             IWebHelper webHelper,
             IWorkContext workContext)
         {
             this._affiliateService = affiliateService;
-            this._countryService = countryService;
+            this._baseAdminModelFactory = baseAdminModelFactory;
             this._customerService = customerService;
             this._dateTimeHelper = dateTimeHelper;
             this._localizationService = localizationService;
             this._orderService = orderService;
             this._priceFormatter = priceFormatter;
-            this._stateProvinceService = stateProvinceService;
             this._webHelper = webHelper;
             this._workContext = workContext;
         }
@@ -108,26 +98,10 @@ namespace Nop.Web.Areas.Admin.Factories
             model.FaxEnabled = true;
 
             //prepare available countries
-            var availableCountries = _countryService.GetAllCountries(showHidden: true);
-            model.AvailableCountries = availableCountries
-                .Select(country => new SelectListItem { Text = country.Name, Value = country.Id.ToString() }).ToList();
-
-            //insert special country item for the "select" value
-            model.AvailableCountries
-                .Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Address.SelectCountry"), Value = "0" });
+            _baseAdminModelFactory.PrepareCountries(model.AvailableCountries);
 
             //prepare available states
-            var states = model.CountryId.HasValue
-                ? _stateProvinceService.GetStateProvincesByCountryId(model.CountryId.Value, showHidden: true)
-                : new List<StateProvince>();
-            model.AvailableStates = states.Select(state => new SelectListItem { Text = state.Name, Value = state.Id.ToString() }).ToList();
-
-            //insert special state item for the "non US" value
-            if (!states.Any())
-            {
-                model.AvailableStates
-                    .Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Address.OtherNonUS"), Value = "0" });
-            }
+            _baseAdminModelFactory.PrepareStatesAndProvinces(model.AvailableStates, model.CountryId);
 
             return model;
         }
@@ -238,16 +212,10 @@ namespace Nop.Web.Areas.Admin.Factories
 
             model.AffliateId = affiliate.Id;
 
-            //prepare order, payment and shipping statuses
-            model.AvailableOrderStatuses = OrderStatus.Pending.ToSelectList(false).ToList();
-            model.AvailablePaymentStatuses = PaymentStatus.Pending.ToSelectList(false).ToList();
-            model.AvailableShippingStatuses = ShippingStatus.NotYetShipped.ToSelectList(false).ToList();
-
-            //insert special status item for the "all" value
-            var allSelectListItem = new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" };
-            model.AvailableOrderStatuses.Insert(0, allSelectListItem);
-            model.AvailablePaymentStatuses.Insert(0, allSelectListItem);
-            model.AvailableShippingStatuses.Insert(0, allSelectListItem);
+            //prepare available order, payment and shipping statuses
+            _baseAdminModelFactory.PrepareOrderStatuses(model.AvailableOrderStatuses);
+            _baseAdminModelFactory.PreparePaymentStatuses(model.AvailablePaymentStatuses);
+            _baseAdminModelFactory.PrepareShippingStatuses(model.AvailableShippingStatuses);
 
             return model;
         }
