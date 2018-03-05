@@ -281,7 +281,7 @@ namespace Nop.Services.Catalog
 
             return _cacheManager.Get(key, () =>
             {
-                var query = from pam in _productAttributeMappingRepository.Table.Include("ProductAttribute").Include("ProductAttributeValues")
+                var query = from pam in _productAttributeMappingRepository.Table
                             orderby pam.DisplayOrder, pam.Id
                             where pam.ProductId == productId
                             select pam;

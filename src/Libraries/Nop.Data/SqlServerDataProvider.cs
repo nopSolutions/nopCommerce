@@ -25,6 +25,7 @@ namespace Nop.Data
             this.dataConnectionString = dataConnectionString;
             DbContextOptionsBuilder<DbContext> builder = new DbContextOptionsBuilder<DbContext>();
             builder.UseSqlServer(this.dataConnectionString);
+            builder.UseLazyLoadingProxies();
             _options = builder.Options;
         }
         #region Utilities

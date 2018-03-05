@@ -1,4 +1,4 @@
-﻿using System;
+﻿    using System;
 using System.Data.Common;
 using System.Data.SqlClient;
 using System.IO;
@@ -20,6 +20,7 @@ namespace Nop.Data
             this.dataConnectionString = CommonHelper.ReplaceDataDirectory(dataConnectionString);
             DbContextOptionsBuilder<DbContext> builder2 = new DbContextOptionsBuilder<DbContext>();
             builder2.UseSqlite(this.dataConnectionString);
+            builder2.UseLazyLoadingProxies();
             _options = builder2.Options;
         }
 

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Orders;
 
@@ -12,11 +13,11 @@ namespace Nop.Core.Domain.Customers
     public partial class Customer : BaseEntity
     {
         private ICollection<ExternalAuthenticationRecord> _externalAuthenticationRecords;
-        private ICollection<Customer_CustomerRole_Mapping> _customerRoles;
+        private ICollection<Customer_CustomerRole_Mapping> _customerCustomerRoles;
         private ICollection<CustomerRole> _customerRolesonly;
         private ICollection<ShoppingCartItem> _shoppingCartItems;
         private ICollection<ReturnRequest> _returnRequests;
-        private ICollection<CustomerAddresses> _addresses;
+        private ICollection<CustomerAddresses> _customerAddresses;
         private ICollection<Address> _addressesonly;
 
         /// <summary>
@@ -25,14 +26,14 @@ namespace Nop.Core.Domain.Customers
         public Customer()
         {
             this.CustomerGuid = Guid.NewGuid();
-            _addresses = new ObservableCollection<CustomerAddresses>();
+            _customerAddresses = new ObservableCollection<CustomerAddresses>();
             _addressesonly = new ObservableCollection<Address>();
             ((ObservableCollection<Address>)_addressesonly).CollectionChanged += Customer_CollectionChanged;
-            ((ObservableCollection<CustomerAddresses>)_addresses).CollectionChanged += Customer_CollectionChanged1;
-            _customerRoles = new ObservableCollection<Customer_CustomerRole_Mapping>();
+            ((ObservableCollection<CustomerAddresses>)_customerAddresses).CollectionChanged += Customer_CollectionChanged1;
+            _customerCustomerRoles = new ObservableCollection<Customer_CustomerRole_Mapping>();
             _customerRolesonly = new ObservableCollection<CustomerRole>();
             ((ObservableCollection<CustomerRole>)_customerRolesonly).CollectionChanged += Customer_CollectionChanged2; ;
-            ((ObservableCollection<Customer_CustomerRole_Mapping>)_customerRoles).CollectionChanged += Customer_CollectionChanged3;
+            ((ObservableCollection<Customer_CustomerRole_Mapping>)_customerCustomerRoles).CollectionChanged += Customer_CollectionChanged3;
         }
 
         /// <summary>
@@ -161,8 +162,8 @@ namespace Nop.Core.Domain.Customers
         /// </summary>
         public virtual ICollection<Customer_CustomerRole_Mapping> CustomerCustomerRoles
         {
-            get { return _customerRoles; }
-            protected set { _customerRoles = value; }
+            get { return _customerCustomerRoles; }
+            protected set { _customerCustomerRoles = value; }
         }
 
         /// <summary>
@@ -200,20 +201,12 @@ namespace Nop.Core.Domain.Customers
         {
             get
             {
-                if (_addresses != null)
-                {
-                    
-                }
-                else
-                {
-                    
-                }
-                return _addresses;
+                return _customerAddresses;
 
             }
             protected set
             {
-                _addresses = value;
+                _customerAddresses = value;
             }            
         }
         private bool internalmodify = false;
@@ -232,7 +225,7 @@ namespace Nop.Core.Domain.Customers
                         CustomerId = this.Id
                     };
                     internalmodify = true;
-                    _addresses.Add(ca);
+                    CustomerAddresses.Add(ca);
                     internalmodify = false;
                 }
             }
@@ -240,10 +233,10 @@ namespace Nop.Core.Domain.Customers
             {
                 foreach (Address olditem in e.OldItems)
                 {
-                    var item = ((List<CustomerAddresses>) _addresses).Find(p =>
+                    var item = ((List<CustomerAddresses>) CustomerAddresses).Find(p =>
                         p.AddressId == olditem.Id && p.CustomerId == this.Id);
                     internalmodify = true;
-                    _addresses.Remove(item);
+                    CustomerAddresses.Remove(item);
                     internalmodify = false;
                 }
             }
@@ -257,7 +250,11 @@ namespace Nop.Core.Domain.Customers
                 foreach (CustomerAddresses newitem in e.NewItems)
                 {
                     internalmodify = true;
-                    _addressesonly.Add(newitem.Address);
+                    try
+                    {
+                        _addressesonly.Add(newitem.Address);
+                    }
+                    catch (Exception) { }
                     internalmodify = false;
                 }
             }
@@ -279,13 +276,17 @@ namespace Nop.Core.Domain.Customers
 
             get
             {
-                if (_addressesonly.Contains(null))
+                if (_addressesonly.Contains(null) || (_addressesonly.Count != CustomerAddresses.Count))
                 {
                     internalmodify = true;
                     _addressesonly.Clear();
-                    foreach (var item in _addresses)
+                    foreach (var item in CustomerAddresses)
                     {
-                        _addressesonly.Add(item.Address);
+                        try
+                        {
+                            _addressesonly.Add(item.Address);
+                        }
+                        catch (Exception) { }
                     }
                     internalmodify = false;
                 }
@@ -308,7 +309,7 @@ namespace Nop.Core.Domain.Customers
                         CustomerId = this.Id
                     };
                     internalmodify = true;
-                    _customerRoles.Add(ca);
+                    CustomerCustomerRoles.Add(ca);
                     internalmodify = false;
                 }
             }
@@ -316,10 +317,10 @@ namespace Nop.Core.Domain.Customers
             {
                 foreach (CustomerRole olditem in e.OldItems)
                 {
-                    var item = ((List<Customer_CustomerRole_Mapping>)_customerRoles).Find(p =>
+                    var item = ((List<Customer_CustomerRole_Mapping>)CustomerCustomerRoles).Find(p =>
                         p.CustomerRoleId == olditem.Id && p.CustomerId == this.Id);
                     internalmodify = true;
-                    _customerRoles.Remove(item);
+                    CustomerCustomerRoles.Remove(item);
                     internalmodify = false;
                 }
             }
@@ -333,7 +334,11 @@ namespace Nop.Core.Domain.Customers
                 foreach (Customer_CustomerRole_Mapping newitem in e.NewItems)
                 {
                     internalmodify = true;
-                    _customerRolesonly.Add(newitem.CustomerRole);
+                    try
+                    {
+                        _customerRolesonly.Add(newitem.CustomerRole);
+                    }
+                    catch (Exception) { }
                     internalmodify = false;
                 }
             }
@@ -349,16 +354,16 @@ namespace Nop.Core.Domain.Customers
             }
         }
 
-        public virtual ICollection<CustomerRole> CustomerRoles
+        public ICollection<CustomerRole> CustomerRoles
         {
             get
             {
-                if (_customerRolesonly.Contains(null))
+                if (_customerRolesonly.Contains(null) || (_customerRolesonly.Count !=CustomerCustomerRoles.Count))
                 {
                     //regenerate
                     internalmodify = true;
                     _customerRolesonly.Clear();
-                    foreach (var item in _customerRoles)
+                    foreach (var item in CustomerCustomerRoles)
                     {
                         _customerRolesonly.Add(item.CustomerRole);
                     }

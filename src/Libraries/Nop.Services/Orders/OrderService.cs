@@ -75,14 +75,6 @@ namespace Nop.Services.Orders
 
             //return _orderRepository.GetById(orderId);
             return _orderRepository.Table
-                .Include("BillingAddress")
-                .Include("Customer")
-                .Include("DiscountUsageHistory")
-                .Include("GiftCardUsageHistory")
-                .Include("OrderItems.Product")
-                .Include("OrderNotes")
-                .Include("Shipments")
-                .Include("ShippingAddress")
                 .FirstOrDefault(o => o.Id == orderId);
         }
 
@@ -97,14 +89,6 @@ namespace Nop.Services.Orders
                 return null;
            
             return _orderRepository.Table
-                    .Include("BillingAddress")
-                    .Include("Customer")
-                    .Include("DiscountUsageHistory")
-                    .Include("GiftCardUsageHistory")
-                    .Include("OrderItems")
-                    .Include("OrderNotes")
-                    .Include("Shipments")
-                    .Include("ShippingAddress")
                 .FirstOrDefault(o => o.CustomOrderNumber == customOrderNumber);
         }
 
@@ -119,14 +103,6 @@ namespace Nop.Services.Orders
                 return new List<Order>();
 
             var query = from o in _orderRepository.Table
-                .Include("BillingAddress")
-                .Include("Customer")
-                .Include("DiscountUsageHistory")
-                .Include("GiftCardUsageHistory")
-                .Include("OrderItems")
-                .Include("OrderNotes")
-                .Include("Shipments")
-                .Include("ShippingAddress")
             where orderIds.Contains(o.Id) && !o.Deleted
                         select o;
             var orders = query.ToList();
@@ -152,14 +128,6 @@ namespace Nop.Services.Orders
                 return null;
 
             var query = from o in _orderRepository.Table
-                .Include("BillingAddress")
-                .Include("Customer")
-                .Include("DiscountUsageHistory")
-                .Include("GiftCardUsageHistory")
-                .Include("OrderItems")
-                .Include("OrderNotes")
-                .Include("Shipments")
-                .Include("ShippingAddress")
             where o.OrderGuid == orderGuid
                         select o;
             var order = query.FirstOrDefault();
@@ -215,15 +183,7 @@ namespace Nop.Services.Orders
             string billingPhone = null, string billingEmail = null, string billingLastName = "",
             string orderNotes = null, int pageIndex = 0, int pageSize = int.MaxValue, bool getOnlyTotalCount = false)
         {
-            var query = _orderRepository.Table
-                .Include("BillingAddress")
-                .Include("Customer")
-                .Include("DiscountUsageHistory")
-                .Include("GiftCardUsageHistory")
-                .Include("OrderItems")
-                .Include("OrderNotes")
-                .Include("Shipments")
-                .Include("ShippingAddress");
+            var query = _orderRepository.Table;
             if (storeId > 0)
                 query = query.Where(o => o.StoreId == storeId);
             if (vendorId > 0)
@@ -325,15 +285,7 @@ namespace Nop.Services.Orders
         public virtual Order GetOrderByAuthorizationTransactionIdAndPaymentMethod(string authorizationTransactionId, 
             string paymentMethodSystemName)
         { 
-            var query = _orderRepository.Table
-                .Include("BillingAddress")
-                .Include("Customer")
-                .Include("DiscountUsageHistory")
-                .Include("GiftCardUsageHistory")
-                .Include("OrderItems")
-                .Include("OrderNotes")
-                .Include("Shipments")
-                .Include("ShippingAddress");
+            var query = _orderRepository.Table;
             if (!string.IsNullOrWhiteSpace(authorizationTransactionId))
                 query = query.Where(o => o.AuthorizationTransactionId == authorizationTransactionId);
             

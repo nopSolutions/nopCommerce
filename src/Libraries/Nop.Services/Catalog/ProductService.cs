@@ -1996,10 +1996,7 @@ namespace Nop.Services.Catalog
             string message = null, int storeId = 0, int productId = 0, int vendorId = 0, bool showHidden = false,
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            var query = _productReviewRepository.Table
-                .Include("ProductReviewHelpfulnessEntries")
-                .Include("Product")
-                .Include("Store");
+            var query = _productReviewRepository.Table;
             if (approved.HasValue)
                 query = query.Where(pr => pr.IsApproved == approved);
             if (customerId > 0)
@@ -2065,9 +2062,6 @@ namespace Nop.Services.Catalog
                 return new List<ProductReview>();
 
             var query = from pr in _productReviewRepository.Table
-                .Include("ProductReviewHelpfulnessEntries")
-                .Include("Product")
-                .Include("Store")
             where productReviewIds.Contains(pr.Id)
                         select pr;
             var productReviews = query.ToList();

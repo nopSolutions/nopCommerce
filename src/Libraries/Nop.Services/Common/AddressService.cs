@@ -136,7 +136,7 @@ namespace Nop.Services.Common
                 return null;
 
             var key = string.Format(ADDRESSES_BY_ID_KEY, addressId);
-            return _cacheManager.Get(key, () => _addressRepository.Table.Include("Country").Include("StateProvince").Single(t => t.Id == addressId));
+            return _cacheManager.Get(key, () => _addressRepository.Table.Single(t => t.Id == addressId));
         }
 
         /// <summary>

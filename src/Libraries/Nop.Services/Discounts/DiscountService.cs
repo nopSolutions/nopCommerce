@@ -740,7 +740,7 @@ namespace Nop.Services.Discounts
                 return null;
 
             //return _discountUsageHistoryRepository.GetById(discountUsageHistoryId);
-            return _discountUsageHistoryRepository.Table.Include("Order").Single(d => d.Id == discountUsageHistoryId);
+            return _discountUsageHistoryRepository.Table.Single(d => d.Id == discountUsageHistoryId);
         }
 
         /// <summary>
@@ -755,7 +755,7 @@ namespace Nop.Services.Discounts
         public virtual IPagedList<DiscountUsageHistory> GetAllDiscountUsageHistory(int? discountId = null,
             int? customerId = null, int? orderId = null, int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            var discountUsageHistory = _discountUsageHistoryRepository.Table.Include("Order");
+            var discountUsageHistory = _discountUsageHistoryRepository.Table;
             //ignore deleted orders
             discountUsageHistory = discountUsageHistory.Where(historyRecord => historyRecord.Order.Deleted == false);
 

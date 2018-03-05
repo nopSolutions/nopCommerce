@@ -71,7 +71,7 @@ namespace Nop.Core.Domain.Customers
             protected set { _permissionRecords = value; }
         }
 
-        public ICollection<Customer_CustomerRole_Mapping> Customers
+        public virtual ICollection<Customer_CustomerRole_Mapping> Customers
         {
             get { return _customers ?? (_customers = new List<Customer_CustomerRole_Mapping>()); }
             protected set { _customers = value; }

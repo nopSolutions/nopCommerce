@@ -19,6 +19,7 @@ namespace Nop.Data
             this.dataConnectionString = dataConnectionString;
             DbContextOptionsBuilder<DbContext> builder2 = new DbContextOptionsBuilder<DbContext>();
             builder2.UseMySql(dataConnectionString);
+            builder2.UseLazyLoadingProxies();
             _options = builder2.Options;
         }
 
