@@ -114,7 +114,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 options.Cookie.Name = ".Nop.Antiforgery";
 
                 //whether to allow the use of anti-forgery cookies from SSL protected page on the other store pages which are not
-                options.Cookie.SecurePolicy = EngineContext.Current.Resolve<SecuritySettings>().ForceSslForAllPages
+                options.Cookie.SecurePolicy = DataSettingsHelper.DatabaseIsInstalled() && EngineContext.Current.Resolve<SecuritySettings>().ForceSslForAllPages
                     ? CookieSecurePolicy.SameAsRequest : CookieSecurePolicy.None;
             });
         }
@@ -131,7 +131,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 options.Cookie.HttpOnly = true;
 
                 //whether to allow the use of session values from SSL protected page on the other store pages which are not
-                options.Cookie.SecurePolicy = EngineContext.Current.Resolve<SecuritySettings>().ForceSslForAllPages
+                options.Cookie.SecurePolicy = DataSettingsHelper.DatabaseIsInstalled() && EngineContext.Current.Resolve<SecuritySettings>().ForceSslForAllPages
                     ? CookieSecurePolicy.SameAsRequest : CookieSecurePolicy.None;
             });
         }
@@ -202,7 +202,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 options.AccessDeniedPath = NopCookieAuthenticationDefaults.AccessDeniedPath;
 
                 //whether to allow the use of authentication cookies from SSL protected page on the other store pages which are not
-                options.Cookie.SecurePolicy = EngineContext.Current.Resolve<SecuritySettings>().ForceSslForAllPages
+                options.Cookie.SecurePolicy = DataSettingsHelper.DatabaseIsInstalled() && EngineContext.Current.Resolve<SecuritySettings>().ForceSslForAllPages
                     ? CookieSecurePolicy.SameAsRequest : CookieSecurePolicy.None;
             });
 
@@ -215,7 +215,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 options.AccessDeniedPath = NopCookieAuthenticationDefaults.AccessDeniedPath;
 
                 //whether to allow the use of authentication cookies from SSL protected page on the other store pages which are not
-                options.Cookie.SecurePolicy = EngineContext.Current.Resolve<SecuritySettings>().ForceSslForAllPages
+                options.Cookie.SecurePolicy = DataSettingsHelper.DatabaseIsInstalled() && EngineContext.Current.Resolve<SecuritySettings>().ForceSslForAllPages
                     ? CookieSecurePolicy.SameAsRequest : CookieSecurePolicy.None;
             });
 
