@@ -611,6 +611,15 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.MinOrderTotalToAwardPoints.Hint">
     <Value>Specify the minimum order total (exclude shipping cost) to award points for purchases.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.CheckoutDisabled">
+    <Value>Checkout disabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.CheckoutDisabled.Hint">
+    <Value>Check to disable the checkout process (a read-only mode where ordering is turned off temporarily).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Checkout.Disabled">
+    <Value>Sorry, checkout process is temporary disabled</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -1192,5 +1201,13 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'rewardpointssettings.min
 BEGIN
     INSERT [Setting] ([Name], [Value], [StoreId])
     VALUES (N'rewardpointssettings.minordertotaltoawardpoints', N'0', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'ordersettings.checkoutdisabled')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'ordersettings.checkoutdisabled', N'false', 0)
 END
 GO
