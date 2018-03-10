@@ -2,6 +2,9 @@
 
 namespace Nop.Core.Domain.Common
 {
+    /// <summary>
+    /// PPDF settings
+    /// </summary>
     public class PdfSettings : ISettings
     {
         /// <summary>

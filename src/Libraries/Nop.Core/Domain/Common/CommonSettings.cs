@@ -3,8 +3,14 @@ using Nop.Core.Configuration;
 
 namespace Nop.Core.Domain.Common
 {
+    /// <summary>
+    /// Common settings
+    /// </summary>
     public class CommonSettings : ISettings
     {
+        /// <summary>
+        /// Ctor
+        /// </summary>
         public CommonSettings()
         {
             SitemapCustomUrls = new List<string>();

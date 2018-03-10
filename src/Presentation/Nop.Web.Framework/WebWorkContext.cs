@@ -59,6 +59,22 @@ namespace Nop.Web.Framework
 
         #region Ctor
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="httpContextAccessor">HTTP context accessor</param>
+        /// <param name="currencySettings">Currency settings</param>
+        /// <param name="authenticationService">Authentication service</param>
+        /// <param name="currencyService">Currency service</param>
+        /// <param name="customerService">Customer service</param>
+        /// <param name="genericAttributeService">Generic attribute service</param>
+        /// <param name="languageService">Language service</param>
+        /// <param name="storeContext">Store context</param>
+        /// <param name="storeMappingService">Store mapping service</param>
+        /// <param name="userAgentHelper">User gent helper</param>
+        /// <param name="vendorService">Vendor service</param>
+        /// <param name="localizationSettings">Localization settings</param>
+        /// <param name="taxSettings">Tax settings</param>
         public WebWorkContext(IHttpContextAccessor httpContextAccessor, 
             CurrencySettings currencySettings,
             IAuthenticationService authenticationService,
@@ -195,7 +211,7 @@ namespace Nop.Web.Framework
 
                 //check whether request is made by a background (schedule) task
                 if (_httpContextAccessor.HttpContext == null ||
-                    _httpContextAccessor.HttpContext.Request.Path.Equals(new PathString($"/{TaskManager.ScheduleTaskPatch}"), StringComparison.InvariantCultureIgnoreCase))
+                    _httpContextAccessor.HttpContext.Request.Path.Equals(new PathString($"/{TaskManager.ScheduleTaskPath}"), StringComparison.InvariantCultureIgnoreCase))
                 {
                     //in this case return built-in customer record for background task
                     customer = _customerService.GetCustomerBySystemName(SystemCustomerNames.BackgroundTask);

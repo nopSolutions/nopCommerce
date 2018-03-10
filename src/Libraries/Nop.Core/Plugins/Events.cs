@@ -9,6 +9,10 @@ namespace Nop.Core.Plugins
     {
         #region Ctor
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="uploadedPlugins">Uploaded plugins</param>
         public PluginsUploadedEvent(IList<PluginDescriptor> uploadedPlugins)
         {
             this.UploadedPlugins = uploadedPlugins;

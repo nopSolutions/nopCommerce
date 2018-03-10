@@ -5,6 +5,9 @@ using Nop.Core.Domain.Discounts;
 
 namespace Nop.Services.Discounts
 {
+    /// <summary>
+    /// Discount extensions
+    /// </summary>
     public static class DiscountExtensions
     {
         /// <summary>

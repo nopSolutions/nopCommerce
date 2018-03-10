@@ -7,8 +7,15 @@ using Nop.Services.Localization;
 
 namespace Nop.Web.Framework.Validators
 {
+    /// <summary>
+    /// Base class for validators
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public abstract class BaseNopValidator<T> : AbstractValidator<T> where T : class
     {
+        /// <summary>
+        /// Ctor
+        /// </summary>
         protected BaseNopValidator()
         {
             PostInitialize();

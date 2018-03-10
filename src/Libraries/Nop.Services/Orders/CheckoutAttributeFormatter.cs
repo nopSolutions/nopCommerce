@@ -27,6 +27,17 @@ namespace Nop.Services.Orders
         private readonly IDownloadService _downloadService;
         private readonly IWebHelper _webHelper;
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="workContext">Work context</param>
+        /// <param name="checkoutAttributeService">Checkout attribute service</param>
+        /// <param name="checkoutAttributeParser">Checkout attribute parser</param>
+        /// <param name="currencyService">Currency service</param>
+        /// <param name="taxService">Tax service</param>
+        /// <param name="priceFormatter">Price formatter</param>
+        /// <param name="downloadService">Download service</param>
+        /// <param name="webHelper">Web helper</param>
         public CheckoutAttributeFormatter(IWorkContext workContext,
             ICheckoutAttributeService checkoutAttributeService,
             ICheckoutAttributeParser checkoutAttributeParser,

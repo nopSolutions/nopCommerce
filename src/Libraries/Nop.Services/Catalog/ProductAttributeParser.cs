@@ -22,6 +22,11 @@ namespace Nop.Services.Catalog
 
         #region Ctor
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="context">DB context</param>
+        /// <param name="productAttributeService">Product attribute service</param>
         public ProductAttributeParser(IDbContext context,
             IProductAttributeService productAttributeService)
         {

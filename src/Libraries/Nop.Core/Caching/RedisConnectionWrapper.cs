@@ -25,6 +25,10 @@ namespace Nop.Core.Caching
 
         #region Ctor
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="config">Config</param>
         public RedisConnectionWrapper(NopConfig config)
         {
             this._config = config;

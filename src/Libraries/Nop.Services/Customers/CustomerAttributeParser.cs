@@ -15,6 +15,11 @@ namespace Nop.Services.Customers
         private readonly ICustomerAttributeService _customerAttributeService;
         private readonly ILocalizationService _localizationService;
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="customerAttributeService">Customer attribute service</param>
+        /// <param name="localizationService">Localization service</param>
         public CustomerAttributeParser(ICustomerAttributeService customerAttributeService,
             ILocalizationService localizationService)
         {

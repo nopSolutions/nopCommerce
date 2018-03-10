@@ -136,6 +136,17 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrencies))
                 return AccessDeniedView();
 
+            var model = new CurrencyListModel
+            {
+                AutoUpdateEnabled = _currencySettings.AutoUpdateEnabled,
+                ExchangeRateProviders = _currencyService.LoadAllExchangeRateProviders().Select(erp => new SelectListItem
+                {
+                    Text = erp.PluginDescriptor.FriendlyName,
+                    Value = erp.PluginDescriptor.SystemName,
+                    Selected = erp.PluginDescriptor.SystemName.Equals(_currencySettings.ActiveExchangeRateProviderSystemName, StringComparison.InvariantCultureIgnoreCase)
+                }).ToList(),
+            };
+
             if (liveRates)
             {
                 try
@@ -143,8 +154,12 @@ namespace Nop.Web.Areas.Admin.Controllers
                     var primaryExchangeCurrency = _currencyService.GetCurrencyById(_currencySettings.PrimaryExchangeRateCurrencyId, false);
                     if (primaryExchangeCurrency == null)
                         throw new NopException("Primary exchange rate currency is not set");
-
-                    ViewBag.Rates = _currencyService.GetCurrencyLiveRates(primaryExchangeCurrency.CurrencyCode);
+                    
+                    //filter by existing currencies
+                    var currencies = _currencyService.GetAllCurrencies(true, loadCacheableCopy: false);
+                    model.ExchangeRates = _currencyService.GetCurrencyLiveRates(primaryExchangeCurrency.CurrencyCode)
+                        .Where(rate => currencies.Any(currency => currency.CurrencyCode.Equals(rate.CurrencyCode, StringComparison.InvariantCultureIgnoreCase)))
+                        .Select(rate => new CurrencyListModel.ExchangeRateModel { CurrencyCode = rate.CurrencyCode, Rate = rate.Rate }).ToList();
                 }
                 catch (Exception exc)
                 {
@@ -152,31 +167,20 @@ namespace Nop.Web.Areas.Admin.Controllers
                 }
             }
 
-            ViewBag.ExchangeRateProviders = new List<SelectListItem>();
-            foreach (var erp in _currencyService.LoadAllExchangeRateProviders())
-            {
-                ViewBag.ExchangeRateProviders.Add(new SelectListItem
-                {
-                    Text = erp.PluginDescriptor.FriendlyName,
-                    Value = erp.PluginDescriptor.SystemName,
-                    Selected = erp.PluginDescriptor.SystemName.Equals(_currencySettings.ActiveExchangeRateProviderSystemName, StringComparison.InvariantCultureIgnoreCase)
-                });
-            }
-            ViewBag.AutoUpdateEnabled = _currencySettings.AutoUpdateEnabled;
-           
-            return View();
+            return View(model);
         }
 
         [HttpPost]
         [FormValueRequired("save")]
-        public virtual IActionResult List(IFormCollection formValues)
+        public virtual IActionResult List(CurrencyListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrencies))
                 return AccessDeniedView();
 
-            _currencySettings.ActiveExchangeRateProviderSystemName = formValues["exchangeRateProvider"];
-            _currencySettings.AutoUpdateEnabled = !formValues["autoUpdateEnabled"].Equals("false");
+            _currencySettings.ActiveExchangeRateProviderSystemName = model.ExchangeRateProvider;
+            _currencySettings.AutoUpdateEnabled = model.AutoUpdateEnabled;
             _settingService.SaveSetting(_currencySettings);
+
             return RedirectToAction("List", "Currency");
         }
 
@@ -198,6 +202,26 @@ namespace Nop.Web.Areas.Admin.Controllers
                 Total = currenciesModel.Count
             };
             return Json(gridModel);
+        }
+
+        [HttpPost]
+        public virtual IActionResult ApplyAllRates(IEnumerable<CurrencyListModel.ExchangeRateModel> rates)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrencies))
+                return AccessDeniedView();
+            
+            foreach (var rate in rates)
+            {
+                var currency = _currencyService.GetCurrencyByCode(rate.CurrencyCode, false);
+                if (currency == null)
+                    continue;
+
+                currency.Rate = rate.Rate;
+                currency.UpdatedOnUtc = DateTime.UtcNow;
+                _currencyService.UpdateCurrency(currency);
+            }
+
+            return Json(new { result = true });
         }
 
         [HttpPost]

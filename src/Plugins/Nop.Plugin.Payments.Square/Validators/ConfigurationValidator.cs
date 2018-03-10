@@ -1,20 +1,37 @@
-﻿using FluentValidation;
+﻿using System;
+using FluentValidation;
 using Nop.Plugin.Payments.Square.Models;
-using Nop.Services.Localization;
 using Nop.Web.Framework.Validators;
 
 namespace Nop.Plugin.Payments.Square.Validators
 {
     /// <summary>
-    /// Represents validator of a configuration model
+    /// Represents validator of the Square payment plugin configuration model
     /// </summary>
-    public partial class ConfigurationValidator : BaseNopValidator<ConfigurationModel>
+    public partial class ConfigurationModelValidator : BaseNopValidator<ConfigurationModel>
     {
-        public ConfigurationValidator(ILocalizationService localizationService)
+        public ConfigurationModelValidator()
         {
-            //token renewal limit to 45 days max
-            RuleFor(x => x.AccessTokenRenewalPeriod).LessThanOrEqualTo(45)
-                .WithMessage(localizationService.GetResource("Plugins.Payments.Square.Fields.AccessTokenRenewalPeriod.Max"));
+            //rules for sandbox credentials
+            RuleFor(model => model.AccessToken).Must((model, context) =>
+            {
+                //do not validate for production credentials
+                if (!model.UseSandbox)
+                    return true;
+
+                return !string.IsNullOrEmpty(model.AccessToken) && 
+                    model.AccessToken.StartsWith(SquarePaymentDefaults.SandboxCredentialsPrefix, StringComparison.InvariantCultureIgnoreCase);
+            }).WithMessage($"Sandbox access token should start with '{SquarePaymentDefaults.SandboxCredentialsPrefix}'");
+
+            RuleFor(model => model.ApplicationId).Must((model, context) =>
+            {
+                //do not validate for production credentials
+                if (!model.UseSandbox)
+                    return true;
+
+                return !string.IsNullOrEmpty(model.ApplicationId) && 
+                    model.ApplicationId.StartsWith(SquarePaymentDefaults.SandboxCredentialsPrefix, StringComparison.InvariantCultureIgnoreCase);
+            }).WithMessage($"Sandbox application ID should start with '{SquarePaymentDefaults.SandboxCredentialsPrefix}'");
         }
     }
 }

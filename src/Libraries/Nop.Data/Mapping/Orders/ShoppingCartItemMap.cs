@@ -2,8 +2,14 @@
 
 namespace Nop.Data.Mapping.Orders
 {
+    /// <summary>
+    /// Mapping class
+    /// </summary>
     public partial class ShoppingCartItemMap : NopEntityTypeConfiguration<ShoppingCartItem>
     {
+        /// <summary>
+        /// Ctor
+        /// </summary>
         public ShoppingCartItemMap()
         {
             this.ToTable("ShoppingCartItem");

@@ -3,8 +3,17 @@ using Nop.Core.Domain.Cms;
 
 namespace Nop.Services.Cms
 {
+    /// <summary>
+    /// Widget extensions
+    /// </summary>
     public static class WidgetExtensions
     {
+        /// <summary>
+        /// Is widget active
+        /// </summary>
+        /// <param name="widget">Widget</param>
+        /// <param name="widgetSettings">Widget settings</param>
+        /// <returns>Result</returns>
         public static bool IsWidgetActive(this IWidgetPlugin widget,
             WidgetSettings widgetSettings)
         {

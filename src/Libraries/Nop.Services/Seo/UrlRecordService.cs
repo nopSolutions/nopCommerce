@@ -73,6 +73,11 @@ namespace Nop.Services.Seo
 
         #region Utilities
 
+        /// <summary>
+        /// Map
+        /// </summary>
+        /// <param name="record">UrlRecord</param>
+        /// <returns>UrlRecordForCaching</returns>
         protected UrlRecordForCaching Map(UrlRecord record)
         {
             if (record == null)
@@ -119,6 +124,9 @@ namespace Nop.Services.Seo
 
         #region Nested classes
 
+        /// <summary>
+        /// UrlRecord (for caching)
+        /// </summary>
         [Serializable]
         public class UrlRecordForCaching
         {

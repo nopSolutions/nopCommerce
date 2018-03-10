@@ -15,15 +15,26 @@
 
         #region Ctors
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="key">Key</param>
+        /// <param name="value">Value</param>
+        public Token(string key, object value) : this(key, value, false)
+        {
+        }
+
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="key">Key</param>
+        /// <param name="value">Value</param>
+        /// <param name="neverHtmlEncoded">Indicates whether this token should not be HTML encoded</param>
         public Token(string key, object value, bool neverHtmlEncoded)
         {
             this._key = key;
             this._value = value;
             this._neverHtmlEncoded = neverHtmlEncoded;
-        }
-
-        public Token(string key, object value) : this(key, value, false)
-        {
         }
 
         #endregion

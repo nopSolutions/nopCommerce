@@ -2,8 +2,14 @@ using Nop.Core.Domain.Topics;
 
 namespace Nop.Data.Mapping.Topics
 {
+    /// <summary>
+    /// Mapping class
+    /// </summary>
     public partial class TopicTemplateMap : NopEntityTypeConfiguration<TopicTemplate>
     {
+        /// <summary>
+        /// Ctor
+        /// </summary>
         public TopicTemplateMap()
         {
             this.ToTable("TopicTemplate");

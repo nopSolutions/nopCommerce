@@ -47,6 +47,11 @@ namespace Nop.Services.Shipping.Tracking
                 .ToList();
         }
 
+        /// <summary>
+        /// Get tracker by tracking number
+        /// </summary>
+        /// <param name="trackingNumber">Tracking number</param>
+        /// <returns>Tracker (IShipmentTracker)</returns>
         protected virtual IShipmentTracker GetTrackerByTrackingNumber(string trackingNumber)
         {
             return GetAllTrackers().FirstOrDefault(c => c.IsMatch(trackingNumber));

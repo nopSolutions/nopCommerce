@@ -21,6 +21,11 @@ namespace Nop.Services.Common
 
         #region Ctor
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="searchTermRepository">Search term repository</param>
+        /// <param name="eventPublisher">Event publisher</param>
         public SearchTermService(IRepository<SearchTerm> searchTermRepository,
             IEventPublisher eventPublisher)
         {

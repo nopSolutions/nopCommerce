@@ -10,8 +10,8 @@
 <script type="text/javascript">
     $(document).ready(function() {
         $("#@Html.IdForModel()").TouchSpin({
-            min: @(int.MinValue),
-            max: @(int.MaxValue),
+            min: @Html.Raw(int.MinValue),
+            max: @Html.Raw(int.MaxValue),
             decimals: 0,
             verticalbuttons: true,
             postfix: "@postfix"

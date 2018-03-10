@@ -5,6 +5,9 @@ using Nop.Core.Html;
 
 namespace Nop.Services.Orders
 {
+    /// <summary>
+    /// Order extensions
+    /// </summary>
     public static class OrderExtensions
     {
         /// <summary>

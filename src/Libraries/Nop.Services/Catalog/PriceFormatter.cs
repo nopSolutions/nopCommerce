@@ -27,6 +27,14 @@ namespace Nop.Services.Catalog
 
         #region Ctor
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="workContext">Work context</param>
+        /// <param name="currencyService">Currency service</param>
+        /// <param name="localizationService">Localization service</param>
+        /// <param name="taxSettings">Tax settings</param>
+        /// <param name="currencySettings">Currency settings</param>
         public PriceFormatter(IWorkContext workContext,
             ICurrencyService currencyService,
             ILocalizationService localizationService,

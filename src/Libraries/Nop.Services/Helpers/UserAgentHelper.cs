@@ -24,6 +24,11 @@ namespace Nop.Services.Helpers
 
         #region Ctor
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="nopConfig">Config</param>
+        /// <param name="httpContextAccessor">HTTP context accessor</param>
         public UserAgentHelper(NopConfig nopConfig, IHttpContextAccessor httpContextAccessor)
         {
             this._nopConfig = nopConfig;
@@ -34,6 +39,10 @@ namespace Nop.Services.Helpers
 
         #region Utilities
 
+        /// <summary>
+        /// Get BrowscapXmlHelper
+        /// </summary>
+        /// <returns>BrowscapXmlHelper</returns>
         [MethodImpl(MethodImplOptions.Synchronized)]
         protected virtual BrowscapXmlHelper GetBrowscapXmlHelper()
         {

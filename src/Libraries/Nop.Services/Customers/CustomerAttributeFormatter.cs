@@ -22,6 +22,12 @@ namespace Nop.Services.Customers
 
         #region Ctor
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="customerAttributeParser">Customer attribute parser</param>
+        /// <param name="customerAttributeService">Customer attribute service</param>
+        /// <param name="workContext">Work context</param>
         public CustomerAttributeFormatter(ICustomerAttributeParser customerAttributeParser,
             ICustomerAttributeService customerAttributeService,
             IWorkContext workContext)

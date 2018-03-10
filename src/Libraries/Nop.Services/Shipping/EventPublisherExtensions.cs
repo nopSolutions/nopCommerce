@@ -3,6 +3,9 @@ using Nop.Services.Events;
 
 namespace Nop.Services.Shipping
 {
+    /// <summary>
+    /// Event publisher extensions
+    /// </summary>
     public static class EventPublisherExtensions
     {
         /// <summary>

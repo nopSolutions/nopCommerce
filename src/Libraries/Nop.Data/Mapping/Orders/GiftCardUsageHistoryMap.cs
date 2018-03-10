@@ -2,8 +2,14 @@ using Nop.Core.Domain.Orders;
 
 namespace Nop.Data.Mapping.Orders
 {
+    /// <summary>
+    /// Mapping class
+    /// </summary>
     public partial class GiftCardUsageHistoryMap : NopEntityTypeConfiguration<GiftCardUsageHistory>
     {
+        /// <summary>
+        /// Ctor
+        /// </summary>
         public GiftCardUsageHistoryMap()
         {
             this.ToTable("GiftCardUsageHistory");

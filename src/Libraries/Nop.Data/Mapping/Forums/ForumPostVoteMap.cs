@@ -2,8 +2,14 @@
 
 namespace Nop.Data.Mapping.Forums
 {
+    /// <summary>
+    /// Mapping class
+    /// </summary>
     public partial class ForumPostVoteMap : NopEntityTypeConfiguration<ForumPostVote>
     {
+        /// <summary>
+        /// Ctor
+        /// </summary>
         public ForumPostVoteMap()
         {
             this.ToTable("Forums_PostVote");

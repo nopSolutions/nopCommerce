@@ -4,6 +4,9 @@ using Nop.Core.Extensions;
 
 namespace Nop.Services.Common
 {
+    /// <summary>
+    /// Address extensions
+    /// </summary>
     public static class AddressExtensions
     {
         /// <summary>

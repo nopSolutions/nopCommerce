@@ -2,8 +2,14 @@
 
 namespace Nop.Data.Mapping.Shipping
 {
+    /// <summary>
+    /// Mapping class
+    /// </summary>
     public class ShippingMethodMap : NopEntityTypeConfiguration<ShippingMethod>
     {
+        /// <summary>
+        /// Ctor
+        /// </summary>
         public ShippingMethodMap()
         {
             this.ToTable("ShippingMethod");

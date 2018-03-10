@@ -6,6 +6,9 @@ using Nop.Services.Seo;
 
 namespace Nop.Services.Affiliates
 {
+    /// <summary>
+    /// Affiliate extensions
+    /// </summary>
     public static class AffiliateExtensions
     {
         /// <summary>

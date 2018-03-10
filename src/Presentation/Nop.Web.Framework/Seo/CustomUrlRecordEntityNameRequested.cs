@@ -4,10 +4,25 @@ using Nop.Services.Seo;
 namespace Nop.Web.Framework.Seo
 {
     /// <summary>
-    /// Represents event to handle unknow URL record entity names
+    /// Represents event to handle unknown URL record entity names
     /// </summary>
     public class CustomUrlRecordEntityNameRequested
     {
+        #region Ctor
+
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="routeData">Route data</param>
+        /// <param name="urlRecord">URL record</param>
+        public CustomUrlRecordEntityNameRequested(RouteData routeData, UrlRecordService.UrlRecordForCaching urlRecord)
+        {
+            RouteData = routeData;
+            UrlRecord = urlRecord;
+        }
+
+        #endregion
+
         #region Properties
 
         /// <summary>
@@ -22,14 +37,5 @@ namespace Nop.Web.Framework.Seo
 
         #endregion
 
-        #region Ctor
-
-        public CustomUrlRecordEntityNameRequested(RouteData routeData, UrlRecordService.UrlRecordForCaching urlRecord)
-        {
-            RouteData = routeData;
-            UrlRecord = urlRecord;
-        }
-
-        #endregion
     }
 }

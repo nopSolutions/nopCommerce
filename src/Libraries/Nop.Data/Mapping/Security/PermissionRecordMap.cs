@@ -2,8 +2,14 @@ using Nop.Core.Domain.Security;
 
 namespace Nop.Data.Mapping.Security
 {
+    /// <summary>
+    /// Mapping class
+    /// </summary>
     public partial class PermissionRecordMap : NopEntityTypeConfiguration<PermissionRecord>
     {
+        /// <summary>
+        /// Ctor
+        /// </summary>
         public PermissionRecordMap()
         {
             this.ToTable("PermissionRecord");

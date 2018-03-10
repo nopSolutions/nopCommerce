@@ -5,8 +5,6 @@ using System.Reflection;
 using Autofac;
 using Autofac.Builder;
 using Autofac.Core;
-using Microsoft.AspNetCore.DataProtection;
-using Microsoft.AspNetCore.DataProtection.Repositories;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Nop.Core;
 using Nop.Core.Caching;
@@ -39,6 +37,7 @@ using Nop.Services.Messages;
 using Nop.Services.News;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
+using Nop.Services.Plugins;
 using Nop.Services.Polls;
 using Nop.Services.Security;
 using Nop.Services.Seo;
@@ -47,6 +46,7 @@ using Nop.Services.Shipping.Date;
 using Nop.Services.Stores;
 using Nop.Services.Tasks;
 using Nop.Services.Tax;
+using Nop.Services.Themes;
 using Nop.Services.Topics;
 using Nop.Services.Vendors;
 using Nop.Web.Framework.Mvc.Routing;
@@ -212,6 +212,7 @@ namespace Nop.Web.Framework.Infrastructure
             builder.RegisterType<ExportManager>().As<IExportManager>().InstancePerLifetimeScope();
             builder.RegisterType<ImportManager>().As<IImportManager>().InstancePerLifetimeScope();
             builder.RegisterType<PdfService>().As<IPdfService>().InstancePerLifetimeScope();
+            builder.RegisterType<UploadService>().As<IUploadService>().InstancePerLifetimeScope();
             builder.RegisterType<ThemeProvider>().As<IThemeProvider>().InstancePerLifetimeScope();
             builder.RegisterType<ThemeContext>().As<IThemeContext>().InstancePerLifetimeScope();
             builder.RegisterType<ExternalAuthenticationService>().As<IExternalAuthenticationService>().InstancePerLifetimeScope();
@@ -265,12 +266,21 @@ namespace Nop.Web.Framework.Infrastructure
     }
 
 
+    /// <summary>
+    /// Setting source
+    /// </summary>
     public class SettingsSource : IRegistrationSource
     {
         static readonly MethodInfo BuildMethod = typeof(SettingsSource).GetMethod(
             "BuildRegistration",
             BindingFlags.Static | BindingFlags.NonPublic);
 
+        /// <summary>
+        /// Registrations for
+        /// </summary>
+        /// <param name="service">Service</param>
+        /// <param name="registrations">Registrations</param>
+        /// <returns>Registrations</returns>
         public IEnumerable<IComponentRegistration> RegistrationsFor(
             Service service,
             Func<Service, IEnumerable<IComponentRegistration>> registrations)
@@ -301,6 +311,9 @@ namespace Nop.Web.Framework.Infrastructure
                 .CreateRegistration();
         }
 
+        /// <summary>
+        /// Is adapter for individual components
+        /// </summary>
         public bool IsAdapterForIndividualComponents { get { return false; } }
     }
 

@@ -20,6 +20,10 @@ namespace Nop.Web.Framework.Globalization
 
         #region Ctor
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="next">Next</param>
         public CultureMiddleware(RequestDelegate next)
         {
             _next = next;

@@ -132,6 +132,12 @@ namespace Nop.Services.Orders
             return shoppingCart[0].Customer;
         }
 
+        /// <summary>
+        /// Limit cart by store (if carts are not shared between stores)
+        /// </summary>
+        /// <param name="cart">Cart</param>
+        /// <param name="storeId">Store identifier</param>
+        /// <returns>Cart</returns>
         public static IEnumerable<ShoppingCartItem> LimitPerStore(this IEnumerable<ShoppingCartItem> cart, int storeId)
         {
             var shoppingCartSettings = EngineContext.Current.Resolve<ShoppingCartSettings>();

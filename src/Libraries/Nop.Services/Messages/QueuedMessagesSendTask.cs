@@ -13,6 +13,12 @@ namespace Nop.Services.Messages
         private readonly IEmailSender _emailSender;
         private readonly ILogger _logger;
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="queuedEmailService">Queued email service</param>
+        /// <param name="emailSender">Email sender</param>
+        /// <param name="logger">Logger</param>
         public QueuedMessagesSendTask(IQueuedEmailService queuedEmailService,
             IEmailSender emailSender, 
             ILogger logger)

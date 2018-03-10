@@ -11,6 +11,10 @@ namespace Nop.Services.Common
     {
         private readonly IStoreContext _storeContext;
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="storeContext">Store context</param>
         public KeepAliveTask(IStoreContext storeContext)
         {
             this._storeContext = storeContext;

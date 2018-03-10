@@ -2,8 +2,14 @@ using Nop.Core.Domain.Messages;
 
 namespace Nop.Data.Mapping.Messages
 {
+    /// <summary>
+    /// Mapping class
+    /// </summary>
     public partial class QueuedEmailMap : NopEntityTypeConfiguration<QueuedEmail>
     {
+        /// <summary>
+        /// Ctor
+        /// </summary>
         public QueuedEmailMap()
         {
             this.ToTable("QueuedEmail");

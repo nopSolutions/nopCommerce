@@ -2791,16 +2791,15 @@ label, label + * {
 	color: #4ab2f1;
 }
 
-.apply-vendor-page .accept-terms-of-service {
-    margin: 0 0 20px;
+.apply-vendor-page .terms-of-service {
     text-align: center;
 }
-.apply-vendor-page .accept-terms-of-service > * {
+.apply-vendor-page .terms-of-service > * {
     display: inline-block;
     line-height: 32px;
 }
-.apply-vendor-page .accept-terms-of-service span,
-.apply-vendor-page .accept-terms-of-service a {
+.apply-vendor-page .terms-of-service span,
+.apply-vendor-page .terms-of-service a {
     color: #4ab2f1;
     cursor: pointer;
 }

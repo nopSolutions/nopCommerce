@@ -21,6 +21,10 @@ namespace Nop.Services.Authentication.External
 
         #region Methods
 
+        /// <summary>
+        /// Add error
+        /// </summary>
+        /// <param name="error">Error</param>
         public static void AddErrorsToDisplay(string error)
         {
             var session = EngineContext.Current.Resolve<IHttpContextAccessor>().HttpContext.Session;
@@ -29,6 +33,10 @@ namespace Nop.Services.Authentication.External
             session.Set(EXTERNAL_AUTHENTICATION_ERRORS, errors);
         }
 
+        /// <summary>
+        /// Retrieve errors to display
+        /// </summary>
+        /// <returns>Errors</returns>
         public static IList<string> RetrieveErrorsToDisplay()
         {
             var session = EngineContext.Current.Resolve<IHttpContextAccessor>().HttpContext.Session;

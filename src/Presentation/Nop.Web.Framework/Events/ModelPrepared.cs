@@ -9,6 +9,10 @@ namespace Nop.Web.Framework.Events
     {
         #region Ctor
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="model">Model</param>
         public ModelPrepared(T model)
         {
             this.Model = model;

@@ -2,8 +2,14 @@ using Nop.Core.Domain.Configuration;
 
 namespace Nop.Data.Mapping.Configuration
 {
+    /// <summary>
+    /// Mapping class
+    /// </summary>
     public partial class SettingMap : NopEntityTypeConfiguration<Setting>
     {
+        /// <summary>
+        /// Ctor
+        /// </summary>
         public SettingMap()
         {
             this.ToTable("Setting");

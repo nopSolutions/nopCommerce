@@ -29,6 +29,10 @@ namespace Nop.Services.Customers.Cache
 
         #region Ctor
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="cacheManager">Cache manager</param>
         public CustomerCacheEventConsumer(IStaticCacheManager cacheManager)
         {
             this._cacheManager = cacheManager;

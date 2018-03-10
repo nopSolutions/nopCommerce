@@ -4,6 +4,9 @@ using System.Linq;
 
 namespace Nop.Core.Domain.Stores
 {
+    /// <summary>
+    /// Store extensions
+    /// </summary>
     public static class StoreExtensions
     {
         /// <summary>

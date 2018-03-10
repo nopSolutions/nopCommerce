@@ -10,6 +10,11 @@ namespace Nop.Web.Framework.Events
     {
         #region Ctor
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="model">Model</param>
+        /// <param name="modelState">Model state</param>
         public ModelReceived(T model, ModelStateDictionary modelState)
         {
             this.Model = model;

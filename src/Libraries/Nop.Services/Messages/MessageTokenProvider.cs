@@ -43,6 +43,9 @@ using Nop.Services.Stores;
 
 namespace Nop.Services.Messages
 {
+    /// <summary>
+    /// Message token provider
+    /// </summary>
     public partial class MessageTokenProvider : IMessageTokenProvider
     {
         #region Fields
@@ -80,6 +83,33 @@ namespace Nop.Services.Messages
 
         #region Ctor
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="languageService">Language service</param>
+        /// <param name="localizationService">Localization service</param>
+        /// <param name="dateTimeHelper">Datetime helper</param>
+        /// <param name="priceFormatter">Price formatter</param>
+        /// <param name="currencyService">Currency service</param>
+        /// <param name="workContext">Work context</param>
+        /// <param name="downloadService">Download service</param>
+        /// <param name="orderService">Order service</param>
+        /// <param name="paymentService">Payment service</param>
+        /// <param name="storeService">Store service</param>
+        /// <param name="storeContext">Store context</param>
+        /// <param name="productAttributeParser">Product attribute parser</param>
+        /// <param name="addressAttributeFormatter">Address attribute formatter</param>
+        /// <param name="customerAttributeFormatter">Customer attribute formatter</param>
+        /// <param name="urlHelperFactory">URL Helper factory</param>
+        /// <param name="actionContextAccessor">Action context accessor</param>
+        /// <param name="templatesSettings">Templates settings</param>
+        /// <param name="catalogSettings">Catalog settings</param>
+        /// <param name="taxSettings">Tax settings</param>
+        /// <param name="currencySettings">Currency settings</param>
+        /// <param name="shippingSettings">Shipping settings</param>
+        /// <param name="paymentSettings">Payment settings</param>
+        /// <param name="eventPublisher">Event publisher</param>
+        /// <param name="storeInformationSettings">StoreInformation settings</param>
         public MessageTokenProvider(ILanguageService languageService,
             ILocalizationService localizationService, 
             IDateTimeHelper dateTimeHelper,
@@ -558,6 +588,12 @@ namespace Nop.Services.Messages
             return result;
         }
 
+        /// <summary>
+        /// Write order totals
+        /// </summary>
+        /// <param name="order">Order</param>
+        /// <param name="language">Language</param>
+        /// <param name="sb">StringBuilder</param>
         protected virtual void WriteTotals(Order order, Language language, StringBuilder sb)
         {
             //subtotal

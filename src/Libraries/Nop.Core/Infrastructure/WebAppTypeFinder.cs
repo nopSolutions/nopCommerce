@@ -40,6 +40,10 @@ namespace Nop.Core.Infrastructure
             return System.AppContext.BaseDirectory;
         }
 
+        /// <summary>
+        /// Get assemblies
+        /// </summary>
+        /// <returns>Result</returns>
         public override IList<Assembly> GetAssemblies()
         {
             if (this.EnsureBinFolderAssembliesLoaded && !_binFolderAssembliesLoaded)

@@ -77,12 +77,27 @@ namespace Nop.Services.Logging
 
         #region Nested classes
 
+        /// <summary>
+        /// Activity log type for caching
+        /// </summary>
         [Serializable]
         public class ActivityLogTypeForCaching
         {
+            /// <summary>
+            /// Identifier
+            /// </summary>
             public int Id { get; set; }
+            /// <summary>
+            /// System keyword
+            /// </summary>
             public string SystemKeyword { get; set; }
+            /// <summary>
+            /// Name
+            /// </summary>
             public string Name { get; set; }
+            /// <summary>
+            /// Enabled
+            /// </summary>
             public bool Enabled { get; set; }
         }
 

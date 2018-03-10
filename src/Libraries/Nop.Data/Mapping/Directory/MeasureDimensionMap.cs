@@ -2,8 +2,14 @@ using Nop.Core.Domain.Directory;
 
 namespace Nop.Data.Mapping.Directory
 {
+    /// <summary>
+    /// Mapping class
+    /// </summary>
     public partial class MeasureDimensionMap : NopEntityTypeConfiguration<MeasureDimension>
     {
+        /// <summary>
+        /// Ctor
+        /// </summary>
         public MeasureDimensionMap()
         {
             this.ToTable("MeasureDimension");

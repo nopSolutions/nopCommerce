@@ -23,6 +23,12 @@ namespace Nop.Core.Caching
 
         #region Ctor
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="perRequestCacheManager">Cache manager</param>
+        /// <param name="connectionWrapper">ConnectionW wrapper</param>
+        /// <param name="config">Config</param>
         public RedisCacheManager(ICacheManager perRequestCacheManager,
             IRedisConnectionWrapper connectionWrapper, 
             NopConfig config)

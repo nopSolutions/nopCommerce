@@ -6,6 +6,9 @@ using Nop.Core;
 
 namespace Nop.Web.Framework.Compression
 {
+    /// <summary>
+    /// Workaround for ResponseCompression
+    /// </summary>
     public partial class ResponseCompressionVaryWorkaroundMiddleware
     {
         #region Fields
@@ -16,6 +19,10 @@ namespace Nop.Web.Framework.Compression
 
         #region Ctor
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="next">Next</param>
         public ResponseCompressionVaryWorkaroundMiddleware(RequestDelegate next)
         {
             _next = next;

@@ -30,6 +30,20 @@ namespace Nop.Services.Catalog
         private readonly IPriceCalculationService _priceCalculationService;
         private readonly ShoppingCartSettings _shoppingCartSettings;
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="workContext">Work context</param>
+        /// <param name="productAttributeService">Product attribute service</param>
+        /// <param name="productAttributeParser">Product attribute parser</param>
+        /// <param name="currencyService">Currency service</param>
+        /// <param name="localizationService">Localization service</param>
+        /// <param name="taxService">Tax service</param>
+        /// <param name="priceFormatter"> Price formatter</param>
+        /// <param name="downloadService">Download service</param>
+        /// <param name="webHelper">Web helper</param>
+        /// <param name="priceCalculationService">Price calculation service</param>
+        /// <param name="shoppingCartSettings">Shopping cart settings</param>
         public ProductAttributeFormatter(IWorkContext workContext,
             IProductAttributeService productAttributeService,
             IProductAttributeParser productAttributeParser,

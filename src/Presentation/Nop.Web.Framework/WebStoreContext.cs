@@ -18,7 +18,13 @@ namespace Nop.Web.Framework
 
         private Store _cachedStore;
 
-        public WebStoreContext(IHttpContextAccessor httpContextAccessor, IStoreService storeService)
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="httpContextAccessor">HTTP context accessor</param>
+        /// <param name="storeService">Store service</param>
+        public WebStoreContext(IHttpContextAccessor httpContextAccessor,
+            IStoreService storeService)
         {
             this._httpContextAccessor = httpContextAccessor;
             this._storeService = storeService;

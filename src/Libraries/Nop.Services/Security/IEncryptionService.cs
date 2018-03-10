@@ -1,5 +1,8 @@
-﻿namespace Nop.Services.Security 
+﻿namespace Nop.Services.Security
 {
+    /// <summary>
+    /// Encryption service
+    /// </summary>
     public interface IEncryptionService 
     {
         /// <summary>

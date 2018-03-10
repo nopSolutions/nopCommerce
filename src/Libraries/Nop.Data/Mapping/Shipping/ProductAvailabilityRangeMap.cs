@@ -2,8 +2,14 @@
 
 namespace Nop.Data.Mapping.Shipping
 {
+    /// <summary>
+    /// Mapping class
+    /// </summary>
     public class ProductAvailabilityRangeMap : NopEntityTypeConfiguration<ProductAvailabilityRange>
     {
+        /// <summary>
+        /// Ctor
+        /// </summary>
         public ProductAvailabilityRangeMap()
         {
             this.ToTable("ProductAvailabilityRange");

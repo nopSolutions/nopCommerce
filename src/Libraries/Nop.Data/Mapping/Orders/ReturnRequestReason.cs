@@ -2,8 +2,14 @@ using Nop.Core.Domain.Orders;
 
 namespace Nop.Data.Mapping.Orders
 {
+    /// <summary>
+    /// Mapping class
+    /// </summary>
     public partial class ReturnRequestReasonMap : NopEntityTypeConfiguration<ReturnRequestReason>
     {
+        /// <summary>
+        /// Ctor
+        /// </summary>
         public ReturnRequestReasonMap()
         {
             this.ToTable("ReturnRequestReason");

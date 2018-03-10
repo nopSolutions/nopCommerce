@@ -15,6 +15,9 @@ using Nop.Services.Localization;
 
 namespace Nop.Services.Installation
 {
+    /// <summary>
+    /// Installation service using SQL files (fast installation)
+    /// </summary>
     public partial class SqlFileInstallationService : IInstallationService
     {
         #region Fields
@@ -29,6 +32,14 @@ namespace Nop.Services.Installation
 
         #region Ctor
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="languageRepository">Language repository</param>
+        /// <param name="customerRepository">Customer repository</param>
+        /// <param name="storeRepository">Store repository</param>
+        /// <param name="dbContext">DB context</param>
+        /// <param name="webHelper">Web helper</param>
         public SqlFileInstallationService(IRepository<Language> languageRepository,
             IRepository<Customer> customerRepository,
             IRepository<Store> storeRepository,
@@ -46,6 +57,9 @@ namespace Nop.Services.Installation
 
         #region Utilities
 
+        /// <summary>
+        /// Install locales
+        /// </summary>
         protected virtual void InstallLocaleResources()
         {
             //'English' language
@@ -60,6 +74,11 @@ namespace Nop.Services.Installation
             }
         }
 
+        /// <summary>
+        /// Update default customer
+        /// </summary>
+        /// <param name="defaultUserEmail">Email</param>
+        /// <param name="defaultUserPassword">Password</param>
         protected virtual void UpdateDefaultCustomer(string defaultUserEmail, string defaultUserPassword)
         {
             var adminUser = _customerRepository.Table.Single(x => x.Email == "admin@yourStore.com");
@@ -76,6 +95,9 @@ namespace Nop.Services.Installation
                  PasswordFormat.Hashed, defaultUserPassword));
         }
 
+        /// <summary>
+        /// Update default store URL
+        /// </summary>
         protected virtual void UpdateDefaultStoreUrl()
         {
             var store = _storeRepository.Table.FirstOrDefault();
@@ -86,6 +108,10 @@ namespace Nop.Services.Installation
             _storeRepository.Update(store);
         }
 
+        /// <summary>
+        /// Execute SQL file
+        /// </summary>
+        /// <param name="path">File path</param>
         protected virtual void ExecuteSqlFile(string path)
         {
             var statements = new List<string>();
@@ -102,6 +128,11 @@ namespace Nop.Services.Installation
                 _dbContext.ExecuteSqlCommand(stmt);
         }
 
+        /// <summary>
+        /// Read next statement from stream
+        /// </summary>
+        /// <param name="reader">Reader</param>
+        /// <returns>Result</returns>
         protected virtual string ReadNextStatementFromStream(StreamReader reader)
         {
             var sb = new StringBuilder();
@@ -129,6 +160,12 @@ namespace Nop.Services.Installation
 
         #region Methods
 
+        /// <summary>
+        /// Install data
+        /// </summary>
+        /// <param name="defaultUserEmail">Default user email</param>
+        /// <param name="defaultUserPassword">Default user password</param>
+        /// <param name="installSampleData">A value indicating whether to install sample data</param>
         public virtual void InstallData(string defaultUserEmail,
             string defaultUserPassword, bool installSampleData = true)
         {

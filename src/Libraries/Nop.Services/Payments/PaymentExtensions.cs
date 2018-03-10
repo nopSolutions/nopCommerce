@@ -151,18 +151,27 @@ namespace Nop.Services.Payments
         /// </summary>
         public class DictionarySerializer : IXmlSerializable
         {
-            public Dictionary<string, object> Dictionary;
-
+            /// <summary>
+            /// Ctor
+            /// </summary>
             public DictionarySerializer()
             {
                 Dictionary = new Dictionary<string, object>();
             }
 
+            /// <summary>
+            /// Ctor
+            /// </summary>
+            /// <param name="dictionary">Dictionary</param>
             public DictionarySerializer(Dictionary<string, object> dictionary)
             {
                 Dictionary = dictionary;
             }
 
+            /// <summary>
+            /// Write XML
+            /// </summary>
+            /// <param name="writer">Writer</param>
             public void WriteXml(XmlWriter writer)
             {
                 if (!Dictionary.Any())
@@ -184,6 +193,10 @@ namespace Nop.Services.Payments
                 }
             }
 
+            /// <summary>
+            /// Read XML
+            /// </summary>
+            /// <param name="reader">Reader</param>
             public void ReadXml(XmlReader reader)
             {
                 var wasEmpty = reader.IsEmptyElement;
@@ -202,10 +215,19 @@ namespace Nop.Services.Payments
                 reader.ReadEndElement();
             }
 
+            /// <summary>
+            /// Get schema
+            /// </summary>
+            /// <returns>XML schema</returns>
             public XmlSchema GetSchema()
             {
                 return null;
             }
+
+            /// <summary>
+            /// Dictionary
+            /// </summary>
+            public Dictionary<string, object> Dictionary;
         }
     }
 }

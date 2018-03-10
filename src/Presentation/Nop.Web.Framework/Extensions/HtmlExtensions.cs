@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.Routing;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Nop.Core.Infrastructure;
 using Nop.Services.Localization;
 using Nop.Services.Stores;
@@ -16,10 +15,24 @@ using Nop.Web.Framework.Localization;
 
 namespace Nop.Web.Framework.Extensions
 {
+    /// <summary>
+    /// HTML extensions
+    /// </summary>
     public static class HtmlExtensions
     {
         #region Admin area extensions
-        
+
+        /// <summary>
+        /// Generate editor for localizable entities
+        /// </summary>
+        /// <typeparam name="T">Type</typeparam>
+        /// <typeparam name="TLocalizedModelLocal">Type</typeparam>
+        /// <param name="helper">HTML helper</param>
+        /// <param name="name">ID of control</param>
+        /// <param name="localizedTemplate">Template with localizable values</param>
+        /// <param name="standardTemplate">Template for standard (default) values</param>
+        /// <param name="ignoreIfSeveralStores">A value indicating whether to ignore localization if we have multiple stores</param>
+        /// <returns></returns>
         public static IHtmlContent LocalizedEditor<T, TLocalizedModelLocal>(this IHtmlHelper<T> helper,
             string name,
             Func<int, HelperResult> localizedTemplate,
@@ -136,9 +149,15 @@ namespace Nop.Web.Framework.Extensions
 
             return tabName;
         }
-        
+
         #region Form fields
 
+        /// <summary>
+        /// Generate hint control
+        /// </summary>
+        /// <param name="helper">HTML helper</param>
+        /// <param name="value">TexHint text</param>
+        /// <returns>Result</returns>
         public static IHtmlContent Hint(this IHtmlHelper helper, string value)
         {
             //create tag builder
@@ -153,11 +172,16 @@ namespace Nop.Web.Framework.Extensions
         }
 
         #endregion
-        
+
         #endregion
-        
+
         #region Common extensions
 
+        /// <summary>
+        /// Convert IHtmlContent to string
+        /// </summary>
+        /// <param name="htmlContent">HTML content</param>
+        /// <returns>Result</returns>
         public static string RenderHtmlContent(this IHtmlContent htmlContent)
         {
             using (var writer = new StringWriter())
@@ -168,6 +192,11 @@ namespace Nop.Web.Framework.Extensions
             }
         }
 
+        /// <summary>
+        /// Convert IHtmlContent to string
+        /// </summary>
+        /// <param name="tag">Tag</param>
+        /// <returns>String</returns>
         public static string ToHtmlString(this IHtmlContent tag)
         {
             using (var writer = new StringWriter())

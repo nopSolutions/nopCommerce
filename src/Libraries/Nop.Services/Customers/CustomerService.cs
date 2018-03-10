@@ -76,6 +76,28 @@ namespace Nop.Services.Customers
 
         #region Ctor
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="cacheManager">Cache manager</param>
+        /// <param name="customerRepository">Customer repository</param>
+        /// <param name="customerPasswordRepository">Customer password repository</param>
+        /// <param name="customerRoleRepository">Customer role repository</param>
+        /// <param name="gaRepository">Generic attribute repository</param>
+        /// <param name="orderRepository">Order repository</param>
+        /// <param name="forumPostRepository">Forum post repository</param>
+        /// <param name="forumTopicRepository">Forum topic repository</param>
+        /// <param name="blogCommentRepository">Blog comment repository</param>
+        /// <param name="newsCommentRepository">News comment repository</param>
+        /// <param name="pollVotingRecordRepository">Poll voting record repository</param>
+        /// <param name="productReviewRepository">Product review repository</param>
+        /// <param name="productReviewHelpfulnessRepository">Product review helpfulness repository</param>
+        /// <param name="genericAttributeService">Generic attribute service</param>
+        /// <param name="dataProvider">Data provider</param>
+        /// <param name="dbContext">DB context</param>
+        /// <param name="eventPublisher">Event publisher</param>
+        /// <param name="customerSettings">Customer settings</param>
+        /// <param name="commonSettings">Common settings</param>
         public CustomerService(ICacheManager cacheManager,
             IRepository<Customer> customerRepository,
             IRepository<CustomerPassword> customerPasswordRepository,
@@ -121,6 +143,13 @@ namespace Nop.Services.Customers
 
         #region Utilities
 
+        /// <summary>
+        /// Delete guest customers using LINQ
+        /// </summary>
+        /// <param name="createdFromUtc">Created from</param>
+        /// <param name="createdToUtc">Created to</param>
+        /// <param name="onlyWithoutShoppingCart">Delete only without shopping cart</param>
+        /// <returns>Number of delete customers</returns>
         protected virtual int DeleteGuestCustomersUseLinq(DateTime? createdFromUtc, DateTime? createdToUtc, bool onlyWithoutShoppingCart)
         {
             var guestRole = GetCustomerRoleBySystemName(SystemCustomerRoleNames.Guests);
@@ -216,6 +245,13 @@ namespace Nop.Services.Customers
             return totalRecordsDeleted;
         }
 
+        /// <summary>
+        /// Delete guest customers using a stored procedure
+        /// </summary>
+        /// <param name="createdFromUtc">Created from</param>
+        /// <param name="createdToUtc">Created to</param>
+        /// <param name="onlyWithoutShoppingCart">Delete only without shopping cart</param>
+        /// <returns>Number of delete customers</returns>
         protected virtual int DeleteGuestCustomersUseStoredProcedure(DateTime? createdFromUtc, DateTime? createdToUtc, bool onlyWithoutShoppingCart)
         {
             //prepare parameters

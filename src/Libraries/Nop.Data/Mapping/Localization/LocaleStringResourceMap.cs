@@ -2,8 +2,14 @@ using Nop.Core.Domain.Localization;
 
 namespace Nop.Data.Mapping.Localization
 {
+    /// <summary>
+    /// Mapping class
+    /// </summary>
     public partial class LocaleStringResourceMap : NopEntityTypeConfiguration<LocaleStringResource>
     {
+        /// <summary>
+        /// Ctor
+        /// </summary>
         public LocaleStringResourceMap()
         {
             this.ToTable("LocaleStringResource");

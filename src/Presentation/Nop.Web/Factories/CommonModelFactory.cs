@@ -26,6 +26,7 @@ using Nop.Services.Media;
 using Nop.Services.Orders;
 using Nop.Services.Security;
 using Nop.Services.Seo;
+using Nop.Services.Themes;
 using Nop.Services.Topics;
 using Nop.Web.Framework.Security.Captcha;
 using Nop.Web.Framework.Themes;
@@ -587,17 +588,17 @@ namespace Nop.Web.Factories
         {
             var model = new StoreThemeSelectorModel();
 
-            var currentTheme = _themeProvider.GetThemeConfigurationBySystemName(_themeContext.WorkingThemeName);
+            var currentTheme = _themeProvider.GetThemeBySystemName(_themeContext.WorkingThemeName);
             model.CurrentStoreTheme = new StoreThemeModel
             {
                 Name = currentTheme?.SystemName,
-                Title = currentTheme?.Title
+                Title = currentTheme?.FriendlyName
             };
 
-            model.AvailableStoreThemes = _themeProvider.GetThemeConfigurations().Select(x => new StoreThemeModel
+            model.AvailableStoreThemes = _themeProvider.GetThemes().Select(x => new StoreThemeModel
             {
                 Name = x.SystemName,
-                Title = x.Title
+                Title = x.FriendlyName
             }).ToList();
 
             return model;

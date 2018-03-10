@@ -8,6 +8,9 @@ using Nop.Web.Framework.Mvc.Models;
 
 namespace Nop.Web.Framework.TagHelpers.Admin
 {
+    /// <summary>
+    /// nop-delete-confirmation tag helper
+    /// </summary>
     [HtmlTargetElement("nop-delete-confirmation", Attributes = ModelIdAttributeName + "," + ButtonIdAttributeName, TagStructure = TagStructure.WithoutEndTag)]
     public class NopDeleteConfirmationTagHelper : TagHelper
     {
@@ -47,12 +50,23 @@ namespace Nop.Web.Framework.TagHelpers.Admin
         [ViewContext]
         public ViewContext ViewContext { get; set; }
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="generator">HTML generator</param>
+        /// <param name="htmlHelper">HTML helper</param>
         public NopDeleteConfirmationTagHelper(IHtmlGenerator generator, IHtmlHelper htmlHelper)
         {
             Generator = generator;
             _htmlHelper = htmlHelper;
         }
 
+
+        /// <summary>
+        /// Process
+        /// </summary>
+        /// <param name="context">Context</param>
+        /// <param name="output">Output</param>
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
             if (context == null)

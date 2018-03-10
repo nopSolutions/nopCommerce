@@ -2,8 +2,14 @@
 
 namespace Nop.Data.Mapping.Logging
 {
+    /// <summary>
+    /// Mapping class
+    /// </summary>
     public partial class ActivityLogMap : NopEntityTypeConfiguration<ActivityLog>
     {
+        /// <summary>
+        /// Ctor
+        /// </summary>
         public ActivityLogMap()
         {
             this.ToTable("ActivityLog");

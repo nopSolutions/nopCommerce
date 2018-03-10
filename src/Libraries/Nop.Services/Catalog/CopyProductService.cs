@@ -35,6 +35,22 @@ namespace Nop.Services.Catalog
 
         #region Ctor
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="productService">pProduct service</param>
+        /// <param name="productAttributeService">Product attribute service</param>
+        /// <param name="languageService">Language service</param>
+        /// <param name="localizedEntityService">Localized entity service</param>
+        /// <param name="localizationService">Localization service</param>
+        /// <param name="pictureService">Picture service</param>
+        /// <param name="categoryService">Category service</param>
+        /// <param name="manufacturerService">Manufacturer service</param>
+        /// <param name="specificationAttributeService">Specification attribute service</param>
+        /// <param name="downloadService">Download service</param>
+        /// <param name="productAttributeParser">Product attribute parser</param>
+        /// <param name="urlRecordService">URL record service</param>
+        /// <param name="storeMappingService">Store mapping service</param>
         public CopyProductService(IProductService productService,
             IProductAttributeService productAttributeService,
             ILanguageService languageService,
@@ -68,6 +84,11 @@ namespace Nop.Services.Catalog
 
         #region Utilities
 
+        /// <summary>
+        /// Copy discount mappings
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="productCopy">New product</param>
         protected virtual void CopyDiscountsMapping(Product product, Product productCopy)
         {
             foreach (var discount in product.AppliedDiscounts)
@@ -77,6 +98,14 @@ namespace Nop.Services.Catalog
             }
         }
 
+        /// <summary>
+        /// Copy associated products
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="isPublished">A value indicating whether they should be published</param>
+        /// <param name="copyImages">A value indicating whether to copy images</param>
+        /// <param name="copyAssociatedProducts">A value indicating whether to copy associated products</param>
+        /// <param name="productCopy">New product</param>
         protected virtual void CopyAssociatedProducts(Product product, bool isPublished, bool copyImages, bool copyAssociatedProducts, Product productCopy)
         {
             if (!copyAssociatedProducts)
@@ -92,6 +121,11 @@ namespace Nop.Services.Catalog
             }
         }
 
+        /// <summary>
+        /// Copy tier prices
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="productCopy">New product</param>
         protected virtual void CopyTierPrices(Product product, Product productCopy)
         {
             foreach (var tierPrice in product.TierPrices)
@@ -109,6 +143,12 @@ namespace Nop.Services.Catalog
             }
         }
 
+        /// <summary>
+        /// Copy attributes mapping
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="productCopy">New product</param>
+        /// <param name="originalNewPictureIdentifiers">Identifiers of pictures</param>
         protected virtual void CopyAttributesMapping(Product product, Product productCopy, Dictionary<int, int> originalNewPictureIdentifiers)
         {
             var associatedAttributes = new Dictionary<int, int>();
@@ -315,6 +355,11 @@ namespace Nop.Services.Catalog
             }
         }
 
+        /// <summary>
+        /// Copy product specifications
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="productCopy">New product</param>
         protected virtual void CopyProductSpecifications(Product product, Product productCopy)
         {
             foreach (var productSpecificationAttribute in product.ProductSpecificationAttributes)
@@ -333,6 +378,11 @@ namespace Nop.Services.Catalog
             }
         }
 
+        /// <summary>
+        /// Copy crosssell mapping
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="productCopy">New product</param>
         protected virtual void CopyCrossSellsMapping(Product product, Product productCopy)
         {
             foreach (var csProduct in _productService.GetCrossSellProductsByProductId1(product.Id, true))
@@ -346,7 +396,12 @@ namespace Nop.Services.Catalog
             }
         }
 
-        protected virtual void CopyReleatedProductsMapping(Product product, Product productCopy)
+        /// <summary>
+        /// Copy related products mapping
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="productCopy">New product</param>
+        protected virtual void CopyRelatedProductsMapping(Product product, Product productCopy)
         {
             foreach (var relatedProduct in _productService.GetRelatedProductsByProductId1(product.Id, true))
             {
@@ -360,6 +415,11 @@ namespace Nop.Services.Catalog
             }
         }
 
+        /// <summary>
+        /// Copy manufacturer mapping
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="productCopy">New product</param>
         protected virtual void CopyManufacturersMapping(Product product, Product productCopy)
         {
             foreach (var productManufacturers in product.ProductManufacturers)
@@ -375,7 +435,11 @@ namespace Nop.Services.Catalog
                 _manufacturerService.InsertProductManufacturer(productManufacturerCopy);
             }
         }
-
+        /// <summary>
+        /// Copy category mapping
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="productCopy">New product</param>
         protected virtual void CopyCategoriesMapping(Product product, Product productCopy)
         {
             foreach (var productCategory in product.ProductCategories)
@@ -392,6 +456,11 @@ namespace Nop.Services.Catalog
             }
         }
 
+        /// <summary>
+        /// Copy warehouse mapping
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="productCopy">New product</param>
         protected virtual void CopyWarehousesMapping(Product product, Product productCopy)
         {
             foreach (var pwi in product.ProductWarehouseInventory)
@@ -413,6 +482,14 @@ namespace Nop.Services.Catalog
             _productService.UpdateProduct(productCopy);
         }
 
+        /// <summary>
+        /// Copy product pictures
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="newName">New product name</param>
+        /// <param name="copyImages"></param>
+        /// <param name="productCopy">New product</param>
+        /// <returns>Identifiers of old and new pictures</returns>
         protected virtual Dictionary<int, int> CopyProductPictures(Product product, string newName, bool copyImages, Product productCopy)
         {
             //variable to store original and new picture identifiers
@@ -440,6 +517,11 @@ namespace Nop.Services.Catalog
             return originalNewPictureIdentifiers;
         }
 
+        /// <summary>
+        /// Copy localization data
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="productCopy">New product</param>
         protected virtual void CopyLocalizationData(Product product, Product productCopy)
         {
             var languages = _languageService.GetAllLanguages(true);
@@ -476,6 +558,13 @@ namespace Nop.Services.Catalog
             }
         }
 
+        /// <summary>
+        /// Copy product
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="newName">New product name</param>
+        /// <param name="isPublished">A value indicating whether a new product is published</param>
+        /// <returns></returns>
         protected virtual Product CopyBaseProductData(Product product, string newName, bool isPublished)
         {
             //product download & sample download
@@ -687,7 +776,7 @@ namespace Nop.Services.Catalog
             //product <-> manufacturers mappings
             CopyManufacturersMapping(product, productCopy);
             //product <-> related products mappings
-            CopyReleatedProductsMapping(product, productCopy);
+            CopyRelatedProductsMapping(product, productCopy);
             //product <-> cross sells mappings
             CopyCrossSellsMapping(product, productCopy);
             //product <-> attributes mappings

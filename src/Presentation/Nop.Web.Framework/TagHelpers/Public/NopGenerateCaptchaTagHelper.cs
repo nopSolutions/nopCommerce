@@ -6,6 +6,9 @@ using Nop.Web.Framework.Security.Captcha;
 
 namespace Nop.Web.Framework.TagHelpers.Public
 {
+    /// <summary>
+    /// nop-captcha tag helper
+    /// </summary>
     [HtmlTargetElement("nop-captcha", TagStructure = TagStructure.WithoutEndTag)]
     public class NopGenerateCaptchaTagHelper : TagHelper
     {
@@ -19,12 +22,22 @@ namespace Nop.Web.Framework.TagHelpers.Public
         [ViewContext]
         public ViewContext ViewContext { get; set; }
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="htmlHelper">HTML helper</param>
+        /// <param name="captchaSettings">Captcha settings</param>
         public NopGenerateCaptchaTagHelper(IHtmlHelper htmlHelper, CaptchaSettings captchaSettings)
         {
             _htmlHelper = htmlHelper;
             _captchaSettings = captchaSettings;
         }
 
+        /// <summary>
+        /// Process
+        /// </summary>
+        /// <param name="context">Context</param>
+        /// <param name="output">Output</param>
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
             if (context == null)

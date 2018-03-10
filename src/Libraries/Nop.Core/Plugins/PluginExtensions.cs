@@ -5,6 +5,9 @@ using System.Linq;
 
 namespace Nop.Core.Plugins
 {
+    /// <summary>
+    /// Plugin extensions
+    /// </summary>
     public static class PluginExtensions
     {
         private static readonly List<string> SupportedLogoImageExtensions = new List<string>
@@ -14,6 +17,12 @@ namespace Nop.Core.Plugins
             "gif"
         };
 
+        /// <summary>
+        /// Get logo URL
+        /// </summary>
+        /// <param name="pluginDescriptor">Plugin descriptor</param>
+        /// <param name="webHelper">Web helper</param>
+        /// <returns>Logo URL</returns>
         public static string GetLogoUrl(this PluginDescriptor pluginDescriptor, IWebHelper webHelper)
         {
             if (pluginDescriptor == null)

@@ -2,8 +2,14 @@ using Nop.Core.Domain.Blogs;
 
 namespace Nop.Data.Mapping.Blogs
 {
+    /// <summary>
+    /// Mapping class
+    /// </summary>
     public partial class BlogPostMap : NopEntityTypeConfiguration<BlogPost>
     {
+        /// <summary>
+        /// Ctor
+        /// </summary>
         public BlogPostMap()
         {
             this.ToTable("BlogPost");
