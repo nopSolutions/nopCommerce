@@ -1,4 +1,4 @@
-﻿@model CurrencyListModel
+﻿@model CurrencySearchModel
 @{
     //page title
     ViewBag.Title = T("Admin.Configuration.Currencies").Text;
@@ -36,20 +36,20 @@
                     <div class="panel-body">
                         <div class="form-group">
                             <div class="col-md-3">
-                                <nop-label asp-for="ExchangeRateProvider"/>
+                                <nop-label asp-for="ExchangeRateProviderModel.ExchangeRateProvider"/>
                             </div>
                             <div class="col-md-9">
-                                <nop-select asp-for-name="ExchangeRateProvider" asp-items="Model.ExchangeRateProviders" />
-                                <span asp-validation-for="ExchangeRateProvider"></span>
+                                <nop-select asp-for-name="ExchangeRateProviderModel.ExchangeRateProvider" asp-items="Model.ExchangeRateProviderModel.ExchangeRateProviders" />
+                                <span asp-validation-for="ExchangeRateProviderModel.ExchangeRateProvider"></span>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="col-md-3">
-                                <nop-label asp-for="AutoUpdateEnabled"/>
+                                <nop-label asp-for="ExchangeRateProviderModel.AutoUpdateEnabled"/>
                             </div>
                             <div class="col-md-9">
-                                <nop-editor asp-for="AutoUpdateEnabled"/>
-                                <span asp-validation-for="AutoUpdateEnabled"></span>
+                                <nop-editor asp-for="ExchangeRateProviderModel.AutoUpdateEnabled"/>
+                                <span asp-validation-for="ExchangeRateProviderModel.AutoUpdateEnabled"></span>
                             </div>
                         </div>
                     </div>
@@ -203,7 +203,7 @@
                         </script>
                     </div>
                 </div>
-                @if (Model.ExchangeRates?.Any() ?? false)
+                @if (Model.ExchangeRateProviderModel.ExchangeRates?.Any() ?? false)
                 {
                     <div class="panel panel-default">
                         <div class="panel-heading">
@@ -261,18 +261,14 @@
                                 });
 
                                 function applyCurrencyRate(rate, currencyCode) {
-                                    var postData = (rate && currencyCode) ? {
-                                        rate: rate,
-                                        currencyCode: currencyCode
-                                    } : {
-                                        rates: rates
-                                        };
-                                    var url = (rate && currencyCode) ? '@(Url.Action("ApplyRate"))' : '@(Url.Action("ApplyAllRates"))';
+                                    var postData = {
+                                        rateModels: (rate && currencyCode) ? [ { CurrencyCode: currencyCode, Rate: rate} ] : rates
+                                    };
                                     addAntiForgeryToken(postData);
                                     $.ajax({
                                         cache: false,
                                         type: "POST",
-                                        url: url,
+                                        url: '@(Url.Action("ApplyRates"))',
                                         data: postData,
                                         success: function (data) {
                                             var grid = $("#currencies-grid").data('kendoGrid');
@@ -286,16 +282,16 @@
 
                                 //local datasource
                                 var rates = [
-                                    @for (var i = 0; i < Model.ExchangeRates.Count; i++)
+                                    @for (var i = 0; i < Model.ExchangeRateProviderModel.ExchangeRates.Count; i++)
                                     {
-                                        var rate = Model.ExchangeRates[i];
+                                        var rate = Model.ExchangeRateProviderModel.ExchangeRates[i];
                                         <text>
                                             {
                                                 CurrencyCode: "@(Html.Raw(JavaScriptEncoder.Default.Encode(rate.CurrencyCode)))",
                                                 Rate: "@(Html.Raw(JavaScriptEncoder.Default.Encode(rate.Rate.ToString())))"
                                             }
                                         </text>
-                                        if (i != Model.ExchangeRates.Count - 1)
+                                        if (i != Model.ExchangeRateProviderModel.ExchangeRates.Count - 1)
                                         {
                                             <text>,</text>
                                         }

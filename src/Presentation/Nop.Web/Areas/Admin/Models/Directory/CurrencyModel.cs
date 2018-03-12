@@ -8,9 +8,14 @@ using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Models.Directory
 {
+    /// <summary>
+    /// Represents a currency model
+    /// </summary>
     [Validator(typeof(CurrencyValidator))]
-    public partial class CurrencyModel : BaseNopEntityModel, ILocalizedModel<CurrencyLocalizedModel>
+    public partial class CurrencyModel : BaseNopEntityModel, ILocalizedModel<CurrencyLocalizedModel>, IStoreMappingSupportedModel
     {
+        #region Ctor
+
         public CurrencyModel()
         {
             Locales = new List<CurrencyLocalizedModel>();
@@ -18,6 +23,10 @@ namespace Nop.Web.Areas.Admin.Models.Directory
             SelectedStoreIds = new List<int>();
             AvailableStores = new List<SelectListItem>();
         }
+
+        #endregion
+
+        #region Properties
 
         [NopResourceDisplayName("Admin.Configuration.Currencies.Fields.Name")]
         public string Name { get; set; }
@@ -58,6 +67,8 @@ namespace Nop.Web.Areas.Admin.Models.Directory
 
         [NopResourceDisplayName("Admin.Configuration.Currencies.Fields.RoundingType")]
         public int RoundingTypeId { get; set; }
+
+        #endregion
     }
 
     public partial class CurrencyLocalizedModel : ILocalizedLocaleModel
