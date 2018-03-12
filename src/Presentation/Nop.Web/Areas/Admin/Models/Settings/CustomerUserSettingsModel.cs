@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Models;
 using Nop.Web.Areas.Admin.Models.Common;
+using Nop.Web.Areas.Admin.Models.Customers;
 
 namespace Nop.Web.Areas.Admin.Models.Settings
 {
@@ -15,6 +16,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
             AddressSettings = new AddressSettingsModel();
             DateTimeSettings = new DateTimeSettingsModel();
             ExternalAuthenticationSettings = new ExternalAuthenticationSettingsModel();
+            CustomerAttributeSearchModel = new CustomerAttributeSearchModel();
             AddressAttributeSearchModel = new AddressAttributeSearchModel();
         }
 
@@ -22,6 +24,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public AddressSettingsModel AddressSettings { get; set; }
         public DateTimeSettingsModel DateTimeSettings { get; set; }
         public ExternalAuthenticationSettingsModel ExternalAuthenticationSettings { get; set; }
+        public CustomerAttributeSearchModel CustomerAttributeSearchModel { get; set; }
         public AddressAttributeSearchModel AddressAttributeSearchModel { get; set; }
 
         #region Nested classes

@@ -1,15 +1,13 @@
 ﻿using System;
-using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using Nop.Web.Areas.Admin.Extensions;
-using Nop.Web.Areas.Admin.Models.Customers;
-using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Services.Customers;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Security;
-using Nop.Web.Framework.Kendoui;
+using Nop.Web.Areas.Admin.Extensions;
+using Nop.Web.Areas.Admin.Factories;
+using Nop.Web.Areas.Admin.Models.Customers;
 using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.Filters;
 
@@ -19,11 +17,10 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
+        private readonly ICustomerAttributeModelFactory _customerAttributeModelFactory;
         private readonly ICustomerAttributeService _customerAttributeService;
-        private readonly ILanguageService _languageService;
         private readonly ILocalizedEntityService _localizedEntityService;
         private readonly ILocalizationService _localizationService;
-        private readonly IWorkContext _workContext;
         private readonly IPermissionService _permissionService;
         private readonly ICustomerActivityService _customerActivityService;
 
@@ -31,25 +28,23 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Ctor
 
-        public CustomerAttributeController(ICustomerAttributeService customerAttributeService,
-            ILanguageService languageService, 
+        public CustomerAttributeController(ICustomerAttributeModelFactory customerAttributeModelFactory,
+            ICustomerAttributeService customerAttributeService,
             ILocalizedEntityService localizedEntityService,
             ILocalizationService localizationService,
-            IWorkContext workContext,
             IPermissionService permissionService,
             ICustomerActivityService customerActivityService)
         {
+            this._customerAttributeModelFactory = customerAttributeModelFactory;
             this._customerAttributeService = customerAttributeService;
-            this._languageService = languageService;
             this._localizedEntityService = localizedEntityService;
             this._localizationService = localizationService;
-            this._workContext = workContext;
             this._permissionService = permissionService;
             this._customerActivityService = customerActivityService;
         }
 
         #endregion
-        
+
         #region Utilities
 
         protected virtual void UpdateAttributeLocales(CustomerAttribute customerAttribute, CustomerAttributeModel model)
@@ -75,7 +70,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         #endregion
-        
+
         #region Customer attributes
 
         public virtual IActionResult Index()
@@ -88,42 +83,33 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
-            //we just redirect a user to the customer settings page
-
             //select "customer form fields" tab
             SaveSelectedTabName("tab-customerformfields");
+
+            //we just redirect a user to the customer settings page
             return RedirectToAction("CustomerUser", "Setting");
         }
 
         [HttpPost]
-        public virtual IActionResult List(DataSourceRequest command)
+        public virtual IActionResult List(CustomerAttributeSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedKendoGridJson();
 
-            var customerAttributes = _customerAttributeService.GetAllCustomerAttributes();
-            var gridModel = new DataSourceResult
-            {
-                Data = customerAttributes.Select(x =>
-                {
-                    var attributeModel = x.ToModel();
-                    attributeModel.AttributeControlTypeName = x.AttributeControlType.GetLocalizedEnum(_localizationService, _workContext);
-                    return attributeModel;
-                }),
-                Total = customerAttributes.Count()
-            };
-            return Json(gridModel);
+            //prepare model
+            var model = _customerAttributeModelFactory.PrepareCustomerAttributeListModel(searchModel);
+
+            return Json(model);
         }
-        
-        //create
+
         public virtual IActionResult Create()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
-            var model = new CustomerAttributeModel();
-            //locales
-            AddLocales(_languageService, model.Locales);
+            //prepare model
+            var model = _customerAttributeModelFactory.PrepareCustomerAttributeModel(new CustomerAttributeModel(), null);
+
             return View(model);
         }
 
@@ -140,7 +126,8 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 //activity log
                 _customerActivityService.InsertActivity("AddNewCustomerAttribute",
-                    string.Format(_localizationService.GetResource("ActivityLog.AddNewCustomerAttribute"), customerAttribute.Id), customerAttribute);
+                    string.Format(_localizationService.GetResource("ActivityLog.AddNewCustomerAttribute"), customerAttribute.Id),
+                    customerAttribute);
 
                 //locales
                 UpdateAttributeLocales(customerAttribute, model);
@@ -154,30 +141,29 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                     return RedirectToAction("Edit", new { id = customerAttribute.Id });
                 }
+
                 return RedirectToAction("List");
             }
 
             //If we got this far, something failed, redisplay form
+            model = _customerAttributeModelFactory.PrepareCustomerAttributeModel(model, null, true);
+
             return View(model);
         }
 
-        //edit
         public virtual IActionResult Edit(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
+            //try to get a customer attribute with the specified id
             var customerAttribute = _customerAttributeService.GetCustomerAttributeById(id);
             if (customerAttribute == null)
-                //No customer attribute found with the specified id
                 return RedirectToAction("List");
 
-            var model = customerAttribute.ToModel();
-            //locales
-            AddLocales(_languageService, model.Locales, (locale, languageId) =>
-            {
-                locale.Name = customerAttribute.GetLocalized(x => x.Name, languageId, false, false);
-            });
+            //prepare model
+            var model = _customerAttributeModelFactory.PrepareCustomerAttributeModel(null, customerAttribute);
+
             return View(model);
         }
 
@@ -199,7 +185,8 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 //activity log
                 _customerActivityService.InsertActivity("EditCustomerAttribute",
-                    string.Format(_localizationService.GetResource("ActivityLog.EditCustomerAttribute"), customerAttribute.Id), customerAttribute);
+                    string.Format(_localizationService.GetResource("ActivityLog.EditCustomerAttribute"), customerAttribute.Id),
+                    customerAttribute);
 
                 //locales
                 UpdateAttributeLocales(customerAttribute, model);
@@ -210,7 +197,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     //selected tab
                     SaveSelectedTabName();
 
-                    return RedirectToAction("Edit", new {id = customerAttribute.Id});
+                    return RedirectToAction("Edit", new { id = customerAttribute.Id });
                 }
                 return RedirectToAction("List");
             }
@@ -219,7 +206,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             return View(model);
         }
 
-        //delete
         [HttpPost]
         public virtual IActionResult Delete(int id)
         {
@@ -231,7 +217,8 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //activity log
             _customerActivityService.InsertActivity("DeleteCustomerAttribute",
-                string.Format(_localizationService.GetResource("ActivityLog.DeleteCustomerAttribute"), customerAttribute.Id), customerAttribute);
+                string.Format(_localizationService.GetResource("ActivityLog.DeleteCustomerAttribute"), customerAttribute.Id),
+                customerAttribute);
 
             SuccessNotification(_localizationService.GetResource("Admin.Customers.CustomerAttributes.Deleted"));
             return RedirectToAction("List");
@@ -241,46 +228,36 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Customer attribute values
 
-        //list
         [HttpPost]
-        public virtual IActionResult ValueList(int customerAttributeId, DataSourceRequest command)
+        public virtual IActionResult ValueList(CustomerAttributeValueSearchModel searchModel, int customerAttributeId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedKendoGridJson();
 
-            var values = _customerAttributeService.GetCustomerAttributeValues(customerAttributeId);
-            var gridModel = new DataSourceResult
-            {
-                Data = values.Select(x => new CustomerAttributeValueModel
-                {
-                    Id = x.Id,
-                    CustomerAttributeId = x.CustomerAttributeId,
-                    Name = x.Name,
-                    IsPreSelected = x.IsPreSelected,
-                    DisplayOrder = x.DisplayOrder,
-                }),
-                Total = values.Count()
-            };
-            return Json(gridModel);
+            //try to get a customer attribute with the specified id
+            var customerAttribute = _customerAttributeService.GetCustomerAttributeById(customerAttributeId)
+                ?? throw new ArgumentException("No customer attribute found with the specified id", nameof(customerAttributeId));
+
+            //prepare model
+            var model = _customerAttributeModelFactory.PrepareCustomerAttributeValueListModel(searchModel, customerAttribute);
+
+            return Json(model);
         }
 
-        //create
         public virtual IActionResult ValueCreatePopup(int customerAttributeId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
+            //try to get a customer attribute with the specified id
             var customerAttribute = _customerAttributeService.GetCustomerAttributeById(customerAttributeId);
             if (customerAttribute == null)
-                //No customer attribute found with the specified id
                 return RedirectToAction("List");
 
-            var model = new CustomerAttributeValueModel
-            {
-                CustomerAttributeId = customerAttributeId
-            };
-            //locales
-            AddLocales(_languageService, model.Locales);
+            //prepare model
+            var model = _customerAttributeModelFactory
+                .PrepareCustomerAttributeValueModel(new CustomerAttributeValueModel(), customerAttribute, null);
+
             return View(model);
         }
 
@@ -290,11 +267,11 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
+            //try to get a customer attribute with the specified id
             var customerAttribute = _customerAttributeService.GetCustomerAttributeById(model.CustomerAttributeId);
             if (customerAttribute == null)
-                //No customer attribute found with the specified id
                 return RedirectToAction("List");
-            
+
             if (ModelState.IsValid)
             {
                 var cav = new CustomerAttributeValue
@@ -314,37 +291,33 @@ namespace Nop.Web.Areas.Admin.Controllers
                 UpdateValueLocales(cav, model);
 
                 ViewBag.RefreshPage = true;
+
                 return View(model);
             }
 
             //If we got this far, something failed, redisplay form
+            model = _customerAttributeModelFactory.PrepareCustomerAttributeValueModel(model, customerAttribute, null, true);
+
             return View(model);
         }
 
-        //edit
         public virtual IActionResult ValueEditPopup(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
-            var cav = _customerAttributeService.GetCustomerAttributeValueById(id);
-            if (cav == null)
-                //No customer attribute value found with the specified id
+            //try to get a customer attribute value with the specified id
+            var customerAttributeValue = _customerAttributeService.GetCustomerAttributeValueById(id);
+            if (customerAttributeValue == null)
                 return RedirectToAction("List");
 
-            var model = new CustomerAttributeValueModel
-            {
-                CustomerAttributeId = cav.CustomerAttributeId,
-                Name = cav.Name,
-                IsPreSelected = cav.IsPreSelected,
-                DisplayOrder = cav.DisplayOrder
-            };
+            //try to get a customer attribute with the specified id
+            var customerAttribute = _customerAttributeService.GetCustomerAttributeById(customerAttributeValue.CustomerAttributeId);
+            if (customerAttribute == null)
+                return RedirectToAction("List");
 
-            //locales
-            AddLocales(_languageService, model.Locales, (locale, languageId) =>
-            {
-                locale.Name = cav.GetLocalized(x => x.Name, languageId, false, false);
-            });
+            //prepare model
+            var model = _customerAttributeModelFactory.PrepareCustomerAttributeValueModel(null, customerAttribute, customerAttributeValue);
 
             return View(model);
         }
@@ -355,51 +328,61 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
-            var cav = _customerAttributeService.GetCustomerAttributeValueById(model.Id);
-            if (cav == null)
-                //No customer attribute value found with the specified id
+            //try to get a customer attribute value with the specified id
+            var customerAttributeValue = _customerAttributeService.GetCustomerAttributeValueById(model.Id);
+            if (customerAttributeValue == null)
+                return RedirectToAction("List");
+
+            //try to get a customer attribute with the specified id
+            var customerAttribute = _customerAttributeService.GetCustomerAttributeById(customerAttributeValue.CustomerAttributeId);
+            if (customerAttribute == null)
                 return RedirectToAction("List");
 
             if (ModelState.IsValid)
             {
-                cav.Name = model.Name;
-                cav.IsPreSelected = model.IsPreSelected;
-                cav.DisplayOrder = model.DisplayOrder;
-                _customerAttributeService.UpdateCustomerAttributeValue(cav);
+                customerAttributeValue.Name = model.Name;
+                customerAttributeValue.IsPreSelected = model.IsPreSelected;
+                customerAttributeValue.DisplayOrder = model.DisplayOrder;
+                _customerAttributeService.UpdateCustomerAttributeValue(customerAttributeValue);
 
                 //activity log
                 _customerActivityService.InsertActivity("EditCustomerAttributeValue",
-                    string.Format(_localizationService.GetResource("ActivityLog.EditCustomerAttributeValue"), cav.Id), cav);
+                    string.Format(_localizationService.GetResource("ActivityLog.EditCustomerAttributeValue"), customerAttributeValue.Id),
+                    customerAttributeValue);
 
-                UpdateValueLocales(cav, model);
+                UpdateValueLocales(customerAttributeValue, model);
 
                 ViewBag.RefreshPage = true;
+
                 return View(model);
             }
 
             //If we got this far, something failed, redisplay form
+            model = _customerAttributeModelFactory.PrepareCustomerAttributeValueModel(model, customerAttribute, customerAttributeValue, true);
+
             return View(model);
         }
 
-        //delete
         [HttpPost]
         public virtual IActionResult ValueDelete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
-            var cav = _customerAttributeService.GetCustomerAttributeValueById(id);
-            if (cav == null)
-                throw new ArgumentException("No customer attribute value found with the specified id");
-            _customerAttributeService.DeleteCustomerAttributeValue(cav);
+            //try to get a customer attribute value with the specified id
+            var customerAttributeValue = _customerAttributeService.GetCustomerAttributeValueById(id)
+                ?? throw new ArgumentException("No customer attribute value found with the specified id", nameof(id));
+
+            _customerAttributeService.DeleteCustomerAttributeValue(customerAttributeValue);
 
             //activity log
             _customerActivityService.InsertActivity("DeleteCustomerAttributeValue",
-                string.Format(_localizationService.GetResource("ActivityLog.DeleteCustomerAttributeValue"), cav.Id), cav);
+                string.Format(_localizationService.GetResource("ActivityLog.DeleteCustomerAttributeValue"), customerAttributeValue.Id),
+                customerAttributeValue);
 
             return new NullJsonResult();
         }
-        
+
         #endregion
     }
 }

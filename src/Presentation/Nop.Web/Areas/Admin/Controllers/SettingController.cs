@@ -56,6 +56,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         #region Fields
 
         private readonly IAddressAttributeModelFactory _addressAttributeModelFactory;
+        private readonly ICustomerAttributeModelFactory _customerAttributeModelFactory;
         private readonly ISettingService _settingService;
         private readonly ICountryService _countryService;
         private readonly IStateProvinceService _stateProvinceService;
@@ -87,6 +88,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         #region Ctor
 
         public SettingController(IAddressAttributeModelFactory addressAttributeModelFactory,
+            ICustomerAttributeModelFactory customerAttributeModelFactory,
             ISettingService settingService,
             ICountryService countryService, 
             IStateProvinceService stateProvinceService,
@@ -114,6 +116,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             CurrencySettings currencySettings)
         {
             this._addressAttributeModelFactory = addressAttributeModelFactory;
+            this._customerAttributeModelFactory = customerAttributeModelFactory;
             this._settingService = settingService;
             this._countryService = countryService;
             this._stateProvinceService = stateProvinceService;
@@ -1644,7 +1647,9 @@ namespace Nop.Web.Areas.Admin.Controllers
                 AddressSettings = addressSettings.ToModel()
             };
 
-            //prepare nested search model
+            //prepare nested search models
+            model.CustomerAttributeSearchModel = _customerAttributeModelFactory
+                .PrepareCustomerAttributeSearchModel(model.CustomerAttributeSearchModel);
             model.AddressAttributeSearchModel = _addressAttributeModelFactory
                 .PrepareAddressAttributeSearchModel(model.AddressAttributeSearchModel);
 

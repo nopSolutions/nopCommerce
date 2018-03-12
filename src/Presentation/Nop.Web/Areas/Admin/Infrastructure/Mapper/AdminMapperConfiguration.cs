@@ -648,6 +648,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
             CreateMap<CustomerAttribute, CustomerAttributeModel>()
                 .ForMember(dest => dest.AttributeControlTypeName, mo => mo.Ignore())
                 .ForMember(dest => dest.Locales, mo => mo.Ignore())
+                .ForMember(dest => dest.CustomerAttributeValueSearchModel, mo => mo.Ignore())
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore())
                 .ForMember(dest => dest.Form, mo => mo.Ignore());
             CreateMap<CustomerAttributeModel, CustomerAttribute>()

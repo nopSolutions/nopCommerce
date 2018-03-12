@@ -6,13 +6,23 @@ using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Models.Customers
 {
+    /// <summary>
+    /// Represents a customer attribute model
+    /// </summary>
     [Validator(typeof(CustomerAttributeValidator))]
     public partial class CustomerAttributeModel : BaseNopEntityModel, ILocalizedModel<CustomerAttributeLocalizedModel>
     {
+        #region Ctor
+
         public CustomerAttributeModel()
         {
             Locales = new List<CustomerAttributeLocalizedModel>();
+            CustomerAttributeValueSearchModel = new CustomerAttributeValueSearchModel();
         }
+
+        #endregion
+
+        #region Properties
 
         [NopResourceDisplayName("Admin.Customers.CustomerAttributes.Fields.Name")]
         public string Name { get; set; }
@@ -22,6 +32,7 @@ namespace Nop.Web.Areas.Admin.Models.Customers
 
         [NopResourceDisplayName("Admin.Customers.CustomerAttributes.Fields.AttributeControlType")]
         public int AttributeControlTypeId { get; set; }
+
         [NopResourceDisplayName("Admin.Customers.CustomerAttributes.Fields.AttributeControlType")]
         public string AttributeControlTypeName { get; set; }
 
@@ -29,6 +40,10 @@ namespace Nop.Web.Areas.Admin.Models.Customers
         public int DisplayOrder { get; set; }
 
         public IList<CustomerAttributeLocalizedModel> Locales { get; set; }
+
+        public CustomerAttributeValueSearchModel CustomerAttributeValueSearchModel { get; set; }
+
+        #endregion
     }
 
     public partial class CustomerAttributeLocalizedModel : ILocalizedLocaleModel
