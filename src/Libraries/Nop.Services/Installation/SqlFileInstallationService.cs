@@ -27,6 +27,7 @@ namespace Nop.Services.Installation
         private readonly IRepository<Store> _storeRepository;
         private readonly IDbContext _dbContext;
         private readonly IWebHelper _webHelper;
+        private readonly INopFileProvider _fileProvider;
 
         #endregion
 
@@ -40,17 +41,20 @@ namespace Nop.Services.Installation
         /// <param name="storeRepository">Store repository</param>
         /// <param name="dbContext">DB context</param>
         /// <param name="webHelper">Web helper</param>
+        /// <param name="fileProvider">File provider</param>
         public SqlFileInstallationService(IRepository<Language> languageRepository,
             IRepository<Customer> customerRepository,
             IRepository<Store> storeRepository,
             IDbContext dbContext,
-            IWebHelper webHelper)
+            IWebHelper webHelper,
+            INopFileProvider fileProvider)
         {
             this._languageRepository = languageRepository;
             this._customerRepository = customerRepository;
             this._storeRepository = storeRepository;
             this._dbContext = dbContext;
             this._webHelper = webHelper;
+            this._fileProvider = fileProvider;
         }
 
         #endregion
@@ -66,9 +70,9 @@ namespace Nop.Services.Installation
             var language = _languageRepository.Table.Single(l => l.Name == "English");
 
             //save resources
-            foreach (var filePath in System.IO.Directory.EnumerateFiles(CommonHelper.MapPath("~/App_Data/Localization/"), "*.nopres.xml", SearchOption.TopDirectoryOnly))
+            foreach (var filePath in _fileProvider.EnumerateFiles(_fileProvider.MapPath("~/App_Data/Localization/"), "*.nopres.xml"))
             {
-                var localesXml = File.ReadAllText(filePath);
+                var localesXml = _fileProvider.ReadAllText(filePath, Encoding.UTF8);
                 var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
                 localizationService.ImportResourcesFromXml(language, localesXml);
             }
@@ -115,9 +119,8 @@ namespace Nop.Services.Installation
         protected virtual void ExecuteSqlFile(string path)
         {
             var statements = new List<string>();
-
-            using (var stream = File.OpenRead(path))
-            using (var reader = new StreamReader(stream))
+            
+            using (var reader = new StreamReader(path))
             {
                 string statement;
                 while ((statement = ReadNextStatementFromStream(reader)) != null)
@@ -169,14 +172,14 @@ namespace Nop.Services.Installation
         public virtual void InstallData(string defaultUserEmail,
             string defaultUserPassword, bool installSampleData = true)
         {
-            ExecuteSqlFile(CommonHelper.MapPath("~/App_Data/Install/Fast/create_required_data.sql"));
+            ExecuteSqlFile(_fileProvider.MapPath("~/App_Data/Install/Fast/create_required_data.sql"));
             InstallLocaleResources();
             UpdateDefaultCustomer(defaultUserEmail, defaultUserPassword);
             UpdateDefaultStoreUrl();
 
             if (installSampleData)
             {
-                ExecuteSqlFile(CommonHelper.MapPath("~/App_Data/Install/Fast/create_sample_data.sql"));
+                ExecuteSqlFile(_fileProvider.MapPath("~/App_Data/Install/Fast/create_sample_data.sql"));
             }
         }
 

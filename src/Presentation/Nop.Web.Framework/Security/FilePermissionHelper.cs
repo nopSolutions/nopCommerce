@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
-using System.IO;
+
 using System.Security.AccessControl;
 using System.Security.Principal;
-using Nop.Core;
 using Nop.Core.Data;
+using Nop.Core.Infrastructure;
 using Nop.Core.Plugins;
 
 namespace Nop.Web.Framework.Security
@@ -36,7 +36,8 @@ namespace Nop.Web.Framework.Security
             AuthorizationRuleCollection rules;
             try
             {
-                rules = Directory.GetAccessControl(path).GetAccessRules(true, true, typeof(SecurityIdentifier));
+                var fileProvider = EngineContext.Current.Resolve<INopFileProvider>();
+                rules = fileProvider.GetAccessControl(path).GetAccessRules(true, true, typeof(SecurityIdentifier));
             }
             catch
             {
@@ -142,7 +143,7 @@ namespace Nop.Web.Framework.Security
                 }
                 return flag13;
             }
-            catch (IOException)
+            catch (System.IO.IOException)
             {
             }
             return false;
@@ -154,20 +155,25 @@ namespace Nop.Web.Framework.Security
         /// <returns>Result</returns>
         public static IEnumerable<string> GetDirectoriesWrite()
         {
-            var rootDir = CommonHelper.MapPath("~/");
-            var dirsToCheck = new List<string>();
-            //dirsToCheck.Add(rootDir);
-            dirsToCheck.Add(Path.Combine(rootDir, "App_Data"));
-            dirsToCheck.Add(Path.Combine(rootDir, "bin"));
-            dirsToCheck.Add(Path.Combine(rootDir, "log"));
-            dirsToCheck.Add(Path.Combine(rootDir, "plugins"));
-            dirsToCheck.Add(Path.Combine(rootDir, "plugins\\bin"));
-            dirsToCheck.Add(Path.Combine(rootDir, "wwwroot\\bundles"));
-            dirsToCheck.Add(Path.Combine(rootDir, "wwwroot\\db_backups"));
-            dirsToCheck.Add(Path.Combine(rootDir, "wwwroot\\files\\exportimport"));
-            dirsToCheck.Add(Path.Combine(rootDir, "wwwroot\\images"));
-            dirsToCheck.Add(Path.Combine(rootDir, "wwwroot\\images\\thumbs"));
-            dirsToCheck.Add(Path.Combine(rootDir, "wwwroot\\images\\uploaded"));
+            var fileProvider = EngineContext.Current.Resolve<INopFileProvider>();
+
+            var rootDir = fileProvider.MapPath("~/");
+            
+            var dirsToCheck = new List<string>
+            {
+                fileProvider.Combine(rootDir, "App_Data"),
+                fileProvider.Combine(rootDir, "bin"),
+                fileProvider.Combine(rootDir, "log"),
+                fileProvider.Combine(rootDir, "plugins"),
+                fileProvider.Combine(rootDir, "plugins\\bin"),
+                fileProvider.Combine(rootDir, "wwwroot\\bundles"),
+                fileProvider.Combine(rootDir, "wwwroot\\db_backups"),
+                fileProvider.Combine(rootDir, "wwwroot\\files\\exportimport"),
+                fileProvider.Combine(rootDir, "wwwroot\\images"),
+                fileProvider.Combine(rootDir, "wwwroot\\images\\thumbs"),
+                fileProvider.Combine(rootDir, "wwwroot\\images\\uploaded")
+            };
+            
             return dirsToCheck;
         }
 
@@ -177,10 +183,12 @@ namespace Nop.Web.Framework.Security
         /// <returns>Result</returns>
         public static IEnumerable<string> GetFilesWrite()
         {
+            var fileProvider = EngineContext.Current.Resolve<INopFileProvider>();
+
             return new List<string>
             {
-                CommonHelper.MapPath(PluginManager.InstalledPluginsFilePath),
-                CommonHelper.MapPath(DataSettingsManager.DataSettingsFilePath)
+                fileProvider.MapPath(PluginManager.InstalledPluginsFilePath),
+                fileProvider.MapPath(DataSettingsManager.DataSettingsFilePath)
             };
         }
     }

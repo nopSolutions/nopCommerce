@@ -27,15 +27,19 @@ namespace Nop.Web.Controllers
 
         private readonly IInstallationLocalizationService _locService;
         private readonly NopConfig _config;
+        private readonly INopFileProvider _fileProvider;
         
         #endregion
         
         #region Ctor
 
-        public InstallController(IInstallationLocalizationService locService, NopConfig config)
+        public InstallController(IInstallationLocalizationService locService, 
+            NopConfig config,
+            INopFileProvider fileProvider)
         {
             this._locService = locService;
             this._config = config;
+            this._fileProvider = fileProvider;
         }
         
         #endregion
@@ -288,7 +292,7 @@ namespace Nop.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                var settingsManager = new DataSettingsManager();
+                var settingsManager = new DataSettingsManager(_fileProvider);
                 try
                 {
                     string connectionString;
@@ -343,10 +347,10 @@ namespace Nop.Web.Controllers
                         connectionString = "Data Source=" + databasePath + ";Persist Security Info=False";
 
                         //drop database if exists
-                        var databaseFullPath = CommonHelper.MapPath("~/App_Data/") + databaseFileName;
-                        if (System.IO.File.Exists(databaseFullPath))
+                        var databaseFullPath = _fileProvider.MapPath("~/App_Data/") + databaseFileName;
+                        if (_fileProvider.FileExists(databaseFullPath))
                         {
-                            System.IO.File.Delete(databaseFullPath);
+                            _fileProvider.DeleteFile(databaseFullPath);
                         }
                     }
 
@@ -394,8 +398,7 @@ namespace Nop.Web.Controllers
 
                     //register default permissions
                     //var permissionProviders = EngineContext.Current.Resolve<ITypeFinder>().FindClassesOfType<IPermissionProvider>();
-                    var permissionProviders = new List<Type>();
-                    permissionProviders.Add(typeof(StandardPermissionProvider));
+                    var permissionProviders = new List<Type> {typeof(StandardPermissionProvider)};
                     foreach (var providerType in permissionProviders)
                     {
                         var provider = (IPermissionProvider)Activator.CreateInstance(providerType);

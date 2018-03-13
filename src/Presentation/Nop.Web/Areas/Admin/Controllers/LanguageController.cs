@@ -2,11 +2,11 @@
 using System.IO;
 using System.Linq;
 using System.Text;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core.Domain.Localization;
+using Nop.Core.Infrastructure;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Security;
@@ -22,38 +22,44 @@ namespace Nop.Web.Areas.Admin.Controllers
 {
     public partial class LanguageController : BaseAdminController
     {
+        #region Const
+
+        private const string FLAGS_PATH = @"images\flags";
+
+        #endregion
+
         #region Fields
 
         private readonly ICustomerActivityService _customerActivityService;
-        private readonly IHostingEnvironment _hostingEnvironment;
         private readonly ILanguageModelFactory _languageModelFactory;
         private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
         private readonly IPermissionService _permissionService;
         private readonly IStoreMappingService _storeMappingService;
         private readonly IStoreService _storeService;
+        private readonly INopFileProvider _fileProvider;
 
         #endregion
 
         #region Ctor
 
         public LanguageController(ICustomerActivityService customerActivityService,
-            IHostingEnvironment hostingEnvironment,
             ILanguageModelFactory languageModelFactory,
             ILanguageService languageService,
             ILocalizationService localizationService,
             IPermissionService permissionService,
             IStoreMappingService storeMappingService,
-            IStoreService storeService)
+            IStoreService storeService,
+            INopFileProvider fileProvider)
         {
             this._customerActivityService = customerActivityService;
-            this._hostingEnvironment = hostingEnvironment;
             this._languageModelFactory = languageModelFactory;
             this._languageService = languageService;
             this._localizationService = localizationService;
             this._permissionService = permissionService;
             this._storeMappingService = storeMappingService;
             this._storeService = storeService;
+            this._fileProvider = fileProvider;
         }
 
         #endregion
@@ -270,9 +276,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
                 return Json("Access denied");
 
-            var flagNames = Directory
-                .EnumerateFiles(Path.Combine(_hostingEnvironment.WebRootPath, "images\\flags"), "*.png", SearchOption.TopDirectoryOnly)
-                .Select(Path.GetFileName)
+            var flagNames = _fileProvider
+                .EnumerateFiles(_fileProvider.GetAbsolutePath(FLAGS_PATH), "*.png")
+                .Select(_fileProvider.GetFileName)
                 .ToList();
 
             var availableFlagFileNames = flagNames.Select(flagName => new SelectListItem
@@ -429,15 +435,13 @@ namespace Nop.Web.Areas.Admin.Controllers
                 {
                     using (var sr = new StreamReader(importxmlfile.OpenReadStream(), Encoding.UTF8))
                     {
-                        var content = sr.ReadToEnd();
-                        _localizationService.ImportResourcesFromXml(language, content);
+                        _localizationService.ImportResourcesFromXml(language, sr.ReadToEnd());
                     }
-
                 }
                 else
                 {
                     ErrorNotification(_localizationService.GetResource("Admin.Common.UploadFile"));
-                    return RedirectToAction("Edit", new { id = language.Id });
+                    return RedirectToAction("Edit", new {id = language.Id});
                 }
 
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Languages.Imported"));
