@@ -13,6 +13,13 @@ namespace Nop.Web.Framework.Factories
         /// Prepare selected and all available customer roles for the passed model
         /// </summary>
         /// <typeparam name="TModel">ACL supported model type</typeparam>
+        /// <param name="model">Model</param>
+        void PrepareModelCustomerRoles<TModel>(TModel model) where TModel : IAclSupportedModel;
+
+        /// <summary>
+        /// Prepare selected and all available customer roles for the passed model by ACL mappings
+        /// </summary>
+        /// <typeparam name="TModel">ACL supported model type</typeparam>
         /// <typeparam name="TEntity">ACL supported entity type</typeparam>
         /// <param name="model">Model</param>
         /// <param name="entity">Entity</param>

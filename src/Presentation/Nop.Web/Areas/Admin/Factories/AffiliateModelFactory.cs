@@ -67,8 +67,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="model">Address model</param>
         /// <param name="address">Address</param>
-        /// <returns>Address model</returns>
-        protected virtual AddressModel PrepareAddressModel(AddressModel model, Address address)
+        protected virtual void PrepareAddressModel(AddressModel model, Address address)
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
@@ -102,8 +101,6 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare available states
             _baseAdminModelFactory.PrepareStatesAndProvinces(model.AvailableStates, model.CountryId);
-
-            return model;
         }
 
         #endregion
@@ -191,7 +188,7 @@ namespace Nop.Web.Areas.Admin.Factories
             }
 
             //prepare address model
-            model.Address = PrepareAddressModel(model.Address, affiliate?.Address);
+            PrepareAddressModel(model.Address, affiliate?.Address);
 
             return model;
         }

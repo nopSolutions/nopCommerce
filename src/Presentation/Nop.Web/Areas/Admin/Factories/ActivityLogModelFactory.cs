@@ -44,9 +44,9 @@ namespace Nop.Web.Areas.Admin.Factories
         {
             //prepare available activity log types
             var availableActivityTypes = _customerActivityService.GetAllActivityTypes();
-            var model = availableActivityTypes.Select(activityType => activityType.ToModel()).ToList();
+            var models = availableActivityTypes.Select(activityType => activityType.ToModel()).ToList();
 
-            return model;
+            return models;
         }
 
         /// <summary>

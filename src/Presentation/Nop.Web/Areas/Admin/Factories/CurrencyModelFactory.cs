@@ -56,9 +56,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="model">Currency exchange rate provider model</param>
         /// <param name="prepareExchangeRates">Whether to prepare exchange rate models</param>
-        /// <returns>Currency exchange rate provider model</returns>
-        protected virtual CurrencyExchangeRateProviderModel PrepareExchangeRateProviderModel(CurrencyExchangeRateProviderModel model,
-            bool liveRates)
+        protected virtual void PrepareExchangeRateProviderModel(CurrencyExchangeRateProviderModel model, bool liveRates)
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
@@ -78,16 +76,13 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare exchange rates
             if (liveRates)
                 PrepareExchangeRateModels(model.ExchangeRates);
-
-            return model;
         }
 
         /// <summary>
         /// Prepare exchange rate models
         /// </summary>
         /// <param name="models">List of currency exchange rate model</param>
-        /// <returns>List of currency exchange rate model</returns>
-        protected virtual IList<CurrencyExchangeRateModel> PrepareExchangeRateModels(IList<CurrencyExchangeRateModel> models)
+        protected virtual void PrepareExchangeRateModels(IList<CurrencyExchangeRateModel> models)
         {
             if (models == null)
                 throw new ArgumentNullException(nameof(models));
@@ -110,8 +105,6 @@ namespace Nop.Web.Areas.Admin.Factories
             {
                 models.Add(new CurrencyExchangeRateModel { CurrencyCode = rate.CurrencyCode, Rate = rate.Rate });
             }
-
-            return models;
         }
 
         #endregion
@@ -130,7 +123,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(model));
 
             //prepare exchange rate provider model
-            model.ExchangeRateProviderModel = PrepareExchangeRateProviderModel(model.ExchangeRateProviderModel, prepareExchangeRates);
+            PrepareExchangeRateProviderModel(model.ExchangeRateProviderModel, prepareExchangeRates);
 
             return model;
         }

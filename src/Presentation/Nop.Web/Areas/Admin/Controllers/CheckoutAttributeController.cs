@@ -192,9 +192,9 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             //prepare model
-            _checkoutAttributeModelFactory.PrepareCheckoutAttributeSearchModel(new CheckoutAttributeSearchModel());
+            var model = _checkoutAttributeModelFactory.PrepareCheckoutAttributeSearchModel(new CheckoutAttributeSearchModel());
 
-            return View();
+            return View(model);
         }
 
         [HttpPost]

@@ -126,7 +126,7 @@ namespace Nop.Web.Areas.Admin.Factories
             _baseAdminModelFactory.PrepareCustomerRoles(model.AvailableCustomerRoles);
 
             //prepare available email accounts
-            _baseAdminModelFactory.PrepareEmailAccounts(model.AvailableEmailAccounts);
+            _baseAdminModelFactory.PrepareEmailAccounts(model.AvailableEmailAccounts, false);
 
             return model;
         }

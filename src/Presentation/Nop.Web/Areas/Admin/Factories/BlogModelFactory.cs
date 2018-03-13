@@ -138,7 +138,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 model.AllowComments = true;
 
             //prepare available languages
-            _baseAdminModelFactory.PrepareLanguages(model.AvailableLanguages);
+            _baseAdminModelFactory.PrepareLanguages(model.AvailableLanguages, false);
 
             //prepare available stores
             _storeMappingSupportedModelFactory.PrepareModelStores(model, blogPost, excludeProperties);

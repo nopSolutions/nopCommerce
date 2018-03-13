@@ -191,7 +191,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (addressAttributeValue != null)
             {
                 //fill in model values from the entity
-                model = new AddressAttributeValueModel
+                model = model ?? new AddressAttributeValueModel
                 {
                     Name = addressAttributeValue.Name,
                     IsPreSelected = addressAttributeValue.IsPreSelected,

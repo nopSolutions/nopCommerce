@@ -191,7 +191,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (customerAttributeValue != null)
             {
                 //fill in model values from the entity
-                model = new CustomerAttributeValueModel
+                model = model ?? new CustomerAttributeValueModel
                 {
                     Name = customerAttributeValue.Name,
                     IsPreSelected = customerAttributeValue.IsPreSelected,

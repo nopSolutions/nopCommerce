@@ -137,7 +137,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //prepare model
             var model = _countryModelFactory.PrepareCountrySearchModel(new CountrySearchModel());
 
-            return View();
+            return View(model);
         }
 
         [HttpPost]

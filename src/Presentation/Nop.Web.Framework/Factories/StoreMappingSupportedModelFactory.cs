@@ -37,6 +37,26 @@ namespace Nop.Web.Framework.Factories
         /// Prepare selected and all available stores for the passed model
         /// </summary>
         /// <typeparam name="TModel">Store mapping supported model type</typeparam>
+        /// <param name="model">Model</param>
+        public virtual void PrepareModelStores<TModel>(TModel model) where TModel : IStoreMappingSupportedModel
+        {
+            if (model == null)
+                throw new ArgumentNullException(nameof(model));
+
+            //prepare available stores
+            var availableStores = _storeService.GetAllStores();
+            model.AvailableStores = availableStores.Select(store => new SelectListItem
+            {
+                Text = store.Name,
+                Value = store.Id.ToString(),
+                Selected = model.SelectedStoreIds.Contains(store.Id)
+            }).ToList();
+        }
+
+        /// <summary>
+        /// Prepare selected and all available stores for the passed model by store mappings
+        /// </summary>
+        /// <typeparam name="TModel">Store mapping supported model type</typeparam>
         /// <typeparam name="TEntity">Store mapping supported entity type</typeparam>
         /// <param name="model">Model</param>
         /// <param name="entity">Entity</param>
@@ -47,18 +67,11 @@ namespace Nop.Web.Framework.Factories
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
 
-            //try to get store identifiers with granted access
+            //prepare stores with granted access
             if (!ignoreStoreMappings && entity != null)
                 model.SelectedStoreIds = _storeMappingService.GetStoresIdsWithAccess(entity).ToList();
 
-            //prepare available stores
-            var availableStores = _storeService.GetAllStores();
-            model.AvailableStores = availableStores.Select(store => new SelectListItem
-            {
-                Text = store.Name,
-                Value = store.Id.ToString(),
-                Selected = model.SelectedStoreIds.Contains(store.Id)
-            }).ToList();
+            PrepareModelStores(model);
         }
         
         #endregion

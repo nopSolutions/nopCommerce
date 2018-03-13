@@ -11,6 +11,7 @@ using Nop.Services;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
+using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Messages;
@@ -33,6 +34,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly ICountryService _countryService;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly ICustomerService _customerService;
+        private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IEmailAccountService _emailAccountService;
         private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
@@ -52,6 +54,7 @@ namespace Nop.Web.Areas.Admin.Factories
             ICountryService countryService,
             ICustomerActivityService customerActivityService,
             ICustomerService customerService,
+            IDateTimeHelper dateTimeHelper,
             IEmailAccountService emailAccountService,
             ILanguageService languageService,
             ILocalizationService localizationService,
@@ -67,6 +70,7 @@ namespace Nop.Web.Areas.Admin.Factories
             this._countryService = countryService;
             this._customerActivityService = customerActivityService;
             this._customerService = customerService;
+            this._dateTimeHelper = dateTimeHelper;
             this._emailAccountService = emailAccountService;
             this._languageService = languageService;
             this._localizationService = localizationService;
@@ -86,20 +90,25 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare default item
         /// </summary>
         /// <param name="items">Available items</param>
-        /// <param name="text">Item text; pass null to use "All" text</param>
-        protected virtual void PrepareDefaultItem(IList<SelectListItem> items, string text = null)
+        /// <param name="withSpecialDefaultItem">Whether to insert the first special item for the default value</param>
+        /// <param name="defaultItemText">Default item text; pass null to use "All" text</param>
+        protected virtual void PrepareDefaultItem(IList<SelectListItem> items, bool withSpecialDefaultItem, string defaultItemText = null)
         {
             if (items == null)
                 throw new ArgumentNullException(nameof(items));
+
+            //whether to insert the first special item for the default value
+            if (!withSpecialDefaultItem)
+                return;
 
             //at now we use "0" as the default value
             var value = "0";
 
             //prepare item text
-            text = text ?? _localizationService.GetResource("Admin.Common.All");
+            defaultItemText = defaultItemText ?? _localizationService.GetResource("Admin.Common.All");
 
             //insert this default item at first
-            items.Insert(0, new SelectListItem { Text = text, Value = value });
+            items.Insert(0, new SelectListItem { Text = defaultItemText, Value = value });
         }
 
         #endregion
@@ -110,7 +119,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare available activity log types
         /// </summary>
         /// <param name="items">Activity log type items</param>
-        public virtual void PrepareActivityLogTypes(IList<SelectListItem> items)
+        /// <param name="withSpecialDefaultItem">Whether to insert the first special item for the default value</param>
+        /// <param name="defaultItemText">Default item text; pass null to use default value of the default item text</param>
+        public virtual void PrepareActivityLogTypes(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
         {
             if (items == null)
                 throw new ArgumentNullException(nameof(items));
@@ -122,15 +133,17 @@ namespace Nop.Web.Areas.Admin.Factories
                 items.Add(new SelectListItem { Value = activityType.Id.ToString(), Text = activityType.Name });
             }
 
-            //insert special type item for the "all" value
-            PrepareDefaultItem(items);
+            //insert special item for the default value
+            PrepareDefaultItem(items, withSpecialDefaultItem, defaultItemText);
         }
 
         /// <summary>
         /// Prepare available order statuses
         /// </summary>
         /// <param name="items">Order status items</param>
-        public virtual void PrepareOrderStatuses(IList<SelectListItem> items)
+        /// <param name="withSpecialDefaultItem">Whether to insert the first special item for the default value</param>
+        /// <param name="defaultItemText">Default item text; pass null to use default value of the default item text</param>
+        public virtual void PrepareOrderStatuses(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
         {
             if (items == null)
                 throw new ArgumentNullException(nameof(items));
@@ -142,15 +155,17 @@ namespace Nop.Web.Areas.Admin.Factories
                 items.Add(statusItem);
             }
 
-            //insert special status item for the "all" value
-            PrepareDefaultItem(items);
+            //insert special item for the default value
+            PrepareDefaultItem(items, withSpecialDefaultItem, defaultItemText);
         }
 
         /// <summary>
         /// Prepare available payment statuses
         /// </summary>
         /// <param name="items">Payment status items</param>
-        public virtual void PreparePaymentStatuses(IList<SelectListItem> items)
+        /// <param name="withSpecialDefaultItem">Whether to insert the first special item for the default value</param>
+        /// <param name="defaultItemText">Default item text; pass null to use default value of the default item text</param>
+        public virtual void PreparePaymentStatuses(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
         {
             if (items == null)
                 throw new ArgumentNullException(nameof(items));
@@ -162,15 +177,17 @@ namespace Nop.Web.Areas.Admin.Factories
                 items.Add(statusItem);
             }
 
-            //insert special status item for the "all" value
-            PrepareDefaultItem(items);
+            //insert special item for the default value
+            PrepareDefaultItem(items, withSpecialDefaultItem, defaultItemText);
         }
 
         /// <summary>
         /// Prepare available shipping statuses
         /// </summary>
         /// <param name="items">Shipping status items</param>
-        public virtual void PrepareShippingStatuses(IList<SelectListItem> items)
+        /// <param name="withSpecialDefaultItem">Whether to insert the first special item for the default value</param>
+        /// <param name="defaultItemText">Default item text; pass null to use default value of the default item text</param>
+        public virtual void PrepareShippingStatuses(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
         {
             if (items == null)
                 throw new ArgumentNullException(nameof(items));
@@ -182,15 +199,17 @@ namespace Nop.Web.Areas.Admin.Factories
                 items.Add(statusItem);
             }
 
-            //insert special status item for the "all" value
-            PrepareDefaultItem(items);
+            //insert special item for the default value
+            PrepareDefaultItem(items, withSpecialDefaultItem, defaultItemText);
         }
 
         /// <summary>
         /// Prepare available countries
         /// </summary>
         /// <param name="items">Country items</param>
-        public virtual void PrepareCountries(IList<SelectListItem> items)
+        /// <param name="withSpecialDefaultItem">Whether to insert the first special item for the default value</param>
+        /// <param name="defaultItemText">Default item text; pass null to use default value of the default item text</param>
+        public virtual void PrepareCountries(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
         {
             if (items == null)
                 throw new ArgumentNullException(nameof(items));
@@ -202,8 +221,8 @@ namespace Nop.Web.Areas.Admin.Factories
                 items.Add(new SelectListItem { Value = country.Id.ToString(), Text = country.Name });
             }
 
-            //insert special country item for the "select" value
-            PrepareDefaultItem(items, _localizationService.GetResource("Admin.Address.SelectCountry"));
+            //insert special item for the default value
+            PrepareDefaultItem(items, withSpecialDefaultItem, defaultItemText ?? _localizationService.GetResource("Admin.Address.SelectCountry"));
         }
 
         /// <summary>
@@ -211,7 +230,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="items">State and province items</param>
         /// <param name="countryId">Country identifier; pass null to don't load states and provinces</param>
-        public virtual void PrepareStatesAndProvinces(IList<SelectListItem> items, int? countryId)
+        /// <param name="withSpecialDefaultItem">Whether to insert the first special item for the default value</param>
+        /// <param name="defaultItemText">Default item text; pass null to use default value of the default item text</param>
+        public virtual void PrepareStatesAndProvinces(IList<SelectListItem> items, int? countryId,
+            bool withSpecialDefaultItem = true, string defaultItemText = null)
         {
             if (items == null)
                 throw new ArgumentNullException(nameof(items));
@@ -223,19 +245,25 @@ namespace Nop.Web.Areas.Admin.Factories
                 foreach (var state in availableStates)
                 {
                     items.Add(new SelectListItem { Value = state.Id.ToString(), Text = state.Name });
-                }                
+                }
+
+                //insert special item for the default value
+                if (items.Any())
+                    PrepareDefaultItem(items, withSpecialDefaultItem, defaultItemText ?? _localizationService.GetResource("Admin.Address.SelectState"));
             }
 
-            //insert special state item for the "non US" value
+            //insert special item for the default value
             if (!items.Any())
-                PrepareDefaultItem(items, _localizationService.GetResource("Admin.Address.OtherNonUS"));
+                PrepareDefaultItem(items, withSpecialDefaultItem, defaultItemText ?? _localizationService.GetResource("Admin.Address.OtherNonUS"));
         }
 
         /// <summary>
         /// Prepare available languages
         /// </summary>
         /// <param name="items">Language items</param>
-        public virtual void PrepareLanguages(IList<SelectListItem> items)
+        /// <param name="withSpecialDefaultItem">Whether to insert the first special item for the default value</param>
+        /// <param name="defaultItemText">Default item text; pass null to use default value of the default item text</param>
+        public virtual void PrepareLanguages(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
         {
             if (items == null)
                 throw new ArgumentNullException(nameof(items));
@@ -246,13 +274,18 @@ namespace Nop.Web.Areas.Admin.Factories
             {
                 items.Add(new SelectListItem { Value = language.Id.ToString(), Text = language.Name });
             }
+
+            //insert special item for the default value
+            PrepareDefaultItem(items, withSpecialDefaultItem, defaultItemText);
         }
 
         /// <summary>
         /// Prepare available stores
         /// </summary>
         /// <param name="items">Store items</param>
-        public virtual void PrepareStores(IList<SelectListItem> items)
+        /// <param name="withSpecialDefaultItem">Whether to insert the first special item for the default value</param>
+        /// <param name="defaultItemText">Default item text; pass null to use default value of the default item text</param>
+        public virtual void PrepareStores(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
         {
             if (items == null)
                 throw new ArgumentNullException(nameof(items));
@@ -264,15 +297,17 @@ namespace Nop.Web.Areas.Admin.Factories
                 items.Add(new SelectListItem { Value = store.Id.ToString(), Text = store.Name });
             }
 
-            //insert special store item for the "all" value
-            PrepareDefaultItem(items);
+            //insert special item for the default value
+            PrepareDefaultItem(items, withSpecialDefaultItem, defaultItemText);
         }
 
         /// <summary>
         /// Prepare available customer roles
         /// </summary>
         /// <param name="items">Customer role items</param>
-        public virtual void PrepareCustomerRoles(IList<SelectListItem> items)
+        /// <param name="withSpecialDefaultItem">Whether to insert the first special item for the default value</param>
+        /// <param name="defaultItemText">Default item text; pass null to use default value of the default item text</param>
+        public virtual void PrepareCustomerRoles(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
         {
             if (items == null)
                 throw new ArgumentNullException(nameof(items));
@@ -284,15 +319,17 @@ namespace Nop.Web.Areas.Admin.Factories
                 items.Add(new SelectListItem { Value = customerRole.Id.ToString(), Text = customerRole.Name });
             }
 
-            //insert special customer role item for the "all" value
-            PrepareDefaultItem(items);
+            //insert special item for the default value
+            PrepareDefaultItem(items, withSpecialDefaultItem, defaultItemText);
         }
 
         /// <summary>
         /// Prepare available email accounts
         /// </summary>
         /// <param name="items">Email account items</param>
-        public virtual void PrepareEmailAccounts(IList<SelectListItem> items)
+        /// <param name="withSpecialDefaultItem">Whether to insert the first special item for the default value</param>
+        /// <param name="defaultItemText">Default item text; pass null to use default value of the default item text</param>
+        public virtual void PrepareEmailAccounts(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
         {
             if (items == null)
                 throw new ArgumentNullException(nameof(items));
@@ -303,13 +340,18 @@ namespace Nop.Web.Areas.Admin.Factories
             {
                 items.Add(new SelectListItem { Value = emailAccount.Id.ToString(), Text = $"{emailAccount.DisplayName} ({emailAccount.Email})" });
             }
+
+            //insert special item for the default value
+            PrepareDefaultItem(items, withSpecialDefaultItem, defaultItemText);
         }
 
         /// <summary>
         /// Prepare available tax categories
         /// </summary>
         /// <param name="items">Tax category items</param>
-        public virtual void PrepareTaxCategories(IList<SelectListItem> items)
+        /// <param name="withSpecialDefaultItem">Whether to insert the first special item for the default value</param>
+        /// <param name="defaultItemText">Default item text; pass null to use default value of the default item text</param>
+        public virtual void PrepareTaxCategories(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
         {
             if (items == null)
                 throw new ArgumentNullException(nameof(items));
@@ -321,15 +363,18 @@ namespace Nop.Web.Areas.Admin.Factories
                 items.Add(new SelectListItem { Value = taxCategory.Id.ToString(), Text = taxCategory.Name });
             }
 
-            //insert special tax category item for the "none" value
-            PrepareDefaultItem(items, _localizationService.GetResource("Admin.Configuration.Settings.Tax.TaxCategories.None"));
+            //insert special item for the default value
+            PrepareDefaultItem(items, withSpecialDefaultItem, 
+                defaultItemText ?? _localizationService.GetResource("Admin.Configuration.Settings.Tax.TaxCategories.None"));
         }
 
         /// <summary>
         /// Prepare available categories
         /// </summary>
         /// <param name="items">Category items</param>
-        public virtual void PrepareCategories(IList<SelectListItem> items)
+        /// <param name="withSpecialDefaultItem">Whether to insert the first special item for the default value</param>
+        /// <param name="defaultItemText">Default item text; pass null to use default value of the default item text</param>
+        public virtual void PrepareCategories(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
         {
             if (items == null)
                 throw new ArgumentNullException(nameof(items));
@@ -341,15 +386,17 @@ namespace Nop.Web.Areas.Admin.Factories
                 items.Add(categoryItem);
             }
 
-            //insert special category item for the "all" value
-            PrepareDefaultItem(items);
+            //insert special item for the default value
+            PrepareDefaultItem(items, withSpecialDefaultItem, defaultItemText);
         }
 
         /// <summary>
         /// Prepare available manufacturers
         /// </summary>
         /// <param name="items">Manufacturer items</param>
-        public virtual void PrepareManufacturers(IList<SelectListItem> items)
+        /// <param name="withSpecialDefaultItem">Whether to insert the first special item for the default value</param>
+        /// <param name="defaultItemText">Default item text; pass null to use default value of the default item text</param>
+        public virtual void PrepareManufacturers(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
         {
             if (items == null)
                 throw new ArgumentNullException(nameof(items));
@@ -361,15 +408,17 @@ namespace Nop.Web.Areas.Admin.Factories
                 items.Add(manufacturerItem);
             }
 
-            //insert special manufacturer item for the "all" value
-            PrepareDefaultItem(items);
+            //insert special item for the default value
+            PrepareDefaultItem(items, withSpecialDefaultItem, defaultItemText);
         }
 
         /// <summary>
         /// Prepare available vendors
         /// </summary>
         /// <param name="items">Vendor items</param>
-        public virtual void PrepareVendors(IList<SelectListItem> items)
+        /// <param name="withSpecialDefaultItem">Whether to insert the first special item for the default value</param>
+        /// <param name="defaultItemText">Default item text; pass null to use default value of the default item text</param>
+        public virtual void PrepareVendors(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
         {
             if (items == null)
                 throw new ArgumentNullException(nameof(items));
@@ -381,15 +430,17 @@ namespace Nop.Web.Areas.Admin.Factories
                 items.Add(vendorItem);
             }
 
-            //insert special vendor item for the "all" value
-            PrepareDefaultItem(items);
+            //insert special item for the default value
+            PrepareDefaultItem(items, withSpecialDefaultItem, defaultItemText);
         }
 
         /// <summary>
         /// Prepare available product types
         /// </summary>
         /// <param name="items">Product type items</param>
-        public virtual void PrepareProductTypes(IList<SelectListItem> items)
+        /// <param name="withSpecialDefaultItem">Whether to insert the first special item for the default value</param>
+        /// <param name="defaultItemText">Default item text; pass null to use default value of the default item text</param>
+        public virtual void PrepareProductTypes(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
         {
             if (items == null)
                 throw new ArgumentNullException(nameof(items));
@@ -401,35 +452,17 @@ namespace Nop.Web.Areas.Admin.Factories
                 items.Add(productTypeItem);
             }
 
-            //insert special product type item for the "all" value
-            PrepareDefaultItem(items);
-        }
-
-        /// <summary>
-        /// Prepare available parent categories
-        /// </summary>
-        /// <param name="items">Category items</param>
-        public virtual void PrepareParentCategories(IList<SelectListItem> items)
-        {
-            if (items == null)
-                throw new ArgumentNullException(nameof(items));
-
-            //prepare available parent categories
-            var availableCategoryItems = SelectListHelper.GetCategoryList(_categoryService, _cacheManager, true);
-            foreach (var categoryItem in availableCategoryItems)
-            {
-                items.Add(categoryItem);
-            }
-
-            //insert special category item for the "none" value
-            PrepareDefaultItem(items, _localizationService.GetResource("Admin.Catalog.Categories.Fields.Parent.None"));
+            //insert special item for the default value
+            PrepareDefaultItem(items, withSpecialDefaultItem, defaultItemText);
         }
 
         /// <summary>
         /// Prepare available category templates
         /// </summary>
         /// <param name="items">Category template items</param>
-        public virtual void PrepareCategoryTemplates(IList<SelectListItem> items)
+        /// <param name="withSpecialDefaultItem">Whether to insert the first special item for the default value</param>
+        /// <param name="defaultItemText">Default item text; pass null to use default value of the default item text</param>
+        public virtual void PrepareCategoryTemplates(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
         {
             if (items == null)
                 throw new ArgumentNullException(nameof(items));
@@ -440,6 +473,53 @@ namespace Nop.Web.Areas.Admin.Factories
             {
                 items.Add(new SelectListItem { Value = template.Id.ToString(), Text = template.Name });
             }
+
+            //insert special item for the default value
+            PrepareDefaultItem(items, withSpecialDefaultItem, defaultItemText);
+        }
+
+        /// <summary>
+        /// Prepare available time zones
+        /// </summary>
+        /// <param name="items">Time zone items</param>
+        /// <param name="withSpecialDefaultItem">Whether to insert the first special item for the default value</param>
+        /// <param name="defaultItemText">Default item text; pass null to use default value of the default item text</param>
+        public virtual void PrepareTimeZones(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
+        {
+            if (items == null)
+                throw new ArgumentNullException(nameof(items));
+
+            //prepare available time zones
+            var availableTimeZones = _dateTimeHelper.GetSystemTimeZones();
+            foreach (var timeZone in availableTimeZones)
+            {
+                items.Add(new SelectListItem { Value = timeZone.Id, Text = timeZone.DisplayName });
+            }
+
+            //insert special item for the default value
+            PrepareDefaultItem(items, withSpecialDefaultItem, defaultItemText);
+        }
+
+        /// <summary>
+        /// Prepare available shopping cart types
+        /// </summary>
+        /// <param name="items">Shopping cart type items</param>
+        /// <param name="withSpecialDefaultItem">Whether to insert the first special item for the default value</param>
+        /// <param name="defaultItemText">Default item text; pass null to use default value of the default item text</param>
+        public virtual void PrepareShoppingCartTypes(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
+        {
+            if (items == null)
+                throw new ArgumentNullException(nameof(items));
+
+            //prepare available shopping cart types
+            var availableShoppingCartTypeItems = ShoppingCartType.ShoppingCart.ToSelectList(false);
+            foreach (var shoppingCartTypeItem in availableShoppingCartTypeItems)
+            {
+                items.Add(shoppingCartTypeItem);
+            }
+
+            //insert special item for the default value
+            PrepareDefaultItem(items, withSpecialDefaultItem, defaultItemText);
         }
 
         #endregion

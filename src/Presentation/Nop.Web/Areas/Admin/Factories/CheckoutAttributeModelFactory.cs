@@ -72,8 +72,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="model">Condition attributes model</param>
         /// <param name="checkoutAttribute">Checkout attribute</param>
-        /// <returns>Condition attributes model</returns>
-        protected virtual ConditionModel PrepareConditionAttributesModel(ConditionModel model, CheckoutAttribute checkoutAttribute)
+        protected virtual void PrepareConditionAttributesModel(ConditionModel model, CheckoutAttribute checkoutAttribute)
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
@@ -83,7 +82,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             model.EnableCondition = !string.IsNullOrEmpty(checkoutAttribute.ConditionAttributeXml);
             if (!model.EnableCondition)
-                return model;
+                return;
 
             //get selected checkout attribute
             var selectedAttribute = _checkoutAttributeParser.ParseCheckoutAttributes(checkoutAttribute.ConditionAttributeXml).FirstOrDefault();
@@ -109,8 +108,6 @@ namespace Nop.Web.Areas.Admin.Factories
                     Selected = selectedAttribute?.Id == attribute.Id && selectedValuesIds.Contains(value.Id)
                 }).ToList()
             }).ToList();
-
-            return model;
         }
 
         #endregion
@@ -287,7 +284,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (checkoutAttributeValue != null)
             {
                 //fill in model values from the entity
-                model = new CheckoutAttributeValueModel
+                model = model ?? new CheckoutAttributeValueModel
                 {
                     Name = checkoutAttributeValue.Name,
                     ColorSquaresRgb = checkoutAttributeValue.ColorSquaresRgb,
