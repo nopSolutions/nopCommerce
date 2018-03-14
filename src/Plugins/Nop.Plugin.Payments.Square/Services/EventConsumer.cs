@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using Microsoft.AspNetCore.Routing;
 using Nop.Core.Domain.Payments;
 using Nop.Services.Events;
 using Nop.Services.Localization;
@@ -61,11 +60,9 @@ namespace Nop.Plugin.Payments.Square.Services
                 return;
 
             //add js sсript to one page checkout
-            var matchedRoutes = eventMessage.Helper.ViewContext.RouteData.Routers.OfType<INamedRouter>();
-            if (matchedRoutes.Any(route => route.Name.Equals("CheckoutOnePage")))
+            if (eventMessage.GetRouteNames().Any(r => r.Equals("CheckoutOnePage")))
             {
-                eventMessage.Helper
-                    .AddScriptParts(ResourceLocation.Footer, SquarePaymentDefaults.PaymentFormScriptPath, excludeFromBundle: true);
+                eventMessage.Helper.AddScriptParts(ResourceLocation.Footer, SquarePaymentDefaults.PaymentFormScriptPath, excludeFromBundle: true);
             }
         }
 
