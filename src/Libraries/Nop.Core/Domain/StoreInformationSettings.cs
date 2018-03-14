@@ -3,7 +3,7 @@
 namespace Nop.Core.Domain
 {
     /// <summary>
-    /// Store onformation settings
+    /// Store information settings
     /// </summary>
     public class StoreInformationSettings : ISettings
     {

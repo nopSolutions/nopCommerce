@@ -187,6 +187,26 @@ namespace Nop.Services.Orders
 
             //event notification
             _eventPublisher.EntityDeleted(shoppingCartItem);
+
+            if(!_catalogSettings.RemoveRequiredProducts)
+                return;
+            
+            var product = _productService.GetProductById(shoppingCartItem.ProductId);
+
+            if (product == null || !product.RequireOtherProducts || !product.AutomaticallyAddRequiredProducts)
+                return;
+
+            var requiredProductIds = product.ParseRequiredProductIds();
+            var requiredShoppingCartItems = customer.ShoppingCartItems
+                .Where(x => x.ShoppingCartType == shoppingCartItem.ShoppingCartType)
+                .Where(item => requiredProductIds.Any(id => id == item.ProductId))
+                .ToList();
+
+            //remove required products from the cart if the main one is removed
+            foreach (var cartItem in requiredShoppingCartItems)
+            {
+                DeleteShoppingCartItem(cartItem, false, ensureOnlyActiveCheckoutAttributes);
+            }
         }
 
         /// <summary>

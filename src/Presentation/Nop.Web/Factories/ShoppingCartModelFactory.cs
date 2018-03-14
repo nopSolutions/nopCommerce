@@ -1186,18 +1186,16 @@ namespace Nop.Web.Factories
                 }
 
                 //reward points to be earned
-                if (_rewardPointsSettings.Enabled &&
-                    _rewardPointsSettings.DisplayHowMuchWillBeEarned &&
-                    shoppingCartTotalBase.HasValue)
+                if (_rewardPointsSettings.Enabled && _rewardPointsSettings.DisplayHowMuchWillBeEarned && shoppingCartTotalBase.HasValue)
                 {
-                    var shippingBaseInclTax = model.RequiresShipping
-                        ? _orderTotalCalculationService.GetShoppingCartShippingTotal(cart, true)
-                        : 0;
-                    if (shippingBaseInclTax.HasValue)
-                    {
-                        var totalForRewardPoints = _orderTotalCalculationService.CalculateApplicableOrderTotalForRewardPoints(shippingBaseInclTax.Value, shoppingCartTotalBase.Value);
+                    //get shipping total
+                    var shippingBaseInclTax = !model.RequiresShipping ? 0 : _orderTotalCalculationService.GetShoppingCartShippingTotal(cart, true) ?? 0;
+
+                    //get total for reward points
+                    var totalForRewardPoints = _orderTotalCalculationService
+                        .CalculateApplicableOrderTotalForRewardPoints(shippingBaseInclTax, shoppingCartTotalBase.Value);
+                    if (totalForRewardPoints > decimal.Zero)
                         model.WillEarnRewardPoints = _orderTotalCalculationService.CalculateRewardPoints(_workContext.CurrentCustomer, totalForRewardPoints);
-                    }
                 }
 
             }

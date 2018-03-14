@@ -1,3 +1,5 @@
+@model PollListModel
+
 @inject AdminAreaSettings adminAreaSettings
 
 @{
@@ -27,6 +29,33 @@
 <div class="content">
     <div class="form-horizontal">
         <div class="panel-group">
+            
+            @*hide the entire search block if no elements are displayed*@
+            <div class="panel panel-default panel-search" @(Model.AvailableStores.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group" @(Model.AvailableStores.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
+                                <div class="col-md-4">
+                                    <nop-label asp-for="SearchStoreId" />
+                                </div>
+                                <div class="col-md-8">
+                                    <nop-select asp-for="SearchStoreId" asp-items="Model.AvailableStores" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-8 col-md-offset-4">
+                                    <button type="button" id="search-poll" class="btn btn-primary btn-search">
+                                        <i class="fa fa-search"></i>
+                                        @T("Admin.Common.Search")
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="panel panel-default">
                 <div class="panel-body">
                     <div id="polls-grid"></div>
@@ -41,7 +70,7 @@
                                             url: "@Html.Raw(Url.Action("List", "Poll"))",
                                             type: "POST",
                                             dataType: "json",
-                                            data: addAntiForgeryToken
+                                            data: additionalData
                                         }
                                     },
                                     schema: {
@@ -116,6 +145,24 @@
                                 ]
                             });
                         });
+                    </script>
+
+                    <script>
+                        $(document).ready(function() {
+                            $('#search-poll').click(function() {
+                                var grid = $('#polls-grid').data('kendoGrid');
+                                grid.dataSource.page(1);
+                                return false;
+                            });
+                        });
+
+                        function additionalData() {
+                            var data = {
+                                SearchStoreId: $('#SearchStoreId').val()
+                            };
+                            addAntiForgeryToken(data);
+                            return data;
+                        }
                     </script>
                 </div>
             </div>

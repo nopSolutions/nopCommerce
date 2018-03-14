@@ -557,6 +557,87 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.ForceSslForAllPages.Hint">
     <Value>By default not all site pages are SSL protected. Check to force SSL for the entire site. This setting is highly recommended when you have SSL enabled on your store.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.RewardPoints.Fields.Date">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.RewardPoints.Fields.CreatedDate">
+    <Value>Date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.RewardPoints.Fields.EndDate">
+    <Value>End date</Value>
+  </LocaleResource>
+  <LocaleResource Name="RewardPoints.Fields.Date">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="RewardPoints.Fields.CreatedDate">
+    <Value>Date</Value>
+  </LocaleResource>
+  <LocaleResource Name="RewardPoints.Fields.EndDate">
+    <Value>End date</Value>
+  </LocaleResource>
+  <LocaleResource Name="RewardPoints.Message.Expired">
+    <Value>Unused reward points from {0} have expired</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.RegistrationPointsValidity">
+    <Value>Registration points validity</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.RegistrationPointsValidity.Hint">
+    <Value>Specify number of days when the points awarded for registration will be valid.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.RegistrationPointsValidity.Postfix">
+    <Value>Days</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.PurchasesPointsValidity">
+    <Value>Purchases points validity</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.PurchasesPointsValidity.Hint">
+    <Value>Specify number of days when the points awarded for purchases will be valid.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.PurchasesPointsValidity.Postfix">
+    <Value>Days</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.RewardPoints.Fields.PointsValidity">
+    <Value>Points validity</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.RewardPoints.Fields.PointsValidity.Hint">
+    <Value>Specify number of days when the awarded points will be valid (only for positive amount of points).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.RewardPoints.Fields.PointsValidity.Postfix">
+    <Value>Days</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.MinOrderTotalToAwardPoints">
+    <Value>Minimum order total</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.MinOrderTotalToAwardPoints.Hint">
+    <Value>Specify the minimum order total (exclude shipping cost) to award points for purchases.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.CheckoutDisabled">
+    <Value>Checkout disabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.CheckoutDisabled.Hint">
+    <Value>Check to disable the checkout process (a read-only mode where ordering is turned off temporarily).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Checkout.Disabled">
+    <Value>Sorry, checkout process is temporary disabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Polls.Fields.LimitedToStores">
+    <Value>Limited to stores</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Polls.Fields.LimitedToStores.Hint">
+    <Value>Option to limit this poll to a certain store. If you have multiple stores, choose one or several from the list. If you don''t use this option just leave this field empty.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Polls.List.SearchStore">
+    <Value>Store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Polls.List.SearchStore.Hint">
+    <Value>Search by a specific store.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.RemoveRequiredProducts">
+    <Value>Remove required products</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.RemoveRequiredProducts.Hint">
+    <Value>Remove required products from the cart if the main one is removed.</Value>
+  </LocaleResource> 
 </Language>
 '
 
@@ -1099,4 +1180,76 @@ GO
 UPDATE [Setting] 
 SET [Name] = N'adminareasettings.useisodateformatinjsonresult' 
 WHERE [Name] = N'adminareasettings.useisodatetimeconverterinjson'
+GO
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id = object_id('[RewardPointsHistory]') AND NAME = 'EndDateUtc')
+BEGIN
+	ALTER TABLE [RewardPointsHistory]
+	ADD [EndDateUtc] DATETIME NULL
+END
+GO
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id = object_id('[RewardPointsHistory]') AND NAME = 'ValidPoints')
+BEGIN
+	ALTER TABLE [RewardPointsHistory]
+	ADD [ValidPoints] INT NULL
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'rewardpointssettings.registrationpointsvalidity')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'rewardpointssettings.registrationpointsvalidity', N'30', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'rewardpointssettings.purchasespointsvalidity')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'rewardpointssettings.purchasespointsvalidity', N'45', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'rewardpointssettings.minordertotaltoawardpoints')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'rewardpointssettings.minordertotaltoawardpoints', N'0', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'ordersettings.checkoutdisabled')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'ordersettings.checkoutdisabled', N'false', 0)
+END
+GO
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id = object_id('[Poll]') and NAME = 'LimitedToStores')
+BEGIN
+	ALTER TABLE [Poll]
+	ADD [LimitedToStores] BIT NULL
+END
+GO
+
+UPDATE [Poll]
+SET [LimitedToStores] = 0
+WHERE [LimitedToStores] IS NULL
+GO
+
+ALTER TABLE [Poll] ALTER COLUMN [LimitedToStores] BIT NOT NULL
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'catalogsettings.removerequiredproducts')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'catalogsettings.removerequiredproducts', N'false', 0)
+END
 GO

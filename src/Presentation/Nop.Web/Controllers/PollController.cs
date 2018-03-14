@@ -5,6 +5,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Polls;
 using Nop.Services.Localization;
 using Nop.Services.Polls;
+using Nop.Services.Stores;
 using Nop.Web.Factories;
 
 namespace Nop.Web.Controllers
@@ -13,24 +14,27 @@ namespace Nop.Web.Controllers
     {
         #region Fields
 
-        private readonly IPollModelFactory _pollModelFactory;
         private readonly ILocalizationService _localizationService;
-        private readonly IWorkContext _workContext;
+        private readonly IPollModelFactory _pollModelFactory;
         private readonly IPollService _pollService;
+        private readonly IStoreMappingService _storeMappingService;
+        private readonly IWorkContext _workContext;
 
         #endregion
 
         #region Ctor
 
-        public PollController(IPollModelFactory pollModelFactory,
-            ILocalizationService localizationService,
-            IWorkContext workContext,
-            IPollService pollService)
+        public PollController(ILocalizationService localizationService, 
+            IPollModelFactory pollModelFactory,
+            IPollService pollService,
+            IStoreMappingService storeMappingService,
+            IWorkContext workContext)
         {
-            this._pollModelFactory = pollModelFactory;
             this._localizationService = localizationService;
-            this._workContext = workContext;
+            this._pollModelFactory = pollModelFactory;
             this._pollService = pollService;
+            this._storeMappingService = storeMappingService;
+            this._workContext = workContext;
         }
 
         #endregion
@@ -42,23 +46,14 @@ namespace Nop.Web.Controllers
         {
             var pollAnswer = _pollService.GetPollAnswerById(pollAnswerId);
             if (pollAnswer == null)
-                return Json(new
-                {
-                    error = "No poll answer found with the specified id",
-                });
+                return Json(new { error = "No poll answer found with the specified id" });
 
             var poll = pollAnswer.Poll;
-            if (!poll.Published)
-                return Json(new
-                {
-                    error = "Poll is not available",
-                });
+            if (!poll.Published || !_storeMappingService.Authorize(poll))
+                return Json(new { error = "Poll is not available" });
 
             if (_workContext.CurrentCustomer.IsGuest() && !poll.AllowGuestsToVote)
-                return Json(new
-                {
-                    error = _localizationService.GetResource("Polls.OnlyRegisteredUsersVote"),
-                });
+                return Json(new { error = _localizationService.GetResource("Polls.OnlyRegisteredUsersVote") });
 
             var alreadyVoted = _pollService.AlreadyVoted(poll.Id, _workContext.CurrentCustomer.Id);
             if (!alreadyVoted)
@@ -70,6 +65,7 @@ namespace Nop.Web.Controllers
                     CustomerId = _workContext.CurrentCustomer.Id,
                     CreatedOnUtc = DateTime.UtcNow
                 });
+
                 //update totals
                 pollAnswer.NumberOfVotes = pollAnswer.PollVotingRecords.Count;
                 _pollService.UpdatePoll(poll);

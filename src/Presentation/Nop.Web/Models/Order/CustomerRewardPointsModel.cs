@@ -33,8 +33,11 @@ namespace Nop.Web.Models.Order
             [NopResourceDisplayName("RewardPoints.Fields.Message")]
             public string Message { get; set; }
 
-            [NopResourceDisplayName("RewardPoints.Fields.Date")]
+            [NopResourceDisplayName("RewardPoints.Fields.CreatedDate")]
             public DateTime CreatedOn { get; set; }
+
+            [NopResourceDisplayName("RewardPoints.Fields.EndDate")]
+            public DateTime? EndDate { get; set; }
         }
 
         #endregion

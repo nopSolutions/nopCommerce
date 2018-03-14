@@ -70,8 +70,12 @@
                             title: "@T("Admin.Customers.Customers.RewardPoints.Fields.Message")"
                         }, {
                             field: "CreatedOn",
-                            title: "@T("Admin.Promotions.Campaigns.Fields.CreatedOn")",
-                            width: 200,
+                            title: "@T("Admin.Customers.Customers.RewardPoints.Fields.CreatedDate")",
+                            type: "date",
+                            format: "{0:G}"
+                        }, {
+                            field: "EndDate",
+                            title: "@T("Admin.Customers.Customers.RewardPoints.Fields.EndDate")",
                             type: "date",
                             format: "{0:G}"
                         }
@@ -93,6 +97,15 @@
                 <div class="col-md-9">
                     <nop-editor asp-for="@Model.AddRewardPoints.Points" />
                     <span asp-validation-for="@Model.AddRewardPoints.Points"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-label asp-for="@Model.AddRewardPoints.PointsValidity" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="@Model.AddRewardPoints.PointsValidity" asp-postfix="@T("Admin.Customers.Customers.RewardPoints.Fields.PointsValidity.Postfix")" />
+                    <span asp-validation-for="@Model.AddRewardPoints.PointsValidity"></span>
                 </div>
             </div>
             <div class="form-group">
@@ -158,6 +171,7 @@
                         ActivatePointsImmediately: $("#@Html.IdFor(model => model.AddRewardPoints.ActivatePointsImmediately)").is(':checked'),
                         ActivationDelayPeriodId: $("#@Html.IdFor(model => model.AddRewardPoints.ActivationDelayPeriodId)").val(),
                         ActivationDelay: $("#@Html.IdFor(model => model.AddRewardPoints.ActivationDelay)").val(),
+                        PointsValidity: $("#@Html.IdFor(model => model.AddRewardPoints.PointsValidity)").val(),
                         CustomerId: '@Model.Id'
                     };
                     addAntiForgeryToken(postData);

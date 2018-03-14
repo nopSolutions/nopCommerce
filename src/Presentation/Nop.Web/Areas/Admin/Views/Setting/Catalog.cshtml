@@ -433,6 +433,16 @@
                     <div class="panel-body">
                         <div class="form-group">
                             <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="RemoveRequiredProducts_OverrideForStore" asp-input="RemoveRequiredProducts" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="RemoveRequiredProducts" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="RemoveRequiredProducts" />
+                                <span asp-validation-for="RemoveRequiredProducts"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
                                 <nop-override-store-checkbox asp-for="ShowBestsellersOnHomepage_OverrideForStore" asp-input="ShowBestsellersOnHomepage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
                                 <nop-label asp-for="ShowBestsellersOnHomepage" />
                             </div>
