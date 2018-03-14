@@ -14,11 +14,11 @@ namespace Nop.Web.Framework.Events
         /// Ctor
         /// </summary>
         /// <param name="helper">HTML Helper</param>
-        /// <param name="overridenRouteName">Overriden route name</param>
-        public PageRenderingEvent(IHtmlHelper helper, string overridenRouteName = null)
+        /// <param name="overriddenRouteName">Overridden route name</param>
+        public PageRenderingEvent(IHtmlHelper helper, string overriddenRouteName = null)
         {
             this.Helper = helper;
-            this.OverridenRouteName = overridenRouteName;
+            this.OverriddenRouteName = overriddenRouteName;
         }
 
         /// <summary>
@@ -27,17 +27,17 @@ namespace Nop.Web.Framework.Events
         public IHtmlHelper Helper { get; private set; }
 
         /// <summary>
-        /// Overriden route name
+        /// Overridden route name
         /// </summary>
-        public string OverridenRouteName { get; private set; }
+        public string OverriddenRouteName { get; private set; }
 
         public IEnumerable<string> GetRouteNames()
         {
-            //if an overriden route name is specified, then use it
+            //if an overridden route name is specified, then use it
             //we use it to specify a custom route name when some custom page uses a custom route. But we still need this event to be invoked
-            if (!string.IsNullOrEmpty(OverridenRouteName))
+            if (!string.IsNullOrEmpty(OverriddenRouteName))
             {
-                return new List<string>() { OverridenRouteName };
+                return new List<string>() { OverriddenRouteName };
             }
 
             var matchedRoutes = this.Helper.ViewContext.RouteData.Routers.OfType<INamedRouter>();

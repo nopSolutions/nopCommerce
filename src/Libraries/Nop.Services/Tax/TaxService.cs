@@ -167,18 +167,18 @@ namespace Nop.Services.Tax
 
             //new EU VAT rules starting January 1st 2015
             //find more info at http://ec.europa.eu/taxation_customs/taxation/vat/how_vat_works/telecom/index_en.htm#new_rules
-            var overridenBasedOn = _taxSettings.EuVatEnabled                                            //EU VAT enabled?
+            var overriddenBasedOn = _taxSettings.EuVatEnabled                                            //EU VAT enabled?
                 && product != null && product.IsTelecommunicationsOrBroadcastingOrElectronicServices    //telecommunications, broadcasting and electronic services?
                 && DateTime.UtcNow > new DateTime(2015, 1, 1, 0, 0, 0, DateTimeKind.Utc)                //January 1st 2015 passed?
                 && IsEuConsumer(customer);                                                              //Europe Union consumer?
-            if (overridenBasedOn)
+            if (overriddenBasedOn)
             {
                 //We must charge VAT in the EU country where the customer belongs (not where the business is based)
                 basedOn = TaxBasedOn.BillingAddress;
             }
 
             //tax is based on pickup point address
-            if (!overridenBasedOn && _taxSettings.TaxBasedOnPickupPointAddress && _shippingSettings.AllowPickUpInStore)
+            if (!overriddenBasedOn && _taxSettings.TaxBasedOnPickupPointAddress && _shippingSettings.AllowPickUpInStore)
             {
                 var pickupPoint = customer.GetAttribute<PickupPoint>(SystemCustomerAttributeNames.SelectedPickupPoint, _storeContext.CurrentStore.Id);
                 if (pickupPoint != null)
