@@ -7,6 +7,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
+using Nop.Core.Domain.Tax;
 using Nop.Services;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
@@ -516,6 +517,28 @@ namespace Nop.Web.Areas.Admin.Factories
             foreach (var shoppingCartTypeItem in availableShoppingCartTypeItems)
             {
                 items.Add(shoppingCartTypeItem);
+            }
+
+            //insert special item for the default value
+            PrepareDefaultItem(items, withSpecialDefaultItem, defaultItemText);
+        }
+
+        /// <summary>
+        /// Prepare available tax display types
+        /// </summary>
+        /// <param name="items">Tax display type items</param>
+        /// <param name="withSpecialDefaultItem">Whether to insert the first special item for the default value</param>
+        /// <param name="defaultItemText">Default item text; pass null to use default value of the default item text</param>
+        public virtual void PrepareTaxDisplayTypes(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
+        {
+            if (items == null)
+                throw new ArgumentNullException(nameof(items));
+
+            //prepare available tax display types
+            var availableTaxDisplayTypeItems = TaxDisplayType.ExcludingTax.ToSelectList(false);
+            foreach (var taxDisplayTypeItem in availableTaxDisplayTypeItems)
+            {
+                items.Add(taxDisplayTypeItem);
             }
 
             //insert special item for the default value
