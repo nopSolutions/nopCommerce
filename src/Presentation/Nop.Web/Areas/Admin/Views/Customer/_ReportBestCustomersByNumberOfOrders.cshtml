@@ -1,4 +1,5 @@
-﻿@model BestCustomersReportModel
+﻿@model BestCustomersReportSearchModel
+
 @inject AdminAreaSettings adminAreaSettings
 @{
     var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
@@ -136,6 +137,7 @@
 
                 function bestCustomersNumberOfOrdersAdditionalData(e) {
                     var data = {
+                        OrderBy : 2,
                         StartDate: $('#@Html.IdFor(model => model.StartDate)').val(),
                         EndDate: $('#@Html.IdFor(model => model.EndDate)').val(),
                         OrderStatusId: $('#@Html.IdFor(model => model.OrderStatusId)').val(),

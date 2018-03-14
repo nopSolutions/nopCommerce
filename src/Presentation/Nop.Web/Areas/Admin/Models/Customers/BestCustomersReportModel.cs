@@ -1,38 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Nop.Web.Framework.Mvc.ModelBinding;
+﻿using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Areas.Admin.Models.Customers
 {
+    /// <summary>
+    /// Represents a best customers report model
+    /// </summary>
     public partial class BestCustomersReportModel : BaseNopModel
     {
-        public BestCustomersReportModel()
-        {
-            AvailableOrderStatuses = new List<SelectListItem>();
-            AvailablePaymentStatuses = new List<SelectListItem>();
-            AvailableShippingStatuses = new List<SelectListItem>();
-        }
+        #region Properties
 
-        [NopResourceDisplayName("Admin.Customers.Reports.BestBy.StartDate")]
-        [UIHint("DateNullable")]
-        public DateTime? StartDate { get; set; }
+        public int CustomerId { get; set; }
 
-        [NopResourceDisplayName("Admin.Customers.Reports.BestBy.EndDate")]
-        [UIHint("DateNullable")]
-        public DateTime? EndDate { get; set; }
+        [NopResourceDisplayName("Admin.Customers.Reports.BestBy.Fields.Customer")]
+        public string CustomerName { get; set; }
 
-        [NopResourceDisplayName("Admin.Customers.Reports.BestBy.OrderStatus")]
-        public int OrderStatusId { get; set; }
-        [NopResourceDisplayName("Admin.Customers.Reports.BestBy.PaymentStatus")]
-        public int PaymentStatusId { get; set; }
-        [NopResourceDisplayName("Admin.Customers.Reports.BestBy.ShippingStatus")]
-        public int ShippingStatusId { get; set; }
+        [NopResourceDisplayName("Admin.Customers.Reports.BestBy.Fields.OrderTotal")]
+        public string OrderTotal { get; set; }
 
-        public IList<SelectListItem> AvailableOrderStatuses { get; set; }
-        public IList<SelectListItem> AvailablePaymentStatuses { get; set; }
-        public IList<SelectListItem> AvailableShippingStatuses { get; set; }
+        [NopResourceDisplayName("Admin.Customers.Reports.BestBy.Fields.OrderCount")]
+        public decimal OrderCount { get; set; }
+        
+        #endregion
     }
 }

@@ -15,10 +15,10 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <div class="col-md-4">
-                            <nop-label asp-for="ShoppingCartTypeModel.ShoppingCartType" />
+                            <nop-label asp-for="CustomerShoppingCartSearchModel.ShoppingCartTypeId" />
                         </div>
                         <div class="col-md-8">
-                            <nop-select asp-for="ShoppingCartTypeModel.ShoppingCartType" asp-items="@Model.ShoppingCartTypeModel.AvailableShoppingCartTypes" />
+                            <nop-select asp-for="CustomerShoppingCartSearchModel.ShoppingCartTypeId" asp-items="@Model.CustomerShoppingCartSearchModel.AvailableShoppingCartTypes" />
                         </div>
                     </div>
                 </div>
@@ -109,7 +109,7 @@
 <script>
     function additionalData() {
         var data = {
-            ShoppingCartType: $('#@Html.IdFor(model => model.ShoppingCartTypeModel.ShoppingCartType)').val()
+            ShoppingCartTypeId: $('#@Html.IdFor(model => model.CustomerShoppingCartSearchModel.ShoppingCartTypeId)').val()
         };
         addAntiForgeryToken(data);
         return data;
@@ -117,7 +117,7 @@
 
     $(document)
         .ready(function() {
-            $("#ShoppingCartTypeModel_ShoppingCartType")
+            $("#CustomerShoppingCartSearchModel_ShoppingCartTypeId")
                 .change(function() {
                     $("#currentshoppingcart-grid").data('kendoGrid').dataSource.read();
                 });

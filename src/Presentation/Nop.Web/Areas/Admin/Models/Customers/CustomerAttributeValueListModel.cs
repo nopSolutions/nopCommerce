@@ -5,7 +5,7 @@ namespace Nop.Web.Areas.Admin.Models.Customers
     /// <summary>
     /// Represents a customer attribute value list model
     /// </summary>
-    public class CustomerAttributeValueListModel : BasePagedListModel<CustomerAttributeValueModel>
+    public partial class CustomerAttributeValueListModel : BasePagedListModel<CustomerAttributeValueModel>
     {
     }
 }

@@ -1,4 +1,4 @@
-﻿@model CustomerListModel
+﻿@model CustomerSearchModel
 @inject AdminAreaSettings adminAreaSettings
 
 @using System.Globalization;
@@ -186,14 +186,14 @@
                                 </div>
                                 <div class="form-group">
                                     <div class="col-md-4">
-                                        <nop-label asp-for="SearchCustomerRoleIds" />
+                                        <nop-label asp-for="SelectedCustomerRoleIds" />
                                     </div>
                                     <div class="col-md-8">
-                                        <nop-select asp-for="SearchCustomerRoleIds" asp-items="Model.AvailableCustomerRoles" asp-multiple="true" />
+                                        <nop-select asp-for="SelectedCustomerRoleIds" asp-items="Model.AvailableCustomerRoles" asp-multiple="true" />
                                         <script>
                                             $(document).ready(function() {
                                                 var rolesIdsInput =
-                                                    $('#@Html.IdFor(model => model.SearchCustomerRoleIds)')
+                                                    $('#@Html.IdFor(model => model.SelectedCustomerRoleIds)')
                                                         .data("kendoMultiSelect");
                                                 rolesIdsInput.setOptions({
                                                     autoClose: false,
@@ -437,7 +437,7 @@
 
     function additionalData() {
         var data = {
-            SearchCustomerRoleIds: $('#@Html.IdFor(model => model.SearchCustomerRoleIds)').val(),
+            SelectedCustomerRoleIds: $('#@Html.IdFor(model => model.SelectedCustomerRoleIds)').val(),
             SearchEmail: $('#@Html.IdFor(model => model.SearchEmail)').val(),
             SearchUsername: $('#@Html.IdFor(model => model.SearchUsername)').val(),
             SearchFirstName: $('#@Html.IdFor(model => model.SearchFirstName)').val(),

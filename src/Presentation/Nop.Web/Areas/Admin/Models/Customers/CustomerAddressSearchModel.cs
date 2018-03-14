@@ -3,9 +3,9 @@
 namespace Nop.Web.Areas.Admin.Models.Customers
 {
     /// <summary>
-    /// Represents a customer list model
+    /// Represents a customer address search model
     /// </summary>
-    public partial class CustomerListModel : BasePagedListModel<CustomerModel>
+    public partial class CustomerAddressSearchModel : BaseSearchModel
     {
     }
 }

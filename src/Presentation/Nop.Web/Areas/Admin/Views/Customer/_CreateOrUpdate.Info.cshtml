@@ -455,8 +455,8 @@
                         {
                             <div class="checkbox">
                                 <label>
-                                    <input type="checkbox" name="SelectedNewsletterSubscriptionStoreIds" value="@store.Id" checked="@(Model.SelectedNewsletterSubscriptionStoreIds != null && Model.SelectedNewsletterSubscriptionStoreIds.Contains(store.Id))" />
-                                    (@(store.Name))
+                                    <input type="checkbox" name="SelectedNewsletterSubscriptionStoreIds" value="@store.Value" checked="@store.Selected" />
+                                    (@(store.Text))
                                 </label>
                             </div>
                         }
