@@ -12,10 +12,14 @@
     				<RepositoryType>Git</RepositoryType>
   			</PropertyGroup>
   			<ItemGroup>
-  			  <PackageReference Include="NUnit" Version="3.9.0" />
+  			  <PackageReference Include="NUnit" Version="3.10.1" />
+  			  <PackageReference Include="NUnit3TestAdapter" Version="3.10.0" />
   			  <PackageReference Include="RhinoMocks" Version="3.6.1" />
   			</ItemGroup>
   			<ItemGroup>
   			  <ProjectReference Include="..\..\Libraries\Nop.Core\Nop.Core.csproj" />
+  			</ItemGroup>
+  			<ItemGroup>
+  			  <Service Include="{82a7f48d-3b50-4b1e-b82e-3ada8210c358}" />
   			</ItemGroup>
 </Project>
