@@ -632,6 +632,12 @@ set @resources='
   <LocaleResource Name="Admin.ContentManagement.Polls.List.SearchStore.Hint">
     <Value>Search by a specific store.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.RemoveRequiredProducts">
+    <Value>Remove required products</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.RemoveRequiredProducts.Hint">
+    <Value>Remove required products from the cart if the main one is removed.</Value>
+  </LocaleResource> 
 </Language>
 '
 
@@ -1238,4 +1244,12 @@ WHERE [LimitedToStores] IS NULL
 GO
 
 ALTER TABLE [Poll] ALTER COLUMN [LimitedToStores] BIT NOT NULL
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'catalogsettings.removerequiredproducts')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'catalogsettings.removerequiredproducts', N'false', 0)
+END
 GO
