@@ -43,6 +43,9 @@ namespace Nop.Web.Framework.Globalization
             if (!DataSettingsHelper.DatabaseIsInstalled())
                 return;
 
+            if (webHelper.IsStaticResource())
+                return;
+
             var adminAreaUrl = $"{webHelper.GetStoreLocation()}admin";
             if (webHelper.GetThisPageUrl(false).StartsWith(adminAreaUrl, StringComparison.InvariantCultureIgnoreCase))
             {
