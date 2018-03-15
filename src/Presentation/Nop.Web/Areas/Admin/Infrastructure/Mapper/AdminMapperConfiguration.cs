@@ -476,7 +476,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.ConfigurationUrl, mo => mo.Ignore())
                 .ForMember(dest => dest.Form, mo => mo.Ignore());
             //external authentication methods
-            CreateMap<IExternalAuthenticationMethod, AuthenticationMethodModel>()
+            CreateMap<IExternalAuthenticationMethod, ExternalAuthenticationMethodModel>()
                 .ForMember(dest => dest.FriendlyName, mo => mo.MapFrom(src => src.PluginDescriptor.FriendlyName))
                 .ForMember(dest => dest.SystemName, mo => mo.MapFrom(src => src.PluginDescriptor.SystemName))
                 .ForMember(dest => dest.DisplayOrder, mo => mo.MapFrom(src => src.PluginDescriptor.DisplayOrder))

@@ -593,9 +593,9 @@ namespace Nop.Web.Areas.Admin.Extensions
 
         #region External authentication methods
 
-        public static AuthenticationMethodModel ToModel(this IExternalAuthenticationMethod entity)
+        public static ExternalAuthenticationMethodModel ToModel(this IExternalAuthenticationMethod entity)
         {
-            return entity.MapTo<IExternalAuthenticationMethod, AuthenticationMethodModel>();
+            return entity.MapTo<IExternalAuthenticationMethod, ExternalAuthenticationMethodModel>();
         }
 
         #endregion

@@ -3,8 +3,13 @@ using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Areas.Admin.Models.ExternalAuthentication
 {
-    public partial class AuthenticationMethodModel : BaseNopModel
+    /// <summary>
+    /// Represents an external authentication method model
+    /// </summary>
+    public partial class ExternalAuthenticationMethodModel : BaseNopModel
     {
+        #region Properties
+
         [NopResourceDisplayName("Admin.Configuration.ExternalAuthenticationMethods.Fields.FriendlyName")]
         public string FriendlyName { get; set; }
 
@@ -19,5 +24,7 @@ namespace Nop.Web.Areas.Admin.Models.ExternalAuthentication
 
         [NopResourceDisplayName("Admin.Configuration.ExternalAuthenticationMethods.Configure")]
         public string ConfigurationUrl { get; set; }
+
+        #endregion
     }
 }
