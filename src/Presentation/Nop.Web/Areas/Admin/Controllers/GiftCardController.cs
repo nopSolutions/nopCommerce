@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Nop.Web.Areas.Admin.Extensions;
-using Nop.Web.Areas.Admin.Models.Orders;
 using Nop.Core;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Localization;
@@ -16,9 +13,10 @@ using Nop.Services.Logging;
 using Nop.Services.Messages;
 using Nop.Services.Orders;
 using Nop.Services.Security;
+using Nop.Web.Areas.Admin.Extensions;
+using Nop.Web.Areas.Admin.Factories;
+using Nop.Web.Areas.Admin.Models.Orders;
 using Nop.Web.Framework.Controllers;
-using Nop.Web.Framework.Extensions;
-using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Web.Areas.Admin.Controllers
@@ -27,47 +25,54 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
+        private readonly CurrencySettings _currencySettings;
+        private readonly ICurrencyService _currencyService;
+        private readonly ICustomerActivityService _customerActivityService;
+        private readonly IDateTimeHelper _dateTimeHelper;
+        private readonly IGiftCardModelFactory _giftCardModelFactory;
         private readonly IGiftCardService _giftCardService;
+        private readonly ILanguageService _languageService;
+        private readonly ILocalizationService _localizationService;
+        private readonly IPermissionService _permissionService;
         private readonly IPriceFormatter _priceFormatter;
         private readonly IWorkflowMessageService _workflowMessageService;
-        private readonly IDateTimeHelper _dateTimeHelper;
         private readonly LocalizationSettings _localizationSettings;
-        private readonly ICurrencyService _currencyService;
-        private readonly CurrencySettings _currencySettings;
-        private readonly ILocalizationService _localizationService;
-        private readonly ILanguageService _languageService;
-        private readonly ICustomerActivityService _customerActivityService;
-        private readonly IPermissionService _permissionService;
 
         #endregion
 
         #region Ctor
 
-        public GiftCardController(IGiftCardService giftCardService,
-            IPriceFormatter priceFormatter, IWorkflowMessageService workflowMessageService,
-            IDateTimeHelper dateTimeHelper, LocalizationSettings localizationSettings,
-            ICurrencyService currencyService, CurrencySettings currencySettings,
-            ILocalizationService localizationService, ILanguageService languageService,
-            ICustomerActivityService customerActivityService, IPermissionService permissionService)
+        public GiftCardController(CurrencySettings currencySettings,
+            ICurrencyService currencyService,
+            ICustomerActivityService customerActivityService,
+            IDateTimeHelper dateTimeHelper,
+            IGiftCardModelFactory giftCardModelFactory,
+            IGiftCardService giftCardService,
+            ILanguageService languageService,
+            ILocalizationService localizationService,
+            IPermissionService permissionService,
+            IPriceFormatter priceFormatter,
+            IWorkflowMessageService workflowMessageService,
+            LocalizationSettings localizationSettings)
         {
+            this._currencySettings = currencySettings;
+            this._currencyService = currencyService;
+            this._customerActivityService = customerActivityService;
+            this._dateTimeHelper = dateTimeHelper;
+            this._giftCardModelFactory = giftCardModelFactory;
             this._giftCardService = giftCardService;
+            this._languageService = languageService;
+            this._localizationService = localizationService;
+            this._permissionService = permissionService;
             this._priceFormatter = priceFormatter;
             this._workflowMessageService = workflowMessageService;
-            this._dateTimeHelper = dateTimeHelper;
             this._localizationSettings = localizationSettings;
-            this._currencyService = currencyService;
-            this._currencySettings = currencySettings;
-            this._localizationService = localizationService;
-            this._languageService = languageService;
-            this._customerActivityService = customerActivityService;
-            this._permissionService = permissionService;
         }
 
         #endregion
 
         #region Methods
 
-        //list
         public virtual IActionResult Index()
         {
             return RedirectToAction("List");
@@ -78,54 +83,22 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageGiftCards))
                 return AccessDeniedView();
 
-            var model = new GiftCardListModel();
-            model.ActivatedList.Add(new SelectListItem
-            {
-                Value = "0",
-                Text = _localizationService.GetResource("Admin.GiftCards.List.Activated.All")
-            });
-            model.ActivatedList.Add(new SelectListItem
-            {
-                Value = "1",
-                Text = _localizationService.GetResource("Admin.GiftCards.List.Activated.ActivatedOnly")
-            });
-            model.ActivatedList.Add(new SelectListItem
-            {
-                Value = "2",
-                Text = _localizationService.GetResource("Admin.GiftCards.List.Activated.DeactivatedOnly")
-            });
+            //prepare model
+            var model = _giftCardModelFactory.PrepareGiftCardSearchModel(new GiftCardSearchModel());
+
             return View(model);
         }
 
         [HttpPost]
-        public virtual IActionResult GiftCardList(DataSourceRequest command, GiftCardListModel model)
+        public virtual IActionResult GiftCardList(GiftCardSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageGiftCards))
                 return AccessDeniedKendoGridJson();
 
-            bool? isGiftCardActivated = null;
-            if (model.ActivatedId == 1)
-                isGiftCardActivated = true;
-            else if (model.ActivatedId == 2)
-                isGiftCardActivated = false;
-            var giftCards = _giftCardService.GetAllGiftCards(isGiftCardActivated: isGiftCardActivated,
-                giftCardCouponCode: model.CouponCode,
-                recipientName: model.RecipientName,
-                pageIndex: command.Page - 1, pageSize: command.PageSize);
-            var gridModel = new DataSourceResult
-            {
-                Data = giftCards.Select(x =>
-                {
-                    var m = x.ToModel();
-                    m.RemainingAmountStr = _priceFormatter.FormatPrice(x.GetGiftCardRemainingAmount(), true, false);
-                    m.AmountStr = _priceFormatter.FormatPrice(x.Amount, true, false);
-                    m.CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc);
-                    return m;
-                }),
-                Total = giftCards.TotalCount
-            };
+            //prepare model
+            var model = _giftCardModelFactory.PrepareGiftCardListModel(searchModel);
 
-            return Json(gridModel);
+            return Json(model);
         }
 
         public virtual IActionResult Create()
@@ -133,10 +106,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageGiftCards))
                 return AccessDeniedView();
 
-            var model = new GiftCardModel
-            {
-                PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode
-            };
+            //prepare model
+            var model = _giftCardModelFactory.PrepareGiftCardModel(new GiftCardModel(), null);
 
             return View(model);
         }
@@ -158,11 +129,13 @@ namespace Nop.Web.Areas.Admin.Controllers
                     string.Format(_localizationService.GetResource("ActivityLog.AddNewGiftCard"), giftCard.GiftCardCouponCode), giftCard);
 
                 SuccessNotification(_localizationService.GetResource("Admin.GiftCards.Added"));
+
                 return continueEditing ? RedirectToAction("Edit", new { id = giftCard.Id }) : RedirectToAction("List");
             }
 
             //If we got this far, something failed, redisplay form
-            model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
+            model = _giftCardModelFactory.PrepareGiftCardModel(model, null, true);
+
             return View(model);
         }
 
@@ -171,18 +144,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageGiftCards))
                 return AccessDeniedView();
 
+            //try to get a gift card with the specified id
             var giftCard = _giftCardService.GetGiftCardById(id);
             if (giftCard == null)
-                //No gift card found with the specified id
                 return RedirectToAction("List");
 
-            var model = giftCard.ToModel();
-            model.PurchasedWithOrderId = giftCard.PurchasedWithOrderItem != null ? (int?)giftCard.PurchasedWithOrderItem.OrderId : null;
-            model.RemainingAmountStr = _priceFormatter.FormatPrice(giftCard.GetGiftCardRemainingAmount(), true, false);
-            model.AmountStr = _priceFormatter.FormatPrice(giftCard.Amount, true, false);
-            model.CreatedOn = _dateTimeHelper.ConvertToUserTime(giftCard.CreatedOnUtc, DateTimeKind.Utc);
-            model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
-            model.PurchasedWithOrderNumber = giftCard.PurchasedWithOrderItem != null ? giftCard.PurchasedWithOrderItem.Order.CustomOrderNumber : null;
+            //prepare model
+            var model = _giftCardModelFactory.PrepareGiftCardModel(null, giftCard);
 
             return View(model);
         }
@@ -194,7 +162,10 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageGiftCards))
                 return AccessDeniedView();
 
+            //try to get a gift card with the specified id
             var giftCard = _giftCardService.GetGiftCardById(model.Id);
+            if (giftCard == null)
+                return RedirectToAction("List");
 
             model.PurchasedWithOrderId = giftCard.PurchasedWithOrderItem != null ? (int?)giftCard.PurchasedWithOrderItem.OrderId : null;
             model.RemainingAmountStr = _priceFormatter.FormatPrice(giftCard.GetGiftCardRemainingAmount(), true, false);
@@ -219,15 +190,18 @@ namespace Nop.Web.Areas.Admin.Controllers
                     //selected tab
                     SaveSelectedTabName();
 
-                    return RedirectToAction("Edit",  new {id = giftCard.Id});
+                    return RedirectToAction("Edit", new { id = giftCard.Id });
                 }
+
                 return RedirectToAction("List");
             }
 
             //If we got this far, something failed, redisplay form
+            model = _giftCardModelFactory.PrepareGiftCardModel(model, giftCard, true);
+
             return View(model);
         }
-        
+
         [HttpPost]
         public virtual IActionResult GenerateCouponCode()
         {
@@ -241,7 +215,10 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageGiftCards))
                 return AccessDeniedView();
 
+            //try to get a gift card with the specified id
             var giftCard = _giftCardService.GetGiftCardById(model.Id);
+            if (giftCard == null)
+                return RedirectToAction("List");
 
             model = giftCard.ToModel();
             model.PurchasedWithOrderId = giftCard.PurchasedWithOrderItem != null ? (int?)giftCard.PurchasedWithOrderItem.OrderId : null;
@@ -255,6 +232,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 if (!CommonHelper.IsValidEmail(giftCard.RecipientEmail))
                     throw new NopException("Recipient email is not valid");
+
                 if (!CommonHelper.IsValidEmail(giftCard.SenderEmail))
                     throw new NopException("Sender email is not valid");
 
@@ -287,16 +265,16 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             return View(model);
         }
-        
+
         [HttpPost]
         public virtual IActionResult Delete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageGiftCards))
                 return AccessDeniedView();
 
+            //try to get a gift card with the specified id
             var giftCard = _giftCardService.GetGiftCardById(id);
             if (giftCard == null)
-                //No gift card found with the specified id
                 return RedirectToAction("List");
 
             _giftCardService.DeleteGiftCard(giftCard);
@@ -306,37 +284,24 @@ namespace Nop.Web.Areas.Admin.Controllers
                 string.Format(_localizationService.GetResource("ActivityLog.DeleteGiftCard"), giftCard.GiftCardCouponCode), giftCard);
 
             SuccessNotification(_localizationService.GetResource("Admin.GiftCards.Deleted"));
+
             return RedirectToAction("List");
         }
-        
-        //Gif card usage history
+
         [HttpPost]
-        public virtual IActionResult UsageHistoryList(int giftCardId, DataSourceRequest command)
+        public virtual IActionResult UsageHistoryList(GiftCardUsageHistorySearchModel searchModel, int giftCardId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageGiftCards))
                 return AccessDeniedKendoGridJson();
 
-            var giftCard = _giftCardService.GetGiftCardById(giftCardId);
-            if (giftCard == null)
-                throw new ArgumentException("No gift card found with the specified id");
+            //try to get a gift card with the specified id
+            var giftCard = _giftCardService.GetGiftCardById(giftCardId)
+                ?? throw new ArgumentException("No gift card found with the specified id", nameof(giftCardId));
 
-            var usageHistoryModel = giftCard.GiftCardUsageHistory.OrderByDescending(gcuh => gcuh.CreatedOnUtc)
-                .Select(x => new GiftCardModel.GiftCardUsageHistoryModel
-                {
-                    Id = x.Id,
-                    OrderId = x.UsedWithOrderId,
-                    UsedValue = _priceFormatter.FormatPrice(x.UsedValue, true, false),
-                    CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc),
-                    CustomOrderNumber = x.UsedWithOrder.CustomOrderNumber
-                })
-                .ToList();
-            var gridModel = new DataSourceResult
-            {
-                Data = usageHistoryModel.PagedForCommand(command),
-                Total = usageHistoryModel.Count
-            };
+            //prepare model
+            var model = _giftCardModelFactory.PrepareGiftCardUsageHistoryListModel(searchModel, giftCard);
 
-            return Json(gridModel);
+            return Json(model);
         }
 
         #endregion

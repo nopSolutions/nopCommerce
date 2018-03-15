@@ -5,8 +5,22 @@ using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Areas.Admin.Models.Orders
 {
+    /// <summary>
+    /// Represents a gift card model
+    /// </summary>
     public partial class GiftCardModel: BaseNopEntityModel
     {
+        #region Ctor
+
+        public GiftCardModel()
+        {
+            this.GiftCardUsageHistorySearchModel = new GiftCardUsageHistorySearchModel();
+        }
+
+        #endregion
+
+        #region Properties
+
         [NopResourceDisplayName("Admin.GiftCards.Fields.GiftCardType")]
         public int GiftCardTypeId { get; set; }
 
@@ -56,21 +70,7 @@ namespace Nop.Web.Areas.Admin.Models.Orders
 
         public string PrimaryStoreCurrencyCode { get; set; }
 
-        #region Nested classes
-
-        public partial class GiftCardUsageHistoryModel : BaseNopEntityModel
-        {
-            [NopResourceDisplayName("Admin.GiftCards.History.UsedValue")]
-            public string UsedValue { get; set; }
-            
-            public int OrderId { get; set; }
-
-            [NopResourceDisplayName("Admin.GiftCards.History.CreatedOn")]
-            public DateTime CreatedOn { get; set; }
-
-            [NopResourceDisplayName("Admin.GiftCards.History.CustomOrderNumber")]
-            public string CustomOrderNumber { get; set; }
-        }
+        public GiftCardUsageHistorySearchModel GiftCardUsageHistorySearchModel { get; set; }
 
         #endregion
     }

@@ -1,0 +1,215 @@
+﻿using System;
+using System.Linq;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Nop.Core.Domain.Directory;
+using Nop.Core.Domain.Orders;
+using Nop.Services.Catalog;
+using Nop.Services.Directory;
+using Nop.Services.Helpers;
+using Nop.Services.Localization;
+using Nop.Services.Orders;
+using Nop.Web.Areas.Admin.Extensions;
+using Nop.Web.Areas.Admin.Models.Orders;
+using Nop.Web.Framework.Extensions;
+
+namespace Nop.Web.Areas.Admin.Factories
+{
+    /// <summary>
+    /// Represents the gift card model factory implementation
+    /// </summary>
+    public partial class GiftCardModelFactory : IGiftCardModelFactory
+    {
+        #region Fields
+
+        private readonly CurrencySettings _currencySettings;
+        private readonly ICurrencyService _currencyService;
+        private readonly IDateTimeHelper _dateTimeHelper;
+        private readonly IGiftCardService _giftCardService;
+        private readonly ILocalizationService _localizationService;
+        private readonly IPriceFormatter _priceFormatter;
+
+        #endregion
+
+        #region Ctor
+
+        public GiftCardModelFactory(CurrencySettings currencySettings,
+            ICurrencyService currencyService,
+            IDateTimeHelper dateTimeHelper,
+            IGiftCardService giftCardService,
+            ILocalizationService localizationService,
+            IPriceFormatter priceFormatter)
+        {
+            this._currencySettings = currencySettings;
+            this._currencyService = currencyService;
+            this._dateTimeHelper = dateTimeHelper;
+            this._giftCardService = giftCardService;
+            this._localizationService = localizationService;
+            this._priceFormatter = priceFormatter;
+        }
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Prepare gift card search model
+        /// </summary>
+        /// <param name="model">Gift card search model</param>
+        /// <returns>Gift card search model</returns>
+        public virtual GiftCardSearchModel PrepareGiftCardSearchModel(GiftCardSearchModel model)
+        {
+            if (model == null)
+                throw new ArgumentNullException(nameof(model));
+
+            //prepare "activated" filter (0 - all; 1 - activated only; 2 - deactivated only)
+            model.ActivatedList.Add(new SelectListItem
+            {
+                Value = "0",
+                Text = _localizationService.GetResource("Admin.GiftCards.List.Activated.All")
+            });
+            model.ActivatedList.Add(new SelectListItem
+            {
+                Value = "1",
+                Text = _localizationService.GetResource("Admin.GiftCards.List.Activated.ActivatedOnly")
+            });
+            model.ActivatedList.Add(new SelectListItem
+            {
+                Value = "2",
+                Text = _localizationService.GetResource("Admin.GiftCards.List.Activated.DeactivatedOnly")
+            });
+
+            return model;
+        }
+
+        /// <summary>
+        /// Prepare paged gift card list model
+        /// </summary>
+        /// <param name="searchModel">Gift card search model</param>
+        /// <returns>Gift card list model</returns>
+        public virtual GiftCardListModel PrepareGiftCardListModel(GiftCardSearchModel searchModel)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+            //get parameters to filter gift cards
+            var isActivatedOnly = searchModel.ActivatedId == 0 ? null : searchModel.ActivatedId == 1 ? true : (bool?)false;
+
+            //get gift cards
+            var giftCards = _giftCardService.GetAllGiftCards(isGiftCardActivated: isActivatedOnly,
+                giftCardCouponCode: searchModel.CouponCode,
+                recipientName: searchModel.RecipientName,
+                pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
+
+            //prepare list model
+            var model = new GiftCardListModel
+            {
+                Data = giftCards.Select(giftCard =>
+                {
+                    //fill in model values from the entity
+                    var giftCardModel = giftCard.ToModel();
+
+                    //convert dates to the user time
+                    giftCardModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(giftCard.CreatedOnUtc, DateTimeKind.Utc);
+
+                    //fill in additional values (not existing in the entity)
+                    giftCardModel.RemainingAmountStr = _priceFormatter.FormatPrice(giftCard.GetGiftCardRemainingAmount(), true, false);
+                    giftCardModel.AmountStr = _priceFormatter.FormatPrice(giftCard.Amount, true, false);
+
+                    return giftCardModel;
+                }),
+                Total = giftCards.TotalCount
+            };
+
+            return model;
+        }
+
+        /// <summary>
+        /// Prepare gift card model
+        /// </summary>
+        /// <param name="model">Gift card model</param>
+        /// <param name="giftCard">Gift card</param>
+        /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
+        /// <returns>Gift card model</returns>
+        public virtual GiftCardModel PrepareGiftCardModel(GiftCardModel model, GiftCard giftCard, bool excludeProperties = false)
+        {
+            if (giftCard != null)
+            {
+                //fill in model values from the entity
+                model = model ?? giftCard.ToModel();
+
+                model.PurchasedWithOrderId = giftCard.PurchasedWithOrderItem?.OrderId;
+                model.RemainingAmountStr = _priceFormatter.FormatPrice(giftCard.GetGiftCardRemainingAmount(), true, false);
+                model.AmountStr = _priceFormatter.FormatPrice(giftCard.Amount, true, false);
+                model.CreatedOn = _dateTimeHelper.ConvertToUserTime(giftCard.CreatedOnUtc, DateTimeKind.Utc);
+                model.PurchasedWithOrderNumber = giftCard.PurchasedWithOrderItem?.Order?.CustomOrderNumber;
+
+                //prepare nested search model
+                PrepareGiftCardUsageHistorySearchModel(model.GiftCardUsageHistorySearchModel);
+            }
+
+            model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId)?.CurrencyCode;
+
+            return model;
+        }
+
+        /// <summary>
+        /// Prepare gift card usage history search model
+        /// </summary>
+        /// <param name="model">Gift card usage history search model</param>
+        /// <returns>Gift card usage history search model</returns>
+        public virtual GiftCardUsageHistorySearchModel PrepareGiftCardUsageHistorySearchModel(GiftCardUsageHistorySearchModel model)
+        {
+            if (model == null)
+                throw new ArgumentNullException(nameof(model));
+
+            return model;
+        }
+
+        /// <summary>
+        /// Prepare paged gift usage history card list model
+        /// </summary>
+        /// <param name="searchModel">Gift card usage history search model</param>
+        /// <param name="giftCard">Gift card</param>
+        /// <returns>Gift card usage history list model</returns>
+        public virtual GiftCardUsageHistoryListModel PrepareGiftCardUsageHistoryListModel(GiftCardUsageHistorySearchModel searchModel,
+            GiftCard giftCard)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+            if (giftCard == null)
+                throw new ArgumentNullException(nameof(giftCard));
+
+            //get gift card usage history
+            var usageHistory = giftCard.GiftCardUsageHistory.OrderByDescending(historyEntry => historyEntry.CreatedOnUtc).ToList();
+
+            //prepare list model
+            var model = new GiftCardUsageHistoryListModel
+            {
+                Data = usageHistory.PaginationByRequestModel(searchModel).Select(historyEntry =>
+                {
+                    //fill in model values from the entity
+                    var giftCardUsageHistoryModel = new GiftCardUsageHistoryModel
+                    {
+                        Id = historyEntry.Id,
+                        OrderId = historyEntry.UsedWithOrderId,
+                        CustomOrderNumber = historyEntry.UsedWithOrder.CustomOrderNumber
+                    };
+
+                    //convert dates to the user time
+                    giftCardUsageHistoryModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(historyEntry.CreatedOnUtc, DateTimeKind.Utc);
+
+                    //fill in additional values (not existing in the entity)
+                    giftCardUsageHistoryModel.UsedValue = _priceFormatter.FormatPrice(historyEntry.UsedValue, true, false);
+
+                    return giftCardUsageHistoryModel;
+                }),
+                Total = usageHistory.Count
+            };
+
+            return model;
+        }
+
+        #endregion
+    }
+}
