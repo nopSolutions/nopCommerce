@@ -7,13 +7,22 @@ using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Areas.Admin.Models.Forums
 {
+    /// <summary>
+    /// Represents a forum list model
+    /// </summary>
     [Validator(typeof(ForumValidator))]
     public partial class ForumModel : BaseNopEntityModel
     {
+        #region Ctor
+
         public ForumModel()
         {
             ForumGroups = new List<ForumGroupModel>();
         }
+
+        #endregion
+
+        #region Properties
 
         [NopResourceDisplayName("Admin.ContentManagement.Forums.Forum.Fields.ForumGroupId")]
         public int ForumGroupId { get; set; }
@@ -31,5 +40,7 @@ namespace Nop.Web.Areas.Admin.Models.Forums
         public DateTime CreatedOn { get; set; }
 
         public List<ForumGroupModel> ForumGroups { get; set; }
+
+        #endregion
     }
 }
