@@ -11,18 +11,18 @@
                     {
                         <div class="form-group">
                             <div class="col-md-3">
-                                <nop-label asp-for="Search.SearchResourceName" />
+                                <nop-label asp-for="LocaleResourceSearchModel.SearchResourceName" />
                             </div>
                             <div class="col-md-9">
-                                <nop-editor asp-for="Search.SearchResourceName" />
+                                <nop-editor asp-for="LocaleResourceSearchModel.SearchResourceName" />
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="col-md-3">
-                                <nop-label asp-for="Search.SearchResourceValue" />
+                                <nop-label asp-for="LocaleResourceSearchModel.SearchResourceValue" />
                             </div>
                             <div class="col-md-9">
-                                <nop-editor asp-for="Search.SearchResourceValue" />
+                                <nop-editor asp-for="LocaleResourceSearchModel.SearchResourceValue" />
                             </div>
                         </div>
                         <div class="form-group">
@@ -170,15 +170,15 @@
 
                     function additionalData() {
                         var data = {
-                            SearchResourceName: $('#@Html.IdFor(model => model.Search.SearchResourceName)').val(),
-                            SearchResourceValue: $('#@Html.IdFor(model => model.Search.SearchResourceValue)').val()
+                            SearchResourceName: $('#@Html.IdFor(model => model.LocaleResourceSearchModel.SearchResourceName)').val(),
+                            SearchResourceValue: $('#@Html.IdFor(model => model.LocaleResourceSearchModel.SearchResourceValue)').val()
                         };
                         addAntiForgeryToken(data);
                         return data;
                     }
 
-                    $("".concat("#@Html.IdFor(model => model.Search.SearchResourceName),",
-                        "#@Html.IdFor(model => model.Search.SearchResourceValue)")).keydown(function(event) {
+                    $("".concat("#@Html.IdFor(model => model.LocaleResourceSearchModel.SearchResourceName),",
+                        "#@Html.IdFor(model => model.LocaleResourceSearchModel.SearchResourceValue)")).keydown(function(event) {
                         if (event.keyCode === 13) {
                             $("#search-resources").click();
                             return false;

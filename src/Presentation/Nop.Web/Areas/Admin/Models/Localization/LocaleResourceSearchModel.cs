@@ -1,13 +1,21 @@
-﻿using Nop.Web.Framework.Mvc.ModelBinding;
-using Nop.Web.Framework.Models;
+﻿using Nop.Web.Framework.Models;
+using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Models.Localization
 {
-    public class LanguageResourcesListModel : BaseNopModel
+    /// <summary>
+    /// Represents a locale resource search model
+    /// </summary>
+    public partial class LocaleResourceSearchModel : BaseSearchModel
     {
+        #region Properties
+
         [NopResourceDisplayName("Admin.Configuration.Languages.Resources.SearchResourceName")]
         public string SearchResourceName { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Languages.Resources.SearchResourceValue")]
         public string SearchResourceValue { get; set; }
+
+        #endregion
     }
 }

@@ -7,15 +7,25 @@ using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Areas.Admin.Models.Localization
 {
+    /// <summary>
+    /// Represents a language model
+    /// </summary>
     [Validator(typeof(LanguageValidator))]
-    public partial class LanguageModel : BaseNopEntityModel
+    public partial class LanguageModel : BaseNopEntityModel, IStoreMappingSupportedModel
     {
+        #region Ctor
+
         public LanguageModel()
         {
             AvailableCurrencies = new List<SelectListItem>();
             SelectedStoreIds = new List<int>();
             AvailableStores = new List<SelectListItem>();
+            LocaleResourceSearchModel = new LocaleResourceSearchModel();
         }
+
+        #endregion
+
+        #region Properties
 
         [NopResourceDisplayName("Admin.Configuration.Languages.Fields.Name")]
         public string Name { get; set; }
@@ -36,6 +46,7 @@ namespace Nop.Web.Areas.Admin.Models.Localization
         //default currency
         [NopResourceDisplayName("Admin.Configuration.Languages.Fields.DefaultCurrency")]
         public int DefaultCurrencyId { get; set; }
+
         public IList<SelectListItem> AvailableCurrencies { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Languages.Fields.Published")]
@@ -47,9 +58,12 @@ namespace Nop.Web.Areas.Admin.Models.Localization
         //store mapping
         [NopResourceDisplayName("Admin.Configuration.Languages.Fields.LimitedToStores")]
         public IList<int> SelectedStoreIds { get; set; }
+
         public IList<SelectListItem> AvailableStores { get; set; }
 
         // search
-        public LanguageResourcesListModel Search { get; set; }
+        public LocaleResourceSearchModel LocaleResourceSearchModel { get; set; }
+
+        #endregion
     }
 }

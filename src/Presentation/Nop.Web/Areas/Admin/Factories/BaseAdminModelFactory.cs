@@ -33,6 +33,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly ICategoryService _categoryService;
         private readonly ICategoryTemplateService _categoryTemplateService;
         private readonly ICountryService _countryService;
+        private readonly ICurrencyService _currencyService;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly ICustomerService _customerService;
         private readonly IDateTimeHelper _dateTimeHelper;
@@ -53,6 +54,7 @@ namespace Nop.Web.Areas.Admin.Factories
         public BaseAdminModelFactory(ICategoryService categoryService,
             ICategoryTemplateService categoryTemplateService,
             ICountryService countryService,
+            ICurrencyService currencyService,
             ICustomerActivityService customerActivityService,
             ICustomerService customerService,
             IDateTimeHelper dateTimeHelper,
@@ -69,6 +71,7 @@ namespace Nop.Web.Areas.Admin.Factories
             this._categoryService = categoryService;
             this._categoryTemplateService = categoryTemplateService;
             this._countryService = countryService;
+            this._currencyService = currencyService;
             this._customerActivityService = customerActivityService;
             this._customerService = customerService;
             this._dateTimeHelper = dateTimeHelper;
@@ -539,6 +542,28 @@ namespace Nop.Web.Areas.Admin.Factories
             foreach (var taxDisplayTypeItem in availableTaxDisplayTypeItems)
             {
                 items.Add(taxDisplayTypeItem);
+            }
+
+            //insert special item for the default value
+            PrepareDefaultItem(items, withSpecialDefaultItem, defaultItemText);
+        }
+
+        /// <summary>
+        /// Prepare available currencies
+        /// </summary>
+        /// <param name="items">Currency items</param>
+        /// <param name="withSpecialDefaultItem">Whether to insert the first special item for the default value</param>
+        /// <param name="defaultItemText">Default item text; pass null to use default value of the default item text</param>
+        public virtual void PrepareCurrencies(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
+        {
+            if (items == null)
+                throw new ArgumentNullException(nameof(items));
+
+            //prepare available currencies
+            var availableCurrencies = _currencyService.GetAllCurrencies(true);
+            foreach (var currency in availableCurrencies)
+            {
+                items.Add(new SelectListItem { Value = currency.Id.ToString(), Text = currency.Name });
             }
 
             //insert special item for the default value
