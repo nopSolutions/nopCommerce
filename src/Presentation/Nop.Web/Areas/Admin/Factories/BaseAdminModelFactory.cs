@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
@@ -564,6 +565,28 @@ namespace Nop.Web.Areas.Admin.Factories
             foreach (var currency in availableCurrencies)
             {
                 items.Add(new SelectListItem { Value = currency.Id.ToString(), Text = currency.Name });
+            }
+
+            //insert special item for the default value
+            PrepareDefaultItem(items, withSpecialDefaultItem, defaultItemText);
+        }
+
+        /// <summary>
+        /// Prepare available discount types
+        /// </summary>
+        /// <param name="items">Discount type items</param>
+        /// <param name="withSpecialDefaultItem">Whether to insert the first special item for the default value</param>
+        /// <param name="defaultItemText">Default item text; pass null to use default value of the default item text</param>
+        public virtual void PrepareDiscountTypes(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
+        {
+            if (items == null)
+                throw new ArgumentNullException(nameof(items));
+
+            //prepare available discount types
+            var availableDiscountTypeItems = DiscountType.AssignedToOrderTotal.ToSelectList(false);
+            foreach (var discountTypeItem in availableDiscountTypeItems)
+            {
+                items.Add(discountTypeItem);
             }
 
             //insert special item for the default value

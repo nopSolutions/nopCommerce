@@ -3,9 +3,9 @@
 namespace Nop.Web.Areas.Admin.Models.Discounts
 {
     /// <summary>
-    /// Represents a discount list model
+    /// Represents a discount manufacturer search model
     /// </summary>
-    public partial class DiscountListModel : BasePagedListModel<DiscountModel>
+    public partial class DiscountManufacturerSearchModel : BaseSearchModel
     {
     }
 }
