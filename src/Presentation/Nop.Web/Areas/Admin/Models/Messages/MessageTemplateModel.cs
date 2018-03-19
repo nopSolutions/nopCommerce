@@ -8,9 +8,14 @@ using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Models.Messages
 {
+    /// <summary>
+    /// Represents a message template model
+    /// </summary>
     [Validator(typeof(MessageTemplateValidator))]
-    public partial class MessageTemplateModel : BaseNopEntityModel, ILocalizedModel<MessageTemplateLocalizedModel>
+    public partial class MessageTemplateModel : BaseNopEntityModel, ILocalizedModel<MessageTemplateLocalizedModel>, IStoreMappingSupportedModel
     {
+        #region Ctor
+
         public MessageTemplateModel()
         {
             Locales = new List<MessageTemplateLocalizedModel>();
@@ -19,6 +24,10 @@ namespace Nop.Web.Areas.Admin.Models.Messages
             SelectedStoreIds = new List<int>();
             AvailableStores = new List<SelectListItem>();
         }
+
+        #endregion
+
+        #region Properties
 
         [NopResourceDisplayName("Admin.ContentManagement.MessageTemplates.Fields.AllowedTokens")]
         public string AllowedTokens { get; set; }
@@ -44,6 +53,7 @@ namespace Nop.Web.Areas.Admin.Models.Messages
         [NopResourceDisplayName("Admin.ContentManagement.MessageTemplates.Fields.DelayBeforeSend")]
         [UIHint("Int32Nullable")]
         public int? DelayBeforeSend { get; set; }
+
         public int DelayPeriodId { get; set; }
 
         public bool HasAttachedDownload { get; set; }
@@ -53,17 +63,22 @@ namespace Nop.Web.Areas.Admin.Models.Messages
 
         [NopResourceDisplayName("Admin.ContentManagement.MessageTemplates.Fields.EmailAccount")]
         public int EmailAccountId { get; set; }
+
         public IList<SelectListItem> AvailableEmailAccounts { get; set; }
 
         //store mapping
         [NopResourceDisplayName("Admin.ContentManagement.MessageTemplates.Fields.LimitedToStores")]
         public IList<int> SelectedStoreIds { get; set; }
+
         public IList<SelectListItem> AvailableStores { get; set; }
+
         //comma-separated list of stores used on the list page
         [NopResourceDisplayName("Admin.ContentManagement.MessageTemplates.Fields.LimitedToStores")]
         public string ListOfStores { get; set; }
 
         public IList<MessageTemplateLocalizedModel> Locales { get; set; }
+
+        #endregion
     }
 
     public partial class MessageTemplateLocalizedModel : ILocalizedLocaleModel
