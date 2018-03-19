@@ -9,9 +9,14 @@ using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Areas.Admin.Models.News
 {
+    /// <summary>
+    /// Represents a news item model
+    /// </summary>
     [Validator(typeof(NewsItemValidator))]
-    public partial class NewsItemModel : BaseNopEntityModel
+    public partial class NewsItemModel : BaseNopEntityModel, IStoreMappingSupportedModel
     {
+        #region Ctor
+
         public NewsItemModel()
         {
             this.AvailableLanguages = new List<SelectListItem>();
@@ -20,8 +25,13 @@ namespace Nop.Web.Areas.Admin.Models.News
             AvailableStores = new List<SelectListItem>();
         }
 
+        #endregion
+
+        #region Properties
+
         [NopResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.Language")]
         public int LanguageId { get; set; }
+
         public IList<SelectListItem> AvailableLanguages { get; set; }
 
         [NopResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.Language")]
@@ -30,6 +40,7 @@ namespace Nop.Web.Areas.Admin.Models.News
         //store mapping
         [NopResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.LimitedToStores")]
         public IList<int> SelectedStoreIds { get; set; }
+
         public IList<SelectListItem> AvailableStores { get; set; }
 
         [NopResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.Title")]
@@ -68,9 +79,12 @@ namespace Nop.Web.Areas.Admin.Models.News
         public bool Published { get; set; }
 
         public int ApprovedComments { get; set; }
+
         public int NotApprovedComments { get; set; }
 
         [NopResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.CreatedOn")]
         public DateTime CreatedOn { get; set; }
+
+        #endregion
     }
 }
