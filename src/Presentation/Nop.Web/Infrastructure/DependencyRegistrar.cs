@@ -50,6 +50,7 @@ namespace Nop.Web.Infrastructure
             builder.RegisterType<ForumModelFactory>().As<IForumModelFactory>().InstancePerLifetimeScope();
             builder.RegisterType<GiftCardModelFactory>().As<IGiftCardModelFactory>().InstancePerLifetimeScope();
             builder.RegisterType<LanguageModelFactory>().As<ILanguageModelFactory>().InstancePerLifetimeScope();
+            builder.RegisterType<LogModelFactory>().As<ILogModelFactory>().InstancePerLifetimeScope();
 
             //factories
             builder.RegisterType<Factories.AddressModelFactory>().As<Factories.IAddressModelFactory>().InstancePerLifetimeScope();

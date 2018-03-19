@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Discounts;
+using Nop.Core.Domain.Logging;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
@@ -587,6 +588,28 @@ namespace Nop.Web.Areas.Admin.Factories
             foreach (var discountTypeItem in availableDiscountTypeItems)
             {
                 items.Add(discountTypeItem);
+            }
+
+            //insert special item for the default value
+            PrepareDefaultItem(items, withSpecialDefaultItem, defaultItemText);
+        }
+
+        /// <summary>
+        /// Prepare available log levels
+        /// </summary>
+        /// <param name="items">Log level items</param>
+        /// <param name="withSpecialDefaultItem">Whether to insert the first special item for the default value</param>
+        /// <param name="defaultItemText">Default item text; pass null to use default value of the default item text</param>
+        public virtual void PrepareLogLevels(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
+        {
+            if (items == null)
+                throw new ArgumentNullException(nameof(items));
+
+            //prepare available log levels
+            var availableLogLevelItems = LogLevel.Debug.ToSelectList(false);
+            foreach (var logLevelItem in availableLogLevelItems)
+            {
+                items.Add(logLevelItem);
             }
 
             //insert special item for the default value
