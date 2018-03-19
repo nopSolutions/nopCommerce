@@ -1,3 +1,5 @@
+@model MeasureSearchModel
+
 @{
     //page title
     ViewBag.Title = T("Admin.Configuration.Shipping.Measures").Text;
@@ -25,7 +27,7 @@
                         @T("Admin.Configuration.Shipping.Measures.Dimensions")
                     </div>
                     <div class="panel-body">
-                        @await Html.PartialAsync("Dimensions")
+                        @await Html.PartialAsync("Dimensions", Model.MeasureDimensionSearchModel)
                     </div>
                 </div>
                 <div class="panel panel-default">
@@ -33,7 +35,7 @@
                         @T("Admin.Configuration.Shipping.Measures.Weights")
                     </div>
                     <div class="panel-body">
-                        @await Html.PartialAsync("Weights")
+                        @await Html.PartialAsync("Weights", Model.MeasureWeightSearchModel)
                     </div>
                 </div>
             </div>
