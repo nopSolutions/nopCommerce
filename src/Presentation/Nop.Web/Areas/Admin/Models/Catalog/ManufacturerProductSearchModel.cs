@@ -3,9 +3,9 @@
 namespace Nop.Web.Areas.Admin.Models.Catalog
 {
     /// <summary>
-    /// Represents a manufacturer list model
+    /// Represents a manufacturer product search model
     /// </summary>
-    public partial class ManufacturerListModel : BasePagedListModel<ManufacturerModel>
+    public partial class ManufacturerProductSearchModel : BaseSearchModel
     {
     }
 }

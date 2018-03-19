@@ -8,9 +8,15 @@ using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Models.Catalog
 {
+    /// <summary>
+    /// Represents a manufacturer model
+    /// </summary>
     [Validator(typeof(ManufacturerValidator))]
-    public partial class ManufacturerModel : BaseNopEntityModel, ILocalizedModel<ManufacturerLocalizedModel>
+    public partial class ManufacturerModel : BaseNopEntityModel, IAclSupportedModel, IDiscountSupportedModel,
+        ILocalizedModel<ManufacturerLocalizedModel>, IStoreMappingSupportedModel
     {
+        #region Ctor
+
         public ManufacturerModel()
         {
             if (PageSize < 1)
@@ -28,7 +34,13 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
 
             SelectedStoreIds = new List<int>();
             AvailableStores = new List<SelectListItem>();
+
+            ManufacturerProductSearchModel = new ManufacturerProductSearchModel();
         }
+
+        #endregion
+
+        #region Properties
 
         [NopResourceDisplayName("Admin.Catalog.Manufacturers.Fields.Name")]
         public string Name { get; set; }
@@ -38,6 +50,7 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
 
         [NopResourceDisplayName("Admin.Catalog.Manufacturers.Fields.ManufacturerTemplate")]
         public int ManufacturerTemplateId { get; set; }
+
         public IList<SelectListItem> AvailableManufacturerTemplates { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Manufacturers.Fields.MetaKeywords")]
@@ -94,58 +107,7 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
         public IList<int> SelectedDiscountIds { get; set; }
         public IList<SelectListItem> AvailableDiscounts { get; set; }
 
-        #region Nested classes
-
-        public partial class ManufacturerProductModel : BaseNopEntityModel
-        {
-            public int ManufacturerId { get; set; }
-
-            public int ProductId { get; set; }
-
-            [NopResourceDisplayName("Admin.Catalog.Manufacturers.Products.Fields.Product")]
-            public string ProductName { get; set; }
-
-            [NopResourceDisplayName("Admin.Catalog.Manufacturers.Products.Fields.IsFeaturedProduct")]
-            public bool IsFeaturedProduct { get; set; }
-
-            [NopResourceDisplayName("Admin.Catalog.Manufacturers.Products.Fields.DisplayOrder")]
-            public int DisplayOrder { get; set; }
-        }
-
-        public partial class AddManufacturerProductModel : BaseNopModel
-        {
-            public AddManufacturerProductModel()
-            {
-                AvailableCategories = new List<SelectListItem>();
-                AvailableManufacturers = new List<SelectListItem>();
-                AvailableStores = new List<SelectListItem>();
-                AvailableVendors = new List<SelectListItem>();
-                AvailableProductTypes = new List<SelectListItem>();
-            }
-
-            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchProductName")]
-            public string SearchProductName { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchCategory")]
-            public int SearchCategoryId { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchManufacturer")]
-            public int SearchManufacturerId { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchStore")]
-            public int SearchStoreId { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchVendor")]
-            public int SearchVendorId { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchProductType")]
-            public int SearchProductTypeId { get; set; }
-
-            public IList<SelectListItem> AvailableCategories { get; set; }
-            public IList<SelectListItem> AvailableManufacturers { get; set; }
-            public IList<SelectListItem> AvailableStores { get; set; }
-            public IList<SelectListItem> AvailableVendors { get; set; }
-            public IList<SelectListItem> AvailableProductTypes { get; set; }
-
-            public int ManufacturerId { get; set; }
-
-            public int[] SelectedProductIds { get; set; }
-        }
+        public ManufacturerProductSearchModel ManufacturerProductSearchModel { get; set; }
 
         #endregion
     }

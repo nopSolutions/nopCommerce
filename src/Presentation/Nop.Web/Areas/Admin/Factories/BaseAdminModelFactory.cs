@@ -43,6 +43,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
         private readonly IManufacturerService _manufacturerService;
+        private readonly IManufacturerTemplateService _manufacturerTemplateService;
         private readonly IStateProvinceService _stateProvinceService;
         private readonly IStaticCacheManager _cacheManager;
         private readonly IStoreService _storeService;
@@ -64,6 +65,7 @@ namespace Nop.Web.Areas.Admin.Factories
             ILanguageService languageService,
             ILocalizationService localizationService,
             IManufacturerService manufacturerService,
+            IManufacturerTemplateService manufacturerTemplateService,
             IStateProvinceService stateProvinceService,
             IStaticCacheManager cacheManager,
             IStoreService storeService,
@@ -81,6 +83,7 @@ namespace Nop.Web.Areas.Admin.Factories
             this._languageService = languageService;
             this._localizationService = localizationService;
             this._manufacturerService = manufacturerService;
+            this._manufacturerTemplateService = manufacturerTemplateService;
             this._stateProvinceService = stateProvinceService;
             this._cacheManager = cacheManager;
             this._storeService = storeService;
@@ -610,6 +613,29 @@ namespace Nop.Web.Areas.Admin.Factories
             foreach (var logLevelItem in availableLogLevelItems)
             {
                 items.Add(logLevelItem);
+            }
+
+            //insert special item for the default value
+            PrepareDefaultItem(items, withSpecialDefaultItem, defaultItemText);
+        }
+
+        /// <summary>
+        /// Prepare available manufacturer templates
+        /// </summary>
+        /// <param name="items">Manufacturer template items</param>
+        /// <param name="withSpecialDefaultItem">Whether to insert the first special item for the default value</param>
+        /// <param name="defaultItemText">Default item text; pass null to use default value of the default item text</param>
+        public virtual void PrepareManufacturerTemplates(IList<SelectListItem> items, 
+            bool withSpecialDefaultItem = true, string defaultItemText = null)
+        {
+            if (items == null)
+                throw new ArgumentNullException(nameof(items));
+
+            //prepare available manufacturer templates
+            var availableTemplates = _manufacturerTemplateService.GetAllManufacturerTemplates();
+            foreach (var template in availableTemplates)
+            {
+                items.Add(new SelectListItem { Value = template.Id.ToString(), Text = template.Name });
             }
 
             //insert special item for the default value
