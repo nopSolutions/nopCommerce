@@ -10,6 +10,7 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
+using Nop.Core.Plugins;
 using Nop.Services;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
@@ -18,6 +19,7 @@ using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Messages;
+using Nop.Services.Plugins;
 using Nop.Services.Stores;
 using Nop.Services.Tax;
 using Nop.Services.Vendors;
@@ -44,6 +46,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly ILocalizationService _localizationService;
         private readonly IManufacturerService _manufacturerService;
         private readonly IManufacturerTemplateService _manufacturerTemplateService;
+        private readonly IPluginFinder _pluginFinder;
         private readonly IStateProvinceService _stateProvinceService;
         private readonly IStaticCacheManager _cacheManager;
         private readonly IStoreService _storeService;
@@ -66,6 +69,7 @@ namespace Nop.Web.Areas.Admin.Factories
             ILocalizationService localizationService,
             IManufacturerService manufacturerService,
             IManufacturerTemplateService manufacturerTemplateService,
+            IPluginFinder pluginFinder,
             IStateProvinceService stateProvinceService,
             IStaticCacheManager cacheManager,
             IStoreService storeService,
@@ -83,6 +87,7 @@ namespace Nop.Web.Areas.Admin.Factories
             this._languageService = languageService;
             this._localizationService = localizationService;
             this._manufacturerService = manufacturerService;
+            this._pluginFinder = pluginFinder;
             this._manufacturerTemplateService = manufacturerTemplateService;
             this._stateProvinceService = stateProvinceService;
             this._cacheManager = cacheManager;
@@ -636,6 +641,50 @@ namespace Nop.Web.Areas.Admin.Factories
             foreach (var template in availableTemplates)
             {
                 items.Add(new SelectListItem { Value = template.Id.ToString(), Text = template.Name });
+            }
+
+            //insert special item for the default value
+            PrepareDefaultItem(items, withSpecialDefaultItem, defaultItemText);
+        }
+
+        /// <summary>
+        /// Prepare available load plugin modes
+        /// </summary>
+        /// <param name="items">Load plugin mode items</param>
+        /// <param name="withSpecialDefaultItem">Whether to insert the first special item for the default value</param>
+        /// <param name="defaultItemText">Default item text; pass null to use default value of the default item text</param>
+        public virtual void PrepareLoadPluginModes(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
+        {
+            if (items == null)
+                throw new ArgumentNullException(nameof(items));
+
+            //prepare available load plugin modes
+            var availableLoadPluginModeItems = LoadPluginsMode.All.ToSelectList(false);
+            foreach (var loadPluginModeItem in availableLoadPluginModeItems)
+            {
+                items.Add(loadPluginModeItem);
+            }
+
+            //insert special item for the default value
+            PrepareDefaultItem(items, withSpecialDefaultItem, defaultItemText);
+        }
+
+        /// <summary>
+        /// Prepare available plugin groups
+        /// </summary>
+        /// <param name="items">Plugin group items</param>
+        /// <param name="withSpecialDefaultItem">Whether to insert the first special item for the default value</param>
+        /// <param name="defaultItemText">Default item text; pass null to use default value of the default item text</param>
+        public virtual void PreparePluginGroups(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
+        {
+            if (items == null)
+                throw new ArgumentNullException(nameof(items));
+
+            //prepare available plugin groups
+            var availablePluginGroups = _pluginFinder.GetPluginGroups();
+            foreach (var group in availablePluginGroups)
+            {
+                items.Add(new SelectListItem { Value = group, Text = group });
             }
 
             //insert special item for the default value

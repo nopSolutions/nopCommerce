@@ -194,5 +194,21 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="defaultItemText">Default item text; pass null to use default value of the default item text</param>
         void PrepareManufacturerTemplates(IList<SelectListItem> items,
             bool withSpecialDefaultItem = true, string defaultItemText = null);
+
+        /// <summary>
+        /// Prepare available load plugin modes
+        /// </summary>
+        /// <param name="items">Load plugin mode items</param>
+        /// <param name="withSpecialDefaultItem">Whether to insert the first special item for the default value</param>
+        /// <param name="defaultItemText">Default item text; pass null to use default value of the default item text</param>
+        void PrepareLoadPluginModes(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null);
+
+        /// <summary>
+        /// Prepare available plugin groups
+        /// </summary>
+        /// <param name="items">Plugin group items</param>
+        /// <param name="withSpecialDefaultItem">Whether to insert the first special item for the default value</param>
+        /// <param name="defaultItemText">Default item text; pass null to use default value of the default item text</param>
+        void PreparePluginGroups(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null);
     }
 }
