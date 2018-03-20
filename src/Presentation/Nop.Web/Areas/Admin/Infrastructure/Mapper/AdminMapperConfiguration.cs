@@ -509,12 +509,12 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore())
                 .ForMember(dest => dest.Form, mo => mo.Ignore());
             //newsLetter subscriptions
-            CreateMap<NewsLetterSubscription, NewsLetterSubscriptionModel>()
+            CreateMap<NewsLetterSubscription, NewsletterSubscriptionModel>()
                 .ForMember(dest => dest.StoreName, mo => mo.Ignore())
                 .ForMember(dest => dest.CreatedOn, mo => mo.Ignore())
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore())
                 .ForMember(dest => dest.Form, mo => mo.Ignore());
-            CreateMap<NewsLetterSubscriptionModel, NewsLetterSubscription>()
+            CreateMap<NewsletterSubscriptionModel, NewsLetterSubscription>()
                 .ForMember(dest => dest.StoreId, mo => mo.Ignore())
                 .ForMember(dest => dest.CreatedOnUtc, mo => mo.Ignore())
                 .ForMember(dest => dest.NewsLetterSubscriptionGuid, mo => mo.Ignore());

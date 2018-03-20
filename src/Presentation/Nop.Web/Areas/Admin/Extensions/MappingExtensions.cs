@@ -722,17 +722,17 @@ namespace Nop.Web.Areas.Admin.Extensions
 
         #region NewsLetter subscriptions
 
-        public static NewsLetterSubscriptionModel ToModel(this NewsLetterSubscription entity)
+        public static NewsletterSubscriptionModel ToModel(this NewsLetterSubscription entity)
         {
-            return entity.MapTo<NewsLetterSubscription, NewsLetterSubscriptionModel>();
+            return entity.MapTo<NewsLetterSubscription, NewsletterSubscriptionModel>();
         }
 
-        public static NewsLetterSubscription ToEntity(this NewsLetterSubscriptionModel model)
+        public static NewsLetterSubscription ToEntity(this NewsletterSubscriptionModel model)
         {
-            return model.MapTo<NewsLetterSubscriptionModel, NewsLetterSubscription>();
+            return model.MapTo<NewsletterSubscriptionModel, NewsLetterSubscription>();
         }
 
-        public static NewsLetterSubscription ToEntity(this NewsLetterSubscriptionModel model, NewsLetterSubscription destination)
+        public static NewsLetterSubscription ToEntity(this NewsletterSubscriptionModel model, NewsLetterSubscription destination)
         {
             return model.MapTo(destination);
         }
