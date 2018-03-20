@@ -177,5 +177,19 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>Customer back in stock subscriptions list model</returns>
         CustomerBackInStockSubscriptionListModel PrepareCustomerBackInStockSubscriptionListModel(
             CustomerBackInStockSubscriptionSearchModel searchModel, Customer customer);
+
+        /// <summary>
+        /// Prepare online customer search model
+        /// </summary>
+        /// <param name="model">Online customer search model</param>
+        /// <returns>Online customer search model</returns>
+        OnlineCustomerSearchModel PrepareOnlineCustomerSearchModel(OnlineCustomerSearchModel model);
+
+        /// <summary>
+        /// Prepare paged online customer list model
+        /// </summary>
+        /// <param name="searchModel">Online customer search model</param>
+        /// <returns>Online customer list model</returns>
+        OnlineCustomerListModel PrepareOnlineCustomerListModel(OnlineCustomerSearchModel searchModel);
     }
 }

@@ -18,6 +18,7 @@ using Nop.Services.Authentication.External;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
+using Nop.Services.Directory;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
@@ -61,6 +62,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IExternalAuthenticationService _externalAuthenticationService;
         private readonly IGenericAttributeService _genericAttributeService;
+        private readonly IGeoLookupService _geoLookupService;
         private readonly ILocalizationService _localizationService;
         private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
         private readonly IOrderService _orderService;
@@ -75,7 +77,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IWorkContext _workContext;
         private readonly MediaSettings _mediaSettings;
         private readonly RewardPointsSettings _rewardPointsSettings;
-        private readonly TaxSettings _taxSettings;
+        private readonly TaxSettings _taxSettings;        
 
         #endregion
 
@@ -99,6 +101,7 @@ namespace Nop.Web.Areas.Admin.Factories
             IDateTimeHelper dateTimeHelper,
             IExternalAuthenticationService externalAuthenticationService,
             IGenericAttributeService genericAttributeService,
+            IGeoLookupService geoLookupService,
             ILocalizationService localizationService,
             INewsLetterSubscriptionService newsLetterSubscriptionService,
             IOrderService orderService,
@@ -133,6 +136,7 @@ namespace Nop.Web.Areas.Admin.Factories
             this._dateTimeHelper = dateTimeHelper;
             this._externalAuthenticationService = externalAuthenticationService;
             this._genericAttributeService = genericAttributeService;
+            this._geoLookupService = geoLookupService;
             this._localizationService = localizationService;
             this._newsLetterSubscriptionService = newsLetterSubscriptionService;
             this._orderService = orderService;
@@ -1184,6 +1188,69 @@ namespace Nop.Web.Areas.Admin.Factories
                     return subscriptionModel;
                 }),
                 Total = subscriptions.TotalCount
+            };
+
+            return model;
+        }
+
+        /// <summary>
+        /// Prepare online customer search model
+        /// </summary>
+        /// <param name="model">Online customer search model</param>
+        /// <returns>Online customer search model</returns>
+        public virtual OnlineCustomerSearchModel PrepareOnlineCustomerSearchModel(OnlineCustomerSearchModel model)
+        {
+            if (model == null)
+                throw new ArgumentNullException(nameof(model));
+            
+            return model;
+        }
+
+        /// <summary>
+        /// Prepare paged online customer list model
+        /// </summary>
+        /// <param name="searchModel">Online customer search model</param>
+        /// <returns>Online customer list model</returns>
+        public virtual OnlineCustomerListModel PrepareOnlineCustomerListModel(OnlineCustomerSearchModel searchModel)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+            //get parameters to filter customers
+            var lastActivityFrom = DateTime.UtcNow.AddMinutes(-_customerSettings.OnlineCustomerMinutes);
+
+            //get online customers
+            var customers = _customerService.GetOnlineCustomers(customerRoleIds: null,
+                 lastActivityFromUtc: lastActivityFrom,
+                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
+
+            //prepare list model
+            var model = new OnlineCustomerListModel
+            {
+                Data = customers.Select(customer =>
+                {
+                    //fill in model values from the entity
+                    var customerModel = new OnlineCustomerModel
+                    {
+                        Id = customer.Id
+                    };
+
+                    //convert dates to the user time
+                    customerModel.LastActivityDate = _dateTimeHelper.ConvertToUserTime(customer.LastActivityDateUtc, DateTimeKind.Utc);
+
+                    //fill in additional values (not existing in the entity)
+                    customerModel.CustomerInfo = customer.IsRegistered() 
+                        ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
+                    customerModel.LastIpAddress = _customerSettings.StoreIpAddresses
+                        ? customer.LastIpAddress : _localizationService.GetResource("Admin.Customers.OnlineCustomers.Fields.IPAddress.Disabled");
+                    customerModel.Location = _geoLookupService.LookupCountryName(customer.LastIpAddress);
+                    customerModel.LastVisitedPage = _customerSettings.StoreLastVisitedPage 
+                        ? customer.GetAttribute<string>(SystemCustomerAttributeNames.LastVisitedPage) 
+                        : _localizationService.GetResource("Admin.Customers.OnlineCustomers.Fields.LastVisitedPage.Disabled");
+
+                    return customerModel;
+                }),
+                Total = customers.TotalCount
             };
 
             return model;
