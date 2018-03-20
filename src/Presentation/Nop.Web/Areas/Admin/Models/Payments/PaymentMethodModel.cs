@@ -3,8 +3,13 @@ using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Areas.Admin.Models.Payments
 {
+    /// <summary>
+    /// Represents a payment method model
+    /// </summary>
     public partial class PaymentMethodModel : BaseNopModel
     {
+        #region Properties
+
         [NopResourceDisplayName("Admin.Configuration.Payment.Methods.Fields.FriendlyName")]
         public string FriendlyName { get; set; }
 
@@ -37,5 +42,7 @@ namespace Nop.Web.Areas.Admin.Models.Payments
 
         [NopResourceDisplayName("Admin.Configuration.Payment.Methods.Fields.RecurringPaymentType")]
         public string RecurringPaymentType { get; set; }
+
+        #endregion
     }
 }
