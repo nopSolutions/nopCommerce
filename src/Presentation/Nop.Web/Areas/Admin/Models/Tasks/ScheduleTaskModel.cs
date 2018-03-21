@@ -5,9 +5,14 @@ using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Areas.Admin.Models.Tasks
 {
+    /// <summary>
+    /// Represents a schedule task model
+    /// </summary>
     [Validator(typeof(ScheduleTaskValidator))]
     public partial class ScheduleTaskModel : BaseNopEntityModel
     {
+        #region Properties
+
         [NopResourceDisplayName("Admin.System.ScheduleTasks.Name")]
         public string Name { get; set; }
 
@@ -28,5 +33,7 @@ namespace Nop.Web.Areas.Admin.Models.Tasks
 
         [NopResourceDisplayName("Admin.System.ScheduleTasks.LastSuccess")]
         public string LastSuccessUtc { get; set; }
+
+        #endregion
     }
 }
