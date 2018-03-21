@@ -1,11 +1,24 @@
-﻿using System;
-using Nop.Web.Framework.Mvc.ModelBinding;
+﻿using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Areas.Admin.Models.Orders
 {
+    /// <summary>
+    /// Represents a recurring payment model
+    /// </summary>
     public partial class RecurringPaymentModel : BaseNopEntityModel
     {
+        #region Ctor
+
+        public RecurringPaymentModel()
+        {
+            this.RecurringPaymentHistorySearchModel = new RecurringPaymentHistorySearchModel();
+        }
+
+        #endregion
+
+        #region Properties
+
         [NopResourceDisplayName("Admin.RecurringPayments.Fields.ID")]
         public override int Id { get; set; }
 
@@ -38,6 +51,7 @@ namespace Nop.Web.Areas.Admin.Models.Orders
 
         [NopResourceDisplayName("Admin.RecurringPayments.Fields.Customer")]
         public int CustomerId { get; set; }
+
         [NopResourceDisplayName("Admin.RecurringPayments.Fields.Customer")]
         public string CustomerEmail { get; set; }
 
@@ -48,29 +62,7 @@ namespace Nop.Web.Areas.Admin.Models.Orders
 
         public bool LastPaymentFailed { get; set; }
 
-        #region Nested classes
-
-        public partial class RecurringPaymentHistoryModel : BaseNopEntityModel
-        {
-            public int OrderId { get; set; }
-
-            [NopResourceDisplayName("Admin.RecurringPayments.History.CustomOrderNumber")]
-            public string CustomOrderNumber { get; set; }
-
-            public int RecurringPaymentId { get; set; }
-
-            [NopResourceDisplayName("Admin.RecurringPayments.History.OrderStatus")]
-            public string OrderStatus { get; set; }
-
-            [NopResourceDisplayName("Admin.RecurringPayments.History.PaymentStatus")]
-            public string PaymentStatus { get; set; }
-
-            [NopResourceDisplayName("Admin.RecurringPayments.History.ShippingStatus")]
-            public string ShippingStatus { get; set; }
-
-            [NopResourceDisplayName("Admin.RecurringPayments.History.CreatedOn")]
-            public DateTime CreatedOn { get; set; }
-        }
+        public RecurringPaymentHistorySearchModel RecurringPaymentHistorySearchModel { get; set; }
 
         #endregion
     }
