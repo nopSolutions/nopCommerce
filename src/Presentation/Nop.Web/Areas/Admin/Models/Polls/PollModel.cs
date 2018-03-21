@@ -9,18 +9,29 @@ using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Areas.Admin.Models.Polls
 {
+    /// <summary>
+    /// Represents a poll model
+    /// </summary>
     [Validator(typeof(PollValidator))]
-    public partial class PollModel : BaseNopEntityModel
+    public partial class PollModel : BaseNopEntityModel, IStoreMappingSupportedModel
     {
+        #region Ctor
+
         public PollModel()
         {
             this.AvailableLanguages = new List<SelectListItem>();
             this.AvailableStores = new List<SelectListItem>();
             this.SelectedStoreIds = new List<int>();
+            this.PollAnswerSearchModel = new PollAnswerSearchModel();
         }
+
+        #endregion
+
+        #region Properties
 
         [NopResourceDisplayName("Admin.ContentManagement.Polls.Fields.Language")]
         public int LanguageId { get; set; }
+
         public IList<SelectListItem> AvailableLanguages { get; set; }
 
         [NopResourceDisplayName("Admin.ContentManagement.Polls.Fields.Language")]
@@ -54,6 +65,11 @@ namespace Nop.Web.Areas.Admin.Models.Polls
         
         [NopResourceDisplayName("Admin.ContentManagement.Polls.Fields.LimitedToStores")]
         public IList<int> SelectedStoreIds { get; set; }
+
         public IList<SelectListItem> AvailableStores { get; set; }
+
+        public PollAnswerSearchModel PollAnswerSearchModel { get; set; }
+
+        #endregion
     }
 }

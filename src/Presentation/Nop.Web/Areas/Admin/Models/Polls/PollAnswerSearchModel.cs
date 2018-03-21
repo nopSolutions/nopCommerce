@@ -3,9 +3,9 @@
 namespace Nop.Web.Areas.Admin.Models.Polls
 {
     /// <summary>
-    /// Represents a poll list model
+    /// Represents a poll answer search model
     /// </summary>
-    public partial class PollListModel : BasePagedListModel<PollModel>
+    public partial class PollAnswerSearchModel : BaseSearchModel
     {
     }
 }

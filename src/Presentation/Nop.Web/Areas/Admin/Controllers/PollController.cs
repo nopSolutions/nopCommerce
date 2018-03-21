@@ -1,49 +1,45 @@
 ﻿using System;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Nop.Web.Areas.Admin.Extensions;
-using Nop.Web.Areas.Admin.Models.Polls;
 using Nop.Core.Domain.Polls;
-using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Polls;
 using Nop.Services.Security;
+using Nop.Services.Stores;
+using Nop.Web.Areas.Admin.Extensions;
+using Nop.Web.Areas.Admin.Factories;
+using Nop.Web.Areas.Admin.Models.Polls;
 using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.Filters;
-using Nop.Services.Stores;
 
 namespace Nop.Web.Areas.Admin.Controllers
 {
     public partial class PollController : BaseAdminController
-	{
+    {
         #region Fields
 
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
         private readonly IPermissionService _permissionService;
+        private readonly IPollModelFactory _pollModelFactory;
         private readonly IPollService _pollService;
         private readonly IStoreMappingService _storeMappingService;
         private readonly IStoreService _storeService;
 
-		#endregion
+        #endregion
 
-		#region Ctor
+        #region Ctor
 
-        public PollController(IDateTimeHelper dateTimeHelper, 
-            ILanguageService languageService,
-            ILocalizationService localizationService,
+        public PollController(ILocalizationService localizationService,
             IPermissionService permissionService,
-            IPollService pollService, 
+            IPollModelFactory pollModelFactory,
+            IPollService pollService,
             IStoreMappingService storeMappingService,
             IStoreService storeService)
         {
-            this._dateTimeHelper = dateTimeHelper;
-            this._languageService = languageService;
             this._localizationService = localizationService;
             this._permissionService = permissionService;
+            this._pollModelFactory = pollModelFactory;
             this._pollService = pollService;
             this._storeMappingService = storeMappingService;
             this._storeService = storeService;
@@ -52,43 +48,6 @@ namespace Nop.Web.Areas.Admin.Controllers
         #endregion
 
         #region Utilities
-
-        protected virtual void PrepareLanguagesModel(PollModel model)
-        {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
-
-            var languages = _languageService.GetAllLanguages(true);
-            foreach (var language in languages)
-            {
-                model.AvailableLanguages.Add(new SelectListItem
-                {
-                    Text = language.Name,
-                    Value = language.Id.ToString()
-                });
-            }
-        }
-
-        protected virtual void PrepareStoresMappingModel(PollModel model, Poll poll, bool excludeProperties)
-        {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
-
-            //prepare selected stores
-            if (!excludeProperties && poll != null)
-                model.SelectedStoreIds = _storeMappingService.GetStoresIdsWithAccess(poll).ToList();
-
-            //prepare all available stores
-            foreach (var store in _storeService.GetAllStores())
-            {
-                model.AvailableStores.Add(new SelectListItem
-                {
-                    Text = store.Name,
-                    Value = store.Id.ToString(),
-                    Selected = model.SelectedStoreIds.Contains(store.Id)
-                });
-            }
-        }
 
         protected virtual void SaveStoreMappings(Poll poll, PollModel model)
         {
@@ -126,45 +85,22 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
                 return AccessDeniedView();
 
-            var model = new PollListModel();
-
-            //prepare stores
-            model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
-            foreach (var store in _storeService.GetAllStores())
-                model.AvailableStores.Add(new SelectListItem { Text = store.Name, Value = store.Id.ToString() });
+            //prepare model
+            var model = _pollModelFactory.PreparePollSearchModel(new PollSearchModel());
 
             return View(model);
         }
 
         [HttpPost]
-        public virtual IActionResult List(PollListModel listModel, DataSourceRequest command)
+        public virtual IActionResult List(PollSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
                 return AccessDeniedKendoGridJson();
 
-            var polls = _pollService.GetPolls(listModel.SearchStoreId, 
-                showHidden: true, pageIndex: command.Page - 1, pageSize: command.PageSize);
-            var gridModel = new DataSourceResult
-            {
-                Data = polls.Select(poll =>
-                {
-                    var model = poll.ToModel();
+            //prepare model
+            var model = _pollModelFactory.PreparePollListModel(searchModel);
 
-                    //get user dates
-                    if (poll.StartDateUtc.HasValue)
-                        model.StartDate = _dateTimeHelper.ConvertToUserTime(poll.StartDateUtc.Value, DateTimeKind.Utc);
-                    if (poll.EndDateUtc.HasValue)
-                        model.EndDate = _dateTimeHelper.ConvertToUserTime(poll.EndDateUtc.Value, DateTimeKind.Utc);
-
-                    //get language name
-                    model.LanguageName = _languageService.GetLanguageById(poll.LanguageId)?.Name;
-
-                    return model;
-                }),
-                Total = polls.TotalCount
-            };
-
-            return Json(gridModel);
+            return Json(model);
         }
 
         public virtual IActionResult Create()
@@ -172,17 +108,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
                 return AccessDeniedView();
 
-            var model = new PollModel();
-
-            //languages
-            PrepareLanguagesModel(model);
-            
-            //prepare stores
-            PrepareStoresMappingModel(model, null, false);
-            
-            //default values
-            model.Published = true;
-            model.ShowOnHomePage = true;
+            //prepare model
+            var model = _pollModelFactory.PreparePollModel(new PollModel(), null);
 
             return View(model);
         }
@@ -212,12 +139,12 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                     return RedirectToAction("Edit", new { id = poll.Id });
                 }
+
                 return RedirectToAction("List");
             }
 
             //If we got this far, something failed, redisplay form
-            PrepareLanguagesModel(model);
-            PrepareStoresMappingModel(model, null, true);
+            model = _pollModelFactory.PreparePollModel(model, null, true);
 
             return View(model);
         }
@@ -227,21 +154,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
                 return AccessDeniedView();
 
+            //try to get a poll with the specified id
             var poll = _pollService.GetPollById(id);
             if (poll == null)
-                //No poll found with the specified id
                 return RedirectToAction("List");
-            
-            var model = poll.ToModel();
 
-            model.StartDate = poll.StartDateUtc;
-            model.EndDate = poll.EndDateUtc;
-            
-            //languages
-            PrepareLanguagesModel(model);
-
-            //prepare stores
-            PrepareStoresMappingModel(model, poll, false);
+            //prepare model
+            var model = _pollModelFactory.PreparePollModel(null, poll);
 
             return View(model);
         }
@@ -252,9 +171,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
                 return AccessDeniedView();
 
+            //try to get a poll with the specified id
             var poll = _pollService.GetPollById(model.Id);
             if (poll == null)
-                //No poll found with the specified id
                 return RedirectToAction("List");
 
             if (ModelState.IsValid)
@@ -276,12 +195,12 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                     return RedirectToAction("Edit", new { id = poll.Id });
                 }
+
                 return RedirectToAction("List");
             }
 
             //If we got this far, something failed, redisplay form
-            PrepareLanguagesModel(model);
-            PrepareStoresMappingModel(model, poll, true);
+            model = _pollModelFactory.PreparePollModel(model, poll, true);
 
             return View(model);
         }
@@ -292,14 +211,15 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
                 return AccessDeniedView();
 
+            //try to get a poll with the specified id
             var poll = _pollService.GetPollById(id);
             if (poll == null)
-                //No poll found with the specified id
                 return RedirectToAction("List");
-            
+
             _pollService.DeletePoll(poll);
 
             SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Polls.Deleted"));
+
             return RedirectToAction("List");
         }
 
@@ -308,41 +228,32 @@ namespace Nop.Web.Areas.Admin.Controllers
         #region Poll answer
 
         [HttpPost]
-        public virtual IActionResult PollAnswers(int pollId, DataSourceRequest command)
+        public virtual IActionResult PollAnswers(PollAnswerSearchModel searchModel, int pollId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
                 return AccessDeniedKendoGridJson();
 
+            //try to get a poll with the specified id
             var poll = _pollService.GetPollById(pollId)
                 ?? throw new ArgumentException("No poll found with the specified id", nameof(pollId));
-            
-            var answers = poll.PollAnswers.OrderBy(pollAnswer => pollAnswer.DisplayOrder).ToList();
-            var gridModel = new DataSourceResult
-            {
-                Data = answers.Select(pollAnswer => new PollAnswerModel
-                {
-                    Id = pollAnswer.Id,
-                    PollId = pollAnswer.PollId,
-                    Name = pollAnswer.Name,
-                    NumberOfVotes = pollAnswer.NumberOfVotes,
-                    DisplayOrder = pollAnswer.DisplayOrder
-                }),
-                Total = answers.Count
-            };
 
-            return Json(gridModel);
+            //prepare model
+            var model = _pollModelFactory.PreparePollAnswerListModel(searchModel, poll);
+
+            return Json(model);
         }
-        
+
         [HttpPost]
         public virtual IActionResult PollAnswerUpdate(PollAnswerModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
                 return AccessDeniedView();
-            
+
             if (!ModelState.IsValid)
                 return Json(new DataSourceResult { Errors = ModelState.SerializeErrors() });
 
-            var pollAnswer = _pollService.GetPollAnswerById(model.Id) 
+            //try to get a poll answer with the specified id
+            var pollAnswer = _pollService.GetPollAnswerById(model.Id)
                 ?? throw new ArgumentException("No poll answer found with the specified id");
 
             pollAnswer.Name = model.Name;
@@ -357,14 +268,15 @@ namespace Nop.Web.Areas.Admin.Controllers
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
                 return AccessDeniedView();
-           
+
             if (!ModelState.IsValid)
                 return Json(new DataSourceResult { Errors = ModelState.SerializeErrors() });
 
-            var poll = _pollService.GetPollById(pollId) 
+            //try to get a poll with the specified id
+            var poll = _pollService.GetPollById(pollId)
                 ?? throw new ArgumentException("No poll found with the specified id", nameof(pollId));
 
-            poll.PollAnswers.Add(new PollAnswer 
+            poll.PollAnswers.Add(new PollAnswer
             {
                 Name = model.Name,
                 DisplayOrder = model.DisplayOrder
@@ -373,16 +285,17 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             return new NullJsonResult();
         }
-        
+
         [HttpPost]
         public virtual IActionResult PollAnswerDelete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
                 return AccessDeniedView();
 
-            var pollAnswer = _pollService.GetPollAnswerById(id) 
+            //try to get a poll answer with the specified id
+            var pollAnswer = _pollService.GetPollAnswerById(id)
                 ?? throw new ArgumentException("No poll answer found with the specified id", nameof(id));
-            
+
             _pollService.DeletePollAnswer(pollAnswer);
 
             return new NullJsonResult();
