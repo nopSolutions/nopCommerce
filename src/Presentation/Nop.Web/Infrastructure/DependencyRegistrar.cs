@@ -59,6 +59,7 @@ namespace Nop.Web.Infrastructure
             builder.RegisterType<PaymentModelFactory>().As<IPaymentModelFactory>().InstancePerLifetimeScope();
             builder.RegisterType<PluginModelFactory>().As<IPluginModelFactory>().InstancePerLifetimeScope();
             builder.RegisterType<PollModelFactory>().As<IPollModelFactory>().InstancePerLifetimeScope();
+            builder.RegisterType<ProductAttributeModelFactory>().As<IProductAttributeModelFactory>().InstancePerLifetimeScope();
 
             //factories
             builder.RegisterType<Factories.AddressModelFactory>().As<Factories.IAddressModelFactory>().InstancePerLifetimeScope();

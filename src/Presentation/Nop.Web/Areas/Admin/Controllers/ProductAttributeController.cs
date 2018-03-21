@@ -1,14 +1,13 @@
 ﻿using System;
-using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using Nop.Web.Areas.Admin.Extensions;
-using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Core.Domain.Catalog;
 using Nop.Services.Catalog;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Security;
-using Nop.Web.Framework.Kendoui;
+using Nop.Web.Areas.Admin.Extensions;
+using Nop.Web.Areas.Admin.Factories;
+using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.Filters;
 
@@ -18,37 +17,34 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
-        private readonly IProductService _productService;
-        private readonly IProductAttributeService _productAttributeService;
-        private readonly ILanguageService _languageService;
-        private readonly ILocalizedEntityService _localizedEntityService;
-        private readonly ILocalizationService _localizationService;
         private readonly ICustomerActivityService _customerActivityService;
+        private readonly ILocalizationService _localizationService;
+        private readonly ILocalizedEntityService _localizedEntityService;
         private readonly IPermissionService _permissionService;
+        private readonly IProductAttributeModelFactory _productAttributeModelFactory;
+        private readonly IProductAttributeService _productAttributeService;
 
         #endregion Fields
 
         #region Ctor
 
-        public ProductAttributeController(IProductService productService,
-            IProductAttributeService productAttributeService,
-            ILanguageService languageService,
-            ILocalizedEntityService localizedEntityService,
+        public ProductAttributeController(ICustomerActivityService customerActivityService,
             ILocalizationService localizationService,
-            ICustomerActivityService customerActivityService,
-            IPermissionService permissionService)
+            ILocalizedEntityService localizedEntityService,
+            IPermissionService permissionService,
+            IProductAttributeModelFactory productAttributeModelFactory,
+            IProductAttributeService productAttributeService)
         {
-            this._productService = productService;
-            this._productAttributeService = productAttributeService;
-            this._languageService = languageService;
-            this._localizedEntityService = localizedEntityService;
-            this._localizationService = localizationService;
             this._customerActivityService = customerActivityService;
+            this._localizationService = localizationService;
+            this._localizedEntityService = localizedEntityService;
             this._permissionService = permissionService;
+            this._productAttributeModelFactory = productAttributeModelFactory;
+            this._productAttributeService = productAttributeService;
         }
 
         #endregion
-        
+
         #region Utilities
 
         protected virtual void UpdateLocales(ProductAttribute productAttribute, ProductAttributeModel model)
@@ -79,12 +75,11 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         #endregion
-        
+
         #region Methods
 
         #region Attribute list / create / edit / delete
 
-        //list
         public virtual IActionResult Index()
         {
             return RedirectToAction("List");
@@ -95,35 +90,32 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
 
-            return View();
+            //prepare model
+            var model = _productAttributeModelFactory.PrepareProductAttributeSearchModel(new ProductAttributeSearchModel());
+
+            return View(model);
         }
 
         [HttpPost]
-        public virtual IActionResult List(DataSourceRequest command)
+        public virtual IActionResult List(ProductAttributeSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedKendoGridJson();
 
-            var productAttributes = _productAttributeService
-                .GetAllProductAttributes(command.Page - 1, command.PageSize);
-            var gridModel = new DataSourceResult
-            {
-                Data = productAttributes.Select(x => x.ToModel()),
-                Total = productAttributes.TotalCount
-            };
+            //prepare model
+            var model = _productAttributeModelFactory.PrepareProductAttributeListModel(searchModel);
 
-            return Json(gridModel);
+            return Json(model);
         }
-        
-        //create
+
         public virtual IActionResult Create()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
 
-            var model = new ProductAttributeModel();
-            //locales
-            AddLocales(_languageService, model.Locales);
+            //prepare model
+            var model = _productAttributeModelFactory.PrepareProductAttributeModel(new ProductAttributeModel(), null);
+
             return View(model);
         }
 
@@ -152,32 +144,29 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                     return RedirectToAction("Edit", new { id = productAttribute.Id });
                 }
+
                 return RedirectToAction("List");
 
             }
 
             //If we got this far, something failed, redisplay form
+            model = _productAttributeModelFactory.PrepareProductAttributeModel(model, null, true);
+
             return View(model);
         }
 
-        //edit
         public virtual IActionResult Edit(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
 
+            //try to get a product attribute with the specified id
             var productAttribute = _productAttributeService.GetProductAttributeById(id);
             if (productAttribute == null)
-                //No product attribute found with the specified id
                 return RedirectToAction("List");
 
-            var model = productAttribute.ToModel();
-            //locales
-            AddLocales(_languageService, model.Locales, (locale, languageId) =>
-            {
-                locale.Name = productAttribute.GetLocalized(x => x.Name, languageId, false, false);
-                locale.Description = productAttribute.GetLocalized(x => x.Description, languageId, false, false);
-            });
+            //prepare model
+            var model = _productAttributeModelFactory.PrepareProductAttributeModel(null, productAttribute);
 
             return View(model);
         }
@@ -188,11 +177,11 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
 
+            //try to get a product attribute with the specified id
             var productAttribute = _productAttributeService.GetProductAttributeById(model.Id);
             if (productAttribute == null)
-                //No product attribute found with the specified id
                 return RedirectToAction("List");
-            
+
             if (ModelState.IsValid)
             {
                 productAttribute = model.ToEntity(productAttribute);
@@ -205,6 +194,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     string.Format(_localizationService.GetResource("ActivityLog.EditProductAttribute"), productAttribute.Name), productAttribute);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Catalog.Attributes.ProductAttributes.Updated"));
+
                 if (continueEditing)
                 {
                     //selected tab
@@ -212,23 +202,25 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                     return RedirectToAction("Edit", new { id = productAttribute.Id });
                 }
+
                 return RedirectToAction("List");
             }
 
             //If we got this far, something failed, redisplay form
+            model = _productAttributeModelFactory.PrepareProductAttributeModel(model, productAttribute, true);
+
             return View(model);
         }
 
-        //delete
         [HttpPost]
         public virtual IActionResult Delete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
 
+            //try to get a product attribute with the specified id
             var productAttribute = _productAttributeService.GetProductAttributeById(id);
             if (productAttribute == null)
-                //No product attribute found with the specified id
                 return RedirectToAction("List");
 
             _productAttributeService.DeleteProductAttribute(productAttribute);
@@ -238,6 +230,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 string.Format(_localizationService.GetResource("ActivityLog.DeleteProductAttribute"), productAttribute.Name), productAttribute);
 
             SuccessNotification(_localizationService.GetResource("Admin.Catalog.Attributes.ProductAttributes.Deleted"));
+
             return RedirectToAction("List");
         }
 
@@ -245,87 +238,55 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Used by products
 
-        //used by products
         [HttpPost]
-        public virtual IActionResult UsedByProducts(DataSourceRequest command, int productAttributeId)
+        public virtual IActionResult UsedByProducts(ProductAttributeProductSearchModel searchModel, int productAttributeId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedKendoGridJson();
 
-            var products = _productService.GetProductsByProductAtributeId(
-                productAttributeId: productAttributeId,
-                pageIndex: command.Page - 1,
-                pageSize: command.PageSize);
-            var gridModel = new DataSourceResult
-            {
-                Data = products.Select(x =>
-                {
-                    return new ProductAttributeModel.UsedByProductModel
-                    {
-                        Id = x.Id,
-                        ProductName = x.Name,
-                        Published = x.Published
-                    };
-                }),
-                Total = products.TotalCount
-            };
+            //try to get a product attribute with the specified id
+            var productAttribute = _productAttributeService.GetProductAttributeById(productAttributeId)
+                ?? throw new ArgumentException("No product attribute found with the specified id", nameof(productAttributeId));
 
-            return Json(gridModel);
+            //prepare model
+            var model = _productAttributeModelFactory.PrepareProductAttributeProductListModel(searchModel, productAttribute);
+
+            return Json(model);
         }
-        
+
         #endregion
 
         #region Predefined values
 
         [HttpPost]
-        public virtual IActionResult PredefinedProductAttributeValueList(int productAttributeId, DataSourceRequest command)
+        public virtual IActionResult PredefinedProductAttributeValueList(PredefinedProductAttributeValueSearchModel searchModel,
+            int productAttributeId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedKendoGridJson();
 
-            var values = _productAttributeService.GetPredefinedProductAttributeValues(productAttributeId);
-            var gridModel = new DataSourceResult
-            {
-                Data = values.Select(x =>
-                {
-                    return new PredefinedProductAttributeValueModel
-                    {
-                        Id = x.Id,
-                        ProductAttributeId = x.ProductAttributeId,
-                        Name = x.Name,
-                        PriceAdjustment = x.PriceAdjustment,
-                        PriceAdjustmentUsePercentage = x.PriceAdjustmentUsePercentage,
-                        PriceAdjustmentStr = x.PriceAdjustment.ToString("G29") + (x.PriceAdjustmentUsePercentage ? " %" : ""),
-                        WeightAdjustment = x.WeightAdjustment,
-                        WeightAdjustmentStr = x.WeightAdjustment.ToString("G29"),
-                        Cost = x.Cost,
-                        IsPreSelected = x.IsPreSelected,
-                        DisplayOrder = x.DisplayOrder
-                    };
-                }),
-                Total = values.Count()
-            };
+            //try to get a product attribute with the specified id
+            var productAttribute = _productAttributeService.GetProductAttributeById(productAttributeId)
+                ?? throw new ArgumentException("No product attribute found with the specified id", nameof(productAttributeId));
 
-            return Json(gridModel);
+            //prepare model
+            var model = _productAttributeModelFactory.PreparePredefinedProductAttributeValueListModel(searchModel, productAttribute);
+
+            return Json(model);
         }
 
-        //create
         public virtual IActionResult PredefinedProductAttributeValueCreatePopup(int productAttributeId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
 
-            var productAttribute = _productAttributeService.GetProductAttributeById(productAttributeId);
-            if (productAttribute == null)
-                throw new ArgumentException("No product attribute found with the specified id");
+            //try to get a product attribute with the specified id
+            var productAttribute = _productAttributeService.GetProductAttributeById(productAttributeId)
+                ?? throw new ArgumentException("No product attribute found with the specified id", nameof(productAttributeId));
 
-            var model = new PredefinedProductAttributeValueModel
-            {
-                ProductAttributeId = productAttributeId
-            };
-
-            //locales
-            AddLocales(_languageService, model.Locales);
+            //prepare model
+            var model = _productAttributeModelFactory
+                .PreparePredefinedProductAttributeValueModel(new PredefinedProductAttributeValueModel(), productAttribute, null);
 
             return View(model);
         }
@@ -336,9 +297,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
 
-            var productAttribute = _productAttributeService.GetProductAttributeById(model.ProductAttributeId);
-            if (productAttribute == null)
-                throw new ArgumentException("No product attribute found with the specified id");
+            //try to get a product attribute with the specified id
+            var productAttribute = _productAttributeService.GetProductAttributeById(model.ProductAttributeId)
+                ?? throw new ArgumentException("No product attribute found with the specified id");
 
             if (ModelState.IsValid)
             {
@@ -358,39 +319,32 @@ namespace Nop.Web.Areas.Admin.Controllers
                 UpdateLocales(ppav, model);
 
                 ViewBag.RefreshPage = true;
+
                 return View(model);
             }
 
             //If we got this far, something failed, redisplay form
+            model = _productAttributeModelFactory.PreparePredefinedProductAttributeValueModel(model, productAttribute, null, true);
+
             return View(model);
         }
 
-        //edit
         public virtual IActionResult PredefinedProductAttributeValueEditPopup(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
 
-            var ppav = _productAttributeService.GetPredefinedProductAttributeValueById(id);
-            if (ppav == null)
-                throw new ArgumentException("No product attribute value found with the specified id");
+            //try to get a predefined product attribute value with the specified id
+            var productAttributeValue = _productAttributeService.GetPredefinedProductAttributeValueById(id)
+                ?? throw new ArgumentException("No predefined product attribute value found with the specified id");
 
-            var model = new PredefinedProductAttributeValueModel
-            {
-                ProductAttributeId = ppav.ProductAttributeId,
-                Name = ppav.Name,
-                PriceAdjustment = ppav.PriceAdjustment,
-                PriceAdjustmentUsePercentage = ppav.PriceAdjustmentUsePercentage,
-                WeightAdjustment = ppav.WeightAdjustment,
-                Cost = ppav.Cost,
-                IsPreSelected = ppav.IsPreSelected,
-                DisplayOrder = ppav.DisplayOrder
-            };
-            //locales
-            AddLocales(_languageService, model.Locales, (locale, languageId) =>
-            {
-                locale.Name = ppav.GetLocalized(x => x.Name, languageId, false, false);
-            });
+            //try to get a product attribute with the specified id
+            var productAttribute = _productAttributeService.GetProductAttributeById(productAttributeValue.ProductAttributeId)
+                ?? throw new ArgumentException("No product attribute found with the specified id");
+
+            //prepare model
+            var model = _productAttributeModelFactory.PreparePredefinedProductAttributeValueModel(null, productAttribute, productAttributeValue);
+
             return View(model);
         }
 
@@ -400,43 +354,49 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
 
-            var ppav = _productAttributeService.GetPredefinedProductAttributeValueById(model.Id);
-            if (ppav == null)
-                throw new ArgumentException("No product attribute value found with the specified id");
+            //try to get a predefined product attribute value with the specified id
+            var productAttributeValue = _productAttributeService.GetPredefinedProductAttributeValueById(model.Id)
+                ?? throw new ArgumentException("No predefined product attribute value found with the specified id");
+
+            //try to get a product attribute with the specified id
+            var productAttribute = _productAttributeService.GetProductAttributeById(productAttributeValue.ProductAttributeId)
+                ?? throw new ArgumentException("No product attribute found with the specified id");
 
             if (ModelState.IsValid)
             {
-                ppav.Name = model.Name;
-                ppav.PriceAdjustment = model.PriceAdjustment;
-                ppav.PriceAdjustmentUsePercentage = model.PriceAdjustmentUsePercentage;
-                ppav.WeightAdjustment = model.WeightAdjustment;
-                ppav.Cost = model.Cost;
-                ppav.IsPreSelected = model.IsPreSelected;
-                ppav.DisplayOrder = model.DisplayOrder;
-                _productAttributeService.UpdatePredefinedProductAttributeValue(ppav);
+                productAttributeValue.Name = model.Name;
+                productAttributeValue.PriceAdjustment = model.PriceAdjustment;
+                productAttributeValue.PriceAdjustmentUsePercentage = model.PriceAdjustmentUsePercentage;
+                productAttributeValue.WeightAdjustment = model.WeightAdjustment;
+                productAttributeValue.Cost = model.Cost;
+                productAttributeValue.IsPreSelected = model.IsPreSelected;
+                productAttributeValue.DisplayOrder = model.DisplayOrder;
+                _productAttributeService.UpdatePredefinedProductAttributeValue(productAttributeValue);
 
-                UpdateLocales(ppav, model);
+                UpdateLocales(productAttributeValue, model);
 
                 ViewBag.RefreshPage = true;
+
                 return View(model);
             }
 
             //If we got this far, something failed, redisplay form
+            model = _productAttributeModelFactory.PreparePredefinedProductAttributeValueModel(model, productAttribute, productAttributeValue, true);
+
             return View(model);
         }
 
-        //delete
         [HttpPost]
         public virtual IActionResult PredefinedProductAttributeValueDelete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
 
-            var ppav = _productAttributeService.GetPredefinedProductAttributeValueById(id);
-            if (ppav == null)
-                throw new ArgumentException("No predefined product attribute value found with the specified id");
+            //try to get a predefined product attribute value with the specified id
+            var productAttributeValue = _productAttributeService.GetPredefinedProductAttributeValueById(id)
+                ?? throw new ArgumentException("No predefined product attribute value found with the specified id", nameof(id));
 
-            _productAttributeService.DeletePredefinedProductAttributeValue(ppav);
+            _productAttributeService.DeletePredefinedProductAttributeValue(productAttributeValue);
 
             return new NullJsonResult();
         }
