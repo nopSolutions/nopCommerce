@@ -7,9 +7,14 @@ using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Areas.Admin.Models.Messages
 {
+    /// <summary>
+    /// Represents a queued email model
+    /// </summary>
     [Validator(typeof(QueuedEmailValidator))]
     public partial class QueuedEmailModel: BaseNopEntityModel
     {
+        #region Properties
+
         [NopResourceDisplayName("Admin.System.QueuedEmails.Fields.Id")]
         public override int Id { get; set; }
 
@@ -71,5 +76,7 @@ namespace Nop.Web.Areas.Admin.Models.Messages
 
         [NopResourceDisplayName("Admin.System.QueuedEmails.Fields.EmailAccountName")]
         public string EmailAccountName { get; set; }
+
+        #endregion
     }
 }
