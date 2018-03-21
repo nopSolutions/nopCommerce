@@ -691,6 +691,29 @@ namespace Nop.Web.Areas.Admin.Factories
             PrepareDefaultItem(items, withSpecialDefaultItem, defaultItemText);
         }
 
+        /// <summary>
+        /// Prepare available return request statuses
+        /// </summary>
+        /// <param name="items">Return request status items</param>
+        /// <param name="withSpecialDefaultItem">Whether to insert the first special item for the default value</param>
+        /// <param name="defaultItemText">Default item text; pass null to use default value of the default item text</param>
+        public virtual void PrepareReturnRequestStatuses(IList<SelectListItem> items, 
+            bool withSpecialDefaultItem = true, string defaultItemText = null)
+        {
+            if (items == null)
+                throw new ArgumentNullException(nameof(items));
+
+            //prepare available return request statuses
+            var availableStatusItems = ReturnRequestStatus.Pending.ToSelectList(false);
+            foreach (var statusItem in availableStatusItems)
+            {
+                items.Add(statusItem);
+            }
+
+            //insert special item for the default value
+            PrepareDefaultItem(items, withSpecialDefaultItem, defaultItemText);
+        }
+
         #endregion
     }
 }
