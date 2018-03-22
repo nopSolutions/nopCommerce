@@ -219,5 +219,21 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="defaultItemText">Default item text; pass null to use default value of the default item text</param>
         void PrepareReturnRequestStatuses(IList<SelectListItem> items,
             bool withSpecialDefaultItem = true, string defaultItemText = null);
+
+        /// <summary>
+        /// Prepare available product templates
+        /// </summary>
+        /// <param name="items">Product template items</param>
+        /// <param name="withSpecialDefaultItem">Whether to insert the first special item for the default value</param>
+        /// <param name="defaultItemText">Default item text; pass null to use default value of the default item text</param>
+        void PrepareProductTemplates(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null);
+
+        /// <summary>
+        /// Prepare available topic templates
+        /// </summary>
+        /// <param name="items">Topic template items</param>
+        /// <param name="withSpecialDefaultItem">Whether to insert the first special item for the default value</param>
+        /// <param name="defaultItemText">Default item text; pass null to use default value of the default item text</param>
+        void PrepareTopicTemplates(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null);
     }
 }

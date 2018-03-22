@@ -22,6 +22,7 @@ using Nop.Services.Messages;
 using Nop.Services.Plugins;
 using Nop.Services.Stores;
 using Nop.Services.Tax;
+using Nop.Services.Topics;
 using Nop.Services.Vendors;
 using Nop.Web.Areas.Admin.Helpers;
 
@@ -47,10 +48,12 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IManufacturerService _manufacturerService;
         private readonly IManufacturerTemplateService _manufacturerTemplateService;
         private readonly IPluginFinder _pluginFinder;
+        private readonly IProductTemplateService _productTemplateService;
         private readonly IStateProvinceService _stateProvinceService;
         private readonly IStaticCacheManager _cacheManager;
         private readonly IStoreService _storeService;
         private readonly ITaxCategoryService _taxCategoryService;
+        private readonly ITopicTemplateService _topicTemplateService;
         private readonly IVendorService _vendorService;
 
         #endregion
@@ -70,10 +73,12 @@ namespace Nop.Web.Areas.Admin.Factories
             IManufacturerService manufacturerService,
             IManufacturerTemplateService manufacturerTemplateService,
             IPluginFinder pluginFinder,
+            IProductTemplateService productTemplateService,
             IStateProvinceService stateProvinceService,
             IStaticCacheManager cacheManager,
             IStoreService storeService,
             ITaxCategoryService taxCategoryService,
+            ITopicTemplateService topicTemplateService,
             IVendorService vendorService)
         {
             this._categoryService = categoryService;
@@ -88,11 +93,13 @@ namespace Nop.Web.Areas.Admin.Factories
             this._localizationService = localizationService;
             this._manufacturerService = manufacturerService;
             this._pluginFinder = pluginFinder;
+            this._productTemplateService = productTemplateService;
             this._manufacturerTemplateService = manufacturerTemplateService;
             this._stateProvinceService = stateProvinceService;
             this._cacheManager = cacheManager;
             this._storeService = storeService;
             this._taxCategoryService = taxCategoryService;
+            this._topicTemplateService = topicTemplateService;
             this._vendorService = vendorService;
         }
 
@@ -708,6 +715,50 @@ namespace Nop.Web.Areas.Admin.Factories
             foreach (var statusItem in availableStatusItems)
             {
                 items.Add(statusItem);
+            }
+
+            //insert special item for the default value
+            PrepareDefaultItem(items, withSpecialDefaultItem, defaultItemText);
+        }
+
+        /// <summary>
+        /// Prepare available product templates
+        /// </summary>
+        /// <param name="items">Product template items</param>
+        /// <param name="withSpecialDefaultItem">Whether to insert the first special item for the default value</param>
+        /// <param name="defaultItemText">Default item text; pass null to use default value of the default item text</param>
+        public virtual void PrepareProductTemplates(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
+        {
+            if (items == null)
+                throw new ArgumentNullException(nameof(items));
+
+            //prepare available product templates
+            var availableTemplates = _productTemplateService.GetAllProductTemplates();
+            foreach (var template in availableTemplates)
+            {
+                items.Add(new SelectListItem { Value = template.Id.ToString(), Text = template.Name });
+            }
+
+            //insert special item for the default value
+            PrepareDefaultItem(items, withSpecialDefaultItem, defaultItemText);
+        }
+
+        /// <summary>
+        /// Prepare available topic templates
+        /// </summary>
+        /// <param name="items">Topic template items</param>
+        /// <param name="withSpecialDefaultItem">Whether to insert the first special item for the default value</param>
+        /// <param name="defaultItemText">Default item text; pass null to use default value of the default item text</param>
+        public virtual void PrepareTopicTemplates(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
+        {
+            if (items == null)
+                throw new ArgumentNullException(nameof(items));
+
+            //prepare available topic templates
+            var availableTemplates = _topicTemplateService.GetAllTopicTemplates();
+            foreach (var template in availableTemplates)
+            {
+                items.Add(new SelectListItem { Value = template.Id.ToString(), Text = template.Name });
             }
 
             //insert special item for the default value
