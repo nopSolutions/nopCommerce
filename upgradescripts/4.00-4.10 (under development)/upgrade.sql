@@ -1890,3 +1890,24 @@ BEGIN
 	DROP TABLE #PageIndex
 END
 GO
+
+--new index
+IF NOT EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_QueuedEmail_SentOnUtc_DontSendBeforeDateUtc_Extended' and object_id=object_id(N'[dbo].[QueuedEmail]'))
+BEGIN
+    CREATE NONCLUSTERED INDEX [IX_QueuedEmail_SentOnUtc_DontSendBeforeDateUtc_Extended] ON QueuedEmail ([SentOnUtc], [DontSendBeforeDateUtc]) INCLUDE ([SentTries])
+END
+GO
+
+--new index
+IF NOT EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_Product_VisibleIndividually_Published_Deleted_Extended' and object_id=object_id(N'[dbo].[Product]'))
+BEGIN
+    CREATE NONCLUSTERED INDEX [IX_Product_VisibleIndividually_Published_Deleted_Extended] ON Product ([VisibleIndividually],[Published],[Deleted]) INCLUDE ([Id],[AvailableStartDateTimeUtc],[AvailableEndDateTimeUtc])
+END
+GO
+
+--new index
+IF NOT EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_Category_Deleted_Extended' and object_id=object_id(N'[dbo].[Category]'))
+BEGIN
+    CREATE NONCLUSTERED INDEX [IX_Category_Deleted_Extended] ON Category ([Deleted]) INCLUDE ([Id],[Name],[SubjectToAcl],[LimitedToStores],[Published])
+END
+GO
