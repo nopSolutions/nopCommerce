@@ -1,10 +1,16 @@
 ﻿using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Models;
+using Nop.Web.Areas.Admin.Models.Vendors;
 
 namespace Nop.Web.Areas.Admin.Models.Settings
 {
     public partial class VendorSettingsModel : BaseNopModel
     {
+        public VendorSettingsModel()
+        {
+            this.VendorAttributeSearchModel = new VendorAttributeSearchModel();
+        }
+
         public int ActiveStoreScopeConfiguration { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.Vendor.VendorsBlockItemsToDisplay")]
@@ -50,5 +56,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.Vendor.ShowVendorOnOrderDetailsPage")]
         public bool ShowVendorOnOrderDetailsPage { get; set; }
         public bool ShowVendorOnOrderDetailsPage_OverrideForStore { get; set; }
+
+        public VendorAttributeSearchModel VendorAttributeSearchModel { get; set; }
     }
 }

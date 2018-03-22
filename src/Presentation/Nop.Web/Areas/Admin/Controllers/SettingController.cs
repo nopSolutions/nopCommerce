@@ -57,6 +57,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         private readonly IAddressAttributeModelFactory _addressAttributeModelFactory;
         private readonly ICustomerAttributeModelFactory _customerAttributeModelFactory;
+        private readonly IVendorAttributeModelFactory _vendorAttributeModelFactory;
         private readonly ISettingService _settingService;
         private readonly ICountryService _countryService;
         private readonly IStateProvinceService _stateProvinceService;
@@ -89,6 +90,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public SettingController(IAddressAttributeModelFactory addressAttributeModelFactory,
             ICustomerAttributeModelFactory customerAttributeModelFactory,
+            IVendorAttributeModelFactory vendorAttributeModelFactory,
             ISettingService settingService,
             ICountryService countryService, 
             IStateProvinceService stateProvinceService,
@@ -117,6 +119,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         {
             this._addressAttributeModelFactory = addressAttributeModelFactory;
             this._customerAttributeModelFactory = customerAttributeModelFactory;
+            this._vendorAttributeModelFactory = vendorAttributeModelFactory;
             this._settingService = settingService;
             this._countryService = countryService;
             this._stateProvinceService = stateProvinceService;
@@ -273,6 +276,9 @@ namespace Nop.Web.Areas.Admin.Controllers
                 model.MaximumProductNumber_OverrideForStore = _settingService.SettingExists(vendorSettings, x => x.MaximumProductNumber, storeScope);
                 model.AllowVendorsToImportProducts_OverrideForStore = _settingService.SettingExists(vendorSettings, x => x.AllowVendorsToImportProducts, storeScope);
             }
+
+            //prepare nested search model
+            model.VendorAttributeSearchModel = _vendorAttributeModelFactory.PrepareVendorAttributeSearchModel(model.VendorAttributeSearchModel);
 
             return View(model);
         }
