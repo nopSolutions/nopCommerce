@@ -1,7 +1,8 @@
-﻿@using Nop.Services.Stores
+﻿@model ShoppingCartSearchModel
+
+@using Nop.Services.Stores
 @inject AdminAreaSettings adminAreaSettings
 @inject IStoreService storeService
-@model ShoppingCartTypeModel
 
 @{
     var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
