@@ -5,9 +5,14 @@ using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Areas.Admin.Models.Templates
 {
+    /// <summary>
+    /// Represents a topic template model
+    /// </summary>
     [Validator(typeof(TopicTemplateValidator))]
     public partial class TopicTemplateModel : BaseNopEntityModel
     {
+        #region Properties
+
         [NopResourceDisplayName("Admin.System.Templates.Topic.Name")]
         public string Name { get; set; }
 
@@ -16,5 +21,7 @@ namespace Nop.Web.Areas.Admin.Models.Templates
 
         [NopResourceDisplayName("Admin.System.Templates.Topic.DisplayOrder")]
         public int DisplayOrder { get; set; }
+
+        #endregion
     }
 }

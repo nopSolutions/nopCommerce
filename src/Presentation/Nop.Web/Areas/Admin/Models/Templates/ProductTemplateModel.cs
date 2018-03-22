@@ -5,9 +5,14 @@ using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Areas.Admin.Models.Templates
 {
+    /// <summary>
+    /// Represents a product template model
+    /// </summary>
     [Validator(typeof(ProductTemplateValidator))]
     public partial class ProductTemplateModel : BaseNopEntityModel
     {
+        #region Properties
+
         [NopResourceDisplayName("Admin.System.Templates.Product.Name")]
         public string Name { get; set; }
 
@@ -19,5 +24,7 @@ namespace Nop.Web.Areas.Admin.Models.Templates
 
         [NopResourceDisplayName("Admin.System.Templates.Product.IgnoredProductTypes")]
         public string IgnoredProductTypes { get; set; }
+
+        #endregion
     }
 }
