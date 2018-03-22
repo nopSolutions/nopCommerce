@@ -182,8 +182,11 @@
                         url: "@(Url.Action("RewardPointsHistoryAdd", "Customer"))",
                         data: postData,
                         success: function (data) {
-                            var grid = $("#customer-rewardpoints-grid").data('kendoGrid');
-                            grid.dataSource.read();
+                            if (data.Result) {
+                                var grid = $("#customer-rewardpoints-grid").data('kendoGrid');
+                                grid.dataSource.read();
+                            }
+
                             $('#addRewardPoints').attr('disabled', false);
                         },
                         error:function (xhr, ajaxOptions, thrownError){
