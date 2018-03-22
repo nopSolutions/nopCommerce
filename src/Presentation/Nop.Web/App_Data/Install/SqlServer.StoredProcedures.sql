@@ -384,21 +384,21 @@ BEGIN
 	IF @CategoryIdsCount > 0
 	BEGIN
 		SET @sql = @sql + '
-		LEFT JOIN Product_Category_Mapping pcm with (NOLOCK)
+		INNER JOIN Product_Category_Mapping pcm with (NOLOCK)
 			ON p.Id = pcm.ProductId'
 	END
 	
 	IF @ManufacturerId > 0
 	BEGIN
 		SET @sql = @sql + '
-		LEFT JOIN Product_Manufacturer_Mapping pmm with (NOLOCK)
+		INNER JOIN Product_Manufacturer_Mapping pmm with (NOLOCK)
 			ON p.Id = pmm.ProductId'
 	END
 	
 	IF ISNULL(@ProductTagId, 0) != 0
 	BEGIN
 		SET @sql = @sql + '
-		LEFT JOIN Product_ProductTag_Mapping pptm with (NOLOCK)
+		INNER JOIN Product_ProductTag_Mapping pptm with (NOLOCK)
 			ON p.Id = pptm.Product_Id'
 	END
 	
