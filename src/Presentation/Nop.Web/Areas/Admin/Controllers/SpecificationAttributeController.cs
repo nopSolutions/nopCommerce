@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using Nop.Web.Areas.Admin.Extensions;
-using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Core.Domain.Catalog;
 using Nop.Services.Catalog;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Security;
-using Nop.Web.Framework.Kendoui;
+using Nop.Web.Areas.Admin.Extensions;
+using Nop.Web.Areas.Admin.Factories;
+using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.Filters;
 
@@ -18,34 +18,34 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
-        private readonly ISpecificationAttributeService _specificationAttributeService;
-        private readonly ILanguageService _languageService;
-        private readonly ILocalizedEntityService _localizedEntityService;
-        private readonly ILocalizationService _localizationService;
         private readonly ICustomerActivityService _customerActivityService;
+        private readonly ILocalizationService _localizationService;
+        private readonly ILocalizedEntityService _localizedEntityService;
         private readonly IPermissionService _permissionService;
+        private readonly ISpecificationAttributeModelFactory _specificationAttributeModelFactory;
+        private readonly ISpecificationAttributeService _specificationAttributeService;
 
         #endregion Fields
 
         #region Ctor
 
-        public SpecificationAttributeController(ISpecificationAttributeService specificationAttributeService,
-            ILanguageService languageService, 
+        public SpecificationAttributeController(ICustomerActivityService customerActivityService,
+            ILocalizationService localizationService,
             ILocalizedEntityService localizedEntityService,
-            ILocalizationService localizationService, 
-            ICustomerActivityService customerActivityService,
-            IPermissionService permissionService)
+            IPermissionService permissionService,
+            ISpecificationAttributeModelFactory specificationAttributeModelFactory,
+            ISpecificationAttributeService specificationAttributeService)
         {
-            this._specificationAttributeService = specificationAttributeService;
-            this._languageService = languageService;
-            this._localizedEntityService = localizedEntityService;
-            this._localizationService = localizationService;
             this._customerActivityService = customerActivityService;
+            this._localizationService = localizationService;
+            this._localizedEntityService = localizedEntityService;
             this._permissionService = permissionService;
+            this._specificationAttributeModelFactory = specificationAttributeModelFactory;
+            this._specificationAttributeService = specificationAttributeService;
         }
 
         #endregion
-        
+
         #region Utilities
 
         protected virtual void UpdateAttributeLocales(SpecificationAttribute specificationAttribute, SpecificationAttributeModel model)
@@ -71,10 +71,9 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         #endregion
-        
+
         #region Specification attributes
 
-        //list
         public virtual IActionResult Index()
         {
             return RedirectToAction("List");
@@ -85,35 +84,32 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
 
-            return View();
+            //prepare model
+            var model = _specificationAttributeModelFactory.PrepareSpecificationAttributeSearchModel(new SpecificationAttributeSearchModel());
+
+            return View(model);
         }
 
         [HttpPost]
-        public virtual IActionResult List(DataSourceRequest command)
+        public virtual IActionResult List(SpecificationAttributeSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedKendoGridJson();
 
-            var specificationAttributes = _specificationAttributeService
-                .GetSpecificationAttributes(command.Page - 1, command.PageSize);
-            var gridModel = new DataSourceResult
-            {
-                Data = specificationAttributes.Select(x => x.ToModel()),
-                Total = specificationAttributes.TotalCount
-            };
+            //prepare model
+            var model = _specificationAttributeModelFactory.PrepareSpecificationAttributeListModel(searchModel);
 
-            return Json(gridModel);
+            return Json(model);
         }
-        
-        //create
+
         public virtual IActionResult Create()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
 
-            var model = new SpecificationAttributeModel();
-            //locales
-            AddLocales(_languageService, model.Locales);
+            //prepare model
+            var model = _specificationAttributeModelFactory.PrepareSpecificationAttributeModel(new SpecificationAttributeModel(), null);
+
             return View(model);
         }
 
@@ -142,10 +138,13 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                     return RedirectToAction("Edit", new { id = specificationAttribute.Id });
                 }
+
                 return RedirectToAction("List");
             }
 
             //If we got this far, something failed, redisplay form
+            model = _specificationAttributeModelFactory.PrepareSpecificationAttributeModel(model, null, true);
+
             return View(model);
         }
 
@@ -155,17 +154,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
 
+            //try to get a specification attribute with the specified id
             var specificationAttribute = _specificationAttributeService.GetSpecificationAttributeById(id);
             if (specificationAttribute == null)
-                //No specification attribute found with the specified id
                 return RedirectToAction("List");
 
-            var model = specificationAttribute.ToModel();
-            //locales
-            AddLocales(_languageService, model.Locales, (locale, languageId) =>
-            {
-                locale.Name = specificationAttribute.GetLocalized(x => x.Name, languageId, false, false);
-            });
+            //prepare model
+            var model = _specificationAttributeModelFactory.PrepareSpecificationAttributeModel(null, specificationAttribute);
 
             return View(model);
         }
@@ -176,9 +171,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
 
+            //try to get a specification attribute with the specified id
             var specificationAttribute = _specificationAttributeService.GetSpecificationAttributeById(model.Id);
             if (specificationAttribute == null)
-                //No specification attribute found with the specified id
                 return RedirectToAction("List");
 
             if (ModelState.IsValid)
@@ -199,25 +194,27 @@ namespace Nop.Web.Areas.Admin.Controllers
                     //selected tab
                     SaveSelectedTabName();
 
-                    return RedirectToAction("Edit",  new {id = specificationAttribute.Id});
+                    return RedirectToAction("Edit", new { id = specificationAttribute.Id });
                 }
+
                 return RedirectToAction("List");
             }
 
             //If we got this far, something failed, redisplay form
+            model = _specificationAttributeModelFactory.PrepareSpecificationAttributeModel(model, specificationAttribute, true);
+
             return View(model);
         }
 
-        //delete
         [HttpPost]
         public virtual IActionResult Delete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
 
+            //try to get a specification attribute with the specified id
             var specificationAttribute = _specificationAttributeService.GetSpecificationAttributeById(id);
             if (specificationAttribute == null)
-                //No specification attribute found with the specified id
                 return RedirectToAction("List");
 
             _specificationAttributeService.DeleteSpecificationAttribute(specificationAttribute);
@@ -227,6 +224,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 string.Format(_localizationService.GetResource("ActivityLog.DeleteSpecAttribute"), specificationAttribute.Name), specificationAttribute);
 
             SuccessNotification(_localizationService.GetResource("Admin.Catalog.Attributes.SpecificationAttributes.Deleted"));
+
             return RedirectToAction("List");
         }
 
@@ -234,47 +232,36 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Specification attribute options
 
-        //list
         [HttpPost]
-        public virtual IActionResult OptionList(int specificationAttributeId, DataSourceRequest command)
+        public virtual IActionResult OptionList(SpecificationAttributeOptionSearchModel searchModel, int specificationAttributeId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedKendoGridJson();
 
-            var options = _specificationAttributeService.GetSpecificationAttributeOptionsBySpecificationAttribute(specificationAttributeId);
-            var gridModel = new DataSourceResult
-            {
-                Data = options.Select(x => 
-                    {
-                        var model = x.ToModel();
-                        //in order to save performance to do not check whether a product is deleted, etc
-                        model.NumberOfAssociatedProducts = _specificationAttributeService
-                            .GetProductSpecificationAttributeCount(0, x.Id);
-                        //locales
-                        //AddLocales(_languageService, model.Locales, (locale, languageId) =>
-                        //{
-                        //    locale.Name = x.GetLocalized(y => y.Name, languageId, false, false);
-                        //});
-                        return model;
-                    }),
-                Total = options.Count()
-            };
+            //try to get a specification attribute with the specified id
+            var specificationAttribute = _specificationAttributeService.GetSpecificationAttributeById(specificationAttributeId)
+                ?? throw new ArgumentException("No specification attribute found with the specified id", nameof(specificationAttributeId));
 
-            return Json(gridModel);
+            //prepare model
+            var model = _specificationAttributeModelFactory.PrepareSpecificationAttributeOptionListModel(searchModel, specificationAttribute);
+
+            return Json(model);
         }
 
-        //create
         public virtual IActionResult OptionCreatePopup(int specificationAttributeId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
 
-            var model = new SpecificationAttributeOptionModel
-            {
-                SpecificationAttributeId = specificationAttributeId
-            };
-            //locales
-            AddLocales(_languageService, model.Locales);
+            //try to get a specification attribute with the specified id
+            var specificationAttribute = _specificationAttributeService.GetSpecificationAttributeById(specificationAttributeId);
+            if (specificationAttribute == null)
+                return RedirectToAction("List");
+
+            //prepare model
+            var model = _specificationAttributeModelFactory
+                .PrepareSpecificationAttributeOptionModel(new SpecificationAttributeOptionModel(), specificationAttribute, null);
+
             return View(model);
         }
 
@@ -284,48 +271,53 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
 
+            //try to get a specification attribute with the specified id
             var specificationAttribute = _specificationAttributeService.GetSpecificationAttributeById(model.SpecificationAttributeId);
             if (specificationAttribute == null)
-                //No specification attribute found with the specified id
                 return RedirectToAction("List");
 
             if (ModelState.IsValid)
             {
                 var sao = model.ToEntity();
+
                 //clear "Color" values if it's disabled
                 if (!model.EnableColorSquaresRgb)
                     sao.ColorSquaresRgb = null;
 
                 _specificationAttributeService.InsertSpecificationAttributeOption(sao);
+
                 UpdateOptionLocales(sao, model);
 
                 ViewBag.RefreshPage = true;
+
                 return View(model);
             }
 
             //If we got this far, something failed, redisplay form
+            model = _specificationAttributeModelFactory.PrepareSpecificationAttributeOptionModel(model, specificationAttribute, null, true);
+
             return View(model);
         }
 
-        //edit
         public virtual IActionResult OptionEditPopup(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
 
-            var sao = _specificationAttributeService.GetSpecificationAttributeOptionById(id);
-            if (sao == null)
-                //No specification attribute option found with the specified id
+            //try to get a specification attribute option with the specified id
+            var specificationAttributeOption = _specificationAttributeService.GetSpecificationAttributeOptionById(id);
+            if (specificationAttributeOption == null)
                 return RedirectToAction("List");
 
-            var model = sao.ToModel();
-            //"Color" value
-            model.EnableColorSquaresRgb = !string.IsNullOrEmpty(sao.ColorSquaresRgb);
-            //locales
-            AddLocales(_languageService, model.Locales, (locale, languageId) =>
-            {
-                locale.Name = sao.GetLocalized(x => x.Name, languageId, false, false);
-            });
+            //try to get a specification attribute with the specified id
+            var specificationAttribute = _specificationAttributeService
+                .GetSpecificationAttributeById(specificationAttributeOption.SpecificationAttributeId);
+            if (specificationAttribute == null)
+                return RedirectToAction("List");
+
+            //prepare model
+            var model = _specificationAttributeModelFactory
+                .PrepareSpecificationAttributeOptionModel(null, specificationAttribute, specificationAttributeOption);
 
             return View(model);
         }
@@ -336,47 +328,56 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
 
-            var sao = _specificationAttributeService.GetSpecificationAttributeOptionById(model.Id);
-            if (sao == null)
-                //No specification attribute option found with the specified id
+            //try to get a specification attribute option with the specified id
+            var specificationAttributeOption = _specificationAttributeService.GetSpecificationAttributeOptionById(model.Id);
+            if (specificationAttributeOption == null)
+                return RedirectToAction("List");
+
+            //try to get a specification attribute with the specified id
+            var specificationAttribute = _specificationAttributeService
+                .GetSpecificationAttributeById(specificationAttributeOption.SpecificationAttributeId);
+            if (specificationAttribute == null)
                 return RedirectToAction("List");
 
             if (ModelState.IsValid)
             {
-                sao = model.ToEntity(sao);
+                specificationAttributeOption = model.ToEntity(specificationAttributeOption);
+
                 //clear "Color" values if it's disabled
                 if (!model.EnableColorSquaresRgb)
-                    sao.ColorSquaresRgb = null;
+                    specificationAttributeOption.ColorSquaresRgb = null;
 
-                _specificationAttributeService.UpdateSpecificationAttributeOption(sao);
+                _specificationAttributeService.UpdateSpecificationAttributeOption(specificationAttributeOption);
 
-                UpdateOptionLocales(sao, model);
+                UpdateOptionLocales(specificationAttributeOption, model);
 
                 ViewBag.RefreshPage = true;
+
                 return View(model);
             }
 
             //If we got this far, something failed, redisplay form
+            model = _specificationAttributeModelFactory
+                .PrepareSpecificationAttributeOptionModel(model, specificationAttribute, specificationAttributeOption, true);
+
             return View(model);
         }
 
-        //delete
         [HttpPost]
         public virtual IActionResult OptionDelete(int id, int specificationAttributeId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
 
-            var sao = _specificationAttributeService.GetSpecificationAttributeOptionById(id);
-            if (sao == null)
-                throw new ArgumentException("No specification attribute option found with the specified id");
+            //try to get a specification attribute option with the specified id
+            var specificationAttributeOption = _specificationAttributeService.GetSpecificationAttributeOptionById(id)
+                ?? throw new ArgumentException("No specification attribute option found with the specified id", nameof(id));
 
-            _specificationAttributeService.DeleteSpecificationAttributeOption(sao);
+            _specificationAttributeService.DeleteSpecificationAttributeOption(specificationAttributeOption);
 
             return new NullJsonResult();
         }
 
-        //ajax
         [HttpGet]
         public virtual IActionResult GetOptionsByAttributeId(string attributeId)
         {
@@ -400,29 +401,21 @@ namespace Nop.Web.Areas.Admin.Controllers
         #region Mapped products
 
         [HttpPost]
-        public virtual IActionResult UsedByProducts(int specificationAttributeId, DataSourceRequest command)
+        public virtual IActionResult UsedByProducts(SpecificationAttributeProductSearchModel searchModel, int specificationAttributeId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedKendoGridJson();
 
-            var products = _specificationAttributeService.GetProductsBySpecificationAttributeId(specificationAttributeId, command.Page - 1,
-                command.PageSize);
-           
-            var gridModel = new DataSourceResult
-            {
-                Data = products.Select(product => new SpecificationAttributeOptionModel.UsedByProducts
-                {
-                    SpecificationAttributeId = specificationAttributeId,
-                    ProductId = product.Id,
-                    ProductName = product.Name,
-                    Published = product.Published
-                }),
-                Total = products.TotalCount
-            };
+            //try to get a specification attribute with the specified id
+            var specificationAttribute = _specificationAttributeService.GetSpecificationAttributeById(specificationAttributeId)
+                ?? throw new ArgumentException("No specification attribute found with the specified id", nameof(specificationAttributeId));
 
-            return Json(gridModel);
+            //prepare model
+            var model = _specificationAttributeModelFactory.PrepareSpecificationAttributeProductListModel(searchModel, specificationAttribute);
+
+            return Json(model);
         }
-        
+
         #endregion
     }
 }

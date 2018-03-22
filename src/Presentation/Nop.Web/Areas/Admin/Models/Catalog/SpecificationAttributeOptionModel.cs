@@ -6,13 +6,22 @@ using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Models.Catalog
 {
+    /// <summary>
+    /// Represents a specification attribute option model
+    /// </summary>
     [Validator(typeof(SpecificationAttributeOptionValidator))]
     public partial class SpecificationAttributeOptionModel : BaseNopEntityModel, ILocalizedModel<SpecificationAttributeOptionLocalizedModel>
     {
+        #region Ctor
+
         public SpecificationAttributeOptionModel()
         {
             Locales = new List<SpecificationAttributeOptionLocalizedModel>();
         }
+
+        #endregion
+
+        #region Properties
 
         public int SpecificationAttributeId { get; set; }
 
@@ -21,6 +30,7 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
 
         [NopResourceDisplayName("Admin.Catalog.Attributes.SpecificationAttributes.Options.Fields.ColorSquaresRgb")]
         public string ColorSquaresRgb { get; set; }
+
         [NopResourceDisplayName("Admin.Catalog.Attributes.SpecificationAttributes.Options.Fields.EnableColorSquaresRgb")]
         public bool EnableColorSquaresRgb { get; set; }
 
@@ -32,21 +42,6 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
         
         public IList<SpecificationAttributeOptionLocalizedModel> Locales { get; set; }
 
-        #region Nested classes
-
-        public partial class UsedByProducts : BaseNopEntityModel
-        {
-            public int SpecificationAttributeId { get; set; }
-
-            public int ProductId { get; set; }
-
-            [NopResourceDisplayName("Admin.Catalog.Attributes.SpecificationAttributes.UsedByProducts.Product")]
-            public string ProductName { get; set; }
-
-            [NopResourceDisplayName("Admin.Catalog.Attributes.SpecificationAttributes.UsedByProducts.Published")]
-            public bool Published { get; set; }
-        }
-
         #endregion
     }
 
@@ -56,7 +51,5 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
 
         [NopResourceDisplayName("Admin.Catalog.Attributes.SpecificationAttributes.Options.Fields.Name")]
         public string Name { get; set; }
-    }
-
-    
+    }    
 }
