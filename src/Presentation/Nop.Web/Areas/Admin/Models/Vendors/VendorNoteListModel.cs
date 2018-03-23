@@ -3,9 +3,9 @@
 namespace Nop.Web.Areas.Admin.Models.Vendors
 {
     /// <summary>
-    /// Represents a vendor list model
+    /// Represents a vendor note list model
     /// </summary>
-    public partial class VendorListModel : BasePagedListModel<VendorModel>
+    public partial class VendorNoteListModel : BasePagedListModel<VendorNoteModel>
     {
     }
 }

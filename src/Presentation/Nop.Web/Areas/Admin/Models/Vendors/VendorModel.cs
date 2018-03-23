@@ -10,9 +10,14 @@ using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Models.Vendors
 {
+    /// <summary>
+    /// Represents a vendor model
+    /// </summary>
     [Validator(typeof(VendorValidator))]
     public partial class VendorModel : BaseNopEntityModel, ILocalizedModel<VendorLocalizedModel>
     {
+        #region Ctor
+
         public VendorModel()
         {
             if (PageSize < 1)
@@ -21,8 +26,13 @@ namespace Nop.Web.Areas.Admin.Models.Vendors
             Address = new AddressModel();
             VendorAttributes = new List<VendorAttributeModel>();
             Locales = new List<VendorLocalizedModel>();
-            AssociatedCustomers = new List<AssociatedCustomerInfo>();
+            AssociatedCustomers = new List<VendorAssociatedCustomerModel>();
+            VendorNoteSearchModel = new VendorNoteSearchModel();
         }
+
+        #endregion
+
+        #region Properties
 
         [NopResourceDisplayName("Admin.Vendors.Fields.Name")]
         public string Name { get; set; }
@@ -47,8 +57,7 @@ namespace Nop.Web.Areas.Admin.Models.Vendors
         public bool Active { get; set; }
 
         [NopResourceDisplayName("Admin.Vendors.Fields.DisplayOrder")]
-        public int DisplayOrder { get; set; }
-        
+        public int DisplayOrder { get; set; }        
 
         [NopResourceDisplayName("Admin.Vendors.Fields.MetaKeywords")]
         public string MetaKeywords { get; set; }
@@ -76,28 +85,18 @@ namespace Nop.Web.Areas.Admin.Models.Vendors
         public IList<VendorLocalizedModel> Locales { get; set; }
 
         [NopResourceDisplayName("Admin.Vendors.Fields.AssociatedCustomerEmails")]
-        public IList<AssociatedCustomerInfo> AssociatedCustomers { get; set; }
+        public IList<VendorAssociatedCustomerModel> AssociatedCustomers { get; set; }
 
         //vendor notes
         [NopResourceDisplayName("Admin.Vendors.VendorNotes.Fields.Note")]
         public string AddVendorNoteMessage { get; set; }
-        
+
+        public VendorNoteSearchModel VendorNoteSearchModel { get; set; }
+
+        #endregion
+
         #region Nested classes
-
-        public class AssociatedCustomerInfo : BaseNopEntityModel
-        {
-            public string Email { get; set; }
-        }
-
-        public partial class VendorNote : BaseNopEntityModel
-        {
-            public int VendorId { get; set; }
-            [NopResourceDisplayName("Admin.Vendors.VendorNotes.Fields.Note")]
-            public string Note { get; set; }
-            [NopResourceDisplayName("Admin.Vendors.VendorNotes.Fields.CreatedOn")]
-            public DateTime CreatedOn { get; set; }
-        }
-
+        
         public partial class VendorAttributeModel : BaseNopEntityModel
         {
             public VendorAttributeModel()
