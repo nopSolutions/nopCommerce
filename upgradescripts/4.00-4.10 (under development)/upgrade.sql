@@ -644,6 +644,240 @@ set @resources='
   <LocaleResource Name="ShoppingCart.RequiredProductUpdateWarning">
     <Value>This product is required in the quantity of {0}</Value>
   </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Fields.From">
+    <Value></Value>
+  </LocaleResource> 
+  <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Fields.From.Hint">
+    <Value></Value>
+  </LocaleResource> 
+  <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Fields.To">
+    <Value></Value>
+  </LocaleResource> 
+  <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Fields.To.Hint">
+    <Value></Value>
+  </LocaleResource> 
+  <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Fields.WeightFrom">
+    <Value>Order weight from</Value>
+  </LocaleResource> 
+  <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Fields.WeightFrom.Hint">
+    <Value>Order weight from.</Value>
+  </LocaleResource> 
+  <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Fields.WeightTo">
+    <Value>Order weight to</Value>
+  </LocaleResource> 
+  <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Fields.WeightTo.Hint">
+    <Value>Order weight to.</Value>
+  </LocaleResource>     
+  <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Fields.OrderSubtotalFrom">
+    <Value>Order subtotal from</Value>
+  </LocaleResource> 
+  <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Fields.OrderSubtotalFrom.Hint">
+    <Value>Order subtotal from.</Value>
+  </LocaleResource> 
+  <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Fields.OrderSubtotalTo">
+    <Value>Order subtotal to</Value>
+  </LocaleResource> 
+  <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Fields.OrderSubtotalTo.Hint">
+    <Value>Order subtotal to.</Value>
+  </LocaleResource>    
+  <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.ShippingByWeight">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Fixed">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Fields.Rate">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Fields.Store">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Fields.Store.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Fields.Warehouse">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Fields.Warehouse.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Fields.Country">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Fields.Country.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Fields.StateProvince">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Fields.StateProvince.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Fields.Zip">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Fields.Zip.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Fields.ShippingMethod">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Fields.ShippingMethod.Hint">
+    <Value></Value>
+  </LocaleResource>  
+  <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Fields.From">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Fields.From.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Fields.To">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Fields.To.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Fields.AdditionalFixedCost">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Fields.AdditionalFixedCost.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Fields.LowerWeightLimit">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Fields.LowerWeightLimit.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Fields.PercentageRateOfSubtotal">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Fields.PercentageRateOfSubtotal.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Fields.RatePerWeightUnit">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Fields.RatePerWeightUnit.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Fields.LimitMethodsToCreated">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Fields.LimitMethodsToCreated.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Fields.DataHtml">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.AddRecord">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Formula">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Formula.Value">
+    <Value></Value>
+  </LocaleResource>  
+  <LocaleResource Name="Plugins.Shipping.FixedByWeightByTotal.ShippingByWeight">
+    <Value>By Weight/Total</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedByWeightByTotal.Fixed">
+    <Value>Fixed Rate</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedByWeightByTotal.Fields.Rate">
+    <Value>Rate</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedByWeightByTotal.Fields.Store">
+    <Value>Store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedByWeightByTotal.Fields.Store.Hint">
+    <Value>If an asterisk is selected, then this shipping rate will apply to all stores.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedByWeightByTotal.Fields.Warehouse">
+    <Value>Warehouse</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedByWeightByTotal.Fields.Warehouse.Hint">
+    <Value>If an asterisk is selected, then this shipping rate will apply to all warehouses.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedByWeightByTotal.Fields.Country">
+    <Value>Country</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedByWeightByTotal.Fields.Country.Hint">
+    <Value>If an asterisk is selected, then this shipping rate will apply to all customers, regardless of the country.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedByWeightByTotal.Fields.StateProvince">
+    <Value>State / province</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedByWeightByTotal.Fields.StateProvince.Hint">
+    <Value>If an asterisk is selected, then this shipping rate will apply to all customers from the given country, regardless of the state.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedByWeightByTotal.Fields.Zip">
+    <Value>Zip</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedByWeightByTotal.Fields.Zip.Hint">
+    <Value>Zip / postal code. If zip is empty, then this shipping rate will apply to all customers from the given country or state, regardless of the zip code.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedByWeightByTotal.Fields.ShippingMethod">
+    <Value>Shipping method</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedByWeightByTotal.Fields.ShippingMethod.Hint">
+    <Value>Choose shipping method.</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Plugins.Shipping.FixedByWeightByTotal.Fields.From">
+    <Value>Order weight from</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedByWeightByTotal.Fields.From.Hint">
+    <Value>Order weight from.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedByWeightByTotal.Fields.To">
+    <Value>Order weight to</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedByWeightByTotal.Fields.To.Hint">
+    <Value>Order weight to.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedByWeightByTotal.Fields.AdditionalFixedCost">
+    <Value>Additional fixed cost</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedByWeightByTotal.Fields.AdditionalFixedCost.Hint">
+    <Value>Specify an additional fixed cost per shopping cart for this option. Set to 0 if you don''t want an additional fixed cost to be applied.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedByWeightByTotal.Fields.LowerWeightLimit">
+    <Value>Lower weight limit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedByWeightByTotal.Fields.LowerWeightLimit.Hint">
+    <Value>Lower weight limit. This field can be used for \"per extra weight unit\" scenarios.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedByWeightByTotal.Fields.PercentageRateOfSubtotal">
+    <Value>Charge percentage (of subtotal)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedByWeightByTotal.Fields.PercentageRateOfSubtotal.Hint">
+    <Value>Charge percentage (of subtotal).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedByWeightByTotal.Fields.RatePerWeightUnit">
+    <Value>Rate per weight unit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedByWeightByTotal.Fields.RatePerWeightUnit.Hint">
+    <Value>Rate per weight unit.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedByWeightByTotal.Fields.LimitMethodsToCreated">
+    <Value>Limit shipping methods to configured ones</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedByWeightByTotal.Fields.LimitMethodsToCreated.Hint">
+    <Value>If you check this option, then your customers will be limited to shipping options configured here. Otherwise, they''ll be able to choose any existing shipping options even they are not configured here (zero shipping fee in this case).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedByWeightByTotal.Fields.DataHtml">
+    <Value>Data</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedByWeightByTotal.AddRecord">
+    <Value>Add record</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedByWeightByTotal.Formula">
+    <Value>Formula to calculate rates</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedByWeightByTotal.Formula.Value">
+    <Value>[additional fixed cost] + ([order total weight] - [lower weight limit]) * [rate per weight unit] + [order subtotal] * [charge percentage]</Value>
+  </LocaleResource>    
 </Language>
 '
 
@@ -1233,6 +1467,80 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'ordersettings.checkoutdi
 BEGIN
     INSERT [Setting] ([Name], [Value], [StoreId])
     VALUES (N'ordersettings.checkoutdisabled', N'false', 0)
+END
+GO
+
+--rename column
+IF EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ShippingByWeight]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
+AND EXISTS (SELECT 1 FROM sys.columns WHERE object_id = OBJECT_ID(N'[dbo].[ShippingByWeight]') and NAME='From')
+BEGIN
+    EXEC sp_RENAME '[dbo].[ShippingByWeight].[From]', 'WeightFrom', 'COLUMN'
+END
+GO
+
+--rename column
+IF EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ShippingByWeight]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
+AND EXISTS (SELECT 1 FROM sys.columns WHERE object_id = OBJECT_ID(N'[dbo].[ShippingByWeight]') and NAME='To')
+BEGIN
+    EXEC sp_RENAME '[dbo].[ShippingByWeight].[To]', 'WeightTo', 'COLUMN'
+END
+GO
+
+--new column
+IF EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ShippingByWeight]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
+and NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id = object_id('[ShippingByWeight]') AND NAME = 'OrderSubtotalFrom')
+BEGIN
+	ALTER TABLE [ShippingByWeight]
+	ADD [OrderSubtotalFrom] DECIMAL NULL
+END
+GO
+
+IF EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ShippingByWeight]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
+and EXISTS (SELECT 1 FROM sys.columns WHERE object_id = object_id('[ShippingByWeight]') AND NAME = 'OrderSubtotalFrom')
+BEGIN
+	UPDATE [ShippingByWeight]
+	SET [OrderSubtotalFrom] = 0
+	WHERE [OrderSubtotalFrom] IS NULL
+END
+GO
+
+
+IF EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ShippingByWeight]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
+and EXISTS (SELECT 1 FROM sys.columns WHERE object_id = object_id('[ShippingByWeight]') AND NAME = 'OrderSubtotalFrom')
+BEGIN
+	ALTER TABLE [ShippingByWeight] ALTER COLUMN [OrderSubtotalFrom] DECIMAL NOT NULL
+END
+GO
+
+--new column
+IF EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ShippingByWeight]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
+and NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id = object_id('[ShippingByWeight]') AND NAME = 'OrderSubtotalTo')
+BEGIN
+	ALTER TABLE [ShippingByWeight]
+	ADD [OrderSubtotalTo] DECIMAL NULL
+END
+GO
+
+IF EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ShippingByWeight]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
+and EXISTS (SELECT 1 FROM sys.columns WHERE object_id = object_id('[ShippingByWeight]') AND NAME = 'OrderSubtotalTo')
+BEGIN
+	UPDATE [ShippingByWeight]
+	SET [OrderSubtotalTo] = 1000000
+	WHERE [OrderSubtotalTo] IS NULL
+END
+GO
+
+IF EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ShippingByWeight]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
+and EXISTS (SELECT 1 FROM sys.columns WHERE object_id = object_id('[ShippingByWeight]') AND NAME = 'OrderSubtotalTo')
+BEGIN
+	ALTER TABLE [ShippingByWeight] ALTER COLUMN [OrderSubtotalTo] DECIMAL NOT NULL
+END
+GO
+
+--rename table
+IF EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ShippingByWeight]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
+BEGIN
+    EXEC sp_RENAME '[dbo].[ShippingByWeight]', 'ShippingByWeightByTotal'
 END
 GO
 
