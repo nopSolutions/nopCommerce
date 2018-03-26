@@ -182,8 +182,24 @@
                         url: "@(Url.Action("RewardPointsHistoryAdd", "Customer"))",
                         data: postData,
                         success: function (data) {
-                            var grid = $("#customer-rewardpoints-grid").data('kendoGrid');
-                            grid.dataSource.read();
+                            if (data.Result) {
+                                var grid = $("#customer-rewardpoints-grid").data('kendoGrid');
+                                grid.dataSource.read();
+
+                                $("#@Html.IdFor(model => model.AddRewardPoints.Points)").val(0);
+                                $("#@Html.IdFor(model => model.AddRewardPoints.Message)").val("@Model.AddRewardPoints.Message");
+                                $("#@Html.IdFor(model => model.AddRewardPoints.StoreId)").val(@Model.AddRewardPoints.StoreId);
+                                $("#@Html.IdFor(model => model.AddRewardPoints.ActivationDelayPeriodId)").val(@Model.AddRewardPoints.ActivationDelayPeriodId);
+                                $("#@Html.IdFor(model => model.AddRewardPoints.ActivationDelay)").val(@Model.AddRewardPoints.ActivationDelay);
+                                $("#@Html.IdFor(model => model.AddRewardPoints.PointsValidity)").val('');
+                                $("#@Html.IdFor(model => model.AddRewardPoints.ActivatePointsImmediately)").prop('checked', @(Model.AddRewardPoints.ActivatePointsImmediately.ToString().ToLower()));
+
+                                activatePointsImmediately();
+                            } else {
+                                if(data.Error != undefined)
+                                    alert(data.Error);
+                            }
+
                             $('#addRewardPoints').attr('disabled', false);
                         },
                         error:function (xhr, ajaxOptions, thrownError){

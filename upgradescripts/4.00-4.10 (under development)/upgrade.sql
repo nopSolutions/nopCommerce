@@ -878,6 +878,9 @@ set @resources='
   <LocaleResource Name="Plugins.Shipping.FixedByWeightByTotal.Formula.Value">
     <Value>[additional fixed cost] + ([order total weight] - [lower weight limit]) * [rate per weight unit] + [order subtotal] * [charge percentage]</Value>
   </LocaleResource>    
+  <LocaleResource Name="Admin.Customers.Customers.RewardPoints.AddingZeroValueNotAllowed">
+    <Value>Adding a new row with zero value isn''t allowed</Value>
+  </LocaleResource>  
 </Language>
 '
 

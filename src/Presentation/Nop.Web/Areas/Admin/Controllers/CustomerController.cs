@@ -1682,6 +1682,10 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
 
+            //prevent adding a new row with zero value
+            if (model.Points == 0)
+                return Json(new { Result = false, Error = _localizationService.GetResource("Admin.Customers.Customers.RewardPoints.AddingZeroValueNotAllowed") });
+
             var customer = _customerService.GetCustomerById(model.CustomerId);
             if (customer == null)
                 return Json(new { Result = false });
