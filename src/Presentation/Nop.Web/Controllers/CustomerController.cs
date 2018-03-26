@@ -34,6 +34,7 @@ using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc.Filters;
 using Nop.Web.Framework.Security;
 using Nop.Web.Framework.Security.Captcha;
+using Nop.Web.Framework.Validators;
 using Nop.Web.Models.Customer;
 
 namespace Nop.Web.Controllers
@@ -802,7 +803,11 @@ namespace Nop.Web.Controllers
             var usernameAvailable = false;
             var statusText = _localizationService.GetResource("Account.CheckUsernameAvailability.NotAvailable");
 
-            if (_customerSettings.UsernamesEnabled && !string.IsNullOrWhiteSpace(username))
+            if (!UsernamePropertyValidator.IsValid(username, _customerSettings))
+            {
+                statusText = _localizationService.GetResource("Account.Fields.Username.NotValid");
+            }
+            else if (_customerSettings.UsernamesEnabled && !string.IsNullOrWhiteSpace(username))
             {
                 if (_workContext.CurrentCustomer != null &&
                     _workContext.CurrentCustomer.Username != null &&

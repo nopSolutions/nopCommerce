@@ -24,6 +24,7 @@ namespace Nop.Web.Validators.Customer
             if (customerSettings.UsernamesEnabled && customerSettings.AllowUsersToChangeUsernames)
             {
                 RuleFor(x => x.Username).NotEmpty().WithMessage(localizationService.GetResource("Account.Fields.Username.Required"));
+                RuleFor(x => x.Username).IsUsername(customerSettings).WithMessage(localizationService.GetResource("Account.Fields.Username.NotValid"));
             }
 
             //form fields

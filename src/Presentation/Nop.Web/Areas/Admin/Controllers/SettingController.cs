@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
@@ -1660,14 +1661,39 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
+            var hasError = false;
 
-            var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var storeScope = GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var customerSettings = _settingService.LoadSetting<CustomerSettings>(storeScope);
+
+            var lastUsernameValidationRule = customerSettings.UsernameValidationRule;
+            var lastUsernameValidationEnabledValue = customerSettings.UsernameValidationEnabled;
+            var lastUsernameValidationUseRegexValue = customerSettings.UsernameValidationUseRegex;
+
             var addressSettings = _settingService.LoadSetting<AddressSettings>(storeScope);
             var dateTimeSettings = _settingService.LoadSetting<DateTimeSettings>(storeScope);
             var externalAuthenticationSettings = _settingService.LoadSetting<ExternalAuthenticationSettings>(storeScope);
 
             customerSettings = model.CustomerSettings.ToEntity(customerSettings);
+            
+            if (customerSettings.UsernameValidationEnabled && customerSettings.UsernameValidationUseRegex)
+            {
+                try
+                {
+                    //validate regex rule
+                    var unused = Regex.IsMatch("test_user_name", customerSettings.UsernameValidationRule);
+                }
+                catch (ArgumentException)
+                {
+                    //restoring previous settings
+                    customerSettings.UsernameValidationRule = lastUsernameValidationRule;
+                    customerSettings.UsernameValidationEnabled = lastUsernameValidationEnabledValue;
+                    customerSettings.UsernameValidationUseRegex = lastUsernameValidationUseRegexValue;
+
+                    hasError = true;
+                    ErrorNotification(_localizationService.GetResource("Admin.Configuration.Settings.CustomerSettings.RegexValidationRule.Error"));
+                }
+            }
             _settingService.SaveSetting(customerSettings);
 
             addressSettings = model.AddressSettings.ToEntity(addressSettings);
@@ -1682,11 +1708,14 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //activity log
             _customerActivityService.InsertActivity("EditSettings", _localizationService.GetResource("ActivityLog.EditSettings"));
-
-            SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
-
+            
             //selected tab
             SaveSelectedTabName();
+
+            if (hasError)
+                return View(model);
+           
+            SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
 
             return RedirectToAction("CustomerUser");
         }

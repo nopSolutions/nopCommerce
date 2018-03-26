@@ -881,6 +881,30 @@ set @resources='
   <LocaleResource Name="Admin.Customers.Customers.RewardPoints.AddingZeroValueNotAllowed">
     <Value>Adding a new row with zero value isn''t allowed</Value>
   </LocaleResource>  
+  <LocaleResource Name="Account.Fields.Username.NotValid">
+    <Value>Username is not valid</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.UsernameValidationEnabled">
+    <Value>Username validation is enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.UsernameValidationEnabled.Hint">
+    <Value>Check to enable username validation (when registering or changing on the "My Account" page)</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.UsernameValidationUseRegex">
+    <Value>Use regex for username validation</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.UsernameValidationUseRegex.Hint">
+    <Value>Check to use a regular expression for username validation (when registering or changing on the "My Account" page)</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.UsernameValidationRule">
+    <Value>Username validation rule</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.UsernameValidationRule.Hint">
+    <Value>Set the validation rule for username. You can specify a list of allowed characters or a regular expression. If you use a regular expression check the "Use regex for username validation" setting.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerSettings.RegexValidationRule.Error">
+    <Value>The regular expression for username validation is incorrect</Value>
+  </LocaleResource> 
 </Language>
 '
 
@@ -1450,10 +1474,26 @@ END
 GO
 
 --new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'customersettings.usernamevalidationenabled')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'customersettings.usernamevalidationenabled', N'false', 0)
+END
+GO
+
+--new setting
 IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'rewardpointssettings.purchasespointsvalidity')
 BEGIN
     INSERT [Setting] ([Name], [Value], [StoreId])
     VALUES (N'rewardpointssettings.purchasespointsvalidity', N'45', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'customersettings.usernamevalidationuseregex')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'customersettings.usernamevalidationuseregex', N'false', 0)
 END
 GO
 
@@ -2220,5 +2260,13 @@ GO
 IF NOT EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_Category_Deleted_Extended' and object_id=object_id(N'[dbo].[Category]'))
 BEGIN
     CREATE NONCLUSTERED INDEX [IX_Category_Deleted_Extended] ON Category ([Deleted]) INCLUDE ([Id],[Name],[SubjectToAcl],[LimitedToStores],[Published])
+END
+GO
+
+--new setting   
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'customersettings.usernamevalidationrule')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'customersettings.usernamevalidationrule', N'', 0)
 END
 GO
