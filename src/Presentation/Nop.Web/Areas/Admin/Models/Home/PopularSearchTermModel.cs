@@ -1,7 +1,7 @@
 using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Models;
 
-namespace Nop.Web.Areas.Admin.Models.Common
+namespace Nop.Web.Areas.Admin.Models.Home
 {
     /// <summary>
     /// Represents a popular search term model

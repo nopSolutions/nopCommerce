@@ -46,7 +46,6 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IMaintenanceService _maintenanceService;
         private readonly IMeasureService _measureService;
         private readonly IPaymentService _paymentService;
-        private readonly ISearchTermService _searchTermService;
         private readonly IStoreContext _storeContext;
         private readonly IStoreService _storeService;
         private readonly IUrlHelperFactory _urlHelperFactory;
@@ -70,7 +69,6 @@ namespace Nop.Web.Areas.Admin.Factories
             IMaintenanceService maintenanceService,
             IMeasureService measureService,
             IPaymentService paymentService,
-            ISearchTermService searchTermService,
             IStoreContext storeContext,
             IStoreService storeService,
             IUrlHelperFactory urlHelperFactory,
@@ -90,7 +88,6 @@ namespace Nop.Web.Areas.Admin.Factories
             this._maintenanceService = maintenanceService;
             this._measureService = measureService;
             this._paymentService = paymentService;
-            this._searchTermService = searchTermService;
             this._storeContext = storeContext;
             this._storeService = storeService;
             this._urlHelperFactory = urlHelperFactory;
@@ -672,47 +669,6 @@ namespace Nop.Web.Areas.Admin.Factories
                     return urlRecordModel;
                 }),
                 Total = urlRecords.TotalCount
-            };
-
-            return model;
-        }
-
-        /// <summary>
-        /// Prepare popular search term search model
-        /// </summary>
-        /// <param name="model">Popular search term search model</param>
-        /// <returns>Popular search term search model</returns>
-        public virtual PopularSearchTermSearchModel PreparePopularSearchTermSearchModel(PopularSearchTermSearchModel model)
-        {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
-
-            return model;
-        }
-
-        /// <summary>
-        /// Prepare paged popular search term list model
-        /// </summary>
-        /// <param name="searchModel">Popular search term search model</param>
-        /// <returns>Popular search term list model</returns>
-        public virtual PopularSearchTermListModel PreparePopularSearchTermListModel(PopularSearchTermSearchModel searchModel)
-        {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            //get popular search terms
-            var searchTermRecordLines = _searchTermService.GetStats(pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
-
-            //prepare list model
-            var model = new PopularSearchTermListModel
-            {
-                //fill in model values from the entity
-                Data = searchTermRecordLines.Select(searchTerm => new PopularSearchTermModel
-                {
-                    Keyword = searchTerm.Keyword,
-                    Count = searchTerm.Count
-                }),
-                Total = searchTermRecordLines.TotalCount
             };
 
             return model;

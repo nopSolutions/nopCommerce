@@ -341,18 +341,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             return Json(new { Result = true });
         }
 
-        [HttpPost]
-        public virtual IActionResult PopularSearchTermsReport(PopularSearchTermSearchModel searchModel)
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedKendoGridJson();
-
-            //prepare model
-            var model = _commonModelFactory.PreparePopularSearchTermListModel(searchModel);
-
-            return Json(model);
-        }
-
         //action displaying notification (warning) to a store owner that entered SE URL already exists
         public virtual IActionResult UrlReservedWarning(string entityId, string entityName, string seName)
         {

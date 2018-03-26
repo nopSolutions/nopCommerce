@@ -1,13 +1,12 @@
 ﻿using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using Nop.Web.Areas.Admin.Models.Home;
-using Nop.Core;
 using Nop.Core.Domain.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Services.Security;
-using Nop.Web.Areas.Admin.Helpers;
+using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Areas.Admin.Models.Common;
+using Nop.Web.Areas.Admin.Models.Home;
 
 namespace Nop.Web.Areas.Admin.Controllers
 {
@@ -16,30 +15,33 @@ namespace Nop.Web.Areas.Admin.Controllers
         #region Fields
 
         private readonly AdminAreaSettings _adminAreaSettings;
+        private readonly ICommonModelFactory _commonModelFactory;
+        private readonly IHomeModelFactory _homeModelFactory;
         private readonly ILocalizationService _localizationService;
         private readonly IPermissionService _permissionService;
         private readonly ISettingService _settingService;
-        private readonly IWorkContext _workContext;
 
         #endregion
 
         #region Ctor
 
         public HomeController(AdminAreaSettings adminAreaSettings,
+            ICommonModelFactory commonModelFactory,
+            IHomeModelFactory homeModelFactory,
             ILocalizationService localizationService,
             IPermissionService permissionService,
-            ISettingService settingService,
-            IWorkContext workContext)
+            ISettingService settingService)
         {
             this._adminAreaSettings = adminAreaSettings;
+            this._commonModelFactory = commonModelFactory;
+            this._homeModelFactory = homeModelFactory;
             this._localizationService = localizationService;
             this._permissionService = permissionService;
             this._settingService = settingService;
-            this._workContext = workContext;
         }
-        
+
         #endregion
-        
+
         #region Methods
 
         public virtual IActionResult Index()
@@ -47,15 +49,14 @@ namespace Nop.Web.Areas.Admin.Controllers
             //display a warning to a store owner if there are some error
             if (_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
             {
-                var errors = WarningsHelper.GetWarnings().Where(x => x.Level == SystemWarningLevel.Fail).ToList();
-                if (errors.Any())
+                var warnings = _commonModelFactory.PrepareSystemWarningModels();
+                if (warnings.Any(warning => warning.Level == SystemWarningLevel.Fail))
                     WarningNotification(_localizationService.GetResource("Admin.System.Warnings.Errors"), false);
             }
 
-            var model = new DashboardModel
-            {
-                IsLoggedInAsVendor = _workContext.CurrentVendor != null
-            };
+            //prepare model
+            var model = _homeModelFactory.PrepareDashboardModel(new DashboardModel());
+
             return View(model);
         }
 
@@ -66,6 +67,18 @@ namespace Nop.Web.Areas.Admin.Controllers
             _settingService.SaveSetting(_adminAreaSettings);
 
             return Content("Setting changed");
+        }
+
+        [HttpPost]
+        public virtual IActionResult PopularSearchTermsReport(PopularSearchTermSearchModel searchModel)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
+                return AccessDeniedKendoGridJson();
+
+            //prepare model
+            var model = _homeModelFactory.PreparePopularSearchTermListModel(searchModel);
+
+            return Json(model);
         }
 
         #endregion

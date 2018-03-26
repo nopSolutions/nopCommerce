@@ -57,20 +57,6 @@ namespace Nop.Web.Areas.Admin.Factories
         UrlRecordListModel PrepareUrlRecordListModel(UrlRecordSearchModel searchModel);
 
         /// <summary>
-        /// Prepare popular search term search model
-        /// </summary>
-        /// <param name="model">Popular search term search model</param>
-        /// <returns>Popular search term search model</returns>
-        PopularSearchTermSearchModel PreparePopularSearchTermSearchModel(PopularSearchTermSearchModel model);
-
-        /// <summary>
-        /// Prepare paged popular search term list model
-        /// </summary>
-        /// <param name="searchModel">Popular search term search model</param>
-        /// <returns>Popular search term list model</returns>
-        PopularSearchTermListModel PreparePopularSearchTermListModel(PopularSearchTermSearchModel searchModel);
-
-        /// <summary>
         /// Prepare language selector model
         /// </summary>
         /// <returns>Language selector model</returns>
