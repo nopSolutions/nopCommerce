@@ -1,40 +1,43 @@
-﻿using System.Linq;
-using Microsoft.AspNetCore.Mvc;
-using Nop.Core;
-using Nop.Services.Localization;
-using Nop.Web.Areas.Admin.Extensions;
-using Nop.Web.Areas.Admin.Models.Common;
+﻿using Microsoft.AspNetCore.Mvc;
+using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Framework.Components;
 
 namespace Nop.Web.Areas.Admin.Components
 {
+    /// <summary>
+    /// Represents a view component that displays the admin language selector
+    /// </summary>
     public class AdminLanguageSelectorViewComponent : NopViewComponent
     {
-        private readonly ILanguageService _languageService;
-        private readonly IStoreContext _storeContext;
-        private readonly IWorkContext _workContext;
+        #region Fields
 
-        public AdminLanguageSelectorViewComponent(ILanguageService languageService,
-            IStoreContext storeContext,
-            IWorkContext workContext)
+        private readonly ICommonModelFactory _commonModelFactory;
+
+        #endregion
+
+        #region Ctor
+
+        public AdminLanguageSelectorViewComponent(ICommonModelFactory commonModelFactory)
         {
-            this._languageService = languageService;
-            this._storeContext = storeContext;
-            this._workContext = workContext;
+            this._commonModelFactory = commonModelFactory;
         }
 
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Invoke view component
+        /// </summary>
+        /// <returns>View component result</returns>
         public IViewComponentResult Invoke()
         {
-            var model = new LanguageSelectorModel
-            {
-                CurrentLanguage = _workContext.WorkingLanguage.ToModel(),
-                AvailableLanguages = _languageService
-                .GetAllLanguages(storeId: _storeContext.CurrentStore.Id)
-                .Select(x => x.ToModel())
-                .ToList()
-            };
+            //prepare model
+            var model = _commonModelFactory.PrepareLanguageSelectorModel();
 
             return View(model);
         }
+
+        #endregion
     }
 }

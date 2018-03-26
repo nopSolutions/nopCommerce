@@ -3,12 +3,19 @@ using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Areas.Admin.Models.Common
 {
-    public partial class SearchTermReportLineModel : BaseNopModel
+    /// <summary>
+    /// Represents a popular search term model
+    /// </summary>
+    public partial class PopularSearchTermModel : BaseNopModel
     {
+        #region Properties
+
         [NopResourceDisplayName("Admin.SearchTermReport.Keyword")]
         public string Keyword { get; set; }
 
         [NopResourceDisplayName("Admin.SearchTermReport.Count")]
         public int Count { get; set; }
+
+        #endregion
     }
 }

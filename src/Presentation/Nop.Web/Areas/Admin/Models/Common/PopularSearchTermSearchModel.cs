@@ -3,9 +3,9 @@
 namespace Nop.Web.Areas.Admin.Models.Common
 {
     /// <summary>
-    /// Represents an URL record list model
+    /// Represents a popular search term search model
     /// </summary>
-    public partial class UrlRecordListModel : BasePagedListModel<UrlRecordModel>
+    public partial class PopularSearchTermSearchModel : BaseSearchModel
     {
     }
 }

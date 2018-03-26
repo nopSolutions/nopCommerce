@@ -3,9 +3,9 @@
 namespace Nop.Web.Areas.Admin.Models.Common
 {
     /// <summary>
-    /// Represents an URL record list model
+    /// Represents a backup file list model
     /// </summary>
-    public partial class UrlRecordListModel : BasePagedListModel<UrlRecordModel>
+    public partial class BackupFileListModel : BasePagedListModel<BackupFileModel>
     {
     }
 }

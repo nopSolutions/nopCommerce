@@ -82,7 +82,7 @@
                     <div class="col-md-4">
                         @if (canManageProducts)
                         {
-                            @await Html.PartialAsync("_PopularSearchTermsReport")
+                            @await Html.PartialAsync("_PopularSearchTermsReport", Model.PopularSearchTermSearchModel)
                         }
                     </div>
                 </div>
