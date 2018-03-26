@@ -73,13 +73,15 @@ namespace Nop.Services.Orders
         /// <param name="quantity">Quantity</param>
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <param name="ignoreNonCombinableAttributes">A value indicating whether we should ignore non-combinable attributes</param>
+        /// <param name="ignoreConditionMet">A value indicating whether we should ignore filtering by "is condition met" property</param>
         /// <returns>Warnings</returns>
         IList<string> GetShoppingCartItemAttributeWarnings(Customer customer, 
             ShoppingCartType shoppingCartType,
             Product product,
             int quantity = 1,
             string attributesXml = "",
-            bool ignoreNonCombinableAttributes = false);
+            bool ignoreNonCombinableAttributes = false,
+            bool ignoreConditionMet = false);
         
         /// <summary>
         /// Validates shopping cart item (gift card)

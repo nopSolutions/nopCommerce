@@ -1353,7 +1353,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //new one
                 var warnings = new List<string>();
                 warnings.AddRange(_shoppingCartService.GetShoppingCartItemAttributeWarnings(_workContext.CurrentCustomer,
-                    ShoppingCartType.ShoppingCart, product, 1, attributesXml, true));
+                    ShoppingCartType.ShoppingCart, product, 1, attributesXml, true, true));
                 if (warnings.Count != 0)
                     continue;
 
