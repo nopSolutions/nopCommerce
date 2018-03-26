@@ -542,13 +542,15 @@ namespace Nop.Services.Orders
         /// <param name="quantity">Quantity</param>
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <param name="ignoreNonCombinableAttributes">A value indicating whether we should ignore non-combinable attributes</param>
+        /// <param name="ignoreConditionMet">A value indicating whether we should ignore filtering by "is condition met" property</param>
         /// <returns>Warnings</returns>
         public virtual IList<string> GetShoppingCartItemAttributeWarnings(Customer customer, 
             ShoppingCartType shoppingCartType,
             Product product, 
             int quantity = 1,
             string attributesXml = "",
-            bool ignoreNonCombinableAttributes = false)
+            bool ignoreNonCombinableAttributes = false,
+            bool ignoreConditionMet = false)
         {
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
@@ -583,12 +585,17 @@ namespace Nop.Services.Orders
             {
                 attributes2 = attributes2.Where(x => !x.IsNonCombinable()).ToList();
             }
+
             //validate conditional attributes only (if specified)
-            attributes2 = attributes2.Where(x =>
+            if (!ignoreConditionMet)
             {
-                var conditionMet = _productAttributeParser.IsConditionMet(x, attributesXml);
-                return !conditionMet.HasValue || conditionMet.Value;
-            }).ToList();
+                attributes2 = attributes2.Where(x =>
+                {
+                    var conditionMet = _productAttributeParser.IsConditionMet(x, attributesXml);
+                    return !conditionMet.HasValue || conditionMet.Value;
+                }).ToList();
+            }
+
             foreach (var a2 in attributes2)
             {
                 if (a2.IsRequired)
