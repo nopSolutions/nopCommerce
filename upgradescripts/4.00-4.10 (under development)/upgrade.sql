@@ -644,6 +644,9 @@ set @resources='
   <LocaleResource Name="ShoppingCart.RequiredProductUpdateWarning">
     <Value>This product is required in the quantity of {0}</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.RewardPoints.AddingZeroValueNotAllowed">
+    <Value>Adding a new row with zero value isn''t allowed</Value>
+  </LocaleResource>  
 </Language>
 '
 

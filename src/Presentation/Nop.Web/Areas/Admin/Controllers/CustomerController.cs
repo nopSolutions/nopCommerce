@@ -1684,7 +1684,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //prevent adding a new row with zero value
             if (model.Points == 0)
-                return Json(new { Result = false });
+                return Json(new { Result = false, Error = _localizationService.GetResource("Admin.Customers.Customers.RewardPoints.AddingZeroValueNotAllowed") });
 
             var customer = _customerService.GetCustomerById(model.CustomerId);
             if (customer == null)

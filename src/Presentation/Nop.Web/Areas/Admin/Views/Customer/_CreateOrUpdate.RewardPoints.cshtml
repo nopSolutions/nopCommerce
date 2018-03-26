@@ -195,6 +195,9 @@
                                 $("#@Html.IdFor(model => model.AddRewardPoints.ActivatePointsImmediately)").prop('checked', @(Model.AddRewardPoints.ActivatePointsImmediately.ToString().ToLower()));
 
                                 activatePointsImmediately();
+                            } else {
+                                if(data.Error != undefined)
+                                    alert(data.Error);
                             }
 
                             $('#addRewardPoints').attr('disabled', false);
