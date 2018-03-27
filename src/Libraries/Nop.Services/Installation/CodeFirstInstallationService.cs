@@ -6089,7 +6089,7 @@ namespace Nop.Services.Installation
                 DefaultManufacturerPageSize = 6,
                 ShowProductReviewsTabOnAccountPage = true,
                 ProductReviewsPageSizeOnAccountPage = 10,
-                ProductReviewsSortByCreatedDateAscending = true,
+                ProductReviewsSortByCreatedDateAscending = false,
                 ExportImportProductAttributes = true,
                 ExportImportProductSpecificationAttributes = true,
                 ExportImportUseDropdownlistsForAssociatedEntities = true,
