@@ -1,55 +1,46 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Nop.Core;
-using Nop.Core.Domain.Customers;
-using Nop.Services.Common;
-using Nop.Services.Stores;
-using Nop.Web.Areas.Admin.Models.Settings;
-using Nop.Web.Areas.Admin.Models.Stores;
+using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Framework.Components;
 
 namespace Nop.Web.Areas.Admin.Components
 {
+    /// <summary>
+    /// Represents a view component that displays the store scope configuration
+    /// </summary>
     public class StoreScopeConfigurationViewComponent : NopViewComponent
     {
-        private readonly IStoreService _storeService;
-        private readonly IWorkContext _workContext;
+        #region Fields
 
-        public StoreScopeConfigurationViewComponent(IStoreService storeService, IWorkContext workContext)
+        private readonly ISettingModelFactory _settingModelFactory;
+
+        #endregion
+
+        #region Ctor
+
+        public StoreScopeConfigurationViewComponent(ISettingModelFactory settingModelFactory)
         {
-            this._storeService = storeService;
-            this._workContext = workContext;
+            this._settingModelFactory = settingModelFactory;
         }
 
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Invoke view component
+        /// </summary>
+        /// <returns>View component result</returns>
         public IViewComponentResult Invoke()
         {
-            var allStores = _storeService.GetAllStores();
-            if (allStores.Count < 2)
+            //prepare model
+            var model = _settingModelFactory.PrepareStoreScopeConfigurationModel();
+
+            if (model.Stores.Count < 2)
                 return Content("");
-
-            var model = new StoreScopeConfigurationModel();
-            foreach (var s in allStores)
-            {
-                model.Stores.Add(new StoreModel
-                {
-                    Id = s.Id,
-                    Name = s.Name
-                });
-            }
-            model.StoreId = GetActiveStoreScopeConfiguration(_storeService, _workContext);
-
+            
             return View(model);
         }
 
-        private int GetActiveStoreScopeConfiguration(IStoreService storeService, IWorkContext workContext)
-        {
-            //ensure that we have 2 (or more) stores
-            if (storeService.GetAllStores().Count < 2)
-                return 0;
-
-            var storeId = workContext.CurrentCustomer.GetAttribute<int>(SystemCustomerAttributeNames.AdminAreaStoreScopeConfiguration);
-            var store = storeService.GetStoreById(storeId);
-
-            return store != null ? store.Id : 0;
-        }
+        #endregion
     }
 }

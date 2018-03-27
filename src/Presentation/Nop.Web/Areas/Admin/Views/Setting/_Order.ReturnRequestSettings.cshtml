@@ -74,7 +74,7 @@
             </div>
         </div>
     </div>
-    @await Html.PartialAsync("_ReturnRequestReasons")
-    @await Html.PartialAsync("_ReturnRequestActions")
+    @await Html.PartialAsync("../ReturnRequest/_ReturnRequestReasons.cshtml", Model.ReturnRequestReasonSearchModel)
+    @await Html.PartialAsync("../ReturnRequest/_ReturnRequestActions.cshtml", Model.ReturnRequestActionSearchModel)
     @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.OrderSettingsReturnRequestSettingsBottom })
 </div>

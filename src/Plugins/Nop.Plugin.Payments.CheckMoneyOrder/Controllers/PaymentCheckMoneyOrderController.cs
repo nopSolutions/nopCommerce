@@ -4,7 +4,6 @@ using Nop.Plugin.Payments.CheckMoneyOrder.Models;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Services.Security;
-using Nop.Services.Stores;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc.Filters;
@@ -21,8 +20,7 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder.Controllers
         private readonly ILocalizationService _localizationService;
         private readonly IPermissionService _permissionService;
         private readonly ISettingService _settingService;
-        private readonly IStoreService _storeService;
-        private readonly IWorkContext _workContext;
+        private readonly IStoreContext _storeContext;
 
         #endregion
 
@@ -32,15 +30,13 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder.Controllers
             ILocalizationService localizationService,
             IPermissionService permissionService,
             ISettingService settingService,
-            IStoreService storeService,
-            IWorkContext workContext)
+            IStoreContext storeContext)
         {
             this._languageService = languageService;
             this._localizationService = localizationService;
             this._permissionService = permissionService;
             this._settingService = settingService;
-            this._storeService = storeService;
-            this._workContext = workContext;
+            this._storeContext = storeContext;
         }
 
         #endregion
@@ -53,7 +49,7 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder.Controllers
                 return AccessDeniedView();
 
             //load settings for a chosen store scope
-            var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var storeScope = _storeContext.ActiveStoreScopeConfiguration;
             var checkMoneyOrderPaymentSettings = _settingService.LoadSetting<CheckMoneyOrderPaymentSettings>(storeScope);
 
             var model = new ConfigurationModel
@@ -93,7 +89,7 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder.Controllers
                 return Configure();
 
             //load settings for a chosen store scope
-            var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var storeScope = _storeContext.ActiveStoreScopeConfiguration;
             var checkMoneyOrderPaymentSettings = _settingService.LoadSetting<CheckMoneyOrderPaymentSettings>(storeScope);
 
             //save settings

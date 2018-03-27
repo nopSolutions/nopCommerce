@@ -7,7 +7,6 @@ using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Services.Media;
 using Nop.Services.Security;
-using Nop.Services.Stores;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 
@@ -16,23 +15,20 @@ namespace Nop.Plugin.Widgets.NivoSlider.Controllers
     [Area(AreaNames.Admin)]
     public class WidgetsNivoSliderController : BasePluginController
     {
-        private readonly IWorkContext _workContext;
-        private readonly IStoreService _storeService;
+        private readonly IStoreContext _storeContext;
         private readonly IPermissionService _permissionService;
         private readonly IPictureService _pictureService;
         private readonly ISettingService _settingService;
         private readonly ILocalizationService _localizationService;
 
-        public WidgetsNivoSliderController(IWorkContext workContext,
-            IStoreService storeService,
+        public WidgetsNivoSliderController(IStoreContext storeContext,
             IPermissionService permissionService, 
             IPictureService pictureService,
             ISettingService settingService,
             ICacheManager cacheManager,
             ILocalizationService localizationService)
         {
-            this._workContext = workContext;
-            this._storeService = storeService;
+            this._storeContext = storeContext;
             this._permissionService = permissionService;
             this._pictureService = pictureService;
             this._settingService = settingService;
@@ -45,7 +41,7 @@ namespace Nop.Plugin.Widgets.NivoSlider.Controllers
                 return AccessDeniedView();
 
             //load settings for a chosen store scope
-            var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var storeScope = _storeContext.ActiveStoreScopeConfiguration;
             var nivoSliderSettings = _settingService.LoadSetting<NivoSliderSettings>(storeScope);
             var model = new ConfigurationModel
             {
@@ -96,7 +92,7 @@ namespace Nop.Plugin.Widgets.NivoSlider.Controllers
                 return AccessDeniedView();
 
             //load settings for a chosen store scope
-            var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var storeScope = _storeContext.ActiveStoreScopeConfiguration;
             var nivoSliderSettings = _settingService.LoadSetting<NivoSliderSettings>(storeScope);
 
             //get previous picture identifiers

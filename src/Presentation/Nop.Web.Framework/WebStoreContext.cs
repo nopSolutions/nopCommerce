@@ -3,7 +3,10 @@ using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Net.Http.Headers;
 using Nop.Core;
+using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Stores;
+using Nop.Core.Infrastructure;
+using Nop.Services.Common;
 using Nop.Services.Stores;
 
 namespace Nop.Web.Framework
@@ -13,10 +16,17 @@ namespace Nop.Web.Framework
     /// </summary>
     public partial class WebStoreContext : IStoreContext
     {
+        #region Fields
+
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IStoreService _storeService;
 
         private Store _cachedStore;
+        private int? _cachedActiveStoreScopeConfiguration;
+
+        #endregion
+
+        #region Ctor
 
         /// <summary>
         /// Ctor
@@ -30,8 +40,12 @@ namespace Nop.Web.Framework
             this._storeService = storeService;
         }
 
+        #endregion
+
+        #region Properties
+
         /// <summary>
-        /// Gets or sets the current store
+        /// Gets the current store
         /// </summary>
         public virtual Store CurrentStore
         {
@@ -57,5 +71,35 @@ namespace Nop.Web.Framework
                 return _cachedStore;
             }
         }
+
+        /// <summary>
+        /// Gets active store scope configuration
+        /// </summary>
+        public virtual int ActiveStoreScopeConfiguration
+        {
+            get
+            {
+                if (_cachedActiveStoreScopeConfiguration.HasValue)
+                    return _cachedActiveStoreScopeConfiguration.Value;
+
+                //ensure that we have 2 (or more) stores
+                if (_storeService.GetAllStores().Count > 1)
+                {
+                    //do not inject IWorkContext via constructor because it'll cause circular references
+                    var currentCustomer = EngineContext.Current.Resolve<IWorkContext>().CurrentCustomer;
+
+                    //try to get store identifier from attributes
+                    var storeId = currentCustomer.GetAttribute<int>(SystemCustomerAttributeNames.AdminAreaStoreScopeConfiguration);
+
+                    _cachedActiveStoreScopeConfiguration = _storeService.GetStoreById(storeId)?.Id ?? 0;
+                }
+                else
+                    _cachedActiveStoreScopeConfiguration = 0;
+
+                return _cachedActiveStoreScopeConfiguration ?? 0;
+            }
+        }
+
+        #endregion
     }
 }

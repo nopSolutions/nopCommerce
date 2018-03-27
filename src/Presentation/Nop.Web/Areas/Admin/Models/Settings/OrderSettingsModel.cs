@@ -1,10 +1,26 @@
 ﻿using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Models;
+using Nop.Web.Areas.Admin.Models.Orders;
 
 namespace Nop.Web.Areas.Admin.Models.Settings
 {
+    /// <summary>
+    /// Represents an order settings model
+    /// </summary>
     public partial class OrderSettingsModel : BaseNopModel
     {
+        #region Ctor
+
+        public OrderSettingsModel()
+        {
+            this.ReturnRequestReasonSearchModel = new ReturnRequestReasonSearchModel();
+            this.ReturnRequestActionSearchModel = new ReturnRequestActionSearchModel();
+        }
+
+        #endregion
+
+        #region Properties
+
         public int ActiveStoreScopeConfiguration { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.Order.IsReOrderAllowed")]
@@ -89,8 +105,10 @@ namespace Nop.Web.Areas.Admin.Models.Settings
 
         [NopResourceDisplayName("Admin.Configuration.Settings.Order.ActivateGiftCardsAfterCompletingOrder")]
         public bool ActivateGiftCardsAfterCompletingOrder { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.Order.DeactivateGiftCardsAfterCancellingOrder")]
         public bool DeactivateGiftCardsAfterCancellingOrder { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.Order.DeactivateGiftCardsAfterDeletingOrder")]
         public bool DeactivateGiftCardsAfterDeletingOrder { get; set; }
 
@@ -117,5 +135,11 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.Order.DeleteGiftCardUsageHistory")]
         public bool DeleteGiftCardUsageHistory { get; set; }
         public bool DeleteGiftCardUsageHistory_OverrideForStore { get; set; }
+
+        public ReturnRequestReasonSearchModel ReturnRequestReasonSearchModel { get; set; }
+
+        public ReturnRequestActionSearchModel ReturnRequestActionSearchModel { get; set; }
+
+        #endregion
     }
 }

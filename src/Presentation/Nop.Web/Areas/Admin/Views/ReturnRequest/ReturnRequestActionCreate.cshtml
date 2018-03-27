@@ -1,20 +1,19 @@
-@model ReturnRequestReasonModel
+@model ReturnRequestActionModel
 
 @{
     //page title
-    ViewBag.Title = T("Admin.Configuration.Settings.Order.ReturnRequestReasons.AddNew").Text;
+    ViewBag.Title = T("Admin.Configuration.Settings.Order.ReturnRequestActions.AddNew").Text;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Order settings");
 }
 
-
-<form asp-controller="Setting" asp-action="ReturnRequestReasonCreate" method="post">
+<form asp-controller="ReturnRequest" asp-action="ReturnRequestActionCreate" method="post">
     <div class="content-header clearfix">
         <h1 class="pull-left">
-            @T("Admin.Configuration.Settings.Order.ReturnRequestReasons.AddNew")
+            @T("Admin.Configuration.Settings.Order.ReturnRequestActions.AddNew")
             <small>
                 <i class="fa fa-arrow-circle-left"></i>
-                <a asp-action="ReturnRequestReasonList">@T("Admin.Configuration.Settings.Order.ReturnRequestReasons.BackToList")</a>
+                <a asp-action="ReturnRequestActionList">@T("Admin.Configuration.Settings.Order.ReturnRequestActions.BackToList")</a>
             </small>
         </h1>
         <div class="pull-right">
@@ -26,13 +25,13 @@
                 <i class="fa fa-floppy-o"></i>
                 @T("Admin.Common.SaveContinue")
             </button>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ReturnRequestReasonDetailsButtons })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ReturnRequestActionDetailsButtons })
         </div>
     </div>
 
     <div class="content">
         <div class="form-horizontal">
-            @await Html.PartialAsync("_CreateOrUpdate.ReturnRequestReason", Model)
+            @await Html.PartialAsync("_CreateOrUpdate.ReturnRequestAction", Model)
         </div>
     </div>
 </form>

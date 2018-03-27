@@ -4,12 +4,21 @@ using Nop.Web.Areas.Admin.Models.Vendors;
 
 namespace Nop.Web.Areas.Admin.Models.Settings
 {
+    /// <summary>
+    /// Represents a vendor settings model
+    /// </summary>
     public partial class VendorSettingsModel : BaseNopModel
     {
+        #region Ctor
+
         public VendorSettingsModel()
         {
             this.VendorAttributeSearchModel = new VendorAttributeSearchModel();
         }
+
+        #endregion
+
+        #region Properties
 
         public int ActiveStoreScopeConfiguration { get; set; }
 
@@ -58,5 +67,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public bool ShowVendorOnOrderDetailsPage_OverrideForStore { get; set; }
 
         public VendorAttributeSearchModel VendorAttributeSearchModel { get; set; }
+
+        #endregion
     }
 }

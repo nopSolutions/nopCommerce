@@ -710,7 +710,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
             CreateMap<StoreModel, Store>();
 
             //Settings
-            CreateMap<CaptchaSettings, GeneralCommonSettingsModel.CaptchaSettingsModel>()
+            CreateMap<CaptchaSettings, CaptchaSettingsModel>()
                 .ForMember(dest => dest.AvailableReCaptchaVersions, mo => mo.Ignore())
                 .ForMember(dest => dest.Enabled_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.ShowOnLoginPage_OverrideForStore, mo => mo.Ignore())
@@ -727,14 +727,13 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.ReCaptchaVersion_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore())
                 .ForMember(dest => dest.Form, mo => mo.Ignore());
-            CreateMap<GeneralCommonSettingsModel.CaptchaSettingsModel, CaptchaSettings>()
+            CreateMap<CaptchaSettingsModel, CaptchaSettings>()
                 .ForMember(dest => dest.ReCaptchaTheme, mo => mo.Ignore())
                 .ForMember(dest => dest.ReCaptchaLanguage, mo => mo.Ignore());
             CreateMap<TaxSettings, TaxSettingsModel>()
                 .ForMember(dest => dest.DefaultTaxAddress, mo => mo.Ignore())
                 .ForMember(dest => dest.TaxDisplayTypeValues, mo => mo.Ignore())
                 .ForMember(dest => dest.TaxBasedOnValues, mo => mo.Ignore())
-                .ForMember(dest => dest.PaymentMethodAdditionalFeeTaxCategories, mo => mo.Ignore())
                 .ForMember(dest => dest.TaxCategories, mo => mo.Ignore())
                 .ForMember(dest => dest.EuVatShopCountries, mo => mo.Ignore())
                 .ForMember(dest => dest.ActiveStoreScopeConfiguration, mo => mo.Ignore())
@@ -1069,20 +1068,20 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.ImageSquarePictureSize, mo => mo.Ignore())
                 .ForMember(dest => dest.AutoCompleteSearchThumbPictureSize, mo => mo.Ignore())
                 .ForMember(dest => dest.AzureCacheControlHeader, mo => mo.Ignore());
-            CreateMap<CustomerSettings, CustomerUserSettingsModel.CustomerSettingsModel>()
+            CreateMap<CustomerSettings, CustomerSettingsModel>()
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore())
                 .ForMember(dest => dest.Form, mo => mo.Ignore());
-            CreateMap<CustomerUserSettingsModel.CustomerSettingsModel, CustomerSettings>()
+            CreateMap<CustomerSettingsModel, CustomerSettings>()
                 .ForMember(dest => dest.HashedPasswordFormat, mo => mo.Ignore())
                 .ForMember(dest => dest.AvatarMaximumSizeBytes, mo => mo.Ignore())
                 .ForMember(dest => dest.DownloadableProductsValidateUser, mo => mo.Ignore())
                 .ForMember(dest => dest.OnlineCustomerMinutes, mo => mo.Ignore())
                 .ForMember(dest => dest.SuffixDeletedCustomers, mo => mo.Ignore())
                 .ForMember(dest => dest.DeleteGuestTaskOlderThanMinutes, mo => mo.Ignore());
-            CreateMap<AddressSettings, CustomerUserSettingsModel.AddressSettingsModel>()
+            CreateMap<AddressSettings, AddressSettingsModel>()
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore())
                 .ForMember(dest => dest.Form, mo => mo.Ignore());
-            CreateMap<CustomerUserSettingsModel.AddressSettingsModel, AddressSettings>()
+            CreateMap<AddressSettingsModel, AddressSettings>()
                 .ForMember(dest => dest.PreselectCountryIfOnlyOne, mo => mo.Ignore());
             CreateMap<ProductEditorSettings, ProductEditorSettingsModel>()
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore())

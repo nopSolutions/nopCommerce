@@ -3,8 +3,13 @@ using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Areas.Admin.Models.Settings
 {
+    /// <summary>
+    /// Represents a media settings model
+    /// </summary>
     public partial class MediaSettingsModel : BaseNopModel
     {
+        #region Properties
+
         public int ActiveStoreScopeConfiguration { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.Media.PicturesStoredIntoDatabase")]
@@ -69,5 +74,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.Media.DefaultPictureZoomEnabled")]
         public bool DefaultPictureZoomEnabled { get; set; }
         public bool DefaultPictureZoomEnabled_OverrideForStore { get; set; }
+
+        #endregion
     }
 }

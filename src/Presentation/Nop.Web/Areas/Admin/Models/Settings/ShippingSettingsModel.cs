@@ -4,8 +4,22 @@ using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Areas.Admin.Models.Settings
 {
+    /// <summary>
+    /// Represents a shipping settings model
+    /// </summary>
     public partial class ShippingSettingsModel : BaseNopModel
     {
+        #region Ctor
+
+        public ShippingSettingsModel()
+        {
+            ShippingOriginAddress = new AddressModel();
+        }
+
+        #endregion
+
+        #region Properties
+
         public int ActiveStoreScopeConfiguration { get; set; }
         
         [NopResourceDisplayName("Admin.Configuration.Settings.Shipping.ShipToSameAddress")]
@@ -72,5 +86,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public bool ShippingOriginAddress_OverrideForStore { get; set; }
 
         public string PrimaryStoreCurrencyCode { get; set; }
+
+        #endregion
     }
 }

@@ -2,9 +2,17 @@
 
 namespace Nop.Web.Areas.Admin.Models.Settings
 {
-    public partial class ModeModel : BaseNopModel
+    /// <summary>
+    /// Represents a setting mode model
+    /// </summary>
+    public partial class SettingModeModel : BaseNopModel
     {
+        #region Properties
+
         public string ModeName { get; set; }
+
         public bool Enabled { get; set; }
+
+        #endregion
     }
 }

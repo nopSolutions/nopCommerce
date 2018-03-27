@@ -6,15 +6,23 @@ using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Areas.Admin.Models.Settings
 {
+    /// <summary>
+    /// Represents a tax settings model
+    /// </summary>
     public partial class TaxSettingsModel : BaseNopModel
     {
+        #region Ctor
+
         public TaxSettingsModel()
         {
-            PaymentMethodAdditionalFeeTaxCategories = new List<SelectListItem>();
             TaxCategories = new List<SelectListItem>();
             EuVatShopCountries = new List<SelectListItem>();
             DefaultTaxAddress = new AddressModel();
         }
+
+        #endregion
+
+        #region Properties
 
         public int ActiveStoreScopeConfiguration { get; set; }
 
@@ -91,7 +99,6 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.Tax.PaymentMethodAdditionalFeeTaxClass")]
         public int PaymentMethodAdditionalFeeTaxClassId { get; set; }
         public bool PaymentMethodAdditionalFeeTaxClassId_OverrideForStore { get; set; }
-        public IList<SelectListItem> PaymentMethodAdditionalFeeTaxCategories { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.Tax.EuVatEnabled")]
         public bool EuVatEnabled { get; set; }
@@ -117,5 +124,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.Tax.EuVatEmailAdminWhenNewVatSubmitted")]
         public bool EuVatEmailAdminWhenNewVatSubmitted { get; set; }
         public bool EuVatEmailAdminWhenNewVatSubmitted_OverrideForStore { get; set; }
+
+        #endregion
     }
 }

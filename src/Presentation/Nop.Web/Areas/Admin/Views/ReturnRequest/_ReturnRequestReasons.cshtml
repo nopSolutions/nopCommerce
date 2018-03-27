@@ -1,21 +1,23 @@
-﻿<div class="panel panel-default">
+﻿@model ReturnRequestReasonSearchModel
+
+<div class="panel panel-default">
     <div class="panel-heading">
-        @T("Admin.Configuration.Settings.Order.ReturnRequestActions")
+        @T("Admin.Configuration.Settings.Order.ReturnRequestReasons")
     </div>
     <div class="panel-body">
         <p>
-            <em>@T("Admin.Configuration.Settings.Order.ReturnRequestActions.Hint")</em>
+            <em>@T("Admin.Configuration.Settings.Order.ReturnRequestReasons.Hint")</em>
         </p>
-        <div id="returnrequestactions-grid"></div>
+        <div id="returnrequestreasons-grid"></div>
 
         <script>
                 $(document).ready(function () {
-                    $("#returnrequestactions-grid").kendoGrid({
+                    $("#returnrequestreasons-grid").kendoGrid({
                         dataSource: {
                             type: "json",
                             transport: {
                                 read: {
-                                    url: "@Html.Raw(Url.Action("ReturnRequestActionList"))",
+                                    url: "@Html.Raw(Url.Action("ReturnRequestReasonList", "ReturnRequest"))",
                                     type: "POST",
                                     dataType: "json",
                                     data: addAntiForgeryToken
@@ -49,11 +51,11 @@
                         scrollable: false,
                         columns: [{
                             field: "Name",
-                            title: "@T("Admin.Configuration.Settings.Order.ReturnRequestActions.Name")",
+                            title: "@T("Admin.Configuration.Settings.Order.ReturnRequestReasons.Name")",
                             width: 300
                         }, {
                             field: "DisplayOrder",
-                            title: "@T("Admin.Configuration.Settings.Order.ReturnRequestActions.DisplayOrder")",
+                            title: "@T("Admin.Configuration.Settings.Order.ReturnRequestReasons.DisplayOrder")",
                             width: 100
                         }, {
                             field: "Id",
@@ -61,14 +63,14 @@
                             width: 100,
                             headerAttributes: { style: "text-align:center" },
                             attributes: { style: "text-align:center" },
-                            template: '<a class="btn btn-default" href="@Url.Content("~/Admin/Setting/ReturnRequestActionEdit/")#=Id#"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>'
+                            template: '<a class="btn btn-default" href="@Url.Content("~/Admin/ReturnRequest/ReturnRequestReasonEdit/")#=Id#"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>'
                         }]
                     });
                 });
         </script>
     </div>
     <div class="panel-footer">
-        <a asp-action="ReturnRequestActionCreate" class="btn btn-primary">
+        <a asp-action="ReturnRequestReasonCreate" asp-controller="ReturnRequest" class="btn btn-primary">
             <i class="fa fa-plus-square"></i>
             @T("Admin.Common.AddNew")
         </a>

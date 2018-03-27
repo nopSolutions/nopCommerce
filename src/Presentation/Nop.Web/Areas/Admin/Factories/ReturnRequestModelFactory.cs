@@ -8,7 +8,10 @@ using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Media;
 using Nop.Services.Orders;
+using Nop.Web.Areas.Admin.Extensions;
 using Nop.Web.Areas.Admin.Models.Orders;
+using Nop.Web.Framework.Extensions;
+using Nop.Web.Framework.Factories;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -23,6 +26,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IDownloadService _downloadService;
         private readonly ILocalizationService _localizationService;
+        private readonly ILocalizedModelFactory _localizedModelFactory;
         private readonly IOrderService _orderService;
         private readonly IReturnRequestService _returnRequestService;
         private readonly IWorkContext _workContext;
@@ -35,6 +39,7 @@ namespace Nop.Web.Areas.Admin.Factories
             IDateTimeHelper dateTimeHelper,
             IDownloadService downloadService,
             ILocalizationService localizationService,
+            ILocalizedModelFactory localizedModelFactory,
             IOrderService orderService,
             IReturnRequestService returnRequestService,
             IWorkContext workContext)
@@ -43,6 +48,7 @@ namespace Nop.Web.Areas.Admin.Factories
             this._dateTimeHelper = dateTimeHelper;
             this._downloadService = downloadService;
             this._localizationService = localizationService;
+            this._localizedModelFactory = localizedModelFactory;
             this._orderService = orderService;
             this._returnRequestService = returnRequestService;
             this._workContext = workContext;
@@ -186,6 +192,142 @@ namespace Nop.Web.Areas.Admin.Factories
                     model.ReturnRequestStatusId = returnRequest.ReturnRequestStatusId;
                 }
             }
+
+            return model;
+        }
+
+        /// <summary>
+        /// Prepare return request reason search model
+        /// </summary>
+        /// <param name="model">Return request reason search model</param>
+        /// <returns>Return request reason search model</returns>
+        public virtual ReturnRequestReasonSearchModel PrepareReturnRequestReasonSearchModel(ReturnRequestReasonSearchModel model)
+        {
+            if (model == null)
+                throw new ArgumentNullException(nameof(model));
+            
+            return model;
+        }
+
+        /// <summary>
+        /// Prepare paged return request reason list model
+        /// </summary>
+        /// <param name="searchModel">Return request reason search model</param>
+        /// <returns>Return request reason list model</returns>
+        public virtual ReturnRequestReasonListModel PrepareReturnRequestReasonListModel(ReturnRequestReasonSearchModel searchModel)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+            //get return request reasons
+            var reasons = _returnRequestService.GetAllReturnRequestReasons();
+
+            //prepare list model
+            var model = new ReturnRequestReasonListModel
+            {
+                //fill in model values from the entity
+                Data = reasons.PaginationByRequestModel(searchModel).Select(reason => reason.ToModel()),
+                Total = reasons.Count
+            };
+
+            return model;
+        }
+
+        /// <summary>
+        /// Prepare return request reason model
+        /// </summary>
+        /// <param name="model">Return request reason model</param>
+        /// <param name="returnRequestReason">Return request reason</param>
+        /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
+        /// <returns>Return request reason model</returns>
+        public virtual ReturnRequestReasonModel PrepareReturnRequestReasonModel(ReturnRequestReasonModel model,
+            ReturnRequestReason returnRequestReason, bool excludeProperties = false)
+        {
+            Action<ReturnRequestReasonLocalizedModel, int> localizedModelConfiguration = null;
+
+            if (returnRequestReason != null)
+            {
+                //fill in model values from the entity
+                model = model ?? returnRequestReason.ToModel();
+                
+                //define localized model configuration action
+                localizedModelConfiguration = (locale, languageId) =>
+                {
+                    locale.Name = returnRequestReason.GetLocalized(entity => entity.Name, languageId, false, false);
+                };
+            }
+            
+            //prepare localized models
+            if (!excludeProperties)
+                model.Locales = _localizedModelFactory.PrepareLocalizedModels(localizedModelConfiguration);
+
+            return model;
+        }
+
+        /// <summary>
+        /// Prepare return request action search model
+        /// </summary>
+        /// <param name="model">Return request action search model</param>
+        /// <returns>Return request action search model</returns>
+        public virtual ReturnRequestActionSearchModel PrepareReturnRequestActionSearchModel(ReturnRequestActionSearchModel model)
+        {
+            if (model == null)
+                throw new ArgumentNullException(nameof(model));
+
+            return model;
+        }
+
+        /// <summary>
+        /// Prepare paged return request action list model
+        /// </summary>
+        /// <param name="searchModel">Return request action search model</param>
+        /// <returns>Return request action list model</returns>
+        public virtual ReturnRequestActionListModel PrepareReturnRequestActionListModel(ReturnRequestActionSearchModel searchModel)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+            //get return request actions
+            var actions = _returnRequestService.GetAllReturnRequestActions();
+
+            //prepare list model
+            var model = new ReturnRequestActionListModel
+            {
+                //fill in model values from the entity
+                Data = actions.PaginationByRequestModel(searchModel).Select(action => action.ToModel()),
+                Total = actions.Count
+            };
+
+            return model;
+        }
+
+        /// <summary>
+        /// Prepare return request action model
+        /// </summary>
+        /// <param name="model">Return request action model</param>
+        /// <param name="returnRequestAction">Return request action</param>
+        /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
+        /// <returns>Return request action model</returns>
+        public virtual ReturnRequestActionModel PrepareReturnRequestActionModel(ReturnRequestActionModel model,
+            ReturnRequestAction returnRequestAction, bool excludeProperties = false)
+        {
+            Action<ReturnRequestActionLocalizedModel, int> localizedModelConfiguration = null;
+
+            if (returnRequestAction != null)
+            {
+                //fill in model values from the entity
+                model = model ?? returnRequestAction.ToModel();
+
+                //define localized model configuration action
+                localizedModelConfiguration = (locale, languageId) =>
+                {
+                    locale.Name = returnRequestAction.GetLocalized(entity => entity.Name, languageId, false, false);
+                };
+            }
+
+            //prepare localized models
+            if (!excludeProperties)
+                model.Locales = _localizedModelFactory.PrepareLocalizedModels(localizedModelConfiguration);
 
             return model;
         }

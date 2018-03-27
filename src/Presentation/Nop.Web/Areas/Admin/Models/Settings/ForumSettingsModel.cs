@@ -4,8 +4,13 @@ using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Areas.Admin.Models.Settings
 {
+    /// <summary>
+    /// Represents a forum settings model
+    /// </summary>
     public partial class ForumSettingsModel : BaseNopModel
     {
+        #region Properties
+
         public int ActiveStoreScopeConfiguration { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.Forums.ForumsEnabled")]
@@ -100,5 +105,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.Forums.ActiveDiscussionsPageSize")]
         public int ActiveDiscussionsPageSize { get; set; }
         public bool ActiveDiscussionsPageSize_OverrideForStore { get; set; }
+
+        #endregion
     }
 }

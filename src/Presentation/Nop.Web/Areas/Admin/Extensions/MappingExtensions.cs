@@ -1039,29 +1039,29 @@ namespace Nop.Web.Areas.Admin.Extensions
         }
 
         //customer/user settings
-        public static CustomerUserSettingsModel.CustomerSettingsModel ToModel(this CustomerSettings entity)
+        public static CustomerSettingsModel ToModel(this CustomerSettings entity)
         {
-            return entity.MapTo<CustomerSettings, CustomerUserSettingsModel.CustomerSettingsModel>();
+            return entity.MapTo<CustomerSettings, CustomerSettingsModel>();
         }
-        public static CustomerSettings ToEntity(this CustomerUserSettingsModel.CustomerSettingsModel model, CustomerSettings destination)
+        public static CustomerSettings ToEntity(this CustomerSettingsModel model, CustomerSettings destination)
         {
             return model.MapTo(destination);
         }
-        public static CustomerUserSettingsModel.AddressSettingsModel ToModel(this AddressSettings entity)
+        public static AddressSettingsModel ToModel(this AddressSettings entity)
         {
-            return entity.MapTo<AddressSettings, CustomerUserSettingsModel.AddressSettingsModel>();
+            return entity.MapTo<AddressSettings, AddressSettingsModel>();
         }
-        public static AddressSettings ToEntity(this CustomerUserSettingsModel.AddressSettingsModel model, AddressSettings destination)
+        public static AddressSettings ToEntity(this AddressSettingsModel model, AddressSettings destination)
         {
             return model.MapTo(destination);
         }
 
         //general (captcha) settings
-        public static GeneralCommonSettingsModel.CaptchaSettingsModel ToModel(this CaptchaSettings entity)
+        public static CaptchaSettingsModel ToModel(this CaptchaSettings entity)
         {
-            return entity.MapTo<CaptchaSettings, GeneralCommonSettingsModel.CaptchaSettingsModel>();
+            return entity.MapTo<CaptchaSettings, CaptchaSettingsModel>();
         }
-        public static CaptchaSettings ToEntity(this GeneralCommonSettingsModel.CaptchaSettingsModel model, CaptchaSettings destination)
+        public static CaptchaSettings ToEntity(this CaptchaSettingsModel model, CaptchaSettings destination)
         {
             return model.MapTo(destination);
         }

@@ -5,12 +5,22 @@ using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Areas.Admin.Models.Settings
 {
+    /// <summary>
+    /// Represents a catalog settings model
+    /// </summary>
     public partial class CatalogSettingsModel : BaseNopModel
     {
+        #region Ctor
+
         public CatalogSettingsModel()
         {
             AvailableViewModes = new List<SelectListItem>();
+            SortOptionSearchModel = new SortOptionSearchModel();
         }
+
+        #endregion
+
+        #region Properties
 
         public int ActiveStoreScopeConfiguration { get; set; }
         
@@ -269,13 +279,21 @@ namespace Nop.Web.Areas.Admin.Models.Settings
 
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.IgnoreDiscounts")]
         public bool IgnoreDiscounts { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.IgnoreFeaturedProducts")]
         public bool IgnoreFeaturedProducts { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.IgnoreAcl")]
         public bool IgnoreAcl { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.IgnoreStoreLimitations")]
         public bool IgnoreStoreLimitations { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.CacheProductPrices")]
         public bool CacheProductPrices { get; set; }
+
+        public SortOptionSearchModel SortOptionSearchModel { get; set; }
+
+        #endregion
     }
 }

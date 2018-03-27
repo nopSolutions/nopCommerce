@@ -280,24 +280,6 @@ namespace Nop.Web.Framework.Controllers
             pageHeadBuilder.AddEditPageUrl(editPageUrl);
         }
 
-        /// <summary>
-        /// Get active store scope (for multi-store configuration mode)
-        /// </summary>
-        /// <param name="storeService">Store service</param>
-        /// <param name="workContext">Work context</param>
-        /// <returns>Store ID; 0 if we are in a shared mode</returns>
-        protected virtual int GetActiveStoreScopeConfiguration(IStoreService storeService, IWorkContext workContext)
-        {
-            //ensure that we have 2 (or more) stores
-            if (storeService.GetAllStores().Count < 2)
-                return 0;
-
-            var storeId = workContext.CurrentCustomer.GetAttribute<int>(SystemCustomerAttributeNames.AdminAreaStoreScopeConfiguration);
-            var store = storeService.GetStoreById(storeId);
-
-            return store != null ? store.Id : 0;
-        }
-
         #endregion
 
         #region Localization

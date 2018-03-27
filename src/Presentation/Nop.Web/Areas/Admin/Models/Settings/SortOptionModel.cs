@@ -3,8 +3,13 @@ using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Areas.Admin.Models.Settings
 {
+    /// <summary>
+    /// Represents a sort option model
+    /// </summary>
     public partial class SortOptionModel : BaseNopEntityModel
     {
+        #region Properties
+
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.SortOptions.Name")]
         public string Name { get; set; }
 
@@ -13,5 +18,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
 
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.SortOptions.DisplayOrder")]
         public int DisplayOrder { get; set; }
+
+        #endregion
     }
 }
