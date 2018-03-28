@@ -23,6 +23,13 @@ namespace Nop.Web.Areas.Admin.Factories
         ShoppingCartListModel PrepareShoppingCartListModel(ShoppingCartSearchModel searchModel);
 
         /// <summary>
+        /// Prepare shopping cart item search model
+        /// </summary>
+        /// <param name="model">Shopping cart item search model</param>
+        /// <returns>Shopping cart item search model</returns>
+        ShoppingCartItemSearchModel PrepareShoppingCartItemSearchModel(ShoppingCartItemSearchModel model);
+
+        /// <summary>
         /// Prepare paged shopping cart item list model
         /// </summary>
         /// <param name="searchModel">Shopping cart item search model</param>

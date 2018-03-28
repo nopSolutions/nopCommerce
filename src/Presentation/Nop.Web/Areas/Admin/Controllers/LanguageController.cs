@@ -289,13 +289,13 @@ namespace Nop.Web.Areas.Admin.Controllers
         #region Resources
 
         [HttpPost]
-        public virtual IActionResult Resources(LocaleResourceSearchModel searchModel, int languageId)
+        public virtual IActionResult Resources(LocaleResourceSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
                 return AccessDeniedKendoGridJson();
 
             //try to get a language with the specified id
-            var language = _languageService.GetLanguageById(languageId, false);
+            var language = _languageService.GetLanguageById(searchModel.LanguageId, false);
             if (language == null)
                 return RedirectToAction("List");
 

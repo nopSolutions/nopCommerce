@@ -7,5 +7,10 @@ namespace Nop.Web.Areas.Admin.Models.Polls
     /// </summary>
     public partial class PollAnswerSearchModel : BaseSearchModel
     {
+        #region Properties
+
+        public int PollId { get; set; }
+
+        #endregion
     }
 }

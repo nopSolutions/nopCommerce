@@ -76,6 +76,12 @@ namespace Nop.Web.Areas.Admin.Factories
             //set default search values
             model.ShoppingCartType = ShoppingCartType.ShoppingCart;
 
+            //prepare nested search model
+            PrepareShoppingCartItemSearchModel(model.ShoppingCartItemSearchModel);
+
+            //prepare page parameters
+            model.SetGridPageSize();
+
             return model;
         }
 
@@ -115,6 +121,22 @@ namespace Nop.Web.Areas.Admin.Factories
                 }),
                 Total = customers.TotalCount
             };
+
+            return model;
+        }
+
+        /// <summary>
+        /// Prepare shopping cart item search model
+        /// </summary>
+        /// <param name="model">Shopping cart item search model</param>
+        /// <returns>Shopping cart item search model</returns>
+        public virtual ShoppingCartItemSearchModel PrepareShoppingCartItemSearchModel(ShoppingCartItemSearchModel model)
+        {
+            if (model == null)
+                throw new ArgumentNullException(nameof(model));
+            
+            //prepare page parameters
+            model.SetGridPageSize();
 
             return model;
         }

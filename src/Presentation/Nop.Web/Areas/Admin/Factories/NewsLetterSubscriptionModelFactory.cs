@@ -77,6 +77,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 Text = _localizationService.GetResource("Admin.Promotions.NewsLetterSubscriptions.List.SearchActive.NotActiveOnly")
             });
 
+            //prepare page parameters
+            model.SetGridPageSize();
+
             return model;
         }
 

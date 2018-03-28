@@ -53,6 +53,9 @@ namespace Nop.Web.Areas.Admin.Factories
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
 
+            //prepare page parameters
+            model.SetGridPageSize();
+
             return model;
         }
 
@@ -141,6 +144,9 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare available product types
             _baseAdminModelFactory.PrepareProductTypes(model.AvailableProductTypes);
+
+            //prepare page parameters
+            model.SetPopupGridPageSize();
 
             return model;
         }

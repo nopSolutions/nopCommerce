@@ -488,14 +488,14 @@ namespace Nop.Web.Areas.Admin.Controllers
         #region Products
 
         [HttpPost]
-        public virtual IActionResult ProductList(ManufacturerProductSearchModel searchModel, int manufacturerId)
+        public virtual IActionResult ProductList(ManufacturerProductSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
                 return AccessDeniedKendoGridJson();
 
             //try to get a manufacturer with the specified id
-            var manufacturer = _manufacturerService.GetManufacturerById(manufacturerId)
-                ?? throw new ArgumentException("No manufacturer found with the specified id", nameof(manufacturerId));
+            var manufacturer = _manufacturerService.GetManufacturerById(searchModel.ManufacturerId)
+                ?? throw new ArgumentException("No manufacturer found with the specified id");
 
             //prepare model
             var model = _manufacturerModelFactory.PrepareManufacturerProductListModel(searchModel, manufacturer);

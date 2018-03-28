@@ -1,12 +1,9 @@
 ﻿@model NewsletterSubscriptionSearchModel
 
 @using Nop.Services.Stores
-@inject AdminAreaSettings adminAreaSettings
 @inject IStoreService storeService
 
 @{
-    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
-    var gridPageSizes = adminAreaSettings.GridPageSizes;
     var stores = storeService.GetAllStores();
 
     //page title
@@ -115,7 +112,18 @@
                                                 url: "@Html.Raw(Url.Action("SubscriptionList", "NewsLetterSubscription"))",
                                                 type: "POST",
                                                 dataType: "json",
-                                                data: additionalData
+                                                data: function() {
+                                                    var data = {
+                                                        StartDate: $('#@Html.IdFor(model => model.StartDate)').val(),
+                                                        EndDate: $('#@Html.IdFor(model => model.EndDate)').val(),
+                                                        ActiveId: $('#@Html.IdFor(model => model.ActiveId)').val(),
+                                                        StoreId: $('#@Html.IdFor(model => model.StoreId)').val(),
+                                                        CustomerRoleId: $('#@Html.IdFor(model => model.CustomerRoleId)').val(),
+                                                        SearchEmail: $('#@Html.IdFor(model => model.SearchEmail)').val()
+                                                    };
+                                                    addAntiForgeryToken(data);
+                                                    return data;
+                                                }
                                             },
                                             update: {
                                                 url: "@Html.Raw(Url.Action("SubscriptionUpdate", "NewsLetterSubscription"))",
@@ -154,14 +162,14 @@
                                             // Cancel the changes
                                             this.cancelChanges();
                                         },
-                                        pageSize: @(defaultGridPageSize),
+                                        pageSize: @(Model.PageSize),
                                         serverPaging: true,
                                         serverFiltering: true,
                                         serverSorting: true
                                     },
                                     pageable: {
                                         refresh: true,
-                                        pageSizes: [@(gridPageSizes)],
+                                        pageSizes: [@(Model.AvailablePageSizes)],
                                         @await Html.PartialAsync("_GridPagerMessages")
                                     },
                                     editable: {
@@ -229,19 +237,6 @@
                                     }
                                 });
                             });
-
-                            function additionalData() {
-                                var data = {
-                                    StartDate: $('#@Html.IdFor(model => model.StartDate)').val(),
-                                    EndDate: $('#@Html.IdFor(model => model.EndDate)').val(),
-                                    ActiveId: $('#@Html.IdFor(model => model.ActiveId)').val(),
-                                    StoreId: $('#@Html.IdFor(model => model.StoreId)').val(),
-                                    CustomerRoleId: $('#@Html.IdFor(model => model.CustomerRoleId)').val(),
-                                    SearchEmail: $('#@Html.IdFor(model => model.SearchEmail)').val()
-                                };
-                                addAntiForgeryToken(data);
-                                return data;
-                            }
                         </script>
                     </div>
                 </div>

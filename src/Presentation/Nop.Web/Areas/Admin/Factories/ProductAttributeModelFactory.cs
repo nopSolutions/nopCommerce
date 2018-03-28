@@ -48,6 +48,9 @@ namespace Nop.Web.Areas.Admin.Factories
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
 
+            //prepare page parameters
+            model.SetGridPageSize();
+
             return model;
         }
 
@@ -123,6 +126,14 @@ namespace Nop.Web.Areas.Admin.Factories
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
+
+            if (productAttribute == null)
+                throw new ArgumentNullException(nameof(productAttribute));
+
+            model.ProductAttributeId = productAttribute.Id;
+
+            //prepare page parameters
+            model.SetGridPageSize();
 
             return model;
         }
@@ -231,6 +242,14 @@ namespace Nop.Web.Areas.Admin.Factories
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
+
+            if (productAttribute == null)
+                throw new ArgumentNullException(nameof(productAttribute));
+
+            model.ProductAttributeId = productAttribute.Id;
+
+            //prepare page parameters
+            model.SetGridPageSize();
 
             return model;
         }

@@ -1,11 +1,6 @@
 @model LogSearchModel
 
-@inject AdminAreaSettings adminAreaSettings
-
 @{
-    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
-    var gridPageSizes = adminAreaSettings.GridPageSizes;
-
     //page title
     ViewBag.Title = T("Admin.System.Log").Text;
     //active menu item (system name)
@@ -98,7 +93,16 @@
                                                 url: "@Html.Raw(Url.Action("LogList", "Log"))",
                                                 type: "POST",
                                                 dataType: "json",
-                                                data: additionalData
+                                                data: function() {
+                                                    var data = {
+                                                        CreatedOnFrom: $('#@Html.IdFor(model => model.CreatedOnFrom)').val(),
+                                                        CreatedOnTo: $('#@Html.IdFor(model => model.CreatedOnTo)').val(),
+                                                        Message: $('#@Html.IdFor(model => model.Message)').val(),
+                                                        LogLevelId: $('#@Html.IdFor(model => model.LogLevelId)').val()
+                                                    };
+                                                    addAntiForgeryToken(data);
+                                                    return data;
+                                                }
                                             }
                                         },
                                         schema: {
@@ -111,14 +115,14 @@
                                             // Cancel the changes
                                             this.cancelChanges();
                                         },
-                                        pageSize: @(defaultGridPageSize),
+                                        pageSize: @(Model.PageSize),
                                         serverPaging: true,
                                         serverFiltering: true,
                                         serverSorting: true
                                     },
                                     pageable: {
                                         refresh: true,
-                                        pageSizes: [@(gridPageSizes)],
+                                        pageSizes: [@(Model.AvailablePageSizes)],
                                         @await Html.PartialAsync("_GridPagerMessages")
                                     },
                                     scrollable: false,
@@ -234,17 +238,6 @@
                                     updateMasterCheckbox();
                                 });
                             });
-
-                            function additionalData() {
-                                var data = {
-                                    CreatedOnFrom: $('#@Html.IdFor(model => model.CreatedOnFrom)').val(),
-                                    CreatedOnTo: $('#@Html.IdFor(model => model.CreatedOnTo)').val(),
-                                    Message: $('#@Html.IdFor(model => model.Message)').val(),
-                                    LogLevelId: $('#@Html.IdFor(model => model.LogLevelId)').val()
-                                };
-                                addAntiForgeryToken(data);
-                                return data;
-                            }
 
                             function onDataBound(e) {
                                 $('#log-grid input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]').each(function() {

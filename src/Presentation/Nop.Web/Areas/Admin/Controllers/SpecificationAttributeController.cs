@@ -233,14 +233,14 @@ namespace Nop.Web.Areas.Admin.Controllers
         #region Specification attribute options
 
         [HttpPost]
-        public virtual IActionResult OptionList(SpecificationAttributeOptionSearchModel searchModel, int specificationAttributeId)
+        public virtual IActionResult OptionList(SpecificationAttributeOptionSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedKendoGridJson();
 
             //try to get a specification attribute with the specified id
-            var specificationAttribute = _specificationAttributeService.GetSpecificationAttributeById(specificationAttributeId)
-                ?? throw new ArgumentException("No specification attribute found with the specified id", nameof(specificationAttributeId));
+            var specificationAttribute = _specificationAttributeService.GetSpecificationAttributeById(searchModel.SpecificationAttributeId)
+                ?? throw new ArgumentException("No specification attribute found with the specified id");
 
             //prepare model
             var model = _specificationAttributeModelFactory.PrepareSpecificationAttributeOptionListModel(searchModel, specificationAttribute);
@@ -401,14 +401,14 @@ namespace Nop.Web.Areas.Admin.Controllers
         #region Mapped products
 
         [HttpPost]
-        public virtual IActionResult UsedByProducts(SpecificationAttributeProductSearchModel searchModel, int specificationAttributeId)
+        public virtual IActionResult UsedByProducts(SpecificationAttributeProductSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedKendoGridJson();
 
             //try to get a specification attribute with the specified id
-            var specificationAttribute = _specificationAttributeService.GetSpecificationAttributeById(specificationAttributeId)
-                ?? throw new ArgumentException("No specification attribute found with the specified id", nameof(specificationAttributeId));
+            var specificationAttribute = _specificationAttributeService.GetSpecificationAttributeById(searchModel.SpecificationAttributeId)
+                ?? throw new ArgumentException("No specification attribute found with the specified id");
 
             //prepare model
             var model = _specificationAttributeModelFactory.PrepareSpecificationAttributeProductListModel(searchModel, specificationAttribute);

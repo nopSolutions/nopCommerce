@@ -68,6 +68,9 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare available stores
             _baseAdminModelFactory.PrepareStores(model.AvailableStores);
 
+            //prepare page parameters
+            model.SetGridPageSize();
+
             return model;
         }
 
@@ -173,6 +176,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 Text = _localizationService.GetResource("Admin.ContentManagement.Blog.Comments.List.SearchApproved.DisapprovedOnly"),
                 Value = "2"
             });
+
+            //prepare page parameters
+            model.SetGridPageSize();
 
             return model;
         }

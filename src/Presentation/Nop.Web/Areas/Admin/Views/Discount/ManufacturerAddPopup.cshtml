@@ -1,11 +1,8 @@
 ﻿@model AddManufacturerToDiscountSearchModel
-@inject AdminAreaSettings adminAreaSetting
 
 @{
     Layout = "_AdminPopupLayout";
-
-    var popupGridPageSize = adminAreaSetting.PopupGridPageSize;
-
+    
     //page title
     ViewBag.Title = T("Admin.Promotions.Discounts.AppliedToManufacturers.AddNew").Text;
 }
@@ -74,7 +71,13 @@
                                                 url: "@Html.Raw(Url.Action("ManufacturerAddPopupList", "Discount"))",
                                                 type: "POST",
                                                 dataType: "json",
-                                                data: additionalData
+                                                data: function() {
+                                                    var data = {
+                                                        SearchManufacturerName: $('#@Html.IdFor(model => model.SearchManufacturerName)').val()
+                                                    };
+                                                    addAntiForgeryToken(data);
+                                                    return data;
+                                                }
                                             }
                                         },
                                         schema: {
@@ -87,13 +90,14 @@
                                             // Cancel the changes
                                             this.cancelChanges();
                                         },
-                                        pageSize: @(popupGridPageSize),
+                                        pageSize: @(Model.PageSize),
                                         serverPaging: true,
                                         serverFiltering: true,
                                         serverSorting: true
                                     },
                                     pageable: {
                                         refresh: true,
+                                        pageSizes: [@(Model.AvailablePageSizes)],
                                         @await Html.PartialAsync("_GridPagerMessages")
                                     },
                                     editable: {
@@ -150,14 +154,6 @@
                                     updateMasterCheckbox();
                                 });
                             });
-
-                            function additionalData() {
-                                var data = {
-                                    SearchManufacturerName: $('#@Html.IdFor(model => model.SearchManufacturerName)').val()
-                                };
-                                addAntiForgeryToken(data);
-                                return data;
-                            }
 
                             function updateMasterCheckbox() {
                                 var numChkBoxes = $('#manufacturers-grid input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]').length;

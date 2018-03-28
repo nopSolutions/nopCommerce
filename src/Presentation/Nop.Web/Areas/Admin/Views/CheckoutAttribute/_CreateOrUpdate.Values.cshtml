@@ -5,9 +5,7 @@
     <div class="panel panel-default">
         @if (Model.Id > 0)
         {
-            /*TODO display the following warning if values are not supported by selected attribute control type
-            'Values are not required for this attribute control type'
-            */
+            /*TODO display the following warning if values are not supported by selected attribute control type - 'Values are not required for this attribute control type' */
             <div class="panel-body">
                 <div id="checkoutattributevalues-grid"></div>
 
@@ -18,10 +16,16 @@
                                 type: "json",
                                 transport: {
                                     read: {
-                                        url: "@Html.Raw(Url.Action("ValueList", "CheckoutAttribute", new { checkoutAttributeId = Model.Id }))",
+                                        url: "@Html.Raw(Url.Action("ValueList", "CheckoutAttribute"))",
                                         type: "POST",
                                         dataType: "json",
-                                        data: addAntiForgeryToken
+                                        data: function() {
+                                            var data = {
+                                                CheckoutAttributeId: '@(Model.Id)'
+                                            };
+                                            addAntiForgeryToken(data);
+                                            return data;
+                                        }
                                     },
                                     destroy: {
                                         url: "@Html.Raw(Url.Action("ValueDelete", "CheckoutAttribute"))",
@@ -43,15 +47,14 @@
                                     // Cancel the changes
                                     this.cancelChanges();
                                 },
+                                pageSize: @(Model.CheckoutAttributeValueSearchModel.PageSize),
                                 serverPaging: true,
                                 serverFiltering: true,
                                 serverSorting: true
                             },
                             pageable: {
                                 refresh: true,
-                                numeric: false,
-                                previousNext: false,
-                                info: false,
+                                pageSizes: [@(Model.CheckoutAttributeValueSearchModel.AvailablePageSizes)],
                                 @await Html.PartialAsync("_GridPagerMessages")
                             },
                             editable: {
@@ -101,7 +104,7 @@
             </div>
             <div class="panel-footer">
                 <button type="submit" id="btnAddNewValue"
-                        onclick="javascript:OpenWindow('@(Url.Action("ValueCreatePopup", "CheckoutAttribute", new {checkoutAttributeId = Model.Id, btnId = "btnRefresh", formId = "checkoutattribute-form"}))', 800, 500, true); return false;"
+                        onclick="javascript:OpenWindow('@(Url.Action("ValueCreatePopup", "CheckoutAttribute", new { checkoutAttributeId = Model.Id, btnId = "btnRefresh", formId = "checkoutattribute-form" }))', 800, 500, true); return false;"
                         class="btn btn-primary">
                     @T("Admin.Catalog.Attributes.CheckoutAttributes.Values.AddNew")
                 </button>

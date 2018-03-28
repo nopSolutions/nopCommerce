@@ -144,14 +144,14 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual IActionResult HistoryList(RecurringPaymentHistorySearchModel searchModel, int recurringPaymentId)
+        public virtual IActionResult HistoryList(RecurringPaymentHistorySearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageRecurringPayments))
                 return AccessDeniedKendoGridJson();
 
             //try to get a recurring payment with the specified id
-            var payment = _orderService.GetRecurringPaymentById(recurringPaymentId)
-                ?? throw new ArgumentException("No recurring payment found with the specified id", nameof(recurringPaymentId));
+            var payment = _orderService.GetRecurringPaymentById(searchModel.RecurringPaymentId)
+                ?? throw new ArgumentException("No recurring payment found with the specified id");
 
             //prepare model
             var model = _recurringPaymentModelFactory.PrepareRecurringPaymentHistoryListModel(searchModel, payment);

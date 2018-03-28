@@ -7,5 +7,10 @@ namespace Nop.Web.Areas.Admin.Models.Orders
     /// </summary>
     public partial class RecurringPaymentHistorySearchModel : BaseSearchModel
     {
+        #region Properties
+
+        public int RecurringPaymentId { get; set; }
+
+        #endregion
     }
 }

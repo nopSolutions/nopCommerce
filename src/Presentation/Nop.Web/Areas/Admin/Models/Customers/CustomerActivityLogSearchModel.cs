@@ -7,5 +7,10 @@ namespace Nop.Web.Areas.Admin.Models.Customers
     /// </summary>
     public partial class CustomerActivityLogSearchModel : BaseSearchModel
     {
+        #region Properties
+
+        public int CustomerId { get; set; }
+
+        #endregion
     }
 }

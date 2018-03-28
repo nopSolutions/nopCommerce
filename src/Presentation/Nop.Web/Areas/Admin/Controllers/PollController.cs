@@ -228,14 +228,14 @@ namespace Nop.Web.Areas.Admin.Controllers
         #region Poll answer
 
         [HttpPost]
-        public virtual IActionResult PollAnswers(PollAnswerSearchModel searchModel, int pollId)
+        public virtual IActionResult PollAnswers(PollAnswerSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
                 return AccessDeniedKendoGridJson();
 
             //try to get a poll with the specified id
-            var poll = _pollService.GetPollById(pollId)
-                ?? throw new ArgumentException("No poll found with the specified id", nameof(pollId));
+            var poll = _pollService.GetPollById(searchModel.PollId)
+                ?? throw new ArgumentException("No poll found with the specified id");
 
             //prepare model
             var model = _pollModelFactory.PreparePollAnswerListModel(searchModel, poll);

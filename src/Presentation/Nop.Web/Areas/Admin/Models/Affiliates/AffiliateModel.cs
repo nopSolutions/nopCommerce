@@ -14,8 +14,8 @@ namespace Nop.Web.Areas.Admin.Models.Affiliates
         public AffiliateModel()
         {
             Address = new AddressModel();
-            AffiliatedOrderSearch= new AffiliatedOrderSearchModel();
-            AffiliatedCustomerSearch = new AffiliatedCustomerSearchModel();
+            AffiliatedOrderSearchModel= new AffiliatedOrderSearchModel();
+            AffiliatedCustomerSearchModel = new AffiliatedCustomerSearchModel();
         }
 
         #endregion
@@ -36,9 +36,9 @@ namespace Nop.Web.Areas.Admin.Models.Affiliates
 
         public AddressModel Address { get; set; }
 
-        public AffiliatedOrderSearchModel AffiliatedOrderSearch { get; set; }
+        public AffiliatedOrderSearchModel AffiliatedOrderSearchModel { get; set; }
 
-        public AffiliatedCustomerSearchModel AffiliatedCustomerSearch { get; set; }
+        public AffiliatedCustomerSearchModel AffiliatedCustomerSearchModel { get; set; }
 
         #endregion
     }

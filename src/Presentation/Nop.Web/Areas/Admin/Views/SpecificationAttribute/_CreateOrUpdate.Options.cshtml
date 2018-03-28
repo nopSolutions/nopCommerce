@@ -15,10 +15,16 @@
                                 type: "json",
                                 transport: {
                                     read: {
-                                        url: "@Html.Raw(Url.Action("OptionList", "SpecificationAttribute", new {specificationAttributeId = Model.Id}))",
+                                        url: "@Html.Raw(Url.Action("OptionList", "SpecificationAttribute"))",
                                         type: "POST",
                                         dataType: "json",
-                                        data: addAntiForgeryToken
+                                        data: function() {
+                                            var data = {
+                                                SpecificationAttributeId: '@(Model.Id)'
+                                            };
+                                            addAntiForgeryToken(data);
+                                            return data;
+                                        }
                                     },
                                     destroy: {
                                         url: "@Html.Raw(Url.Action("OptionDelete", "SpecificationAttribute"))",
@@ -46,15 +52,14 @@
                                     // Cancel the changes
                                     this.cancelChanges();
                                 },
+                                pageSize: @(Model.SpecificationAttributeOptionSearchModel.PageSize),
                                 serverPaging: true,
                                 serverFiltering: true,
                                 serverSorting: true
                             },
                             pageable: {
                                 refresh: true,
-                                numeric: false,
-                                previousNext: false,
-                                info: false,
+                                pageSizes: [@(Model.SpecificationAttributeOptionSearchModel.AvailablePageSizes)],
                                 @await Html.PartialAsync("_GridPagerMessages")
                             },
                             editable: {
@@ -95,7 +100,7 @@
                 </script>
             </div>
             <div class="panel-footer">
-                <button type="submit" id="btnAddNewOption" onclick="javascript:OpenWindow('@(Url.Action("OptionCreatePopup", "SpecificationAttribute", new {specificationAttributeId = Model.Id, btnId = "btnRefresh", formId = "specificationattribute-form"}))', 800, 400, true); return false;" class="btn btn-primary">
+                <button type="submit" id="btnAddNewOption" onclick="javascript:OpenWindow('@(Url.Action("OptionCreatePopup", "SpecificationAttribute", new { specificationAttributeId = Model.Id, btnId = "btnRefresh", formId = "specificationattribute-form" }))', 800, 400, true); return false;" class="btn btn-primary">
                     @T("Admin.Catalog.Attributes.SpecificationAttributes.Options.AddNew")
                 </button>
                 <input type="submit" id="btnRefresh" style="display: none" />

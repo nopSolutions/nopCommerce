@@ -1,13 +1,9 @@
 ﻿@model ProductReviewSearchModel
 
 @using Nop.Services.Stores
-
-@inject AdminAreaSettings adminAreaSettings
 @inject IStoreService storeService
 
 @{
-    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
-    var gridPageSizes = adminAreaSettings.GridPageSizes;
     var stores = storeService.GetAllStores();
 
     //page title
@@ -153,7 +149,18 @@
                                             url: "@Html.Raw(Url.Action("List", "ProductReview"))",
                                             type: "POST",
                                             dataType: "json",
-                                            data: additionalData
+                                            data: function() {
+                                                var data = {
+                                                    CreatedOnFrom: $('#@Html.IdFor(model => model.CreatedOnFrom)').val(),
+                                                    CreatedOnTo: $('#@Html.IdFor(model => model.CreatedOnTo)').val(),
+                                                    SearchText: $('#@Html.IdFor(model => model.SearchText)').val(),
+                                                    SearchStoreId: $('#@Html.IdFor(model => model.SearchStoreId)').val(),
+                                                    SearchProductId: $('#@Html.IdFor(model => model.SearchProductId)').val(),
+                                                    SearchApprovedId: $('#SearchApprovedId').val()
+                                                };
+                                                addAntiForgeryToken(data);
+                                                return data;
+                                            }
                                         }
                                     },
                                     schema: {
@@ -166,14 +173,14 @@
                                         // Cancel the changes
                                         this.cancelChanges();
                                     },
-                                    pageSize: @(defaultGridPageSize),
+                                    pageSize: @(Model.PageSize),
                                     serverPaging: true,
                                     serverFiltering: true,
                                     serverSorting: true
                                 },
                                 pageable: {
                                     refresh: true,
-                                    pageSizes: [@(gridPageSizes)],
+                                    pageSizes: [@(Model.AvailablePageSizes)],
                                     @await Html.PartialAsync("_GridPagerMessages")
                                 },
                                 scrollable: false,
@@ -371,19 +378,6 @@
                                 updateMasterCheckbox();
                             });
                         });
-
-                        function additionalData() {
-                            var data = {
-                                CreatedOnFrom: $('#@Html.IdFor(model => model.CreatedOnFrom)').val(),
-                                CreatedOnTo: $('#@Html.IdFor(model => model.CreatedOnTo)').val(),
-                                SearchText: $('#@Html.IdFor(model => model.SearchText)').val(),
-                                SearchStoreId: $('#@Html.IdFor(model => model.SearchStoreId)').val(),
-                                SearchProductId: $('#@Html.IdFor(model => model.SearchProductId)').val(),
-                                SearchApprovedId: $('#SearchApprovedId').val()
-                            };
-                            addAntiForgeryToken(data);
-                            return data;
-                        }
 
                         function onDataBound(e) {
 

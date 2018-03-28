@@ -1,11 +1,6 @@
 @model QueuedEmailSearchModel
 
-@inject AdminAreaSettings adminAreaSettings
-
 @{
-    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
-    var gridPageSizes = adminAreaSettings.GridPageSizes;
-
     //page title
     ViewBag.Title = T("Admin.System.QueuedEmails").Text;
     //active menu item (system name)
@@ -128,7 +123,18 @@
                                                 url: "@Html.Raw(Url.Action("QueuedEmailList", "QueuedEmail"))",
                                                 type: "POST",
                                                 dataType: "json",
-                                                data: additionalData
+                                                data: function() {
+                                                    var data = {
+                                                        SearchStartDate: $('#@Html.IdFor(model => model.SearchStartDate)').val(),
+                                                        SearchEndDate: $('#@Html.IdFor(model => model.SearchEndDate)').val(),
+                                                        SearchFromEmail: $('#@Html.IdFor(model => model.SearchFromEmail)').val(),
+                                                        SearchToEmail: $('#@Html.IdFor(model => model.SearchToEmail)').val(),
+                                                        SearchLoadNotSent: $('#@Html.IdFor(model => model.SearchLoadNotSent)').is(':checked'),
+                                                        SearchMaxSentTries: $('#@Html.IdFor(model => model.SearchMaxSentTries)').val()
+                                                    };
+                                                    addAntiForgeryToken(data);
+                                                    return data;
+                                                }
                                             }
                                         },
                                         schema: {
@@ -141,14 +147,14 @@
                                             // Cancel the changes
                                             this.cancelChanges();
                                         },
-                                        pageSize: @(defaultGridPageSize),
+                                        pageSize: @(Model.PageSize),
                                         serverPaging: true,
                                         serverFiltering: true,
                                         serverSorting: true
                                     },
                                     pageable: {
                                         refresh: true,
-                                        pageSizes: [@(gridPageSizes)],
+                                        pageSizes: [@(Model.AvailablePageSizes)],
                                         @await Html.PartialAsync("_GridPagerMessages")
                                     },
                                     scrollable: false,
@@ -296,19 +302,6 @@
                                     updateMasterCheckbox();
                                 });
                             });
-
-                            function additionalData() {
-                                var data = {
-                                    SearchStartDate: $('#@Html.IdFor(model => model.SearchStartDate)').val(),
-                                    SearchEndDate: $('#@Html.IdFor(model => model.SearchEndDate)').val(),
-                                    SearchFromEmail: $('#@Html.IdFor(model => model.SearchFromEmail)').val(),
-                                    SearchToEmail: $('#@Html.IdFor(model => model.SearchToEmail)').val(),
-                                    SearchLoadNotSent: $('#@Html.IdFor(model => model.SearchLoadNotSent)').is(':checked'),
-                                    SearchMaxSentTries: $('#@Html.IdFor(model => model.SearchMaxSentTries)').val()
-                                };
-                                addAntiForgeryToken(data);
-                                return data;
-                            }
 
                             function onDataBound(e) {
 

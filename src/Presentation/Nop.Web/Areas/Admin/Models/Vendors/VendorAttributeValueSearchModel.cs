@@ -7,5 +7,10 @@ namespace Nop.Web.Areas.Admin.Models.Vendors
     /// </summary>
     public partial class VendorAttributeValueSearchModel : BaseSearchModel
     {
+        #region Properties
+
+        public int VendorAttributeId { get; set; }
+
+        #endregion
     }
 }

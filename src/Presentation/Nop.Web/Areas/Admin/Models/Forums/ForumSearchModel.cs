@@ -7,5 +7,10 @@ namespace Nop.Web.Areas.Admin.Models.Forums
     /// </summary>
     public partial class ForumSearchModel : BaseSearchModel
     {
+        #region Properties
+
+        public int ForumGroupId { get; set; }
+
+        #endregion
     }
 }

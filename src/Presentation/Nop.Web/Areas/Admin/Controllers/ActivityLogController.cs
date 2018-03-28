@@ -20,7 +20,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly ILocalizationService _localizationService;
         private readonly IPermissionService _permissionService;
 
-        #endregion Fields
+        #endregion
 
         #region Ctor
 

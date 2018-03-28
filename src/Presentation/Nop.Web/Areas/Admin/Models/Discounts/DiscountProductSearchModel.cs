@@ -7,5 +7,10 @@ namespace Nop.Web.Areas.Admin.Models.Discounts
     /// </summary>
     public partial class DiscountProductSearchModel : BaseSearchModel
     {
+        #region Properties
+
+        public int DiscountId { get; set; }
+
+        #endregion
     }
 }

@@ -69,14 +69,14 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual IActionResult ForumList(ForumSearchModel searchModel, int forumGroupId)
+        public virtual IActionResult ForumList(ForumSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageForums))
                 return AccessDeniedKendoGridJson();
 
             //try to get a forum group with the specified id
-            var forumGroup = _forumService.GetForumGroupById(forumGroupId)
-                ?? throw new ArgumentException("No forum group found with the specified id", nameof(forumGroupId));
+            var forumGroup = _forumService.GetForumGroupById(searchModel.ForumGroupId)
+                ?? throw new ArgumentException("No forum group found with the specified id");
 
             //prepare model
             var model = _forumModelFactory.PrepareForumListModel(searchModel, forumGroup);

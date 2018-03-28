@@ -1,4 +1,4 @@
-﻿@model MeasureDimensionSearchModel
+﻿@model MeasureSearchModel
 
 <div id="measuredimension-grid"></div>
 
@@ -59,15 +59,14 @@
                     // Cancel the changes
                     this.cancelChanges();
                 },
+                pageSize: @(Model.MeasureDimensionSearchModel.PageSize),
                 serverPaging: true,
                 serverFiltering: true,
                 serverSorting: true
             },
             pageable: {
                 refresh: true,
-                numeric: false,
-                previousNext: false,
-                info: false,
+                pageSizes: [@(Model.MeasureDimensionSearchModel.AvailablePageSizes)],
                 @await Html.PartialAsync("_GridPagerMessages")
             },
             toolbar: [{ name: "create", text: "@T("Admin.Common.AddNewRecord")" }],

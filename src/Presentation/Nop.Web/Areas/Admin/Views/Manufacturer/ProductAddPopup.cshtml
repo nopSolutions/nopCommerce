@@ -1,11 +1,7 @@
 ﻿@model AddProductToManufacturerSearchModel
 
-@inject AdminAreaSettings adminAreaSettings
-
 @{
     Layout = "_AdminPopupLayout";
-
-    var popupGridPageSize = adminAreaSettings.PopupGridPageSize;
 
     //page title
     ViewBag.Title = T("Admin.Catalog.Manufacturers.Products.AddNew").Text;
@@ -117,7 +113,18 @@
                                                 url: "@Html.Raw(Url.Action("ProductAddPopupList", "Manufacturer"))",
                                                 type: "POST",
                                                 dataType: "json",
-                                                data: additionalData
+                                                data: function() {
+                                                    var data = {
+                                                        SearchProductName: $('#@Html.IdFor(model => model.SearchProductName)').val(),
+                                                        SearchCategoryId: $('#SearchCategoryId').val(),
+                                                        SearchManufacturerId: $('#SearchManufacturerId').val(),
+                                                        SearchStoreId: $('#SearchStoreId').val(),
+                                                        SearchVendorId: $('#SearchVendorId').val(),
+                                                        SearchProductTypeId: $('#SearchProductTypeId').val()
+                                                    };
+                                                    addAntiForgeryToken(data);
+                                                    return data;
+                                                }
                                             }
                                         },
                                         schema: {
@@ -130,13 +137,14 @@
                                             // Cancel the changes
                                             this.cancelChanges();
                                         },
-                                        pageSize: @(popupGridPageSize),
+                                        pageSize: @(Model.PageSize),
                                         serverPaging: true,
                                         serverFiltering: true,
                                         serverSorting: true
                                     },
                                     pageable: {
                                         refresh: true,
+                                        pageSizes: [@(Model.AvailablePageSizes)],
                                         @await Html.PartialAsync("_GridPagerMessages")
                                     },
                                     editable: {
@@ -194,19 +202,6 @@
                                     updateMasterCheckbox();
                                 });
                             });
-
-                            function additionalData() {
-                                var data = {
-                                    SearchProductName: $('#@Html.IdFor(model => model.SearchProductName)').val(),
-                                    SearchCategoryId: $('#SearchCategoryId').val(),
-                                    SearchManufacturerId: $('#SearchManufacturerId').val(),
-                                    SearchStoreId: $('#SearchStoreId').val(),
-                                    SearchVendorId: $('#SearchVendorId').val(),
-                                    SearchProductTypeId: $('#SearchProductTypeId').val()
-                                };
-                                addAntiForgeryToken(data);
-                                return data;
-                            }
 
                             function updateMasterCheckbox() {
                                 var numChkBoxes = $('#products-grid input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]').length;

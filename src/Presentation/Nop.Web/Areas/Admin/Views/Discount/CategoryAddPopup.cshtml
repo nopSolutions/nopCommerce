@@ -1,11 +1,8 @@
 ﻿@model AddCategoryToDiscountSearchModel
 
-@inject AdminAreaSettings adminAreaSettings
 @{
     Layout = "_AdminPopupLayout";
-
-    var popupGridPageSize = adminAreaSettings.PopupGridPageSize;
-
+    
     //page title
     ViewBag.Title = T("Admin.Promotions.Discounts.AppliedToCategories.AddNew").Text;
 }
@@ -71,7 +68,13 @@
                                                 url: "@Html.Raw(Url.Action("CategoryAddPopupList", "Discount"))",
                                                 type: "POST",
                                                 dataType: "json",
-                                                data: additionalData
+                                                data: function() {
+                                                    var data = {
+                                                        SearchCategoryName: $('#@Html.IdFor(model => model.SearchCategoryName)').val()
+                                                    };
+                                                    addAntiForgeryToken(data);
+                                                    return data;
+                                                }
                                             }
                                         },
                                         schema: {
@@ -84,13 +87,14 @@
                                             // Cancel the changes
                                             this.cancelChanges();
                                         },
-                                        pageSize: @(popupGridPageSize),
+                                        pageSize: @(Model.PageSize),
                                         serverPaging: true,
                                         serverFiltering: true,
                                         serverSorting: true
                                     },
                                     pageable: {
                                         refresh: true,
+                                        pageSizes: [@(Model.AvailablePageSizes)],
                                         @await Html.PartialAsync("_GridPagerMessages")
                                     },
                                     editable: {
@@ -147,14 +151,6 @@
                                     updateMasterCheckbox();
                                 });
                             });
-
-                            function additionalData() {
-                                var data = {
-                                    SearchCategoryName: $('#@Html.IdFor(model => model.SearchCategoryName)').val()
-                                };
-                                addAntiForgeryToken(data);
-                                return data;
-                            }
 
                             function updateMasterCheckbox() {
                                 var numChkBoxes = $('#categories-grid input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]').length;

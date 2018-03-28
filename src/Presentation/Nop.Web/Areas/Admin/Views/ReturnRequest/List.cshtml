@@ -1,11 +1,6 @@
 @model ReturnRequestSearchModel
 
-@inject AdminAreaSettings adminAreaSettings
-
 @{
-    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
-    var gridPageSizes = adminAreaSettings.GridPageSizes;
-
     //page title
     ViewBag.Title = T("Admin.ReturnRequests").Text;
     //active menu item (system name)
@@ -92,7 +87,16 @@
                                                     url: "@Html.Raw(Url.Action("List", "ReturnRequest"))",
                                                     type: "POST",
                                                     dataType: "json",
-                                                    data: additionalData
+                                                    data: function() {
+                                                        var data = {
+                                                            StartDate: $('#@Html.IdFor(model => model.StartDate)').val(),
+                                                            EndDate: $('#@Html.IdFor(model => model.EndDate)').val(),
+                                                            CustomNumber: $('#@Html.IdFor(model => model.CustomNumber)').val(),
+                                                            ReturnRequestStatusId: $('#@Html.IdFor(model => model.ReturnRequestStatusId)').val()
+                                                        };
+                                                        addAntiForgeryToken(data);
+                                                        return data;
+                                                    }
                                                 }
                                             },
                                             schema: {
@@ -105,14 +109,14 @@
                                                 // Cancel the changes
                                                 this.cancelChanges();
                                             },
-                                            pageSize: @(defaultGridPageSize),
+                                            pageSize: @(Model.PageSize),
                                             serverPaging: true,
                                             serverFiltering: true,
                                             serverSorting: true
                                         },
                                         pageable: {
                                             refresh: true,
-                                            pageSizes: [@(gridPageSizes)],
+                                            pageSizes: [@(Model.AvailablePageSizes)],
                                             @await Html.PartialAsync("_GridPagerMessages")
                                         },
                                         editable: {
@@ -183,18 +187,6 @@
                                     return false;
                                 });
                         });
-
-                        function additionalData() {
-                            var data = {
-                                StartDate: $('#@Html.IdFor(model => model.StartDate)').val(),
-                                EndDate: $('#@Html.IdFor(model => model.EndDate)').val(),
-                                CustomNumber: $('#@Html.IdFor(model => model.CustomNumber)').val(),
-                                ReturnRequestStatusId: $('#@Html.IdFor(model => model.ReturnRequestStatusId)')
-                                    .val()
-                            };
-                            addAntiForgeryToken(data);
-                            return data;
-                        }
                     </script>
                 </div>
             </div>

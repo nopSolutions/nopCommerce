@@ -153,6 +153,9 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare available groups
             _baseAdminModelFactory.PreparePluginGroups(model.AvailableGroups);
 
+            //prepare page parameters
+            model.SetGridPageSize();
+
             return model;
         }
 
@@ -299,6 +302,10 @@ namespace Nop.Web.Areas.Admin.Factories
                 Value = "20",
                 Text = _localizationService.GetResource("Admin.Configuration.Plugins.OfficialFeed.Price.Commercial")
             });
+
+            //prepare page parameters
+            model.PageSize = 15;
+            model.AvailablePageSizes = "15";
 
             return model;
         }

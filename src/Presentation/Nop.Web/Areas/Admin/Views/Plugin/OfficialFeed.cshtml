@@ -5,9 +5,6 @@
     ViewBag.Title = T("Admin.Configuration.Plugins.OfficialFeed").Text;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("All plugins and themes catalog");
-
-    //currently we support only 15 page size for this page
-    var defaultGridPageSize = 15;
 }
 
 <nop-antiforgery-token />
@@ -86,7 +83,16 @@
                                             url: "@Html.Raw(Url.Action("OfficialFeedSelect", "Plugin"))",
                                             type: "POST",
                                             dataType: "json",
-                                            data: additionalData
+                                            data: function() {
+                                                var data = {
+                                                    SearchName: $('#@Html.IdFor(model => model.SearchName)').val(),
+                                                    SearchVersionId: $('#SearchVersionId').val(),
+                                                    SearchCategoryId: $('#SearchCategoryId').val(),
+                                                    SearchPriceId: $('#SearchPriceId').val()
+                                                };
+                                                addAntiForgeryToken(data);
+                                                return data;
+                                            }
                                         }
                                     },
                                     schema: {
@@ -99,13 +105,14 @@
                                         // Cancel the changes
                                         this.cancelChanges();
                                     },
-                                    pageSize: @(defaultGridPageSize),
+                                    pageSize: @(Model.PageSize),
                                     serverPaging: true,
                                     serverFiltering: true,
                                     serverSorting: true
                                 },
                                 pageable: {
                                     refresh: true,
+                                    pageSizes: [@(Model.AvailablePageSizes)],
                                     @await Html.PartialAsync("_GridPagerMessages")
                                 },
                                 editable: {
@@ -186,18 +193,6 @@
                                 return false;
                             }
                         });
-
-                        function additionalData() {
-                            var data = {
-                                SearchName: $('#@Html.IdFor(model => model.SearchName)').val(),
-                                SearchVersionId: $('#SearchVersionId').val(),
-                                SearchCategoryId: $('#SearchCategoryId').val(),
-                                SearchPriceId: $('#SearchPriceId').val()
-                            };
-                            addAntiForgeryToken(data);
-                            return data;
-                        }
-
                     </script>
                 </div>
             </div>

@@ -1,12 +1,8 @@
 ﻿@model AddProductToDiscountSearchModel
 
-@inject AdminAreaSettings adminAreaSetting
-
 @{
     Layout = "_AdminPopupLayout";
-
-    var popupGridPageSize = adminAreaSetting.PopupGridPageSize;
-
+    
     //page title
     ViewBag.Title = T("Admin.Promotions.Discounts.AppliedToProducts.AddNew").Text;
 }
@@ -117,7 +113,18 @@
                                             url: "@Html.Raw(Url.Action("ProductAddPopupList", "Discount"))",
                                             type: "POST",
                                             dataType: "json",
-                                            data: additionalData
+                                            data: function() {
+                                                var data = {
+                                                    SearchProductName: $('#@Html.IdFor(model => model.SearchProductName)').val(),
+                                                    SearchCategoryId: $('#SearchCategoryId').val(),
+                                                    SearchManufacturerId: $('#SearchManufacturerId').val(),
+                                                    SearchStoreId: $('#SearchStoreId').val(),
+                                                    SearchVendorId: $('#SearchVendorId').val(),
+                                                    SearchProductTypeId: $('#SearchProductTypeId').val()
+                                                };
+                                                addAntiForgeryToken(data);
+                                                return data;
+                                            }
                                         }
                                     },
                                     schema: {
@@ -130,13 +137,14 @@
                                         // Cancel the changes
                                         this.cancelChanges();
                                     },
-                                    pageSize: @(popupGridPageSize),
+                                    pageSize: @(Model.PageSize),
                                     serverPaging: true,
                                     serverFiltering: true,
                                     serverSorting: true
                                 },
                                 pageable: {
                                     refresh: true,
+                                    pageSizes: [@(Model.AvailablePageSizes)],
                                     @await Html.PartialAsync("_GridPagerMessages")
                                 },
                                 editable: {
@@ -192,20 +200,7 @@
                             $('#products-grid').on('change', 'input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]', function(e) {
                                 updateMasterCheckbox();
                             });
-                        });
-
-                        function additionalData() {
-                            var data = {
-                                SearchProductName: $('#@Html.IdFor(model => model.SearchProductName)').val(),
-                                SearchCategoryId: $('#SearchCategoryId').val(),
-                                SearchManufacturerId: $('#SearchManufacturerId').val(),
-                                SearchStoreId: $('#SearchStoreId').val(),
-                                SearchVendorId: $('#SearchVendorId').val(),
-                                SearchProductTypeId: $('#SearchProductTypeId').val()
-                            };
-                            addAntiForgeryToken(data);
-                            return data;
-                        }
+                            });
 
                         function updateMasterCheckbox() {
                             var numChkBoxes = $('#products-grid input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]').length;

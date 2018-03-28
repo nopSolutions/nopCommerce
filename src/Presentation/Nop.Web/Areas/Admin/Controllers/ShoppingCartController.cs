@@ -61,14 +61,14 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual IActionResult GetCartDetails(ShoppingCartItemSearchModel searchModel, int customerId)
+        public virtual IActionResult GetCartDetails(ShoppingCartItemSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrentCarts))
                 return AccessDeniedKendoGridJson();
 
             //try to get a customer with the specified id
-            var customer = _customerService.GetCustomerById(customerId)
-                ?? throw new ArgumentException("No customer found with the specified id", nameof(customerId));
+            var customer = _customerService.GetCustomerById(searchModel.CustomerId)
+                ?? throw new ArgumentException("No customer found with the specified id");
 
             //prepare model
             var model = _shoppingCartModelFactory.PrepareShoppingCartItemListModel(searchModel, customer);

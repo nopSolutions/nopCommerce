@@ -229,14 +229,14 @@ namespace Nop.Web.Areas.Admin.Controllers
         #region Customer attribute values
 
         [HttpPost]
-        public virtual IActionResult ValueList(CustomerAttributeValueSearchModel searchModel, int customerAttributeId)
+        public virtual IActionResult ValueList(CustomerAttributeValueSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedKendoGridJson();
 
             //try to get a customer attribute with the specified id
-            var customerAttribute = _customerAttributeService.GetCustomerAttributeById(customerAttributeId)
-                ?? throw new ArgumentException("No customer attribute found with the specified id", nameof(customerAttributeId));
+            var customerAttribute = _customerAttributeService.GetCustomerAttributeById(searchModel.CustomerAttributeId)
+                ?? throw new ArgumentException("No customer attribute found with the specified id");
 
             //prepare model
             var model = _customerAttributeModelFactory.PrepareCustomerAttributeValueListModel(searchModel, customerAttribute);

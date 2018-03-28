@@ -54,6 +54,9 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare default search values
             model.SearchMaxSentTries = 10;
 
+            //prepare page parameters
+            model.SetGridPageSize();
+
             return model;
         }
 

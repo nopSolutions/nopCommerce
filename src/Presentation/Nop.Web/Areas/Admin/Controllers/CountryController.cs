@@ -339,14 +339,14 @@ namespace Nop.Web.Areas.Admin.Controllers
         #region States / provinces
 
         [HttpPost]
-        public virtual IActionResult States(StateProvinceSearchModel searchModel, int countryId)
+        public virtual IActionResult States(StateProvinceSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
                 return AccessDeniedKendoGridJson();
 
             //try to get a country with the specified id
-            var country = _countryService.GetCountryById(countryId)
-                ?? throw new ArgumentException("No country found with the specified id", nameof(countryId));
+            var country = _countryService.GetCountryById(searchModel.CountryId)
+                ?? throw new ArgumentException("No country found with the specified id");
 
             //prepare model
             var model = _countryModelFactory.PrepareStateProvinceListModel(searchModel, country);

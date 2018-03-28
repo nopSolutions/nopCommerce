@@ -114,6 +114,10 @@ namespace Nop.Web.Areas.Admin.Factories
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
 
+            //prepare page parameters
+            model.PageSize = 5;
+            model.AvailablePageSizes = "5";
+
             return model;
         }
 

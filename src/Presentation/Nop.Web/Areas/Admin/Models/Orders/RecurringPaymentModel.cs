@@ -57,7 +57,7 @@ namespace Nop.Web.Areas.Admin.Models.Orders
 
         [NopResourceDisplayName("Admin.RecurringPayments.Fields.PaymentType")]
         public string PaymentType { get; set; }
-        
+
         public bool CanCancelRecurringPayment { get; set; }
 
         public bool LastPaymentFailed { get; set; }

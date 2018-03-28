@@ -7,5 +7,10 @@ namespace Nop.Web.Areas.Admin.Models.Directory
     /// </summary>
     public partial class StateProvinceSearchModel : BaseSearchModel
     {
+        #region Properties
+
+        public int CountryId { get; set; }
+
+        #endregion
     }
 }

@@ -7,5 +7,10 @@ namespace Nop.Web.Areas.Admin.Models.Customers
     /// </summary>
     public partial class CustomerAttributeValueSearchModel : BaseSearchModel
     {
+        #region Properties
+
+        public int CustomerAttributeId { get; set; }
+
+        #endregion
     }
 }

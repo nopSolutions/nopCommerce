@@ -1,15 +1,10 @@
 ﻿@model SettingSearchModel
 
-@inject AdminAreaSettings adminAreaSettings
 @inject IStoreService storeService
-
 @using System.Text.Encodings.Web
 @using Nop.Services.Stores
 
 @{
-    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
-    var gridPageSizes = adminAreaSettings.GridPageSizes;
-
     //page title
     ViewBag.Title = T("Admin.Configuration.Settings.AllSettings").Text;
     //active menu item (system name)
@@ -78,7 +73,14 @@
                                             url: "@Html.Raw(Url.Action("AllSettings", "Setting"))",
                                             type: "POST",
                                             dataType: "json",
-                                            data: additionalData
+                                            data: function() {
+                                                var data = {
+                                                    SearchSettingName: $('#@Html.IdFor(model => model.SearchSettingName)').val(),
+                                                    SearchSettingValue: $('#@Html.IdFor(model => model.SearchSettingValue)').val()
+                                                };
+                                                addAntiForgeryToken(data);
+                                                return data;
+                                            }
                                         },
                                         create: {
                                             url: "@Html.Raw(Url.Action("SettingAdd", "Setting"))",
@@ -124,14 +126,14 @@
                                         // Cancel the changes
                                         this.cancelChanges();
                                     },
-                                    pageSize: @(defaultGridPageSize),
+                                    pageSize: @(Model.PageSize),
                                     serverPaging: true,
                                     serverFiltering: true,
                                     serverSorting: true
                                 },
                                 pageable: {
                                     refresh: true,
-                                    pageSizes: [@(gridPageSizes)],
+                                    pageSizes: [@(Model.AvailablePageSizes)],
                                     @await Html.PartialAsync("_GridPagerMessages")
                                 },
                                 toolbar: [{ name: "create", text: "@T("Admin.Common.AddNewRecord")" }],
@@ -213,15 +215,6 @@
                                 return false;
                             });
                         });
-
-                        function additionalData() {
-                            var data = {
-                                SearchSettingName: $('#@Html.IdFor(model => model.SearchSettingName)').val(),
-                                SearchSettingValue: $('#@Html.IdFor(model => model.SearchSettingValue)').val()
-                            };
-                            addAntiForgeryToken(data);
-                            return data;
-                        }
 
                         $("".concat("#@Html.IdFor(model => model.SearchSettingName),",
                             "#@Html.IdFor(model => model.SearchSettingValue)")).keydown(function(event) {

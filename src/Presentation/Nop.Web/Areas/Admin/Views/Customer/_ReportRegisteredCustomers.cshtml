@@ -1,4 +1,4 @@
-﻿@model RegisteredCustomersReportSearchModel
+﻿@model CustomerReportsSearchModel
 
 <div class="panel-group">
     <div class="panel panel-default">
@@ -27,15 +27,14 @@
                                 // Cancel the changes
                                 this.cancelChanges();
                             },
+                            pageSize: @(Model.RegisteredCustomers.PageSize),
                             serverPaging: true,
                             serverFiltering: true,
                             serverSorting: true
                         },
                         pageable: {
                             refresh: true,
-                            numeric: false,
-                            previousNext: false,
-                            info: false,
+                            pageSizes: [@(Model.RegisteredCustomers.AvailablePageSizes)],
                             @await Html.PartialAsync("_GridPagerMessages")
                         },
                         editable: {

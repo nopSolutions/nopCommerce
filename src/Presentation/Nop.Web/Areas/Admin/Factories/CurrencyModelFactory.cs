@@ -125,6 +125,10 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare exchange rate provider model
             PrepareExchangeRateProviderModel(model.ExchangeRateProviderModel, prepareExchangeRates);
 
+            //prepare page parameters
+            model.SetGridPageSize();
+            model.PageSize = 1000;
+
             return model;
         }
 

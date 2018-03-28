@@ -35,8 +35,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare locale resource search model
         /// </summary>
         /// <param name="model">Locale resource search model</param>
+        /// <param name="language">Language</param>
         /// <returns>Locale resource search model</returns>
-        LocaleResourceSearchModel PrepareLocaleResourceSearchModel(LocaleResourceSearchModel model);
+        LocaleResourceSearchModel PrepareLocaleResourceSearchModel(LocaleResourceSearchModel model, Language language);
 
         /// <summary>
         /// Prepare paged locale resource list model

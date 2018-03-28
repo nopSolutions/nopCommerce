@@ -349,14 +349,14 @@ namespace Nop.Web.Areas.Admin.Controllers
         #region Checkout attribute values
 
         [HttpPost]
-        public virtual IActionResult ValueList(CheckoutAttributeValueSearchModel searchModel, int checkoutAttributeId)
+        public virtual IActionResult ValueList(CheckoutAttributeValueSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedKendoGridJson();
 
             //try to get a checkout attribute with the specified id
-            var checkoutAttribute = _checkoutAttributeService.GetCheckoutAttributeById(checkoutAttributeId)
-                ?? throw new ArgumentException("No checkout attribute found with the specified id", nameof(checkoutAttributeId));
+            var checkoutAttribute = _checkoutAttributeService.GetCheckoutAttributeById(searchModel.CheckoutAttributeId)
+                ?? throw new ArgumentException("No checkout attribute found with the specified id");
 
             //prepare model
             var model = _checkoutAttributeModelFactory.PrepareCheckoutAttributeValueListModel(searchModel, checkoutAttribute);

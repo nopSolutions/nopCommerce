@@ -64,6 +64,9 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare available stores
             _baseAdminModelFactory.PrepareStores(model.AvailableStores);
 
+            //prepare page parameters
+            model.SetGridPageSize();
+
             return model;
         }
 

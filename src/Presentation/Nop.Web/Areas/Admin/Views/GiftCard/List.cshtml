@@ -1,11 +1,6 @@
 @model GiftCardSearchModel
 
-@inject AdminAreaSettings adminAreaSettings
-
 @{
-    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
-    var gridPageSizes = adminAreaSettings.GridPageSizes;
-
     //page title
     ViewBag.Title = T("Admin.GiftCards").Text;
     //active menu item (system name)
@@ -84,7 +79,15 @@
                                             url: "@Html.Raw(Url.Action("GiftCardList", "GiftCard"))",
                                             type: "POST",
                                             dataType: "json",
-                                            data: additionalData
+                                            data: function() {
+                                                var data = {
+                                                    ActivatedId: $('#@Html.IdFor(model => model.ActivatedId)').val(),
+                                                    CouponCode: $('#@Html.IdFor(model => model.CouponCode)').val(),
+                                                    RecipientName: $('#@Html.IdFor(model => model.RecipientName)').val()
+                                                };
+                                                addAntiForgeryToken(data);
+                                                return data;
+                                            }
                                         }
                                     },
                                     schema: {
@@ -97,14 +100,14 @@
                                         // Cancel the changes
                                         this.cancelChanges();
                                     },
-                                    pageSize: @(defaultGridPageSize),
+                                    pageSize: @(Model.PageSize),
                                     serverPaging: true,
                                     serverFiltering: true,
                                     serverSorting: true
                                 },
                                 pageable: {
                                     refresh: true,
-                                    pageSizes: [@(gridPageSizes)],
+                                    pageSizes: [@(Model.AvailablePageSizes)],
                                     @await Html.PartialAsync("_GridPagerMessages")
                                 },
                                 editable: {
@@ -143,7 +146,7 @@
                                     width: 100,
                                     headerAttributes: { style: "text-align:center" },
                                     attributes: { style: "text-align:center" },
-                                    template: '<a class="btn btn-default" href="Edit/#=Id#"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>'                                
+                                    template: '<a class="btn btn-default" href="Edit/#=Id#"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>'
                                 }]
                             });
                         });
@@ -165,16 +168,6 @@
                                 return false;
                             }
                         });
-
-                        function additionalData() {
-                            var data = {
-                                ActivatedId: $('#@Html.IdFor(model => model.ActivatedId)').val(),
-                                CouponCode: $('#@Html.IdFor(model => model.CouponCode)').val(),
-                                RecipientName: $('#@Html.IdFor(model => model.RecipientName)').val()
-                            };
-                            addAntiForgeryToken(data);
-                            return data;
-                        }
                     </script>
                 </div>
             </div>

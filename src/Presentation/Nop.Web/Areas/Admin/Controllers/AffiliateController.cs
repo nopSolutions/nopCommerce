@@ -236,14 +236,14 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual IActionResult AffiliatedCustomerList(AffiliatedCustomerSearchModel searchModel, int affiliateId)
+        public virtual IActionResult AffiliatedCustomerList(AffiliatedCustomerSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAffiliates))
                 return AccessDeniedKendoGridJson();
 
             //try to get an affiliate with the specified id
-            var affiliate = _affiliateService.GetAffiliateById(affiliateId)
-                ?? throw new ArgumentException("No affiliate found with the specified id", nameof(affiliateId));
+            var affiliate = _affiliateService.GetAffiliateById(searchModel.AffliateId)
+                ?? throw new ArgumentException("No affiliate found with the specified id");
 
             //prepare model
             var model = _affiliateModelFactory.PrepareAffiliatedCustomerListModel(searchModel, affiliate);

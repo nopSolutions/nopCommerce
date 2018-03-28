@@ -78,6 +78,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 Text = _localizationService.GetResource("Admin.GiftCards.List.Activated.DeactivatedOnly")
             });
 
+            //prepare page parameters
+            model.SetGridPageSize();
+
             return model;
         }
 
@@ -144,7 +147,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 model.PurchasedWithOrderNumber = giftCard.PurchasedWithOrderItem?.Order?.CustomOrderNumber;
 
                 //prepare nested search model
-                PrepareGiftCardUsageHistorySearchModel(model.GiftCardUsageHistorySearchModel);
+                PrepareGiftCardUsageHistorySearchModel(model.GiftCardUsageHistorySearchModel, giftCard);
             }
 
             model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId)?.CurrencyCode;
@@ -156,11 +159,21 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare gift card usage history search model
         /// </summary>
         /// <param name="model">Gift card usage history search model</param>
+        /// <param name="giftCard">Gift card</param>
         /// <returns>Gift card usage history search model</returns>
-        public virtual GiftCardUsageHistorySearchModel PrepareGiftCardUsageHistorySearchModel(GiftCardUsageHistorySearchModel model)
+        public virtual GiftCardUsageHistorySearchModel PrepareGiftCardUsageHistorySearchModel(GiftCardUsageHistorySearchModel model,
+            GiftCard giftCard)
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
+
+            if (giftCard == null)
+                throw new ArgumentNullException(nameof(giftCard));
+
+            model.GiftCardId = giftCard.Id;
+
+            //prepare page parameters
+            model.SetGridPageSize();
 
             return model;
         }

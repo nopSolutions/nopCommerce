@@ -46,8 +46,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare discount usage history search model
         /// </summary>
         /// <param name="model">Discount usage history search model</param>
+        /// <param name="discount">Discount</param>
         /// <returns>Discount usage history search model</returns>
-        DiscountUsageHistorySearchModel PrepareDiscountUsageHistorySearchModel(DiscountUsageHistorySearchModel model);
+        DiscountUsageHistorySearchModel PrepareDiscountUsageHistorySearchModel(DiscountUsageHistorySearchModel model, 
+            Discount discount);
 
         /// <summary>
         /// Prepare paged discount usage history list model

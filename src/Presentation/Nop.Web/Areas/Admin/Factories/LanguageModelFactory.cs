@@ -50,6 +50,9 @@ namespace Nop.Web.Areas.Admin.Factories
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
 
+            //prepare page parameters
+            model.SetGridPageSize();
+
             return model;
         }
 
@@ -92,7 +95,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 model = model ?? language.ToModel();
 
                 //prepare nested search model
-                PrepareLocaleResourceSearchModel(model.LocaleResourceSearchModel);
+                PrepareLocaleResourceSearchModel(model.LocaleResourceSearchModel, language);
             }
 
             //set default values for the new model
@@ -116,11 +119,20 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare locale resource search model
         /// </summary>
         /// <param name="model">Locale resource search model</param>
+        /// <param name="language">Language</param>
         /// <returns>Locale resource search model</returns>
-        public virtual LocaleResourceSearchModel PrepareLocaleResourceSearchModel(LocaleResourceSearchModel model)
+        public virtual LocaleResourceSearchModel PrepareLocaleResourceSearchModel(LocaleResourceSearchModel model, Language language)
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
+
+            if (language == null)
+                throw new ArgumentNullException(nameof(language));
+
+            model.LanguageId = language.Id;
+
+            //prepare page parameters
+            model.SetGridPageSize();
 
             return model;
         }

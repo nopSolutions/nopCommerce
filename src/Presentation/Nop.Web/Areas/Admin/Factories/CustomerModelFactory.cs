@@ -423,6 +423,9 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare available customer roles
             _aclSupportedModelFactory.PrepareModelCustomerRoles(model);
 
+            //prepare page parameters
+            model.SetGridPageSize();
+
             return model;
         }
 
@@ -582,7 +585,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 PrepareAssociatedExternalAuthModels(model.AssociatedExternalAuthRecords, customer);
 
                 //prepare nested search models
-                PrepareRewardPointsSearchModel(model.RewardPointsSearchModel, customer);
+                PrepareRewardPointsSearchModel(model.CustomerRewardPointsSearchModel, customer);
                 PrepareCustomerAddressSearchModel(model.CustomerAddressSearchModel, customer);
                 PrepareCustomerOrderSearchModel(model.CustomerOrderSearchModel, customer);
                 PrepareCustomerShoppingCartSearchModel(model.CustomerShoppingCartSearchModel, customer);
@@ -655,6 +658,14 @@ namespace Nop.Web.Areas.Admin.Factories
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
 
+            if (customer == null)
+                throw new ArgumentNullException(nameof(customer));
+
+            model.CustomerId = customer.Id;
+
+            //prepare page parameters
+            model.SetGridPageSize();
+
             return model;
         }
 
@@ -718,6 +729,14 @@ namespace Nop.Web.Areas.Admin.Factories
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
+
+            if (customer == null)
+                throw new ArgumentNullException(nameof(customer));
+
+            model.CustomerId = customer.Id;
+
+            //prepare page parameters
+            model.SetGridPageSize();
 
             return model;
         }
@@ -801,6 +820,14 @@ namespace Nop.Web.Areas.Admin.Factories
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
+
+            if (customer == null)
+                throw new ArgumentNullException(nameof(customer));
+
+            model.CustomerId = customer.Id;
+
+            //prepare page parameters
+            model.SetGridPageSize();
 
             return model;
         }
@@ -887,6 +914,9 @@ namespace Nop.Web.Areas.Admin.Factories
             _baseAdminModelFactory.PreparePaymentStatuses(model.AvailablePaymentStatuses);
             _baseAdminModelFactory.PrepareShippingStatuses(model.AvailableShippingStatuses);
 
+            //prepare page parameters
+            model.SetGridPageSize();
+
             return model;
         }
 
@@ -957,6 +987,9 @@ namespace Nop.Web.Areas.Admin.Factories
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
 
+            //prepare page parameters
+            model.SetGridPageSize();
+
             return model;
         }
 
@@ -1017,9 +1050,17 @@ namespace Nop.Web.Areas.Admin.Factories
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
 
+            if (customer == null)
+                throw new ArgumentNullException(nameof(customer));
+
+            model.CustomerId = customer.Id;
+
             //prepare available shopping cart types (search shopping cart by default)
             model.ShoppingCartTypeId = (int)ShoppingCartType.ShoppingCart;
             _baseAdminModelFactory.PrepareShoppingCartTypes(model.AvailableShoppingCartTypes, false);
+
+            //prepare page parameters
+            model.SetGridPageSize();
 
             return model;
         }
@@ -1086,6 +1127,14 @@ namespace Nop.Web.Areas.Admin.Factories
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
 
+            if (customer == null)
+                throw new ArgumentNullException(nameof(customer));
+
+            model.CustomerId = customer.Id;
+
+            //prepare page parameters
+            model.SetGridPageSize();
+
             return model;
         }
 
@@ -1143,6 +1192,14 @@ namespace Nop.Web.Areas.Admin.Factories
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
+
+            if (customer == null)
+                throw new ArgumentNullException(nameof(customer));
+
+            model.CustomerId = customer.Id;
+
+            //prepare page parameters
+            model.SetGridPageSize();
 
             return model;
         }
@@ -1202,7 +1259,10 @@ namespace Nop.Web.Areas.Admin.Factories
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
-            
+
+            //prepare page parameters
+            model.SetGridPageSize();
+
             return model;
         }
 

@@ -16,6 +16,7 @@ namespace Nop.Web.Areas.Admin.Models.ShoppingCart
         public ShoppingCartSearchModel()
         {
             AvailableShoppingCartTypes = new List<SelectListItem>();
+            ShoppingCartItemSearchModel = new ShoppingCartItemSearchModel();
         }
 
         #endregion
@@ -26,6 +27,8 @@ namespace Nop.Web.Areas.Admin.Models.ShoppingCart
         public ShoppingCartType ShoppingCartType { get; set; }
 
         public IList<SelectListItem> AvailableShoppingCartTypes { get; set; }
+
+        public ShoppingCartItemSearchModel ShoppingCartItemSearchModel { get; set; }
 
         #endregion
     }

@@ -7,7 +7,6 @@
     const string panelId = "popular-search-terms-box";
     const string hidePanelAttributeName = "HidePopularSearchTermsReport";
     var hidePanel = workContext.CurrentCustomer.GetAttribute<bool>(hidePanelAttributeName);
-    var gridPageSize = 5;
 }
 
 <div class="box box-info @if(hidePanel){<text>collapsed-box</text>}" id="@panelId">
@@ -60,13 +59,14 @@
                             // Cancel the changes
                             this.cancelChanges();
                         },
-                        pageSize: @(gridPageSize),
+                        pageSize: @(Model.PageSize),
                         serverPaging: true,
                         serverFiltering: true,
                         serverSorting: true
                     },
                     pageable: {
                         refresh: true,
+                        pageSizes: [@(Model.AvailablePageSizes)],
                         @await Html.PartialAsync("_GridPagerMessages")
                     },
                     editable: {

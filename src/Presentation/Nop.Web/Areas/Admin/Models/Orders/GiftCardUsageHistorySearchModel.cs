@@ -7,5 +7,10 @@ namespace Nop.Web.Areas.Admin.Models.Orders
     /// </summary>
     public partial class GiftCardUsageHistorySearchModel : BaseSearchModel
     {
+        #region Properties
+
+        public int GiftCardId { get; set; }
+
+        #endregion
     }
 }

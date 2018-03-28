@@ -62,6 +62,9 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare available activity log types
             _baseAdminModelFactory.PrepareActivityLogTypes(model.ActivityLogType);
 
+            //prepare page parameters
+            model.SetGridPageSize();
+
             return model;
         }
 

@@ -59,6 +59,9 @@ namespace Nop.Web.Areas.Admin.Factories
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
 
+            //prepare page parameters
+            model.SetGridPageSize();
+
             return model;
         }
 
@@ -154,7 +157,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 model.CanCancelRecurringPayment = _orderProcessingService.CanCancelRecurringPayment(_workContext.CurrentCustomer, recurringPayment);
 
                 //prepare nested search model
-                PrepareRecurringPaymentHistorySearchModel(model.RecurringPaymentHistorySearchModel);
+                PrepareRecurringPaymentHistorySearchModel(model.RecurringPaymentHistorySearchModel, recurringPayment);
             }
             
             return model;
@@ -164,11 +167,21 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare recurring payment history search model
         /// </summary>
         /// <param name="model">Recurring payment history search model</param>
+        /// <param name="recurringPayment">Recurring payment</param>
         /// <returns>Recurring payment history search model</returns>
-        public virtual RecurringPaymentHistorySearchModel PrepareRecurringPaymentHistorySearchModel(RecurringPaymentHistorySearchModel model)
+        public virtual RecurringPaymentHistorySearchModel PrepareRecurringPaymentHistorySearchModel(RecurringPaymentHistorySearchModel model,
+            RecurringPayment recurringPayment)
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
+
+            if (recurringPayment == null)
+                throw new ArgumentNullException(nameof(recurringPayment));
+
+            model.RecurringPaymentId = recurringPayment.Id;
+
+            //prepare page parameters
+            model.SetGridPageSize();
 
             return model;
         }

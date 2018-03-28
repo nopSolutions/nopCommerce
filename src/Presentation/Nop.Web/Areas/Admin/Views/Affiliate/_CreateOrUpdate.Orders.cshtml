@@ -1,11 +1,4 @@
-@model AffiliatedOrderSearchModel
-
-@inject AdminAreaSettings adminAreaSettings
-
-@{
-    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
-    var gridPageSizes = adminAreaSettings.GridPageSizes;
-}
+@model AffiliateModel
 
 <div class="panel-group">
     @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.AffiliateDetailsOrdersTop, additionalData = Model })
@@ -15,42 +8,42 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <div class="col-md-4">
-                            <nop-label asp-for="StartDate" />
+                            <nop-label asp-for="AffiliatedOrderSearchModel.StartDate" />
                         </div>
                         <div class="col-md-8">
-                            <nop-editor asp-for="StartDate" />
+                            <nop-editor asp-for="AffiliatedOrderSearchModel.StartDate" />
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-md-4">
-                            <nop-label asp-for="EndDate" />
+                            <nop-label asp-for="AffiliatedOrderSearchModel.EndDate" />
                         </div>
                         <div class="col-md-8">
-                            <nop-editor asp-for="EndDate" />
+                            <nop-editor asp-for="AffiliatedOrderSearchModel.EndDate" />
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-md-4">
-                            <nop-label asp-for="OrderStatusId" />
+                            <nop-label asp-for="AffiliatedOrderSearchModel.OrderStatusId" />
                         </div>
                         <div class="col-md-8">
-                            <nop-select asp-for="OrderStatusId" asp-items="Model.AvailableOrderStatuses" />
+                            <nop-select asp-for="AffiliatedOrderSearchModel.OrderStatusId" asp-items="Model.AffiliatedOrderSearchModel.AvailableOrderStatuses" />
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-md-4">
-                            <nop-label asp-for="PaymentStatusId" />
+                            <nop-label asp-for="AffiliatedOrderSearchModel.PaymentStatusId" />
                         </div>
                         <div class="col-md-8">
-                            <nop-select asp-for="PaymentStatusId" asp-items="Model.AvailablePaymentStatuses" />
+                            <nop-select asp-for="AffiliatedOrderSearchModel.PaymentStatusId" asp-items="Model.AffiliatedOrderSearchModel.AvailablePaymentStatuses" />
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-md-4">
-                            <nop-label asp-for="ShippingStatusId" />
+                            <nop-label asp-for="AffiliatedOrderSearchModel.ShippingStatusId" />
                         </div>
                         <div class="col-md-8">
-                            <nop-select asp-for="ShippingStatusId" asp-items="Model.AvailableShippingStatuses" />
+                            <nop-select asp-for="AffiliatedOrderSearchModel.ShippingStatusId" asp-items="Model.AffiliatedOrderSearchModel.AvailableShippingStatuses" />
                         </div>
                     </div>
                     <div class="form-group">
@@ -80,7 +73,18 @@
                                     url: "@Html.Raw(Url.Action("AffiliatedOrderListGrid", "Affiliate"))",
                                     type: "POST",
                                     dataType: "json",
-                                    data: additionalData
+                                    data: function() {
+                                        var data = {
+                                            AffliateId: '@(Model.Id)',
+                                            StartDate: $('#@Html.IdFor(model => model.AffiliatedOrderSearchModel.StartDate)').val(),
+                                            EndDate: $('#@Html.IdFor(model => model.AffiliatedOrderSearchModel.EndDate)').val(),
+                                            OrderStatusId: $('#@Html.IdFor(model => model.AffiliatedOrderSearchModel.OrderStatusId)').val(),
+                                            PaymentStatusId: $('#@Html.IdFor(model => model.AffiliatedOrderSearchModel.PaymentStatusId)').val(),
+                                            ShippingStatusId: $('#@Html.IdFor(model => model.AffiliatedOrderSearchModel.ShippingStatusId)').val()
+                                        };
+                                        addAntiForgeryToken(data);
+                                        return data;
+                                    }
                                 }
                             },
                             schema: {
@@ -93,14 +97,14 @@
                                 // Cancel the changes
                                 this.cancelChanges();
                             },
-                            pageSize: @(defaultGridPageSize),
+                            pageSize: @(Model.AffiliatedOrderSearchModel.PageSize),
                             serverPaging: true,
                             serverFiltering: true,
                             serverSorting: true
                         },
                         pageable: {
                             refresh: true,
-                            pageSizes: [@(gridPageSizes)],
+                            pageSizes: [@(Model.AffiliatedOrderSearchModel.AvailablePageSizes)],
                             @await Html.PartialAsync("_GridPagerMessages")
                         },
                         editable: {
@@ -161,19 +165,6 @@
                         return false;
                     });
                 });
-
-                function additionalData() {
-                    var data = {
-                        AffliateId: @(Model.AffliateId),
-                        StartDate: $('#@Html.IdFor(model => model.StartDate)').val(),
-                        EndDate: $('#@Html.IdFor(model => model.EndDate)').val(),
-                        OrderStatusId: $('#@Html.IdFor(model => model.OrderStatusId)').val(),
-                        PaymentStatusId: $('#@Html.IdFor(model => model.PaymentStatusId)').val(),
-                        ShippingStatusId: $('#@Html.IdFor(model => model.ShippingStatusId)').val()
-                    };
-                    addAntiForgeryToken(data);
-                    return data;
-                }
             </script>
         </div>
     </div>

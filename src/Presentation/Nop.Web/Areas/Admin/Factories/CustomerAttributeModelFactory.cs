@@ -12,7 +12,7 @@ using Nop.Web.Framework.Factories;
 namespace Nop.Web.Areas.Admin.Factories
 {
     /// <summary>
-    /// Represents the сustomer attribute model factory implementation
+    /// Represents the customer attribute model factory implementation
     /// </summary>
     public partial class CustomerAttributeModelFactory : ICustomerAttributeModelFactory
     {
@@ -51,6 +51,9 @@ namespace Nop.Web.Areas.Admin.Factories
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
+
+            //prepare page parameters
+            model.SetGridPageSize();
 
             return model;
         }
@@ -132,6 +135,14 @@ namespace Nop.Web.Areas.Admin.Factories
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
+
+            if (customerAttribute == null)
+                throw new ArgumentNullException(nameof(customerAttribute));
+
+            model.CustomerAttributeId = customerAttribute.Id;
+
+            //prepare page parameters
+            model.SetGridPageSize();
 
             return model;
         }

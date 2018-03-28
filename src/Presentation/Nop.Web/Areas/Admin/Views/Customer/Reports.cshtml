@@ -1,4 +1,5 @@
 @model CustomerReportsSearchModel
+
 @inject IEventPublisher eventPublisher
 
 @{
@@ -23,16 +24,9 @@
 <div class="content">
     <div class="form-horizontal">
         <nop-tabs id="customer-reports">
-            @{
-                var dataDictAttributesByTotal = new ViewDataDictionary(ViewData);
-                dataDictAttributesByTotal.TemplateInfo.HtmlFieldPrefix = "bestbyordertotal";
-
-                var dataDictAttributesByNumber = new ViewDataDictionary(ViewData);
-                dataDictAttributesByNumber.TemplateInfo.HtmlFieldPrefix = "bestbynumberoforders";
-            }
-            <nop-tab asp-name="tab-ordertotal" asp-title="@T("Admin.Customers.Reports.BestBy.BestByOrderTotal")" asp-default="true">@await Html.PartialAsync("_ReportBestCustomersByOrderTotal", Model.BestCustomersByOrderTotal, dataDictAttributesByTotal)</nop-tab>
-            <nop-tab asp-name="tab-numberoforders" asp-title="@T("Admin.Customers.Reports.BestBy.BestByNumberOfOrders")">@await Html.PartialAsync("_ReportBestCustomersByNumberOfOrders", Model.BestCustomersByOrderTotal, dataDictAttributesByNumber)</nop-tab>
-            <nop-tab asp-name="tab-registeredcustomers" asp-title="@T("Admin.Customers.Reports.RegisteredCustomers")">@await Html.PartialAsync("_ReportRegisteredCustomers", Model.RegisteredCustomers)</nop-tab>
+            <nop-tab asp-name="tab-ordertotal" asp-title="@T("Admin.Customers.Reports.BestBy.BestByOrderTotal")" asp-default="true">@await Html.PartialAsync("_ReportBestCustomersByOrderTotal", Model)</nop-tab>
+            <nop-tab asp-name="tab-numberoforders" asp-title="@T("Admin.Customers.Reports.BestBy.BestByNumberOfOrders")">@await Html.PartialAsync("_ReportBestCustomersByNumberOfOrders", Model)</nop-tab>
+            <nop-tab asp-name="tab-registeredcustomers" asp-title="@T("Admin.Customers.Reports.RegisteredCustomers")">@await Html.PartialAsync("_ReportRegisteredCustomers", Model)</nop-tab>
         </nop-tabs>
     </div>
 </div>

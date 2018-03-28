@@ -1,5 +1,4 @@
 @model LanguageModel
-@inject AdminAreaSettings adminAreaSettings
 
 <div class="panel-group">
     @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.LanguageDetailsResourcesTop, additionalData = Model })
@@ -51,11 +50,6 @@
     {
         <div class="panel panel-default">
             <div class="panel-body">
-                @{
-                    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
-                    var gridPageSizes = adminAreaSettings.GridPageSizes;
-                }
-
                 <div id="resources-grid"></div>
 
                 <script>
@@ -65,13 +59,21 @@
                                 type: "json",
                                 transport: {
                                     read: {
-                                        url: "@Html.Raw(Url.Action("Resources", "Language", new {languageId = Model.Id}))",
+                                        url: "@Html.Raw(Url.Action("Resources", "Language"))",
                                         type: "POST",
                                         dataType: "json",
-                                        data: additionalData
+                                        data: function() {
+                                            var data = {
+                                                LanguageId: '@(Model.Id)',
+                                                SearchResourceName: $('#@Html.IdFor(model => model.LocaleResourceSearchModel.SearchResourceName)').val(),
+                                                SearchResourceValue: $('#@Html.IdFor(model => model.LocaleResourceSearchModel.SearchResourceValue)').val()
+                                            };
+                                            addAntiForgeryToken(data);
+                                            return data;
+                                        }
                                     },
                                     create: {
-                                        url: "@Html.Raw(Url.Action("ResourceAdd", "Language", new {languageId = Model.Id}))",
+                                        url: "@Html.Raw(Url.Action("ResourceAdd", "Language", new { languageId = Model.Id }))",
                                         type: "POST",
                                         dataType: "json",
                                         data: addAntiForgeryToken
@@ -112,14 +114,14 @@
                                     // Cancel the changes
                                     this.cancelChanges();
                                 },
-                                pageSize: @(defaultGridPageSize),
+                                pageSize: @(Model.LocaleResourceSearchModel.PageSize),
                                 serverPaging: true,
                                 serverFiltering: true,
                                 serverSorting: true
                             },
                             pageable: {
                                 refresh: true,
-                                pageSizes: [@(gridPageSizes)],
+                                pageSizes: [@(Model.LocaleResourceSearchModel.AvailablePageSizes)],
                                 @await Html.PartialAsync("_GridPagerMessages")
                             },
                             toolbar: [{ name: "create", text: "@T("Admin.Common.AddNewRecord")" }],
@@ -167,15 +169,6 @@
                             return false;
                         });
                     });
-
-                    function additionalData() {
-                        var data = {
-                            SearchResourceName: $('#@Html.IdFor(model => model.LocaleResourceSearchModel.SearchResourceName)').val(),
-                            SearchResourceValue: $('#@Html.IdFor(model => model.LocaleResourceSearchModel.SearchResourceValue)').val()
-                        };
-                        addAntiForgeryToken(data);
-                        return data;
-                    }
 
                     $("".concat("#@Html.IdFor(model => model.LocaleResourceSearchModel.SearchResourceName),",
                         "#@Html.IdFor(model => model.LocaleResourceSearchModel.SearchResourceValue)")).keydown(function(event) {

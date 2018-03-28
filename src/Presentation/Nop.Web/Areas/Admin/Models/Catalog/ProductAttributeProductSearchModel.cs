@@ -7,5 +7,10 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
     /// </summary>
     public partial class ProductAttributeProductSearchModel : BaseSearchModel
     {
+        #region Properties
+
+        public int ProductAttributeId { get; set; }
+
+        #endregion
     }
 }

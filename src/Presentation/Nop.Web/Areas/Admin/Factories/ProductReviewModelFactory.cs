@@ -78,6 +78,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 Value = "2"
             });
 
+            //prepare page parameters
+            model.SetGridPageSize();
+
             return model;
         }
 

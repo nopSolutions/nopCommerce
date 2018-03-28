@@ -57,6 +57,9 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare available log levels
             _baseAdminModelFactory.PrepareLogLevels(model.AvailableLogLevels);
 
+            //prepare page parameters
+            model.SetGridPageSize();
+
             return model;
         }
 

@@ -58,6 +58,9 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare available stores
             _baseAdminModelFactory.PrepareStores(model.AvailableStores);
 
+            //prepare page parameters
+            model.SetGridPageSize();
+
             return model;
         }
 
@@ -119,7 +122,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 model.EndDate = poll.EndDateUtc;
 
                 //prepare nested search model
-                PreparePollAnswerSearchModel(model.PollAnswerSearchModel);
+                PreparePollAnswerSearchModel(model.PollAnswerSearchModel, poll);
             }
 
             //set default values for the new model
@@ -142,11 +145,20 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare poll answer search model
         /// </summary>
         /// <param name="model">Poll answer search model</param>
+        /// <param name="poll">Poll</param>
         /// <returns>Poll answer search model</returns>
-        public virtual PollAnswerSearchModel PreparePollAnswerSearchModel(PollAnswerSearchModel model)
+        public virtual PollAnswerSearchModel PreparePollAnswerSearchModel(PollAnswerSearchModel model, Poll poll)
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
+
+            if (poll == null)
+                throw new ArgumentNullException(nameof(poll));
+
+            model.PollId = poll.Id;
+
+            //prepare page parameters
+            model.SetGridPageSize();
 
             return model;
         }

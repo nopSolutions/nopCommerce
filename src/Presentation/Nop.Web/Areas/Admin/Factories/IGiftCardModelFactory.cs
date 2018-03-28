@@ -35,8 +35,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare gift card usage history search model
         /// </summary>
         /// <param name="model">Gift card usage history search model</param>
+        /// <param name="giftCard">Gift card</param>
         /// <returns>Gift card usage history search model</returns>
-        GiftCardUsageHistorySearchModel PrepareGiftCardUsageHistorySearchModel(GiftCardUsageHistorySearchModel model);
+        GiftCardUsageHistorySearchModel PrepareGiftCardUsageHistorySearchModel(GiftCardUsageHistorySearchModel model,
+            GiftCard giftCard);
 
         /// <summary>
         /// Prepare paged gift usage history card list model

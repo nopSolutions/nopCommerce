@@ -454,14 +454,14 @@ namespace Nop.Web.Areas.Admin.Controllers
         #region Vendor notes
 
         [HttpPost]
-        public virtual IActionResult VendorNotesSelect(VendorNoteSearchModel searchModel, int vendorId)
+        public virtual IActionResult VendorNotesSelect(VendorNoteSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageVendors))
                 return AccessDeniedKendoGridJson();
 
             //try to get a vendor with the specified id
-            var vendor = _vendorService.GetVendorById(vendorId)
-                ?? throw new ArgumentException("No vendor found with the specified id", nameof(vendorId));
+            var vendor = _vendorService.GetVendorById(searchModel.VendorId)
+                ?? throw new ArgumentException("No vendor found with the specified id");
 
             //prepare model
             var model = _vendorModelFactory.PrepareVendorNoteListModel(searchModel, vendor);

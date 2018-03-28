@@ -20,7 +20,9 @@ namespace Nop.Web.Areas.Admin.Models.Customers
         #endregion
 
         #region Properties
-        
+
+        public int CustomerId { get; set; }
+
         [NopResourceDisplayName("Admin.ShoppingCartType.ShoppingCartType")]
         public int ShoppingCartTypeId { get; set; }
 

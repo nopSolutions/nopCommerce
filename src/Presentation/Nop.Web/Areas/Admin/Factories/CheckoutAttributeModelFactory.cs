@@ -124,6 +124,9 @@ namespace Nop.Web.Areas.Admin.Factories
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
 
+            //prepare page parameters
+            model.SetGridPageSize();
+
             return model;
         }
 
@@ -221,6 +224,14 @@ namespace Nop.Web.Areas.Admin.Factories
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
+
+            if (checkoutAttribute == null)
+                throw new ArgumentNullException(nameof(checkoutAttribute));
+
+            model.CheckoutAttributeId = checkoutAttribute.Id;
+
+            //prepare page parameters
+            model.SetGridPageSize();
 
             return model;
         }

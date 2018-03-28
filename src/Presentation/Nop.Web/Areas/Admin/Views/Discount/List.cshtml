@@ -1,10 +1,6 @@
 @model DiscountSearchModel
 
-@inject AdminAreaSettings adminAreaSetting
 @{
-    var defaultGridPageSize = adminAreaSetting.DefaultGridPageSize;
-    var gridPageSizes = adminAreaSetting.GridPageSizes;
-
     //page title
     ViewBag.Title = T("Admin.Promotions.Discounts").Text;
     //active menu item (system name)
@@ -99,7 +95,17 @@
                                             url: "@Html.Raw(Url.Action("List", "Discount"))",
                                             type: "POST",
                                             dataType: "json",
-                                            data: additionalData
+                                            data: function() {
+                                                var data = {
+                                                    SearchDiscountTypeId: $('#@Html.IdFor(model => model.SearchDiscountTypeId)').val(),
+                                                    SearchDiscountCouponCode: $('#@Html.IdFor(model => model.SearchDiscountCouponCode)').val(),
+                                                    SearchDiscountName: $('#@Html.IdFor(model => model.SearchDiscountName)').val(),
+                                                    SearchStartDate: $('#@Html.IdFor(model => model.SearchStartDate)').val(),
+                                                    SearchEndDate: $('#@Html.IdFor(model => model.SearchEndDate)').val(),
+                                                };
+                                                addAntiForgeryToken(data);
+                                                return data;
+                                            }
                                         }
                                     },
                                     schema: {
@@ -112,14 +118,14 @@
                                         // Cancel the changes
                                         this.cancelChanges();
                                     },
-                                    pageSize: @(defaultGridPageSize),
+                                    pageSize: @(Model.PageSize),
                                     serverPaging: true,
                                     serverFiltering: true,
                                     serverSorting: true
                                 },
                                 pageable: {
                                     refresh: true,
-                                    pageSizes: [@(gridPageSizes)],
+                                    pageSizes: [@(Model.AvailablePageSizes)],
                                     @await Html.PartialAsync("_GridPagerMessages")
                                 },
                                 editable: {
@@ -186,18 +192,6 @@
                                     return false;
                                 }
                         });
-
-                        function additionalData() {
-                            var data = {
-                                SearchDiscountTypeId: $('#@Html.IdFor(model => model.SearchDiscountTypeId)').val(),
-                                SearchDiscountCouponCode: $('#@Html.IdFor(model => model.SearchDiscountCouponCode)').val(),
-                                SearchDiscountName: $('#@Html.IdFor(model => model.SearchDiscountName)').val(),
-                                SearchStartDate: $('#@Html.IdFor(model => model.SearchStartDate)').val(),
-                                SearchEndDate: $('#@Html.IdFor(model => model.SearchEndDate)').val(),
-                            };
-                            addAntiForgeryToken(data);
-                            return data;
-                        }
                     </script>
                 </div>
             </div>

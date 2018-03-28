@@ -430,14 +430,14 @@ namespace Nop.Web.Areas.Admin.Controllers
         #region Applied to products
 
         [HttpPost]
-        public virtual IActionResult ProductList(DiscountProductSearchModel searchModel, int discountId)
+        public virtual IActionResult ProductList(DiscountProductSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
                 return AccessDeniedKendoGridJson();
 
             //try to get a discount with the specified id
-            var discount = _discountService.GetDiscountById(discountId)
-                ?? throw new ArgumentException("No discount found with the specified id", nameof(discountId));
+            var discount = _discountService.GetDiscountById(searchModel.DiscountId)
+                ?? throw new ArgumentException("No discount found with the specified id");
 
             //prepare model
             var model = _discountModelFactory.PrepareDiscountProductListModel(searchModel, discount);
@@ -525,14 +525,14 @@ namespace Nop.Web.Areas.Admin.Controllers
         #region Applied to categories
 
         [HttpPost]
-        public virtual IActionResult CategoryList(DiscountCategorySearchModel searchModel, int discountId)
+        public virtual IActionResult CategoryList(DiscountCategorySearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
                 return AccessDeniedKendoGridJson();
 
             //try to get a discount with the specified id
-            var discount = _discountService.GetDiscountById(discountId)
-                ?? throw new ArgumentException("No discount found with the specified id", nameof(discountId));
+            var discount = _discountService.GetDiscountById(searchModel.DiscountId)
+                ?? throw new ArgumentException("No discount found with the specified id");
 
             //prepare model
             var model = _discountModelFactory.PrepareDiscountCategoryListModel(searchModel, discount);
@@ -618,14 +618,14 @@ namespace Nop.Web.Areas.Admin.Controllers
         #region Applied to manufacturers
 
         [HttpPost]
-        public virtual IActionResult ManufacturerList(DiscountManufacturerSearchModel searchModel, int discountId)
+        public virtual IActionResult ManufacturerList(DiscountManufacturerSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
                 return AccessDeniedKendoGridJson();
 
             //try to get a discount with the specified id
-            var discount = _discountService.GetDiscountById(discountId)
-                ?? throw new ArgumentException("No discount found with the specified id", nameof(discountId));
+            var discount = _discountService.GetDiscountById(searchModel.DiscountId)
+                ?? throw new ArgumentException("No discount found with the specified id");
 
             //prepare model
             var model = _discountModelFactory.PrepareDiscountManufacturerListModel(searchModel, discount);
@@ -711,14 +711,14 @@ namespace Nop.Web.Areas.Admin.Controllers
         #region Discount usage history
 
         [HttpPost]
-        public virtual IActionResult UsageHistoryList(DiscountUsageHistorySearchModel searchModel, int discountId)
+        public virtual IActionResult UsageHistoryList(DiscountUsageHistorySearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
                 return AccessDeniedKendoGridJson();
 
             //try to get a discount with the specified id
-            var discount = _discountService.GetDiscountById(discountId)
-                ?? throw new ArgumentException("No discount found with the specified id", nameof(discountId));
+            var discount = _discountService.GetDiscountById(searchModel.DiscountId)
+                ?? throw new ArgumentException("No discount found with the specified id");
 
             //prepare model
             var model = _discountModelFactory.PrepareDiscountUsageHistoryListModel(searchModel, discount);

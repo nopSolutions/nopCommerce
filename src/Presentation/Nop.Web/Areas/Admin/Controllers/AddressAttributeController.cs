@@ -243,14 +243,14 @@ namespace Nop.Web.Areas.Admin.Controllers
         #region Address attribute values
 
         [HttpPost]
-        public virtual IActionResult ValueList(AddressAttributeValueSearchModel searchModel, int addressAttributeId)
+        public virtual IActionResult ValueList(AddressAttributeValueSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedKendoGridJson();
 
             //try to get an address attribute with the specified id
-            var addressAttribute = _addressAttributeService.GetAddressAttributeById(addressAttributeId)
-                ?? throw new ArgumentException("No address attribute found with the specified id", nameof(addressAttributeId));
+            var addressAttribute = _addressAttributeService.GetAddressAttributeById(searchModel.AddressAttributeId)
+                ?? throw new ArgumentException("No address attribute found with the specified id");
 
             //prepare model
             var model = _addressAttributeModelFactory.PrepareAddressAttributeValueListModel(searchModel, addressAttribute);

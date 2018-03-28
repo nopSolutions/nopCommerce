@@ -1072,14 +1072,14 @@ namespace Nop.Web.Areas.Admin.Controllers
         #region Reward points history
 
         [HttpPost]
-        public virtual IActionResult RewardPointsHistorySelect(CustomerRewardPointsSearchModel searchModel, int customerId)
+        public virtual IActionResult RewardPointsHistorySelect(CustomerRewardPointsSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedKendoGridJson();
 
             //try to get a customer with the specified id
-            var customer = _customerService.GetCustomerById(customerId)
-                ?? throw new ArgumentException("No customer found with the specified id", nameof(customerId));
+            var customer = _customerService.GetCustomerById(searchModel.CustomerId)
+                ?? throw new ArgumentException("No customer found with the specified id");
 
             //prepare model
             var model = _customerModelFactory.PrepareRewardPointsListModel(searchModel, customer);
@@ -1127,14 +1127,14 @@ namespace Nop.Web.Areas.Admin.Controllers
         #region Addresses
 
         [HttpPost]
-        public virtual IActionResult AddressesSelect(CustomerAddressSearchModel searchModel, int customerId)
+        public virtual IActionResult AddressesSelect(CustomerAddressSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedKendoGridJson();
 
             //try to get a customer with the specified id
-            var customer = _customerService.GetCustomerById(customerId)
-                ?? throw new ArgumentException("No customer found with the specified id", nameof(customerId));
+            var customer = _customerService.GetCustomerById(searchModel.CustomerId)
+                ?? throw new ArgumentException("No customer found with the specified id");
 
             //prepare model
             var model = _customerModelFactory.PrepareCustomerAddressListModel(searchModel, customer);
@@ -1293,14 +1293,14 @@ namespace Nop.Web.Areas.Admin.Controllers
         #region Orders
 
         [HttpPost]
-        public virtual IActionResult OrderList(CustomerOrderSearchModel searchModel, int customerId)
+        public virtual IActionResult OrderList(CustomerOrderSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedKendoGridJson();
 
             //try to get a customer with the specified id
-            var customer = _customerService.GetCustomerById(customerId)
-                ?? throw new ArgumentException("No customer found with the specified id", nameof(customerId));
+            var customer = _customerService.GetCustomerById(searchModel.CustomerId)
+                ?? throw new ArgumentException("No customer found with the specified id");
 
             //prepare model
             var model = _customerModelFactory.PrepareCustomerOrderListModel(searchModel, customer);
@@ -1446,14 +1446,14 @@ namespace Nop.Web.Areas.Admin.Controllers
         #region Current shopping cart/ wishlist
 
         [HttpPost]
-        public virtual IActionResult GetCartList(CustomerShoppingCartSearchModel searchModel, int customerId)
+        public virtual IActionResult GetCartList(CustomerShoppingCartSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedKendoGridJson();
 
             //try to get a customer with the specified id
-            var customer = _customerService.GetCustomerById(customerId)
-                ?? throw new ArgumentException("No customer found with the specified id", nameof(customerId));
+            var customer = _customerService.GetCustomerById(searchModel.CustomerId)
+                ?? throw new ArgumentException("No customer found with the specified id");
 
             //prepare model
             var model = _customerModelFactory.PrepareCustomerShoppingCartListModel(searchModel, customer);
@@ -1466,14 +1466,14 @@ namespace Nop.Web.Areas.Admin.Controllers
         #region Activity log
 
         [HttpPost]
-        public virtual IActionResult ListActivityLog(CustomerActivityLogSearchModel searchModel, int customerId)
+        public virtual IActionResult ListActivityLog(CustomerActivityLogSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedKendoGridJson();
 
             //try to get a customer with the specified id
-            var customer = _customerService.GetCustomerById(customerId)
-                ?? throw new ArgumentException("No customer found with the specified id", nameof(customerId));
+            var customer = _customerService.GetCustomerById(searchModel.CustomerId)
+                ?? throw new ArgumentException("No customer found with the specified id");
 
             //prepare model
             var model = _customerModelFactory.PrepareCustomerActivityLogListModel(searchModel, customer);
@@ -1486,14 +1486,14 @@ namespace Nop.Web.Areas.Admin.Controllers
         #region Back in stock subscriptions
 
         [HttpPost]
-        public virtual IActionResult BackInStockSubscriptionList(CustomerBackInStockSubscriptionSearchModel searchModel, int customerId)
+        public virtual IActionResult BackInStockSubscriptionList(CustomerBackInStockSubscriptionSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedKendoGridJson();
 
             //try to get a customer with the specified id
-            var customer = _customerService.GetCustomerById(customerId)
-                ?? throw new ArgumentException("No customer found with the specified id", nameof(customerId));
+            var customer = _customerService.GetCustomerById(searchModel.CustomerId)
+                ?? throw new ArgumentException("No customer found with the specified id");
 
             //prepare model
             var model = _customerModelFactory.PrepareCustomerBackInStockSubscriptionListModel(searchModel, customer);

@@ -1,10 +1,6 @@
 @model BlogCommentSearchModel
 
-@inject AdminAreaSettings adminAreaSettings
 @{
-    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
-    var gridPageSizes = adminAreaSettings.GridPageSizes;
-
     //page title
     ViewBag.Title = T("Admin.ContentManagement.Blog.Comments").Text;
     //active menu item (system name)
@@ -101,7 +97,16 @@
                                             url: "@Url.Action("Comments", "Blog", new { filterByBlogPostId = filterByBlogPostId.HasValue ? filterByBlogPostId : null })",
                                             type: "POST",
                                             dataType: "json",
-                                            data: additionalData
+                                            data: function() {
+                                                var data = {
+                                                    CreatedOnFrom: $('#@Html.IdFor(model => model.CreatedOnFrom)').val(),
+                                                    CreatedOnTo: $('#@Html.IdFor(model => model.CreatedOnTo)').val(),
+                                                    SearchText: $('#@Html.IdFor(model => model.SearchText)').val(),
+                                                    SearchApprovedId: $('#SearchApprovedId').val()
+                                                };
+                                                addAntiForgeryToken(data);
+                                                return data;
+                                            }
                                         },
                                         update: {
                                             url: "@Html.Raw(Url.Action("CommentUpdate", "Blog"))",
@@ -145,14 +150,14 @@
                                         // Cancel the changes
                                         this.cancelChanges();
                                     },
-                                    pageSize: @(defaultGridPageSize),
+                                    pageSize: @(Model.PageSize),
                                     serverPaging: true,
                                     serverFiltering: true,
                                     serverSorting: true
                                 },
                                 pageable: {
                                     refresh: true,
-                                    pageSizes: [@(gridPageSizes)],
+                                    pageSizes: [@(Model.AvailablePageSizes)],
                                     @await Html.PartialAsync("_GridPagerMessages")
                                 },
                                 editable: {
@@ -361,17 +366,6 @@
                             var numChkBoxes = $('#comments-grid input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]').length;
                             var numChkBoxesChecked = $('#comments-grid input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]:checked').length;
                             $('#mastercheckbox').attr('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
-                        }
-
-                        function additionalData() {
-                            var data = {
-                                CreatedOnFrom: $('#@Html.IdFor(model => model.CreatedOnFrom)').val(),
-                                CreatedOnTo: $('#@Html.IdFor(model => model.CreatedOnTo)').val(),
-                                SearchText: $('#@Html.IdFor(model => model.SearchText)').val(),
-                                SearchApprovedId: $('#SearchApprovedId').val()
-                            };
-                            addAntiForgeryToken(data);
-                            return data;
                         }
                     </script>
                 </div>

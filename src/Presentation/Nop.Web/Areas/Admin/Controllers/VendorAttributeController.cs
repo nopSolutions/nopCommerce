@@ -231,14 +231,14 @@ namespace Nop.Web.Areas.Admin.Controllers
         #region Vendor attribute values
 
         [HttpPost]
-        public virtual IActionResult ValueList(VendorAttributeValueSearchModel searchModel, int vendorAttributeId)
+        public virtual IActionResult ValueList(VendorAttributeValueSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedKendoGridJson();
 
             //try to get a vendor attribute with the specified id
-            var vendorAttribute = _vendorAttributeService.GetVendorAttributeById(vendorAttributeId)
-                ?? throw new ArgumentException("No vendor attribute found with the specified id", nameof(vendorAttributeId));
+            var vendorAttribute = _vendorAttributeService.GetVendorAttributeById(searchModel.VendorAttributeId)
+                ?? throw new ArgumentException("No vendor attribute found with the specified id");
 
             //prepare model
             var model = _vendorAttributeModelFactory.PrepareVendorAttributeValueListModel(searchModel, vendorAttribute);

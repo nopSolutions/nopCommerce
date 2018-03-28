@@ -1,5 +1,4 @@
 ﻿@model CustomerSearchModel
-@inject AdminAreaSettings adminAreaSettings
 
 @using System.Globalization;
 @using Nop.Core.Domain.Media
@@ -7,9 +6,6 @@
 @inject MediaSettings _mediaSettings
 
 @{
-    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
-    var gridPageSizes = adminAreaSettings.GridPageSizes;
-
     //page title
     ViewBag.Title = T("Admin.Customers.Customers").Text;
     //active menu item (system name)
@@ -243,7 +239,23 @@
                         url: "@Html.Raw(Url.Action("CustomerList", "Customer"))",
                         type: "POST",
                         dataType: "json",
-                        data: additionalData
+                        data: function() {
+                            var data = {
+                                SelectedCustomerRoleIds: $('#@Html.IdFor(model => model.SelectedCustomerRoleIds)').val(),
+                                SearchEmail: $('#@Html.IdFor(model => model.SearchEmail)').val(),
+                                SearchUsername: $('#@Html.IdFor(model => model.SearchUsername)').val(),
+                                SearchFirstName: $('#@Html.IdFor(model => model.SearchFirstName)').val(),
+                                SearchLastName: $('#@Html.IdFor(model => model.SearchLastName)').val(),
+                                SearchDayOfBirth: $('#@Html.IdFor(model => model.SearchDayOfBirth)').val(),
+                                SearchMonthOfBirth: $('#@Html.IdFor(model => model.SearchMonthOfBirth)').val(),
+                                SearchCompany: $('#@Html.IdFor(model => model.SearchCompany)').val(),
+                                SearchPhone: $('#@Html.IdFor(model => model.SearchPhone)').val(),
+                                SearchZipPostalCode: $('#@Html.IdFor(model => model.SearchZipPostalCode)').val(),
+                                SearchIpAddress: $('#@Html.IdFor(model => model.SearchIpAddress)').val()
+                            };
+                            addAntiForgeryToken(data);
+                            return data;
+                        }
                     }
                 },
                 schema: {
@@ -256,14 +268,14 @@
                     // Cancel the changes
                     this.cancelChanges();
                 },
-                pageSize: @(defaultGridPageSize),
+                pageSize: @(Model.PageSize),
                 serverPaging: true,
                 serverFiltering: true,
                 serverSorting: true
             },
             pageable: {
                 refresh: true,
-                pageSizes: [@(gridPageSizes)],
+                pageSizes: [@(Model.AvailablePageSizes)],
                 @await Html.PartialAsync("_GridPagerMessages")
             },
             scrollable: false,
@@ -433,24 +445,6 @@
         var numChkBoxes = $('#customers-grid input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]').length;
         var numChkBoxesChecked = $('#customers-grid input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]:checked').length;
         $('#mastercheckbox').attr('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
-    }
-
-    function additionalData() {
-        var data = {
-            SelectedCustomerRoleIds: $('#@Html.IdFor(model => model.SelectedCustomerRoleIds)').val(),
-            SearchEmail: $('#@Html.IdFor(model => model.SearchEmail)').val(),
-            SearchUsername: $('#@Html.IdFor(model => model.SearchUsername)').val(),
-            SearchFirstName: $('#@Html.IdFor(model => model.SearchFirstName)').val(),
-            SearchLastName: $('#@Html.IdFor(model => model.SearchLastName)').val(),
-            SearchDayOfBirth: $('#@Html.IdFor(model => model.SearchDayOfBirth)').val(),
-            SearchMonthOfBirth: $('#@Html.IdFor(model => model.SearchMonthOfBirth)').val(),
-            SearchCompany: $('#@Html.IdFor(model => model.SearchCompany)').val(),
-            SearchPhone: $('#@Html.IdFor(model => model.SearchPhone)').val(),
-            SearchZipPostalCode: $('#@Html.IdFor(model => model.SearchZipPostalCode)').val(),
-            SearchIpAddress: $('#@Html.IdFor(model => model.SearchIpAddress)').val()
-        };
-        addAntiForgeryToken(data);
-        return data;
     }
                         </script>
                     </div>

@@ -117,6 +117,9 @@ namespace Nop.Web.Areas.Admin.Factories
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
 
+            //prepare page parameters
+            model.SetGridPageSize();
+
             return model;
         }
 
@@ -171,11 +174,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 model.Id = affiliate.Id;
                 model.Url = affiliate.GenerateUrl(_webHelper);
 
-                //prepare order search model
-                model.AffiliatedOrderSearch = PrepareAffiliatedOrderSearchModel(model.AffiliatedOrderSearch, affiliate);
-
-                //prepare customer search model
-                model.AffiliatedCustomerSearch = PrepareAffiliatedCustomerSearchModel(model.AffiliatedCustomerSearch, affiliate);
+                //prepare nested search models
+                PrepareAffiliatedOrderSearchModel(model.AffiliatedOrderSearchModel, affiliate);
+                PrepareAffiliatedCustomerSearchModel(model.AffiliatedCustomerSearchModel, affiliate);
 
                 //whether to fill in some of properties
                 if (!excludeProperties)
@@ -208,11 +209,14 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(affiliate));
 
             model.AffliateId = affiliate.Id;
-
+            
             //prepare available order, payment and shipping statuses
             _baseAdminModelFactory.PrepareOrderStatuses(model.AvailableOrderStatuses);
             _baseAdminModelFactory.PreparePaymentStatuses(model.AvailablePaymentStatuses);
             _baseAdminModelFactory.PrepareShippingStatuses(model.AvailableShippingStatuses);
+
+            //prepare page parameters
+            model.SetGridPageSize();
 
             return model;
         }
@@ -286,6 +290,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(affiliate));
 
             model.AffliateId = affiliate.Id;
+
+            //prepare page parameters
+            model.SetGridPageSize();
 
             return model;
         }

@@ -1,4 +1,5 @@
 @model CustomerModel
+
 <div class="panel-group">
     @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CustomerDetailsAddressesTop, additionalData = Model })
     <div class="panel panel-default">
@@ -12,10 +13,16 @@
                             type: "json",
                             transport: {
                                 read: {
-                                    url: "@Html.Raw(Url.Action("AddressesSelect", "Customer", new { customerId = Model.Id }))",
+                                    url: "@Html.Raw(Url.Action("AddressesSelect", "Customer"))",
                                     type: "POST",
                                     dataType: "json",
-                                    data: addAntiForgeryToken
+                                    data: function() {
+                                        var data = {
+                                            CustomerId: '@(Model.Id)'
+                                        };
+                                        addAntiForgeryToken(data);
+                                        return data;
+                                    }
                                 },
                                 destroy: {
                                     url: "@Html.Raw(Url.Action("AddressDelete", "Customer", new { customerId = Model.Id }))",
@@ -37,15 +44,14 @@
                                 // Cancel the changes
                                 this.cancelChanges();
                             },
+                            pageSize: @(Model.CustomerAddressSearchModel.PageSize),
                             serverPaging: true,
                             serverFiltering: true,
                             serverSorting: true
                         },
                         pageable: {
                             refresh: true,
-                            numeric: false,
-                            previousNext: false,
-                            info: false,
+                            pageSizes: [@(Model.CustomerAddressSearchModel.AvailablePageSizes)],
                             @await Html.PartialAsync("_GridPagerMessages")
                         },
                         editable: {
@@ -91,7 +97,7 @@
             </script>
         </div>
         <div class="panel-footer">
-            <button type="button" class="btn btn-primary" onclick="location.href = '@Url.Action("AddressCreate", new {customerId = Model.Id})'">
+            <button type="button" class="btn btn-primary" onclick="location.href = '@Url.Action("AddressCreate", new { customerId = Model.Id })'">
                 @T("Admin.Customers.Customers.Addresses.AddButton")
             </button>
         </div>

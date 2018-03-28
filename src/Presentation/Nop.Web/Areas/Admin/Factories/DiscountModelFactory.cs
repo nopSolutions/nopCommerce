@@ -91,6 +91,9 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare available discount types
             _baseAdminModelFactory.PrepareDiscountTypes(model.AvailableDiscountTypes);
 
+            //prepare page parameters
+            model.SetGridPageSize();
+
             return model;
         }
 
@@ -184,7 +187,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     new SelectListItem { Value = requirement.Id.ToString(), Text = requirement.DiscountRequirementRuleSystemName }).ToList();
 
                 //prepare nested search models
-                PrepareDiscountUsageHistorySearchModel(model.DiscountUsageHistorySearchModel);
+                PrepareDiscountUsageHistorySearchModel(model.DiscountUsageHistorySearchModel, discount);
                 PrepareDiscountProductSearchModel(model.DiscountProductSearchModel, discount);
                 PrepareDiscountCategorySearchModel(model.DiscountCategorySearchModel, discount);
                 PrepareDiscountManufacturerSearchModel(model.DiscountManufacturerSearchModel, discount);
@@ -266,11 +269,21 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare discount usage history search model
         /// </summary>
         /// <param name="model">Discount usage history search model</param>
+        /// <param name="discount">Discount</param>
         /// <returns>Discount usage history search model</returns>
-        public virtual DiscountUsageHistorySearchModel PrepareDiscountUsageHistorySearchModel(DiscountUsageHistorySearchModel model)
+        public virtual DiscountUsageHistorySearchModel PrepareDiscountUsageHistorySearchModel(DiscountUsageHistorySearchModel model,
+            Discount discount)
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
+
+            if (discount == null)
+                throw new ArgumentNullException(nameof(discount));
+
+            model.DiscountId = discount.Id;
+
+            //prepare page parameters
+            model.SetGridPageSize();
 
             return model;
         }
@@ -337,6 +350,14 @@ namespace Nop.Web.Areas.Admin.Factories
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
 
+            if (discount == null)
+                throw new ArgumentNullException(nameof(discount));
+
+            model.DiscountId = discount.Id;
+
+            //prepare page parameters
+            model.SetGridPageSize();
+
             return model;
         }
 
@@ -399,6 +420,9 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare available product types
             _baseAdminModelFactory.PrepareProductTypes(model.AvailableProductTypes);
 
+            //prepare page parameters
+            model.SetPopupGridPageSize();
+
             return model;
         }
 
@@ -443,6 +467,14 @@ namespace Nop.Web.Areas.Admin.Factories
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
+
+            if (discount == null)
+                throw new ArgumentNullException(nameof(discount));
+
+            model.DiscountId = discount.Id;
+
+            //prepare page parameters
+            model.SetGridPageSize();
 
             return model;
         }
@@ -490,6 +522,9 @@ namespace Nop.Web.Areas.Admin.Factories
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
+
+            //prepare page parameters
+            model.SetPopupGridPageSize();
 
             return model;
         }
@@ -540,6 +575,14 @@ namespace Nop.Web.Areas.Admin.Factories
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
 
+            if (discount == null)
+                throw new ArgumentNullException(nameof(discount));
+
+            model.DiscountId = discount.Id;
+
+            //prepare page parameters
+            model.SetGridPageSize();
+
             return model;
         }
 
@@ -587,6 +630,9 @@ namespace Nop.Web.Areas.Admin.Factories
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
+
+            //prepare page parameters
+            model.SetPopupGridPageSize();
 
             return model;
         }

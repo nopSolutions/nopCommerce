@@ -1,5 +1,5 @@
 ﻿@model CustomerModel
-@using Nop.Core.Domain.Orders
+
 @using Nop.Services.Stores
 @inject IStoreService storeService
 @{
@@ -36,10 +36,17 @@
                             type: "json",
                             transport: {
                                 read: {
-                                    url: "@Html.Raw(Url.Action("GetCartList", "Customer", new { customerId = Model.Id }))",
+                                    url: "@Html.Raw(Url.Action("GetCartList", "Customer"))",
                                     type: "POST",
                                     dataType: "json",
-                                    data: additionalData
+                                    data: function () {
+                                        var data = {
+                                            CustomerId: '@(Model.Id)',
+                                            ShoppingCartTypeId: $('#@Html.IdFor(model => model.CustomerShoppingCartSearchModel.ShoppingCartTypeId)').val()
+                                        };
+                                        addAntiForgeryToken(data);
+                                        return data;
+                                    }
                                 }
                             },
                             schema: {
@@ -52,15 +59,14 @@
                                 // Cancel the changes
                                 this.cancelChanges();
                             },
+                            pageSize: @(Model.CustomerShoppingCartSearchModel.PageSize),
                             serverPaging: true,
                             serverFiltering: true,
                             serverSorting: true
                         },
                         pageable: {
                             refresh: true,
-                            numeric: false,
-                            previousNext: false,
-                            info: false,
+                            pageSizes: [@(Model.CustomerShoppingCartSearchModel.AvailablePageSizes)],
                             @await Html.PartialAsync("_GridPagerMessages")
                         },
                         editable: {
@@ -99,27 +105,13 @@
                             format: "{0:G}"
                         }]
                     });
+
+                    $('#@Html.IdFor(model => model.CustomerShoppingCartSearchModel.ShoppingCartTypeId)').change(function() {
+                        $("#currentshoppingcart-grid").data('kendoGrid').dataSource.read();
+                    });
                 });
             </script>
         </div>
     </div>
     @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CustomerDetailsShoppingCartBottom, additionalData = Model })
 </div>
-
-<script>
-    function additionalData() {
-        var data = {
-            ShoppingCartTypeId: $('#@Html.IdFor(model => model.CustomerShoppingCartSearchModel.ShoppingCartTypeId)').val()
-        };
-        addAntiForgeryToken(data);
-        return data;
-    }
-
-    $(document)
-        .ready(function() {
-            $("#CustomerShoppingCartSearchModel_ShoppingCartTypeId")
-                .change(function() {
-                    $("#currentshoppingcart-grid").data('kendoGrid').dataSource.read();
-                });
-        });
-</script>

@@ -36,8 +36,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare recurring payment history search model
         /// </summary>
         /// <param name="model">Recurring payment history search model</param>
+        /// <param name="recurringPayment">Recurring payment</param>
         /// <returns>Recurring payment history search model</returns>
-        RecurringPaymentHistorySearchModel PrepareRecurringPaymentHistorySearchModel(RecurringPaymentHistorySearchModel model);
+        RecurringPaymentHistorySearchModel PrepareRecurringPaymentHistorySearchModel(RecurringPaymentHistorySearchModel model,
+            RecurringPayment recurringPayment);
 
         /// <summary>
         /// Prepare paged recurring payment history list model

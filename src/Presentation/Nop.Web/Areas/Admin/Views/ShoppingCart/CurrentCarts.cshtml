@@ -1,12 +1,9 @@
 ﻿@model ShoppingCartSearchModel
 
 @using Nop.Services.Stores
-@inject AdminAreaSettings adminAreaSettings
 @inject IStoreService storeService
 
 @{
-    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
-    var gridPageSizes = adminAreaSettings.GridPageSizes;
     var stores = storeService.GetAllStores();
 
     //page title
@@ -59,7 +56,13 @@
                                             url: "@Html.Raw(Url.Action("CurrentCarts", "ShoppingCart"))",
                                             type: "POST",
                                             dataType: "json",
-                                            data: additionalData
+                                            data: function() {
+                                                var data = {
+                                                    ShoppingCartType: $('#@Html.IdFor(model => model.ShoppingCartType)').val()
+                                                };
+                                                addAntiForgeryToken(data);
+                                                return data;
+                                            }
                                         }
                                     },
                                     schema: {
@@ -72,14 +75,14 @@
                                         // Cancel the changes
                                         this.cancelChanges();
                                     },
-                                    pageSize: @(defaultGridPageSize),
+                                    pageSize: @(Model.PageSize),
                                     serverPaging: true,
                                     serverFiltering: true,
                                     serverSorting: true
                                 },
                                 pageable: {
                                     refresh: true,
-                                    pageSizes: [@(gridPageSizes)],
+                                    pageSizes: [@(Model.AvailablePageSizes)],
                                     @await Html.PartialAsync("_GridPagerMessages")
                                 },
                                 //details grid
@@ -107,11 +110,17 @@
                                     type: "json",
                                     transport: {
                                         read: {
-                                            url: "@Html.Raw(Url.Action("GetCartDetails", "ShoppingCart"))?customerId=" +
-                                                e.data.CustomerId,
+                                            url: "@Html.Raw(Url.Action("GetCartDetails", "ShoppingCart"))",
                                             type: "POST",
                                             dataType: "json",
-                                            data: additionalData
+                                            data: function() {
+                                                var data = {
+                                                    CustomerId: e.data.CustomerId,
+                                                    ShoppingCartType: $('#@Html.IdFor(model => model.ShoppingCartType)').val()
+                                                };
+                                                addAntiForgeryToken(data);
+                                                return data;
+                                            }
                                         },
                                         destroy: {
                                             url: "@Html.Raw(Url.Action("DeleteItem", "ShoppingCart"))",
@@ -138,6 +147,7 @@
                                         // Cancel the changes
                                         this.cancelChanges();
                                     },
+                                    pageSize: @(Model.ShoppingCartItemSearchModel.PageSize),
                                     serverPaging: true,
                                     serverFiltering: true,
                                     serverSorting: true
@@ -150,9 +160,7 @@
                                 sortable: true,
                                 pageable: {
                                     refresh: true,
-                                    numeric: false,
-                                    previousNext: false,
-                                    info: false,
+                                    pageSizes: [@(Model.ShoppingCartItemSearchModel.AvailablePageSizes)],
                                     @await Html.PartialAsync("_GridPagerMessages")
                                 },
                                 columns: [
@@ -201,14 +209,6 @@
     </div>
 
     <script>
-        function additionalData() {
-            var data = {
-                ShoppingCartType: $('#@Html.IdFor(model => model.ShoppingCartType)').val()
-            };
-            addAntiForgeryToken(data);
-            return data;
-        }
-
         $(document)
             .ready(function() {
                 $("#@Html.IdFor(model => model.ShoppingCartType)")

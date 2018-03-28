@@ -239,14 +239,14 @@ namespace Nop.Web.Areas.Admin.Controllers
         #region Used by products
 
         [HttpPost]
-        public virtual IActionResult UsedByProducts(ProductAttributeProductSearchModel searchModel, int productAttributeId)
+        public virtual IActionResult UsedByProducts(ProductAttributeProductSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedKendoGridJson();
 
             //try to get a product attribute with the specified id
-            var productAttribute = _productAttributeService.GetProductAttributeById(productAttributeId)
-                ?? throw new ArgumentException("No product attribute found with the specified id", nameof(productAttributeId));
+            var productAttribute = _productAttributeService.GetProductAttributeById(searchModel.ProductAttributeId)
+                ?? throw new ArgumentException("No product attribute found with the specified id");
 
             //prepare model
             var model = _productAttributeModelFactory.PrepareProductAttributeProductListModel(searchModel, productAttribute);
@@ -259,15 +259,14 @@ namespace Nop.Web.Areas.Admin.Controllers
         #region Predefined values
 
         [HttpPost]
-        public virtual IActionResult PredefinedProductAttributeValueList(PredefinedProductAttributeValueSearchModel searchModel,
-            int productAttributeId)
+        public virtual IActionResult PredefinedProductAttributeValueList(PredefinedProductAttributeValueSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedKendoGridJson();
 
             //try to get a product attribute with the specified id
-            var productAttribute = _productAttributeService.GetProductAttributeById(productAttributeId)
-                ?? throw new ArgumentException("No product attribute found with the specified id", nameof(productAttributeId));
+            var productAttribute = _productAttributeService.GetProductAttributeById(searchModel.ProductAttributeId)
+                ?? throw new ArgumentException("No product attribute found with the specified id");
 
             //prepare model
             var model = _productAttributeModelFactory.PreparePredefinedProductAttributeValueListModel(searchModel, productAttribute);

@@ -1,11 +1,6 @@
 @model ManufacturerSearchModel
 
-@inject AdminAreaSettings adminAreaSettings
-
 @{
-    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
-    var gridPageSizes = adminAreaSettings.GridPageSizes;
-
     //page title
     ViewBag.Title = T("Admin.Catalog.Manufacturers").Text;
     //active menu item (system name)
@@ -104,7 +99,14 @@
                                             url: "@Html.Raw(Url.Action("List", "Manufacturer"))",
                                             type: "POST",
                                             dataType: "json",
-                                            data: additionalData
+                                            data: function() {
+                                                var data = {
+                                                    SearchManufacturerName: $('#@Html.IdFor(model => model.SearchManufacturerName)').val(),
+                                                    SearchStoreId: $('#SearchStoreId').val()
+                                                };
+                                                addAntiForgeryToken(data);
+                                                return data;
+                                            }
                                         }
                                     },
                                     schema: {
@@ -117,14 +119,14 @@
                                         // Cancel the changes
                                         this.cancelChanges();
                                     },
-                                    pageSize: @(defaultGridPageSize),
+                                    pageSize: @(Model.PageSize),
                                     serverPaging: true,
                                     serverFiltering: true,
                                     serverSorting: true
                                 },
                                 pageable: {
                                     refresh: true,
-                                    pageSizes: [@(gridPageSizes)],
+                                    pageSizes: [@(Model.AvailablePageSizes)],
                                     @await Html.PartialAsync("_GridPagerMessages")
                                 },
                                 editable: {
@@ -177,15 +179,6 @@
                                 }
                             });
                         });
-
-                        function additionalData() {
-                            var data = {
-                                SearchManufacturerName: $('#@Html.IdFor(model => model.SearchManufacturerName)').val(),
-                                SearchStoreId: $('#SearchStoreId').val()
-                            };
-                            addAntiForgeryToken(data);
-                            return data;
-                        }
                     </script>
                 </div>
             </div>

@@ -4,7 +4,7 @@ using Nop.Web.Areas.Admin.Models.Customers;
 namespace Nop.Web.Areas.Admin.Factories
 {
     /// <summary>
-    /// Represents the сustomer attribute model factory
+    /// Represents the customer attribute model factory
     /// </summary>
     public partial interface ICustomerAttributeModelFactory
     {

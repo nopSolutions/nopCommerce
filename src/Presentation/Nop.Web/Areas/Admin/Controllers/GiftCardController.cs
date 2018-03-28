@@ -289,14 +289,14 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual IActionResult UsageHistoryList(GiftCardUsageHistorySearchModel searchModel, int giftCardId)
+        public virtual IActionResult UsageHistoryList(GiftCardUsageHistorySearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageGiftCards))
                 return AccessDeniedKendoGridJson();
 
             //try to get a gift card with the specified id
-            var giftCard = _giftCardService.GetGiftCardById(giftCardId)
-                ?? throw new ArgumentException("No gift card found with the specified id", nameof(giftCardId));
+            var giftCard = _giftCardService.GetGiftCardById(searchModel.GiftCardId)
+                ?? throw new ArgumentException("No gift card found with the specified id");
 
             //prepare model
             var model = _giftCardModelFactory.PrepareGiftCardUsageHistoryListModel(searchModel, giftCard);

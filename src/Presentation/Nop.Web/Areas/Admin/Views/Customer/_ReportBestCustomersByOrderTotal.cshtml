@@ -1,51 +1,46 @@
-﻿@model BestCustomersReportSearchModel
+﻿@model CustomerReportsSearchModel
 
-@inject AdminAreaSettings adminAreaSettings
-@{
-    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
-    var gridPageSizes = adminAreaSettings.GridPageSizes;
-}
 <div class="panel-group">
     <div class="panel panel-default">
         <div class="panel-body">
             <div class="form-group">
                 <div class="col-md-3">
-                    <nop-label asp-for="StartDate"/>
+                    <nop-label asp-for="BestCustomersByOrderTotal.StartDate"/>
                 </div>
                 <div class="col-md-9">
-                    <nop-editor asp-for="StartDate"/>
+                    <nop-editor asp-for="BestCustomersByOrderTotal.StartDate"/>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-md-3">
-                    <nop-label asp-for="EndDate"/>
+                    <nop-label asp-for="BestCustomersByOrderTotal.EndDate"/>
                 </div>
                 <div class="col-md-9">
-                    <nop-editor asp-for="EndDate"/>
+                    <nop-editor asp-for="BestCustomersByOrderTotal.EndDate"/>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-md-3">
-                    <nop-label asp-for="OrderStatusId"/>
+                    <nop-label asp-for="BestCustomersByOrderTotal.OrderStatusId"/>
                 </div>
                 <div class="col-md-9">
-                    <nop-select asp-for="OrderStatusId" asp-items="Model.AvailableOrderStatuses"/>
+                    <nop-select asp-for="BestCustomersByOrderTotal.OrderStatusId" asp-items="Model.BestCustomersByOrderTotal.AvailableOrderStatuses"/>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-md-3">
-                    <nop-label asp-for="PaymentStatusId"/>
+                    <nop-label asp-for="BestCustomersByOrderTotal.PaymentStatusId"/>
                 </div>
                 <div class="col-md-9">
-                    <nop-select asp-for="PaymentStatusId" asp-items="Model.AvailablePaymentStatuses"/>
+                    <nop-select asp-for="BestCustomersByOrderTotal.PaymentStatusId" asp-items="Model.BestCustomersByOrderTotal.AvailablePaymentStatuses"/>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-md-3">
-                    <nop-label asp-for="ShippingStatusId"/>
+                    <nop-label asp-for="BestCustomersByOrderTotal.ShippingStatusId"/>
                 </div>
                 <div class="col-md-9">
-                    <nop-select asp-for="ShippingStatusId" asp-items="Model.AvailableShippingStatuses"/>
+                    <nop-select asp-for="BestCustomersByOrderTotal.ShippingStatusId" asp-items="Model.BestCustomersByOrderTotal.AvailableShippingStatuses"/>
                 </div>
             </div>
             <div class="form-group">
@@ -73,7 +68,18 @@
                                     url: "@Html.Raw(Url.Action("ReportBestCustomersByOrderTotalList", "Customer"))",
                                     type: "POST",
                                     dataType: "json",
-                                    data: bestCustomersOrderTotalAdditionalData
+                                    data: function () {
+                                        var data = {
+                                            OrderBy : 1,
+                                            StartDate: $('#@Html.IdFor(model => model.BestCustomersByOrderTotal.StartDate)').val(),
+                                            EndDate: $('#@Html.IdFor(model => model.BestCustomersByOrderTotal.EndDate)').val(),
+                                            OrderStatusId: $('#@Html.IdFor(model => model.BestCustomersByOrderTotal.OrderStatusId)').val(),
+                                            PaymentStatusId: $('#@Html.IdFor(model => model.BestCustomersByOrderTotal.PaymentStatusId)').val(),
+                                            ShippingStatusId: $('#@Html.IdFor(model => model.BestCustomersByOrderTotal.ShippingStatusId)').val()
+                                        };
+                                        addAntiForgeryToken(data);
+                                        return data;
+                                    }
                                 }
                             },
                             schema: {
@@ -86,14 +92,14 @@
                                 // Cancel the changes
                                 this.cancelChanges();
                             },
-                            pageSize: @(defaultGridPageSize),
+                            pageSize: @(Model.BestCustomersByOrderTotal.PageSize),
                             serverPaging: true,
                             serverFiltering: true,
                             serverSorting: true
                         },
                         pageable: {
                             refresh: true,
-                            pageSizes: [@(gridPageSizes)],
+                            pageSizes: [@(Model.BestCustomersByOrderTotal.AvailablePageSizes)],
                             @await Html.PartialAsync("_GridPagerMessages")
                         },
                         editable: {
@@ -133,19 +139,6 @@
                         return false;
                     });
                 });
-
-                function bestCustomersOrderTotalAdditionalData(e) {
-                    var data = {
-                        OrderBy : 1,
-                        StartDate: $('#@Html.IdFor(model => model.StartDate)').val(),
-                        EndDate: $('#@Html.IdFor(model => model.EndDate)').val(),
-                        OrderStatusId: $('#@Html.IdFor(model => model.OrderStatusId)').val(),
-                        PaymentStatusId: $('#@Html.IdFor(model => model.PaymentStatusId)').val(),
-                        ShippingStatusId: $('#@Html.IdFor(model => model.ShippingStatusId)').val()
-                    };
-                    addAntiForgeryToken(data);
-                    return data;
-                }
             </script>
         </div>
     </div>

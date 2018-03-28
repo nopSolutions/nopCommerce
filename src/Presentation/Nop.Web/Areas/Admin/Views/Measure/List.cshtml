@@ -27,7 +27,7 @@
                         @T("Admin.Configuration.Shipping.Measures.Dimensions")
                     </div>
                     <div class="panel-body">
-                        @await Html.PartialAsync("Dimensions", Model.MeasureDimensionSearchModel)
+                        @await Html.PartialAsync("Dimensions", Model)
                     </div>
                 </div>
                 <div class="panel panel-default">
@@ -35,7 +35,7 @@
                         @T("Admin.Configuration.Shipping.Measures.Weights")
                     </div>
                     <div class="panel-body">
-                        @await Html.PartialAsync("Weights", Model.MeasureWeightSearchModel)
+                        @await Html.PartialAsync("Weights", Model)
                     </div>
                 </div>
             </div>

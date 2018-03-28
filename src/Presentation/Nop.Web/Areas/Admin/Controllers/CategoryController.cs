@@ -492,14 +492,14 @@ namespace Nop.Web.Areas.Admin.Controllers
         #region Products
 
         [HttpPost]
-        public virtual IActionResult ProductList(CategoryProductSearchModel searchModel, int categoryId)
+        public virtual IActionResult ProductList(CategoryProductSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
                 return AccessDeniedKendoGridJson();
 
             //try to get a category with the specified id
-            var category = _categoryService.GetCategoryById(categoryId)
-                ?? throw new ArgumentException("No category found with the specified id", nameof(categoryId));
+            var category = _categoryService.GetCategoryById(searchModel.CategoryId)
+                ?? throw new ArgumentException("No category found with the specified id");
 
             //prepare model
             var model = _categoryModelFactory.PrepareCategoryProductListModel(searchModel, category);

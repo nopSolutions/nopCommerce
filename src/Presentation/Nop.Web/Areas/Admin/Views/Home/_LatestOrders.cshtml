@@ -49,7 +49,7 @@
                                 url: "@Html.Raw(Url.Action("OrderList", "Order"))",
                                 type: "POST",
                                 dataType: "json",
-                                data: additionalDataLatestOrders
+                                data: addAntiForgeryToken
                             }
                         },
                         schema: {
@@ -118,12 +118,6 @@
                     ]
                 });
             });
-
-            function additionalDataLatestOrders() {
-                var data = {};
-                addAntiForgeryToken(data);
-                return data;
-            }
         </script>
     </div>
 </div>

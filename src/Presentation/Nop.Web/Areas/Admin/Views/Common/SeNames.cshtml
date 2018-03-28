@@ -1,10 +1,6 @@
 @model UrlRecordSearchModel
 
-@inject AdminAreaSettings adminAreaSettings
 @{
-    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
-    var gridPageSizes = adminAreaSettings.GridPageSizes;
-
     //page title
     ViewBag.Title = T("Admin.System.SeNames").Text;
     //active menu item (system name)
@@ -64,7 +60,13 @@
                                             url: "@Html.Raw(Url.Action("SeNames", "Common"))",
                                             type: "POST",
                                             dataType: "json",
-                                            data: additionalData
+                                            data: function() {
+                                                var data = {
+                                                    SeName: $('#@Html.IdFor(model => model.SeName)').val()
+                                                };
+                                                addAntiForgeryToken(data);
+                                                return data;
+                                            }
                                         }
                                     },
                                     schema: {
@@ -77,14 +79,14 @@
                                         // Cancel the changes
                                         this.cancelChanges();
                                     },
-                                    pageSize: @(defaultGridPageSize),
+                                    pageSize: @(Model.PageSize),
                                     serverPaging: true,
                                     serverFiltering: true,
                                     serverSorting: true
                                 },
                                 pageable: {
                                     refresh: true,
-                                    pageSizes: [@(gridPageSizes)],
+                                    pageSizes: [@(Model.AvailablePageSizes)],
                                     @await Html.PartialAsync("_GridPagerMessages")
                                 },
                                 scrollable: false,
@@ -217,14 +219,6 @@
             updateMasterCheckbox();
         });
     });
-
-    function additionalData() {
-        var data = {
-            SeName: $('#@Html.IdFor(model => model.SeName)').val()
-        };
-        addAntiForgeryToken(data);
-        return data;
-    }
 
     function onDataBound(e) {
         $('#sename-grid input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]').each(function() {

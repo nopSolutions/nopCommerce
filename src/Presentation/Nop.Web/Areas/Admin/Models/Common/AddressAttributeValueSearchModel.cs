@@ -7,5 +7,10 @@ namespace Nop.Web.Areas.Admin.Models.Common
     /// </summary>
     public partial class AddressAttributeValueSearchModel : BaseSearchModel
     {
+        #region Properties
+
+        public int AddressAttributeId { get; set; }
+
+        #endregion
     }
 }

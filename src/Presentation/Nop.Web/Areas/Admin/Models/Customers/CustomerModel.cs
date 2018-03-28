@@ -35,7 +35,7 @@ namespace Nop.Web.Areas.Admin.Models.Customers
             this.AvailableNewsletterSubscriptionStores = new List<SelectListItem>();
             this.SelectedNewsletterSubscriptionStoreIds = new List<int>();
             this.AddRewardPoints = new AddRewardPointsToCustomerModel();
-            this.RewardPointsSearchModel = new CustomerRewardPointsSearchModel();
+            this.CustomerRewardPointsSearchModel = new CustomerRewardPointsSearchModel();
             this.CustomerAddressSearchModel = new CustomerAddressSearchModel();
             this.CustomerOrderSearchModel = new CustomerOrderSearchModel();
             this.CustomerShoppingCartSearchModel = new CustomerShoppingCartSearchModel();
@@ -214,7 +214,7 @@ namespace Nop.Web.Areas.Admin.Models.Customers
 
         public AddRewardPointsToCustomerModel AddRewardPoints { get; set; }
 
-        public CustomerRewardPointsSearchModel RewardPointsSearchModel { get; set; }
+        public CustomerRewardPointsSearchModel CustomerRewardPointsSearchModel { get; set; }
 
         //send email model
         public SendEmailModel SendEmail { get; set; }
