@@ -509,9 +509,9 @@ namespace Nop.Web.Areas.Admin.Extensions
         
         #region Shipping rate computation method
 
-        public static ShippingRateComputationMethodModel ToModel(this IShippingRateComputationMethod entity)
+        public static ShippingProviderModel ToModel(this IShippingRateComputationMethod entity)
         {
-            return entity.MapTo<IShippingRateComputationMethod, ShippingRateComputationMethodModel>();
+            return entity.MapTo<IShippingRateComputationMethod, ShippingProviderModel>();
         }
 
         #endregion

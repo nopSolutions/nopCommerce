@@ -3,8 +3,13 @@ using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Areas.Admin.Models.Shipping
 {
-    public partial class ShippingRateComputationMethodModel : BaseNopModel
+    /// <summary>
+    /// Represents a shipping provider model
+    /// </summary>
+    public partial class ShippingProviderModel : BaseNopModel
     {
+        #region Properties
+
         [NopResourceDisplayName("Admin.Configuration.Shipping.Providers.Fields.FriendlyName")]
         public string FriendlyName { get; set; }
 
@@ -22,5 +27,7 @@ namespace Nop.Web.Areas.Admin.Models.Shipping
 
         [NopResourceDisplayName("Admin.Configuration.Shipping.Providers.Configure")]
         public string ConfigurationUrl { get; set; }
+
+        #endregion
     }
 }
