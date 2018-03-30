@@ -12167,6 +12167,16 @@ namespace Nop.Services.Installation
             }
             product.ProductTags.Add(productTag);
             _productRepository.Update(product);
+
+            //search engine name
+            _urlRecordRepository.Insert(new UrlRecord()
+            {
+                EntityId = productTag.Id,
+                EntityName = "ProductTag",
+                LanguageId = 0,
+                IsActive = true,
+                Slug = productTag.ValidateSeName("", productTag.Name, true)
+            });
         }
 
         #endregion

@@ -2270,3 +2270,206 @@ BEGIN
 	VALUES (N'customersettings.usernamevalidationrule', N'', 0)
 END
 GO
+
+
+IF EXISTS (
+        SELECT *
+        FROM sysobjects
+        WHERE id = OBJECT_ID(N'[temp_generate_sename]') AND OBJECTPROPERTY(id,N'IsProcedure') = 1)
+DROP PROCEDURE [temp_generate_sename]
+GO
+CREATE PROCEDURE [temp_generate_sename]
+(
+    @table_name nvarchar(1000),
+    @entity_id int,
+    @language_id int = 0, --0 to process main sename column, --language id to process a localized value
+    @result nvarchar(1000) OUTPUT
+)
+AS
+BEGIN
+    --get current name
+    DECLARE @current_sename nvarchar(1000)
+    DECLARE @sql nvarchar(4000)
+    
+    IF (@language_id = 0)
+    BEGIN
+        SET @sql = 'SELECT @current_sename = [Name] FROM [' + @table_name + '] WHERE [Id] = ' + ISNULL(CAST(@entity_id AS nvarchar(max)), '0')
+        EXEC sp_executesql @sql,N'@current_sename nvarchar(1000) OUTPUT',@current_sename OUTPUT        
+    END
+    ELSE
+    BEGIN
+        SET @sql = 'SELECT @current_sename = [LocaleValue] FROM [LocalizedProperty] WHERE [LocaleKeyGroup]=''' + @table_name + ''' AND [LocaleKey] = ''Name'' AND [LanguageId] = ' + ISNULL(CAST(@language_id AS nvarchar(max)), '0') + ' AND [EntityId] = ' + ISNULL(CAST(@entity_id AS nvarchar(max)), '0')
+        EXEC sp_executesql @sql,N'@current_sename nvarchar(1000) OUTPUT',@current_sename OUTPUT		
+        
+        --if not empty, se name is already specified by a store owner. if empty, we should use poduct name
+        IF (@current_sename is null or @current_sename = N'')
+        BEGIN
+            SET @sql = 'SELECT @current_sename = [LocaleValue] FROM [LocalizedProperty] WHERE [LocaleKeyGroup]=''' + @table_name + ''' AND [LocaleKey] = ''Name'' AND [LanguageId] = ' + ISNULL(CAST(@language_id AS nvarchar(max)), '0') + ' AND [EntityId] = ' + ISNULL(CAST(@entity_id AS nvarchar(max)), '0')
+            EXEC sp_executesql @sql,N'@current_sename nvarchar(1000) OUTPUT',@current_sename OUTPUT        
+        END
+        
+        --if localized product name is also empty, we exit
+        IF (@current_sename is null or @current_sename = N'')
+            RETURN
+    END
+    
+    --generate se name    
+    DECLARE @new_sename nvarchar(1000)
+    SET @new_sename = ''
+    --ensure only allowed chars
+    DECLARE @allowed_se_chars nvarchar(4000)
+    --Note for store owners: add more chars below if want them to be supported when migrating your data
+    SET @allowed_se_chars = N'abcdefghijklmnopqrstuvwxyz1234567890 _-'
+    DECLARE @l int
+    SET @l = len(@current_sename)
+    DECLARE @p int
+    SET @p = 1
+    WHILE @p <= @l
+    BEGIN
+        DECLARE @c nvarchar(1)
+        SET @c = substring(@current_sename, @p, 1)
+        IF CHARINDEX(@c,@allowed_se_chars) > 0
+        BEGIN
+            SET @new_sename = @new_sename + @c
+        END		
+        SET @p = @p + 1
+    END	
+    --replace spaces with '-'
+    SELECT @new_sename = REPLACE(@new_sename,' ','-');
+    WHILE CHARINDEX('--',@new_sename) > 0
+        SELECT @new_sename = REPLACE(@new_sename,'--','-');
+    WHILE CHARINDEX('__',@new_sename) > 0
+        SELECT @new_sename = REPLACE(@new_sename,'__','_');
+    --ensure not empty
+    IF (@new_sename is null or @new_sename = '')
+        SELECT @new_sename = ISNULL(CAST(@entity_id AS nvarchar(max)), '0');
+    --lowercase
+    SELECT @new_sename = LOWER(@new_sename)
+    --ensure this sename is not reserved
+    WHILE (1=1)
+    BEGIN
+        DECLARE @sename_is_already_reserved bit
+        SET @sename_is_already_reserved = 0
+        SET @sql = 'IF EXISTS (SELECT 1 FROM [UrlRecord] WHERE [Slug] = @sename AND NOT ([EntityId] = ' + ISNULL(CAST(@entity_id AS nvarchar(max)), '0') + ' AND [EntityName] = ''' + @table_name + '''))
+                    BEGIN
+                        SELECT @sename_is_already_reserved = 1
+                    END'
+        EXEC sp_executesql @sql,N'@sename nvarchar(1000), @sename_is_already_reserved nvarchar(4000) OUTPUT',@new_sename,@sename_is_already_reserved OUTPUT
+        
+        IF (@sename_is_already_reserved > 0)
+        BEGIN
+            --add some digit to the end in this case
+            SET @new_sename = @new_sename + '-2'
+        END
+        ELSE
+        BEGIN
+            BREAK
+        END
+    END
+    
+    --return
+    SET @result = @new_sename
+END
+GO
+
+
+--update [sename] column for product tags
+BEGIN
+    DECLARE @sename_existing_entity_id int
+    DECLARE cur_sename_existing_entity CURSOR FOR
+    SELECT [Id]
+    FROM [ProductTag]
+    OPEN cur_sename_existing_entity
+    FETCH NEXT FROM cur_sename_existing_entity INTO @sename_existing_entity_id
+    WHILE @@FETCH_STATUS = 0
+    BEGIN
+        DECLARE @sename nvarchar(1000)    
+        SET @sename = null -- clear cache (variable scope)
+        
+        DECLARE @table_name nvarchar(1000)    
+        SET @table_name = N'ProductTag'
+        
+        DECLARE @product_tag_system_name nvarchar(1000)
+        SET @product_tag_system_name = null -- clear cache (variable scope)
+        SELECT @product_tag_system_name = [Name] FROM [ProductTag] WHERE [Id] = @sename_existing_entity_id
+        
+        --main sename
+        EXEC    [dbo].[temp_generate_sename]
+				@table_name = @table_name,
+                @entity_id = @sename_existing_entity_id,                
+                @result = @sename OUTPUT
+                
+        IF EXISTS(SELECT 1 FROM [UrlRecord] WHERE [LanguageId]=0 AND [EntityId]=@sename_existing_entity_id AND [EntityName]=@table_name)
+        BEGIN
+            UPDATE [UrlRecord]
+            SET [Slug] = @sename
+            WHERE [LanguageId]=0 AND [EntityId]=@sename_existing_entity_id AND [EntityName]=@table_name
+        END
+        ELSE
+        BEGIN
+            INSERT INTO [UrlRecord] ([EntityId], [EntityName], [Slug], [IsActive], [LanguageId])
+            VALUES (@sename_existing_entity_id, @table_name, @sename, 1, 0)
+        END        
+		
+		
+		--localized values
+        DECLARE @ExistingLanguageID int
+        DECLARE cur_existinglanguage CURSOR FOR
+        SELECT [ID]
+        FROM [Language]
+        OPEN cur_existinglanguage
+        FETCH NEXT FROM cur_existinglanguage INTO @ExistingLanguageID
+        WHILE @@FETCH_STATUS = 0
+        BEGIN    
+            SET @sename = null -- clear cache (variable scope)
+            
+            EXEC    [dbo].[temp_generate_sename]
+                    @table_name = @table_name,
+                    @entity_id = @sename_existing_entity_id,
+                    @language_id = @ExistingLanguageID,
+                    @result = @sename OUTPUT
+            IF (len(@sename) > 0)
+            BEGIN
+                
+                DECLARE @sql nvarchar(4000)
+                SET @sql = 'IF EXISTS (SELECT 1 FROM [UrlRecord] WHERE [EntityName]=''' + @table_name + ''' AND [LanguageId] = ' + ISNULL(CAST(@ExistingLanguageID AS nvarchar(max)), '0') + ' AND [EntityId] = ' + ISNULL(CAST(@sename_existing_entity_id AS nvarchar(max)), '0') + ')
+                BEGIN
+                    --update
+                    UPDATE [UrlRecord]
+                    SET [Slug] = @sename
+                    WHERE [EntityName]=''' + @table_name + ''' AND [LanguageId] = ' + ISNULL(CAST(@ExistingLanguageID AS nvarchar(max)), '0') + ' AND [EntityId] = ' + ISNULL(CAST(@sename_existing_entity_id AS nvarchar(max)), '0') + '
+                END
+                ELSE
+                BEGIN
+                    --insert
+                    INSERT INTO [UrlRecord] ([EntityId], [EntityName], [Slug], [IsActive], [LanguageId])
+                    VALUES (' + ISNULL(CAST(@sename_existing_entity_id AS nvarchar(max)), '0') +','''+ @table_name + ''',@sename, 1, ' + ISNULL(CAST(@ExistingLanguageID AS nvarchar(max)), '0')+ ')
+                END
+                '
+                EXEC sp_executesql @sql,N'@sename nvarchar(1000) OUTPUT',@sename OUTPUT
+                
+            END
+                    
+
+            --fetch next language identifier
+            FETCH NEXT FROM cur_existinglanguage INTO @ExistingLanguageID
+        END
+        CLOSE cur_existinglanguage
+        DEALLOCATE cur_existinglanguage
+
+
+        --fetch next identifier
+        FETCH NEXT FROM cur_sename_existing_entity INTO @sename_existing_entity_id
+    END
+    CLOSE cur_sename_existing_entity
+    DEALLOCATE cur_sename_existing_entity
+END
+GO
+
+--drop temporary procedures & functions
+IF EXISTS (
+        SELECT *
+        FROM sys.objects
+        WHERE object_id = OBJECT_ID(N'[temp_generate_sename]') AND OBJECTPROPERTY(object_id,N'IsProcedure') = 1)
+DROP PROCEDURE [temp_generate_sename]
+GO
