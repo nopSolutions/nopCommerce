@@ -235,5 +235,30 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="withSpecialDefaultItem">Whether to insert the first special item for the default value</param>
         /// <param name="defaultItemText">Default item text; pass null to use default value of the default item text</param>
         void PrepareTopicTemplates(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null);
+
+        /// <summary>
+        /// Prepare available warehouses
+        /// </summary>
+        /// <param name="items">Warehouse items</param>
+        /// <param name="withSpecialDefaultItem">Whether to insert the first special item for the default value</param>
+        /// <param name="defaultItemText">Default item text; pass null to use default value of the default item text</param>
+        void PrepareWarehouses(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null);
+
+        /// <summary>
+        /// Prepare available delivery dates
+        /// </summary>
+        /// <param name="items">Delivery date items</param>
+        /// <param name="withSpecialDefaultItem">Whether to insert the first special item for the default value</param>
+        /// <param name="defaultItemText">Default item text; pass null to use default value of the default item text</param>
+        void PrepareDeliveryDates(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null);
+
+        /// <summary>
+        /// Prepare available product availability ranges
+        /// </summary>
+        /// <param name="items">Product availability range items</param>
+        /// <param name="withSpecialDefaultItem">Whether to insert the first special item for the default value</param>
+        /// <param name="defaultItemText">Default item text; pass null to use default value of the default item text</param>
+        void PrepareProductAvailabilityRanges(IList<SelectListItem> items,
+            bool withSpecialDefaultItem = true, string defaultItemText = null);
     }
 }

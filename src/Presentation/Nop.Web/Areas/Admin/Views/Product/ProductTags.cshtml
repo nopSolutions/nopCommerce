@@ -1,9 +1,6 @@
-@inject AdminAreaSettings adminAreaSettings
+@model ProductTagSearchModel
 
 @{
-    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
-    var gridPageSizes = adminAreaSettings.GridPageSizes;
-
     //page title
     ViewBag.Title = T("Admin.Catalog.ProductTags").Text;
     //active menu item (system name)
@@ -71,14 +68,14 @@
                                         // Cancel the changes
                                         this.cancelChanges();
                                     },
-                                    pageSize: @(defaultGridPageSize),
+                                    pageSize: @(Model.PageSize),
                                     serverPaging: true,
                                     serverFiltering: true,
                                     serverSorting: true
                                 },
                                 pageable: {
                                     refresh: true,
-                                    pageSizes: [@(gridPageSizes)],
+                                    pageSizes: [@(Model.AvailablePageSizes)],
                                     @await Html.PartialAsync("_GridPagerMessages")
                                 },
                                 editable: {

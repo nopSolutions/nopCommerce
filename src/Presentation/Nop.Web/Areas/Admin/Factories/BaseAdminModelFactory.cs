@@ -20,6 +20,8 @@ using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Messages;
 using Nop.Services.Plugins;
+using Nop.Services.Shipping;
+using Nop.Services.Shipping.Date;
 using Nop.Services.Stores;
 using Nop.Services.Tax;
 using Nop.Services.Topics;
@@ -41,6 +43,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly ICurrencyService _currencyService;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly ICustomerService _customerService;
+        private readonly IDateRangeService _dateRangeService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IEmailAccountService _emailAccountService;
         private readonly ILanguageService _languageService;
@@ -49,6 +52,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IManufacturerTemplateService _manufacturerTemplateService;
         private readonly IPluginFinder _pluginFinder;
         private readonly IProductTemplateService _productTemplateService;
+        private readonly IShippingService _shippingService;
         private readonly IStateProvinceService _stateProvinceService;
         private readonly IStaticCacheManager _cacheManager;
         private readonly IStoreService _storeService;
@@ -66,6 +70,7 @@ namespace Nop.Web.Areas.Admin.Factories
             ICurrencyService currencyService,
             ICustomerActivityService customerActivityService,
             ICustomerService customerService,
+            IDateRangeService dateRangeService,
             IDateTimeHelper dateTimeHelper,
             IEmailAccountService emailAccountService,
             ILanguageService languageService,
@@ -74,6 +79,7 @@ namespace Nop.Web.Areas.Admin.Factories
             IManufacturerTemplateService manufacturerTemplateService,
             IPluginFinder pluginFinder,
             IProductTemplateService productTemplateService,
+            IShippingService shippingService,
             IStateProvinceService stateProvinceService,
             IStaticCacheManager cacheManager,
             IStoreService storeService,
@@ -87,14 +93,16 @@ namespace Nop.Web.Areas.Admin.Factories
             this._currencyService = currencyService;
             this._customerActivityService = customerActivityService;
             this._customerService = customerService;
+            this._dateRangeService = dateRangeService;
             this._dateTimeHelper = dateTimeHelper;
             this._emailAccountService = emailAccountService;
             this._languageService = languageService;
             this._localizationService = localizationService;
             this._manufacturerService = manufacturerService;
+            this._manufacturerTemplateService = manufacturerTemplateService;
             this._pluginFinder = pluginFinder;
             this._productTemplateService = productTemplateService;
-            this._manufacturerTemplateService = manufacturerTemplateService;
+            this._shippingService = shippingService;
             this._stateProvinceService = stateProvinceService;
             this._cacheManager = cacheManager;
             this._storeService = storeService;
@@ -759,6 +767,73 @@ namespace Nop.Web.Areas.Admin.Factories
             foreach (var template in availableTemplates)
             {
                 items.Add(new SelectListItem { Value = template.Id.ToString(), Text = template.Name });
+            }
+
+            //insert special item for the default value
+            PrepareDefaultItem(items, withSpecialDefaultItem, defaultItemText);
+        }
+
+        /// <summary>
+        /// Prepare available warehouses
+        /// </summary>
+        /// <param name="items">Warehouse items</param>
+        /// <param name="withSpecialDefaultItem">Whether to insert the first special item for the default value</param>
+        /// <param name="defaultItemText">Default item text; pass null to use default value of the default item text</param>
+        public virtual void PrepareWarehouses(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
+        {
+            if (items == null)
+                throw new ArgumentNullException(nameof(items));
+
+            //prepare available warehouses
+            var availableWarehouses = _shippingService.GetAllWarehouses();
+            foreach (var warehouse in availableWarehouses)
+            {
+                items.Add(new SelectListItem { Value = warehouse.Id.ToString(), Text = warehouse.Name });
+            }
+
+            //insert special item for the default value
+            PrepareDefaultItem(items, withSpecialDefaultItem, defaultItemText);
+        }
+
+        /// <summary>
+        /// Prepare available delivery dates
+        /// </summary>
+        /// <param name="items">Delivery date items</param>
+        /// <param name="withSpecialDefaultItem">Whether to insert the first special item for the default value</param>
+        /// <param name="defaultItemText">Default item text; pass null to use default value of the default item text</param>
+        public virtual void PrepareDeliveryDates(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
+        {
+            if (items == null)
+                throw new ArgumentNullException(nameof(items));
+
+            //prepare available delivery dates
+            var availableDeliveryDates = _dateRangeService.GetAllDeliveryDates();
+            foreach (var date in availableDeliveryDates)
+            {
+                items.Add(new SelectListItem { Value = date.Id.ToString(), Text = date.Name });
+            }
+
+            //insert special item for the default value
+            PrepareDefaultItem(items, withSpecialDefaultItem, defaultItemText);
+        }
+
+        /// <summary>
+        /// Prepare available product availability ranges
+        /// </summary>
+        /// <param name="items">Product availability range items</param>
+        /// <param name="withSpecialDefaultItem">Whether to insert the first special item for the default value</param>
+        /// <param name="defaultItemText">Default item text; pass null to use default value of the default item text</param>
+        public virtual void PrepareProductAvailabilityRanges(IList<SelectListItem> items, 
+            bool withSpecialDefaultItem = true, string defaultItemText = null)
+        {
+            if (items == null)
+                throw new ArgumentNullException(nameof(items));
+
+            //prepare available product availability ranges
+            var availableProductAvailabilityRanges = _dateRangeService.GetAllProductAvailabilityRanges();
+            foreach (var range in availableProductAvailabilityRanges)
+            {
+                items.Add(new SelectListItem { Value = range.Id.ToString(), Text = range.Name });
             }
 
             //insert special item for the default value

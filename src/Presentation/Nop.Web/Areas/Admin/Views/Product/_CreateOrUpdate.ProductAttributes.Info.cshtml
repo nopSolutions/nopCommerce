@@ -11,10 +11,16 @@
                         type: "json",
                         transport: {
                             read: {
-                                url: "@Html.Raw(Url.Action("ProductAttributeMappingList", "Product", new { productId = Model.Id }))",
+                                url: "@Html.Raw(Url.Action("ProductAttributeMappingList", "Product"))",
                                 type: "POST",
                                 dataType: "json",
-                                data: addAntiForgeryToken
+                                data: function additionalData() {
+                                    var data = {
+                                        ProductId: '@(Model.Id)'
+                                    };
+                                    addAntiForgeryToken(data);
+                                    return data;
+                                }
                             }
                         },
                         schema: {
@@ -27,15 +33,14 @@
                             // Cancel the changes
                             this.cancelChanges();
                         },
+                        pageSize: @(Model.ProductAttributeMappingSearchModel.PageSize),
                         serverPaging: true,
                         serverFiltering: true,
                         serverSorting: true
                     },
                     pageable: {
                         refresh: true,
-                        numeric: false,
-                        previousNext: false,
-                        info: false,
+                        pageSizes: [@(Model.ProductAttributeMappingSearchModel.AvailablePageSizes)],
                         @await Html.PartialAsync("_GridPagerMessages")
                     },
                     editable: {

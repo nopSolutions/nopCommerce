@@ -10,16 +10,22 @@ using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Models.Catalog
 {
+    /// <summary>
+    /// Represents a product model
+    /// </summary>
     [Validator(typeof(ProductValidator))]
-    public partial class ProductModel : BaseNopEntityModel, ILocalizedModel<ProductLocalizedModel>
+    public partial class ProductModel : BaseNopEntityModel, 
+        IAclSupportedModel, IDiscountSupportedModel, ILocalizedModel<ProductLocalizedModel>, IStoreMappingSupportedModel
     {
+        #region Ctor
+
         public ProductModel()
         {
-            Locales = new List<ProductLocalizedModel>();
             ProductPictureModels = new List<ProductPictureModel>();
+            Locales = new List<ProductLocalizedModel>();
             CopyProductModel = new CopyProductModel();
             AddPictureModel = new ProductPictureModel();
-            AddSpecificationAttributeModel = new AddProductSpecificationAttributeModel();
+            AddSpecificationAttributeModel = new AddSpecificationAttributeToProductModel();
             ProductWarehouseInventoryModels = new List<ProductWarehouseInventoryModel>();
             ProductEditorSettingsModel = new ProductEditorSettingsModel();
             StockQuantityHistory = new StockQuantityHistoryModel();
@@ -49,7 +55,22 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
 
             SelectedDiscountIds = new List<int>();
             AvailableDiscounts = new List<SelectListItem>();
+
+            RelatedProductSearchModel = new RelatedProductSearchModel();
+            CrossSellProductSearchModel = new CrossSellProductSearchModel();
+            AssociatedProductSearchModel = new AssociatedProductSearchModel();
+            ProductPictureSearchModel = new ProductPictureSearchModel();
+            ProductSpecificationAttributeSearchModel = new ProductSpecificationAttributeSearchModel();
+            ProductOrderSearchModel = new ProductOrderSearchModel();
+            TierPriceSearchModel = new TierPriceSearchModel();
+            StockQuantityHistorySearchModel = new StockQuantityHistorySearchModel();
+            ProductAttributeMappingSearchModel = new ProductAttributeMappingSearchModel();
+            ProductAttributeCombinationSearchModel = new ProductAttributeCombinationSearchModel();
         }
+
+        #endregion
+
+        #region Properties
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.ID")]
         public override int Id { get; set; }
@@ -60,11 +81,13 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.ProductType")]
         public int ProductTypeId { get; set; }
+
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.ProductType")]
         public string ProductTypeName { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.AssociatedToProductName")]
         public int AssociatedToProductId { get; set; }
+
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.AssociatedToProductName")]
         public string AssociatedToProductName { get; set; }
 
@@ -74,6 +97,7 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.ProductTemplate")]
         public int ProductTemplateId { get; set; }
         public IList<SelectListItem> AvailableProductTemplates { get; set; }
+
         //<product type ID, list of supported product template IDs>
         public Dictionary<int, IList<SelectListItem>> ProductsTypesSupportedByProductTemplates { get; set; }
 
@@ -121,8 +145,10 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.IsGiftCard")]
         public bool IsGiftCard { get; set; }
+
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.GiftCardType")]
         public int GiftCardTypeId { get; set; }
+
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.OverriddenGiftCardAmount")]
         [UIHint("DecimalNullable")]
         public decimal? OverriddenGiftCardAmount { get; set; }
@@ -232,7 +258,9 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.StockQuantity")]
         public int StockQuantity { get; set; }
+
         public int LastStockQuantity { get; set; }
+
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.StockQuantity")]
         public string StockQuantityStr { get; set; }
 
@@ -308,22 +336,28 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.BasepriceEnabled")]
         public bool BasepriceEnabled { get; set; }
+
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.BasepriceAmount")]
         public decimal BasepriceAmount { get; set; }
+
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.BasepriceUnit")]
         public int BasepriceUnitId { get; set; }
         public IList<SelectListItem> AvailableBasepriceUnits { get; set; }
+
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.BasepriceBaseAmount")]
         public decimal BasepriceBaseAmount { get; set; }
+
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.BasepriceBaseUnit")]
         public int BasepriceBaseUnitId { get; set; }
         public IList<SelectListItem> AvailableBasepriceBaseUnits { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.MarkAsNew")]
         public bool MarkAsNew { get; set; }
+
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.MarkAsNewStartDateTimeUtc")]
         [UIHint("DateTimeNullable")]
         public DateTime? MarkAsNewStartDateTimeUtc { get; set; }
+
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.MarkAsNewEndDateTimeUtc")]
         [UIHint("DateTimeNullable")]
         public DateTime? MarkAsNewEndDateTimeUtc { get; set; }
@@ -356,11 +390,14 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.CreatedOn")]
         public DateTime? CreatedOn { get; set; }
+
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.UpdatedOn")]
         public DateTime? UpdatedOn { get; set; }
 
         public string PrimaryStoreCurrencyCode { get; set; }
+
         public string BaseDimensionIn { get; set; }
+
         public string BaseWeightIn { get; set; }
 
         public IList<ProductLocalizedModel> Locales { get; set; }
@@ -406,7 +443,7 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
         public bool ProductAttributesExist { get; set; }
 
         //add specification attribute model
-        public AddProductSpecificationAttributeModel AddSpecificationAttributeModel { get; set; }
+        public AddSpecificationAttributeToProductModel AddSpecificationAttributeModel { get; set; }
 
         //multiple warehouses
         [NopResourceDisplayName("Admin.Catalog.Products.ProductWarehouseInventory")]
@@ -421,503 +458,25 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
         //stock quantity history
         public StockQuantityHistoryModel StockQuantityHistory { get; set; }
 
-        #region Nested classes
+        public RelatedProductSearchModel RelatedProductSearchModel { get; set; }
 
-        public partial class AddRequiredProductModel : BaseNopModel
-        {
-            public AddRequiredProductModel()
-            {
-                AvailableCategories = new List<SelectListItem>();
-                AvailableManufacturers = new List<SelectListItem>();
-                AvailableStores = new List<SelectListItem>();
-                AvailableVendors = new List<SelectListItem>();
-                AvailableProductTypes = new List<SelectListItem>();
-            }
+        public CrossSellProductSearchModel CrossSellProductSearchModel { get; set; }
 
-            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchProductName")]
-            public string SearchProductName { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchCategory")]
-            public int SearchCategoryId { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchManufacturer")]
-            public int SearchManufacturerId { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchStore")]
-            public int SearchStoreId { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchVendor")]
-            public int SearchVendorId { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchProductType")]
-            public int SearchProductTypeId { get; set; }
+        public AssociatedProductSearchModel AssociatedProductSearchModel { get; set; }
 
-            public IList<SelectListItem> AvailableCategories { get; set; }
-            public IList<SelectListItem> AvailableManufacturers { get; set; }
-            public IList<SelectListItem> AvailableStores { get; set; }
-            public IList<SelectListItem> AvailableVendors { get; set; }
-            public IList<SelectListItem> AvailableProductTypes { get; set; }
+        public ProductPictureSearchModel ProductPictureSearchModel { get; set; }
 
-            //vendor
-            public bool IsLoggedInAsVendor { get; set; }
-        }
+        public ProductSpecificationAttributeSearchModel ProductSpecificationAttributeSearchModel { get; set; }
 
-        public partial class AddProductSpecificationAttributeModel : BaseNopModel
-        {
-            public AddProductSpecificationAttributeModel()
-            {
-                AvailableAttributes = new List<SelectListItem>();
-                AvailableOptions = new List<SelectListItem>();
-            }
-            
-            [NopResourceDisplayName("Admin.Catalog.Products.SpecificationAttributes.Fields.SpecificationAttribute")]
-            public int SpecificationAttributeId { get; set; }
+        public ProductOrderSearchModel ProductOrderSearchModel { get; set; }
 
-            [NopResourceDisplayName("Admin.Catalog.Products.SpecificationAttributes.Fields.AttributeType")]
-            public int AttributeTypeId { get; set; }
+        public TierPriceSearchModel TierPriceSearchModel { get; set; }
 
-            [NopResourceDisplayName("Admin.Catalog.Products.SpecificationAttributes.Fields.SpecificationAttributeOption")]
-            public int SpecificationAttributeOptionId { get; set; }
-            
-            [NopResourceDisplayName("Admin.Catalog.Products.SpecificationAttributes.Fields.CustomValue")]
-            public string CustomValue { get; set; }
+        public StockQuantityHistorySearchModel StockQuantityHistorySearchModel { get; set; }
 
-            [NopResourceDisplayName("Admin.Catalog.Products.SpecificationAttributes.Fields.AllowFiltering")]
-            public bool AllowFiltering { get; set; }
+        public ProductAttributeMappingSearchModel ProductAttributeMappingSearchModel { get; set; }
 
-            [NopResourceDisplayName("Admin.Catalog.Products.SpecificationAttributes.Fields.ShowOnProductPage")]
-            public bool ShowOnProductPage { get; set; }
-
-            [NopResourceDisplayName("Admin.Catalog.Products.SpecificationAttributes.Fields.DisplayOrder")]
-            public int DisplayOrder { get; set; }
-
-            public IList<SelectListItem> AvailableAttributes { get; set; }
-            public IList<SelectListItem> AvailableOptions { get; set; }
-        }
-        
-        public partial class ProductPictureModel : BaseNopEntityModel
-        {
-            public int ProductId { get; set; }
-
-            [UIHint("Picture")]
-            [NopResourceDisplayName("Admin.Catalog.Products.Pictures.Fields.Picture")]
-            public int PictureId { get; set; }
-
-            [NopResourceDisplayName("Admin.Catalog.Products.Pictures.Fields.Picture")]
-            public string PictureUrl { get; set; }
-
-            [NopResourceDisplayName("Admin.Catalog.Products.Pictures.Fields.DisplayOrder")]
-            public int DisplayOrder { get; set; }
-
-            [NopResourceDisplayName("Admin.Catalog.Products.Pictures.Fields.OverrideAltAttribute")]
-            public string OverrideAltAttribute { get; set; }
-
-            [NopResourceDisplayName("Admin.Catalog.Products.Pictures.Fields.OverrideTitleAttribute")]
-            public string OverrideTitleAttribute { get; set; }
-        }
-
-        public partial class RelatedProductModel : BaseNopEntityModel
-        {
-            public int ProductId2 { get; set; }
-
-            [NopResourceDisplayName("Admin.Catalog.Products.RelatedProducts.Fields.Product")]
-            public string Product2Name { get; set; }
-            
-            [NopResourceDisplayName("Admin.Catalog.Products.RelatedProducts.Fields.DisplayOrder")]
-            public int DisplayOrder { get; set; }
-        }
-
-        public partial class AddRelatedProductModel : BaseNopModel
-        {
-            public AddRelatedProductModel()
-            {
-                AvailableCategories = new List<SelectListItem>();
-                AvailableManufacturers = new List<SelectListItem>();
-                AvailableStores = new List<SelectListItem>();
-                AvailableVendors = new List<SelectListItem>();
-                AvailableProductTypes = new List<SelectListItem>();
-            }
-
-            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchProductName")]
-            public string SearchProductName { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchCategory")]
-            public int SearchCategoryId { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchManufacturer")]
-            public int SearchManufacturerId { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchStore")]
-            public int SearchStoreId { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchVendor")]
-            public int SearchVendorId { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchProductType")]
-            public int SearchProductTypeId { get; set; }
-
-            public IList<SelectListItem> AvailableCategories { get; set; }
-            public IList<SelectListItem> AvailableManufacturers { get; set; }
-            public IList<SelectListItem> AvailableStores { get; set; }
-            public IList<SelectListItem> AvailableVendors { get; set; }
-            public IList<SelectListItem> AvailableProductTypes { get; set; }
-
-            public int ProductId { get; set; }
-
-            public int[] SelectedProductIds { get; set; }
-
-            //vendor
-            public bool IsLoggedInAsVendor { get; set; }
-        }
-
-        public partial class AssociatedProductModel : BaseNopEntityModel
-        {
-            [NopResourceDisplayName("Admin.Catalog.Products.AssociatedProducts.Fields.Product")]
-            public string ProductName { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.AssociatedProducts.Fields.DisplayOrder")]
-            public int DisplayOrder { get; set; }
-        }
-
-        public partial class AddAssociatedProductModel : BaseNopModel
-        {
-            public AddAssociatedProductModel()
-            {
-                AvailableCategories = new List<SelectListItem>();
-                AvailableManufacturers = new List<SelectListItem>();
-                AvailableStores = new List<SelectListItem>();
-                AvailableVendors = new List<SelectListItem>();
-                AvailableProductTypes = new List<SelectListItem>();
-            }
-
-            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchProductName")]
-            public string SearchProductName { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchCategory")]
-            public int SearchCategoryId { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchManufacturer")]
-            public int SearchManufacturerId { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchStore")]
-            public int SearchStoreId { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchVendor")]
-            public int SearchVendorId { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchProductType")]
-            public int SearchProductTypeId { get; set; }
-
-            public IList<SelectListItem> AvailableCategories { get; set; }
-            public IList<SelectListItem> AvailableManufacturers { get; set; }
-            public IList<SelectListItem> AvailableStores { get; set; }
-            public IList<SelectListItem> AvailableVendors { get; set; }
-            public IList<SelectListItem> AvailableProductTypes { get; set; }
-
-            public int ProductId { get; set; }
-
-            public int[] SelectedProductIds { get; set; }
-
-            //vendor
-            public bool IsLoggedInAsVendor { get; set; }
-        }
-
-        public partial class CrossSellProductModel : BaseNopEntityModel
-        {
-            public int ProductId2 { get; set; }
-
-            [NopResourceDisplayName("Admin.Catalog.Products.CrossSells.Fields.Product")]
-            public string Product2Name { get; set; }
-        }
-
-        public partial class AddCrossSellProductModel : BaseNopModel
-        {
-            public AddCrossSellProductModel()
-            {
-                AvailableCategories = new List<SelectListItem>();
-                AvailableManufacturers = new List<SelectListItem>();
-                AvailableStores = new List<SelectListItem>();
-                AvailableVendors = new List<SelectListItem>();
-                AvailableProductTypes = new List<SelectListItem>();
-            }
-
-            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchProductName")]
-            public string SearchProductName { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchCategory")]
-            public int SearchCategoryId { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchManufacturer")]
-            public int SearchManufacturerId { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchStore")]
-            public int SearchStoreId { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchVendor")]
-            public int SearchVendorId { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchProductType")]
-            public int SearchProductTypeId { get; set; }
-
-            public IList<SelectListItem> AvailableCategories { get; set; }
-            public IList<SelectListItem> AvailableManufacturers { get; set; }
-            public IList<SelectListItem> AvailableStores { get; set; }
-            public IList<SelectListItem> AvailableVendors { get; set; }
-            public IList<SelectListItem> AvailableProductTypes { get; set; }
-
-            public int ProductId { get; set; }
-
-            public int[] SelectedProductIds { get; set; }
-
-            //vendor
-            public bool IsLoggedInAsVendor { get; set; }
-        }
-
-        public partial class TierPriceModel : BaseNopEntityModel
-        {
-            public TierPriceModel()
-            {
-                AvailableStores = new List<SelectListItem>();
-                AvailableCustomerRoles = new List<SelectListItem>();
-            }
-
-            public int ProductId { get; set; }
-
-            [NopResourceDisplayName("Admin.Catalog.Products.TierPrices.Fields.CustomerRole")]
-            public int CustomerRoleId { get; set; }
-            public IList<SelectListItem> AvailableCustomerRoles { get; set; }
-            public string CustomerRole { get; set; }
-
-            [NopResourceDisplayName("Admin.Catalog.Products.TierPrices.Fields.Store")]
-            public int StoreId { get; set; }
-            public IList<SelectListItem> AvailableStores { get; set; }
-            public string Store { get; set; }
-
-            [NopResourceDisplayName("Admin.Catalog.Products.TierPrices.Fields.Quantity")]
-            public int Quantity { get; set; }
-
-            [NopResourceDisplayName("Admin.Catalog.Products.TierPrices.Fields.Price")]
-            public decimal Price { get; set; }
-
-            [NopResourceDisplayName("Admin.Catalog.Products.TierPrices.Fields.StartDateTimeUtc")]
-            [UIHint("DateTimeNullable")]
-            public DateTime? StartDateTimeUtc { get; set; }
-
-            [NopResourceDisplayName("Admin.Catalog.Products.TierPrices.Fields.EndDateTimeUtc")]
-            [UIHint("DateTimeNullable")]
-            public DateTime? EndDateTimeUtc { get; set; }
-        }
-
-        public partial class ProductWarehouseInventoryModel : BaseNopModel
-        {
-            [NopResourceDisplayName("Admin.Catalog.Products.ProductWarehouseInventory.Fields.Warehouse")]
-            public int WarehouseId { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.ProductWarehouseInventory.Fields.Warehouse")]
-            public string WarehouseName { get; set; }
-
-            [NopResourceDisplayName("Admin.Catalog.Products.ProductWarehouseInventory.Fields.WarehouseUsed")]
-            public bool WarehouseUsed { get; set; }
-
-            [NopResourceDisplayName("Admin.Catalog.Products.ProductWarehouseInventory.Fields.StockQuantity")]
-            public int StockQuantity { get; set; }
-
-            [NopResourceDisplayName("Admin.Catalog.Products.ProductWarehouseInventory.Fields.ReservedQuantity")]
-            public int ReservedQuantity { get; set; }
-
-            [NopResourceDisplayName("Admin.Catalog.Products.ProductWarehouseInventory.Fields.PlannedQuantity")]
-            public int PlannedQuantity { get; set; }
-        }
-
-        public partial class ProductAttributeMappingModel : BaseNopEntityModel, ILocalizedModel<ProductAttributeMappingLocalizedModel>
-        {
-            public ProductAttributeMappingModel()
-            {
-                AvailableProductAttributes = new List<SelectListItem>();
-                Locales = new List<ProductAttributeMappingLocalizedModel>();
-            }
-
-            public int ProductId { get; set; }
-
-            [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Fields.Attribute")]
-            public int ProductAttributeId { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Fields.Attribute")]
-            public string ProductAttribute { get; set; }
-            public IList<SelectListItem> AvailableProductAttributes { get; set; }
-
-            [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Fields.TextPrompt")]
-            public string TextPrompt { get; set; }
-
-            [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Fields.IsRequired")]
-            public bool IsRequired { get; set; }
-
-            [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Fields.AttributeControlType")]
-            public int AttributeControlTypeId { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Fields.AttributeControlType")]
-            public string AttributeControlType { get; set; }
-
-            [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Fields.DisplayOrder")]
-            public int DisplayOrder { get; set; }
-
-            //validation fields
-            [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules.MinLength")]
-            [UIHint("Int32Nullable")]
-            public int? ValidationMinLength { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules.MaxLength")]
-            [UIHint("Int32Nullable")]
-            public int? ValidationMaxLength { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules.FileAllowedExtensions")]
-            public string ValidationFileAllowedExtensions { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules.FileMaximumSize")]
-            [UIHint("Int32Nullable")]
-            public int? ValidationFileMaximumSize { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules.DefaultValue")]
-            public string DefaultValue { get; set; }
-            public string ValidationRulesString { get; set; }
-            
-            //condition
-            [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Condition")]
-            public bool ConditionAllowed { get; set; }
-            public string ConditionString { get; set; }
-            public ProductAttributeConditionModel ConditionModel { get; set; }
-
-            public IList<ProductAttributeMappingLocalizedModel> Locales { get; set; }
-        }
-
-        public partial class ProductAttributeMappingLocalizedModel : ILocalizedLocaleModel
-        {
-            public int LanguageId { get; set; }
-
-            [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Fields.TextPrompt")]
-            public string TextPrompt { get; set; }
-        }
-
-        [Validator(typeof(ProductAttributeValueModelValidator))]
-        public partial class ProductAttributeValueModel : BaseNopEntityModel, ILocalizedModel<ProductAttributeValueLocalizedModel>
-        {
-            public ProductAttributeValueModel()
-            {
-                ProductPictureModels = new List<ProductPictureModel>();
-                Locales = new List<ProductAttributeValueLocalizedModel>();
-            }
-
-            public int ProductAttributeMappingId { get; set; }
-
-            [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.AttributeValueType")]
-            public int AttributeValueTypeId { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.AttributeValueType")]
-            public string AttributeValueTypeName { get; set; }
-
-            [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.AssociatedProduct")]
-            public int AssociatedProductId { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.AssociatedProduct")]
-            public string AssociatedProductName { get; set; }
-
-            [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.Name")]
-            public string Name { get; set; }
-            
-            [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.ColorSquaresRgb")]
-            public string ColorSquaresRgb { get; set; }
-            public bool DisplayColorSquaresRgb { get; set; }
-
-            [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.ImageSquaresPicture")]
-            [UIHint("Picture")]
-            public int ImageSquaresPictureId { get; set; }
-            public bool DisplayImageSquaresPicture { get; set; }
-
-            [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.PriceAdjustment")]
-            public decimal PriceAdjustment { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.PriceAdjustment")]
-            //used only on the values list page
-            public string PriceAdjustmentStr { get; set; }
-
-            [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.PriceAdjustmentUsePercentage")]
-            public bool PriceAdjustmentUsePercentage { get; set; }
-
-            [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.WeightAdjustment")]
-            public decimal WeightAdjustment { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.WeightAdjustment")]
-            //used only on the values list page
-            public string WeightAdjustmentStr { get; set; }
-
-            [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.Cost")]
-            public decimal Cost { get; set; }
-
-            [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.CustomerEntersQty")]
-            public bool CustomerEntersQty { get; set; }
-
-            [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.Quantity")]
-            public int Quantity { get; set; }
-
-            [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.IsPreSelected")]
-            public bool IsPreSelected { get; set; }
-
-            [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.DisplayOrder")]
-            public int DisplayOrder { get; set; }
-
-            [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.Picture")]
-            public int PictureId { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.Picture")]
-            public string PictureThumbnailUrl { get; set; }
-
-            public IList<ProductPictureModel> ProductPictureModels { get; set; }
-            public IList<ProductAttributeValueLocalizedModel> Locales { get; set; }
-
-            #region Nested classes
-
-            public partial class AssociateProductToAttributeValueModel : BaseNopModel
-            {
-                public AssociateProductToAttributeValueModel()
-                {
-                    AvailableCategories = new List<SelectListItem>();
-                    AvailableManufacturers = new List<SelectListItem>();
-                    AvailableStores = new List<SelectListItem>();
-                    AvailableVendors = new List<SelectListItem>();
-                    AvailableProductTypes = new List<SelectListItem>();
-                }
-
-                [NopResourceDisplayName("Admin.Catalog.Products.List.SearchProductName")]
-                public string SearchProductName { get; set; }
-                [NopResourceDisplayName("Admin.Catalog.Products.List.SearchCategory")]
-                public int SearchCategoryId { get; set; }
-                [NopResourceDisplayName("Admin.Catalog.Products.List.SearchManufacturer")]
-                public int SearchManufacturerId { get; set; }
-                [NopResourceDisplayName("Admin.Catalog.Products.List.SearchStore")]
-                public int SearchStoreId { get; set; }
-                [NopResourceDisplayName("Admin.Catalog.Products.List.SearchVendor")]
-                public int SearchVendorId { get; set; }
-                [NopResourceDisplayName("Admin.Catalog.Products.List.SearchProductType")]
-                public int SearchProductTypeId { get; set; }
-
-                public IList<SelectListItem> AvailableCategories { get; set; }
-                public IList<SelectListItem> AvailableManufacturers { get; set; }
-                public IList<SelectListItem> AvailableStores { get; set; }
-                public IList<SelectListItem> AvailableVendors { get; set; }
-                public IList<SelectListItem> AvailableProductTypes { get; set; }
-                
-                //vendor
-                public bool IsLoggedInAsVendor { get; set; }
-
-                public int AssociatedToProductId { get; set; }
-            }
-
-            #endregion
-        }
-
-        public partial class ProductAttributeValueLocalizedModel : ILocalizedLocaleModel
-        {
-            public int LanguageId { get; set; }
-
-            [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.Name")]
-            public string Name { get; set; }
-        }
-
-        #region Stock quantity history
-
-        public partial class StockQuantityHistoryModel : BaseNopEntityModel
-        {
-            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchWarehouse")]
-            public int SearchWarehouseId { get; set; }
-
-            [NopResourceDisplayName("Admin.Catalog.Products.StockQuantityHistory.Fields.Warehouse")]
-            public string WarehouseName { get; set; }
-
-            [NopResourceDisplayName("Admin.Catalog.Products.StockQuantityHistory.Fields.Combination")]
-            public string AttributeCombination { get; set; }
-
-            [NopResourceDisplayName("Admin.Catalog.Products.StockQuantityHistory.Fields.QuantityAdjustment")]
-            public int QuantityAdjustment { get; set; }
-
-            [NopResourceDisplayName("Admin.Catalog.Products.StockQuantityHistory.Fields.StockQuantity")]
-            public int StockQuantity { get; set; }
-
-            [NopResourceDisplayName("Admin.Catalog.Products.StockQuantityHistory.Fields.Message")]
-            public string Message { get; set; }
-
-            [NopResourceDisplayName("Admin.Catalog.Products.StockQuantityHistory.Fields.CreatedOn")]
-            [UIHint("DecimalNullable")]
-            public DateTime CreatedOn { get; set; }
-        }
-
-        #endregion
+        public ProductAttributeCombinationSearchModel ProductAttributeCombinationSearchModel { get; set; }
 
         #endregion
     }

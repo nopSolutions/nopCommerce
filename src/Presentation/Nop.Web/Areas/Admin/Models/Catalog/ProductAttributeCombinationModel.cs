@@ -6,14 +6,23 @@ using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Areas.Admin.Models.Catalog
 {
+    /// <summary>
+    /// Represents a product attribute combination model
+    /// </summary>
     public partial class ProductAttributeCombinationModel : BaseNopEntityModel
     {
+        #region Ctor
+
         public ProductAttributeCombinationModel()
         {
             ProductAttributes = new List<ProductAttributeModel>();
-            ProductPictureModels = new List<ProductModel.ProductPictureModel>();
+            ProductPictureModels = new List<ProductPictureModel>();
             Warnings = new List<string>();
         }
+
+        #endregion
+
+        #region Properties
 
         public int ProductId { get; set; }
 
@@ -44,12 +53,16 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
 
         [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.Picture")]
         public int PictureId { get; set; }
+
         public string PictureThumbnailUrl { get; set; }
 
         public IList<ProductAttributeModel> ProductAttributes { get; set; }
-        public IList<ProductModel.ProductPictureModel> ProductPictureModels { get; set; }
+
+        public IList<ProductPictureModel> ProductPictureModels { get; set; }
 
         public IList<string> Warnings { get; set; }
+
+        #endregion
 
         #region Nested classes
 

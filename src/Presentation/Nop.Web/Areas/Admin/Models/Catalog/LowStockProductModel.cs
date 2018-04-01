@@ -3,8 +3,13 @@ using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Areas.Admin.Models.Catalog
 {
+    /// <summary>
+    /// Represents a low stock product model
+    /// </summary>
     public partial class LowStockProductModel : BaseNopEntityModel
     {
+        #region Properties
+
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.Name")]
         public string Name { get; set; }
 
@@ -18,5 +23,7 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.Published")]
         public bool Published { get; set; }
+
+        #endregion
     }
 }

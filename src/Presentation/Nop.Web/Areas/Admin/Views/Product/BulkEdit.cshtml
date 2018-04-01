@@ -1,10 +1,6 @@
-@model BulkEditListModel
-@inject AdminAreaSettings adminAreaSettings
+@model BulkEditProductSearchModel
 
 @{
-    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
-    var gridPageSizes = adminAreaSettings.GridPageSizes;
-
     //page title
     ViewBag.Title = T("Admin.Catalog.BulkEdit").Text;
     //active menu item (system name)
@@ -88,7 +84,16 @@
                                                 url: "@Html.Raw(Url.Action("BulkEditSelect", "Product"))",
                                                 type: "POST",
                                                 dataType: "json",
-                                                data: additionalData
+                                                data: function() {
+                                                    var data = {
+                                                        SearchProductName: $('#@Html.IdFor(model => model.SearchProductName)').val(),
+                                                        SearchCategoryId: $('#SearchCategoryId').val(),
+                                                        SearchManufacturerId: $('#SearchManufacturerId').val(),
+                                                        SearchProductTypeId: $('#SearchProductTypeId').val()
+                                                    };
+                                                    addAntiForgeryToken(data);
+                                                    return data;
+                                                }
                                             },
                                             update: {
                                                 url: "@Html.Raw(Url.Action("BulkEditUpdate", "Product"))",
@@ -157,14 +162,14 @@
                                         },
                                         //bulk editing
                                         batch: true,
-                                        pageSize: @(defaultGridPageSize),
+                                        pageSize: @(Model.PageSize),
                                         serverPaging: true,
                                         serverFiltering: true,
                                         serverSorting: true
                                     },
                                     pageable: {
                                         refresh: true,
-                                        pageSizes: [@(gridPageSizes)],
+                                        pageSizes: [@(Model.AvailablePageSizes)],
                                         @await Html.PartialAsync("_GridPagerMessages")
                                     },
                                     toolbar: [{ name: "save", text: "@T("Admin.Common.SaveChanges")" }, { name: "cancel", text: "@T("Admin.Common.CancelChanges")" }],
@@ -253,17 +258,6 @@
                                     }
                                 });
                             });
-
-                            function additionalData() {
-                                var data = {
-                                    SearchProductName: $('#@Html.IdFor(model => model.SearchProductName)').val(),
-                                    SearchCategoryId: $('#SearchCategoryId').val(),
-                                    SearchManufacturerId: $('#SearchManufacturerId').val(),
-                                    SearchProductTypeId: $('#SearchProductTypeId').val()
-                                };
-                                addAntiForgeryToken(data);
-                                return data;
-                            }
                             </script>
                         </div>
                     </div>

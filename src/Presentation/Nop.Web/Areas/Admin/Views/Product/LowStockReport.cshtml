@@ -1,10 +1,6 @@
-﻿@model LowStockProductListModel
-@inject AdminAreaSettings adminAreaSettings
+﻿@model LowStockProductSearchModel
 
 @{
-    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
-    var gridPageSizes = adminAreaSettings.GridPageSizes;
-
     //page title
     ViewBag.Title = T("Admin.Catalog.LowStockReport").Text;
     //active menu item (system name)
@@ -63,7 +59,13 @@
                                                 url: "@Html.Raw(Url.Action("LowStockReportList", "Product"))",
                                                 type: "POST",
                                                 dataType: "json",
-                                                data: additionalData
+                                                data: function() {
+                                                    var data = {
+                                                        SearchPublishedId: $('#SearchPublishedId').val()
+                                                    };
+                                                    addAntiForgeryToken(data);
+                                                    return data;
+                                                }
                                             }
                                         },
                                         schema: {
@@ -76,14 +78,14 @@
                                             // Cancel the changes
                                             this.cancelChanges();
                                         },
-                                        pageSize: @(defaultGridPageSize),
+                                        pageSize: @(Model.PageSize),
                                         serverPaging: true,
                                         serverFiltering: true,
                                         serverSorting: true
                                     },
                                     pageable: {
                                         refresh: true,
-                                        pageSizes: [@(gridPageSizes)],
+                                        pageSizes: [@(Model.AvailablePageSizes)],
                                         @await Html.PartialAsync("_GridPagerMessages")
                                     },
                                     editable: {
@@ -139,13 +141,5 @@
                 return false;
             });
         });
-
-        function additionalData() {
-            var data = {
-                SearchPublishedId: $('#SearchPublishedId').val()
-            };
-            addAntiForgeryToken(data);
-            return data;
-        }
     </script>
 </form>

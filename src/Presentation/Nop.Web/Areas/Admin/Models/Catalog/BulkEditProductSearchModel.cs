@@ -5,14 +5,23 @@ using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Areas.Admin.Models.Catalog
 {
-    public partial class BulkEditListModel : BaseNopModel
+    /// <summary>
+    /// Represents a bulk edit product search model
+    /// </summary>
+    public partial class BulkEditProductSearchModel : BaseSearchModel
     {
-        public BulkEditListModel()
+        #region Ctor
+
+        public BulkEditProductSearchModel()
         {
             AvailableCategories = new List<SelectListItem>();
             AvailableManufacturers = new List<SelectListItem>();
             AvailableProductTypes = new List<SelectListItem>();
         }
+
+        #endregion
+
+        #region Properties
 
         [NopResourceDisplayName("Admin.Catalog.BulkEdit.List.SearchProductName")]
         public string SearchProductName { get; set; }
@@ -22,11 +31,16 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
 
         [NopResourceDisplayName("Admin.Catalog.BulkEdit.List.SearchManufacturer")]
         public int SearchManufacturerId { get; set; }
+
         [NopResourceDisplayName("Admin.Catalog.Products.List.SearchProductType")]
         public int SearchProductTypeId { get; set; }
+
         public IList<SelectListItem> AvailableProductTypes { get; set; }
 
         public IList<SelectListItem> AvailableCategories { get; set; }
+
         public IList<SelectListItem> AvailableManufacturers { get; set; }
+
+        #endregion
     }
 }

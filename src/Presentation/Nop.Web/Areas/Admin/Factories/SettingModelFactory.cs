@@ -1266,6 +1266,22 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         /// <summary>
+        /// Prepare product editor settings model
+        /// </summary>
+        /// <returns>Product editor settings model</returns>
+        public virtual ProductEditorSettingsModel PrepareProductEditorSettingsModel()
+        {
+            //load settings for a chosen store scope
+            var storeId = _storeContext.ActiveStoreScopeConfiguration;
+            var productEditorSettings = _settingService.LoadSetting<ProductEditorSettings>(storeId);
+
+            //fill in model values from the entity
+            var model = productEditorSettings.ToModel();
+
+            return model;
+        }
+
+        /// <summary>
         /// Prepare setting search model
         /// </summary>
         /// <param name="model">Setting search model</param>

@@ -184,6 +184,12 @@ namespace Nop.Web.Areas.Admin.Factories
         DisplayDefaultFooterItemSettingsModel PrepareDisplayDefaultFooterItemSettingsModel();
 
         /// <summary>
+        /// Prepare product editor settings model
+        /// </summary>
+        /// <returns>Product editor settings model</returns>
+        ProductEditorSettingsModel PrepareProductEditorSettingsModel();
+
+        /// <summary>
         /// Prepare setting search model
         /// </summary>
         /// <param name="model">Setting search model</param>
