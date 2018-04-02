@@ -905,6 +905,12 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.CustomerSettings.RegexValidationRule.Error">
     <Value>The regular expression for username validation is incorrect</Value>
   </LocaleResource> 
+  <LocaleResource Name="Admin.Configuration.Settings.Order.DeleteGiftCardUsageHistory">
+    <Value>Delete gift card usage history after order cancellation</Value>
+  </LocaleResource> 
+  <LocaleResource Name="Admin.Configuration.Settings.Order.DeleteGiftCardUsageHistory.Hint">
+    <Value>Check to delete gift card usage history after order cancellation</Value>
+  </LocaleResource>   
 </Language>
 '
 
@@ -2268,5 +2274,13 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'customersettings.usernam
 BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId])
 	VALUES (N'customersettings.usernamevalidationrule', N'', 0)
+END
+GO
+
+--new setting   
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'ordersettings.deletegiftcardusagehistory')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'ordersettings.deletegiftcardusagehistory', N'False', 0)
 END
 GO

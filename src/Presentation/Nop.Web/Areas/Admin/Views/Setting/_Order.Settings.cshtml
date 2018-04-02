@@ -307,6 +307,16 @@
                     <span asp-validation-for="DeactivateGiftCardsAfterDeletingOrder"></span>
                 </div>
             </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="DeleteGiftCardUsageHistory_OverrideForStore" asp-input="DeleteGiftCardUsageHistory" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="DeleteGiftCardUsageHistory" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="DeleteGiftCardUsageHistory" />
+                    <span asp-validation-for="DeleteGiftCardUsageHistory"></span>
+                </div>
+            </div>
         </div>
     </div>
     @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.OrderSettingsSettingsBottom })

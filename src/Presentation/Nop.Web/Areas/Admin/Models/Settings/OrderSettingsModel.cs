@@ -113,5 +113,9 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.Order.AllowAdminsToBuyCallForPriceProducts")]
         public bool AllowAdminsToBuyCallForPriceProducts { get; set; }
         public bool AllowAdminsToBuyCallForPriceProducts_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Order.DeleteGiftCardUsageHistory")]
+        public bool DeleteGiftCardUsageHistory { get; set; }
+        public bool DeleteGiftCardUsageHistory_OverrideForStore { get; set; }
     }
 }

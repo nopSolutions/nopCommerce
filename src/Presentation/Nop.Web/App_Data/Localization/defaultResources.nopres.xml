@@ -7278,6 +7278,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Order.DeactivateGiftCardsAfterDeletingOrder.Hint">
     <Value>Check to deactivate related gift cards when an order is deleted.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.DeleteGiftCardUsageHistory">
+    <Value>Delete gift card usage history after order cancellation</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.DeleteGiftCardUsageHistory.Hint">
+    <Value>Check to delete gift card usage history after order cancellation</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Order.DisableBillingAddressCheckoutStep">
     <Value>Disable "Billing address" step</Value>
   </LocaleResource>
