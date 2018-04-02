@@ -846,7 +846,7 @@ namespace Nop.Services.Media
             if(supportedLengthOfBinaryHash == 0 || !picturesIds.Any())
                 return new Dictionary<int, string>();
 
-            const string strCommand = "SELECT [Id] as [PictureId], HASHBYTES('sha1', substring([PictureBinary], 0, {0})) as [Hash] FROM [Picture] where id in ({1})";
+            const string strCommand = "SELECT [Id] as [PictureId], HASHBYTES('sha1', substring([PictureBinary], 0, {0})) as [Hash] FROM [Picture] where [Id] in ({1})";
             return _dbContext.SqlQuery<HashItem>(string.Format(strCommand, supportedLengthOfBinaryHash, picturesIds.Select(p => p.ToString()).Aggregate((all, current) => all + ", " + current))).Distinct()
                 .ToDictionary(p => p.PictureId, p => BitConverter.ToString(p.Hash).Replace("-", ""));
         }
