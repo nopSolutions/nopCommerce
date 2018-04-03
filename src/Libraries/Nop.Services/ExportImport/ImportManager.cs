@@ -28,6 +28,7 @@ using Nop.Services.Vendors;
 using OfficeOpenXml;
 using System.Net;
 using Microsoft.Extensions.DependencyInjection;
+using Nop.Services.Stores;
 
 namespace Nop.Services.ExportImport
 {
@@ -75,6 +76,7 @@ namespace Nop.Services.ExportImport
         private readonly VendorSettings _vendorSettings;
         private readonly ISpecificationAttributeService _specificationAttributeService;
         private readonly ILogger _logger;
+        private readonly IStoreMappingService _storeMappingService;
 
         #endregion
 
@@ -107,7 +109,8 @@ namespace Nop.Services.ExportImport
             VendorSettings vendorSettings,
             ISpecificationAttributeService specificationAttributeService,
             ILogger logger,
-            IServiceScopeFactory serviceScopeFactory)
+            IServiceScopeFactory serviceScopeFactory,
+            IStoreMappingService storeMappingService)
         {
             this._productService = productService;
             this._categoryService = categoryService;
@@ -137,6 +140,7 @@ namespace Nop.Services.ExportImport
             this._specificationAttributeService = specificationAttributeService;
             this._logger = logger;
             this._serviceScopeFactory = serviceScopeFactory;
+            this._storeMappingService = storeMappingService;
         }
 
         #endregion
@@ -1185,19 +1189,18 @@ namespace Nop.Services.ExportImport
                 var allProductsCategoryIds = _categoryService.GetProductCategoryIds(allProductsBySku.Select(p => p.Id).ToArray());
 
                 //performance optimization, load all categories in one SQL request
-                Dictionary<string, Category> allCategories;
+                Dictionary<CategoryKey, Category> allCategories;
                 try
                 {
                     allCategories = _categoryService
                         .GetAllCategories(showHidden: true, loadCacheableCopy: false)
-                        .ToDictionary(c => c.GetFormattedBreadCrumb(_categoryService), c => c);
+                        .ToDictionary(c => new CategoryKey(c, _categoryService, _storeMappingService), c => c);
                 }
                 catch (ArgumentException)
                 {
                     //categories with the same name are not supported in the same category level
                     throw new ArgumentException(_localizationService.GetResource("Admin.Catalog.Products.Import.CategoriesWithSameNameNotSupported"));
                 }
-                
 
                 //performance optimization, load all manufacturers IDs for products in one SQL request
                 var allProductsManufacturerIds = _manufacturerService.GetProductManufacturerIds(allProductsBySku.Select(p => p.Id).ToArray());
@@ -1604,7 +1607,9 @@ namespace Nop.Services.ExportImport
 
                         //category mappings
                         var categories = isNew || !allProductsCategoryIds.ContainsKey(product.Id) ? new int[0] : allProductsCategoryIds[product.Id];
-                        var importedCategories = categoryNames.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries).Select(x => allCategories.ContainsKey(x.Trim()) ? allCategories[x.Trim()].Id : allCategories.Values.First(c => c.Name == x.Trim()).Id).ToList();
+                        var importedCategories = categoryNames.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
+                            .Select(categoryName => new CategoryKey(categoryName))
+                            .Select(categoryKey => allCategories.ContainsKey(categoryKey) ? allCategories[categoryKey].Id : allCategories.Values.First(c => c.Name == categoryKey.Key).Id).ToList();
                         foreach (var categoryId in importedCategories)
                         {
                             if (categories.Any(c => c == categoryId))
@@ -2097,6 +2102,60 @@ namespace Nop.Services.ExportImport
             public string Picture3Path { get; set; }
 
             public bool IsNew { get; set; }
+        }
+
+        public class CategoryKey
+        {
+            public CategoryKey(Category category, ICategoryService categoryService, IStoreMappingService storeMappingService)
+            {
+                Key = category.GetFormattedBreadCrumb(categoryService);
+                StoresIds = category.LimitedToStores ? storeMappingService.GetStoresIdsWithAccess(category).ToList() : new List<int>();
+                Category = category;
+            }
+
+            public CategoryKey(string key, List<int> storesIds = null)
+            {
+                Key = key.Trim();
+                StoresIds = storesIds ?? new List<int>();
+            }
+
+            public List<int> StoresIds { get; }
+            public Category Category { get; }
+            public string Key { get; }
+
+            public bool Equals(CategoryKey y)
+            {
+                if (y == null)
+                    return false;
+
+                if (Category != null && y.Category != null)
+                    return Category.Id == y.Category.Id;
+
+                if ((StoresIds.Any() || y.StoresIds.Any()) 
+                    && (StoresIds.All(id => !y.StoresIds.Contains(id)) || y.StoresIds.All(id => !StoresIds.Contains(id))))
+                    return false;
+
+                return Key.Equals(y.Key);
+            }
+            
+            public override int GetHashCode()
+            {
+                if (StoresIds.Any())
+                {
+                    var storesIds = StoresIds.Select(id => id.ToString())
+                        .Aggregate("", (all, current) => all + current);
+
+                    return $"{storesIds}_{Key}".GetHashCode();
+                }
+
+                return Key.GetHashCode();
+            }
+
+            public override bool Equals(object obj)
+            {
+                var other = obj as CategoryKey;
+                return other?.Equals(other) ?? false;
+            }
         }
 
         #endregion
