@@ -661,7 +661,8 @@ namespace Nop.Services.Orders
                 return;
 
             var rewardPointsBalance = _rewardPointService.GetRewardPointsBalance(customer.Id, _storeContext.CurrentStore.Id);
-
+            rewardPointsBalance = _rewardPointService.GetReducedPointsBalance(rewardPointsBalance);
+            
             if (!CheckMinimumRewardPointsToUseRequirement(rewardPointsBalance))
                 return;
 

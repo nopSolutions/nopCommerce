@@ -905,6 +905,15 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.CustomerSettings.RegexValidationRule.Error">
     <Value>The regular expression for username validation is incorrect</Value>
   </LocaleResource> 
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.MaximumRewardPointsToUsePerOrder">
+    <Value>Maximum reward points to use per order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.MaximumRewardPointsToUsePerOrder.Hint">
+    <Value>Customers won''t be able to use more than X reward points per one order. Set to 0 if you do not want to use this setting.</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Checkout.UseRewardPoints">
+    <Value>Use my reward points, {0} reward points ({1}) available for this order</Value>
+  </LocaleResource>  
 </Language>
 '
 
@@ -2268,5 +2277,13 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'customersettings.usernam
 BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId])
 	VALUES (N'customersettings.usernamevalidationrule', N'', 0)
+END
+GO
+
+--new setting   
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'rewardpointssettings.maximumrewardpointstouseperorder')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'rewardpointssettings.maximumrewardpointstouseperorder', N'0', 0)
 END
 GO

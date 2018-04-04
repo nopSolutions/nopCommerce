@@ -374,6 +374,8 @@ namespace Nop.Web.Factories
             if (_rewardPointsSettings.Enabled && !cart.IsRecurring())
             {
                 var rewardPointsBalance = _rewardPointService.GetRewardPointsBalance(_workContext.CurrentCustomer.Id, _storeContext.CurrentStore.Id);
+                rewardPointsBalance = _rewardPointService.GetReducedPointsBalance(rewardPointsBalance);
+
                 var rewardPointsAmountBase = _orderTotalCalculationService.ConvertRewardPointsToAmount(rewardPointsBalance);
                 var rewardPointsAmount = _currencyService.ConvertFromPrimaryStoreCurrency(rewardPointsAmountBase, _workContext.WorkingCurrency);
                 if (rewardPointsAmount > decimal.Zero && 

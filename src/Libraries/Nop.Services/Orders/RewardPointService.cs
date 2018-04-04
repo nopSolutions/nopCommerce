@@ -4,6 +4,8 @@ using Nop.Core;
 using Nop.Core.Data;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
+using Nop.Services.Catalog;
+using Nop.Services.Directory;
 using Nop.Services.Events;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
@@ -40,7 +42,7 @@ namespace Nop.Services.Orders
             ILocalizationService localizationService,
             IRepository<RewardPointsHistory> rewardPointsHistoryRepository,
             RewardPointsSettings rewardPointsSettings)
-        {
+        { 
             this._dateTimeHelper = dateTimeHelper;
             this._eventPublisher = eventPublisher;
             this._localizationService = localizationService;
@@ -136,7 +138,7 @@ namespace Nop.Services.Orders
                 UpdateRewardPointsHistoryEntry(historyEntry);
             }
         }
-
+        
         #endregion
 
         #region Methods
@@ -173,6 +175,20 @@ namespace Nop.Services.Orders
 
             //return point balance of the first actual history entry
             return query.FirstOrDefault()?.PointsBalance ?? 0;
+        }
+
+        /// <summary>
+        /// Gets reduced reward points balance per order
+        /// </summary>
+        /// <param name="rewardPointsBalance">Reward points balance</param>
+        /// <returns>Reduced balance</returns>
+        public int GetReducedPointsBalance(int rewardPointsBalance)
+        {
+            if (_rewardPointsSettings.MaximumRewardPointsToUsePerOrder > 0 &&
+                rewardPointsBalance > _rewardPointsSettings.MaximumRewardPointsToUsePerOrder)
+                return _rewardPointsSettings.MaximumRewardPointsToUsePerOrder;
+
+            return rewardPointsBalance;
         }
 
         /// <summary>
