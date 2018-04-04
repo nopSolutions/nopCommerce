@@ -1007,7 +1007,8 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.ExportWithProducts_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.AllowAdminsToBuyCallForPriceProducts_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore())
-                .ForMember(dest => dest.Form, mo => mo.Ignore());
+                .ForMember(dest => dest.Form, mo => mo.Ignore())
+                .ForMember(dest => dest.DeleteGiftCardUsageHistory_OverrideForStore, mo => mo.Ignore());
             CreateMap<OrderSettingsModel, OrderSettings>()
                 .ForMember(dest => dest.GeneratePdfInvoiceInCustomerLanguage, mo => mo.Ignore())
                 .ForMember(dest => dest.ReturnRequestsFileMaximumSize, mo => mo.Ignore())

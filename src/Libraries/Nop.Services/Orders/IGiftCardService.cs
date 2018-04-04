@@ -74,5 +74,11 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <returns>Result</returns>
         string GenerateGiftCardCode();
+
+        /// <summary>
+        /// Delete gift card usage history
+        /// </summary>
+        /// <param name="order">Order</param>
+        void DeleteGiftCardUsageHistory(Order order);
     }
 }

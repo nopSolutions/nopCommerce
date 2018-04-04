@@ -1429,7 +1429,7 @@ namespace Nop.Services.Orders
                 _giftCardService.UpdateGiftCard(agc.GiftCard);
             }
         }
-
+       
         /// <summary>
         /// Save discount usage history
         /// </summary>
@@ -2226,6 +2226,12 @@ namespace Nop.Services.Orders
 
             //return (add) back redeemded reward points
             ReturnBackRedeemedRewardPoints(order);
+
+            //delete gift card usage history
+            if (_orderSettings.DeleteGiftCardUsageHistory)
+            {
+                _giftCardService.DeleteGiftCardUsageHistory(order);
+            }
 
             //cancel recurring payments
             var recurringPayments = _orderService.SearchRecurringPayments(initialOrderId: order.Id);
