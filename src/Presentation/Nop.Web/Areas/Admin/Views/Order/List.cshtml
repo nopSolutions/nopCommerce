@@ -1,12 +1,9 @@
-﻿@model OrderListModel
-@inject AdminAreaSettings adminAreaSettings
-@inject IStoreService storeService
+﻿@model OrderSearchModel
 
+@inject IStoreService storeService
 @using Nop.Services.Stores
 
 @{
-    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
-    var gridPageSizes = adminAreaSettings.GridPageSizes;
     var stores = storeService.GetAllStores();
 
     //page title
@@ -277,245 +274,261 @@
                         <div id="orders-grid"></div>
 
                         <script>
-    $(document).ready(function() {
-        $("#orders-grid").kendoGrid({
-            dataSource: {
-                type: "json",
-                transport: {
-                    read: {
-                        url: "@Html.Raw(Url.Action("OrderList", "Order"))",
-                        type: "POST",
-                        dataType: "json",
-                        data: additionalData
-                    }
-                },
-                schema: {
-                    data: "Data",
-                    total: "Total",
-                    errors: "Errors"
-                },
-                requestEnd: function (e) {
-                    if (e.type == "read") {
-                        var response = e.response;
-                        if (response) {
-                            //store extra data
-                            reportAggregates = e.response["ExtraData"];
-                        }
-                    }
-                },
-                error: function(e) {
-                    display_kendoui_grid_error(e);
-                    // Cancel the changes
-                    this.cancelChanges();
-                },
-                pageSize: @(defaultGridPageSize),
-                serverPaging: true,
-                serverFiltering: true,
-                serverSorting: true
-            },
-            pageable: {
-                refresh: true,
-                pageSizes: [@(gridPageSizes)],
-                @await Html.PartialAsync("_GridPagerMessages")
-            },
-            editable: {
-                confirmation: "@T("Admin.Common.DeleteConfirmation")",
-                mode: "inline"
-            },
-            scrollable: false,
-            dataBound: onDataBound,
-            columns: [
-                {
-                    field: "Id",
-                    headerTemplate: "<input id='mastercheckbox' type='checkbox'/>",
-                    headerAttributes: { style: "text-align:center" },
-                    attributes: { style: "text-align:center" },
-                    template: "<input type='checkbox' value='#=Id#' class='checkboxGroups'/>",
-                    width: 50
-                }, {
-                    field: "CustomOrderNumber",
-                    title: "@T("Admin.Orders.Fields.CustomOrderNumber")",
-                    width: 80
-                },
-                @if (!Model.IsLoggedInAsVendor)
-                {
-                    //a vendor does not have access to this functionality
-                    <text>{
-                    field: "OrderStatus",
-                    title: "@T("Admin.Orders.Fields.OrderStatus")",
-                    width: 100,
-                    template: '<span class="grid-report-item ' +
-                        '# if(OrderStatusId == 10) {# yellow #} #' +
-                        '# if(OrderStatusId == 20) {# blue #} #' +
-                        '# if(OrderStatusId == 30) {# green #} #' +
-                        '# if(OrderStatusId == 40) {# red #} #' +
-                        '">#=OrderStatus#</span>'
-                },</text>
-                }
-                {
-                    field: "PaymentStatus",
-                    title: "@T("Admin.Orders.Fields.PaymentStatus")",
-                    width: 150
-                },
-                @if (!Model.IsLoggedInAsVendor)
-                {
-                    //a vendor does not have access to this functionality
-                    <text>{
-                    field: "ShippingStatus",
-                    title: "@T("Admin.Orders.Fields.ShippingStatus")",
-                    width: 150
-                },</text>
-                }
-                {
-                    field: "CustomerEmail",
-                    title: "@T("Admin.Orders.Fields.Customer")",
-                    width: 250,
-                    template: '#=CustomerFullName# (#=CustomerEmail#)'
-                },
-                {
-                    field: "StoreName",
-                    hidden: @(stores.Count > 1 ? "false" : "true"),
-                    title: "@T("Admin.Orders.Fields.Store")",
-                    width: 100
-                }, {
-                    field: "CreatedOn",
-                    title: "@T("Admin.Orders.Fields.CreatedOn")",
-                    width: 150,
-                    type: "date",
-                    format: "{0:G}"
-                },
-                @if (!Model.IsLoggedInAsVendor)
-                {
-                    //a vendor does not have access to this functionality
-                    <text>{
-                    field: "OrderTotal",
-                    title: "@T("Admin.Orders.Fields.OrderTotal")",
-                    width: 100,
-                    footerTemplate: '<div><strong>@T("Admin.Orders.Report.Summary")</strong></div>' +
-                        '<div>@T("Admin.Orders.Report.Profit") <span id=\"aggregator-profit-block\"></span></div>' +
-                        '<div>@T("Admin.Orders.Report.Shipping") <span id=\"aggregator-shipping-block\"></span></div>' +
-                        '<div>@T("Admin.Orders.Report.Tax") <span id=\"aggregator-tax-block\"></span></div>' +
-                        '<div>@T("Admin.Orders.Report.Total") <span id=\"aggregator-total-block\"></span></div>'
-                },</text>
-                }
-                {
-                    field: "Id",
-                    title: "@T("Admin.Common.View")",
-                    width: 50,
-                    headerAttributes: { style: "text-align:center" },
-                    attributes: { style: "text-align:center" },
-                    template: '<a class="btn btn-default" href="Edit/#=Id#"><i class="fa fa-eye"></i>@T("Admin.Common.View")</a>'
-                }
-            ]
-        } );
-    });
+                            $(document).ready(function() {
+                                $("#orders-grid").kendoGrid({
+                                    dataSource: {
+                                        type: "json",
+                                        transport: {
+                                            read: {
+                                                url: "@Html.Raw(Url.Action("OrderList", "Order"))",
+                                                type: "POST",
+                                                dataType: "json",
+                                                data: function() {
+                                                    var data = {
+                                                        StartDate: $('#@Html.IdFor(model => model.StartDate)').val(),
+                                                        EndDate: $('#@Html.IdFor(model => model.EndDate)').val(),
+                                                        OrderStatusIds: $('#@Html.IdFor(model => model.OrderStatusIds)').val(),
+                                                        PaymentStatusIds: $('#@Html.IdFor(model => model.PaymentStatusIds)').val(),
+                                                        ShippingStatusIds: $('#@Html.IdFor(model => model.ShippingStatusIds)').val(),
+                                                        StoreId: $('#@Html.IdFor(model => model.StoreId)').val(),
+                                                        VendorId: $('#@Html.IdFor(model => model.VendorId)').val(),
+                                                        WarehouseId: $('#@Html.IdFor(model => model.WarehouseId)').val(),
+                                                        BillingEmail: $('#@Html.IdFor(model => model.BillingEmail)').val(),
+                                                        BillingPhone: $('#@Html.IdFor(model => model.BillingPhone)').val(),
+                                                        BillingLastName: $('#@Html.IdFor(model => model.BillingLastName)').val(),
+                                                        BillingCountryId: $('#@Html.IdFor(model => model.BillingCountryId)').val(),
+                                                        PaymentMethodSystemName: $('#@Html.IdFor(model => model.PaymentMethodSystemName)').val(),
+                                                        ProductId: $('#@Html.IdFor(model => model.ProductId)').val(),
+                                                        OrderNotes: $('#@Html.IdFor(model => model.OrderNotes)').val()
+                                                    };
+                                                    addAntiForgeryToken(data);
+                                                    return data;
+                                                }
+                                            }
+                                        },
+                                        schema: {
+                                            data: "Data",
+                                            total: "Total",
+                                            errors: "Errors"
+                                        },
+                                        error: function(e) {
+                                            display_kendoui_grid_error(e);
+                                            // Cancel the changes
+                                            this.cancelChanges();
+                                        },
+                                        pageSize: @(Model.PageSize),
+                                        serverPaging: true,
+                                        serverFiltering: true,
+                                        serverSorting: true
+                                    },
+                                    pageable: {
+                                        refresh: true,
+                                        pageSizes: [@(Model.AvailablePageSizes)],
+                                        @await Html.PartialAsync("_GridPagerMessages")
+                                    },
+                                    editable: {
+                                        confirmation: "@T("Admin.Common.DeleteConfirmation")",
+                                        mode: "inline"
+                                    },
+                                    scrollable: false,
+                                    dataBound: onDataBound,
+                                    columns: [
+                                        {
+                                            field: "Id",
+                                            headerTemplate: "<input id='mastercheckbox' type='checkbox'/>",
+                                            headerAttributes: { style: "text-align:center" },
+                                            attributes: { style: "text-align:center" },
+                                            template: "<input type='checkbox' value='#=Id#' class='checkboxGroups'/>",
+                                            width: 50
+                                        }, {
+                                            field: "CustomOrderNumber",
+                                            title: "@T("Admin.Orders.Fields.CustomOrderNumber")",
+                                            width: 80
+                                        },
+                                        @if (!Model.IsLoggedInAsVendor)
+                                        {
+                                            //a vendor does not have access to this functionality
+                                            <text>{
+                                            field: "OrderStatus",
+                                            title: "@T("Admin.Orders.Fields.OrderStatus")",
+                                            width: 100,
+                                            template: '<span class="grid-report-item ' +
+                                                '# if(OrderStatusId == 10) {# yellow #} #' +
+                                                '# if(OrderStatusId == 20) {# blue #} #' +
+                                                '# if(OrderStatusId == 30) {# green #} #' +
+                                                '# if(OrderStatusId == 40) {# red #} #' +
+                                                '">#=OrderStatus#</span>'
+                                        },</text>
+                                        }
+                                        {
+                                            field: "PaymentStatus",
+                                            title: "@T("Admin.Orders.Fields.PaymentStatus")",
+                                            width: 150
+                                        },
+                                        @if (!Model.IsLoggedInAsVendor)
+                                        {
+                                            //a vendor does not have access to this functionality
+                                            <text>{
+                                            field: "ShippingStatus",
+                                            title: "@T("Admin.Orders.Fields.ShippingStatus")",
+                                            width: 150
+                                        },</text>
+                                        }
+                                        {
+                                            field: "CustomerEmail",
+                                            title: "@T("Admin.Orders.Fields.Customer")",
+                                            width: 250,
+                                            template: '#=CustomerFullName# (#=CustomerEmail#)'
+                                        },
+                                        {
+                                            field: "StoreName",
+                                            hidden: @(stores.Count > 1 ? "false" : "true"),
+                                            title: "@T("Admin.Orders.Fields.Store")",
+                                            width: 100
+                                        }, {
+                                            field: "CreatedOn",
+                                            title: "@T("Admin.Orders.Fields.CreatedOn")",
+                                            width: 150,
+                                            type: "date",
+                                            format: "{0:G}"
+                                        },
+                                        @if (!Model.IsLoggedInAsVendor)
+                                        {
+                                            //a vendor does not have access to this functionality
+                                            <text>{
+                                            field: "OrderTotal",
+                                            title: "@T("Admin.Orders.Fields.OrderTotal")",
+                                            width: 100,
+                                            footerTemplate: '<div><strong>@T("Admin.Orders.Report.Summary")</strong></div>' +
+                                                '<div>@T("Admin.Orders.Report.Profit") <span id=\"aggregator-profit-block\"></span></div>' +
+                                                '<div>@T("Admin.Orders.Report.Shipping") <span id=\"aggregator-shipping-block\"></span></div>' +
+                                                '<div>@T("Admin.Orders.Report.Tax") <span id=\"aggregator-tax-block\"></span></div>' +
+                                                '<div>@T("Admin.Orders.Report.Total") <span id=\"aggregator-total-block\"></span></div>'
+                                        },</text>
+                                        }
+                                        {
+                                            field: "Id",
+                                            title: "@T("Admin.Common.View")",
+                                            width: 50,
+                                            headerAttributes: { style: "text-align:center" },
+                                            attributes: { style: "text-align:center" },
+                                            template: '<a class="btn btn-default" href="Edit/#=Id#"><i class="fa fa-eye"></i>@T("Admin.Common.View")</a>'
+                                        }
+                                    ]
+                                } );
+                            });
                         </script>
 
                         <script>
-    var selectedIds = [];
-    var reportAggregates = "";
+                            var selectedIds = [];
+                            var reportAggregates = "";
 
-    $(document).ready(function () {
-        //search button
-        $('#search-orders').click(function () {
-            //search
-            var grid = $('#orders-grid').data('kendoGrid');
-            grid.dataSource.page(1); //new search. Set page size to 1
-            //grid.dataSource.read(); we already loaded the grid above using "page" function
-            //clear selected checkboxes
-            $('.checkboxGroups').attr('checked', false).change();
-            selectedIds = [];
-            return false;
-        });
+                            $(document).ready(function () {
+                                //search button
+                                $('#search-orders').click(function () {
+                                    //search
+                                    var grid = $('#orders-grid').data('kendoGrid');
+                                    grid.dataSource.page(1); //new search. Set page size to 1
+                                    //grid.dataSource.read(); we already loaded the grid above using "page" function
+                                    //clear selected checkboxes
+                                    $('.checkboxGroups').attr('checked', false).change();
+                                    selectedIds = [];
+                                    return false;
+                                });
 
-        $("".concat("#@Html.IdFor(model => model.BillingEmail),",
-            "#@Html.IdFor(model => model.BillingLastName),",
-            "#@Html.IdFor(model => model.BillingPhone),",
-            "#@Html.IdFor(model => model.OrderNotes)")).keydown(function (event) {
-            if (event.keyCode === 13) {
-                $("#search-orders").click();
-                return false;
-            }
-        });
+                                $("".concat("#@Html.IdFor(model => model.BillingEmail),",
+                                    "#@Html.IdFor(model => model.BillingLastName),",
+                                    "#@Html.IdFor(model => model.BillingPhone),",
+                                    "#@Html.IdFor(model => model.OrderNotes)")).keydown(function (event) {
+                                    if (event.keyCode === 13) {
+                                        $("#search-orders").click();
+                                        return false;
+                                    }
+                                });
 
-        $("#@Html.IdFor(model => model.GoDirectlyToCustomOrderNumber)").keydown(function(event) {
-            if (event.keyCode === 13) {
-                $("#go-to-order-by-number").click();
-                return false;
-            }
-        });
+                                $("#@Html.IdFor(model => model.GoDirectlyToCustomOrderNumber)").keydown(function(event) {
+                                    if (event.keyCode === 13) {
+                                        $("#go-to-order-by-number").click();
+                                        return false;
+                                    }
+                                });
 
-        $('#mastercheckbox').click(function () {
-            $('.checkboxGroups').attr('checked', $(this).is(':checked')).change();
-        });
+                                $('#mastercheckbox').click(function () {
+                                    $('.checkboxGroups').attr('checked', $(this).is(':checked')).change();
+                                });
 
-        //wire up checkboxes.
-        $('#orders-grid').on('change', 'input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]', function (e) {
-            var $check = $(this);
-            var checked = jQuery.inArray($check.val(), selectedIds);
-            if ($check.is(":checked") == true) {
-                if (checked == -1) {
-                    //add id to selectedIds.
-                    selectedIds.push($check.val());
-                }
-            } else if (checked > -1) {
-                //remove id from selectedIds.
-                selectedIds = $.grep(selectedIds, function (item, index) {
-                    return item != $check.val();
-                });
-            }
-            updateMasterCheckbox();
-        });
-    });
+                                //wire up checkboxes.
+                                $('#orders-grid').on('change', 'input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]', function (e) {
+                                    var $check = $(this);
+                                    var checked = jQuery.inArray($check.val(), selectedIds);
+                                    if ($check.is(":checked") == true) {
+                                        if (checked == -1) {
+                                            //add id to selectedIds.
+                                            selectedIds.push($check.val());
+                                        }
+                                    } else if (checked > -1) {
+                                        //remove id from selectedIds.
+                                        selectedIds = $.grep(selectedIds, function (item, index) {
+                                            return item != $check.val();
+                                        });
+                                    }
+                                    updateMasterCheckbox();
+                                });
+                            });
 
-    function additionalData() {
-        var data = {
-            StartDate: $('#@Html.IdFor(model => model.StartDate)').val(),
-            EndDate: $('#@Html.IdFor(model => model.EndDate)').val(),
-            OrderStatusIds: $('#@Html.IdFor(model => model.OrderStatusIds)').val(),
-            PaymentStatusIds: $('#@Html.IdFor(model => model.PaymentStatusIds)').val(),
-            ShippingStatusIds: $('#@Html.IdFor(model => model.ShippingStatusIds)').val(),
-            StoreId: $('#@Html.IdFor(model => model.StoreId)').val(),
-            VendorId: $('#@Html.IdFor(model => model.VendorId)').val(),
-            WarehouseId: $('#@Html.IdFor(model => model.WarehouseId)').val(),
-            BillingEmail: $('#@Html.IdFor(model => model.BillingEmail)').val(),
-            BillingPhone: $('#@Html.IdFor(model => model.BillingPhone)').val(),
-            BillingLastName: $('#@Html.IdFor(model => model.BillingLastName)').val(),
-            BillingCountryId: $('#@Html.IdFor(model => model.BillingCountryId)').val(),
-            PaymentMethodSystemName: $('#@Html.IdFor(model => model.PaymentMethodSystemName)').val(),
-            ProductId: $('#@Html.IdFor(model => model.ProductId)').val(),
-            OrderNotes: $('#@Html.IdFor(model => model.OrderNotes)').val()
-        };
-        addAntiForgeryToken(data);
-        return data;
-    }
+                            function onDataBound(e) {
+                                $('#orders-grid input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]').each(function () {
+                                    var currentId = $(this).val();
+                                    var checked = jQuery.inArray(currentId, selectedIds);
+                                    //set checked based on if current checkbox's value is in selectedIds.
+                                    $(this).attr('checked', checked > -1);
+                                });
 
-    function onDataBound(e) {
-        $('#orders-grid input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]').each(function () {
-            var currentId = $(this).val();
-            var checked = jQuery.inArray(currentId, selectedIds);
-            //set checked based on if current checkbox's value is in selectedIds.
-            $(this).attr('checked', checked > -1);
-        });
+                                updateMasterCheckbox();
 
-        updateMasterCheckbox();
+                                //update order totals summary
+                                var postData = {
+                                    StartDate: $('#@Html.IdFor(model => model.StartDate)').val(),
+                                    EndDate: $('#@Html.IdFor(model => model.EndDate)').val(),
+                                    OrderStatusIds: $('#@Html.IdFor(model => model.OrderStatusIds)').val(),
+                                    PaymentStatusIds: $('#@Html.IdFor(model => model.PaymentStatusIds)').val(),
+                                    ShippingStatusIds: $('#@Html.IdFor(model => model.ShippingStatusIds)').val(),
+                                    StoreId: $('#@Html.IdFor(model => model.StoreId)').val(),
+                                    VendorId: $('#@Html.IdFor(model => model.VendorId)').val(),
+                                    WarehouseId: $('#@Html.IdFor(model => model.WarehouseId)').val(),
+                                    BillingEmail: $('#@Html.IdFor(model => model.BillingEmail)').val(),
+                                    BillingPhone: $('#@Html.IdFor(model => model.BillingPhone)').val(),
+                                    BillingLastName: $('#@Html.IdFor(model => model.BillingLastName)').val(),
+                                    BillingCountryId: $('#@Html.IdFor(model => model.BillingCountryId)').val(),
+                                    PaymentMethodSystemName: $('#@Html.IdFor(model => model.PaymentMethodSystemName)').val(),
+                                    ProductId: $('#@Html.IdFor(model => model.ProductId)').val(),
+                                    OrderNotes: $('#@Html.IdFor(model => model.OrderNotes)').val()
+                                };
+                                addAntiForgeryToken(postData);
 
-        //update order totals summary
-        if (reportAggregates != "") {
-            for (var key in reportAggregates) {
-                $('#aggregator-profit-block').text(reportAggregates['aggregatorprofit']);
-                $('#aggregator-shipping-block').text(reportAggregates['aggregatorshipping']);
-                $('#aggregator-tax-block').text(reportAggregates['aggregatortax']);
-                $('#aggregator-total-block').text(reportAggregates['aggregatortotal']);
-            }
-        }
-    }
+                                $.ajax({
+                                    cache:false,
+                                    type: "POST",
+                                    url: "@(Url.Action("ReportAggregates", "Order"))",
+                                    data: postData,
+                                    success: function (data) {
+                                        if (data) {
+                                            for (var key in data) {
+                                                $('#aggregator-profit-block').text(data['aggregatorprofit']);
+                                                $('#aggregator-shipping-block').text(data['aggregatorshipping']);
+                                                $('#aggregator-tax-block').text(data['aggregatortax']);
+                                                $('#aggregator-total-block').text(data['aggregatortotal']);
+                                            }
+                                        }
+                                    }
+                                });                                
+                            }
 
-    function updateMasterCheckbox() {
-        var numChkBoxes = $('#orders-grid input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]').length;
-        var numChkBoxesChecked = $('#orders-grid input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]:checked').length;
-        $('#mastercheckbox').attr('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
-    }
+                            function updateMasterCheckbox() {
+                                var numChkBoxes = $('#orders-grid input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]').length;
+                                var numChkBoxesChecked = $('#orders-grid input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]:checked').length;
+                                $('#mastercheckbox').attr('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
+                            }
                         </script>
                     </div>
                 </div>

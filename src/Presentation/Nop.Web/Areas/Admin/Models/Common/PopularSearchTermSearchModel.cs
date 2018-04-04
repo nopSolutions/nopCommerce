@@ -1,6 +1,6 @@
 ﻿using Nop.Web.Framework.Models;
 
-namespace Nop.Web.Areas.Admin.Models.Home
+namespace Nop.Web.Areas.Admin.Models.Common
 {
     /// <summary>
     /// Represents a popular search term search model

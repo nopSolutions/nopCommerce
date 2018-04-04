@@ -3,8 +3,13 @@ using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Areas.Admin.Models.Orders
 {
-    public partial class OrderIncompleteReportLineModel : BaseNopModel
+    /// <summary>
+    /// Represents an incomplete order report model
+    /// </summary>
+    public partial class OrderIncompleteReportModel : BaseNopModel
     {
+        #region Properties
+
         [NopResourceDisplayName("Admin.SalesReport.Incomplete.Item")]
         public string Item { get; set; }
 
@@ -16,5 +21,7 @@ namespace Nop.Web.Areas.Admin.Models.Orders
 
         [NopResourceDisplayName("Admin.SalesReport.Incomplete.View")]
         public string ViewLink { get; set; }
+
+        #endregion
     }
 }

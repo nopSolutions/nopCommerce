@@ -7,9 +7,14 @@ using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Areas.Admin.Models.Orders
 {
-    public partial class BestsellersReportModel : BaseNopModel
+    /// <summary>
+    /// Represents a bestseller search model
+    /// </summary>
+    public partial class BestsellerSearchModel : BaseSearchModel
     {
-        public BestsellersReportModel()
+        #region Ctor
+
+        public BestsellerSearchModel()
         {
             AvailableStores = new List<SelectListItem>();
             AvailableOrderStatuses = new List<SelectListItem>();
@@ -19,6 +24,10 @@ namespace Nop.Web.Areas.Admin.Models.Orders
             AvailableCountries = new List<SelectListItem>();
             AvailableVendors = new List<SelectListItem>();
         }
+
+        #endregion
+
+        #region Properties
 
         [NopResourceDisplayName("Admin.SalesReport.Bestsellers.StartDate")]
         [UIHint("DateNullable")]
@@ -30,27 +39,41 @@ namespace Nop.Web.Areas.Admin.Models.Orders
 
         [NopResourceDisplayName("Admin.SalesReport.Bestsellers.Store")]
         public int StoreId { get; set; }
+
         [NopResourceDisplayName("Admin.SalesReport.Bestsellers.OrderStatus")]
         public int OrderStatusId { get; set; }
+
         [NopResourceDisplayName("Admin.SalesReport.Bestsellers.PaymentStatus")]
         public int PaymentStatusId { get; set; }
+
         [NopResourceDisplayName("Admin.SalesReport.Bestsellers.Category")]
         public int CategoryId { get; set; }
+
         [NopResourceDisplayName("Admin.SalesReport.Bestsellers.Manufacturer")]
         public int ManufacturerId { get; set; }
+
         [NopResourceDisplayName("Admin.SalesReport.Bestsellers.BillingCountry")]
         public int BillingCountryId { get; set; }
+
         [NopResourceDisplayName("Admin.SalesReport.Bestsellers.Vendor")]
         public int VendorId { get; set; }
 
         public IList<SelectListItem> AvailableStores { get; set; }
+
         public IList<SelectListItem> AvailableOrderStatuses { get; set; }
+
         public IList<SelectListItem> AvailablePaymentStatuses { get; set; }
+
         public IList<SelectListItem> AvailableCategories { get; set; }
+
         public IList<SelectListItem> AvailableManufacturers { get; set; }
+
         public IList<SelectListItem> AvailableCountries { get; set; }
+
         public IList<SelectListItem> AvailableVendors { get; set; }
 
         public bool IsLoggedInAsVendor { get; set; }
+
+        #endregion
     }
 }

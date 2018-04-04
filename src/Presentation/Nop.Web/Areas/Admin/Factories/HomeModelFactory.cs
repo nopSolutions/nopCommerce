@@ -6,13 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Common;
-using Nop.Core.Domain.Customers;
-using Nop.Core.Domain.Orders;
-using Nop.Services.Catalog;
-using Nop.Services.Common;
 using Nop.Services.Configuration;
-using Nop.Services.Customers;
-using Nop.Services.Orders;
 using Nop.Web.Areas.Admin.Infrastructure.Cache;
 using Nop.Web.Areas.Admin.Models.Home;
 using Nop.Web.Framework.Mvc.Rss;
@@ -42,12 +36,9 @@ namespace Nop.Web.Areas.Admin.Factories
         #region Fields
 
         private readonly AdminAreaSettings _adminAreaSettings;
-        private readonly ICustomerService _customerService;
+        private readonly ICommonModelFactory _commonModelFactory;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly IOrderService _orderService;
-        private readonly IProductService _productService;
-        private readonly IReturnRequestService _returnRequestService;
-        private readonly ISearchTermService _searchTermService;
+        private readonly IOrderModelFactory _orderModelFactory;
         private readonly ISettingService _settingService;
         private readonly IStaticCacheManager _cacheManager;
         private readonly IWebHelper _webHelper;
@@ -58,24 +49,18 @@ namespace Nop.Web.Areas.Admin.Factories
         #region Ctor
 
         public HomeModelFactory(AdminAreaSettings adminAreaSettings,
-            ICustomerService customerService,
+            ICommonModelFactory commonModelFactory,
             IHttpContextAccessor httpContextAccessor,
-            IOrderService orderService,
-            IProductService productService,
-            IReturnRequestService returnRequestService,
-            ISearchTermService searchTermService,
+            IOrderModelFactory orderModelFactory,
             ISettingService settingService,
             IStaticCacheManager cacheManager,
             IWebHelper webHelper,
             IWorkContext workContext)
         {
             this._adminAreaSettings = adminAreaSettings;
-            this._customerService = customerService;
+            this._commonModelFactory = commonModelFactory;
             this._httpContextAccessor = httpContextAccessor;
-            this._orderService = orderService;
-            this._productService = productService;
-            this._returnRequestService = returnRequestService;
-            this._searchTermService = searchTermService;
+            this._orderModelFactory = orderModelFactory;
             this._settingService = settingService;
             this._cacheManager = cacheManager;
             this._webHelper = webHelper;
@@ -98,53 +83,10 @@ namespace Nop.Web.Areas.Admin.Factories
 
             model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
 
-            //prepare nested search model
-            PreparePopularSearchTermSearchModel(model.PopularSearchTermSearchModel);
-
-            return model;
-        }
-
-        /// <summary>
-        /// Prepare popular search term search model
-        /// </summary>
-        /// <param name="model">Popular search term search model</param>
-        /// <returns>Popular search term search model</returns>
-        public virtual PopularSearchTermSearchModel PreparePopularSearchTermSearchModel(PopularSearchTermSearchModel model)
-        {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
-
-            //prepare page parameters
-            model.PageSize = 5;
-            model.AvailablePageSizes = "5";
-
-            return model;
-        }
-
-        /// <summary>
-        /// Prepare paged popular search term list model
-        /// </summary>
-        /// <param name="searchModel">Popular search term search model</param>
-        /// <returns>Popular search term list model</returns>
-        public virtual PopularSearchTermListModel PreparePopularSearchTermListModel(PopularSearchTermSearchModel searchModel)
-        {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            //get popular search terms
-            var searchTermRecordLines = _searchTermService.GetStats(pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
-
-            //prepare list model
-            var model = new PopularSearchTermListModel
-            {
-                //fill in model values from the entity
-                Data = searchTermRecordLines.Select(searchTerm => new PopularSearchTermModel
-                {
-                    Keyword = searchTerm.Keyword,
-                    Count = searchTerm.Count
-                }),
-                Total = searchTermRecordLines.TotalCount
-            };
+            //prepare nested search models
+            _commonModelFactory.PreparePopularSearchTermSearchModel(model.PopularSearchTerms);
+            _orderModelFactory.PrepareBestsellerBriefSearchModel(model.BestsellersByAmount);
+            _orderModelFactory.PrepareBestsellerBriefSearchModel(model.BestsellersByQuantity);
 
             return model;
         }
@@ -210,32 +152,6 @@ namespace Nop.Web.Areas.Admin.Factories
                     }
                 }
             }
-
-            return model;
-        }
-
-        /// <summary>
-        /// Prepare common statistics model
-        /// </summary>
-        /// <returns>Common statistics model</returns>
-        public virtual CommonStatisticsModel PrepareCommonStatisticsModel()
-        {
-            var model = new CommonStatisticsModel
-            {
-                NumberOfOrders = _orderService.SearchOrders(pageIndex: 0, pageSize: 1, getOnlyTotalCount: true).TotalCount
-            };
-
-            var customerRoleIds = new[] { _customerService.GetCustomerRoleBySystemName(SystemCustomerRoleNames.Registered).Id };
-            model.NumberOfCustomers = _customerService.GetAllCustomers(customerRoleIds: customerRoleIds,
-                pageIndex: 0, pageSize: 1, getOnlyTotalCount: true).TotalCount;
-
-            var returnRequestStatus = ReturnRequestStatus.Pending;
-            model.NumberOfPendingReturnRequests = _returnRequestService.SearchReturnRequests(rs: returnRequestStatus,
-                pageIndex: 0, pageSize: 1, getOnlyTotalCount: true).TotalCount;
-
-            model.NumberOfLowStockProducts =
-                _productService.GetLowStockProducts(getOnlyTotalCount: true).TotalCount +
-                _productService.GetLowStockProductCombinations(getOnlyTotalCount: true).TotalCount;
 
             return model;
         }

@@ -1,17 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Nop.Web.Areas.Admin.Models.Common;
-using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Tax;
-using Nop.Web.Framework.Mvc.ModelBinding;
+using Nop.Web.Areas.Admin.Models.Common;
 using Nop.Web.Framework.Models;
+using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Models.Orders
 {
+    /// <summary>
+    /// Represents an order model
+    /// </summary>
     public partial class OrderModel : BaseNopEntityModel
     {
+        #region Ctor
+
         public OrderModel()
         {
             CustomValues = new Dictionary<string, object>();
@@ -19,7 +22,13 @@ namespace Nop.Web.Areas.Admin.Models.Orders
             GiftCards = new List<GiftCard>();
             Items = new List<OrderItemModel>();
             UsedDiscounts = new List<UsedDiscountModel>();
+            OrderShipmentSearchModel = new OrderShipmentSearchModel();
+            OrderNoteSearchModel = new OrderNoteSearchModel();
         }
+
+        #endregion
+
+        #region Properties
 
         public bool IsLoggedInAsVendor { get; set; }
 
@@ -224,61 +233,14 @@ namespace Nop.Web.Areas.Admin.Models.Orders
         public bool CanPartiallyRefundOffline { get; set; }
         public bool CanVoid { get; set; }
         public bool CanVoidOffline { get; set; }
-        
+
+        public OrderShipmentSearchModel OrderShipmentSearchModel { get; set; }
+
+        public OrderNoteSearchModel OrderNoteSearchModel { get; set; }
+
+        #endregion
+
         #region Nested Classes
-
-        public partial class OrderItemModel : BaseNopEntityModel
-        {
-            public OrderItemModel()
-            {
-                PurchasedGiftCardIds = new List<int>();
-                ReturnRequests = new List<ReturnRequestBriefModel>();
-            }
-            public int ProductId { get; set; }
-            public string ProductName { get; set; }
-            public string VendorName { get; set; }
-            public string Sku { get; set; }
-
-            public string PictureThumbnailUrl { get; set; }
-
-            public string UnitPriceInclTax { get; set; }
-            public string UnitPriceExclTax { get; set; }
-            public decimal UnitPriceInclTaxValue { get; set; }
-            public decimal UnitPriceExclTaxValue { get; set; }
-
-            public int Quantity { get; set; }
-
-            public string DiscountInclTax { get; set; }
-            public string DiscountExclTax { get; set; }
-            public decimal DiscountInclTaxValue { get; set; }
-            public decimal DiscountExclTaxValue { get; set; }
-
-            public string SubTotalInclTax { get; set; }
-            public string SubTotalExclTax { get; set; }
-            public decimal SubTotalInclTaxValue { get; set; }
-            public decimal SubTotalExclTaxValue { get; set; }
-
-            public string AttributeInfo { get; set; }
-            public string RecurringInfo { get; set; }
-            public string RentalInfo { get; set; }
-            public IList<ReturnRequestBriefModel> ReturnRequests { get; set; }
-            public IList<int> PurchasedGiftCardIds { get; set; }
-
-            public bool IsDownload { get; set; }
-            public int DownloadCount { get; set; }
-            public DownloadActivationType DownloadActivationType { get; set; }
-            public bool IsDownloadActivated { get; set; }
-            public Guid LicenseDownloadGuid { get; set; }
-
-            #region Nested Classes
-
-            public partial class ReturnRequestBriefModel : BaseNopEntityModel
-            {
-                public string CustomNumber { get; set; }
-            }
-
-            #endregion
-        }
 
         public partial class TaxRate : BaseNopModel
         {
@@ -291,181 +253,8 @@ namespace Nop.Web.Areas.Admin.Models.Orders
             [NopResourceDisplayName("Admin.Orders.Fields.GiftCardInfo")]
             public string CouponCode { get; set; }
             public string Amount { get; set; }
-        }
-
-        public partial class OrderNote : BaseNopEntityModel
-        {
-            public int OrderId { get; set; }
-            [NopResourceDisplayName("Admin.Orders.OrderNotes.Fields.DisplayToCustomer")]
-            public bool DisplayToCustomer { get; set; }
-            [NopResourceDisplayName("Admin.Orders.OrderNotes.Fields.Note")]
-            public string Note { get; set; }
-            [NopResourceDisplayName("Admin.Orders.OrderNotes.Fields.Download")]
-            public int DownloadId { get; set; }
-            [NopResourceDisplayName("Admin.Orders.OrderNotes.Fields.Download")]
-            public Guid DownloadGuid { get; set; }
-            [NopResourceDisplayName("Admin.Orders.OrderNotes.Fields.CreatedOn")]
-            public DateTime CreatedOn { get; set; }
-        }
-
-        public partial class UploadLicenseModel : BaseNopModel
-        {
-            public int OrderId { get; set; }
-
-            public int OrderItemId { get; set; }
-
-            [UIHint("Download")]
-            public int LicenseDownloadId { get; set; }
-
-        }
-
-        public partial class AddOrderProductModel : BaseNopModel
-        {
-            public AddOrderProductModel()
-            {
-                AvailableCategories = new List<SelectListItem>();
-                AvailableManufacturers = new List<SelectListItem>();
-                AvailableProductTypes = new List<SelectListItem>();
-            }
-
-            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchProductName")]
-            public string SearchProductName { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchCategory")]
-            public int SearchCategoryId { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchManufacturer")]
-            public int SearchManufacturerId { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchProductType")]
-            public int SearchProductTypeId { get; set; }
-
-            public IList<SelectListItem> AvailableCategories { get; set; }
-            public IList<SelectListItem> AvailableManufacturers { get; set; }
-            public IList<SelectListItem> AvailableProductTypes { get; set; }
-
-            public int OrderId { get; set; }
-
-            #region Nested classes
-            
-            public partial class ProductModel : BaseNopEntityModel
-            {
-                [NopResourceDisplayName("Admin.Orders.Products.AddNew.Name")]
-                public string Name { get; set; }
-
-                [NopResourceDisplayName("Admin.Orders.Products.AddNew.SKU")]
-                public string Sku { get; set; }
-            }
-
-            public partial class ProductDetailsModel : BaseNopModel
-            {
-                public ProductDetailsModel()
-                {
-                    ProductAttributes = new List<ProductAttributeModel>();
-                    GiftCard = new GiftCardModel();
-                    Warnings = new List<string>();
-                }
-
-                public int ProductId { get; set; }
-
-                public int OrderId { get; set; }
-
-                public ProductType ProductType { get; set; }
-
-                public string Name { get; set; }
-
-                [NopResourceDisplayName("Admin.Orders.Products.AddNew.UnitPriceInclTax")]
-                public decimal UnitPriceInclTax { get; set; }
-                [NopResourceDisplayName("Admin.Orders.Products.AddNew.UnitPriceExclTax")]
-                public decimal UnitPriceExclTax { get; set; }
-
-                [NopResourceDisplayName("Admin.Orders.Products.AddNew.Quantity")]
-                public int Quantity { get; set; }
-
-                [NopResourceDisplayName("Admin.Orders.Products.AddNew.SubTotalInclTax")]
-                public decimal SubTotalInclTax { get; set; }
-                [NopResourceDisplayName("Admin.Orders.Products.AddNew.SubTotalExclTax")]
-                public decimal SubTotalExclTax { get; set; }
-
-                //product attributes
-                public IList<ProductAttributeModel> ProductAttributes { get; set; }
-                //gift card info
-                public GiftCardModel GiftCard { get; set; }
-                //rental
-                public bool IsRental { get; set; }
-
-                public List<string> Warnings { get; set; }
-
-                /// <summary>
-                /// A value indicating whether this attribute depends on some other attribute
-                /// </summary>
-                public bool HasCondition { get; set; }
-
-                public bool AutoUpdateOrderTotals { get; set; }
-            }
-
-            public partial class ProductAttributeModel : BaseNopEntityModel
-            {
-                public ProductAttributeModel()
-                {
-                    Values = new List<ProductAttributeValueModel>();
-                }
-
-                public int ProductAttributeId { get; set; }
-
-                public string Name { get; set; }
-
-                public string TextPrompt { get; set; }
-
-                public bool IsRequired { get; set; }
-
-                public bool HasCondition { get; set; }
-
-                /// <summary>
-                /// Allowed file extensions for customer uploaded files
-                /// </summary>
-                public IList<string> AllowedFileExtensions { get; set; }
-
-                public AttributeControlType AttributeControlType { get; set; }
-
-                public IList<ProductAttributeValueModel> Values { get; set; }
-            }
-
-            public partial class ProductAttributeValueModel : BaseNopEntityModel
-            {
-                public string Name { get; set; }
-
-                public bool IsPreSelected { get; set; }
-
-                public string PriceAdjustment { get; set; }
-
-                public decimal PriceAdjustmentValue { get; set; }
-
-                public bool CustomerEntersQty { get; set; }
-
-                public int Quantity { get; set; }
-            }
-
-            public partial class GiftCardModel : BaseNopModel
-            {
-                public bool IsGiftCard { get; set; }
-
-                [NopResourceDisplayName("Admin.GiftCards.Fields.RecipientName")]
-                public string RecipientName { get; set; }
-                [DataType(DataType.EmailAddress)]
-                [NopResourceDisplayName("Admin.GiftCards.Fields.RecipientEmail")]
-                public string RecipientEmail { get; set; }
-                [NopResourceDisplayName("Admin.GiftCards.Fields.SenderName")]
-                public string SenderName { get; set; }
-                [DataType(DataType.EmailAddress)]
-                [NopResourceDisplayName("Admin.GiftCards.Fields.SenderEmail")]
-                public string SenderEmail { get; set; }
-                [NopResourceDisplayName("Admin.GiftCards.Fields.Message")]
-                public string Message { get; set; }
-
-                public GiftCardType GiftCardType { get; set; }
-            }
-
-            #endregion
-        }
-
+        }               
+        
         public partial class UsedDiscountModel:BaseNopModel
         {
             public int DiscountId { get; set; }

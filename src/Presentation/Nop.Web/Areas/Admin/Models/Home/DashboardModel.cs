@@ -1,4 +1,6 @@
-﻿using Nop.Web.Framework.Models;
+﻿using Nop.Web.Areas.Admin.Models.Common;
+using Nop.Web.Areas.Admin.Models.Orders;
+using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Areas.Admin.Models.Home
 {
@@ -11,7 +13,9 @@ namespace Nop.Web.Areas.Admin.Models.Home
 
         public DashboardModel()
         {
-            this.PopularSearchTermSearchModel = new PopularSearchTermSearchModel();
+            this.PopularSearchTerms = new PopularSearchTermSearchModel();
+            this.BestsellersByAmount = new BestsellerBriefSearchModel();
+            this.BestsellersByQuantity = new BestsellerBriefSearchModel();
         }
 
         #endregion
@@ -20,7 +24,11 @@ namespace Nop.Web.Areas.Admin.Models.Home
 
         public bool IsLoggedInAsVendor { get; set; }
 
-        public PopularSearchTermSearchModel PopularSearchTermSearchModel { get; set; }
+        public PopularSearchTermSearchModel PopularSearchTerms { get; set; }
+
+        public BestsellerBriefSearchModel BestsellersByAmount { get; set; }
+
+        public BestsellerBriefSearchModel BestsellersByQuantity { get; set; }
 
         #endregion
     }

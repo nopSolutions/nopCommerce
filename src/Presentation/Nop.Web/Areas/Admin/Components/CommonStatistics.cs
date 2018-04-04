@@ -13,7 +13,7 @@ namespace Nop.Web.Areas.Admin.Components
     {
         #region Fields
 
-        private readonly IHomeModelFactory _homeModelFactory;
+        private readonly ICommonModelFactory _commonModelFactory;
         private readonly IPermissionService _permissionService;
         private readonly IWorkContext _workContext;
 
@@ -21,11 +21,11 @@ namespace Nop.Web.Areas.Admin.Components
 
         #region Ctor
 
-        public CommonStatisticsViewComponent(IHomeModelFactory homeModelFactory,
+        public CommonStatisticsViewComponent(ICommonModelFactory commonModelFactory,
             IPermissionService permissionService,
             IWorkContext workContext)
         {
-            this._homeModelFactory = homeModelFactory;
+            this._commonModelFactory = commonModelFactory;
             this._permissionService = permissionService;
             this._workContext = workContext;
         }
@@ -53,7 +53,7 @@ namespace Nop.Web.Areas.Admin.Components
                 return Content("");
 
             //prepare model
-            var model = _homeModelFactory.PrepareCommonStatisticsModel();
+            var model = _commonModelFactory.PrepareCommonStatisticsModel();
 
             return View(model);
         }

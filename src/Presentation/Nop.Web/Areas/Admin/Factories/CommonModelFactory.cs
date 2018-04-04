@@ -12,12 +12,17 @@ using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Net.Http.Headers;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
+using Nop.Core.Domain.Orders;
 using Nop.Core.Plugins;
+using Nop.Services.Catalog;
 using Nop.Services.Common;
+using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
+using Nop.Services.Orders;
 using Nop.Services.Payments;
 using Nop.Services.Seo;
 using Nop.Services.Stores;
@@ -39,20 +44,25 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly CurrencySettings _currencySettings;
         private readonly IActionContextAccessor _actionContextAccessor;
         private readonly ICurrencyService _currencyService;
+        private readonly ICustomerService _customerService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
         private readonly IMaintenanceService _maintenanceService;
         private readonly IMeasureService _measureService;
+        private readonly IOrderService _orderService;
         private readonly IPaymentService _paymentService;
+        private readonly IProductService _productService;
+        private readonly IReturnRequestService _returnRequestService;
+        private readonly ISearchTermService _searchTermService;
         private readonly IStoreContext _storeContext;
         private readonly IStoreService _storeService;
         private readonly IUrlHelperFactory _urlHelperFactory;
         private readonly IUrlRecordService _urlRecordService;
         private readonly IWebHelper _webHelper;
         private readonly IWorkContext _workContext;
-        private readonly MeasureSettings _measureSettings;
+        private readonly MeasureSettings _measureSettings;        
 
         #endregion
 
@@ -62,13 +72,18 @@ namespace Nop.Web.Areas.Admin.Factories
             CurrencySettings currencySettings,
             IActionContextAccessor actionContextAccessor,
             ICurrencyService currencyService,
+            ICustomerService customerService,
             IDateTimeHelper dateTimeHelper,
             IHttpContextAccessor httpContextAccessor,
             ILanguageService languageService,
             ILocalizationService localizationService,
             IMaintenanceService maintenanceService,
             IMeasureService measureService,
+            IOrderService orderService,
             IPaymentService paymentService,
+            IProductService productService,
+            IReturnRequestService returnRequestService,
+            ISearchTermService searchTermService,
             IStoreContext storeContext,
             IStoreService storeService,
             IUrlHelperFactory urlHelperFactory,
@@ -81,13 +96,18 @@ namespace Nop.Web.Areas.Admin.Factories
             this._currencySettings = currencySettings;
             this._actionContextAccessor = actionContextAccessor;
             this._currencyService = currencyService;
+            this._customerService = customerService;
             this._dateTimeHelper = dateTimeHelper;
             this._httpContextAccessor = httpContextAccessor;
             this._languageService = languageService;
             this._localizationService = localizationService;
             this._maintenanceService = maintenanceService;
             this._measureService = measureService;
+            this._orderService = orderService;
             this._paymentService = paymentService;
+            this._productService = productService;
+            this._returnRequestService = returnRequestService;
+            this._searchTermService = searchTermService;
             this._storeContext = storeContext;
             this._storeService = storeService;
             this._urlHelperFactory = urlHelperFactory;
@@ -692,6 +712,77 @@ namespace Nop.Web.Areas.Admin.Factories
                 AvailableLanguages = _languageService
                     .GetAllLanguages(storeId: _storeContext.CurrentStore.Id).Select(language => language.ToModel()).ToList()
             };
+
+            return model;
+        }
+
+        /// <summary>
+        /// Prepare popular search term search model
+        /// </summary>
+        /// <param name="model">Popular search term search model</param>
+        /// <returns>Popular search term search model</returns>
+        public virtual PopularSearchTermSearchModel PreparePopularSearchTermSearchModel(PopularSearchTermSearchModel model)
+        {
+            if (model == null)
+                throw new ArgumentNullException(nameof(model));
+
+            //prepare page parameters
+            model.PageSize = 5;
+            model.AvailablePageSizes = "5";
+
+            return model;
+        }
+
+        /// <summary>
+        /// Prepare paged popular search term list model
+        /// </summary>
+        /// <param name="searchModel">Popular search term search model</param>
+        /// <returns>Popular search term list model</returns>
+        public virtual PopularSearchTermListModel PreparePopularSearchTermListModel(PopularSearchTermSearchModel searchModel)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+            //get popular search terms
+            var searchTermRecordLines = _searchTermService.GetStats(pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
+
+            //prepare list model
+            var model = new PopularSearchTermListModel
+            {
+                //fill in model values from the entity
+                Data = searchTermRecordLines.Select(searchTerm => new PopularSearchTermModel
+                {
+                    Keyword = searchTerm.Keyword,
+                    Count = searchTerm.Count
+                }),
+                Total = searchTermRecordLines.TotalCount
+            };
+
+            return model;
+        }
+
+        /// <summary>
+        /// Prepare common statistics model
+        /// </summary>
+        /// <returns>Common statistics model</returns>
+        public virtual CommonStatisticsModel PrepareCommonStatisticsModel()
+        {
+            var model = new CommonStatisticsModel
+            {
+                NumberOfOrders = _orderService.SearchOrders(pageIndex: 0, pageSize: 1, getOnlyTotalCount: true).TotalCount
+            };
+
+            var customerRoleIds = new[] { _customerService.GetCustomerRoleBySystemName(SystemCustomerRoleNames.Registered).Id };
+            model.NumberOfCustomers = _customerService.GetAllCustomers(customerRoleIds: customerRoleIds,
+                pageIndex: 0, pageSize: 1, getOnlyTotalCount: true).TotalCount;
+
+            var returnRequestStatus = ReturnRequestStatus.Pending;
+            model.NumberOfPendingReturnRequests = _returnRequestService.SearchReturnRequests(rs: returnRequestStatus,
+                pageIndex: 0, pageSize: 1, getOnlyTotalCount: true).TotalCount;
+
+            model.NumberOfLowStockProducts =
+                _productService.GetLowStockProducts(getOnlyTotalCount: true).TotalCount +
+                _productService.GetLowStockProductCombinations(getOnlyTotalCount: true).TotalCount;
 
             return model;
         }

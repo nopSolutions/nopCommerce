@@ -171,9 +171,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (payment == null)
                 return RedirectToAction("List");
 
-            //prepare model
-            var model = _recurringPaymentModelFactory.PrepareRecurringPaymentModel(null, payment);
-
             try
             {
                 var errors = _orderProcessingService.ProcessNextRecurringPayment(payment);
@@ -181,6 +178,9 @@ namespace Nop.Web.Areas.Admin.Controllers
                     errors.ToList().ForEach(error => ErrorNotification(error, false));
                 else
                     SuccessNotification(_localizationService.GetResource("Admin.RecurringPayments.NextPaymentProcessed"), false);
+
+                //prepare model
+                var model = _recurringPaymentModelFactory.PrepareRecurringPaymentModel(null, payment);
 
                 //selected tab
                 SaveSelectedTabName(persistForTheNextRequest: false);
@@ -190,6 +190,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             catch (Exception exc)
             {
                 ErrorNotification(exc, false);
+
+                //prepare model
+                var model = _recurringPaymentModelFactory.PrepareRecurringPaymentModel(null, payment);
 
                 //selected tab
                 SaveSelectedTabName(persistForTheNextRequest: false);
@@ -210,9 +213,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (payment == null)
                 return RedirectToAction("List");
 
-            //prepare model
-            var model = _recurringPaymentModelFactory.PrepareRecurringPaymentModel(null, payment);
-
             try
             {
                 var errors = _orderProcessingService.CancelRecurringPayment(payment);
@@ -224,6 +224,9 @@ namespace Nop.Web.Areas.Admin.Controllers
                 else
                     SuccessNotification(_localizationService.GetResource("Admin.RecurringPayments.Cancelled"), false);
 
+                //prepare model
+                var model = _recurringPaymentModelFactory.PrepareRecurringPaymentModel(null, payment);
+
                 //selected tab
                 SaveSelectedTabName(persistForTheNextRequest: false);
 
@@ -232,6 +235,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             catch (Exception exc)
             {
                 ErrorNotification(exc, false);
+
+                //prepare model
+                var model = _recurringPaymentModelFactory.PrepareRecurringPaymentModel(null, payment);
 
                 //selected tab
                 SaveSelectedTabName(persistForTheNextRequest: false);

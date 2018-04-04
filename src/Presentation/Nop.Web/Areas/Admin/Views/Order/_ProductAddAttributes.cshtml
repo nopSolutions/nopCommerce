@@ -1,4 +1,4 @@
-﻿@model IList<OrderModel.AddOrderProductModel.ProductAttributeModel>
+﻿@model IList<AddProductToOrderModel.ProductAttributeModel>
 
 @using System.Text
 @using Nop.Core.Domain.Catalog;
@@ -11,7 +11,7 @@
     var attributesHaveConditions = Model.Any(a => a.HasCondition);
     var attributeChangeHandlerFuncName = $"attribute_change_handler_{productId}";
 
-    var getAttributeValueName = new Func<OrderModel.AddOrderProductModel.ProductAttributeValueModel, string>((attributeValue) =>
+    var getAttributeValueName = new Func<AddProductToOrderModel.ProductAttributeValueModel, string>((attributeValue) =>
         string.IsNullOrEmpty(attributeValue.PriceAdjustment) ? attributeValue.Name : T("Products.ProductAttributes.PriceAdjustment",
             attributeValue.Name, attributeValue.PriceAdjustment, attributeValue.CustomerEntersQty ? T("Products.ProductAttributes.PriceAdjustment.PerItem").Text : string.Empty).Text);
 

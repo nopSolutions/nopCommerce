@@ -3,9 +3,9 @@
 namespace Nop.Web.Areas.Admin.Models.Orders
 {
     /// <summary>
-    /// Represents a shipment list model
+    /// Represents a bestseller list model
     /// </summary>
-    public partial class ShipmentListModel : BasePagedListModel<ShipmentModel>
+    public partial class BestsellerListModel : BasePagedListModel<BestsellerModel>
     {
     }
 }

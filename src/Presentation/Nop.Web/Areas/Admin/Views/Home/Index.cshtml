@@ -82,7 +82,7 @@
                     <div class="col-md-4">
                         @if (canManageProducts)
                         {
-                            @await Html.PartialAsync("_PopularSearchTermsReport", Model.PopularSearchTermSearchModel)
+                            @await Html.PartialAsync("_PopularSearchTermsReport", Model.PopularSearchTerms)
                         }
                     </div>
                 </div>
@@ -92,10 +92,10 @@
             {
                 <div class="row">
                     <div class="col-md-6">
-                        @await Html.PartialAsync("_BestsellersBriefReportByQuantity")
+                        @await Html.PartialAsync("_BestsellersBriefReportByQuantity", Model.BestsellersByQuantity)
                     </div>
                     <div class="col-md-6">
-                        @await Html.PartialAsync("_BestsellersBriefReportByAmount")
+                        @await Html.PartialAsync("_BestsellersBriefReportByAmount", Model.BestsellersByAmount)
                     </div>
                 </div>
             }

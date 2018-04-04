@@ -69,18 +69,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             return Content("Setting changed");
         }
 
-        [HttpPost]
-        public virtual IActionResult PopularSearchTermsReport(PopularSearchTermSearchModel searchModel)
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedKendoGridJson();
-
-            //prepare model
-            var model = _homeModelFactory.PreparePopularSearchTermListModel(searchModel);
-
-            return Json(model);
-        }
-
         #endregion
     }
 }

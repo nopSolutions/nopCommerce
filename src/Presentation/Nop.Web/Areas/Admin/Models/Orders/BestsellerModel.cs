@@ -3,9 +3,15 @@ using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Areas.Admin.Models.Orders
 {
-    public partial class BestsellersReportLineModel : BaseNopModel
+    /// <summary>
+    /// Represents a bestseller model
+    /// </summary>
+    public partial class BestsellerModel : BaseNopModel
     {
+        #region Properties
+
         public int ProductId { get; set; }
+
         [NopResourceDisplayName("Admin.SalesReport.Bestsellers.Fields.Name")]
         public string ProductName { get; set; }
 
@@ -14,5 +20,7 @@ namespace Nop.Web.Areas.Admin.Models.Orders
 
         [NopResourceDisplayName("Admin.SalesReport.Bestsellers.Fields.TotalQuantity")]
         public decimal TotalQuantity { get; set; }
+
+        #endregion
     }
 }

@@ -43,7 +43,7 @@
                         type: "json",
                         transport: {
                             read: {
-                                url: "@Html.Raw(Url.Action("PopularSearchTermsReport", "Home"))",
+                                url: "@Html.Raw(Url.Action("PopularSearchTermsReport", "Common"))",
                                 type: "POST",
                                 dataType: "json",
                                 data: addAntiForgeryToken
@@ -66,7 +66,6 @@
                     },
                     pageable: {
                         refresh: true,
-                        pageSizes: [@(Model.AvailablePageSizes)],
                         @await Html.PartialAsync("_GridPagerMessages")
                     },
                     editable: {

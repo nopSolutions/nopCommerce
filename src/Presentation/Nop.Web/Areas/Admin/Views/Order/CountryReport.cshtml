@@ -1,4 +1,4 @@
-﻿@model CountryReportModel
+﻿@model CountryReportSearchModel
 
 @{
     //page title
@@ -83,7 +83,16 @@
                                             url: "@Html.Raw(Url.Action("CountryReportList", "Order"))",
                                             type: "POST",
                                             dataType: "json",
-                                            data: additionalData
+                                            data: function() {
+                                                var data = {
+                                                    StartDate: $('#@Html.IdFor(model => model.StartDate)').val(),
+                                                    EndDate: $('#@Html.IdFor(model => model.EndDate)').val(),
+                                                    OrderStatusId: $('#OrderStatusId').val(),
+                                                    PaymentStatusId: $('#PaymentStatusId').val()
+                                                };
+                                                addAntiForgeryToken(data);
+                                                return data;
+                                            }
                                         }
                                     },
                                     schema: {
@@ -96,15 +105,14 @@
                                         // Cancel the changes
                                         this.cancelChanges();
                                     },
+                                    pageSize: @(Model.PageSize),
                                     serverPaging: true,
                                     serverFiltering: true,
                                     serverSorting: true
                                 },
                                 pageable: {
                                     refresh: true,
-                                    numeric: false,
-                                    previousNext: false,
-                                    info: false,
+                                    pageSizes: [@(Model.AvailablePageSizes)],
                                     @await Html.PartialAsync("_GridPagerMessages")
                                 },
                                 scrollable: false,
@@ -130,17 +138,6 @@
                                 return false;
                             });
                         });
-
-                        function additionalData() {
-                            var data = {
-                                StartDate: $('#@Html.IdFor(model => model.StartDate)').val(),
-                                EndDate: $('#@Html.IdFor(model => model.EndDate)').val(),
-                                OrderStatusId: $('#OrderStatusId').val(),
-                                PaymentStatusId: $('#PaymentStatusId').val()
-                            };
-                            addAntiForgeryToken(data);
-                            return data;
-                        }
                     </script>
                 </div>
             </div>

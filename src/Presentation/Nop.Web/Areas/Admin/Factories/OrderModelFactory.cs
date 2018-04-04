@@ -1,0 +1,2031 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.Routing;
+using Nop.Core;
+using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Common;
+using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Directory;
+using Nop.Core.Domain.Orders;
+using Nop.Core.Domain.Payments;
+using Nop.Core.Domain.Shipping;
+using Nop.Core.Domain.Tax;
+using Nop.Services.Affiliates;
+using Nop.Services.Catalog;
+using Nop.Services.Common;
+using Nop.Services.Directory;
+using Nop.Services.Discounts;
+using Nop.Services.Helpers;
+using Nop.Services.Localization;
+using Nop.Services.Media;
+using Nop.Services.Orders;
+using Nop.Services.Payments;
+using Nop.Services.Security;
+using Nop.Services.Shipping;
+using Nop.Services.Shipping.Tracking;
+using Nop.Services.Stores;
+using Nop.Services.Tax;
+using Nop.Services.Vendors;
+using Nop.Web.Areas.Admin.Extensions;
+using Nop.Web.Areas.Admin.Models.Common;
+using Nop.Web.Areas.Admin.Models.Orders;
+using Nop.Web.Framework.Extensions;
+
+namespace Nop.Web.Areas.Admin.Factories
+{
+    /// <summary>
+    /// Represents the order model factory implementation
+    /// </summary>
+    public partial class OrderModelFactory : IOrderModelFactory
+    {
+        #region Fields
+
+        private readonly AddressSettings _addressSettings;
+        private readonly CurrencySettings _currencySettings;
+        private readonly IActionContextAccessor _actionContextAccessor;
+        private readonly IAddressAttributeFormatter _addressAttributeFormatter;
+        private readonly IAddressAttributeParser _addressAttributeParser;
+        private readonly IAddressAttributeService _addressAttributeService;
+        private readonly IAffiliateService _affiliateService;
+        private readonly IBaseAdminModelFactory _baseAdminModelFactory;
+        private readonly ICountryService _countryService;
+        private readonly ICurrencyService _currencyService;
+        private readonly IDateTimeHelper _dateTimeHelper;
+        private readonly IDiscountService _discountService;
+        private readonly IDownloadService _downloadService;
+        private readonly IEncryptionService _encryptionService;
+        private readonly IGiftCardService _giftCardService;
+        private readonly ILocalizationService _localizationService;
+        private readonly IMeasureService _measureService;
+        private readonly IOrderProcessingService _orderProcessingService;
+        private readonly IOrderReportService _orderReportService;
+        private readonly IOrderService _orderService;
+        private readonly IPaymentService _paymentService;
+        private readonly IPictureService _pictureService;
+        private readonly IPriceCalculationService _priceCalculationService;
+        private readonly IPriceFormatter _priceFormatter;
+        private readonly IProductAttributeParser _productAttributeParser;
+        private readonly IProductAttributeService _productAttributeService;
+        private readonly IProductService _productService;
+        private readonly IReturnRequestService _returnRequestService;
+        private readonly IShipmentService _shipmentService;
+        private readonly IShippingService _shippingService;
+        private readonly IStoreService _storeService;
+        private readonly ITaxService _taxService;
+        private readonly IUrlHelperFactory _urlHelperFactory;
+        private readonly IVendorService _vendorService;
+        private readonly IWorkContext _workContext;
+        private readonly MeasureSettings _measureSettings;
+        private readonly OrderSettings _orderSettings;
+        private readonly ShippingSettings _shippingSettings;
+        private readonly TaxSettings _taxSettings;
+
+        #endregion
+
+        #region Ctor
+
+        public OrderModelFactory(AddressSettings addressSettings,
+            CurrencySettings currencySettings,
+            IActionContextAccessor actionContextAccessor,
+            IAddressAttributeFormatter addressAttributeFormatter,
+            IAddressAttributeParser addressAttributeParser,
+            IAddressAttributeService addressAttributeService,
+            IAffiliateService affiliateService,
+            IBaseAdminModelFactory baseAdminModelFactory,
+            ICountryService countryService,
+            ICurrencyService currencyService,
+            IDateTimeHelper dateTimeHelper,
+            IDiscountService discountService,
+            IDownloadService downloadService,
+            IEncryptionService encryptionService,
+            IGiftCardService giftCardService,
+            ILocalizationService localizationService,
+            IMeasureService measureService,
+            IOrderProcessingService orderProcessingService,
+            IOrderReportService orderReportService,
+            IOrderService orderService,
+            IPaymentService paymentService,
+            IPictureService pictureService,
+            IPriceCalculationService priceCalculationService,
+            IPriceFormatter priceFormatter,
+            IProductAttributeParser productAttributeParser,
+            IProductAttributeService productAttributeService,
+            IProductService productService,
+            IReturnRequestService returnRequestService,
+            IShipmentService shipmentService,
+            IShippingService shippingService,
+            IStoreService storeService,
+            ITaxService taxService,
+            IUrlHelperFactory urlHelperFactory,
+            IVendorService vendorService,
+            IWorkContext workContext,
+            MeasureSettings measureSettings,
+            OrderSettings orderSettings,
+            ShippingSettings shippingSettings,
+            TaxSettings taxSettings)
+        {
+            this._addressSettings = addressSettings;
+            this._currencySettings = currencySettings;
+            this._actionContextAccessor = actionContextAccessor;
+            this._addressAttributeFormatter = addressAttributeFormatter;
+            this._addressAttributeParser = addressAttributeParser;
+            this._addressAttributeService = addressAttributeService;
+            this._affiliateService = affiliateService;
+            this._baseAdminModelFactory = baseAdminModelFactory;
+            this._countryService = countryService;
+            this._currencyService = currencyService;
+            this._dateTimeHelper = dateTimeHelper;
+            this._discountService = discountService;
+            this._downloadService = downloadService;
+            this._encryptionService = encryptionService;
+            this._giftCardService = giftCardService;
+            this._localizationService = localizationService;
+            this._measureService = measureService;
+            this._orderProcessingService = orderProcessingService;
+            this._orderReportService = orderReportService;
+            this._orderService = orderService;
+            this._paymentService = paymentService;
+            this._pictureService = pictureService;
+            this._priceCalculationService = priceCalculationService;
+            this._priceFormatter = priceFormatter;
+            this._productAttributeParser = productAttributeParser;
+            this._productAttributeService = productAttributeService;
+            this._productService = productService;
+            this._returnRequestService = returnRequestService;
+            this._shipmentService = shipmentService;
+            this._shippingService = shippingService;
+            this._storeService = storeService;
+            this._taxService = taxService;
+            this._urlHelperFactory = urlHelperFactory;
+            this._vendorService = vendorService;
+            this._workContext = workContext;
+            this._measureSettings = measureSettings;
+            this._orderSettings = orderSettings;
+            this._shippingSettings = shippingSettings;
+            this._taxSettings = taxSettings;
+        }
+
+        #endregion
+
+        #region Utilities
+
+        /// <summary>
+        /// Prepare address model
+        /// </summary>
+        /// <param name="model">Address model</param>
+        /// <param name="address">Address</param>
+        protected virtual void PrepareAddressModel(AddressModel model, Address address)
+        {
+            if (model == null)
+                throw new ArgumentNullException(nameof(model));
+
+            model.FormattedCustomAddressAttributes = _addressAttributeFormatter.FormatAttributes(address.CustomAttributes);
+
+            //set some of address fields as enabled and required
+            model.FirstNameEnabled = true;
+            model.FirstNameRequired = true;
+            model.LastNameEnabled = true;
+            model.LastNameRequired = true;
+            model.EmailEnabled = true;
+            model.EmailRequired = true;
+            model.CompanyEnabled = _addressSettings.CompanyEnabled;
+            model.CompanyRequired = _addressSettings.CompanyRequired;
+            model.CountryEnabled = _addressSettings.CountryEnabled;
+            model.CountryRequired = _addressSettings.CountryEnabled;
+            model.StateProvinceEnabled = _addressSettings.StateProvinceEnabled;
+            model.CountyEnabled = _addressSettings.CountyEnabled;
+            model.CountyRequired = _addressSettings.CountyRequired;
+            model.CityEnabled = _addressSettings.CityEnabled;
+            model.CityRequired = _addressSettings.CityRequired;
+            model.StreetAddressEnabled = _addressSettings.StreetAddressEnabled;
+            model.StreetAddressRequired = _addressSettings.StreetAddressRequired;
+            model.StreetAddress2Enabled = _addressSettings.StreetAddress2Enabled;
+            model.StreetAddress2Required = _addressSettings.StreetAddress2Required;
+            model.ZipPostalCodeEnabled = _addressSettings.ZipPostalCodeEnabled;
+            model.ZipPostalCodeRequired = _addressSettings.ZipPostalCodeRequired;
+            model.PhoneEnabled = _addressSettings.PhoneEnabled;
+            model.PhoneRequired = _addressSettings.PhoneRequired;
+            model.FaxEnabled = _addressSettings.FaxEnabled;
+            model.FaxRequired = _addressSettings.FaxRequired;
+        }
+
+        /// <summary>
+        /// Prepare order item models
+        /// </summary>
+        /// <param name="models">List of order item models</param>
+        /// <param name="order">Order</param>
+        protected virtual void PrepareOrderItemModels(IList<OrderItemModel> models, Order order)
+        {
+            if (models == null)
+                throw new ArgumentNullException(nameof(models));
+
+            if (order == null)
+                throw new ArgumentNullException(nameof(order));
+
+            var primaryStoreCurrency = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId);
+
+            //get order items
+            var orderItems = order.OrderItems;
+            if (_workContext.CurrentVendor != null)
+                orderItems = orderItems.Where(orderItem => orderItem.Product.VendorId == _workContext.CurrentVendor.Id).ToList();
+
+            foreach (var orderItem in orderItems)
+            {
+                //fill in model values from the entity
+                var orderItemModel = new OrderItemModel
+                {
+                    Id = orderItem.Id,
+                    ProductId = orderItem.ProductId,
+                    ProductName = orderItem.Product.Name,
+                    Quantity = orderItem.Quantity,
+                    IsDownload = orderItem.Product.IsDownload,
+                    DownloadCount = orderItem.DownloadCount,
+                    DownloadActivationType = orderItem.Product.DownloadActivationType,
+                    IsDownloadActivated = orderItem.IsDownloadActivated,
+                    UnitPriceInclTaxValue = orderItem.UnitPriceInclTax,
+                    UnitPriceExclTaxValue = orderItem.UnitPriceExclTax,
+                    DiscountInclTaxValue = orderItem.DiscountAmountInclTax,
+                    DiscountExclTaxValue = orderItem.DiscountAmountExclTax,
+                    SubTotalInclTaxValue = orderItem.PriceInclTax,
+                    SubTotalExclTaxValue = orderItem.PriceExclTax,
+                    AttributeInfo = orderItem.AttributeDescription
+                };
+
+                //fill in additional values (not existing in the entity)
+                orderItemModel.Sku = orderItem.Product.FormatSku(orderItem.AttributesXml, _productAttributeParser);
+                orderItemModel.VendorName = _vendorService.GetVendorById(orderItem.Product.VendorId)?.Name;
+
+                //picture
+                var orderItemPicture = orderItem.Product.GetProductPicture(orderItem.AttributesXml, _pictureService, _productAttributeParser);
+                orderItemModel.PictureThumbnailUrl = _pictureService.GetPictureUrl(orderItemPicture, 75, true);
+
+                //license file
+                if (orderItem.LicenseDownloadId.HasValue)
+                {
+                    orderItemModel.LicenseDownloadGuid = _downloadService
+                        .GetDownloadById(orderItem.LicenseDownloadId.Value)?.DownloadGuid ?? Guid.Empty;
+                }
+
+                //unit price
+                orderItemModel.UnitPriceInclTax = _priceFormatter
+                    .FormatPrice(orderItem.UnitPriceInclTax, true, primaryStoreCurrency, _workContext.WorkingLanguage, true, true);
+                orderItemModel.UnitPriceExclTax = _priceFormatter
+                    .FormatPrice(orderItem.UnitPriceExclTax, true, primaryStoreCurrency, _workContext.WorkingLanguage, false, true);
+
+                //discounts
+                orderItemModel.DiscountInclTax = _priceFormatter.FormatPrice(orderItem.DiscountAmountInclTax, true,
+                    primaryStoreCurrency, _workContext.WorkingLanguage, true, true);
+                orderItemModel.DiscountExclTax = _priceFormatter.FormatPrice(orderItem.DiscountAmountExclTax, true,
+                    primaryStoreCurrency, _workContext.WorkingLanguage, false, true);
+
+                //subtotal
+                orderItemModel.SubTotalInclTax = _priceFormatter.FormatPrice(orderItem.PriceInclTax, true, primaryStoreCurrency,
+                    _workContext.WorkingLanguage, true, true);
+                orderItemModel.SubTotalExclTax = _priceFormatter.FormatPrice(orderItem.PriceExclTax, true, primaryStoreCurrency,
+                    _workContext.WorkingLanguage, false, true);
+
+                //recurring info
+                if (orderItem.Product.IsRecurring)
+                {
+                    orderItemModel.RecurringInfo = string.Format(_localizationService.GetResource("Admin.Orders.Products.RecurringPeriod"),
+                        orderItem.Product.RecurringCycleLength,
+                        orderItem.Product.RecurringCyclePeriod.GetLocalizedEnum(_localizationService, _workContext));
+                }
+
+                //rental info
+                if (orderItem.Product.IsRental)
+                {
+                    var rentalStartDate = orderItem.RentalStartDateUtc.HasValue
+                        ? orderItem.Product.FormatRentalDate(orderItem.RentalStartDateUtc.Value) : string.Empty;
+                    var rentalEndDate = orderItem.RentalEndDateUtc.HasValue
+                        ? orderItem.Product.FormatRentalDate(orderItem.RentalEndDateUtc.Value) : string.Empty;
+                    orderItemModel.RentalInfo = string.Format(_localizationService.GetResource("Order.Rental.FormattedDate"),
+                        rentalStartDate, rentalEndDate);
+                }
+
+                //prepare return request models
+                PrepareReturnRequestBriefModels(orderItemModel.ReturnRequests, orderItem);
+
+                //gift card identifiers
+                orderItemModel.PurchasedGiftCardIds = _giftCardService
+                    .GetGiftCardsByPurchasedWithOrderItemId(orderItem.Id).Select(card => card.Id).ToList();
+
+                models.Add(orderItemModel);
+            }
+        }
+
+        /// <summary>
+        /// Prepare return request brief models
+        /// </summary>
+        /// <param name="models">List of return request brief models</param>
+        /// <param name="orderItem">Order item</param>
+        protected virtual void PrepareReturnRequestBriefModels(IList<OrderItemModel.ReturnRequestBriefModel> models, OrderItem orderItem)
+        {
+            if (models == null)
+                throw new ArgumentNullException(nameof(models));
+
+            if (orderItem == null)
+                throw new ArgumentNullException(nameof(orderItem));
+
+            var returnRequests = _returnRequestService.SearchReturnRequests(orderItemId: orderItem.Id);
+            foreach (var returnRequest in returnRequests)
+            {
+                models.Add(new OrderItemModel.ReturnRequestBriefModel
+                {
+                    CustomNumber = returnRequest.CustomNumber,
+                    Id = returnRequest.Id
+                });
+            }
+        }
+
+        /// <summary>
+        /// Prepare order model totals
+        /// </summary>
+        /// <param name="model">Order model</param>
+        /// <param name="order">Order</param>
+        protected virtual void PrepareOrderModelTotals(OrderModel model, Order order)
+        {
+            if (model == null)
+                throw new ArgumentNullException(nameof(model));
+
+            if (order == null)
+                throw new ArgumentNullException(nameof(order));
+
+            var primaryStoreCurrency = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId);
+
+            //subtotal
+            model.OrderSubtotalInclTax = _priceFormatter.FormatPrice(order.OrderSubtotalInclTax, true, primaryStoreCurrency,
+                _workContext.WorkingLanguage, true);
+            model.OrderSubtotalExclTax = _priceFormatter.FormatPrice(order.OrderSubtotalExclTax, true, primaryStoreCurrency,
+                _workContext.WorkingLanguage, false);
+            model.OrderSubtotalInclTaxValue = order.OrderSubtotalInclTax;
+            model.OrderSubtotalExclTaxValue = order.OrderSubtotalExclTax;
+
+            //discount (applied to order subtotal)
+            var orderSubtotalDiscountInclTaxStr = _priceFormatter.FormatPrice(order.OrderSubTotalDiscountInclTax, true,
+                primaryStoreCurrency, _workContext.WorkingLanguage, true);
+            var orderSubtotalDiscountExclTaxStr = _priceFormatter.FormatPrice(order.OrderSubTotalDiscountExclTax, true,
+                primaryStoreCurrency, _workContext.WorkingLanguage, false);
+            if (order.OrderSubTotalDiscountInclTax > decimal.Zero)
+                model.OrderSubTotalDiscountInclTax = orderSubtotalDiscountInclTaxStr;
+            if (order.OrderSubTotalDiscountExclTax > decimal.Zero)
+                model.OrderSubTotalDiscountExclTax = orderSubtotalDiscountExclTaxStr;
+            model.OrderSubTotalDiscountInclTaxValue = order.OrderSubTotalDiscountInclTax;
+            model.OrderSubTotalDiscountExclTaxValue = order.OrderSubTotalDiscountExclTax;
+
+            //shipping
+            model.OrderShippingInclTax = _priceFormatter.FormatShippingPrice(order.OrderShippingInclTax, true,
+                primaryStoreCurrency, _workContext.WorkingLanguage, true);
+            model.OrderShippingExclTax = _priceFormatter.FormatShippingPrice(order.OrderShippingExclTax, true,
+                primaryStoreCurrency, _workContext.WorkingLanguage, false);
+            model.OrderShippingInclTaxValue = order.OrderShippingInclTax;
+            model.OrderShippingExclTaxValue = order.OrderShippingExclTax;
+
+            //payment method additional fee
+            if (order.PaymentMethodAdditionalFeeInclTax > decimal.Zero)
+            {
+                model.PaymentMethodAdditionalFeeInclTax = _priceFormatter.FormatPaymentMethodAdditionalFee(
+                    order.PaymentMethodAdditionalFeeInclTax, true, primaryStoreCurrency, _workContext.WorkingLanguage, true);
+                model.PaymentMethodAdditionalFeeExclTax = _priceFormatter.FormatPaymentMethodAdditionalFee(
+                    order.PaymentMethodAdditionalFeeExclTax, true, primaryStoreCurrency, _workContext.WorkingLanguage, false);
+            }
+            model.PaymentMethodAdditionalFeeInclTaxValue = order.PaymentMethodAdditionalFeeInclTax;
+            model.PaymentMethodAdditionalFeeExclTaxValue = order.PaymentMethodAdditionalFeeExclTax;
+
+            //tax
+            model.Tax = _priceFormatter.FormatPrice(order.OrderTax, true, false);
+            var taxRates = order.TaxRatesDictionary;
+            var displayTaxRates = _taxSettings.DisplayTaxRates && taxRates.Any();
+            var displayTax = !displayTaxRates;
+            foreach (var tr in order.TaxRatesDictionary)
+            {
+                model.TaxRates.Add(new OrderModel.TaxRate
+                {
+                    Rate = _priceFormatter.FormatTaxRate(tr.Key),
+                    Value = _priceFormatter.FormatPrice(tr.Value, true, false),
+                });
+            }
+            model.DisplayTaxRates = displayTaxRates;
+            model.DisplayTax = displayTax;
+            model.TaxValue = order.OrderTax;
+            model.TaxRatesValue = order.TaxRates;
+
+            //discount
+            if (order.OrderDiscount > 0)
+                model.OrderTotalDiscount = _priceFormatter.FormatPrice(-order.OrderDiscount, true, false);
+            model.OrderTotalDiscountValue = order.OrderDiscount;
+
+            //gift cards
+            foreach (var gcuh in order.GiftCardUsageHistory)
+            {
+                model.GiftCards.Add(new OrderModel.GiftCard
+                {
+                    CouponCode = gcuh.GiftCard.GiftCardCouponCode,
+                    Amount = _priceFormatter.FormatPrice(-gcuh.UsedValue, true, false),
+                });
+            }
+
+            //reward points
+            if (order.RedeemedRewardPointsEntry != null)
+            {
+                model.RedeemedRewardPoints = -order.RedeemedRewardPointsEntry.Points;
+                model.RedeemedRewardPointsAmount =
+                    _priceFormatter.FormatPrice(-order.RedeemedRewardPointsEntry.UsedAmount, true, false);
+            }
+
+            //total
+            model.OrderTotal = _priceFormatter.FormatPrice(order.OrderTotal, true, false);
+            model.OrderTotalValue = order.OrderTotal;
+
+            //refunded amount
+            if (order.RefundedAmount > decimal.Zero)
+                model.RefundedAmount = _priceFormatter.FormatPrice(order.RefundedAmount, true, false);
+
+            //used discounts
+            var duh = _discountService.GetAllDiscountUsageHistory(orderId: order.Id);
+            foreach (var d in duh)
+            {
+                model.UsedDiscounts.Add(new OrderModel.UsedDiscountModel
+                {
+                    DiscountId = d.DiscountId,
+                    DiscountName = d.Discount.Name
+                });
+            }
+
+            //profit (hide for vendors)
+            if (_workContext.CurrentVendor == null)
+            {
+                var profit = _orderReportService.ProfitReport(orderId: order.Id);
+                model.Profit = _priceFormatter.FormatPrice(profit, true, false);
+            }
+        }
+
+        /// <summary>
+        /// Prepare order model payment info
+        /// </summary>
+        /// <param name="model">Order model</param>
+        /// <param name="order">Order</param>
+        protected virtual void PrepareOrderModelPaymentInfo(OrderModel model, Order order)
+        {
+            if (model == null)
+                throw new ArgumentNullException(nameof(model));
+
+            if (order == null)
+                throw new ArgumentNullException(nameof(order));
+
+            //prepare billing address
+            model.BillingAddress = order.BillingAddress.ToModel();
+            PrepareAddressModel(model.BillingAddress, order.BillingAddress);
+
+            if (order.AllowStoringCreditCardNumber)
+            {
+                //card type
+                model.CardType = _encryptionService.DecryptText(order.CardType);
+                //cardholder name
+                model.CardName = _encryptionService.DecryptText(order.CardName);
+                //card number
+                model.CardNumber = _encryptionService.DecryptText(order.CardNumber);
+                //cvv
+                model.CardCvv2 = _encryptionService.DecryptText(order.CardCvv2);
+                //expiry date
+                var cardExpirationMonthDecrypted = _encryptionService.DecryptText(order.CardExpirationMonth);
+                if (!string.IsNullOrEmpty(cardExpirationMonthDecrypted) && cardExpirationMonthDecrypted != "0")
+                    model.CardExpirationMonth = cardExpirationMonthDecrypted;
+                var cardExpirationYearDecrypted = _encryptionService.DecryptText(order.CardExpirationYear);
+                if (!string.IsNullOrEmpty(cardExpirationYearDecrypted) && cardExpirationYearDecrypted != "0")
+                    model.CardExpirationYear = cardExpirationYearDecrypted;
+
+                model.AllowStoringCreditCardNumber = true;
+            }
+            else
+            {
+                var maskedCreditCardNumberDecrypted = _encryptionService.DecryptText(order.MaskedCreditCardNumber);
+                if (!string.IsNullOrEmpty(maskedCreditCardNumberDecrypted))
+                    model.CardNumber = maskedCreditCardNumberDecrypted;
+            }
+
+            //payment transaction info
+            model.AuthorizationTransactionId = order.AuthorizationTransactionId;
+            model.CaptureTransactionId = order.CaptureTransactionId;
+            model.SubscriptionTransactionId = order.SubscriptionTransactionId;
+
+            //payment method info
+            var pm = _paymentService.LoadPaymentMethodBySystemName(order.PaymentMethodSystemName);
+            model.PaymentMethod = pm != null ? pm.PluginDescriptor.FriendlyName : order.PaymentMethodSystemName;
+            model.PaymentStatus = order.PaymentStatus.GetLocalizedEnum(_localizationService, _workContext);
+
+            //payment method buttons
+            model.CanCancelOrder = _orderProcessingService.CanCancelOrder(order);
+            model.CanCapture = _orderProcessingService.CanCapture(order);
+            model.CanMarkOrderAsPaid = _orderProcessingService.CanMarkOrderAsPaid(order);
+            model.CanRefund = _orderProcessingService.CanRefund(order);
+            model.CanRefundOffline = _orderProcessingService.CanRefundOffline(order);
+            model.CanPartiallyRefund = _orderProcessingService.CanPartiallyRefund(order, decimal.Zero);
+            model.CanPartiallyRefundOffline = _orderProcessingService.CanPartiallyRefundOffline(order, decimal.Zero);
+            model.CanVoid = _orderProcessingService.CanVoid(order);
+            model.CanVoidOffline = _orderProcessingService.CanVoidOffline(order);
+
+            model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId)?.CurrencyCode;
+            model.MaxAmountToRefund = order.OrderTotal - order.RefundedAmount;
+
+            //recurring payment record
+            model.RecurringPaymentId = _orderService.SearchRecurringPayments(initialOrderId: order.Id, showHidden: true).FirstOrDefault()?.Id ?? 0;
+        }
+
+        /// <summary>
+        /// Prepare order model shipping info
+        /// </summary>
+        /// <param name="model">Order model</param>
+        /// <param name="order">Order</param>
+        protected virtual void PrepareOrderModelShippingInfo(OrderModel model, Order order)
+        {
+            if (model == null)
+                throw new ArgumentNullException(nameof(model));
+
+            if (order == null)
+                throw new ArgumentNullException(nameof(order));
+
+            model.ShippingStatus = order.ShippingStatus.GetLocalizedEnum(_localizationService, _workContext);
+            if (order.ShippingStatus == ShippingStatus.ShippingNotRequired)
+                return;
+
+            model.IsShippable = true;
+            model.ShippingMethod = order.ShippingMethod;
+            model.CanAddNewShipments = order.HasItemsToAddToShipment();
+            model.PickUpInStore = order.PickUpInStore;
+            if (!order.PickUpInStore)
+            {
+                model.ShippingAddress = order.ShippingAddress.ToModel();
+                PrepareAddressModel(model.ShippingAddress, order.ShippingAddress);
+                model.ShippingAddressGoogleMapsUrl = $"http://maps.google.com/maps?f=q&hl=en&ie=UTF8&oe=UTF8&geocode=&q={WebUtility.UrlEncode(order.ShippingAddress.Address1 + " " + order.ShippingAddress.ZipPostalCode + " " + order.ShippingAddress.City + " " + (order.ShippingAddress.Country != null ? order.ShippingAddress.Country.Name : ""))}";
+            }
+            else
+            {
+                if (order.PickupAddress != null)
+                {
+                    model.PickupAddress = order.PickupAddress.ToModel();
+                    model.PickupAddressGoogleMapsUrl = $"http://maps.google.com/maps?f=q&hl=en&ie=UTF8&oe=UTF8&geocode=&q={WebUtility.UrlEncode($"{order.PickupAddress.Address1} {order.PickupAddress.ZipPostalCode} {order.PickupAddress.City} {(order.PickupAddress.Country != null ? order.PickupAddress.Country.Name : string.Empty)}")}";
+                }
+            }
+        }
+
+        /// <summary>
+        /// Prepare product attribute models
+        /// </summary>
+        /// <param name="models">List of product attribute models</param>
+        /// <param name="order">Order</param>
+        /// <param name="product">Product</param>
+        protected virtual void PrepareProductAttributeModels(IList<AddProductToOrderModel.ProductAttributeModel> models, Order order, Product product)
+        {
+            if (models == null)
+                throw new ArgumentNullException(nameof(models));
+
+            if (order == null)
+                throw new ArgumentNullException(nameof(order));
+
+            if (product == null)
+                throw new ArgumentNullException(nameof(product));
+
+            var attributes = _productAttributeService.GetProductAttributeMappingsByProductId(product.Id);
+            foreach (var attribute in attributes)
+            {
+                var attributeModel = new AddProductToOrderModel.ProductAttributeModel
+                {
+                    Id = attribute.Id,
+                    ProductAttributeId = attribute.ProductAttributeId,
+                    Name = attribute.ProductAttribute.Name,
+                    TextPrompt = attribute.TextPrompt,
+                    IsRequired = attribute.IsRequired,
+                    AttributeControlType = attribute.AttributeControlType,
+                    HasCondition = !string.IsNullOrEmpty(attribute.ConditionAttributeXml)
+                };
+                if (!string.IsNullOrEmpty(attribute.ValidationFileAllowedExtensions))
+                {
+                    attributeModel.AllowedFileExtensions = attribute.ValidationFileAllowedExtensions
+                        .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                        .ToList();
+                }
+
+                if (attribute.ShouldHaveValues())
+                {
+                    //values
+                    var attributeValues = _productAttributeService.GetProductAttributeValues(attribute.Id);
+                    foreach (var attributeValue in attributeValues)
+                    {
+                        //price adjustment
+                        var priceAdjustment = _taxService.GetProductPrice(product,
+                            _priceCalculationService.GetProductAttributeValuePriceAdjustment(attributeValue, order.Customer), out _);
+
+                        var priceAdjustmentStr = string.Empty;
+                        if (priceAdjustment != 0)
+                        {
+                            if (attributeValue.PriceAdjustmentUsePercentage)
+                            {
+                                priceAdjustmentStr = attributeValue.PriceAdjustment.ToString("G29");
+                                priceAdjustmentStr = priceAdjustment > 0 ? $"+{priceAdjustmentStr}%" : $"{priceAdjustmentStr}%";
+                            }
+                            else
+                            {
+                                priceAdjustmentStr = priceAdjustment > 0 ? $"+{_priceFormatter.FormatPrice(priceAdjustment, false, false)}" : $"-{_priceFormatter.FormatPrice(-priceAdjustment, false, false)}";
+                            }
+                        }
+
+                        attributeModel.Values.Add(new AddProductToOrderModel.ProductAttributeValueModel
+                        {
+                            Id = attributeValue.Id,
+                            Name = attributeValue.Name,
+                            IsPreSelected = attributeValue.IsPreSelected,
+                            CustomerEntersQty = attributeValue.CustomerEntersQty,
+                            Quantity = attributeValue.Quantity,
+                            PriceAdjustment = priceAdjustmentStr,
+                            PriceAdjustmentValue = priceAdjustment
+                        });
+                    }
+                }
+
+                models.Add(attributeModel);
+            }
+        }
+
+        /// <summary>
+        /// Prepare shipment item model
+        /// </summary>
+        /// <param name="model">Shipment item model</param>
+        /// <param name="orderItem">Order item</param>
+        protected virtual void PrepareShipmentItemModel(ShipmentItemModel model, OrderItem orderItem)
+        {
+            if (model == null)
+                throw new ArgumentNullException(nameof(model));
+
+            //fill in additional values (not existing in the entity)
+            model.OrderItemId = orderItem.Id;
+            model.ProductId = orderItem.ProductId;
+            model.ProductName = orderItem.Product.Name;
+            model.Sku = orderItem.Product.FormatSku(orderItem.AttributesXml, _productAttributeParser);
+            model.AttributeInfo = orderItem.AttributeDescription;
+            model.ShipSeparately = orderItem.Product.ShipSeparately;
+            model.QuantityOrdered = orderItem.Quantity;
+            model.QuantityInAllShipments = orderItem.GetTotalNumberOfItemsInAllShipment();
+            model.QuantityToAdd = orderItem.GetTotalNumberOfItemsCanBeAddedToShipment();
+
+            var baseWeight = _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId)?.Name;
+            var baseDimension = _measureService.GetMeasureDimensionById(_measureSettings.BaseDimensionId)?.Name;
+            if (orderItem.ItemWeight.HasValue)
+                model.ItemWeight = $"{orderItem.ItemWeight:F2} [{baseWeight}]";
+            model.ItemDimensions =
+                $"{orderItem.Product.Length:F2} x {orderItem.Product.Width:F2} x {orderItem.Product.Height:F2} [{baseDimension}]";
+
+            if (orderItem.Product.IsRental)
+            {
+                var rentalStartDate = orderItem.RentalStartDateUtc.HasValue
+                    ? orderItem.Product.FormatRentalDate(orderItem.RentalStartDateUtc.Value) : "";
+                var rentalEndDate = orderItem.RentalEndDateUtc.HasValue
+                    ? orderItem.Product.FormatRentalDate(orderItem.RentalEndDateUtc.Value) : "";
+                model.RentalInfo = string
+                    .Format(_localizationService.GetResource("Order.Rental.FormattedDate"), rentalStartDate, rentalEndDate);
+            }
+        }
+
+        /// <summary>
+        /// Prepare shipment status event models
+        /// </summary>
+        /// <param name="models">List of shipment status event models</param>
+        /// <param name="shipment">Shipment</param>
+        protected virtual void PrepareShipmentStatusEventModels(IList<ShipmentStatusEventModel> models, Shipment shipment)
+        {
+            if (models == null)
+                throw new ArgumentNullException(nameof(models));
+
+            var shipmentTracker = shipment.GetShipmentTracker(_shippingService, _shippingSettings);
+            var shipmentEvents = shipmentTracker.GetShipmentEvents(shipment.TrackingNumber);
+            if (shipmentEvents == null)
+                return;
+
+            foreach (var shipmentEvent in shipmentEvents)
+            {
+                var shipmentStatusEventModel = new ShipmentStatusEventModel
+                {
+                    Date = shipmentEvent.Date,
+                    EventName = shipmentEvent.EventName,
+                    Location = shipmentEvent.Location
+                };
+                var shipmentEventCountry = _countryService.GetCountryByTwoLetterIsoCode(shipmentEvent.CountryCode);
+                shipmentStatusEventModel.Country = shipmentEventCountry != null
+                    ? shipmentEventCountry.GetLocalized(x => x.Name) : shipmentEvent.CountryCode;
+                models.Add(shipmentStatusEventModel);
+            }
+        }
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Prepare order search model
+        /// </summary>
+        /// <param name="model">Order search model</param>
+        /// <returns>Order search model</returns>
+        public virtual OrderSearchModel PrepareOrderSearchModel(OrderSearchModel model)
+        {
+            if (model == null)
+                throw new ArgumentNullException(nameof(model));
+
+            model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
+            model.BillingPhoneEnabled = _addressSettings.PhoneEnabled;
+
+            //prepare available order, payment and shipping statuses
+            _baseAdminModelFactory.PrepareOrderStatuses(model.AvailableOrderStatuses);
+            if (model.AvailableOrderStatuses.Any())
+            {
+                if (model.OrderStatusIds?.Any() ?? false)
+                {
+                    var ids = model.OrderStatusIds.Select(id => id.ToString());
+                    model.AvailableOrderStatuses.Where(statusItem => ids.Contains(statusItem.Value)).ToList()
+                        .ForEach(statusItem => statusItem.Selected = true);
+                }
+                else
+                    model.AvailableOrderStatuses.FirstOrDefault().Selected = true;
+            }
+
+            _baseAdminModelFactory.PreparePaymentStatuses(model.AvailablePaymentStatuses);
+            if (model.AvailablePaymentStatuses.Any())
+            {
+                if (model.PaymentStatusIds?.Any() ?? false)
+                {
+                    var ids = model.PaymentStatusIds.Select(id => id.ToString());
+                    model.AvailablePaymentStatuses.Where(statusItem => ids.Contains(statusItem.Value)).ToList()
+                        .ForEach(statusItem => statusItem.Selected = true);
+                }
+                else
+                    model.AvailablePaymentStatuses.FirstOrDefault().Selected = true;
+            }
+
+            _baseAdminModelFactory.PrepareShippingStatuses(model.AvailableShippingStatuses);
+            if (model.AvailableShippingStatuses.Any())
+            {
+                if (model.ShippingStatusIds?.Any() ?? false)
+                {
+                    var ids = model.ShippingStatusIds.Select(id => id.ToString());
+                    model.AvailableShippingStatuses.Where(statusItem => ids.Contains(statusItem.Value)).ToList()
+                        .ForEach(statusItem => statusItem.Selected = true);
+                }
+                else
+                    model.AvailableShippingStatuses.FirstOrDefault().Selected = true;
+            }
+
+            //prepare available stores
+            _baseAdminModelFactory.PrepareStores(model.AvailableStores);
+
+            //prepare available vendors
+            _baseAdminModelFactory.PrepareVendors(model.AvailableVendors);
+
+            //prepare available payment methods
+            model.AvailablePaymentMethods = _paymentService.LoadAllPaymentMethods().Select(method =>
+                new SelectListItem { Text = method.PluginDescriptor.FriendlyName, Value = method.PluginDescriptor.SystemName }).ToList();
+            model.AvailablePaymentMethods.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
+
+            //prepare available billing countries
+            model.AvailableCountries = _countryService.GetAllCountriesForBilling(showHidden: true)
+                .Select(country => new SelectListItem { Text = country.Name, Value = country.Id.ToString() }).ToList();
+            model.AvailableCountries.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+
+            //prepare page parameters
+            model.SetGridPageSize();
+
+            return model;
+        }
+
+        /// <summary>
+        /// Prepare paged order list model
+        /// </summary>
+        /// <param name="searchModel">Order search model</param>
+        /// <returns>Order list model</returns>
+        public virtual OrderListModel PrepareOrderListModel(OrderSearchModel searchModel)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+            //get parameters to filter orders
+            var orderStatusIds = (searchModel.OrderStatusIds?.Contains(0) ?? true) ? null : searchModel.OrderStatusIds.ToList();
+            var paymentStatusIds = (searchModel.PaymentStatusIds?.Contains(0) ?? true) ? null : searchModel.PaymentStatusIds.ToList();
+            var shippingStatusIds = (searchModel.ShippingStatusIds?.Contains(0) ?? true) ? null : searchModel.ShippingStatusIds.ToList();
+            if (_workContext.CurrentVendor != null)
+                searchModel.VendorId = _workContext.CurrentVendor.Id;
+            var startDateValue = !searchModel.StartDate.HasValue ? null
+                : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
+            var endDateValue = !searchModel.EndDate.HasValue ? null
+                : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
+            var product = _productService.GetProductById(searchModel.ProductId);
+            var filterByProductId = (product != null && (_workContext.CurrentVendor == null || product.VendorId == _workContext.CurrentVendor.Id))
+                ? searchModel.ProductId : 0;
+
+            //get orders
+            var orders = _orderService.SearchOrders(storeId: searchModel.StoreId,
+                vendorId: searchModel.VendorId,
+                productId: filterByProductId,
+                warehouseId: searchModel.WarehouseId,
+                paymentMethodSystemName: searchModel.PaymentMethodSystemName,
+                createdFromUtc: startDateValue,
+                createdToUtc: endDateValue,
+                osIds: orderStatusIds,
+                psIds: paymentStatusIds,
+                ssIds: shippingStatusIds,
+                billingPhone: searchModel.BillingPhone,
+                billingEmail: searchModel.BillingEmail,
+                billingLastName: searchModel.BillingLastName,
+                billingCountryId: searchModel.BillingCountryId,
+                orderNotes: searchModel.OrderNotes,
+                pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
+
+            //prepare list model
+            var model = new OrderListModel
+            {
+                //fill in model values from the entity
+                Data = orders.Select(order =>
+                {
+                    //fill in model values from the entity
+                    var orderModel = new OrderModel
+                    {
+                        Id = order.Id,
+                        OrderStatusId = order.OrderStatusId,
+                        PaymentStatusId = order.PaymentStatusId,
+                        ShippingStatusId = order.ShippingStatusId,
+                        CustomerEmail = order.BillingAddress.Email,
+                        CustomerFullName = $"{order.BillingAddress.FirstName} {order.BillingAddress.LastName}",
+                        CustomOrderNumber = order.CustomOrderNumber
+                    };
+
+                    //convert dates to the user time
+                    orderModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, DateTimeKind.Utc);
+
+                    //fill in additional values (not existing in the entity)
+                    orderModel.StoreName = _storeService.GetStoreById(order.StoreId)?.Name ?? "Deleted";
+                    orderModel.OrderStatus = order.OrderStatus.GetLocalizedEnum(_localizationService, _workContext);
+                    orderModel.PaymentStatus = order.PaymentStatus.GetLocalizedEnum(_localizationService, _workContext);
+                    orderModel.ShippingStatus = order.ShippingStatus.GetLocalizedEnum(_localizationService, _workContext);
+                    orderModel.OrderTotal = _priceFormatter.FormatPrice(order.OrderTotal, true, false);
+
+                    return orderModel;
+                }),
+                Total = orders.TotalCount
+            };
+
+            return model;
+        }
+
+        /// <summary>
+        /// Prepare order aggregator model
+        /// </summary>
+        /// <param name="searchModel">Order search model</param>
+        /// <returns>Order aggregator model</returns>
+        public virtual OrderAggreratorModel PrepareOrderAggregatorModel(OrderSearchModel searchModel)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+            //get parameters to filter orders
+            var orderStatusIds = (searchModel.OrderStatusIds?.Contains(0) ?? true) ? null : searchModel.OrderStatusIds.ToList();
+            var paymentStatusIds = (searchModel.PaymentStatusIds?.Contains(0) ?? true) ? null : searchModel.PaymentStatusIds.ToList();
+            var shippingStatusIds = (searchModel.ShippingStatusIds?.Contains(0) ?? true) ? null : searchModel.ShippingStatusIds.ToList();
+            if (_workContext.CurrentVendor != null)
+                searchModel.VendorId = _workContext.CurrentVendor.Id;
+            var startDateValue = !searchModel.StartDate.HasValue ? null
+                : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
+            var endDateValue = !searchModel.EndDate.HasValue ? null
+                : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
+            var product = _productService.GetProductById(searchModel.ProductId);
+            var filterByProductId = (product != null && (_workContext.CurrentVendor == null || product.VendorId == _workContext.CurrentVendor.Id))
+                ? searchModel.ProductId : 0;
+
+            //prepare additional model data
+            var reportSummary = _orderReportService.GetOrderAverageReportLine(storeId: searchModel.StoreId,
+                vendorId: searchModel.VendorId,
+                productId: filterByProductId,
+                paymentMethodSystemName: searchModel.PaymentMethodSystemName,
+                osIds: orderStatusIds,
+                psIds: paymentStatusIds,
+                ssIds: shippingStatusIds,
+                startTimeUtc: startDateValue,
+                endTimeUtc: endDateValue,
+                billingPhone: searchModel.BillingPhone,
+                billingEmail: searchModel.BillingEmail,
+                billingLastName: searchModel.BillingLastName,
+                billingCountryId: searchModel.BillingCountryId,
+                orderNotes: searchModel.OrderNotes);
+
+            var profit = _orderReportService.ProfitReport(storeId: searchModel.StoreId,
+                vendorId: searchModel.VendorId,
+                productId: filterByProductId,
+                paymentMethodSystemName: searchModel.PaymentMethodSystemName,
+                osIds: orderStatusIds,
+                psIds: paymentStatusIds,
+                ssIds: shippingStatusIds,
+                startTimeUtc: startDateValue,
+                endTimeUtc: endDateValue,
+                billingPhone: searchModel.BillingPhone,
+                billingEmail: searchModel.BillingEmail,
+                billingLastName: searchModel.BillingLastName,
+                billingCountryId: searchModel.BillingCountryId,
+                orderNotes: searchModel.OrderNotes);
+
+            var primaryStoreCurrency = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId);
+            var shippingSum = _priceFormatter
+                .FormatShippingPrice(reportSummary.SumShippingExclTax, true, primaryStoreCurrency, _workContext.WorkingLanguage, false);
+            var taxSum = _priceFormatter.FormatPrice(reportSummary.SumTax, true, false);
+            var totalSum = _priceFormatter.FormatPrice(reportSummary.SumOrders, true, false);
+            var profitSum = _priceFormatter.FormatPrice(profit, true, false);
+
+            var model = new OrderAggreratorModel
+            {
+                aggregatorprofit = profitSum,
+                aggregatorshipping = shippingSum,
+                aggregatortax = taxSum,
+                aggregatortotal = totalSum
+            };
+
+            return model;
+        }
+
+        /// <summary>
+        /// Prepare order model
+        /// </summary>
+        /// <param name="model">Order model</param>
+        /// <param name="order">Order</param>
+        /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
+        /// <returns>Order model</returns>
+        public virtual OrderModel PrepareOrderModel(OrderModel model, Order order, bool excludeProperties = false)
+        {
+            if (order != null)
+            {
+                //fill in model values from the entity
+                model = model ?? new OrderModel
+                {
+                    Id = order.Id,
+                    OrderStatusId = order.OrderStatusId,
+                    OrderGuid = order.OrderGuid,
+                    CustomOrderNumber = order.CustomOrderNumber,
+                    CustomerId = order.CustomerId,
+                    CustomerIp = order.CustomerIp,
+                    VatNumber = order.VatNumber,
+                    CheckoutAttributeInfo = order.CheckoutAttributeDescription
+                };
+
+                model.OrderStatus = order.OrderStatus.GetLocalizedEnum(_localizationService, _workContext);
+                model.StoreName = _storeService.GetStoreById(order.StoreId)?.Name ?? "Deleted";
+                model.CustomerInfo = order.Customer.IsRegistered() ? order.Customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
+                model.CreatedOn = _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, DateTimeKind.Utc);
+                model.CustomValues = order.DeserializeCustomValues();
+
+                var affiliate = _affiliateService.GetAffiliateById(order.AffiliateId);
+                if (affiliate != null)
+                {
+                    model.AffiliateId = affiliate.Id;
+                    model.AffiliateName = affiliate.GetFullName();
+                }
+
+                //prepare order totals
+                PrepareOrderModelTotals(model, order);
+
+                //prepare order items
+                PrepareOrderItemModels(model.Items, order);
+                model.HasDownloadableProducts = model.Items.Any(item => item.IsDownload);
+
+                //prepare payment info
+                PrepareOrderModelPaymentInfo(model, order);
+
+                //prepare shipping info
+                PrepareOrderModelShippingInfo(model, order);
+
+                //prepare nested search model
+                PrepareOrderShipmentSearchModel(model.OrderShipmentSearchModel, order);
+                PrepareOrderNoteSearchModel(model.OrderNoteSearchModel, order);
+            }
+
+            model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
+            model.AllowCustomersToSelectTaxDisplayType = _taxSettings.AllowCustomersToSelectTaxDisplayType;
+            model.TaxDisplayType = _taxSettings.TaxDisplayType;
+
+            return model;
+        }
+
+        /// <summary>
+        /// Prepare upload license model
+        /// </summary>
+        /// <param name="model">Upload license model</param>
+        /// <param name="order">Order</param>
+        /// <param name="orderItem">Order item</param>
+        /// <returns>Upload license model</returns>
+        public virtual UploadLicenseModel PrepareUploadLicenseModel(UploadLicenseModel model, Order order, OrderItem orderItem)
+        {
+            if (model == null)
+                throw new ArgumentNullException(nameof(model));
+
+            if (order == null)
+                throw new ArgumentNullException(nameof(order));
+
+            if (orderItem == null)
+                throw new ArgumentNullException(nameof(orderItem));
+
+            model.LicenseDownloadId = orderItem.LicenseDownloadId ?? 0;
+            model.OrderId = order.Id;
+            model.OrderItemId = orderItem.Id;
+
+            return model;
+        }
+
+        /// <summary>
+        /// Prepare product search model to add to the order
+        /// </summary>
+        /// <param name="model">Product search model to add to the order</param>
+        /// <param name="order">Order</param>
+        /// <returns>Product search model to add to the order</returns>
+        public virtual AddProductToOrderSearchModel PrepareAddProductToOrderSearchModel(AddProductToOrderSearchModel model, Order order)
+        {
+            if (model == null)
+                throw new ArgumentNullException(nameof(model));
+
+            if (order == null)
+                throw new ArgumentNullException(nameof(order));
+
+            model.OrderId = order.Id;
+
+            //prepare available categories
+            _baseAdminModelFactory.PrepareCategories(model.AvailableCategories);
+
+            //prepare available manufacturers
+            _baseAdminModelFactory.PrepareManufacturers(model.AvailableManufacturers);
+
+            //prepare available product types
+            _baseAdminModelFactory.PrepareProductTypes(model.AvailableProductTypes);
+
+            //prepare page parameters
+            model.SetGridPageSize();
+
+            return model;
+        }
+
+        /// <summary>
+        /// Prepare paged product list model to add to the order
+        /// </summary>
+        /// <param name="searchModel">Product search model to add to the order</param>
+        /// <param name="order">Order</param>
+        /// <returns>Product search model to add to the order</returns>
+        public virtual AddProductToOrderListModel PrepareAddProductToOrderListModel(AddProductToOrderSearchModel searchModel, Order order)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+            //get products
+            var products = _productService.SearchProducts(showHidden: true,
+                categoryIds: new List<int> { searchModel.SearchCategoryId },
+                manufacturerId: searchModel.SearchManufacturerId,
+                productType: searchModel.SearchProductTypeId > 0 ? (ProductType?)searchModel.SearchProductTypeId : null,
+                keywords: searchModel.SearchProductName,
+                pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
+
+            //prepare grid model
+            var model = new AddProductToOrderListModel
+            {
+                //fill in model values from the entity
+                Data = products.Select(product => product.ToModel()),
+                Total = products.TotalCount
+            };
+
+            return model;
+        }
+
+        /// <summary>
+        /// Prepare product model to add to the order
+        /// </summary>
+        /// <param name="model">Product model to add to the order</param>
+        /// <param name="order">Order</param>
+        /// <param name="product">Product</param>
+        /// <returns>Product model to add to the order</returns>
+        public virtual AddProductToOrderModel PrepareAddProductToOrderModel(AddProductToOrderModel model, Order order, Product product)
+        {
+            if (model == null)
+                throw new ArgumentNullException(nameof(model));
+
+            if (order == null)
+                throw new ArgumentNullException(nameof(order));
+
+            if (product == null)
+                throw new ArgumentNullException(nameof(product));
+
+            model.ProductId = product.Id;
+            model.OrderId = order.Id;
+            model.Name = product.Name;
+            model.IsRental = product.IsRental;
+            model.ProductType = product.ProductType;
+            model.AutoUpdateOrderTotals = _orderSettings.AutoUpdateOrderTotalsOnEditingOrder;
+
+            var presetQty = 1;
+            var presetPrice = _priceCalculationService.GetFinalPrice(product, order.Customer, decimal.Zero, true, presetQty);
+            var presetPriceInclTax = _taxService.GetProductPrice(product, presetPrice, true, order.Customer, out _);
+            var presetPriceExclTax = _taxService.GetProductPrice(product, presetPrice, false, order.Customer, out _);
+            model.UnitPriceExclTax = presetPriceExclTax;
+            model.UnitPriceInclTax = presetPriceInclTax;
+            model.Quantity = presetQty;
+            model.SubTotalExclTax = presetPriceExclTax;
+            model.SubTotalInclTax = presetPriceInclTax;
+
+            //attributes
+            PrepareProductAttributeModels(model.ProductAttributes, order, product);
+            model.HasCondition = model.ProductAttributes.Any(attribute => attribute.HasCondition);
+
+            //gift card
+            model.GiftCard.IsGiftCard = product.IsGiftCard;
+            if (model.GiftCard.IsGiftCard)
+                model.GiftCard.GiftCardType = product.GiftCardType;
+
+            return model;
+        }
+
+        /// <summary>
+        /// Prepare order address model
+        /// </summary>
+        /// <param name="model">Order address model</param>
+        /// <param name="order">Order</param>
+        /// <param name="address">Address</param>
+        /// <returns>Order address model</returns>
+        public virtual OrderAddressModel PrepareOrderAddressModel(OrderAddressModel model, Order order, Address address)
+        {
+            if (model == null)
+                throw new ArgumentNullException(nameof(model));
+
+            if (order == null)
+                throw new ArgumentNullException(nameof(order));
+
+            if (address == null)
+                throw new ArgumentNullException(nameof(address));
+
+            model.OrderId = order.Id;
+
+            //prepare address model
+            model.Address = address.ToModel();
+            PrepareAddressModel(model.Address, address);
+
+            //prepare available countries
+            _baseAdminModelFactory.PrepareCountries(model.Address.AvailableCountries);
+
+            //prepare available states
+            _baseAdminModelFactory.PrepareStatesAndProvinces(model.Address.AvailableStates, model.Address.CountryId);
+
+            //prepare custom address attributes
+            model.Address.PrepareCustomAddressAttributes(address, _addressAttributeService, _addressAttributeParser);
+
+            return model;
+        }
+
+        /// <summary>
+        /// Prepare shipment search model
+        /// </summary>
+        /// <param name="model">Shipment search model</param>
+        /// <returns>Shipment search model</returns>
+        public virtual ShipmentSearchModel PrepareShipmentSearchModel(ShipmentSearchModel model)
+        {
+            if (model == null)
+                throw new ArgumentNullException(nameof(model));
+
+            //prepare available countries
+            _baseAdminModelFactory.PrepareCountries(model.AvailableCountries);
+
+            //prepare available states and provinces
+            _baseAdminModelFactory.PrepareStatesAndProvinces(model.AvailableCountries, model.CountryId);
+
+            //prepare available warehouses
+            _baseAdminModelFactory.PrepareWarehouses(model.AvailableWarehouses);
+
+            //prepare nested search model
+            PrepareShipmentItemSearchModel(model.ShipmentItemSearchModel);
+
+            //prepare page parameters
+            model.SetGridPageSize();
+
+            return model;
+        }
+
+        /// <summary>
+        /// Prepare paged shipment list model
+        /// </summary>
+        /// <param name="searchModel">Shipment search model</param>
+        /// <returns>Shipment list model</returns>
+        public virtual ShipmentListModel PrepareShipmentListModel(ShipmentSearchModel searchModel)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+            //get parameters to filter shipments
+            var vendorId = _workContext.CurrentVendor?.Id ?? 0;
+            var startDateValue = !searchModel.StartDate.HasValue ? null
+                : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
+            var endDateValue = !searchModel.EndDate.HasValue ? null
+                : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
+
+            //get shipments
+            var shipments = _shipmentService.GetAllShipments(vendorId: vendorId,
+                warehouseId: searchModel.WarehouseId,
+                shippingCountryId: searchModel.CountryId,
+                shippingStateId: searchModel.StateProvinceId,
+                shippingCounty: searchModel.County,
+                shippingCity: searchModel.City,
+                trackingNumber: searchModel.TrackingNumber,
+                loadNotShipped: searchModel.LoadNotShipped,
+                createdFromUtc: startDateValue,
+                createdToUtc: endDateValue,
+                pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
+
+            //prepare list model
+            var model = new ShipmentListModel
+            {
+                //fill in model values from the entity
+                Data = shipments.Select(shipment =>
+                {
+                    //fill in model values from the entity
+                    var shipmentModel = new ShipmentModel
+                    {
+                        Id = shipment.Id,
+                        TrackingNumber = shipment.TrackingNumber,
+                        CustomOrderNumber = shipment.Order.CustomOrderNumber
+                    };
+
+                    //convert dates to the user time
+                    shipmentModel.ShippedDate = shipment.ShippedDateUtc.HasValue
+                        ? _dateTimeHelper.ConvertToUserTime(shipment.ShippedDateUtc.Value, DateTimeKind.Utc).ToString()
+                        : _localizationService.GetResource("Admin.Orders.Shipments.ShippedDate.NotYet");
+                    shipmentModel.DeliveryDate = shipment.DeliveryDateUtc.HasValue
+                        ? _dateTimeHelper.ConvertToUserTime(shipment.DeliveryDateUtc.Value, DateTimeKind.Utc).ToString()
+                        : _localizationService.GetResource("Admin.Orders.Shipments.DeliveryDate.NotYet");
+
+                    //fill in additional values (not existing in the entity)
+                    if (shipment.TotalWeight.HasValue)
+                        shipmentModel.TotalWeight = $"{shipment.TotalWeight:F2} [{_measureService.GetMeasureWeightById(_measureSettings.BaseWeightId)?.Name}]";
+
+                    return shipmentModel;
+                }),
+                Total = shipments.TotalCount
+            };
+
+            return model;
+        }
+
+        /// <summary>
+        /// Prepare shipment model
+        /// </summary>
+        /// <param name="model">Shipment model</param>
+        /// <param name="shipment">Shipment</param>
+        /// <param name="order">Order</param>
+        /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
+        /// <returns>Shipment model</returns>
+        public virtual ShipmentModel PrepareShipmentModel(ShipmentModel model, Shipment shipment, Order order, bool excludeProperties = false)
+        {
+            if (shipment != null)
+            {
+                //fill in model values from the entity
+                model = model ?? new ShipmentModel
+                {
+                    Id = shipment.Id,
+                    OrderId = shipment.OrderId,
+                    TrackingNumber = shipment.TrackingNumber,
+                    ShippedDateUtc = shipment.ShippedDateUtc,
+                    CanShip = !shipment.ShippedDateUtc.HasValue,
+                    DeliveryDateUtc = shipment.DeliveryDateUtc,
+                    AdminComment = shipment.AdminComment,
+                    CustomOrderNumber = shipment.Order.CustomOrderNumber
+                };
+
+                model.ShippedDate = shipment.ShippedDateUtc.HasValue
+                    ? _dateTimeHelper.ConvertToUserTime(shipment.ShippedDateUtc.Value, DateTimeKind.Utc).ToString()
+                    : _localizationService.GetResource("Admin.Orders.Shipments.ShippedDate.NotYet");
+                model.DeliveryDate = shipment.DeliveryDateUtc.HasValue
+                    ? _dateTimeHelper.ConvertToUserTime(shipment.DeliveryDateUtc.Value, DateTimeKind.Utc).ToString()
+                    : _localizationService.GetResource("Admin.Orders.Shipments.DeliveryDate.NotYet");
+
+                model.CanDeliver = shipment.ShippedDateUtc.HasValue && !shipment.DeliveryDateUtc.HasValue;
+                if (shipment.TotalWeight.HasValue)
+                    model.TotalWeight = $"{shipment.TotalWeight:F2} [{_measureService.GetMeasureWeightById(_measureSettings.BaseWeightId)?.Name}]";
+
+                //prepare shipment items
+                foreach (var item in shipment.ShipmentItems)
+                {
+                    var orderItem = _orderService.GetOrderItemById(item.OrderItemId);
+                    if (orderItem == null)
+                        continue;
+
+                    //fill in model values from the entity
+                    var shipmentItemModel = new ShipmentItemModel
+                    {
+                        Id = item.Id,
+                        QuantityInThisShipment = item.Quantity,
+                        ShippedFromWarehouse = _shippingService.GetWarehouseById(item.WarehouseId)?.Name
+                    };
+
+                    PrepareShipmentItemModel(shipmentItemModel, orderItem);
+
+                    model.Items.Add(shipmentItemModel);
+                }
+
+                //prepare shipment events
+                if (!string.IsNullOrEmpty(shipment.TrackingNumber))
+                {
+                    var shipmentTracker = shipment.GetShipmentTracker(_shippingService, _shippingSettings);
+                    if (shipmentTracker != null)
+                    {
+                        model.TrackingNumberUrl = shipmentTracker.GetUrl(shipment.TrackingNumber);
+                        if (_shippingSettings.DisplayShipmentEventsToStoreOwner)
+                            PrepareShipmentStatusEventModels(model.ShipmentStatusEvents, shipment);
+                    }
+                }
+            }
+
+            if (shipment == null)
+            {
+                model.OrderId = order.Id;
+                model.CustomOrderNumber = order.CustomOrderNumber;
+                var orderItems = order.OrderItems.Where(item => item.Product.IsShipEnabled).ToList();
+                if (_workContext.CurrentVendor != null)
+                    orderItems = orderItems.Where(item => item.Product.VendorId == _workContext.CurrentVendor.Id).ToList();
+
+                foreach (var orderItem in orderItems)
+                {
+                    var shipmentItemModel = new ShipmentItemModel();
+                    PrepareShipmentItemModel(shipmentItemModel, orderItem);
+
+                    //ensure that this product can be added to a shipment
+                    if (shipmentItemModel.QuantityToAdd <= 0)
+                        continue;
+
+                    if (orderItem.Product.ManageInventoryMethod == ManageInventoryMethod.ManageStock && orderItem.Product.UseMultipleWarehouses)
+                    {
+                        //multiple warehouses supported
+                        shipmentItemModel.AllowToChooseWarehouse = true;
+                        foreach (var pwi in orderItem.Product.ProductWarehouseInventory.OrderBy(w => w.WarehouseId).ToList())
+                        {
+                            var warehouse = pwi.Warehouse;
+                            if (warehouse != null)
+                            {
+                                shipmentItemModel.AvailableWarehouses.Add(new ShipmentItemModel.WarehouseInfo
+                                {
+                                    WarehouseId = warehouse.Id,
+                                    WarehouseName = warehouse.Name,
+                                    StockQuantity = pwi.StockQuantity,
+                                    ReservedQuantity = pwi.ReservedQuantity,
+                                    PlannedQuantity = _shipmentService.GetQuantityInShipments(orderItem.Product, warehouse.Id, true, true)
+                                });
+                            }
+                        }
+                    }
+                    else
+                    {
+                        //multiple warehouses are not supported
+                        var warehouse = _shippingService.GetWarehouseById(orderItem.Product.WarehouseId);
+                        if (warehouse != null)
+                        {
+                            shipmentItemModel.AvailableWarehouses.Add(new ShipmentItemModel.WarehouseInfo
+                            {
+                                WarehouseId = warehouse.Id,
+                                WarehouseName = warehouse.Name,
+                                StockQuantity = orderItem.Product.StockQuantity
+                            });
+                        }
+                    }
+
+                    model.Items.Add(shipmentItemModel);
+                }
+            }
+
+            return model;
+        }
+
+        /// <summary>
+        /// Prepare order shipment search model
+        /// </summary>
+        /// <param name="model">Order shipment search model</param>
+        /// <param name="order">Order</param>
+        /// <returns>Order shipment search model</returns>
+        public virtual OrderShipmentSearchModel PrepareOrderShipmentSearchModel(OrderShipmentSearchModel model, Order order)
+        {
+            if (model == null)
+                throw new ArgumentNullException(nameof(model));
+
+            if (order == null)
+                throw new ArgumentNullException(nameof(order));
+
+            model.OrderId = order.Id;
+
+            //prepare nested search model
+            PrepareShipmentItemSearchModel(model.ShipmentItemSearchModel);
+
+            //prepare page parameters
+            model.SetGridPageSize();
+
+            return model;
+        }
+
+        /// <summary>
+        /// Prepare paged order shipment list model
+        /// </summary>
+        /// <param name="searchModel">Order shipment search model</param>
+        /// <param name="order">Order</param>
+        /// <returns>Order shipment list model</returns>
+        public virtual OrderShipmentListModel PrepareOrderShipmentListModel(OrderShipmentSearchModel searchModel, Order order)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+            if (order == null)
+                throw new ArgumentNullException(nameof(order));
+
+            //get shipments
+            var shipments = order.Shipments.ToList();
+
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null)
+            {
+                shipments = shipments.Where(shipment => shipment.ShipmentItems.Any(item =>
+                    _orderService.GetOrderItemById(item.OrderItemId)?.Product?.VendorId == _workContext.CurrentVendor.Id)).ToList();
+            }
+
+            shipments = shipments.OrderBy(shipment => shipment.CreatedOnUtc).ToList();
+
+            //prepare list model
+            var model = new OrderShipmentListModel
+            {
+                //fill in model values from the entity
+                Data = shipments.PaginationByRequestModel(searchModel).Select(shipment =>
+                {
+                    //fill in model values from the entity
+                    var shipmentModel = new ShipmentModel
+                    {
+                        Id = shipment.Id,
+                        OrderId = shipment.OrderId,
+                        TrackingNumber = shipment.TrackingNumber,
+                        ShippedDateUtc = shipment.ShippedDateUtc,
+                        CanShip = !shipment.ShippedDateUtc.HasValue,
+                        DeliveryDateUtc = shipment.DeliveryDateUtc,
+                        AdminComment = shipment.AdminComment,
+                        CustomOrderNumber = shipment.Order.CustomOrderNumber
+                    };
+
+                    //convert dates to the user time
+                    shipmentModel.ShippedDate = shipment.ShippedDateUtc.HasValue
+                        ? _dateTimeHelper.ConvertToUserTime(shipment.ShippedDateUtc.Value, DateTimeKind.Utc).ToString()
+                        : _localizationService.GetResource("Admin.Orders.Shipments.ShippedDate.NotYet");
+                    shipmentModel.DeliveryDate = shipment.DeliveryDateUtc.HasValue
+                        ? _dateTimeHelper.ConvertToUserTime(shipment.DeliveryDateUtc.Value, DateTimeKind.Utc).ToString()
+                        : _localizationService.GetResource("Admin.Orders.Shipments.DeliveryDate.NotYet");
+
+                    //fill in additional values (not existing in the entity)
+                    shipmentModel.CanDeliver = shipment.ShippedDateUtc.HasValue && !shipment.DeliveryDateUtc.HasValue;
+                    var baseWeight = _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId)?.Name;
+                    if (shipment.TotalWeight.HasValue)
+                        shipmentModel.TotalWeight = $"{shipment.TotalWeight:F2} [{baseWeight}]";
+
+                    return shipmentModel;
+                }),
+                Total = shipments.Count
+            };
+
+            return model;
+        }
+
+        /// <summary>
+        /// Prepare shipment item search model
+        /// </summary>
+        /// <param name="model">Shipment item search model</param>
+        /// <returns>Shipment item search model</returns>
+        public virtual ShipmentItemSearchModel PrepareShipmentItemSearchModel(ShipmentItemSearchModel model)
+        {
+            if (model == null)
+                throw new ArgumentNullException(nameof(model));
+            
+            //prepare page parameters
+            model.SetGridPageSize();
+
+            return model;
+        }
+
+        /// <summary>
+        /// Prepare paged shipment item list model
+        /// </summary>
+        /// <param name="searchModel">Shipment item search model</param>
+        /// <param name="shipment">Shipment</param>
+        /// <returns>Shipment item list model</returns>
+        public virtual ShipmentItemListModel PrepareShipmentItemListModel(ShipmentItemSearchModel searchModel, Shipment shipment)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+            if (shipment == null)
+                throw new ArgumentNullException(nameof(shipment));
+
+            //get shipments
+            var shipmentItems = shipment.ShipmentItems.ToList();
+
+            //prepare list model
+            var model = new ShipmentItemListModel
+            {
+                //fill in model values from the entity
+                Data = shipmentItems.PaginationByRequestModel(searchModel).Select(item =>
+                {
+                    //fill in model values from the entity
+                    var shipmentItemModel = new ShipmentItemModel
+                    {
+                        Id = item.Id,
+                        QuantityInThisShipment = item.Quantity
+                    };
+
+                    //fill in additional values (not existing in the entity)
+                    var orderItem = _orderService.GetOrderItemById(item.OrderItemId);
+                    if (orderItem != null)
+                    {
+                        shipmentItemModel.OrderItemId = orderItem.Id;
+                        shipmentItemModel.ProductId = orderItem.ProductId;
+                        shipmentItemModel.ProductName = orderItem.Product.Name;
+                        shipmentItemModel.ShippedFromWarehouse = _shippingService.GetWarehouseById(item.WarehouseId)?.Name;
+
+                        var baseWeight = _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId)?.Name;
+                        var baseDimension = _measureService.GetMeasureDimensionById(_measureSettings.BaseDimensionId)?.Name;
+                        if (orderItem.ItemWeight.HasValue)
+                            shipmentItemModel.ItemWeight = $"{orderItem.ItemWeight:F2} [{baseWeight}]";
+                        shipmentItemModel.ItemDimensions =
+                            $"{orderItem.Product.Length:F2} x {orderItem.Product.Width:F2} x {orderItem.Product.Height:F2} [{baseDimension}]";
+                    }
+
+                    return shipmentItemModel;
+                }),
+                Total = shipmentItems.Count
+            };
+
+            return model;
+        }
+
+        /// <summary>
+        /// Prepare order note search model
+        /// </summary>
+        /// <param name="model">Order note search model</param>
+        /// <param name="order">Order</param>
+        /// <returns>Order note search model</returns>
+        public virtual OrderNoteSearchModel PrepareOrderNoteSearchModel(OrderNoteSearchModel model, Order order)
+        {
+            if (model == null)
+                throw new ArgumentNullException(nameof(model));
+
+            if (order == null)
+                throw new ArgumentNullException(nameof(order));
+
+            model.OrderId = order.Id;
+
+            //prepare page parameters
+            model.SetGridPageSize();
+
+            return model;
+        }
+
+        /// <summary>
+        /// Prepare paged order note list model
+        /// </summary>
+        /// <param name="searchModel">Order note search model</param>
+        /// <param name="order">Order</param>
+        /// <returns>Order note list model</returns>
+        public virtual OrderNoteListModel PrepareOrderNoteListModel(OrderNoteSearchModel searchModel, Order order)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+            if (order == null)
+                throw new ArgumentNullException(nameof(order));
+
+            //get notes
+            var orderNotes = order.OrderNotes.OrderByDescending(on => on.CreatedOnUtc).ToList();
+
+            //prepare list model
+            var model = new OrderNoteListModel
+            {
+                //fill in model values from the entity
+                Data = orderNotes.PaginationByRequestModel(searchModel).Select(orderNote =>
+                {
+                    //fill in model values from the entity
+                    var orderNoteModel = new OrderNoteModel
+                    {
+                        Id = orderNote.Id,
+                        OrderId = orderNote.OrderId,
+                        DownloadId = orderNote.DownloadId,
+                        DisplayToCustomer = orderNote.DisplayToCustomer,
+                        Note = orderNote.FormatOrderNoteText()
+                    };
+
+                    //convert dates to the user time
+                    orderNoteModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(orderNote.CreatedOnUtc, DateTimeKind.Utc);
+
+                    //fill in additional values (not existing in the entity)
+                    orderNoteModel.DownloadGuid = _downloadService.GetDownloadById(orderNote.DownloadId)?.DownloadGuid ?? Guid.Empty;
+
+                    return orderNoteModel;
+                }),
+                Total = orderNotes.Count
+            };
+
+            return model;
+        }
+
+        /// <summary>
+        /// Prepare bestseller brief search model
+        /// </summary>
+        /// <param name="model">Bestseller brief search model</param>
+        /// <returns>Bestseller brief search model</returns>
+        public virtual BestsellerBriefSearchModel PrepareBestsellerBriefSearchModel(BestsellerBriefSearchModel model)
+        {
+            if (model == null)
+                throw new ArgumentNullException(nameof(model));
+
+            //prepare page parameters
+            model.PageSize = 5;
+            model.AvailablePageSizes = "5";
+
+            return model;
+        }
+
+        /// <summary>
+        /// Prepare paged bestseller brief list model
+        /// </summary>
+        /// <param name="searchModel">Bestseller brief search model</param>
+        /// <returns>Bestseller brief list model</returns>
+        public virtual BestsellerBriefListModel PrepareBestsellerBriefListModel(BestsellerBriefSearchModel searchModel)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+            //get bestsellers
+            var bestsellers = _orderReportService.BestSellersReport(showHidden: true,
+                vendorId: _workContext.CurrentVendor?.Id ?? 0,
+                orderBy: searchModel.OrderBy,
+                pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
+
+            //prepare list model
+            var model = new BestsellerBriefListModel
+            {
+                Data = bestsellers.Select(bestseller =>
+                {
+                    //fill in model values from the entity
+                    var bestsellerModel = new BestsellerModel
+                    {
+                        ProductId = bestseller.ProductId,
+                        TotalQuantity = bestseller.TotalQuantity
+                    };
+
+                    //fill in additional values (not existing in the entity)
+                    bestsellerModel.ProductName = _productService.GetProductById(bestseller.ProductId)?.Name;
+                    bestsellerModel.TotalAmount = _priceFormatter.FormatPrice(bestseller.TotalAmount, true, false);
+
+                    return bestsellerModel;
+                }),
+                Total = bestsellers.TotalCount
+            };
+
+            return model;
+        }
+
+        /// <summary>
+        /// Prepare bestseller search model
+        /// </summary>
+        /// <param name="model">Bestseller search model</param>
+        /// <returns>Bestseller search model</returns>
+        public virtual BestsellerSearchModel PrepareBestsellerSearchModel(BestsellerSearchModel model)
+        {
+            if (model == null)
+                throw new ArgumentNullException(nameof(model));
+
+            model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
+
+            //prepare available stores
+            _baseAdminModelFactory.PrepareStores(model.AvailableStores);
+
+            //prepare available order statuses
+            _baseAdminModelFactory.PrepareOrderStatuses(model.AvailableOrderStatuses);
+
+            //prepare available payment statuses
+            _baseAdminModelFactory.PreparePaymentStatuses(model.AvailablePaymentStatuses);
+
+            //prepare available categories
+            _baseAdminModelFactory.PrepareCategories(model.AvailableCategories);
+
+            //prepare available manufacturers
+            _baseAdminModelFactory.PrepareManufacturers(model.AvailableManufacturers);
+
+            //prepare available billing countries
+            model.AvailableCountries = _countryService.GetAllCountriesForBilling(showHidden: true)
+                .Select(country => new SelectListItem { Text = country.Name, Value = country.Id.ToString() }).ToList();
+            model.AvailableCountries.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+
+            //prepare available vendors
+            _baseAdminModelFactory.PrepareVendors(model.AvailableVendors);
+
+            //prepare page parameters
+            model.SetGridPageSize();
+
+            return model;
+        }
+
+        /// <summary>
+        /// Prepare paged bestseller list model
+        /// </summary>
+        /// <param name="searchModel">Bestseller search model</param>
+        /// <returns>Bestseller list model</returns>
+        public virtual BestsellerListModel PrepareBestsellerListModel(BestsellerSearchModel searchModel)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+            //get parameters to filter bestsellers
+            var orderStatus = searchModel.OrderStatusId > 0 ? (OrderStatus?)(searchModel.OrderStatusId) : null;
+            var paymentStatus = searchModel.PaymentStatusId > 0 ? (PaymentStatus?)(searchModel.PaymentStatusId) : null;
+            if (_workContext.CurrentVendor != null)
+                searchModel.VendorId = _workContext.CurrentVendor.Id;
+            var startDateValue = !searchModel.StartDate.HasValue ? null
+                : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
+            var endDateValue = !searchModel.EndDate.HasValue ? null
+                : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
+
+            //get bestsellers
+            var bestsellers = _orderReportService.BestSellersReport(showHidden: true,
+                createdFromUtc: startDateValue,
+                createdToUtc: endDateValue,
+                os: orderStatus,
+                ps: paymentStatus,
+                billingCountryId: searchModel.BillingCountryId,
+                orderBy: 2,
+                vendorId: searchModel.VendorId,
+                categoryId: searchModel.CategoryId,
+                manufacturerId: searchModel.ManufacturerId,
+                storeId: searchModel.StoreId,
+                pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
+
+            //prepare list model
+            var model = new BestsellerListModel
+            {
+                Data = bestsellers.Select(bestseller =>
+                {
+                    //fill in model values from the entity
+                    var bestsellerModel = new BestsellerModel
+                    {
+                        ProductId = bestseller.ProductId,
+                        TotalQuantity = bestseller.TotalQuantity
+                    };
+
+                    //fill in additional values (not existing in the entity)
+                    bestsellerModel.ProductName = _productService.GetProductById(bestseller.ProductId)?.Name;
+                    bestsellerModel.TotalAmount = _priceFormatter.FormatPrice(bestseller.TotalAmount, true, false);
+
+                    return bestsellerModel;
+                }),
+                Total = bestsellers.TotalCount
+            };
+
+            return model;
+        }
+
+        /// <summary>
+        /// Prepare never sold report search model
+        /// </summary>
+        /// <param name="model">Never sold report search model</param>
+        /// <returns>Never sold report search model</returns>
+        public virtual NeverSoldReportSearchModel PrepareNeverSoldReportSearchModel(NeverSoldReportSearchModel model)
+        {
+            if (model == null)
+                throw new ArgumentNullException(nameof(model));
+
+            model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
+
+            //prepare available stores
+            _baseAdminModelFactory.PrepareStores(model.AvailableStores);
+
+            //prepare available categories
+            _baseAdminModelFactory.PrepareCategories(model.AvailableCategories);
+
+            //prepare available manufacturers
+            _baseAdminModelFactory.PrepareManufacturers(model.AvailableManufacturers);
+
+            //prepare available vendors
+            _baseAdminModelFactory.PrepareVendors(model.AvailableVendors);
+
+            //prepare page parameters
+            model.SetGridPageSize();
+
+            return model;
+        }
+
+        /// <summary>
+        /// Prepare paged never sold report list model
+        /// </summary>
+        /// <param name="searchModel">Never sold report search model</param>
+        /// <returns>Never sold report list model</returns>
+        public virtual NeverSoldReportListModel PrepareNeverSoldReportListModel(NeverSoldReportSearchModel searchModel)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+            //get parameters to filter neverSoldReports
+            if (_workContext.CurrentVendor != null)
+                searchModel.SearchVendorId = _workContext.CurrentVendor.Id;
+            var startDateValue = !searchModel.StartDate.HasValue ? null
+                : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
+            var endDateValue = !searchModel.EndDate.HasValue ? null
+                : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
+
+            //get report items
+            var items = _orderReportService.ProductsNeverSold(showHidden: true,
+                vendorId: searchModel.SearchVendorId,
+                storeId: searchModel.SearchStoreId,
+                categoryId: searchModel.SearchCategoryId,
+                manufacturerId: searchModel.SearchManufacturerId,
+                createdFromUtc: startDateValue,
+                createdToUtc: endDateValue,
+                pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
+
+            //prepare list model
+            var model = new NeverSoldReportListModel
+            {
+                //fill in model values from the entity
+                Data = items.Select(item => new NeverSoldReportModel
+                {
+                    ProductId = item.Id,
+                    ProductName = item.Name
+                }),
+                Total = items.TotalCount
+            };
+
+            return model;
+        }
+
+        /// <summary>
+        /// Prepare country report search model
+        /// </summary>
+        /// <param name="model">Country report search model</param>
+        /// <returns>Country report search model</returns>
+        public virtual CountryReportSearchModel PrepareCountryReportSearchModel(CountryReportSearchModel model)
+        {
+            if (model == null)
+                throw new ArgumentNullException(nameof(model));
+
+            //prepare available order statuses
+            _baseAdminModelFactory.PrepareOrderStatuses(model.AvailableOrderStatuses);
+
+            //prepare available payment statuses
+            _baseAdminModelFactory.PreparePaymentStatuses(model.AvailablePaymentStatuses);
+
+            //prepare page parameters
+            model.SetGridPageSize();
+
+            return model;
+        }
+
+        /// <summary>
+        /// Prepare paged country report list model
+        /// </summary>
+        /// <param name="searchModel">Country report search model</param>
+        /// <returns>Country report list model</returns>
+        public virtual CountryReportListModel PrepareCountryReportListModel(CountryReportSearchModel searchModel)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+            //get parameters to filter countryReports
+            var orderStatus = searchModel.OrderStatusId > 0 ? (OrderStatus?)(searchModel.OrderStatusId) : null;
+            var paymentStatus = searchModel.PaymentStatusId > 0 ? (PaymentStatus?)(searchModel.PaymentStatusId) : null;
+            var startDateValue = !searchModel.StartDate.HasValue ? null
+                : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
+            var endDateValue = !searchModel.EndDate.HasValue ? null
+                : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
+
+            //get items
+            var items = _orderReportService.GetCountryReport(os: orderStatus,
+                ps: paymentStatus,
+                startTimeUtc: startDateValue,
+                endTimeUtc: endDateValue);
+
+            //prepare list model
+            var model = new CountryReportListModel
+            {
+                Data = items.PaginationByRequestModel(searchModel).Select(item =>
+                {
+                    //fill in model values from the entity
+                    var countryReportModel = new CountryReportModel
+                    {
+                        TotalOrders = item.TotalOrders
+                    };
+
+                    //fill in additional values (not existing in the entity)
+                    countryReportModel.SumOrders = _priceFormatter.FormatPrice(item.SumOrders, true, false);
+                    countryReportModel.CountryName = _countryService.GetCountryById(item.CountryId ?? 0)?.Name;
+
+                    return countryReportModel;
+                }),
+                Total = items.Count
+            };
+
+            return model;
+        }
+
+        /// <summary>
+        /// Prepare order average line summary report list model
+        /// </summary>
+        /// <returns>Order average line summary report list model</returns>
+        public virtual OrderAverageReportListModel PrepareOrderAverageReportListModel()
+        {
+            //get report
+            var report = new List<OrderAverageReportLineSummary>();
+            report.Add(_orderReportService.OrderAverageReport(0, OrderStatus.Pending));
+            report.Add(_orderReportService.OrderAverageReport(0, OrderStatus.Processing));
+            report.Add(_orderReportService.OrderAverageReport(0, OrderStatus.Complete));
+            report.Add(_orderReportService.OrderAverageReport(0, OrderStatus.Cancelled));
+
+            //prepare list model
+            var model = new OrderAverageReportListModel
+            {
+                Data = report.Select(reportItem => new OrderAverageReportModel
+                {
+                    OrderStatus = reportItem.OrderStatus.GetLocalizedEnum(_localizationService, _workContext),
+                    SumTodayOrders = _priceFormatter.FormatPrice(reportItem.SumTodayOrders, true, false),
+                    SumThisWeekOrders = _priceFormatter.FormatPrice(reportItem.SumThisWeekOrders, true, false),
+                    SumThisMonthOrders = _priceFormatter.FormatPrice(reportItem.SumThisMonthOrders, true, false),
+                    SumThisYearOrders = _priceFormatter.FormatPrice(reportItem.SumThisYearOrders, true, false),
+                    SumAllTimeOrders = _priceFormatter.FormatPrice(reportItem.SumAllTimeOrders, true, false),
+                }),
+                Total = report.Count
+            };
+
+            return model;
+        }
+
+        /// <summary>
+        /// Prepare incomplete order report list model
+        /// </summary>
+        /// <returns>Incomplete order report list model</returns>
+        public virtual OrderIncompleteReportListModel PrepareOrderIncompleteReportListModel()
+        {
+            var orderIncompleteReportModels = new List<OrderIncompleteReportModel>();
+
+            //get URL helper
+            var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
+
+            //not paid
+            var orderStatuses = Enum.GetValues(typeof(OrderStatus)).Cast<int>().Where(os => os != (int)OrderStatus.Cancelled).ToList();
+            var paymentStatuses = new List<int>() { (int)PaymentStatus.Pending };
+            var psPending = _orderReportService.GetOrderAverageReportLine(psIds: paymentStatuses, osIds: orderStatuses);
+            orderIncompleteReportModels.Add(new OrderIncompleteReportModel
+            {
+                Item = _localizationService.GetResource("Admin.SalesReport.Incomplete.TotalUnpaidOrders"),
+                Count = psPending.CountOrders,
+                Total = _priceFormatter.FormatPrice(psPending.SumOrders, true, false),
+                ViewLink = urlHelper.Action("List", "Order", new
+                {
+                    orderStatusIds = string.Join(",", orderStatuses),
+                    paymentStatusIds = string.Join(",", paymentStatuses)
+                })
+            });
+
+            //not shipped
+            var shippingStatuses = new List<int>() { (int)ShippingStatus.NotYetShipped };
+            var ssPending = _orderReportService.GetOrderAverageReportLine(osIds: orderStatuses, ssIds: shippingStatuses);
+            orderIncompleteReportModels.Add(new OrderIncompleteReportModel
+            {
+                Item = _localizationService.GetResource("Admin.SalesReport.Incomplete.TotalNotShippedOrders"),
+                Count = ssPending.CountOrders,
+                Total = _priceFormatter.FormatPrice(ssPending.SumOrders, true, false),
+                ViewLink = urlHelper.Action("List", "Order", new
+                {
+                    orderStatusIds = string.Join(",", orderStatuses),
+                    shippingStatusIds = string.Join(",", shippingStatuses)
+                })
+            });
+
+            //pending
+            orderStatuses = new List<int>() { (int)OrderStatus.Pending };
+            var osPending = _orderReportService.GetOrderAverageReportLine(osIds: orderStatuses);
+            orderIncompleteReportModels.Add(new OrderIncompleteReportModel
+            {
+                Item = _localizationService.GetResource("Admin.SalesReport.Incomplete.TotalIncompleteOrders"),
+                Count = osPending.CountOrders,
+                Total = _priceFormatter.FormatPrice(osPending.SumOrders, true, false),
+                ViewLink = urlHelper.Action("List", "Order", new { orderStatusIds = string.Join(",", orderStatuses) })
+            });
+
+            //prepare list model
+            var model = new OrderIncompleteReportListModel
+            {
+                Data = orderIncompleteReportModels,
+                Total = orderIncompleteReportModels.Count
+            };
+
+            return model;
+        }
+
+        #endregion
+    }
+}

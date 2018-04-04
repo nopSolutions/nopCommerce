@@ -3,8 +3,13 @@ using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Areas.Admin.Models.Orders
 {
-    public partial class OrderAverageReportLineSummaryModel : BaseNopModel
+    /// <summary>
+    /// Represents an an order average report line summary model
+    /// </summary>
+    public partial class OrderAverageReportModel : BaseNopModel
     {
+        #region Properties
+
         [NopResourceDisplayName("Admin.SalesReport.Average.OrderStatus")]
         public string OrderStatus { get; set; }
 
@@ -22,5 +27,7 @@ namespace Nop.Web.Areas.Admin.Models.Orders
 
         [NopResourceDisplayName("Admin.SalesReport.Average.SumAllTimeOrders")]
         public string SumAllTimeOrders { get; set; }
+
+        #endregion
     }
 }
