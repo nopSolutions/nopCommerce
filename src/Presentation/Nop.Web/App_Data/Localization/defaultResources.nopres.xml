@@ -12181,7 +12181,7 @@
     <Value>Discount limitation</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Discounts.Fields.DiscountLimitation.Hint">
-    <Value>Choose the limitation of discount.</Value>
+    <Value>Choose the limitation of discount. This parameter will not be taken into account for recurring products/orders.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Discounts.Fields.DiscountPercentage">
     <Value>Discount percentage</Value>
