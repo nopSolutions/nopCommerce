@@ -11,9 +11,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare affiliate search model
         /// </summary>
-        /// <param name="model">Affiliate search model</param>
+        /// <param name="searchModel">Affiliate search model</param>
         /// <returns>Affiliate search model</returns>
-        AffiliateSearchModel PrepareAffiliateSearchModel(AffiliateSearchModel model);
+        AffiliateSearchModel PrepareAffiliateSearchModel(AffiliateSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged affiliate list model
@@ -34,10 +34,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare affiliated order search model
         /// </summary>
-        /// <param name="model">Affiliated order search model</param>
+        /// <param name="searchModel">Affiliated order search model</param>
         /// <param name="affiliate">Affiliate</param>
         /// <returns>Affiliated order search model</returns>
-        AffiliatedOrderSearchModel PrepareAffiliatedOrderSearchModel(AffiliatedOrderSearchModel model, Affiliate affiliate);
+        AffiliatedOrderSearchModel PrepareAffiliatedOrderSearchModel(AffiliatedOrderSearchModel searchModel, Affiliate affiliate);
 
         /// <summary>
         /// Prepare paged affiliated order list model
@@ -50,10 +50,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare affiliated customer search model
         /// </summary>
-        /// <param name="model">Affiliated customer search model</param>
+        /// <param name="searchModel">Affiliated customer search model</param>
         /// <param name="affiliate">Affiliate</param>
         /// <returns>Affiliated customer search model</returns>
-        AffiliatedCustomerSearchModel PrepareAffiliatedCustomerSearchModel(AffiliatedCustomerSearchModel model,
+        AffiliatedCustomerSearchModel PrepareAffiliatedCustomerSearchModel(AffiliatedCustomerSearchModel searchModel,
             Affiliate affiliate);
 
         /// <summary>

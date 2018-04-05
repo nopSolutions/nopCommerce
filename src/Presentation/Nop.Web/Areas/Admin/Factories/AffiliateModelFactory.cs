@@ -110,17 +110,17 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare affiliate search model
         /// </summary>
-        /// <param name="model">Affiliate search model</param>
+        /// <param name="searchModel">Affiliate search model</param>
         /// <returns>Affiliate search model</returns>
-        public virtual AffiliateSearchModel PrepareAffiliateSearchModel(AffiliateSearchModel model)
+        public virtual AffiliateSearchModel PrepareAffiliateSearchModel(AffiliateSearchModel searchModel)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>
@@ -197,28 +197,28 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare affiliated order search model
         /// </summary>
-        /// <param name="model">Affiliated order search model</param>
+        /// <param name="searchModel">Affiliated order search model</param>
         /// <param name="affiliate">Affiliate</param>
         /// <returns>Affiliated order search model</returns>
-        public virtual AffiliatedOrderSearchModel PrepareAffiliatedOrderSearchModel(AffiliatedOrderSearchModel model, Affiliate affiliate)
+        public virtual AffiliatedOrderSearchModel PrepareAffiliatedOrderSearchModel(AffiliatedOrderSearchModel searchModel, Affiliate affiliate)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             if (affiliate == null)
                 throw new ArgumentNullException(nameof(affiliate));
 
-            model.AffliateId = affiliate.Id;
+            searchModel.AffliateId = affiliate.Id;
             
             //prepare available order, payment and shipping statuses
-            _baseAdminModelFactory.PrepareOrderStatuses(model.AvailableOrderStatuses);
-            _baseAdminModelFactory.PreparePaymentStatuses(model.AvailablePaymentStatuses);
-            _baseAdminModelFactory.PrepareShippingStatuses(model.AvailableShippingStatuses);
+            _baseAdminModelFactory.PrepareOrderStatuses(searchModel.AvailableOrderStatuses);
+            _baseAdminModelFactory.PreparePaymentStatuses(searchModel.AvailablePaymentStatuses);
+            _baseAdminModelFactory.PrepareShippingStatuses(searchModel.AvailableShippingStatuses);
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>
@@ -240,9 +240,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
             var endDateValue = !searchModel.EndDate.HasValue ? null
                 : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
-            var orderStatusIds = searchModel.OrderStatusId > 0 ? new List<int>() { searchModel.OrderStatusId } : null;
-            var paymentStatusIds = searchModel.PaymentStatusId > 0 ? new List<int>() { searchModel.PaymentStatusId } : null;
-            var shippingStatusIds = searchModel.ShippingStatusId > 0 ? new List<int>() { searchModel.ShippingStatusId } : null;
+            var orderStatusIds = searchModel.OrderStatusId > 0 ? new List<int> { searchModel.OrderStatusId } : null;
+            var paymentStatusIds = searchModel.PaymentStatusId > 0 ? new List<int> { searchModel.PaymentStatusId } : null;
+            var shippingStatusIds = searchModel.ShippingStatusId > 0 ? new List<int> { searchModel.ShippingStatusId } : null;
 
             //get orders
             var orders = _orderService.SearchOrders(createdFromUtc: startDateValue,
