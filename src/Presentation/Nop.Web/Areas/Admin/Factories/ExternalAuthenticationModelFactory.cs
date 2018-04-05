@@ -36,18 +36,18 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare external authentication method search model
         /// </summary>
-        /// <param name="model">External authentication method search model</param>
+        /// <param name="searchModel">External authentication method search model</param>
         /// <returns>External authentication method search model</returns>
         public virtual ExternalAuthenticationMethodSearchModel PrepareExternalAuthenticationMethodSearchModel(
-            ExternalAuthenticationMethodSearchModel model)
+            ExternalAuthenticationMethodSearchModel searchModel)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>

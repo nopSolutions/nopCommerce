@@ -10,9 +10,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare category template search model
         /// </summary>
-        /// <param name="model">Category template search model</param>
+        /// <param name="searchModel">Category template search model</param>
         /// <returns>Category template search model</returns>
-        CategoryTemplateSearchModel PrepareCategoryTemplateSearchModel(CategoryTemplateSearchModel model);
+        CategoryTemplateSearchModel PrepareCategoryTemplateSearchModel(CategoryTemplateSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged category template list model
@@ -24,9 +24,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare manufacturer template search model
         /// </summary>
-        /// <param name="model">Manufacturer template search model</param>
+        /// <param name="searchModel">Manufacturer template search model</param>
         /// <returns>Manufacturer template search model</returns>
-        ManufacturerTemplateSearchModel PrepareManufacturerTemplateSearchModel(ManufacturerTemplateSearchModel model);
+        ManufacturerTemplateSearchModel PrepareManufacturerTemplateSearchModel(ManufacturerTemplateSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged manufacturer template list model
@@ -38,9 +38,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare product template search model
         /// </summary>
-        /// <param name="model">Product template search model</param>
+        /// <param name="searchModel">Product template search model</param>
         /// <returns>Product template search model</returns>
-        ProductTemplateSearchModel PrepareProductTemplateSearchModel(ProductTemplateSearchModel model);
+        ProductTemplateSearchModel PrepareProductTemplateSearchModel(ProductTemplateSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged product template list model
@@ -52,9 +52,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare topic template search model
         /// </summary>
-        /// <param name="model">Topic template search model</param>
+        /// <param name="searchModel">Topic template search model</param>
         /// <returns>Topic template search model</returns>
-        TopicTemplateSearchModel PrepareTopicTemplateSearchModel(TopicTemplateSearchModel model);
+        TopicTemplateSearchModel PrepareTopicTemplateSearchModel(TopicTemplateSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged topic template list model

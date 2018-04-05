@@ -38,17 +38,17 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare specification attribute search model
         /// </summary>
-        /// <param name="model">Specification attribute search model</param>
+        /// <param name="searchModel">Specification attribute search model</param>
         /// <returns>Specification attribute search model</returns>
-        public virtual SpecificationAttributeSearchModel PrepareSpecificationAttributeSearchModel(SpecificationAttributeSearchModel model)
+        public virtual SpecificationAttributeSearchModel PrepareSpecificationAttributeSearchModel(SpecificationAttributeSearchModel searchModel)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>
@@ -114,24 +114,24 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare specification attribute option search model
         /// </summary>
-        /// <param name="model">Specification attribute option search model</param>
+        /// <param name="searchModel">Specification attribute option search model</param>
         /// <param name="specificationAttribute">Specification attribute</param>
         /// <returns>Specification attribute option search model</returns>
         public virtual SpecificationAttributeOptionSearchModel PrepareSpecificationAttributeOptionSearchModel(
-            SpecificationAttributeOptionSearchModel model, SpecificationAttribute specificationAttribute)
+            SpecificationAttributeOptionSearchModel searchModel, SpecificationAttribute specificationAttribute)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             if (specificationAttribute == null)
                 throw new ArgumentNullException(nameof(specificationAttribute));
 
-            model.SpecificationAttributeId = specificationAttribute.Id;
+            searchModel.SpecificationAttributeId = specificationAttribute.Id;
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>
@@ -215,24 +215,24 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare search model of products that use the specification attribute
         /// </summary>
-        /// <param name="model">Search model of products that use the specification attribute</param>
+        /// <param name="searchModel">Search model of products that use the specification attribute</param>
         /// <param name="specificationAttribute">Specification attribute</param>
         /// <returns>Search model of products that use the specification attribute</returns>
         public virtual SpecificationAttributeProductSearchModel PrepareSpecificationAttributeProductSearchModel(
-            SpecificationAttributeProductSearchModel model, SpecificationAttribute specificationAttribute)
+            SpecificationAttributeProductSearchModel searchModel, SpecificationAttribute specificationAttribute)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             if (specificationAttribute == null)
                 throw new ArgumentNullException(nameof(specificationAttribute));
 
-            model.SpecificationAttributeId = specificationAttribute.Id;
+            searchModel.SpecificationAttributeId = specificationAttribute.Id;
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>

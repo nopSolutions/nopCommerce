@@ -14,9 +14,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare order search model
         /// </summary>
-        /// <param name="model">Order search model</param>
+        /// <param name="searchModel">Order search model</param>
         /// <returns>Order search model</returns>
-        OrderSearchModel PrepareOrderSearchModel(OrderSearchModel model);
+        OrderSearchModel PrepareOrderSearchModel(OrderSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged order list model
@@ -53,10 +53,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare product search model to add to the order
         /// </summary>
-        /// <param name="model">Product search model to add to the order</param>
+        /// <param name="searchModel">Product search model to add to the order</param>
         /// <param name="order">Order</param>
         /// <returns>Product search model to add to the order</returns>
-        AddProductToOrderSearchModel PrepareAddProductToOrderSearchModel(AddProductToOrderSearchModel model, Order order);
+        AddProductToOrderSearchModel PrepareAddProductToOrderSearchModel(AddProductToOrderSearchModel searchModel, Order order);
 
         /// <summary>
         /// Prepare paged product list model to add to the order
@@ -87,9 +87,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare shipment search model
         /// </summary>
-        /// <param name="model">Shipment search model</param>
+        /// <param name="searchModel">Shipment search model</param>
         /// <returns>Shipment search model</returns>
-        ShipmentSearchModel PrepareShipmentSearchModel(ShipmentSearchModel model);
+        ShipmentSearchModel PrepareShipmentSearchModel(ShipmentSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged shipment list model
@@ -111,10 +111,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare order shipment search model
         /// </summary>
-        /// <param name="model">Order shipment search model</param>
+        /// <param name="searchModel">Order shipment search model</param>
         /// <param name="order">Order</param>
         /// <returns>Order shipment search model</returns>
-        OrderShipmentSearchModel PrepareOrderShipmentSearchModel(OrderShipmentSearchModel model, Order order);
+        OrderShipmentSearchModel PrepareOrderShipmentSearchModel(OrderShipmentSearchModel searchModel, Order order);
 
         /// <summary>
         /// Prepare paged order shipment list model
@@ -127,9 +127,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare shipment item search model
         /// </summary>
-        /// <param name="model">Shipment item search model</param>
+        /// <param name="searchModel">Shipment item search model</param>
         /// <returns>Shipment item search model</returns>
-        ShipmentItemSearchModel PrepareShipmentItemSearchModel(ShipmentItemSearchModel model);
+        ShipmentItemSearchModel PrepareShipmentItemSearchModel(ShipmentItemSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged shipment item list model
@@ -142,10 +142,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare order note search model
         /// </summary>
-        /// <param name="model">Order note search model</param>
+        /// <param name="searchModel">Order note search model</param>
         /// <param name="order">Order</param>
         /// <returns>Order note search model</returns>
-        OrderNoteSearchModel PrepareOrderNoteSearchModel(OrderNoteSearchModel model, Order order);
+        OrderNoteSearchModel PrepareOrderNoteSearchModel(OrderNoteSearchModel searchModel, Order order);
 
         /// <summary>
         /// Prepare paged order note list model
@@ -158,9 +158,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare bestseller brief search model
         /// </summary>
-        /// <param name="model">Bestseller brief search model</param>
+        /// <param name="searchModel">Bestseller brief search model</param>
         /// <returns>Bestseller brief search model</returns>
-        BestsellerBriefSearchModel PrepareBestsellerBriefSearchModel(BestsellerBriefSearchModel model);
+        BestsellerBriefSearchModel PrepareBestsellerBriefSearchModel(BestsellerBriefSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged bestseller brief list model
@@ -172,9 +172,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare bestseller search model
         /// </summary>
-        /// <param name="model">Bestseller search model</param>
+        /// <param name="searchModel">Bestseller search model</param>
         /// <returns>Bestseller search model</returns>
-        BestsellerSearchModel PrepareBestsellerSearchModel(BestsellerSearchModel model);
+        BestsellerSearchModel PrepareBestsellerSearchModel(BestsellerSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged bestseller list model
@@ -186,9 +186,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare never sold report search model
         /// </summary>
-        /// <param name="model">Never sold report search model</param>
+        /// <param name="searchModel">Never sold report search model</param>
         /// <returns>Never sold report search model</returns>
-        NeverSoldReportSearchModel PrepareNeverSoldReportSearchModel(NeverSoldReportSearchModel model);
+        NeverSoldReportSearchModel PrepareNeverSoldReportSearchModel(NeverSoldReportSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged never sold report list model
@@ -200,9 +200,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare country report search model
         /// </summary>
-        /// <param name="model">Country report search model</param>
+        /// <param name="searchModel">Country report search model</param>
         /// <returns>Country report search model</returns>
-        CountryReportSearchModel PrepareCountryReportSearchModel(CountryReportSearchModel model);
+        CountryReportSearchModel PrepareCountryReportSearchModel(CountryReportSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged country report list model

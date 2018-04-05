@@ -11,9 +11,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare vendor search model
         /// </summary>
-        /// <param name="model">Vendor search model</param>
+        /// <param name="searchModel">Vendor search model</param>
         /// <returns>Vendor search model</returns>
-        VendorSearchModel PrepareVendorSearchModel(VendorSearchModel model);
+        VendorSearchModel PrepareVendorSearchModel(VendorSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged vendor list model
@@ -34,10 +34,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare vendor note search model
         /// </summary>
-        /// <param name="model">Vendor note search model</param>
+        /// <param name="searchModel">Vendor note search model</param>
         /// <param name="vendor">Vendor</param>
         /// <returns>Vendor note search model</returns>
-        VendorNoteSearchModel PrepareVendorNoteSearchModel(VendorNoteSearchModel model, Vendor vendor);
+        VendorNoteSearchModel PrepareVendorNoteSearchModel(VendorNoteSearchModel searchModel, Vendor vendor);
 
         /// <summary>
         /// Prepare paged vendor note list model

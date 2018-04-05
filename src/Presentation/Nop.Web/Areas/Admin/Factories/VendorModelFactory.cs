@@ -4,12 +4,10 @@ using System.Linq;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Vendors;
-using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
-using Nop.Services.Orders;
 using Nop.Services.Seo;
 using Nop.Services.Vendors;
 using Nop.Web.Areas.Admin.Extensions;
@@ -231,17 +229,17 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare vendor search model
         /// </summary>
-        /// <param name="model">Vendor search model</param>
+        /// <param name="searchModel">Vendor search model</param>
         /// <returns>Vendor search model</returns>
-        public virtual VendorSearchModel PrepareVendorSearchModel(VendorSearchModel model)
+        public virtual VendorSearchModel PrepareVendorSearchModel(VendorSearchModel searchModel)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>
@@ -332,23 +330,23 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare vendor note search model
         /// </summary>
-        /// <param name="model">Vendor note search model</param>
+        /// <param name="searchModel">Vendor note search model</param>
         /// <param name="vendor">Vendor</param>
         /// <returns>Vendor note search model</returns>
-        public virtual VendorNoteSearchModel PrepareVendorNoteSearchModel(VendorNoteSearchModel model, Vendor vendor)
+        public virtual VendorNoteSearchModel PrepareVendorNoteSearchModel(VendorNoteSearchModel searchModel, Vendor vendor)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             if (vendor == null)
                 throw new ArgumentNullException(nameof(vendor));
 
-            model.VendorId = vendor.Id;
+            searchModel.VendorId = vendor.Id;
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>
@@ -377,7 +375,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     var vendorNoteModel = new VendorNoteModel
                     {
                         Id = note.Id,
-                        VendorId = note.VendorId,
+                        VendorId = note.VendorId
                     };
 
                     //convert dates to the user time

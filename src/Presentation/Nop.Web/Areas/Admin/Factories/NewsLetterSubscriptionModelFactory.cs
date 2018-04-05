@@ -47,40 +47,40 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare newsletter subscription search model
         /// </summary>
-        /// <param name="model">Newsletter subscription search model</param>
+        /// <param name="searchModel">Newsletter subscription search model</param>
         /// <returns>Newsletter subscription search model</returns>
-        public virtual NewsletterSubscriptionSearchModel PrepareNewsletterSubscriptionSearchModel(NewsletterSubscriptionSearchModel model)
+        public virtual NewsletterSubscriptionSearchModel PrepareNewsletterSubscriptionSearchModel(NewsletterSubscriptionSearchModel searchModel)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             //prepare available stores
-            _baseAdminModelFactory.PrepareStores(model.AvailableStores);
+            _baseAdminModelFactory.PrepareStores(searchModel.AvailableStores);
 
             //prepare available customer roles
-            _baseAdminModelFactory.PrepareCustomerRoles(model.AvailableCustomerRoles);
+            _baseAdminModelFactory.PrepareCustomerRoles(searchModel.AvailableCustomerRoles);
 
             //prepare "activated" filter (0 - all; 1 - activated only; 2 - deactivated only)
-            model.ActiveList.Add(new SelectListItem
+            searchModel.ActiveList.Add(new SelectListItem
             {
                 Value = "0",
                 Text = _localizationService.GetResource("Admin.Promotions.NewsLetterSubscriptions.List.SearchActive.All")
             });
-            model.ActiveList.Add(new SelectListItem
+            searchModel.ActiveList.Add(new SelectListItem
             {
                 Value = "1",
                 Text = _localizationService.GetResource("Admin.Promotions.NewsLetterSubscriptions.List.SearchActive.ActiveOnly")
             });
-            model.ActiveList.Add(new SelectListItem
+            searchModel.ActiveList.Add(new SelectListItem
             {
                 Value = "2",
                 Text = _localizationService.GetResource("Admin.Promotions.NewsLetterSubscriptions.List.SearchActive.NotActiveOnly")
             });
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>

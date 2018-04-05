@@ -52,17 +52,17 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare recurring payment search model
         /// </summary>
-        /// <param name="model">Recurring payment search model</param>
+        /// <param name="searchModel">Recurring payment search model</param>
         /// <returns>Recurring payment search model</returns>
-        public virtual RecurringPaymentSearchModel PrepareRecurringPaymentSearchModel(RecurringPaymentSearchModel model)
+        public virtual RecurringPaymentSearchModel PrepareRecurringPaymentSearchModel(RecurringPaymentSearchModel searchModel)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>
@@ -93,7 +93,7 @@ namespace Nop.Web.Areas.Admin.Factories
                         TotalCycles = recurringPayment.TotalCycles,
                         IsActive = recurringPayment.IsActive,
                         CyclesRemaining = recurringPayment.CyclesRemaining,
-                        CustomerId = recurringPayment.InitialOrder.CustomerId,
+                        CustomerId = recurringPayment.InitialOrder.CustomerId
                     };
 
                     //convert dates to the user time
@@ -102,6 +102,7 @@ namespace Nop.Web.Areas.Admin.Factories
                         recurringPaymentModel.NextPaymentDate = _dateTimeHelper
                             .ConvertToUserTime(recurringPayment.NextPaymentDate.Value, DateTimeKind.Utc).ToString();
                     }
+
                     recurringPaymentModel.StartDate = _dateTimeHelper
                         .ConvertToUserTime(recurringPayment.StartDateUtc, DateTimeKind.Utc).ToString();
 
@@ -166,24 +167,24 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare recurring payment history search model
         /// </summary>
-        /// <param name="model">Recurring payment history search model</param>
+        /// <param name="searchModel">Recurring payment history search model</param>
         /// <param name="recurringPayment">Recurring payment</param>
         /// <returns>Recurring payment history search model</returns>
-        public virtual RecurringPaymentHistorySearchModel PrepareRecurringPaymentHistorySearchModel(RecurringPaymentHistorySearchModel model,
+        public virtual RecurringPaymentHistorySearchModel PrepareRecurringPaymentHistorySearchModel(RecurringPaymentHistorySearchModel searchModel,
             RecurringPayment recurringPayment)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             if (recurringPayment == null)
                 throw new ArgumentNullException(nameof(recurringPayment));
 
-            model.RecurringPaymentId = recurringPayment.Id;
+            searchModel.RecurringPaymentId = recurringPayment.Id;
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>
@@ -214,7 +215,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     {
                         Id = historyEntry.Id,
                         OrderId = historyEntry.OrderId,
-                        RecurringPaymentId = historyEntry.RecurringPaymentId,
+                        RecurringPaymentId = historyEntry.RecurringPaymentId
                     };
 
                     //convert dates to the user time

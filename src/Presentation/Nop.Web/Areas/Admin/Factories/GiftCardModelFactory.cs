@@ -54,34 +54,34 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare gift card search model
         /// </summary>
-        /// <param name="model">Gift card search model</param>
+        /// <param name="searchModel">Gift card search model</param>
         /// <returns>Gift card search model</returns>
-        public virtual GiftCardSearchModel PrepareGiftCardSearchModel(GiftCardSearchModel model)
+        public virtual GiftCardSearchModel PrepareGiftCardSearchModel(GiftCardSearchModel searchModel)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             //prepare "activated" filter (0 - all; 1 - activated only; 2 - deactivated only)
-            model.ActivatedList.Add(new SelectListItem
+            searchModel.ActivatedList.Add(new SelectListItem
             {
                 Value = "0",
                 Text = _localizationService.GetResource("Admin.GiftCards.List.Activated.All")
             });
-            model.ActivatedList.Add(new SelectListItem
+            searchModel.ActivatedList.Add(new SelectListItem
             {
                 Value = "1",
                 Text = _localizationService.GetResource("Admin.GiftCards.List.Activated.ActivatedOnly")
             });
-            model.ActivatedList.Add(new SelectListItem
+            searchModel.ActivatedList.Add(new SelectListItem
             {
                 Value = "2",
                 Text = _localizationService.GetResource("Admin.GiftCards.List.Activated.DeactivatedOnly")
             });
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>
@@ -158,24 +158,24 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare gift card usage history search model
         /// </summary>
-        /// <param name="model">Gift card usage history search model</param>
+        /// <param name="searchModel">Gift card usage history search model</param>
         /// <param name="giftCard">Gift card</param>
         /// <returns>Gift card usage history search model</returns>
-        public virtual GiftCardUsageHistorySearchModel PrepareGiftCardUsageHistorySearchModel(GiftCardUsageHistorySearchModel model,
+        public virtual GiftCardUsageHistorySearchModel PrepareGiftCardUsageHistorySearchModel(GiftCardUsageHistorySearchModel searchModel,
             GiftCard giftCard)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             if (giftCard == null)
                 throw new ArgumentNullException(nameof(giftCard));
 
-            model.GiftCardId = giftCard.Id;
+            searchModel.GiftCardId = giftCard.Id;
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>

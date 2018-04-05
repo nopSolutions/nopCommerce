@@ -13,7 +13,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="model">Topic search model</param>
         /// <returns>Topic search model</returns>
-        TopicSearchModel PrepareTopicSearchModel(TopicSearchModel model);
+        TopicSearchModel PrepareTopicSearchModel(TopicSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged topic list model

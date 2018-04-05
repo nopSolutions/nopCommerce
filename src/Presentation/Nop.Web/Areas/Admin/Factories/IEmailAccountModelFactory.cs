@@ -11,9 +11,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare email account search model
         /// </summary>
-        /// <param name="model">Email account search model</param>
+        /// <param name="searchModel">Email account search model</param>
         /// <returns>Email account search model</returns>
-        EmailAccountSearchModel PrepareEmailAccountSearchModel(EmailAccountSearchModel model);
+        EmailAccountSearchModel PrepareEmailAccountSearchModel(EmailAccountSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged email account list model

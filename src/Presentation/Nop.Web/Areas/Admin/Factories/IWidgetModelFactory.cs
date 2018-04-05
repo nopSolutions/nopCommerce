@@ -11,9 +11,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare widget search model
         /// </summary>
-        /// <param name="model">Widget search model</param>
+        /// <param name="searchModel">Widget search model</param>
         /// <returns>Widget search model</returns>
-        WidgetSearchModel PrepareWidgetSearchModel(WidgetSearchModel model);
+        WidgetSearchModel PrepareWidgetSearchModel(WidgetSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged widget list model

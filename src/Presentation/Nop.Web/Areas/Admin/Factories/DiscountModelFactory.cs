@@ -81,20 +81,20 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare discount search model
         /// </summary>
-        /// <param name="model">Discount search model</param>
+        /// <param name="searchModel">Discount search model</param>
         /// <returns>Discount search model</returns>
-        public virtual DiscountSearchModel PrepareDiscountSearchModel(DiscountSearchModel model)
+        public virtual DiscountSearchModel PrepareDiscountSearchModel(DiscountSearchModel searchModel)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             //prepare available discount types
-            _baseAdminModelFactory.PrepareDiscountTypes(model.AvailableDiscountTypes);
+            _baseAdminModelFactory.PrepareDiscountTypes(searchModel.AvailableDiscountTypes);
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>
@@ -178,7 +178,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 model.AvailableDiscountRequirementRules.Insert(0, new SelectListItem
                 {
                     Text = _localizationService.GetResource("Admin.Promotions.Discounts.Requirements.DiscountRequirementType.Select"),
-                    Value = ""
+                    Value = string.Empty
                 });
 
                 //prepare available requirement groups
@@ -216,7 +216,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="discount">Discount</param>
         /// <param name="groupInteractionType">Interaction type within the group of requirements</param>
         /// <returns>List of discount requirement rule models</returns>
-        public virtual IList<DiscountRequirementRuleModel> PrepareDiscountRequirementRuleModels(IEnumerable<DiscountRequirement> requirements,
+        public virtual IList<DiscountRequirementRuleModel> PrepareDiscountRequirementRuleModels(ICollection<DiscountRequirement> requirements,
             Discount discount, RequirementGroupInteractionType groupInteractionType)
         {
             if (requirements == null)
@@ -237,11 +237,11 @@ namespace Nop.Web.Areas.Admin.Factories
                     IsGroup = requirement.IsGroup,
                     RuleName = requirement.DiscountRequirementRuleSystemName,
                     IsLastInGroup = lastRequirement == null || lastRequirement.Id == requirement.Id,
-                    InteractionTypeId = (int)groupInteractionType,
+                    InteractionTypeId = (int)groupInteractionType
                 };
 
                 var interactionType = requirement.InteractionType ?? RequirementGroupInteractionType.And;
-                requirementModel.AvailableInteractionTypes = interactionType.ToSelectList(true);
+                requirementModel.AvailableInteractionTypes = interactionType.ToSelectList();
 
                 if (requirement.IsGroup)
                 {
@@ -268,24 +268,24 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare discount usage history search model
         /// </summary>
-        /// <param name="model">Discount usage history search model</param>
+        /// <param name="searchModel">Discount usage history search model</param>
         /// <param name="discount">Discount</param>
         /// <returns>Discount usage history search model</returns>
-        public virtual DiscountUsageHistorySearchModel PrepareDiscountUsageHistorySearchModel(DiscountUsageHistorySearchModel model,
+        public virtual DiscountUsageHistorySearchModel PrepareDiscountUsageHistorySearchModel(DiscountUsageHistorySearchModel searchModel,
             Discount discount)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             if (discount == null)
                 throw new ArgumentNullException(nameof(discount));
 
-            model.DiscountId = discount.Id;
+            searchModel.DiscountId = discount.Id;
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>
@@ -342,23 +342,23 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare discount product search model
         /// </summary>
-        /// <param name="model">Discount product search model</param>
+        /// <param name="searchModel">Discount product search model</param>
         /// <param name="discount">Discount</param>
         /// <returns>Discount product search model</returns>
-        public virtual DiscountProductSearchModel PrepareDiscountProductSearchModel(DiscountProductSearchModel model, Discount discount)
+        public virtual DiscountProductSearchModel PrepareDiscountProductSearchModel(DiscountProductSearchModel searchModel, Discount discount)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             if (discount == null)
                 throw new ArgumentNullException(nameof(discount));
 
-            model.DiscountId = discount.Id;
+            searchModel.DiscountId = discount.Id;
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>
@@ -398,32 +398,32 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare product search model to add to the discount
         /// </summary>
-        /// <param name="model">Product search model to add to the discount</param>
+        /// <param name="searchModel">Product search model to add to the discount</param>
         /// <returns>Product search model to add to the discount</returns>
-        public virtual AddProductToDiscountSearchModel PrepareAddProductToDiscountSearchModel(AddProductToDiscountSearchModel model)
+        public virtual AddProductToDiscountSearchModel PrepareAddProductToDiscountSearchModel(AddProductToDiscountSearchModel searchModel)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             //prepare available categories
-            _baseAdminModelFactory.PrepareCategories(model.AvailableCategories);
+            _baseAdminModelFactory.PrepareCategories(searchModel.AvailableCategories);
 
             //prepare available manufacturers
-            _baseAdminModelFactory.PrepareManufacturers(model.AvailableManufacturers);
+            _baseAdminModelFactory.PrepareManufacturers(searchModel.AvailableManufacturers);
 
             //prepare available stores
-            _baseAdminModelFactory.PrepareStores(model.AvailableStores);
+            _baseAdminModelFactory.PrepareStores(searchModel.AvailableStores);
 
             //prepare available vendors
-            _baseAdminModelFactory.PrepareVendors(model.AvailableVendors);
+            _baseAdminModelFactory.PrepareVendors(searchModel.AvailableVendors);
 
             //prepare available product types
-            _baseAdminModelFactory.PrepareProductTypes(model.AvailableProductTypes);
+            _baseAdminModelFactory.PrepareProductTypes(searchModel.AvailableProductTypes);
 
             //prepare page parameters
-            model.SetPopupGridPageSize();
+            searchModel.SetPopupGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>
@@ -460,23 +460,23 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare discount category search model
         /// </summary>
-        /// <param name="model">Discount category search model</param>
+        /// <param name="searchModel">Discount category search model</param>
         /// <param name="discount">Discount</param>
         /// <returns>Discount category search model</returns>
-        public virtual DiscountCategorySearchModel PrepareDiscountCategorySearchModel(DiscountCategorySearchModel model, Discount discount)
+        public virtual DiscountCategorySearchModel PrepareDiscountCategorySearchModel(DiscountCategorySearchModel searchModel, Discount discount)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             if (discount == null)
                 throw new ArgumentNullException(nameof(discount));
 
-            model.DiscountId = discount.Id;
+            searchModel.DiscountId = discount.Id;
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>
@@ -516,17 +516,17 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare category search model to add to the discount
         /// </summary>
-        /// <param name="model">Category search model to add to the discount</param>
+        /// <param name="searchModel">Category search model to add to the discount</param>
         /// <returns>Category search model to add to the discount</returns>
-        public virtual AddCategoryToDiscountSearchModel PrepareAddCategoryToDiscountSearchModel(AddCategoryToDiscountSearchModel model)
+        public virtual AddCategoryToDiscountSearchModel PrepareAddCategoryToDiscountSearchModel(AddCategoryToDiscountSearchModel searchModel)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             //prepare page parameters
-            model.SetPopupGridPageSize();
+            searchModel.SetPopupGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>
@@ -566,24 +566,24 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare discount manufacturer search model
         /// </summary>
-        /// <param name="model">Discount manufacturer search model</param>
+        /// <param name="searchModel">Discount manufacturer search model</param>
         /// <param name="discount">Discount</param>
         /// <returns>Discount manufacturer search model</returns>
-        public virtual DiscountManufacturerSearchModel PrepareDiscountManufacturerSearchModel(DiscountManufacturerSearchModel model,
+        public virtual DiscountManufacturerSearchModel PrepareDiscountManufacturerSearchModel(DiscountManufacturerSearchModel searchModel,
             Discount discount)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             if (discount == null)
                 throw new ArgumentNullException(nameof(discount));
 
-            model.DiscountId = discount.Id;
+            searchModel.DiscountId = discount.Id;
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>
@@ -624,17 +624,17 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare manufacturer search model to add to the discount
         /// </summary>
-        /// <param name="model">Manufacturer search model to add to the discount</param>
+        /// <param name="searchModel">Manufacturer search model to add to the discount</param>
         /// <returns>Manufacturer search model to add to the discount</returns>
-        public virtual AddManufacturerToDiscountSearchModel PrepareAddManufacturerToDiscountSearchModel(AddManufacturerToDiscountSearchModel model)
+        public virtual AddManufacturerToDiscountSearchModel PrepareAddManufacturerToDiscountSearchModel(AddManufacturerToDiscountSearchModel searchModel)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             //prepare page parameters
-            model.SetPopupGridPageSize();
+            searchModel.SetPopupGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>

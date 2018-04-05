@@ -44,20 +44,20 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare queued email search model
         /// </summary>
-        /// <param name="model">Queued email search model</param>
+        /// <param name="searchModel">Queued email search model</param>
         /// <returns>Queued email search model</returns>
-        public virtual QueuedEmailSearchModel PrepareQueuedEmailSearchModel(QueuedEmailSearchModel model)
+        public virtual QueuedEmailSearchModel PrepareQueuedEmailSearchModel(QueuedEmailSearchModel searchModel)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             //prepare default search values
-            model.SearchMaxSentTries = 10;
+            searchModel.SearchMaxSentTries = 10;
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>
@@ -108,6 +108,7 @@ namespace Nop.Web.Areas.Admin.Factories
                         queuedEmailModel.DontSendBeforeDate = _dateTimeHelper
                             .ConvertToUserTime(queuedEmail.DontSendBeforeDateUtc.Value, DateTimeKind.Utc);
                     }
+
                     if (queuedEmail.SentOnUtc.HasValue)
                         queuedEmailModel.SentOn = _dateTimeHelper.ConvertToUserTime(queuedEmail.SentOnUtc.Value, DateTimeKind.Utc);
 

@@ -10,9 +10,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare schedule task search model
         /// </summary>
-        /// <param name="model">Schedule task search model</param>
+        /// <param name="searchModel">Schedule task search model</param>
         /// <returns>Schedule task search model</returns>
-        ScheduleTaskSearchModel PrepareScheduleTaskSearchModel(ScheduleTaskSearchModel model);
+        ScheduleTaskSearchModel PrepareScheduleTaskSearchModel(ScheduleTaskSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged schedule task list model

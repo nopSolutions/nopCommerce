@@ -49,39 +49,39 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare product review search model
         /// </summary>
-        /// <param name="model">Product review search model</param>
+        /// <param name="searchModel">Product review search model</param>
         /// <returns>Product review search model</returns>
-        public virtual ProductReviewSearchModel PrepareProductReviewSearchModel(ProductReviewSearchModel model)
+        public virtual ProductReviewSearchModel PrepareProductReviewSearchModel(ProductReviewSearchModel searchModel)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
-            model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
+            searchModel.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
 
             //prepare available stores
-            _baseAdminModelFactory.PrepareStores(model.AvailableStores);
+            _baseAdminModelFactory.PrepareStores(searchModel.AvailableStores);
 
             //prepare "approved" property (0 - all; 1 - approved only; 2 - disapproved only)
-            model.AvailableApprovedOptions.Add(new SelectListItem
+            searchModel.AvailableApprovedOptions.Add(new SelectListItem
             {
                 Text = _localizationService.GetResource("Admin.Catalog.ProductReviews.List.SearchApproved.All"),
                 Value = "0"
             });
-            model.AvailableApprovedOptions.Add(new SelectListItem
+            searchModel.AvailableApprovedOptions.Add(new SelectListItem
             {
                 Text = _localizationService.GetResource("Admin.Catalog.ProductReviews.List.SearchApproved.ApprovedOnly"),
                 Value = "1"
             });
-            model.AvailableApprovedOptions.Add(new SelectListItem
+            searchModel.AvailableApprovedOptions.Add(new SelectListItem
             {
                 Text = _localizationService.GetResource("Admin.Catalog.ProductReviews.List.SearchApproved.DisapprovedOnly"),
                 Value = "2"
             });
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>

@@ -52,9 +52,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare sort option search model
         /// </summary>
-        /// <param name="model">Sort option search model</param>
+        /// <param name="searchModel">Sort option search model</param>
         /// <returns>Sort option search model</returns>
-        SortOptionSearchModel PrepareSortOptionSearchModel(SortOptionSearchModel model);
+        SortOptionSearchModel PrepareSortOptionSearchModel(SortOptionSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged sort option list model
@@ -172,13 +172,13 @@ namespace Nop.Web.Areas.Admin.Factories
         AdminAreaSettingsModel PrepareAdminAreaSettingsModel();
 
         /// <summary>
-        /// Prepare display default menu item settings settings model
+        /// Prepare display default menu item settings model
         /// </summary>
         /// <returns>Display default menu item settings model</returns>
         DisplayDefaultMenuItemSettingsModel PrepareDisplayDefaultMenuItemSettingsModel();
 
         /// <summary>
-        /// Prepare display default footer item settings settings model
+        /// Prepare display default footer item settings model
         /// </summary>
         /// <returns>Display default footer item settings model</returns>
         DisplayDefaultFooterItemSettingsModel PrepareDisplayDefaultFooterItemSettingsModel();
@@ -192,9 +192,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare setting search model
         /// </summary>
-        /// <param name="model">Setting search model</param>
+        /// <param name="searchModel">Setting search model</param>
         /// <returns>Setting search model</returns>
-        SettingSearchModel PrepareSettingSearchModel(SettingSearchModel model);
+        SettingSearchModel PrepareSettingSearchModel(SettingSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged setting list model

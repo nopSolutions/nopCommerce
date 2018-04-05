@@ -11,9 +11,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare forum group search model
         /// </summary>
-        /// <param name="model">Forum group search model</param>
+        /// <param name="searchModel">Forum group search model</param>
         /// <returns>Forum group search model</returns>
-        ForumGroupSearchModel PrepareForumGroupSearchModel(ForumGroupSearchModel model);
+        ForumGroupSearchModel PrepareForumGroupSearchModel(ForumGroupSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged forum group list model
@@ -34,9 +34,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare forum search model
         /// </summary>
-        /// <param name="model">Forum search model</param>
+        /// <param name="searchModel">Forum search model</param>
         /// <returns>Forum search model</returns>
-        ForumSearchModel PrepareForumSearchModel(ForumSearchModel model);
+        ForumSearchModel PrepareForumSearchModel(ForumSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged forum list model

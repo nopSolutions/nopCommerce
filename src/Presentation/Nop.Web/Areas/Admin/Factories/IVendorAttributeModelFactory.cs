@@ -11,9 +11,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare vendor attribute search model
         /// </summary>
-        /// <param name="model">Vendor attribute search model</param>
+        /// <param name="searchModel">Vendor attribute search model</param>
         /// <returns>Vendor attribute search model</returns>
-        VendorAttributeSearchModel PrepareVendorAttributeSearchModel(VendorAttributeSearchModel model);
+        VendorAttributeSearchModel PrepareVendorAttributeSearchModel(VendorAttributeSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged vendor attribute list model
@@ -35,10 +35,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare vendor attribute value search model
         /// </summary>
-        /// <param name="model">Vendor attribute value search model</param>
+        /// <param name="searchModel">Vendor attribute value search model</param>
         /// <param name="vendorAttribute">Vendor attribute</param>
         /// <returns>Vendor attribute value search model</returns>
-        VendorAttributeValueSearchModel PrepareVendorAttributeValueSearchModel(VendorAttributeValueSearchModel model,
+        VendorAttributeValueSearchModel PrepareVendorAttributeValueSearchModel(VendorAttributeValueSearchModel searchModel,
             VendorAttribute vendorAttribute);
 
         /// <summary>

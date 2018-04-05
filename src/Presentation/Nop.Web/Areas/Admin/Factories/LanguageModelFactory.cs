@@ -43,17 +43,17 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare language search model
         /// </summary>
-        /// <param name="model">Language search model</param>
+        /// <param name="searchModel">Language search model</param>
         /// <returns>Language search model</returns>
-        public virtual LanguageSearchModel PrepareLanguageSearchModel(LanguageSearchModel model)
+        public virtual LanguageSearchModel PrepareLanguageSearchModel(LanguageSearchModel searchModel)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>
@@ -118,23 +118,23 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare locale resource search model
         /// </summary>
-        /// <param name="model">Locale resource search model</param>
+        /// <param name="searchModel">Locale resource search model</param>
         /// <param name="language">Language</param>
         /// <returns>Locale resource search model</returns>
-        public virtual LocaleResourceSearchModel PrepareLocaleResourceSearchModel(LocaleResourceSearchModel model, Language language)
+        public virtual LocaleResourceSearchModel PrepareLocaleResourceSearchModel(LocaleResourceSearchModel searchModel, Language language)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             if (language == null)
                 throw new ArgumentNullException(nameof(language));
 
-            model.LanguageId = language.Id;
+            searchModel.LanguageId = language.Id;
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>
@@ -171,7 +171,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     LanguageId = language.Id,
                     Id = localeResource.Value.Key,
                     Name = localeResource.Key,
-                    Value = localeResource.Value.Value,
+                    Value = localeResource.Value.Value
                 }),
                 Total = localeResources.Count()
             };

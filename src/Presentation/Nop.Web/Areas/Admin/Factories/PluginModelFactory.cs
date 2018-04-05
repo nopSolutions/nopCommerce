@@ -114,7 +114,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     model.IsEnabled = pickupPointProvider.IsPickupPointProviderActive(_shippingSettings);
                     break;
 
-                case ITaxProvider taxProvider:
+                case ITaxProvider _:
                     model.IsEnabled = plugin.PluginDescriptor.SystemName
                         .Equals(_taxSettings.ActiveTaxProviderSystemName, StringComparison.InvariantCultureIgnoreCase);
                     break;
@@ -140,23 +140,23 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare plugin search model
         /// </summary>
-        /// <param name="model">Plugin search model</param>
+        /// <param name="searchModel">Plugin search model</param>
         /// <returns>Plugin search model</returns>
-        public virtual PluginSearchModel PreparePluginSearchModel(PluginSearchModel model)
+        public virtual PluginSearchModel PreparePluginSearchModel(PluginSearchModel searchModel)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             //prepare available load plugin modes
-            _baseAdminModelFactory.PrepareLoadPluginModes(model.AvailableLoadModes, false);
+            _baseAdminModelFactory.PrepareLoadPluginModes(searchModel.AvailableLoadModes, false);
 
             //prepare available groups
-            _baseAdminModelFactory.PreparePluginGroups(model.AvailableGroups);
+            _baseAdminModelFactory.PreparePluginGroups(searchModel.AvailableGroups);
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>
@@ -244,30 +244,30 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare search model of plugins of the official feed
         /// </summary>
-        /// <param name="model">Search model of plugins of the official feed</param>
+        /// <param name="searchModel">Search model of plugins of the official feed</param>
         /// <returns>Search model of plugins of the official feed</returns>
-        public virtual OfficialFeedPluginSearchModel PrepareOfficialFeedPluginSearchModel(OfficialFeedPluginSearchModel model)
+        public virtual OfficialFeedPluginSearchModel PrepareOfficialFeedPluginSearchModel(OfficialFeedPluginSearchModel searchModel)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             //prepare available versions
-            model.AvailableVersions.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            searchModel.AvailableVersions.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
             foreach (var version in _officialFeedManager.GetVersions())
-                model.AvailableVersions.Add(new SelectListItem { Text = version.Name, Value = version.Id.ToString() });
+                searchModel.AvailableVersions.Add(new SelectListItem { Text = version.Name, Value = version.Id.ToString() });
 
             //pre-select current version
             //current version name and named on official site do not match. that's why we use "Contains"
-            var currentVersionItem = model.AvailableVersions.FirstOrDefault(x => x.Text.Contains(NopVersion.CurrentVersion));
+            var currentVersionItem = searchModel.AvailableVersions.FirstOrDefault(x => x.Text.Contains(NopVersion.CurrentVersion));
             if (currentVersionItem != null)
             {
-                model.SearchVersionId = int.Parse(currentVersionItem.Value);
+                searchModel.SearchVersionId = int.Parse(currentVersionItem.Value);
                 currentVersionItem.Selected = true;
             }
 
             //prepare available plugin categories
             var pluginCategories = _officialFeedManager.GetCategories();
-            model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            searchModel.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
             foreach (var pluginCategory in pluginCategories)
             {
                 var pluginCategoryNames = new List<string>();
@@ -277,9 +277,10 @@ namespace Nop.Web.Areas.Admin.Factories
                     pluginCategoryNames.Add(tmpCategory.Name);
                     tmpCategory = pluginCategories.FirstOrDefault(category => category.Id == tmpCategory.ParentCategoryId);
                 }
+
                 pluginCategoryNames.Reverse();
 
-                model.AvailableCategories.Add(new SelectListItem
+                searchModel.AvailableCategories.Add(new SelectListItem
                 {
                     Value = pluginCategory.Id.ToString(),
                     Text = string.Join(" >> ", pluginCategoryNames)
@@ -287,27 +288,27 @@ namespace Nop.Web.Areas.Admin.Factories
             }
 
             //prepare available prices
-            model.AvailablePrices.Add(new SelectListItem
+            searchModel.AvailablePrices.Add(new SelectListItem
             {
                 Value = "0",
                 Text = _localizationService.GetResource("Admin.Common.All")
             });
-            model.AvailablePrices.Add(new SelectListItem
+            searchModel.AvailablePrices.Add(new SelectListItem
             {
                 Value = "10",
                 Text = _localizationService.GetResource("Admin.Configuration.Plugins.OfficialFeed.Price.Free")
             });
-            model.AvailablePrices.Add(new SelectListItem
+            searchModel.AvailablePrices.Add(new SelectListItem
             {
                 Value = "20",
                 Text = _localizationService.GetResource("Admin.Configuration.Plugins.OfficialFeed.Price.Commercial")
             });
 
             //prepare page parameters
-            model.PageSize = 15;
-            model.AvailablePageSizes = "15";
+            searchModel.PageSize = 15;
+            searchModel.AvailablePageSizes = "15";
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>

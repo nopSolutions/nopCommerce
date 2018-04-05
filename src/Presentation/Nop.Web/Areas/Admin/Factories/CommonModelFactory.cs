@@ -387,16 +387,16 @@ namespace Nop.Web.Areas.Admin.Factories
             var dirsToCheck = FilePermissionHelper.GetDirectoriesWrite();
             foreach (var dir in dirsToCheck)
             {
-                if (!FilePermissionHelper.CheckPermissions(dir, false, true, true, false))
+                if (FilePermissionHelper.CheckPermissions(dir, false, true, true, false))
+                    continue;
+
+                models.Add(new SystemWarningModel
                 {
-                    models.Add(new SystemWarningModel
-                    {
-                        Level = SystemWarningLevel.Warning,
-                        Text = string.Format(_localizationService.GetResource("Admin.System.Warnings.DirectoryPermission.Wrong"),
+                    Level = SystemWarningLevel.Warning,
+                    Text = string.Format(_localizationService.GetResource("Admin.System.Warnings.DirectoryPermission.Wrong"),
                         WindowsIdentity.GetCurrent().Name, dir)
-                    });
-                    dirPermissionsOk = false;
-                }
+                });
+                dirPermissionsOk = false;
             }
 
             if (dirPermissionsOk)
@@ -412,16 +412,16 @@ namespace Nop.Web.Areas.Admin.Factories
             var filesToCheck = FilePermissionHelper.GetFilesWrite();
             foreach (var file in filesToCheck)
             {
-                if (!FilePermissionHelper.CheckPermissions(file, false, true, true, true))
+                if (FilePermissionHelper.CheckPermissions(file, false, true, true, true))
+                    continue;
+
+                models.Add(new SystemWarningModel
                 {
-                    models.Add(new SystemWarningModel
-                    {
-                        Level = SystemWarningLevel.Warning,
-                        Text = string.Format(_localizationService.GetResource("Admin.System.Warnings.FilePermission.Wrong"),
-                            WindowsIdentity.GetCurrent().Name, file)
-                    });
-                    filePermissionsOk = false;
-                }
+                    Level = SystemWarningLevel.Warning,
+                    Text = string.Format(_localizationService.GetResource("Admin.System.Warnings.FilePermission.Wrong"),
+                        WindowsIdentity.GetCurrent().Name, file)
+                });
+                filePermissionsOk = false;
             }
 
             if (filePermissionsOk)
@@ -613,17 +613,17 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare URL record search model
         /// </summary>
-        /// <param name="model">URL record search model</param>
+        /// <param name="searchModel">URL record search model</param>
         /// <returns>URL record search model</returns>
-        public virtual UrlRecordSearchModel PrepareUrlRecordSearchModel(UrlRecordSearchModel model)
+        public virtual UrlRecordSearchModel PrepareUrlRecordSearchModel(UrlRecordSearchModel searchModel)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>

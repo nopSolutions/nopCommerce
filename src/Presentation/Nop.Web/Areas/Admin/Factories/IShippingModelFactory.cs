@@ -11,9 +11,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare shipping provider search model
         /// </summary>
-        /// <param name="model">Shipping provider search model</param>
+        /// <param name="searchModel">Shipping provider search model</param>
         /// <returns>Shipping provider search model</returns>
-        ShippingProviderSearchModel PrepareShippingProviderSearchModel(ShippingProviderSearchModel model);
+        ShippingProviderSearchModel PrepareShippingProviderSearchModel(ShippingProviderSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged shipping provider list model
@@ -25,9 +25,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare pickup point provider search model
         /// </summary>
-        /// <param name="model">Pickup point provider search model</param>
+        /// <param name="searchModel">Pickup point provider search model</param>
         /// <returns>Pickup point provider search model</returns>
-        PickupPointProviderSearchModel PreparePickupPointProviderSearchModel(PickupPointProviderSearchModel model);
+        PickupPointProviderSearchModel PreparePickupPointProviderSearchModel(PickupPointProviderSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged pickup point provider list model
@@ -39,9 +39,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare shipping method search model
         /// </summary>
-        /// <param name="model">Shipping method search model</param>
+        /// <param name="searchModel">Shipping method search model</param>
         /// <returns>Shipping method search model</returns>
-        ShippingMethodSearchModel PrepareShippingMethodSearchModel(ShippingMethodSearchModel model);
+        ShippingMethodSearchModel PrepareShippingMethodSearchModel(ShippingMethodSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged shipping method list model
@@ -63,16 +63,16 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare dates and ranges search model
         /// </summary>
-        /// <param name="model">Dates and ranges search model</param>
+        /// <param name="searchModel">Dates and ranges search model</param>
         /// <returns>Dates and ranges search model</returns>
-        DatesRangesSearchModel PrepareDatesRangesSearchModel(DatesRangesSearchModel model);
+        DatesRangesSearchModel PrepareDatesRangesSearchModel(DatesRangesSearchModel searchModel);
 
         /// <summary>
         /// Prepare delivery date search model
         /// </summary>
-        /// <param name="model">Delivery date search model</param>
+        /// <param name="searchModel">Delivery date search model</param>
         /// <returns>Delivery date search model</returns>
-        DeliveryDateSearchModel PrepareDeliveryDateSearchModel(DeliveryDateSearchModel model);
+        DeliveryDateSearchModel PrepareDeliveryDateSearchModel(DeliveryDateSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged delivery date list model
@@ -93,9 +93,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare product availability range search model
         /// </summary>
-        /// <param name="model">Product availability range search model</param>
+        /// <param name="searchModel">Product availability range search model</param>
         /// <returns>Product availability range search model</returns>
-        ProductAvailabilityRangeSearchModel PrepareProductAvailabilityRangeSearchModel(ProductAvailabilityRangeSearchModel model);
+        ProductAvailabilityRangeSearchModel PrepareProductAvailabilityRangeSearchModel(ProductAvailabilityRangeSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged product availability range list model
@@ -117,9 +117,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare warehouse search model
         /// </summary>
-        /// <param name="model">Warehouse search model</param>
+        /// <param name="searchModel">Warehouse search model</param>
         /// <returns>Warehouse search model</returns>
-        WarehouseSearchModel PrepareWarehouseSearchModel(WarehouseSearchModel model);
+        WarehouseSearchModel PrepareWarehouseSearchModel(WarehouseSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged warehouse list model

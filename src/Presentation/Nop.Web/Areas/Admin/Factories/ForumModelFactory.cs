@@ -37,20 +37,20 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare forum group search model
         /// </summary>
-        /// <param name="model">Forum group search model</param>
+        /// <param name="searchModel">Forum group search model</param>
         /// <returns>Forum group search model</returns>
-        public virtual ForumGroupSearchModel PrepareForumGroupSearchModel(ForumGroupSearchModel model)
+        public virtual ForumGroupSearchModel PrepareForumGroupSearchModel(ForumGroupSearchModel searchModel)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             //prepare nested search model
-            PrepareForumSearchModel(model.ForumSearch);
+            PrepareForumSearchModel(searchModel.ForumSearch);
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>
@@ -108,17 +108,17 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare forum search model
         /// </summary>
-        /// <param name="model">Forum search model</param>
+        /// <param name="searchModel">Forum search model</param>
         /// <returns>Forum search model</returns>
-        public virtual ForumSearchModel PrepareForumSearchModel(ForumSearchModel model)
+        public virtual ForumSearchModel PrepareForumSearchModel(ForumSearchModel searchModel)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>

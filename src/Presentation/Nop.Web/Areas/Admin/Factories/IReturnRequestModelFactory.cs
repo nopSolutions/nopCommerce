@@ -11,9 +11,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare return request search model
         /// </summary>
-        /// <param name="model">Return request search model</param>
+        /// <param name="searchModel">Return request search model</param>
         /// <returns>Return request search model</returns>
-        ReturnRequestSearchModel PrepareReturnRequestSearchModel(ReturnRequestSearchModel model);
+        ReturnRequestSearchModel PrepareReturnRequestSearchModel(ReturnRequestSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged return request list model
@@ -35,9 +35,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare return request reason search model
         /// </summary>
-        /// <param name="model">Return request reason search model</param>
+        /// <param name="searchModel">Return request reason search model</param>
         /// <returns>Return request reason search model</returns>
-        ReturnRequestReasonSearchModel PrepareReturnRequestReasonSearchModel(ReturnRequestReasonSearchModel model);
+        ReturnRequestReasonSearchModel PrepareReturnRequestReasonSearchModel(ReturnRequestReasonSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged return request reason list model
@@ -59,9 +59,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare return request action search model
         /// </summary>
-        /// <param name="model">Return request action search model</param>
+        /// <param name="searchModel">Return request action search model</param>
         /// <returns>Return request action search model</returns>
-        ReturnRequestActionSearchModel PrepareReturnRequestActionSearchModel(ReturnRequestActionSearchModel model);
+        ReturnRequestActionSearchModel PrepareReturnRequestActionSearchModel(ReturnRequestActionSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged return request action list model

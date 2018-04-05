@@ -10,16 +10,16 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare measure search model
         /// </summary>
-        /// <param name="model">Measure search model</param>
+        /// <param name="searchModel">Measure search model</param>
         /// <returns>Measure search model</returns>
-        MeasureSearchModel PrepareMeasureSearchModel(MeasureSearchModel model);
+        MeasureSearchModel PrepareMeasureSearchModel(MeasureSearchModel searchModel);
 
         /// <summary>
         /// Prepare measure dimension search model
         /// </summary>
-        /// <param name="model">Measure dimension search model</param>
+        /// <param name="searchModel">Measure dimension search model</param>
         /// <returns>Measure dimension search model</returns>
-        MeasureDimensionSearchModel PrepareMeasureDimensionSearchModel(MeasureDimensionSearchModel model);
+        MeasureDimensionSearchModel PrepareMeasureDimensionSearchModel(MeasureDimensionSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged measure dimension list model
@@ -31,9 +31,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare measure weight search model
         /// </summary>
-        /// <param name="model">Measure weight search model</param>
+        /// <param name="searchModel">Measure weight search model</param>
         /// <returns>Measure weight search model</returns>
-        MeasureWeightSearchModel PrepareMeasureWeightSearchModel(MeasureWeightSearchModel model);
+        MeasureWeightSearchModel PrepareMeasureWeightSearchModel(MeasureWeightSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged measure weight list model

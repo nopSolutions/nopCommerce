@@ -45,17 +45,17 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare vendor attribute search model
         /// </summary>
-        /// <param name="model">Vendor attribute search model</param>
+        /// <param name="searchModel">Vendor attribute search model</param>
         /// <returns>Vendor attribute search model</returns>
-        public virtual VendorAttributeSearchModel PrepareVendorAttributeSearchModel(VendorAttributeSearchModel model)
+        public virtual VendorAttributeSearchModel PrepareVendorAttributeSearchModel(VendorAttributeSearchModel searchModel)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>
@@ -127,24 +127,24 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare vendor attribute value search model
         /// </summary>
-        /// <param name="model">Vendor attribute value search model</param>
+        /// <param name="searchModel">Vendor attribute value search model</param>
         /// <param name="vendorAttribute">Vendor attribute</param>
         /// <returns>Vendor attribute value search model</returns>
-        public virtual VendorAttributeValueSearchModel PrepareVendorAttributeValueSearchModel(VendorAttributeValueSearchModel model,
+        public virtual VendorAttributeValueSearchModel PrepareVendorAttributeValueSearchModel(VendorAttributeValueSearchModel searchModel,
             VendorAttribute vendorAttribute)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             if (vendorAttribute == null)
                 throw new ArgumentNullException(nameof(vendorAttribute));
 
-            model.VendorAttributeId = vendorAttribute.Id;
+            searchModel.VendorAttributeId = vendorAttribute.Id;
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>

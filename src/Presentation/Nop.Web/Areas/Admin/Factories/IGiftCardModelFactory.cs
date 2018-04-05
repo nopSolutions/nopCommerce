@@ -11,9 +11,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare gift card search model
         /// </summary>
-        /// <param name="model">Gift card search model</param>
+        /// <param name="searchModel">Gift card search model</param>
         /// <returns>Gift card search model</returns>
-        GiftCardSearchModel PrepareGiftCardSearchModel(GiftCardSearchModel model);
+        GiftCardSearchModel PrepareGiftCardSearchModel(GiftCardSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged gift card list model
@@ -34,10 +34,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare gift card usage history search model
         /// </summary>
-        /// <param name="model">Gift card usage history search model</param>
+        /// <param name="searchModel">Gift card usage history search model</param>
         /// <param name="giftCard">Gift card</param>
         /// <returns>Gift card usage history search model</returns>
-        GiftCardUsageHistorySearchModel PrepareGiftCardUsageHistorySearchModel(GiftCardUsageHistorySearchModel model,
+        GiftCardUsageHistorySearchModel PrepareGiftCardUsageHistorySearchModel(GiftCardUsageHistorySearchModel searchModel,
             GiftCard giftCard);
 
         /// <summary>

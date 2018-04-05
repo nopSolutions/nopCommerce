@@ -11,9 +11,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare shopping cart search model
         /// </summary>
-        /// <param name="model">Shopping cart search model</param>
+        /// <param name="searchModel">Shopping cart search model</param>
         /// <returns>Shopping cart search model</returns>
-        ShoppingCartSearchModel PrepareShoppingCartSearchModel(ShoppingCartSearchModel model);
+        ShoppingCartSearchModel PrepareShoppingCartSearchModel(ShoppingCartSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged shopping cart list model
@@ -25,9 +25,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare shopping cart item search model
         /// </summary>
-        /// <param name="model">Shopping cart item search model</param>
+        /// <param name="searchModel">Shopping cart item search model</param>
         /// <returns>Shopping cart item search model</returns>
-        ShoppingCartItemSearchModel PrepareShoppingCartItemSearchModel(ShoppingCartItemSearchModel model);
+        ShoppingCartItemSearchModel PrepareShoppingCartItemSearchModel(ShoppingCartItemSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged shopping cart item list model

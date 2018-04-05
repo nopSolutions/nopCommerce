@@ -244,32 +244,32 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare product search model to add to the category
         /// </summary>
-        /// <param name="model">Product search model to add to the category</param>
+        /// <param name="searchModel">Product search model to add to the category</param>
         /// <returns>Product search model to add to the category</returns>
-        public virtual AddProductToCategorySearchModel PrepareAddProductToCategorySearchModel(AddProductToCategorySearchModel model)
+        public virtual AddProductToCategorySearchModel PrepareAddProductToCategorySearchModel(AddProductToCategorySearchModel searchModel)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             //prepare available categories
-            _baseAdminModelFactory.PrepareCategories(model.AvailableCategories);
+            _baseAdminModelFactory.PrepareCategories(searchModel.AvailableCategories);
 
             //prepare available manufacturers
-            _baseAdminModelFactory.PrepareManufacturers(model.AvailableManufacturers);
+            _baseAdminModelFactory.PrepareManufacturers(searchModel.AvailableManufacturers);
 
             //prepare available stores
-            _baseAdminModelFactory.PrepareStores(model.AvailableStores);
+            _baseAdminModelFactory.PrepareStores(searchModel.AvailableStores);
 
             //prepare available vendors
-            _baseAdminModelFactory.PrepareVendors(model.AvailableVendors);
+            _baseAdminModelFactory.PrepareVendors(searchModel.AvailableVendors);
 
             //prepare available product types
-            _baseAdminModelFactory.PrepareProductTypes(model.AvailableProductTypes);
+            _baseAdminModelFactory.PrepareProductTypes(searchModel.AvailableProductTypes);
 
             //prepare page parameters
-            model.SetPopupGridPageSize();
+            searchModel.SetPopupGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>

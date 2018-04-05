@@ -11,9 +11,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare message template search model
         /// </summary>
-        /// <param name="model">Message template search model</param>
+        /// <param name="searchModel">Message template search model</param>
         /// <returns>Message template search model</returns>
-        MessageTemplateSearchModel PrepareMessageTemplateSearchModel(MessageTemplateSearchModel model);
+        MessageTemplateSearchModel PrepareMessageTemplateSearchModel(MessageTemplateSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged message template list model

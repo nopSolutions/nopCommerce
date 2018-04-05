@@ -29,7 +29,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// {2} : whether advertisements are hidden
         /// {3} : store URL
         /// </remarks>
-        private static string NopCommerceNewsUrl => "https://www.nopCommerce.com/NewsRSS.aspx?Version={0}&Localhost={1}&HideAdvertisements={2}&StoreURL={3}";
+        private const string NOP_COMMERCE_NEWS_URL = "https://www.nopCommerce.com/NewsRSS.aspx?Version={0}&Localhost={1}&HideAdvertisements={2}&StoreURL={3}";
 
         #endregion
 
@@ -105,7 +105,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var rssData = _cacheManager.Get(ModelCacheEventConsumer.OFFICIAL_NEWS_MODEL_KEY, () =>
             {
                 //compose nopCommerce news RSS feed URL
-                var nopCommerceNewsUrl = string.Format(NopCommerceNewsUrl,
+                var nopCommerceNewsUrl = string.Format(NOP_COMMERCE_NEWS_URL,
                     NopVersion.CurrentVersion,
                     _webHelper.IsLocalRequest(_httpContextAccessor.HttpContext.Request),
                     _adminAreaSettings.HideAdvertisementsOnAdminArea,

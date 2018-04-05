@@ -11,9 +11,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare queued email search model
         /// </summary>
-        /// <param name="model">Queued email search model</param>
+        /// <param name="searchModel">Queued email search model</param>
         /// <returns>Queued email search model</returns>
-        QueuedEmailSearchModel PrepareQueuedEmailSearchModel(QueuedEmailSearchModel model);
+        QueuedEmailSearchModel PrepareQueuedEmailSearchModel(QueuedEmailSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged queued email list model

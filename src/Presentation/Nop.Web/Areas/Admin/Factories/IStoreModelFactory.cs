@@ -11,9 +11,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare store search model
         /// </summary>
-        /// <param name="model">Store search model</param>
+        /// <param name="searchModel">Store search model</param>
         /// <returns>Store search model</returns>
-        StoreSearchModel PrepareStoreSearchModel(StoreSearchModel model);
+        StoreSearchModel PrepareStoreSearchModel(StoreSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged store list model

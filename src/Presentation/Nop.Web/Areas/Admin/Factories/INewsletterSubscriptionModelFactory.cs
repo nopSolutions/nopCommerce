@@ -10,9 +10,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare newsletter subscription search model
         /// </summary>
-        /// <param name="model">Newsletter subscription search model</param>
+        /// <param name="searchModel">Newsletter subscription search model</param>
         /// <returns>Newsletter subscription search model</returns>
-        NewsletterSubscriptionSearchModel PrepareNewsletterSubscriptionSearchModel(NewsletterSubscriptionSearchModel model);
+        NewsletterSubscriptionSearchModel PrepareNewsletterSubscriptionSearchModel(NewsletterSubscriptionSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged newsletter subscription list model

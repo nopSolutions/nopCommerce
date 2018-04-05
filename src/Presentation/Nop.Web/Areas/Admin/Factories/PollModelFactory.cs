@@ -48,20 +48,20 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare poll search model
         /// </summary>
-        /// <param name="model">Poll search model</param>
+        /// <param name="searchModel">Poll search model</param>
         /// <returns>Poll search model</returns>
-        public virtual PollSearchModel PreparePollSearchModel(PollSearchModel model)
+        public virtual PollSearchModel PreparePollSearchModel(PollSearchModel searchModel)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             //prepare available stores
-            _baseAdminModelFactory.PrepareStores(model.AvailableStores);
+            _baseAdminModelFactory.PrepareStores(searchModel.AvailableStores);
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>
@@ -144,23 +144,23 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare poll answer search model
         /// </summary>
-        /// <param name="model">Poll answer search model</param>
+        /// <param name="searchModel">Poll answer search model</param>
         /// <param name="poll">Poll</param>
         /// <returns>Poll answer search model</returns>
-        public virtual PollAnswerSearchModel PreparePollAnswerSearchModel(PollAnswerSearchModel model, Poll poll)
+        public virtual PollAnswerSearchModel PreparePollAnswerSearchModel(PollAnswerSearchModel searchModel, Poll poll)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             if (poll == null)
                 throw new ArgumentNullException(nameof(poll));
 
-            model.PollId = poll.Id;
+            searchModel.PollId = poll.Id;
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>

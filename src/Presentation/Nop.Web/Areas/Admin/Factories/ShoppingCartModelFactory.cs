@@ -63,26 +63,26 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare shopping cart search model
         /// </summary>
-        /// <param name="model">Shopping cart search model</param>
+        /// <param name="searchModel">Shopping cart search model</param>
         /// <returns>Shopping cart search model</returns>
-        public virtual ShoppingCartSearchModel PrepareShoppingCartSearchModel(ShoppingCartSearchModel model)
+        public virtual ShoppingCartSearchModel PrepareShoppingCartSearchModel(ShoppingCartSearchModel searchModel)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             //prepare available shopping cart types
-            _baseAdminModelFactory.PrepareShoppingCartTypes(model.AvailableShoppingCartTypes, false);
+            _baseAdminModelFactory.PrepareShoppingCartTypes(searchModel.AvailableShoppingCartTypes, false);
 
             //set default search values
-            model.ShoppingCartType = ShoppingCartType.ShoppingCart;
+            searchModel.ShoppingCartType = ShoppingCartType.ShoppingCart;
 
             //prepare nested search model
-            PrepareShoppingCartItemSearchModel(model.ShoppingCartItemSearchModel);
+            PrepareShoppingCartItemSearchModel(searchModel.ShoppingCartItemSearchModel);
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>
@@ -128,17 +128,17 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare shopping cart item search model
         /// </summary>
-        /// <param name="model">Shopping cart item search model</param>
+        /// <param name="searchModel">Shopping cart item search model</param>
         /// <returns>Shopping cart item search model</returns>
-        public virtual ShoppingCartItemSearchModel PrepareShoppingCartItemSearchModel(ShoppingCartItemSearchModel model)
+        public virtual ShoppingCartItemSearchModel PrepareShoppingCartItemSearchModel(ShoppingCartItemSearchModel searchModel)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
-            
-            //prepare page parameters
-            model.SetGridPageSize();
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
-            return model;
+            //prepare page parameters
+            searchModel.SetGridPageSize();
+
+            return searchModel;
         }
 
         /// <summary>
@@ -179,9 +179,9 @@ namespace Nop.Web.Areas.Admin.Factories
                     itemModel.Store = _storeService.GetStoreById(item.StoreId)?.Name ?? "Deleted";
                     itemModel.AttributeInfo = _productAttributeFormatter.FormatAttributes(item.Product, item.AttributesXml, item.Customer);
                     var unitPrice = _priceCalculationService.GetUnitPrice(item);
-                    itemModel.UnitPrice = _priceFormatter.FormatPrice(_taxService.GetProductPrice(item.Product, unitPrice, out decimal taxRate));
+                    itemModel.UnitPrice = _priceFormatter.FormatPrice(_taxService.GetProductPrice(item.Product, unitPrice, out var _));
                     var subTotal = _priceCalculationService.GetSubTotal(item);
-                    itemModel.Total = _priceFormatter.FormatPrice(_taxService.GetProductPrice(item.Product, subTotal, out taxRate));
+                    itemModel.Total = _priceFormatter.FormatPrice(_taxService.GetProductPrice(item.Product, subTotal, out _));
 
                     return itemModel;
                 }),

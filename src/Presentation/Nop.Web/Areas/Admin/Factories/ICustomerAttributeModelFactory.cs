@@ -11,9 +11,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare customer attribute search model
         /// </summary>
-        /// <param name="model">Customer attribute search model</param>
+        /// <param name="searchModel">Customer attribute search model</param>
         /// <returns>Customer attribute search model</returns>
-        CustomerAttributeSearchModel PrepareCustomerAttributeSearchModel(CustomerAttributeSearchModel model);
+        CustomerAttributeSearchModel PrepareCustomerAttributeSearchModel(CustomerAttributeSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged customer attribute list model
@@ -35,10 +35,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare customer attribute value search model
         /// </summary>
-        /// <param name="model">Customer attribute value search model</param>
+        /// <param name="searchModel">Customer attribute value search model</param>
         /// <param name="customerAttribute">Customer attribute</param>
         /// <returns>Customer attribute value search model</returns>
-        CustomerAttributeValueSearchModel PrepareCustomerAttributeValueSearchModel(CustomerAttributeValueSearchModel model,
+        CustomerAttributeValueSearchModel PrepareCustomerAttributeValueSearchModel(CustomerAttributeValueSearchModel searchModel,
             CustomerAttribute customerAttribute);
 
         /// <summary>

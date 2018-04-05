@@ -53,17 +53,17 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare payment method search model
         /// </summary>
-        /// <param name="model">Payment method search model</param>
+        /// <param name="searchModel">Payment method search model</param>
         /// <returns>Payment method search model</returns>
-        public virtual PaymentMethodSearchModel PreparePaymentMethodSearchModel(PaymentMethodSearchModel model)
+        public virtual PaymentMethodSearchModel PreparePaymentMethodSearchModel(PaymentMethodSearchModel searchModel)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>

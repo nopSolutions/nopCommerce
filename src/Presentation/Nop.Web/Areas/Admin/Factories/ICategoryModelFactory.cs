@@ -50,9 +50,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare product search model to add to the category
         /// </summary>
-        /// <param name="model">Product search model to add to the category</param>
+        /// <param name="searchModel">Product search model to add to the category</param>
         /// <returns>Product search model to add to the category</returns>
-        AddProductToCategorySearchModel PrepareAddProductToCategorySearchModel(AddProductToCategorySearchModel model);
+        AddProductToCategorySearchModel PrepareAddProductToCategorySearchModel(AddProductToCategorySearchModel searchModel);
 
         /// <summary>
         /// Prepare paged product list model to add to the category

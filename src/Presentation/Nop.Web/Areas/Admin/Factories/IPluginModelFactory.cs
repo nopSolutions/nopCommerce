@@ -11,9 +11,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare plugin search model
         /// </summary>
-        /// <param name="model">Plugin search model</param>
+        /// <param name="searchModel">Plugin search model</param>
         /// <returns>Plugin search model</returns>
-        PluginSearchModel PreparePluginSearchModel(PluginSearchModel model);
+        PluginSearchModel PreparePluginSearchModel(PluginSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged plugin list model
@@ -34,9 +34,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare search model of plugins of the official feed
         /// </summary>
-        /// <param name="model">Search model of plugins of the official feed</param>
+        /// <param name="searchModel">Search model of plugins of the official feed</param>
         /// <returns>Search model of plugins of the official feed</returns>
-        OfficialFeedPluginSearchModel PrepareOfficialFeedPluginSearchModel(OfficialFeedPluginSearchModel model);
+        OfficialFeedPluginSearchModel PrepareOfficialFeedPluginSearchModel(OfficialFeedPluginSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged list model of plugins of the official feed

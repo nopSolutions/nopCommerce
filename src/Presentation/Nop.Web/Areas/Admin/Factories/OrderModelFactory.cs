@@ -262,7 +262,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
                 //picture
                 var orderItemPicture = orderItem.Product.GetProductPicture(orderItem.AttributesXml, _pictureService, _productAttributeParser);
-                orderItemModel.PictureThumbnailUrl = _pictureService.GetPictureUrl(orderItemPicture, 75, true);
+                orderItemModel.PictureThumbnailUrl = _pictureService.GetPictureUrl(orderItemPicture, 75);
 
                 //license file
                 if (orderItem.LicenseDownloadId.HasValue)
@@ -394,6 +394,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 model.PaymentMethodAdditionalFeeExclTax = _priceFormatter.FormatPaymentMethodAdditionalFee(
                     order.PaymentMethodAdditionalFeeExclTax, true, primaryStoreCurrency, _workContext.WorkingLanguage, false);
             }
+
             model.PaymentMethodAdditionalFeeInclTaxValue = order.PaymentMethodAdditionalFeeInclTax;
             model.PaymentMethodAdditionalFeeExclTaxValue = order.PaymentMethodAdditionalFeeExclTax;
 
@@ -407,9 +408,10 @@ namespace Nop.Web.Areas.Admin.Factories
                 model.TaxRates.Add(new OrderModel.TaxRate
                 {
                     Rate = _priceFormatter.FormatTaxRate(tr.Key),
-                    Value = _priceFormatter.FormatPrice(tr.Value, true, false),
+                    Value = _priceFormatter.FormatPrice(tr.Value, true, false)
                 });
             }
+
             model.DisplayTaxRates = displayTaxRates;
             model.DisplayTax = displayTax;
             model.TaxValue = order.OrderTax;
@@ -426,7 +428,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 model.GiftCards.Add(new OrderModel.GiftCard
                 {
                     CouponCode = gcuh.GiftCard.GiftCardCouponCode,
-                    Amount = _priceFormatter.FormatPrice(-gcuh.UsedValue, true, false),
+                    Amount = _priceFormatter.FormatPrice(-gcuh.UsedValue, true, false)
                 });
             }
 
@@ -683,9 +685,9 @@ namespace Nop.Web.Areas.Admin.Factories
             if (orderItem.Product.IsRental)
             {
                 var rentalStartDate = orderItem.RentalStartDateUtc.HasValue
-                    ? orderItem.Product.FormatRentalDate(orderItem.RentalStartDateUtc.Value) : "";
+                    ? orderItem.Product.FormatRentalDate(orderItem.RentalStartDateUtc.Value) : string.Empty;
                 var rentalEndDate = orderItem.RentalEndDateUtc.HasValue
-                    ? orderItem.Product.FormatRentalDate(orderItem.RentalEndDateUtc.Value) : "";
+                    ? orderItem.Product.FormatRentalDate(orderItem.RentalEndDateUtc.Value) : string.Empty;
                 model.RentalInfo = string
                     .Format(_localizationService.GetResource("Order.Rental.FormattedDate"), rentalStartDate, rentalEndDate);
             }
@@ -728,76 +730,76 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare order search model
         /// </summary>
-        /// <param name="model">Order search model</param>
+        /// <param name="searchModel">Order search model</param>
         /// <returns>Order search model</returns>
-        public virtual OrderSearchModel PrepareOrderSearchModel(OrderSearchModel model)
+        public virtual OrderSearchModel PrepareOrderSearchModel(OrderSearchModel searchModel)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
-            model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
-            model.BillingPhoneEnabled = _addressSettings.PhoneEnabled;
+            searchModel.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
+            searchModel.BillingPhoneEnabled = _addressSettings.PhoneEnabled;
 
             //prepare available order, payment and shipping statuses
-            _baseAdminModelFactory.PrepareOrderStatuses(model.AvailableOrderStatuses);
-            if (model.AvailableOrderStatuses.Any())
+            _baseAdminModelFactory.PrepareOrderStatuses(searchModel.AvailableOrderStatuses);
+            if (searchModel.AvailableOrderStatuses.Any())
             {
-                if (model.OrderStatusIds?.Any() ?? false)
+                if (searchModel.OrderStatusIds?.Any() ?? false)
                 {
-                    var ids = model.OrderStatusIds.Select(id => id.ToString());
-                    model.AvailableOrderStatuses.Where(statusItem => ids.Contains(statusItem.Value)).ToList()
+                    var ids = searchModel.OrderStatusIds.Select(id => id.ToString());
+                    searchModel.AvailableOrderStatuses.Where(statusItem => ids.Contains(statusItem.Value)).ToList()
                         .ForEach(statusItem => statusItem.Selected = true);
                 }
                 else
-                    model.AvailableOrderStatuses.FirstOrDefault().Selected = true;
+                    searchModel.AvailableOrderStatuses.FirstOrDefault().Selected = true;
             }
 
-            _baseAdminModelFactory.PreparePaymentStatuses(model.AvailablePaymentStatuses);
-            if (model.AvailablePaymentStatuses.Any())
+            _baseAdminModelFactory.PreparePaymentStatuses(searchModel.AvailablePaymentStatuses);
+            if (searchModel.AvailablePaymentStatuses.Any())
             {
-                if (model.PaymentStatusIds?.Any() ?? false)
+                if (searchModel.PaymentStatusIds?.Any() ?? false)
                 {
-                    var ids = model.PaymentStatusIds.Select(id => id.ToString());
-                    model.AvailablePaymentStatuses.Where(statusItem => ids.Contains(statusItem.Value)).ToList()
+                    var ids = searchModel.PaymentStatusIds.Select(id => id.ToString());
+                    searchModel.AvailablePaymentStatuses.Where(statusItem => ids.Contains(statusItem.Value)).ToList()
                         .ForEach(statusItem => statusItem.Selected = true);
                 }
                 else
-                    model.AvailablePaymentStatuses.FirstOrDefault().Selected = true;
+                    searchModel.AvailablePaymentStatuses.FirstOrDefault().Selected = true;
             }
 
-            _baseAdminModelFactory.PrepareShippingStatuses(model.AvailableShippingStatuses);
-            if (model.AvailableShippingStatuses.Any())
+            _baseAdminModelFactory.PrepareShippingStatuses(searchModel.AvailableShippingStatuses);
+            if (searchModel.AvailableShippingStatuses.Any())
             {
-                if (model.ShippingStatusIds?.Any() ?? false)
+                if (searchModel.ShippingStatusIds?.Any() ?? false)
                 {
-                    var ids = model.ShippingStatusIds.Select(id => id.ToString());
-                    model.AvailableShippingStatuses.Where(statusItem => ids.Contains(statusItem.Value)).ToList()
+                    var ids = searchModel.ShippingStatusIds.Select(id => id.ToString());
+                    searchModel.AvailableShippingStatuses.Where(statusItem => ids.Contains(statusItem.Value)).ToList()
                         .ForEach(statusItem => statusItem.Selected = true);
                 }
                 else
-                    model.AvailableShippingStatuses.FirstOrDefault().Selected = true;
+                    searchModel.AvailableShippingStatuses.FirstOrDefault().Selected = true;
             }
 
             //prepare available stores
-            _baseAdminModelFactory.PrepareStores(model.AvailableStores);
+            _baseAdminModelFactory.PrepareStores(searchModel.AvailableStores);
 
             //prepare available vendors
-            _baseAdminModelFactory.PrepareVendors(model.AvailableVendors);
+            _baseAdminModelFactory.PrepareVendors(searchModel.AvailableVendors);
 
             //prepare available payment methods
-            model.AvailablePaymentMethods = _paymentService.LoadAllPaymentMethods().Select(method =>
+            searchModel.AvailablePaymentMethods = _paymentService.LoadAllPaymentMethods().Select(method =>
                 new SelectListItem { Text = method.PluginDescriptor.FriendlyName, Value = method.PluginDescriptor.SystemName }).ToList();
-            model.AvailablePaymentMethods.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
+            searchModel.AvailablePaymentMethods.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = string.Empty });
 
             //prepare available billing countries
-            model.AvailableCountries = _countryService.GetAllCountriesForBilling(showHidden: true)
+            searchModel.AvailableCountries = _countryService.GetAllCountriesForBilling(showHidden: true)
                 .Select(country => new SelectListItem { Text = country.Name, Value = country.Id.ToString() }).ToList();
-            model.AvailableCountries.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            searchModel.AvailableCountries.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>
@@ -821,7 +823,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var endDateValue = !searchModel.EndDate.HasValue ? null
                 : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
             var product = _productService.GetProductById(searchModel.ProductId);
-            var filterByProductId = (product != null && (_workContext.CurrentVendor == null || product.VendorId == _workContext.CurrentVendor.Id))
+            var filterByProductId = product != null && (_workContext.CurrentVendor == null || product.VendorId == _workContext.CurrentVendor.Id)
                 ? searchModel.ProductId : 0;
 
             //get orders
@@ -899,7 +901,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var endDateValue = !searchModel.EndDate.HasValue ? null
                 : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
             var product = _productService.GetProductById(searchModel.ProductId);
-            var filterByProductId = (product != null && (_workContext.CurrentVendor == null || product.VendorId == _workContext.CurrentVendor.Id))
+            var filterByProductId = product != null && (_workContext.CurrentVendor == null || product.VendorId == _workContext.CurrentVendor.Id)
                 ? searchModel.ProductId : 0;
 
             //prepare additional model data
@@ -1041,32 +1043,32 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare product search model to add to the order
         /// </summary>
-        /// <param name="model">Product search model to add to the order</param>
+        /// <param name="searchModel">Product search model to add to the order</param>
         /// <param name="order">Order</param>
         /// <returns>Product search model to add to the order</returns>
-        public virtual AddProductToOrderSearchModel PrepareAddProductToOrderSearchModel(AddProductToOrderSearchModel model, Order order)
+        public virtual AddProductToOrderSearchModel PrepareAddProductToOrderSearchModel(AddProductToOrderSearchModel searchModel, Order order)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             if (order == null)
                 throw new ArgumentNullException(nameof(order));
 
-            model.OrderId = order.Id;
+            searchModel.OrderId = order.Id;
 
             //prepare available categories
-            _baseAdminModelFactory.PrepareCategories(model.AvailableCategories);
+            _baseAdminModelFactory.PrepareCategories(searchModel.AvailableCategories);
 
             //prepare available manufacturers
-            _baseAdminModelFactory.PrepareManufacturers(model.AvailableManufacturers);
+            _baseAdminModelFactory.PrepareManufacturers(searchModel.AvailableManufacturers);
 
             //prepare available product types
-            _baseAdminModelFactory.PrepareProductTypes(model.AvailableProductTypes);
+            _baseAdminModelFactory.PrepareProductTypes(searchModel.AvailableProductTypes);
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>
@@ -1185,29 +1187,29 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare shipment search model
         /// </summary>
-        /// <param name="model">Shipment search model</param>
+        /// <param name="searchModel">Shipment search model</param>
         /// <returns>Shipment search model</returns>
-        public virtual ShipmentSearchModel PrepareShipmentSearchModel(ShipmentSearchModel model)
+        public virtual ShipmentSearchModel PrepareShipmentSearchModel(ShipmentSearchModel searchModel)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             //prepare available countries
-            _baseAdminModelFactory.PrepareCountries(model.AvailableCountries);
+            _baseAdminModelFactory.PrepareCountries(searchModel.AvailableCountries);
 
             //prepare available states and provinces
-            _baseAdminModelFactory.PrepareStatesAndProvinces(model.AvailableCountries, model.CountryId);
+            _baseAdminModelFactory.PrepareStatesAndProvinces(searchModel.AvailableCountries, searchModel.CountryId);
 
             //prepare available warehouses
-            _baseAdminModelFactory.PrepareWarehouses(model.AvailableWarehouses);
+            _baseAdminModelFactory.PrepareWarehouses(searchModel.AvailableWarehouses);
 
             //prepare nested search model
-            PrepareShipmentItemSearchModel(model.ShipmentItemSearchModel);
+            PrepareShipmentItemSearchModel(searchModel.ShipmentItemSearchModel);
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>
@@ -1282,7 +1284,8 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="order">Order</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
         /// <returns>Shipment model</returns>
-        public virtual ShipmentModel PrepareShipmentModel(ShipmentModel model, Shipment shipment, Order order, bool excludeProperties = false)
+        public virtual ShipmentModel PrepareShipmentModel(ShipmentModel model, Shipment shipment, Order order,
+            bool excludeProperties = false)
         {
             if (shipment != null)
             {
@@ -1308,7 +1311,8 @@ namespace Nop.Web.Areas.Admin.Factories
 
                 model.CanDeliver = shipment.ShippedDateUtc.HasValue && !shipment.DeliveryDateUtc.HasValue;
                 if (shipment.TotalWeight.HasValue)
-                    model.TotalWeight = $"{shipment.TotalWeight:F2} [{_measureService.GetMeasureWeightById(_measureSettings.BaseWeightId)?.Name}]";
+                    model.TotalWeight =
+                        $"{shipment.TotalWeight:F2} [{_measureService.GetMeasureWeightById(_measureSettings.BaseWeightId)?.Name}]";
 
                 //prepare shipment items
                 foreach (var item in shipment.ShipmentItems)
@@ -1343,60 +1347,63 @@ namespace Nop.Web.Areas.Admin.Factories
                 }
             }
 
-            if (shipment == null)
+            if (shipment != null)
+                return model;
+
+            model.OrderId = order.Id;
+            model.CustomOrderNumber = order.CustomOrderNumber;
+            var orderItems = order.OrderItems.Where(item => item.Product.IsShipEnabled).ToList();
+            if (_workContext.CurrentVendor != null)
+                orderItems = orderItems.Where(item => item.Product.VendorId == _workContext.CurrentVendor.Id).ToList();
+
+            foreach (var orderItem in orderItems)
             {
-                model.OrderId = order.Id;
-                model.CustomOrderNumber = order.CustomOrderNumber;
-                var orderItems = order.OrderItems.Where(item => item.Product.IsShipEnabled).ToList();
-                if (_workContext.CurrentVendor != null)
-                    orderItems = orderItems.Where(item => item.Product.VendorId == _workContext.CurrentVendor.Id).ToList();
+                var shipmentItemModel = new ShipmentItemModel();
+                PrepareShipmentItemModel(shipmentItemModel, orderItem);
 
-                foreach (var orderItem in orderItems)
+                //ensure that this product can be added to a shipment
+                if (shipmentItemModel.QuantityToAdd <= 0)
+                    continue;
+
+                if (orderItem.Product.ManageInventoryMethod == ManageInventoryMethod.ManageStock &&
+                    orderItem.Product.UseMultipleWarehouses)
                 {
-                    var shipmentItemModel = new ShipmentItemModel();
-                    PrepareShipmentItemModel(shipmentItemModel, orderItem);
-
-                    //ensure that this product can be added to a shipment
-                    if (shipmentItemModel.QuantityToAdd <= 0)
-                        continue;
-
-                    if (orderItem.Product.ManageInventoryMethod == ManageInventoryMethod.ManageStock && orderItem.Product.UseMultipleWarehouses)
+                    //multiple warehouses supported
+                    shipmentItemModel.AllowToChooseWarehouse = true;
+                    foreach (var pwi in orderItem.Product.ProductWarehouseInventory.OrderBy(w => w.WarehouseId)
+                        .ToList())
                     {
-                        //multiple warehouses supported
-                        shipmentItemModel.AllowToChooseWarehouse = true;
-                        foreach (var pwi in orderItem.Product.ProductWarehouseInventory.OrderBy(w => w.WarehouseId).ToList())
-                        {
-                            var warehouse = pwi.Warehouse;
-                            if (warehouse != null)
-                            {
-                                shipmentItemModel.AvailableWarehouses.Add(new ShipmentItemModel.WarehouseInfo
-                                {
-                                    WarehouseId = warehouse.Id,
-                                    WarehouseName = warehouse.Name,
-                                    StockQuantity = pwi.StockQuantity,
-                                    ReservedQuantity = pwi.ReservedQuantity,
-                                    PlannedQuantity = _shipmentService.GetQuantityInShipments(orderItem.Product, warehouse.Id, true, true)
-                                });
-                            }
-                        }
-                    }
-                    else
-                    {
-                        //multiple warehouses are not supported
-                        var warehouse = _shippingService.GetWarehouseById(orderItem.Product.WarehouseId);
+                        var warehouse = pwi.Warehouse;
                         if (warehouse != null)
                         {
                             shipmentItemModel.AvailableWarehouses.Add(new ShipmentItemModel.WarehouseInfo
                             {
                                 WarehouseId = warehouse.Id,
                                 WarehouseName = warehouse.Name,
-                                StockQuantity = orderItem.Product.StockQuantity
+                                StockQuantity = pwi.StockQuantity,
+                                ReservedQuantity = pwi.ReservedQuantity,
+                                PlannedQuantity =
+                                    _shipmentService.GetQuantityInShipments(orderItem.Product, warehouse.Id, true, true)
                             });
                         }
                     }
-
-                    model.Items.Add(shipmentItemModel);
                 }
+                else
+                {
+                    //multiple warehouses are not supported
+                    var warehouse = _shippingService.GetWarehouseById(orderItem.Product.WarehouseId);
+                    if (warehouse != null)
+                    {
+                        shipmentItemModel.AvailableWarehouses.Add(new ShipmentItemModel.WarehouseInfo
+                        {
+                            WarehouseId = warehouse.Id,
+                            WarehouseName = warehouse.Name,
+                            StockQuantity = orderItem.Product.StockQuantity
+                        });
+                    }
+                }
+
+                model.Items.Add(shipmentItemModel);
             }
 
             return model;
@@ -1405,26 +1412,26 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare order shipment search model
         /// </summary>
-        /// <param name="model">Order shipment search model</param>
+        /// <param name="searchModel">Order shipment search model</param>
         /// <param name="order">Order</param>
         /// <returns>Order shipment search model</returns>
-        public virtual OrderShipmentSearchModel PrepareOrderShipmentSearchModel(OrderShipmentSearchModel model, Order order)
+        public virtual OrderShipmentSearchModel PrepareOrderShipmentSearchModel(OrderShipmentSearchModel searchModel, Order order)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             if (order == null)
                 throw new ArgumentNullException(nameof(order));
 
-            model.OrderId = order.Id;
+            searchModel.OrderId = order.Id;
 
             //prepare nested search model
-            PrepareShipmentItemSearchModel(model.ShipmentItemSearchModel);
+            PrepareShipmentItemSearchModel(searchModel.ShipmentItemSearchModel);
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>
@@ -1497,17 +1504,17 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare shipment item search model
         /// </summary>
-        /// <param name="model">Shipment item search model</param>
+        /// <param name="searchModel">Shipment item search model</param>
         /// <returns>Shipment item search model</returns>
-        public virtual ShipmentItemSearchModel PrepareShipmentItemSearchModel(ShipmentItemSearchModel model)
+        public virtual ShipmentItemSearchModel PrepareShipmentItemSearchModel(ShipmentItemSearchModel searchModel)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
-            
-            //prepare page parameters
-            model.SetGridPageSize();
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
-            return model;
+            //prepare page parameters
+            searchModel.SetGridPageSize();
+
+            return searchModel;
         }
 
         /// <summary>
@@ -1568,23 +1575,23 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare order note search model
         /// </summary>
-        /// <param name="model">Order note search model</param>
+        /// <param name="searchModel">Order note search model</param>
         /// <param name="order">Order</param>
         /// <returns>Order note search model</returns>
-        public virtual OrderNoteSearchModel PrepareOrderNoteSearchModel(OrderNoteSearchModel model, Order order)
+        public virtual OrderNoteSearchModel PrepareOrderNoteSearchModel(OrderNoteSearchModel searchModel, Order order)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             if (order == null)
                 throw new ArgumentNullException(nameof(order));
 
-            model.OrderId = order.Id;
+            searchModel.OrderId = order.Id;
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>
@@ -1637,18 +1644,18 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare bestseller brief search model
         /// </summary>
-        /// <param name="model">Bestseller brief search model</param>
+        /// <param name="searchModel">Bestseller brief search model</param>
         /// <returns>Bestseller brief search model</returns>
-        public virtual BestsellerBriefSearchModel PrepareBestsellerBriefSearchModel(BestsellerBriefSearchModel model)
+        public virtual BestsellerBriefSearchModel PrepareBestsellerBriefSearchModel(BestsellerBriefSearchModel searchModel)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             //prepare page parameters
-            model.PageSize = 5;
-            model.AvailablePageSizes = "5";
+            searchModel.PageSize = 5;
+            searchModel.AvailablePageSizes = "5";
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>
@@ -1694,42 +1701,42 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare bestseller search model
         /// </summary>
-        /// <param name="model">Bestseller search model</param>
+        /// <param name="searchModel">Bestseller search model</param>
         /// <returns>Bestseller search model</returns>
-        public virtual BestsellerSearchModel PrepareBestsellerSearchModel(BestsellerSearchModel model)
+        public virtual BestsellerSearchModel PrepareBestsellerSearchModel(BestsellerSearchModel searchModel)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
-            model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
+            searchModel.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
 
             //prepare available stores
-            _baseAdminModelFactory.PrepareStores(model.AvailableStores);
+            _baseAdminModelFactory.PrepareStores(searchModel.AvailableStores);
 
             //prepare available order statuses
-            _baseAdminModelFactory.PrepareOrderStatuses(model.AvailableOrderStatuses);
+            _baseAdminModelFactory.PrepareOrderStatuses(searchModel.AvailableOrderStatuses);
 
             //prepare available payment statuses
-            _baseAdminModelFactory.PreparePaymentStatuses(model.AvailablePaymentStatuses);
+            _baseAdminModelFactory.PreparePaymentStatuses(searchModel.AvailablePaymentStatuses);
 
             //prepare available categories
-            _baseAdminModelFactory.PrepareCategories(model.AvailableCategories);
+            _baseAdminModelFactory.PrepareCategories(searchModel.AvailableCategories);
 
             //prepare available manufacturers
-            _baseAdminModelFactory.PrepareManufacturers(model.AvailableManufacturers);
+            _baseAdminModelFactory.PrepareManufacturers(searchModel.AvailableManufacturers);
 
             //prepare available billing countries
-            model.AvailableCountries = _countryService.GetAllCountriesForBilling(showHidden: true)
+            searchModel.AvailableCountries = _countryService.GetAllCountriesForBilling(showHidden: true)
                 .Select(country => new SelectListItem { Text = country.Name, Value = country.Id.ToString() }).ToList();
-            model.AvailableCountries.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            searchModel.AvailableCountries.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
 
             //prepare available vendors
-            _baseAdminModelFactory.PrepareVendors(model.AvailableVendors);
+            _baseAdminModelFactory.PrepareVendors(searchModel.AvailableVendors);
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>
@@ -1743,8 +1750,8 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get parameters to filter bestsellers
-            var orderStatus = searchModel.OrderStatusId > 0 ? (OrderStatus?)(searchModel.OrderStatusId) : null;
-            var paymentStatus = searchModel.PaymentStatusId > 0 ? (PaymentStatus?)(searchModel.PaymentStatusId) : null;
+            var orderStatus = searchModel.OrderStatusId > 0 ? (OrderStatus?)searchModel.OrderStatusId : null;
+            var paymentStatus = searchModel.PaymentStatusId > 0 ? (PaymentStatus?)searchModel.PaymentStatusId : null;
             if (_workContext.CurrentVendor != null)
                 searchModel.VendorId = _workContext.CurrentVendor.Id;
             var startDateValue = !searchModel.StartDate.HasValue ? null
@@ -1793,31 +1800,31 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare never sold report search model
         /// </summary>
-        /// <param name="model">Never sold report search model</param>
+        /// <param name="searchModel">Never sold report search model</param>
         /// <returns>Never sold report search model</returns>
-        public virtual NeverSoldReportSearchModel PrepareNeverSoldReportSearchModel(NeverSoldReportSearchModel model)
+        public virtual NeverSoldReportSearchModel PrepareNeverSoldReportSearchModel(NeverSoldReportSearchModel searchModel)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
-            model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
+            searchModel.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
 
             //prepare available stores
-            _baseAdminModelFactory.PrepareStores(model.AvailableStores);
+            _baseAdminModelFactory.PrepareStores(searchModel.AvailableStores);
 
             //prepare available categories
-            _baseAdminModelFactory.PrepareCategories(model.AvailableCategories);
+            _baseAdminModelFactory.PrepareCategories(searchModel.AvailableCategories);
 
             //prepare available manufacturers
-            _baseAdminModelFactory.PrepareManufacturers(model.AvailableManufacturers);
+            _baseAdminModelFactory.PrepareManufacturers(searchModel.AvailableManufacturers);
 
             //prepare available vendors
-            _baseAdminModelFactory.PrepareVendors(model.AvailableVendors);
+            _baseAdminModelFactory.PrepareVendors(searchModel.AvailableVendors);
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>
@@ -1866,23 +1873,23 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare country report search model
         /// </summary>
-        /// <param name="model">Country report search model</param>
+        /// <param name="searchModel">Country report search model</param>
         /// <returns>Country report search model</returns>
-        public virtual CountryReportSearchModel PrepareCountryReportSearchModel(CountryReportSearchModel model)
+        public virtual CountryReportSearchModel PrepareCountryReportSearchModel(CountryReportSearchModel searchModel)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             //prepare available order statuses
-            _baseAdminModelFactory.PrepareOrderStatuses(model.AvailableOrderStatuses);
+            _baseAdminModelFactory.PrepareOrderStatuses(searchModel.AvailableOrderStatuses);
 
             //prepare available payment statuses
-            _baseAdminModelFactory.PreparePaymentStatuses(model.AvailablePaymentStatuses);
+            _baseAdminModelFactory.PreparePaymentStatuses(searchModel.AvailablePaymentStatuses);
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>
@@ -1896,8 +1903,8 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get parameters to filter countryReports
-            var orderStatus = searchModel.OrderStatusId > 0 ? (OrderStatus?)(searchModel.OrderStatusId) : null;
-            var paymentStatus = searchModel.PaymentStatusId > 0 ? (PaymentStatus?)(searchModel.PaymentStatusId) : null;
+            var orderStatus = searchModel.OrderStatusId > 0 ? (OrderStatus?)searchModel.OrderStatusId : null;
+            var paymentStatus = searchModel.PaymentStatusId > 0 ? (PaymentStatus?)searchModel.PaymentStatusId : null;
             var startDateValue = !searchModel.StartDate.HasValue ? null
                 : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
             var endDateValue = !searchModel.EndDate.HasValue ? null
@@ -1939,11 +1946,13 @@ namespace Nop.Web.Areas.Admin.Factories
         public virtual OrderAverageReportListModel PrepareOrderAverageReportListModel()
         {
             //get report
-            var report = new List<OrderAverageReportLineSummary>();
-            report.Add(_orderReportService.OrderAverageReport(0, OrderStatus.Pending));
-            report.Add(_orderReportService.OrderAverageReport(0, OrderStatus.Processing));
-            report.Add(_orderReportService.OrderAverageReport(0, OrderStatus.Complete));
-            report.Add(_orderReportService.OrderAverageReport(0, OrderStatus.Cancelled));
+            var report = new List<OrderAverageReportLineSummary>
+            {
+                _orderReportService.OrderAverageReport(0, OrderStatus.Pending),
+                _orderReportService.OrderAverageReport(0, OrderStatus.Processing),
+                _orderReportService.OrderAverageReport(0, OrderStatus.Complete),
+                _orderReportService.OrderAverageReport(0, OrderStatus.Cancelled)
+            };
 
             //prepare list model
             var model = new OrderAverageReportListModel
@@ -1955,7 +1964,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     SumThisWeekOrders = _priceFormatter.FormatPrice(reportItem.SumThisWeekOrders, true, false),
                     SumThisMonthOrders = _priceFormatter.FormatPrice(reportItem.SumThisMonthOrders, true, false),
                     SumThisYearOrders = _priceFormatter.FormatPrice(reportItem.SumThisYearOrders, true, false),
-                    SumAllTimeOrders = _priceFormatter.FormatPrice(reportItem.SumAllTimeOrders, true, false),
+                    SumAllTimeOrders = _priceFormatter.FormatPrice(reportItem.SumAllTimeOrders, true, false)
                 }),
                 Total = report.Count
             };
@@ -1976,7 +1985,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //not paid
             var orderStatuses = Enum.GetValues(typeof(OrderStatus)).Cast<int>().Where(os => os != (int)OrderStatus.Cancelled).ToList();
-            var paymentStatuses = new List<int>() { (int)PaymentStatus.Pending };
+            var paymentStatuses = new List<int> { (int)PaymentStatus.Pending };
             var psPending = _orderReportService.GetOrderAverageReportLine(psIds: paymentStatuses, osIds: orderStatuses);
             orderIncompleteReportModels.Add(new OrderIncompleteReportModel
             {
@@ -1991,7 +2000,7 @@ namespace Nop.Web.Areas.Admin.Factories
             });
 
             //not shipped
-            var shippingStatuses = new List<int>() { (int)ShippingStatus.NotYetShipped };
+            var shippingStatuses = new List<int> { (int)ShippingStatus.NotYetShipped };
             var ssPending = _orderReportService.GetOrderAverageReportLine(osIds: orderStatuses, ssIds: shippingStatuses);
             orderIncompleteReportModels.Add(new OrderIncompleteReportModel
             {
@@ -2006,7 +2015,7 @@ namespace Nop.Web.Areas.Admin.Factories
             });
 
             //pending
-            orderStatuses = new List<int>() { (int)OrderStatus.Pending };
+            orderStatuses = new List<int> { (int)OrderStatus.Pending };
             var osPending = _orderReportService.GetOrderAverageReportLine(osIds: orderStatuses);
             orderIncompleteReportModels.Add(new OrderIncompleteReportModel
             {

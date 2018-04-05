@@ -96,17 +96,17 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare shipping provider search model
         /// </summary>
-        /// <param name="model">Shipping provider search model</param>
+        /// <param name="searchModel">Shipping provider search model</param>
         /// <returns>Shipping provider search model</returns>
-        public virtual ShippingProviderSearchModel PrepareShippingProviderSearchModel(ShippingProviderSearchModel model)
+        public virtual ShippingProviderSearchModel PrepareShippingProviderSearchModel(ShippingProviderSearchModel searchModel)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>
@@ -146,17 +146,17 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare pickup point provider search model
         /// </summary>
-        /// <param name="model">Pickup point provider search model</param>
+        /// <param name="searchModel">Pickup point provider search model</param>
         /// <returns>Pickup point provider search model</returns>
-        public virtual PickupPointProviderSearchModel PreparePickupPointProviderSearchModel(PickupPointProviderSearchModel model)
+        public virtual PickupPointProviderSearchModel PreparePickupPointProviderSearchModel(PickupPointProviderSearchModel searchModel)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>
@@ -196,17 +196,17 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare shipping method search model
         /// </summary>
-        /// <param name="model">Shipping method search model</param>
+        /// <param name="searchModel">Shipping method search model</param>
         /// <returns>Shipping method search model</returns>
-        public virtual ShippingMethodSearchModel PrepareShippingMethodSearchModel(ShippingMethodSearchModel model)
+        public virtual ShippingMethodSearchModel PrepareShippingMethodSearchModel(ShippingMethodSearchModel searchModel)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>
@@ -268,34 +268,34 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare dates and ranges search model
         /// </summary>
-        /// <param name="model">Dates and ranges search model</param>
+        /// <param name="searchModel">Dates and ranges search model</param>
         /// <returns>Dates and ranges search model</returns>
-        public virtual DatesRangesSearchModel PrepareDatesRangesSearchModel(DatesRangesSearchModel model)
+        public virtual DatesRangesSearchModel PrepareDatesRangesSearchModel(DatesRangesSearchModel searchModel)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             //prepare nested search models
-            PrepareDeliveryDateSearchModel(model.DeliveryDateSearchModel);
-            PrepareProductAvailabilityRangeSearchModel(model.ProductAvailabilityRangeSearchModel);
+            PrepareDeliveryDateSearchModel(searchModel.DeliveryDateSearchModel);
+            PrepareProductAvailabilityRangeSearchModel(searchModel.ProductAvailabilityRangeSearchModel);
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>
         /// Prepare delivery date search model
         /// </summary>
-        /// <param name="model">Delivery date search model</param>
+        /// <param name="searchModel">Delivery date search model</param>
         /// <returns>Delivery date search model</returns>
-        public virtual DeliveryDateSearchModel PrepareDeliveryDateSearchModel(DeliveryDateSearchModel model)
+        public virtual DeliveryDateSearchModel PrepareDeliveryDateSearchModel(DeliveryDateSearchModel searchModel)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>
@@ -355,17 +355,17 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare product availability range search model
         /// </summary>
-        /// <param name="model">Product availability range search model</param>
+        /// <param name="searchModel">Product availability range search model</param>
         /// <returns>Product availability range search model</returns>
-        public virtual ProductAvailabilityRangeSearchModel PrepareProductAvailabilityRangeSearchModel(ProductAvailabilityRangeSearchModel model)
+        public virtual ProductAvailabilityRangeSearchModel PrepareProductAvailabilityRangeSearchModel(ProductAvailabilityRangeSearchModel searchModel)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>
@@ -426,17 +426,17 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare warehouse search model
         /// </summary>
-        /// <param name="model">Warehouse search model</param>
+        /// <param name="searchModel">Warehouse search model</param>
         /// <returns>Warehouse search model</returns>
-        public virtual WarehouseSearchModel PrepareWarehouseSearchModel(WarehouseSearchModel model)
+        public virtual WarehouseSearchModel PrepareWarehouseSearchModel(WarehouseSearchModel searchModel)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>

@@ -36,34 +36,34 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare measure search model
         /// </summary>
-        /// <param name="model">Measure search model</param>
+        /// <param name="searchModel">Measure search model</param>
         /// <returns>Measure search model</returns>
-        public virtual MeasureSearchModel PrepareMeasureSearchModel(MeasureSearchModel model)
+        public virtual MeasureSearchModel PrepareMeasureSearchModel(MeasureSearchModel searchModel)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             //prepare nested search models
-            PrepareMeasureDimensionSearchModel(model.MeasureDimensionSearchModel);
-            PrepareMeasureWeightSearchModel(model.MeasureWeightSearchModel);
+            PrepareMeasureDimensionSearchModel(searchModel.MeasureDimensionSearchModel);
+            PrepareMeasureWeightSearchModel(searchModel.MeasureWeightSearchModel);
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>
         /// Prepare measure dimension search model
         /// </summary>
-        /// <param name="model">Measure dimension search model</param>
+        /// <param name="searchModel">Measure dimension search model</param>
         /// <returns>Measure dimension search model</returns>
-        public virtual MeasureDimensionSearchModel PrepareMeasureDimensionSearchModel(MeasureDimensionSearchModel model)
+        public virtual MeasureDimensionSearchModel PrepareMeasureDimensionSearchModel(MeasureDimensionSearchModel searchModel)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>
@@ -101,17 +101,17 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare measure weight search model
         /// </summary>
-        /// <param name="model">Measure weight search model</param>
+        /// <param name="searchModel">Measure weight search model</param>
         /// <returns>Measure weight search model</returns>
-        public virtual MeasureWeightSearchModel PrepareMeasureWeightSearchModel(MeasureWeightSearchModel model)
+        public virtual MeasureWeightSearchModel PrepareMeasureWeightSearchModel(MeasureWeightSearchModel searchModel)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>

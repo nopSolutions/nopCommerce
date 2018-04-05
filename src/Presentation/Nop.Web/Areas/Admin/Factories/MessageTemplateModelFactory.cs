@@ -54,20 +54,20 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare message template search model
         /// </summary>
-        /// <param name="model">Message template search model</param>
+        /// <param name="searchModel">Message template search model</param>
         /// <returns>Message template search model</returns>
-        public virtual MessageTemplateSearchModel PrepareMessageTemplateSearchModel(MessageTemplateSearchModel model)
+        public virtual MessageTemplateSearchModel PrepareMessageTemplateSearchModel(MessageTemplateSearchModel searchModel)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             //prepare available stores
-            _baseAdminModelFactory.PrepareStores(model.AvailableStores);
+            _baseAdminModelFactory.PrepareStores(searchModel.AvailableStores);
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>
@@ -84,7 +84,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var messageTemplates = _messageTemplateService.GetAllMessageTemplates(storeId: searchModel.SearchStoreId);
             
             //prepare store names (to avoid loading for each message template)
-            var stores = _storeService.GetAllStores().Select(store => new { store.Id, store.Name });
+            var stores = _storeService.GetAllStores().Select(store => new { store.Id, store.Name }).ToList();
 
             //prepare list model
             var model = new MessageTemplateListModel
@@ -101,7 +101,8 @@ namespace Nop.Web.Areas.Admin.Factories
                         _storeMappingSupportedModelFactory.PrepareModelStores(messageTemplateModel, messageTemplate, false);
                         storeNames = stores
                             .Where(store => messageTemplateModel.SelectedStoreIds.Contains(store.Id)).Select(store => store.Name);
-                    }                    
+                    }  
+                    
                     messageTemplateModel.ListOfStores = string.Join(", ", storeNames);
 
                     return messageTemplateModel;

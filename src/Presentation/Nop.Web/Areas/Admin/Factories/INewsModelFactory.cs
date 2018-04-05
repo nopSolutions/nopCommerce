@@ -11,9 +11,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare news item search model
         /// </summary>
-        /// <param name="model">News item search model</param>
+        /// <param name="searchModel">News item search model</param>
         /// <returns>News item search model</returns>
-        NewsItemSearchModel PrepareNewsItemSearchModel(NewsItemSearchModel model);
+        NewsItemSearchModel PrepareNewsItemSearchModel(NewsItemSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged news item list model
@@ -34,10 +34,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare news comment search model
         /// </summary>
-        /// <param name="model">News comment search model</param>
+        /// <param name="searchModel">News comment search model</param>
         /// <param name="newsItem">News item</param>
         /// <returns>News comment search model</returns>
-        NewsCommentSearchModel PrepareNewsCommentSearchModel(NewsCommentSearchModel model, NewsItem newsItem);
+        NewsCommentSearchModel PrepareNewsCommentSearchModel(NewsCommentSearchModel searchModel, NewsItem newsItem);
 
         /// <summary>
         /// Prepare paged news comment list model

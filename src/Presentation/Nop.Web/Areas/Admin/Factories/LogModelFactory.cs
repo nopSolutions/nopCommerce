@@ -47,20 +47,20 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare log search model
         /// </summary>
-        /// <param name="model">Log search model</param>
+        /// <param name="searchModel">Log search model</param>
         /// <returns>Log search model</returns>
-        public virtual LogSearchModel PrepareLogSearchModel(LogSearchModel model)
+        public virtual LogSearchModel PrepareLogSearchModel(LogSearchModel searchModel)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             //prepare available log levels
-            _baseAdminModelFactory.PrepareLogLevels(model.AvailableLogLevels);
+            _baseAdminModelFactory.PrepareLogLevels(searchModel.AvailableLogLevels);
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>
@@ -78,7 +78,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 ? (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.CreatedOnFrom.Value, _dateTimeHelper.CurrentTimeZone) : null;
             var createdToFromValue = searchModel.CreatedOnTo.HasValue
                 ? (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.CreatedOnTo.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1) : null;
-            var logLevel = searchModel.LogLevelId > 0 ? (LogLevel?)(searchModel.LogLevelId) : null;
+            var logLevel = searchModel.LogLevelId > 0 ? (LogLevel?)searchModel.LogLevelId : null;
 
             //get log
             var logItems = _logger.GetAllLogs(message: searchModel.Message,

@@ -35,17 +35,17 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare schedule task search model
         /// </summary>
-        /// <param name="model">Schedule task search model</param>
+        /// <param name="searchModel">Schedule task search model</param>
         /// <returns>Schedule task search model</returns>
-        public virtual ScheduleTaskSearchModel PrepareScheduleTaskSearchModel(ScheduleTaskSearchModel model)
+        public virtual ScheduleTaskSearchModel PrepareScheduleTaskSearchModel(ScheduleTaskSearchModel searchModel)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>
@@ -82,11 +82,13 @@ namespace Nop.Web.Areas.Admin.Factories
                         scheduleTaskModel.LastStartUtc = _dateTimeHelper
                             .ConvertToUserTime(scheduleTask.LastStartUtc.Value, DateTimeKind.Utc).ToString("G");
                     }
+
                     if (scheduleTask.LastEndUtc.HasValue)
                     {
                         scheduleTaskModel.LastEndUtc = _dateTimeHelper
                             .ConvertToUserTime(scheduleTask.LastEndUtc.Value, DateTimeKind.Utc).ToString("G");
                     }
+
                     if (scheduleTask.LastSuccessUtc.HasValue)
                     {
                         scheduleTaskModel.LastSuccessUtc = _dateTimeHelper

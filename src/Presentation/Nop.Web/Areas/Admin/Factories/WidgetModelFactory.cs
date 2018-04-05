@@ -38,17 +38,17 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare widget search model
         /// </summary>
-        /// <param name="model">Widget search model</param>
+        /// <param name="searchModel">Widget search model</param>
         /// <returns>Widget search model</returns>
-        public virtual WidgetSearchModel PrepareWidgetSearchModel(WidgetSearchModel model)
+        public virtual WidgetSearchModel PrepareWidgetSearchModel(WidgetSearchModel searchModel)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>

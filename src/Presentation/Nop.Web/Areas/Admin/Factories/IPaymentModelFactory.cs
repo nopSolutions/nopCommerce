@@ -10,9 +10,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare payment method search model
         /// </summary>
-        /// <param name="model">Payment method search model</param>
+        /// <param name="searchModel">Payment method search model</param>
         /// <returns>Payment method search model</returns>
-        PaymentMethodSearchModel PreparePaymentMethodSearchModel(PaymentMethodSearchModel model);
+        PaymentMethodSearchModel PreparePaymentMethodSearchModel(PaymentMethodSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged payment method list model

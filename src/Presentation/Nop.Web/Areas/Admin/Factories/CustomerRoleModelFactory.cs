@@ -46,17 +46,17 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare customer role search model
         /// </summary>
-        /// <param name="model">Customer role search model</param>
+        /// <param name="searchModel">Customer role search model</param>
         /// <returns>Customer role search model</returns>
-        public virtual CustomerRoleSearchModel PrepareCustomerRoleSearchModel(CustomerRoleSearchModel model)
+        public virtual CustomerRoleSearchModel PrepareCustomerRoleSearchModel(CustomerRoleSearchModel searchModel)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>
@@ -120,35 +120,35 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare customer role product search model
         /// </summary>
-        /// <param name="model">Customer role product search model</param>
+        /// <param name="searchModel">Customer role product search model</param>
         /// <returns>Customer role product search model</returns>
-        public virtual CustomerRoleProductSearchModel PrepareCustomerRoleProductSearchModel(CustomerRoleProductSearchModel model)
+        public virtual CustomerRoleProductSearchModel PrepareCustomerRoleProductSearchModel(CustomerRoleProductSearchModel searchModel)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             //a vendor should have access only to his products
-            model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
+            searchModel.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
 
             //prepare available categories
-            _baseAdminModelFactory.PrepareCategories(model.AvailableCategories);
+            _baseAdminModelFactory.PrepareCategories(searchModel.AvailableCategories);
 
             //prepare available manufacturers
-            _baseAdminModelFactory.PrepareManufacturers(model.AvailableManufacturers);
+            _baseAdminModelFactory.PrepareManufacturers(searchModel.AvailableManufacturers);
 
             //prepare available stores
-            _baseAdminModelFactory.PrepareStores(model.AvailableStores);
+            _baseAdminModelFactory.PrepareStores(searchModel.AvailableStores);
 
             //prepare available vendors
-            _baseAdminModelFactory.PrepareVendors(model.AvailableVendors);
+            _baseAdminModelFactory.PrepareVendors(searchModel.AvailableVendors);
 
             //prepare available product types
-            _baseAdminModelFactory.PrepareProductTypes(model.AvailableProductTypes);
+            _baseAdminModelFactory.PrepareProductTypes(searchModel.AvailableProductTypes);
 
             //prepare page parameters
-            model.SetPopupGridPageSize();
+            searchModel.SetPopupGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>

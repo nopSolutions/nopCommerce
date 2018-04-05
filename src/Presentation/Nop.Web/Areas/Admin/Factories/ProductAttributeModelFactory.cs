@@ -41,17 +41,17 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare product attribute search model
         /// </summary>
-        /// <param name="model">Product attribute search model</param>
+        /// <param name="searchModel">Product attribute search model</param>
         /// <returns>Product attribute search model</returns>
-        public virtual ProductAttributeSearchModel PrepareProductAttributeSearchModel(ProductAttributeSearchModel model)
+        public virtual ProductAttributeSearchModel PrepareProductAttributeSearchModel(ProductAttributeSearchModel searchModel)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>
@@ -118,24 +118,24 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare predefined product attribute value search model
         /// </summary>
-        /// <param name="model">Predefined product attribute value search model</param>
+        /// <param name="searchModel">Predefined product attribute value search model</param>
         /// <param name="productAttribute">Product attribute</param>
         /// <returns>Predefined product attribute value search model</returns>
         public virtual PredefinedProductAttributeValueSearchModel PreparePredefinedProductAttributeValueSearchModel(
-            PredefinedProductAttributeValueSearchModel model, ProductAttribute productAttribute)
+            PredefinedProductAttributeValueSearchModel searchModel, ProductAttribute productAttribute)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             if (productAttribute == null)
                 throw new ArgumentNullException(nameof(productAttribute));
 
-            model.ProductAttributeId = productAttribute.Id;
+            searchModel.ProductAttributeId = productAttribute.Id;
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>
@@ -174,7 +174,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     //fill in additional values (not existing in the entity)
                     predefinedProductAttributeValueModel.WeightAdjustmentStr = value.WeightAdjustment.ToString("G29");
                     predefinedProductAttributeValueModel.PriceAdjustmentStr = value.PriceAdjustment
-                        .ToString("G29") + (value.PriceAdjustmentUsePercentage ? " %" : "");
+                        .ToString("G29") + (value.PriceAdjustmentUsePercentage ? " %" : string.Empty);
 
                     return predefinedProductAttributeValueModel;
                 }),
@@ -234,24 +234,24 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare search model of products that use the product attribute
         /// </summary>
-        /// <param name="model">Search model of products that use the product attribute</param>
+        /// <param name="searchModel">Search model of products that use the product attribute</param>
         /// <param name="productAttribute">Product attribute</param>
         /// <returns>Search model of products that use the product attribute</returns>
-        public virtual ProductAttributeProductSearchModel PrepareProductAttributeProductSearchModel(ProductAttributeProductSearchModel model,
+        public virtual ProductAttributeProductSearchModel PrepareProductAttributeProductSearchModel(ProductAttributeProductSearchModel searchModel,
             ProductAttribute productAttribute)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             if (productAttribute == null)
                 throw new ArgumentNullException(nameof(productAttribute));
 
-            model.ProductAttributeId = productAttribute.Id;
+            searchModel.ProductAttributeId = productAttribute.Id;
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>

@@ -11,9 +11,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare customer role search model
         /// </summary>
-        /// <param name="model">Customer role search model</param>
+        /// <param name="searchModel">Customer role search model</param>
         /// <returns>Customer role search model</returns>
-        CustomerRoleSearchModel PrepareCustomerRoleSearchModel(CustomerRoleSearchModel model);
+        CustomerRoleSearchModel PrepareCustomerRoleSearchModel(CustomerRoleSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged customer role list model
@@ -34,9 +34,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare customer role product search model
         /// </summary>
-        /// <param name="model">Customer role product search model</param>
+        /// <param name="searchModel">Customer role product search model</param>
         /// <returns>Customer role product search model</returns>
-        CustomerRoleProductSearchModel PrepareCustomerRoleProductSearchModel(CustomerRoleProductSearchModel model);
+        CustomerRoleProductSearchModel PrepareCustomerRoleProductSearchModel(CustomerRoleProductSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged customer role product list model

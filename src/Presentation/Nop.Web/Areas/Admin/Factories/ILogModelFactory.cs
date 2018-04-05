@@ -11,9 +11,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare log search model
         /// </summary>
-        /// <param name="model">Log search model</param>
+        /// <param name="searchModel">Log search model</param>
         /// <returns>Log search model</returns>
-        LogSearchModel PrepareLogSearchModel(LogSearchModel model);
+        LogSearchModel PrepareLogSearchModel(LogSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged log list model

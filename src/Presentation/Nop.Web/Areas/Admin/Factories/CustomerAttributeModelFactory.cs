@@ -45,17 +45,17 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare customer attribute search model
         /// </summary>
-        /// <param name="model">Customer attribute search model</param>
+        /// <param name="searchModel">Customer attribute search model</param>
         /// <returns>Customer attribute search model</returns>
-        public virtual CustomerAttributeSearchModel PrepareCustomerAttributeSearchModel(CustomerAttributeSearchModel model)
+        public virtual CustomerAttributeSearchModel PrepareCustomerAttributeSearchModel(CustomerAttributeSearchModel searchModel)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>
@@ -127,24 +127,24 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare customer attribute value search model
         /// </summary>
-        /// <param name="model">Customer attribute value search model</param>
+        /// <param name="searchModel">Customer attribute value search model</param>
         /// <param name="customerAttribute">Customer attribute</param>
         /// <returns>Customer attribute value search model</returns>
-        public virtual CustomerAttributeValueSearchModel PrepareCustomerAttributeValueSearchModel(CustomerAttributeValueSearchModel model,
+        public virtual CustomerAttributeValueSearchModel PrepareCustomerAttributeValueSearchModel(CustomerAttributeValueSearchModel searchModel,
             CustomerAttribute customerAttribute)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             if (customerAttribute == null)
                 throw new ArgumentNullException(nameof(customerAttribute));
 
-            model.CustomerAttributeId = customerAttribute.Id;
+            searchModel.CustomerAttributeId = customerAttribute.Id;
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>

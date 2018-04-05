@@ -10,9 +10,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare tax provider search model
         /// </summary>
-        /// <param name="model">Tax provider search model</param>
+        /// <param name="searchModel">Tax provider search model</param>
         /// <returns>Tax provider search model</returns>
-        TaxProviderSearchModel PrepareTaxProviderSearchModel(TaxProviderSearchModel model);
+        TaxProviderSearchModel PrepareTaxProviderSearchModel(TaxProviderSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged tax provider list model
@@ -24,9 +24,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare tax category search model
         /// </summary>
-        /// <param name="model">Tax category search model</param>
+        /// <param name="searchModel">Tax category search model</param>
         /// <returns>Tax category search model</returns>
-        TaxCategorySearchModel PrepareTaxCategorySearchModel(TaxCategorySearchModel model);
+        TaxCategorySearchModel PrepareTaxCategorySearchModel(TaxCategorySearchModel searchModel);
 
         /// <summary>
         /// Prepare paged tax category list model

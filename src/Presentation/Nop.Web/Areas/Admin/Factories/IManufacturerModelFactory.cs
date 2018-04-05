@@ -11,9 +11,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare manufacturer search model
         /// </summary>
-        /// <param name="model">Manufacturer search model</param>
+        /// <param name="searchModel">Manufacturer search model</param>
         /// <returns>Manufacturer search model</returns>
-        ManufacturerSearchModel PrepareManufacturerSearchModel(ManufacturerSearchModel model);
+        ManufacturerSearchModel PrepareManufacturerSearchModel(ManufacturerSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged manufacturer list model
@@ -35,10 +35,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare manufacturer product search model
         /// </summary>
-        /// <param name="model">Manufacturer product search model</param>
+        /// <param name="searchModel">Manufacturer product search model</param>
         /// <param name="manufacturer">Manufacturer</param>
         /// <returns>Manufacturer product search model</returns>
-        ManufacturerProductSearchModel PrepareManufacturerProductSearchModel(ManufacturerProductSearchModel model,
+        ManufacturerProductSearchModel PrepareManufacturerProductSearchModel(ManufacturerProductSearchModel searchModel,
             Manufacturer manufacturer);
 
         /// <summary>
@@ -53,9 +53,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare product search model to add to the manufacturer
         /// </summary>
-        /// <param name="model">Product search model to add to the manufacturer</param>
+        /// <param name="searchModel">Product search model to add to the manufacturer</param>
         /// <returns>Product search model to add to the manufacturer</returns>
-        AddProductToManufacturerSearchModel PrepareAddProductToManufacturerSearchModel(AddProductToManufacturerSearchModel model);
+        AddProductToManufacturerSearchModel PrepareAddProductToManufacturerSearchModel(AddProductToManufacturerSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged product list model to add to the manufacturer

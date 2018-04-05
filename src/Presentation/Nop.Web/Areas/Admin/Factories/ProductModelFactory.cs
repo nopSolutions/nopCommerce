@@ -4,7 +4,6 @@ using System.ComponentModel;
 using System.Linq;
 using System.Net;
 using System.Text;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Caching;
@@ -15,7 +14,6 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
 using Nop.Services.Catalog;
-using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Discounts;
@@ -26,7 +24,6 @@ using Nop.Services.Orders;
 using Nop.Services.Seo;
 using Nop.Services.Shipping;
 using Nop.Services.Stores;
-using Nop.Services.Vendors;
 using Nop.Web.Areas.Admin.Extensions;
 using Nop.Web.Areas.Admin.Infrastructure.Cache;
 using Nop.Web.Areas.Admin.Models.Catalog;
@@ -229,11 +226,12 @@ namespace Nop.Web.Areas.Admin.Factories
                         Value = sa.Id.ToString()
                     });
                 }
+
                 return availableSpecificationAttributes;
             });
 
             //options of preselected specification attribute
-            if (model.AvailableAttributes.Any() && int.TryParse(model.AvailableAttributes.FirstOrDefault()?.Value, out int selectedAttributeId))
+            if (model.AvailableAttributes.Any() && int.TryParse(model.AvailableAttributes.FirstOrDefault()?.Value, out var selectedAttributeId))
             {
                 model.AvailableOptions = _specificationAttributeService
                     .GetSpecificationAttributeOptionsBySpecificationAttribute(selectedAttributeId)
@@ -260,24 +258,28 @@ namespace Nop.Web.Areas.Admin.Factories
                     _localizationService.GetResource("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules.MinLength"),
                     attributeMapping.ValidationMinLength);
             }
+
             if (attributeMapping.ValidationMaxLength.HasValue)
             {
                 validationRules.AppendFormat("{0}: {1}<br />",
                     _localizationService.GetResource("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules.MaxLength"),
                     attributeMapping.ValidationMaxLength);
             }
+
             if (!string.IsNullOrEmpty(attributeMapping.ValidationFileAllowedExtensions))
             {
                 validationRules.AppendFormat("{0}: {1}<br />",
                     _localizationService.GetResource("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules.FileAllowedExtensions"),
                     WebUtility.HtmlEncode(attributeMapping.ValidationFileAllowedExtensions));
             }
+
             if (attributeMapping.ValidationFileMaximumSize.HasValue)
             {
                 validationRules.AppendFormat("{0}: {1}<br />",
                     _localizationService.GetResource("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules.FileMaximumSize"),
                     attributeMapping.ValidationFileMaximumSize);
             }
+
             if (!string.IsNullOrEmpty(attributeMapping.DefaultValue))
             {
                 validationRules.AppendFormat("{0}: {1}<br />",
@@ -396,56 +398,56 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare product search model
         /// </summary>
-        /// <param name="model">Product search model</param>
+        /// <param name="searchModel">Product search model</param>
         /// <returns>Product search model</returns>
-        public virtual ProductSearchModel PrepareProductSearchModel(ProductSearchModel model)
+        public virtual ProductSearchModel PrepareProductSearchModel(ProductSearchModel searchModel)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             //a vendor should have access only to his products
-            model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
-            model.AllowVendorsToImportProducts = _vendorSettings.AllowVendorsToImportProducts;
+            searchModel.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
+            searchModel.AllowVendorsToImportProducts = _vendorSettings.AllowVendorsToImportProducts;
 
             //prepare available categories
-            _baseAdminModelFactory.PrepareCategories(model.AvailableCategories);
+            _baseAdminModelFactory.PrepareCategories(searchModel.AvailableCategories);
 
             //prepare available manufacturers
-            _baseAdminModelFactory.PrepareManufacturers(model.AvailableManufacturers);
+            _baseAdminModelFactory.PrepareManufacturers(searchModel.AvailableManufacturers);
 
             //prepare available stores
-            _baseAdminModelFactory.PrepareStores(model.AvailableStores);
+            _baseAdminModelFactory.PrepareStores(searchModel.AvailableStores);
 
             //prepare available vendors
-            _baseAdminModelFactory.PrepareVendors(model.AvailableVendors);
+            _baseAdminModelFactory.PrepareVendors(searchModel.AvailableVendors);
 
             //prepare available product types
-            _baseAdminModelFactory.PrepareProductTypes(model.AvailableProductTypes);
+            _baseAdminModelFactory.PrepareProductTypes(searchModel.AvailableProductTypes);
 
             //prepare available warehouses
-            _baseAdminModelFactory.PrepareWarehouses(model.AvailableWarehouses);
+            _baseAdminModelFactory.PrepareWarehouses(searchModel.AvailableWarehouses);
 
             //prepare "published" filter (0 - all; 1 - published only; 2 - unpublished only)
-            model.AvailablePublishedOptions.Add(new SelectListItem
+            searchModel.AvailablePublishedOptions.Add(new SelectListItem
             {
                 Value = "0",
                 Text = _localizationService.GetResource("Admin.Catalog.Products.List.SearchPublished.All")
             });
-            model.AvailablePublishedOptions.Add(new SelectListItem
+            searchModel.AvailablePublishedOptions.Add(new SelectListItem
             {
                 Value = "1",
                 Text = _localizationService.GetResource("Admin.Catalog.Products.List.SearchPublished.PublishedOnly")
             });
-            model.AvailablePublishedOptions.Add(new SelectListItem
+            searchModel.AvailablePublishedOptions.Add(new SelectListItem
             {
                 Value = "2",
                 Text = _localizationService.GetResource("Admin.Catalog.Products.List.SearchPublished.UnpublishedOnly")
             });
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>
@@ -459,7 +461,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get parameters to filter comments
-            var publishedOnly = searchModel.SearchPublishedId == 0 ? null : searchModel.SearchPublishedId == 1 ? true : (bool?)false;
+            var overridePublished = searchModel.SearchPublishedId == 0 ? null : (bool?)(searchModel.SearchPublishedId == 1);
             if (_workContext.CurrentVendor != null)
                 searchModel.SearchVendorId = _workContext.CurrentVendor.Id;
             var categoryIds = new List<int> { searchModel.SearchCategoryId };
@@ -478,7 +480,8 @@ namespace Nop.Web.Areas.Admin.Factories
                 warehouseId: searchModel.SearchWarehouseId,
                 productType: searchModel.SearchProductTypeId > 0 ? (ProductType?)searchModel.SearchProductTypeId : null,
                 keywords: searchModel.SearchProductName,
-                pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
+                pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize,
+                overridePublished: overridePublished);
 
             //prepare list model
             var model = new ProductListModel
@@ -493,7 +496,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     //fill in additional values (not existing in the entity)
                     var defaultProductPicture = _pictureService.GetPicturesByProductId(product.Id, 1).FirstOrDefault();
-                    productModel.PictureThumbnailUrl = _pictureService.GetPictureUrl(defaultProductPicture, 75, true);
+                    productModel.PictureThumbnailUrl = _pictureService.GetPictureUrl(defaultProductPicture, 75);
                     productModel.ProductTypeName = product.ProductType.GetLocalizedEnum(_localizationService, _workContext);
                     if (product.ProductType == ProductType.SimpleProduct && product.ManageInventoryMethod == ManageInventoryMethod.ManageStock)
                         productModel.StockQuantityStr = product.GetTotalStockQuantity().ToString();
@@ -528,6 +531,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     model.AssociatedToProductId = product.ParentGroupedProductId;
                     model.AssociatedToProductName = parentGroupedProduct.Name;
                 }
+
                 model.CreatedOn = _dateTimeHelper.ConvertToUserTime(product.CreatedOnUtc, DateTimeKind.Utc);
                 model.UpdatedOn = _dateTimeHelper.ConvertToUserTime(product.UpdatedOnUtc, DateTimeKind.Utc);
                 model.LastStockQuantity = product.StockQuantity;
@@ -658,7 +662,7 @@ namespace Nop.Web.Areas.Admin.Factories
             _baseAdminModelFactory.PrepareCategories(model.AvailableCategories, false);
             foreach (var categoryItem in model.AvailableCategories)
             {
-                categoryItem.Selected = int.TryParse(categoryItem.Value, out int categoryId)
+                categoryItem.Selected = int.TryParse(categoryItem.Value, out var categoryId)
                     && model.SelectedCategoryIds.Contains(categoryId);
             }
 
@@ -666,7 +670,7 @@ namespace Nop.Web.Areas.Admin.Factories
             _baseAdminModelFactory.PrepareManufacturers(model.AvailableManufacturers, false);
             foreach (var manufacturerItem in model.AvailableManufacturers)
             {
-                manufacturerItem.Selected = int.TryParse(manufacturerItem.Value, out int manufacturerId)
+                manufacturerItem.Selected = int.TryParse(manufacturerItem.Value, out var manufacturerId)
                     && model.SelectedManufacturerIds.Contains(manufacturerId);
             }
 
@@ -686,34 +690,34 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare required product search model to add to the product
         /// </summary>
-        /// <param name="model">Required product search model to add to the product</param>
+        /// <param name="searchModel">Required product search model to add to the product</param>
         /// <returns>Required product search model to add to the product</returns>
-        public virtual AddRequiredProductSearchModel PrepareAddRequiredProductSearchModel(AddRequiredProductSearchModel model)
+        public virtual AddRequiredProductSearchModel PrepareAddRequiredProductSearchModel(AddRequiredProductSearchModel searchModel)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
-            model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
+            searchModel.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
 
             //prepare available categories
-            _baseAdminModelFactory.PrepareCategories(model.AvailableCategories);
+            _baseAdminModelFactory.PrepareCategories(searchModel.AvailableCategories);
 
             //prepare available manufacturers
-            _baseAdminModelFactory.PrepareManufacturers(model.AvailableManufacturers);
+            _baseAdminModelFactory.PrepareManufacturers(searchModel.AvailableManufacturers);
 
             //prepare available stores
-            _baseAdminModelFactory.PrepareStores(model.AvailableStores);
+            _baseAdminModelFactory.PrepareStores(searchModel.AvailableStores);
 
             //prepare available vendors
-            _baseAdminModelFactory.PrepareVendors(model.AvailableVendors);
+            _baseAdminModelFactory.PrepareVendors(searchModel.AvailableVendors);
 
             //prepare available product types
-            _baseAdminModelFactory.PrepareProductTypes(model.AvailableProductTypes);
+            _baseAdminModelFactory.PrepareProductTypes(searchModel.AvailableProductTypes);
 
             //prepare page parameters
-            model.SetPopupGridPageSize();
+            searchModel.SetPopupGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>
@@ -754,29 +758,29 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare related product search model
         /// </summary>
-        /// <param name="model">Related product search model</param>
+        /// <param name="searchModel">Related product search model</param>
         /// <param name="product">Product</param>
         /// <returns>Related product search model</returns>
-        public virtual RelatedProductSearchModel PrepareRelatedProductSearchModel(RelatedProductSearchModel model, Product product)
+        public virtual RelatedProductSearchModel PrepareRelatedProductSearchModel(RelatedProductSearchModel searchModel, Product product)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
-            model.ProductId = product.Id;
+            searchModel.ProductId = product.Id;
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>
         /// Prepare paged related product list model
         /// </summary>
-        /// <param name="model">Related product search model</param>
+        /// <param name="searchModel">Related product search model</param>
         /// <param name="product">Product</param>
         /// <returns>Related product list model</returns>
         public virtual RelatedProductListModel PrepareRelatedProductListModel(RelatedProductSearchModel searchModel, Product product)
@@ -817,34 +821,34 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare related product search model to add to the product
         /// </summary>
-        /// <param name="model">Related product search model to add to the product</param>
+        /// <param name="searchModel">Related product search model to add to the product</param>
         /// <returns>Related product search model to add to the product</returns>
-        public virtual AddRelatedProductSearchModel PrepareAddRelatedProductSearchModel(AddRelatedProductSearchModel model)
+        public virtual AddRelatedProductSearchModel PrepareAddRelatedProductSearchModel(AddRelatedProductSearchModel searchModel)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
-            model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
+            searchModel.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
 
             //prepare available categories
-            _baseAdminModelFactory.PrepareCategories(model.AvailableCategories);
+            _baseAdminModelFactory.PrepareCategories(searchModel.AvailableCategories);
 
             //prepare available manufacturers
-            _baseAdminModelFactory.PrepareManufacturers(model.AvailableManufacturers);
+            _baseAdminModelFactory.PrepareManufacturers(searchModel.AvailableManufacturers);
 
             //prepare available stores
-            _baseAdminModelFactory.PrepareStores(model.AvailableStores);
+            _baseAdminModelFactory.PrepareStores(searchModel.AvailableStores);
 
             //prepare available vendors
-            _baseAdminModelFactory.PrepareVendors(model.AvailableVendors);
+            _baseAdminModelFactory.PrepareVendors(searchModel.AvailableVendors);
 
             //prepare available product types
-            _baseAdminModelFactory.PrepareProductTypes(model.AvailableProductTypes);
+            _baseAdminModelFactory.PrepareProductTypes(searchModel.AvailableProductTypes);
 
             //prepare page parameters
-            model.SetPopupGridPageSize();
+            searchModel.SetPopupGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>
@@ -885,29 +889,29 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare cross-sell product search model
         /// </summary>
-        /// <param name="model">Cross-sell product search model</param>
+        /// <param name="searchModel">Cross-sell product search model</param>
         /// <param name="product">Product</param>
         /// <returns>Cross-sell product search model</returns>
-        public virtual CrossSellProductSearchModel PrepareCrossSellProductSearchModel(CrossSellProductSearchModel model, Product product)
+        public virtual CrossSellProductSearchModel PrepareCrossSellProductSearchModel(CrossSellProductSearchModel searchModel, Product product)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
-            model.ProductId = product.Id;
+            searchModel.ProductId = product.Id;
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>
         /// Prepare paged cross-sell product list model
         /// </summary>
-        /// <param name="model">Cross-sell product search model</param>
+        /// <param name="searchModel">Cross-sell product search model</param>
         /// <param name="product">Product</param>
         /// <returns>Cross-sell product list model</returns>
         public virtual CrossSellProductListModel PrepareCrossSellProductListModel(CrossSellProductSearchModel searchModel, Product product)
@@ -947,34 +951,34 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare cross-sell product search model to add to the product
         /// </summary>
-        /// <param name="model">Cross-sell product search model to add to the product</param>
+        /// <param name="searchModel">Cross-sell product search model to add to the product</param>
         /// <returns>Cross-sell product search model to add to the product</returns>
-        public virtual AddCrossSellProductSearchModel PrepareAddCrossSellProductSearchModel(AddCrossSellProductSearchModel model)
+        public virtual AddCrossSellProductSearchModel PrepareAddCrossSellProductSearchModel(AddCrossSellProductSearchModel searchModel)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
-            model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
+            searchModel.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
 
             //prepare available categories
-            _baseAdminModelFactory.PrepareCategories(model.AvailableCategories);
+            _baseAdminModelFactory.PrepareCategories(searchModel.AvailableCategories);
 
             //prepare available manufacturers
-            _baseAdminModelFactory.PrepareManufacturers(model.AvailableManufacturers);
+            _baseAdminModelFactory.PrepareManufacturers(searchModel.AvailableManufacturers);
 
             //prepare available stores
-            _baseAdminModelFactory.PrepareStores(model.AvailableStores);
+            _baseAdminModelFactory.PrepareStores(searchModel.AvailableStores);
 
             //prepare available vendors
-            _baseAdminModelFactory.PrepareVendors(model.AvailableVendors);
+            _baseAdminModelFactory.PrepareVendors(searchModel.AvailableVendors);
 
             //prepare available product types
-            _baseAdminModelFactory.PrepareProductTypes(model.AvailableProductTypes);
+            _baseAdminModelFactory.PrepareProductTypes(searchModel.AvailableProductTypes);
 
             //prepare page parameters
-            model.SetPopupGridPageSize();
+            searchModel.SetPopupGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>
@@ -1015,29 +1019,29 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare associated product search model
         /// </summary>
-        /// <param name="model">Associated product search model</param>
+        /// <param name="searchModel">Associated product search model</param>
         /// <param name="product">Product</param>
         /// <returns>Associated product search model</returns>
-        public virtual AssociatedProductSearchModel PrepareAssociatedProductSearchModel(AssociatedProductSearchModel model, Product product)
+        public virtual AssociatedProductSearchModel PrepareAssociatedProductSearchModel(AssociatedProductSearchModel searchModel, Product product)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
-            model.ProductId = product.Id;
+            searchModel.ProductId = product.Id;
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>
         /// Prepare paged associated product list model
         /// </summary>
-        /// <param name="model">Associated product search model</param>
+        /// <param name="searchModel">Associated product search model</param>
         /// <param name="product">Product</param>
         /// <returns>Associated product list model</returns>
         public virtual AssociatedProductListModel PrepareAssociatedProductListModel(AssociatedProductSearchModel searchModel, Product product)
@@ -1072,34 +1076,34 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare associated product search model to add to the product
         /// </summary>
-        /// <param name="model">Associated product search model to add to the product</param>
+        /// <param name="searchModel">Associated product search model to add to the product</param>
         /// <returns>Associated product search model to add to the product</returns>
-        public virtual AddAssociatedProductSearchModel PrepareAddAssociatedProductSearchModel(AddAssociatedProductSearchModel model)
+        public virtual AddAssociatedProductSearchModel PrepareAddAssociatedProductSearchModel(AddAssociatedProductSearchModel searchModel)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
-            model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
+            searchModel.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
 
             //prepare available categories
-            _baseAdminModelFactory.PrepareCategories(model.AvailableCategories);
+            _baseAdminModelFactory.PrepareCategories(searchModel.AvailableCategories);
 
             //prepare available manufacturers
-            _baseAdminModelFactory.PrepareManufacturers(model.AvailableManufacturers);
+            _baseAdminModelFactory.PrepareManufacturers(searchModel.AvailableManufacturers);
 
             //prepare available stores
-            _baseAdminModelFactory.PrepareStores(model.AvailableStores);
+            _baseAdminModelFactory.PrepareStores(searchModel.AvailableStores);
 
             //prepare available vendors
-            _baseAdminModelFactory.PrepareVendors(model.AvailableVendors);
+            _baseAdminModelFactory.PrepareVendors(searchModel.AvailableVendors);
 
             //prepare available product types
-            _baseAdminModelFactory.PrepareProductTypes(model.AvailableProductTypes);
+            _baseAdminModelFactory.PrepareProductTypes(searchModel.AvailableProductTypes);
 
             //prepare page parameters
-            model.SetPopupGridPageSize();
+            searchModel.SetPopupGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>
@@ -1153,29 +1157,29 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare product picture search model
         /// </summary>
-        /// <param name="model">Product picture search model</param>
+        /// <param name="searchModel">Product picture search model</param>
         /// <param name="product">Product</param>
         /// <returns>Product picture search model</returns>
-        public virtual ProductPictureSearchModel PrepareProductPictureSearchModel(ProductPictureSearchModel model, Product product)
+        public virtual ProductPictureSearchModel PrepareProductPictureSearchModel(ProductPictureSearchModel searchModel, Product product)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
-            model.ProductId = product.Id;
+            searchModel.ProductId = product.Id;
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>
         /// Prepare paged product picture list model
         /// </summary>
-        /// <param name="model">Product picture search model</param>
+        /// <param name="searchModel">Product picture search model</param>
         /// <param name="product">Product</param>
         /// <returns>Product picture list model</returns>
         public virtual ProductPictureListModel PrepareProductPictureListModel(ProductPictureSearchModel searchModel, Product product)
@@ -1222,30 +1226,30 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare product specification attribute search model
         /// </summary>
-        /// <param name="model">Product specification attribute search model</param>
+        /// <param name="searchModel">Product specification attribute search model</param>
         /// <param name="product">Product</param>
         /// <returns>Product specification attribute search model</returns>
         public virtual ProductSpecificationAttributeSearchModel PrepareProductSpecificationAttributeSearchModel(
-            ProductSpecificationAttributeSearchModel model, Product product)
+            ProductSpecificationAttributeSearchModel searchModel, Product product)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
-            model.ProductId = product.Id;
+            searchModel.ProductId = product.Id;
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>
         /// Prepare paged product specification attribute list model
         /// </summary>
-        /// <param name="model">Product specification attribute search model</param>
+        /// <param name="searchModel">Product specification attribute search model</param>
         /// <param name="product">Product</param>
         /// <returns>Product specification attribute list model</returns>
         public virtual ProductSpecificationAttributeListModel PrepareProductSpecificationAttributeListModel(
@@ -1307,17 +1311,17 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare product tag search model
         /// </summary>
-        /// <param name="model">Product tag search model</param>
+        /// <param name="searchModel">Product tag search model</param>
         /// <returns>Product tag search model</returns>
-        public virtual ProductTagSearchModel PrepareProductTagSearchModel(ProductTagSearchModel model)
+        public virtual ProductTagSearchModel PrepareProductTagSearchModel(ProductTagSearchModel searchModel)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>
@@ -1396,29 +1400,29 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare product order search model
         /// </summary>
-        /// <param name="model">Product order search model</param>
+        /// <param name="searchModel">Product order search model</param>
         /// <param name="product">Product</param>
         /// <returns>Product order search model</returns>
-        public virtual ProductOrderSearchModel PrepareProductOrderSearchModel(ProductOrderSearchModel model, Product product)
+        public virtual ProductOrderSearchModel PrepareProductOrderSearchModel(ProductOrderSearchModel searchModel, Product product)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
-            model.ProductId = product.Id;
+            searchModel.ProductId = product.Id;
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>
         /// Prepare paged product order list model
         /// </summary>
-        /// <param name="model">Product order search model</param>
+        /// <param name="searchModel">Product order search model</param>
         /// <param name="product">Product</param>
         /// <returns>Product order list model</returns>
         public virtual ProductOrderListModel PrepareProductOrderListModel(ProductOrderSearchModel searchModel, Product product)
@@ -1466,34 +1470,34 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare low stock product search model
         /// </summary>
-        /// <param name="model">Low stock product search model</param>
+        /// <param name="searchModel">Low stock product search model</param>
         /// <returns>Low stock product search model</returns>
-        public virtual LowStockProductSearchModel PrepareLowStockProductSearchModel(LowStockProductSearchModel model)
+        public virtual LowStockProductSearchModel PrepareLowStockProductSearchModel(LowStockProductSearchModel searchModel)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             //prepare "published" filter (0 - all; 1 - published only; 2 - unpublished only)
-            model.AvailablePublishedOptions.Add(new SelectListItem
+            searchModel.AvailablePublishedOptions.Add(new SelectListItem
             {
                 Value = "0",
                 Text = _localizationService.GetResource("Admin.Catalog.LowStockReport.SearchPublished.All")
             });
-            model.AvailablePublishedOptions.Add(new SelectListItem
+            searchModel.AvailablePublishedOptions.Add(new SelectListItem
             {
                 Value = "1",
                 Text = _localizationService.GetResource("Admin.Catalog.LowStockReport.SearchPublished.PublishedOnly")
             });
-            model.AvailablePublishedOptions.Add(new SelectListItem
+            searchModel.AvailablePublishedOptions.Add(new SelectListItem
             {
                 Value = "2",
                 Text = _localizationService.GetResource("Admin.Catalog.LowStockReport.SearchPublished.UnpublishedOnly")
             });
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>
@@ -1551,26 +1555,26 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare bulk edit product search model
         /// </summary>
-        /// <param name="model">Bulk edit product search model</param>
+        /// <param name="searchModel">Bulk edit product search model</param>
         /// <returns>Bulk edit product search model</returns>
-        public virtual BulkEditProductSearchModel PrepareBulkEditProductSearchModel(BulkEditProductSearchModel model)
+        public virtual BulkEditProductSearchModel PrepareBulkEditProductSearchModel(BulkEditProductSearchModel searchModel)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             //prepare available categories
-            _baseAdminModelFactory.PrepareCategories(model.AvailableCategories);
+            _baseAdminModelFactory.PrepareCategories(searchModel.AvailableCategories);
 
             //prepare available manufacturers
-            _baseAdminModelFactory.PrepareManufacturers(model.AvailableManufacturers);
+            _baseAdminModelFactory.PrepareManufacturers(searchModel.AvailableManufacturers);
 
             //prepare available product types
-            _baseAdminModelFactory.PrepareProductTypes(model.AvailableProductTypes);
+            _baseAdminModelFactory.PrepareProductTypes(searchModel.AvailableProductTypes);
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>
@@ -1629,29 +1633,29 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare tier price search model
         /// </summary>
-        /// <param name="model">Tier price search model</param>
+        /// <param name="searchModel">Tier price search model</param>
         /// <param name="product">Product</param>
         /// <returns>Tier price search model</returns>
-        public virtual TierPriceSearchModel PrepareTierPriceSearchModel(TierPriceSearchModel model, Product product)
+        public virtual TierPriceSearchModel PrepareTierPriceSearchModel(TierPriceSearchModel searchModel, Product product)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
-            model.ProductId = product.Id;
+            searchModel.ProductId = product.Id;
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>
         /// Prepare paged tier price list model
         /// </summary>
-        /// <param name="model">Tier price search model</param>
+        /// <param name="searchModel">Tier price search model</param>
         /// <param name="product">Product</param>
         /// <returns>Tier price list model</returns>
         public virtual TierPriceListModel PrepareTierPriceListModel(TierPriceSearchModel searchModel, Product product)
@@ -1741,32 +1745,32 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare stock quantity history search model
         /// </summary>
-        /// <param name="model">Stock quantity history search model</param>
+        /// <param name="searchModel">Stock quantity history search model</param>
         /// <param name="product">Product</param>
         /// <returns>Stock quantity history search model</returns>
-        public virtual StockQuantityHistorySearchModel PrepareStockQuantityHistorySearchModel(StockQuantityHistorySearchModel model, Product product)
+        public virtual StockQuantityHistorySearchModel PrepareStockQuantityHistorySearchModel(StockQuantityHistorySearchModel searchModel, Product product)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
-            model.ProductId = product.Id;
+            searchModel.ProductId = product.Id;
 
             //prepare available warehouses
-            _baseAdminModelFactory.PrepareWarehouses(model.AvailableWarehouses);
+            _baseAdminModelFactory.PrepareWarehouses(searchModel.AvailableWarehouses);
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>
         /// Prepare paged stock quantity history list model
         /// </summary>
-        /// <param name="model">Stock quantity history search model</param>
+        /// <param name="searchModel">Stock quantity history search model</param>
         /// <param name="product">Product</param>
         /// <returns>Stock quantity history list model</returns>
         public virtual StockQuantityHistoryListModel PrepareStockQuantityHistoryListModel(StockQuantityHistorySearchModel searchModel, Product product)
@@ -1806,6 +1810,7 @@ namespace Nop.Web.Areas.Admin.Factories
                         stockQuantityHistoryModel.AttributeCombination = _productAttributeFormatter.FormatAttributes(historyEntry.Product,
                             combination.AttributesXml, _workContext.CurrentCustomer, renderGiftCardAttributes: false);
                     }
+
                     stockQuantityHistoryModel.WarehouseName = historyEntry.WarehouseId.HasValue
                         ? _shippingService.GetWarehouseById(historyEntry.WarehouseId.Value)?.Name ?? "Deleted"
                         : _localizationService.GetResource("Admin.Catalog.Products.Fields.Warehouse.None");
@@ -1821,30 +1826,30 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare product attribute mapping search model
         /// </summary>
-        /// <param name="model">Product attribute mapping search model</param>
+        /// <param name="searchModel">Product attribute mapping search model</param>
         /// <param name="product">Product</param>
         /// <returns>Product attribute mapping search model</returns>
-        public virtual ProductAttributeMappingSearchModel PrepareProductAttributeMappingSearchModel(ProductAttributeMappingSearchModel model,
+        public virtual ProductAttributeMappingSearchModel PrepareProductAttributeMappingSearchModel(ProductAttributeMappingSearchModel searchModel,
             Product product)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
-            model.ProductId = product.Id;
+            searchModel.ProductId = product.Id;
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>
         /// Prepare paged product attribute mapping list model
         /// </summary>
-        /// <param name="model">Product attribute mapping search model</param>
+        /// <param name="searchModel">Product attribute mapping search model</param>
         /// <param name="product">Product</param>
         /// <returns>Product attribute mapping list model</returns>
         public virtual ProductAttributeMappingListModel PrepareProductAttributeMappingListModel(ProductAttributeMappingSearchModel searchModel,
@@ -1978,24 +1983,24 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare product attribute value search model
         /// </summary>
-        /// <param name="model">Product attribute value search model</param>
+        /// <param name="searchModel">Product attribute value search model</param>
         /// <param name="productAttributeMapping">Product attribute mapping</param>
         /// <returns>Product attribute value search model</returns>
-        public virtual ProductAttributeValueSearchModel PrepareProductAttributeValueSearchModel(ProductAttributeValueSearchModel model,
+        public virtual ProductAttributeValueSearchModel PrepareProductAttributeValueSearchModel(ProductAttributeValueSearchModel searchModel,
             ProductAttributeMapping productAttributeMapping)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             if (productAttributeMapping == null)
                 throw new ArgumentNullException(nameof(productAttributeMapping));
 
-            model.ProductAttributeMappingId = productAttributeMapping.Id;
+            searchModel.ProductAttributeMappingId = productAttributeMapping.Id;
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>
@@ -2052,15 +2057,17 @@ namespace Nop.Web.Areas.Admin.Factories
                             productAttributeValueModel.PriceAdjustmentStr += " %";
                         productAttributeValueModel.WeightAdjustmentStr = value.WeightAdjustment.ToString("G29");
                     }
+
                     if (value.AttributeValueType == AttributeValueType.AssociatedToProduct)
                     {
                         productAttributeValueModel
                             .AssociatedProductName = _productService.GetProductById(value.AssociatedProductId)?.Name ?? string.Empty;
                     }
+
                     var pictureThumbnailUrl = _pictureService.GetPictureUrl(value.PictureId, 75, false);
                     //little hack here. Grid is rendered wrong way with <img> without "src" attribute
                     if (string.IsNullOrEmpty(pictureThumbnailUrl))
-                        pictureThumbnailUrl = _pictureService.GetPictureUrl(null, 1, true);
+                        pictureThumbnailUrl = _pictureService.GetPictureUrl(null, 1);
                     productAttributeValueModel.PictureThumbnailUrl = pictureThumbnailUrl;
 
                     return productAttributeValueModel;
@@ -2152,35 +2159,35 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare product model to associate to the product attribute value
         /// </summary>
-        /// <param name="model">Product model to associate to the product attribute value</param>
+        /// <param name="searchModel">Product model to associate to the product attribute value</param>
         /// <returns>Product model to associate to the product attribute value</returns>
         public virtual AssociateProductToAttributeValueSearchModel PrepareAssociateProductToAttributeValueSearchModel(
-            AssociateProductToAttributeValueSearchModel model)
+            AssociateProductToAttributeValueSearchModel searchModel)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
-            model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
+            searchModel.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
 
             //prepare available categories
-            _baseAdminModelFactory.PrepareCategories(model.AvailableCategories);
+            _baseAdminModelFactory.PrepareCategories(searchModel.AvailableCategories);
 
             //prepare available manufacturers
-            _baseAdminModelFactory.PrepareManufacturers(model.AvailableManufacturers);
+            _baseAdminModelFactory.PrepareManufacturers(searchModel.AvailableManufacturers);
 
             //prepare available stores
-            _baseAdminModelFactory.PrepareStores(model.AvailableStores);
+            _baseAdminModelFactory.PrepareStores(searchModel.AvailableStores);
 
             //prepare available vendors
-            _baseAdminModelFactory.PrepareVendors(model.AvailableVendors);
+            _baseAdminModelFactory.PrepareVendors(searchModel.AvailableVendors);
 
             //prepare available product types
-            _baseAdminModelFactory.PrepareProductTypes(model.AvailableProductTypes);
+            _baseAdminModelFactory.PrepareProductTypes(searchModel.AvailableProductTypes);
 
             //prepare page parameters
-            model.SetPopupGridPageSize();
+            searchModel.SetPopupGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>
@@ -2222,30 +2229,30 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare product attribute combination search model
         /// </summary>
-        /// <param name="model">Product attribute combination search model</param>
+        /// <param name="searchModel">Product attribute combination search model</param>
         /// <param name="product">Product</param>
         /// <returns>Product attribute combination search model</returns>
         public virtual ProductAttributeCombinationSearchModel PrepareProductAttributeCombinationSearchModel(
-            ProductAttributeCombinationSearchModel model, Product product)
+            ProductAttributeCombinationSearchModel searchModel, Product product)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
-            model.ProductId = product.Id;
+            searchModel.ProductId = product.Id;
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>
         /// Prepare paged product attribute combination list model
         /// </summary>
-        /// <param name="model">Product attribute combination search model</param>
+        /// <param name="searchModel">Product attribute combination search model</param>
         /// <param name="product">Product</param>
         /// <returns>Product attribute combination list model</returns>
         public virtual ProductAttributeCombinationListModel PrepareProductAttributeCombinationListModel(
@@ -2286,7 +2293,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     var pictureThumbnailUrl = _pictureService.GetPictureUrl(combination.PictureId, 75, false);
                     //little hack here. Grid is rendered wrong way with <img> without "src" attribute
                     if (string.IsNullOrEmpty(pictureThumbnailUrl))
-                        pictureThumbnailUrl = _pictureService.GetPictureUrl(null, 1, true);
+                        pictureThumbnailUrl = _pictureService.GetPictureUrl(null, 1);
                     productAttributeCombinationModel.PictureThumbnailUrl = pictureThumbnailUrl;
                     var warnings = _shoppingCartService.GetShoppingCartItemAttributeWarnings(_workContext.CurrentCustomer,
                         ShoppingCartType.ShoppingCart, combination.Product,

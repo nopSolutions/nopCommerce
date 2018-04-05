@@ -61,20 +61,20 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare topic search model
         /// </summary>
-        /// <param name="model">Topic search model</param>
+        /// <param name="searchModel">Topic search model</param>
         /// <returns>Topic search model</returns>
-        public virtual TopicSearchModel PrepareTopicSearchModel(TopicSearchModel model)
+        public virtual TopicSearchModel PrepareTopicSearchModel(TopicSearchModel searchModel)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             //prepare available stores
-            _baseAdminModelFactory.PrepareStores(model.AvailableStores);
+            _baseAdminModelFactory.PrepareStores(searchModel.AvailableStores);
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>

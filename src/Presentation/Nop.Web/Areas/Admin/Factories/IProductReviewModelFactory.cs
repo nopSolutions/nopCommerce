@@ -11,9 +11,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare product review search model
         /// </summary>
-        /// <param name="model">Product review search model</param>
+        /// <param name="searchModel">Product review search model</param>
         /// <returns>Product review search model</returns>
-        ProductReviewSearchModel PrepareProductReviewSearchModel(ProductReviewSearchModel model);
+        ProductReviewSearchModel PrepareProductReviewSearchModel(ProductReviewSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged product review list model

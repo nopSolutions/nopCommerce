@@ -58,20 +58,20 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare news item search model
         /// </summary>
-        /// <param name="model">News item search model</param>
+        /// <param name="searchModel">News item search model</param>
         /// <returns>News item search model</returns>
-        public virtual NewsItemSearchModel PrepareNewsItemSearchModel(NewsItemSearchModel model)
+        public virtual NewsItemSearchModel PrepareNewsItemSearchModel(NewsItemSearchModel searchModel)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             //prepare available stores
-            _baseAdminModelFactory.PrepareStores(model.AvailableStores);
+            _baseAdminModelFactory.PrepareStores(searchModel.AvailableStores);
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>
@@ -157,35 +157,35 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare news comment search model
         /// </summary>
-        /// <param name="model">News comment search model</param>
+        /// <param name="searchModel">News comment search model</param>
         /// <param name="newsItem">News item</param>
         /// <returns>News comment search model</returns>
-        public virtual NewsCommentSearchModel PrepareNewsCommentSearchModel(NewsCommentSearchModel model, NewsItem newsItem)
+        public virtual NewsCommentSearchModel PrepareNewsCommentSearchModel(NewsCommentSearchModel searchModel, NewsItem newsItem)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             //prepare "approved" property (0 - all; 1 - approved only; 2 - disapproved only)
-            model.AvailableApprovedOptions.Add(new SelectListItem
+            searchModel.AvailableApprovedOptions.Add(new SelectListItem
             {
                 Text = _localizationService.GetResource("Admin.ContentManagement.News.Comments.List.SearchApproved.All"),
                 Value = "0"
             });
-            model.AvailableApprovedOptions.Add(new SelectListItem
+            searchModel.AvailableApprovedOptions.Add(new SelectListItem
             {
                 Text = _localizationService.GetResource("Admin.ContentManagement.News.Comments.List.SearchApproved.ApprovedOnly"),
                 Value = "1"
             });
-            model.AvailableApprovedOptions.Add(new SelectListItem
+            searchModel.AvailableApprovedOptions.Add(new SelectListItem
             {
                 Text = _localizationService.GetResource("Admin.ContentManagement.News.Comments.List.SearchApproved.DisapprovedOnly"),
                 Value = "2"
             });
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>
@@ -244,7 +244,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     return commentModel;
                 }),
-                Total = comments.Count,
+                Total = comments.Count
             };
 
             return model;

@@ -39,17 +39,17 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare tax provider search model
         /// </summary>
-        /// <param name="model">Tax provider search model</param>
+        /// <param name="searchModel">Tax provider search model</param>
         /// <returns>Tax provider search model</returns>
-        public virtual TaxProviderSearchModel PrepareTaxProviderSearchModel(TaxProviderSearchModel model)
+        public virtual TaxProviderSearchModel PrepareTaxProviderSearchModel(TaxProviderSearchModel searchModel)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>
@@ -89,17 +89,17 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare tax category search model
         /// </summary>
-        /// <param name="model">Tax category search model</param>
+        /// <param name="searchModel">Tax category search model</param>
         /// <returns>Tax category search model</returns>
-        public virtual TaxCategorySearchModel PrepareTaxCategorySearchModel(TaxCategorySearchModel model)
+        public virtual TaxCategorySearchModel PrepareTaxCategorySearchModel(TaxCategorySearchModel searchModel)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>

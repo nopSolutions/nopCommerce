@@ -61,29 +61,29 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare return request search model
         /// </summary>
-        /// <param name="model">Return request search model</param>
+        /// <param name="searchModel">Return request search model</param>
         /// <returns>Return request search model</returns>
-        public virtual ReturnRequestSearchModel PrepareReturnRequestSearchModel(ReturnRequestSearchModel model)
+        public virtual ReturnRequestSearchModel PrepareReturnRequestSearchModel(ReturnRequestSearchModel searchModel)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             //prepare available return request statuses
-            _baseAdminModelFactory.PrepareReturnRequestStatuses(model.ReturnRequestStatusList, false);
+            _baseAdminModelFactory.PrepareReturnRequestStatuses(searchModel.ReturnRequestStatusList, false);
 
             //for some reason, the standard default value (0) for the "All" item is already used for the "Pending" status, so here we use -1
             //TODO: move away from using 0 in ReturnRequestStatus enum
-            model.ReturnRequestStatusId = -1;
-            model.ReturnRequestStatusList.Insert(0, new SelectListItem
+            searchModel.ReturnRequestStatusId = -1;
+            searchModel.ReturnRequestStatusList.Insert(0, new SelectListItem
             {
                 Value = "-1",
                 Text = _localizationService.GetResource("Admin.ReturnRequests.SearchReturnRequestStatus.All")
             });
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>
@@ -160,40 +160,40 @@ namespace Nop.Web.Areas.Admin.Factories
         public virtual ReturnRequestModel PrepareReturnRequestModel(ReturnRequestModel model,
             ReturnRequest returnRequest, bool excludeProperties = false)
         {
-            if (returnRequest != null)
+            if (returnRequest == null)
+                return model;
+
+            //fill in model values from the entity
+            model = model ?? new ReturnRequestModel
             {
-                //fill in model values from the entity
-                model = model ?? new ReturnRequestModel
-                {
-                    Id = returnRequest.Id,
-                    CustomNumber = returnRequest.CustomNumber,
-                    CustomerId = returnRequest.CustomerId,
-                    Quantity = returnRequest.Quantity,
-                };
+                Id = returnRequest.Id,
+                CustomNumber = returnRequest.CustomNumber,
+                CustomerId = returnRequest.CustomerId,
+                Quantity = returnRequest.Quantity
+            };
 
-                model.CreatedOn = _dateTimeHelper.ConvertToUserTime(returnRequest.CreatedOnUtc, DateTimeKind.Utc);
+            model.CreatedOn = _dateTimeHelper.ConvertToUserTime(returnRequest.CreatedOnUtc, DateTimeKind.Utc);
 
-                model.CustomerInfo = returnRequest.Customer.IsRegistered()
-                    ? returnRequest.Customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
-                model.UploadedFileGuid = _downloadService.GetDownloadById(returnRequest.UploadedFileId)?.DownloadGuid ?? Guid.Empty;
-                var orderItem = _orderService.GetOrderItemById(returnRequest.OrderItemId);
-                if (orderItem != null)
-                {
-                    model.ProductId = orderItem.ProductId;
-                    model.ProductName = orderItem.Product.Name;
-                    model.OrderId = orderItem.OrderId;
-                    model.AttributeInfo = orderItem.AttributeDescription;
-                    model.CustomOrderNumber = orderItem.Order.CustomOrderNumber;
-                }
+            model.CustomerInfo = returnRequest.Customer.IsRegistered()
+                ? returnRequest.Customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
+            model.UploadedFileGuid = _downloadService.GetDownloadById(returnRequest.UploadedFileId)?.DownloadGuid ?? Guid.Empty;
+            var orderItem = _orderService.GetOrderItemById(returnRequest.OrderItemId);
+            if (orderItem != null)
+            {
+                model.ProductId = orderItem.ProductId;
+                model.ProductName = orderItem.Product.Name;
+                model.OrderId = orderItem.OrderId;
+                model.AttributeInfo = orderItem.AttributeDescription;
+                model.CustomOrderNumber = orderItem.Order.CustomOrderNumber;
+            }
 
-                if (!excludeProperties)
-                {
-                    model.ReasonForReturn = returnRequest.ReasonForReturn;
-                    model.RequestedAction = returnRequest.RequestedAction;
-                    model.CustomerComments = returnRequest.CustomerComments;
-                    model.StaffNotes = returnRequest.StaffNotes;
-                    model.ReturnRequestStatusId = returnRequest.ReturnRequestStatusId;
-                }
+            if (!excludeProperties)
+            {
+                model.ReasonForReturn = returnRequest.ReasonForReturn;
+                model.RequestedAction = returnRequest.RequestedAction;
+                model.CustomerComments = returnRequest.CustomerComments;
+                model.StaffNotes = returnRequest.StaffNotes;
+                model.ReturnRequestStatusId = returnRequest.ReturnRequestStatusId;
             }
 
             return model;
@@ -202,17 +202,17 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare return request reason search model
         /// </summary>
-        /// <param name="model">Return request reason search model</param>
+        /// <param name="searchModel">Return request reason search model</param>
         /// <returns>Return request reason search model</returns>
-        public virtual ReturnRequestReasonSearchModel PrepareReturnRequestReasonSearchModel(ReturnRequestReasonSearchModel model)
+        public virtual ReturnRequestReasonSearchModel PrepareReturnRequestReasonSearchModel(ReturnRequestReasonSearchModel searchModel)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>
@@ -273,17 +273,17 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare return request action search model
         /// </summary>
-        /// <param name="model">Return request action search model</param>
+        /// <param name="searchModel">Return request action search model</param>
         /// <returns>Return request action search model</returns>
-        public virtual ReturnRequestActionSearchModel PrepareReturnRequestActionSearchModel(ReturnRequestActionSearchModel model)
+        public virtual ReturnRequestActionSearchModel PrepareReturnRequestActionSearchModel(ReturnRequestActionSearchModel searchModel)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>

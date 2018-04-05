@@ -42,17 +42,17 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare category template search model
         /// </summary>
-        /// <param name="model">Category template search model</param>
+        /// <param name="searchModel">Category template search model</param>
         /// <returns>Category template search model</returns>
-        public virtual CategoryTemplateSearchModel PrepareCategoryTemplateSearchModel(CategoryTemplateSearchModel model)
+        public virtual CategoryTemplateSearchModel PrepareCategoryTemplateSearchModel(CategoryTemplateSearchModel searchModel)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>
@@ -82,17 +82,17 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare manufacturer template search model
         /// </summary>
-        /// <param name="model">Manufacturer template search model</param>
+        /// <param name="searchModel">Manufacturer template search model</param>
         /// <returns>Manufacturer template search model</returns>
-        public virtual ManufacturerTemplateSearchModel PrepareManufacturerTemplateSearchModel(ManufacturerTemplateSearchModel model)
+        public virtual ManufacturerTemplateSearchModel PrepareManufacturerTemplateSearchModel(ManufacturerTemplateSearchModel searchModel)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>
@@ -122,17 +122,17 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare product template search model
         /// </summary>
-        /// <param name="model">Product template search model</param>
+        /// <param name="searchModel">Product template search model</param>
         /// <returns>Product template search model</returns>
-        public virtual ProductTemplateSearchModel PrepareProductTemplateSearchModel(ProductTemplateSearchModel model)
+        public virtual ProductTemplateSearchModel PrepareProductTemplateSearchModel(ProductTemplateSearchModel searchModel)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>
@@ -162,17 +162,17 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare topic template search model
         /// </summary>
-        /// <param name="model">Topic template search model</param>
+        /// <param name="searchModel">Topic template search model</param>
         /// <returns>Topic template search model</returns>
-        public virtual TopicTemplateSearchModel PrepareTopicTemplateSearchModel(TopicTemplateSearchModel model)
+        public virtual TopicTemplateSearchModel PrepareTopicTemplateSearchModel(TopicTemplateSearchModel searchModel)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>

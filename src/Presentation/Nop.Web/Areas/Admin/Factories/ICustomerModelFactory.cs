@@ -12,9 +12,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare customer search model
         /// </summary>
-        /// <param name="model">Customer search model</param>
+        /// <param name="searchModel">Customer search model</param>
         /// <returns>Customer search model</returns>
-        CustomerSearchModel PrepareCustomerSearchModel(CustomerSearchModel model);
+        CustomerSearchModel PrepareCustomerSearchModel(CustomerSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged customer list model
@@ -35,10 +35,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare reward points search model
         /// </summary>
-        /// <param name="model">Reward points search model</param>
+        /// <param name="searchModel">Reward points search model</param>
         /// <param name="customer">Customer</param>
         /// <returns>Reward points search model</returns>
-        CustomerRewardPointsSearchModel PrepareRewardPointsSearchModel(CustomerRewardPointsSearchModel model, Customer customer);
+        CustomerRewardPointsSearchModel PrepareRewardPointsSearchModel(CustomerRewardPointsSearchModel searchModel, Customer customer);
 
         /// <summary>
         /// Prepare paged reward points list model
@@ -51,10 +51,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare customer address search model
         /// </summary>
-        /// <param name="model">Customer address search model</param>
+        /// <param name="searchModel">Customer address search model</param>
         /// <param name="customer">Customer</param>
         /// <returns>Customer address search model</returns>
-        CustomerAddressSearchModel PrepareCustomerAddressSearchModel(CustomerAddressSearchModel model, Customer customer);
+        CustomerAddressSearchModel PrepareCustomerAddressSearchModel(CustomerAddressSearchModel searchModel, Customer customer);
 
         /// <summary>
         /// Prepare paged customer address list model
@@ -78,10 +78,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare customer order search model
         /// </summary>
-        /// <param name="model">Customer order search model</param>
+        /// <param name="searchModel">Customer order search model</param>
         /// <param name="customer">Customer</param>
         /// <returns>Customer order search model</returns>
-        CustomerOrderSearchModel PrepareCustomerOrderSearchModel(CustomerOrderSearchModel model, Customer customer);
+        CustomerOrderSearchModel PrepareCustomerOrderSearchModel(CustomerOrderSearchModel searchModel, Customer customer);
 
         /// <summary>
         /// Prepare paged customer order list model
@@ -94,19 +94,19 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare customer reports search model
         /// </summary>
-        /// <param name="model">Customer reports search model</param>
+        /// <param name="searchModel">Customer reports search model</param>
         /// <returns>Customer reports search model</returns>
-        CustomerReportsSearchModel PrepareCustomerReportsSearchModel(CustomerReportsSearchModel model);
+        CustomerReportsSearchModel PrepareCustomerReportsSearchModel(CustomerReportsSearchModel searchModel);
 
         /// <summary>
         /// Prepare best customers report search model
         /// </summary>
-        /// <param name="model">Best customers report search model</param>
+        /// <param name="searchModel">Best customers report search model</param>
         /// <returns>Best customers report search model</returns>
-        BestCustomersReportSearchModel PrepareBestCustomersReportSearchModel(BestCustomersReportSearchModel model);
+        BestCustomersReportSearchModel PrepareBestCustomersReportSearchModel(BestCustomersReportSearchModel searchModel);
 
         /// <summary>
-        /// Prepare paged best customers report list model
+        /// Prepare paged best customers report list modelSearchModel searchModel
         /// </summary>
         /// <param name="searchModel">Best customers report search model</param>
         /// <returns>Best customers report list model</returns>
@@ -115,9 +115,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare registered customers report search model
         /// </summary>
-        /// <param name="model">Registered customers report search model</param>
+        /// <param name="searchModel">Registered customers report search model</param>
         /// <returns>Registered customers report search model</returns>
-        RegisteredCustomersReportSearchModel PrepareRegisteredCustomersReportSearchModel(RegisteredCustomersReportSearchModel model);
+        RegisteredCustomersReportSearchModel PrepareRegisteredCustomersReportSearchModel(RegisteredCustomersReportSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged registered customers report list model
@@ -129,10 +129,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare customer shopping cart search model
         /// </summary>
-        /// <param name="model">Customer shopping cart search model</param>
+        /// <param name="searchModel">Customer shopping cart search model</param>
         /// <param name="customer">Customer</param>
         /// <returns>Customer shopping cart search model</returns>
-        CustomerShoppingCartSearchModel PrepareCustomerShoppingCartSearchModel(CustomerShoppingCartSearchModel model,
+        CustomerShoppingCartSearchModel PrepareCustomerShoppingCartSearchModel(CustomerShoppingCartSearchModel searchModel,
             Customer customer);
 
         /// <summary>
@@ -147,10 +147,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare customer activity log search model
         /// </summary>
-        /// <param name="model">Customer activity log search model</param>
+        /// <param name="searchModel">Customer activity log search model</param>
         /// <param name="customer">Customer</param>
         /// <returns>Customer activity log search model</returns>
-        CustomerActivityLogSearchModel PrepareCustomerActivityLogSearchModel(CustomerActivityLogSearchModel model, Customer customer);
+        CustomerActivityLogSearchModel PrepareCustomerActivityLogSearchModel(CustomerActivityLogSearchModel searchModel, Customer customer);
 
         /// <summary>
         /// Prepare paged customer activity log list model
@@ -163,11 +163,11 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare customer back in stock subscriptions search model
         /// </summary>
-        /// <param name="model">Customer back in stock subscriptions search model</param>
+        /// <param name="searchModel">Customer back in stock subscriptions search model</param>
         /// <param name="customer">Customer</param>
         /// <returns>Customer back in stock subscriptions search model</returns>
         CustomerBackInStockSubscriptionSearchModel PrepareCustomerBackInStockSubscriptionSearchModel(
-            CustomerBackInStockSubscriptionSearchModel model, Customer customer);
+            CustomerBackInStockSubscriptionSearchModel searchModel, Customer customer);
 
         /// <summary>
         /// Prepare paged customer back in stock subscriptions list model
@@ -181,9 +181,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare online customer search model
         /// </summary>
-        /// <param name="model">Online customer search model</param>
+        /// <param name="searchModel">Online customer search model</param>
         /// <returns>Online customer search model</returns>
-        OnlineCustomerSearchModel PrepareOnlineCustomerSearchModel(OnlineCustomerSearchModel model);
+        OnlineCustomerSearchModel PrepareOnlineCustomerSearchModel(OnlineCustomerSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged online customer list model

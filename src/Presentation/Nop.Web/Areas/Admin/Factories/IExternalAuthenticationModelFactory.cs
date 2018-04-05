@@ -10,10 +10,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare external authentication method search model
         /// </summary>
-        /// <param name="model">External authentication method search model</param>
+        /// <param name="searchModel">External authentication method search model</param>
         /// <returns>External authentication method search model</returns>
         ExternalAuthenticationMethodSearchModel PrepareExternalAuthenticationMethodSearchModel(
-            ExternalAuthenticationMethodSearchModel model);
+            ExternalAuthenticationMethodSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged external authentication method list model

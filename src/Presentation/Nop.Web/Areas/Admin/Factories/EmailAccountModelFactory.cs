@@ -36,17 +36,17 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare email account search model
         /// </summary>
-        /// <param name="model">Email account search model</param>
+        /// <param name="searchModel">Email account search model</param>
         /// <returns>Email account search model</returns>
-        public virtual EmailAccountSearchModel PrepareEmailAccountSearchModel(EmailAccountSearchModel model)
+        public virtual EmailAccountSearchModel PrepareEmailAccountSearchModel(EmailAccountSearchModel searchModel)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>

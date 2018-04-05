@@ -41,17 +41,17 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare store search model
         /// </summary>
-        /// <param name="model">Store search model</param>
+        /// <param name="searchModel">Store search model</param>
         /// <returns>Store search model</returns>
-        public virtual StoreSearchModel PrepareStoreSearchModel(StoreSearchModel model)
+        public virtual StoreSearchModel PrepareStoreSearchModel(StoreSearchModel searchModel)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>

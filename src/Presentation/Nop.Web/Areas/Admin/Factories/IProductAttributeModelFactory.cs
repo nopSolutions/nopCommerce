@@ -11,9 +11,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare product attribute search model
         /// </summary>
-        /// <param name="model">Product attribute search model</param>
+        /// <param name="searchModel">Product attribute search model</param>
         /// <returns>Product attribute search model</returns>
-        ProductAttributeSearchModel PrepareProductAttributeSearchModel(ProductAttributeSearchModel model);
+        ProductAttributeSearchModel PrepareProductAttributeSearchModel(ProductAttributeSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged product attribute list model
@@ -35,11 +35,11 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare predefined product attribute value search model
         /// </summary>
-        /// <param name="model">Predefined product attribute value search model</param>
+        /// <param name="searchModel">Predefined product attribute value search model</param>
         /// <param name="productAttribute">Product attribute</param>
         /// <returns>Predefined product attribute value search model</returns>
         PredefinedProductAttributeValueSearchModel PreparePredefinedProductAttributeValueSearchModel(
-            PredefinedProductAttributeValueSearchModel model, ProductAttribute productAttribute);
+            PredefinedProductAttributeValueSearchModel searchModel, ProductAttribute productAttribute);
 
         /// <summary>
         /// Prepare paged predefined product attribute value list model
@@ -64,10 +64,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare search model of products that use the product attribute
         /// </summary>
-        /// <param name="model">Search model of products that use the product attribute</param>
+        /// <param name="searchModel">Search model of products that use the product attribute</param>
         /// <param name="productAttribute">Product attribute</param>
         /// <returns>Search model of products that use the product attribute</returns>
-        ProductAttributeProductSearchModel PrepareProductAttributeProductSearchModel(ProductAttributeProductSearchModel model,
+        ProductAttributeProductSearchModel PrepareProductAttributeProductSearchModel(ProductAttributeProductSearchModel searchModel,
             ProductAttribute productAttribute);
 
         /// <summary>

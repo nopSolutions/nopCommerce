@@ -277,24 +277,24 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare affiliated customer search model
         /// </summary>
-        /// <param name="model">Affiliated customer search model</param>
+        /// <param name="searchModel">Affiliated customer search model</param>
         /// <param name="affiliate">Affiliate</param>
         /// <returns>Affiliated customer search model</returns>
-        public virtual AffiliatedCustomerSearchModel PrepareAffiliatedCustomerSearchModel(AffiliatedCustomerSearchModel model, 
+        public virtual AffiliatedCustomerSearchModel PrepareAffiliatedCustomerSearchModel(AffiliatedCustomerSearchModel searchModel, 
             Affiliate affiliate)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             if (affiliate == null)
                 throw new ArgumentNullException(nameof(affiliate));
 
-            model.AffliateId = affiliate.Id;
+            searchModel.AffliateId = affiliate.Id;
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>

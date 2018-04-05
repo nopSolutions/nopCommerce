@@ -11,9 +11,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare specification attribute search model
         /// </summary>
-        /// <param name="model">Specification attribute search model</param>
+        /// <param name="searchModel">Specification attribute search model</param>
         /// <returns>Specification attribute search model</returns>
-        SpecificationAttributeSearchModel PrepareSpecificationAttributeSearchModel(SpecificationAttributeSearchModel model);
+        SpecificationAttributeSearchModel PrepareSpecificationAttributeSearchModel(SpecificationAttributeSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged specification attribute list model
@@ -35,11 +35,11 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare specification attribute option search model
         /// </summary>
-        /// <param name="model">Specification attribute option search model</param>
+        /// <param name="searchModel">Specification attribute option search model</param>
         /// <param name="specificationAttribute">Specification attribute</param>
         /// <returns>Specification attribute option search model</returns>
         SpecificationAttributeOptionSearchModel PrepareSpecificationAttributeOptionSearchModel(
-            SpecificationAttributeOptionSearchModel model, SpecificationAttribute specificationAttribute);
+            SpecificationAttributeOptionSearchModel searchModel, SpecificationAttribute specificationAttribute);
 
         /// <summary>
         /// Prepare paged specification attribute option list model
@@ -65,11 +65,11 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare search model of products that use the specification attribute
         /// </summary>
-        /// <param name="model">Search model of products that use the specification attribute</param>
+        /// <param name="searchModel">Search model of products that use the specification attribute</param>
         /// <param name="specificationAttribute">Specification attribute</param>
         /// <returns>Search model of products that use the specification attribute</returns>
         SpecificationAttributeProductSearchModel PrepareSpecificationAttributeProductSearchModel(
-            SpecificationAttributeProductSearchModel model, SpecificationAttribute specificationAttribute);
+            SpecificationAttributeProductSearchModel searchModel, SpecificationAttribute specificationAttribute);
 
         /// <summary>
         /// Prepare paged list model of products that use the specification attribute

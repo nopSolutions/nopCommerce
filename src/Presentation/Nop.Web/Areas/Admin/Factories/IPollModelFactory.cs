@@ -11,9 +11,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare poll search model
         /// </summary>
-        /// <param name="model">Poll search model</param>
+        /// <param name="searchModel">Poll search model</param>
         /// <returns>Poll search model</returns>
-        PollSearchModel PreparePollSearchModel(PollSearchModel model);
+        PollSearchModel PreparePollSearchModel(PollSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged poll list model
@@ -34,10 +34,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare poll answer search model
         /// </summary>
-        /// <param name="model">Poll answer search model</param>
+        /// <param name="searchModel">Poll answer search model</param>
         /// <param name="poll">Poll</param>
         /// <returns>Poll answer search model</returns>
-        PollAnswerSearchModel PreparePollAnswerSearchModel(PollAnswerSearchModel model, Poll poll);
+        PollAnswerSearchModel PreparePollAnswerSearchModel(PollAnswerSearchModel searchModel, Poll poll);
 
         /// <summary>
         /// Prepare paged poll answer list model
