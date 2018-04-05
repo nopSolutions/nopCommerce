@@ -117,17 +117,17 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare checkout attribute search model
         /// </summary>
-        /// <param name="model">Checkout attribute search model</param>
+        /// <param name="searchModel">Checkout attribute search model</param>
         /// <returns>Checkout attribute search model</returns>
-        public virtual CheckoutAttributeSearchModel PrepareCheckoutAttributeSearchModel(CheckoutAttributeSearchModel model)
+        public virtual CheckoutAttributeSearchModel PrepareCheckoutAttributeSearchModel(CheckoutAttributeSearchModel searchModel)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>
@@ -216,24 +216,24 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare checkout attribute value search model
         /// </summary>
-        /// <param name="model">Checkout attribute value search model</param>
+        /// <param name="searchModel">Checkout attribute value search model</param>
         /// <param name="checkoutAttribute">Checkout attribute</param>
         /// <returns>Checkout attribute value search model</returns>
-        public virtual CheckoutAttributeValueSearchModel PrepareCheckoutAttributeValueSearchModel(CheckoutAttributeValueSearchModel model,
+        public virtual CheckoutAttributeValueSearchModel PrepareCheckoutAttributeValueSearchModel(CheckoutAttributeValueSearchModel searchModel,
             CheckoutAttribute checkoutAttribute)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             if (checkoutAttribute == null)
                 throw new ArgumentNullException(nameof(checkoutAttribute));
 
-            model.CheckoutAttributeId = checkoutAttribute.Id;
+            searchModel.CheckoutAttributeId = checkoutAttribute.Id;
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>

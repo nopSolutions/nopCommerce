@@ -11,9 +11,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare checkout attribute search model
         /// </summary>
-        /// <param name="model">Checkout attribute search model</param>
+        /// <param name="searchModel">Checkout attribute search model</param>
         /// <returns>Checkout attribute search model</returns>
-        CheckoutAttributeSearchModel PrepareCheckoutAttributeSearchModel(CheckoutAttributeSearchModel model);
+        CheckoutAttributeSearchModel PrepareCheckoutAttributeSearchModel(CheckoutAttributeSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged checkout attribute list model
@@ -35,10 +35,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare checkout attribute value search model
         /// </summary>
-        /// <param name="model">Checkout attribute value search model</param>
+        /// <param name="searchModel">Checkout attribute value search model</param>
         /// <param name="checkoutAttribute">Checkout attribute</param>
         /// <returns>Checkout attribute value search model</returns>
-        CheckoutAttributeValueSearchModel PrepareCheckoutAttributeValueSearchModel(CheckoutAttributeValueSearchModel model,
+        CheckoutAttributeValueSearchModel PrepareCheckoutAttributeValueSearchModel(CheckoutAttributeValueSearchModel searchModel,
             CheckoutAttribute checkoutAttribute);
 
         /// <summary>
