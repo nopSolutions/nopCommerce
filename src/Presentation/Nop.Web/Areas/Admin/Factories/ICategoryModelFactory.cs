@@ -11,9 +11,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare category search model
         /// </summary>
-        /// <param name="model">Category search model</param>
+        /// <param name="searchModel">Category search model</param>
         /// <returns>Category search model</returns>
-        CategorySearchModel PrepareCategorySearchModel(CategorySearchModel model);
+        CategorySearchModel PrepareCategorySearchModel(CategorySearchModel searchModel);
 
         /// <summary>
         /// Prepare paged category list model
@@ -34,10 +34,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare category product search model
         /// </summary>
-        /// <param name="model">Category product search model</param>
+        /// <param name="searchModel">Category product search model</param>
         /// <param name="category">Category</param>
         /// <returns>Category product search model</returns>
-        CategoryProductSearchModel PrepareCategoryProductSearchModel(CategoryProductSearchModel model, Category category);
+        CategoryProductSearchModel PrepareCategoryProductSearchModel(CategoryProductSearchModel searchModel, Category category);
 
         /// <summary>
         /// Prepare paged category product list model

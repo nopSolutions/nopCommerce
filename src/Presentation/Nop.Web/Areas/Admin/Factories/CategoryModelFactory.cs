@@ -65,20 +65,20 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare category search model
         /// </summary>
-        /// <param name="model">Category search model</param>
+        /// <param name="searchModel">Category search model</param>
         /// <returns>Category search model</returns>
-        public virtual CategorySearchModel PrepareCategorySearchModel(CategorySearchModel model)
+        public virtual CategorySearchModel PrepareCategorySearchModel(CategorySearchModel searchModel)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             //prepare available stores
-            _baseAdminModelFactory.PrepareStores(model.AvailableStores);
+            _baseAdminModelFactory.PrepareStores(searchModel.AvailableStores);
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>
@@ -184,23 +184,23 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare category product search model
         /// </summary>
-        /// <param name="model">Category product search model</param>
+        /// <param name="searchModel">Category product search model</param>
         /// <param name="category">Category</param>
         /// <returns>Category product search model</returns>
-        public virtual CategoryProductSearchModel PrepareCategoryProductSearchModel(CategoryProductSearchModel model, Category category)
+        public virtual CategoryProductSearchModel PrepareCategoryProductSearchModel(CategoryProductSearchModel searchModel, Category category)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             if (category == null)
                 throw new ArgumentNullException(nameof(category));
 
-            model.CategoryId = category.Id;
+            searchModel.CategoryId = category.Id;
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>
