@@ -485,7 +485,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     loadedAssemblyModel.Location = assembly.IsDynamic ? null : assembly.Location;
                     loadedAssemblyModel.IsDebug = assembly.GetCustomAttributes(typeof(DebuggableAttribute), false)
-                        ?.FirstOrDefault() is DebuggableAttribute attribute && attribute.IsJITOptimizerDisabled;
+                        .FirstOrDefault() is DebuggableAttribute attribute && attribute.IsJITOptimizerDisabled;
 
                     //https://stackoverflow.com/questions/2050396/getting-the-date-of-a-net-assembly
                     //we use a simple method because the more Jeff Atwood's solution doesn't work anymore 
@@ -561,17 +561,17 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare backup file search model
         /// </summary>
-        /// <param name="model">Backup file search model</param>
+        /// <param name="searchModel">Backup file search model</param>
         /// <returns>Backup file search model</returns>
-        public virtual BackupFileSearchModel PrepareBackupFileSearchModel(BackupFileSearchModel model)
+        public virtual BackupFileSearchModel PrepareBackupFileSearchModel(BackupFileSearchModel searchModel)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>
@@ -690,6 +690,7 @@ namespace Nop.Web.Areas.Admin.Factories
                             detailsUrl = urlHelper.Action("Edit", "Vendor", new { id = urlRecord.EntityId });
                             break;
                     }
+
                     urlRecordModel.DetailsUrl = detailsUrl;
 
                     return urlRecordModel;
@@ -719,18 +720,18 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare popular search term search model
         /// </summary>
-        /// <param name="model">Popular search term search model</param>
+        /// <param name="searchModel">Popular search term search model</param>
         /// <returns>Popular search term search model</returns>
-        public virtual PopularSearchTermSearchModel PreparePopularSearchTermSearchModel(PopularSearchTermSearchModel model)
+        public virtual PopularSearchTermSearchModel PreparePopularSearchTermSearchModel(PopularSearchTermSearchModel searchModel)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             //prepare page parameters
-            model.PageSize = 5;
-            model.AvailablePageSizes = "5";
+            searchModel.PageSize = 5;
+            searchModel.AvailablePageSizes = "5";
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>

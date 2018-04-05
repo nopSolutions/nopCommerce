@@ -31,9 +31,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare backup file search model
         /// </summary>
-        /// <param name="model">Backup file search model</param>
+        /// <param name="searchModel">Backup file search model</param>
         /// <returns>Backup file search model</returns>
-        BackupFileSearchModel PrepareBackupFileSearchModel(BackupFileSearchModel model);
+        BackupFileSearchModel PrepareBackupFileSearchModel(BackupFileSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged backup file list model
@@ -45,9 +45,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare URL record search model
         /// </summary>
-        /// <param name="model">URL record search model</param>
+        /// <param name="searchModel">URL record search model</param>
         /// <returns>URL record search model</returns>
-        UrlRecordSearchModel PrepareUrlRecordSearchModel(UrlRecordSearchModel model);
+        UrlRecordSearchModel PrepareUrlRecordSearchModel(UrlRecordSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged URL record list model
@@ -65,9 +65,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare popular search term search model
         /// </summary>
-        /// <param name="model">Popular search term search model</param>
+        /// <param name="searchModel">Popular search term search model</param>
         /// <returns>Popular search term search model</returns>
-        PopularSearchTermSearchModel PreparePopularSearchTermSearchModel(PopularSearchTermSearchModel model);
+        PopularSearchTermSearchModel PreparePopularSearchTermSearchModel(PopularSearchTermSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged popular search term list model
