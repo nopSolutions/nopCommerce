@@ -11,9 +11,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare campaign search model
         /// </summary>
-        /// <param name="model">Campaign search model</param>
+        /// <param name="searchModel">Campaign search model</param>
         /// <returns>Campaign search model</returns>
-        CampaignSearchModel PrepareCampaignSearchModel(CampaignSearchModel model);
+        CampaignSearchModel PrepareCampaignSearchModel(CampaignSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged campaign list model

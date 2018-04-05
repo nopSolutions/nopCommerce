@@ -46,20 +46,20 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare campaign search model
         /// </summary>
-        /// <param name="model">Campaign search model</param>
+        /// <param name="searchModel">Campaign search model</param>
         /// <returns>Campaign search model</returns>
-        public virtual CampaignSearchModel PrepareCampaignSearchModel(CampaignSearchModel model)
+        public virtual CampaignSearchModel PrepareCampaignSearchModel(CampaignSearchModel searchModel)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             //prepare available stores
-            _baseAdminModelFactory.PrepareStores(model.AvailableStores);
+            _baseAdminModelFactory.PrepareStores(searchModel.AvailableStores);
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>
