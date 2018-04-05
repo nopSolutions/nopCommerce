@@ -131,7 +131,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 return;
 
             //at now we use "0" as the default value
-            var value = "0";
+            const string value = "0";
 
             //prepare item text
             defaultItemText = defaultItemText ?? _localizationService.GetResource("Admin.Common.All");
