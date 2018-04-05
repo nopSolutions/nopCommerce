@@ -56,7 +56,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="model">Currency exchange rate provider model</param>
         /// <param name="prepareExchangeRates">Whether to prepare exchange rate models</param>
-        protected virtual void PrepareExchangeRateProviderModel(CurrencyExchangeRateProviderModel model, bool liveRates)
+        protected virtual void PrepareExchangeRateProviderModel(CurrencyExchangeRateProviderModel model, bool prepareExchangeRates)
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
@@ -74,7 +74,7 @@ namespace Nop.Web.Areas.Admin.Factories
             }).ToList();
 
             //prepare exchange rates
-            if (liveRates)
+            if (prepareExchangeRates)
                 PrepareExchangeRateModels(model.ExchangeRates);
         }
 
@@ -114,22 +114,22 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare currency search model
         /// </summary>
-        /// <param name="model">Currency search model</param>
+        /// <param name="searchModel">Currency search model</param>
         /// <param name="prepareExchangeRates">Whether to prepare exchange rate models</param>
         /// <returns>Currency search model</returns>
-        public virtual CurrencySearchModel PrepareCurrencySearchModel(CurrencySearchModel model, bool prepareExchangeRates = false)
+        public virtual CurrencySearchModel PrepareCurrencySearchModel(CurrencySearchModel searchModel, bool prepareExchangeRates = false)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             //prepare exchange rate provider model
-            PrepareExchangeRateProviderModel(model.ExchangeRateProviderModel, prepareExchangeRates);
+            PrepareExchangeRateProviderModel(searchModel.ExchangeRateProviderModel, prepareExchangeRates);
 
             //prepare page parameters
-            model.SetGridPageSize();
-            model.PageSize = 1000;
+            searchModel.SetGridPageSize();
+            searchModel.PageSize = 1000;
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>

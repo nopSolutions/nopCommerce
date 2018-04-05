@@ -11,10 +11,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare currency search model
         /// </summary>
-        /// <param name="model">Currency search model</param>
+        /// <param name="searchModel">Currency search model</param>
         /// <param name="prepareExchangeRates">Whether to prepare exchange rate models</param>
         /// <returns>Currency search model</returns>
-        CurrencySearchModel PrepareCurrencySearchModel(CurrencySearchModel model, bool prepareExchangeRates = false);
+        CurrencySearchModel PrepareCurrencySearchModel(CurrencySearchModel searchModel, bool prepareExchangeRates = false);
 
         /// <summary>
         /// Prepare paged currency list model
