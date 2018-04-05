@@ -7,7 +7,7 @@ set @resources='
 <Language>
   <LocaleResource Name="Admin.Configuration.Currencies.Fields.CurrencyCode.Hint">
     <Value>The currency code. For a list of currency codes, go to: https://en.wikipedia.org/wiki/ISO_4217</Value>
-  </LocaleResource>
+  </LocaleResource>  
   <LocaleResource Name="Admin.Customers.Customers.Fields.Avatar">
     <Value>Avatar</Value>
   </LocaleResource>
@@ -910,7 +910,28 @@ set @resources='
   </LocaleResource> 
   <LocaleResource Name="Admin.Configuration.Settings.Order.DeleteGiftCardUsageHistory.Hint">
     <Value>Check to delete gift card usage history after order cancellation</Value>
-  </LocaleResource>   
+  </LocaleResource> 
+  <LocaleResource Name="Enums.Nop.Web.Framework.Security.Captcha.ReCaptchaVersion.Version1">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Web.Framework.Security.Captcha.ReCaptchaVersion.Version2">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.reCaptchaVersion">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.reCaptchaVersion.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Common.WrongCaptchaV2">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Common.WrongCaptcha">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Common.WrongCaptchaMessage">
+    <Value>The reCAPTCHA response is invalid or malformed. Please try again.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -2283,4 +2304,9 @@ BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId])
 	VALUES (N'ordersettings.deletegiftcardusagehistory', N'False', 0)
 END
+GO
+
+--del setting
+DELETE FROM [Setting]
+WHERE [Name] = N'captchasettings.recaptchaversion'
 GO

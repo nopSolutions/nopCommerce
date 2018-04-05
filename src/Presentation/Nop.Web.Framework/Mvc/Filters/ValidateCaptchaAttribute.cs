@@ -76,7 +76,7 @@ namespace Nop.Web.Framework.Mvc.Filters
                 if ((!StringValues.IsNullOrEmpty(captchaChallengeValue) && !StringValues.IsNullOrEmpty(captchaResponseValue)) || !StringValues.IsNullOrEmpty(gCaptchaResponseValue))
                 {
                     //create CAPTCHA validator
-                    var captchaValidtor = new GReCaptchaValidator(_captchaSettings.ReCaptchaVersion)
+                    var captchaValidtor = new GReCaptchaValidator()
                     {
                         SecretKey = _captchaSettings.ReCaptchaPrivateKey,
                         RemoteIp = context.HttpContext.Connection.RemoteIpAddress?.ToString(),

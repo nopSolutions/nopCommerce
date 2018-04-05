@@ -1061,10 +1061,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var captchaSettings = _settingService.LoadSetting<CaptchaSettings>(storeId);
 
             //fill in model values from the entity
-            var model = captchaSettings.ToModel();
-
-            //fill in additional values (not existing in the entity)
-            model.AvailableReCaptchaVersions = ReCaptchaVersion.Version1.ToSelectList(false).ToList();
+            var model = captchaSettings.ToModel();            
 
             return model;
         }
