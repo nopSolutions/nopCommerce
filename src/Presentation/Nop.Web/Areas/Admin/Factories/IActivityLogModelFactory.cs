@@ -17,9 +17,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare activity log search model
         /// </summary>
-        /// <param name="model">Activity log search model</param>
+        /// <param name="searchModel">Activity log search model</param>
         /// <returns>Activity log search model</returns>
-        ActivityLogSearchModel PrepareActivityLogSearchModel(ActivityLogSearchModel model);
+        ActivityLogSearchModel PrepareActivityLogSearchModel(ActivityLogSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged activity log list model

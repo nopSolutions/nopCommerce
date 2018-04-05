@@ -52,20 +52,20 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare activity log search model
         /// </summary>
-        /// <param name="model">Activity log search model</param>
+        /// <param name="searchModel">Activity log search model</param>
         /// <returns>Activity log search model</returns>
-        public virtual ActivityLogSearchModel PrepareActivityLogSearchModel(ActivityLogSearchModel model)
+        public virtual ActivityLogSearchModel PrepareActivityLogSearchModel(ActivityLogSearchModel searchModel)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             //prepare available activity log types
-            _baseAdminModelFactory.PrepareActivityLogTypes(model.ActivityLogType);
+            _baseAdminModelFactory.PrepareActivityLogTypes(searchModel.ActivityLogType);
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>
