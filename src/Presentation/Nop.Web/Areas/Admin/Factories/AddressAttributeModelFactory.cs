@@ -45,17 +45,17 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare address attribute search model
         /// </summary>
-        /// <param name="model">Address attribute search model</param>
+        /// <param name="searchModel">Address attribute search model</param>
         /// <returns>Address attribute search model</returns>
-        public virtual AddressAttributeSearchModel PrepareAddressAttributeSearchModel(AddressAttributeSearchModel model)
+        public virtual AddressAttributeSearchModel PrepareAddressAttributeSearchModel(AddressAttributeSearchModel searchModel)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>
@@ -127,31 +127,31 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare address attribute value search model
         /// </summary>
-        /// <param name="model">Address attribute value search model</param>
+        /// <param name="searchModel">Address attribute value search model</param>
         /// <param name="addressAttribute">Address attribute</param>
         /// <returns>Address attribute value search model</returns>
-        public virtual AddressAttributeValueSearchModel PrepareAddressAttributeValueSearchModel(AddressAttributeValueSearchModel model,
+        public virtual AddressAttributeValueSearchModel PrepareAddressAttributeValueSearchModel(AddressAttributeValueSearchModel searchModel,
             AddressAttribute addressAttribute)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             if (addressAttribute == null)
                 throw new ArgumentNullException(nameof(addressAttribute));
 
-            model.AddressAttributeId = addressAttribute.Id;
+            searchModel.AddressAttributeId = addressAttribute.Id;
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>
         /// Prepare paged address attribute value list model
         /// </summary>
         /// <param name="searchModel">Address attribute value search model</param>
-        /// <param name="AddressAttribute">Address attribute</param>
+        /// <param name="addressAttribute">Address attribute</param>
         /// <returns>Address attribute value list model</returns>
         public virtual AddressAttributeValueListModel PrepareAddressAttributeValueListModel(AddressAttributeValueSearchModel searchModel,
             AddressAttribute addressAttribute)

@@ -11,9 +11,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare address attribute search model
         /// </summary>
-        /// <param name="model">Address attribute search model</param>
+        /// <param name="searchModel">Address attribute search model</param>
         /// <returns>Address attribute search model</returns>
-        AddressAttributeSearchModel PrepareAddressAttributeSearchModel(AddressAttributeSearchModel model);
+        AddressAttributeSearchModel PrepareAddressAttributeSearchModel(AddressAttributeSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged address attribute list model
@@ -35,17 +35,17 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare address attribute value search model
         /// </summary>
-        /// <param name="model">Address attribute value search model</param>
+        /// <param name="searchModel">Address attribute value search model</param>
         /// <param name="addressAttribute">Address attribute</param>
         /// <returns>Address attribute value search model</returns>
-        AddressAttributeValueSearchModel PrepareAddressAttributeValueSearchModel(AddressAttributeValueSearchModel model,
+        AddressAttributeValueSearchModel PrepareAddressAttributeValueSearchModel(AddressAttributeValueSearchModel searchModel,
             AddressAttribute addressAttribute);
 
         /// <summary>
         /// Prepare paged address attribute value list model
         /// </summary>
         /// <param name="searchModel">Address attribute value search model</param>
-        /// <param name="AddressAttribute">Address attribute</param>
+        /// <param name="addressAttribute">Address attribute</param>
         /// <returns>Address attribute value list model</returns>
         AddressAttributeValueListModel PrepareAddressAttributeValueListModel(AddressAttributeValueSearchModel searchModel, 
             AddressAttribute addressAttribute);
