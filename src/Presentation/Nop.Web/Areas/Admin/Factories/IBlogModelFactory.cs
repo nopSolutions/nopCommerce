@@ -11,9 +11,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare blog post search model
         /// </summary>
-        /// <param name="model">Blog post search model</param>
+        /// <param name="searchModel">Blog post search model</param>
         /// <returns>Blog post search model</returns>
-        BlogPostSearchModel PrepareBlogPostSearchModel(BlogPostSearchModel model);
+        BlogPostSearchModel PrepareBlogPostSearchModel(BlogPostSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged blog post list model
@@ -34,10 +34,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare blog comment search model
         /// </summary>
-        /// <param name="model">Blog comment search model</param>
+        /// <param name="searchModel">Blog comment search model</param>
         /// <param name="blogPost">Blog post</param>
         /// <returns>Blog comment search model</returns>
-        BlogCommentSearchModel PrepareBlogCommentSearchModel(BlogCommentSearchModel model, BlogPost blogPost);
+        BlogCommentSearchModel PrepareBlogCommentSearchModel(BlogCommentSearchModel searchModel, BlogPost blogPost);
 
         /// <summary>
         /// Prepare paged blog comment list model
