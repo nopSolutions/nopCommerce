@@ -44,17 +44,17 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare country search model
         /// </summary>
-        /// <param name="model">Country search model</param>
+        /// <param name="searchModel">Country search model</param>
         /// <returns>Country search model</returns>
-        public virtual CountrySearchModel PrepareCountrySearchModel(CountrySearchModel model)
+        public virtual CountrySearchModel PrepareCountrySearchModel(CountrySearchModel searchModel)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>
@@ -128,23 +128,23 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare state and province search model
         /// </summary>
-        /// <param name="model">State and province search model</param>
+        /// <param name="searchModel">State and province search model</param>
         /// <param name="country">Country</param>
         /// <returns>State and province search model</returns>
-        public virtual StateProvinceSearchModel PrepareStateProvinceSearchModel(StateProvinceSearchModel model, Country country)
+        public virtual StateProvinceSearchModel PrepareStateProvinceSearchModel(StateProvinceSearchModel searchModel, Country country)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
 
             if (country == null)
                 throw new ArgumentNullException(nameof(country));
 
-            model.CountryId = country.Id;
+            searchModel.CountryId = country.Id;
 
             //prepare page parameters
-            model.SetGridPageSize();
+            searchModel.SetGridPageSize();
 
-            return model;
+            return searchModel;
         }
 
         /// <summary>

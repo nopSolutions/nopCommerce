@@ -11,9 +11,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare country search model
         /// </summary>
-        /// <param name="model">Country search model</param>
+        /// <param name="searchModel">Country search model</param>
         /// <returns>Country search model</returns>
-        CountrySearchModel PrepareCountrySearchModel(CountrySearchModel model);
+        CountrySearchModel PrepareCountrySearchModel(CountrySearchModel searchModel);
 
         /// <summary>
         /// Prepare paged country list model
@@ -34,10 +34,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare state and province search model
         /// </summary>
-        /// <param name="model">State and province search model</param>
+        /// <param name="searchModel">State and province search model</param>
         /// <param name="country">Country</param>
         /// <returns>State and province search model</returns>
-        StateProvinceSearchModel PrepareStateProvinceSearchModel(StateProvinceSearchModel model, Country country);
+        StateProvinceSearchModel PrepareStateProvinceSearchModel(StateProvinceSearchModel searchModel, Country country);
 
         /// <summary>
         /// Prepare paged state and province list model
