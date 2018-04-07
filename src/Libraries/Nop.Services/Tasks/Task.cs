@@ -139,7 +139,7 @@ namespace Nop.Services.Tasks
                     var expirationInSeconds = ScheduleTask.Seconds <= 300 ? ScheduleTask.Seconds - 1 : 300;
 
                     //execute task with lock
-                    var redisWrapper = EngineContext.Current.Resolve<IRedisConnectionWrapper>();
+                    var redisWrapper = EngineContext.Current.Resolve<ILocker>();
                     redisWrapper.PerformActionWithLock(ScheduleTask.Type, TimeSpan.FromSeconds(expirationInSeconds), ExecuteTask);
                 }
                 else
