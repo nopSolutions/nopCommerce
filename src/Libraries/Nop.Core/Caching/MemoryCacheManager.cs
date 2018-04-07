@@ -58,7 +58,17 @@ namespace Nop.Core.Caching
         /// </summary>
         /// <param name="cacheTime">Cache time in minutes</param>
         /// <returns></returns>
+        [Obsolete]
         protected MemoryCacheEntryOptions GetMemoryCacheEntryOptions(int cacheTime)
+        {
+            return GetMemoryCacheEntryOptions(TimeSpan.FromMinutes(cacheTime));
+        }
+
+        /// <summary>
+        /// Create entry options to item of memory cache
+        /// </summary>
+        /// <param name="cacheTime">Cache time</param>
+        protected MemoryCacheEntryOptions GetMemoryCacheEntryOptions(TimeSpan cacheTime)
         {
             var options = new MemoryCacheEntryOptions()
                 // add cancellation token for clear cache
@@ -67,7 +77,7 @@ namespace Nop.Core.Caching
                 .RegisterPostEvictionCallback(PostEviction);
 
             //set cache time
-            options.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(cacheTime);
+            options.AbsoluteExpirationRelativeToNow = cacheTime;
 
             return options;
         }
@@ -162,7 +172,7 @@ namespace Nop.Core.Caching
         {
             if (data != null)
             {
-                _cache.Set(AddKey(key), data, GetMemoryCacheEntryOptions(cacheTime));
+                _cache.Set(AddKey(key), data, GetMemoryCacheEntryOptions(TimeSpan.FromMinutes(cacheTime)));
             }
         }
 
