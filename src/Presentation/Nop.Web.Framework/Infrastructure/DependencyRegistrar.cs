@@ -113,7 +113,12 @@ namespace Nop.Web.Framework.Infrastructure
                 builder.RegisterType<RedisCacheManager>().As<IStaticCacheManager>().InstancePerLifetimeScope();
             }
             else
-                builder.RegisterType<MemoryCacheManager>().As<IStaticCacheManager>().SingleInstance();
+            {
+                builder.RegisterType<MemoryCacheManager>()
+                    .As<ILocker>()
+                    .As<IStaticCacheManager>()
+                    .SingleInstance();
+            }
 
             //work context
             builder.RegisterType<WebWorkContext>().As<IWorkContext>().InstancePerLifetimeScope();

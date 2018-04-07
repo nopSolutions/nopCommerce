@@ -10,7 +10,7 @@ namespace Nop.Core.Caching
     /// <summary>
     /// Represents a memory cache manager 
     /// </summary>
-    public partial class MemoryCacheManager : IStaticCacheManager
+    public partial class MemoryCacheManager : ILocker, IStaticCacheManager
     {
         #region Fields
 
@@ -184,6 +184,35 @@ namespace Nop.Core.Caching
         public virtual bool IsSet(string key)
         {
             return _cache.TryGetValue(key, out object _);
+        }
+
+        /// <summary>
+        /// Perform some action with exclusive in-memory lock
+        /// </summary>
+        /// <param name="resource">The key we are locking on</param>
+        /// <param name="expirationTime">The time after which the lock will automatically be expired</param>
+        /// <param name="action">Action to be performed with locking</param>
+        /// <returns>True if lock was acquired and action was performed; otherwise false</returns>
+        public bool PerformActionWithLock(string key, TimeSpan expirationTime, Action action)
+        {
+            //ensure that lock is acquired
+            if (!_allKeys.TryAdd(key, true))
+                return false;
+
+            try
+            {
+                _cache.Set(key, key, GetMemoryCacheEntryOptions(expirationTime));
+
+                //perform action
+                action();
+
+                return true;
+            }
+            finally
+            {
+                //release lock even if action fails
+                Remove(key);
+            }
         }
 
         /// <summary>
