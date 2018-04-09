@@ -239,6 +239,7 @@
         public static string OrderShipmentDetailsButtons => "admin_order_shipment_details_buttons";
         public static string OrderShipmentListButtons => "admin_order_shipment_list_buttons";
         public static string OrderUploadLicenseButtons => "admin_order_upload_license_buttons";
+        public static string PaymentsListButtons => "admin_payments_list_buttons";
         public static string PaymentMethodListButtons => "admin_payment_method_list_buttons";
         public static string PaymentMethodRestrictionsListButtons => "admin_payment_method_restrictions_list_buttons";
         public static string PermissionListButtons => "admin_permission_list_buttons";
