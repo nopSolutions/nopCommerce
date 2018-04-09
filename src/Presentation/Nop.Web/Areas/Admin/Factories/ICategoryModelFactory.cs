@@ -32,14 +32,6 @@ namespace Nop.Web.Areas.Admin.Factories
         CategoryModel PrepareCategoryModel(CategoryModel model, Category category, bool excludeProperties = false);
 
         /// <summary>
-        /// Prepare category product search model
-        /// </summary>
-        /// <param name="searchModel">Category product search model</param>
-        /// <param name="category">Category</param>
-        /// <returns>Category product search model</returns>
-        CategoryProductSearchModel PrepareCategoryProductSearchModel(CategoryProductSearchModel searchModel, Category category);
-
-        /// <summary>
         /// Prepare paged category product list model
         /// </summary>
         /// <param name="searchModel">Category product search model</param>

@@ -32,14 +32,6 @@ namespace Nop.Web.Areas.Admin.Factories
         CountryModel PrepareCountryModel(CountryModel model, Country country, bool excludeProperties = false);
 
         /// <summary>
-        /// Prepare state and province search model
-        /// </summary>
-        /// <param name="searchModel">State and province search model</param>
-        /// <param name="country">Country</param>
-        /// <returns>State and province search model</returns>
-        StateProvinceSearchModel PrepareStateProvinceSearchModel(StateProvinceSearchModel searchModel, Country country);
-
-        /// <summary>
         /// Prepare paged state and province list model
         /// </summary>
         /// <param name="searchModel">State and province search model</param>

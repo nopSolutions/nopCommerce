@@ -48,14 +48,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <returns>Catalog settings model</returns>
         CatalogSettingsModel PrepareCatalogSettingsModel();
-
-        /// <summary>
-        /// Prepare sort option search model
-        /// </summary>
-        /// <param name="searchModel">Sort option search model</param>
-        /// <returns>Sort option search model</returns>
-        SortOptionSearchModel PrepareSortOptionSearchModel(SortOptionSearchModel searchModel);
-
+        
         /// <summary>
         /// Prepare paged sort option list model
         /// </summary>
@@ -92,97 +85,13 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <returns>Customer user settings model</returns>
         CustomerUserSettingsModel PrepareCustomerUserSettingsModel();
-
-        /// <summary>
-        /// Prepare address settings model
-        /// </summary>
-        /// <returns>Address settings model</returns>
-        AddressSettingsModel PrepareAddressSettingsModel();
-
-        /// <summary>
-        /// Prepare customer settings model
-        /// </summary>
-        /// <returns>Customer settings model</returns>
-        CustomerSettingsModel PrepareCustomerSettingsModel();
-
-        /// <summary>
-        /// Prepare date time settings model
-        /// </summary>
-        /// <returns>Date time settings model</returns>
-        DateTimeSettingsModel PrepareDateTimeSettingsModel();
-
-        /// <summary>
-        /// Prepare external authentication settings model
-        /// </summary>
-        /// <returns>External authentication settings model</returns>
-        ExternalAuthenticationSettingsModel PrepareExternalAuthenticationSettingsModel();
-
+        
         /// <summary>
         /// Prepare general and common settings model
         /// </summary>
         /// <returns>General and common settings model</returns>
         GeneralCommonSettingsModel PrepareGeneralCommonSettingsModel();
-
-        /// <summary>
-        /// Prepare store information settings model
-        /// </summary>
-        /// <returns>Store information settings model</returns>
-        StoreInformationSettingsModel PrepareStoreInformationSettingsModel();
-
-        /// <summary>
-        /// Prepare SEO settings model
-        /// </summary>
-        /// <returns>SEO settings model</returns>
-        SeoSettingsModel PrepareSeoSettingsModel();
-
-        /// <summary>
-        /// Prepare security settings model
-        /// </summary>
-        /// <returns>Security settings model</returns>
-        SecuritySettingsModel PrepareSecuritySettingsModel();
-
-        /// <summary>
-        /// Prepare captcha settings model
-        /// </summary>
-        /// <returns>Captcha settings model</returns>
-        CaptchaSettingsModel PrepareCaptchaSettingsModel();
-
-        /// <summary>
-        /// Prepare PDF settings model
-        /// </summary>
-        /// <returns>PDF settings model</returns>
-        PdfSettingsModel PreparePdfSettingsModel();
-
-        /// <summary>
-        /// Prepare localization settings model
-        /// </summary>
-        /// <returns>Localization settings model</returns>
-        LocalizationSettingsModel PrepareLocalizationSettingsModel();
-
-        /// <summary>
-        /// Prepare full-text settings model
-        /// </summary>
-        /// <returns>Full-text settings model</returns>
-        FullTextSettingsModel PrepareFullTextSettingsModel();
-
-        /// <summary>
-        /// Prepare admin area settings model
-        /// </summary>
-        /// <returns>Admin area settings model</returns>
-        AdminAreaSettingsModel PrepareAdminAreaSettingsModel();
-
-        /// <summary>
-        /// Prepare display default menu item settings model
-        /// </summary>
-        /// <returns>Display default menu item settings model</returns>
-        DisplayDefaultMenuItemSettingsModel PrepareDisplayDefaultMenuItemSettingsModel();
-
-        /// <summary>
-        /// Prepare display default footer item settings model
-        /// </summary>
-        /// <returns>Display default footer item settings model</returns>
-        DisplayDefaultFooterItemSettingsModel PrepareDisplayDefaultFooterItemSettingsModel();
-
+        
         /// <summary>
         /// Prepare product editor settings model
         /// </summary>

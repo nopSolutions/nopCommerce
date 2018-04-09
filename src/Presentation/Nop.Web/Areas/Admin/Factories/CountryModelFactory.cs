@@ -39,6 +39,32 @@ namespace Nop.Web.Areas.Admin.Factories
 
         #endregion
 
+        #region Utilities
+
+        /// <summary>
+        /// Prepare state and province search model
+        /// </summary>
+        /// <param name="searchModel">State and province search model</param>
+        /// <param name="country">Country</param>
+        /// <returns>State and province search model</returns>
+        protected virtual StateProvinceSearchModel PrepareStateProvinceSearchModel(StateProvinceSearchModel searchModel, Country country)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+            if (country == null)
+                throw new ArgumentNullException(nameof(country));
+
+            searchModel.CountryId = country.Id;
+
+            //prepare page parameters
+            searchModel.SetGridPageSize();
+
+            return searchModel;
+        }
+
+        #endregion
+
         #region Methods
 
         /// <summary>
@@ -123,28 +149,6 @@ namespace Nop.Web.Areas.Admin.Factories
             _storeMappingSupportedModelFactory.PrepareModelStores(model, country, excludeProperties);
 
             return model;
-        }
-
-        /// <summary>
-        /// Prepare state and province search model
-        /// </summary>
-        /// <param name="searchModel">State and province search model</param>
-        /// <param name="country">Country</param>
-        /// <returns>State and province search model</returns>
-        public virtual StateProvinceSearchModel PrepareStateProvinceSearchModel(StateProvinceSearchModel searchModel, Country country)
-        {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            if (country == null)
-                throw new ArgumentNullException(nameof(country));
-
-            searchModel.CountryId = country.Id;
-
-            //prepare page parameters
-            searchModel.SetGridPageSize();
-
-            return searchModel;
         }
 
         /// <summary>

@@ -33,6 +33,56 @@ namespace Nop.Web.Areas.Admin.Factories
 
         #endregion
 
+        #region Utilities
+
+        /// <summary>
+        /// Prepare specification attribute option search model
+        /// </summary>
+        /// <param name="searchModel">Specification attribute option search model</param>
+        /// <param name="specificationAttribute">Specification attribute</param>
+        /// <returns>Specification attribute option search model</returns>
+        protected virtual SpecificationAttributeOptionSearchModel PrepareSpecificationAttributeOptionSearchModel(
+            SpecificationAttributeOptionSearchModel searchModel, SpecificationAttribute specificationAttribute)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+            if (specificationAttribute == null)
+                throw new ArgumentNullException(nameof(specificationAttribute));
+
+            searchModel.SpecificationAttributeId = specificationAttribute.Id;
+
+            //prepare page parameters
+            searchModel.SetGridPageSize();
+
+            return searchModel;
+        }
+
+        /// <summary>
+        /// Prepare search model of products that use the specification attribute
+        /// </summary>
+        /// <param name="searchModel">Search model of products that use the specification attribute</param>
+        /// <param name="specificationAttribute">Specification attribute</param>
+        /// <returns>Search model of products that use the specification attribute</returns>
+        protected virtual SpecificationAttributeProductSearchModel PrepareSpecificationAttributeProductSearchModel(
+            SpecificationAttributeProductSearchModel searchModel, SpecificationAttribute specificationAttribute)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+            if (specificationAttribute == null)
+                throw new ArgumentNullException(nameof(specificationAttribute));
+
+            searchModel.SpecificationAttributeId = specificationAttribute.Id;
+
+            //prepare page parameters
+            searchModel.SetGridPageSize();
+
+            return searchModel;
+        }
+
+        #endregion
+
         #region Methods
 
         /// <summary>
@@ -112,29 +162,6 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         /// <summary>
-        /// Prepare specification attribute option search model
-        /// </summary>
-        /// <param name="searchModel">Specification attribute option search model</param>
-        /// <param name="specificationAttribute">Specification attribute</param>
-        /// <returns>Specification attribute option search model</returns>
-        public virtual SpecificationAttributeOptionSearchModel PrepareSpecificationAttributeOptionSearchModel(
-            SpecificationAttributeOptionSearchModel searchModel, SpecificationAttribute specificationAttribute)
-        {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            if (specificationAttribute == null)
-                throw new ArgumentNullException(nameof(specificationAttribute));
-
-            searchModel.SpecificationAttributeId = specificationAttribute.Id;
-
-            //prepare page parameters
-            searchModel.SetGridPageSize();
-
-            return searchModel;
-        }
-
-        /// <summary>
         /// Prepare paged specification attribute option list model
         /// </summary>
         /// <param name="searchModel">Specification attribute option search model</param>
@@ -210,29 +237,6 @@ namespace Nop.Web.Areas.Admin.Factories
                 model.Locales = _localizedModelFactory.PrepareLocalizedModels(localizedModelConfiguration);
 
             return model;
-        }
-
-        /// <summary>
-        /// Prepare search model of products that use the specification attribute
-        /// </summary>
-        /// <param name="searchModel">Search model of products that use the specification attribute</param>
-        /// <param name="specificationAttribute">Specification attribute</param>
-        /// <returns>Search model of products that use the specification attribute</returns>
-        public virtual SpecificationAttributeProductSearchModel PrepareSpecificationAttributeProductSearchModel(
-            SpecificationAttributeProductSearchModel searchModel, SpecificationAttribute specificationAttribute)
-        {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            if (specificationAttribute == null)
-                throw new ArgumentNullException(nameof(specificationAttribute));
-
-            searchModel.SpecificationAttributeId = specificationAttribute.Id;
-
-            //prepare page parameters
-            searchModel.SetGridPageSize();
-
-            return searchModel;
         }
 
         /// <summary>

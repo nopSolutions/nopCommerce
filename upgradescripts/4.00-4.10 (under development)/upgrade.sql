@@ -911,6 +911,12 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.Order.DeleteGiftCardUsageHistory.Hint">
     <Value>Check to delete gift card usage history after order cancellation</Value>
   </LocaleResource>   
+  <LocaleResource Name="Admin.Catalog.BulkEdit.Fields.ManageInventoryMethod.MultipleWarehouse">
+    <Value>(multi-warehouse)</Value>
+  </LocaleResource>    
+  <LocaleResource Name="Admin.Configuration.Stores.Fields.DefaultLanguage.DefaultItemText">
+    <Value>---</Value>
+  </LocaleResource>   
 </Language>
 '
 

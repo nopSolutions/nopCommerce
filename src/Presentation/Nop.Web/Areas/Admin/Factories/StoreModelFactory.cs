@@ -20,6 +20,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IBaseAdminModelFactory _baseAdminModelFactory;
         private readonly ILocalizedModelFactory _localizedModelFactory;
         private readonly IStoreService _storeService;
+        private readonly ILocalizationService _localizationService;
 
         #endregion
 
@@ -27,11 +28,13 @@ namespace Nop.Web.Areas.Admin.Factories
 
         public StoreModelFactory(IBaseAdminModelFactory baseAdminModelFactory,
             ILocalizedModelFactory localizedModelFactory,
-            IStoreService storeService)
+            IStoreService storeService,
+            ILocalizationService localizationService)
         {
             this._baseAdminModelFactory = baseAdminModelFactory;
             this._localizedModelFactory = localizedModelFactory;
             this._storeService = storeService;
+            this._localizationService = localizationService;
         }
 
         #endregion
@@ -102,8 +105,7 @@ namespace Nop.Web.Areas.Admin.Factories
             }
 
             //prepare available languages
-            //TODO: add locale resource for "---"
-            _baseAdminModelFactory.PrepareLanguages(model.AvailableLanguages, defaultItemText: "---");
+            _baseAdminModelFactory.PrepareLanguages(model.AvailableLanguages, defaultItemText: _localizationService.GetResource("Admin.Configuration.Stores.Fields.DefaultLanguage.DefaultItemText"));
 
             //prepare localized models
             if (!excludeProperties)

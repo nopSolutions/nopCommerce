@@ -460,11 +460,11 @@ namespace Nop.Web.Areas.Admin.Factories
             }
 
             //profit (hide for vendors)
-            if (_workContext.CurrentVendor == null)
-            {
-                var profit = _orderReportService.ProfitReport(orderId: order.Id);
-                model.Profit = _priceFormatter.FormatPrice(profit, true, false);
-            }
+            if (_workContext.CurrentVendor != null)
+                return;
+
+            var profit = _orderReportService.ProfitReport(orderId: order.Id);
+            model.Profit = _priceFormatter.FormatPrice(profit, true, false);
         }
 
         /// <summary>
@@ -568,11 +568,11 @@ namespace Nop.Web.Areas.Admin.Factories
             }
             else
             {
-                if (order.PickupAddress != null)
-                {
-                    model.PickupAddress = order.PickupAddress.ToModel();
-                    model.PickupAddressGoogleMapsUrl = $"http://maps.google.com/maps?f=q&hl=en&ie=UTF8&oe=UTF8&geocode=&q={WebUtility.UrlEncode($"{order.PickupAddress.Address1} {order.PickupAddress.ZipPostalCode} {order.PickupAddress.City} {(order.PickupAddress.Country != null ? order.PickupAddress.Country.Name : string.Empty)}")}";
-                }
+                if (order.PickupAddress == null)
+                    return;
+
+                model.PickupAddress = order.PickupAddress.ToModel();
+                model.PickupAddressGoogleMapsUrl = $"http://maps.google.com/maps?f=q&hl=en&ie=UTF8&oe=UTF8&geocode=&q={WebUtility.UrlEncode($"{order.PickupAddress.Address1} {order.PickupAddress.ZipPostalCode} {order.PickupAddress.City} {(order.PickupAddress.Country != null ? order.PickupAddress.Country.Name : string.Empty)}")}";
             }
         }
 
@@ -682,15 +682,12 @@ namespace Nop.Web.Areas.Admin.Factories
             model.ItemDimensions =
                 $"{orderItem.Product.Length:F2} x {orderItem.Product.Width:F2} x {orderItem.Product.Height:F2} [{baseDimension}]";
 
-            if (orderItem.Product.IsRental)
-            {
-                var rentalStartDate = orderItem.RentalStartDateUtc.HasValue
-                    ? orderItem.Product.FormatRentalDate(orderItem.RentalStartDateUtc.Value) : string.Empty;
-                var rentalEndDate = orderItem.RentalEndDateUtc.HasValue
-                    ? orderItem.Product.FormatRentalDate(orderItem.RentalEndDateUtc.Value) : string.Empty;
-                model.RentalInfo = string
-                    .Format(_localizationService.GetResource("Order.Rental.FormattedDate"), rentalStartDate, rentalEndDate);
-            }
+            if (!orderItem.Product.IsRental)
+                return;
+
+            var rentalStartDate = orderItem.RentalStartDateUtc.HasValue ? orderItem.Product.FormatRentalDate(orderItem.RentalStartDateUtc.Value) : string.Empty;
+            var rentalEndDate = orderItem.RentalEndDateUtc.HasValue ? orderItem.Product.FormatRentalDate(orderItem.RentalEndDateUtc.Value) : string.Empty;
+            model.RentalInfo = string.Format(_localizationService.GetResource("Order.Rental.FormattedDate"), rentalStartDate, rentalEndDate);
         }
 
         /// <summary>
@@ -721,6 +718,69 @@ namespace Nop.Web.Areas.Admin.Factories
                     ? shipmentEventCountry.GetLocalized(x => x.Name) : shipmentEvent.CountryCode;
                 models.Add(shipmentStatusEventModel);
             }
+        }
+
+        /// <summary>
+        /// Prepare order shipment search model
+        /// </summary>
+        /// <param name="searchModel">Order shipment search model</param>
+        /// <param name="order">Order</param>
+        /// <returns>Order shipment search model</returns>
+        protected virtual OrderShipmentSearchModel PrepareOrderShipmentSearchModel(OrderShipmentSearchModel searchModel, Order order)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+            if (order == null)
+                throw new ArgumentNullException(nameof(order));
+
+            searchModel.OrderId = order.Id;
+
+            //prepare nested search model
+            PrepareShipmentItemSearchModel(searchModel.ShipmentItemSearchModel);
+
+            //prepare page parameters
+            searchModel.SetGridPageSize();
+
+            return searchModel;
+        }
+
+        /// <summary>
+        /// Prepare shipment item search model
+        /// </summary>
+        /// <param name="searchModel">Shipment item search model</param>
+        /// <returns>Shipment item search model</returns>
+        protected virtual ShipmentItemSearchModel PrepareShipmentItemSearchModel(ShipmentItemSearchModel searchModel)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+            //prepare page parameters
+            searchModel.SetGridPageSize();
+
+            return searchModel;
+        }
+
+        /// <summary>
+        /// Prepare order note search model
+        /// </summary>
+        /// <param name="searchModel">Order note search model</param>
+        /// <param name="order">Order</param>
+        /// <returns>Order note search model</returns>
+        protected virtual OrderNoteSearchModel PrepareOrderNoteSearchModel(OrderNoteSearchModel searchModel, Order order)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+            if (order == null)
+                throw new ArgumentNullException(nameof(order));
+
+            searchModel.OrderId = order.Id;
+
+            //prepare page parameters
+            searchModel.SetGridPageSize();
+
+            return searchModel;
         }
 
         #endregion
@@ -1230,17 +1290,18 @@ namespace Nop.Web.Areas.Admin.Factories
                 : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
 
             //get shipments
-            var shipments = _shipmentService.GetAllShipments(vendorId: vendorId,
-                warehouseId: searchModel.WarehouseId,
-                shippingCountryId: searchModel.CountryId,
-                shippingStateId: searchModel.StateProvinceId,
-                shippingCounty: searchModel.County,
-                shippingCity: searchModel.City,
-                trackingNumber: searchModel.TrackingNumber,
-                loadNotShipped: searchModel.LoadNotShipped,
-                createdFromUtc: startDateValue,
-                createdToUtc: endDateValue,
-                pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
+            var shipments = _shipmentService.GetAllShipments(vendorId,
+                searchModel.WarehouseId,
+                searchModel.CountryId,
+                searchModel.StateProvinceId,
+                searchModel.County,
+                searchModel.City,
+                searchModel.TrackingNumber,
+                searchModel.LoadNotShipped,
+                startDateValue,
+                endDateValue,
+                searchModel.Page - 1, 
+                searchModel.PageSize);
 
             //prepare list model
             var model = new ShipmentListModel
@@ -1410,31 +1471,6 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         /// <summary>
-        /// Prepare order shipment search model
-        /// </summary>
-        /// <param name="searchModel">Order shipment search model</param>
-        /// <param name="order">Order</param>
-        /// <returns>Order shipment search model</returns>
-        public virtual OrderShipmentSearchModel PrepareOrderShipmentSearchModel(OrderShipmentSearchModel searchModel, Order order)
-        {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            if (order == null)
-                throw new ArgumentNullException(nameof(order));
-
-            searchModel.OrderId = order.Id;
-
-            //prepare nested search model
-            PrepareShipmentItemSearchModel(searchModel.ShipmentItemSearchModel);
-
-            //prepare page parameters
-            searchModel.SetGridPageSize();
-
-            return searchModel;
-        }
-
-        /// <summary>
         /// Prepare paged order shipment list model
         /// </summary>
         /// <param name="searchModel">Order shipment search model</param>
@@ -1502,22 +1538,6 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         /// <summary>
-        /// Prepare shipment item search model
-        /// </summary>
-        /// <param name="searchModel">Shipment item search model</param>
-        /// <returns>Shipment item search model</returns>
-        public virtual ShipmentItemSearchModel PrepareShipmentItemSearchModel(ShipmentItemSearchModel searchModel)
-        {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            //prepare page parameters
-            searchModel.SetGridPageSize();
-
-            return searchModel;
-        }
-
-        /// <summary>
         /// Prepare paged shipment item list model
         /// </summary>
         /// <param name="searchModel">Shipment item search model</param>
@@ -1549,20 +1569,21 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     //fill in additional values (not existing in the entity)
                     var orderItem = _orderService.GetOrderItemById(item.OrderItemId);
-                    if (orderItem != null)
-                    {
-                        shipmentItemModel.OrderItemId = orderItem.Id;
-                        shipmentItemModel.ProductId = orderItem.ProductId;
-                        shipmentItemModel.ProductName = orderItem.Product.Name;
-                        shipmentItemModel.ShippedFromWarehouse = _shippingService.GetWarehouseById(item.WarehouseId)?.Name;
+                    if (orderItem == null)
+                        return shipmentItemModel;
 
-                        var baseWeight = _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId)?.Name;
-                        var baseDimension = _measureService.GetMeasureDimensionById(_measureSettings.BaseDimensionId)?.Name;
-                        if (orderItem.ItemWeight.HasValue)
-                            shipmentItemModel.ItemWeight = $"{orderItem.ItemWeight:F2} [{baseWeight}]";
-                        shipmentItemModel.ItemDimensions =
-                            $"{orderItem.Product.Length:F2} x {orderItem.Product.Width:F2} x {orderItem.Product.Height:F2} [{baseDimension}]";
-                    }
+                    shipmentItemModel.OrderItemId = orderItem.Id;
+                    shipmentItemModel.ProductId = orderItem.ProductId;
+                    shipmentItemModel.ProductName = orderItem.Product.Name;
+                    shipmentItemModel.ShippedFromWarehouse = _shippingService.GetWarehouseById(item.WarehouseId)?.Name;
+
+                    var baseWeight = _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId)?.Name;
+                    var baseDimension = _measureService.GetMeasureDimensionById(_measureSettings.BaseDimensionId)?.Name;
+                    if (orderItem.ItemWeight.HasValue)
+                        shipmentItemModel.ItemWeight = $"{orderItem.ItemWeight:F2} [{baseWeight}]";
+
+                    shipmentItemModel.ItemDimensions =
+                        $"{orderItem.Product.Length:F2} x {orderItem.Product.Width:F2} x {orderItem.Product.Height:F2} [{baseDimension}]";
 
                     return shipmentItemModel;
                 }),
@@ -1570,28 +1591,6 @@ namespace Nop.Web.Areas.Admin.Factories
             };
 
             return model;
-        }
-
-        /// <summary>
-        /// Prepare order note search model
-        /// </summary>
-        /// <param name="searchModel">Order note search model</param>
-        /// <param name="order">Order</param>
-        /// <returns>Order note search model</returns>
-        public virtual OrderNoteSearchModel PrepareOrderNoteSearchModel(OrderNoteSearchModel searchModel, Order order)
-        {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            if (order == null)
-                throw new ArgumentNullException(nameof(order));
-
-            searchModel.OrderId = order.Id;
-
-            //prepare page parameters
-            searchModel.SetGridPageSize();
-
-            return searchModel;
         }
 
         /// <summary>

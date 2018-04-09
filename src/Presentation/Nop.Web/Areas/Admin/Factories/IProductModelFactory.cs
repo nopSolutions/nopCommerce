@@ -46,14 +46,6 @@ namespace Nop.Web.Areas.Admin.Factories
         AddRequiredProductListModel PrepareAddRequiredProductListModel(AddRequiredProductSearchModel searchModel);
 
         /// <summary>
-        /// Prepare related product search model
-        /// </summary>
-        /// <param name="searchModel">Related product search model</param>
-        /// <param name="product">Product</param>
-        /// <returns>Related product search model</returns>
-        RelatedProductSearchModel PrepareRelatedProductSearchModel(RelatedProductSearchModel searchModel, Product product);
-
-        /// <summary>
         /// Prepare paged related product list model
         /// </summary>
         /// <param name="searchModel">Related product search model</param>
@@ -74,14 +66,6 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="searchModel">Related product search model to add to the product</param>
         /// <returns>Related product list model to add to the product</returns>
         AddRelatedProductListModel PrepareAddRelatedProductListModel(AddRelatedProductSearchModel searchModel);
-
-        /// <summary>
-        /// Prepare cross-sell product search model
-        /// </summary>
-        /// <param name="searchModel">Cross-sell product search model</param>
-        /// <param name="product">Product</param>
-        /// <returns>Cross-sell product search model</returns>
-        CrossSellProductSearchModel PrepareCrossSellProductSearchModel(CrossSellProductSearchModel searchModel, Product product);
 
         /// <summary>
         /// Prepare paged cross-sell product list model
@@ -106,14 +90,6 @@ namespace Nop.Web.Areas.Admin.Factories
         AddCrossSellProductListModel PrepareAddCrossSellProductListModel(AddCrossSellProductSearchModel searchModel);
 
         /// <summary>
-        /// Prepare associated product search model
-        /// </summary>
-        /// <param name="searchModel">Associated product search model</param>
-        /// <param name="product">Product</param>
-        /// <returns>Associated product search model</returns>
-        AssociatedProductSearchModel PrepareAssociatedProductSearchModel(AssociatedProductSearchModel searchModel, Product product);
-
-        /// <summary>
         /// Prepare paged associated product list model
         /// </summary>
         /// <param name="searchModel">Associated product search model</param>
@@ -136,29 +112,12 @@ namespace Nop.Web.Areas.Admin.Factories
         AddAssociatedProductListModel PrepareAddAssociatedProductListModel(AddAssociatedProductSearchModel searchModel);
 
         /// <summary>
-        /// Prepare product picture search model
-        /// </summary>
-        /// <param name="searchModel">Product picture search model</param>
-        /// <param name="product">Product</param>
-        /// <returns>Product picture search model</returns>
-        ProductPictureSearchModel PrepareProductPictureSearchModel(ProductPictureSearchModel searchModel, Product product);
-
-        /// <summary>
         /// Prepare paged product picture list model
         /// </summary>
         /// <param name="searchModel">Product picture search model</param>
         /// <param name="product">Product</param>
         /// <returns>Product picture list model</returns>
         ProductPictureListModel PrepareProductPictureListModel(ProductPictureSearchModel searchModel, Product product);
-
-        /// <summary>
-        /// Prepare product specification attribute search model
-        /// </summary>
-        /// <param name="searchModel">Product specification attribute search model</param>
-        /// <param name="product">Product</param>
-        /// <returns>Product specification attribute search model</returns>
-        ProductSpecificationAttributeSearchModel PrepareProductSpecificationAttributeSearchModel(
-            ProductSpecificationAttributeSearchModel searchModel, Product product);
 
         /// <summary>
         /// Prepare paged product specification attribute list model
@@ -191,14 +150,6 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
         /// <returns>Product tag model</returns>
         ProductTagModel PrepareProductTagModel(ProductTagModel model, ProductTag productTag, bool excludeProperties = false);
-
-        /// <summary>
-        /// Prepare product order search model
-        /// </summary>
-        /// <param name="searchModel">Product order search model</param>
-        /// <param name="product">Product</param>
-        /// <returns>Product order search model</returns>
-        ProductOrderSearchModel PrepareProductOrderSearchModel(ProductOrderSearchModel searchModel, Product product);
 
         /// <summary>
         /// Prepare paged product order list model
@@ -237,14 +188,6 @@ namespace Nop.Web.Areas.Admin.Factories
         BulkEditProductListModel PrepareBulkEditProductListModel(BulkEditProductSearchModel searchModel);
 
         /// <summary>
-        /// Prepare tier price search model
-        /// </summary>
-        /// <param name="searchModel">Tier price search model</param>
-        /// <param name="product">Product</param>
-        /// <returns>Tier price search model</returns>
-        TierPriceSearchModel PrepareTierPriceSearchModel(TierPriceSearchModel searchModel, Product product);
-
-        /// <summary>
         /// Prepare paged tier price list model
         /// </summary>
         /// <param name="searchModel">Tier price search model</param>
@@ -264,29 +207,12 @@ namespace Nop.Web.Areas.Admin.Factories
             Product product, TierPrice tierPrice, bool excludeProperties = false);
 
         /// <summary>
-        /// Prepare stock quantity history search model
-        /// </summary>
-        /// <param name="searchModel">Stock quantity history search model</param>
-        /// <param name="product">Product</param>
-        /// <returns>Stock quantity history search model</returns>
-        StockQuantityHistorySearchModel PrepareStockQuantityHistorySearchModel(StockQuantityHistorySearchModel searchModel, Product product);
-
-        /// <summary>
         /// Prepare paged stock quantity history list model
         /// </summary>
         /// <param name="searchModel">Stock quantity history search model</param>
         /// <param name="product">Product</param>
         /// <returns>Stock quantity history list model</returns>
         StockQuantityHistoryListModel PrepareStockQuantityHistoryListModel(StockQuantityHistorySearchModel searchModel, Product product);
-
-        /// <summary>
-        /// Prepare product attribute mapping search model
-        /// </summary>
-        /// <param name="searchModel">Product attribute mapping search model</param>
-        /// <param name="product">Product</param>
-        /// <returns>Product attribute mapping search model</returns>
-        ProductAttributeMappingSearchModel PrepareProductAttributeMappingSearchModel(ProductAttributeMappingSearchModel searchModel,
-            Product product);
 
         /// <summary>
         /// Prepare paged product attribute mapping list model
@@ -307,15 +233,6 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>Product attribute mapping model</returns>
         ProductAttributeMappingModel PrepareProductAttributeMappingModel(ProductAttributeMappingModel model,
             Product product, ProductAttributeMapping productAttributeMapping, bool excludeProperties = false);
-
-        /// <summary>
-        /// Prepare product attribute value search model
-        /// </summary>
-        /// <param name="searchModel">Product attribute value search model</param>
-        /// <param name="productAttributeMapping">Product attribute mapping</param>
-        /// <returns>Product attribute value search model</returns>
-        ProductAttributeValueSearchModel PrepareProductAttributeValueSearchModel(ProductAttributeValueSearchModel searchModel,
-            ProductAttributeMapping productAttributeMapping);
 
         /// <summary>
         /// Prepare paged product attribute value list model
@@ -352,15 +269,6 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>Product model to associate to the product attribute value</returns>
         AssociateProductToAttributeValueListModel PrepareAssociateProductToAttributeValueListModel(
             AssociateProductToAttributeValueSearchModel searchModel);
-
-        /// <summary>
-        /// Prepare product attribute combination search model
-        /// </summary>
-        /// <param name="searchModel">Product attribute combination search model</param>
-        /// <param name="product">Product</param>
-        /// <returns>Product attribute combination search model</returns>
-        ProductAttributeCombinationSearchModel PrepareProductAttributeCombinationSearchModel(
-            ProductAttributeCombinationSearchModel searchModel, Product product);
 
         /// <summary>
         /// Prepare paged product attribute combination list model

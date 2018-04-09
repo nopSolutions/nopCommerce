@@ -129,20 +129,20 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>Queued email model</returns>
         public virtual QueuedEmailModel PrepareQueuedEmailModel(QueuedEmailModel model, QueuedEmail queuedEmail, bool excludeProperties = false)
         {
-            if (queuedEmail != null)
-            {
-                //fill in model values from the entity
-                model = model ?? queuedEmail.ToModel();
+            if (queuedEmail == null)
+                return model;
 
-                model.PriorityName = queuedEmail.Priority.GetLocalizedEnum(_localizationService, _workContext);
-                model.CreatedOn = _dateTimeHelper.ConvertToUserTime(queuedEmail.CreatedOnUtc, DateTimeKind.Utc);
+            //fill in model values from the entity
+            model = model ?? queuedEmail.ToModel();
 
-                if (queuedEmail.SentOnUtc.HasValue)
-                    model.SentOn = _dateTimeHelper.ConvertToUserTime(queuedEmail.SentOnUtc.Value, DateTimeKind.Utc);
-                if (queuedEmail.DontSendBeforeDateUtc.HasValue)
-                    model.DontSendBeforeDate = _dateTimeHelper.ConvertToUserTime(queuedEmail.DontSendBeforeDateUtc.Value, DateTimeKind.Utc);
-                else model.SendImmediately = true;
-            }
+            model.PriorityName = queuedEmail.Priority.GetLocalizedEnum(_localizationService, _workContext);
+            model.CreatedOn = _dateTimeHelper.ConvertToUserTime(queuedEmail.CreatedOnUtc, DateTimeKind.Utc);
+
+            if (queuedEmail.SentOnUtc.HasValue)
+                model.SentOn = _dateTimeHelper.ConvertToUserTime(queuedEmail.SentOnUtc.Value, DateTimeKind.Utc);
+            if (queuedEmail.DontSendBeforeDateUtc.HasValue)
+                model.DontSendBeforeDate = _dateTimeHelper.ConvertToUserTime(queuedEmail.DontSendBeforeDateUtc.Value, DateTimeKind.Utc);
+            else model.SendImmediately = true;
 
             return model;
         }

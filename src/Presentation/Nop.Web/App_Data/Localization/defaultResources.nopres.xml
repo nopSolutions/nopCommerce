@@ -1968,6 +1968,9 @@
   <LocaleResource Name="Admin.Catalog.BulkEdit.Fields.ManageInventoryMethod">
     <Value>Manage inventory</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.BulkEdit.Fields.ManageInventoryMethod.MultipleWarehouse">
+    <Value>(multi-warehouse)</Value>
+  </LocaleResource> 
   <LocaleResource Name="Admin.Catalog.BulkEdit.Fields.Name">
     <Value>Name</Value>
   </LocaleResource>
@@ -8615,6 +8618,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Stores.Fields.DefaultLanguage">
     <Value>Default language</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Stores.Fields.DefaultLanguage.DefaultItemText">
+    <Value>---</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Stores.Fields.DefaultLanguage.Hint">
     <Value>This property allows a store owner to specify a default language for a store. If not specified, then the default language display order will be used.</Value>

@@ -116,7 +116,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     Id = attribute.Id,
                     Name = attribute.Name,
                     IsRequired = attribute.IsRequired,
-                    AttributeControlType = attribute.AttributeControlType,
+                    AttributeControlType = attribute.AttributeControlType
                 };
 
                 if (attribute.ShouldHaveValues())
@@ -222,6 +222,28 @@ namespace Nop.Web.Areas.Admin.Factories
             model.PrepareCustomAddressAttributes(address, _addressAttributeService, _addressAttributeParser);
         }
 
+        /// <summary>
+        /// Prepare vendor note search model
+        /// </summary>
+        /// <param name="searchModel">Vendor note search model</param>
+        /// <param name="vendor">Vendor</param>
+        /// <returns>Vendor note search model</returns>
+        protected virtual VendorNoteSearchModel PrepareVendorNoteSearchModel(VendorNoteSearchModel searchModel, Vendor vendor)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+            if (vendor == null)
+                throw new ArgumentNullException(nameof(vendor));
+
+            searchModel.VendorId = vendor.Id;
+
+            //prepare page parameters
+            searchModel.SetGridPageSize();
+
+            return searchModel;
+        }
+
         #endregion
 
         #region Methods
@@ -325,28 +347,6 @@ namespace Nop.Web.Areas.Admin.Factories
             PrepareAddressModel(model.Address, address);
 
             return model;
-        }
-
-        /// <summary>
-        /// Prepare vendor note search model
-        /// </summary>
-        /// <param name="searchModel">Vendor note search model</param>
-        /// <param name="vendor">Vendor</param>
-        /// <returns>Vendor note search model</returns>
-        public virtual VendorNoteSearchModel PrepareVendorNoteSearchModel(VendorNoteSearchModel searchModel, Vendor vendor)
-        {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            if (vendor == null)
-                throw new ArgumentNullException(nameof(vendor));
-
-            searchModel.VendorId = vendor.Id;
-
-            //prepare page parameters
-            searchModel.SetGridPageSize();
-
-            return searchModel;
         }
 
         /// <summary>

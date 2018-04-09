@@ -89,6 +89,38 @@ namespace Nop.Web.Areas.Admin.Factories
             _baseAdminModelFactory.PrepareStatesAndProvinces(model.AvailableStates, model.CountryId);
         }
 
+        /// <summary>
+        /// Prepare delivery date search model
+        /// </summary>
+        /// <param name="searchModel">Delivery date search model</param>
+        /// <returns>Delivery date search model</returns>
+        protected virtual DeliveryDateSearchModel PrepareDeliveryDateSearchModel(DeliveryDateSearchModel searchModel)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+            //prepare page parameters
+            searchModel.SetGridPageSize();
+
+            return searchModel;
+        }
+
+        /// <summary>
+        /// Prepare product availability range search model
+        /// </summary>
+        /// <param name="searchModel">Product availability range search model</param>
+        /// <returns>Product availability range search model</returns>
+        protected virtual ProductAvailabilityRangeSearchModel PrepareProductAvailabilityRangeSearchModel(ProductAvailabilityRangeSearchModel searchModel)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+            //prepare page parameters
+            searchModel.SetGridPageSize();
+
+            return searchModel;
+        }
+
         #endregion
 
         #region Methods
@@ -283,22 +315,6 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         /// <summary>
-        /// Prepare delivery date search model
-        /// </summary>
-        /// <param name="searchModel">Delivery date search model</param>
-        /// <returns>Delivery date search model</returns>
-        public virtual DeliveryDateSearchModel PrepareDeliveryDateSearchModel(DeliveryDateSearchModel searchModel)
-        {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            //prepare page parameters
-            searchModel.SetGridPageSize();
-
-            return searchModel;
-        }
-
-        /// <summary>
         /// Prepare paged delivery date list model
         /// </summary>
         /// <param name="searchModel">Delivery date search model</param>
@@ -350,22 +366,6 @@ namespace Nop.Web.Areas.Admin.Factories
                 model.Locales = _localizedModelFactory.PrepareLocalizedModels(localizedModelConfiguration);
 
             return model;
-        }
-
-        /// <summary>
-        /// Prepare product availability range search model
-        /// </summary>
-        /// <param name="searchModel">Product availability range search model</param>
-        /// <returns>Product availability range search model</returns>
-        public virtual ProductAvailabilityRangeSearchModel PrepareProductAvailabilityRangeSearchModel(ProductAvailabilityRangeSearchModel searchModel)
-        {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            //prepare page parameters
-            searchModel.SetGridPageSize();
-
-            return searchModel;
         }
 
         /// <summary>

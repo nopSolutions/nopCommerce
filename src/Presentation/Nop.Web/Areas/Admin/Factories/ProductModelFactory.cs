@@ -391,6 +391,255 @@ namespace Nop.Web.Areas.Admin.Factories
             }
         }
 
+        /// <summary>
+        /// Prepare related product search model
+        /// </summary>
+        /// <param name="searchModel">Related product search model</param>
+        /// <param name="product">Product</param>
+        /// <returns>Related product search model</returns>
+        protected virtual RelatedProductSearchModel PrepareRelatedProductSearchModel(RelatedProductSearchModel searchModel, Product product)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+            if (product == null)
+                throw new ArgumentNullException(nameof(product));
+
+            searchModel.ProductId = product.Id;
+
+            //prepare page parameters
+            searchModel.SetGridPageSize();
+
+            return searchModel;
+        }
+
+        /// <summary>
+        /// Prepare cross-sell product search model
+        /// </summary>
+        /// <param name="searchModel">Cross-sell product search model</param>
+        /// <param name="product">Product</param>
+        /// <returns>Cross-sell product search model</returns>
+        protected virtual CrossSellProductSearchModel PrepareCrossSellProductSearchModel(CrossSellProductSearchModel searchModel, Product product)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+            if (product == null)
+                throw new ArgumentNullException(nameof(product));
+
+            searchModel.ProductId = product.Id;
+
+            //prepare page parameters
+            searchModel.SetGridPageSize();
+
+            return searchModel;
+        }
+
+        /// <summary>
+        /// Prepare associated product search model
+        /// </summary>
+        /// <param name="searchModel">Associated product search model</param>
+        /// <param name="product">Product</param>
+        /// <returns>Associated product search model</returns>
+        protected virtual AssociatedProductSearchModel PrepareAssociatedProductSearchModel(AssociatedProductSearchModel searchModel, Product product)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+            if (product == null)
+                throw new ArgumentNullException(nameof(product));
+
+            searchModel.ProductId = product.Id;
+
+            //prepare page parameters
+            searchModel.SetGridPageSize();
+
+            return searchModel;
+        }
+
+        /// <summary>
+        /// Prepare product picture search model
+        /// </summary>
+        /// <param name="searchModel">Product picture search model</param>
+        /// <param name="product">Product</param>
+        /// <returns>Product picture search model</returns>
+        protected virtual ProductPictureSearchModel PrepareProductPictureSearchModel(ProductPictureSearchModel searchModel, Product product)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+            if (product == null)
+                throw new ArgumentNullException(nameof(product));
+
+            searchModel.ProductId = product.Id;
+
+            //prepare page parameters
+            searchModel.SetGridPageSize();
+
+            return searchModel;
+        }
+
+        /// <summary>
+        /// Prepare product order search model
+        /// </summary>
+        /// <param name="searchModel">Product order search model</param>
+        /// <param name="product">Product</param>
+        /// <returns>Product order search model</returns>
+        protected virtual ProductOrderSearchModel PrepareProductOrderSearchModel(ProductOrderSearchModel searchModel, Product product)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+            if (product == null)
+                throw new ArgumentNullException(nameof(product));
+
+            searchModel.ProductId = product.Id;
+
+            //prepare page parameters
+            searchModel.SetGridPageSize();
+
+            return searchModel;
+        }
+
+        /// <summary>
+        /// Prepare tier price search model
+        /// </summary>
+        /// <param name="searchModel">Tier price search model</param>
+        /// <param name="product">Product</param>
+        /// <returns>Tier price search model</returns>
+        protected virtual TierPriceSearchModel PrepareTierPriceSearchModel(TierPriceSearchModel searchModel, Product product)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+            if (product == null)
+                throw new ArgumentNullException(nameof(product));
+
+            searchModel.ProductId = product.Id;
+
+            //prepare page parameters
+            searchModel.SetGridPageSize();
+
+            return searchModel;
+        }
+
+        /// <summary>
+        /// Prepare stock quantity history search model
+        /// </summary>
+        /// <param name="searchModel">Stock quantity history search model</param>
+        /// <param name="product">Product</param>
+        /// <returns>Stock quantity history search model</returns>
+        protected virtual StockQuantityHistorySearchModel PrepareStockQuantityHistorySearchModel(StockQuantityHistorySearchModel searchModel, Product product)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+            if (product == null)
+                throw new ArgumentNullException(nameof(product));
+
+            searchModel.ProductId = product.Id;
+
+            //prepare available warehouses
+            _baseAdminModelFactory.PrepareWarehouses(searchModel.AvailableWarehouses);
+
+            //prepare page parameters
+            searchModel.SetGridPageSize();
+
+            return searchModel;
+        }
+
+        /// <summary>
+        /// Prepare product attribute mapping search model
+        /// </summary>
+        /// <param name="searchModel">Product attribute mapping search model</param>
+        /// <param name="product">Product</param>
+        /// <returns>Product attribute mapping search model</returns>
+        protected virtual ProductAttributeMappingSearchModel PrepareProductAttributeMappingSearchModel(ProductAttributeMappingSearchModel searchModel,
+            Product product)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+            if (product == null)
+                throw new ArgumentNullException(nameof(product));
+
+            searchModel.ProductId = product.Id;
+
+            //prepare page parameters
+            searchModel.SetGridPageSize();
+
+            return searchModel;
+        }
+
+        /// <summary>
+        /// Prepare product attribute value search model
+        /// </summary>
+        /// <param name="searchModel">Product attribute value search model</param>
+        /// <param name="productAttributeMapping">Product attribute mapping</param>
+        /// <returns>Product attribute value search model</returns>
+        protected virtual ProductAttributeValueSearchModel PrepareProductAttributeValueSearchModel(ProductAttributeValueSearchModel searchModel,
+            ProductAttributeMapping productAttributeMapping)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+            if (productAttributeMapping == null)
+                throw new ArgumentNullException(nameof(productAttributeMapping));
+
+            searchModel.ProductAttributeMappingId = productAttributeMapping.Id;
+
+            //prepare page parameters
+            searchModel.SetGridPageSize();
+
+            return searchModel;
+        }
+
+        /// <summary>
+        /// Prepare product attribute combination search model
+        /// </summary>
+        /// <param name="searchModel">Product attribute combination search model</param>
+        /// <param name="product">Product</param>
+        /// <returns>Product attribute combination search model</returns>
+        protected virtual ProductAttributeCombinationSearchModel PrepareProductAttributeCombinationSearchModel(
+            ProductAttributeCombinationSearchModel searchModel, Product product)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+            if (product == null)
+                throw new ArgumentNullException(nameof(product));
+
+            searchModel.ProductId = product.Id;
+
+            //prepare page parameters
+            searchModel.SetGridPageSize();
+
+            return searchModel;
+        }
+
+        /// <summary>
+        /// Prepare product specification attribute search model
+        /// </summary>
+        /// <param name="searchModel">Product specification attribute search model</param>
+        /// <param name="product">Product</param>
+        /// <returns>Product specification attribute search model</returns>
+        protected virtual ProductSpecificationAttributeSearchModel PrepareProductSpecificationAttributeSearchModel(
+            ProductSpecificationAttributeSearchModel searchModel, Product product)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+            if (product == null)
+                throw new ArgumentNullException(nameof(product));
+
+            searchModel.ProductId = product.Id;
+
+            //prepare page parameters
+            searchModel.SetGridPageSize();
+
+            return searchModel;
+        }
+
         #endregion
 
         #region Methods
@@ -619,9 +868,8 @@ namespace Nop.Web.Areas.Admin.Factories
                 model.ProductsTypesSupportedByProductTemplates.Add((int)productType, new List<SelectListItem>());
                 foreach (var template in productTemplates)
                 {
-                    if (string.IsNullOrEmpty(template.IgnoredProductTypes) ||
-                        !((IList<int>)TypeDescriptor.GetConverter(typeof(List<int>))
-                            .ConvertFrom(template.IgnoredProductTypes)).Contains((int)productType))
+                    var list = (IList<int>)TypeDescriptor.GetConverter(typeof(List<int>)).ConvertFrom(template.IgnoredProductTypes) ?? new List<int>();
+                    if (string.IsNullOrEmpty(template.IgnoredProductTypes) || !list.Contains((int)productType))
                     {
                         model.ProductsTypesSupportedByProductTemplates[(int)productType].Add(new SelectListItem
                         {
@@ -652,7 +900,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 defaultItemText: _localizationService.GetResource("Admin.Catalog.Products.Fields.Warehouse.None"));
             PrepareProductWarehouseInventoryModels(model.ProductWarehouseInventoryModels, product);
 
-            //prepare available baseprice units
+            //prepare available base price units
             var availableMeasureWeights = _measureService.GetAllMeasureWeights()
                 .Select(weight => new SelectListItem { Text = weight.Name, Value = weight.Id.ToString() }).ToList();
             model.AvailableBasepriceUnits = availableMeasureWeights;
@@ -753,28 +1001,6 @@ namespace Nop.Web.Areas.Admin.Factories
             };
 
             return model;
-        }
-
-        /// <summary>
-        /// Prepare related product search model
-        /// </summary>
-        /// <param name="searchModel">Related product search model</param>
-        /// <param name="product">Product</param>
-        /// <returns>Related product search model</returns>
-        public virtual RelatedProductSearchModel PrepareRelatedProductSearchModel(RelatedProductSearchModel searchModel, Product product)
-        {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
-
-            searchModel.ProductId = product.Id;
-
-            //prepare page parameters
-            searchModel.SetGridPageSize();
-
-            return searchModel;
         }
 
         /// <summary>
@@ -887,28 +1113,6 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         /// <summary>
-        /// Prepare cross-sell product search model
-        /// </summary>
-        /// <param name="searchModel">Cross-sell product search model</param>
-        /// <param name="product">Product</param>
-        /// <returns>Cross-sell product search model</returns>
-        public virtual CrossSellProductSearchModel PrepareCrossSellProductSearchModel(CrossSellProductSearchModel searchModel, Product product)
-        {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
-
-            searchModel.ProductId = product.Id;
-
-            //prepare page parameters
-            searchModel.SetGridPageSize();
-
-            return searchModel;
-        }
-
-        /// <summary>
         /// Prepare paged cross-sell product list model
         /// </summary>
         /// <param name="searchModel">Cross-sell product search model</param>
@@ -1017,28 +1221,6 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         /// <summary>
-        /// Prepare associated product search model
-        /// </summary>
-        /// <param name="searchModel">Associated product search model</param>
-        /// <param name="product">Product</param>
-        /// <returns>Associated product search model</returns>
-        public virtual AssociatedProductSearchModel PrepareAssociatedProductSearchModel(AssociatedProductSearchModel searchModel, Product product)
-        {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
-
-            searchModel.ProductId = product.Id;
-
-            //prepare page parameters
-            searchModel.SetGridPageSize();
-
-            return searchModel;
-        }
-
-        /// <summary>
         /// Prepare paged associated product list model
         /// </summary>
         /// <param name="searchModel">Associated product search model</param>
@@ -1140,11 +1322,11 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     //fill in additional values (not existing in the entity)
                     var parentGroupedProduct = _productService.GetProductById(product.ParentGroupedProductId);
-                    if (parentGroupedProduct != null)
-                    {
-                        productModel.AssociatedToProductId = product.ParentGroupedProductId;
-                        productModel.AssociatedToProductName = parentGroupedProduct.Name;
-                    }
+                    if (parentGroupedProduct == null)
+                        return productModel;
+
+                    productModel.AssociatedToProductId = product.ParentGroupedProductId;
+                    productModel.AssociatedToProductName = parentGroupedProduct.Name;
 
                     return productModel;
                 }),
@@ -1152,28 +1334,6 @@ namespace Nop.Web.Areas.Admin.Factories
             };
 
             return model;
-        }
-
-        /// <summary>
-        /// Prepare product picture search model
-        /// </summary>
-        /// <param name="searchModel">Product picture search model</param>
-        /// <param name="product">Product</param>
-        /// <returns>Product picture search model</returns>
-        public virtual ProductPictureSearchModel PrepareProductPictureSearchModel(ProductPictureSearchModel searchModel, Product product)
-        {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
-
-            searchModel.ProductId = product.Id;
-
-            //prepare page parameters
-            searchModel.SetGridPageSize();
-
-            return searchModel;
         }
 
         /// <summary>
@@ -1221,29 +1381,6 @@ namespace Nop.Web.Areas.Admin.Factories
             };
 
             return model;
-        }
-
-        /// <summary>
-        /// Prepare product specification attribute search model
-        /// </summary>
-        /// <param name="searchModel">Product specification attribute search model</param>
-        /// <param name="product">Product</param>
-        /// <returns>Product specification attribute search model</returns>
-        public virtual ProductSpecificationAttributeSearchModel PrepareProductSpecificationAttributeSearchModel(
-            ProductSpecificationAttributeSearchModel searchModel, Product product)
-        {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
-
-            searchModel.ProductId = product.Id;
-
-            //prepare page parameters
-            searchModel.SetGridPageSize();
-
-            return searchModel;
         }
 
         /// <summary>
@@ -1395,28 +1532,6 @@ namespace Nop.Web.Areas.Admin.Factories
                 model.Locales = _localizedModelFactory.PrepareLocalizedModels(localizedModelConfiguration);
 
             return model;
-        }
-
-        /// <summary>
-        /// Prepare product order search model
-        /// </summary>
-        /// <param name="searchModel">Product order search model</param>
-        /// <param name="product">Product</param>
-        /// <returns>Product order search model</returns>
-        public virtual ProductOrderSearchModel PrepareProductOrderSearchModel(ProductOrderSearchModel searchModel, Product product)
-        {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
-
-            searchModel.ProductId = product.Id;
-
-            //prepare page parameters
-            searchModel.SetGridPageSize();
-
-            return searchModel;
         }
 
         /// <summary>
@@ -1618,8 +1733,7 @@ namespace Nop.Web.Areas.Admin.Factories
                         .GetLocalizedEnum(_localizationService, _workContext.WorkingLanguage.Id);
                     if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStock && product.UseMultipleWarehouses)
                     {
-                        //TODO: localize "(multi-warehouse)"
-                        productModel.ManageInventoryMethod = $"{productModel.ManageInventoryMethod} (multi-warehouse)";
+                        productModel.ManageInventoryMethod = $"{productModel.ManageInventoryMethod} {_localizationService.GetResource("Admin.Catalog.BulkEdit.Fields.ManageInventoryMethod.MultipleWarehouse")}";
                     }
 
                     return productModel;
@@ -1628,28 +1742,6 @@ namespace Nop.Web.Areas.Admin.Factories
             };
 
             return model;
-        }
-
-        /// <summary>
-        /// Prepare tier price search model
-        /// </summary>
-        /// <param name="searchModel">Tier price search model</param>
-        /// <param name="product">Product</param>
-        /// <returns>Tier price search model</returns>
-        public virtual TierPriceSearchModel PrepareTierPriceSearchModel(TierPriceSearchModel searchModel, Product product)
-        {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
-
-            searchModel.ProductId = product.Id;
-
-            //prepare page parameters
-            searchModel.SetGridPageSize();
-
-            return searchModel;
         }
 
         /// <summary>
@@ -1743,31 +1835,6 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         /// <summary>
-        /// Prepare stock quantity history search model
-        /// </summary>
-        /// <param name="searchModel">Stock quantity history search model</param>
-        /// <param name="product">Product</param>
-        /// <returns>Stock quantity history search model</returns>
-        public virtual StockQuantityHistorySearchModel PrepareStockQuantityHistorySearchModel(StockQuantityHistorySearchModel searchModel, Product product)
-        {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
-
-            searchModel.ProductId = product.Id;
-
-            //prepare available warehouses
-            _baseAdminModelFactory.PrepareWarehouses(searchModel.AvailableWarehouses);
-
-            //prepare page parameters
-            searchModel.SetGridPageSize();
-
-            return searchModel;
-        }
-
-        /// <summary>
         /// Prepare paged stock quantity history list model
         /// </summary>
         /// <param name="searchModel">Stock quantity history search model</param>
@@ -1824,29 +1891,6 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         /// <summary>
-        /// Prepare product attribute mapping search model
-        /// </summary>
-        /// <param name="searchModel">Product attribute mapping search model</param>
-        /// <param name="product">Product</param>
-        /// <returns>Product attribute mapping search model</returns>
-        public virtual ProductAttributeMappingSearchModel PrepareProductAttributeMappingSearchModel(ProductAttributeMappingSearchModel searchModel,
-            Product product)
-        {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
-
-            searchModel.ProductId = product.Id;
-
-            //prepare page parameters
-            searchModel.SetGridPageSize();
-
-            return searchModel;
-        }
-
-        /// <summary>
         /// Prepare paged product attribute mapping list model
         /// </summary>
         /// <param name="searchModel">Product attribute mapping search model</param>
@@ -1890,15 +1934,14 @@ namespace Nop.Web.Areas.Admin.Factories
                         .GetLocalizedEnum(_localizationService, _workContext);
                     var conditionAttribute = _productAttributeParser
                         .ParseProductAttributeMappings(attributeMapping.ConditionAttributeXml).FirstOrDefault();
-                    if (conditionAttribute != null)
+                    if (conditionAttribute == null)
+                        return productAttributeMappingModel;
+
+                    var conditionValue = _productAttributeParser.ParseProductAttributeValues(attributeMapping.ConditionAttributeXml).FirstOrDefault();
+                    if (conditionValue != null)
                     {
-                        var conditionValue = _productAttributeParser
-                            .ParseProductAttributeValues(attributeMapping.ConditionAttributeXml).FirstOrDefault();
-                        if (conditionValue != null)
-                        {
-                            productAttributeMappingModel.ConditionString =
-                                $"{WebUtility.HtmlEncode(conditionAttribute.ProductAttribute.Name)}: {WebUtility.HtmlEncode(conditionValue.Name)}";
-                        }
+                        productAttributeMappingModel.ConditionString =
+                            $"{WebUtility.HtmlEncode(conditionAttribute.ProductAttribute.Name)}: {WebUtility.HtmlEncode(conditionValue.Name)}";
                     }
 
                     return productAttributeMappingModel;
@@ -1978,29 +2021,6 @@ namespace Nop.Web.Areas.Admin.Factories
             }).ToList();
 
             return model;
-        }
-
-        /// <summary>
-        /// Prepare product attribute value search model
-        /// </summary>
-        /// <param name="searchModel">Product attribute value search model</param>
-        /// <param name="productAttributeMapping">Product attribute mapping</param>
-        /// <returns>Product attribute value search model</returns>
-        public virtual ProductAttributeValueSearchModel PrepareProductAttributeValueSearchModel(ProductAttributeValueSearchModel searchModel,
-            ProductAttributeMapping productAttributeMapping)
-        {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            if (productAttributeMapping == null)
-                throw new ArgumentNullException(nameof(productAttributeMapping));
-
-            searchModel.ProductAttributeMappingId = productAttributeMapping.Id;
-
-            //prepare page parameters
-            searchModel.SetGridPageSize();
-
-            return searchModel;
         }
 
         /// <summary>
@@ -2224,29 +2244,6 @@ namespace Nop.Web.Areas.Admin.Factories
             };
 
             return model;
-        }
-
-        /// <summary>
-        /// Prepare product attribute combination search model
-        /// </summary>
-        /// <param name="searchModel">Product attribute combination search model</param>
-        /// <param name="product">Product</param>
-        /// <returns>Product attribute combination search model</returns>
-        public virtual ProductAttributeCombinationSearchModel PrepareProductAttributeCombinationSearchModel(
-            ProductAttributeCombinationSearchModel searchModel, Product product)
-        {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
-
-            searchModel.ProductId = product.Id;
-
-            //prepare page parameters
-            searchModel.SetGridPageSize();
-
-            return searchModel;
         }
 
         /// <summary>

@@ -40,6 +40,32 @@ namespace Nop.Web.Areas.Admin.Factories
 
         #endregion
 
+        #region Utilities
+
+        /// <summary>
+        /// Prepare address attribute value search model
+        /// </summary>
+        /// <param name="searchModel">Address attribute value search model</param>
+        /// <param name="addressAttribute">Address attribute</param>
+        /// <returns>Address attribute value search model</returns>
+        protected virtual AddressAttributeValueSearchModel PrepareAddressAttributeValueSearchModel(AddressAttributeValueSearchModel searchModel, AddressAttribute addressAttribute)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+            if (addressAttribute == null)
+                throw new ArgumentNullException(nameof(addressAttribute));
+
+            searchModel.AddressAttributeId = addressAttribute.Id;
+
+            //prepare page parameters
+            searchModel.SetGridPageSize();
+
+            return searchModel;
+        }
+
+        #endregion
+
         #region Methods
 
         /// <summary>
@@ -125,29 +151,6 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         /// <summary>
-        /// Prepare address attribute value search model
-        /// </summary>
-        /// <param name="searchModel">Address attribute value search model</param>
-        /// <param name="addressAttribute">Address attribute</param>
-        /// <returns>Address attribute value search model</returns>
-        public virtual AddressAttributeValueSearchModel PrepareAddressAttributeValueSearchModel(AddressAttributeValueSearchModel searchModel,
-            AddressAttribute addressAttribute)
-        {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            if (addressAttribute == null)
-                throw new ArgumentNullException(nameof(addressAttribute));
-
-            searchModel.AddressAttributeId = addressAttribute.Id;
-
-            //prepare page parameters
-            searchModel.SetGridPageSize();
-
-            return searchModel;
-        }
-
-        /// <summary>
         /// Prepare paged address attribute value list model
         /// </summary>
         /// <param name="searchModel">Address attribute value search model</param>
@@ -175,7 +178,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     AddressAttributeId = value.AddressAttributeId,
                     Name = value.Name,
                     IsPreSelected = value.IsPreSelected,
-                    DisplayOrder = value.DisplayOrder,
+                    DisplayOrder = value.DisplayOrder
                 }),
                 Total = addressAttributeValues.Count
             };

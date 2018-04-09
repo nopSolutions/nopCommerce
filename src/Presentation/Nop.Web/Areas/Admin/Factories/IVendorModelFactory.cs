@@ -32,14 +32,6 @@ namespace Nop.Web.Areas.Admin.Factories
         VendorModel PrepareVendorModel(VendorModel model, Vendor vendor, bool excludeProperties = false);
 
         /// <summary>
-        /// Prepare vendor note search model
-        /// </summary>
-        /// <param name="searchModel">Vendor note search model</param>
-        /// <param name="vendor">Vendor</param>
-        /// <returns>Vendor note search model</returns>
-        VendorNoteSearchModel PrepareVendorNoteSearchModel(VendorNoteSearchModel searchModel, Vendor vendor);
-
-        /// <summary>
         /// Prepare paged vendor note list model
         /// </summary>
         /// <param name="searchModel">Vendor note search model</param>

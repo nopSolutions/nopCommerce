@@ -36,6 +36,56 @@ namespace Nop.Web.Areas.Admin.Factories
 
         #endregion
 
+        #region Utilities
+
+        /// <summary>
+        /// Prepare predefined product attribute value search model
+        /// </summary>
+        /// <param name="searchModel">Predefined product attribute value search model</param>
+        /// <param name="productAttribute">Product attribute</param>
+        /// <returns>Predefined product attribute value search model</returns>
+        protected virtual PredefinedProductAttributeValueSearchModel PreparePredefinedProductAttributeValueSearchModel(
+            PredefinedProductAttributeValueSearchModel searchModel, ProductAttribute productAttribute)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+            if (productAttribute == null)
+                throw new ArgumentNullException(nameof(productAttribute));
+
+            searchModel.ProductAttributeId = productAttribute.Id;
+
+            //prepare page parameters
+            searchModel.SetGridPageSize();
+
+            return searchModel;
+        }
+
+        /// <summary>
+        /// Prepare search model of products that use the product attribute
+        /// </summary>
+        /// <param name="searchModel">Search model of products that use the product attribute</param>
+        /// <param name="productAttribute">Product attribute</param>
+        /// <returns>Search model of products that use the product attribute</returns>
+        protected virtual ProductAttributeProductSearchModel PrepareProductAttributeProductSearchModel(ProductAttributeProductSearchModel searchModel,
+            ProductAttribute productAttribute)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+            if (productAttribute == null)
+                throw new ArgumentNullException(nameof(productAttribute));
+
+            searchModel.ProductAttributeId = productAttribute.Id;
+
+            //prepare page parameters
+            searchModel.SetGridPageSize();
+
+            return searchModel;
+        }
+
+        #endregion
+
         #region Methods
 
         /// <summary>
@@ -113,29 +163,6 @@ namespace Nop.Web.Areas.Admin.Factories
                 model.Locales = _localizedModelFactory.PrepareLocalizedModels(localizedModelConfiguration);
 
             return model;
-        }
-
-        /// <summary>
-        /// Prepare predefined product attribute value search model
-        /// </summary>
-        /// <param name="searchModel">Predefined product attribute value search model</param>
-        /// <param name="productAttribute">Product attribute</param>
-        /// <returns>Predefined product attribute value search model</returns>
-        public virtual PredefinedProductAttributeValueSearchModel PreparePredefinedProductAttributeValueSearchModel(
-            PredefinedProductAttributeValueSearchModel searchModel, ProductAttribute productAttribute)
-        {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            if (productAttribute == null)
-                throw new ArgumentNullException(nameof(productAttribute));
-
-            searchModel.ProductAttributeId = productAttribute.Id;
-
-            //prepare page parameters
-            searchModel.SetGridPageSize();
-
-            return searchModel;
         }
 
         /// <summary>
@@ -229,29 +256,6 @@ namespace Nop.Web.Areas.Admin.Factories
                 model.Locales = _localizedModelFactory.PrepareLocalizedModels(localizedModelConfiguration);
 
             return model;
-        }
-
-        /// <summary>
-        /// Prepare search model of products that use the product attribute
-        /// </summary>
-        /// <param name="searchModel">Search model of products that use the product attribute</param>
-        /// <param name="productAttribute">Product attribute</param>
-        /// <returns>Search model of products that use the product attribute</returns>
-        public virtual ProductAttributeProductSearchModel PrepareProductAttributeProductSearchModel(ProductAttributeProductSearchModel searchModel,
-            ProductAttribute productAttribute)
-        {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            if (productAttribute == null)
-                throw new ArgumentNullException(nameof(productAttribute));
-
-            searchModel.ProductAttributeId = productAttribute.Id;
-
-            //prepare page parameters
-            searchModel.SetGridPageSize();
-
-            return searchModel;
         }
 
         /// <summary>

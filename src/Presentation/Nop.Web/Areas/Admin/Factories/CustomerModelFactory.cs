@@ -222,7 +222,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     Id = attribute.Id,
                     Name = attribute.Name,
                     IsRequired = attribute.IsRequired,
-                    AttributeControlType = attribute.AttributeControlType,
+                    AttributeControlType = attribute.AttributeControlType
                 };
 
                 if (attribute.ShouldHaveValues())
@@ -391,6 +391,181 @@ namespace Nop.Web.Areas.Admin.Factories
             addressHtmlSb.Append("</div>");
 
             model.AddressHtml = addressHtmlSb.ToString();
+        }
+
+        /// <summary>
+        /// Prepare reward points search model
+        /// </summary>
+        /// <param name="searchModel">Reward points search model</param>
+        /// <param name="customer">Customer</param>
+        /// <returns>Reward points search model</returns>
+        protected virtual CustomerRewardPointsSearchModel PrepareRewardPointsSearchModel(CustomerRewardPointsSearchModel searchModel, Customer customer)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+            if (customer == null)
+                throw new ArgumentNullException(nameof(customer));
+
+            searchModel.CustomerId = customer.Id;
+
+            //prepare page parameters
+            searchModel.SetGridPageSize();
+
+            return searchModel;
+        }
+
+        /// <summary>
+        /// Prepare customer address search model
+        /// </summary>
+        /// <param name="searchModel">Customer address search model</param>
+        /// <param name="customer">Customer</param>
+        /// <returns>Customer address search model</returns>
+        protected virtual CustomerAddressSearchModel PrepareCustomerAddressSearchModel(CustomerAddressSearchModel searchModel, Customer customer)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+            if (customer == null)
+                throw new ArgumentNullException(nameof(customer));
+
+            searchModel.CustomerId = customer.Id;
+
+            //prepare page parameters
+            searchModel.SetGridPageSize();
+
+            return searchModel;
+        }
+
+        /// <summary>
+        /// Prepare customer order search model
+        /// </summary>
+        /// <param name="searchModel">Customer order search model</param>
+        /// <param name="customer">Customer</param>
+        /// <returns>Customer order search model</returns>
+        protected virtual CustomerOrderSearchModel PrepareCustomerOrderSearchModel(CustomerOrderSearchModel searchModel, Customer customer)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+            if (customer == null)
+                throw new ArgumentNullException(nameof(customer));
+
+            searchModel.CustomerId = customer.Id;
+
+            //prepare page parameters
+            searchModel.SetGridPageSize();
+
+            return searchModel;
+        }
+
+        /// <summary>
+        /// Prepare best customers report search model
+        /// </summary>
+        /// <param name="searchModel">Best customers report search model</param>
+        /// <returns>Best customers report search model</returns>
+        protected virtual BestCustomersReportSearchModel PrepareBestCustomersReportSearchModel(BestCustomersReportSearchModel searchModel)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+            //prepare available order, payment and shipping statuses
+            _baseAdminModelFactory.PrepareOrderStatuses(searchModel.AvailableOrderStatuses);
+            _baseAdminModelFactory.PreparePaymentStatuses(searchModel.AvailablePaymentStatuses);
+            _baseAdminModelFactory.PrepareShippingStatuses(searchModel.AvailableShippingStatuses);
+
+            //prepare page parameters
+            searchModel.SetGridPageSize();
+
+            return searchModel;
+        }
+
+        /// <summary>
+        /// Prepare registered customers report search model
+        /// </summary>
+        /// <param name="searchModel">Registered customers report search model</param>
+        /// <returns>Registered customers report search model</returns>
+        protected virtual RegisteredCustomersReportSearchModel PrepareRegisteredCustomersReportSearchModel(RegisteredCustomersReportSearchModel searchModel)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+            //prepare page parameters
+            searchModel.SetGridPageSize();
+
+            return searchModel;
+        }
+
+        /// <summary>
+        /// Prepare customer shopping cart search model
+        /// </summary>
+        /// <param name="searchModel">Customer shopping cart search model</param>
+        /// <param name="customer">Customer</param>
+        /// <returns>Customer shopping cart search model</returns>
+        protected virtual CustomerShoppingCartSearchModel PrepareCustomerShoppingCartSearchModel(CustomerShoppingCartSearchModel searchModel,
+            Customer customer)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+            if (customer == null)
+                throw new ArgumentNullException(nameof(customer));
+
+            searchModel.CustomerId = customer.Id;
+
+            //prepare available shopping cart types (search shopping cart by default)
+            searchModel.ShoppingCartTypeId = (int)ShoppingCartType.ShoppingCart;
+            _baseAdminModelFactory.PrepareShoppingCartTypes(searchModel.AvailableShoppingCartTypes, false);
+
+            //prepare page parameters
+            searchModel.SetGridPageSize();
+
+            return searchModel;
+        }
+
+        /// <summary>
+        /// Prepare customer activity log search model
+        /// </summary>
+        /// <param name="searchModel">Customer activity log search model</param>
+        /// <param name="customer">Customer</param>
+        /// <returns>Customer activity log search model</returns>
+        protected virtual CustomerActivityLogSearchModel PrepareCustomerActivityLogSearchModel(CustomerActivityLogSearchModel searchModel, Customer customer)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+            if (customer == null)
+                throw new ArgumentNullException(nameof(customer));
+
+            searchModel.CustomerId = customer.Id;
+
+            //prepare page parameters
+            searchModel.SetGridPageSize();
+
+            return searchModel;
+        }
+
+        /// <summary>
+        /// Prepare customer back in stock subscriptions search model
+        /// </summary>
+        /// <param name="searchModel">Customer back in stock subscriptions search model</param>
+        /// <param name="customer">Customer</param>
+        /// <returns>Customer back in stock subscriptions search model</returns>
+        protected virtual CustomerBackInStockSubscriptionSearchModel PrepareCustomerBackInStockSubscriptionSearchModel(
+            CustomerBackInStockSubscriptionSearchModel searchModel, Customer customer)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+            if (customer == null)
+                throw new ArgumentNullException(nameof(customer));
+
+            searchModel.CustomerId = customer.Id;
+
+            //prepare page parameters
+            searchModel.SetGridPageSize();
+
+            return searchModel;
         }
 
         #endregion
@@ -647,28 +822,6 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         /// <summary>
-        /// Prepare reward points search model
-        /// </summary>
-        /// <param name="searchModel">Reward points search model</param>
-        /// <param name="customer">Customer</param>
-        /// <returns>Reward points search model</returns>
-        public virtual CustomerRewardPointsSearchModel PrepareRewardPointsSearchModel(CustomerRewardPointsSearchModel searchModel, Customer customer)
-        {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
-
-            searchModel.CustomerId = customer.Id;
-
-            //prepare page parameters
-            searchModel.SetGridPageSize();
-
-            return searchModel;
-        }
-
-        /// <summary>
         /// Prepare paged reward points list model
         /// </summary>
         /// <param name="searchModel">Reward points search model</param>
@@ -716,28 +869,6 @@ namespace Nop.Web.Areas.Admin.Factories
             };
 
             return model;
-        }
-
-        /// <summary>
-        /// Prepare customer address search model
-        /// </summary>
-        /// <param name="searchModel">Customer address search model</param>
-        /// <param name="customer">Customer</param>
-        /// <returns>Customer address search model</returns>
-        public virtual CustomerAddressSearchModel PrepareCustomerAddressSearchModel(CustomerAddressSearchModel searchModel, Customer customer)
-        {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
-
-            searchModel.CustomerId = customer.Id;
-
-            //prepare page parameters
-            searchModel.SetGridPageSize();
-
-            return searchModel;
         }
 
         /// <summary>
@@ -810,28 +941,6 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         /// <summary>
-        /// Prepare customer order search model
-        /// </summary>
-        /// <param name="searchModel">Customer order search model</param>
-        /// <param name="customer">Customer</param>
-        /// <returns>Customer order search model</returns>
-        public virtual CustomerOrderSearchModel PrepareCustomerOrderSearchModel(CustomerOrderSearchModel searchModel, Customer customer)
-        {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
-
-            searchModel.CustomerId = customer.Id;
-
-            //prepare page parameters
-            searchModel.SetGridPageSize();
-
-            return searchModel;
-        }
-
-        /// <summary>
         /// Prepare paged customer order list model
         /// </summary>
         /// <param name="searchModel">Customer order search model</param>
@@ -899,27 +1008,6 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         /// <summary>
-        /// Prepare best customers report search model
-        /// </summary>
-        /// <param name="searchModel">Best customers report search model</param>
-        /// <returns>Best customers report search model</returns>
-        public virtual BestCustomersReportSearchModel PrepareBestCustomersReportSearchModel(BestCustomersReportSearchModel searchModel)
-        {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            //prepare available order, payment and shipping statuses
-            _baseAdminModelFactory.PrepareOrderStatuses(searchModel.AvailableOrderStatuses);
-            _baseAdminModelFactory.PreparePaymentStatuses(searchModel.AvailablePaymentStatuses);
-            _baseAdminModelFactory.PrepareShippingStatuses(searchModel.AvailableShippingStatuses);
-
-            //prepare page parameters
-            searchModel.SetGridPageSize();
-
-            return searchModel;
-        }
-
-        /// <summary>
         /// Prepare paged best customers report list model
         /// </summary>
         /// <param name="searchModel">Best customers report search model</param>
@@ -957,7 +1045,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     {
                         CustomerId = item.CustomerId,
                         OrderTotal = _priceFormatter.FormatPrice(item.OrderTotal, true, false),
-                        OrderCount = item.OrderCount,
+                        OrderCount = item.OrderCount
                     };
 
                     //fill in additional values (not existing in the entity)
@@ -974,22 +1062,6 @@ namespace Nop.Web.Areas.Admin.Factories
             };
 
             return model;
-        }
-
-        /// <summary>
-        /// Prepare registered customers report search model
-        /// </summary>
-        /// <param name="searchModel">Registered customers report search model</param>
-        /// <returns>Registered customers report search model</returns>
-        public virtual RegisteredCustomersReportSearchModel PrepareRegisteredCustomersReportSearchModel(RegisteredCustomersReportSearchModel searchModel)
-        {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            //prepare page parameters
-            searchModel.SetGridPageSize();
-
-            return searchModel;
         }
 
         /// <summary>
@@ -1035,33 +1107,6 @@ namespace Nop.Web.Areas.Admin.Factories
             };
 
             return model;
-        }
-
-        /// <summary>
-        /// Prepare customer shopping cart search model
-        /// </summary>
-        /// <param name="searchModel">Customer shopping cart search model</param>
-        /// <param name="customer">Customer</param>
-        /// <returns>Customer shopping cart search model</returns>
-        public virtual CustomerShoppingCartSearchModel PrepareCustomerShoppingCartSearchModel(CustomerShoppingCartSearchModel searchModel,
-            Customer customer)
-        {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
-
-            searchModel.CustomerId = customer.Id;
-
-            //prepare available shopping cart types (search shopping cart by default)
-            searchModel.ShoppingCartTypeId = (int)ShoppingCartType.ShoppingCart;
-            _baseAdminModelFactory.PrepareShoppingCartTypes(searchModel.AvailableShoppingCartTypes, false);
-
-            //prepare page parameters
-            searchModel.SetGridPageSize();
-
-            return searchModel;
         }
 
         /// <summary>
@@ -1116,28 +1161,6 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         /// <summary>
-        /// Prepare customer activity log search model
-        /// </summary>
-        /// <param name="searchModel">Customer activity log search model</param>
-        /// <param name="customer">Customer</param>
-        /// <returns>Customer activity log search model</returns>
-        public virtual CustomerActivityLogSearchModel PrepareCustomerActivityLogSearchModel(CustomerActivityLogSearchModel searchModel, Customer customer)
-        {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
-
-            searchModel.CustomerId = customer.Id;
-
-            //prepare page parameters
-            searchModel.SetGridPageSize();
-
-            return searchModel;
-        }
-
-        /// <summary>
         /// Prepare paged customer activity log list model
         /// </summary>
         /// <param name="searchModel">Customer activity log search model</param>
@@ -1178,29 +1201,6 @@ namespace Nop.Web.Areas.Admin.Factories
             };
 
             return model;
-        }
-
-        /// <summary>
-        /// Prepare customer back in stock subscriptions search model
-        /// </summary>
-        /// <param name="searchModel">Customer back in stock subscriptions search model</param>
-        /// <param name="customer">Customer</param>
-        /// <returns>Customer back in stock subscriptions search model</returns>
-        public virtual CustomerBackInStockSubscriptionSearchModel PrepareCustomerBackInStockSubscriptionSearchModel(
-            CustomerBackInStockSubscriptionSearchModel searchModel, Customer customer)
-        {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
-
-            searchModel.CustomerId = customer.Id;
-
-            //prepare page parameters
-            searchModel.SetGridPageSize();
-
-            return searchModel;
         }
 
         /// <summary>

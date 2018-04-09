@@ -434,6 +434,22 @@ namespace Nop.Web.Areas.Admin.Factories
             }
         }
 
+        /// <summary>
+        /// Prepare backup file search model
+        /// </summary>
+        /// <param name="searchModel">Backup file search model</param>
+        /// <returns>Backup file search model</returns>
+        protected virtual BackupFileSearchModel PrepareBackupFileSearchModel(BackupFileSearchModel searchModel)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+            //prepare page parameters
+            searchModel.SetGridPageSize();
+
+            return searchModel;
+        }
+
         #endregion
 
         #region Methods
@@ -556,22 +572,6 @@ namespace Nop.Web.Areas.Admin.Factories
             PrepareBackupFileSearchModel(model.BackupFileSearchModel);
 
             return model;
-        }
-
-        /// <summary>
-        /// Prepare backup file search model
-        /// </summary>
-        /// <param name="searchModel">Backup file search model</param>
-        /// <returns>Backup file search model</returns>
-        public virtual BackupFileSearchModel PrepareBackupFileSearchModel(BackupFileSearchModel searchModel)
-        {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            //prepare page parameters
-            searchModel.SetGridPageSize();
-
-            return searchModel;
         }
 
         /// <summary>

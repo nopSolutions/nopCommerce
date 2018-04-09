@@ -40,6 +40,33 @@ namespace Nop.Web.Areas.Admin.Factories
 
         #endregion
 
+        #region Utilities
+
+        /// <summary>
+        /// Prepare vendor attribute value search model
+        /// </summary>
+        /// <param name="searchModel">Vendor attribute value search model</param>
+        /// <param name="vendorAttribute">Vendor attribute</param>
+        /// <returns>Vendor attribute value search model</returns>
+        protected virtual VendorAttributeValueSearchModel PrepareVendorAttributeValueSearchModel(VendorAttributeValueSearchModel searchModel,
+            VendorAttribute vendorAttribute)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+            if (vendorAttribute == null)
+                throw new ArgumentNullException(nameof(vendorAttribute));
+
+            searchModel.VendorAttributeId = vendorAttribute.Id;
+
+            //prepare page parameters
+            searchModel.SetGridPageSize();
+
+            return searchModel;
+        }
+
+        #endregion
+
         #region Methods
 
         /// <summary>
@@ -125,29 +152,6 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         /// <summary>
-        /// Prepare vendor attribute value search model
-        /// </summary>
-        /// <param name="searchModel">Vendor attribute value search model</param>
-        /// <param name="vendorAttribute">Vendor attribute</param>
-        /// <returns>Vendor attribute value search model</returns>
-        public virtual VendorAttributeValueSearchModel PrepareVendorAttributeValueSearchModel(VendorAttributeValueSearchModel searchModel,
-            VendorAttribute vendorAttribute)
-        {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            if (vendorAttribute == null)
-                throw new ArgumentNullException(nameof(vendorAttribute));
-
-            searchModel.VendorAttributeId = vendorAttribute.Id;
-
-            //prepare page parameters
-            searchModel.SetGridPageSize();
-
-            return searchModel;
-        }
-
-        /// <summary>
         /// Prepare paged vendor attribute value list model
         /// </summary>
         /// <param name="searchModel">Vendor attribute value search model</param>
@@ -175,7 +179,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     VendorAttributeId = value.VendorAttributeId,
                     Name = value.Name,
                     IsPreSelected = value.IsPreSelected,
-                    DisplayOrder = value.DisplayOrder,
+                    DisplayOrder = value.DisplayOrder
                 }),
                 Total = vendorAttributeValues.Count
             };

@@ -43,15 +43,6 @@ namespace Nop.Web.Areas.Admin.Factories
             Discount discount, RequirementGroupInteractionType groupInteractionType);
 
         /// <summary>
-        /// Prepare discount usage history search model
-        /// </summary>
-        /// <param name="searchModel">Discount usage history search model</param>
-        /// <param name="discount">Discount</param>
-        /// <returns>Discount usage history search model</returns>
-        DiscountUsageHistorySearchModel PrepareDiscountUsageHistorySearchModel(DiscountUsageHistorySearchModel searchModel, 
-            Discount discount);
-
-        /// <summary>
         /// Prepare paged discount usage history list model
         /// </summary>
         /// <param name="searchModel">Discount usage history search model</param>
@@ -59,14 +50,6 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>Discount usage history list model</returns>
         DiscountUsageHistoryListModel PrepareDiscountUsageHistoryListModel(DiscountUsageHistorySearchModel searchModel,
             Discount discount);
-
-        /// <summary>
-        /// Prepare discount product search model
-        /// </summary>
-        /// <param name="searchModel">Discount product search model</param>
-        /// <param name="discount">Discount</param>
-        /// <returns>Discount product search model</returns>
-        DiscountProductSearchModel PrepareDiscountProductSearchModel(DiscountProductSearchModel searchModel, Discount discount);
 
         /// <summary>
         /// Prepare paged discount product list model
@@ -91,14 +74,6 @@ namespace Nop.Web.Areas.Admin.Factories
         AddProductToDiscountListModel PrepareAddProductToDiscountListModel(AddProductToDiscountSearchModel searchModel);
 
         /// <summary>
-        /// Prepare discount category search model
-        /// </summary>
-        /// <param name="searchModel">Discount category search model</param>
-        /// <param name="discount">Discount</param>
-        /// <returns>Discount category search model</returns>
-        DiscountCategorySearchModel PrepareDiscountCategorySearchModel(DiscountCategorySearchModel searchModel, Discount discount);
-
-        /// <summary>
         /// Prepare paged discount category list model
         /// </summary>
         /// <param name="searchModel">Discount category search model</param>
@@ -119,15 +94,6 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="searchModel">Category search model to add to the discount</param>
         /// <returns>Category list model to add to the discount</returns>
         AddCategoryToDiscountListModel PrepareAddCategoryToDiscountListModel(AddCategoryToDiscountSearchModel searchModel);
-
-        /// <summary>
-        /// Prepare discount manufacturer search model
-        /// </summary>
-        /// <param name="searchModel">Discount manufacturer search model</param>
-        /// <param name="discount">Discount</param>
-        /// <returns>Discount manufacturer search model</returns>
-        DiscountManufacturerSearchModel PrepareDiscountManufacturerSearchModel(DiscountManufacturerSearchModel searchModel,
-            Discount discount);
 
         /// <summary>
         /// Prepare paged discount manufacturer list model

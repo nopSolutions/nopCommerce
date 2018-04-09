@@ -33,15 +33,6 @@ namespace Nop.Web.Areas.Admin.Factories
             CheckoutAttribute checkoutAttribute, bool excludeProperties = false);
 
         /// <summary>
-        /// Prepare checkout attribute value search model
-        /// </summary>
-        /// <param name="searchModel">Checkout attribute value search model</param>
-        /// <param name="checkoutAttribute">Checkout attribute</param>
-        /// <returns>Checkout attribute value search model</returns>
-        CheckoutAttributeValueSearchModel PrepareCheckoutAttributeValueSearchModel(CheckoutAttributeValueSearchModel searchModel,
-            CheckoutAttribute checkoutAttribute);
-
-        /// <summary>
         /// Prepare paged checkout attribute value list model
         /// </summary>
         /// <param name="searchModel">Checkout attribute value search model</param>

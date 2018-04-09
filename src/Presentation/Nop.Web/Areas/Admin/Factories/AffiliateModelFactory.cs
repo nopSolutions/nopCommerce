@@ -102,6 +102,55 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare available states
             _baseAdminModelFactory.PrepareStatesAndProvinces(model.AvailableStates, model.CountryId);
         }
+        
+        /// <summary>
+        /// Prepare affiliated order search model
+        /// </summary>
+        /// <param name="searchModel">Affiliated order search model</param>
+        /// <param name="affiliate">Affiliate</param>
+        /// <returns>Affiliated order search model</returns>
+        protected virtual AffiliatedOrderSearchModel PrepareAffiliatedOrderSearchModel(AffiliatedOrderSearchModel searchModel, Affiliate affiliate)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+            if (affiliate == null)
+                throw new ArgumentNullException(nameof(affiliate));
+
+            searchModel.AffliateId = affiliate.Id;
+
+            //prepare available order, payment and shipping statuses
+            _baseAdminModelFactory.PrepareOrderStatuses(searchModel.AvailableOrderStatuses);
+            _baseAdminModelFactory.PreparePaymentStatuses(searchModel.AvailablePaymentStatuses);
+            _baseAdminModelFactory.PrepareShippingStatuses(searchModel.AvailableShippingStatuses);
+
+            //prepare page parameters
+            searchModel.SetGridPageSize();
+
+            return searchModel;
+        }
+
+        /// <summary>
+        /// Prepare affiliated customer search model
+        /// </summary>
+        /// <param name="searchModel">Affiliated customer search model</param>
+        /// <param name="affiliate">Affiliate</param>
+        /// <returns>Affiliated customer search model</returns>
+        protected virtual AffiliatedCustomerSearchModel PrepareAffiliatedCustomerSearchModel(AffiliatedCustomerSearchModel searchModel, Affiliate affiliate)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+            if (affiliate == null)
+                throw new ArgumentNullException(nameof(affiliate));
+
+            searchModel.AffliateId = affiliate.Id;
+
+            //prepare page parameters
+            searchModel.SetGridPageSize();
+
+            return searchModel;
+        }
 
         #endregion
 
@@ -195,33 +244,6 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         /// <summary>
-        /// Prepare affiliated order search model
-        /// </summary>
-        /// <param name="searchModel">Affiliated order search model</param>
-        /// <param name="affiliate">Affiliate</param>
-        /// <returns>Affiliated order search model</returns>
-        public virtual AffiliatedOrderSearchModel PrepareAffiliatedOrderSearchModel(AffiliatedOrderSearchModel searchModel, Affiliate affiliate)
-        {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            if (affiliate == null)
-                throw new ArgumentNullException(nameof(affiliate));
-
-            searchModel.AffliateId = affiliate.Id;
-            
-            //prepare available order, payment and shipping statuses
-            _baseAdminModelFactory.PrepareOrderStatuses(searchModel.AvailableOrderStatuses);
-            _baseAdminModelFactory.PreparePaymentStatuses(searchModel.AvailablePaymentStatuses);
-            _baseAdminModelFactory.PrepareShippingStatuses(searchModel.AvailableShippingStatuses);
-
-            //prepare page parameters
-            searchModel.SetGridPageSize();
-
-            return searchModel;
-        }
-
-        /// <summary>
         /// Prepare paged affiliated order list model
         /// </summary>
         /// <param name="searchModel">Affiliated order search model</param>
@@ -272,29 +294,6 @@ namespace Nop.Web.Areas.Admin.Factories
             };
 
             return model;
-        }
-
-        /// <summary>
-        /// Prepare affiliated customer search model
-        /// </summary>
-        /// <param name="searchModel">Affiliated customer search model</param>
-        /// <param name="affiliate">Affiliate</param>
-        /// <returns>Affiliated customer search model</returns>
-        public virtual AffiliatedCustomerSearchModel PrepareAffiliatedCustomerSearchModel(AffiliatedCustomerSearchModel searchModel, 
-            Affiliate affiliate)
-        {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            if (affiliate == null)
-                throw new ArgumentNullException(nameof(affiliate));
-
-            searchModel.AffliateId = affiliate.Id;
-
-            //prepare page parameters
-            searchModel.SetGridPageSize();
-
-            return searchModel;
         }
 
         /// <summary>

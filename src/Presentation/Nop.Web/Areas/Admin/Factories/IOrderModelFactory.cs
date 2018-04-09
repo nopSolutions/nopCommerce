@@ -109,14 +109,6 @@ namespace Nop.Web.Areas.Admin.Factories
         ShipmentModel PrepareShipmentModel(ShipmentModel model, Shipment shipment, Order order, bool excludeProperties = false);
 
         /// <summary>
-        /// Prepare order shipment search model
-        /// </summary>
-        /// <param name="searchModel">Order shipment search model</param>
-        /// <param name="order">Order</param>
-        /// <returns>Order shipment search model</returns>
-        OrderShipmentSearchModel PrepareOrderShipmentSearchModel(OrderShipmentSearchModel searchModel, Order order);
-
-        /// <summary>
         /// Prepare paged order shipment list model
         /// </summary>
         /// <param name="searchModel">Order shipment search model</param>
@@ -125,27 +117,12 @@ namespace Nop.Web.Areas.Admin.Factories
         OrderShipmentListModel PrepareOrderShipmentListModel(OrderShipmentSearchModel searchModel, Order order);
 
         /// <summary>
-        /// Prepare shipment item search model
-        /// </summary>
-        /// <param name="searchModel">Shipment item search model</param>
-        /// <returns>Shipment item search model</returns>
-        ShipmentItemSearchModel PrepareShipmentItemSearchModel(ShipmentItemSearchModel searchModel);
-
-        /// <summary>
         /// Prepare paged shipment item list model
         /// </summary>
         /// <param name="searchModel">Shipment item search model</param>
         /// <param name="shipment">Shipment</param>
         /// <returns>Shipment item list model</returns>
         ShipmentItemListModel PrepareShipmentItemListModel(ShipmentItemSearchModel searchModel, Shipment shipment);
-
-        /// <summary>
-        /// Prepare order note search model
-        /// </summary>
-        /// <param name="searchModel">Order note search model</param>
-        /// <param name="order">Order</param>
-        /// <returns>Order note search model</returns>
-        OrderNoteSearchModel PrepareOrderNoteSearchModel(OrderNoteSearchModel searchModel, Order order);
 
         /// <summary>
         /// Prepare paged order note list model

@@ -59,7 +59,33 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         #endregion
-        
+
+        #region Utilities
+
+        /// <summary>
+        /// Prepare category product search model
+        /// </summary>
+        /// <param name="searchModel">Category product search model</param>
+        /// <param name="category">Category</param>
+        /// <returns>Category product search model</returns>
+        protected virtual CategoryProductSearchModel PrepareCategoryProductSearchModel(CategoryProductSearchModel searchModel, Category category)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+            if (category == null)
+                throw new ArgumentNullException(nameof(category));
+
+            searchModel.CategoryId = category.Id;
+
+            //prepare page parameters
+            searchModel.SetGridPageSize();
+
+            return searchModel;
+        }
+
+        #endregion
+
         #region Methods
 
         /// <summary>
@@ -179,28 +205,6 @@ namespace Nop.Web.Areas.Admin.Factories
             _storeMappingSupportedModelFactory.PrepareModelStores(model, category, excludeProperties);
 
             return model;
-        }
-
-        /// <summary>
-        /// Prepare category product search model
-        /// </summary>
-        /// <param name="searchModel">Category product search model</param>
-        /// <param name="category">Category</param>
-        /// <returns>Category product search model</returns>
-        public virtual CategoryProductSearchModel PrepareCategoryProductSearchModel(CategoryProductSearchModel searchModel, Category category)
-        {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            if (category == null)
-                throw new ArgumentNullException(nameof(category));
-
-            searchModel.CategoryId = category.Id;
-
-            //prepare page parameters
-            searchModel.SetGridPageSize();
-
-            return searchModel;
         }
 
         /// <summary>

@@ -32,29 +32,12 @@ namespace Nop.Web.Areas.Admin.Factories
         AffiliateModel PrepareAffiliateModel(AffiliateModel model, Affiliate affiliate, bool excludeProperties = false);
 
         /// <summary>
-        /// Prepare affiliated order search model
-        /// </summary>
-        /// <param name="searchModel">Affiliated order search model</param>
-        /// <param name="affiliate">Affiliate</param>
-        /// <returns>Affiliated order search model</returns>
-        AffiliatedOrderSearchModel PrepareAffiliatedOrderSearchModel(AffiliatedOrderSearchModel searchModel, Affiliate affiliate);
-
-        /// <summary>
         /// Prepare paged affiliated order list model
         /// </summary>
         /// <param name="searchModel">Affiliated order search model</param>
         /// <param name="affiliate">Affiliate</param>
         /// <returns>Affiliated order list model</returns>
         AffiliatedOrderListModel PrepareAffiliatedOrderListModel(AffiliatedOrderSearchModel searchModel, Affiliate affiliate);
-
-        /// <summary>
-        /// Prepare affiliated customer search model
-        /// </summary>
-        /// <param name="searchModel">Affiliated customer search model</param>
-        /// <param name="affiliate">Affiliate</param>
-        /// <returns>Affiliated customer search model</returns>
-        AffiliatedCustomerSearchModel PrepareAffiliatedCustomerSearchModel(AffiliatedCustomerSearchModel searchModel,
-            Affiliate affiliate);
 
         /// <summary>
         /// Prepare paged affiliated customer list model

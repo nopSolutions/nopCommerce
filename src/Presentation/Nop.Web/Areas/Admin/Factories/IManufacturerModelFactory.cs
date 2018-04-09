@@ -33,15 +33,6 @@ namespace Nop.Web.Areas.Admin.Factories
             Manufacturer manufacturer, bool excludeProperties = false);
 
         /// <summary>
-        /// Prepare manufacturer product search model
-        /// </summary>
-        /// <param name="searchModel">Manufacturer product search model</param>
-        /// <param name="manufacturer">Manufacturer</param>
-        /// <returns>Manufacturer product search model</returns>
-        ManufacturerProductSearchModel PrepareManufacturerProductSearchModel(ManufacturerProductSearchModel searchModel,
-            Manufacturer manufacturer);
-
-        /// <summary>
         /// Prepare paged manufacturer product list model
         /// </summary>
         /// <param name="searchModel">Manufacturer product search model</param>

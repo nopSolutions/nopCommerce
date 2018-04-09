@@ -33,15 +33,6 @@ namespace Nop.Web.Areas.Admin.Factories
             VendorAttribute vendorAttribute, bool excludeProperties = false);
 
         /// <summary>
-        /// Prepare vendor attribute value search model
-        /// </summary>
-        /// <param name="searchModel">Vendor attribute value search model</param>
-        /// <param name="vendorAttribute">Vendor attribute</param>
-        /// <returns>Vendor attribute value search model</returns>
-        VendorAttributeValueSearchModel PrepareVendorAttributeValueSearchModel(VendorAttributeValueSearchModel searchModel,
-            VendorAttribute vendorAttribute);
-
-        /// <summary>
         /// Prepare paged vendor attribute value list model
         /// </summary>
         /// <param name="searchModel">Vendor attribute value search model</param>
