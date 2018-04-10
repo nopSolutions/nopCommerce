@@ -292,7 +292,8 @@ namespace Nop.Services.Seo
             }
 
             var sb = new StringBuilder();
-            foreach (var c in name.ToCharArray())
+            var nameChars = name.ToCharArray();
+            foreach (var c in nameChars)
             {
                 var c2 = c.ToString();
                 if (convertNonWesternChars)
