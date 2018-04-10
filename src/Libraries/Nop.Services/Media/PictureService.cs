@@ -362,7 +362,7 @@ namespace Nop.Services.Media
         /// <returns>Result</returns>
         public virtual string GetPictureSeName(string name)
         {
-            return SeoExtensions.GetSeName(name, true, false);
+            return SeoExtensions.GetSeName(name, true, true);
         }
 
         /// <summary>
