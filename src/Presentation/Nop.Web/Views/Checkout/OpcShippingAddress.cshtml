@@ -109,7 +109,7 @@
                                                         map: googleMap,
                                                         title: "@point.Name",
                                                         position: new google.maps.LatLng(@point.Latitude, @point.Longitude),
-                                                        icon: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
+                                                        icon: "https://maps.google.com/mapfiles/ms/icons/blue-dot.png"
                                                     });
                                                     markers.set("@value", marker);
                                                     google.maps.event.addListener(marker, 'click', function () {
@@ -135,7 +135,7 @@
                                                                 map: googleMap,
                                                                 title: "@point.Name",
                                                                 position: results[0].geometry.location,
-                                                                icon: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
+                                                                icon: "https://maps.google.com/mapfiles/ms/icons/blue-dot.png"
                                                             });
                                                             markers.set("@value", marker);
                                                             google.maps.event.addListener(marker, 'click', function () {
