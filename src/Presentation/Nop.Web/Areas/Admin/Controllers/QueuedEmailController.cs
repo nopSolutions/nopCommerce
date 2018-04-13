@@ -118,7 +118,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 email = model.ToEntity(email);
-                email.DontSendBeforeDateUtc = (model.SendImmediately || !model.DontSendBeforeDate.HasValue) ?
+                email.DontSendBeforeDateUtc = model.SendImmediately || !model.DontSendBeforeDate.HasValue ?
                     null : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.DontSendBeforeDate.Value);
                 _queuedEmailService.UpdateQueuedEmail(email);
 
@@ -127,9 +127,10 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return continueEditing ? RedirectToAction("Edit", new { id = email.Id }) : RedirectToAction("List");
             }
 
-            //If we got this far, something failed, redisplay form
+            //prepare model
             model = _queuedEmailModelFactory.PrepareQueuedEmailModel(model, email, true);
 
+            //if we got this far, something failed, redisplay form
             return View(model);
         }
 
@@ -162,7 +163,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 AttachedDownloadId = queuedEmail.AttachedDownloadId,
                 CreatedOnUtc = DateTime.UtcNow,
                 EmailAccountId = queuedEmail.EmailAccountId,
-                DontSendBeforeDateUtc = (queuedEmailModel.SendImmediately || !queuedEmailModel.DontSendBeforeDate.HasValue) ?
+                DontSendBeforeDateUtc = queuedEmailModel.SendImmediately || !queuedEmailModel.DontSendBeforeDate.HasValue ?
                     null : (DateTime?)_dateTimeHelper.ConvertToUtcTime(queuedEmailModel.DontSendBeforeDate.Value)
             };
             _queuedEmailService.InsertQueuedEmail(requeuedEmail);

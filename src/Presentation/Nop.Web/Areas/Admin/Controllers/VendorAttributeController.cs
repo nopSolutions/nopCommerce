@@ -130,20 +130,19 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 SuccessNotification(_localizationService.GetResource("Admin.Vendors.VendorAttributes.Added"));
 
-                if (continueEditing)
-                {
-                    //selected tab
-                    SaveSelectedTabName();
+                if (!continueEditing)
+                    return RedirectToAction("List");
 
-                    return RedirectToAction("Edit", new { id = vendorAttribute.Id });
-                }
+                //selected tab
+                SaveSelectedTabName();
 
-                return RedirectToAction("List");
+                return RedirectToAction("Edit", new { id = vendorAttribute.Id });
             }
 
-            //If we got this far, something failed, redisplay form
+            //prepare model
             model = _vendorAttributeModelFactory.PrepareVendorAttributeModel(model, null, true);
 
+            //if we got this far, something failed, redisplay form
             return View(model);
         }
 
@@ -187,20 +186,19 @@ namespace Nop.Web.Areas.Admin.Controllers
                 UpdateAttributeLocales(vendorAttribute, model);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Vendors.VendorAttributes.Updated"));
-                if (continueEditing)
-                {
-                    //selected tab
-                    SaveSelectedTabName();
+                if (!continueEditing)
+                    return RedirectToAction("List");
 
-                    return RedirectToAction("Edit", new { id = vendorAttribute.Id });
-                }
+                //selected tab
+                SaveSelectedTabName();
 
-                return RedirectToAction("List");
+                return RedirectToAction("Edit", new { id = vendorAttribute.Id });
             }
 
-            //If we got this far, something failed, redisplay form
+            //prepare model
             model = _vendorAttributeModelFactory.PrepareVendorAttributeModel(model, vendorAttribute, true);
 
+            //if we got this far, something failed, redisplay form
             return View(model);
         }
 
@@ -296,9 +294,10 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return View(model);
             }
 
-            //If we got this far, something failed, redisplay form
+            //prepare model
             model = _vendorAttributeModelFactory.PrepareVendorAttributeValueModel(model, vendorAttribute, null, true);
 
+            //if we got this far, something failed, redisplay form
             return View(model);
         }
 
@@ -359,9 +358,10 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return View(model);
             }
 
-            //If we got this far, something failed, redisplay form
+            //prepare model
             model = _vendorAttributeModelFactory.PrepareVendorAttributeValueModel(model, vendorAttribute, vendorAttributeValue, true);
 
+            //if we got this far, something failed, redisplay form
             return View(model);
         }
 

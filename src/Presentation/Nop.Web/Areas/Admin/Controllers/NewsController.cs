@@ -155,20 +155,19 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.News.NewsItems.Added"));
 
-                if (continueEditing)
-                {
-                    //selected tab
-                    SaveSelectedTabName();
+                if (!continueEditing)
+                    return RedirectToAction("List");
 
-                    return RedirectToAction("Edit", new { id = newsItem.Id });
-                }
+                //selected tab
+                SaveSelectedTabName();
 
-                return RedirectToAction("List");
+                return RedirectToAction("Edit", new { id = newsItem.Id });
             }
 
-            //If we got this far, something failed, redisplay form
+            //prepare model
             model = _newsModelFactory.PrepareNewsItemModel(model, null, true);
 
+            //if we got this far, something failed, redisplay form
             return View(model);
         }
 
@@ -214,25 +213,24 @@ namespace Nop.Web.Areas.Admin.Controllers
                 var seName = newsItem.ValidateSeName(model.SeName, model.Title, true);
                 _urlRecordService.SaveSlug(newsItem, seName, newsItem.LanguageId);
 
-                //Stores
+                //stores
                 SaveStoreMappings(newsItem, model);
 
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.News.NewsItems.Updated"));
 
-                if (continueEditing)
-                {
-                    //selected tab
-                    SaveSelectedTabName();
+                if (!continueEditing)
+                    return RedirectToAction("List");
 
-                    return RedirectToAction("Edit", new { id = newsItem.Id });
-                }
+                //selected tab
+                SaveSelectedTabName();
 
-                return RedirectToAction("List");
+                return RedirectToAction("Edit", new { id = newsItem.Id });
             }
 
-            //If we got this far, something failed, redisplay form
+            //prepare model
             model = _newsModelFactory.PrepareNewsItemModel(model, newsItem, true);
 
+            //if we got this far, something failed, redisplay form
             return View(model);
         }
 
@@ -348,18 +346,18 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageNews))
                 return AccessDeniedView();
 
-            if (selectedIds != null)
+            if (selectedIds == null)
+                return Json(new { Result = true });
+
+            var comments = _newsService.GetNewsCommentsByIds(selectedIds.ToArray());
+
+            _newsService.DeleteNewsComments(comments);
+
+            //activity log
+            foreach (var newsComment in comments)
             {
-                var comments = _newsService.GetNewsCommentsByIds(selectedIds.ToArray());
-
-                _newsService.DeleteNewsComments(comments);
-
-                //activity log
-                foreach (var newsComment in comments)
-                {
-                    _customerActivityService.InsertActivity("DeleteNewsComment",
-                       string.Format(_localizationService.GetResource("ActivityLog.DeleteNewsComment"), newsComment.Id), newsComment);
-                }
+                _customerActivityService.InsertActivity("DeleteNewsComment",
+                    string.Format(_localizationService.GetResource("ActivityLog.DeleteNewsComment"), newsComment.Id), newsComment);
             }
 
             return Json(new { Result = true });
@@ -371,23 +369,23 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageNews))
                 return AccessDeniedView();
 
-            if (selectedIds != null)
+            if (selectedIds == null)
+                return Json(new { Result = true });
+
+            //filter not approved comments
+            var newsComments = _newsService.GetNewsCommentsByIds(selectedIds.ToArray()).Where(comment => !comment.IsApproved);
+
+            foreach (var newsComment in newsComments)
             {
-                //filter not approved comments
-                var newsComments = _newsService.GetNewsCommentsByIds(selectedIds.ToArray()).Where(comment => !comment.IsApproved);
+                newsComment.IsApproved = true;
+                _newsService.UpdateNews(newsComment.NewsItem);
 
-                foreach (var newsComment in newsComments)
-                {
-                    newsComment.IsApproved = true;
-                    _newsService.UpdateNews(newsComment.NewsItem);
+                //raise event 
+                _eventPublisher.Publish(new NewsCommentApprovedEvent(newsComment));
 
-                    //raise event 
-                    _eventPublisher.Publish(new NewsCommentApprovedEvent(newsComment));
-
-                    //activity log
-                    _customerActivityService.InsertActivity("EditNewsComment",
-                        string.Format(_localizationService.GetResource("ActivityLog.EditNewsComment"), newsComment.Id), newsComment);
-                }
+                //activity log
+                _customerActivityService.InsertActivity("EditNewsComment",
+                    string.Format(_localizationService.GetResource("ActivityLog.EditNewsComment"), newsComment.Id), newsComment);
             }
 
             return Json(new { Result = true });
@@ -399,20 +397,20 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageNews))
                 return AccessDeniedView();
 
-            if (selectedIds != null)
+            if (selectedIds == null)
+                return Json(new { Result = true });
+
+            //filter approved comments
+            var newsComments = _newsService.GetNewsCommentsByIds(selectedIds.ToArray()).Where(comment => comment.IsApproved);
+
+            foreach (var newsComment in newsComments)
             {
-                //filter approved comments
-                var newsComments = _newsService.GetNewsCommentsByIds(selectedIds.ToArray()).Where(comment => comment.IsApproved);
+                newsComment.IsApproved = false;
+                _newsService.UpdateNews(newsComment.NewsItem);
 
-                foreach (var newsComment in newsComments)
-                {
-                    newsComment.IsApproved = false;
-                    _newsService.UpdateNews(newsComment.NewsItem);
-
-                    //activity log
-                    _customerActivityService.InsertActivity("EditNewsComment",
-                        string.Format(_localizationService.GetResource("ActivityLog.EditNewsComment"), newsComment.Id), newsComment);
-                }
+                //activity log
+                _customerActivityService.InsertActivity("EditNewsComment",
+                    string.Format(_localizationService.GetResource("ActivityLog.EditNewsComment"), newsComment.Id), newsComment);
             }
 
             return Json(new { Result = true });

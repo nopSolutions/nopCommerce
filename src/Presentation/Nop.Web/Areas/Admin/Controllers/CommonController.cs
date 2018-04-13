@@ -115,10 +115,10 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
 
-            var startDateValue = (model.DeleteGuests.StartDate == null) ? null
+            var startDateValue = model.DeleteGuests.StartDate == null ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.DeleteGuests.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
 
-            var endDateValue = (model.DeleteGuests.EndDate == null) ? null
+            var endDateValue = model.DeleteGuests.EndDate == null ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.DeleteGuests.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
 
             model.DeleteGuests.NumberOfDeletedCustomers = _customerService.DeleteGuestCustomers(startDateValue, endDateValue, model.DeleteGuests.OnlyWithoutShoppingCart);
@@ -146,12 +146,11 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
 
-            var startDateValue = (model.DeleteExportedFiles.StartDate == null) ? null
+            var startDateValue = model.DeleteExportedFiles.StartDate == null ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.DeleteExportedFiles.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
 
-            var endDateValue = (model.DeleteExportedFiles.EndDate == null) ? null
+            var endDateValue = model.DeleteExportedFiles.EndDate == null ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.DeleteExportedFiles.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
-
 
             model.DeleteExportedFiles.NumberOfDeletedFiles = 0;
             var path = Path.Combine(_hostingEnvironment.WebRootPath, "files\\exportimport");
@@ -359,7 +358,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (string.IsNullOrEmpty(seName))
                 return Json(new { Result = string.Empty });
 
-            int.TryParse(entityId, out int parsedEntityId);
+            int.TryParse(entityId, out var parsedEntityId);
             var validatedSeName = SeoExtensions.ValidateSeName(parsedEntityId, entityName, seName, null, false);
 
             if (seName.Equals(validatedSeName, StringComparison.InvariantCultureIgnoreCase))

@@ -139,20 +139,19 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 SuccessNotification(_localizationService.GetResource("Admin.Address.AddressAttributes.Added"));
 
-                if (continueEditing)
-                {
-                    //selected tab
-                    SaveSelectedTabName();
+                if (!continueEditing)
+                    return RedirectToAction("List");
 
-                    return RedirectToAction("Edit", new { id = addressAttribute.Id });
-                }
+                //selected tab
+                SaveSelectedTabName();
 
-                return RedirectToAction("List");
+                return RedirectToAction("Edit", new { id = addressAttribute.Id });
             }
 
-            //If we got this far, something failed, redisplay form
+            //prepare model
             model = _addressAttributeModelFactory.PrepareAddressAttributeModel(model, null, true);
 
+            //if we got this far, something failed, redisplay form
             return View(model);
         }
 
@@ -198,20 +197,19 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 SuccessNotification(_localizationService.GetResource("Admin.Address.AddressAttributes.Updated"));
 
-                if (continueEditing)
-                {
-                    //selected tab
-                    SaveSelectedTabName();
+                if (!continueEditing)
+                    return RedirectToAction("List");
 
-                    return RedirectToAction("Edit", new { id = addressAttribute.Id });
-                }
+                //selected tab
+                SaveSelectedTabName();
 
-                return RedirectToAction("List");
+                return RedirectToAction("Edit", new { id = addressAttribute.Id });
             }
 
-            //If we got this far, something failed, redisplay form
+            //prepare model
             model = _addressAttributeModelFactory.PrepareAddressAttributeModel(model, addressAttribute, true);
 
+            //if we got this far, something failed, redisplay form
             return View(model);
         }
 
@@ -310,9 +308,10 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return View(model);
             }
 
-            //If we got this far, something failed, redisplay form
+            //prepare model
             model = _addressAttributeModelFactory.PrepareAddressAttributeValueModel(model, addressAttribute, null, true);
-
+            
+            //if we got this far, something failed, redisplay form
             return View(model);
         }
 
@@ -372,9 +371,10 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return View(model);
             }
 
-            //If we got this far, something failed, redisplay form
+            //prepare model
             model = _addressAttributeModelFactory.PrepareAddressAttributeValueModel(model, addressAttribute, addressAttributeValue, true);
 
+            //if we got this far, something failed, redisplay form
             return View(model);
         }
 

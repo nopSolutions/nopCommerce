@@ -12,7 +12,7 @@ using Nop.Web.Framework.Mvc;
 namespace Nop.Web.Areas.Admin.Controllers
 {
     public partial class ScheduleTaskController : BaseAdminController
-	{
+    {
         #region Fields
 
         private readonly ICustomerActivityService _customerActivityService;
@@ -27,7 +27,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public ScheduleTaskController(ICustomerActivityService customerActivityService,
             ILocalizationService localizationService,
-            IPermissionService permissionService,           
+            IPermissionService permissionService,
             IScheduleTaskModelFactory scheduleTaskModelFactory,
             IScheduleTaskService scheduleTaskService)
         {
@@ -38,8 +38,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             this._scheduleTaskService = scheduleTaskService;
         }
 
-		#endregion 
-        
+        #endregion
+
         #region Methods
 
         public virtual IActionResult Index()
@@ -58,7 +58,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             return View(model);
         }
 
-		[HttpPost]
+        [HttpPost]
         public virtual IActionResult List(ScheduleTaskSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageScheduleTasks))
@@ -68,7 +68,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             var model = _scheduleTaskModelFactory.PrepareScheduleTaskListModel(searchModel);
 
             return Json(model);
-		}
+        }
 
         [HttpPost]
         public virtual IActionResult TaskUpdate(ScheduleTaskModel model)
@@ -80,8 +80,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return Json(new DataSourceResult { Errors = ModelState.SerializeErrors() });
 
             //try to get a schedule task with the specified id
-            var scheduleTask = _scheduleTaskService.GetTaskById(model.Id) 
-                ?? throw new ArgumentException("Schedule task cannot be loaded");
+            var scheduleTask = _scheduleTaskService.GetTaskById(model.Id)
+                               ?? throw new ArgumentException("Schedule task cannot be loaded");
 
             scheduleTask.Name = model.Name;
             scheduleTask.Seconds = model.Seconds;
@@ -105,10 +105,10 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 //try to get a schedule task with the specified id
                 var scheduleTask = _scheduleTaskService.GetTaskById(id)
-                    ?? throw new ArgumentException("Schedule task cannot be loaded", nameof(id));
+                                   ?? throw new ArgumentException("Schedule task cannot be loaded", nameof(id));
 
                 //ensure that the task is enabled
-                var task = new Task(scheduleTask) {Enabled = true};
+                var task = new Task(scheduleTask) { Enabled = true };
                 task.Execute(true, false);
 
                 SuccessNotification(_localizationService.GetResource("Admin.System.ScheduleTasks.RunNow.Done"));

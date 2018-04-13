@@ -32,13 +32,13 @@ namespace Nop.Web.Areas.Admin.Controllers
                 {
                     success = false,
                     message = "No file uploaded",
-                    downloadGuid = Guid.Empty,
+                    downloadGuid = Guid.Empty
                 });
             }
 
             var fileBinary = httpPostedFile.GetDownloadBits();
 
-            var qqFileNameParameter = "qqfilename";
+            const string qqFileNameParameter = "qqfilename";
             var fileName = httpPostedFile.FileName;
             if (string.IsNullOrEmpty(fileName) && Request.Form.ContainsKey(qqFileNameParameter))
                 fileName = Request.Form[qqFileNameParameter].ToString();
@@ -85,10 +85,10 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             var picture = _pictureService.InsertPicture(fileBinary, contentType, null);
+
             //when returning JSON the mime-type must be set to text/plain
             //otherwise some browsers will pop-up a "Save As" dialog.
-            return Json(new { success = true, pictureId = picture.Id,
-                imageUrl = _pictureService.GetPictureUrl(picture, 100) });
+            return Json(new { success = true, pictureId = picture.Id, imageUrl = _pictureService.GetPictureUrl(picture, 100) });
         }
     }
 }

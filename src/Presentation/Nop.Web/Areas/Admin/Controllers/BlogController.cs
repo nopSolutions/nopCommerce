@@ -155,19 +155,19 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Blog.BlogPosts.Added"));
 
-                if (continueEditing)
-                {
-                    //selected tab
-                    SaveSelectedTabName();
+                if (!continueEditing)
+                    return RedirectToAction("List");
 
-                    return RedirectToAction("Edit", new { id = blogPost.Id });
-                }
-                return RedirectToAction("List");
+                //selected tab
+                SaveSelectedTabName();
+
+                return RedirectToAction("Edit", new { id = blogPost.Id });
             }
 
-            //If we got this far, something failed, redisplay form
+            //prepare model
             model = _blogModelFactory.PrepareBlogPostModel(model, null, true);
 
+            //if we got this far, something failed, redisplay form
             return View(model);
         }
 
@@ -217,19 +217,20 @@ namespace Nop.Web.Areas.Admin.Controllers
                 SaveStoreMappings(blogPost, model);
 
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Blog.BlogPosts.Updated"));
-                if (continueEditing)
-                {
-                    //selected tab
-                    SaveSelectedTabName();
 
-                    return RedirectToAction("Edit", new { id = blogPost.Id });
-                }
-                return RedirectToAction("List");
+                if (!continueEditing)
+                    return RedirectToAction("List");
+
+                //selected tab
+                SaveSelectedTabName();
+
+                return RedirectToAction("Edit", new { id = blogPost.Id });
             }
 
-            //If we got this far, something failed, redisplay form
+            //prepare model
             model = _blogModelFactory.PrepareBlogPostModel(model, blogPost, true);
 
+            //if we got this far, something failed, redisplay form
             return View(model);
         }
 
@@ -251,6 +252,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 string.Format(_localizationService.GetResource("ActivityLog.DeleteBlogPost"), blogPost.Id), blogPost);
 
             SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Blog.BlogPosts.Deleted"));
+
             return RedirectToAction("List");
         }
 
@@ -328,7 +330,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             var comment = _blogService.GetBlogCommentById(id)
                 ?? throw new ArgumentException("No comment found with the specified id", nameof(id));
 
-            var blogPost = comment.BlogPost;
             _blogService.DeleteBlogComment(comment);
 
             //activity log
@@ -344,17 +345,17 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageBlog))
                 return AccessDeniedView();
 
-            if (selectedIds != null)
-            {
-                var comments = _blogService.GetBlogCommentsByIds(selectedIds.ToArray());
+            if (selectedIds == null)
+                return Json(new { Result = true });
 
-                _blogService.DeleteBlogComments(comments);
-                //activity log
-                foreach (var blogComment in comments)
-                {
-                    _customerActivityService.InsertActivity("DeleteBlogPostComment",
-                        string.Format(_localizationService.GetResource("ActivityLog.DeleteBlogPostComment"), blogComment.Id), blogComment);
-                }
+            var comments = _blogService.GetBlogCommentsByIds(selectedIds.ToArray());
+
+            _blogService.DeleteBlogComments(comments);
+            //activity log
+            foreach (var blogComment in comments)
+            {
+                _customerActivityService.InsertActivity("DeleteBlogPostComment",
+                    string.Format(_localizationService.GetResource("ActivityLog.DeleteBlogPostComment"), blogComment.Id), blogComment);
             }
 
             return Json(new { Result = true });
@@ -366,23 +367,23 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageBlog))
                 return AccessDeniedView();
 
-            if (selectedIds != null)
+            if (selectedIds == null)
+                return Json(new { Result = true });
+
+            //filter not approved comments
+            var blogComments = _blogService.GetBlogCommentsByIds(selectedIds.ToArray()).Where(comment => !comment.IsApproved);
+
+            foreach (var blogComment in blogComments)
             {
-                //filter not approved comments
-                var blogComments = _blogService.GetBlogCommentsByIds(selectedIds.ToArray()).Where(comment => !comment.IsApproved);
+                blogComment.IsApproved = true;
+                _blogService.UpdateBlogPost(blogComment.BlogPost);
 
-                foreach (var blogComment in blogComments)
-                {
-                    blogComment.IsApproved = true;
-                    _blogService.UpdateBlogPost(blogComment.BlogPost);
+                //raise event 
+                _eventPublisher.Publish(new BlogCommentApprovedEvent(blogComment));
 
-                    //raise event 
-                    _eventPublisher.Publish(new BlogCommentApprovedEvent(blogComment));
-
-                    //activity log
-                    _customerActivityService.InsertActivity("EditBlogComment",
-                        string.Format(_localizationService.GetResource("ActivityLog.EditBlogComment"), blogComment.Id), blogComment);
-                }
+                //activity log
+                _customerActivityService.InsertActivity("EditBlogComment",
+                    string.Format(_localizationService.GetResource("ActivityLog.EditBlogComment"), blogComment.Id), blogComment);
             }
 
             return Json(new { Result = true });
@@ -394,20 +395,20 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageBlog))
                 return AccessDeniedView();
 
-            if (selectedIds != null)
+            if (selectedIds == null)
+                return Json(new { Result = true });
+
+            //filter approved comments
+            var blogComments = _blogService.GetBlogCommentsByIds(selectedIds.ToArray()).Where(comment => comment.IsApproved);
+
+            foreach (var blogComment in blogComments)
             {
-                //filter approved comments
-                var blogComments = _blogService.GetBlogCommentsByIds(selectedIds.ToArray()).Where(comment => comment.IsApproved);
+                blogComment.IsApproved = false;
+                _blogService.UpdateBlogPost(blogComment.BlogPost);
 
-                foreach (var blogComment in blogComments)
-                {
-                    blogComment.IsApproved = false;
-                    _blogService.UpdateBlogPost(blogComment.BlogPost);
-
-                    //activity log
-                    _customerActivityService.InsertActivity("EditBlogComment",
-                        string.Format(_localizationService.GetResource("ActivityLog.EditBlogComment"), blogComment.Id), blogComment);
-                }
+                //activity log
+                _customerActivityService.InsertActivity("EditBlogComment",
+                    string.Format(_localizationService.GetResource("ActivityLog.EditBlogComment"), blogComment.Id), blogComment);
             }
 
             return Json(new { Result = true });

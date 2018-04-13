@@ -105,6 +105,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     _settingService.SaveSetting(_paymentSettings);
                 }
             }
+
             var pluginDescriptor = pm.PluginDescriptor;
             pluginDescriptor.FriendlyName = model.FriendlyName;
             pluginDescriptor.DisplayOrder = model.DisplayOrder;
@@ -154,6 +155,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                         newCountryIds.Add(c.Id);
                     }
                 }
+
                 _paymentService.SaveRestictedCountryIds(pm, newCountryIds);
             }
 

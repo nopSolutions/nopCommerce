@@ -47,12 +47,12 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Fields
 
-        private Dictionary<string, string> _settings;
-        private Dictionary<string, string> _languageResources;
-
         private readonly IHostingEnvironment _hostingEnvironment;
         private readonly IPermissionService _permissionService;
         private readonly IWorkContext _workContext;
+
+        private Dictionary<string, string> _settings;
+        private Dictionary<string, string> _languageResources;
 
         #endregion
 
@@ -82,7 +82,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!System.IO.File.Exists(filePath))
             {
                 //we use 'using' to close the file after it's created
-                using (System.IO.File.Create(filePath)) { }
+                using (System.IO.File.Create(filePath))
+                {
+                }
             }
 
             //try to read existing configuration
@@ -121,7 +123,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 MOVEFILE = string.Empty,
                 COPYFILE = string.Empty,
                 RENAMEFILE = string.Empty,
-                GENERATETHUMB = string.Empty,
+                GENERATETHUMB = string.Empty
             });
 
             //check whether the path base has changed, otherwise there is no need to overwrite the configuration file
@@ -168,7 +170,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 MOVEFILE = $"{this.HttpContext.Request.PathBase}/Admin/RoxyFileman/ProcessRequest?a=MOVEFILE",
                 COPYFILE = $"{this.HttpContext.Request.PathBase}/Admin/RoxyFileman/ProcessRequest?a=COPYFILE",
                 RENAMEFILE = $"{this.HttpContext.Request.PathBase}/Admin/RoxyFileman/ProcessRequest?a=RENAMEFILE",
-                GENERATETHUMB = $"{this.HttpContext.Request.PathBase}/Admin/RoxyFileman/ProcessRequest?a=GENERATETHUMB",
+                GENERATETHUMB = $"{this.HttpContext.Request.PathBase}/Admin/RoxyFileman/ProcessRequest?a=GENERATETHUMB"
             };
 
             //save the file
@@ -187,7 +189,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #endregion
 
-        #region Utitlies
+        #region Utilities
 
         /// <summary>
         /// Process the incoming request
@@ -246,8 +248,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                         await RenameFileAsync(HttpContext.Request.Query["f"], HttpContext.Request.Query["n"]);
                         break;
                     case "GENERATETHUMB":
-                        int.TryParse(HttpContext.Request.Query["width"].ToString().Replace("px", ""), out int w);
-                        int.TryParse(HttpContext.Request.Query["height"].ToString().Replace("px", ""), out int h);
+                        int.TryParse(HttpContext.Request.Query["width"].ToString().Replace("px", string.Empty), out var w);
+                        int.TryParse(HttpContext.Request.Query["height"].ToString().Replace("px", string.Empty), out var h);
                         CreateThumbnail(HttpContext.Request.Query["f"], w, h);
                         break;
                     case "UPLOAD":
@@ -327,7 +329,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (_settings == null)
                 _settings = ParseJson(GetFullPath(CONFIGURATION_FILE));
 
-            if (_settings.TryGetValue(key, out string value))
+            if (_settings.TryGetValue(key, out var value))
                 return value;
 
             return null;
@@ -343,7 +345,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (_languageResources == null)
                 _languageResources = ParseJson(GetLanguageFile());
 
-            if (_languageResources.TryGetValue(key, out string value))
+            if (_languageResources.TryGetValue(key, out var value))
                 return value;
 
             return key;
@@ -375,10 +377,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             var json = string.Empty;
             try
             {
-                json = System.IO.File.ReadAllText(file, System.Text.Encoding.UTF8)?.Trim();
+                json = System.IO.File.ReadAllText(file, System.Text.Encoding.UTF8).Trim();
             }
-            catch { }
-            
+            catch
+            {
+                //ignore any exception
+            }
+
             if (string.IsNullOrEmpty(json))
                 return result;
 
@@ -397,7 +402,10 @@ namespace Nop.Web.Areas.Admin.Controllers
                     if (!string.IsNullOrEmpty(tmp[0]) && !result.ContainsKey(tmp[0]))
                         result.Add(tmp[0], tmp[1]);
                 }
-                catch { }
+                catch
+                {
+                    //ignore any exception
+                }
             }
 
             return result;
@@ -430,7 +438,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual bool CanHandleFile(string path)
         {
             var result = false;
-            var fileExtension = new FileInfo(path).Extension.Replace(".", "").ToLower();
+            var fileExtension = new FileInfo(path).Extension.Replace(".", string.Empty).ToLower();
 
             var forbiddenUploads = GetSetting("FORBIDDEN_UPLOADS").Trim().ToLower();
             if (!string.IsNullOrEmpty(forbiddenUploads))
@@ -440,11 +448,11 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             var allowedUploads = GetSetting("ALLOWED_UPLOADS").Trim().ToLower();
-            if (!string.IsNullOrEmpty(allowedUploads))
-            {
-                var allowedFileExtensions = new ArrayList(Regex.Split(allowedUploads, "\\s+"));
-                result = allowedFileExtensions.Contains(fileExtension);
-            }
+            if (string.IsNullOrEmpty(allowedUploads))
+                return result;
+
+            var allowedFileExtensions = new ArrayList(Regex.Split(allowedUploads, "\\s+"));
+            result = allowedFileExtensions.Contains(fileExtension);
 
             return result;
         }
@@ -504,6 +512,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 if (i < allDirectories.Count - 1)
                     await HttpContext.Response.WriteAsync(",");
             }
+
             await HttpContext.Response.WriteAsync("]");
         }
 
@@ -545,27 +554,22 @@ namespace Nop.Web.Areas.Admin.Controllers
                 var file = new FileInfo(files[i]);
                 if (GetFileType(file.Extension) == "image")
                 {
-                    try
+                    using (var stream = new FileStream(file.FullName, FileMode.Open))
                     {
-                        using (var stream = new FileStream(file.FullName, FileMode.Open))
+                        using (var image = Image.FromStream(stream))
                         {
-                            using (var image = Image.FromStream(stream))
-                            {
-                                width = image.Width;
-                                height = image.Height;
-                            }
+                            width = image.Width;
+                            height = image.Height;
                         }
                     }
-                    catch (Exception ex)
-                    {
-                        throw ex;
-                    }
                 }
+
                 await HttpContext.Response.WriteAsync($"{{\"p\":\"{directoryPath.TrimEnd('/')}/{file.Name}\",\"t\":\"{Math.Ceiling(GetTimestamp(file.LastWriteTime))}\",\"s\":\"{file.Length}\",\"w\":\"{width}\",\"h\":\"{height}\"}}");
 
                 if (i < files.Count - 1)
                     await HttpContext.Response.WriteAsync(",");
             }
+
             await HttpContext.Response.WriteAsync("]");
         }
 
@@ -895,7 +899,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         {
             var fullSourcePath = GetFullPath(GetVirtualPath(sourcePath));
             var sourceDirectory = new DirectoryInfo(fullSourcePath);
-            var destinationDirectory = new DirectoryInfo(Path.Combine(sourceDirectory.Parent.FullName, newName));
+            var destinationDirectory = new DirectoryInfo(Path.Combine(sourceDirectory.Parent?.FullName ?? string.Empty, newName));
             if (GetVirtualPath(sourcePath) == GetRootDirectory())
                 throw new Exception(GetLanguageResource("E_CannotRenameRoot"));
 
@@ -934,7 +938,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             try
             {
-                var destinationPath = Path.Combine(sourceFile.Directory.FullName, newName);
+                var destinationPath = Path.Combine(sourceFile.Directory?.FullName ?? string.Empty, newName);
                 var destinationFile = new FileInfo(destinationPath);
                 sourceFile.MoveTo(destinationFile.FullName);
                 await HttpContext.Response.WriteAsync(GetSuccessResponse());
@@ -961,30 +965,30 @@ namespace Nop.Web.Areas.Admin.Controllers
                     var cropX = 0;
                     var cropY = 0;
 
-                    var imgRatio = (double)image.Width / (double)image.Height;
+                    var imgRatio = image.Width / (double)image.Height;
 
                     if (height == 0)
-                        height = Convert.ToInt32(Math.Floor((double)width / imgRatio));
+                        height = Convert.ToInt32(Math.Floor(width / imgRatio));
 
                     if (width > image.Width)
                         width = image.Width;
                     if (height > image.Height)
                         height = image.Height;
 
-                    var cropRatio = (double)width / (double)height;
-                    var cropWidth = Convert.ToInt32(Math.Floor((double)image.Height * cropRatio));
-                    var cropHeight = Convert.ToInt32(Math.Floor((double)cropWidth / cropRatio));
+                    var cropRatio = width / (double)height;
+                    var cropWidth = Convert.ToInt32(Math.Floor(image.Height * cropRatio));
+                    var cropHeight = Convert.ToInt32(Math.Floor(cropWidth / cropRatio));
 
                     if (cropWidth > image.Width)
                     {
                         cropWidth = image.Width;
-                        cropHeight = Convert.ToInt32(Math.Floor((double)cropWidth / cropRatio));
+                        cropHeight = Convert.ToInt32(Math.Floor(cropWidth / cropRatio));
                     }
 
                     if (cropHeight > image.Height)
                     {
                         cropHeight = image.Height;
-                        cropWidth = Convert.ToInt32(Math.Floor((double)cropHeight * cropRatio));
+                        cropWidth = Convert.ToInt32(Math.Floor(cropHeight * cropRatio));
                     }
 
                     if (cropWidth < image.Width)
@@ -995,7 +999,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     using (var cropImg = image.Clone(new Rectangle(cropX, cropY, cropWidth, cropHeight), PixelFormat.DontCare))
                     {
                         HttpContext.Response.Headers.Add("Content-Type", MimeTypes.ImagePng);
-                        cropImg.GetThumbnailImage(width, height, () => { return false; }, IntPtr.Zero).Save(HttpContext.Response.Body, ImageFormat.Png);
+                        cropImg.GetThumbnailImage(width, height, () => false, IntPtr.Zero).Save(HttpContext.Response.Body, ImageFormat.Png);
                         HttpContext.Response.Body.Close();
                     }
                 }
@@ -1034,16 +1038,16 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 using (var image = Image.FromStream(stream))
                 {
-                    var ratio = (float)image.Width / (float)image.Height;
+                    var ratio = image.Width / (float)image.Height;
                     if ((image.Width <= width && image.Height <= height) || (width == 0 && height == 0))
                         return;
 
                     var newWidth = width;
-                    int newHeight = Convert.ToInt16(Math.Floor((float)newWidth / ratio));
+                    int newHeight = Convert.ToInt16(Math.Floor(newWidth / ratio));
                     if ((height > 0 && newHeight > height) || (width == 0))
                     {
                         newHeight = height;
-                        newWidth = Convert.ToInt16(Math.Floor((float)newHeight * ratio));
+                        newWidth = Convert.ToInt16(Math.Floor(newHeight * ratio));
                     }
 
                     using (var newImage = new Bitmap(newWidth, newHeight))
@@ -1083,9 +1087,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             try
             {
                 directoryPath = GetFullPath(GetVirtualPath(directoryPath));
-                for (var i = 0; i < HttpContext.Request.Form.Files.Count; i++)
+                foreach (var formFile in HttpContext.Request.Form.Files)
                 {
-                    var fileName = HttpContext.Request.Form.Files[i].FileName;
+                    var fileName = formFile.FileName;
                     if (CanHandleFile(fileName))
                     {
                         var file = new FileInfo(fileName);
@@ -1093,14 +1097,15 @@ namespace Nop.Web.Areas.Admin.Controllers
                         var destinationFile = Path.Combine(directoryPath, uniqueFileName);
                         using (var stream = new FileStream(destinationFile, FileMode.OpenOrCreate))
                         {
-                            HttpContext.Request.Form.Files[i].CopyTo(stream);
+                            formFile.CopyTo(stream);
                         }
-                        if (GetFileType(new FileInfo(uniqueFileName).Extension) == "image")
-                        {
-                            int.TryParse(GetSetting("MAX_IMAGE_WIDTH"), out int w);
-                            int.TryParse(GetSetting("MAX_IMAGE_HEIGHT"), out int h);
-                            ImageResize(destinationFile, destinationFile, w, h);
-                        }
+
+                        if (GetFileType(new FileInfo(uniqueFileName).Extension) != "image")
+                            continue;
+
+                        int.TryParse(GetSetting("MAX_IMAGE_WIDTH"), out var w);
+                        int.TryParse(GetSetting("MAX_IMAGE_HEIGHT"), out var h);
+                        ImageResize(destinationFile, destinationFile, w, h);
                     }
                     else
                     {
@@ -1113,6 +1118,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 result = GetErrorResponse(ex.Message);
             }
+
             if (IsAjaxRequest())
             {
                 if (hasErrors)

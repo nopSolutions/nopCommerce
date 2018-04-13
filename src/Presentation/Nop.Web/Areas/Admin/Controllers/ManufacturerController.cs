@@ -256,6 +256,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     if (model.SelectedDiscountIds != null && model.SelectedDiscountIds.Contains(discount.Id))
                         manufacturer.AppliedDiscounts.Add(discount);
                 }
+
                 _manufacturerService.UpdateManufacturer(manufacturer);
 
                 //update picture seo file name
@@ -264,7 +265,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //ACL (customer roles)
                 SaveManufacturerAcl(manufacturer, model);
 
-                //Stores
+                //stores
                 SaveStoreMappings(manufacturer, model);
 
                 //activity log
@@ -273,20 +274,19 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 SuccessNotification(_localizationService.GetResource("Admin.Catalog.Manufacturers.Added"));
 
-                if (continueEditing)
-                {
-                    //selected tab
-                    SaveSelectedTabName();
+                if (!continueEditing)
+                    return RedirectToAction("List");
 
-                    return RedirectToAction("Edit", new { id = manufacturer.Id });
-                }
+                //selected tab
+                SaveSelectedTabName();
 
-                return RedirectToAction("List");
+                return RedirectToAction("Edit", new { id = manufacturer.Id });
             }
 
-            //If we got this far, something failed, redisplay form
+            //prepare model
             model = _manufacturerModelFactory.PrepareManufacturerModel(model, null, true);
 
+            //if we got this far, something failed, redisplay form
             return View(model);
         }
 
@@ -348,6 +348,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                             manufacturer.AppliedDiscounts.Remove(discount);
                     }
                 }
+
                 _manufacturerService.UpdateManufacturer(manufacturer);
 
                 //delete an old picture (if deleted or updated)
@@ -364,7 +365,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //ACL
                 SaveManufacturerAcl(manufacturer, model);
 
-                //Stores
+                //stores
                 SaveStoreMappings(manufacturer, model);
 
                 //activity log
@@ -373,20 +374,19 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 SuccessNotification(_localizationService.GetResource("Admin.Catalog.Manufacturers.Updated"));
 
-                if (continueEditing)
-                {
-                    //selected tab
-                    SaveSelectedTabName();
+                if (!continueEditing)
+                    return RedirectToAction("List");
 
-                    return RedirectToAction("Edit", new { id = manufacturer.Id });
-                }
+                //selected tab
+                SaveSelectedTabName();
 
-                return RedirectToAction("List");
+                return RedirectToAction("Edit", new { id = manufacturer.Id });
             }
 
-            //If we got this far, something failed, redisplay form
+            //prepare model
             model = _manufacturerModelFactory.PrepareManufacturerModel(model, manufacturer, true);
 
+            //if we got this far, something failed, redisplay form
             return View(model);
         }
 
@@ -473,6 +473,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     ErrorNotification(_localizationService.GetResource("Admin.Common.UploadFile"));
                     return RedirectToAction("List");
                 }
+
                 SuccessNotification(_localizationService.GetResource("Admin.Catalog.Manufacturers.Imported"));
                 return RedirectToAction("List");
             }

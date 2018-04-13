@@ -45,12 +45,12 @@ namespace Nop.Web.Areas.Admin.Components
                 !_permissionService.Authorize(StandardPermissionProvider.ManageReturnRequests) ||
                 !_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
             {
-                return Content("");
+                return Content(string.Empty);
             }
 
             //a vendor doesn't have access to this report
             if (_workContext.CurrentVendor != null)
-                return Content("");
+                return Content(string.Empty);
 
             //prepare model
             var model = _commonModelFactory.PrepareCommonStatisticsModel();

@@ -91,23 +91,22 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 foreach (var pr in permissionRecords)
                 {
-
                     var allow = permissionRecordSystemNamesToRestrict.Contains(pr.SystemName);
                     if (allow)
                     {
-                        if (pr.CustomerRoles.FirstOrDefault(x => x.Id == cr.Id) == null)
-                        {
-                            pr.CustomerRoles.Add(cr);
-                            _permissionService.UpdatePermissionRecord(pr);
-                        }
+                        if (pr.CustomerRoles.FirstOrDefault(x => x.Id == cr.Id) != null)
+                            continue;
+
+                        pr.CustomerRoles.Add(cr);
+                        _permissionService.UpdatePermissionRecord(pr);
                     }
                     else
                     {
-                        if (pr.CustomerRoles.FirstOrDefault(x => x.Id == cr.Id) != null)
-                        {
-                            pr.CustomerRoles.Remove(cr);
-                            _permissionService.UpdatePermissionRecord(pr);
-                        }
+                        if (pr.CustomerRoles.FirstOrDefault(x => x.Id == cr.Id) == null)
+                            continue;
+
+                        pr.CustomerRoles.Remove(cr);
+                        _permissionService.UpdatePermissionRecord(pr);
                     }
                 }
             }

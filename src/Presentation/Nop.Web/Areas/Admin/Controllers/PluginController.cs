@@ -124,7 +124,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 if (archivefile == null || archivefile.Length == 0)
                 {
-
                     ErrorNotification(_localizationService.GetResource("Admin.Common.UploadFile"));
                     return RedirectToAction("List");
                 }
@@ -147,10 +146,10 @@ namespace Nop.Web.Areas.Admin.Controllers
                 }
 
                 //events
-                if (pluginDescriptors?.Any() ?? false)
+                if (pluginDescriptors.Any())
                     _eventPublisher.Publish(new PluginsUploadedEvent(pluginDescriptors));
 
-                if (themeDescriptors?.Any() ?? false)
+                if (themeDescriptors.Any())
                     _eventPublisher.Publish(new ThemesUploadedEvent(themeDescriptors));
 
                 var message = string.Format(_localizationService.GetResource("Admin.Configuration.Plugins.Uploaded"), pluginDescriptors.Count, themeDescriptors.Count);
@@ -376,8 +375,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                                 _paymentSettings.ActivePaymentMethodSystemNames.Add(pluginDescriptor.SystemName);
                                 _settingService.SaveSetting(_paymentSettings);
                             }
-                            break;
 
+                            break;
                         case IShippingRateComputationMethod shippingRateComputationMethod:
                             if (shippingRateComputationMethod.IsShippingRateComputationMethodActive(_shippingSettings) && !model.IsEnabled)
                             {
@@ -393,8 +392,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                                 _shippingSettings.ActiveShippingRateComputationMethodSystemNames.Add(pluginDescriptor.SystemName);
                                 _settingService.SaveSetting(_shippingSettings);
                             }
-                            break;
 
+                            break;
                         case IPickupPointProvider pickupPointProvider:
                             if (pickupPointProvider.IsPickupPointProviderActive(_shippingSettings) && !model.IsEnabled)
                             {
@@ -410,9 +409,9 @@ namespace Nop.Web.Areas.Admin.Controllers
                                 _shippingSettings.ActivePickupPointProviderSystemNames.Add(pluginDescriptor.SystemName);
                                 _settingService.SaveSetting(_shippingSettings);
                             }
-                            break;
 
-                        case ITaxProvider taxProvider:
+                            break;
+                        case ITaxProvider _:
                             if (!model.IsEnabled)
                             {
                                 //mark as disabled
@@ -425,7 +424,6 @@ namespace Nop.Web.Areas.Admin.Controllers
                             _taxSettings.ActiveTaxProviderSystemName = model.SystemName;
                             _settingService.SaveSetting(_taxSettings);
                             break;
-
                         case IExternalAuthenticationMethod externalAuthenticationMethod:
                             if (externalAuthenticationMethod.IsMethodActive(_externalAuthenticationSettings) && !model.IsEnabled)
                             {
@@ -441,8 +439,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                                 _externalAuthenticationSettings.ActiveAuthenticationMethodSystemNames.Add(pluginDescriptor.SystemName);
                                 _settingService.SaveSetting(_externalAuthenticationSettings);
                             }
-                            break;
 
+                            break;
                         case IWidgetPlugin widgetPlugin:
                             if (widgetPlugin.IsWidgetActive(_widgetSettings) && !model.IsEnabled)
                             {
@@ -458,6 +456,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                                 _widgetSettings.ActiveWidgetSystemNames.Add(pluginDescriptor.SystemName);
                                 _settingService.SaveSetting(_widgetSettings);
                             }
+
                             break;
                     }
 
@@ -470,10 +469,11 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 return View(model);
             }
-
-            //If we got this far, something failed, redisplay form
+            
+            //prepare model
             model = _pluginModelFactory.PreparePluginModel(model, pluginDescriptor, true);
 
+            //if we got this far, something failed, redisplay form
             return View(model);
         }
 

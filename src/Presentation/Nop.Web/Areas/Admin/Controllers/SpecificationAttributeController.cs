@@ -131,20 +131,19 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 SuccessNotification(_localizationService.GetResource("Admin.Catalog.Attributes.SpecificationAttributes.Added"));
 
-                if (continueEditing)
-                {
-                    //selected tab
-                    SaveSelectedTabName();
+                if (!continueEditing)
+                    return RedirectToAction("List");
 
-                    return RedirectToAction("Edit", new { id = specificationAttribute.Id });
-                }
+                //selected tab
+                SaveSelectedTabName();
 
-                return RedirectToAction("List");
+                return RedirectToAction("Edit", new { id = specificationAttribute.Id });
             }
 
-            //If we got this far, something failed, redisplay form
+            //prepare model
             model = _specificationAttributeModelFactory.PrepareSpecificationAttributeModel(model, null, true);
 
+            //if we got this far, something failed, redisplay form
             return View(model);
         }
 
@@ -189,20 +188,19 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 SuccessNotification(_localizationService.GetResource("Admin.Catalog.Attributes.SpecificationAttributes.Updated"));
 
-                if (continueEditing)
-                {
-                    //selected tab
-                    SaveSelectedTabName();
+                if (!continueEditing)
+                    return RedirectToAction("List");
 
-                    return RedirectToAction("Edit", new { id = specificationAttribute.Id });
-                }
+                //selected tab
+                SaveSelectedTabName();
 
-                return RedirectToAction("List");
+                return RedirectToAction("Edit", new { id = specificationAttribute.Id });
             }
 
-            //If we got this far, something failed, redisplay form
+            //prepare model
             model = _specificationAttributeModelFactory.PrepareSpecificationAttributeModel(model, specificationAttribute, true);
 
+            //if we got this far, something failed, redisplay form
             return View(model);
         }
 
@@ -293,9 +291,10 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return View(model);
             }
 
-            //If we got this far, something failed, redisplay form
+            //prepare model
             model = _specificationAttributeModelFactory.PrepareSpecificationAttributeOptionModel(model, specificationAttribute, null, true);
 
+            //if we got this far, something failed, redisplay form
             return View(model);
         }
 
@@ -356,10 +355,11 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return View(model);
             }
 
-            //If we got this far, something failed, redisplay form
+            //prepare model
             model = _specificationAttributeModelFactory
                 .PrepareSpecificationAttributeOptionModel(model, specificationAttribute, specificationAttributeOption, true);
 
+            //if we got this far, something failed, redisplay form
             return View(model);
         }
 
@@ -386,7 +386,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
             //    return AccessDeniedView();
 
-            // This action method gets called via an ajax request
+            //this action method gets called via an ajax request
             if (string.IsNullOrEmpty(attributeId))
                 throw new ArgumentNullException(nameof(attributeId));
 

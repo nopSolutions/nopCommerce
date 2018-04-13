@@ -161,9 +161,10 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return continueEditing ? RedirectToAction("Edit", new { id = returnRequest.Id }) : RedirectToAction("List");
             }
 
-            //If we got this far, something failed, redisplay form
+            //prepare model
             model = _returnRequestModelFactory.PrepareReturnRequestModel(model, returnRequest, true);
 
+            //if we got this far, something failed, redisplay form
             return View(model);
         }
 
@@ -273,9 +274,10 @@ namespace Nop.Web.Areas.Admin.Controllers
                     : RedirectToAction("ReturnRequestReasonList");
             }
 
-            //If we got this far, something failed, redisplay form
+            //prepare model
             model = _returnRequestModelFactory.PrepareReturnRequestReasonModel(model, null, true);
 
+            //if we got this far, something failed, redisplay form
             return View(model);
         }
 
@@ -316,20 +318,19 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Settings.Order.ReturnRequestReasons.Updated"));
 
-                if (continueEditing)
-                {
-                    //selected tab
-                    SaveSelectedTabName();
+                if (!continueEditing)
+                    return RedirectToAction("ReturnRequestReasonList");
 
-                    return RedirectToAction("ReturnRequestReasonEdit", new { id = returnRequestReason.Id });
-                }
+                //selected tab
+                SaveSelectedTabName();
 
-                return RedirectToAction("ReturnRequestReasonList");
+                return RedirectToAction("ReturnRequestReasonEdit", new { id = returnRequestReason.Id });
             }
 
-            //If we got this far, something failed, redisplay form
+            //prepare model
             model = _returnRequestModelFactory.PrepareReturnRequestReasonModel(model, returnRequestReason, true);
 
+            //if we got this far, something failed, redisplay form
             return View(model);
         }
 
@@ -410,9 +411,10 @@ namespace Nop.Web.Areas.Admin.Controllers
                     : RedirectToAction("ReturnRequestActionList");
             }
 
-            //If we got this far, something failed, redisplay form
+            //prepare model
             model = _returnRequestModelFactory.PrepareReturnRequestActionModel(model, null, true);
 
+            //if we got this far, something failed, redisplay form
             return View(model);
         }
 
@@ -453,20 +455,19 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Settings.Order.ReturnRequestActions.Updated"));
 
-                if (continueEditing)
-                {
-                    //selected tab
-                    SaveSelectedTabName();
+                if (!continueEditing)
+                    return RedirectToAction("ReturnRequestActionList");
 
-                    return RedirectToAction("ReturnRequestActionEdit", new { id = returnRequestAction.Id });
-                }
+                //selected tab
+                SaveSelectedTabName();
 
-                return RedirectToAction("ReturnRequestActionList");
+                return RedirectToAction("ReturnRequestActionEdit", new { id = returnRequestAction.Id });
             }
 
-            //If we got this far, something failed, redisplay form
+            //prepare model
             model = _returnRequestModelFactory.PrepareReturnRequestActionModel(model, returnRequestAction, true);
 
+            //if we got this far, something failed, redisplay form
             return View(model);
         }
 

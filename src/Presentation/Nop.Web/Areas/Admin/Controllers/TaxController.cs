@@ -78,11 +78,11 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return RedirectToAction("Providers");
 
             var taxProvider = _taxService.LoadTaxProviderBySystemName(systemName);
-            if (taxProvider != null)
-            {
-                _taxSettings.ActiveTaxProviderSystemName = systemName;
-                _settingService.SaveSetting(_taxSettings);
-            }
+            if (taxProvider == null)
+                return RedirectToAction("Providers");
+
+            _taxSettings.ActiveTaxProviderSystemName = systemName;
+            _settingService.SaveSetting(_taxSettings);
 
             return RedirectToAction("Providers");
         }

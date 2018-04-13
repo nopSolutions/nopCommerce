@@ -134,20 +134,19 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 SuccessNotification(_localizationService.GetResource("Admin.Customers.CustomerAttributes.Added"));
 
-                if (continueEditing)
-                {
-                    //selected tab
-                    SaveSelectedTabName();
+                if (!continueEditing)
+                    return RedirectToAction("List");
 
-                    return RedirectToAction("Edit", new { id = customerAttribute.Id });
-                }
+                //selected tab
+                SaveSelectedTabName();
 
-                return RedirectToAction("List");
+                return RedirectToAction("Edit", new { id = customerAttribute.Id });
             }
-
-            //If we got this far, something failed, redisplay form
+            
+            //prepare model
             model = _customerAttributeModelFactory.PrepareCustomerAttributeModel(model, null, true);
 
+            //if we got this far, something failed, redisplay form
             return View(model);
         }
 
@@ -175,35 +174,33 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             var customerAttribute = _customerAttributeService.GetCustomerAttributeById(model.Id);
             if (customerAttribute == null)
-                //No customer attribute found with the specified id
+                //no customer attribute found with the specified id
                 return RedirectToAction("List");
 
-            if (ModelState.IsValid)
-            {
-                customerAttribute = model.ToEntity(customerAttribute);
-                _customerAttributeService.UpdateCustomerAttribute(customerAttribute);
+            if (!ModelState.IsValid)
+                //if we got this far, something failed, redisplay form
+                return View(model);
 
-                //activity log
-                _customerActivityService.InsertActivity("EditCustomerAttribute",
-                    string.Format(_localizationService.GetResource("ActivityLog.EditCustomerAttribute"), customerAttribute.Id),
-                    customerAttribute);
+            customerAttribute = model.ToEntity(customerAttribute);
+            _customerAttributeService.UpdateCustomerAttribute(customerAttribute);
 
-                //locales
-                UpdateAttributeLocales(customerAttribute, model);
+            //activity log
+            _customerActivityService.InsertActivity("EditCustomerAttribute",
+                string.Format(_localizationService.GetResource("ActivityLog.EditCustomerAttribute"), customerAttribute.Id),
+                customerAttribute);
 
-                SuccessNotification(_localizationService.GetResource("Admin.Customers.CustomerAttributes.Updated"));
-                if (continueEditing)
-                {
-                    //selected tab
-                    SaveSelectedTabName();
+            //locales
+            UpdateAttributeLocales(customerAttribute, model);
 
-                    return RedirectToAction("Edit", new { id = customerAttribute.Id });
-                }
+            SuccessNotification(_localizationService.GetResource("Admin.Customers.CustomerAttributes.Updated"));
+
+            if (!continueEditing)
                 return RedirectToAction("List");
-            }
 
-            //If we got this far, something failed, redisplay form
-            return View(model);
+            //selected tab
+            SaveSelectedTabName();
+
+            return RedirectToAction("Edit", new { id = customerAttribute.Id });
         }
 
         [HttpPost]
@@ -295,9 +292,10 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return View(model);
             }
 
-            //If we got this far, something failed, redisplay form
+            //prepare model
             model = _customerAttributeModelFactory.PrepareCustomerAttributeValueModel(model, customerAttribute, null, true);
 
+            //if we got this far, something failed, redisplay form
             return View(model);
         }
 
@@ -357,9 +355,10 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return View(model);
             }
 
-            //If we got this far, something failed, redisplay form
+            //prepare model
             model = _customerAttributeModelFactory.PrepareCustomerAttributeValueModel(model, customerAttribute, customerAttributeValue, true);
 
+            //if we got this far, something failed, redisplay form
             return View(model);
         }
 

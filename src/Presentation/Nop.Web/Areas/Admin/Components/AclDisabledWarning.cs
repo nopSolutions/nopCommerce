@@ -33,17 +33,17 @@ namespace Nop.Web.Areas.Admin.Components
                 var stores = _storeService.GetAllStores();
                 foreach (var store in stores)
                 {
-                    if (!enabled)
-                    {
-                        var catalogSettings = _settingService.LoadSetting<CatalogSettings>(store.Id);
-                        enabled = catalogSettings.IgnoreAcl;
-                    }
+                    var catalogSettings = _settingService.LoadSetting<CatalogSettings>(store.Id);
+                    enabled = catalogSettings.IgnoreAcl;
+
+                    if (enabled)
+                        break;
                 }
             }
 
             //This setting is disabled. No warnings.
             if (!enabled)
-                return Content("");
+                return Content(string.Empty);
 
             return View();
         }

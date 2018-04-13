@@ -41,7 +41,7 @@ namespace Nop.Web.Areas.Admin.Components
             }
             catch
             {
-                return Content("");
+                return Content(string.Empty);
             }
         }
 
