@@ -187,6 +187,9 @@ namespace Nop.Web.Areas.Admin.Controllers
                     x => x.Name,
                     localized.Name,
                     localized.LanguageId);
+
+                var seName = productTag.ValidateSeName("", localized.Name, false);
+                _urlRecordService.SaveSlug(productTag, seName, localized.LanguageId);
             }
         }
 
