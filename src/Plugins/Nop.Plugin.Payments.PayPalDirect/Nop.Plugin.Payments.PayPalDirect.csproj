@@ -48,7 +48,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="PayPal" Version="2.0.0-rc1" />
+    <PackageReference Include="PayPal" Version="2.0.0-rc2" />
   </ItemGroup>
 
   <ItemGroup>

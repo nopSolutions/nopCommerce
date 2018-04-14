@@ -18,14 +18,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.CSharp" Version="4.5.0-preview1-26216-02" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.1.0-preview1-final" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="2.1.0-preview1-final" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SQLite" Version="2.1.0-preview1-final" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.1.0-preview1-final" />
-    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="2.1.0-preview1" />
+    <PackageReference Include="Microsoft.CSharp" Version="4.5.0-preview2-26406-04" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.1.0-preview2-final" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="2.1.0-preview2-final" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SQLite" Version="2.1.0-preview2-final" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.1.0-preview2-final" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="2.1.0-preview2" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="2.0.1" />
-    <PackageReference Include="System.Data.SqlClient" Version="4.5.0-preview1-26216-02" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.5.0-preview2-26406-04" />
   </ItemGroup>
 
   <ItemGroup>
