@@ -54,17 +54,6 @@ namespace Nop.Core.Caching
         #region Utilities
 
         /// <summary>
-        /// Create entry options to item of memory cache 
-        /// </summary>
-        /// <param name="cacheTime">Cache time in minutes</param>
-        /// <returns></returns>
-        [Obsolete]
-        protected MemoryCacheEntryOptions GetMemoryCacheEntryOptions(int cacheTime)
-        {
-            return GetMemoryCacheEntryOptions(TimeSpan.FromMinutes(cacheTime));
-        }
-
-        /// <summary>
         /// Create entry options to item of memory cache
         /// </summary>
         /// <param name="cacheTime">Cache time</param>
