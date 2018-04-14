@@ -1,12 +1,10 @@
 ﻿@model CustomerModel
+
 @using Nop.Core.Domain.Customers
 @using Nop.Services
 @using Nop.Services.Stores
-@inject AdminAreaSettings adminAreaSettings
 @inject IStoreService storeService
 @{
-    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
-    var gridPageSizes = adminAreaSettings.GridPageSizes;
     var stores = storeService.GetAllStores();
 }
 
@@ -23,10 +21,16 @@
                             type: "json",
                             transport: {
                                 read: {
-                                    url: "@Html.Raw(Url.Action("RewardPointsHistorySelect", "Customer", new {customerId = Model.Id}))",
+                                    url: "@Html.Raw(Url.Action("RewardPointsHistorySelect"))",
                                     type: "POST",
                                     dataType: "json",
-                                    data: addAntiForgeryToken
+                                    data: function() {
+                                        var data = {
+                                            CustomerId: '@(Model.Id)'
+                                        };
+                                        addAntiForgeryToken(data);
+                                        return data;
+                                    }
                                 }
                             },
                             schema: {
@@ -39,14 +43,14 @@
                                 // Cancel the changes
                                 this.cancelChanges();
                             },
-                            pageSize: @(defaultGridPageSize),
+                            pageSize: @(Model.CustomerRewardPointsSearchModel.PageSize),
                             serverPaging: true,
                             serverFiltering: true,
                             serverSorting: true
                         },
                         pageable: {
                             refresh: true,
-                            pageSizes: [@(gridPageSizes)],
+                            pageSizes: [@(Model.CustomerRewardPointsSearchModel.AvailablePageSizes)],
                             @await Html.PartialAsync("_GridPagerMessages")
                         },
                         editable: {
@@ -70,8 +74,12 @@
                             title: "@T("Admin.Customers.Customers.RewardPoints.Fields.Message")"
                         }, {
                             field: "CreatedOn",
-                            title: "@T("Admin.Promotions.Campaigns.Fields.CreatedOn")",
-                            width: 200,
+                            title: "@T("Admin.Customers.Customers.RewardPoints.Fields.CreatedDate")",
+                            type: "date",
+                            format: "{0:G}"
+                        }, {
+                            field: "EndDate",
+                            title: "@T("Admin.Customers.Customers.RewardPoints.Fields.EndDate")",
                             type: "date",
                             format: "{0:G}"
                         }
@@ -93,6 +101,15 @@
                 <div class="col-md-9">
                     <nop-editor asp-for="@Model.AddRewardPoints.Points" />
                     <span asp-validation-for="@Model.AddRewardPoints.Points"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-label asp-for="@Model.AddRewardPoints.PointsValidity" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="@Model.AddRewardPoints.PointsValidity" asp-postfix="@T("Admin.Customers.Customers.RewardPoints.Fields.PointsValidity.Postfix")" />
+                    <span asp-validation-for="@Model.AddRewardPoints.PointsValidity"></span>
                 </div>
             </div>
             <div class="form-group">
@@ -158,7 +175,8 @@
                         ActivatePointsImmediately: $("#@Html.IdFor(model => model.AddRewardPoints.ActivatePointsImmediately)").is(':checked'),
                         ActivationDelayPeriodId: $("#@Html.IdFor(model => model.AddRewardPoints.ActivationDelayPeriodId)").val(),
                         ActivationDelay: $("#@Html.IdFor(model => model.AddRewardPoints.ActivationDelay)").val(),
-                        CustomerId: '@Model.Id'
+                        PointsValidity: $("#@Html.IdFor(model => model.AddRewardPoints.PointsValidity)").val(),
+                        CustomerId: '@(Model.Id)'
                     };
                     addAntiForgeryToken(postData);
 
@@ -168,8 +186,24 @@
                         url: "@(Url.Action("RewardPointsHistoryAdd", "Customer"))",
                         data: postData,
                         success: function (data) {
-                            var grid = $("#customer-rewardpoints-grid").data('kendoGrid');
-                            grid.dataSource.read();
+                            if (data.Result) {
+                                var grid = $("#customer-rewardpoints-grid").data('kendoGrid');
+                                grid.dataSource.read();
+
+                                $("#@Html.IdFor(model => model.AddRewardPoints.Points)").val(0);
+                                $("#@Html.IdFor(model => model.AddRewardPoints.Message)").val("@Model.AddRewardPoints.Message");
+                                $("#@Html.IdFor(model => model.AddRewardPoints.StoreId)").val(@Model.AddRewardPoints.StoreId);
+                                $("#@Html.IdFor(model => model.AddRewardPoints.ActivationDelayPeriodId)").val(@Model.AddRewardPoints.ActivationDelayPeriodId);
+                                $("#@Html.IdFor(model => model.AddRewardPoints.ActivationDelay)").val(@Model.AddRewardPoints.ActivationDelay);
+                                $("#@Html.IdFor(model => model.AddRewardPoints.PointsValidity)").val('');
+                                $("#@Html.IdFor(model => model.AddRewardPoints.ActivatePointsImmediately)").prop('checked', @(Model.AddRewardPoints.ActivatePointsImmediately.ToString().ToLower()));
+
+                                activatePointsImmediately();
+                            } else {
+                                if(data.Error != undefined)
+                                    alert(data.Error);
+                            }
+
                             $('#addRewardPoints').attr('disabled', false);
                         },
                         error:function (xhr, ajaxOptions, thrownError){

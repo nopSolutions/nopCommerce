@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using FluentValidation.Attributes;
 using Nop.Web.Framework.Mvc.ModelBinding;
-using Nop.Web.Framework.Mvc.Models;
+using Nop.Web.Framework.Models;
 using Nop.Web.Validators.Vendors;
 
 namespace Nop.Web.Models.Vendors

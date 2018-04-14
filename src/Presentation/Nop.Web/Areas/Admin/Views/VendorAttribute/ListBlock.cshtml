@@ -1,4 +1,6 @@
-﻿<div class="panel panel-default advanced-setting">
+﻿@model VendorAttributeSearchModel
+
+<div class="panel panel-default advanced-setting">
     <div class="panel-heading">
         @T("Admin.Vendors.VendorAttributes")
     </div>
@@ -31,15 +33,14 @@
                                 // Cancel the changes
                                 this.cancelChanges();
                             },
+                            pageSize: @(Model.PageSize),
                             serverPaging: true,
                             serverFiltering: true,
                             serverSorting: true
                         },
                         pageable: {
                             refresh: true,
-                            numeric: false,
-                            previousNext: false,
-                            info: false,
+                            pageSizes: [@(Model.AvailablePageSizes)],
                             @await Html.PartialAsync("_GridPagerMessages")
                         },
                         editable: {

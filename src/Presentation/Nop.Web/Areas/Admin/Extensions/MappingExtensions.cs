@@ -509,9 +509,9 @@ namespace Nop.Web.Areas.Admin.Extensions
         
         #region Shipping rate computation method
 
-        public static ShippingRateComputationMethodModel ToModel(this IShippingRateComputationMethod entity)
+        public static ShippingProviderModel ToModel(this IShippingRateComputationMethod entity)
         {
-            return entity.MapTo<IShippingRateComputationMethod, ShippingRateComputationMethodModel>();
+            return entity.MapTo<IShippingRateComputationMethod, ShippingProviderModel>();
         }
 
         #endregion
@@ -593,9 +593,9 @@ namespace Nop.Web.Areas.Admin.Extensions
 
         #region External authentication methods
 
-        public static AuthenticationMethodModel ToModel(this IExternalAuthenticationMethod entity)
+        public static ExternalAuthenticationMethodModel ToModel(this IExternalAuthenticationMethod entity)
         {
-            return entity.MapTo<IExternalAuthenticationMethod, AuthenticationMethodModel>();
+            return entity.MapTo<IExternalAuthenticationMethod, ExternalAuthenticationMethodModel>();
         }
 
         #endregion
@@ -722,17 +722,17 @@ namespace Nop.Web.Areas.Admin.Extensions
 
         #region NewsLetter subscriptions
 
-        public static NewsLetterSubscriptionModel ToModel(this NewsLetterSubscription entity)
+        public static NewsletterSubscriptionModel ToModel(this NewsLetterSubscription entity)
         {
-            return entity.MapTo<NewsLetterSubscription, NewsLetterSubscriptionModel>();
+            return entity.MapTo<NewsLetterSubscription, NewsletterSubscriptionModel>();
         }
 
-        public static NewsLetterSubscription ToEntity(this NewsLetterSubscriptionModel model)
+        public static NewsLetterSubscription ToEntity(this NewsletterSubscriptionModel model)
         {
-            return model.MapTo<NewsLetterSubscriptionModel, NewsLetterSubscription>();
+            return model.MapTo<NewsletterSubscriptionModel, NewsLetterSubscription>();
         }
 
-        public static NewsLetterSubscription ToEntity(this NewsLetterSubscriptionModel model, NewsLetterSubscription destination)
+        public static NewsLetterSubscription ToEntity(this NewsletterSubscriptionModel model, NewsLetterSubscription destination)
         {
             return model.MapTo(destination);
         }
@@ -1039,29 +1039,29 @@ namespace Nop.Web.Areas.Admin.Extensions
         }
 
         //customer/user settings
-        public static CustomerUserSettingsModel.CustomerSettingsModel ToModel(this CustomerSettings entity)
+        public static CustomerSettingsModel ToModel(this CustomerSettings entity)
         {
-            return entity.MapTo<CustomerSettings, CustomerUserSettingsModel.CustomerSettingsModel>();
+            return entity.MapTo<CustomerSettings, CustomerSettingsModel>();
         }
-        public static CustomerSettings ToEntity(this CustomerUserSettingsModel.CustomerSettingsModel model, CustomerSettings destination)
+        public static CustomerSettings ToEntity(this CustomerSettingsModel model, CustomerSettings destination)
         {
             return model.MapTo(destination);
         }
-        public static CustomerUserSettingsModel.AddressSettingsModel ToModel(this AddressSettings entity)
+        public static AddressSettingsModel ToModel(this AddressSettings entity)
         {
-            return entity.MapTo<AddressSettings, CustomerUserSettingsModel.AddressSettingsModel>();
+            return entity.MapTo<AddressSettings, AddressSettingsModel>();
         }
-        public static AddressSettings ToEntity(this CustomerUserSettingsModel.AddressSettingsModel model, AddressSettings destination)
+        public static AddressSettings ToEntity(this AddressSettingsModel model, AddressSettings destination)
         {
             return model.MapTo(destination);
         }
 
         //general (captcha) settings
-        public static GeneralCommonSettingsModel.CaptchaSettingsModel ToModel(this CaptchaSettings entity)
+        public static CaptchaSettingsModel ToModel(this CaptchaSettings entity)
         {
-            return entity.MapTo<CaptchaSettings, GeneralCommonSettingsModel.CaptchaSettingsModel>();
+            return entity.MapTo<CaptchaSettings, CaptchaSettingsModel>();
         }
-        public static CaptchaSettings ToEntity(this GeneralCommonSettingsModel.CaptchaSettingsModel model, CaptchaSettings destination)
+        public static CaptchaSettings ToEntity(this CaptchaSettingsModel model, CaptchaSettings destination)
         {
             return model.MapTo(destination);
         }

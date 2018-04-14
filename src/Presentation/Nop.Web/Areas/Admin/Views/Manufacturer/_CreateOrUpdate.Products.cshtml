@@ -1,5 +1,4 @@
 @model ManufacturerModel
-@inject AdminAreaSettings adminAreaSettings
 
 <div class="panel-group">
     @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ManufacturerDetailsProductsTop, additionalData = Model })
@@ -7,11 +6,6 @@
     {
         <div class="panel panel-default">
             <div class="panel-body">
-                @{
-                    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
-                    var gridPageSizes = adminAreaSettings.GridPageSizes;
-                }
-
                 <div id="products-grid"></div>
 
                 <script>
@@ -21,10 +15,16 @@
                                 type: "json",
                                 transport: {
                                     read: {
-                                        url: "@Html.Raw(Url.Action("ProductList", "Manufacturer", new {manufacturerId = Model.Id}))",
+                                        url: "@Html.Raw(Url.Action("ProductList", "Manufacturer"))",
                                         type: "POST",
                                         dataType: "json",
-                                        data: addAntiForgeryToken
+                                        data: function() {
+                                            var data = {
+                                                ManufacturerId: '@(Model.Id)'
+                                            };
+                                            addAntiForgeryToken(data);
+                                            return data;
+                                        }
                                     },
                                     update: {
                                         url: "@Html.Raw(Url.Action("ProductUpdate", "Manufacturer"))",
@@ -63,14 +63,14 @@
                                     // Cancel the changes
                                     this.cancelChanges();
                                 },
-                                pageSize: @(defaultGridPageSize),
+                                pageSize: @(Model.ManufacturerProductSearchModel.PageSize),
                                 serverPaging: true,
                                 serverFiltering: true,
                                 serverSorting: true
                             },
                             pageable: {
                                 refresh: true,
-                                pageSizes: [@(gridPageSizes)],
+                                pageSizes: [@(Model.ManufacturerProductSearchModel.AvailablePageSizes)],
                                 @await Html.PartialAsync("_GridPagerMessages")
                             },
                             editable: {
@@ -127,7 +127,7 @@
             </div>
 
             <div class="panel-footer">
-                <button type="submit" id="btnAddNewProduct" onclick="javascript:OpenWindow('@(Url.Action("ProductAddPopup", "Manufacturer", new {manufacturerId = Model.Id, btnId = "btnRefreshProducts", formId = "manufacturer-form"}))', 800, 800, true); return false;" class="btn btn-primary">
+                <button type="submit" id="btnAddNewProduct" onclick="javascript:OpenWindow('@(Url.Action("ProductAddPopup", "Manufacturer", new { manufacturerId = Model.Id, btnId = "btnRefreshProducts", formId = "manufacturer-form" }))', 800, 800, true); return false;" class="btn btn-primary">
                     @T("Admin.Catalog.Manufacturers.Products.AddNew")
                 </button>
                 <input type="submit" id="btnRefreshProducts" style="display: none" />

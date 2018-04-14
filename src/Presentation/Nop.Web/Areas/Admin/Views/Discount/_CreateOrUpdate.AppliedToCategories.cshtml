@@ -1,9 +1,4 @@
 @model DiscountModel
-@inject AdminAreaSettings adminAreaSettings
-@{
-    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
-    var gridPageSizes = adminAreaSettings.GridPageSizes;
-}
 
 <div class="panel-group">
     @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.DiscountDetailsAppliedToCategoriesTop, additionalData = Model })
@@ -20,13 +15,19 @@
                                 type: "json",
                                 transport: {
                                     read: {
-                                        url: "@Html.Raw(Url.Action("CategoryList", "Discount", new {discountId = Model.Id}))",
+                                        url: "@Html.Raw(Url.Action("CategoryList", "Discount"))",
                                         type: "POST",
                                         dataType: "json",
-                                        data: addAntiForgeryToken
+                                        data: function() {
+                                            var data = {
+                                                DiscountId: '@(Model.Id)'
+                                            };
+                                            addAntiForgeryToken(data);
+                                            return data;
+                                        }
                                     },
                                     destroy: {
-                                        url: "@Html.Raw(Url.Action("CategoryDelete", "Discount", new {discountId = Model.Id}))",
+                                        url: "@Html.Raw(Url.Action("CategoryDelete", "Discount", new { discountId = Model.Id }))",
                                         type: "POST",
                                         dataType: "json",
                                         data: addAntiForgeryToken
@@ -49,14 +50,14 @@
                                     // Cancel the changes
                                     this.cancelChanges();
                                 },
-                                pageSize: @(defaultGridPageSize),
+                                pageSize: @(Model.DiscountCategorySearchModel.PageSize),
                                 serverPaging: true,
                                 serverFiltering: true,
                                 serverSorting: true
                             },
                             pageable: {
                                 refresh: true,
-                                pageSizes: [@(gridPageSizes)],
+                                pageSizes: [@(Model.DiscountCategorySearchModel.AvailablePageSizes)],
                                 @await Html.PartialAsync("_GridPagerMessages")
                             },
                             editable: {
@@ -90,7 +91,7 @@
                 </script>
             </div>
             <div class="panel-footer">
-                <button type="submit" id="btnAddNewCategory" onclick="javascript:OpenWindow('@(Url.Action("CategoryAddPopup", "Discount", new {discountId = Model.Id, btnId = "btnRefreshCategories", formId = "discount-form"}))', 800, 800, true); return false;" class="btn btn-primary">
+                <button type="submit" id="btnAddNewCategory" onclick="javascript:OpenWindow('@(Url.Action("CategoryAddPopup", "Discount", new { discountId = Model.Id, btnId = "btnRefreshCategories", formId = "discount-form" }))', 800, 800, true); return false;" class="btn btn-primary">
                     @T("Admin.Promotions.Discounts.AppliedToCategories.AddNew")
                 </button>
                 <input type="submit" id="btnRefreshCategories" style="display: none" />

@@ -1,10 +1,6 @@
-﻿@model OrderModel.AddOrderProductModel
-@inject AdminAreaSettings adminAreaSettings
+﻿@model AddProductToOrderSearchModel
 
 @{
-    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
-    var gridPageSizes = adminAreaSettings.GridPageSizes;
-
     //page title
     ViewBag.Title = string.Format(T("Admin.Orders.Products.AddNew.Title1").Text, Model.OrderId);
     //active menu item (system name)
@@ -91,7 +87,17 @@
                                             url: "@Html.Raw(Url.Action("AddProductToOrder", "Order"))",
                                             type: "POST",
                                             dataType: "json",
-                                            data: additionalData
+                                            data: function() {
+                                                var data = {
+                                                    OrderId : '@(Model.OrderId)',
+                                                    SearchProductName: $('#@Html.IdFor(model => model.SearchProductName)').val(),
+                                                    SearchCategoryId: $('#SearchCategoryId').val(),
+                                                    SearchManufacturerId: $('#SearchManufacturerId').val(),
+                                                    SearchProductTypeId: $('#SearchProductTypeId').val()
+                                                };
+                                                addAntiForgeryToken(data);
+                                                return data;
+                                            }
                                         }
                                     },
                                     schema: {
@@ -104,14 +110,14 @@
                                         // Cancel the changes
                                         this.cancelChanges();
                                     },
-                                    pageSize: @(defaultGridPageSize),
+                                    pageSize: @(Model.PageSize),
                                     serverPaging: true,
                                     serverFiltering: true,
                                     serverSorting: true
                                 },
                                 pageable: {
                                     refresh: true,
-                                    pageSizes: [@(gridPageSizes)],
+                                    pageSizes: [@(Model.AvailablePageSizes)],
                                     @await Html.PartialAsync("_GridPagerMessages")
                                 },
                                 editable: {
@@ -160,18 +166,7 @@
                                 return false;
                             }
                         });
-
-                        function additionalData() {
-                            var data = {
-                                SearchProductName: $('#@Html.IdFor(model => model.SearchProductName)').val(),
-                                SearchCategoryId: $('#SearchCategoryId').val(),
-                                SearchManufacturerId: $('#SearchManufacturerId').val(),
-                                SearchProductTypeId: $('#SearchProductTypeId').val()
-                            };
-                            addAntiForgeryToken(data);
-                            return data;
-                        }
-
+                        
                         function addProductToOrder(productId) {
                             //load "product details page" block
                             var productDetailsActionUrl = '@Html.Raw(Url.Action("AddProductToOrderDetails", "Order", new {orderId = Model.OrderId, productId = "productidplaceholder"}))';

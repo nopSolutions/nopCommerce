@@ -1,4 +1,5 @@
 ﻿@model ProductModel
+
 @inject IStoreService storeService
 @inject IProductTagService productTagService
 
@@ -1192,10 +1193,16 @@
                                         type: "json",
                                         transport: {
                                             read: {
-                                                url: "@Html.Raw(Url.Action("TierPriceList", "Product", new {productId = Model.Id}))",
+                                                url: "@Html.Raw(Url.Action("TierPriceList", "Product"))",
                                                 type: "POST",
                                                 dataType: "json",
-                                                data: addAntiForgeryToken
+                                                data: function additionalData() {
+                                                    var data = {
+                                                        ProductId: '@(Model.Id)'
+                                                    };
+                                                    addAntiForgeryToken(data);
+                                                    return data;
+                                                }
                                             },
                                             destroy: {
                                                 url: "@Html.Raw(Url.Action("TierPriceDelete", "Product"))",
@@ -1228,15 +1235,14 @@
                                             // Cancel the changes
                                             this.cancelChanges();
                                         },
+                                        pageSize: @(Model.TierPriceSearchModel.PageSize),
                                         serverPaging: true,
                                         serverFiltering: true,
                                         serverSorting: true
                                     },
                                     pageable: {
                                         refresh: true,
-                                        numeric: false,
-                                        previousNext: false,
-                                        info: false,
+                                        pageSizes: [@(Model.TierPriceSearchModel.AvailablePageSizes)],
                                         @await Html.PartialAsync("_GridPagerMessages")
                                     },
                                     editable: {
@@ -1344,10 +1350,16 @@
                                         type: "json",
                                         transport: {
                                             read: {
-                                                url: "@Html.Raw(Url.Action("AssociatedProductList", "Product", new {productId = Model.Id}))",
+                                                url: "@Html.Raw(Url.Action("AssociatedProductList", "Product"))",
                                                 type: "POST",
                                                 dataType: "json",
-                                                data: addAntiForgeryToken
+                                                data: function additionalData() {
+                                                    var data = {
+                                                        ProductId: '@(Model.Id)'
+                                                    };
+                                                    addAntiForgeryToken(data);
+                                                    return data;
+                                                }
                                             },
                                             update: {
                                                 url: "@Html.Raw(Url.Action("AssociatedProductUpdate", "Product"))",
@@ -1385,15 +1397,14 @@
                                             // Cancel the changes
                                             this.cancelChanges();
                                         },
+                                        pageSize: @(Model.AssociatedProductSearchModel.PageSize),
                                         serverPaging: true,
                                         serverFiltering: true,
                                         serverSorting: true
                                     },
                                     pageable: {
                                         refresh: true,
-                                        numeric: false,
-                                        previousNext: false,
-                                        info: false,
+                                        pageSizes: [@(Model.AssociatedProductSearchModel.AvailablePageSizes)],
                                         @await Html.PartialAsync("_GridPagerMessages")
                                     },
                                     editable: {
@@ -2009,10 +2020,16 @@
                                         type: "json",
                                         transport: {
                                             read: {
-                                                url: "@Html.Raw(Url.Action("RelatedProductList", "Product", new {productId = Model.Id}))",
+                                                url: "@Html.Raw(Url.Action("RelatedProductList", "Product"))",
                                                 type: "POST",
                                                 dataType: "json",
-                                                data: addAntiForgeryToken
+                                                data: function additionalData() {
+                                                    var data = {
+                                                        ProductId: '@(Model.Id)'
+                                                    };
+                                                    addAntiForgeryToken(data);
+                                                    return data;
+                                                }
                                             },
                                             update: {
                                                 url: "@Html.Raw(Url.Action("RelatedProductUpdate", "Product"))",
@@ -2050,15 +2067,14 @@
                                             // Cancel the changes
                                             this.cancelChanges();
                                         },
+                                        pageSize: @(Model.RelatedProductSearchModel.PageSize),
                                         serverPaging: true,
                                         serverFiltering: true,
                                         serverSorting: true
                                     },
                                     pageable: {
                                         refresh: true,
-                                        numeric: false,
-                                        previousNext: false,
-                                        info: false,
+                                        pageSizes: [@(Model.RelatedProductSearchModel.AvailablePageSizes)],
                                         @await Html.PartialAsync("_GridPagerMessages")
                                     },
                                     editable: {
@@ -2144,10 +2160,16 @@
                                         type: "json",
                                         transport: {
                                             read: {
-                                                url: "@Html.Raw(Url.Action("CrossSellProductList", "Product", new {productId = Model.Id}))",
+                                                url: "@Html.Raw(Url.Action("CrossSellProductList", "Product"))",
                                                 type: "POST",
                                                 dataType: "json",
-                                                data: addAntiForgeryToken
+                                                data: function additionalData() {
+                                                    var data = {
+                                                        ProductId: '@(Model.Id)'
+                                                    };
+                                                    addAntiForgeryToken(data);
+                                                    return data;
+                                                }
                                             },
                                             destroy: {
                                                 url: "@Html.Raw(Url.Action("CrossSellProductDelete", "Product"))",
@@ -2173,15 +2195,14 @@
                                             // Cancel the changes
                                             this.cancelChanges();
                                         },
+                                        pageSize: @(Model.CrossSellProductSearchModel.PageSize),
                                         serverPaging: true,
                                         serverFiltering: true,
                                         serverSorting: true
                                     },
                                     pageable: {
                                         refresh: true,
-                                        numeric: false,
-                                        previousNext: false,
-                                        info: false,
+                                        pageSizes: [@(Model.CrossSellProductSearchModel.AvailablePageSizes)],
                                         @await Html.PartialAsync("_GridPagerMessages")
                                     },
                                     editable: {

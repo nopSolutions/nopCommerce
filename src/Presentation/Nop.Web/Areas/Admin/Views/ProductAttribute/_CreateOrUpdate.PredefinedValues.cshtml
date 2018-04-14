@@ -18,10 +18,16 @@
                                 type: "json",
                                 transport: {
                                     read: {
-                                        url: "@Html.Raw(Url.Action("PredefinedProductAttributeValueList", "ProductAttribute", new {productAttributeId = Model.Id}))",
+                                        url: "@Html.Raw(Url.Action("PredefinedProductAttributeValueList", "ProductAttribute"))",
                                         type: "POST",
                                         dataType: "json",
-                                        data: addAntiForgeryToken
+                                        data: function() {
+                                            var data = {
+                                                ProductAttributeId: '@(Model.Id)'
+                                            };
+                                            addAntiForgeryToken(data);
+                                            return data;
+                                        }
                                     },
                                     destroy: {
                                         url: "@Html.Raw(Url.Action("PredefinedProductAttributeValueDelete", "ProductAttribute"))",
@@ -47,15 +53,14 @@
                                     // Cancel the changes
                                     this.cancelChanges();
                                 },
+                                pageSize: @(Model.PredefinedProductAttributeValueSearchModel.PageSize),
                                 serverPaging: true,
                                 serverFiltering: true,
                                 serverSorting: true
                             },
                             pageable: {
                                 refresh: true,
-                                numeric: false,
-                                previousNext: false,
-                                info: false,
+                                pageSizes: [@(Model.PredefinedProductAttributeValueSearchModel.AvailablePageSizes)],
                                 @await Html.PartialAsync("_GridPagerMessages")
                             },
                             editable: {
@@ -105,7 +110,7 @@
                 </script>
             </div>
             <div class="panel-footer">
-                <button type="submit" id="btnAddNewValue" onclick="javascript:OpenWindow('@(Url.Action("PredefinedProductAttributeValueCreatePopup", "ProductAttribute", new {productAttributeId = Model.Id, btnId = "btnRefresh", formId = "productattribute-form"}))', 800, 550, true); return false;" class="btn btn-primary">
+                <button type="submit" id="btnAddNewValue" onclick="javascript:OpenWindow('@(Url.Action("PredefinedProductAttributeValueCreatePopup", "ProductAttribute", new { productAttributeId = Model.Id, btnId = "btnRefresh", formId = "productattribute-form" }))', 800, 550, true); return false;" class="btn btn-primary">
                     @T("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.AddNew")
                 </button>
                 <input type="submit" id="btnRefresh" style="display:none" />

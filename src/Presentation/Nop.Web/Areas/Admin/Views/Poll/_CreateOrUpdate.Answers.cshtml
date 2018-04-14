@@ -15,13 +15,19 @@
                                 type: "json",
                                 transport: {
                                     read: {
-                                        url: "@Html.Raw(Url.Action("PollAnswers", "Poll", new {pollId = Model.Id}))",
+                                        url: "@Html.Raw(Url.Action("PollAnswers", "Poll"))",
                                         type: "POST",
                                         dataType: "json",
-                                        data: addAntiForgeryToken
+                                        data: function() {
+                                            var data = {
+                                                PollId: '@(Model.Id)'
+                                            };
+                                            addAntiForgeryToken(data);
+                                            return data;
+                                        }
                                     },
                                     create: {
-                                        url: "@Html.Raw(Url.Action("PollAnswerAdd", "Poll", new {pollId = Model.Id}))",
+                                        url: "@Html.Raw(Url.Action("PollAnswerAdd", "Poll", new { pollId = Model.Id }))",
                                         type: "POST",
                                         dataType: "json",
                                         data: addAntiForgeryToken
@@ -63,15 +69,14 @@
                                     // Cancel the changes
                                     this.cancelChanges();
                                 },
+                                pageSize: @(Model.PollAnswerSearchModel.PageSize),
                                 serverPaging: true,
                                 serverFiltering: true,
                                 serverSorting: true
                             },
                             pageable: {
                                 refresh: true,
-                                numeric: false,
-                                previousNext: false,
-                                info: false,
+                                pageSizes: [@(Model.PollAnswerSearchModel.AvailablePageSizes)],
                                 @await Html.PartialAsync("_GridPagerMessages")
                             },
                             toolbar: [{ name: "create", text: "@T("Admin.Common.AddNewRecord")" }],
@@ -114,7 +119,6 @@
                             ]
                         });
                     });
-
                 </script>
             </div>
         }

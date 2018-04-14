@@ -183,7 +183,7 @@
                     </div>
                 </div>
                 @*render vendor attributes*@
-                @await Html.PartialAsync("../VendorAttribute/ListBlock.cshtml")
+                @await Html.PartialAsync("../VendorAttribute/ListBlock.cshtml", Model.VendorAttributeSearchModel)
                 @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.VendorSettingsBottom })
             </div>
         </div>

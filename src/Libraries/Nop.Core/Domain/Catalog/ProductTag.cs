@@ -1,12 +1,13 @@
 using System.Collections.Generic;
 using Nop.Core.Domain.Localization;
+using Nop.Core.Domain.Seo;
 
 namespace Nop.Core.Domain.Catalog
 {
     /// <summary>
     /// Represents a product tag
     /// </summary>
-    public partial class ProductTag : BaseEntity, ILocalizedEntity
+    public partial class ProductTag : BaseEntity, ILocalizedEntity, ISlugSupported
     {
         private ICollection<Product_ProductTag_Mapping> _products;
 

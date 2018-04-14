@@ -337,10 +337,16 @@
                                 type: "json",
                                 transport: {
                                     read: {
-                                        url: "@Html.Raw(Url.Action("ShipmentsByOrder", "Order", new {orderId = Model.Id}))",
+                                        url: "@Html.Raw(Url.Action("ShipmentsByOrder", "Order"))",
                                         type: "POST",
                                         dataType: "json",
-                                        data: addAntiForgeryToken
+                                        data: function () {
+                                            var data = {
+                                                OrderId: '@(Model.Id)'
+                                            };
+                                            addAntiForgeryToken(data);
+                                            return data;
+                                        }
                                     }
                                 },
                                 schema: {
@@ -353,15 +359,14 @@
                                     // Cancel the changes
                                     this.cancelChanges();
                                 },
+                                pageSize: @(Model.OrderShipmentSearchModel.PageSize),
                                 serverPaging: true,
                                 serverFiltering: true,
                                 serverSorting: true
                             },
                             pageable: {
                                 refresh: true,
-                                numeric: false,
-                                previousNext: false,
-                                info: false,
+                                pageSizes: [@(Model.OrderShipmentSearchModel.AvailablePageSizes)],
                                 @await Html.PartialAsync("_GridPagerMessages")
                             },
                             //details grid
@@ -415,10 +420,16 @@
                                 type: "json",
                                 transport: {
                                     read: {
-                                        url: "@Html.Raw(Url.Action("ShipmentsItemsByShipmentId", "Order"))?shipmentId=" + e.data.Id,
+                                        url: "@Html.Raw(Url.Action("ShipmentsItemsByShipmentId", "Order"))",
                                         type: "POST",
                                         dataType: "json",
-                                        data: addAntiForgeryToken
+                                        data: function () {
+                                            var data = {
+                                                ShipmentId: e.data.Id
+                                            };
+                                            addAntiForgeryToken(data);
+                                            return data;
+                                        }
                                     }
                                 },
                                 schema: {
@@ -431,6 +442,7 @@
                                     // Cancel the changes
                                     this.cancelChanges();
                                 },
+                                pageSize: @(Model.OrderShipmentSearchModel.ShipmentItemSearchModel.PageSize),
                                 serverPaging: true,
                                 serverFiltering: true,
                                 serverSorting: true
@@ -439,9 +451,7 @@
                             sortable: true,
                             pageable: {
                                 refresh: true,
-                                numeric: false,
-                                previousNext: false,
-                                info: false,
+                                pageSizes: [@(Model.OrderShipmentSearchModel.ShipmentItemSearchModel.AvailablePageSizes)],
                                 @await Html.PartialAsync("_GridPagerMessages")
                             },
                             columns: [

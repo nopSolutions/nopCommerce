@@ -15,10 +15,16 @@
                                 type: "json",
                                 transport: {
                                     read: {
-                                        url: "@Html.Raw(Url.Action("States", "Country", new { countryId = Model.Id }))",
+                                        url: "@Html.Raw(Url.Action("States", "Country"))",
                                         type: "POST",
                                         dataType: "json",
-                                        data: addAntiForgeryToken
+                                        data: function() {
+                                            var data = {
+                                                CountryId: '@(Model.Id)'
+                                            };
+                                            addAntiForgeryToken(data);
+                                            return data;
+                                        }
                                     },
                                     destroy: {
                                         url: "@Html.Raw(Url.Action("StateDelete", "Country"))",
@@ -40,15 +46,14 @@
                                     // Cancel the changes
                                     this.cancelChanges();
                                 },
+                                pageSize: @(Model.StateProvinceSearchModel.PageSize),
                                 serverPaging: true,
                                 serverFiltering: true,
                                 serverSorting: true
                             },
                             pageable: {
                                 refresh: true,
-                                numeric: false,
-                                previousNext: false,
-                                info: false,
+                                pageSizes: [@(Model.StateProvinceSearchModel.AvailablePageSizes)],
                                 @await Html.PartialAsync("_GridPagerMessages")
                             },
                             editable: {
@@ -96,7 +101,7 @@
             <div class="panel-footer">
                 <div width="100%">
                     <button type="submit" id="btnAddNewState"
-                            onclick="javascript:OpenWindow('@(Url.Action("StateCreatePopup", "Country", new {countryId = Model.Id, btnId = "btnRefresh", formId = "country-form"}))', 800, 450, true); return false;"
+                            onclick="javascript:OpenWindow('@(Url.Action("StateCreatePopup", "Country", new { countryId = Model.Id, btnId = "btnRefresh", formId = "country-form" }))', 800, 450, true); return false;"
                             class="btn btn-primary">
                         @T("Admin.Configuration.Countries.States.AddNew")
                     </button>

@@ -1,50 +1,50 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Domain.Cms;
 using Nop.Core.Plugins;
 using Nop.Services.Cms;
 using Nop.Services.Configuration;
 using Nop.Services.Plugins;
 using Nop.Services.Security;
-using Nop.Web.Areas.Admin.Extensions;
+using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Areas.Admin.Models.Cms;
-using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
 
 namespace Nop.Web.Areas.Admin.Controllers
 {
     public partial class WidgetController : BaseAdminController
-	{
+    {
         #region Fields
-        
-        private readonly IWidgetService _widgetService;
+
         private readonly IPermissionService _permissionService;
+        private readonly IPluginFinder _pluginFinder;
         private readonly ISettingService _settingService;
+        private readonly IWidgetModelFactory _widgetModelFactory;
+        private readonly IWidgetService _widgetService;
         private readonly WidgetSettings _widgetSettings;
-	    private readonly IPluginFinder _pluginFinder;
 
         #endregion
 
         #region Ctor
 
-        public WidgetController(IWidgetService widgetService,
-            IPermissionService permissionService,
+        public WidgetController(IPermissionService permissionService,
+            IPluginFinder pluginFinder,
             ISettingService settingService,
-            WidgetSettings widgetSettings,
-            IPluginFinder pluginFinder)
-		{
-            this._widgetService = widgetService;
+            IWidgetModelFactory widgetModelFactory,
+            IWidgetService widgetService,
+            WidgetSettings widgetSettings)
+        {
             this._permissionService = permissionService;
-            this._settingService = settingService;
-            this._widgetSettings = widgetSettings;
             this._pluginFinder = pluginFinder;
+            this._settingService = settingService;
+            this._widgetModelFactory = widgetModelFactory;
+            this._widgetService = widgetService;
+            this._widgetSettings = widgetSettings;
         }
 
-		#endregion 
-        
+        #endregion
+
         #region Methods
-        
+
         public virtual IActionResult Index()
         {
             return RedirectToAction("List");
@@ -55,32 +55,22 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageWidgets))
                 return AccessDeniedView();
 
-            return View();
+            //prepare model
+            var model = _widgetModelFactory.PrepareWidgetSearchModel(new WidgetSearchModel());
+
+            return View(model);
         }
 
         [HttpPost]
-        public virtual IActionResult List(DataSourceRequest command)
+        public virtual IActionResult List(WidgetSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageWidgets))
                 return AccessDeniedKendoGridJson();
 
-            var widgetsModel = new List<WidgetModel>();
-            var widgets = _widgetService.LoadAllWidgets();
-            foreach (var widget in widgets)
-            {
-                var tmp1 = widget.ToModel();
-                tmp1.IsActive = widget.IsWidgetActive(_widgetSettings);
-                tmp1.ConfigurationUrl = widget.GetConfigurationPageUrl();
-                widgetsModel.Add(tmp1);
-            }
-            widgetsModel = widgetsModel.ToList();
-            var gridModel = new DataSourceResult
-            {
-                Data = widgetsModel,
-                Total = widgetsModel.Count()
-            };
+            //prepare model
+            var model = _widgetModelFactory.PrepareWidgetListModel(searchModel);
 
-            return Json(gridModel);
+            return Json(model);
         }
 
         [HttpPost]
@@ -122,7 +112,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             return new NullJsonResult();
         }
-        
-	    #endregion
+
+        #endregion
     }
 }

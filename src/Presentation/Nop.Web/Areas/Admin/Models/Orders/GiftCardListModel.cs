@@ -1,26 +1,11 @@
-﻿using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Nop.Web.Framework.Mvc.ModelBinding;
-using Nop.Web.Framework.Mvc.Models;
+﻿using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Areas.Admin.Models.Orders
 {
-    public partial class GiftCardListModel : BaseNopModel
+    /// <summary>
+    /// Represents a gift card list model
+    /// </summary>
+    public class GiftCardListModel : BasePagedListModel<GiftCardModel>
     {
-        public GiftCardListModel()
-        {
-            ActivatedList = new List<SelectListItem>();
-        }
-
-        [NopResourceDisplayName("Admin.GiftCards.List.CouponCode")]
-        public string CouponCode { get; set; }
-
-        [NopResourceDisplayName("Admin.GiftCards.List.RecipientName")]
-        public string RecipientName { get; set; }
-
-        [NopResourceDisplayName("Admin.GiftCards.List.Activated")]
-        public int ActivatedId { get; set; }
-        [NopResourceDisplayName("Admin.GiftCards.List.Activated")]
-        public IList<SelectListItem> ActivatedList { get; set; }
     }
 }

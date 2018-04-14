@@ -1817,7 +1817,7 @@ INSERT [dbo].[Setting] ([Id], [Name], [Value], [StoreId]) VALUES (389, N'securit
 INSERT [dbo].[Setting] ([Id], [Name], [Value], [StoreId]) VALUES (390, N'securitysettings.enablexsrfprotectionforpublicstore', N'True', 0)
 INSERT [dbo].[Setting] ([Id], [Name], [Value], [StoreId]) VALUES (391, N'securitysettings.honeypotenabled', N'False', 0)
 INSERT [dbo].[Setting] ([Id], [Name], [Value], [StoreId]) VALUES (392, N'securitysettings.honeypotinputname', N'hpinput', 0)
-INSERT [dbo].[Setting] ([Id], [Name], [Value], [StoreId]) VALUES (393, N'shippingsettings.activeshippingratecomputationmethodsystemnames', N'Shipping.FixedOrByWeight', 0)
+INSERT [dbo].[Setting] ([Id], [Name], [Value], [StoreId]) VALUES (393, N'shippingsettings.activeshippingratecomputationmethodsystemnames', N'Shipping.FixedByWeightByTotal', 0)
 INSERT [dbo].[Setting] ([Id], [Name], [Value], [StoreId]) VALUES (394, N'shippingsettings.activepickuppointprovidersystemnames', N'Pickup.PickupInStore', 0)
 INSERT [dbo].[Setting] ([Id], [Name], [Value], [StoreId]) VALUES (395, N'shippingsettings.shiptosameaddress', N'True', 0)
 INSERT [dbo].[Setting] ([Id], [Name], [Value], [StoreId]) VALUES (396, N'shippingsettings.allowpickupinstore', N'True', 0)

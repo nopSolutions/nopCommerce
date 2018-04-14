@@ -1,11 +1,12 @@
-﻿@using Nop.Core
+﻿@model BestsellerBriefSearchModel  
+
+@using Nop.Core
 @using Nop.Services.Common
 @inject IWorkContext workContext
 @{
     const string panelId = "bestsellers-report-amount-box";
     const string hidePanelAttributeName = "HideBestsellersBriefReportByAmountPanel";
     var hidePanel = workContext.CurrentCustomer.GetAttribute<bool>(hidePanelAttributeName);
-    var gridPageSize = 5;
 }
 
 <div class="box box-info @if(hidePanel){<text>collapsed-box</text>}" id="@panelId">
@@ -45,7 +46,13 @@
                                 url: "@Html.Raw(Url.Action("BestsellersBriefReportByAmountList", "Order"))",
                                 type: "POST",
                                 dataType: "json",
-                                data: addAntiForgeryToken
+                                data: function() {
+                                    var data = {
+                                        OrderBy : 2
+                                    };
+                                    addAntiForgeryToken(data);
+                                    return data;
+                                }
                             }
                         },
                         schema: {
@@ -58,7 +65,7 @@
                             // Cancel the changes
                             this.cancelChanges();
                         },
-                        pageSize: @(gridPageSize),
+                        pageSize: @(Model.PageSize),
                         serverPaging: true,
                         serverFiltering: true,
                         serverSorting: true

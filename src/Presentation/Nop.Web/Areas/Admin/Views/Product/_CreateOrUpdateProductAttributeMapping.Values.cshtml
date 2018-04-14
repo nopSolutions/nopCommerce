@@ -1,4 +1,4 @@
-@model ProductModel.ProductAttributeMappingModel
+@model ProductAttributeMappingModel
 
 <div class="panel-group">
     @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductAttributeMappingDetailsValuesTop, additionalData = Model })
@@ -15,11 +15,16 @@
                             type: "json",
                             transport: {
                                 read: {
-                                    url:
-                                        "@Html.Raw(Url.Action("ProductAttributeValueList", "Product", new {productAttributeMappingId = Model.Id}))",
+                                    url: "@Html.Raw(Url.Action("ProductAttributeValueList", "Product"))",
                                     type: "POST",
                                     dataType: "json",
-                                    data: addAntiForgeryToken
+                                    data: function additionalData() {
+                                        var data = {
+                                            ProductAttributeMappingId: '@(Model.Id)'
+                                        };
+                                        addAntiForgeryToken(data);
+                                        return data;
+                                    }
                                 },
                                 destroy: {
                                     url: "@Html.Raw(Url.Action("ProductAttributeValueDelete", "Product"))",
@@ -45,15 +50,14 @@
                                 // Cancel the changes
                                 this.cancelChanges();
                             },
+                            pageSize: @(Model.ProductAttributeValueSearchModel.PageSize),
                             serverPaging: true,
                             serverFiltering: true,
                             serverSorting: true
                         },
                         pageable: {
                             refresh: true,
-                            numeric: false,
-                            previousNext: false,
-                            info: false,
+                            pageSizes: [@(Model.ProductAttributeValueSearchModel.AvailablePageSizes)],
                             @await Html.PartialAsync("_GridPagerMessages")
                         },
                         editable: {
@@ -124,7 +128,7 @@
             </script>
         </div>
         <div class="panel-footer">
-            <button type="submit" id="btnAddNewValue" onclick="javascript:OpenWindow('@(Url.Action("ProductAttributeValueCreatePopup", "Product", new {productAttributeMappingId = Model.Id, btnId = "btnRefresh", formId = "productattribute-form"}))', 800, 750, true);return false;" class="btn btn-primary">
+            <button type="submit" id="btnAddNewValue" onclick="javascript:OpenWindow('@(Url.Action("ProductAttributeValueCreatePopup", "Product", new { productAttributeMappingId = Model.Id, btnId = "btnRefresh", formId = "productattribute-form" }))', 800, 750, true);return false;" class="btn btn-primary">
                 @T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.AddNew")
             </button>
             <input type="submit" id="btnRefresh" style="display: none"/>

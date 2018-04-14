@@ -13,10 +13,16 @@
                             type: "json",
                             transport: {
                                 read: {
-                                    url: "@Html.Raw(Url.Action("OrderNotesSelect", "Order", new {orderId = Model.Id}))",
+                                    url: "@Html.Raw(Url.Action("OrderNotesSelect", "Order"))",
                                     type: "POST",
                                     dataType: "json",
-                                    data: addAntiForgeryToken
+                                    data: function () {
+                                        var data = {
+                                            OrderId: '@(Model.Id)'
+                                        };
+                                        addAntiForgeryToken(data);
+                                        return data;
+                                    }
                                 },
                                 destroy: {
                                     url: "@Html.Raw(Url.Action("OrderNoteDelete", "Order", new {orderId = Model.Id}))",
@@ -44,15 +50,14 @@
                                 // Cancel the changes
                                 this.cancelChanges();
                             },
+                            pageSize: @(Model.OrderNoteSearchModel.PageSize),
                             serverPaging: true,
                             serverFiltering: true,
                             serverSorting: true
                         },
                         pageable: {
                             refresh: true,
-                            numeric: false,
-                            previousNext: false,
-                            info: false,
+                            pageSizes: [@(Model.OrderNoteSearchModel.AvailablePageSizes)],
                             @await Html.PartialAsync("_GridPagerMessages")
                         },
                         editable: {
@@ -179,8 +184,8 @@
                 DisplayToCustomer: orderNoteDisplayToCustomer,
                 message: orderNoteMessage,
                 downloadId: orderNoteDownloadId,
-                orderId: @Model.Id
-                };
+                orderId: '@Model.Id'
+            };
             addAntiForgeryToken(postData);
 
             $.ajax({

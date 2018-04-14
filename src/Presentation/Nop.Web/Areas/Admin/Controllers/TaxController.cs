@@ -1,46 +1,48 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using Nop.Web.Areas.Admin.Extensions;
-using Nop.Web.Areas.Admin.Models.Tax;
 using Nop.Core.Domain.Tax;
 using Nop.Services.Configuration;
 using Nop.Services.Security;
 using Nop.Services.Tax;
+using Nop.Web.Areas.Admin.Extensions;
+using Nop.Web.Areas.Admin.Factories;
+using Nop.Web.Areas.Admin.Models.Tax;
 using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
 
 namespace Nop.Web.Areas.Admin.Controllers
 {
     public partial class TaxController : BaseAdminController
-	{
-		#region Fields
+    {
+        #region Fields
 
-        private readonly ITaxService _taxService;
-        private readonly ITaxCategoryService _taxCategoryService;
-        private readonly TaxSettings _taxSettings;
-        private readonly ISettingService _settingService;
         private readonly IPermissionService _permissionService;
+        private readonly ISettingService _settingService;
+        private readonly ITaxCategoryService _taxCategoryService;
+        private readonly ITaxModelFactory _taxModelFactory;
+        private readonly ITaxService _taxService;
+        private readonly TaxSettings _taxSettings;
 
         #endregion
 
         #region Ctor
 
-        public TaxController(ITaxService taxService,
-            ITaxCategoryService taxCategoryService,
-            TaxSettings taxSettings,
+        public TaxController(IPermissionService permissionService,
             ISettingService settingService,
-            IPermissionService permissionService)
-		{
-            this._taxService = taxService;
-            this._taxCategoryService = taxCategoryService;
-            this._taxSettings = taxSettings;
-            this._settingService = settingService;
+            ITaxCategoryService taxCategoryService,
+            ITaxModelFactory taxModelFactory,
+            ITaxService taxService,
+            TaxSettings taxSettings)
+        {
             this._permissionService = permissionService;
-		}
+            this._settingService = settingService;
+            this._taxCategoryService = taxCategoryService;
+            this._taxModelFactory = taxModelFactory;
+            this._taxService = taxService;
+            this._taxSettings = taxSettings;
+        }
 
-		#endregion 
+        #endregion
 
         #region Tax Providers
 
@@ -48,44 +50,32 @@ namespace Nop.Web.Areas.Admin.Controllers
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
                 return AccessDeniedView();
-            
-            return View();
+
+            //prepare model
+            var model = _taxModelFactory.PrepareTaxProviderSearchModel(new TaxProviderSearchModel());
+
+            return View(model);
         }
 
         [HttpPost]
-        public virtual IActionResult Providers(DataSourceRequest command)
+        public virtual IActionResult Providers(TaxProviderSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
                 return AccessDeniedKendoGridJson();
 
-            var taxProvidersModel = new List<TaxProviderModel>();
-            var taxProviders = _taxService.LoadAllTaxProviders();
-            foreach (var taxProvider in taxProviders)
-            {
-                var tmp1 = taxProvider.ToModel();
-                tmp1.IsPrimaryTaxProvider = tmp1.SystemName.Equals(_taxSettings.ActiveTaxProviderSystemName, StringComparison.InvariantCultureIgnoreCase);
-                tmp1.ConfigurationUrl = taxProvider.GetConfigurationPageUrl();
-                taxProvidersModel.Add(tmp1);
-            }
-                
-            var gridModel = new DataSourceResult
-            {
-                Data = taxProvidersModel,
-                Total = taxProvidersModel.Count()
-            };
+            //prepare model
+            var model = _taxModelFactory.PrepareTaxProviderListModel(searchModel);
 
-            return Json(gridModel);
+            return Json(model);
         }
-        
+
         public virtual IActionResult MarkAsPrimaryProvider(string systemName)
         {
-            if (string.IsNullOrEmpty(systemName))
-            {
-                return RedirectToAction("Providers");
-            }
-
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
                 return AccessDeniedView();
+
+            if (string.IsNullOrEmpty(systemName))
+                return RedirectToAction("Providers");
 
             var taxProvider = _taxService.LoadTaxProviderBySystemName(systemName);
             if (taxProvider != null)
@@ -106,25 +96,22 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
                 return AccessDeniedView();
 
-            return View();
+            //prepare model
+            var model = _taxModelFactory.PrepareTaxCategorySearchModel(new TaxCategorySearchModel());
+
+            return View(model);
         }
 
         [HttpPost]
-        public virtual IActionResult Categories(DataSourceRequest command)
+        public virtual IActionResult Categories(TaxCategorySearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
                 return AccessDeniedKendoGridJson();
 
-            var categoriesModel = _taxCategoryService.GetAllTaxCategories()
-                .Select(x => x.ToModel())
-                .ToList();
-            var gridModel = new DataSourceResult
-            {
-                Data = categoriesModel,
-                Total = categoriesModel.Count
-            };
+            //prepare model
+            var model = _taxModelFactory.PrepareTaxCategoryListModel(searchModel);
 
-            return Json(gridModel);
+            return Json(model);
         }
 
         [HttpPost]
@@ -134,9 +121,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
-            {
                 return Json(new DataSourceResult { Errors = ModelState.SerializeErrors() });
-            }
 
             var taxCategory = _taxCategoryService.GetTaxCategoryById(model.Id);
             taxCategory = model.ToEntity(taxCategory);
@@ -152,9 +137,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
-            {
                 return Json(new DataSourceResult { Errors = ModelState.SerializeErrors() });
-            }
 
             var taxCategory = new TaxCategory();
             taxCategory = model.ToEntity(taxCategory);
@@ -169,9 +152,10 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
                 return AccessDeniedView();
 
-            var taxCategory = _taxCategoryService.GetTaxCategoryById(id);
-            if (taxCategory == null)
-                throw new ArgumentException("No tax category found with the specified id");
+            //try to get a tax category with the specified id
+            var taxCategory = _taxCategoryService.GetTaxCategoryById(id)
+                ?? throw new ArgumentException("No tax category found with the specified id", nameof(id));
+
             _taxCategoryService.DeleteTaxCategory(taxCategory);
 
             return new NullJsonResult();

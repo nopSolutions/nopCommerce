@@ -1,6 +1,6 @@
-﻿@using System.Text.Encodings.Web
-@model MaintenanceModel
+﻿@model MaintenanceModel
 
+@using System.Text.Encodings.Web
 @{
     //page title
     ViewBag.Title = T("Admin.System.Maintenance").Text;
@@ -219,15 +219,14 @@
                                     // Cancel the changes
                                     this.cancelChanges();
                                 },
+                                pageSize: @(Model.BackupFileSearchModel.PageSize),
                                 serverPaging: true,
                                 serverFiltering: true,
                                 serverSorting: true
                             },
                             pageable: {
                                 refresh: true,
-                                numeric: false,
-                                previousNext: false,
-                                info: false,
+                                pageSizes: [@(Model.BackupFileSearchModel.AvailablePageSizes)],
                                 @await Html.PartialAsync("_GridPagerMessages")
                             },
                             editable: {

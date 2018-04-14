@@ -5,7 +5,6 @@ using Nop.Plugin.Widgets.GoogleAnalytics.Models;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Services.Security;
-using Nop.Services.Stores;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc.Filters;
@@ -18,9 +17,8 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Controllers
     public class WidgetsGoogleAnalyticsController : BasePluginController
     {
         #region Fields
-
-        private readonly IWorkContext _workContext;
-        private readonly IStoreService _storeService;
+        
+        private readonly IStoreContext _storeContext;
         private readonly ISettingService _settingService;
         private readonly ILocalizationService _localizationService;
         private readonly IPermissionService _permissionService;
@@ -29,15 +27,12 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Controllers
 
         #region Ctor
 
-        public WidgetsGoogleAnalyticsController(IWorkContext workContext,
-            IStoreContext storeContext, 
-            IStoreService storeService,
+        public WidgetsGoogleAnalyticsController(IStoreContext storeContext, 
             ISettingService settingService, 
             ILocalizationService localizationService,
             IPermissionService permissionService)
         {
-            this._workContext = workContext;
-            this._storeService = storeService;
+            this._storeContext = storeContext;
             this._settingService = settingService;
             this._localizationService = localizationService;
             this._permissionService = permissionService;
@@ -53,7 +48,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Controllers
                 return AccessDeniedView();
 
             //load settings for a chosen store scope
-            var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var storeScope = _storeContext.ActiveStoreScopeConfiguration;
             var googleAnalyticsSettings = _settingService.LoadSetting<GoogleAnalyticsSettings>(storeScope);
 
             var model = new ConfigurationModel
@@ -90,7 +85,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Controllers
                 return AccessDeniedView();
 
             //load settings for a chosen store scope
-            var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var storeScope = _storeContext.ActiveStoreScopeConfiguration;
             var googleAnalyticsSettings = _settingService.LoadSetting<GoogleAnalyticsSettings>(storeScope);
 
             googleAnalyticsSettings.GoogleId = model.GoogleId;

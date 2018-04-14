@@ -6,5 +6,9 @@
 5. Copy back App_Data\dataSettings.json and App_Data\installedPlugins.json files
 6. Ensure that everything is OK
 
+Version specific steps:
+7. Added "Shipping by Total" functionality to "Shipping by Weight" plugin. Upgrade instructions: do not forget to manually delete "/Plugins/Shipping.FixedOrByWeight" directory (it's not used anymore) and replace the plugin «Shipping.FixedOrByWeight» by the plugin «Shipping.FixedByWeightByTotal» in the App_Data/installedPlugins.json file.
+
+
 Notes:
 1. If you stored your pictures on the file system, then also backup them (\Content\Images\) and copy back after upgrade

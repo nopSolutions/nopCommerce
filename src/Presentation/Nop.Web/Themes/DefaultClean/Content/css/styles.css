@@ -3418,6 +3418,14 @@ label, label + * {
 .cart-footer .checkout-buttons {
 	padding: 0 10px;
 }
+.cart-footer .checkout-disabled {
+    font-size: 20px;
+    text-align: center;
+    background: #ffa500;
+    border: 1px solid #c3891e;
+    color: #fff;
+    padding: 15px 50px;
+}
 .cart-footer .checkout-button {
 	display: inline-block;
 	min-width: 160px;

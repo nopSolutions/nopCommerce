@@ -1,19 +1,27 @@
 ﻿using System.Collections.Generic;
 using FluentValidation.Attributes;
 using Nop.Web.Areas.Admin.Validators.Vendors;
-using Nop.Web.Framework.Localization;
+using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Mvc.ModelBinding;
-using Nop.Web.Framework.Mvc.Models;
 
 namespace Nop.Web.Areas.Admin.Models.Vendors
 {
+    /// <summary>
+    /// Represents a vendor attribute value model
+    /// </summary>
     [Validator(typeof(VendorAttributeValueValidator))]
     public partial class VendorAttributeValueModel : BaseNopEntityModel, ILocalizedModel<VendorAttributeValueLocalizedModel>
     {
+        #region Ctor
+
         public VendorAttributeValueModel()
         {
             Locales = new List<VendorAttributeValueLocalizedModel>();
         }
+
+        #endregion
+
+        #region Properties
 
         public int VendorAttributeId { get; set; }
 
@@ -27,9 +35,11 @@ namespace Nop.Web.Areas.Admin.Models.Vendors
         public int DisplayOrder {get;set;}
 
         public IList<VendorAttributeValueLocalizedModel> Locales { get; set; }
+
+        #endregion
     }
 
-    public partial class VendorAttributeValueLocalizedModel : ILocalizedModelLocal
+    public partial class VendorAttributeValueLocalizedModel : ILocalizedLocaleModel
     {
         public int LanguageId { get; set; }
 

@@ -408,6 +408,6 @@
         </div>
     </div>
     @*render custom customer attributes*@
-    @await Html.PartialAsync("../CustomerAttribute/ListBlock.cshtml")
+    @await Html.PartialAsync("../CustomerAttribute/ListBlock.cshtml", Model.CustomerAttributeSearchModel)
     @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CustomerUserSettingsCustomerFormFieldsBottom })
 </div>

@@ -1,29 +1,44 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Nop.Core;
-using Nop.Services.Common;
-using Nop.Web.Areas.Admin.Models.Settings;
+using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Framework.Components;
 
 namespace Nop.Web.Areas.Admin.Components
 {
+    /// <summary>
+    /// Represents a view component that displays the setting mode
+    /// </summary>
     public class SettingModeViewComponent : NopViewComponent
     {
-        private readonly IWorkContext _workContext;
+        #region Fields
 
-        public SettingModeViewComponent(IWorkContext workContext)
+        private readonly ISettingModelFactory _settingModelFactory;
+
+        #endregion
+
+        #region Ctor
+
+        public SettingModeViewComponent(ISettingModelFactory settingModelFactory)
         {
-            this._workContext = workContext;
+            this._settingModelFactory = settingModelFactory;
         }
 
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Invoke view component
+        /// </summary>
+        /// <param name="modeName">Setting mode name</param>
+        /// <returns>View component result</returns>
         public IViewComponentResult Invoke(string modeName = "settings-advanced-mode")
         {
-            var model = new ModeModel
-            {
-                ModeName = modeName,
-                Enabled = _workContext.CurrentCustomer.GetAttribute<bool>(modeName)
-            };
+            //prepare model
+            var model = _settingModelFactory.PrepareSettingModeModel(modeName);
 
             return View(model);
         }
+
+        #endregion
     }
 }

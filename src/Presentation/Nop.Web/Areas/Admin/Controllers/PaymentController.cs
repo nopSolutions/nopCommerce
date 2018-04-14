@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
-using Nop.Core;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Plugins;
 using Nop.Services.Configuration;
@@ -13,9 +11,8 @@ using Nop.Services.Localization;
 using Nop.Services.Payments;
 using Nop.Services.Plugins;
 using Nop.Services.Security;
-using Nop.Web.Areas.Admin.Extensions;
+using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Areas.Admin.Models.Payments;
-using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
 
 namespace Nop.Web.Areas.Admin.Controllers
@@ -23,40 +20,37 @@ namespace Nop.Web.Areas.Admin.Controllers
     public partial class PaymentController : BaseAdminController
     {
         #region Fields
-        
-        private readonly IPaymentService _paymentService;
-        private readonly PaymentSettings _paymentSettings;
-        private readonly ISettingService _settingService;
-        private readonly IPermissionService _permissionService;
+
         private readonly ICountryService _countryService;
-        private readonly IPluginFinder _pluginFinder;
-        private readonly IWebHelper _webHelper;
         private readonly ILocalizationService _localizationService;
-        private readonly IWorkContext _workContext;
+        private readonly IPaymentModelFactory _paymentModelFactory;
+        private readonly IPaymentService _paymentService;
+        private readonly IPermissionService _permissionService;
+        private readonly IPluginFinder _pluginFinder;
+        private readonly ISettingService _settingService;
+        private readonly PaymentSettings _paymentSettings;
 
         #endregion
 
         #region Ctor
 
-        public PaymentController(IPaymentService paymentService,
-            PaymentSettings paymentSettings,
-            ISettingService settingService,
-            IPermissionService permissionService,
-            ICountryService countryService,
-            IPluginFinder pluginFinder,
-            IWebHelper webHelper,
+        public PaymentController(ICountryService countryService,
             ILocalizationService localizationService,
-            IWorkContext workContext)
+            IPaymentModelFactory paymentModelFactory,
+            IPaymentService paymentService,
+            IPermissionService permissionService,
+            IPluginFinder pluginFinder,
+            ISettingService settingService,
+            PaymentSettings paymentSettings)
         {
-            this._paymentService = paymentService;
-            this._paymentSettings = paymentSettings;
-            this._settingService = settingService;
-            this._permissionService = permissionService;
             this._countryService = countryService;
-            this._pluginFinder = pluginFinder;
-            this._webHelper = webHelper;
             this._localizationService = localizationService;
-            this._workContext = workContext;
+            this._paymentModelFactory = paymentModelFactory;
+            this._paymentService = paymentService;
+            this._permissionService = permissionService;
+            this._pluginFinder = pluginFinder;
+            this._settingService = settingService;
+            this._paymentSettings = paymentSettings;
         }
 
         #endregion
@@ -68,34 +62,22 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePaymentMethods))
                 return AccessDeniedView();
 
-            return View();
+            //prepare model
+            var model = _paymentModelFactory.PreparePaymentMethodSearchModel(new PaymentMethodSearchModel());
+
+            return View(model);
         }
 
         [HttpPost]
-        public virtual IActionResult Methods(DataSourceRequest command)
+        public virtual IActionResult Methods(PaymentMethodSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePaymentMethods))
                 return AccessDeniedKendoGridJson();
 
-            var paymentMethodsModel = new List<PaymentMethodModel>();
-            var paymentMethods = _paymentService.LoadAllPaymentMethods();
-            foreach (var paymentMethod in paymentMethods)
-            {
-                var tmp1 = paymentMethod.ToModel();
-                tmp1.IsActive = paymentMethod.IsPaymentMethodActive(_paymentSettings);
-                tmp1.LogoUrl = paymentMethod.PluginDescriptor.GetLogoUrl(_webHelper);
-                tmp1.ConfigurationUrl = paymentMethod.GetConfigurationPageUrl();
-                tmp1.RecurringPaymentType = paymentMethod.RecurringPaymentType.GetLocalizedEnum(_localizationService, _workContext);
-                paymentMethodsModel.Add(tmp1);
-            }
-            paymentMethodsModel = paymentMethodsModel.ToList();
-            var gridModel = new DataSourceResult
-            {
-                Data = paymentMethodsModel,
-                Total = paymentMethodsModel.Count
-            };
+            //prepare model
+            var model = _paymentModelFactory.PreparePaymentMethodListModel(searchModel);
 
-            return Json(gridModel);
+            return Json(model);
         }
 
         [HttpPost]
@@ -141,35 +123,14 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePaymentMethods))
                 return AccessDeniedView();
 
-            var model = new PaymentMethodRestrictionModel();
-
-            var paymentMethods = _paymentService.LoadAllPaymentMethods();
-            var countries = _countryService.GetAllCountries(showHidden: true);
-            foreach (var pm in paymentMethods)
-            {
-                model.AvailablePaymentMethods.Add(pm.ToModel());
-            }
-            foreach (var c in countries)
-            {
-                model.AvailableCountries.Add(c.ToModel());
-            }
-            foreach (var pm in paymentMethods)
-            {
-                var restictedCountries = _paymentService.GetRestictedCountryIds(pm);
-                foreach (var c in countries)
-                {
-                    var resticted = restictedCountries.Contains(c.Id);
-                    if (!model.Resticted.ContainsKey(pm.PluginDescriptor.SystemName))
-                        model.Resticted[pm.PluginDescriptor.SystemName] = new Dictionary<int, bool>();
-                    model.Resticted[pm.PluginDescriptor.SystemName][c.Id] = resticted;
-                }
-            }
+            //prepare model
+            var model = _paymentModelFactory.PreparePaymentMethodRestrictionModel(new PaymentMethodRestrictionModel());
 
             return View(model);
         }
 
         [HttpPost, ActionName("MethodRestrictions")]
-        public virtual IActionResult MethodRestrictionsSave(IFormCollection form)
+        public virtual IActionResult MethodRestrictionsSave(PaymentMethodRestrictionModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePaymentMethods))
                 return AccessDeniedView();
@@ -180,8 +141,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             foreach (var pm in paymentMethods)
             {
                 var formKey = "restrict_" + pm.PluginDescriptor.SystemName;
-                var countryIdsToRestrict = (!StringValues.IsNullOrEmpty(form[formKey])
-                        ? form[formKey].ToString().Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries).ToList()
+                var countryIdsToRestrict = (!StringValues.IsNullOrEmpty(model.Form[formKey])
+                        ? model.Form[formKey].ToString().Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList()
                         : new List<string>())
                     .Select(x => Convert.ToInt32(x)).ToList();
 
@@ -196,8 +157,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _paymentService.SaveRestictedCountryIds(pm, newCountryIds);
             }
 
-            SuccessNotification(
-                _localizationService.GetResource("Admin.Configuration.Payment.MethodRestrictions.Updated"));
+            SuccessNotification(_localizationService.GetResource("Admin.Configuration.Payment.MethodRestrictions.Updated"));
+
             return RedirectToAction("MethodRestrictions");
         }
 

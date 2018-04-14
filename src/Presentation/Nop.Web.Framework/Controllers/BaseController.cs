@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Encodings.Web;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Razor;
@@ -19,7 +17,7 @@ using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Stores;
 using Nop.Web.Framework.Kendoui;
-using Nop.Web.Framework.Localization;
+using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Mvc.Filters;
 using Nop.Web.Framework.UI;
 
@@ -282,24 +280,6 @@ namespace Nop.Web.Framework.Controllers
             pageHeadBuilder.AddEditPageUrl(editPageUrl);
         }
 
-        /// <summary>
-        /// Get active store scope (for multi-store configuration mode)
-        /// </summary>
-        /// <param name="storeService">Store service</param>
-        /// <param name="workContext">Work context</param>
-        /// <returns>Store ID; 0 if we are in a shared mode</returns>
-        protected virtual int GetActiveStoreScopeConfiguration(IStoreService storeService, IWorkContext workContext)
-        {
-            //ensure that we have 2 (or more) stores
-            if (storeService.GetAllStores().Count < 2)
-                return 0;
-
-            var storeId = workContext.CurrentCustomer.GetAttribute<int>(SystemCustomerAttributeNames.AdminAreaStoreScopeConfiguration);
-            var store = storeService.GetStoreById(storeId);
-
-            return store != null ? store.Id : 0;
-        }
-
         #endregion
 
         #region Localization
@@ -311,7 +291,7 @@ namespace Nop.Web.Framework.Controllers
         /// <param name="languageService">Language service</param>
         /// <param name="locales">Locales</param>
         protected virtual void AddLocales<TLocalizedModelLocal>(ILanguageService languageService, 
-            IList<TLocalizedModelLocal> locales) where TLocalizedModelLocal : ILocalizedModelLocal
+            IList<TLocalizedModelLocal> locales) where TLocalizedModelLocal : ILocalizedLocaleModel
         {
             AddLocales(languageService, locales, null);
         }
@@ -324,7 +304,7 @@ namespace Nop.Web.Framework.Controllers
         /// <param name="locales">Locales</param>
         /// <param name="configure">Configure action</param>
         protected virtual void AddLocales<TLocalizedModelLocal>(ILanguageService languageService, 
-            IList<TLocalizedModelLocal> locales, Action<TLocalizedModelLocal, int> configure) where TLocalizedModelLocal : ILocalizedModelLocal
+            IList<TLocalizedModelLocal> locales, Action<TLocalizedModelLocal, int> configure) where TLocalizedModelLocal : ILocalizedLocaleModel
         {
             foreach (var language in languageService.GetAllLanguages(true))
             {

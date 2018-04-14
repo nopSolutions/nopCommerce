@@ -146,30 +146,38 @@ namespace Nop.Web.Factories
             if (command == null)
                 throw new ArgumentNullException(nameof(command));
 
-            var allDisabled = _catalogSettings.ProductSortingEnumDisabled.Count == Enum.GetValues(typeof(ProductSortingEnum)).Length;
-            pagingFilteringModel.AllowProductSorting = _catalogSettings.AllowProductSorting && !allDisabled;
+            //set the order by position by default
+            pagingFilteringModel.OrderBy = command.OrderBy;
+            command.OrderBy = (int)ProductSortingEnum.Position;
 
-            var activeOptions = Enum.GetValues(typeof(ProductSortingEnum)).Cast<int>()
-                .Except(_catalogSettings.ProductSortingEnumDisabled)
-                .Select((idOption) => new KeyValuePair<int, int>(idOption, _catalogSettings.ProductSortingEnumDisplayOrder.TryGetValue(idOption, out int order) ? order : idOption))
-                .OrderBy(x => x.Value);
-            if (command.OrderBy == null)
-                command.OrderBy = allDisabled ? 0 : activeOptions.First().Key;
+            //ensure that product sorting is enabled
+            if (!_catalogSettings.AllowProductSorting)
+                return;
 
-            if (pagingFilteringModel.AllowProductSorting)
+            //get active sorting options
+            var activeSortingOptionsIds = Enum.GetValues(typeof(ProductSortingEnum)).Cast<int>()
+                .Except(_catalogSettings.ProductSortingEnumDisabled).ToList();
+            if (!activeSortingOptionsIds.Any())
+                return;
+
+            //order sorting options
+            var orderedActiveSortingOptions = activeSortingOptionsIds
+                .Select(id => new { Id = id, Order = _catalogSettings.ProductSortingEnumDisplayOrder.TryGetValue(id, out int order) ? order : id })
+                .OrderBy(option => option.Order).ToList();
+
+            pagingFilteringModel.AllowProductSorting = true;
+            command.OrderBy = pagingFilteringModel.OrderBy ?? orderedActiveSortingOptions.FirstOrDefault().Id;
+
+            //prepare available model sorting options
+            var currentPageUrl = _webHelper.GetThisPageUrl(true);
+            foreach (var option in orderedActiveSortingOptions)
             {
-                foreach (var option in activeOptions)
+                pagingFilteringModel.AvailableSortOptions.Add(new SelectListItem
                 {
-                    var currentPageUrl = _webHelper.GetThisPageUrl(true);
-                    var sortUrl = _webHelper.ModifyQueryString(currentPageUrl, "orderby=" + (option.Key).ToString(), null);
-                    var sortValue = ((ProductSortingEnum)option.Key).GetLocalizedEnum(_localizationService, _workContext);
-                    pagingFilteringModel.AvailableSortOptions.Add(new SelectListItem
-                    {
-                        Text = sortValue,
-                        Value = sortUrl,
-                        Selected = option.Key == command.OrderBy
-                    });
-                }
+                    Text = ((ProductSortingEnum)option.Id).GetLocalizedEnum(_localizationService, _workContext),
+                    Value = _webHelper.ModifyQueryString(currentPageUrl, $"orderby={option.Id}", null),
+                    Selected = option.Id == command.OrderBy
+                });
             }
         }
 

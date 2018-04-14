@@ -1,9 +1,6 @@
 @model ActivityLogSearchModel
-@inject AdminAreaSettings adminAreaSettings
-@{
-    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
-    var gridPageSizes = adminAreaSettings.GridPageSizes;
 
+@{
     //page title
     ViewBag.Title = T("Admin.Configuration.ActivityLog.ActivityLog").Text;
     //active menu item (system name)
@@ -90,7 +87,16 @@
                                             url: "@Html.Raw(Url.Action("ListLogs", "ActivityLog"))",
                                             type: "POST",
                                             dataType: "json",
-                                            data: additionalData
+                                            data: function() {
+                                                var data = {
+                                                    CreatedOnFrom: $('#@Html.IdFor(model => model.CreatedOnFrom)').val(),
+                                                    CreatedOnTo: $('#@Html.IdFor(model => model.CreatedOnTo)').val(),
+                                                    IpAddress: $('#@Html.IdFor(model => model.IpAddress)').val(),
+                                                    ActivityLogTypeId: $('#ActivityLogTypeId').val()
+                                                };
+                                                addAntiForgeryToken(data);
+                                                return data;
+                                            }
                                         },
                                         destroy: {
                                             url: "@Html.Raw(Url.Action("AcivityLogDelete", "ActivityLog"))",
@@ -118,14 +124,14 @@
                                         // Cancel the changes
                                         this.cancelChanges();
                                     },
-                                    pageSize: @(defaultGridPageSize),
+                                    pageSize: @(Model.PageSize),
                                     serverPaging: true,
                                     serverFiltering: true,
                                     serverSorting: true
                                 },
                                 pageable: {
                                     refresh: true,
-                                    pageSizes: [@(gridPageSizes)],
+                                    pageSizes: [@(Model.AvailablePageSizes)],
                                     @await Html.PartialAsync("_GridPagerMessages")
                                 },
                                 editable: {
@@ -174,17 +180,6 @@
                                 return false;
                             });
                         });
-
-                        function additionalData() {
-                            var data = {
-                                CreatedOnFrom: $('#@Html.IdFor(model => model.CreatedOnFrom)').val(),
-                                CreatedOnTo: $('#@Html.IdFor(model => model.CreatedOnTo)').val(),
-                                IpAddress: $('#@Html.IdFor(model => model.IpAddress)').val(),
-                                ActivityLogTypeId: $('#ActivityLogTypeId').val()
-                            };
-                            addAntiForgeryToken(data);
-                            return data;
-                        }
                     </script>
                 </div>
             </div>

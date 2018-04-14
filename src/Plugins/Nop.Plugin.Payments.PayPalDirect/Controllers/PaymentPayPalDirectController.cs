@@ -36,7 +36,6 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
         private readonly ISettingService _settingService;
         private readonly IStoreContext _storeContext;
         private readonly IStoreService _storeService;
-        private readonly IWorkContext _workContext;
         private readonly IWebHelper _webHelper;
 
         #endregion
@@ -51,7 +50,6 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
             ISettingService settingService,
             IStoreContext storeContext,
             IStoreService storeService,
-            IWorkContext workContext,
             IWebHelper webHelper)
         {
             this._localizationService = localizationService;
@@ -62,7 +60,6 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
             this._settingService = settingService;
             this._storeContext = storeContext;
             this._storeService = storeService;
-            this._workContext = workContext;
             this._webHelper = webHelper;
         }
 
@@ -76,7 +73,7 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
         /// <returns>Webhook id</returns>
         protected string CreateWebHook()
         {
-            var storeScope = GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var storeScope = _storeContext.ActiveStoreScopeConfiguration;
             var payPalDirectPaymentSettings = _settingService.LoadSetting<PayPalDirectPaymentSettings>(storeScope);
 
             try
@@ -133,7 +130,7 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
                 return AccessDeniedView();
 
             //load settings for a chosen store scope
-            var storeScope = GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var storeScope = _storeContext.ActiveStoreScopeConfiguration;
             var payPalDirectPaymentSettings = _settingService.LoadSetting<PayPalDirectPaymentSettings>(storeScope);
 
             var model = new ConfigurationModel
@@ -177,7 +174,7 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
                 return Configure();
 
             //load settings for a chosen store scope
-            var storeScope = GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var storeScope = _storeContext.ActiveStoreScopeConfiguration;
             var payPalDirectPaymentSettings = _settingService.LoadSetting<PayPalDirectPaymentSettings>(storeScope);
 
             //save settings
@@ -233,7 +230,7 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
         [HttpPost]
         public IActionResult WebhookEventsHandler()
         {
-            var storeScope = GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var storeScope = _storeContext.ActiveStoreScopeConfiguration;
             var payPalDirectPaymentSettings = _settingService.LoadSetting<PayPalDirectPaymentSettings>(storeScope);
 
             try

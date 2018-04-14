@@ -115,6 +115,10 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             services.AddAntiforgery(options =>
             {
                 options.Cookie.Name = ".Nop.Antiforgery";
+
+                //whether to allow the use of anti-forgery cookies from SSL protected page on the other store pages which are not
+                options.Cookie.SecurePolicy = DataSettingsHelper.DatabaseIsInstalled() && EngineContext.Current.Resolve<SecuritySettings>().ForceSslForAllPages
+                    ? CookieSecurePolicy.SameAsRequest : CookieSecurePolicy.None;
             });
         }
 
@@ -128,6 +132,10 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             {
                 options.Cookie.Name = ".Nop.Session";
                 options.Cookie.HttpOnly = true;
+
+                //whether to allow the use of session values from SSL protected page on the other store pages which are not
+                options.Cookie.SecurePolicy = DataSettingsHelper.DatabaseIsInstalled() && EngineContext.Current.Resolve<SecuritySettings>().ForceSslForAllPages
+                    ? CookieSecurePolicy.SameAsRequest : CookieSecurePolicy.None;
             });
         }
 
@@ -196,6 +204,10 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 options.Cookie.HttpOnly = true;
                 options.LoginPath = NopCookieAuthenticationDefaults.LoginPath;
                 options.AccessDeniedPath = NopCookieAuthenticationDefaults.AccessDeniedPath;
+
+                //whether to allow the use of authentication cookies from SSL protected page on the other store pages which are not
+                options.Cookie.SecurePolicy = DataSettingsHelper.DatabaseIsInstalled() && EngineContext.Current.Resolve<SecuritySettings>().ForceSslForAllPages
+                    ? CookieSecurePolicy.SameAsRequest : CookieSecurePolicy.None;
             });
 
             //add external authentication
@@ -205,6 +217,10 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 options.Cookie.HttpOnly = true;
                 options.LoginPath = NopCookieAuthenticationDefaults.LoginPath;
                 options.AccessDeniedPath = NopCookieAuthenticationDefaults.AccessDeniedPath;
+
+                //whether to allow the use of authentication cookies from SSL protected page on the other store pages which are not
+                options.Cookie.SecurePolicy = DataSettingsHelper.DatabaseIsInstalled() && EngineContext.Current.Resolve<SecuritySettings>().ForceSslForAllPages
+                    ? CookieSecurePolicy.SameAsRequest : CookieSecurePolicy.None;
             });
 
             //register and configure external authentication plugins now

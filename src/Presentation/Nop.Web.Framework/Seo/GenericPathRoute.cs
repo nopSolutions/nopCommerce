@@ -151,6 +151,12 @@ namespace Nop.Web.Framework.Seo
                     currentRouteData.Values["productid"] = urlRecord.EntityId;
                     currentRouteData.Values["SeName"] = urlRecord.Slug;
                     break;
+                case "producttag":
+                    currentRouteData.Values["controller"] = "Catalog";
+                    currentRouteData.Values["action"] = "ProductsByTag";
+                    currentRouteData.Values["productTagId"] = urlRecord.EntityId;
+                    currentRouteData.Values["SeName"] = urlRecord.Slug;
+                    break;
                 case "category":
                     currentRouteData.Values["controller"] = "Catalog";
                     currentRouteData.Values["action"] = "Category";

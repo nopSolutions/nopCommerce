@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Routing;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Payments;
 using Nop.Plugin.Payments.Worldpay.Models.Customer;
@@ -68,8 +67,7 @@ namespace Nop.Plugin.Payments.Worldpay.Services
                 return;
 
             //add js sсript to one page checkout
-            var matchedRoutes = eventMessage.Helper.ViewContext.RouteData.Routers.OfType<INamedRouter>();
-            if (matchedRoutes.Any(route => route.Name.Equals("CheckoutOnePage")))
+            if (eventMessage.GetRouteNames().Any(r => r.Equals("CheckoutOnePage")))
                 eventMessage.Helper.AddScriptParts(ResourceLocation.Footer, WorldpayPaymentDefaults.PaymentScriptPath, excludeFromBundle: true);
         }
 

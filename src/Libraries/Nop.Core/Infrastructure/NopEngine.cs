@@ -42,7 +42,7 @@ namespace Nop.Core.Infrastructure
         {
             var accessor = ServiceProvider.GetService<IHttpContextAccessor>();
             var context = accessor.HttpContext;
-            return context != null ? context.RequestServices : ServiceProvider;
+            return context?.RequestServices ?? ServiceProvider;
         }
 
         /// <summary>

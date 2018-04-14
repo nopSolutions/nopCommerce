@@ -1,6 +1,7 @@
-﻿@using Nop.Core.Domain.Catalog
+﻿@model ProductModel
+
+@using Nop.Core.Domain.Catalog
 @using Nop.Services
-@model ProductModel
 
 <div class="panel-group">
     <p>
@@ -23,10 +24,16 @@
                                     type: "json",
                                     transport: {
                                         read: {
-                                            url: "@Html.Raw(Url.Action("ProductSpecAttrList", "Product", new {productId = Model.Id}))",
+                                            url: "@Html.Raw(Url.Action("ProductSpecAttrList", "Product"))",
                                             type: "POST",
                                             dataType: "json",
-                                            data: addAntiForgeryToken
+                                            data: function additionalData() {
+                                                var data = {
+                                                    ProductId: '@(Model.Id)'
+                                                };
+                                                addAntiForgeryToken(data);
+                                                return data;
+                                            }
                                         },
                                         update: {
                                             url: "@Html.Raw(Url.Action("ProductSpecAttrUpdate", "Product"))",
@@ -69,15 +76,14 @@
                                         // Cancel the changes
                                         this.cancelChanges();
                                     },
+                                    pageSize: @(Model.ProductSpecificationAttributeSearchModel.PageSize),
                                     serverPaging: true,
                                     serverFiltering: true,
                                     serverSorting: true
                                 },
                                 pageable: {
                                     refresh: true,
-                                    numeric: false,
-                                    previousNext: false,
-                                    info: false,
+                                    pageSizes: [@(Model.ProductSpecificationAttributeSearchModel.AvailablePageSizes)],
                                     @await Html.PartialAsync("_GridPagerMessages")
                                 },
                                 editable: {
@@ -225,8 +231,8 @@
                                 allowFiltering: allowFiltering,
                                 showOnProductPage: showOnProductPage,
                                 displayOrder: displayOrder,
-                                productId: @(Model.Id)
-                                };
+                                productId: '@(Model.Id)'
+                            };
                             addAntiForgeryToken(postData);
 
                             $.ajax({

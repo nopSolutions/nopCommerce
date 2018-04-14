@@ -2,7 +2,7 @@
 using FluentValidation.Attributes;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core.Domain.Forums;
-using Nop.Web.Framework.Mvc.Models;
+using Nop.Web.Framework.Models;
 using Nop.Web.Validators.Boards;
 
 namespace Nop.Web.Models.Boards

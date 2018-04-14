@@ -4493,7 +4493,7 @@ namespace Nop.Services.Installation
                 ShippingStatus = ShippingStatus.NotYetShipped,
                 ShippingMethod = "Ground",
                 PickUpInStore = false,
-                ShippingRateComputationMethodSystemName = "Shipping.FixedOrByWeight",
+                ShippingRateComputationMethodSystemName = "Shipping.FixedByWeightByTotal",
                 CustomValuesXml = string.Empty,
                 VatNumber = string.Empty,
                 CreatedOnUtc = DateTime.UtcNow,
@@ -4660,7 +4660,7 @@ namespace Nop.Services.Installation
                 ShippingStatus = ShippingStatus.NotYetShipped,
                 ShippingMethod = "Next Day Air",
                 PickUpInStore = false,
-                ShippingRateComputationMethodSystemName = "Shipping.FixedOrByWeight",
+                ShippingRateComputationMethodSystemName = "Shipping.FixedByWeightByTotal",
                 CustomValuesXml = string.Empty,
                 VatNumber = string.Empty,
                 CreatedOnUtc = DateTime.UtcNow,
@@ -5132,7 +5132,7 @@ namespace Nop.Services.Installation
                 ShippingStatus = ShippingStatus.Delivered,
                 ShippingMethod = "Ground",
                 PickUpInStore = false,
-                ShippingRateComputationMethodSystemName = "Shipping.FixedOrByWeight",
+                ShippingRateComputationMethodSystemName = "Shipping.FixedByWeightByTotal",
                 CustomValuesXml = string.Empty,
                 VatNumber = string.Empty,
                 CreatedOnUtc = DateTime.UtcNow,
@@ -6089,7 +6089,7 @@ namespace Nop.Services.Installation
                 DefaultManufacturerPageSize = 6,
                 ShowProductReviewsTabOnAccountPage = true,
                 ProductReviewsPageSizeOnAccountPage = 10,
-                ProductReviewsSortByCreatedDateAscending = true,
+                ProductReviewsSortByCreatedDateAscending = false,
                 ExportImportProductAttributes = true,
                 ExportImportProductSpecificationAttributes = true,
                 ExportImportUseDropdownlistsForAssociatedEntities = true,
@@ -6232,8 +6232,11 @@ namespace Nop.Services.Installation
                 Enabled = true,
                 ExchangeRate = 1,
                 PointsForRegistration = 0,
+                RegistrationPointsValidity = 30,
                 PointsForPurchases_Amount = 10,
                 PointsForPurchases_Points = 1,
+                MinOrderTotalToAwardPoints = 0,
+                PurchasesPointsValidity = 45,
                 ActivationDelay = 0,
                 ActivationDelayPeriodId = 0,
                 DisplayHowMuchWillBeEarned = true,
@@ -6336,7 +6339,7 @@ namespace Nop.Services.Installation
 
             settingService.SaveSetting(new ShippingSettings
             {
-                ActiveShippingRateComputationMethodSystemNames = new List<string> { "Shipping.FixedOrByWeight" },
+                ActiveShippingRateComputationMethodSystemNames = new List<string> { "Shipping.FixedByWeightByTotal" },
                 ActivePickupPointProviderSystemNames = new List<string> { "Pickup.PickupInStore" },
                 ShipToSameAddress = true,
                 AllowPickUpInStore = true,
@@ -12164,6 +12167,16 @@ namespace Nop.Services.Installation
             }
             product.ProductTagsAdd(productTag);
             _productRepository.Update(product);
+
+            //search engine name
+            _urlRecordRepository.Insert(new UrlRecord()
+            {
+                EntityId = productTag.Id,
+                EntityName = "ProductTag",
+                LanguageId = 0,
+                IsActive = true,
+                Slug = productTag.ValidateSeName("", productTag.Name, true)
+            });
         }
 
         #endregion

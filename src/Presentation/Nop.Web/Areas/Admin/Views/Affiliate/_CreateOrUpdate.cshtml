@@ -1,4 +1,5 @@
 ﻿@model AffiliateModel
+
 @inject IEventPublisher eventPublisher
 
 <div asp-validation-summary="All"></div>
@@ -11,7 +12,7 @@
             @if (Model.Id > 0)
             {
                 <nop-tab asp-name="tab-customers" asp-title="@T("Admin.Affiliates.Customers")">@await Html.PartialAsync("_CreateOrUpdate.Customers", Model)</nop-tab>
-                <nop-tab asp-name="tab-orders" asp-title="@T("Admin.Affiliates.Orders")">@await Html.PartialAsync("_CreateOrUpdate.Orders", Model.AffiliatedOrderList)</nop-tab>
+                <nop-tab asp-name="tab-orders" asp-title="@T("Admin.Affiliates.Orders")">@await Html.PartialAsync("_CreateOrUpdate.Orders", Model)</nop-tab>
             }
         </nop-tabs>
     </div>

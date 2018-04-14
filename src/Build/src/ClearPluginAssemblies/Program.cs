@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -8,7 +9,7 @@ namespace ClearPluginAssemblies
     {
         protected const string FILES_TO_DELETE = "dotnet-bundle.exe;Nop.Web.pdb;Nop.Web.exe;Nop.Web.exe.config";
 
-        protected static void Clear(string paths, string fileNames, bool saveLocalesFolders)
+        protected static void Clear(string paths, IList<string> fileNames, bool saveLocalesFolders)
         {
             foreach (var pluginPath in paths.Split(';'))
             {
@@ -22,7 +23,7 @@ namespace ClearPluginAssemblies
 
                     foreach (var directoryInfo in allDirectoryInfo)
                     {
-                        foreach (var fileName in fileNames.Split(';'))
+                        foreach (var fileName in fileNames)
                         {
                             //delete dll file if it exists in current path
                             var dllfilePath = Path.Combine(directoryInfo.FullName, fileName + ".dll");
@@ -56,11 +57,15 @@ namespace ClearPluginAssemblies
         private static void Main(string[] args)
         {
             var paths = string.Empty;
-            var fileNames = string.Empty;
+            var outputPath = string.Empty;
             var basePluginPath = string.Empty;
             var saveLocalesFolders = true;
 
-            foreach (var arg in args)
+            var settings = args.FirstOrDefault(a => a.Contains("|")) ?? string.Empty;
+            if(string.IsNullOrEmpty(settings))
+                return;
+
+            foreach (var arg in settings.Split('|'))
             {
                 var data = arg.Split("=").Select(p => p.Trim()).ToList();
 
@@ -72,8 +77,8 @@ namespace ClearPluginAssemblies
                     case "Paths":
                         paths = value;
                         break;
-                    case "FileNames":
-                        fileNames = value;
+                    case "OutputPath":
+                        outputPath = value;
                         break;
                     case "PluginPath":
                         basePluginPath = value;
@@ -84,7 +89,13 @@ namespace ClearPluginAssemblies
                 }
             }
             
-            if (string.IsNullOrEmpty(paths) || string.IsNullOrEmpty(fileNames))
+            if(!Directory.Exists(outputPath))
+                return;
+
+            var di = new DirectoryInfo(outputPath);
+            var fileNames = di.GetFiles("*.dll", SearchOption.AllDirectories).Select(fi => fi.Name.Replace(fi.Extension, "")).ToList();
+           
+            if (string.IsNullOrEmpty(paths) || !fileNames.Any())
             {
                 return;
             }

@@ -190,6 +190,7 @@ namespace Nop.Services.Orders
                 {
                     OrderCount = result.Count(),
                     OrderShippingExclTaxSum = result.Sum(o => o.OrderShippingExclTax),
+                    OrderPaymentFeeExclTaxSum = result.Sum(o => o.PaymentMethodAdditionalFeeExclTax),
                     OrderTaxSum = result.Sum(o => o.OrderTax),
                     OrderTotalSum = result.Sum(o => o.OrderTotal)
                 }
@@ -197,6 +198,7 @@ namespace Nop.Services.Orders
             {
                 CountOrders = r.OrderCount,
                 SumShippingExclTax = r.OrderShippingExclTaxSum,
+                OrderPaymentFeeExclTaxSum = r.OrderPaymentFeeExclTaxSum,
                 SumTax = r.OrderTaxSum,
                 SumOrders = r.OrderTotalSum
             }).FirstOrDefault();
@@ -205,6 +207,7 @@ namespace Nop.Services.Orders
             {
                 CountOrders = 0,
                 SumShippingExclTax = decimal.Zero,
+                OrderPaymentFeeExclTaxSum = decimal.Zero,
                 SumTax = decimal.Zero,
                 SumOrders = decimal.Zero,
             };
@@ -557,7 +560,11 @@ namespace Nop.Services.Orders
                 billingEmail: billingEmail,
                 billingLastName: billingLastName,
                 orderNotes: orderNotes);
-            var profit = reportSummary.SumOrders - reportSummary.SumShippingExclTax - reportSummary.SumTax - productCost;
+            var profit = reportSummary.SumOrders 
+                         - reportSummary.SumShippingExclTax
+                         - reportSummary.OrderPaymentFeeExclTaxSum
+                         - reportSummary.SumTax 
+                         - productCost;
             return profit;
         }
 

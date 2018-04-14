@@ -16,10 +16,16 @@
                         type: "json",
                         transport: {
                             read: {
-                                url: "@Html.Raw(Url.Action("ProductAttributeCombinationList", "Product", new {productId = Model.Id}))",
+                                url: "@Html.Raw(Url.Action("ProductAttributeCombinationList", "Product"))",
                                 type: "POST",
                                 dataType: "json",
-                                data: addAntiForgeryToken
+                                data: function additionalData() {
+                                    var data = {
+                                        ProductId: '@(Model.Id)'
+                                    };
+                                    addAntiForgeryToken(data);
+                                    return data;
+                                }
                             },
                             destroy: {
                                 url: "@Html.Raw(Url.Action("ProductAttributeCombinationDelete", "Product"))",
@@ -53,15 +59,14 @@
                             // Cancel the changes
                             this.cancelChanges();
                         },
+                        pageSize: @(Model.ProductAttributeCombinationSearchModel.PageSize),
                         serverPaging: true,
                         serverFiltering: true,
                         serverSorting: true
                     },
                     pageable: {
                         refresh: true,
-                        numeric: false,
-                        previousNext: false,
-                        info: false,
+                        pageSizes: [@(Model.ProductAttributeCombinationSearchModel.AvailablePageSizes)],
                         @await Html.PartialAsync("_GridPagerMessages")
                     },
                     editable: {
@@ -143,13 +148,13 @@
         </script>
     </div>
     <div class="panel-footer">
-        <button type="submit" id="btnAddNewCombination" onclick="javascript:OpenWindow('@(Url.Action("ProductAttributeCombinationCreatePopup", "Product", new {productId = Model.Id, btnId = "btnRefreshCombinations", formId = "product-form"}))', 800, 700, true); return false;" class="btn btn-primary">
+        <button type="submit" id="btnAddNewCombination" onclick="javascript:OpenWindow('@(Url.Action("ProductAttributeCombinationCreatePopup", "Product", new { productId = Model.Id, btnId = "btnRefreshCombinations", formId = "product-form" }))', 800, 700, true); return false;" class="btn btn-primary">
             @T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.AddNew")
         </button>
         <button type="button" id="btnGenerateAllCombinations" class="btn bg-aqua">
             @T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.GenerateAll")
         </button>
-        <button type="submit" id="btnGenerateSeveralCombination" onclick="javascript:OpenWindow('@(Url.Action("ProductAttributeCombinationGeneratePopup", "Product", new {productId = Model.Id, btnId = "btnRefreshCombinations", formId = "product-form"}))', 800, 700, true); return false;" class="btn bg-aqua">
+        <button type="submit" id="btnGenerateSeveralCombination" onclick="javascript:OpenWindow('@(Url.Action("ProductAttributeCombinationGeneratePopup", "Product", new { productId = Model.Id, btnId = "btnRefreshCombinations", formId = "product-form" }))', 800, 700, true); return false;" class="btn bg-aqua">
             @T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.GenerateSeveral")
         </button>
         <input type="submit" id="btnRefreshCombinations" style="display: none"/>
@@ -176,7 +181,7 @@
                         $.ajax({
                             cache: false,
                             type: 'POST',
-                            url: '@Url.Action("GenerateAllAttributeCombinations", "Product", new {productId = Model.Id})',
+                            url: '@Url.Action("GenerateAllAttributeCombinations", "Product", new { productId = Model.Id })',
                             data: postData,
                             dataType: 'json',
                             success: function(data) {

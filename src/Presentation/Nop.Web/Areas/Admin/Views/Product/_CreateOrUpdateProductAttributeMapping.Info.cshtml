@@ -1,4 +1,5 @@
-﻿@model ProductModel.ProductAttributeMappingModel
+﻿@model ProductAttributeMappingModel
+
 @using Nop.Core.Domain.Catalog
 @using Nop.Services
 
@@ -65,7 +66,7 @@
                     <span asp-validation-for="ProductAttributeId"></span>
                 </div>
             </div>
-            @(Html.LocalizedEditor<ProductModel.ProductAttributeMappingModel, ProductModel.ProductAttributeMappingLocalizedModel>("productattribute-localized",
+            @(Html.LocalizedEditor<ProductAttributeMappingModel, ProductAttributeMappingLocalizedModel>("productattribute-localized",
             @<div>
                 <div class="form-group">
                     <div class="col-md-3">

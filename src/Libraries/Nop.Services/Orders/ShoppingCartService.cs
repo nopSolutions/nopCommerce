@@ -187,6 +187,29 @@ namespace Nop.Services.Orders
 
             //event notification
             _eventPublisher.EntityDeleted(shoppingCartItem);
+
+            if(!_catalogSettings.RemoveRequiredProducts)
+                return;
+
+            var product = _productService.GetProductById(shoppingCartItem.ProductId);
+            if (!product?.RequireOtherProducts ?? true)
+                return;
+
+            var requiredProductIds = product.ParseRequiredProductIds();
+            var requiredShoppingCartItems = customer.ShoppingCartItems
+                .Where(x => x.ShoppingCartType == shoppingCartItem.ShoppingCartType)
+                .Where(item => requiredProductIds.Any(id => id == item.ProductId))
+                .ToList();
+
+            //update quantity of required products in the cart if the main one is removed
+            foreach (var cartItem in requiredShoppingCartItems)
+            {
+                //at now we ignore quantities of required products and use 1
+                var requiredProductQuantity = 1;
+
+                UpdateShoppingCartItem(customer, cartItem.Id, cartItem.AttributesXml, cartItem.CustomerEnteredPrice,
+                    quantity: cartItem.Quantity - (shoppingCartItem.Quantity * requiredProductQuantity), resetCheckoutData: false);
+            }
         }
 
         /// <summary>
@@ -227,11 +250,12 @@ namespace Nop.Services.Orders
         /// <param name="shoppingCartType">Shopping cart type</param>
         /// <param name="product">Product</param>
         /// <param name="storeId">Store identifier</param>
-        /// <param name="automaticallyAddRequiredProductsIfEnabled">Automatically add required products if enabled</param>
+        /// <param name="quantity">Quantity</param>
+        /// <param name="addRequiredProducts">Whether to add required products</param>
+        /// <param name="shoppingCartItemId">Shopping cart identifier; pass 0 if it's a new item</param>
         /// <returns>Warnings</returns>
-        public virtual IList<string> GetRequiredProductWarnings(Customer customer,
-            ShoppingCartType shoppingCartType, Product product,
-            int storeId, bool automaticallyAddRequiredProductsIfEnabled)
+        public virtual IList<string> GetRequiredProductWarnings(Customer customer, ShoppingCartType shoppingCartType, Product product,
+            int storeId, int quantity, bool addRequiredProducts, int shoppingCartItemId)
         {
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
@@ -239,77 +263,67 @@ namespace Nop.Services.Orders
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
-            var cart = customer.ShoppingCartItems
-                .Where(sci => sci.ShoppingCartType == shoppingCartType)
-                .LimitPerStore(storeId)
-                .ToList();
-
             var warnings = new List<string>();
 
-            if (product.RequireOtherProducts)
+            //at now we ignore quantities of required products and use 1
+            var requiredProductQuantity = 1;
+
+            //get customer shopping cart
+            var cart = customer.ShoppingCartItems
+                .Where(item => item.ShoppingCartType == shoppingCartType)
+                .LimitPerStore(storeId).ToList();
+
+            //whether other cart items require the passed product
+            var passedProductRequiredQuantity = cart
+                .Where(item => item.Product.RequireOtherProducts && item.Product.ParseRequiredProductIds().Contains(product.Id))
+                .Sum(item => item.Quantity * requiredProductQuantity);
+            if (passedProductRequiredQuantity > quantity)
+                warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.RequiredProductUpdateWarning"), passedProductRequiredQuantity));
+
+            //whether the passed product requires other products
+            if (!product.RequireOtherProducts)
+                return warnings;
+
+            //get these required products
+            var requiredProducts = _productService.GetProductsByIds(product.ParseRequiredProductIds());
+            if (!requiredProducts.Any())
+                return warnings;
+
+            //get warnings
+            var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
+            var warningLocale = _localizationService.GetResource("ShoppingCart.RequiredProductWarning");
+            foreach (var requiredProduct in requiredProducts)
             {
-                var requiredProducts = new List<Product>();
-                foreach (var id in product.ParseRequiredProductIds())
+                //get the required quantity of the required product
+                var requiredProductRequiredQuantity = (quantity * requiredProductQuantity) + cart
+                    .Where(item => item.Product.RequireOtherProducts && item.Product.ParseRequiredProductIds().Contains(requiredProduct.Id))
+                    .Where(item => item.Id != shoppingCartItemId)
+                    .Sum(item => item.Quantity * requiredProductQuantity);
+
+                //whether required product is already in the cart in the required quantity
+                var quantityToAdd = requiredProductRequiredQuantity - (cart.FirstOrDefault(item => item.ProductId == requiredProduct.Id)?.Quantity ?? 0);
+                if (quantityToAdd <= 0)
+                    continue;
+
+                //prepare warning message
+                var requiredProductName = WebUtility.HtmlEncode(requiredProduct.GetLocalized(x => x.Name));
+                var requiredProductWarning = _catalogSettings.UseLinksInRequiredProductWarnings
+                    ? string.Format(warningLocale, $"<a href=\"{(urlHelper.RouteUrl(nameof(Product), new { SeName = requiredProduct.GetSeName() }))}\">{requiredProductName}</a>", requiredProductRequiredQuantity)
+                    : string.Format(warningLocale, requiredProductName, requiredProductRequiredQuantity);
+
+                //add to cart (if possible)
+                if (addRequiredProducts && product.AutomaticallyAddRequiredProducts)
                 {
-                    var rp = _productService.GetProductById(id);
-                    if (rp != null)
-                        requiredProducts.Add(rp);
+                    //do not add required products to prevent circular references
+                    var addToCartWarnings = AddToCart(customer, requiredProduct, shoppingCartType, storeId,
+                        quantity: quantityToAdd, addRequiredProducts: false);
+
+                    //don't display all specific errors only the generic one
+                    if (addToCartWarnings.Any())
+                        warnings.Add(requiredProductWarning);
                 }
-
-                //get URL helper
-                var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
-
-                foreach (var rp in requiredProducts)
-                {
-                    //ensure that product is in the cart
-                    var alreadyInTheCart = false;
-                    foreach (var sci in cart)
-                    {
-                        if (sci.ProductId == rp.Id)
-                        {
-                            alreadyInTheCart = true;
-                            break;
-                        }
-                    }
-                    //not in the cart
-                    if (!alreadyInTheCart)
-                    {
-                        var requiredProductName = WebUtility.HtmlEncode(rp.GetLocalized(x => x.Name));
-                        var requiredProductLink = $"<a href=\"{(urlHelper.RouteUrl("Product", new { SeName = rp.GetSeName()}))}\">{requiredProductName}</a>";
-                        var requiredProductWarning = _catalogSettings.UseLinksInRequiredProductWarnings ?
-                            string.Format(_localizationService.GetResource("ShoppingCart.RequiredProductWarning"), requiredProductLink) :
-                            string.Format(_localizationService.GetResource("ShoppingCart.RequiredProductWarning"), requiredProductName);
-                        if (product.AutomaticallyAddRequiredProducts)
-                        {
-                            //add to cart (if possible)
-                            if (automaticallyAddRequiredProductsIfEnabled)
-                            {
-                                //pass 'false' for 'automaticallyAddRequiredProductsIfEnabled' to prevent circular references
-                                var addToCartWarnings = AddToCart(customer: customer,
-                                    product: rp, 
-                                    shoppingCartType: shoppingCartType,
-                                    storeId: storeId,
-                                    automaticallyAddRequiredProductsIfEnabled: false);
-                                if (addToCartWarnings.Any())
-                                {
-                                    //a product wasn't automatically added for some reasons
-
-                                    //don't display specific errors from 'addToCartWarnings' variable
-                                    //display only generic error
-                                    warnings.Add(requiredProductWarning);
-                                }
-                            }
-                            else
-                            {
-                                warnings.Add(requiredProductWarning);
-                            }
-                        }
-                        else
-                        {
-                            warnings.Add(requiredProductWarning);
-                        }
-                    }
-                }
+                else
+                    warnings.Add(requiredProductWarning);
             }
 
             return warnings;
@@ -528,13 +542,15 @@ namespace Nop.Services.Orders
         /// <param name="quantity">Quantity</param>
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <param name="ignoreNonCombinableAttributes">A value indicating whether we should ignore non-combinable attributes</param>
+        /// <param name="ignoreConditionMet">A value indicating whether we should ignore filtering by "is condition met" property</param>
         /// <returns>Warnings</returns>
         public virtual IList<string> GetShoppingCartItemAttributeWarnings(Customer customer, 
             ShoppingCartType shoppingCartType,
             Product product, 
             int quantity = 1,
             string attributesXml = "",
-            bool ignoreNonCombinableAttributes = false)
+            bool ignoreNonCombinableAttributes = false,
+            bool ignoreConditionMet = false)
         {
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
@@ -569,12 +585,17 @@ namespace Nop.Services.Orders
             {
                 attributes2 = attributes2.Where(x => !x.IsNonCombinable()).ToList();
             }
+
             //validate conditional attributes only (if specified)
-            attributes2 = attributes2.Where(x =>
+            if (!ignoreConditionMet)
             {
-                var conditionMet = _productAttributeParser.IsConditionMet(x, attributesXml);
-                return !conditionMet.HasValue || conditionMet.Value;
-            }).ToList();
+                attributes2 = attributes2.Where(x =>
+                {
+                    var conditionMet = _productAttributeParser.IsConditionMet(x, attributesXml);
+                    return !conditionMet.HasValue || conditionMet.Value;
+                }).ToList();
+            }
+
             foreach (var a2 in attributes2)
             {
                 if (a2.IsRequired)
@@ -821,7 +842,8 @@ namespace Nop.Services.Orders
         /// <param name="rentalStartDate">Rental start date</param>
         /// <param name="rentalEndDate">Rental end date</param>
         /// <param name="quantity">Quantity</param>
-        /// <param name="automaticallyAddRequiredProductsIfEnabled">Automatically add required products if enabled</param>
+        /// <param name="addRequiredProducts">Whether to add required products</param>
+        /// <param name="shoppingCartItemId">Shopping cart identifier; pass 0 if it's a new item</param>
         /// <param name="getStandardWarnings">A value indicating whether we should validate a product for standard properties</param>
         /// <param name="getAttributesWarnings">A value indicating whether we should validate product attributes</param>
         /// <param name="getGiftCardWarnings">A value indicating whether we should validate gift card properties</param>
@@ -832,7 +854,7 @@ namespace Nop.Services.Orders
             Product product, int storeId,
             string attributesXml, decimal customerEnteredPrice,
             DateTime? rentalStartDate = null, DateTime? rentalEndDate = null,
-            int quantity = 1, bool automaticallyAddRequiredProductsIfEnabled = true,
+            int quantity = 1, bool addRequiredProducts = true, int shoppingCartItemId = 0,
             bool getStandardWarnings = true, bool getAttributesWarnings = true,
             bool getGiftCardWarnings = true, bool getRequiredProductWarnings = true,
             bool getRentalWarnings = true)
@@ -856,7 +878,7 @@ namespace Nop.Services.Orders
 
             //required products
             if (getRequiredProductWarnings)
-                warnings.AddRange(GetRequiredProductWarnings(customer, shoppingCartType, product, storeId, automaticallyAddRequiredProductsIfEnabled));
+                warnings.AddRange(GetRequiredProductWarnings(customer, shoppingCartType, product, storeId, quantity, addRequiredProducts, shoppingCartItemId));
 
             //rental products
             if (getRentalWarnings)
@@ -1080,13 +1102,13 @@ namespace Nop.Services.Orders
         /// <param name="rentalStartDate">Rental start date</param>
         /// <param name="rentalEndDate">Rental end date</param>
         /// <param name="quantity">Quantity</param>
-        /// <param name="automaticallyAddRequiredProductsIfEnabled">Automatically add required products if enabled</param>
+        /// <param name="addRequiredProducts">Whether to add required products</param>
         /// <returns>Warnings</returns>
         public virtual IList<string> AddToCart(Customer customer, Product product,
             ShoppingCartType shoppingCartType, int storeId, string attributesXml = null,
             decimal customerEnteredPrice = decimal.Zero,
             DateTime? rentalStartDate = null, DateTime? rentalEndDate = null,
-            int quantity = 1, bool automaticallyAddRequiredProductsIfEnabled = true)
+            int quantity = 1, bool addRequiredProducts = true)
         {
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
@@ -1136,7 +1158,7 @@ namespace Nop.Services.Orders
                 warnings.AddRange(GetShoppingCartItemWarnings(customer, shoppingCartType, product,
                     storeId, attributesXml, 
                     customerEnteredPrice, rentalStartDate, rentalEndDate,
-                    newQuantity, automaticallyAddRequiredProductsIfEnabled));
+                    newQuantity, addRequiredProducts, shoppingCartItem.Id));
 
                 if (!warnings.Any())
                 {
@@ -1155,7 +1177,7 @@ namespace Nop.Services.Orders
                 warnings.AddRange(GetShoppingCartItemWarnings(customer, shoppingCartType, product,
                     storeId, attributesXml, customerEnteredPrice,
                     rentalStartDate, rentalEndDate, 
-                    quantity, automaticallyAddRequiredProductsIfEnabled));
+                    quantity, addRequiredProducts));
                 if (!warnings.Any())
                 {
                     //maximum items validation
@@ -1251,7 +1273,7 @@ namespace Nop.Services.Orders
                 warnings.AddRange(GetShoppingCartItemWarnings(customer, shoppingCartItem.ShoppingCartType,
                     shoppingCartItem.Product, shoppingCartItem.StoreId,
                     attributesXml, customerEnteredPrice, 
-                    rentalStartDate, rentalEndDate, quantity, false));
+                    rentalStartDate, rentalEndDate, quantity, false, shoppingCartItemId));
                 if (warnings.Any())
                     return warnings;
 
@@ -1269,6 +1291,12 @@ namespace Nop.Services.Orders
             }
             else
             {
+                //check warnings for required products
+                warnings.AddRange(GetRequiredProductWarnings(customer, shoppingCartItem.ShoppingCartType, 
+                    shoppingCartItem.Product, shoppingCartItem.StoreId, quantity, false, shoppingCartItemId));
+                if (warnings.Any())
+                    return warnings;
+
                 //delete a shopping cart item
                 DeleteShoppingCartItem(shoppingCartItem, resetCheckoutData, true);
             }

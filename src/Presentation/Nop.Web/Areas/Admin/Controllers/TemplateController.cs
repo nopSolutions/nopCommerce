@@ -1,13 +1,13 @@
 ﻿using System;
-using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using Nop.Web.Areas.Admin.Extensions;
-using Nop.Web.Areas.Admin.Models.Templates;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Topics;
 using Nop.Services.Catalog;
 using Nop.Services.Security;
 using Nop.Services.Topics;
+using Nop.Web.Areas.Admin.Extensions;
+using Nop.Web.Areas.Admin.Factories;
+using Nop.Web.Areas.Admin.Models.Templates;
 using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
 
@@ -20,6 +20,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly ICategoryTemplateService _categoryTemplateService;
         private readonly IManufacturerTemplateService _manufacturerTemplateService;
         private readonly IProductTemplateService _productTemplateService;
+        private readonly ITemplateModelFactory _templateModelFactory;
         private readonly ITopicTemplateService _topicTemplateService;
         private readonly IPermissionService _permissionService;
 
@@ -30,12 +31,14 @@ namespace Nop.Web.Areas.Admin.Controllers
         public TemplateController(ICategoryTemplateService categoryTemplateService,
             IManufacturerTemplateService manufacturerTemplateService,
             IProductTemplateService productTemplateService,
+            ITemplateModelFactory templateModelFactory,
             ITopicTemplateService topicTemplateService,
             IPermissionService permissionService)
         {
             this._categoryTemplateService = categoryTemplateService;
             this._manufacturerTemplateService = manufacturerTemplateService;
             this._productTemplateService = productTemplateService;
+            this._templateModelFactory = templateModelFactory;
             this._topicTemplateService = topicTemplateService;
             this._permissionService = permissionService;
         }
@@ -49,25 +52,22 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
 
-            return View();
+            //prepare model
+            var model = _templateModelFactory.PrepareCategoryTemplateSearchModel(new CategoryTemplateSearchModel());
+
+            return View(model);
         }
 
         [HttpPost]
-        public virtual IActionResult CategoryTemplates(DataSourceRequest command)
+        public virtual IActionResult CategoryTemplates(CategoryTemplateSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedKendoGridJson();
 
-            var templatesModel = _categoryTemplateService.GetAllCategoryTemplates()
-                .Select(x => x.ToModel())
-                .ToList();
-            var gridModel = new DataSourceResult
-            {
-                Data = templatesModel,
-                Total = templatesModel.Count
-            };
+            //prepare model
+            var model = _templateModelFactory.PrepareCategoryTemplateListModel(searchModel);
 
-            return Json(gridModel);
+            return Json(model);
         }
 
         [HttpPost]
@@ -77,13 +77,12 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
-            {
                 return Json(new DataSourceResult { Errors = ModelState.SerializeErrors() });
-            }
 
-            var template = _categoryTemplateService.GetCategoryTemplateById(model.Id);
-            if (template == null)
-                throw new ArgumentException("No template found with the specified id");
+            //try to get a category template with the specified id
+            var template = _categoryTemplateService.GetCategoryTemplateById(model.Id)
+                ?? throw new ArgumentException("No template found with the specified id");
+
             template = model.ToEntity(template);
             _categoryTemplateService.UpdateCategoryTemplate(template);
 
@@ -97,9 +96,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
-            {
                 return Json(new DataSourceResult { Errors = ModelState.SerializeErrors() });
-            }
 
             var template = new CategoryTemplate();
             template = model.ToEntity(template);
@@ -114,9 +111,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
 
-            var template = _categoryTemplateService.GetCategoryTemplateById(id);
-            if (template == null)
-                throw new ArgumentException("No template found with the specified id");
+            //try to get a category template with the specified id
+            var template = _categoryTemplateService.GetCategoryTemplateById(id)
+                ?? throw new ArgumentException("No template found with the specified id");
 
             _categoryTemplateService.DeleteCategoryTemplate(template);
 
@@ -132,25 +129,22 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
 
-            return View();
+            //prepare model
+            var model = _templateModelFactory.PrepareManufacturerTemplateSearchModel(new ManufacturerTemplateSearchModel());
+
+            return View(model);
         }
 
         [HttpPost]
-        public virtual IActionResult ManufacturerTemplates(DataSourceRequest command)
+        public virtual IActionResult ManufacturerTemplates(ManufacturerTemplateSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedKendoGridJson();
 
-            var templatesModel = _manufacturerTemplateService.GetAllManufacturerTemplates()
-                .Select(x => x.ToModel())
-                .ToList();
-            var gridModel = new DataSourceResult
-            {
-                Data = templatesModel,
-                Total = templatesModel.Count
-            };
+            //prepare model
+            var model = _templateModelFactory.PrepareManufacturerTemplateListModel(searchModel);
 
-            return Json(gridModel);
+            return Json(model);
         }
 
         [HttpPost]
@@ -160,13 +154,12 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
-            {
                 return Json(new DataSourceResult { Errors = ModelState.SerializeErrors() });
-            }
 
-            var template = _manufacturerTemplateService.GetManufacturerTemplateById(model.Id);
-            if (template == null)
-                throw new ArgumentException("No template found with the specified id");
+            //try to get a manufacturer template with the specified id
+            var template = _manufacturerTemplateService.GetManufacturerTemplateById(model.Id)
+                ?? throw new ArgumentException("No template found with the specified id");
+
             template = model.ToEntity(template);
             _manufacturerTemplateService.UpdateManufacturerTemplate(template);
 
@@ -180,9 +173,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
-            {
                 return Json(new DataSourceResult { Errors = ModelState.SerializeErrors() });
-            }
 
             var template = new ManufacturerTemplate();
             template = model.ToEntity(template);
@@ -197,9 +188,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
 
-            var template = _manufacturerTemplateService.GetManufacturerTemplateById(id);
-            if (template == null)
-                throw new ArgumentException("No template found with the specified id");
+            //try to get a manufacturer template with the specified id
+            var template = _manufacturerTemplateService.GetManufacturerTemplateById(id)
+                ?? throw new ArgumentException("No template found with the specified id");
 
             _manufacturerTemplateService.DeleteManufacturerTemplate(template);
 
@@ -215,25 +206,22 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
 
-            return View();
+            //prepare model
+            var model = _templateModelFactory.PrepareProductTemplateSearchModel(new ProductTemplateSearchModel());
+
+            return View(model);
         }
 
         [HttpPost]
-        public virtual IActionResult ProductTemplates(DataSourceRequest command)
+        public virtual IActionResult ProductTemplates(ProductTemplateSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedKendoGridJson();
 
-            var templatesModel = _productTemplateService.GetAllProductTemplates()
-                .Select(x => x.ToModel())
-                .ToList();
-            var gridModel = new DataSourceResult
-            {
-                Data = templatesModel,
-                Total = templatesModel.Count
-            };
+            //prepare model
+            var model = _templateModelFactory.PrepareProductTemplateListModel(searchModel);
 
-            return Json(gridModel);
+            return Json(model);
         }
 
         [HttpPost]
@@ -243,13 +231,12 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
-            {
                 return Json(new DataSourceResult { Errors = ModelState.SerializeErrors() });
-            }
 
-            var template = _productTemplateService.GetProductTemplateById(model.Id);
-            if (template == null)
-                throw new ArgumentException("No template found with the specified id");
+            //try to get a product template with the specified id
+            var template = _productTemplateService.GetProductTemplateById(model.Id)
+                ?? throw new ArgumentException("No template found with the specified id");
+
             template = model.ToEntity(template);
             _productTemplateService.UpdateProductTemplate(template);
 
@@ -263,9 +250,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
-            {
                 return Json(new DataSourceResult { Errors = ModelState.SerializeErrors() });
-            }
 
             var template = new ProductTemplate();
             template = model.ToEntity(template);
@@ -280,9 +265,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
 
-            var template = _productTemplateService.GetProductTemplateById(id);
-            if (template == null)
-                throw new ArgumentException("No template found with the specified id");
+            //try to get a product template with the specified id
+            var template = _productTemplateService.GetProductTemplateById(id)
+                ?? throw new ArgumentException("No template found with the specified id");
 
             _productTemplateService.DeleteProductTemplate(template);
 
@@ -298,25 +283,22 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
 
-            return View();
+            //prepare model
+            var model = _templateModelFactory.PrepareTopicTemplateSearchModel(new TopicTemplateSearchModel());
+
+            return View(model);
         }
 
         [HttpPost]
-        public virtual IActionResult TopicTemplates(DataSourceRequest command)
+        public virtual IActionResult TopicTemplates(TopicTemplateSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedKendoGridJson();
 
-            var templatesModel = _topicTemplateService.GetAllTopicTemplates()
-                .Select(x => x.ToModel())
-                .ToList();
-            var gridModel = new DataSourceResult
-            {
-                Data = templatesModel,
-                Total = templatesModel.Count
-            };
+            //prepare model
+            var model = _templateModelFactory.PrepareTopicTemplateListModel(searchModel);
 
-            return Json(gridModel);
+            return Json(model);
         }
 
         [HttpPost]
@@ -326,13 +308,12 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
-            {
                 return Json(new DataSourceResult { Errors = ModelState.SerializeErrors() });
-            }
 
-            var template = _topicTemplateService.GetTopicTemplateById(model.Id);
-            if (template == null)
-                throw new ArgumentException("No template found with the specified id");
+            //try to get a topic template with the specified id
+            var template = _topicTemplateService.GetTopicTemplateById(model.Id)
+                ?? throw new ArgumentException("No template found with the specified id");
+
             template = model.ToEntity(template);
             _topicTemplateService.UpdateTopicTemplate(template);
 
@@ -346,9 +327,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
-            {
                 return Json(new DataSourceResult { Errors = ModelState.SerializeErrors() });
-            }
 
             var template = new TopicTemplate();
             template = model.ToEntity(template);
@@ -363,9 +342,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
 
-            var template = _topicTemplateService.GetTopicTemplateById(id);
-            if (template == null)
-                throw new ArgumentException("No template found with the specified id");
+            //try to get a topic template with the specified id
+            var template = _topicTemplateService.GetTopicTemplateById(id)
+                ?? throw new ArgumentException("No template found with the specified id");
 
             _topicTemplateService.DeleteTopicTemplate(template);
 

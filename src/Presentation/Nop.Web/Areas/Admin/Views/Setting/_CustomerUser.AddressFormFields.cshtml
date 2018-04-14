@@ -277,6 +277,6 @@
         </div>
     </div>
     @*render custom address attributes*@
-    @await Html.PartialAsync("../AddressAttribute/ListBlock.cshtml")
+    @await Html.PartialAsync("../AddressAttribute/ListBlock.cshtml", Model.AddressAttributeSearchModel)
     @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CustomerUserSettingsAddressFormFieldsBottom })
 </div>

@@ -414,6 +414,9 @@
   <LocaleResource Name="Account.Fields.Username">
     <Value>Username</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.Fields.Username.NotValid">
+    <Value>Username is not valid</Value>
+  </LocaleResource>  
   <LocaleResource Name="Account.Fields.Username.Required">
     <Value>Username is required.</Value>
   </LocaleResource>
@@ -1965,6 +1968,9 @@
   <LocaleResource Name="Admin.Catalog.BulkEdit.Fields.ManageInventoryMethod">
     <Value>Manage inventory</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.BulkEdit.Fields.ManageInventoryMethod.MultipleWarehouse">
+    <Value>(multi-warehouse)</Value>
+  </LocaleResource> 
   <LocaleResource Name="Admin.Catalog.BulkEdit.Fields.Name">
     <Value>Name</Value>
   </LocaleResource>
@@ -5601,6 +5607,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.RecentlyViewedProductsNumber.Hint">
     <Value>The number of 'Recently viewed products' to display when 'Recently viewed products' option is enabled.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.RemoveRequiredProducts">
+    <Value>Remove required products</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.RemoveRequiredProducts.Hint">
+    <Value>Remove required products from the cart if the main one is removed.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.SearchPageAllowCustomersToSelectPageSize">
     <Value>Search page. Allow customers to select page size</Value>
   </LocaleResource>
@@ -5712,6 +5724,9 @@
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.SortOptions.Name">
     <Value>Name</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerSettings.RegexValidationRule.Error">
+    <Value>The regular expression for username validation is incorrect</Value>
+  </LocaleResource>   
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser">
     <Value>Customer settings</Value>
   </LocaleResource>
@@ -6177,6 +6192,24 @@
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.UsernamesEnabled.Hint">
     <Value>Check to use usernames for login/registration instead of emails. WARNING: not recommended to change in production environment.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.UsernameValidationRule">
+    <Value>Username validation rule</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.UsernameValidationRule.Hint">
+    <Value>Set the validation rule for username. You can specify a list of allowed characters or a regular expression. If you use a regular expression check the "Use regex for username validation" setting.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.UsernameValidationEnabled">
+    <Value>Username validation is enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.UsernameValidationEnabled.Hint">
+    <Value>Check to enable username validation (when registering or changing on the "My Account" page)</Value>
+  </LocaleResource> 
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.UsernameValidationUseRegex">
+    <Value>Use regex for username validation</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.UsernameValidationUseRegex.Hint">
+    <Value>Check to use a regular expression for username validation (when registering or changing on the "My Account" page)</Value>
+  </LocaleResource>    
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.UserRegistrationType">
     <Value>Registration method</Value>
   </LocaleResource>
@@ -7203,6 +7236,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Order.BlockTitle.PdfInvoice">
     <Value>Pdf invoice</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.CheckoutDisabled">
+    <Value>Checkout disabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.CheckoutDisabled.Hint">
+    <Value>Check to disable the checkout process (a read-only mode where ordering is turned off temporarily).</Value>
+  </LocaleResource>  
   <LocaleResource Name="Admin.Configuration.Settings.Order.CompleteOrderWhenDelivered">
     <Value>Complete order when delivered</Value>
   </LocaleResource>
@@ -7241,6 +7280,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Order.DeactivateGiftCardsAfterDeletingOrder.Hint">
     <Value>Check to deactivate related gift cards when an order is deleted.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.DeleteGiftCardUsageHistory">
+    <Value>Delete gift card usage history after order cancellation</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.DeleteGiftCardUsageHistory.Hint">
+    <Value>Check to delete gift card usage history after order cancellation</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Order.DisableBillingAddressCheckoutStep">
     <Value>Disable "Billing address" step</Value>
@@ -7764,11 +7809,35 @@
   <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.ActivationDelay.Hint">
     <Value>Specify how many days (hours) must elapse before earned points become active. Points earned by purchase cannot be redeemed until activated. For example, you may set the days before the points become available to 7. In this case, the points earned will be available for spending only 7 days after the purchase.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.MinOrderTotalToAwardPoints">
+    <Value>Minimum order total</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.MinOrderTotalToAwardPoints.Hint">
+    <Value>Specify the minimum order total (exclude shipping cost) to award points for purchases.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.PointsForRegistration">
     <Value>Points for registration</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.PointsForRegistration.Hint">
     <Value>Specify number of points awarded for registration.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.PurchasesPointsValidity">
+    <Value>Purchases points validity</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.PurchasesPointsValidity.Hint">
+    <Value>Specify number of days when the points awarded for purchases will be valid.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.PurchasesPointsValidity.Postfix">
+    <Value>Days</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.RegistrationPointsValidity">
+    <Value>Registration points validity</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.RegistrationPointsValidity.Hint">
+    <Value>Specify number of days when the points awarded for registration will be valid.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.RegistrationPointsValidity.Postfix">
+    <Value>Days</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Shipping">
     <Value>Shipping settings</Value>
@@ -8549,6 +8618,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Stores.Fields.DefaultLanguage">
     <Value>Default language</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Stores.Fields.DefaultLanguage.DefaultItemText">
+    <Value>---</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Stores.Fields.DefaultLanguage.Hint">
     <Value>This property allows a store owner to specify a default language for a store. If not specified, then the default language display order will be used.</Value>
@@ -9459,6 +9531,12 @@
   <LocaleResource Name="Admin.ContentManagement.Polls.Fields.Language.Hint">
     <Value>The language of this poll. A customer will only see the polls for their selected language.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Polls.Fields.LimitedToStores">
+    <Value>Limited to stores</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Polls.Fields.LimitedToStores.Hint">
+    <Value>Option to limit this poll to a certain store. If you have multiple stores, choose one or several from the list. If you don't use this option just leave this field empty.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Polls.Fields.Name">
     <Value>Name</Value>
   </LocaleResource>
@@ -9494,6 +9572,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Polls.Info">
     <Value>Poll Info</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Polls.List.SearchStore">
+    <Value>Store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Polls.List.SearchStore.Hint">
+    <Value>Search by a specific store.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Polls.Updated">
     <Value>The poll has been updated successfully.</Value>
@@ -10413,6 +10497,9 @@
   <LocaleResource Name="Admin.Customers.Customers.RewardPoints.AddButton">
     <Value>Add (reduce) reward points</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.RewardPoints.AddingZeroValueNotAllowed">
+    <Value>Adding a new row with zero value isn't allowed</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.RewardPoints.AddTitle">
     <Value>Add (reduce) points</Value>
   </LocaleResource>
@@ -10428,8 +10515,11 @@
   <LocaleResource Name="Admin.Customers.Customers.RewardPoints.Fields.ActivationDelay.Hint">
     <Value>Specify how many days (hours) must elapse before earned points become active.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Customers.Customers.RewardPoints.Fields.Date">
+  <LocaleResource Name="Admin.Customers.Customers.RewardPoints.Fields.CreatedDate">
     <Value>Date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.RewardPoints.Fields.EndDate">
+    <Value>End date</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.RewardPoints.Fields.Message">
     <Value>Message</Value>
@@ -10445,6 +10535,15 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.RewardPoints.Fields.PointsBalance">
     <Value>Points balance</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.RewardPoints.Fields.PointsValidity">
+    <Value>Points validity</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.RewardPoints.Fields.PointsValidity.Hint">
+    <Value>Specify number of days when the awarded points will be valid (only for positive amount of points).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.RewardPoints.Fields.PointsValidity.Postfix">
+    <Value>Days</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.RewardPoints.Fields.Store">
     <Value>Store</Value>
@@ -13962,6 +14061,9 @@
   <LocaleResource Name="Checkout.ConfirmYourOrder">
     <Value>Confirm your order</Value>
   </LocaleResource>
+  <LocaleResource Name="Checkout.Disabled">
+    <Value>Sorry, checkout process is temporary disabled</Value>
+  </LocaleResource>
   <LocaleResource Name="Checkout.EnterBillingAddress">
     <Value>Enter billing address</Value>
   </LocaleResource>
@@ -16677,8 +16779,11 @@
   <LocaleResource Name="RewardPoints.CurrentBalance">
     <Value>Your current balance is {0} reward points ({1}).</Value>
   </LocaleResource>
-  <LocaleResource Name="RewardPoints.Fields.Date">
+  <LocaleResource Name="RewardPoints.Fields.CreatedDate">
     <Value>Date</Value>
+  </LocaleResource>
+  <LocaleResource Name="RewardPoints.Fields.EndDate">
+    <Value>End date</Value>
   </LocaleResource>
   <LocaleResource Name="RewardPoints.Fields.Message">
     <Value>Message</Value>
@@ -16697,6 +16802,9 @@
   </LocaleResource>
   <LocaleResource Name="RewardPoints.Message.EarnedForRegistration">
     <Value>Registered as customer</Value>
+  </LocaleResource>
+  <LocaleResource Name="RewardPoints.Message.Expired">
+    <Value>Unused reward points from {0} have expired</Value>
   </LocaleResource>
   <LocaleResource Name="RewardPoints.Message.RedeemedForOrder">
     <Value>Redeemed for order #{0}</Value>
@@ -16998,8 +17106,11 @@
   <LocaleResource Name="ShoppingCart.Rental.StartDateShouldBeFuture">
     <Value>Rental start date should be the future date</Value>
   </LocaleResource>
+  <LocaleResource Name="ShoppingCart.RequiredProductUpdateWarning">
+    <Value>This product is required in the quantity of {0}</Value>
+  </LocaleResource>
   <LocaleResource Name="ShoppingCart.RequiredProductWarning">
-    <Value>This product requires the following product is added to the cart: {0}</Value>
+    <Value>This product requires the following product is added to the cart in the quantity of {1}: {0}</Value>
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.SelectAttribute">
     <Value>Please select {0}</Value>

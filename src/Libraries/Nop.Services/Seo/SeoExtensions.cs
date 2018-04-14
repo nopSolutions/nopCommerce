@@ -24,35 +24,6 @@ namespace Nop.Services.Seo
 
         #endregion
         
-        #region Product tag
-
-        /// <summary>
-        /// Gets product tag SE (search engine) name
-        /// </summary>
-        /// <param name="productTag">Product tag</param>
-        /// <returns>Product tag SE (search engine) name</returns>
-        public static string GetSeName(this ProductTag productTag)
-        {
-            var workContext = EngineContext.Current.Resolve<IWorkContext>();
-            return GetSeName(productTag, workContext.WorkingLanguage.Id);
-        }
-
-        /// <summary>
-        /// Gets product tag SE (search engine) name
-        /// </summary>
-        /// <param name="productTag">Product tag</param>
-        /// <param name="languageId">Language identifier</param>
-        /// <returns>Product tag SE (search engine) name</returns>
-        public static string GetSeName(this ProductTag productTag, int languageId)
-        {
-            if (productTag == null)
-                throw new ArgumentNullException(nameof(productTag));
-            var seName = GetSeName(productTag.GetLocalized(x => x.Name, languageId));
-            return seName;
-        }
-
-        #endregion
-
         #region Forum
 
         /// <summary>

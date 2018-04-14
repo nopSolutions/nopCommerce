@@ -1,48 +1,50 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Routing;
-using Nop.Services.Cms;
-using Nop.Web.Areas.Admin.Models.Cms;
+using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Framework.Components;
 
 namespace Nop.Web.Areas.Admin.Components
 {
+    /// <summary>
+    /// Represents a view component that displays an admin widgets
+    /// </summary>
     public class AdminWidgetViewComponent : NopViewComponent
     {
-        private readonly IWidgetService _widgetService;
+        #region Fields
 
-        public AdminWidgetViewComponent(IWidgetService widgetService)
+        private readonly IWidgetModelFactory _widgetModelFactory;
+
+        #endregion
+
+        #region Ctor
+
+        public AdminWidgetViewComponent(IWidgetModelFactory widgetModelFactory)
         {
-            this._widgetService = widgetService;
+            this._widgetModelFactory = widgetModelFactory;
         }
 
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Invoke view component
+        /// </summary>
+        /// <param name="widgetZone">Widget zone name</param>
+        /// <param name="additionalData">Additional data</param>
+        /// <returns>View component result</returns>
         public IViewComponentResult Invoke(string widgetZone, object additionalData = null)
         {
-            var model = new List<RenderWidgetModel>();
-
-            //add widget zone to view component arguments
-            additionalData = new RouteValueDictionary()
-            {
-                { "widgetZone", widgetZone },
-                { "additionalData", additionalData }
-            };
-
-            var widgets = _widgetService.LoadActiveWidgetsByWidgetZone(widgetZone);
-            foreach (var widget in widgets)
-            {
-                model.Add(new RenderWidgetModel
-                {
-                    WidgetViewComponentName = widget.GetWidgetViewComponentName(widgetZone),
-                    WidgetViewComponentArguments = additionalData
-                });
-            }
+            //prepare model
+            var models = _widgetModelFactory.PrepareRenderWidgetModels(widgetZone, additionalData);
 
             //no data?
-            if (!model.Any())
-                return Content("");
+            if (!models.Any())
+                return Content(string.Empty);
 
-            return View(model);
+            return View(models);
         }
+
+        #endregion
     }
 }

@@ -13,15 +13,19 @@
                             type: "json",
                             transport: {
                                 read: {
-                                    url:
-                                        "@Html.Raw(Url.Action("VendorNotesSelect", "Vendor", new {vendorId = Model.Id}))",
+                                    url: "@Html.Raw(Url.Action("VendorNotesSelect", "Vendor"))",
                                     type: "POST",
                                     dataType: "json",
-                                    data: addAntiForgeryToken
+                                    data: function() {
+                                        var data = {
+                                            VendorId: '@(Model.Id)'
+                                        };
+                                        addAntiForgeryToken(data);
+                                        return data;
+                                    }
                                 },
                                 destroy: {
-                                    url:
-                                        "@Html.Raw(Url.Action("VendorNoteDelete", "Vendor", new {vendorId = Model.Id}))",
+                                    url: "@Html.Raw(Url.Action("VendorNoteDelete", "Vendor", new { vendorId = Model.Id }))",
                                     type: "POST",
                                     dataType: "json",
                                     data: addAntiForgeryToken
@@ -46,15 +50,14 @@
                                 // Cancel the changes
                                 this.cancelChanges();
                             },
+                            pageSize: @(Model.VendorNoteSearchModel.PageSize),
                             serverPaging: true,
                             serverFiltering: true,
                             serverSorting: true
                         },
                         pageable: {
                             refresh: true,
-                            numeric: false,
-                            previousNext: false,
-                            info: false,
+                            pageSizes: [@(Model.VendorNoteSearchModel.AvailablePageSizes)],
                             @await Html.PartialAsync("_GridPagerMessages")
                         },
                         editable: {
@@ -117,7 +120,7 @@
 
             var postData = {
                 message: vendorNoteMessage,
-                vendorId: @Model.Id
+                vendorId: '@(Model.Id)'
             };
             addAntiForgeryToken(postData);
 

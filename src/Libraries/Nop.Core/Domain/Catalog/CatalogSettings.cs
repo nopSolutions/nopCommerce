@@ -432,5 +432,10 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets a value of max products count in one file 
         /// </summary>
         public int ExportImportProductsCountInOneFile { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to remove required products from the cart if the main one is removed
+        /// </summary>
+        public bool RemoveRequiredProducts { get; set; }
     }
 }

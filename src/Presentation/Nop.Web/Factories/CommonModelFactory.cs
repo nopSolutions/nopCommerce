@@ -648,7 +648,7 @@ namespace Nop.Web.Factories
                     {
                         GroupTitle = productTagsGroupTitle,
                         Name = productTag.GetLocalized(x => x.Name),
-                        Url = urlHelper.RouteUrl("ProductsByTag", new { productTagId = productTag.Id, SeName = productTag.GetSeName() })
+                        Url = urlHelper.RouteUrl("ProductsByTag", new { SeName = productTag.GetSeName() })
                     }));
                 }
 

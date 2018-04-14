@@ -8,6 +8,7 @@ using System.Net;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Text.RegularExpressions;
+using System.Threading;
 
 namespace Nop.Core
 {
@@ -29,6 +30,29 @@ namespace Nop.Core
         static CommonHelper()
         {
             _emailRegex = new Regex(_emailExpression, RegexOptions.IgnoreCase);
+        }
+
+        #endregion
+
+        #region Utilities
+
+        private static void DeleteDirectoryRecursive(string path)
+        {
+            Directory.Delete(path, true);
+            const int maxIterationToWait = 10;
+            var curIteration = 0;
+
+            //according to the documentation(https://msdn.microsoft.com/ru-ru/library/windows/desktop/aa365488.aspx) 
+            //System.IO.Directory.Delete method ultimately (after removing the files) calls native 
+            //RemoveDirectory function which marks the directory as "deleted". That's why we wait until 
+            //the directory is actually deleted. For more details see https://stackoverflow.com/a/4245121
+            while (Directory.Exists(path))
+            {
+                curIteration += 1;
+                if (curIteration > maxIterationToWait)
+                    return;
+                Thread.Sleep(100);
+            }
         }
 
         #endregion
@@ -382,15 +406,15 @@ namespace Nop.Core
 
             try
             {
-                Directory.Delete(path, true);
+                DeleteDirectoryRecursive(path);
             }
             catch (IOException)
             {
-                Directory.Delete(path, true);
+                DeleteDirectoryRecursive(path);
             }
             catch (UnauthorizedAccessException)
             {
-                Directory.Delete(path, true);
+                DeleteDirectoryRecursive(path);
             }
         }
 

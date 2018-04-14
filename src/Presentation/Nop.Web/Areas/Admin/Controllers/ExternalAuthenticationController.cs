@@ -1,47 +1,47 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Plugins;
 using Nop.Services.Authentication.External;
 using Nop.Services.Configuration;
 using Nop.Services.Plugins;
 using Nop.Services.Security;
-using Nop.Web.Areas.Admin.Extensions;
+using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Areas.Admin.Models.ExternalAuthentication;
-using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
 
 namespace Nop.Web.Areas.Admin.Controllers
 {
     public partial class ExternalAuthenticationController : BaseAdminController
-	{
+    {
         #region Fields
-        
-        private readonly IExternalAuthenticationService _externalAuthenticationService;
+
         private readonly ExternalAuthenticationSettings _externalAuthenticationSettings;
-        private readonly ISettingService _settingService;
+        private readonly IExternalAuthenticationMethodModelFactory _externalAuthenticationMethodModelFactory;
+        private readonly IExternalAuthenticationService _externalAuthenticationService;
         private readonly IPermissionService _permissionService;
         private readonly IPluginFinder _pluginFinder;
+        private readonly ISettingService _settingService;
 
         #endregion
 
         #region Ctor
 
-        public ExternalAuthenticationController(IExternalAuthenticationService externalAuthenticationService, 
-            ExternalAuthenticationSettings externalAuthenticationSettings,
-            ISettingService settingService,
+        public ExternalAuthenticationController(ExternalAuthenticationSettings externalAuthenticationSettings,
+            IExternalAuthenticationMethodModelFactory externalAuthenticationMethodModelFactory,
+            IExternalAuthenticationService externalAuthenticationService,
             IPermissionService permissionService,
-            IPluginFinder pluginFinder)
+            IPluginFinder pluginFinder,
+            ISettingService settingService)
         {
-            this._externalAuthenticationService = externalAuthenticationService;
             this._externalAuthenticationSettings = externalAuthenticationSettings;
-            this._settingService = settingService;
+            this._externalAuthenticationMethodModelFactory = externalAuthenticationMethodModelFactory;
+            this._externalAuthenticationService = externalAuthenticationService;
             this._permissionService = permissionService;
             this._pluginFinder = pluginFinder;
-		}
+            this._settingService = settingService;
+        }
 
-		#endregion 
+        #endregion
 
         #region Methods
 
@@ -50,36 +50,27 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageExternalAuthenticationMethods))
                 return AccessDeniedView();
 
-            return View();
+            //prepare model
+            var model = _externalAuthenticationMethodModelFactory
+                .PrepareExternalAuthenticationMethodSearchModel(new ExternalAuthenticationMethodSearchModel());
+
+            return View(model);
         }
 
         [HttpPost]
-        public virtual IActionResult Methods(DataSourceRequest command)
+        public virtual IActionResult Methods(ExternalAuthenticationMethodSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageExternalAuthenticationMethods))
                 return AccessDeniedKendoGridJson();
 
-            var methodsModel = new List<AuthenticationMethodModel>();
-            var methods = _externalAuthenticationService.LoadAllExternalAuthenticationMethods();
-            foreach (var method in methods)
-            {
-                var tmp1 = method.ToModel();
-                tmp1.IsActive = method.IsMethodActive(_externalAuthenticationSettings);
-                tmp1.ConfigurationUrl = method.GetConfigurationPageUrl();
-                methodsModel.Add(tmp1);
-            }
-            methodsModel = methodsModel.ToList();
-            var gridModel = new DataSourceResult
-            {
-                Data = methodsModel,
-                Total = methodsModel.Count
-            };
+            //prepare model
+            var model = _externalAuthenticationMethodModelFactory.PrepareExternalAuthenticationMethodListModel(searchModel);
 
-            return Json(gridModel);
+            return Json(model);
         }
 
         [HttpPost]
-        public virtual IActionResult MethodUpdate(AuthenticationMethodModel model)
+        public virtual IActionResult MethodUpdate(ExternalAuthenticationMethodModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageExternalAuthenticationMethods))
                 return AccessDeniedView();
@@ -114,7 +105,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             return new NullJsonResult();
         }
-        
+
         #endregion
     }
 }
