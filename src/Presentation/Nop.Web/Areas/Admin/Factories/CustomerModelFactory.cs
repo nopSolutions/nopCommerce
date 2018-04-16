@@ -197,7 +197,8 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     Id = record.Id,
                     Email = record.Email,
-                    ExternalIdentifier = record.ExternalDisplayIdentifier,
+                    ExternalIdentifier = !string.IsNullOrEmpty(record.ExternalDisplayIdentifier) 
+                        ? record.ExternalDisplayIdentifier : record.ExternalIdentifier,
                     AuthMethodName = method.PluginDescriptor.FriendlyName
                 });
             }
