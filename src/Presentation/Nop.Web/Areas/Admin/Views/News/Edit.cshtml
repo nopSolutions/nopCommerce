@@ -17,7 +17,11 @@
                 <a asp-action="List">@T("Admin.ContentManagement.News.NewsItems.BackToList")</a>
             </small>
         </h1>
-        <div class="pull-right">
+        <div class="pull-right">            
+            <button type="button" onclick="javascript:OpenWindow('@Url.RouteUrl("NewsItem", new {SeName = Model.SeName})', 800, 600, true); return false;" class="btn bg-purple">
+                <i class="fa fa-eye"></i>
+                @T("Admin.Common.Preview")
+            </button>
             <button type="submit" name="save" class="btn bg-blue">
                 <i class="fa fa-floppy-o"></i>
                 @T("Admin.Common.Save")
