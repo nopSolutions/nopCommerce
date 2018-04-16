@@ -189,8 +189,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             //set default authentication schemes
             var authenticationBuilder = services.AddAuthentication(options =>
             {
-                options.DefaultChallengeScheme = NopCookieAuthenticationDefaults.AuthenticationScheme;
-                options.DefaultSignInScheme = NopCookieAuthenticationDefaults.ExternalAuthenticationScheme;
+                options.DefaultScheme = NopCookieAuthenticationDefaults.AuthenticationScheme;
             });
 
             //add main cookie authentication

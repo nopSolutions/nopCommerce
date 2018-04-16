@@ -9,6 +9,10 @@ namespace Nop.Services.Authentication
     /// <summary>
     /// Represents middleware that enables authentication
     /// </summary>
+    /// <remarks>
+    /// Based on Microsoft.AspNetCore.Authentication.AuthenticationMiddleware,
+    /// with error handling added.
+    /// </remarks>
     public class AuthenticationMiddleware
     {
         #region Fields
