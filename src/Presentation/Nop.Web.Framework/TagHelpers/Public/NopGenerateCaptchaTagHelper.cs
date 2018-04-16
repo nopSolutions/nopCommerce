@@ -55,7 +55,7 @@ namespace Nop.Web.Framework.TagHelpers.Public
             viewContextAware?.Contextualize(ViewContext);
 
             //generate captcha control
-            var captchaControl = new GRecaptchaControl(_captchaSettings.ReCaptchaVersion)
+            var captchaControl = new GRecaptchaControl
             {
                 Theme = _captchaSettings.ReCaptchaTheme,
                 Id = "recaptcha",

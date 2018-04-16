@@ -7,7 +7,7 @@ set @resources='
 <Language>  
   <LocaleResource Name="Admin.Configuration.Currencies.Fields.CurrencyCode.Hint">
     <Value>The currency code. For a list of currency codes, go to: https://en.wikipedia.org/wiki/ISO_4217</Value>
-  </LocaleResource>
+  </LocaleResource>  
   <LocaleResource Name="Admin.Customers.Customers.Fields.Avatar">
     <Value>Avatar</Value>
   </LocaleResource>
@@ -919,6 +919,27 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Discounts.Fields.DiscountLimitation.Hint">
     <Value>Choose the limitation of discount. This parameter will not be taken into account for recurring products/orders.</Value>
+  </LocaleResource> 
+  <LocaleResource Name="Enums.Nop.Web.Framework.Security.Captcha.ReCaptchaVersion.Version1">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Web.Framework.Security.Captcha.ReCaptchaVersion.Version2">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.reCaptchaVersion">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.reCaptchaVersion.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Common.WrongCaptchaV2">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Common.WrongCaptcha">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Common.WrongCaptchaMessage">
+    <Value>The reCAPTCHA response is invalid or malformed. Please try again.</Value>
   </LocaleResource>
 </Language>
 '
@@ -2493,4 +2514,9 @@ IF EXISTS (
         FROM sys.objects
         WHERE object_id = OBJECT_ID(N'[temp_generate_sename]') AND OBJECTPROPERTY(object_id,N'IsProcedure') = 1)
 DROP PROCEDURE [temp_generate_sename]
+GO
+
+--del setting
+DELETE FROM [Setting]
+WHERE [Name] = N'captchasettings.recaptchaversion'
 GO

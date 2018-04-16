@@ -835,17 +835,7 @@
                                     <nop-editor asp-for="CaptchaSettings.ShowOnApplyVendorPage" />
                                     <span asp-validation-for="CaptchaSettings.ShowOnApplyVendorPage"></span>
                                 </div>
-                            </div>
-                            <div class="form-group" id="ssReCaptchaVersionpnl">
-                                <div class="col-md-3">
-                                    <nop-override-store-checkbox asp-for="CaptchaSettings.ReCaptchaVersion_OverrideForStore" asp-input="CaptchaSettings.ReCaptchaVersion" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                    <nop-label asp-for="CaptchaSettings.ReCaptchaVersion" />
-                                </div>
-                                <div class="col-md-9">
-                                    <nop-select asp-for="CaptchaSettings.ReCaptchaVersion" asp-items="Model.CaptchaSettings.AvailableReCaptchaVersions" />
-                                    <span asp-validation-for="CaptchaSettings.ReCaptchaVersion"></span>
-                                </div>
-                            </div>
+                            </div>                            
                             <div class="form-group" id="ssReCaptchaPublicKeypnl">
                                 <div class="col-md-3">
                                     <nop-override-store-checkbox asp-for="CaptchaSettings.ReCaptchaPublicKey_OverrideForStore" asp-input="CaptchaSettings.ReCaptchaPublicKey" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
@@ -887,7 +877,6 @@
                                 $('#ssCaptchaShowOnApplyVendorPagepnl').show();
                                 $('#ssReCaptchaPublicKeypnl').show();
                                 $('#ssReCaptchaPrivateKeypnl').show();
-                                $('#ssReCaptchaVersionpnl').show();
                             } else {
                                 $('#ssCaptchaShowOnLoginPagepnl').hide();
                                 $('#ssCaptchaShowOnRegistrationPagepnl').hide();
@@ -900,7 +889,6 @@
                                 $('#ssCaptchaShowOnApplyVendorPagepnl').hide();
                                 $('#ssReCaptchaPublicKeypnl').hide();
                                 $('#ssReCaptchaPrivateKeypnl').hide();
-                                $('#ssReCaptchaVersionpnl').hide();
                             }
                         }
                     </script>
