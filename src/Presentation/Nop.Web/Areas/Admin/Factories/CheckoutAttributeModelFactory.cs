@@ -110,6 +110,29 @@ namespace Nop.Web.Areas.Admin.Factories
             }).ToList();
         }
 
+        /// <summary>
+        /// Prepare checkout attribute value search model
+        /// </summary>
+        /// <param name="searchModel">Checkout attribute value search model</param>
+        /// <param name="checkoutAttribute">Checkout attribute</param>
+        /// <returns>Checkout attribute value search model</returns>
+        protected virtual CheckoutAttributeValueSearchModel PrepareCheckoutAttributeValueSearchModel(CheckoutAttributeValueSearchModel searchModel,
+            CheckoutAttribute checkoutAttribute)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+            if (checkoutAttribute == null)
+                throw new ArgumentNullException(nameof(checkoutAttribute));
+
+            searchModel.CheckoutAttributeId = checkoutAttribute.Id;
+
+            //prepare page parameters
+            searchModel.SetGridPageSize();
+
+            return searchModel;
+        }
+
         #endregion
 
         #region Methods
@@ -214,29 +237,6 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         /// <summary>
-        /// Prepare checkout attribute value search model
-        /// </summary>
-        /// <param name="searchModel">Checkout attribute value search model</param>
-        /// <param name="checkoutAttribute">Checkout attribute</param>
-        /// <returns>Checkout attribute value search model</returns>
-        public virtual CheckoutAttributeValueSearchModel PrepareCheckoutAttributeValueSearchModel(CheckoutAttributeValueSearchModel searchModel,
-            CheckoutAttribute checkoutAttribute)
-        {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            if (checkoutAttribute == null)
-                throw new ArgumentNullException(nameof(checkoutAttribute));
-
-            searchModel.CheckoutAttributeId = checkoutAttribute.Id;
-
-            //prepare page parameters
-            searchModel.SetGridPageSize();
-
-            return searchModel;
-        }
-
-        /// <summary>
         /// Prepare paged checkout attribute value list model
         /// </summary>
         /// <param name="searchModel">Checkout attribute value search model</param>
@@ -268,7 +268,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     PriceAdjustment = value.PriceAdjustment,
                     WeightAdjustment = value.WeightAdjustment,
                     IsPreSelected = value.IsPreSelected,
-                    DisplayOrder = value.DisplayOrder,
+                    DisplayOrder = value.DisplayOrder
                 }),
                 Total = checkoutAttributeValues.Count
             };

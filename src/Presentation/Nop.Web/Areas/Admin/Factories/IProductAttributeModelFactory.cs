@@ -33,15 +33,6 @@ namespace Nop.Web.Areas.Admin.Factories
             ProductAttribute productAttribute, bool excludeProperties = false);
 
         /// <summary>
-        /// Prepare predefined product attribute value search model
-        /// </summary>
-        /// <param name="searchModel">Predefined product attribute value search model</param>
-        /// <param name="productAttribute">Product attribute</param>
-        /// <returns>Predefined product attribute value search model</returns>
-        PredefinedProductAttributeValueSearchModel PreparePredefinedProductAttributeValueSearchModel(
-            PredefinedProductAttributeValueSearchModel searchModel, ProductAttribute productAttribute);
-
-        /// <summary>
         /// Prepare paged predefined product attribute value list model
         /// </summary>
         /// <param name="searchModel">Predefined product attribute value search model</param>
@@ -60,15 +51,6 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>Predefined product attribute value model</returns>
         PredefinedProductAttributeValueModel PreparePredefinedProductAttributeValueModel(PredefinedProductAttributeValueModel model,
             ProductAttribute productAttribute, PredefinedProductAttributeValue productAttributeValue, bool excludeProperties = false);
-
-        /// <summary>
-        /// Prepare search model of products that use the product attribute
-        /// </summary>
-        /// <param name="searchModel">Search model of products that use the product attribute</param>
-        /// <param name="productAttribute">Product attribute</param>
-        /// <returns>Search model of products that use the product attribute</returns>
-        ProductAttributeProductSearchModel PrepareProductAttributeProductSearchModel(ProductAttributeProductSearchModel searchModel,
-            ProductAttribute productAttribute);
 
         /// <summary>
         /// Prepare paged list model of products that use the product attribute

@@ -32,15 +32,6 @@ namespace Nop.Web.Areas.Admin.Factories
         GiftCardModel PrepareGiftCardModel(GiftCardModel model, GiftCard giftCard, bool excludeProperties = false);
 
         /// <summary>
-        /// Prepare gift card usage history search model
-        /// </summary>
-        /// <param name="searchModel">Gift card usage history search model</param>
-        /// <param name="giftCard">Gift card</param>
-        /// <returns>Gift card usage history search model</returns>
-        GiftCardUsageHistorySearchModel PrepareGiftCardUsageHistorySearchModel(GiftCardUsageHistorySearchModel searchModel,
-            GiftCard giftCard);
-
-        /// <summary>
         /// Prepare paged gift usage history card list model
         /// </summary>
         /// <param name="searchModel">Gift card usage history search model</param>

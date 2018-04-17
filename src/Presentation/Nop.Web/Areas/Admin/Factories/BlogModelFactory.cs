@@ -236,7 +236,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     return commentModel;
                 }),
-                Total = comments.Count,
+                Total = comments.Count
             };
 
             return model;

@@ -27,14 +27,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="model">Maintenance model</param>
         /// <returns>Maintenance model</returns>
         MaintenanceModel PrepareMaintenanceModel(MaintenanceModel model);
-
-        /// <summary>
-        /// Prepare backup file search model
-        /// </summary>
-        /// <param name="searchModel">Backup file search model</param>
-        /// <returns>Backup file search model</returns>
-        BackupFileSearchModel PrepareBackupFileSearchModel(BackupFileSearchModel searchModel);
-
+        
         /// <summary>
         /// Prepare paged backup file list model
         /// </summary>

@@ -133,14 +133,14 @@ namespace Nop.Web.Areas.Admin.Factories
                     returnRequestModel.ReturnRequestStatusStr = returnRequest
                         .ReturnRequestStatus.GetLocalizedEnum(_localizationService, _workContext);
                     var orderItem = _orderService.GetOrderItemById(returnRequest.OrderItemId);
-                    if (orderItem != null)
-                    {
-                        returnRequestModel.ProductId = orderItem.ProductId;
-                        returnRequestModel.ProductName = orderItem.Product.Name;
-                        returnRequestModel.OrderId = orderItem.OrderId;
-                        returnRequestModel.AttributeInfo = orderItem.AttributeDescription;
-                        returnRequestModel.CustomOrderNumber = orderItem.Order.CustomOrderNumber;
-                    }
+                    if (orderItem == null)
+                        return returnRequestModel;
+
+                    returnRequestModel.ProductId = orderItem.ProductId;
+                    returnRequestModel.ProductName = orderItem.Product.Name;
+                    returnRequestModel.OrderId = orderItem.OrderId;
+                    returnRequestModel.AttributeInfo = orderItem.AttributeDescription;
+                    returnRequestModel.CustomOrderNumber = orderItem.Order.CustomOrderNumber;
 
                     return returnRequestModel;
                 }),
@@ -187,14 +187,14 @@ namespace Nop.Web.Areas.Admin.Factories
                 model.CustomOrderNumber = orderItem.Order.CustomOrderNumber;
             }
 
-            if (!excludeProperties)
-            {
-                model.ReasonForReturn = returnRequest.ReasonForReturn;
-                model.RequestedAction = returnRequest.RequestedAction;
-                model.CustomerComments = returnRequest.CustomerComments;
-                model.StaffNotes = returnRequest.StaffNotes;
-                model.ReturnRequestStatusId = returnRequest.ReturnRequestStatusId;
-            }
+            if (excludeProperties)
+                return model;
+
+            model.ReasonForReturn = returnRequest.ReasonForReturn;
+            model.RequestedAction = returnRequest.RequestedAction;
+            model.CustomerComments = returnRequest.CustomerComments;
+            model.StaffNotes = returnRequest.StaffNotes;
+            model.ReturnRequestStatusId = returnRequest.ReturnRequestStatusId;
 
             return model;
         }

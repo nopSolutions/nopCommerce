@@ -68,13 +68,6 @@ namespace Nop.Web.Areas.Admin.Factories
         DatesRangesSearchModel PrepareDatesRangesSearchModel(DatesRangesSearchModel searchModel);
 
         /// <summary>
-        /// Prepare delivery date search model
-        /// </summary>
-        /// <param name="searchModel">Delivery date search model</param>
-        /// <returns>Delivery date search model</returns>
-        DeliveryDateSearchModel PrepareDeliveryDateSearchModel(DeliveryDateSearchModel searchModel);
-
-        /// <summary>
         /// Prepare paged delivery date list model
         /// </summary>
         /// <param name="searchModel">Delivery date search model</param>
@@ -89,13 +82,6 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
         /// <returns>Delivery date model</returns>
         DeliveryDateModel PrepareDeliveryDateModel(DeliveryDateModel model, DeliveryDate deliveryDate, bool excludeProperties = false);
-
-        /// <summary>
-        /// Prepare product availability range search model
-        /// </summary>
-        /// <param name="searchModel">Product availability range search model</param>
-        /// <returns>Product availability range search model</returns>
-        ProductAvailabilityRangeSearchModel PrepareProductAvailabilityRangeSearchModel(ProductAvailabilityRangeSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged product availability range list model

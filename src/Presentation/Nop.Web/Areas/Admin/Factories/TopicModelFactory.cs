@@ -97,7 +97,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (!string.IsNullOrEmpty(searchModel.SearchKeywords))
             {
                 topics = topics.Where(topic => (topic.Title?.Contains(searchModel.SearchKeywords) ?? false) ||
-                    (topic.Body?.Contains(searchModel.SearchKeywords) ?? false)).ToList();
+                                               (topic.Body?.Contains(searchModel.SearchKeywords) ?? false)).ToList();
             }
 
             //prepare grid model

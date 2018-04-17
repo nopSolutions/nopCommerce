@@ -32,13 +32,6 @@ namespace Nop.Web.Areas.Admin.Factories
         ForumGroupModel PrepareForumGroupModel(ForumGroupModel model, ForumGroup forumGroup, bool excludeProperties = false);
 
         /// <summary>
-        /// Prepare forum search model
-        /// </summary>
-        /// <param name="searchModel">Forum search model</param>
-        /// <returns>Forum search model</returns>
-        ForumSearchModel PrepareForumSearchModel(ForumSearchModel searchModel);
-
-        /// <summary>
         /// Prepare paged forum list model
         /// </summary>
         /// <param name="searchModel">Forum search model</param>

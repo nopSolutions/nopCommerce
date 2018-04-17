@@ -160,7 +160,8 @@ namespace Nop.Services.Authentication.External
             //check whether the specified email has been already registered
             if (_customerService.GetCustomerByEmail(parameters.Email) != null)
             {
-                var alreadyExistsError = string.Format(_localizationService.GetResource("Account.AssociatedExternalAuth.EmailAlreadyExists"), parameters.ExternalDisplayIdentifier);
+                var alreadyExistsError = string.Format(_localizationService.GetResource("Account.AssociatedExternalAuth.EmailAlreadyExists"),
+                    !string.IsNullOrEmpty(parameters.ExternalDisplayIdentifier) ? parameters.ExternalDisplayIdentifier : parameters.ExternalIdentifier);
                 return ErrorAuthentication(new[] { alreadyExistsError }, returnUrl);
             }
 

@@ -32,6 +32,26 @@ namespace Nop.Web.Areas.Admin.Factories
 
         #endregion
 
+        #region Utilities
+
+        /// <summary>
+        /// Prepare forum search model
+        /// </summary>
+        /// <param name="searchModel">Forum search model</param>
+        /// <returns>Forum search model</returns>
+        protected virtual ForumSearchModel PrepareForumSearchModel(ForumSearchModel searchModel)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+            //prepare page parameters
+            searchModel.SetGridPageSize();
+
+            return searchModel;
+        }
+
+        #endregion
+
         #region Methods
 
         /// <summary>
@@ -103,22 +123,6 @@ namespace Nop.Web.Areas.Admin.Factories
                 model.DisplayOrder = 1;
 
             return model;
-        }
-
-        /// <summary>
-        /// Prepare forum search model
-        /// </summary>
-        /// <param name="searchModel">Forum search model</param>
-        /// <returns>Forum search model</returns>
-        public virtual ForumSearchModel PrepareForumSearchModel(ForumSearchModel searchModel)
-        {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            //prepare page parameters
-            searchModel.SetGridPageSize();
-
-            return searchModel;
         }
 
         /// <summary>

@@ -57,6 +57,33 @@ namespace Nop.Web.Areas.Admin.Factories
 
         #endregion
 
+        #region Utilities
+
+        /// <summary>
+        /// Prepare manufacturer product search model
+        /// </summary>
+        /// <param name="searchModel">Manufacturer product search model</param>
+        /// <param name="manufacturer">Manufacturer</param>
+        /// <returns>Manufacturer product search model</returns>
+        protected virtual ManufacturerProductSearchModel PrepareManufacturerProductSearchModel(ManufacturerProductSearchModel searchModel,
+            Manufacturer manufacturer)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+            if (manufacturer == null)
+                throw new ArgumentNullException(nameof(manufacturer));
+
+            searchModel.ManufacturerId = manufacturer.Id;
+
+            //prepare page parameters
+            searchModel.SetGridPageSize();
+
+            return searchModel;
+        }
+
+        #endregion
+
         #region Methods
 
         /// <summary>
@@ -164,29 +191,6 @@ namespace Nop.Web.Areas.Admin.Factories
             _storeMappingSupportedModelFactory.PrepareModelStores(model, manufacturer, excludeProperties);
 
             return model;
-        }
-
-        /// <summary>
-        /// Prepare manufacturer product search model
-        /// </summary>
-        /// <param name="searchModel">Manufacturer product search model</param>
-        /// <param name="manufacturer">Manufacturer</param>
-        /// <returns>Manufacturer product search model</returns>
-        public virtual ManufacturerProductSearchModel PrepareManufacturerProductSearchModel(ManufacturerProductSearchModel searchModel,
-            Manufacturer manufacturer)
-        {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            if (manufacturer == null)
-                throw new ArgumentNullException(nameof(manufacturer));
-
-            searchModel.ManufacturerId = manufacturer.Id;
-
-            //prepare page parameters
-            searchModel.SetGridPageSize();
-
-            return searchModel;
         }
 
         /// <summary>

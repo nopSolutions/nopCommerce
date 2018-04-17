@@ -38,6 +38,32 @@ namespace Nop.Web.Areas.Admin.Factories
 
         #endregion
 
+        #region Utilities
+
+        /// <summary>
+        /// Prepare locale resource search model
+        /// </summary>
+        /// <param name="searchModel">Locale resource search model</param>
+        /// <param name="language">Language</param>
+        /// <returns>Locale resource search model</returns>
+        protected virtual LocaleResourceSearchModel PrepareLocaleResourceSearchModel(LocaleResourceSearchModel searchModel, Language language)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+            if (language == null)
+                throw new ArgumentNullException(nameof(language));
+
+            searchModel.LanguageId = language.Id;
+
+            //prepare page parameters
+            searchModel.SetGridPageSize();
+
+            return searchModel;
+        }
+
+        #endregion
+
         #region Methods
 
         /// <summary>
@@ -113,28 +139,6 @@ namespace Nop.Web.Areas.Admin.Factories
             _storeMappingSupportedModelFactory.PrepareModelStores(model, language, excludeProperties);
 
             return model;
-        }
-
-        /// <summary>
-        /// Prepare locale resource search model
-        /// </summary>
-        /// <param name="searchModel">Locale resource search model</param>
-        /// <param name="language">Language</param>
-        /// <returns>Locale resource search model</returns>
-        public virtual LocaleResourceSearchModel PrepareLocaleResourceSearchModel(LocaleResourceSearchModel searchModel, Language language)
-        {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            if (language == null)
-                throw new ArgumentNullException(nameof(language));
-
-            searchModel.LanguageId = language.Id;
-
-            //prepare page parameters
-            searchModel.SetGridPageSize();
-
-            return searchModel;
         }
 
         /// <summary>

@@ -33,15 +33,6 @@ namespace Nop.Web.Areas.Admin.Factories
             CustomerAttribute customerAttribute, bool excludeProperties = false);
 
         /// <summary>
-        /// Prepare customer attribute value search model
-        /// </summary>
-        /// <param name="searchModel">Customer attribute value search model</param>
-        /// <param name="customerAttribute">Customer attribute</param>
-        /// <returns>Customer attribute value search model</returns>
-        CustomerAttributeValueSearchModel PrepareCustomerAttributeValueSearchModel(CustomerAttributeValueSearchModel searchModel,
-            CustomerAttribute customerAttribute);
-
-        /// <summary>
         /// Prepare paged customer attribute value list model
         /// </summary>
         /// <param name="searchModel">Customer attribute value search model</param>

@@ -40,6 +40,33 @@ namespace Nop.Web.Areas.Admin.Factories
 
         #endregion
 
+        #region Utilities
+
+        /// <summary>
+        /// Prepare customer attribute value search model
+        /// </summary>
+        /// <param name="searchModel">Customer attribute value search model</param>
+        /// <param name="customerAttribute">Customer attribute</param>
+        /// <returns>Customer attribute value search model</returns>
+        protected virtual CustomerAttributeValueSearchModel PrepareCustomerAttributeValueSearchModel(CustomerAttributeValueSearchModel searchModel,
+            CustomerAttribute customerAttribute)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+            if (customerAttribute == null)
+                throw new ArgumentNullException(nameof(customerAttribute));
+
+            searchModel.CustomerAttributeId = customerAttribute.Id;
+
+            //prepare page parameters
+            searchModel.SetGridPageSize();
+
+            return searchModel;
+        }
+
+        #endregion
+
         #region Methods
 
         /// <summary>
@@ -125,29 +152,6 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         /// <summary>
-        /// Prepare customer attribute value search model
-        /// </summary>
-        /// <param name="searchModel">Customer attribute value search model</param>
-        /// <param name="customerAttribute">Customer attribute</param>
-        /// <returns>Customer attribute value search model</returns>
-        public virtual CustomerAttributeValueSearchModel PrepareCustomerAttributeValueSearchModel(CustomerAttributeValueSearchModel searchModel,
-            CustomerAttribute customerAttribute)
-        {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            if (customerAttribute == null)
-                throw new ArgumentNullException(nameof(customerAttribute));
-
-            searchModel.CustomerAttributeId = customerAttribute.Id;
-
-            //prepare page parameters
-            searchModel.SetGridPageSize();
-
-            return searchModel;
-        }
-
-        /// <summary>
         /// Prepare paged customer attribute value list model
         /// </summary>
         /// <param name="searchModel">Customer attribute value search model</param>
@@ -175,7 +179,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     CustomerAttributeId = value.CustomerAttributeId,
                     Name = value.Name,
                     IsPreSelected = value.IsPreSelected,
-                    DisplayOrder = value.DisplayOrder,
+                    DisplayOrder = value.DisplayOrder
                 }),
                 Total = customerAttributeValues.Count
             };

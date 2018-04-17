@@ -49,6 +49,33 @@ namespace Nop.Web.Areas.Admin.Factories
 
         #endregion
 
+        #region Utilities
+
+        /// <summary>
+        /// Prepare gift card usage history search model
+        /// </summary>
+        /// <param name="searchModel">Gift card usage history search model</param>
+        /// <param name="giftCard">Gift card</param>
+        /// <returns>Gift card usage history search model</returns>
+        protected virtual GiftCardUsageHistorySearchModel PrepareGiftCardUsageHistorySearchModel(GiftCardUsageHistorySearchModel searchModel,
+            GiftCard giftCard)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+            if (giftCard == null)
+                throw new ArgumentNullException(nameof(giftCard));
+
+            searchModel.GiftCardId = giftCard.Id;
+
+            //prepare page parameters
+            searchModel.SetGridPageSize();
+
+            return searchModel;
+        }
+
+        #endregion
+
         #region Methods
 
         /// <summary>
@@ -153,29 +180,6 @@ namespace Nop.Web.Areas.Admin.Factories
             model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId)?.CurrencyCode;
 
             return model;
-        }
-
-        /// <summary>
-        /// Prepare gift card usage history search model
-        /// </summary>
-        /// <param name="searchModel">Gift card usage history search model</param>
-        /// <param name="giftCard">Gift card</param>
-        /// <returns>Gift card usage history search model</returns>
-        public virtual GiftCardUsageHistorySearchModel PrepareGiftCardUsageHistorySearchModel(GiftCardUsageHistorySearchModel searchModel,
-            GiftCard giftCard)
-        {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            if (giftCard == null)
-                throw new ArgumentNullException(nameof(giftCard));
-
-            searchModel.GiftCardId = giftCard.Id;
-
-            //prepare page parameters
-            searchModel.SetGridPageSize();
-
-            return searchModel;
         }
 
         /// <summary>

@@ -32,14 +32,6 @@ namespace Nop.Web.Areas.Admin.Factories
         PollModel PreparePollModel(PollModel model, Poll poll, bool excludeProperties = false);
 
         /// <summary>
-        /// Prepare poll answer search model
-        /// </summary>
-        /// <param name="searchModel">Poll answer search model</param>
-        /// <param name="poll">Poll</param>
-        /// <returns>Poll answer search model</returns>
-        PollAnswerSearchModel PreparePollAnswerSearchModel(PollAnswerSearchModel searchModel, Poll poll);
-
-        /// <summary>
         /// Prepare paged poll answer list model
         /// </summary>
         /// <param name="searchModel">Poll answer search model</param>

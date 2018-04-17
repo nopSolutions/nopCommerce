@@ -32,14 +32,6 @@ namespace Nop.Web.Areas.Admin.Factories
         LanguageModel PrepareLanguageModel(LanguageModel model, Language language, bool excludeProperties = false);
 
         /// <summary>
-        /// Prepare locale resource search model
-        /// </summary>
-        /// <param name="searchModel">Locale resource search model</param>
-        /// <param name="language">Language</param>
-        /// <returns>Locale resource search model</returns>
-        LocaleResourceSearchModel PrepareLocaleResourceSearchModel(LocaleResourceSearchModel searchModel, Language language);
-
-        /// <summary>
         /// Prepare paged locale resource list model
         /// </summary>
         /// <param name="searchModel">Locale resource search model</param>

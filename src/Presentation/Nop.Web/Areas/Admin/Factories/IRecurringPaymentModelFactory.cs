@@ -33,15 +33,6 @@ namespace Nop.Web.Areas.Admin.Factories
             RecurringPayment recurringPayment, bool excludeProperties = false);
 
         /// <summary>
-        /// Prepare recurring payment history search model
-        /// </summary>
-        /// <param name="searchModel">Recurring payment history search model</param>
-        /// <param name="recurringPayment">Recurring payment</param>
-        /// <returns>Recurring payment history search model</returns>
-        RecurringPaymentHistorySearchModel PrepareRecurringPaymentHistorySearchModel(RecurringPaymentHistorySearchModel searchModel,
-            RecurringPayment recurringPayment);
-
-        /// <summary>
         /// Prepare paged recurring payment history list model
         /// </summary>
         /// <param name="searchModel">Recurring payment history search model</param>

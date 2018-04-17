@@ -58,6 +58,26 @@ namespace Nop.Web.Areas.Admin.Factories
 
         #endregion
 
+        #region Utilities
+
+        /// <summary>
+        /// Prepare shopping cart item search model
+        /// </summary>
+        /// <param name="searchModel">Shopping cart item search model</param>
+        /// <returns>Shopping cart item search model</returns>
+        protected virtual ShoppingCartItemSearchModel PrepareShoppingCartItemSearchModel(ShoppingCartItemSearchModel searchModel)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+            //prepare page parameters
+            searchModel.SetGridPageSize();
+
+            return searchModel;
+        }
+
+        #endregion
+
         #region Methods
 
         /// <summary>
@@ -123,22 +143,6 @@ namespace Nop.Web.Areas.Admin.Factories
             };
 
             return model;
-        }
-
-        /// <summary>
-        /// Prepare shopping cart item search model
-        /// </summary>
-        /// <param name="searchModel">Shopping cart item search model</param>
-        /// <returns>Shopping cart item search model</returns>
-        public virtual ShoppingCartItemSearchModel PrepareShoppingCartItemSearchModel(ShoppingCartItemSearchModel searchModel)
-        {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            //prepare page parameters
-            searchModel.SetGridPageSize();
-
-            return searchModel;
         }
 
         /// <summary>

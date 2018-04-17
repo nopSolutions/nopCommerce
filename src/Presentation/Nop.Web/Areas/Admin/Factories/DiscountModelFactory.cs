@@ -76,6 +76,100 @@ namespace Nop.Web.Areas.Admin.Factories
 
         #endregion
 
+        #region Utilities
+
+        /// <summary>
+        /// Prepare discount usage history search model
+        /// </summary>
+        /// <param name="searchModel">Discount usage history search model</param>
+        /// <param name="discount">Discount</param>
+        /// <returns>Discount usage history search model</returns>
+        protected virtual DiscountUsageHistorySearchModel PrepareDiscountUsageHistorySearchModel(DiscountUsageHistorySearchModel searchModel,
+            Discount discount)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+            if (discount == null)
+                throw new ArgumentNullException(nameof(discount));
+
+            searchModel.DiscountId = discount.Id;
+
+            //prepare page parameters
+            searchModel.SetGridPageSize();
+
+            return searchModel;
+        }
+
+        /// <summary>
+        /// Prepare discount product search model
+        /// </summary>
+        /// <param name="searchModel">Discount product search model</param>
+        /// <param name="discount">Discount</param>
+        /// <returns>Discount product search model</returns>
+        protected virtual DiscountProductSearchModel PrepareDiscountProductSearchModel(DiscountProductSearchModel searchModel, Discount discount)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+            if (discount == null)
+                throw new ArgumentNullException(nameof(discount));
+
+            searchModel.DiscountId = discount.Id;
+
+            //prepare page parameters
+            searchModel.SetGridPageSize();
+
+            return searchModel;
+        }
+
+        /// <summary>
+        /// Prepare discount category search model
+        /// </summary>
+        /// <param name="searchModel">Discount category search model</param>
+        /// <param name="discount">Discount</param>
+        /// <returns>Discount category search model</returns>
+        protected virtual DiscountCategorySearchModel PrepareDiscountCategorySearchModel(DiscountCategorySearchModel searchModel, Discount discount)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+            if (discount == null)
+                throw new ArgumentNullException(nameof(discount));
+
+            searchModel.DiscountId = discount.Id;
+
+            //prepare page parameters
+            searchModel.SetGridPageSize();
+
+            return searchModel;
+        }
+
+        /// <summary>
+        /// Prepare discount manufacturer search model
+        /// </summary>
+        /// <param name="searchModel">Discount manufacturer search model</param>
+        /// <param name="discount">Discount</param>
+        /// <returns>Discount manufacturer search model</returns>
+        protected virtual DiscountManufacturerSearchModel PrepareDiscountManufacturerSearchModel(DiscountManufacturerSearchModel searchModel,
+            Discount discount)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+            if (discount == null)
+                throw new ArgumentNullException(nameof(discount));
+
+            searchModel.DiscountId = discount.Id;
+
+            //prepare page parameters
+            searchModel.SetGridPageSize();
+
+            return searchModel;
+        }
+
+        #endregion
+
         #region Methods
 
         /// <summary>
@@ -266,29 +360,6 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         /// <summary>
-        /// Prepare discount usage history search model
-        /// </summary>
-        /// <param name="searchModel">Discount usage history search model</param>
-        /// <param name="discount">Discount</param>
-        /// <returns>Discount usage history search model</returns>
-        public virtual DiscountUsageHistorySearchModel PrepareDiscountUsageHistorySearchModel(DiscountUsageHistorySearchModel searchModel,
-            Discount discount)
-        {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            if (discount == null)
-                throw new ArgumentNullException(nameof(discount));
-
-            searchModel.DiscountId = discount.Id;
-
-            //prepare page parameters
-            searchModel.SetGridPageSize();
-
-            return searchModel;
-        }
-
-        /// <summary>
         /// Prepare paged discount usage history list model
         /// </summary>
         /// <param name="searchModel">Discount usage history search model</param>
@@ -337,28 +408,6 @@ namespace Nop.Web.Areas.Admin.Factories
             };
 
             return model;
-        }
-
-        /// <summary>
-        /// Prepare discount product search model
-        /// </summary>
-        /// <param name="searchModel">Discount product search model</param>
-        /// <param name="discount">Discount</param>
-        /// <returns>Discount product search model</returns>
-        public virtual DiscountProductSearchModel PrepareDiscountProductSearchModel(DiscountProductSearchModel searchModel, Discount discount)
-        {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            if (discount == null)
-                throw new ArgumentNullException(nameof(discount));
-
-            searchModel.DiscountId = discount.Id;
-
-            //prepare page parameters
-            searchModel.SetGridPageSize();
-
-            return searchModel;
         }
 
         /// <summary>
@@ -458,28 +507,6 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         /// <summary>
-        /// Prepare discount category search model
-        /// </summary>
-        /// <param name="searchModel">Discount category search model</param>
-        /// <param name="discount">Discount</param>
-        /// <returns>Discount category search model</returns>
-        public virtual DiscountCategorySearchModel PrepareDiscountCategorySearchModel(DiscountCategorySearchModel searchModel, Discount discount)
-        {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            if (discount == null)
-                throw new ArgumentNullException(nameof(discount));
-
-            searchModel.DiscountId = discount.Id;
-
-            //prepare page parameters
-            searchModel.SetGridPageSize();
-
-            return searchModel;
-        }
-
-        /// <summary>
         /// Prepare paged discount category list model
         /// </summary>
         /// <param name="searchModel">Discount category search model</param>
@@ -561,29 +588,6 @@ namespace Nop.Web.Areas.Admin.Factories
             };
 
             return model;
-        }
-
-        /// <summary>
-        /// Prepare discount manufacturer search model
-        /// </summary>
-        /// <param name="searchModel">Discount manufacturer search model</param>
-        /// <param name="discount">Discount</param>
-        /// <returns>Discount manufacturer search model</returns>
-        public virtual DiscountManufacturerSearchModel PrepareDiscountManufacturerSearchModel(DiscountManufacturerSearchModel searchModel,
-            Discount discount)
-        {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            if (discount == null)
-                throw new ArgumentNullException(nameof(discount));
-
-            searchModel.DiscountId = discount.Id;
-
-            //prepare page parameters
-            searchModel.SetGridPageSize();
-
-            return searchModel;
         }
 
         /// <summary>

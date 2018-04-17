@@ -43,6 +43,32 @@ namespace Nop.Web.Areas.Admin.Factories
 
         #endregion
 
+        #region Utilities
+
+        /// <summary>
+        /// Prepare poll answer search model
+        /// </summary>
+        /// <param name="searchModel">Poll answer search model</param>
+        /// <param name="poll">Poll</param>
+        /// <returns>Poll answer search model</returns>
+        protected virtual PollAnswerSearchModel PreparePollAnswerSearchModel(PollAnswerSearchModel searchModel, Poll poll)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+            if (poll == null)
+                throw new ArgumentNullException(nameof(poll));
+
+            searchModel.PollId = poll.Id;
+
+            //prepare page parameters
+            searchModel.SetGridPageSize();
+
+            return searchModel;
+        }
+
+        #endregion
+
         #region Methods
 
         /// <summary>
@@ -139,28 +165,6 @@ namespace Nop.Web.Areas.Admin.Factories
             _storeMappingSupportedModelFactory.PrepareModelStores(model, poll, excludeProperties);
 
             return model;
-        }
-
-        /// <summary>
-        /// Prepare poll answer search model
-        /// </summary>
-        /// <param name="searchModel">Poll answer search model</param>
-        /// <param name="poll">Poll</param>
-        /// <returns>Poll answer search model</returns>
-        public virtual PollAnswerSearchModel PreparePollAnswerSearchModel(PollAnswerSearchModel searchModel, Poll poll)
-        {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            if (poll == null)
-                throw new ArgumentNullException(nameof(poll));
-
-            searchModel.PollId = poll.Id;
-
-            //prepare page parameters
-            searchModel.SetGridPageSize();
-
-            return searchModel;
         }
 
         /// <summary>

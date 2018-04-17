@@ -33,15 +33,6 @@ namespace Nop.Web.Areas.Admin.Factories
             SpecificationAttribute specificationAttribute, bool excludeProperties = false);
 
         /// <summary>
-        /// Prepare specification attribute option search model
-        /// </summary>
-        /// <param name="searchModel">Specification attribute option search model</param>
-        /// <param name="specificationAttribute">Specification attribute</param>
-        /// <returns>Specification attribute option search model</returns>
-        SpecificationAttributeOptionSearchModel PrepareSpecificationAttributeOptionSearchModel(
-            SpecificationAttributeOptionSearchModel searchModel, SpecificationAttribute specificationAttribute);
-
-        /// <summary>
         /// Prepare paged specification attribute option list model
         /// </summary>
         /// <param name="searchModel">Specification attribute option search model</param>
@@ -61,15 +52,6 @@ namespace Nop.Web.Areas.Admin.Factories
         SpecificationAttributeOptionModel PrepareSpecificationAttributeOptionModel(SpecificationAttributeOptionModel model,
             SpecificationAttribute specificationAttribute, SpecificationAttributeOption specificationAttributeOption, 
             bool excludeProperties = false);
-
-        /// <summary>
-        /// Prepare search model of products that use the specification attribute
-        /// </summary>
-        /// <param name="searchModel">Search model of products that use the specification attribute</param>
-        /// <param name="specificationAttribute">Specification attribute</param>
-        /// <returns>Search model of products that use the specification attribute</returns>
-        SpecificationAttributeProductSearchModel PrepareSpecificationAttributeProductSearchModel(
-            SpecificationAttributeProductSearchModel searchModel, SpecificationAttribute specificationAttribute);
 
         /// <summary>
         /// Prepare paged list model of products that use the specification attribute

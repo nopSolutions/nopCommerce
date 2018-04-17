@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Linq;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
@@ -43,6 +44,33 @@ namespace Nop.Web.Areas.Admin.Factories
             this._orderService = orderService;
             this._paymentService = paymentService;
             this._workContext = workContext;
+        }
+
+        #endregion
+
+        #region Utilities
+
+        /// <summary>
+        /// Prepare recurring payment history search model
+        /// </summary>
+        /// <param name="searchModel">Recurring payment history search model</param>
+        /// <param name="recurringPayment">Recurring payment</param>
+        /// <returns>Recurring payment history search model</returns>
+        protected virtual RecurringPaymentHistorySearchModel PrepareRecurringPaymentHistorySearchModel(RecurringPaymentHistorySearchModel searchModel,
+            RecurringPayment recurringPayment)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+            if (recurringPayment == null)
+                throw new ArgumentNullException(nameof(recurringPayment));
+
+            searchModel.RecurringPaymentId = recurringPayment.Id;
+
+            //prepare page parameters
+            searchModel.SetGridPageSize();
+
+            return searchModel;
         }
 
         #endregion
@@ -100,11 +128,11 @@ namespace Nop.Web.Areas.Admin.Factories
                     if (recurringPayment.NextPaymentDate.HasValue)
                     {
                         recurringPaymentModel.NextPaymentDate = _dateTimeHelper
-                            .ConvertToUserTime(recurringPayment.NextPaymentDate.Value, DateTimeKind.Utc).ToString();
+                            .ConvertToUserTime(recurringPayment.NextPaymentDate.Value, DateTimeKind.Utc).ToString(CultureInfo.InvariantCulture);
                     }
 
                     recurringPaymentModel.StartDate = _dateTimeHelper
-                        .ConvertToUserTime(recurringPayment.StartDateUtc, DateTimeKind.Utc).ToString();
+                        .ConvertToUserTime(recurringPayment.StartDateUtc, DateTimeKind.Utc).ToString(CultureInfo.InvariantCulture);
 
                     //fill in additional values (not existing in the entity)
                     recurringPaymentModel.CyclePeriodStr = recurringPayment.CyclePeriod.GetLocalizedEnum(_localizationService, _workContext);
@@ -129,62 +157,39 @@ namespace Nop.Web.Areas.Admin.Factories
         public virtual RecurringPaymentModel PrepareRecurringPaymentModel(RecurringPaymentModel model, 
             RecurringPayment recurringPayment, bool excludeProperties = false)
         {
-            if (recurringPayment != null)
-            {
-                //fill in model values from the entity
-                model = model ?? new RecurringPaymentModel
-                {
-                    Id = recurringPayment.Id,
-                    CycleLength = recurringPayment.CycleLength,
-                    CyclePeriodId = recurringPayment.CyclePeriodId,
-                    TotalCycles = recurringPayment.TotalCycles,
-                    IsActive = recurringPayment.IsActive,
-                    CyclesRemaining = recurringPayment.CyclesRemaining,
-                    InitialOrderId = recurringPayment.InitialOrder.Id,
-                    CustomerId = recurringPayment.InitialOrder.CustomerId,
-                    LastPaymentFailed = recurringPayment.LastPaymentFailed
-                };
-
-                //convert dates to the user time
-                if (recurringPayment.NextPaymentDate.HasValue)
-                    model.NextPaymentDate = _dateTimeHelper.ConvertToUserTime(recurringPayment.NextPaymentDate.Value, DateTimeKind.Utc).ToString();
-                model.StartDate = _dateTimeHelper.ConvertToUserTime(recurringPayment.StartDateUtc, DateTimeKind.Utc).ToString();
-                
-                model.CustomerEmail = recurringPayment.InitialOrder.Customer.IsRegistered()
-                    ? recurringPayment.InitialOrder.Customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
-                model.PaymentType = _paymentService
-                    .GetRecurringPaymentType(recurringPayment.InitialOrder.PaymentMethodSystemName)
-                    .GetLocalizedEnum(_localizationService, _workContext);
-                model.CanCancelRecurringPayment = _orderProcessingService.CanCancelRecurringPayment(_workContext.CurrentCustomer, recurringPayment);
-
-                //prepare nested search model
-                PrepareRecurringPaymentHistorySearchModel(model.RecurringPaymentHistorySearchModel, recurringPayment);
-            }
-            
-            return model;
-        }
-
-        /// <summary>
-        /// Prepare recurring payment history search model
-        /// </summary>
-        /// <param name="searchModel">Recurring payment history search model</param>
-        /// <param name="recurringPayment">Recurring payment</param>
-        /// <returns>Recurring payment history search model</returns>
-        public virtual RecurringPaymentHistorySearchModel PrepareRecurringPaymentHistorySearchModel(RecurringPaymentHistorySearchModel searchModel,
-            RecurringPayment recurringPayment)
-        {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
             if (recurringPayment == null)
-                throw new ArgumentNullException(nameof(recurringPayment));
+                return model;
 
-            searchModel.RecurringPaymentId = recurringPayment.Id;
+            //fill in model values from the entity
+            model = model ?? new RecurringPaymentModel
+            {
+                Id = recurringPayment.Id,
+                CycleLength = recurringPayment.CycleLength,
+                CyclePeriodId = recurringPayment.CyclePeriodId,
+                TotalCycles = recurringPayment.TotalCycles,
+                IsActive = recurringPayment.IsActive,
+                CyclesRemaining = recurringPayment.CyclesRemaining,
+                InitialOrderId = recurringPayment.InitialOrder.Id,
+                CustomerId = recurringPayment.InitialOrder.CustomerId,
+                LastPaymentFailed = recurringPayment.LastPaymentFailed
+            };
 
-            //prepare page parameters
-            searchModel.SetGridPageSize();
+            //convert dates to the user time
+            if (recurringPayment.NextPaymentDate.HasValue)
+                model.NextPaymentDate = _dateTimeHelper.ConvertToUserTime(recurringPayment.NextPaymentDate.Value, DateTimeKind.Utc).ToString(CultureInfo.InvariantCulture);
+            model.StartDate = _dateTimeHelper.ConvertToUserTime(recurringPayment.StartDateUtc, DateTimeKind.Utc).ToString(CultureInfo.InvariantCulture);
+                
+            model.CustomerEmail = recurringPayment.InitialOrder.Customer.IsRegistered()
+                ? recurringPayment.InitialOrder.Customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
+            model.PaymentType = _paymentService
+                .GetRecurringPaymentType(recurringPayment.InitialOrder.PaymentMethodSystemName)
+                .GetLocalizedEnum(_localizationService, _workContext);
+            model.CanCancelRecurringPayment = _orderProcessingService.CanCancelRecurringPayment(_workContext.CurrentCustomer, recurringPayment);
 
-            return searchModel;
+            //prepare nested search model
+            PrepareRecurringPaymentHistorySearchModel(model.RecurringPaymentHistorySearchModel, recurringPayment);
+
+            return model;
         }
 
         /// <summary>
@@ -223,13 +228,13 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     //fill in additional values (not existing in the entity)
                     var order = _orderService.GetOrderById(historyEntry.OrderId);
-                    if (order != null)
-                    {
-                        historyModel.OrderStatus = order.OrderStatus.GetLocalizedEnum(_localizationService, _workContext);
-                        historyModel.PaymentStatus = order.PaymentStatus.GetLocalizedEnum(_localizationService, _workContext);
-                        historyModel.ShippingStatus = order.ShippingStatus.GetLocalizedEnum(_localizationService, _workContext);
-                        historyModel.CustomOrderNumber = order.CustomOrderNumber;
-                    }
+                    if (order == null)
+                        return historyModel;
+
+                    historyModel.OrderStatus = order.OrderStatus.GetLocalizedEnum(_localizationService, _workContext);
+                    historyModel.PaymentStatus = order.PaymentStatus.GetLocalizedEnum(_localizationService, _workContext);
+                    historyModel.ShippingStatus = order.ShippingStatus.GetLocalizedEnum(_localizationService, _workContext);
+                    historyModel.CustomOrderNumber = order.CustomOrderNumber;
 
                     return historyModel;
                 }),
