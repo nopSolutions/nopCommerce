@@ -941,6 +941,9 @@ set @resources='
   <LocaleResource Name="Common.WrongCaptchaMessage">
     <Value>The reCAPTCHA response is invalid or malformed. Please try again.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Common.DeleteConfirmation.Selected">
+    <Value>Are you sure you want to delete selected items?</Value>
+  </LocaleResource>
 </Language>
 '
 
