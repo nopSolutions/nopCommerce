@@ -56,6 +56,16 @@
                                     <span asp-validation-for="ProductSearchAutoCompleteNumberOfProducts"></span>
                                 </div>
                             </div>
+                            <div class="form-group advanced-setting" id="pnlShowLinkToAllResultInSearchAutoComplete">
+                                <div class="col-md-3">
+                                    <nop-override-store-checkbox asp-for="ShowLinkToAllResultInSearchAutoComplete_OverrideForStore" asp-input="ShowLinkToAllResultInSearchAutoComplete" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                    <nop-label asp-for="ShowLinkToAllResultInSearchAutoComplete" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-editor asp-for="ShowLinkToAllResultInSearchAutoComplete" />
+                                    <span asp-validation-for="ShowLinkToAllResultInSearchAutoComplete"></span>
+                                </div>
+                            </div>
                             <div class="form-group advanced-setting" id="pnlShowProductImagesInSearchAutoComplete">
                                 <div class="col-md-3">
                                     <nop-override-store-checkbox asp-for="ShowProductImagesInSearchAutoComplete_OverrideForStore" asp-input="ShowProductImagesInSearchAutoComplete" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
@@ -133,9 +143,11 @@
                             if ($('#@Html.IdFor(model => model.ProductSearchAutoCompleteEnabled)').is(':checked')) {
                                 $('#pnlProductSearchAutoCompleteNumberOfProducts').show();
                                 $('#pnlShowProductImagesInSearchAutoComplete').show();
+                                $('#pnlShowLinkToAllResultInSearchAutoComplete').show();
                             } else {
                                 $('#pnlProductSearchAutoCompleteNumberOfProducts').hide();
                                 $('#pnlShowProductImagesInSearchAutoComplete').hide();
+                                $('#pnlShowLinkToAllResultInSearchAutoComplete').hide();
                             }
                         }
                     </script>

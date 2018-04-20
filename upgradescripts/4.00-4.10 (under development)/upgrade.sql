@@ -950,6 +950,15 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Payment">
     <Value></Value>
   </LocaleResource>
+  <LocaleResource Name="Search.SearchBox.SearchPageLink">
+    <Value>View all results...</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowLinkToAllResultInSearchAutoComplete">
+    <Value>Show a link to all search results in the autocomplete box</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowLinkToAllResultInSearchAutoComplete.Hint">
+    <Value>Determines whether the link to all results should be displayed in the autocomplete search box. Displayed if the number of items found is greater than the displayed quantity in the autocomplete box.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -2528,4 +2537,12 @@ GO
 --del setting
 DELETE FROM [Setting]
 WHERE [Name] = N'captchasettings.recaptchaversion'
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'catalogsettings.showlinktoallresultinsearchautocomplete')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'catalogsettings.showlinktoallresultinsearchautocomplete', N'false', 0)
+END
 GO

@@ -6051,6 +6051,7 @@ namespace Nop.Services.Installation
                 CompareProductsNumber = 4,
                 ProductSearchAutoCompleteEnabled = true,
                 ProductSearchAutoCompleteNumberOfProducts = 10,
+                ShowLinkToAllResultInSearchAutoComplete = false,
                 ProductSearchTermMinimumLength = 3,
                 ShowProductImagesInSearchAutoComplete = false,
                 ShowBestsellersOnHomepage = false,

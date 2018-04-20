@@ -209,6 +209,11 @@ namespace Nop.Core.Domain.Catalog
         public bool ShowProductImagesInSearchAutoComplete { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether to show link to all result in the auto complete search
+        /// </summary>
+        public bool ShowLinkToAllResultInSearchAutoComplete { get; set; }
+
+        /// <summary>
         /// Gets or sets a minimum search term length
         /// </summary>
         public int ProductSearchTermMinimumLength { get; set; }
