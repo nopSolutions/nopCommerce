@@ -8,6 +8,13 @@ namespace Nop.Web.Areas.Admin.Factories
     public partial interface IPaymentModelFactory
     {
         /// <summary>
+        /// Prepare payment methods model
+        /// </summary>
+        /// <param name="methodsModel">Payment methods model</param>        
+        /// <returns>Payment methods model</returns>
+        PaymentMethodsModel PreparePaymentMethodsModel(PaymentMethodsModel methodsModel);
+
+        /// <summary>
         /// Prepare payment method search model
         /// </summary>
         /// <param name="searchModel">Payment method search model</param>

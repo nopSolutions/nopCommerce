@@ -1,10 +1,10 @@
-@model PaymentMethodSearchModel
+@model PaymentMethodsModel
 
 @{    
     //page title
     ViewBag.Title = T("Admin.Configuration.Payment.Methods").Text;
     //active menu item (system name)
-    Html.SetActiveMenuItemSystemName("Payment methods");
+    Html.SetActiveMenuItemSystemName("PaymentMethods");
 }
 
 <nop-antiforgery-token />
@@ -77,14 +77,14 @@
                                         // Cancel the changes
                                         this.cancelChanges();
                                     },
-                                    pageSize: @(Model.PageSize),
+                                    pageSize: @(Model.PaymentsMethod.PageSize),
                                     serverPaging: true,
                                     serverFiltering: true,
                                     serverSorting: true
                                 },
                                 pageable: {
                                     refresh: true,
-                                    pageSizes: [@(Model.AvailablePageSizes)],
+                                    pageSizes: [@(Model.PaymentsMethod.AvailablePageSizes)],
                                     @await Html.PartialAsync("_GridPagerMessages")
                                 },
                                 editable: {

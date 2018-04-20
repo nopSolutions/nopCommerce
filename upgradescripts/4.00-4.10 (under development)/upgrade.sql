@@ -941,6 +941,15 @@ set @resources='
   <LocaleResource Name="Common.WrongCaptchaMessage">
     <Value>The reCAPTCHA response is invalid or malformed. Please try again.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.PaymentMethods">
+    <Value>Payment methods</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.PaymentMethodsAndRestrictions">
+    <Value>Payment methods and restrictions</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Payment">
+    <Value></Value>
+  </LocaleResource>
 </Language>
 '
 

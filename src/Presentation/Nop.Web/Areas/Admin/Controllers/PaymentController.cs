@@ -55,15 +55,15 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #endregion
 
-        #region Methods
+        #region Methods        
 
-        public virtual IActionResult Methods()
+        public virtual IActionResult PaymentMethods()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePaymentMethods))
                 return AccessDeniedView();
 
             //prepare model
-            var model = _paymentModelFactory.PreparePaymentMethodSearchModel(new PaymentMethodSearchModel());
+            var model = _paymentModelFactory.PreparePaymentMethodsModel(new PaymentMethodsModel());
 
             return View(model);
         }
@@ -131,7 +131,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost, ActionName("MethodRestrictions")]
-        public virtual IActionResult MethodRestrictionsSave(PaymentMethodRestrictionModel model)
+        public virtual IActionResult MethodRestrictionsSave(PaymentMethodsModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePaymentMethods))
                 return AccessDeniedView();
@@ -161,7 +161,10 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             SuccessNotification(_localizationService.GetResource("Admin.Configuration.Payment.MethodRestrictions.Updated"));
 
-            return RedirectToAction("MethodRestrictions");
+            //selected tab
+            SaveSelectedTabName();
+
+            return RedirectToAction("PaymentMethods");
         }
 
         #endregion
