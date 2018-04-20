@@ -11,4 +11,4 @@ Version specific steps:
 
 
 Notes:
-1. If you stored your pictures on the file system, then also backup them (\Content\Images\) and copy back after upgrade
+1. If you stored your pictures on the file system, then also backup them (\wwwroot\Images\) and copy back after upgrade
