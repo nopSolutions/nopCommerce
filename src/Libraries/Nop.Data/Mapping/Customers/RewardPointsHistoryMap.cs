@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Orders;
 
 namespace Nop.Data.Mapping.Customers
 {
@@ -24,6 +25,7 @@ namespace Nop.Data.Mapping.Customers
 
             builder.HasOne(rph => rph.UsedWithOrder)
                 .WithOne(o => o.RedeemedRewardPointsEntry)
+                .HasForeignKey<Order>(o => o.Id)
                 .OnDelete(DeleteBehavior.SetNull);
         }
     }

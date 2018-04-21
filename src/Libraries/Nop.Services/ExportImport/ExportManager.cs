@@ -901,8 +901,8 @@ namespace Nop.Services.ExportImport
                     foreach (var discount in discounts)
                     {
                         xmlWriter.WriteStartElement("Discount");
-                        xmlWriter.WriteString("DiscountId", discount.DiscountId);
-                        xmlWriter.WriteString("Name", discount.Discount.Name);
+                        xmlWriter.WriteString("DiscountId", discount.Id);
+                        xmlWriter.WriteString("Name", discount.Name);
                         xmlWriter.WriteEndElement();
                     }
 

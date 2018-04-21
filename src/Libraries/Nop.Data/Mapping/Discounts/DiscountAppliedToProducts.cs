@@ -17,7 +17,7 @@ namespace Nop.Data.Mapping.Discounts
                 .HasForeignKey(ca => ca.DiscountId);
 
             builder.HasOne(ca => ca.Product)
-                .WithMany(ca => ca.AppliedDiscounts)
+                .WithMany(ca => ca.Discount_AppliedToProducts)
                 .HasForeignKey(ca => ca.ProductId);
         }
     }

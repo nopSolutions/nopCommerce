@@ -14,8 +14,9 @@ using Nop.Services.Events;
 using Nop.Services.Logging;
 using Nop.Services.Seo;
 using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Helpers;
+using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
+using SixLabors.ImageSharp.Processing.Transforms;
 using SixLabors.Primitives;
 
 namespace Nop.Services.Media

@@ -14,6 +14,8 @@ using Nop.Core;
 using Nop.Services.Security;
 using Nop.Web.Framework.Mvc.Filters;
 using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
+using SixLabors.ImageSharp.Processing.Transforms;
 
 namespace Nop.Web.Areas.Admin.Controllers
 {

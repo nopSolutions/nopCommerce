@@ -19,6 +19,8 @@ namespace Nop.Data.Mapping.Catalog
             builder.Property(c => c.MetaTitle).HasMaxLength(400);
             builder.Property(c => c.PriceRanges).HasMaxLength(400);
             builder.Property(c => c.PageSizeOptions).HasMaxLength(200);
+
+            builder.Ignore(c => c.AppliedDiscounts);
         }
     }
 }

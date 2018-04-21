@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Reflection;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Orders;
 
@@ -273,7 +274,6 @@ namespace Nop.Core.Domain.Customers
 
         public ICollection<Address> Addresses
         {
-
             get
             {
                 if (_addressesonly.Contains(null) || (_addressesonly.Count != CustomerAddresses.Count))
@@ -291,6 +291,23 @@ namespace Nop.Core.Domain.Customers
                     internalmodify = false;
                 }
                 return _addressesonly;
+            }
+            set
+            {
+                internalmodify = true;
+                CustomerAddresses.Clear();
+                foreach (var item in value)
+                {
+                    CustomerAddresses dac = new CustomerAddresses()
+                    {
+                        Customer = this,
+                        CustomerId = Id,
+                        Address = item,
+                        AddressId = item.Id
+                    };
+                    CustomerAddresses.Add(dac);
+                }
+                internalmodify = false;
             }
         }
 
@@ -370,6 +387,23 @@ namespace Nop.Core.Domain.Customers
                     internalmodify = false;
                 }
                 return _customerRolesonly;
+            }
+            set
+            {
+                internalmodify = true;
+                CustomerCustomerRoles.Clear();
+                foreach (var item in value)
+                {
+                    Customer_CustomerRole_Mapping dac = new Customer_CustomerRole_Mapping()
+                    {
+                        Customer = this,
+                        CustomerId = Id,
+                        CustomerRole = item,
+                        CustomerRoleId = item.Id
+                    };
+                    CustomerCustomerRoles.Add(dac);
+                }
+                internalmodify = false;
             }
         }
 

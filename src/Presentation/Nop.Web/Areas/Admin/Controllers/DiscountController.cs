@@ -459,8 +459,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ?? throw new ArgumentException("No product found with the specified id", nameof(productId));
 
             //remove discount
-            if (product.AppliedDiscounts.Count(d => d.DiscountId == discount.Id) > 0)
-                product.AppliedDiscountsRemove(discount);
+            if (product.AppliedDiscounts.Count(d => d.Id == discount.Id) > 0)
+                product.AppliedDiscounts.Remove(discount);
 
             _productService.UpdateProduct(product);
             _productService.UpdateHasDiscountsApplied(product);
@@ -554,8 +554,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ?? throw new ArgumentException("No category found with the specified id", nameof(categoryId));
 
             //remove discount
-            if (category.AppliedDiscounts.Count(d => d.DiscountId == discount.Id) > 0)
-                category.AppliedDiscounts.Remove(category.AppliedDiscounts.First(d => d.DiscountId == discount.Id));
+            if (category.AppliedDiscounts.Count(d => d.Id == discount.Id) > 0)
+                category.AppliedDiscounts.Remove(category.AppliedDiscounts.First(d => d.Id == discount.Id));
 
             _categoryService.UpdateCategory(category);
 
@@ -647,8 +647,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ?? throw new ArgumentException("No manufacturer found with the specified id", nameof(manufacturerId));
 
             //remove discount
-            if (manufacturer.AppliedDiscounts.Count(d => d.DiscountId == discount.Id) > 0)
-                manufacturer.AppliedDiscountsRemove(discount);
+            if (manufacturer.AppliedDiscounts.Count(d => d.Id == discount.Id) > 0)
+                manufacturer.AppliedDiscounts.Remove(discount);
 
             _manufacturerService.UpdateManufacturer(manufacturer);
 

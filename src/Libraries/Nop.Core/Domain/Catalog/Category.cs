@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Security;
@@ -13,7 +14,76 @@ namespace Nop.Core.Domain.Catalog
     /// </summary>
     public partial class Category : BaseEntity, ILocalizedEntity, ISlugSupported, IAclSupported, IStoreMappingSupported, IDiscountSupported
     {
-        private ICollection<Discount_AppliedToCategories> _appliedDiscounts;
+        private ICollection<Discount> _appliedDiscounts;
+        private ICollection<Discount_AppliedToCategories> _discount_AppliedToCategories;
+
+        public Category()
+        {
+            _appliedDiscounts = new ObservableCollection<Discount>();
+            _discount_AppliedToCategories = new ObservableCollection<Discount_AppliedToCategories>();
+            ((ObservableCollection<Discount>)_appliedDiscounts).CollectionChanged += appliedDiscountsChanged;
+            ((ObservableCollection<Discount_AppliedToCategories>)_discount_AppliedToCategories).CollectionChanged += appliedDiscountsCategoryChanged;
+        }
+
+        private void appliedDiscountsCategoryChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            if (internalmodify == true) return;
+            if (e.NewItems != null)
+            {
+                foreach (Discount_AppliedToCategories newitem in e.NewItems)
+                {
+                    internalmodify = true;
+                    try
+                    {
+                        _appliedDiscounts.Add(newitem.Discount);
+                    }
+                    catch (Exception) { }
+                    internalmodify = false;
+                }
+            }
+            if (e.OldItems != null)
+            {
+                foreach (Discount_AppliedToCategories olditem in e.OldItems)
+                {
+                    var item = ((List<Discount>)_appliedDiscounts).Find(p => p.Id == olditem.DiscountId);
+                    internalmodify = true;
+                    _appliedDiscounts.Remove(item);
+                    internalmodify = false;
+                }
+            }
+        }
+
+        private void appliedDiscountsChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            if (internalmodify == true) return;
+            if (e.NewItems != null)
+            {
+                foreach (Discount newitem in e.NewItems)
+                {
+                    var ca = new Discount_AppliedToCategories()
+                    {
+                        Discount = newitem,
+                        DiscountId = newitem.Id,
+                        Category = this,
+                        CategoryId = this.Id
+                    };
+                    internalmodify = true;
+                    Discount_AppliedToCategories.Add(ca);
+                    internalmodify = false;
+                }
+            }
+            if (e.OldItems != null)
+            {
+                foreach (Discount olditem in e.OldItems)
+                {
+                    var item = ((List<Discount_AppliedToCategories>)Discount_AppliedToCategories).Find(p =>
+                        p.DiscountId == olditem.Id && p.CategoryId == this.Id);
+                    internalmodify = true;
+                    Discount_AppliedToCategories.Remove(item);
+                    internalmodify = false;
+                }
+            }
+        }
 
         /// <summary>
         /// Gets or sets the name
@@ -123,28 +193,48 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets the collection of applied discounts
         /// </summary>
-        public virtual ICollection<Discount_AppliedToCategories> AppliedDiscounts
-        {
-            get { return _appliedDiscounts ?? (_appliedDiscounts = new List<Discount_AppliedToCategories>()); }
-            protected set { _appliedDiscounts = value; }
-        }
+        /// 
 
-        public void AppliedDiscountsAdd(Discount discount)
+        public virtual ICollection<Discount_AppliedToCategories> Discount_AppliedToCategories
         {
-            Discount_AppliedToCategories dac = new Discount_AppliedToCategories
+            get { return _discount_AppliedToCategories; }
+            protected set { _discount_AppliedToCategories = value; }
+        }
+        private bool internalmodify = false;
+        public virtual ICollection<Discount> AppliedDiscounts
+        {
+            get
             {
-                Discount = discount,
-                DiscountId = discount.Id,
-                Category = this,
-                CategoryId = this.Id
-            };
-            AppliedDiscounts.Add(dac);
-        }
-
-        public void AppliedDiscountsRemove(Discount discount)
-        {
-            var item = ((List<Discount_AppliedToCategories>) AppliedDiscounts).Find(p => p.DiscountId == discount.Id && p.CategoryId == this.Id);
-            AppliedDiscounts.Remove(item);
+                if (_appliedDiscounts.Contains(null) || (_appliedDiscounts.Count != Discount_AppliedToCategories.Count))
+                {
+                    //regenerate
+                    internalmodify = true;
+                    _appliedDiscounts.Clear();
+                    foreach (var item in Discount_AppliedToCategories)
+                    {
+                        _appliedDiscounts.Add(item.Discount);
+                    }
+                    internalmodify = false;
+                }
+                return _appliedDiscounts;
+            }
+            set
+            {
+                internalmodify = true;
+                Discount_AppliedToCategories.Clear();
+                foreach (var item in value)
+                {
+                    Discount_AppliedToCategories dac = new Discount_AppliedToCategories()
+                    {
+                        Category = this,
+                        CategoryId = Id,
+                        Discount = item,
+                        DiscountId = item.Id
+                    };
+                    Discount_AppliedToCategories.Add(dac);
+                }
+                internalmodify = false;
+            }
         }
     }
 }
