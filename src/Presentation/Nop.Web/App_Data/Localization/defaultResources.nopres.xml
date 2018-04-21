@@ -4839,81 +4839,15 @@
   <LocaleResource Name="Admin.Configuration.Languages.XmlFile.Note1">
     <Value>NOTE: It can take up to several minutes.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Languages.XmlFile.Note2">
+  <LocaleResource Name="Admin.Configuration.Languages.XmlFile.Note2">    
     <Value>NOTE: DO NOT click twice.</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Configuration.PaymentMethods">
+    <Value>Payment methods</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Shipping.Measures">
-    <Value>Measures</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Shipping.Measures.Dimensions">
-    <Value>Dimensions</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Shipping.Measures.Dimensions.CantDeletePrimary">
-    <Value>The primary dimension can't be deleted.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Shipping.Measures.Dimensions.Description">
-    <Value>NOTE: if you change your primary dimension, then do not forget to update the appropriate ratios of the units</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Shipping.Measures.Dimensions.Fields.DisplayOrder">
-    <Value>Display order</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Shipping.Measures.Dimensions.Fields.IsPrimaryDimension">
-    <Value>Is primary dimension</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Shipping.Measures.Dimensions.Fields.MarkAsPrimaryDimension">
-    <Value>Mark as primary dimension</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Shipping.Measures.Dimensions.Fields.Name">
-    <Value>Name</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Shipping.Measures.Dimensions.Fields.Name.Required">
-    <Value>Please provide a name.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Shipping.Measures.Dimensions.Fields.Ratio">
-    <Value>Ratio to primary dimension</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Shipping.Measures.Dimensions.Fields.SystemKeyword">
-    <Value>System keyword</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Shipping.Measures.Dimensions.Fields.SystemKeyword.Required">
-    <Value>Please provide a system keyword.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Shipping.Measures.Weights">
-    <Value>Weights</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Shipping.Measures.Weights.CantDeletePrimary">
-    <Value>The primary weight can't be deleted.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Shipping.Measures.Weights.Description">
-    <Value>NOTE: if you change your primary weight, then do not forget to update the appropriate ratios of the units</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Shipping.Measures.Weights.Fields.DisplayOrder">
-    <Value>Display order</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Shipping.Measures.Weights.Fields.IsPrimaryWeight">
-    <Value>Is primary weight</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Shipping.Measures.Weights.Fields.MarkAsPrimaryWeight">
-    <Value>Mark as primary weight</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Shipping.Measures.Weights.Fields.Name">
-    <Value>Name</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Shipping.Measures.Weights.Fields.Name.Required">
-    <Value>Please provide a name.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Shipping.Measures.Weights.Fields.Ratio">
-    <Value>Ratio to primary weight</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Shipping.Measures.Weights.Fields.SystemKeyword">
-    <Value>System keyword</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Shipping.Measures.Weights.Fields.SystemKeyword.Required">
-    <Value>Please provide a system keyword.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Payment">
-    <Value>Payment</Value>
-  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.PaymentMethodsAndRestrictions">
+    <Value>Payment methods and restrictions</Value>
+  </LocaleResource>  
   <LocaleResource Name="Admin.Configuration.Payment.MethodRestrictions">
     <Value>Payment restrictions</Value>
   </LocaleResource>
@@ -6890,13 +6824,7 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.reCaptchaPublicKey.Hint">
     <Value>Enter reCAPTCHA public key (if enabled).</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.reCaptchaVersion">
-    <Value>reCAPTCHA version</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.reCaptchaVersion.Hint">
-    <Value>Select version of the reCAPTCHA.</Value>
-  </LocaleResource>
+  </LocaleResource>  
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SeoFriendlyUrlsForLanguagesEnabled">
     <Value>SEO friendly URLs with multiple languages enabled</Value>
   </LocaleResource>
@@ -8357,6 +8285,75 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Shipping.DeliveryDates.Updated">
     <Value>The delivery date has been updated successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Measures">
+    <Value>Measures</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Measures.Dimensions">
+    <Value>Dimensions</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Measures.Dimensions.CantDeletePrimary">
+    <Value>The primary dimension can't be deleted.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Measures.Dimensions.Description">
+    <Value>NOTE: if you change your primary dimension, then do not forget to update the appropriate ratios of the units</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Measures.Dimensions.Fields.DisplayOrder">
+    <Value>Display order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Measures.Dimensions.Fields.IsPrimaryDimension">
+    <Value>Is primary dimension</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Measures.Dimensions.Fields.MarkAsPrimaryDimension">
+    <Value>Mark as primary dimension</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Measures.Dimensions.Fields.Name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Measures.Dimensions.Fields.Name.Required">
+    <Value>Please provide a name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Measures.Dimensions.Fields.Ratio">
+    <Value>Ratio to primary dimension</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Measures.Dimensions.Fields.SystemKeyword">
+    <Value>System keyword</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Measures.Dimensions.Fields.SystemKeyword.Required">
+    <Value>Please provide a system keyword.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Measures.Weights">
+    <Value>Weights</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Measures.Weights.CantDeletePrimary">
+    <Value>The primary weight can't be deleted.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Measures.Weights.Description">
+    <Value>NOTE: if you change your primary weight, then do not forget to update the appropriate ratios of the units</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Measures.Weights.Fields.DisplayOrder">
+    <Value>Display order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Measures.Weights.Fields.IsPrimaryWeight">
+    <Value>Is primary weight</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Measures.Weights.Fields.MarkAsPrimaryWeight">
+    <Value>Mark as primary weight</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Measures.Weights.Fields.Name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Measures.Weights.Fields.Name.Required">
+    <Value>Please provide a name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Measures.Weights.Fields.Ratio">
+    <Value>Ratio to primary weight</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Measures.Weights.Fields.SystemKeyword">
+    <Value>System keyword</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Measures.Weights.Fields.SystemKeyword.Required">
+    <Value>Please provide a system keyword.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Shipping.Methods">
     <Value>Shipping methods</Value>
@@ -12187,7 +12184,7 @@
     <Value>Discount limitation</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Discounts.Fields.DiscountLimitation.Hint">
-    <Value>Choose the limitation of discount.</Value>
+    <Value>Choose the limitation of discount. This parameter will not be taken into account for recurring products/orders.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Discounts.Fields.DiscountPercentage">
     <Value>Discount percentage</Value>
@@ -14333,11 +14330,8 @@
   </LocaleResource>
   <LocaleResource Name="Common.Warning">
     <Value>Warning</Value>
-  </LocaleResource>
-  <LocaleResource Name="Common.WrongCaptcha">
-    <Value>The characters didn't match the picture. Please try again.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Common.WrongCaptchaV2">
+  </LocaleResource>  
+  <LocaleResource Name="Common.WrongCaptchaMessage">
     <Value>The reCAPTCHA response is invalid or malformed. Please try again.</Value>
   </LocaleResource>
   <LocaleResource Name="Common.WrongEmail">
@@ -14903,13 +14897,7 @@
   </LocaleResource>
   <LocaleResource Name="Enums.Nop.Services.Payments.RecurringPaymentType.NotSupported">
     <Value>Not supported</Value>
-  </LocaleResource>
-  <LocaleResource Name="Enums.Nop.Web.Framework.Security.Captcha.ReCaptchaVersion.Version1">
-    <Value>Version 1.0</Value>
-  </LocaleResource>
-  <LocaleResource Name="Enums.Nop.Web.Framework.Security.Captcha.ReCaptchaVersion.Version2">
-    <Value>Version 2.0</Value>
-  </LocaleResource>
+  </LocaleResource> 
   <LocaleResource Name="Nop.Web.Framework.Validators.MaxDecimal">
     <Value>The value is out of range. Maximum value is {0}.99</Value>
   </LocaleResource>  
@@ -16100,7 +16088,7 @@
   </LocaleResource>
   <LocaleResource Name="Permission.ManageCurrencies">
     <Value>Admin area. Manage Currencies</Value>
-  </LocaleResource>
+  </LocaleResource> 
   <LocaleResource Name="Permission.ManageCurrentCarts">
     <Value>Admin area. Manage Current Carts</Value>
   </LocaleResource>

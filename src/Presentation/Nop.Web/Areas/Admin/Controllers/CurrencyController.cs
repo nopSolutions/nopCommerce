@@ -221,7 +221,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //locales
                 UpdateLocales(currency, model);
 
-                //Stores
+                //stores
                 SaveStoreMappings(currency, model);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Currencies.Added"));
@@ -232,9 +232,10 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
             }
 
-            //If we got this far, something failed, redisplay form
+            //prepare model
             model = _currencyModelFactory.PrepareCurrencyModel(model, null, true);
 
+            //if we got this far, something failed, redisplay form
             return View(model);
         }
 
@@ -286,7 +287,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //locales
                 UpdateLocales(currency, model);
 
-                //Stores
+                //stores
                 SaveStoreMappings(currency, model);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Currencies.Updated"));
@@ -297,9 +298,10 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
             }
 
-            //If we got this far, something failed, redisplay form
+            //prepare model
             model = _currencyModelFactory.PrepareCurrencyModel(model, currency, true);
 
+            //if we got this far, something failed, redisplay form
             return View(model);
         }
 

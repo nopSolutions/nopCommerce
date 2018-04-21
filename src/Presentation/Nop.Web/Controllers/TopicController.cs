@@ -41,17 +41,19 @@ namespace Nop.Web.Controllers
         }
 
         #endregion
-        
+
         #region Methods
         
         public virtual IActionResult TopicDetails(int topicId)
         {
             var model = _topicModelFactory.PrepareTopicModelById(topicId);
-            if (model == null)
+            var hasAdminAccess = _permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && _permissionService.Authorize(StandardPermissionProvider.ManageTopics);
+            //access to Topics preview
+            if (model == null || (!model.Published && !hasAdminAccess))
                 return RedirectToRoute("HomePage");
-
+            
             //display "edit" (manage) link
-            if (_permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && _permissionService.Authorize(StandardPermissionProvider.ManageTopics))
+            if (hasAdminAccess)
                 DisplayEditLink(Url.Action("Edit", "Topic", new { id = model.Id, area = AreaNames.Admin }));
 
             //template
@@ -102,9 +104,10 @@ namespace Nop.Web.Controllers
                     error = _localizationService.GetResource("Topic.WrongPassword");
                 }
             }
+
             return Json(new { Authenticated = authResult, Title = title, Body = body, Error = error });
         }
-        
+
         #endregion
     }
 }

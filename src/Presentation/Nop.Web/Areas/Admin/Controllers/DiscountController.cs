@@ -144,20 +144,19 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 SuccessNotification(_localizationService.GetResource("Admin.Promotions.Discounts.Added"));
 
-                if (continueEditing)
-                {
-                    //selected tab
-                    SaveSelectedTabName();
+                if (!continueEditing)
+                    return RedirectToAction("List");
 
-                    return RedirectToAction("Edit", new { id = discount.Id });
-                }
+                //selected tab
+                SaveSelectedTabName();
 
-                return RedirectToAction("List");
+                return RedirectToAction("Edit", new { id = discount.Id });
             }
 
-            //If we got this far, something failed, redisplay form
+            //prepare model
             model = _discountModelFactory.PrepareDiscountModel(model, null, true);
 
+            //if we got this far, something failed, redisplay form
             return View(model);
         }
 
@@ -228,20 +227,19 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 SuccessNotification(_localizationService.GetResource("Admin.Promotions.Discounts.Updated"));
 
-                if (continueEditing)
-                {
-                    //selected tab
-                    SaveSelectedTabName();
+                if (!continueEditing)
+                    return RedirectToAction("List");
 
-                    return RedirectToAction("Edit", new { id = discount.Id });
-                }
+                //selected tab
+                SaveSelectedTabName();
 
-                return RedirectToAction("List");
+                return RedirectToAction("Edit", new { id = discount.Id });
             }
 
-            //If we got this far, something failed, redisplay form
+            //prepare model
             model = _discountModelFactory.PrepareDiscountModel(model, discount, true);
 
+            //if we got this far, something failed, redisplay form
             return View(model);
         }
 
@@ -296,7 +294,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             var url = $"{_webHelper.GetStoreLocation()}{discountRequirementRule.GetConfigurationUrl(discount.Id, discountRequirementId)}";
 
-            return Json(new { url = url });
+            return Json(new { url });
         }
 
         public virtual IActionResult GetDiscountRequirements(int discountId, int discountRequirementId,
@@ -415,12 +413,12 @@ namespace Nop.Web.Areas.Admin.Controllers
             discount.DiscountRequirements.Add(discountRequirementGroup);
             _discountService.UpdateDiscount(discount);
 
+            if (!string.IsNullOrEmpty(name))
+                return Json(new { Result = true, NewRequirementId = discountRequirementGroup.Id });
+
             //set identifier as group name (if not specified)
-            if (string.IsNullOrEmpty(name))
-            {
-                discountRequirementGroup.DiscountRequirementRuleSystemName = $"#{discountRequirementGroup.Id}";
-                _discountService.UpdateDiscount(discount);
-            }
+            discountRequirementGroup.DiscountRequirementRuleSystemName = $"#{discountRequirementGroup.Id}";
+            _discountService.UpdateDiscount(discount);
 
             return Json(new { Result = true, NewRequirementId = discountRequirementGroup.Id });
         }
@@ -599,13 +597,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             foreach (var id in model.SelectedCategoryIds)
             {
                 var category = _categoryService.GetCategoryById(id);
-                if (category != null)
-                {
-                    if (category.AppliedDiscounts.Count(d => d.Id == discount.Id) == 0)
-                        category.AppliedDiscounts.Add(discount);
+                if (category == null)
+                    continue;
 
-                    _categoryService.UpdateCategory(category);
-                }
+                if (category.AppliedDiscounts.Count(d => d.Id == discount.Id) == 0)
+                    category.AppliedDiscounts.Add(discount);
+
+                _categoryService.UpdateCategory(category);
             }
 
             ViewBag.RefreshPage = true;
@@ -692,13 +690,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             foreach (var id in model.SelectedManufacturerIds)
             {
                 var manufacturer = _manufacturerService.GetManufacturerById(id);
-                if (manufacturer != null)
-                {
-                    if (manufacturer.AppliedDiscounts.Count(d => d.Id == discount.Id) == 0)
-                        manufacturer.AppliedDiscounts.Add(discount);
+                if (manufacturer == null)
+                    continue;
 
-                    _manufacturerService.UpdateManufacturer(manufacturer);
-                }
+                if (manufacturer.AppliedDiscounts.Count(d => d.Id == discount.Id) == 0)
+                    manufacturer.AppliedDiscounts.Add(discount);
+
+                _manufacturerService.UpdateManufacturer(manufacturer);
             }
 
             ViewBag.RefreshPage = true;
@@ -733,9 +731,9 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             //try to get a discount with the specified id
-            var discount = _discountService.GetDiscountById(discountId)
+            var unused = _discountService.GetDiscountById(discountId)
                 ?? throw new ArgumentException("No discount found with the specified id", nameof(discountId));
-
+                
             //try to get a discount usage history entry with the specified id
             var discountUsageHistoryEntry = _discountService.GetDiscountUsageHistoryById(id)
                 ?? throw new ArgumentException("No discount usage history entry found with the specified id", nameof(id));

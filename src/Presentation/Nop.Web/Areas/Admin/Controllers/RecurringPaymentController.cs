@@ -108,20 +108,19 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 SuccessNotification(_localizationService.GetResource("Admin.RecurringPayments.Updated"));
 
-                if (continueEditing)
-                {
-                    //selected tab
-                    SaveSelectedTabName();
+                if (!continueEditing)
+                    return RedirectToAction("List");
 
-                    return RedirectToAction("Edit", new { id = payment.Id });
-                }
+                //selected tab
+                SaveSelectedTabName();
 
-                return RedirectToAction("List");
+                return RedirectToAction("Edit", new { id = payment.Id });
             }
 
-            //If we got this far, something failed, redisplay form
+            //prepare model
             model = _recurringPaymentModelFactory.PrepareRecurringPaymentModel(model, payment, true);
 
+            //if we got this far, something failed, redisplay form
             return View(model);
         }
 
@@ -173,9 +172,9 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             try
             {
-                var errors = _orderProcessingService.ProcessNextRecurringPayment(payment);
+                var errors = _orderProcessingService.ProcessNextRecurringPayment(payment).ToList();
                 if (errors.Any())
-                    errors.ToList().ForEach(error => ErrorNotification(error, false));
+                    errors.ForEach(error => ErrorNotification(error, false));
                 else
                     SuccessNotification(_localizationService.GetResource("Admin.RecurringPayments.NextPaymentProcessed"), false);
 

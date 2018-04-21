@@ -87,11 +87,11 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             var defaultEmailAccount = _emailAccountService.GetEmailAccountById(id);
-            if (defaultEmailAccount != null)
-            {
-                _emailAccountSettings.DefaultEmailAccountId = defaultEmailAccount.Id;
-                _settingService.SaveSetting(_emailAccountSettings);
-            }
+            if (defaultEmailAccount == null)
+                return RedirectToAction("List");
+
+            _emailAccountSettings.DefaultEmailAccountId = defaultEmailAccount.Id;
+            _settingService.SaveSetting(_emailAccountSettings);
 
             return RedirectToAction("List");
         }
@@ -130,9 +130,10 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return continueEditing ? RedirectToAction("Edit", new { id = emailAccount.Id }) : RedirectToAction("List");
             }
 
-            //If we got this far, something failed, redisplay form
+            //prepare model
             model = _emailAccountModelFactory.PrepareEmailAccountModel(model, null, true);
 
+            //if we got this far, something failed, redisplay form
             return View(model);
         }
 
@@ -178,9 +179,10 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return continueEditing ? RedirectToAction("Edit", new { id = emailAccount.Id }) : RedirectToAction("List");
             }
 
-            //If we got this far, something failed, redisplay form
+            //prepare model
             model = _emailAccountModelFactory.PrepareEmailAccountModel(model, emailAccount, true);
 
+            //if we got this far, something failed, redisplay form
             return View(model);
         }
 
@@ -239,9 +241,10 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ErrorNotification(exc.Message, false);
             }
 
-            //If we got this far, something failed, redisplay form
+            //prepare model
             model = _emailAccountModelFactory.PrepareEmailAccountModel(model, emailAccount, true);
 
+            //if we got this far, something failed, redisplay form
             return View(model);
         }
 

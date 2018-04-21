@@ -141,9 +141,10 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return continueEditing ? RedirectToAction("Edit", new { id = campaign.Id }) : RedirectToAction("List");
             }
 
-            //If we got this far, something failed, redisplay form
+            //prepare model
             model = _campaignModelFactory.PrepareCampaignModel(model, null, true);
 
+            //if we got this far, something failed, redisplay form
             return View(model);
         }
 
@@ -194,9 +195,10 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return continueEditing ? RedirectToAction("Edit", new { id = campaign.Id }) : RedirectToAction("List");
             }
 
-            //If we got this far, something failed, redisplay form
+            //prepare model
             model = _campaignModelFactory.PrepareCampaignModel(model, campaign, true);
 
+            //if we got this far, something failed, redisplay form
             return View(model);
         }
 
@@ -247,9 +249,10 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ErrorNotification(exc, false);
             }
 
-            //If we got this far, something failed, redisplay form
+            //prepare model
             model = _campaignModelFactory.PrepareCampaignModel(model, campaign, true);
 
+            //if we got this far, something failed, redisplay form
             return View(model);
         }
 
@@ -288,9 +291,10 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ErrorNotification(exc, false);
             }
 
-            //If we got this far, something failed, redisplay form
+            //prepare model
             model = _campaignModelFactory.PrepareCampaignModel(model, campaign, true);
 
+            //if we got this far, something failed, redisplay form
             return View(model);
         }
 

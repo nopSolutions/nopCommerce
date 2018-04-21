@@ -12,7 +12,7 @@ namespace Nop.Core.Caching
     /// <summary>
     /// Represents Redis connection wrapper implementation
     /// </summary>
-    public class RedisConnectionWrapper : IRedisConnectionWrapper
+    public class RedisConnectionWrapper : IRedisConnectionWrapper, ILocker
     {
         #region Fields
 

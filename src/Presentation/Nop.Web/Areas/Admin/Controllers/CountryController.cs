@@ -186,20 +186,19 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Countries.Added"));
 
-                if (continueEditing)
-                {
-                    //selected tab
-                    SaveSelectedTabName();
+                if (!continueEditing)
+                    return RedirectToAction("List");
 
-                    return RedirectToAction("Edit", new { id = country.Id });
-                }
+                //selected tab
+                SaveSelectedTabName();
 
-                return RedirectToAction("List");
+                return RedirectToAction("Edit", new { id = country.Id });
             }
 
-            //If we got this far, something failed, redisplay form
+            //prepare model
             model = _countryModelFactory.PrepareCountryModel(model, null, true);
 
+            //if we got this far, something failed, redisplay form
             return View(model);
         }
 
@@ -242,25 +241,24 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //locales
                 UpdateLocales(country, model);
 
-                //Stores
+                //stores
                 SaveStoreMappings(country, model);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Countries.Updated"));
 
-                if (continueEditing)
-                {
-                    //selected tab
-                    SaveSelectedTabName();
+                if (!continueEditing)
+                    return RedirectToAction("List");
 
-                    return RedirectToAction("Edit", new { id = country.Id });
-                }
+                //selected tab
+                SaveSelectedTabName();
 
-                return RedirectToAction("List");
+                return RedirectToAction("Edit", new { id = country.Id });
             }
 
-            //If we got this far, something failed, redisplay form
+            //prepare model
             model = _countryModelFactory.PrepareCountryModel(model, country, true);
 
+            //if we got this far, something failed, redisplay form
             return View(model);
         }
 
@@ -303,14 +301,14 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
                 return AccessDeniedView();
 
-            if (selectedIds != null)
+            if (selectedIds == null)
+                return Json(new { Result = true });
+
+            var countries = _countryService.GetCountriesByIds(selectedIds.ToArray());
+            foreach (var country in countries)
             {
-                var countries = _countryService.GetCountriesByIds(selectedIds.ToArray());
-                foreach (var country in countries)
-                {
-                    country.Published = true;
-                    _countryService.UpdateCountry(country);
-                }
+                country.Published = true;
+                _countryService.UpdateCountry(country);
             }
 
             return Json(new { Result = true });
@@ -322,15 +320,16 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
                 return AccessDeniedView();
 
-            if (selectedIds != null)
+            if (selectedIds == null)
+                return Json(new { Result = true });
+
+            var countries = _countryService.GetCountriesByIds(selectedIds.ToArray());
+            foreach (var country in countries)
             {
-                var countries = _countryService.GetCountriesByIds(selectedIds.ToArray());
-                foreach (var country in countries)
-                {
-                    country.Published = false;
-                    _countryService.UpdateCountry(country);
-                }
+                country.Published = false;
+                _countryService.UpdateCountry(country);
             }
+
             return Json(new { Result = true });
         }
 
@@ -398,9 +397,10 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return View(model);
             }
 
-            //If we got this far, something failed, redisplay form
+            //prepare model
             model = _countryModelFactory.PrepareStateProvinceModel(model, country, null, true);
 
+            //if we got this far, something failed, redisplay form
             return View(model);
         }
 
@@ -457,9 +457,10 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return View(model);
             }
 
-            //If we got this far, something failed, redisplay form
+            //prepare model
             model = _countryModelFactory.PrepareStateProvinceModel(model, country, state, true);
 
+            //if we got this far, something failed, redisplay form
             return View(model);
         }
 
@@ -537,6 +538,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     }
                 }
             }
+
             return Json(result);
         }
 
@@ -549,7 +551,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
                 return AccessDeniedView();
 
-            var fileName = $"states_{DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss")}_{CommonHelper.GenerateRandomDigitCode(4)}.txt";
+            var fileName = $"states_{DateTime.Now:yyyy-MM-dd-HH-mm-ss}_{CommonHelper.GenerateRandomDigitCode(4)}.txt";
 
             var states = _stateProvinceService.GetStateProvinces(true);
             var result = _exportManager.ExportStatesToTxt(states);

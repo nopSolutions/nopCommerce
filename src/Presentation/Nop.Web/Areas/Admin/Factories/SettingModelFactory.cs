@@ -412,9 +412,6 @@ namespace Nop.Web.Areas.Admin.Factories
             //fill in model values from the entity
             var model = captchaSettings.ToModel();
 
-            //fill in additional values (not existing in the entity)
-            model.AvailableReCaptchaVersions = ReCaptchaVersion.Version1.ToSelectList(false).ToList();
-
             return model;
         }
 

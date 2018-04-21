@@ -1,8 +1,5 @@
-﻿using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Nop.Web.Framework.Models;
+﻿using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Mvc.ModelBinding;
-using Nop.Web.Framework.Security.Captcha;
 
 namespace Nop.Web.Areas.Admin.Models.Settings
 {
@@ -11,15 +8,6 @@ namespace Nop.Web.Areas.Admin.Models.Settings
     /// </summary>
     public partial class CaptchaSettingsModel : BaseNopModel
     {
-        #region Ctor
-
-        public CaptchaSettingsModel()
-        {
-            this.AvailableReCaptchaVersions = new List<SelectListItem>();
-        }
-
-        #endregion
-
         #region Properties
 
         [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.CaptchaEnabled")]
@@ -68,13 +56,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
 
         [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.reCaptchaPrivateKey")]
         public string ReCaptchaPrivateKey { get; set; }
-        public bool ReCaptchaPrivateKey_OverrideForStore { get; set; }
-
-        [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.reCaptchaVersion")]
-        public ReCaptchaVersion ReCaptchaVersion { get; set; }
-        public bool ReCaptchaVersion_OverrideForStore { get; set; }
-
-        public IList<SelectListItem> AvailableReCaptchaVersions { get; set; }
+        public bool ReCaptchaPrivateKey_OverrideForStore { get; set; }        
 
         #endregion
     }

@@ -147,20 +147,19 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Languages.Added"));
 
-                if (continueEditing)
-                {
-                    //selected tab
-                    SaveSelectedTabName();
+                if (!continueEditing)
+                    return RedirectToAction("List");
 
-                    return RedirectToAction("Edit", new { id = language.Id });
-                }
+                //selected tab
+                SaveSelectedTabName();
 
-                return RedirectToAction("List");
+                return RedirectToAction("Edit", new { id = language.Id });
             }
 
-            //If we got this far, something failed, redisplay form
+            //prepare model
             model = _languageModelFactory.PrepareLanguageModel(model, null, true);
 
+            //if we got this far, something failed, redisplay form
             return View(model);
         }
 
@@ -215,20 +214,19 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //notification
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Languages.Updated"));
 
-                if (continueEditing)
-                {
-                    //selected tab
-                    SaveSelectedTabName();
+                if (!continueEditing)
+                    return RedirectToAction("List");
 
-                    return RedirectToAction("Edit", new { id = language.Id });
-                }
+                //selected tab
+                SaveSelectedTabName();
 
-                return RedirectToAction("List");
+                return RedirectToAction("Edit", new { id = language.Id });
             }
 
-            //If we got this far, something failed, redisplay form
+            //prepare model
             model = _languageModelFactory.PrepareLanguageModel(model, language, true);
 
+            //if we got this far, something failed, redisplay form
             return View(model);
         }
 
@@ -358,9 +356,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             var res = _localizationService.GetLocaleStringResourceByName(model.Name, model.LanguageId, false);
             if (res == null)
             {
-                var resource = new LocaleStringResource { LanguageId = languageId };
-                resource.ResourceName = model.Name;
-                resource.ResourceValue = model.Value;
+                var resource = new LocaleStringResource
+                {
+                    LanguageId = languageId,
+                    ResourceName = model.Name,
+                    ResourceValue = model.Value
+                };
+
                 _localizationService.InsertLocaleStringResource(resource);
             }
             else
@@ -432,7 +434,6 @@ namespace Nop.Web.Areas.Admin.Controllers
                         var content = sr.ReadToEnd();
                         _localizationService.ImportResourcesFromXml(language, content);
                     }
-
                 }
                 else
                 {

@@ -18,7 +18,7 @@ namespace Nop.Web.Framework.Security.Captcha
         {
             var captchaSettings = EngineContext.Current.Resolve<CaptchaSettings>();
 
-            var captchaControl = new GRecaptchaControl(captchaSettings.ReCaptchaVersion)
+            var captchaControl = new GRecaptchaControl
             {
                 Theme = captchaSettings.ReCaptchaTheme,
                 Id = "recaptcha",
