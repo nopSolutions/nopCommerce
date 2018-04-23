@@ -12,7 +12,6 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Tax;
-using Nop.Services.Affiliates;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.ExportImport;
@@ -153,7 +152,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return _localizationService.GetResource("Admin.Customers.Customers.AddCustomerToGuestsOrRegisteredRoleError");
 
             //no errors
-            return "";
+            return string.Empty;
         }
 
         protected virtual string ParseCustomCustomerAttributes(IFormCollection form)
@@ -161,66 +160,65 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (form == null)
                 throw new ArgumentNullException(nameof(form));
 
-            var attributesXml = "";
+            var attributesXml = string.Empty;
             var customerAttributes = _customerAttributeService.GetAllCustomerAttributes();
             foreach (var attribute in customerAttributes)
             {
                 var controlId = $"customer_attribute_{attribute.Id}";
+                StringValues ctrlAttributes;
+
                 switch (attribute.AttributeControlType)
                 {
                     case AttributeControlType.DropdownList:
                     case AttributeControlType.RadioList:
+                        ctrlAttributes = form[controlId];
+                        if (!StringValues.IsNullOrEmpty(ctrlAttributes))
                         {
-                            var ctrlAttributes = form[controlId];
-                            if (!StringValues.IsNullOrEmpty(ctrlAttributes))
+                            var selectedAttributeId = int.Parse(ctrlAttributes);
+                            if (selectedAttributeId > 0)
+                                attributesXml = _customerAttributeParser.AddCustomerAttribute(attributesXml,
+                                    attribute, selectedAttributeId.ToString());
+                        }
+
+                        break;
+                    case AttributeControlType.Checkboxes:
+                        var cblAttributes = form[controlId];
+                        if (!StringValues.IsNullOrEmpty(cblAttributes))
+                        {
+                            foreach (var item in cblAttributes.ToString()
+                                .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                             {
-                                var selectedAttributeId = int.Parse(ctrlAttributes);
+                                var selectedAttributeId = int.Parse(item);
                                 if (selectedAttributeId > 0)
                                     attributesXml = _customerAttributeParser.AddCustomerAttribute(attributesXml,
                                         attribute, selectedAttributeId.ToString());
                             }
                         }
-                        break;
-                    case AttributeControlType.Checkboxes:
-                        {
-                            var cblAttributes = form[controlId];
-                            if (!StringValues.IsNullOrEmpty(cblAttributes))
-                            {
-                                foreach (var item in cblAttributes.ToString().Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
-                                {
-                                    var selectedAttributeId = int.Parse(item);
-                                    if (selectedAttributeId > 0)
-                                        attributesXml = _customerAttributeParser.AddCustomerAttribute(attributesXml,
-                                            attribute, selectedAttributeId.ToString());
-                                }
-                            }
-                        }
+
                         break;
                     case AttributeControlType.ReadonlyCheckboxes:
+                        //load read-only (already server-side selected) values
+                        var attributeValues = _customerAttributeService.GetCustomerAttributeValues(attribute.Id);
+                        foreach (var selectedAttributeId in attributeValues
+                            .Where(v => v.IsPreSelected)
+                            .Select(v => v.Id)
+                            .ToList())
                         {
-                            //load read-only (already server-side selected) values
-                            var attributeValues = _customerAttributeService.GetCustomerAttributeValues(attribute.Id);
-                            foreach (var selectedAttributeId in attributeValues
-                                .Where(v => v.IsPreSelected)
-                                .Select(v => v.Id)
-                                .ToList())
-                            {
-                                attributesXml = _customerAttributeParser.AddCustomerAttribute(attributesXml,
-                                            attribute, selectedAttributeId.ToString());
-                            }
+                            attributesXml = _customerAttributeParser.AddCustomerAttribute(attributesXml,
+                                attribute, selectedAttributeId.ToString());
                         }
+
                         break;
                     case AttributeControlType.TextBox:
                     case AttributeControlType.MultilineTextbox:
+                        ctrlAttributes = form[controlId];
+                        if (!StringValues.IsNullOrEmpty(ctrlAttributes))
                         {
-                            var ctrlAttributes = form[controlId];
-                            if (!StringValues.IsNullOrEmpty(ctrlAttributes))
-                            {
-                                var enteredText = ctrlAttributes.ToString().Trim();
-                                attributesXml = _customerAttributeParser.AddCustomerAttribute(attributesXml,
-                                    attribute, enteredText);
-                            }
+                            var enteredText = ctrlAttributes.ToString().Trim();
+                            attributesXml = _customerAttributeParser.AddCustomerAttribute(attributesXml,
+                                attribute, enteredText);
                         }
+
                         break;
                     case AttributeControlType.Datepicker:
                     case AttributeControlType.ColorSquares:
@@ -293,12 +291,12 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             if (!string.IsNullOrWhiteSpace(model.Email) && _customerService.GetCustomerByEmail(model.Email) != null)
-                ModelState.AddModelError("", "Email is already registered");
+                ModelState.AddModelError(string.Empty, "Email is already registered");
 
             if (!string.IsNullOrWhiteSpace(model.Username) && _customerSettings.UsernamesEnabled &&
                 _customerService.GetCustomerByUsername(model.Username) != null)
             {
-                ModelState.AddModelError("", "Username is already registered");
+                ModelState.AddModelError(string.Empty, "Username is already registered");
             }
 
             //validate customer roles
@@ -310,7 +308,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             var customerRolesError = ValidateCustomerRoles(newCustomerRoles);
             if (!string.IsNullOrEmpty(customerRolesError))
             {
-                ModelState.AddModelError("", customerRolesError);
+                ModelState.AddModelError(string.Empty, customerRolesError);
                 ErrorNotification(customerRolesError, false);
             }
 
@@ -318,7 +316,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (newCustomerRoles.Any() && newCustomerRoles.FirstOrDefault(c => c.SystemName == SystemCustomerRoleNames.Registered) != null &&
                 !CommonHelper.IsValidEmail(model.Email))
             {
-                ModelState.AddModelError("", _localizationService.GetResource("Admin.Customers.Customers.ValidEmailRequiredRegisteredRole"));
+                ModelState.AddModelError(string.Empty, _localizationService.GetResource("Admin.Customers.Customers.ValidEmailRequiredRegisteredRole"));
                 ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.ValidEmailRequiredRegisteredRole"), false);
             }
 
@@ -329,7 +327,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 var customerAttributeWarnings = _customerAttributeParser.GetAttributeWarnings(customerAttributesXml);
                 foreach (var error in customerAttributeWarnings)
                 {
-                    ModelState.AddModelError("", error);
+                    ModelState.AddModelError(string.Empty, error);
                 }
             }
 
@@ -439,8 +437,8 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                     customer.CustomerRoles.Add(customerRole);
                 }
-                _customerService.UpdateCustomer(customer);
 
+                _customerService.UpdateCustomer(customer);
 
                 //ensure that a customer with a vendor associated is not in "Administrators" role
                 //otherwise, he won't have access to other functionality in admin area
@@ -469,20 +467,19 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 SuccessNotification(_localizationService.GetResource("Admin.Customers.Customers.Added"));
 
-                if (continueEditing)
-                {
-                    //selected tab
-                    SaveSelectedTabName();
+                if (!continueEditing)
+                    return RedirectToAction("List");
 
-                    return RedirectToAction("Edit", new { id = customer.Id });
-                }
+                //selected tab
+                SaveSelectedTabName();
 
-                return RedirectToAction("List");
+                return RedirectToAction("Edit", new { id = customer.Id });
             }
 
-            //If we got this far, something failed, redisplay form
+            //prepare model
             model = _customerModelFactory.PrepareCustomerModel(model, null, true);
 
+            //if we got this far, something failed, redisplay form
             return View(model);
         }
 
@@ -523,7 +520,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             var customerRolesError = ValidateCustomerRoles(newCustomerRoles);
             if (!string.IsNullOrEmpty(customerRolesError))
             {
-                ModelState.AddModelError("", customerRolesError);
+                ModelState.AddModelError(string.Empty, customerRolesError);
                 ErrorNotification(customerRolesError, false);
             }
 
@@ -531,7 +528,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (newCustomerRoles.Any() && newCustomerRoles.FirstOrDefault(c => c.SystemName == SystemCustomerRoleNames.Registered) != null &&
                 !CommonHelper.IsValidEmail(model.Email))
             {
-                ModelState.AddModelError("", _localizationService.GetResource("Admin.Customers.Customers.ValidEmailRequiredRegisteredRole"));
+                ModelState.AddModelError(string.Empty, _localizationService.GetResource("Admin.Customers.Customers.ValidEmailRequiredRegisteredRole"));
                 ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.ValidEmailRequiredRegisteredRole"), false);
             }
 
@@ -542,7 +539,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 var customerAttributeWarnings = _customerAttributeParser.GetAttributeWarnings(customerAttributesXml);
                 foreach (var error in customerAttributeWarnings)
                 {
-                    ModelState.AddModelError("", error);
+                    ModelState.AddModelError(string.Empty, error);
                 }
             }
 
@@ -698,6 +695,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                                 customer.CustomerRoles.Remove(customerRole);
                         }
                     }
+
                     _customerService.UpdateCustomer(customer);
 
                     //ensure that a customer with a vendor associated is not in "Administrators" role
@@ -727,15 +725,13 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                     SuccessNotification(_localizationService.GetResource("Admin.Customers.Customers.Updated"));
 
-                    if (continueEditing)
-                    {
-                        //selected tab
-                        SaveSelectedTabName();
+                    if (!continueEditing)
+                        return RedirectToAction("List");
 
-                        return RedirectToAction("Edit", new { id = customer.Id });
-                    }
+                    //selected tab
+                    SaveSelectedTabName();
 
-                    return RedirectToAction("List");
+                    return RedirectToAction("Edit", new { id = customer.Id });
                 }
                 catch (Exception exc)
                 {
@@ -743,9 +739,10 @@ namespace Nop.Web.Areas.Admin.Controllers
                 }
             }
 
-            //If we got this far, something failed, redisplay form
+            //prepare model
             model = _customerModelFactory.PrepareCustomerModel(model, customer, true);
 
+            //if we got this far, something failed, redisplay form
             return View(model);
         }
 
@@ -768,17 +765,17 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return RedirectToAction("Edit", new { id = customer.Id });
             }
 
-            if (ModelState.IsValid)
-            {
-                var changePassRequest = new ChangePasswordRequest(model.Email,
-                    false, _customerSettings.DefaultPasswordFormat, model.Password);
-                var changePassResult = _customerRegistrationService.ChangePassword(changePassRequest);
-                if (changePassResult.Success)
-                    SuccessNotification(_localizationService.GetResource("Admin.Customers.Customers.PasswordChanged"));
-                else
-                    foreach (var error in changePassResult.Errors)
-                        ErrorNotification(error);
-            }
+            if (!ModelState.IsValid)
+                return RedirectToAction("Edit", new { id = customer.Id });
+
+            var changePassRequest = new ChangePasswordRequest(model.Email,
+                false, _customerSettings.DefaultPasswordFormat, model.Password);
+            var changePassResult = _customerRegistrationService.ChangePassword(changePassRequest);
+            if (changePassResult.Success)
+                SuccessNotification(_localizationService.GetResource("Admin.Customers.Customers.PasswordChanged"));
+            else
+                foreach (var error in changePassResult.Errors)
+                    ErrorNotification(error);
 
             return RedirectToAction("Edit", new { id = customer.Id });
         }
@@ -914,18 +911,16 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //activity log
             _customerActivityService.InsertActivity("Impersonation.Started",
-                string.Format(_localizationService.GetResource("ActivityLog.Impersonation.Started.StoreOwner"),
-                    customer.Email, customer.Id), customer);
+                string.Format(_localizationService.GetResource("ActivityLog.Impersonation.Started.StoreOwner"), customer.Email, customer.Id), customer);
             _customerActivityService.InsertActivity(customer, "Impersonation.Started",
-                string.Format(_localizationService.GetResource("ActivityLog.Impersonation.Started.Customer"),
-                    _workContext.CurrentCustomer.Email, _workContext.CurrentCustomer.Id), _workContext.CurrentCustomer);
+                string.Format(_localizationService.GetResource("ActivityLog.Impersonation.Started.Customer"), _workContext.CurrentCustomer.Email, _workContext.CurrentCustomer.Id), _workContext.CurrentCustomer);
 
             //ensure login is not required
             customer.RequireReLogin = false;
             _customerService.UpdateCustomer(customer);
             _genericAttributeService.SaveAttribute<int?>(_workContext.CurrentCustomer, SystemCustomerAttributeNames.ImpersonatedCustomerId, customer.Id);
 
-            return RedirectToAction("Index", "Home", new { area = "" });
+            return RedirectToAction("Index", "Home", new { area = string.Empty });
         }
 
         [HttpPost, ActionName("Edit")]
@@ -1005,7 +1000,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     Subject = model.SendEmail.Subject,
                     Body = model.SendEmail.Body,
                     CreatedOnUtc = DateTime.UtcNow,
-                    DontSendBeforeDateUtc = (model.SendEmail.SendImmediately || !model.SendEmail.DontSendBeforeDate.HasValue) ?
+                    DontSendBeforeDateUtc = model.SendEmail.SendImmediately || !model.SendEmail.DontSendBeforeDate.HasValue ?
                         null : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.SendEmail.DontSendBeforeDate.Value)
                 };
                 _queuedEmailService.InsertQueuedEmail(email);
@@ -1040,7 +1035,6 @@ namespace Nop.Web.Areas.Admin.Controllers
                     throw new NopException("PM subject is empty");
                 if (string.IsNullOrWhiteSpace(model.SendPm.Message))
                     throw new NopException("PM message is empty");
-
 
                 var privateMessage = new PrivateMessage
                 {
@@ -1198,7 +1192,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             var customAttributeWarnings = _addressAttributeParser.GetAttributeWarnings(customAttributes);
             foreach (var error in customAttributeWarnings)
             {
-                ModelState.AddModelError("", error);
+                ModelState.AddModelError(string.Empty, error);
             }
 
             if (ModelState.IsValid)
@@ -1220,9 +1214,10 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return RedirectToAction("AddressEdit", new { addressId = address.Id, customerId = model.CustomerId });
             }
 
-            //If we got this far, something failed, redisplay form
+            //prepare model
             model = _customerModelFactory.PrepareCustomerAddressModel(model, customer, null, true);
 
+            //if we got this far, something failed, redisplay form
             return View(model);
         }
 
@@ -1268,7 +1263,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             var customAttributeWarnings = _addressAttributeParser.GetAttributeWarnings(customAttributes);
             foreach (var error in customAttributeWarnings)
             {
-                ModelState.AddModelError("", error);
+                ModelState.AddModelError(string.Empty, error);
             }
 
             if (ModelState.IsValid)
@@ -1282,9 +1277,10 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return RedirectToAction("AddressEdit", new { addressId = model.Address.Id, customerId = model.CustomerId });
             }
 
-            //If we got this far, something failed, redisplay form
+            //prepare model
             model = _customerModelFactory.PrepareCustomerAddressModel(model, customer, address, true);
 
+            //if we got this far, something failed, redisplay form
             return View(model);
         }
 
@@ -1362,7 +1358,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult LoadCustomerStatistics(string period)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return Content("");
+                return Content(string.Empty);
 
             var result = new List<object>();
 
@@ -1393,8 +1389,8 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                         searchYearDateUser = searchYearDateUser.AddMonths(1);
                     }
-                    break;
 
+                    break;
                 case "month":
                     //month statistics
                     var monthAgoDt = nowDt.AddDays(-30);
@@ -1414,6 +1410,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                         searchMonthDateUser = searchMonthDateUser.AddDays(1);
                     }
+
                     break;
                 case "week":
                 default:
@@ -1435,6 +1432,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                         searchWeekDateUser = searchWeekDateUser.AddDays(1);
                     }
+
                     break;
             }
 
@@ -1518,8 +1516,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 username: model.SearchUsername,
                 firstName: model.SearchFirstName,
                 lastName: model.SearchLastName,
-                dayOfBirth: int.TryParse(model.SearchDayOfBirth, out int dayOfBirth) ? dayOfBirth : 0,
-                monthOfBirth: int.TryParse(model.SearchMonthOfBirth, out int monthOfBirth) ? monthOfBirth : 0,
+                dayOfBirth: int.TryParse(model.SearchDayOfBirth, out var dayOfBirth) ? dayOfBirth : 0,
+                monthOfBirth: int.TryParse(model.SearchMonthOfBirth, out var monthOfBirth) ? monthOfBirth : 0,
                 company: model.SearchCompany,
                 phone: model.SearchPhone,
                 zipPostalCode: model.SearchZipPostalCode);
@@ -1577,8 +1575,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 username: model.SearchUsername,
                 firstName: model.SearchFirstName,
                 lastName: model.SearchLastName,
-                dayOfBirth: int.TryParse(model.SearchDayOfBirth, out int dayOfBirth) ? dayOfBirth : 0,
-                monthOfBirth: int.TryParse(model.SearchMonthOfBirth, out int monthOfBirth) ? monthOfBirth : 0,
+                dayOfBirth: int.TryParse(model.SearchDayOfBirth, out var dayOfBirth) ? dayOfBirth : 0,
+                monthOfBirth: int.TryParse(model.SearchMonthOfBirth, out var monthOfBirth) ? monthOfBirth : 0,
                 company: model.SearchCompany,
                 phone: model.SearchPhone,
                 zipPostalCode: model.SearchZipPostalCode);

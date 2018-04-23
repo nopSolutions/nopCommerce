@@ -124,66 +124,63 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (form == null)
                 throw new ArgumentNullException(nameof(form));
 
-            var attributesXml = "";
+            var attributesXml = string.Empty;
             var vendorAttributes = _vendorAttributeService.GetAllVendorAttributes();
             foreach (var attribute in vendorAttributes)
             {
                 var controlId = $"vendor_attribute_{attribute.Id}";
+                StringValues ctrlAttributes;
                 switch (attribute.AttributeControlType)
                 {
                     case AttributeControlType.DropdownList:
                     case AttributeControlType.RadioList:
+                        ctrlAttributes = form[controlId];
+                        if (!StringValues.IsNullOrEmpty(ctrlAttributes))
                         {
-                            var ctrlAttributes = form[controlId];
-                            if (!StringValues.IsNullOrEmpty(ctrlAttributes))
+                            var selectedAttributeId = int.Parse(ctrlAttributes);
+                            if (selectedAttributeId > 0)
+                                attributesXml = _vendorAttributeParser.AddVendorAttribute(attributesXml,
+                                    attribute, selectedAttributeId.ToString());
+                        }
+
+                        break;
+                    case AttributeControlType.Checkboxes:
+                        var cblAttributes = form[controlId];
+                        if (!StringValues.IsNullOrEmpty(cblAttributes))
+                        {
+                            foreach (var item in cblAttributes.ToString().Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                             {
-                                var selectedAttributeId = int.Parse(ctrlAttributes);
+                                var selectedAttributeId = int.Parse(item);
                                 if (selectedAttributeId > 0)
                                     attributesXml = _vendorAttributeParser.AddVendorAttribute(attributesXml,
                                         attribute, selectedAttributeId.ToString());
                             }
                         }
-                        break;
-                    case AttributeControlType.Checkboxes:
-                        {
-                            var cblAttributes = form[controlId];
-                            if (!StringValues.IsNullOrEmpty(cblAttributes))
-                            {
-                                foreach (var item in cblAttributes.ToString().Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
-                                {
-                                    var selectedAttributeId = int.Parse(item);
-                                    if (selectedAttributeId > 0)
-                                        attributesXml = _vendorAttributeParser.AddVendorAttribute(attributesXml,
-                                            attribute, selectedAttributeId.ToString());
-                                }
-                            }
-                        }
+
                         break;
                     case AttributeControlType.ReadonlyCheckboxes:
+                        //load read-only (already server-side selected) values
+                        var attributeValues = _vendorAttributeService.GetVendorAttributeValues(attribute.Id);
+                        foreach (var selectedAttributeId in attributeValues
+                            .Where(v => v.IsPreSelected)
+                            .Select(v => v.Id)
+                            .ToList())
                         {
-                            //load read-only (already server-side selected) values
-                            var attributeValues = _vendorAttributeService.GetVendorAttributeValues(attribute.Id);
-                            foreach (var selectedAttributeId in attributeValues
-                                .Where(v => v.IsPreSelected)
-                                .Select(v => v.Id)
-                                .ToList())
-                            {
-                                attributesXml = _vendorAttributeParser.AddVendorAttribute(attributesXml,
-                                            attribute, selectedAttributeId.ToString());
-                            }
+                            attributesXml = _vendorAttributeParser.AddVendorAttribute(attributesXml,
+                                attribute, selectedAttributeId.ToString());
                         }
+
                         break;
                     case AttributeControlType.TextBox:
                     case AttributeControlType.MultilineTextbox:
+                        ctrlAttributes = form[controlId];
+                        if (!StringValues.IsNullOrEmpty(ctrlAttributes))
                         {
-                            var ctrlAttributes = form[controlId];
-                            if (!StringValues.IsNullOrEmpty(ctrlAttributes))
-                            {
-                                var enteredText = ctrlAttributes.ToString().Trim();
-                                attributesXml = _vendorAttributeParser.AddVendorAttribute(attributesXml,
-                                    attribute, enteredText);
-                            }
+                            var enteredText = ctrlAttributes.ToString().Trim();
+                            attributesXml = _vendorAttributeParser.AddVendorAttribute(attributesXml,
+                                attribute, enteredText);
                         }
+
                         break;
                     case AttributeControlType.Datepicker:
                     case AttributeControlType.ColorSquares:
@@ -290,20 +287,19 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 SuccessNotification(_localizationService.GetResource("Admin.Vendors.Added"));
 
-                if (continueEditing)
-                {
-                    //selected tab
-                    SaveSelectedTabName();
+                if (!continueEditing)
+                    return RedirectToAction("List");
 
-                    return RedirectToAction("Edit", new { id = vendor.Id });
-                }
+                //selected tab
+                SaveSelectedTabName();
 
-                return RedirectToAction("List");
+                return RedirectToAction("Edit", new { id = vendor.Id });
             }
 
-            //If we got this far, something failed, redisplay form
+            //prepare model
             model = _vendorModelFactory.PrepareVendorModel(model, null, true);
 
+            //if we got this far, something failed, redisplay form
             return View(model);
         }
 
@@ -401,20 +397,19 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 SuccessNotification(_localizationService.GetResource("Admin.Vendors.Updated"));
 
-                if (continueEditing)
-                {
-                    //selected tab
-                    SaveSelectedTabName();
+                if (!continueEditing)
+                    return RedirectToAction("List");
 
-                    return RedirectToAction("Edit", new { id = vendor.Id });
-                }
+                //selected tab
+                SaveSelectedTabName();
 
-                return RedirectToAction("List");
+                return RedirectToAction("Edit", new { id = vendor.Id });
             }
 
-            //If we got this far, something failed, redisplay form
+            //prepare model
             model = _vendorModelFactory.PrepareVendorModel(model, vendor, true);
 
+            //if we got this far, something failed, redisplay form
             return View(model);
         }
 
@@ -482,7 +477,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             var vendorNote = new VendorNote
             {
                 Note = message,
-                CreatedOnUtc = DateTime.UtcNow,
+                CreatedOnUtc = DateTime.UtcNow
             };
             vendor.VendorNotes.Add(vendorNote);
             _vendorService.UpdateVendor(vendor);

@@ -133,9 +133,10 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return continueEditing ? RedirectToAction("Edit", new { id = giftCard.Id }) : RedirectToAction("List");
             }
 
-            //If we got this far, something failed, redisplay form
+            //prepare model
             model = _giftCardModelFactory.PrepareGiftCardModel(model, null, true);
 
+            //if we got this far, something failed, redisplay form
             return View(model);
         }
 
@@ -172,7 +173,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             model.AmountStr = _priceFormatter.FormatPrice(giftCard.Amount, true, false);
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(giftCard.CreatedOnUtc, DateTimeKind.Utc);
             model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
-            model.PurchasedWithOrderNumber = giftCard.PurchasedWithOrderItem != null ? giftCard.PurchasedWithOrderItem.Order.CustomOrderNumber : null;
+            model.PurchasedWithOrderNumber = giftCard.PurchasedWithOrderItem?.Order.CustomOrderNumber;
 
             if (ModelState.IsValid)
             {
@@ -185,20 +186,19 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 SuccessNotification(_localizationService.GetResource("Admin.GiftCards.Updated"));
 
-                if (continueEditing)
-                {
-                    //selected tab
-                    SaveSelectedTabName();
+                if (!continueEditing)
+                    return RedirectToAction("List");
 
-                    return RedirectToAction("Edit", new { id = giftCard.Id });
-                }
+                //selected tab
+                SaveSelectedTabName();
 
-                return RedirectToAction("List");
+                return RedirectToAction("Edit", new { id = giftCard.Id });
             }
 
-            //If we got this far, something failed, redisplay form
+            //prepare model
             model = _giftCardModelFactory.PrepareGiftCardModel(model, giftCard, true);
 
+            //if we got this far, something failed, redisplay form
             return View(model);
         }
 
@@ -226,7 +226,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             model.AmountStr = _priceFormatter.FormatPrice(giftCard.Amount, true, false);
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(giftCard.CreatedOnUtc, DateTimeKind.Utc);
             model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
-            model.PurchasedWithOrderNumber = giftCard.PurchasedWithOrderItem != null ? giftCard.PurchasedWithOrderItem.Order.CustomOrderNumber : null;
+            model.PurchasedWithOrderNumber = giftCard.PurchasedWithOrderItem?.Order.CustomOrderNumber;
 
             try
             {
@@ -237,7 +237,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     throw new NopException("Sender email is not valid");
 
                 var languageId = 0;
-                var order = giftCard.PurchasedWithOrderItem != null ? giftCard.PurchasedWithOrderItem.Order : null;
+                var order = giftCard.PurchasedWithOrderItem?.Order;
                 if (order != null)
                 {
                     var customerLang = _languageService.GetLanguageById(order.CustomerLanguageId);
@@ -250,6 +250,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 {
                     languageId = _localizationSettings.DefaultAdminLanguageId;
                 }
+
                 var queuedEmailIds = _workflowMessageService.SendGiftCardNotification(giftCard, languageId);
                 if (queuedEmailIds.Any())
                 {

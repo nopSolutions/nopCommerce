@@ -125,9 +125,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             else if (model.ActiveId == 2)
                 isActive = false;
 
-            var startDateValue = (model.StartDate == null) ? null
+            var startDateValue = model.StartDate == null ? null
                 : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
-            var endDateValue = (model.EndDate == null) ? null
+            var endDateValue = model.EndDate == null ? null
                 : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
 
             var subscriptions = _newsLetterSubscriptionService.GetAllNewsLetterSubscriptions(model.SearchEmail,

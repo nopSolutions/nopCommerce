@@ -1,7 +1,5 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core.Domain.Topics;
 using Nop.Services.Customers;
 using Nop.Services.Localization;
@@ -31,7 +29,6 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly IStoreService _storeService;
         private readonly ITopicModelFactory _topicModelFactory;
         private readonly ITopicService _topicService;
-        private readonly ITopicTemplateService _topicTemplateService;
         private readonly IUrlRecordService _urlRecordService;
 
         #endregion Fields
@@ -48,7 +45,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             IStoreService storeService,
             ITopicModelFactory topicModelFactory,
             ITopicService topicService,
-            ITopicTemplateService topicTemplateService,
             IUrlRecordService urlRecordService)
         {
             this._aclService = aclService;
@@ -61,7 +57,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             this._storeService = storeService;
             this._topicModelFactory = topicModelFactory;
             this._topicService = topicService;
-            this._topicTemplateService = topicTemplateService;
             this._urlRecordService = urlRecordService;
         }
 
@@ -220,7 +215,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //ACL (customer roles)
                 SaveTopicAcl(topic, model);
 
-                //Stores
+                //stores
                 SaveStoreMappings(topic, model);
 
                 //locales
@@ -232,21 +227,19 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _customerActivityService.InsertActivity("AddNewTopic",
                     string.Format(_localizationService.GetResource("ActivityLog.AddNewTopic"), topic.Title ?? topic.SystemName), topic);
 
-                if (continueEditing)
-                {
-                    //selected tab
-                    SaveSelectedTabName();
+                if (!continueEditing)
+                    return RedirectToAction("List");
 
-                    return RedirectToAction("Edit", new { id = topic.Id });
-                }
+                //selected tab
+                SaveSelectedTabName();
 
-                return RedirectToAction("List");
-
+                return RedirectToAction("Edit", new { id = topic.Id });
             }
 
-            //If we got this far, something failed, redisplay form
+            //prepare model
             model = _topicModelFactory.PrepareTopicModel(model, null, true);
 
+            //if we got this far, something failed, redisplay form
             return View(model);
         }
 
@@ -292,7 +285,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //ACL (customer roles)
                 SaveTopicAcl(topic, model);
 
-                //Stores
+                //stores
                 SaveStoreMappings(topic, model);
 
                 //locales
@@ -304,20 +297,19 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _customerActivityService.InsertActivity("EditTopic",
                     string.Format(_localizationService.GetResource("ActivityLog.EditTopic"), topic.Title ?? topic.SystemName), topic);
 
-                if (continueEditing)
-                {
-                    //selected tab
-                    SaveSelectedTabName();
+                if (!continueEditing)
+                    return RedirectToAction("List");
 
-                    return RedirectToAction("Edit", new { id = topic.Id });
-                }
+                //selected tab
+                SaveSelectedTabName();
 
-                return RedirectToAction("List");
+                return RedirectToAction("Edit", new { id = topic.Id });
             }
 
-            //If we got this far, something failed, redisplay form
+            //prepare model
             model = _topicModelFactory.PrepareTopicModel(model, topic, true);
 
+            //if we got this far, something failed, redisplay form
             return View(model);
         }
 

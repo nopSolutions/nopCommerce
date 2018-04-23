@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewEngines;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
@@ -96,12 +97,14 @@ namespace Nop.Web.Framework.TagHelpers.Admin
             //clear the output
             output.SuppressOutput();
 
+            //container for additional attributes
+            var htmlAttributes = new Dictionary<string, object>();
+
             //disabled attribute
             bool.TryParse(IsDisabled, out bool disabled);
             if (disabled)
             {
-                var d = new TagHelperAttribute("disabled", "disabled");
-                output.Attributes.Add(d);
+                htmlAttributes.Add("disabled", "disabled");
             }
 
             //required asterisk
@@ -118,10 +121,9 @@ namespace Nop.Web.Framework.TagHelpers.Admin
 
             //add form-control class
             bool.TryParse(RenderFormControlClass, out bool renderFormControlClass);
-            object htmlAttributes = null;
             if (string.IsNullOrEmpty(RenderFormControlClass) && For.Metadata.ModelType.Name.Equals("String") || renderFormControlClass)
-                htmlAttributes = new {@class = "form-control"};
-            
+                htmlAttributes.Add("class", "form-control");
+
             //generate editor
 
             //we have to invoke strong typed "EditorFor" method of HtmlHelper<TModel>

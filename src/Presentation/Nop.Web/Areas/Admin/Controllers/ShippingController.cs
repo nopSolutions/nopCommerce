@@ -151,6 +151,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     _settingService.SaveSetting(_shippingSettings);
                 }
             }
+
             var pluginDescriptor = srcm.PluginDescriptor;
 
             //display order
@@ -217,6 +218,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     _settingService.SaveSetting(_shippingSettings);
                 }
             }
+
             var pluginDescriptor = pickupPointProvider.PluginDescriptor;
             pluginDescriptor.DisplayOrder = model.DisplayOrder;
 
@@ -285,9 +287,10 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return continueEditing ? RedirectToAction("EditMethod", new { id = sm.Id }) : RedirectToAction("Methods");
             }
 
-            //If we got this far, something failed, redisplay form
+            //prepare model
             model = _shippingModelFactory.PrepareShippingMethodModel(model, null, true);
 
+            //if we got this far, something failed, redisplay form
             return View(model);
         }
 
@@ -331,9 +334,10 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return continueEditing ? RedirectToAction("EditMethod", shippingMethod.Id) : RedirectToAction("Methods");
             }
 
-            //If we got this far, something failed, redisplay form
+            //prepare model
             model = _shippingModelFactory.PrepareShippingMethodModel(model, shippingMethod, true);
-
+            
+            //if we got this far, something failed, redisplay form
             return View(model);
         }
 
@@ -416,9 +420,10 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return continueEditing ? RedirectToAction("EditDeliveryDate", new { id = deliveryDate.Id }) : RedirectToAction("DatesAndRanges");
             }
 
-            //If we got this far, something failed, redisplay form
+            //prepare model
             model = _shippingModelFactory.PrepareDeliveryDateModel(model, null, true);
 
+            //if we got this far, something failed, redisplay form
             return View(model);
         }
 
@@ -462,9 +467,10 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return continueEditing ? RedirectToAction("EditDeliveryDate", deliveryDate.Id) : RedirectToAction("DatesAndRanges");
             }
 
-            //If we got this far, something failed, redisplay form
+            //prepare model
             model = _shippingModelFactory.PrepareDeliveryDateModel(model, deliveryDate, true);
 
+            //if we got this far, something failed, redisplay form
             return View(model);
         }
 
@@ -532,9 +538,10 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return continueEditing ? RedirectToAction("EditProductAvailabilityRange", new { id = productAvailabilityRange.Id }) : RedirectToAction("DatesAndRanges");
             }
 
-            //If we got this far, something failed, redisplay form
+            //prepare model
             model = _shippingModelFactory.PrepareProductAvailabilityRangeModel(model, null, true);
 
+            //if we got this far, something failed, redisplay form
             return View(model);
         }
 
@@ -578,9 +585,10 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return continueEditing ? RedirectToAction("EditProductAvailabilityRange", productAvailabilityRange.Id) : RedirectToAction("DatesAndRanges");
             }
 
-            //If we got this far, something failed, redisplay form
+            //prepare model
             model = _shippingModelFactory.PrepareProductAvailabilityRangeModel(model, productAvailabilityRange, true);
 
+            //if we got this far, something failed, redisplay form
             return View(model);
         }
 
@@ -670,9 +678,10 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return continueEditing ? RedirectToAction("EditWarehouse", new { id = warehouse.Id }) : RedirectToAction("Warehouses");
             }
 
-            //If we got this far, something failed, redisplay form
+            //prepare model
             model = _shippingModelFactory.PrepareWarehouseModel(model, null, true);
 
+            //if we got this far, something failed, redisplay form
             return View(model);
         }
 
@@ -708,7 +717,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 var address = _addressService.GetAddressById(warehouse.AddressId) ??
                     new Core.Domain.Common.Address
                     {
-                        CreatedOnUtc = DateTime.UtcNow,
+                        CreatedOnUtc = DateTime.UtcNow
                     };
                 address = model.Address.ToEntity(address);
                 if (address.Id > 0)
@@ -731,9 +740,10 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return continueEditing ? RedirectToAction("EditWarehouse", warehouse.Id) : RedirectToAction("Warehouses");
             }
 
-            //If we got this far, something failed, redisplay form
+            //prepare model
             model = _shippingModelFactory.PrepareWarehouseModel(model, warehouse, true);
 
+            //if we got this far, something failed, redisplay form
             return View(model);
         }
 
@@ -797,19 +807,18 @@ namespace Nop.Web.Areas.Admin.Controllers
                     var restrict = countryIdsToRestrict.Contains(country.Id);
                     if (restrict)
                     {
-                        if (shippingMethod.RestrictedCountries.FirstOrDefault(c => c.Id == country.Id) == null)
-                        {
-                            shippingMethod.RestrictedCountries.Add(country);
-                            _shippingService.UpdateShippingMethod(shippingMethod);
-                        }
+                        if (shippingMethod.RestrictedCountries.FirstOrDefault(c => c.Id == country.Id) != null)
+                            continue;
+
+                        shippingMethod.RestrictedCountries.Add(country);
+                        _shippingService.UpdateShippingMethod(shippingMethod);
                     }
                     else
                     {
-                        if (shippingMethod.RestrictedCountries.FirstOrDefault(c => c.Id == country.Id) != null)
-                        {
-                            shippingMethod.RestrictedCountries.Remove(country);
-                            _shippingService.UpdateShippingMethod(shippingMethod);
-                        }
+                        if (shippingMethod.RestrictedCountries.FirstOrDefault(c => c.Id == country.Id) == null)
+                            continue;
+                        shippingMethod.RestrictedCountries.Remove(country);
+                        _shippingService.UpdateShippingMethod(shippingMethod);
                     }
                 }
             }

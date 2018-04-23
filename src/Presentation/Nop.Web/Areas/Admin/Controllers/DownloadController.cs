@@ -81,7 +81,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 {
                     success = false,
                     message = "No file uploaded",
-                    downloadGuid = Guid.Empty,
+                    downloadGuid = Guid.Empty
                 });
             }
 
@@ -104,7 +104,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 DownloadGuid = Guid.NewGuid(),
                 UseDownloadUrl = false,
-                DownloadUrl = "",
+                DownloadUrl = string.Empty,
                 DownloadBinary = fileBinary,
                 ContentType = contentType,
                 //we store filename without extension for downloads
@@ -118,7 +118,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //otherwise some browsers will pop-up a "Save As" dialog.
             return Json(new { success = true, 
                 downloadId = download.Id, 
-                downloadUrl = Url.Action("DownloadFile", new { downloadGuid= download.DownloadGuid }) });
+                downloadUrl = Url.Action("DownloadFile", new { downloadGuid = download.DownloadGuid }) });
         }
 
         #endregion

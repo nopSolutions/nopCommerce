@@ -127,6 +127,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual void SaveConditionAttributes(CheckoutAttribute checkoutAttribute, CheckoutAttributeModel model)
         {
             string attributesXml = null;
+
             if (model.ConditionModel.EnableCondition)
             {
                 var attribute = _checkoutAttributeService.GetCheckoutAttributeById(model.ConditionModel.SelectedAttributeId);
@@ -141,26 +142,28 @@ namespace Nop.Web.Areas.Admin.Controllers
                             {
                                 var selectedAttribute = model.ConditionModel.ConditionAttributes
                                     .FirstOrDefault(x => x.Id == model.ConditionModel.SelectedAttributeId);
-                                var selectedValue = selectedAttribute != null ? selectedAttribute.SelectedValueId : null;
-                                if (!string.IsNullOrEmpty(selectedValue))
-                                    attributesXml = _checkoutAttributeParser.AddCheckoutAttribute(attributesXml, attribute, selectedValue);
-                                else
-                                    //for conditions we should empty values save even when nothing is selected
-                                    //otherwise "attributesXml" will be empty
-                                    //hence we won't be able to find a selected attribute
-                                    attributesXml = _checkoutAttributeParser.AddCheckoutAttribute(attributesXml, attribute, string.Empty);
+                                var selectedValue = selectedAttribute?.SelectedValueId;
+
+                                //for conditions we should empty values save even when nothing is selected
+                                //otherwise "attributesXml" will be empty
+                                //hence we won't be able to find a selected attribute
+                                attributesXml = _checkoutAttributeParser.AddCheckoutAttribute(null, attribute, string.IsNullOrEmpty(selectedValue) ? string.Empty : selectedValue);
                             }
                             break;
                         case AttributeControlType.Checkboxes:
                             {
                                 var selectedAttribute = model.ConditionModel.ConditionAttributes
                                     .FirstOrDefault(x => x.Id == model.ConditionModel.SelectedAttributeId);
-                                var selectedValues = selectedAttribute != null ? selectedAttribute.Values.Where(x => x.Selected).Select(x => x.Value) : null;
-                                if (selectedValues.Any())
+                                var selectedValues = selectedAttribute?.Values
+                                    .Where(x => x.Selected)
+                                    .Select(x => x.Value)
+                                    .ToList();
+
+                                if (selectedValues?.Any() ?? false)
                                     foreach (var value in selectedValues)
                                         attributesXml = _checkoutAttributeParser.AddCheckoutAttribute(attributesXml, attribute, value);
                                 else
-                                    attributesXml = _checkoutAttributeParser.AddCheckoutAttribute(attributesXml, attribute, string.Empty);
+                                    attributesXml = _checkoutAttributeParser.AddCheckoutAttribute(null, attribute, string.Empty);
                             }
                             break;
                         case AttributeControlType.ReadonlyCheckboxes:
@@ -174,6 +177,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     }
                 }
             }
+
             checkoutAttribute.ConditionAttributeXml = attributesXml;
         }
 
@@ -234,7 +238,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //locales
                 UpdateAttributeLocales(checkoutAttribute, model);
 
-                //Stores
+                //stores
                 SaveStoreMappings(checkoutAttribute, model);
 
                 //activity log
@@ -243,20 +247,19 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 SuccessNotification(_localizationService.GetResource("Admin.Catalog.Attributes.CheckoutAttributes.Added"));
 
-                if (continueEditing)
-                {
-                    //selected tab
-                    SaveSelectedTabName();
+                if (!continueEditing)
+                    return RedirectToAction("List");
 
-                    return RedirectToAction("Edit", new { id = checkoutAttribute.Id });
-                }
+                //selected tab
+                SaveSelectedTabName();
 
-                return RedirectToAction("List");
+                return RedirectToAction("Edit", new { id = checkoutAttribute.Id });
             }
 
-            //If we got this far, something failed, redisplay form
+            //prepare model
             model = _checkoutAttributeModelFactory.PrepareCheckoutAttributeModel(model, null, true);
 
+            //if we got this far, something failed, redisplay form
             return View(model);
         }
 
@@ -296,7 +299,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //locales
                 UpdateAttributeLocales(checkoutAttribute, model);
 
-                //Stores
+                //stores
                 SaveStoreMappings(checkoutAttribute, model);
 
                 //activity log
@@ -305,20 +308,19 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 SuccessNotification(_localizationService.GetResource("Admin.Catalog.Attributes.CheckoutAttributes.Updated"));
 
-                if (continueEditing)
-                {
-                    //selected tab
-                    SaveSelectedTabName();
+                if (!continueEditing)
+                    return RedirectToAction("List");
 
-                    return RedirectToAction("Edit", new { id = checkoutAttribute.Id });
-                }
+                //selected tab
+                SaveSelectedTabName();
 
-                return RedirectToAction("List");
+                return RedirectToAction("Edit", new { id = checkoutAttribute.Id });
             }
-
-            //If we got this far, something failed, redisplay form
+            
+            //prepare model
             model = _checkoutAttributeModelFactory.PrepareCheckoutAttributeModel(model, checkoutAttribute, true);
 
+            //if we got this far, something failed, redisplay form
             return View(model);
         }
 
@@ -399,16 +401,16 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 //ensure valid color is chosen/entered
                 if (string.IsNullOrEmpty(model.ColorSquaresRgb))
-                    ModelState.AddModelError("", "Color is required");
+                    ModelState.AddModelError(string.Empty, "Color is required");
 
                 try
                 {
-                    //ensure color is valid (can be instanciated)
+                    //ensure color is valid (can be instantiated)
                     System.Drawing.ColorTranslator.FromHtml(model.ColorSquaresRgb);
                 }
                 catch (Exception exc)
                 {
-                    ModelState.AddModelError("", exc.Message);
+                    ModelState.AddModelError(string.Empty, exc.Message);
                 }
             }
 
@@ -433,9 +435,10 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return View(model);
             }
 
-            //If we got this far, something failed, redisplay form
+            //prepare model
             model = _checkoutAttributeModelFactory.PrepareCheckoutAttributeValueModel(model, checkoutAttribute, null, true);
 
+            //if we got this far, something failed, redisplay form
             return View(model);
         }
 
@@ -483,16 +486,16 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 //ensure valid color is chosen/entered
                 if (string.IsNullOrEmpty(model.ColorSquaresRgb))
-                    ModelState.AddModelError("", "Color is required");
+                    ModelState.AddModelError(string.Empty, "Color is required");
 
                 try
                 {
-                    //ensure color is valid (can be instanciated)
+                    //ensure color is valid (can be instantiated)
                     System.Drawing.ColorTranslator.FromHtml(model.ColorSquaresRgb);
                 }
                 catch (Exception exc)
                 {
-                    ModelState.AddModelError("", exc.Message);
+                    ModelState.AddModelError(string.Empty, exc.Message);
                 }
             }
 
@@ -513,9 +516,10 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return View(model);
             }
 
-            //If we got this far, something failed, redisplay form
+            //prepare model
             model = _checkoutAttributeModelFactory.PrepareCheckoutAttributeValueModel(model, checkoutAttribute, checkoutAttributeValue, true);
 
+            //if we got this far, something failed, redisplay form
             return View(model);
         }
 

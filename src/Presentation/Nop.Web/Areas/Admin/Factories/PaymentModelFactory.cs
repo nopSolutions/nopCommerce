@@ -51,6 +51,23 @@ namespace Nop.Web.Areas.Admin.Factories
         #region Methods
 
         /// <summary>
+        /// Prepare payment methods model
+        /// </summary>
+        /// <param name="methodsModel">Payment methods model</param>
+        /// <returns>Payment methods model</returns>
+        public virtual PaymentMethodsModel PreparePaymentMethodsModel(PaymentMethodsModel methodsModel)
+        {
+            if (methodsModel == null)
+                throw new ArgumentNullException(nameof(methodsModel));
+
+            //prepare nested search models
+            PreparePaymentMethodSearchModel(methodsModel.PaymentsMethod);
+            PreparePaymentMethodRestrictionModel(methodsModel.PaymentMethodRestriction);
+
+            return methodsModel;
+        }
+
+        /// <summary>
         /// Prepare payment method search model
         /// </summary>
         /// <param name="searchModel">Payment method search model</param>

@@ -25,7 +25,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         protected virtual IList<string> GetAllowedFileTypes()
         {
-            return new List<string> {".gif", ".jpg", ".jpeg", ".png", ".bmp"};
+            return new List<string> { ".gif", ".jpg", ".jpeg", ".png", ".bmp" };
         }
 
         [HttpPost]
@@ -75,7 +75,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             ViewData["resultCode"] = "success";
             ViewData["result"] = "success";
-            ViewData["filename"] = this.Url.Content($"{directory}{fileName}");
+            ViewData["filename"] = Url.Content($"{directory}{fileName}");
             return View();
         }
     }

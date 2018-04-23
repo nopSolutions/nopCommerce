@@ -94,6 +94,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     _settingService.SaveSetting(_externalAuthenticationSettings);
                 }
             }
+
             var pluginDescriptor = eam.PluginDescriptor;
             pluginDescriptor.DisplayOrder = model.DisplayOrder;
 

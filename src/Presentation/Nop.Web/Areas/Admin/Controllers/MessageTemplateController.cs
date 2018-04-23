@@ -200,9 +200,10 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
             }
 
-            //if we got this far, something failed, redisplay form
+            //prepare model
             model = _messageTemplateModelFactory.PrepareMessageTemplateModel(model, messageTemplate, true);
 
+            //if we got this far, something failed, redisplay form
             return View(model);
         }
 
@@ -289,16 +290,16 @@ namespace Nop.Web.Areas.Admin.Controllers
             foreach (var formKey in form.Keys)
                 if (formKey.StartsWith("token_", StringComparison.InvariantCultureIgnoreCase))
                 {
-                    var tokenKey = formKey.Substring("token_".Length).Replace("%", "");
+                    var tokenKey = formKey.Substring("token_".Length).Replace("%", string.Empty);
                     var stringValue = form[formKey].ToString();
 
                     //try get non-string value
                     object tokenValue;
-                    if (bool.TryParse(stringValue, out bool boolValue))
+                    if (bool.TryParse(stringValue, out var boolValue))
                         tokenValue = boolValue;
-                    else if (int.TryParse(stringValue, out int intValue))
+                    else if (int.TryParse(stringValue, out var intValue))
                         tokenValue = intValue;
-                    else if (decimal.TryParse(stringValue, out decimal decimalValue))
+                    else if (decimal.TryParse(stringValue, out var decimalValue))
                         tokenValue = decimalValue;
                     else
                         tokenValue = stringValue;

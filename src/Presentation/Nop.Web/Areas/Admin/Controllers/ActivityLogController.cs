@@ -62,7 +62,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //get identifiers of selected activity types
             var selectedActivityTypesIds = form["checkbox_activity_types"]
                 .SelectMany(value => value.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
-                .Select(idString => int.TryParse(idString, out int id) ? id : 0)
+                .Select(idString => int.TryParse(idString, out var id) ? id : 0)
                 .Distinct().ToList();
 
             //update activity types

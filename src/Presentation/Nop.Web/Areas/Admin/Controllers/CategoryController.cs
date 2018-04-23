@@ -256,6 +256,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     if (model.SelectedDiscountIds != null && model.SelectedDiscountIds.Contains(discount.Id))
                         category.AppliedDiscounts.Add(discount);
                 }
+
                 _categoryService.UpdateCategory(category);
 
                 //update picture seo file name
@@ -264,7 +265,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //ACL (customer roles)
                 SaveCategoryAcl(category, model);
 
-                //Stores
+                //stores
                 SaveStoreMappings(category, model);
 
                 //activity log
@@ -273,20 +274,19 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 SuccessNotification(_localizationService.GetResource("Admin.Catalog.Categories.Added"));
 
-                if (continueEditing)
-                {
-                    //selected tab
-                    SaveSelectedTabName();
+                if (!continueEditing)
+                    return RedirectToAction("List");
 
-                    return RedirectToAction("Edit", new { id = category.Id });
-                }
+                //selected tab
+                SaveSelectedTabName();
 
-                return RedirectToAction("List");
+                return RedirectToAction("Edit", new { id = category.Id });
             }
 
-            //If we got this far, something failed, redisplay form
+            //prepare model
             model = _categoryModelFactory.PrepareCategoryModel(model, null, true);
 
+            //if we got this far, something failed, redisplay form
             return View(model);
         }
 
@@ -349,6 +349,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                             category.AppliedDiscounts.Remove(discount);
                     }
                 }
+
                 _categoryService.UpdateCategory(category);
 
                 //delete an old picture (if deleted or updated)
@@ -365,7 +366,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //ACL
                 SaveCategoryAcl(category, model);
 
-                //Stores
+                //stores
                 SaveStoreMappings(category, model);
 
                 //activity log
@@ -374,20 +375,19 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 SuccessNotification(_localizationService.GetResource("Admin.Catalog.Categories.Updated"));
 
-                if (continueEditing)
-                {
-                    //selected tab
-                    SaveSelectedTabName();
+                if (!continueEditing)
+                    return RedirectToAction("List");
 
-                    return RedirectToAction("Edit", new { id = category.Id });
-                }
+                //selected tab
+                SaveSelectedTabName();
 
-                return RedirectToAction("List");
+                return RedirectToAction("Edit", new { id = category.Id });
             }
 
-            //If we got this far, something failed, redisplay form
+            //prepare model
             model = _categoryModelFactory.PrepareCategoryModel(model, category, true);
 
+            //if we got this far, something failed, redisplay form
             return View(model);
         }
 

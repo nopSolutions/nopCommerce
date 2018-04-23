@@ -172,15 +172,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             foreach (var shipmentItem in shipment.ShipmentItems)
             {
                 var orderItem = _orderService.GetOrderItemById(shipmentItem.OrderItemId);
-                if (orderItem != null)
-                {
-                    if (orderItem.Product.VendorId == vendorId)
-                    {
-                        hasVendorProducts = true;
-                        break;
-                    }
-                }
+                if (orderItem == null || orderItem.Product.VendorId != vendorId)
+                    continue;
+
+                hasVendorProducts = true;
+                break;
             }
+
             return hasVendorProducts;
         }
 
@@ -199,114 +197,119 @@ namespace Nop.Web.Areas.Admin.Controllers
             foreach (var attribute in productAttributes)
             {
                 var controlId = $"product_attribute_{attribute.Id}";
+                StringValues ctrlAttributes;
+
                 switch (attribute.AttributeControlType)
                 {
                     case AttributeControlType.DropdownList:
                     case AttributeControlType.RadioList:
                     case AttributeControlType.ColorSquares:
                     case AttributeControlType.ImageSquares:
+                        ctrlAttributes = form[controlId];
+                        if (!StringValues.IsNullOrEmpty(ctrlAttributes))
                         {
-                            var ctrlAttributes = form[controlId];
-                            if (!StringValues.IsNullOrEmpty(ctrlAttributes))
-                            {
-                                var selectedAttributeId = int.Parse(ctrlAttributes);
-                                if (selectedAttributeId > 0)
-                                {
-                                    //get quantity entered by customer
-                                    var quantity = 1;
-                                    var quantityStr = form[$"product_attribute_{attribute.Id}_{selectedAttributeId}_qty"];
-                                    if (!StringValues.IsNullOrEmpty(quantityStr) && (!int.TryParse(quantityStr, out quantity) || quantity < 1))
-                                        errors.Add(_localizationService.GetResource("ShoppingCart.QuantityShouldPositive"));
-
-                                    attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
-                                        attribute, selectedAttributeId.ToString(), quantity > 1 ? (int?)quantity : null);
-                                }
-                            }
-                        }
-                        break;
-                    case AttributeControlType.Checkboxes:
-                        {
-                            var ctrlAttributes = form[controlId];
-                            if (!StringValues.IsNullOrEmpty(ctrlAttributes))
-                            {
-                                foreach (var item in ctrlAttributes.ToString().Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
-                                {
-                                    var selectedAttributeId = int.Parse(item);
-                                    if (selectedAttributeId > 0)
-                                    {
-                                        //get quantity entered by customer
-                                        var quantity = 1;
-                                        var quantityStr = form[$"product_attribute_{attribute.Id}_{item}_qty"];
-                                        if (!StringValues.IsNullOrEmpty(quantityStr) && (!int.TryParse(quantityStr, out quantity) || quantity < 1))
-                                            errors.Add(_localizationService.GetResource("ShoppingCart.QuantityShouldPositive"));
-
-                                        attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
-                                            attribute, selectedAttributeId.ToString(), quantity > 1 ? (int?)quantity : null);
-                                    }
-                                }
-                            }
-                        }
-                        break;
-                    case AttributeControlType.ReadonlyCheckboxes:
-                        {
-                            //load read-only (already server-side selected) values
-                            var attributeValues = _productAttributeService.GetProductAttributeValues(attribute.Id);
-                            foreach (var selectedAttributeId in attributeValues
-                                .Where(v => v.IsPreSelected)
-                                .Select(v => v.Id)
-                                .ToList())
+                            var selectedAttributeId = int.Parse(ctrlAttributes);
+                            if (selectedAttributeId > 0)
                             {
                                 //get quantity entered by customer
                                 var quantity = 1;
                                 var quantityStr = form[$"product_attribute_{attribute.Id}_{selectedAttributeId}_qty"];
-                                if (!StringValues.IsNullOrEmpty(quantityStr) && (!int.TryParse(quantityStr, out quantity) || quantity < 1))
+                                if (!StringValues.IsNullOrEmpty(quantityStr) &&
+                                    (!int.TryParse(quantityStr, out quantity) || quantity < 1))
                                     errors.Add(_localizationService.GetResource("ShoppingCart.QuantityShouldPositive"));
 
                                 attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
                                     attribute, selectedAttributeId.ToString(), quantity > 1 ? (int?)quantity : null);
                             }
                         }
+
+                        break;
+                    case AttributeControlType.Checkboxes:
+                        ctrlAttributes = form[controlId];
+                        if (!StringValues.IsNullOrEmpty(ctrlAttributes))
+                        {
+                            foreach (var item in ctrlAttributes.ToString()
+                                .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                            {
+                                var selectedAttributeId = int.Parse(item);
+                                if (selectedAttributeId <= 0)
+                                    continue;
+
+                                //get quantity entered by customer
+                                var quantity = 1;
+                                var quantityStr = form[$"product_attribute_{attribute.Id}_{item}_qty"];
+                                if (!StringValues.IsNullOrEmpty(quantityStr) &&
+                                    (!int.TryParse(quantityStr, out quantity) || quantity < 1))
+                                    errors.Add(_localizationService.GetResource("ShoppingCart.QuantityShouldPositive"));
+
+                                attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
+                                    attribute, selectedAttributeId.ToString(), quantity > 1 ? (int?)quantity : null);
+                            }
+                        }
+
+                        break;
+                    case AttributeControlType.ReadonlyCheckboxes:
+                        //load read-only (already server-side selected) values
+                        var attributeValues = _productAttributeService.GetProductAttributeValues(attribute.Id);
+                        foreach (var selectedAttributeId in attributeValues
+                            .Where(v => v.IsPreSelected)
+                            .Select(v => v.Id)
+                            .ToList())
+                        {
+                            //get quantity entered by customer
+                            var quantity = 1;
+                            var quantityStr = form[$"product_attribute_{attribute.Id}_{selectedAttributeId}_qty"];
+                            if (!StringValues.IsNullOrEmpty(quantityStr) &&
+                                (!int.TryParse(quantityStr, out quantity) || quantity < 1))
+                                errors.Add(_localizationService.GetResource("ShoppingCart.QuantityShouldPositive"));
+
+                            attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
+                                attribute, selectedAttributeId.ToString(), quantity > 1 ? (int?)quantity : null);
+                        }
+
                         break;
                     case AttributeControlType.TextBox:
                     case AttributeControlType.MultilineTextbox:
+                        ctrlAttributes = form[controlId];
+                        if (!StringValues.IsNullOrEmpty(ctrlAttributes))
                         {
-                            var ctrlAttributes = form[controlId];
-                            if (!StringValues.IsNullOrEmpty(ctrlAttributes))
-                            {
-                                var enteredText = ctrlAttributes.ToString().Trim();
-                                attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
-                                    attribute, enteredText);
-                            }
+                            var enteredText = ctrlAttributes.ToString().Trim();
+                            attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
+                                attribute, enteredText);
                         }
+
                         break;
                     case AttributeControlType.Datepicker:
+
+                        var day = form[controlId + "_day"];
+                        var month = form[controlId + "_month"];
+                        var year = form[controlId + "_year"];
+                        DateTime? selectedDate = null;
+                        try
                         {
-                            var day = form[controlId + "_day"];
-                            var month = form[controlId + "_month"];
-                            var year = form[controlId + "_year"];
-                            DateTime? selectedDate = null;
-                            try
-                            {
-                                selectedDate = new DateTime(Int32.Parse(year), Int32.Parse(month), Int32.Parse(day));
-                            }
-                            catch { }
-                            if (selectedDate.HasValue)
-                            {
-                                attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
-                                    attribute, selectedDate.Value.ToString("D"));
-                            }
+                            selectedDate = new DateTime(int.Parse(year), int.Parse(month), int.Parse(day));
                         }
+                        catch
+                        {
+                        }
+
+                        if (selectedDate.HasValue)
+                        {
+                            attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
+                                attribute, selectedDate.Value.ToString("D"));
+                        }
+
                         break;
                     case AttributeControlType.FileUpload:
+
+                        Guid.TryParse(form[controlId], out var downloadGuid);
+                        var download = _downloadService.GetDownloadByGuid(downloadGuid);
+                        if (download != null)
                         {
-                            Guid.TryParse(form[controlId], out Guid downloadGuid);
-                            var download = _downloadService.GetDownloadByGuid(downloadGuid);
-                            if (download != null)
-                            {
-                                attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
-                                        attribute, download.DownloadGuid.ToString());
-                            }
+                            attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
+                                attribute, download.DownloadGuid.ToString());
                         }
+
                         break;
                     default:
                         break;
@@ -355,6 +358,57 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             _customerActivityService.InsertActivity("EditOrder",
                 string.Format(_localizationService.GetResource("ActivityLog.EditOrder"), order.CustomOrderNumber), order);
+        }
+
+        protected virtual string AddGiftCards(IFormCollection form, Product product, string attributesXml,
+           out string recipientName, out string recipientEmail, out string senderName, out string senderEmail,
+           out string giftCardMessage)
+        {
+            recipientName = string.Empty;
+            recipientEmail = string.Empty;
+            senderName = string.Empty;
+            senderEmail = string.Empty;
+            giftCardMessage = string.Empty;
+
+            if (!product.IsGiftCard)
+                return attributesXml;
+
+            foreach (var formKey in form.Keys)
+            {
+                if (formKey.Equals("giftcard.RecipientName", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    recipientName = form[formKey];
+                    continue;
+                }
+
+                if (formKey.Equals("giftcard.RecipientEmail", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    recipientEmail = form[formKey];
+                    continue;
+                }
+
+                if (formKey.Equals("giftcard.SenderName", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    senderName = form[formKey];
+                    continue;
+                }
+
+                if (formKey.Equals("giftcard.SenderEmail", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    senderEmail = form[formKey];
+                    continue;
+                }
+
+                if (formKey.Equals("giftcard.Message", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    giftCardMessage = form[formKey];
+                }
+            }
+
+            attributesXml = _productAttributeParser.AddGiftCardAttribute(attributesXml,
+                recipientName, recipientEmail, senderName, senderEmail, giftCardMessage);
+
+            return attributesXml;
         }
 
         #endregion
@@ -422,7 +476,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         {
             const int searchTermMinimumLength = 3;
             if (string.IsNullOrWhiteSpace(term) || term.Length < searchTermMinimumLength)
-                return Content("");
+                return Content(string.Empty);
 
             //a vendor should have access only to his products
             var vendorId = 0;
@@ -459,10 +513,10 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
 
-            var startDateValue = (model.StartDate == null) ? null
+            var startDateValue = model.StartDate == null ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
 
-            var endDateValue = (model.EndDate == null) ? null
+            var endDateValue = model.EndDate == null ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
 
             //a vendor should have access only to his products
@@ -544,10 +598,10 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
 
-            var startDateValue = (model.StartDate == null) ? null
+            var startDateValue = model.StartDate == null ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
 
-            var endDateValue = (model.EndDate == null) ? null
+            var endDateValue = model.EndDate == null ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
 
             //a vendor should have access only to his products
@@ -648,7 +702,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //a vendor does not have access to this functionality
             if (_workContext.CurrentVendor != null)
-                return RedirectToAction("Edit", "Order", new { id = id });
+                return RedirectToAction("Edit", "Order", new { id });
 
             try
             {
@@ -684,7 +738,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //a vendor does not have access to this functionality
             if (_workContext.CurrentVendor != null)
-                return RedirectToAction("Edit", "Order", new { id = id });
+                return RedirectToAction("Edit", "Order", new { id });
 
             try
             {
@@ -707,7 +761,6 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ErrorNotification(exc, false);
                 return View(model);
             }
-
         }
 
         [HttpPost, ActionName("Edit")]
@@ -724,7 +777,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //a vendor does not have access to this functionality
             if (_workContext.CurrentVendor != null)
-                return RedirectToAction("Edit", "Order", new { id = id });
+                return RedirectToAction("Edit", "Order", new { id });
 
             try
             {
@@ -760,7 +813,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //a vendor does not have access to this functionality
             if (_workContext.CurrentVendor != null)
-                return RedirectToAction("Edit", "Order", new { id = id });
+                return RedirectToAction("Edit", "Order", new { id });
 
             try
             {
@@ -799,7 +852,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //a vendor does not have access to this functionality
             if (_workContext.CurrentVendor != null)
-                return RedirectToAction("Edit", "Order", new { id = id });
+                return RedirectToAction("Edit", "Order", new { id });
 
             try
             {
@@ -835,7 +888,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //a vendor does not have access to this functionality
             if (_workContext.CurrentVendor != null)
-                return RedirectToAction("Edit", "Order", new { id = id });
+                return RedirectToAction("Edit", "Order", new { id });
 
             try
             {
@@ -874,7 +927,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //a vendor does not have access to this functionality
             if (_workContext.CurrentVendor != null)
-                return RedirectToAction("Edit", "Order", new { id = id });
+                return RedirectToAction("Edit", "Order", new { id });
 
             try
             {
@@ -908,7 +961,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //a vendor does not have access to this functionality
             if (_workContext.CurrentVendor != null)
-                return RedirectToAction("Edit", "Order", new { id = id });
+                return RedirectToAction("Edit", "Order", new { id });
 
             //prepare model
             var model = _orderModelFactory.PrepareOrderModel(null, order);
@@ -930,7 +983,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //a vendor does not have access to this functionality
             if (_workContext.CurrentVendor != null)
-                return RedirectToAction("Edit", "Order", new { id = id });
+                return RedirectToAction("Edit", "Order", new { id });
 
             try
             {
@@ -993,7 +1046,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //a vendor does not have access to this functionality
             if (_workContext.CurrentVendor != null)
-                return RedirectToAction("Edit", "Order", new { id = id });
+                return RedirectToAction("Edit", "Order", new { id });
 
             try
             {
@@ -1062,7 +1115,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //a vendor does not have access to this functionality
             if (_workContext.CurrentVendor != null)
-                return RedirectToAction("Edit", "Order", new { id = id });
+                return RedirectToAction("Edit", "Order", new { id });
 
             _orderProcessingService.DeleteOrder(order);
 
@@ -1086,14 +1139,18 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             var order = _orderService.GetOrderById(orderId);
-            var orders = new List<Order>();
-            orders.Add(order);
+            var orders = new List<Order>
+            {
+                order
+            };
+
             byte[] bytes;
             using (var stream = new MemoryStream())
             {
                 _pdfService.PrintOrdersToPdf(stream, orders, _orderSettings.GeneratePdfInvoiceInCustomerLanguage ? 0 : _workContext.WorkingLanguage.Id, vendorId);
                 bytes = stream.ToArray();
             }
+
             return File(bytes, MimeTypes.ApplicationPdf, $"order_{order.Id}.pdf");
         }
 
@@ -1110,10 +1167,10 @@ namespace Nop.Web.Areas.Admin.Controllers
                 model.VendorId = _workContext.CurrentVendor.Id;
             }
 
-            var startDateValue = (model.StartDate == null) ? null
+            var startDateValue = model.StartDate == null ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
 
-            var endDateValue = (model.EndDate == null) ? null
+            var endDateValue = model.EndDate == null ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
 
             var orderStatusIds = model.OrderStatusIds != null && !model.OrderStatusIds.Contains(0)
@@ -1154,6 +1211,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _pdfService.PrintOrdersToPdf(stream, orders, _orderSettings.GeneratePdfInvoiceInCustomerLanguage ? 0 : _workContext.WorkingLanguage.Id, model.VendorId);
                 bytes = stream.ToArray();
             }
+
             return File(bytes, MimeTypes.ApplicationPdf, "orders.pdf");
         }
 
@@ -1194,6 +1252,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _pdfService.PrintOrdersToPdf(stream, orders, _orderSettings.GeneratePdfInvoiceInCustomerLanguage ? 0 : _workContext.WorkingLanguage.Id, vendorId);
                 bytes = stream.ToArray();
             }
+
             return File(bytes, MimeTypes.ApplicationPdf, "orders.pdf");
         }
 
@@ -1217,13 +1276,13 @@ namespace Nop.Web.Areas.Admin.Controllers
                 foreach (var attribute in attributes)
                 {
                     var conditionMet = _productAttributeParser.IsConditionMet(attribute, attributeXml);
-                    if (conditionMet.HasValue)
-                    {
-                        if (conditionMet.Value)
-                            enabledAttributeMappingIds.Add(attribute.Id);
-                        else
-                            disabledAttributeMappingIds.Add(attribute.Id);
-                    }
+                    if (!conditionMet.HasValue)
+                        continue;
+
+                    if (conditionMet.Value)
+                        enabledAttributeMappingIds.Add(attribute.Id);
+                    else
+                        disabledAttributeMappingIds.Add(attribute.Id);
                 }
             }
 
@@ -1249,7 +1308,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //a vendor does not have access to this functionality
             if (_workContext.CurrentVendor != null)
-                return RedirectToAction("Edit", "Order", new { id = id });
+                return RedirectToAction("Edit", "Order", new { id });
 
             if (order.AllowStoringCreditCardNumber)
             {
@@ -1300,7 +1359,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //a vendor does not have access to this functionality
             if (_workContext.CurrentVendor != null)
-                return RedirectToAction("Edit", "Order", new { id = id });
+                return RedirectToAction("Edit", "Order", new { id });
 
             order.OrderSubtotalInclTax = model.OrderSubtotalInclTaxValue;
             order.OrderSubtotalExclTax = model.OrderSubtotalExclTaxValue;
@@ -1346,7 +1405,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //a vendor does not have access to this functionality
             if (_workContext.CurrentVendor != null)
-                return RedirectToAction("Edit", "Order", new { id = id });
+                return RedirectToAction("Edit", "Order", new { id });
 
             order.ShippingMethod = model.ShippingMethod;
             _orderService.UpdateOrder(order);
@@ -1384,7 +1443,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //a vendor does not have access to this functionality
             if (_workContext.CurrentVendor != null)
-                return RedirectToAction("Edit", "Order", new { id = id });
+                return RedirectToAction("Edit", "Order", new { id });
 
             //get order item identifier
             var orderItemId = 0;
@@ -1395,19 +1454,19 @@ namespace Nop.Web.Areas.Admin.Controllers
             var orderItem = order.OrderItems.FirstOrDefault(x => x.Id == orderItemId)
                 ?? throw new ArgumentException("No order item found with the specified id");
 
-            if (!decimal.TryParse(form["pvUnitPriceInclTax" + orderItemId], out decimal unitPriceInclTax))
+            if (!decimal.TryParse(form["pvUnitPriceInclTax" + orderItemId], out var unitPriceInclTax))
                 unitPriceInclTax = orderItem.UnitPriceInclTax;
-            if (!decimal.TryParse(form["pvUnitPriceExclTax" + orderItemId], out decimal unitPriceExclTax))
+            if (!decimal.TryParse(form["pvUnitPriceExclTax" + orderItemId], out var unitPriceExclTax))
                 unitPriceExclTax = orderItem.UnitPriceExclTax;
-            if (!int.TryParse(form["pvQuantity" + orderItemId], out int quantity))
+            if (!int.TryParse(form["pvQuantity" + orderItemId], out var quantity))
                 quantity = orderItem.Quantity;
-            if (!decimal.TryParse(form["pvDiscountInclTax" + orderItemId], out decimal discountInclTax))
+            if (!decimal.TryParse(form["pvDiscountInclTax" + orderItemId], out var discountInclTax))
                 discountInclTax = orderItem.DiscountAmountInclTax;
-            if (!decimal.TryParse(form["pvDiscountExclTax" + orderItemId], out decimal discountExclTax))
+            if (!decimal.TryParse(form["pvDiscountExclTax" + orderItemId], out var discountExclTax))
                 discountExclTax = orderItem.DiscountAmountExclTax;
-            if (!decimal.TryParse(form["pvPriceInclTax" + orderItemId], out decimal priceInclTax))
+            if (!decimal.TryParse(form["pvPriceInclTax" + orderItemId], out var priceInclTax))
                 priceInclTax = orderItem.PriceInclTax;
-            if (!decimal.TryParse(form["pvPriceExclTax" + orderItemId], out decimal priceExclTax))
+            if (!decimal.TryParse(form["pvPriceExclTax" + orderItemId], out var priceExclTax))
                 priceExclTax = orderItem.PriceExclTax;
 
             if (quantity > 0)
@@ -1429,7 +1488,6 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //adjust inventory
                 _productService.AdjustInventory(orderItem.Product, qtyDifference, orderItem.AttributesXml,
                     string.Format(_localizationService.GetResource("Admin.StockQuantityHistory.Messages.EditOrder"), order.Id));
-
             }
             else
             {
@@ -1492,7 +1550,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //a vendor does not have access to this functionality
             if (_workContext.CurrentVendor != null)
-                return RedirectToAction("Edit", "Order", new { id = id });
+                return RedirectToAction("Edit", "Order", new { id });
 
             //get order item identifier
             var orderItemId = 0;
@@ -1517,7 +1575,6 @@ namespace Nop.Web.Areas.Admin.Controllers
                 SaveSelectedTabName(persistForTheNextRequest: false);
 
                 return View(model);
-
             }
             else
             {
@@ -1757,7 +1814,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //a vendor does not have access to this functionality
             if (_workContext.CurrentVendor != null)
-                return Content("");
+                return Content(string.Empty);
 
             //prepare model
             var model = _orderModelFactory.PrepareAddProductToOrderListModel(searchModel, order);
@@ -1807,11 +1864,11 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ?? throw new ArgumentException("No product found with the specified id");
 
             //basic properties
-            decimal.TryParse(form["UnitPriceInclTax"], out decimal unitPriceInclTax);
-            decimal.TryParse(form["UnitPriceExclTax"], out decimal unitPriceExclTax);
-            int.TryParse(form["Quantity"], out int quantity);
-            decimal.TryParse(form["SubTotalInclTax"], out decimal priceInclTax);
-            decimal.TryParse(form["SubTotalExclTax"], out decimal priceExclTax);
+            decimal.TryParse(form["UnitPriceInclTax"], out var unitPriceInclTax);
+            decimal.TryParse(form["UnitPriceExclTax"], out var unitPriceExclTax);
+            int.TryParse(form["Quantity"], out var quantity);
+            decimal.TryParse(form["SubTotalInclTax"], out var priceInclTax);
+            decimal.TryParse(form["SubTotalExclTax"], out var priceExclTax);
 
             //warnings
             var warnings = new List<string>();
@@ -1819,60 +1876,16 @@ namespace Nop.Web.Areas.Admin.Controllers
             //attributes
             var attributesXml = ParseProductAttributes(product, form, warnings);
 
-            #region Gift cards
-
-            var recipientName = "";
-            var recipientEmail = "";
-            var senderName = "";
-            var senderEmail = "";
-            var giftCardMessage = "";
-            if (product.IsGiftCard)
-            {
-                foreach (var formKey in form.Keys)
-                {
-                    if (formKey.Equals("giftcard.RecipientName", StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        recipientName = form[formKey];
-                        continue;
-                    }
-                    if (formKey.Equals("giftcard.RecipientEmail", StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        recipientEmail = form[formKey];
-                        continue;
-                    }
-                    if (formKey.Equals("giftcard.SenderName", StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        senderName = form[formKey];
-                        continue;
-                    }
-                    if (formKey.Equals("giftcard.SenderEmail", StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        senderEmail = form[formKey];
-                        continue;
-                    }
-                    if (formKey.Equals("giftcard.Message", StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        giftCardMessage = form[formKey];
-                        continue;
-                    }
-                }
-
-                attributesXml = _productAttributeParser.AddGiftCardAttribute(attributesXml,
-                    recipientName, recipientEmail, senderName, senderEmail, giftCardMessage);
-            }
-
-            #endregion
-
-            #region Rental product
-
+            //gift cards
+            attributesXml = AddGiftCards(form, product, attributesXml, out var recipientName, out var recipientEmail, out var senderName, out var senderEmail, out var giftCardMessage);
+            
+            //rental product
             DateTime? rentalStartDate = null;
             DateTime? rentalEndDate = null;
             if (product.IsRental)
             {
                 ParseRentalDates(form, out rentalStartDate, out rentalEndDate);
             }
-
-            #endregion
 
             //warnings
             warnings.AddRange(_shoppingCartService.GetShoppingCartItemAttributeWarnings(order.Customer, ShoppingCartType.ShoppingCart, product, quantity, attributesXml));
@@ -2001,7 +2014,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //try to get an address with the specified id
             var address = _addressService.GetAddressById(addressId)
-                ?? throw new ArgumentException("No address found with the specified id", "addressId");
+                ?? throw new ArgumentException("No address found with the specified id", nameof(addressId));
 
             //prepare model
             var model = _orderModelFactory.PrepareOrderAddressModel(new OrderAddressModel(), order, address);
@@ -2033,7 +2046,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             var customAttributeWarnings = _addressAttributeParser.GetAttributeWarnings(customAttributes);
             foreach (var error in customAttributeWarnings)
             {
-                ModelState.AddModelError("", error);
+                ModelState.AddModelError(string.Empty, error);
             }
 
             if (ModelState.IsValid)
@@ -2054,10 +2067,11 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 return RedirectToAction("AddressEdit", new { addressId = model.Address.Id, orderId = model.OrderId });
             }
-
-            //If we got this far, something failed, redisplay form
+            
+            //prepare model
             model = _orderModelFactory.PrepareOrderAddressModel(model, order, address);
 
+            //if we got this far, something failed, redisplay form
             return View(model);
         }
 
@@ -2100,7 +2114,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null && !HasAccessToOrder(order))
-                return Content("");
+                return Content(string.Empty);
 
             //prepare model
             var model = _orderModelFactory.PrepareOrderShipmentListModel(searchModel, order);
@@ -2120,7 +2134,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null && !HasAccessToShipment(shipment))
-                return Content("");
+                return Content(string.Empty);
 
             //try to get an order with the specified id
             var order = _orderService.GetOrderById(shipment.OrderId)
@@ -2128,7 +2142,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null && !HasAccessToOrder(order))
-                return Content("");
+                return Content(string.Empty);
 
             //prepare model
             var model = _orderModelFactory.PrepareShipmentItemListModel(searchModel, shipment);
@@ -2234,13 +2248,14 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 //ok. we have at least one item. let's create a shipment (if it does not exist)
 
-                var orderItemTotalWeight = orderItem.ItemWeight.HasValue ? orderItem.ItemWeight * qtyToAdd : null;
+                var orderItemTotalWeight = orderItem.ItemWeight * qtyToAdd;
                 if (orderItemTotalWeight.HasValue)
                 {
                     if (!totalWeight.HasValue)
                         totalWeight = 0;
                     totalWeight += orderItemTotalWeight.Value;
                 }
+
                 if (shipment == null)
                 {
                     var trackingNumber = form["TrackingNumber"];
@@ -2253,9 +2268,10 @@ namespace Nop.Web.Areas.Admin.Controllers
                         ShippedDateUtc = null,
                         DeliveryDateUtc = null,
                         AdminComment = adminComment,
-                        CreatedOnUtc = DateTime.UtcNow,
+                        CreatedOnUtc = DateTime.UtcNow
                     };
                 }
+
                 //create a shipment item
                 var shipmentItem = new ShipmentItem
                 {
@@ -2290,7 +2306,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             ErrorNotification(_localizationService.GetResource("Admin.Orders.Shipments.NoProductsSelected"));
 
-            return RedirectToAction("AddShipment", new { orderId = orderId });
+            return RedirectToAction("AddShipment", new { orderId });
         }
 
         public virtual IActionResult ShipmentDetails(int id)
@@ -2425,7 +2441,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             catch (Exception exc)
             {
                 //error
-                ErrorNotification(exc, true);
+                ErrorNotification(exc);
                 return RedirectToAction("ShipmentDetails", new { id = shipment.Id });
             }
         }
@@ -2452,6 +2468,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 {
                     throw new Exception("Enter shipped date");
                 }
+
                 shipment.ShippedDateUtc = model.ShippedDateUtc;
                 _shipmentService.UpdateShipment(shipment);
                 return RedirectToAction("ShipmentDetails", new { id = shipment.Id });
@@ -2459,7 +2476,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             catch (Exception exc)
             {
                 //error
-                ErrorNotification(exc, true);
+                ErrorNotification(exc);
                 return RedirectToAction("ShipmentDetails", new { id = shipment.Id });
             }
         }
@@ -2489,11 +2506,10 @@ namespace Nop.Web.Areas.Admin.Controllers
             catch (Exception exc)
             {
                 //error
-                ErrorNotification(exc, true);
+                ErrorNotification(exc);
                 return RedirectToAction("ShipmentDetails", new { id = shipment.Id });
             }
         }
-
 
         [HttpPost, ActionName("ShipmentDetails")]
         [FormValueRequired("savedeliverydate")]
@@ -2517,6 +2533,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 {
                     throw new Exception("Enter delivery date");
                 }
+
                 shipment.DeliveryDateUtc = model.DeliveryDateUtc;
                 _shipmentService.UpdateShipment(shipment);
                 return RedirectToAction("ShipmentDetails", new { id = shipment.Id });
@@ -2524,7 +2541,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             catch (Exception exc)
             {
                 //error
-                ErrorNotification(exc, true);
+                ErrorNotification(exc);
                 return RedirectToAction("ShipmentDetails", new { id = shipment.Id });
             }
         }
@@ -2543,8 +2560,10 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (_workContext.CurrentVendor != null && !HasAccessToShipment(shipment))
                 return RedirectToAction("List");
 
-            var shipments = new List<Shipment>();
-            shipments.Add(shipment);
+            var shipments = new List<Shipment>
+            {
+                shipment
+            };
 
             byte[] bytes;
             using (var stream = new MemoryStream())
@@ -2552,6 +2571,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _pdfService.PrintPackagingSlipsToPdf(stream, shipments, _orderSettings.GeneratePdfInvoiceInCustomerLanguage ? 0 : _workContext.WorkingLanguage.Id);
                 bytes = stream.ToArray();
             }
+
             return File(bytes, MimeTypes.ApplicationPdf, $"packagingslip_{shipment.Id}.pdf");
         }
 
@@ -2562,10 +2582,10 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
 
-            var startDateValue = (model.StartDate == null) ? null
+            var startDateValue = model.StartDate == null ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
 
-            var endDateValue = (model.EndDate == null) ? null
+            var endDateValue = model.EndDate == null ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
 
             //a vendor should have access only to his products
@@ -2598,6 +2618,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _pdfService.PrintPackagingSlipsToPdf(stream, shipments, _orderSettings.GeneratePdfInvoiceInCustomerLanguage ? 0 : _workContext.WorkingLanguage.Id);
                 bytes = stream.ToArray();
             }
+
             return File(bytes, MimeTypes.ApplicationPdf, "packagingslips.pdf");
         }
 
@@ -2635,6 +2656,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _pdfService.PrintPackagingSlipsToPdf(stream, shipments, _orderSettings.GeneratePdfInvoiceInCustomerLanguage ? 0 : _workContext.WorkingLanguage.Id);
                 bytes = stream.ToArray();
             }
+
             return File(bytes, MimeTypes.ApplicationPdf, "packagingslips.pdf");
         }
 
@@ -2718,7 +2740,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //a vendor does not have access to this functionality
             if (_workContext.CurrentVendor != null)
-                return Content("");
+                return Content(string.Empty);
 
             //prepare model
             var model = _orderModelFactory.PrepareOrderNoteListModel(searchModel, order);
@@ -2745,8 +2767,9 @@ namespace Nop.Web.Areas.Admin.Controllers
                 DisplayToCustomer = displayToCustomer,
                 Note = message,
                 DownloadId = downloadId,
-                CreatedOnUtc = DateTime.UtcNow,
+                CreatedOnUtc = DateTime.UtcNow
             };
+
             order.OrderNotes.Add(orderNote);
             _orderService.UpdateOrder(order);
 
@@ -2756,7 +2779,6 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //email
                 _workflowMessageService.SendNewOrderNoteAddedCustomerNotification(
                     orderNote, _workContext.WorkingLanguage.Id);
-
             }
 
             return Json(new { Result = true });
@@ -2867,7 +2889,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //a vendor doesn't have access to this report
             if (_workContext.CurrentVendor != null)
-                return Content("");
+                return Content(string.Empty);
 
             //prepare model
             var model = _orderModelFactory.PrepareOrderAverageReportListModel();
@@ -2883,7 +2905,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //a vendor doesn't have access to this report
             if (_workContext.CurrentVendor != null)
-                return Content("");
+                return Content(string.Empty);
 
             //prepare model
             var model = _orderModelFactory.PrepareOrderIncompleteReportListModel();
@@ -2917,11 +2939,11 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult LoadOrderStatistics(string period)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return Content("");
+                return Content(string.Empty);
 
             //a vendor doesn't have access to this report
             if (_workContext.CurrentVendor != null)
-                return Content("");
+                return Content(string.Empty);
 
             var result = new List<object>();
 
@@ -2950,8 +2972,8 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                         searchYearDateUser = searchYearDateUser.AddMonths(1);
                     }
-                    break;
 
+                    break;
                 case "month":
                     //month statistics
                     var monthAgoDt = nowDt.AddDays(-30);
@@ -2970,8 +2992,8 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                         searchMonthDateUser = searchMonthDateUser.AddDays(1);
                     }
-                    break;
 
+                    break;
                 case "week":
                 default:
                     //week statistics
@@ -2991,6 +3013,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                         searchWeekDateUser = searchWeekDateUser.AddDays(1);
                     }
+
                     break;
             }
 
