@@ -77,15 +77,13 @@ namespace Nop.Web.Framework.Infrastructure
             //data layer
             var dataSettings = DataSettingsManager.LoadSettings();
             builder.Register(c => DataSettingsManager.LoadSettings()).As<DataSettings>();
-            builder.Register(x => new EfDataProviderManager(x.Resolve<DataSettings>())).As<BaseDataProviderManager>().InstancePerDependency();
-
-            builder.Register(x => x.Resolve<BaseDataProviderManager>().LoadDataProvider()).As<IDataProvider>().InstancePerDependency();
+            builder.RegisterType<EfDataProviderManager>().As<IDataProviderManager>().InstancePerDependency();
+            builder.Register(context => context.Resolve<IDataProviderManager>().DataProvider).As<IDataProvider>().InstancePerDependency();
 
             if (dataSettings?.IsValid ?? false)
             {
-                var efDataProviderManager = new EfDataProviderManager(DataSettingsManager.LoadSettings());
-                var dataProvider = efDataProviderManager.LoadDataProvider();
-                dataProvider.InitConnectionFactory();
+                var efDataProviderManager = new EfDataProviderManager();
+                efDataProviderManager.DataProvider.InitConnectionFactory();
 
                 builder.Register<IDbContext>(c => new NopObjectContext(dataSettings.DataConnectionString)).InstancePerLifetimeScope();
             }

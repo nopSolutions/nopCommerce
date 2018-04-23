@@ -4,37 +4,37 @@ using Nop.Core.Data;
 namespace Nop.Data
 {
     /// <summary>
-    /// Entity Framework data provider manager
+    /// Represents the Entity Framework data provider manager
     /// </summary>
-    public partial class EfDataProviderManager : BaseDataProviderManager
+    public partial class EfDataProviderManager : IDataProviderManager
     {
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="settings">Data settings</param>
-        public EfDataProviderManager(DataSettings settings):base(settings)
-        {
-        }
+        #region Properties
 
         /// <summary>
-        /// Load data provider
+        /// Gets data provider
         /// </summary>
-        /// <returns>Data provider</returns>
-        public override IDataProvider LoadDataProvider()
+        public IDataProvider DataProvider
         {
-            var providerName = Settings.DataProvider;
-            if (string.IsNullOrWhiteSpace(providerName))
-                throw new NopException("Data Settings doesn't contain a providerName");
-
-            switch (providerName.ToLowerInvariant())
+            get
             {
-                case "sqlserver":
-                    return new SqlServerDataProvider();
-                case "sqlce":
-                    return new SqlCeDataProvider();
-                default:
-                    throw new NopException($"Not supported dataprovider name: {providerName}");
+                var providerName = DataSettingsManager.LoadSettings()?.DataProvider;
+                if (string.IsNullOrEmpty(providerName))
+                    throw new NopException("Data settings doesn't contain a provider name");
+
+                switch (providerName.ToLowerInvariant())
+                {
+                    case "sqlserver":
+                        return new SqlServerDataProvider();
+
+                    case "sqlce":
+                        return new SqlCeDataProvider();
+
+                    default:
+                        throw new NopException($"Not supported data provider name: '{providerName}'");
+                }
             }
         }
+
+        #endregion
     }
 }
