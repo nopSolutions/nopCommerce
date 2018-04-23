@@ -42,7 +42,7 @@ namespace Nop.Core.Http
             //TODO test. ensure that no guest record is created
 
             //whether database is installed
-            if (DataSettingsHelper.DatabaseIsInstalled())
+            if (!DataSettingsManager.DatabaseIsInstalled)
             {
                 //keep alive page requested (we ignore it to prevent creating a guest customer records)
                 var keepAliveUrl = $"{webHelper.GetStoreLocation()}keepalive/index";

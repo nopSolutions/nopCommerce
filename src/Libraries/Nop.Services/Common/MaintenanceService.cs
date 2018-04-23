@@ -163,8 +163,8 @@ namespace Nop.Services.Common
         public virtual void RestoreDatabase(string backupFileName)
         {
             CheckBackupSupported();
-            var settings = new DataSettingsManager();
-            var conn = new SqlConnectionStringBuilder(settings.LoadSettings().DataConnectionString)
+
+            var conn = new SqlConnectionStringBuilder(DataSettingsManager.LoadSettings().DataConnectionString)
             {
                 InitialCatalog = "master"
             };

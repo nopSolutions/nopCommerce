@@ -175,7 +175,7 @@ namespace Nop.Web.Controllers
 
         public virtual IActionResult Index()
         {
-            if (DataSettingsHelper.DatabaseIsInstalled())
+            if (DataSettingsManager.DatabaseIsInstalled)
                 return RedirectToRoute("HomePage");
 
             var model = new InstallModel
@@ -209,7 +209,7 @@ namespace Nop.Web.Controllers
         [HttpPost]
         public virtual IActionResult Index(InstallModel model)
         {
-            if (DataSettingsHelper.DatabaseIsInstalled())
+            if (DataSettingsManager.DatabaseIsInstalled)
                 return RedirectToRoute("HomePage");
 
             if (model.DatabaseConnectionString != null)
@@ -288,7 +288,6 @@ namespace Nop.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                var settingsManager = new DataSettingsManager();
                 try
                 {
                     string connectionString;
@@ -351,13 +350,11 @@ namespace Nop.Web.Controllers
                     }
 
                     //save settings
-                    var dataProvider = model.DataProvider;
-                    var settings = new DataSettings
+                    DataSettingsManager.SaveSettings(new DataSettings
                     {
-                        DataProvider = dataProvider,
+                        DataProvider = model.DataProvider,
                         DataConnectionString = connectionString
-                    };
-                    settingsManager.SaveSettings(settings);
+                    });
 
                     //init data provider
                     var dataProviderInstance = EngineContext.Current.Resolve<BaseDataProviderManager>().LoadDataProvider();
@@ -368,7 +365,7 @@ namespace Nop.Web.Controllers
                     installationService.InstallData(model.AdminEmail, model.AdminPassword, model.InstallSampleData);
 
                     //reset cache
-                    DataSettingsHelper.ResetCache();
+                    DataSettingsManager.ResetCache();
 
                     //install plugins
                     PluginManager.MarkAllPluginsAsUninstalled();
@@ -411,17 +408,13 @@ namespace Nop.Web.Controllers
                 catch (Exception exception)
                 {
                     //reset cache
-                    DataSettingsHelper.ResetCache();
+                    DataSettingsManager.ResetCache();
                     
                     var cacheManager = EngineContext.Current.Resolve<IStaticCacheManager>();
                     cacheManager.Clear();
 
                     //clear provider settings if something got wrong
-                    settingsManager.SaveSettings(new DataSettings
-                    {
-                        DataProvider = null,
-                        DataConnectionString = null
-                    });
+                    DataSettingsManager.SaveSettings(new DataSettings());
 
                     ModelState.AddModelError("", string.Format(_locService.GetResource("SetupFailed"), exception.Message));
                 }
@@ -431,7 +424,7 @@ namespace Nop.Web.Controllers
 
         public virtual IActionResult ChangeLanguage(string language)
         {
-            if (DataSettingsHelper.DatabaseIsInstalled())
+            if (DataSettingsManager.DatabaseIsInstalled)
                 return RedirectToRoute("HomePage");
 
             _locService.SaveCurrentLanguage(language);
@@ -443,7 +436,7 @@ namespace Nop.Web.Controllers
         [HttpPost]
         public virtual IActionResult RestartInstall()
         {
-            if (DataSettingsHelper.DatabaseIsInstalled())
+            if (DataSettingsManager.DatabaseIsInstalled)
                 return RedirectToRoute("HomePage");
 
             //restart application

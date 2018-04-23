@@ -66,7 +66,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                     try
                     {
                         //check whether database is installed
-                        if (DataSettingsHelper.DatabaseIsInstalled())
+                        if (DataSettingsManager.DatabaseIsInstalled)
                         {
                             //get current customer
                             var currentCustomer = EngineContext.Current.Resolve<IWorkContext>().CurrentCustomer;
@@ -176,7 +176,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         public static void UseNopAuthentication(this IApplicationBuilder application)
         {
             //check whether database is installed
-            if (!DataSettingsHelper.DatabaseIsInstalled())
+            if (!DataSettingsManager.DatabaseIsInstalled)
                 return;
 
             application.UseMiddleware<AuthenticationMiddleware>();
@@ -189,7 +189,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         public static void UseCulture(this IApplicationBuilder application)
         {
             //check whether database is installed
-            if (!DataSettingsHelper.DatabaseIsInstalled())
+            if (!DataSettingsManager.DatabaseIsInstalled)
                 return;
 
             application.UseMiddleware<CultureMiddleware>();
@@ -215,7 +215,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         public static void UseMiniProfiler(this IApplicationBuilder application)
         {
             //whether database is already installed
-            if (!DataSettingsHelper.DatabaseIsInstalled())
+            if (!DataSettingsManager.DatabaseIsInstalled)
                 return;
 
             //whether MiniProfiler should be displayed

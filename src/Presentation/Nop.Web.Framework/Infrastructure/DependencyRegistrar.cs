@@ -75,23 +75,22 @@ namespace Nop.Web.Framework.Infrastructure
             builder.RegisterType<UserAgentHelper>().As<IUserAgentHelper>().InstancePerLifetimeScope();
 
             //data layer
-            var dataSettingsManager = new DataSettingsManager();
-            var dataProviderSettings = dataSettingsManager.LoadSettings();
-            builder.Register(c => dataSettingsManager.LoadSettings()).As<DataSettings>();
+            var dataSettings = DataSettingsManager.LoadSettings();
+            builder.Register(c => DataSettingsManager.LoadSettings()).As<DataSettings>();
             builder.Register(x => new EfDataProviderManager(x.Resolve<DataSettings>())).As<BaseDataProviderManager>().InstancePerDependency();
 
             builder.Register(x => x.Resolve<BaseDataProviderManager>().LoadDataProvider()).As<IDataProvider>().InstancePerDependency();
 
-            if (dataProviderSettings != null && dataProviderSettings.IsValid())
+            if (dataSettings?.IsValid ?? false)
             {
-                var efDataProviderManager = new EfDataProviderManager(dataSettingsManager.LoadSettings());
+                var efDataProviderManager = new EfDataProviderManager(DataSettingsManager.LoadSettings());
                 var dataProvider = efDataProviderManager.LoadDataProvider();
                 dataProvider.InitConnectionFactory();
 
-                builder.Register<IDbContext>(c => new NopObjectContext(dataProviderSettings.DataConnectionString)).InstancePerLifetimeScope();
+                builder.Register<IDbContext>(c => new NopObjectContext(dataSettings.DataConnectionString)).InstancePerLifetimeScope();
             }
             else
-                builder.Register<IDbContext>(c => new NopObjectContext(dataSettingsManager.LoadSettings().DataConnectionString)).InstancePerLifetimeScope();
+                builder.Register<IDbContext>(c => new NopObjectContext(DataSettingsManager.LoadSettings().DataConnectionString)).InstancePerLifetimeScope();
 
             //repositories
             builder.RegisterGeneric(typeof(EfRepository<>)).As(typeof(IRepository<>)).InstancePerLifetimeScope();
@@ -245,7 +244,7 @@ namespace Nop.Web.Framework.Infrastructure
                 builder.RegisterType<PictureService>().As<IPictureService>().InstancePerLifetimeScope();
 
             //installation service
-            if (!DataSettingsHelper.DatabaseIsInstalled())
+            if (!DataSettingsManager.DatabaseIsInstalled)
             {
                 if (config.UseFastInstallationService)
                     builder.RegisterType<SqlFileInstallationService>().As<IInstallationService>().InstancePerLifetimeScope();

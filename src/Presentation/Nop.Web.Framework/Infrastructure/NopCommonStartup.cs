@@ -111,7 +111,7 @@ namespace Nop.Web.Framework.Infrastructure
                 }
             };
             //whether database is installed
-            if (DataSettingsHelper.DatabaseIsInstalled())
+            if (DataSettingsManager.DatabaseIsInstalled)
             {
                 var securitySettings = EngineContext.Current.Resolve<SecuritySettings>();
                 if (!string.IsNullOrEmpty(securitySettings.PluginStaticFileExtensionsBlacklist))

@@ -6,35 +6,25 @@ using Nop.Core.Infrastructure;
 namespace Nop.Core.Data
 {
     /// <summary>
-    /// Manager of data settings (connection string)
+    /// Represents the data settings manager
     /// </summary>
     public partial class DataSettingsManager
     {
-        #region Const
+        #region Fields
 
-        private const string ObsoleteDataSettingsFilePath = "~/App_Data/Settings.txt";
-        private const string DataSettingsFilePath_ = "~/App_Data/dataSettings.json";
-
-        #endregion
-
-        #region Properties
-
-        /// <summary>
-        /// Gets the path to file that contains data settings
-        /// </summary>
-        public static string DataSettingsFilePath => DataSettingsFilePath_;
+        private static bool? _databaseIsInstalled;
 
         #endregion
 
         #region Methods
 
         /// <summary>
-        /// Load settings
+        /// Load data settings
         /// </summary>
-        /// <param name="filePath">File path; pass null to use default settings file path</param>
-        /// <param name="reloadSettings">Indicates whether to reload data, if they already loaded</param>
+        /// <param name="filePath">File path; pass null to use the default settings file</param>
+        /// <param name="reloadSettings">Whether to reload data, if they already loaded</param>
         /// <returns>Data settings</returns>
-        public virtual DataSettings LoadSettings(string filePath = null, bool reloadSettings = false)
+        public static DataSettings LoadSettings(string filePath = null, bool reloadSettings = false)
         {
             if (!reloadSettings && Singleton<DataSettings>.Instance != null)
                 return Singleton<DataSettings>.Instance;
@@ -94,14 +84,15 @@ namespace Nop.Core.Data
 
             //get data settings from the JSON file
             Singleton<DataSettings>.Instance = JsonConvert.DeserializeObject<DataSettings>(text);
+
             return Singleton<DataSettings>.Instance;
         }
 
         /// <summary>
-        /// Save settings to a file
+        /// Save data settings to the file
         /// </summary>
         /// <param name="settings">Data settings</param>
-        public virtual void SaveSettings(DataSettings settings)
+        public static void SaveSettings(DataSettings settings)
         {
             Singleton<DataSettings>.Instance = settings ?? throw new ArgumentNullException(nameof(settings));
 
@@ -117,6 +108,42 @@ namespace Nop.Core.Data
             //save data settings to the file
             var text = JsonConvert.SerializeObject(Singleton<DataSettings>.Instance, Formatting.Indented);
             File.WriteAllText(filePath, text);
+        }
+
+        /// <summary>
+        /// Reset "database is installed" cached information
+        /// </summary>
+        public static void ResetCache()
+        {
+            _databaseIsInstalled = null;
+        }
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// Gets a path to the file that was used in old nopCommerce versions to contain data settings
+        /// </summary>
+        protected static string ObsoleteDataSettingsFilePath => "~/App_Data/Settings.txt";
+
+        /// <summary>
+        /// Gets a path to the file that contains data settings
+        /// </summary>
+        public static string DataSettingsFilePath => "~/App_Data/dataSettings.json";
+
+        /// <summary>
+        /// Gets a value indicating whether database is already installed
+        /// </summary>
+        public static bool DatabaseIsInstalled
+        {
+            get
+            {
+                if (!_databaseIsInstalled.HasValue)
+                    _databaseIsInstalled = !string.IsNullOrEmpty(LoadSettings(reloadSettings: true)?.DataConnectionString);
+
+                return _databaseIsInstalled.Value;
+            }
         }
 
         #endregion

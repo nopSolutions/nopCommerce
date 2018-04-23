@@ -1,42 +1,46 @@
 ﻿using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace Nop.Core.Data
 {
     /// <summary>
-    /// Data settings (connection string information)
+    /// Represents the data settings
     /// </summary>
     public partial class DataSettings
     {
-        /// <summary>
-        /// Ctor
-        /// </summary>
+        #region Ctor
+
         public DataSettings()
         {
-            RawDataSettings=new Dictionary<string, string>();
+            RawDataSettings = new Dictionary<string, string>();
         }
 
+        #endregion
+
+        #region Properties
+
         /// <summary>
-        /// Data provider
+        /// Gets or sets a data provider
         /// </summary>
         public string DataProvider { get; set; }
 
         /// <summary>
-        /// Connection string
+        /// Gets or sets a connection string
         /// </summary>
         public string DataConnectionString { get; set; }
 
         /// <summary>
-        /// Raw settings file
+        /// Gets or sets a raw settings
         /// </summary>
         public IDictionary<string, string> RawDataSettings { get; }
 
         /// <summary>
-        /// A value indicating whether entered information is valid
+        /// Gets or sets a value indicating whether the information is entered
         /// </summary>
         /// <returns></returns>
-        public bool IsValid()
-        {
-            return !string.IsNullOrEmpty(this.DataProvider) && !string.IsNullOrEmpty(this.DataConnectionString);
-        }
+        [JsonIgnore]
+        public bool IsValid => !string.IsNullOrEmpty(this.DataProvider) && !string.IsNullOrEmpty(this.DataConnectionString);
+
+        #endregion
     }
 }

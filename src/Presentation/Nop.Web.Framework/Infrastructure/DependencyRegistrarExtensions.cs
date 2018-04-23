@@ -24,17 +24,15 @@ namespace Nop.Web.Framework.Infrastructure
             ContainerBuilder builder, string contextName, string filePath = null, bool reloadSettings = false) where T : IDbContext
         {
             //data layer
-            var dataSettingsManager = new DataSettingsManager();
-            var dataProviderSettings = dataSettingsManager.LoadSettings(filePath, reloadSettings);
-
-            if (dataProviderSettings != null && dataProviderSettings.IsValid())
+            var dataSettings = DataSettingsManager.LoadSettings(filePath, reloadSettings);
+            if (dataSettings?.IsValid ?? false)
             {
                 //register named context
-                builder.Register(c => (IDbContext)Activator.CreateInstance(typeof(T), new object[] { dataProviderSettings.DataConnectionString }))
+                builder.Register(c => (IDbContext)Activator.CreateInstance(typeof(T), new object[] { dataSettings.DataConnectionString }))
                     .Named<IDbContext>(contextName)
                     .InstancePerLifetimeScope();
 
-                builder.Register(c => (T)Activator.CreateInstance(typeof(T), new object[] { dataProviderSettings.DataConnectionString }))
+                builder.Register(c => (T)Activator.CreateInstance(typeof(T), new object[] { dataSettings.DataConnectionString }))
                     .InstancePerLifetimeScope();
             }
             else

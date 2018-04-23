@@ -262,7 +262,7 @@ namespace Nop.Core
             }
 
             //if host is empty (it is possible only when HttpContext is not available), use URL of a store entity configured in admin area
-            if (string.IsNullOrEmpty(storeHost) && DataSettingsHelper.DatabaseIsInstalled())
+            if (string.IsNullOrEmpty(storeHost) && DataSettingsManager.DatabaseIsInstalled)
             {
                 //do not inject IWorkContext via constructor because it'll cause circular references
                 storeLocation = EngineContext.Current.Resolve<IStoreContext>().CurrentStore?.Url
