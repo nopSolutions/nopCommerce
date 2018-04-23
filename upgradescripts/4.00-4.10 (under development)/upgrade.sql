@@ -2525,7 +2525,7 @@ IF EXISTS (
 DROP PROCEDURE [temp_generate_sename]
 GO
 
---del setting
+--delete setting
 DELETE FROM [Setting]
 WHERE [Name] = N'captchasettings.recaptchaversion'
 GO
