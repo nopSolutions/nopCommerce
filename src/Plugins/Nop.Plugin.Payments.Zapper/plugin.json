@@ -1,0 +1,11 @@
+﻿{
+  "Group": "Payment methods",
+  "FriendlyName": "Zapper",
+  "SystemName": "Payments.Zapper",
+  "Version": "0.1",
+  "SupportedVersions": [ "4.00" ],
+  "Author": "Zapper Development",
+  "DisplayOrder": 1,
+  "FileName": "Nop.Plugin.Payments.Zapper.dll",
+  "Description": "This plugin allows paying with Zapper"
+}

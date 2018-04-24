@@ -26,6 +26,7 @@ using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc.Filters;
 using Nop.Web.Framework.Security;
 using Nop.Web.Models.Checkout;
+using Microsoft.AspNetCore.Routing;
 
 namespace Nop.Web.Controllers
 {
@@ -64,21 +65,21 @@ namespace Nop.Web.Controllers
 
         #endregion
 
-		#region Ctor
+        #region Ctor
 
         public CheckoutController(ICheckoutModelFactory checkoutModelFactory,
             IWorkContext workContext,
             IStoreContext storeContext,
-            IShoppingCartService shoppingCartService, 
+            IShoppingCartService shoppingCartService,
             ILocalizationService localizationService,
             IProductAttributeParser productAttributeParser,
-            IProductService productService, 
+            IProductService productService,
             IOrderProcessingService orderProcessingService,
-            ICustomerService customerService, 
+            ICustomerService customerService,
             IGenericAttributeService genericAttributeService,
             ICountryService countryService,
             IStateProvinceService stateProvinceService,
-            IShippingService shippingService, 
+            IShippingService shippingService,
             IPaymentService paymentService,
             IPluginFinder pluginFinder,
             ILogger logger,
@@ -86,7 +87,7 @@ namespace Nop.Web.Controllers
             IWebHelper webHelper,
             IAddressAttributeParser addressAttributeParser,
             IAddressAttributeService addressAttributeService,
-            OrderSettings orderSettings, 
+            OrderSettings orderSettings,
             RewardPointsSettings rewardPointsSettings,
             PaymentSettings paymentSettings,
             ShippingSettings shippingSettings,
@@ -206,7 +207,7 @@ namespace Nop.Web.Controllers
 
             if (_orderSettings.OnePageCheckoutEnabled)
                 return RedirectToRoute("CheckoutOnePage");
-            
+
             return RedirectToRoute("CheckoutBillingAddress");
         }
 
@@ -236,7 +237,7 @@ namespace Nop.Web.Controllers
             //disable "order completed" page?
             if (_orderSettings.DisableOrderCompletedPage)
             {
-                return RedirectToRoute("OrderDetails", new {orderId = order.Id});
+                return RedirectToRoute("OrderDetails", new { orderId = order.Id });
             }
 
             //model
@@ -536,7 +537,7 @@ namespace Nop.Web.Controllers
                 overrideAttributesXml: customAttributes);
             return View(model);
         }
-        
+
         public virtual IActionResult ShippingMethod()
         {
             //validation
@@ -557,8 +558,8 @@ namespace Nop.Web.Controllers
             {
                 _genericAttributeService.SaveAttribute<ShippingOption>(_workContext.CurrentCustomer, SystemCustomerAttributeNames.SelectedShippingOption, null, _storeContext.CurrentStore.Id);
                 return RedirectToRoute("CheckoutPaymentMethod");
-                }
-            
+            }
+
             //model
             var model = _checkoutModelFactory.PrepareShippingMethodModel(cart, _workContext.CurrentCustomer.ShippingAddress);
 
@@ -566,11 +567,11 @@ namespace Nop.Web.Controllers
                 model.ShippingMethods.Count == 1)
             {
                 //if we have only one shipping method, then a customer doesn't have to choose a shipping method
-                _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, 
+                _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer,
                     SystemCustomerAttributeNames.SelectedShippingOption,
                     model.ShippingMethods.First().ShippingOption,
                     _storeContext.CurrentStore.Id);
-            
+
                 return RedirectToRoute("CheckoutPaymentMethod");
             }
 
@@ -605,12 +606,12 @@ namespace Nop.Web.Controllers
             //parse selected method 
             if (string.IsNullOrEmpty(shippingoption))
                 return ShippingMethod();
-            var splittedOption = shippingoption.Split(new [] { "___" }, StringSplitOptions.RemoveEmptyEntries);
+            var splittedOption = shippingoption.Split(new[] { "___" }, StringSplitOptions.RemoveEmptyEntries);
             if (splittedOption.Length != 2)
                 return ShippingMethod();
             var selectedName = splittedOption[0];
             var shippingRateComputationMethodSystemName = splittedOption[1];
-            
+
             //find it
             //performance optimization. try cache first
             var shippingOptions = _workContext.CurrentCustomer.GetAttribute<List<ShippingOption>>(SystemCustomerAttributeNames.OfferedShippingOptions, _storeContext.CurrentStore.Id);
@@ -634,10 +635,10 @@ namespace Nop.Web.Controllers
 
             //save
             _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.SelectedShippingOption, shippingOption, _storeContext.CurrentStore.Id);
-            
+
             return RedirectToRoute("CheckoutPaymentMethod");
         }
-        
+
         public virtual IActionResult PaymentMethod()
         {
             //validation
@@ -683,7 +684,7 @@ namespace Nop.Web.Controllers
                 //so customer doesn't have to choose a payment method
 
                 _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer,
-                    SystemCustomerAttributeNames.SelectedPaymentMethod, 
+                    SystemCustomerAttributeNames.SelectedPaymentMethod,
                     paymentMethodModel.PaymentMethods[0].PaymentMethodSystemName,
                     _storeContext.CurrentStore.Id);
                 return RedirectToRoute("CheckoutPaymentInfo");
@@ -731,7 +732,7 @@ namespace Nop.Web.Controllers
                 return PaymentMethod();
 
             var paymentMethodInst = _paymentService.LoadPaymentMethodBySystemName(paymentmethod);
-            if (paymentMethodInst == null || 
+            if (paymentMethodInst == null ||
                 !paymentMethodInst.IsPaymentMethodActive(_paymentSettings) ||
                 !_pluginFinder.AuthenticateStore(paymentMethodInst.PluginDescriptor, _storeContext.CurrentStore.Id) ||
                 !_pluginFinder.AuthorizedForUser(paymentMethodInst.PluginDescriptor, _workContext.CurrentCustomer))
@@ -740,7 +741,7 @@ namespace Nop.Web.Controllers
             //save
             _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer,
                 SystemCustomerAttributeNames.SelectedPaymentMethod, paymentmethod, _storeContext.CurrentStore.Id);
-            
+
             return RedirectToRoute("CheckoutPaymentInfo");
         }
 
@@ -776,7 +777,7 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("CheckoutPaymentMethod");
 
             //Check whether payment info should be skipped
-            if (paymentMethod.SkipPaymentInfo || 
+            if (paymentMethod.SkipPaymentInfo ||
                 (paymentMethod.PaymentMethodType == PaymentMethodType.Redirection && _paymentSettings.SkipPaymentInfoStepForRedirectionPaymentMethods))
             {
                 //skip payment info page
@@ -843,9 +844,10 @@ namespace Nop.Web.Controllers
             var model = _checkoutModelFactory.PreparePaymentInfoModel(paymentMethod);
             return View(model);
         }
-        
+
         public virtual IActionResult Confirm()
         {
+
             //validation
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
@@ -859,7 +861,6 @@ namespace Nop.Web.Controllers
 
             if (_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed)
                 return Challenge();
-
             //model
             var model = _checkoutModelFactory.PrepareConfirmOrderModel(cart);
             return View(model);
@@ -868,11 +869,13 @@ namespace Nop.Web.Controllers
         [HttpPost, ActionName("Confirm")]
         public virtual IActionResult ConfirmOrder()
         {
+
             //validation
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
                 .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
+
             if (!cart.Any())
                 return RedirectToRoute("ShoppingCart");
 
@@ -881,6 +884,7 @@ namespace Nop.Web.Controllers
 
             if (_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed)
                 return Challenge();
+
 
             //model
             var model = _checkoutModelFactory.PrepareConfirmOrderModel(cart);
@@ -892,10 +896,11 @@ namespace Nop.Web.Controllers
                     //Check whether payment workflow is required
                     if (_orderProcessingService.IsPaymentWorkflowRequired(cart))
                         return RedirectToRoute("CheckoutPaymentInfo");
-                    
+
                     processPaymentRequest = new ProcessPaymentRequest();
                 }
-                
+
+
                 //prevent 2 orders being placed within an X seconds time frame
                 if (!IsMinimumOrderPlacementIntervalValid(_workContext.CurrentCustomer))
                     throw new Exception(_localizationService.GetResource("Checkout.MinOrderPlacementInterval"));
@@ -906,7 +911,11 @@ namespace Nop.Web.Controllers
                 processPaymentRequest.PaymentMethodSystemName = _workContext.CurrentCustomer.GetAttribute<string>(
                     SystemCustomerAttributeNames.SelectedPaymentMethod,
                     _genericAttributeService, _storeContext.CurrentStore.Id);
+
+
+
                 var placeOrderResult = _orderProcessingService.PlaceOrder(processPaymentRequest);
+
                 if (placeOrderResult.Success)
                 {
                     HttpContext.Session.Set<ProcessPaymentRequest>("OrderPaymentInfo", null);
@@ -914,6 +923,18 @@ namespace Nop.Web.Controllers
                     {
                         Order = placeOrderResult.PlacedOrder
                     };
+
+                    //zapper: return to confirm view to display qr code 
+                    if (processPaymentRequest.PaymentMethodSystemName == "Payments.Zapper")
+                    {
+                        HttpContext.Session.Set("zappercheckoutmodel", model);
+                        HttpContext.Session.Set("zapperorderid", placeOrderResult.PlacedOrder.Id);
+                        HttpContext.Session.Set("zapperordertotal", placeOrderResult.PlacedOrder.OrderTotal);
+                        HttpContext.Session.Set("zapperorderref", placeOrderResult.PlacedOrder.CustomOrderNumber);
+                        return RedirectToAction("ConfirmZapper", new RouteValueDictionary(
+                            new { controller = "Checkout", action = "ConfirmZapper" }));
+                    }
+
                     _paymentService.PostProcessPayment(postProcessPaymentRequest);
 
                     if (_webHelper.IsRequestBeingRedirected || _webHelper.IsPostBeingDone)
@@ -921,10 +942,10 @@ namespace Nop.Web.Controllers
                         //redirection or POST has been done in PostProcessPayment
                         return Content("Redirected");
                     }
-                    
+
                     return RedirectToRoute("CheckoutCompleted", new { orderId = placeOrderResult.PlacedOrder.Id });
                 }
-                
+
                 foreach (var error in placeOrderResult.Errors)
                     model.Warnings.Add(error);
             }
@@ -938,10 +959,60 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
+        public IActionResult ConfirmZapper()
+        {
+            var model = HttpContext.Session.Get<CheckoutConfirmModel>("zappercheckoutmodel");
+            var orderId = HttpContext.Session.Get<int>("zapperorderid");
+            var orderTotal = HttpContext.Session.Get<decimal>("zapperordertotal");
+            var orderRef = HttpContext.Session.Get<string>("zapperorderref");
+
+            var paymentMethod = _paymentService.LoadPaymentMethodBySystemName("Payments.Zapper");
+            //get zapper plugin settings
+            var processpaymentrequest = paymentMethod.GetPaymentInfo(null);
+            //add custom properties so view can generate qr code
+            model.CustomProperties.Add("MerchantId", processpaymentrequest.CustomValues["MerchantId"]);
+            model.CustomProperties.Add("SiteId", processpaymentrequest.CustomValues["SiteId"]);
+            model.CustomProperties.Add("BillAmount", orderTotal);
+            model.CustomProperties.Add("MerchantReference", orderRef);
+            model.CustomProperties.Add("Paid", false);
+
+            return View("ConfirmZapper", model);
+        }
+
+        [HttpPost, ActionName("ConfirmZapper")]
+        public IActionResult ConfirmZapper(CheckoutConfirmModel model)
+        {
+            try
+            {
+                var orderId = HttpContext.Session.Get<int>("zapperorderid");
+                var order =  _orderService.GetOrderById(orderId);
+                var postProcessPaymentRequest = new PostProcessPaymentRequest
+                {
+                    Order = order
+                };
+
+                _paymentService.PostProcessPayment(postProcessPaymentRequest);
+
+                if (_webHelper.IsRequestBeingRedirected || _webHelper.IsPostBeingDone)
+                {
+                    //redirection or POST has been done in PostProcessPayment
+                    return Content("Redirected");
+                }
+
+                return RedirectToRoute("CheckoutCompleted", new { orderId = orderId });
+
+            }
+            catch (Exception exc)
+            {
+                _logger.Warning(exc.Message, exc);
+                model.Warnings.Add(exc.Message);
+            }
+            return View(model);
+        }
         #endregion
 
         #region Methods (one page checkout)
-        
+
         protected virtual JsonResult OpcLoadStepAfterShippingAddress(List<ShoppingCartItem> cart)
         {
             var shippingMethodModel = _checkoutModelFactory.PrepareShippingMethodModel(cart, _workContext.CurrentCustomer.ShippingAddress);
@@ -1008,7 +1079,7 @@ namespace Nop.Web.Controllers
 
                     return OpcLoadStepAfterPaymentMethod(paymentMethodInst, cart);
                 }
-                
+
                 //customer have to choose a payment method
                 return Json(new
                 {
@@ -1093,7 +1164,7 @@ namespace Nop.Web.Controllers
             var model = _checkoutModelFactory.PrepareOnePageCheckoutModel(cart);
             return View(model);
         }
-        
+
         public virtual IActionResult OpcSaveBilling(CheckoutBillingAddressModel model)
         {
             try
@@ -1385,26 +1456,26 @@ namespace Nop.Web.Controllers
 
                 if (_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed)
                     throw new Exception("Anonymous checkout is not allowed");
-                
+
                 if (!cart.RequiresShipping(_productService, _productAttributeParser))
                     throw new Exception("Shipping is not required");
 
                 //parse selected method 
                 if (string.IsNullOrEmpty(shippingoption))
                     throw new Exception("Selected shipping method can't be parsed");
-                var splittedOption = shippingoption.Split(new [] { "___" }, StringSplitOptions.RemoveEmptyEntries);
+                var splittedOption = shippingoption.Split(new[] { "___" }, StringSplitOptions.RemoveEmptyEntries);
                 if (splittedOption.Length != 2)
                     throw new Exception("Selected shipping method can't be parsed");
                 var selectedName = splittedOption[0];
                 var shippingRateComputationMethodSystemName = splittedOption[1];
-                
+
                 //find it
                 //performance optimization. try cache first
                 var shippingOptions = _workContext.CurrentCustomer.GetAttribute<List<ShippingOption>>(SystemCustomerAttributeNames.OfferedShippingOptions, _storeContext.CurrentStore.Id);
                 if (shippingOptions == null || !shippingOptions.Any())
                 {
                     //not found? let's load them using shipping service
-                    shippingOptions = _shippingService.GetShippingOptions(cart, _workContext.CurrentCustomer.ShippingAddress, 
+                    shippingOptions = _shippingService.GetShippingOptions(cart, _workContext.CurrentCustomer.ShippingAddress,
                         _workContext.CurrentCustomer, shippingRateComputationMethodSystemName, _storeContext.CurrentStore.Id).ShippingOptions.ToList();
                 }
                 else
@@ -1413,7 +1484,7 @@ namespace Nop.Web.Controllers
                     shippingOptions = shippingOptions.Where(so => so.ShippingRateComputationMethodSystemName.Equals(shippingRateComputationMethodSystemName, StringComparison.InvariantCultureIgnoreCase))
                         .ToList();
                 }
-                
+
                 var shippingOption = shippingOptions
                     .Find(so => !string.IsNullOrEmpty(so.Name) && so.Name.Equals(selectedName, StringComparison.InvariantCultureIgnoreCase));
                 if (shippingOption == null)
@@ -1525,7 +1596,7 @@ namespace Nop.Web.Controllers
                 var paymentMethod = _paymentService.LoadPaymentMethodBySystemName(paymentMethodSystemName);
                 if (paymentMethod == null)
                     throw new Exception("Payment method is not selected");
-                
+
                 var warnings = paymentMethod.ValidatePaymentForm(form);
                 foreach (var warning in warnings)
                     ModelState.AddModelError("", warning);
@@ -1634,16 +1705,29 @@ namespace Nop.Web.Controllers
                         });
                     }
 
+                    //zapper: return to confirm view to display qr code 
+                    if (processPaymentRequest.PaymentMethodSystemName == "Payments.Zapper")
+                    {
+                        var model = new CheckoutConfirmModel();
+                        HttpContext.Session.Set("zappercheckoutmodel", model);
+                        HttpContext.Session.Set("zapperorderid", placeOrderResult.PlacedOrder.Id);
+                        HttpContext.Session.Set("zapperordertotal", placeOrderResult.PlacedOrder.OrderTotal);
+                        HttpContext.Session.Set("zapperorderref", placeOrderResult.PlacedOrder.CustomOrderNumber);
+                       
+                        return RedirectToAction("OpcConfirmZapper", new RouteValueDictionary(
+                            new { controller = "Checkout", action = "OpcConfirmZapper" }));
+                    }
+
                     _paymentService.PostProcessPayment(postProcessPaymentRequest);
                     //success
-                    return Json(new {success = 1});
+                    return Json(new { success = 1 });
                 }
-                
+
                 //error
                 var confirmOrderModel = new CheckoutConfirmModel();
                 foreach (var error in placeOrderResult.Errors)
-                    confirmOrderModel.Warnings.Add(error); 
-                    
+                    confirmOrderModel.Warnings.Add(error);
+
                 return Json(new
                 {
                     update_section = new UpdateSectionJsonModel
@@ -1659,6 +1743,73 @@ namespace Nop.Web.Controllers
                 _logger.Warning(exc.Message, exc, _workContext.CurrentCustomer);
                 return Json(new { error = 1, message = exc.Message });
             }
+        }
+
+        public IActionResult OpcConfirmZapper()
+        {
+            var model = HttpContext.Session.Get<CheckoutConfirmModel>("zappercheckoutmodel");
+            var orderId = HttpContext.Session.Get<int>("zapperorderid");
+            var orderTotal = HttpContext.Session.Get<decimal>("zapperordertotal");
+            var orderRef = HttpContext.Session.Get<string>("zapperorderref");
+
+            var paymentMethod = _paymentService.LoadPaymentMethodBySystemName("Payments.Zapper");
+            //get zapper plugin settings
+            var processpaymentrequest = paymentMethod.GetPaymentInfo(null);
+            //add custom properties so view can generate qr code
+            model.CustomProperties.Add("MerchantId", processpaymentrequest.CustomValues["MerchantId"]);
+            model.CustomProperties.Add("SiteId", processpaymentrequest.CustomValues["SiteId"]);
+            model.CustomProperties.Add("BillAmount", orderTotal);
+            model.CustomProperties.Add("MerchantReference", orderRef);
+            model.CustomProperties.Add("Paid", false);
+
+            return Json(new
+            {
+                update_section = new UpdateSectionJsonModel
+                {
+                    name = "confirm-order",
+                    html = RenderPartialViewToString("OpcConfirmOrderZapper", model)
+                },
+                goto_section = "confirm_order"
+            });
+     
+        }
+
+        [HttpPost, ActionName("OpcConfirmZapper")]
+        public IActionResult OpcConfirmZapper(CheckoutConfirmModel model)
+        {
+            try
+            {
+                var orderId = HttpContext.Session.Get<int>("zapperorderid");
+                var order = _orderService.GetOrderById(orderId);
+                var postProcessPaymentRequest = new PostProcessPaymentRequest
+                {
+                    Order = order
+                };
+
+                _paymentService.PostProcessPayment(postProcessPaymentRequest);
+
+                if (_webHelper.IsRequestBeingRedirected || _webHelper.IsPostBeingDone)
+                {
+                    //redirection or POST has been done in PostProcessPayment
+                    return Content("Redirected");
+                }
+
+                //success
+                //redirect
+                //return Json(new
+                //{
+                //    redirect = $"{_webHelper.GetStoreLocation()}checkout/OpcCompleteRedirectionPayment"
+                //});
+                return RedirectToRoute("CheckoutCompleted", new { orderId = orderId });
+                 //return Json(new { success = 1 });
+
+            }
+            catch (Exception exc)
+            {
+                _logger.Warning(exc.Message, exc);
+                model.Warnings.Add(exc.Message);
+            }
+            return View(model);
         }
 
         public virtual IActionResult OpcCompleteRedirectionPayment()
@@ -1678,7 +1829,7 @@ namespace Nop.Web.Controllers
                     .FirstOrDefault();
                 if (order == null)
                     return RedirectToRoute("HomePage");
-                
+
                 var paymentMethod = _paymentService.LoadPaymentMethodBySystemName(order.PaymentMethodSystemName);
                 if (paymentMethod == null)
                     return RedirectToRoute("HomePage");
@@ -1703,7 +1854,7 @@ namespace Nop.Web.Controllers
                     //redirection or POST has been done in PostProcessPayment
                     return Content("Redirected");
                 }
-                
+
                 //if no redirection has been done (to a third-party payment page)
                 //theoretically it's not possible
                 return RedirectToRoute("CheckoutCompleted", new { orderId = order.Id });
@@ -1714,7 +1865,7 @@ namespace Nop.Web.Controllers
                 return Content(exc.Message);
             }
         }
-        
+
         #endregion
     }
 }
