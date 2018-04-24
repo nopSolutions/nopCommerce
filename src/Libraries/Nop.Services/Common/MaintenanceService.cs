@@ -83,7 +83,7 @@ namespace Nop.Services.Common
         /// <returns>Integer ident; null if cannot get the result</returns>
         public virtual int? GetTableIdent<T>() where T: BaseEntity
         {
-            if (_commonSettings.UseStoredProceduresIfSupported && _dataProvider.StoredProceduredSupported)
+            if (_commonSettings.UseStoredProceduresIfSupported && _dataProvider.StoredProceduresSupported)
             {
                 //stored procedures are enabled and supported by the database
                 var tableName = _dbContext.GetTableName<T>();
@@ -102,7 +102,7 @@ namespace Nop.Services.Common
         /// <param name="ident">Ident value</param>
         public virtual void SetTableIdent<T>(int ident) where T : BaseEntity
         {
-            if (_commonSettings.UseStoredProceduresIfSupported && _dataProvider.StoredProceduredSupported)
+            if (_commonSettings.UseStoredProceduresIfSupported && _dataProvider.StoredProceduresSupported)
             {
                 //stored procedures are enabled and supported by the database.
 

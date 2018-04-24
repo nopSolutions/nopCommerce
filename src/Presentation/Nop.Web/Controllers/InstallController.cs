@@ -358,7 +358,9 @@ namespace Nop.Web.Controllers
 
                     //init data provider
                     var dataProvider = EngineContext.Current.Resolve<IDataProvider>();
-                    dataProviderInstance.InitDatabase();
+#if EF6
+                    dataProvider.InitializeDatabase();
+#endif
 
                     //now resolve installation service
                     var installationService = EngineContext.Current.Resolve<IInstallationService>();

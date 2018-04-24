@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if EF6
+using System;
 using System.Data.Entity;
 
 namespace Nop.Data.Initializers
@@ -50,3 +51,4 @@ namespace Nop.Data.Initializers
         #endregion
     }
 }
+#endif

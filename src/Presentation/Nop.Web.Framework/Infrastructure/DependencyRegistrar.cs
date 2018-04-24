@@ -82,9 +82,6 @@ namespace Nop.Web.Framework.Infrastructure
 
             if (dataSettings?.IsValid ?? false)
             {
-                var efDataProviderManager = new EfDataProviderManager();
-                efDataProviderManager.DataProvider.InitConnectionFactory();
-
                 builder.Register<IDbContext>(c => new NopObjectContext(dataSettings.DataConnectionString)).InstancePerLifetimeScope();
             }
             else

@@ -1,17 +1,25 @@
 ﻿using System;
 using System.Data;
 using System.Data.Common;
-using Nop.Core.Data;
 
-namespace Nop.Core.Extensions
+namespace Nop.Core.Data.Extensions
 {
     /// <summary>
-    /// DataProvider extensions
+    /// Represents data provider extensions
     /// </summary>
     public static class DataProviderExtensions
     {
-        private static DbParameter GetParameter(this IDataProvider dataProvider, DbType dbType, string parameterName,
-            object parameterValue)
+        #region Utilities
+
+        /// <summary>
+        /// Get DB parameter
+        /// </summary>
+        /// <param name="dataProvider">Data provider</param>
+        /// <param name="dbType">Data type</param>
+        /// <param name="parameterName">Parameter name</param>
+        /// <param name="parameterValue">Parameter value</param>
+        /// <returns>Parameter</returns>
+        private static DbParameter GetParameter(this IDataProvider dataProvider, DbType dbType, string parameterName, object parameterValue)
         {
             var parameter = dataProvider.GetParameter();
             parameter.ParameterName = parameterName;
@@ -21,6 +29,13 @@ namespace Nop.Core.Extensions
             return parameter;
         }
 
+        /// <summary>
+        /// Get output DB parameter
+        /// </summary>
+        /// <param name="dataProvider">Data provider</param>
+        /// <param name="dbType">Data type</param>
+        /// <param name="parameterName">Parameter name</param>
+        /// <returns>Parameter</returns>
         private static DbParameter GetOutputParameter(this IDataProvider dataProvider, DbType dbType, string parameterName)
         {
             var parameter = dataProvider.GetParameter();
@@ -30,6 +45,10 @@ namespace Nop.Core.Extensions
 
             return parameter;
         }
+
+        #endregion
+
+        #region Methods
 
         /// <summary>
         /// Get string parameter
@@ -113,5 +132,7 @@ namespace Nop.Core.Extensions
         {
             return dataProvider.GetParameter(DbType.DateTime, parameterName, parameterValue.HasValue ? (object)parameterValue.Value : DBNull.Value);
         }
+
+        #endregion
     }
 }

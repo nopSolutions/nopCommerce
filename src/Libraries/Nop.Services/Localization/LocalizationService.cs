@@ -458,7 +458,7 @@ namespace Nop.Services.Localization
 
             if (string.IsNullOrEmpty(xml))
                 return;
-            if (_commonSettings.UseStoredProceduresIfSupported && _dataProvider.StoredProceduredSupported)
+            if (_commonSettings.UseStoredProceduresIfSupported && _dataProvider.StoredProceduresSupported)
             {
                 //SQL 2005 insists that your XML schema incoding be in UTF-16.
                 //Otherwise, you'll get "XML parsing: line 1, character XXX, unable to switch the encoding"

@@ -3,46 +3,44 @@
 namespace Nop.Core.Data
 {
     /// <summary>
-    /// Data provider interface
+    /// Represents a data provider
     /// </summary>
-    public interface IDataProvider
+    public partial interface IDataProvider
     {
-        /// <summary>
-        /// Initialize connection factory
-        /// </summary>
-        void InitConnectionFactory();
+        #region Methods
 
-        /// <summary>
-        /// Set database initializer
-        /// </summary>
-        void SetDatabaseInitializer();
-
+#if EF6
         /// <summary>
         /// Initialize database
         /// </summary>
-        void InitDatabase();
+        void InitializeDatabase();
+#endif
 
         /// <summary>
-        /// A value indicating whether this data provider supports stored procedures
-        /// </summary>
-        bool StoredProceduredSupported { get; }
-
-        /// <summary>
-        /// A value indicating whether this data provider supports backup
-        /// </summary>
-        bool BackupSupported { get; }
-
-        /// <summary>
-        /// Gets a support database parameter object (used by stored procedures)
+        /// Get a support database parameter object (used by stored procedures)
         /// </summary>
         /// <returns>Parameter</returns>
         DbParameter GetParameter();
 
+        #endregion
+
+        #region Properties
+
         /// <summary>
-        /// Maximum length of the data for HASHBYTES functions
-        /// returns 0 if HASHBYTES function is not supported
+        /// Gets a value indicating whether this data provider supports stored procedures
         /// </summary>
-        /// <returns>Length of the data for HASHBYTES functions</returns>
-        int SupportedLengthOfBinaryHash();
+        bool StoredProceduresSupported { get; }
+
+        /// <summary>
+        /// Gets a value indicating whether this data provider supports backup
+        /// </summary>
+        bool BackupSupported { get; }
+
+        /// <summary>
+        /// Gets a maximum length of the data for HASHBYTES functions, returns 0 if HASHBYTES function is not supported
+        /// </summary>
+        int SupportedLengthOfBinaryHash { get; }
+
+        #endregion
     }
 }

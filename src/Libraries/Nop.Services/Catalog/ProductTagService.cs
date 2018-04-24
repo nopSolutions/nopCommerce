@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using Nop.Core.Caching;
 using Nop.Core.Data;
+using Nop.Core.Data.Extensions;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
-using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Stores;
-using Nop.Core.Extensions;
 using Nop.Data;
 using Nop.Services.Events;
 using Nop.Services.Seo;
@@ -115,7 +114,7 @@ namespace Nop.Services.Catalog
             {
                 //stored procedures are enabled and supported by the database. 
                 //It's much faster than the LINQ implementation below 
-                if (_commonSettings.UseStoredProceduresIfSupported && _dataProvider.StoredProceduredSupported)
+                if (_commonSettings.UseStoredProceduresIfSupported && _dataProvider.StoredProceduresSupported)
                 {
                     //prepare parameters
                     var pStoreId = _dataProvider.GetInt32Parameter("StoreId", storeId);

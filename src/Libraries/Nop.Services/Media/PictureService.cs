@@ -842,7 +842,7 @@ namespace Nop.Services.Media
         /// <returns></returns>
         public IDictionary<int, string> GetPicturesHash(int[] picturesIds)
         {
-            var supportedLengthOfBinaryHash = _dataProvider.SupportedLengthOfBinaryHash();
+            var supportedLengthOfBinaryHash = _dataProvider.SupportedLengthOfBinaryHash;
             if(supportedLengthOfBinaryHash == 0 || !picturesIds.Any())
                 return new Dictionary<int, string>();
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if EF6
+using System;
 using System.Data.Entity;
 using System.Data.SqlServerCe;
 using System.IO;
@@ -67,3 +68,4 @@ namespace Nop.Data.Initializers
         #endregion
     }
 }
+#endif

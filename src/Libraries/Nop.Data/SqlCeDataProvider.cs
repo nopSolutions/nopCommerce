@@ -1,64 +1,32 @@
 ﻿using System.Data.Common;
-using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
 using System.Data.SqlClient;
 using Nop.Core.Data;
+#if EF6
 using Nop.Data.Initializers;
+#endif
 
 namespace Nop.Data
 {
     /// <summary>
-    /// SQL Serevr Compact provider
+    /// Represents SQL Server Compact data provider
     /// </summary>
-    public class SqlCeDataProvider : IDataProvider
+    public partial class SqlCeDataProvider : IDataProvider
     {
-        /// <summary>
-        /// Initialize connection factory
-        /// </summary>
-        public virtual void InitConnectionFactory()
-        {
-            var connectionFactory = new SqlCeConnectionFactory("System.Data.SqlServerCe.4.0");
-            //TODO fix compilation warning (below)
-            #pragma warning disable 0618
-            Database.DefaultConnectionFactory = connectionFactory;
-        }
-
+        #region Methods
+        
+#if EF6
         /// <summary>
         /// Initialize database
         /// </summary>
-        public virtual void InitDatabase()
-        {
-            InitConnectionFactory();
-            SetDatabaseInitializer();
-        }
-
-        /// <summary>
-        /// Set database initializer
-        /// </summary>
-        public virtual void SetDatabaseInitializer()
+        public virtual void InitializeDatabase()
         {
             var initializer = new CreateCeDatabaseIfNotExists<NopObjectContext>();
             Database.SetInitializer(initializer);
         }
+#endif
 
         /// <summary>
-        /// A value indicating whether this data provider supports stored procedures
-        /// </summary>
-        public virtual bool StoredProceduredSupported
-        {
-            get { return false; }
-        }
-
-        /// <summary>
-        /// A value indicating whether this data provider supports backup
-        /// </summary>
-        public bool BackupSupported
-        {
-            get { return false; }
-        }
-
-        /// <summary>
-        /// Gets a support database parameter object (used by stored procedures)
+        /// Get a support database parameter object (used by stored procedures)
         /// </summary>
         /// <returns>Parameter</returns>
         public virtual DbParameter GetParameter()
@@ -66,14 +34,25 @@ namespace Nop.Data
             return new SqlParameter();
         }
 
+        #endregion
+
+        #region Properties
+
         /// <summary>
-        /// Maximum length of the data for HASHBYTES functions
-        /// returns 0 if HASHBYTES function is not supported
+        /// Gets a value indicating whether this data provider supports stored procedures
         /// </summary>
-        /// <returns>Length of the data for HASHBYTES functions</returns>
-        public int SupportedLengthOfBinaryHash()
-        {
-            return 0; //HASHBYTES functions is missing in SQL CE
-        }
+        public virtual bool StoredProceduresSupported => false;
+
+        /// <summary>
+        /// Gets a value indicating whether this data provider supports backup
+        /// </summary>
+        public virtual bool BackupSupported => false;
+
+        /// <summary>
+        /// Gets a maximum length of the data for HASHBYTES functions, returns 0 if HASHBYTES function is not supported
+        /// </summary>
+        public virtual int SupportedLengthOfBinaryHash => 0;
+
+        #endregion
     }
 }

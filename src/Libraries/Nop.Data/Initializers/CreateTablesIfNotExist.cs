@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if EF6
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
@@ -80,3 +81,4 @@ namespace Nop.Data.Initializers
         }
     }
 }
+#endif
