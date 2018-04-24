@@ -571,8 +571,7 @@ namespace Nop.Services.Catalog
             var pTotalRecords = _dataProvider.GetOutputInt32Parameter("TotalRecords");
 
             //invoke stored procedure
-            var products = _dbContext.ExecuteStoredProcedureList<Product>(
-                "ProductLoadAllPaged",
+            var products = _dbContext.SqlQuery<Product>("ProductLoadAllPaged",
                 pCategoryIds,
                 pManufacturerId,
                 pStoreId,
@@ -602,7 +601,7 @@ namespace Nop.Services.Catalog
                 pOverridePublished,
                 pLoadFilterableSpecificationAttributeOptionIds,
                 pFilterableSpecificationAttributeOptionIds,
-                pTotalRecords);
+                pTotalRecords).ToList();
             //get filterable specification attribute option identifier
             var filterableSpecificationAttributeOptionIdsStr =
                 pFilterableSpecificationAttributeOptionIds.Value != DBNull.Value

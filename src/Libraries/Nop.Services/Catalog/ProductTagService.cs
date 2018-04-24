@@ -112,6 +112,7 @@ namespace Nop.Services.Catalog
             var key = string.Format(PRODUCTTAG_COUNT_KEY, storeId);
             return _cacheManager.Get(key, () =>
             {
+#if EF6
                 //stored procedures are enabled and supported by the database. 
                 //It's much faster than the LINQ implementation below 
                 if (_commonSettings.UseStoredProceduresIfSupported && _dataProvider.StoredProceduresSupported)
@@ -124,6 +125,7 @@ namespace Nop.Services.Catalog
 
                     return result.ToDictionary(item => item.ProductTagId, item => item.ProductCount);
                 }
+#endif
 
                 //stored procedures aren't supported. Use LINQ
                 var query = _productTagRepository.Table.Select(pt => new

@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Nop.Core;
-using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Seo;
 using Nop.Core.Infrastructure;
-using Nop.Data;
+using Nop.Data.Extensions;
 using Nop.Services.Localization;
 
 namespace Nop.Services.Seo

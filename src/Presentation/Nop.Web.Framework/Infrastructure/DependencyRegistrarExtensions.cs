@@ -35,16 +35,6 @@ namespace Nop.Web.Framework.Infrastructure
                 builder.Register(c => (T)Activator.CreateInstance(typeof(T), new object[] { dataSettings.DataConnectionString }))
                     .InstancePerLifetimeScope();
             }
-            else
-            {
-                //register named context
-                builder.Register(c => (T)Activator.CreateInstance(typeof(T), new object[] { c.Resolve<DataSettings>().DataConnectionString }))
-                    .Named<IDbContext>(contextName)
-                    .InstancePerLifetimeScope();
-
-                builder.Register(c => (T)Activator.CreateInstance(typeof(T), new object[] { c.Resolve<DataSettings>().DataConnectionString }))
-                    .InstancePerLifetimeScope();
-            }
         }
     }
 }

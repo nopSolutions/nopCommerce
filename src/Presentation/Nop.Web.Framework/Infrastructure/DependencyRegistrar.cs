@@ -75,17 +75,9 @@ namespace Nop.Web.Framework.Infrastructure
             builder.RegisterType<UserAgentHelper>().As<IUserAgentHelper>().InstancePerLifetimeScope();
 
             //data layer
-            var dataSettings = DataSettingsManager.LoadSettings();
-            builder.Register(c => DataSettingsManager.LoadSettings()).As<DataSettings>();
             builder.RegisterType<EfDataProviderManager>().As<IDataProviderManager>().InstancePerDependency();
             builder.Register(context => context.Resolve<IDataProviderManager>().DataProvider).As<IDataProvider>().InstancePerDependency();
-
-            if (dataSettings?.IsValid ?? false)
-            {
-                builder.Register<IDbContext>(c => new NopObjectContext(dataSettings.DataConnectionString)).InstancePerLifetimeScope();
-            }
-            else
-                builder.Register<IDbContext>(c => new NopObjectContext(DataSettingsManager.LoadSettings().DataConnectionString)).InstancePerLifetimeScope();
+            builder.RegisterType<NopObjectContext>().As<IDbContext>().InstancePerLifetimeScope();
 
             //repositories
             builder.RegisterGeneric(typeof(EfRepository<>)).As(typeof(IRepository<>)).InstancePerLifetimeScope();

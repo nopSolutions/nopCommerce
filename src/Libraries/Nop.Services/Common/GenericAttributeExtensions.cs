@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using Nop.Core;
 using Nop.Core.Infrastructure;
-using Nop.Data;
+using Nop.Data.Extensions;
 
 namespace Nop.Services.Common
 {

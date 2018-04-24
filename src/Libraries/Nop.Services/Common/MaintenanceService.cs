@@ -10,6 +10,7 @@ using Nop.Core;
 using Nop.Core.Data;
 using Nop.Core.Domain.Common;
 using Nop.Data;
+using Nop.Data.Extensions;
 
 namespace Nop.Services.Common
 {
@@ -83,6 +84,7 @@ namespace Nop.Services.Common
         /// <returns>Integer ident; null if cannot get the result</returns>
         public virtual int? GetTableIdent<T>() where T: BaseEntity
         {
+#if EF6
             if (_commonSettings.UseStoredProceduresIfSupported && _dataProvider.StoredProceduresSupported)
             {
                 //stored procedures are enabled and supported by the database
@@ -90,6 +92,7 @@ namespace Nop.Services.Common
                 var result = _dbContext.SqlQuery<decimal?>($"SELECT IDENT_CURRENT('[{tableName}]')").FirstOrDefault();
                 return result.HasValue ? Convert.ToInt32(result) : 1;
             }
+#endif
             
             //stored procedures aren't supported
             return null;

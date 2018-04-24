@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Internal;
 using Microsoft.AspNetCore.Mvc.Razor;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json.Serialization;
@@ -16,6 +17,7 @@ using Nop.Core.Data;
 using Nop.Core.Domain.Security;
 using Nop.Core.Infrastructure;
 using Nop.Core.Plugins;
+using Nop.Data;
 using Nop.Services.Authentication;
 using Nop.Services.Authentication.External;
 using Nop.Services.Logging;
@@ -271,6 +273,21 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         {
             //we use custom redirect executor as a workaround to allow using non-ASCII characters in redirect URLs
             services.AddSingleton<RedirectResultExecutor, NopRedirectResultExecutor>();
+        }
+
+        /// <summary>
+        /// Register base object context
+        /// </summary>
+        /// <param name="services">Collection of service descriptors</param>
+        public static void AddNopObjectContext(this IServiceCollection services)
+        {
+            var dataSettings = DataSettingsManager.LoadSettings();
+            if (!dataSettings?.IsValid ?? true)
+                return;
+
+            services.AddDbContext<NopObjectContext>(optionsBuilder => optionsBuilder
+                .UseLazyLoadingProxies()
+                .UseSqlServer(dataSettings.DataConnectionString));
         }
     }
 }

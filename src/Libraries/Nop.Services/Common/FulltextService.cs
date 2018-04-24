@@ -45,13 +45,15 @@ namespace Nop.Services.Common
         /// <returns>Result</returns>
         public virtual bool IsFullTextSupported()
         {
+#if EF6
             if (_commonSettings.UseStoredProceduresIfSupported && _dataProvider.StoredProceduresSupported)
             {
                 //stored procedures are enabled and supported by the database. 
                 var result = _dbContext.SqlQuery<int>("EXEC [FullText_IsSupported]");
                 return result.FirstOrDefault() > 0;
             }
-            
+#endif     
+
             //stored procedures aren't supported
             return false;
         }

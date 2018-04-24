@@ -7,7 +7,7 @@ using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Localization;
-using Nop.Data;
+using Nop.Data.Extensions;
 
 namespace Nop.Services.Localization
 {

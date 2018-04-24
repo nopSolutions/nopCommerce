@@ -6,6 +6,7 @@ using Nop.Core.Data;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Messages;
 using Nop.Data;
+using Nop.Data.Extensions;
 using Nop.Services.Events;
 
 namespace Nop.Services.Messages
