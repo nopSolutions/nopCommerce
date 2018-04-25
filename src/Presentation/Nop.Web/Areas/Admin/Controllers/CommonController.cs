@@ -212,6 +212,26 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost, ActionName("Maintenance")]
+        [FormValueRequired("re-index")]
+        public virtual IActionResult ReIndexingTables(MaintenanceModel model)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
+                return AccessDeniedView();
+
+            try
+            {
+                _maintenanceService.ReIndexingTables();
+                SuccessNotification(_localizationService.GetResource("Admin.System.Maintenance.ReIndexTables.Complete"));
+            }
+            catch (Exception exc)
+            {
+                ErrorNotification(exc);
+            }
+
+            return View(model);
+        }
+
+        [HttpPost, ActionName("Maintenance")]
         [FormValueRequired("backupFileName", "action")]
         public virtual IActionResult BackupAction(MaintenanceModel model)
         {
