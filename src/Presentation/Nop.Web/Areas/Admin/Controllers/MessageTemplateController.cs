@@ -192,12 +192,10 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.MessageTemplates.Updated"));
 
-                if (continueEditing)
-                {
-                    return RedirectToAction("Edit", new { id = messageTemplate.Id });
-                }
+                if (!continueEditing)
+                    return RedirectToAction("List");
 
-                return RedirectToAction("List");
+                return RedirectToAction("Edit", new { id = messageTemplate.Id });
             }
 
             //prepare model

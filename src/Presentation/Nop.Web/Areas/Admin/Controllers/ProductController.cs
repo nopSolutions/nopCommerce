@@ -2609,17 +2609,17 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             SuccessNotification(_localizationService.GetResource("Admin.Catalog.Products.ProductAttributes.Attributes.Added"));
 
-            if (continueEditing)
+            if (!continueEditing)
             {
-                //selected tab
-                SaveSelectedTabName();
+                SaveSelectedTabName("tab-product-attributes");
 
-                return RedirectToAction("ProductAttributeMappingEdit", new { id = productAttributeMapping.Id });
+                return RedirectToAction("Edit", new { id = product.Id });
             }
 
-            SaveSelectedTabName("tab-product-attributes");
+            //selected tab
+            SaveSelectedTabName();
 
-            return RedirectToAction("Edit", new { id = product.Id });
+            return RedirectToAction("ProductAttributeMappingEdit", new { id = productAttributeMapping.Id });
         }
 
         public virtual IActionResult ProductAttributeMappingEdit(int id)
@@ -2699,17 +2699,17 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             SuccessNotification(_localizationService.GetResource("Admin.Catalog.Products.ProductAttributes.Attributes.Updated"));
 
-            if (continueEditing)
+            if (!continueEditing)
             {
-                //selected tab
-                SaveSelectedTabName();
+                SaveSelectedTabName("tab-product-attributes");
 
-                return RedirectToAction("ProductAttributeMappingEdit", new { id = productAttributeMapping.Id });
+                return RedirectToAction("Edit", new { id = product.Id });
             }
 
-            SaveSelectedTabName("tab-product-attributes");
+            //selected tab
+            SaveSelectedTabName();
 
-            return RedirectToAction("Edit", new { id = product.Id });
+            return RedirectToAction("ProductAttributeMappingEdit", new { id = productAttributeMapping.Id });
         }
 
         [HttpPost]

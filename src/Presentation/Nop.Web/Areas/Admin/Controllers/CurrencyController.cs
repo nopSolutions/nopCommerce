@@ -226,10 +226,10 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Currencies.Added"));
 
-                if (continueEditing)
-                    return RedirectToAction("Edit", new { id = currency.Id });
+                if (!continueEditing)
+                    return RedirectToAction("List");
 
-                return RedirectToAction("List");
+                return RedirectToAction("Edit", new { id = currency.Id });
             }
 
             //prepare model
@@ -292,10 +292,10 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Currencies.Updated"));
 
-                if (continueEditing)
-                    return RedirectToAction("Edit", new { id = currency.Id });
+                if (!continueEditing)
+                    return RedirectToAction("List");
 
-                return RedirectToAction("List");
+                return RedirectToAction("Edit", new { id = currency.Id });
             }
 
             //prepare model
