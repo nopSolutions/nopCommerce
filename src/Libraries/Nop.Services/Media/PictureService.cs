@@ -41,6 +41,7 @@ namespace Nop.Services.Media
         private readonly MediaSettings _mediaSettings;
         private readonly IDataProvider _dataProvider;
         private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly IRepository<Thumbnail> _thumbRepository;
 
         #endregion
 
@@ -68,7 +69,8 @@ namespace Nop.Services.Media
             IEventPublisher eventPublisher,
             MediaSettings mediaSettings,
             IDataProvider dataProvider,
-            IHostingEnvironment hostingEnvironment)
+            IHostingEnvironment hostingEnvironment,
+            IRepository<Thumbnail> thumbRepository)
         {
             this._pictureRepository = pictureRepository;
             this._productPictureRepository = productPictureRepository;
@@ -80,6 +82,7 @@ namespace Nop.Services.Media
             this._mediaSettings = mediaSettings;
             this._dataProvider = dataProvider;
             this._hostingEnvironment = hostingEnvironment;
+            this._thumbRepository = thumbRepository;
         }
 
         #endregion
@@ -219,16 +222,16 @@ namespace Nop.Services.Media
         /// Delete picture thumbs
         /// </summary>
         /// <param name="picture">Picture</param>
-        protected virtual void DeletePictureThumbs(Picture picture)
+        protected virtual void DeletePictureThumbs(int PictureId)
         {
-            var filter = $"{picture.Id:0000000}*.*";
-            var thumbDirectoryPath = Path.Combine(_hostingEnvironment.WebRootPath, "images\\thumbs");
-            var currentFiles = System.IO.Directory.GetFiles(thumbDirectoryPath, filter, SearchOption.AllDirectories);
-            foreach (var currentFileName in currentFiles)
+            var thumbDirectoryPath = CommonHelper.MapPath("~/content/images/thumbs");
+            var currentFiles = GetThumbnailsFileNames(PictureId);
+            foreach (string currentFileName in currentFiles)
             {
                 var thumbFilePath = GetThumbLocalPath(currentFileName);
                 File.Delete(thumbFilePath);
             }
+            DeleteThumbnailsFromMap(PictureId);
         }
 
         /// <summary>
@@ -467,30 +470,13 @@ namespace Nop.Services.Media
         {
             var url = string.Empty;
             byte[] pictureBinary = null;
-            if (picture != null)
-                pictureBinary = LoadPictureBinary(picture);
-            if (picture == null || pictureBinary == null || pictureBinary.Length == 0)
+            if (picture == null)
             {
                 if (showDefaultPicture)
                 {
                     url = GetDefaultPictureUrl(targetSize, defaultPictureType, storeLocation);
                 }
                 return url;
-            }
-
-            if (picture.IsNew)
-            {
-                DeletePictureThumbs(picture);
-
-                //we do not validate picture binary here to ensure that no exception ("Parameter is not valid") will be thrown
-                picture = UpdatePicture(picture.Id,
-                    pictureBinary,
-                    picture.MimeType,
-                    picture.SeoFilename,
-                    picture.AltAttribute,
-                    picture.TitleAttribute,
-                    false,
-                    false);
             }
 
             var seoFileName = picture.SeoFilename; // = GetPictureSeName(picture.SeoFilename); //just for sure
@@ -511,18 +497,25 @@ namespace Nop.Services.Media
             }
             var thumbFilePath = GetThumbLocalPath(thumbFileName);
 
+            if (picture.IsNew) //if isnew then delete thumbs and set isnew = false
+            {
+                DeletePictureThumbs(picture.Id);
+                _dbContext.ExecuteSqlCommand($"update Picture set IsNew = 0 where Id = {picture.Id}");
+            }
+
             //the named mutex helps to avoid creating the same files in different threads,
             //and does not decrease performance significantly, because the code is blocked only for the specific file.
             using (var mutex = new Mutex(false, thumbFileName))
             {
-                if(!GeneratedThumbExists(thumbFilePath, thumbFileName))
+                if(!_thumbRepository.Table.Any(x => x.PictureId == picture.Id && x.ThumbSize == targetSize))
                 { 
                     mutex.WaitOne();
 
                     //check, if the file was created, while we were waiting for the release of the mutex.
-                    if (!GeneratedThumbExists(thumbFilePath, thumbFileName))
+                    if (!_thumbRepository.Table.Any(x => x.PictureId == picture.Id && x.ThumbSize == targetSize))
                     {
                         byte[] pictureBinaryResized;
+                        pictureBinary = LoadPictureBinary(picture);
 
                         //resizing required
                         if (targetSize != 0)
@@ -569,6 +562,7 @@ namespace Nop.Services.Media
                         }
 
                         SaveThumb(thumbFilePath, thumbFileName, picture.MimeType, pictureBinaryResized);
+                        _thumbRepository.Insert(new Thumbnail() { PictureId = picture.Id, ThumbSize = targetSize, FileName = thumbFileName });
                     }
                     
                     mutex.ReleaseMutex();
@@ -597,6 +591,29 @@ namespace Nop.Services.Media
 
         #endregion
 
+        #region  Thumbnail methods
+        public virtual List<Thumbnail> GetThumbnails(int PictureId)
+        {
+            return _thumbRepository.Table.Where(x => x.PictureId == PictureId).ToList();
+        }
+        public virtual List<string> GetThumbnailsFileNames(int PictureId)
+        {
+            return _thumbRepository.Table.Where(x => x.PictureId == PictureId).Select(x => x.FileName).ToList();
+        }
+        public virtual void DeleteThumbnailsFromMap(int PictureId)
+        {
+            _dbContext.ExecuteSqlCommand($"delete from Thumb_Mapping where PictureId = {PictureId}");
+        }
+        public virtual void InsertThumbnail(Thumbnail thumb)
+        {
+            _thumbRepository.Insert(thumb);
+        }
+        public virtual void DeleteThumbnail(int ThumbnailId)
+        {
+            _dbContext.ExecuteSqlCommand($"delete from Thumb_Mapping where Id = {ThumbnailId}");
+        }
+        #endregion
+
         #region CRUD methods
 
         /// <summary>
@@ -622,7 +639,7 @@ namespace Nop.Services.Media
                 throw new ArgumentNullException(nameof(picture));
 
             //delete thumbs
-            DeletePictureThumbs(picture);
+            DeletePictureThumbs(picture.Id);
 
             //delete from file system
             if (!StoreInDb)
@@ -748,7 +765,7 @@ namespace Nop.Services.Media
 
             //delete old thumbs if a picture has been changed
             if (seoFilename != picture.SeoFilename)
-                DeletePictureThumbs(picture);
+                DeletePictureThumbs(picture.Id);
 
             picture.PictureBinary = StoreInDb ? pictureBinary : new byte[0];
             picture.MimeType = mimeType;

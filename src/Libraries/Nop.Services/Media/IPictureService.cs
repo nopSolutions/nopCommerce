@@ -160,5 +160,14 @@ namespace Nop.Services.Media
         /// <param name="picturesIds">Pictures Ids</param>
         /// <returns></returns>
         IDictionary<int, string> GetPicturesHash(int [] picturesIds);
+
+        #region Thumbnail
+        List<Thumbnail> GetThumbnails(int PictureId);
+        List<string> GetThumbnailsFileNames(int PictureId);
+        void DeleteThumbnailsFromMap(int PictureId);
+        void InsertThumbnail(Thumbnail thumb);
+        void DeleteThumbnail(int ThumbnailId);
+        #endregion
+
     }
 }
