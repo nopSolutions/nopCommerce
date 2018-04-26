@@ -1,52 +1,68 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Catalog;
 
 namespace Nop.Data.Mapping.Catalog
 {
     /// <summary>
-    /// Mapping class
+    /// Represents a product mapping configuration
     /// </summary>
     public partial class ProductMap : NopEntityTypeConfiguration<Product>
     {
+        #region Methods
+
         /// <summary>
-        /// Ctor
+        /// Configures the entity
         /// </summary>
-        public ProductMap()
+        /// <param name="builder">The builder to be used to configure the entity</param>
+        public override void Configure(EntityTypeBuilder<Product> builder)
         {
-            this.ToTable("Product");
-            this.HasKey(p => p.Id);
-            this.Property(p => p.Name).IsRequired().HasMaxLength(400);
-            this.Property(p => p.MetaKeywords).HasMaxLength(400);
-            this.Property(p => p.MetaTitle).HasMaxLength(400);
-            this.Property(p => p.Sku).HasMaxLength(400);
-            this.Property(p => p.ManufacturerPartNumber).HasMaxLength(400);
-            this.Property(p => p.Gtin).HasMaxLength(400);
-            this.Property(p => p.AdditionalShippingCharge).HasPrecision(18, 4);
-            this.Property(p => p.Price).HasPrecision(18, 4);
-            this.Property(p => p.OldPrice).HasPrecision(18, 4);
-            this.Property(p => p.ProductCost).HasPrecision(18, 4);
-            this.Property(p => p.MinimumCustomerEnteredPrice).HasPrecision(18, 4);
-            this.Property(p => p.MaximumCustomerEnteredPrice).HasPrecision(18, 4);
-            this.Property(p => p.Weight).HasPrecision(18, 4);
-            this.Property(p => p.Length).HasPrecision(18, 4);
-            this.Property(p => p.Width).HasPrecision(18, 4);
-            this.Property(p => p.Height).HasPrecision(18, 4);
-            this.Property(p => p.RequiredProductIds).HasMaxLength(1000);
-            this.Property(p => p.AllowedQuantities).HasMaxLength(1000);
-            this.Property(p => p.BasepriceAmount).HasPrecision(18, 4);
-            this.Property(p => p.BasepriceBaseAmount).HasPrecision(18, 4);
+            builder.ToTable(nameof(Product));
+            builder.HasKey(product => product.Id);
 
-            this.Ignore(p => p.ProductType);
-            this.Ignore(p => p.BackorderMode);
-            this.Ignore(p => p.DownloadActivationType);
-            this.Ignore(p => p.GiftCardType);
-            this.Ignore(p => p.LowStockActivity);
-            this.Ignore(p => p.ManageInventoryMethod);
-            this.Ignore(p => p.RecurringCyclePeriod);
-            this.Ignore(p => p.RentalPricePeriod);
+            builder.Property(product => product.Name).HasMaxLength(400).IsRequired();
+            builder.Property(product => product.MetaKeywords).HasMaxLength(400);
+            builder.Property(product => product.MetaTitle).HasMaxLength(400);
+            builder.Property(product => product.Sku).HasMaxLength(400);
+            builder.Property(product => product.ManufacturerPartNumber).HasMaxLength(400);
+            builder.Property(product => product.Gtin).HasMaxLength(400);
+            builder.Property(product => product.AdditionalShippingCharge).HasColumnType("decimal(18, 4)");
+            builder.Property(product => product.Price).HasColumnType("decimal(18, 4)");
+            builder.Property(product => product.OldPrice).HasColumnType("decimal(18, 4)");
+            builder.Property(product => product.ProductCost).HasColumnType("decimal(18, 4)");
+            builder.Property(product => product.MinimumCustomerEnteredPrice).HasColumnType("decimal(18, 4)");
+            builder.Property(product => product.MaximumCustomerEnteredPrice).HasColumnType("decimal(18, 4)");
+            builder.Property(product => product.Weight).HasColumnType("decimal(18, 4)");
+            builder.Property(product => product.Length).HasColumnType("decimal(18, 4)");
+            builder.Property(product => product.Width).HasColumnType("decimal(18, 4)");
+            builder.Property(product => product.Height).HasColumnType("decimal(18, 4)");
+            builder.Property(product => product.RequiredProductIds).HasMaxLength(1000);
+            builder.Property(product => product.AllowedQuantities).HasMaxLength(1000);
+            builder.Property(product => product.BasepriceAmount).HasColumnType("decimal(18, 4)");
+            builder.Property(product => product.BasepriceBaseAmount).HasColumnType("decimal(18, 4)");
 
-            this.HasMany(p => p.ProductTags)
-                .WithMany(pt => pt.Products)
-                .Map(m => m.ToTable("Product_ProductTag_Mapping"));
+#if EF6
+            builder.HasMany(product => product.ProductTags)
+                .WithMany(productTag => productTag.Products)
+                .Map(mapping => mapping.ToTable("Product_ProductTag_Mapping"));
+#else
+            builder.Ignore(product => product.ProductTags);
+            builder.Ignore(product => product.AppliedDiscounts);
+#endif
+
+            builder.Ignore(product => product.ProductType);
+            builder.Ignore(product => product.BackorderMode);
+            builder.Ignore(product => product.DownloadActivationType);
+            builder.Ignore(product => product.GiftCardType);
+            builder.Ignore(product => product.LowStockActivity);
+            builder.Ignore(product => product.ManageInventoryMethod);
+            builder.Ignore(product => product.RecurringCyclePeriod);
+            builder.Ignore(product => product.RentalPricePeriod);
+
+            //add custom configuration
+            this.PostConfigure(builder);
         }
+
+        #endregion
     }
 }

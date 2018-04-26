@@ -1,22 +1,33 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Directory;
 
 namespace Nop.Data.Mapping.Directory
 {
     /// <summary>
-    /// Mapping class
+    /// Represents a measure weight mapping configuration
     /// </summary>
     public partial class MeasureWeightMap : NopEntityTypeConfiguration<MeasureWeight>
     {
+        #region Methods
+
         /// <summary>
-        /// Ctor
+        /// Configures the entity
         /// </summary>
-        public MeasureWeightMap()
+        /// <param name="builder">The builder to be used to configure the entity</param>
+        public override void Configure(EntityTypeBuilder<MeasureWeight> builder)
         {
-            this.ToTable("MeasureWeight");
-            this.HasKey(m => m.Id);
-            this.Property(m => m.Name).IsRequired().HasMaxLength(100);
-            this.Property(m => m.SystemKeyword).IsRequired().HasMaxLength(100);
-            this.Property(m => m.Ratio).HasPrecision(18, 8);
+            builder.ToTable(nameof(MeasureWeight));
+            builder.HasKey(weight => weight.Id);
+
+            builder.Property(weight => weight.Name).HasMaxLength(100).IsRequired();
+            builder.Property(weight => weight.SystemKeyword).HasMaxLength(100).IsRequired();
+            builder.Property(weight => weight.Ratio).HasColumnType("decimal(18, 8)");
+
+            //add custom configuration
+            this.PostConfigure(builder);
         }
+
+        #endregion
     }
 }

@@ -1,27 +1,37 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Messages;
 
 namespace Nop.Data.Mapping.Messages
 {
     /// <summary>
-    /// Mapping class
+    /// Represents an email account mapping configuration
     /// </summary>
     public partial class EmailAccountMap : NopEntityTypeConfiguration<EmailAccount>
     {
+        #region Methods
+
         /// <summary>
-        /// Ctor
+        /// Configures the entity
         /// </summary>
-        public EmailAccountMap()
+        /// <param name="builder">The builder to be used to configure the entity</param>
+        public override void Configure(EntityTypeBuilder<EmailAccount> builder)
         {
-            this.ToTable("EmailAccount");
-            this.HasKey(ea => ea.Id);
+            builder.ToTable(nameof(EmailAccount));
+            builder.HasKey(emailAccount => emailAccount.Id);
 
-            this.Property(ea => ea.Email).IsRequired().HasMaxLength(255);
-            this.Property(ea => ea.DisplayName).HasMaxLength(255);
-            this.Property(ea => ea.Host).IsRequired().HasMaxLength(255);
-            this.Property(ea => ea.Username).IsRequired().HasMaxLength(255);
-            this.Property(ea => ea.Password).IsRequired().HasMaxLength(255);
+            builder.Property(emailAccount => emailAccount.Email).HasMaxLength(255).IsRequired();
+            builder.Property(emailAccount => emailAccount.DisplayName).HasMaxLength(255);
+            builder.Property(emailAccount => emailAccount.Host).HasMaxLength(255).IsRequired();
+            builder.Property(emailAccount => emailAccount.Username).HasMaxLength(255).IsRequired();
+            builder.Property(emailAccount => emailAccount.Password).HasMaxLength(255).IsRequired();
 
-            this.Ignore(ea => ea.FriendlyName);
+            builder.Ignore(emailAccount => emailAccount.FriendlyName);
+
+            //add custom configuration
+            this.PostConfigure(builder);
         }
+
+        #endregion
     }
 }

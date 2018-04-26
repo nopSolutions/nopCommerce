@@ -1,21 +1,32 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Catalog;
 
 namespace Nop.Data.Mapping.Catalog
 {
     /// <summary>
-    /// Mapping class
+    /// Represents a category template mapping configuration
     /// </summary>
     public partial class CategoryTemplateMap : NopEntityTypeConfiguration<CategoryTemplate>
     {
+        #region Methods
+
         /// <summary>
-        /// Ctor
+        /// Configures the entity
         /// </summary>
-        public CategoryTemplateMap()
+        /// <param name="builder">The builder to be used to configure the entity</param>
+        public override void Configure(EntityTypeBuilder<CategoryTemplate> builder)
         {
-            this.ToTable("CategoryTemplate");
-            this.HasKey(p => p.Id);
-            this.Property(p => p.Name).IsRequired().HasMaxLength(400);
-            this.Property(p => p.ViewPath).IsRequired().HasMaxLength(400);
+            builder.ToTable(nameof(CategoryTemplate));
+            builder.HasKey(template => template.Id);
+
+            builder.Property(template => template.Name).HasMaxLength(400).IsRequired();
+            builder.Property(template => template.ViewPath).HasMaxLength(400).IsRequired();
+
+            //add custom configuration
+            this.PostConfigure(builder);
         }
+
+        #endregion
     }
 }

@@ -1,23 +1,33 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Messages;
 
 namespace Nop.Data.Mapping.Messages
 {
     /// <summary>
-    /// Mapping class
+    /// Represents a campaign mapping configuration
     /// </summary>
     public partial class CampaignMap : NopEntityTypeConfiguration<Campaign>
     {
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        public CampaignMap()
-        {
-            this.ToTable("Campaign");
-            this.HasKey(ea => ea.Id);
+        #region Methods
 
-            this.Property(ea => ea.Name).IsRequired();
-            this.Property(ea => ea.Subject).IsRequired();
-            this.Property(ea => ea.Body).IsRequired();
+        /// <summary>
+        /// Configures the entity
+        /// </summary>
+        /// <param name="builder">The builder to be used to configure the entity</param>
+        public override void Configure(EntityTypeBuilder<Campaign> builder)
+        {
+            builder.ToTable(nameof(Campaign));
+            builder.HasKey(campaign => campaign.Id);
+
+            builder.Property(campaign => campaign.Name).IsRequired();
+            builder.Property(campaign => campaign.Subject).IsRequired();
+            builder.Property(campaign => campaign.Body).IsRequired();
+
+            //add custom configuration
+            this.PostConfigure(builder);
         }
+
+        #endregion
     }
 }

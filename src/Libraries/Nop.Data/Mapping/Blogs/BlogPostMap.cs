@@ -1,27 +1,39 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Blogs;
 
 namespace Nop.Data.Mapping.Blogs
 {
     /// <summary>
-    /// Mapping class
+    /// Represents a blog post mapping configuration
     /// </summary>
     public partial class BlogPostMap : NopEntityTypeConfiguration<BlogPost>
     {
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        public BlogPostMap()
-        {
-            this.ToTable("BlogPost");
-            this.HasKey(bp => bp.Id);
-            this.Property(bp => bp.Title).IsRequired();
-            this.Property(bp => bp.Body).IsRequired();
-            this.Property(bp => bp.MetaKeywords).HasMaxLength(400);
-            this.Property(bp => bp.MetaTitle).HasMaxLength(400);
+        #region Methods
 
-            this.HasRequired(bp => bp.Language)
+        /// <summary>
+        /// Configures the entity
+        /// </summary>
+        /// <param name="builder">The builder to be used to configure the entity</param>
+        public override void Configure(EntityTypeBuilder<BlogPost> builder)
+        {
+            builder.ToTable(nameof(BlogPost));
+            builder.HasKey(blogPost => blogPost.Id);
+
+            builder.Property(blogPost => blogPost.Title).IsRequired();
+            builder.Property(blogPost => blogPost.Body).IsRequired();
+            builder.Property(blogPost => blogPost.MetaKeywords).HasMaxLength(400);
+            builder.Property(blogPost => blogPost.MetaTitle).HasMaxLength(400);
+
+            builder.HasOne(blogPost => blogPost.Language)
                 .WithMany()
-                .HasForeignKey(bp => bp.LanguageId).WillCascadeOnDelete(true);
+                .HasForeignKey(blogPost => blogPost.LanguageId)
+                .IsRequired();
+
+            //add custom configuration
+            this.PostConfigure(builder);
         }
+
+        #endregion
     }
 }

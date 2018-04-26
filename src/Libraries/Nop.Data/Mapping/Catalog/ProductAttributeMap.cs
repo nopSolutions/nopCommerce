@@ -1,20 +1,31 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Catalog;
 
 namespace Nop.Data.Mapping.Catalog
 {
     /// <summary>
-    /// Mapping class
+    /// Represents a product attribute mapping configuration
     /// </summary>
     public partial class ProductAttributeMap : NopEntityTypeConfiguration<ProductAttribute>
     {
+        #region Methods
+
         /// <summary>
-        /// Ctor
+        /// Configures the entity
         /// </summary>
-        public ProductAttributeMap()
+        /// <param name="builder">The builder to be used to configure the entity</param>
+        public override void Configure(EntityTypeBuilder<ProductAttribute> builder)
         {
-            this.ToTable("ProductAttribute");
-            this.HasKey(pa => pa.Id);
-            this.Property(pa => pa.Name).IsRequired();
+            builder.ToTable(nameof(ProductAttribute));
+            builder.HasKey(attribute => attribute.Id);
+
+            builder.Property(attribute => attribute.Name).IsRequired();
+
+            //add custom configuration
+            this.PostConfigure(builder);
         }
+
+        #endregion
     }
 }

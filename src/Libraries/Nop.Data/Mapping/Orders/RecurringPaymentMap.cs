@@ -1,29 +1,39 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Orders;
 
 namespace Nop.Data.Mapping.Orders
 {
     /// <summary>
-    /// Mapping class
+    /// Represents a recurring payment mapping configuration
     /// </summary>
     public partial class RecurringPaymentMap : NopEntityTypeConfiguration<RecurringPayment>
     {
+        #region Methods
+
         /// <summary>
-        /// Ctor
+        /// Configures the entity
         /// </summary>
-        public RecurringPaymentMap()
+        /// <param name="builder">The builder to be used to configure the entity</param>
+        public override void Configure(EntityTypeBuilder<RecurringPayment> builder)
         {
-            this.ToTable("RecurringPayment");
-            this.HasKey(rp => rp.Id);
+            builder.ToTable(nameof(RecurringPayment));
+            builder.HasKey(recurringPayment => recurringPayment.Id);
 
-            this.Ignore(rp => rp.NextPaymentDate);
-            this.Ignore(rp => rp.CyclesRemaining);
-            this.Ignore(rp => rp.CyclePeriod);
-
-            //this.HasRequired(rp => rp.InitialOrder).WithOptional().Map(x => x.MapKey("InitialOrderId")).WillCascadeOnDelete(false);
-            this.HasRequired(rp => rp.InitialOrder)
+            builder.HasOne(recurringPayment => recurringPayment.InitialOrder)
                 .WithMany()
-                .HasForeignKey(o => o.InitialOrderId)
-                .WillCascadeOnDelete(false);
+                .HasForeignKey(recurringPayment => recurringPayment.InitialOrderId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Ignore(recurringPayment => recurringPayment.NextPaymentDate);
+            builder.Ignore(recurringPayment => recurringPayment.CyclesRemaining);
+            builder.Ignore(recurringPayment => recurringPayment.CyclePeriod);
+
+            //add custom configuration
+            this.PostConfigure(builder);
         }
+
+        #endregion
     }
 }

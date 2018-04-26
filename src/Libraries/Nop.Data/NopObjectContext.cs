@@ -31,13 +31,12 @@ namespace Nop.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             //dynamically load all configurations
-            var typesToRegister = Assembly.GetExecutingAssembly().GetTypes()
-                .Where(type => !string.IsNullOrEmpty(type.Namespace))
-                .Where(type => type.BaseType != null && type.BaseType.IsGenericType && type.BaseType.GetGenericTypeDefinition() == typeof(NopEntityTypeConfiguration<>));
+            var entityTypeConfigurations = Assembly.GetExecutingAssembly().GetTypes().Where(type => 
+                (type.BaseType?.IsGenericType ?? false) && type.BaseType.GetGenericTypeDefinition() == typeof(NopEntityTypeConfiguration<>));
 
-            foreach (var type in typesToRegister)
+            foreach (var entityTypeConfiguration in entityTypeConfigurations)
             {
-                dynamic configuration = Activator.CreateInstance(type);
+                dynamic configuration = Activator.CreateInstance(entityTypeConfiguration);
                 modelBuilder.ApplyConfiguration(configuration);
             }
 

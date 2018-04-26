@@ -1,28 +1,39 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Logging;
 
 namespace Nop.Data.Mapping.Logging
 {
     /// <summary>
-    /// Mapping class
+    /// Represents a log mapping configuration
     /// </summary>
     public partial class LogMap : NopEntityTypeConfiguration<Log>
     {
+        #region Methods
+
         /// <summary>
-        /// Ctor
+        /// Configures the entity
         /// </summary>
-        public LogMap()
+        /// <param name="builder">The builder to be used to configure the entity</param>
+        public override void Configure(EntityTypeBuilder<Log> builder)
         {
-            this.ToTable("Log");
-            this.HasKey(l => l.Id);
-            this.Property(l => l.ShortMessage).IsRequired();
-            this.Property(l => l.IpAddress).HasMaxLength(200);
+            builder.ToTable(nameof(Log));
+            builder.HasKey(logItem => logItem.Id);
 
-            this.Ignore(l => l.LogLevel);
+            builder.Property(logItem => logItem.ShortMessage).IsRequired();
+            builder.Property(logItem => logItem.IpAddress).HasMaxLength(200);
 
-            this.HasOptional(l => l.Customer)
+            builder.Ignore(logItem => logItem.LogLevel);
+
+            builder.HasOne(logItem => logItem.Customer)
                 .WithMany()
-                .HasForeignKey(l => l.CustomerId)
-            .WillCascadeOnDelete(true);
+                .HasForeignKey(logItem => logItem.CustomerId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            //add custom configuration
+            this.PostConfigure(builder);
         }
+
+        #endregion
     }
 }

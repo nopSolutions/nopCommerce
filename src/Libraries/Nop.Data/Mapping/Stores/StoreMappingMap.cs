@@ -1,26 +1,36 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Stores;
 
 namespace Nop.Data.Mapping.Stores
 {
     /// <summary>
-    /// Mapping class
+    /// Represents a store mapping mapping configuration
     /// </summary>
     public partial class StoreMappingMap : NopEntityTypeConfiguration<StoreMapping>
     {
+        #region Methods
+
         /// <summary>
-        /// Ctor
+        /// Configures the entity
         /// </summary>
-        public StoreMappingMap()
+        /// <param name="builder">The builder to be used to configure the entity</param>
+        public override void Configure(EntityTypeBuilder<StoreMapping> builder)
         {
-            this.ToTable("StoreMapping");
-            this.HasKey(sm => sm.Id);
+            builder.ToTable(nameof(StoreMapping));
+            builder.HasKey(storeMapping => storeMapping.Id);
 
-            this.Property(sm => sm.EntityName).IsRequired().HasMaxLength(400);
+            builder.Property(storeMapping => storeMapping.EntityName).HasMaxLength(400).IsRequired();
 
-            this.HasRequired(sm => sm.Store)
+            builder.HasOne(storeMapping => storeMapping.Store)
                 .WithMany()
-                .HasForeignKey(sm => sm.StoreId)
-                .WillCascadeOnDelete(true);
+                .HasForeignKey(storeMapping => storeMapping.StoreId)
+                .IsRequired();
+
+            //add custom configuration
+            this.PostConfigure(builder);
         }
+
+        #endregion
     }
 }

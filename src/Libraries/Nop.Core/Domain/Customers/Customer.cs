@@ -134,6 +134,16 @@ namespace Nop.Core.Domain.Customers
         /// </summary>
         public int RegisteredInStoreId { get; set; }
 
+        /// <summary>
+        /// Gets or sets the billing address identifier
+        /// </summary>
+        public int? BillingAddressId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the shipping address identifier
+        /// </summary>
+        public int? ShippingAddressId { get; set; }
+
         #region Navigation properties
 
         /// <summary>
@@ -190,7 +200,7 @@ namespace Nop.Core.Domain.Customers
             get { return _addresses ?? (_addresses = new List<Address>()); }
             protected set { _addresses = value; }
         }
-
+        
         #endregion
     }
 }

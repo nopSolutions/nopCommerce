@@ -1,24 +1,36 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Polls;
 
 namespace Nop.Data.Mapping.Polls
 {
     /// <summary>
-    /// Mapping class
+    /// Represents a poll answer mapping configuration
     /// </summary>
     public partial class PollAnswerMap : NopEntityTypeConfiguration<PollAnswer>
     {
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        public PollAnswerMap()
-        {
-            this.ToTable("PollAnswer");
-            this.HasKey(pa => pa.Id);
-            this.Property(pa => pa.Name).IsRequired();
+        #region Methods
 
-            this.HasRequired(pa => pa.Poll)
-                .WithMany(p => p.PollAnswers)
-                .HasForeignKey(pa => pa.PollId).WillCascadeOnDelete(true);
+        /// <summary>
+        /// Configures the entity
+        /// </summary>
+        /// <param name="builder">The builder to be used to configure the entity</param>
+        public override void Configure(EntityTypeBuilder<PollAnswer> builder)
+        {
+            builder.ToTable(nameof(PollAnswer));
+            builder.HasKey(pollAnswer => pollAnswer.Id);
+
+            builder.Property(pollAnswer => pollAnswer.Name).IsRequired();
+
+            builder.HasOne(pollAnswer => pollAnswer.Poll)
+                .WithMany(poll => poll.PollAnswers)
+                .HasForeignKey(pollAnswer => pollAnswer.PollId)
+                .IsRequired();
+
+            //add custom configuration
+            this.PostConfigure(builder);
         }
+
+        #endregion
     }
 }

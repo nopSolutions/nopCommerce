@@ -1,27 +1,39 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Discounts;
 
 namespace Nop.Data.Mapping.Discounts
 {
     /// <summary>
-    /// Mapping class
+    /// Represents a discount usage history mapping configuration
     /// </summary>
     public partial class DiscountUsageHistoryMap : NopEntityTypeConfiguration<DiscountUsageHistory>
     {
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        public DiscountUsageHistoryMap()
-        {
-            this.ToTable("DiscountUsageHistory");
-            this.HasKey(duh => duh.Id);
-            
-            this.HasRequired(duh => duh.Discount)
-                .WithMany()
-                .HasForeignKey(duh => duh.DiscountId);
+        #region Methods
 
-            this.HasRequired(duh => duh.Order)
-                .WithMany(o => o.DiscountUsageHistory)
-                .HasForeignKey(duh => duh.OrderId);
+        /// <summary>
+        /// Configures the entity
+        /// </summary>
+        /// <param name="builder">The builder to be used to configure the entity</param>
+        public override void Configure(EntityTypeBuilder<DiscountUsageHistory> builder)
+        {
+            builder.ToTable(nameof(DiscountUsageHistory));
+            builder.HasKey(historyEntry => historyEntry.Id);
+
+            builder.HasOne(historyEntry => historyEntry.Discount)
+                .WithMany()
+                .HasForeignKey(historyEntry => historyEntry.DiscountId)
+                .IsRequired();
+
+            builder.HasOne(historyEntry => historyEntry.Order)
+                .WithMany(order => order.DiscountUsageHistory)
+                .HasForeignKey(historyEntry => historyEntry.OrderId)
+                .IsRequired();
+
+            //add custom configuration
+            this.PostConfigure(builder);
         }
+
+        #endregion
     }
 }

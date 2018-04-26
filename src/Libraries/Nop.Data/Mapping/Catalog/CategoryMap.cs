@@ -1,24 +1,38 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Catalog;
 
 namespace Nop.Data.Mapping.Catalog
 {
     /// <summary>
-    /// Mapping class
+    /// Represents a category mapping configuration
     /// </summary>
     public partial class CategoryMap : NopEntityTypeConfiguration<Category>
     {
+        #region Methods
+
         /// <summary>
-        /// Ctor
+        /// Configures the entity
         /// </summary>
-        public CategoryMap()
+        /// <param name="builder">The builder to be used to configure the entity</param>
+        public override void Configure(EntityTypeBuilder<Category> builder)
         {
-            this.ToTable("Category");
-            this.HasKey(c => c.Id);
-            this.Property(c => c.Name).IsRequired().HasMaxLength(400);
-            this.Property(c => c.MetaKeywords).HasMaxLength(400);
-            this.Property(c => c.MetaTitle).HasMaxLength(400);
-            this.Property(c => c.PriceRanges).HasMaxLength(400);
-            this.Property(c => c.PageSizeOptions).HasMaxLength(200);
+            builder.ToTable(nameof(Category));
+            builder.HasKey(category => category.Id);
+
+            builder.Property(category => category.Name).HasMaxLength(400).IsRequired();
+            builder.Property(category => category.MetaKeywords).HasMaxLength(400);
+            builder.Property(category => category.MetaTitle).HasMaxLength(400);
+            builder.Property(category => category.PriceRanges).HasMaxLength(400);
+            builder.Property(category => category.PageSizeOptions).HasMaxLength(200);
+
+#if !EF6
+            builder.Ignore(category => category.AppliedDiscounts);
+#endif
+            //add custom configuration
+            this.PostConfigure(builder);
         }
+
+        #endregion
     }
 }

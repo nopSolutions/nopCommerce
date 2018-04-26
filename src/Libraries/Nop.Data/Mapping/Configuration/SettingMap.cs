@@ -1,21 +1,32 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Configuration;
 
 namespace Nop.Data.Mapping.Configuration
 {
     /// <summary>
-    /// Mapping class
+    /// Represents a setting mapping configuration
     /// </summary>
     public partial class SettingMap : NopEntityTypeConfiguration<Setting>
     {
+        #region Methods
+
         /// <summary>
-        /// Ctor
+        /// Configures the entity
         /// </summary>
-        public SettingMap()
+        /// <param name="builder">The builder to be used to configure the entity</param>
+        public override void Configure(EntityTypeBuilder<Setting> builder)
         {
-            this.ToTable("Setting");
-            this.HasKey(s => s.Id);
-            this.Property(s => s.Name).IsRequired().HasMaxLength(200);
-            this.Property(s => s.Value).IsRequired().HasMaxLength(2000);
+            builder.ToTable(nameof(Setting));
+            builder.HasKey(setting => setting.Id);
+
+            builder.Property(setting => setting.Name).HasMaxLength(200).IsRequired();
+            builder.Property(setting => setting.Value).HasMaxLength(2000).IsRequired();
+
+            //add custom configuration
+            this.PostConfigure(builder);
         }
+
+        #endregion
     }
 }
