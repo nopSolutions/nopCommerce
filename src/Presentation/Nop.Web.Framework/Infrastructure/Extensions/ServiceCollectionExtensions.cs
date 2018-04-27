@@ -281,13 +281,16 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         /// <param name="services">Collection of service descriptors</param>
         public static void AddNopObjectContext(this IServiceCollection services)
         {
-            var dataSettings = DataSettingsManager.LoadSettings();
-            if (!dataSettings?.IsValid ?? true)
-                return;
+            services.AddDbContext<NopObjectContext>(optionsBuilder =>
+            {
+                var dataSettings = DataSettingsManager.LoadSettings();
+                if (!dataSettings?.IsValid ?? true)
+                    return;
 
-            services.AddDbContext<NopObjectContext>(optionsBuilder => optionsBuilder
-                .UseLazyLoadingProxies()
-                .UseSqlServer(dataSettings.DataConnectionString));
+                optionsBuilder
+                    .UseLazyLoadingProxies()
+                    .UseSqlServer(dataSettings.DataConnectionString);
+            });
         }
     }
 }

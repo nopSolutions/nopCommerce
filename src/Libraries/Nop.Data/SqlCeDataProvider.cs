@@ -13,7 +13,7 @@ namespace Nop.Data
     public partial class SqlCeDataProvider : IDataProvider
     {
         #region Methods
-        
+
 #if EF6
         /// <summary>
         /// Initialize database
@@ -22,6 +22,13 @@ namespace Nop.Data
         {
             var initializer = new CreateCeDatabaseIfNotExists<NopObjectContext>();
             Database.SetInitializer(initializer);
+        }
+#else
+        /// <summary>
+        /// Initialize database
+        /// </summary>
+        public virtual void InitializeDatabase()
+        {
         }
 #endif
 

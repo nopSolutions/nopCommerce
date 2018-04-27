@@ -5,7 +5,7 @@ using Nop.Core.Infrastructure;
 namespace Nop.Data
 {
     /// <summary>
-    /// Represents the startup task that sets a database initializer
+    /// Represents the startup task that initializes a database
     /// </summary>
     public partial class DataProviderStartupTask : IStartupTask
     {
@@ -21,10 +21,8 @@ namespace Nop.Data
             {
                 var provider = EngineContext.Current.Resolve<IDataProvider>()
                     ?? throw new NopException("No data provider found");
-                
-#if EF6
-                provider.SetDatabaseInitializer();
-#endif
+
+                provider.InitializeDatabase();
             }
         }
 

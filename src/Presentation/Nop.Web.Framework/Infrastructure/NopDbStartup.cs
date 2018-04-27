@@ -20,6 +20,10 @@ namespace Nop.Web.Framework.Infrastructure
         {
             //add object context
             services.AddNopObjectContext();
+
+            //add EF services
+            services.AddEntityFrameworkSqlServer();
+            services.AddEntityFrameworkProxies();
         }
 
         /// <summary>

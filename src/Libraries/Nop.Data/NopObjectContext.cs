@@ -48,15 +48,6 @@ namespace Nop.Data
         #region Methods
 
         /// <summary>
-        /// Generate a script to create all tables for the current model
-        /// </summary>
-        /// <returns>A SQL script</returns>
-        public virtual string CreateDatabaseScript()
-        {
-            return this.Database.GenerateCreateScript();
-        }
-
-        /// <summary>
         /// Creates a DbSet that can be used to query and save instances of entity
         /// </summary>
         /// <typeparam name="TEntity">Entity type</typeparam>
@@ -64,6 +55,15 @@ namespace Nop.Data
         public virtual new DbSet<TEntity> Set<TEntity>() where TEntity : BaseEntity
         {
             return base.Set<TEntity>();
+        }
+
+        /// <summary>
+        /// Generate a script to create all tables for the current model
+        /// </summary>
+        /// <returns>A SQL script</returns>
+        public virtual string GenerateCreateScript()
+        {
+            return this.Database.GenerateCreateScript();
         }
 
         /// <summary>

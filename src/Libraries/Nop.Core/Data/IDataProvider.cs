@@ -8,13 +8,11 @@ namespace Nop.Core.Data
     public partial interface IDataProvider
     {
         #region Methods
-
-#if EF6
+        
         /// <summary>
         /// Initialize database
         /// </summary>
         void InitializeDatabase();
-#endif
 
         /// <summary>
         /// Get a support database parameter object (used by stored procedures)

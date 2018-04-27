@@ -26,6 +26,12 @@ namespace Nop.Data
         int SaveChanges();
 
         /// <summary>
+        /// Generate a script to create all tables for the current model
+        /// </summary>
+        /// <returns>A SQL script</returns>
+        string GenerateCreateScript();
+
+        /// <summary>
         /// Creates a LINQ query based on an interpolated string representing a SQL query
         /// </summary>
         /// <typeparam name="TEntity">Entity type</typeparam>
