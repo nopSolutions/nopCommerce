@@ -205,7 +205,7 @@
                                     </label>
                                 </div>
                                 <div class="col-xs-7">
-                                    @if (!Model.DisableSqlCompact)
+                                    @*@if (!Model.DisableSqlCompact)
                                     {
                                         <div class="radio">
                                             <label>
@@ -213,7 +213,7 @@
                                                 @ILS.GetResource("SqlCompact")
                                             </label>
                                         </div>
-                                    }
+                                    }*@
                                     <div class="radio">
                                         <label>
                                             <input asp-for="DataProvider" value="sqlserver" type="radio" checked="@(Model.DataProvider == "sqlserver")" id="provider_sqlserver" />

@@ -26,8 +26,8 @@ namespace Nop.Data
                     case "sqlserver":
                         return new SqlServerDataProvider();
 
-                    case "sqlce":
-                        return new SqlCeDataProvider();
+                    //case "sqlce":
+                    //    return new SqlCeDataProvider();
 
                     default:
                         throw new NopException($"Not supported data provider name: '{providerName}'");
