@@ -29,6 +29,7 @@ using OfficeOpenXml;
 using System.Net;
 using Microsoft.Extensions.DependencyInjection;
 using Nop.Services.Stores;
+using Nop.Core.Infrastructure;
 
 namespace Nop.Services.ExportImport
 {
@@ -77,6 +78,7 @@ namespace Nop.Services.ExportImport
         private readonly ISpecificationAttributeService _specificationAttributeService;
         private readonly ILogger _logger;
         private readonly IStoreMappingService _storeMappingService;
+        private readonly INopFileProvider _fileProvider;
 
         #endregion
 
@@ -110,7 +112,8 @@ namespace Nop.Services.ExportImport
             ISpecificationAttributeService specificationAttributeService,
             ILogger logger,
             IServiceScopeFactory serviceScopeFactory,
-            IStoreMappingService storeMappingService)
+            IStoreMappingService storeMappingService,
+            INopFileProvider fileProvider)
         {
             this._productService = productService;
             this._categoryService = categoryService;
@@ -141,6 +144,7 @@ namespace Nop.Services.ExportImport
             this._logger = logger;
             this._serviceScopeFactory = serviceScopeFactory;
             this._storeMappingService = storeMappingService;
+            this._fileProvider = fileProvider;
         }
 
         #endregion
@@ -223,11 +227,11 @@ namespace Nop.Services.ExportImport
         /// <returns>The image or null if the image has not changed</returns>
         protected virtual Picture LoadPicture(string picturePath, string name, int? picId = null)
         {
-            if (string.IsNullOrEmpty(picturePath) || !File.Exists(picturePath))
+            if (string.IsNullOrEmpty(picturePath) || !_fileProvider.FileExists(picturePath))
                 return null;
 
             var mimeType = GetMimeTypeFromFilePath(picturePath);
-            var newPictureBinary = File.ReadAllBytes(picturePath);
+            var newPictureBinary = _fileProvider.ReadAllBytes(picturePath);
             var pictureAlreadyExists = false;
             if (picId != null)
             {
@@ -254,9 +258,11 @@ namespace Nop.Services.ExportImport
 
         private void LogPictureInsertError(string picturePath, Exception ex)
         {
-            var fi = new FileInfo(picturePath);
-            var point = string.IsNullOrEmpty(fi.Extension) ? string.Empty : ".";
-            var fileName = fi.Exists ? $"{fi.Name}{point}{fi.Extension}" : string.Empty;
+            var extension = _fileProvider.GetFileExtension(picturePath);
+            var name = _fileProvider.GetFileNameWithoutExtension(picturePath);
+
+            var point = string.IsNullOrEmpty(extension) ? string.Empty : ".";
+            var fileName = _fileProvider.FileExists(picturePath) ? $"{name}{point}{extension}" : string.Empty;
             _logger.Error($"Insert picture failed (file name: {fileName})", ex);
         }
 
@@ -270,7 +276,7 @@ namespace Nop.Services.ExportImport
                         continue;
 
                     var mimeType = GetMimeTypeFromFilePath(picturePath);
-                    var newPictureBinary = File.ReadAllBytes(picturePath);
+                    var newPictureBinary = _fileProvider.ReadAllBytes(picturePath);
                     var pictureAlreadyExists = false;
                     if (!product.IsNew)
                     {
@@ -331,7 +337,7 @@ namespace Nop.Services.ExportImport
                     try
                     {
                         var mimeType = GetMimeTypeFromFilePath(picturePath);
-                        var newPictureBinary = File.ReadAllBytes(picturePath);
+                        var newPictureBinary = _fileProvider.ReadAllBytes(picturePath);
                         var pictureAlreadyExists = false;
                         if (!product.IsNew)
                         {
@@ -739,14 +745,14 @@ namespace Nop.Services.ExportImport
                 return string.Empty;
 
             //ensure that temp directory is created
-            var tempDirectory = CommonHelper.MapPath(UPLOADS_TEMP_PATH);
-            System.IO.Directory.CreateDirectory(new DirectoryInfo(tempDirectory).FullName);
+            var tempDirectory = _fileProvider.MapPath(UPLOADS_TEMP_PATH);
+            _fileProvider.CreateDirectory(tempDirectory);
 
-            var fileName = Path.GetFileName(urlString);
+            var fileName = _fileProvider.GetFileName(urlString);
             if (string.IsNullOrEmpty(fileName))
                 return string.Empty;
 
-            var filePath = Path.Combine(tempDirectory, fileName);
+            var filePath = _fileProvider.Combine(tempDirectory, fileName);
             try
             {
                 WebRequest.Create(urlString);
@@ -1044,7 +1050,7 @@ namespace Nop.Services.ExportImport
 
                 try
                 {
-                    File.Delete(path);
+                    _fileProvider.DeleteFile(path);
                 }
                 catch
                 {
@@ -1071,7 +1077,7 @@ namespace Nop.Services.ExportImport
                     ? metadata.ProductsInFile[curIndex - 1]
                     : metadata.EndRow;
 
-                var filePath = $"{CommonHelper.MapPath(UPLOADS_TEMP_PATH)}/{fileName}_part_{fileIndex}.xlsx";
+                var filePath = $"{_fileProvider.MapPath(UPLOADS_TEMP_PATH)}/{fileName}_part_{fileIndex}.xlsx";
 
                 CopyDataToNewFile(metadata, worksheet, filePath, startRow, endRow, endCell);
 
@@ -1702,12 +1708,12 @@ namespace Nop.Services.ExportImport
 
                 foreach (var downloadedFile in downloadedFiles)
                 {
-                    if(!File.Exists(downloadedFile))
+                    if(!_fileProvider.FileExists(downloadedFile))
                         continue;
 
                     try
                     {
-                        File.Delete(downloadedFile);
+                        _fileProvider.DeleteFile(downloadedFile);
                     }
                     catch
                     {

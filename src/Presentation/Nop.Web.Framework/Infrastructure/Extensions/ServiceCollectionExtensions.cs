@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.DataProtection;
@@ -163,17 +162,16 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             if (nopConfig.RedisCachingEnabled && nopConfig.PersistDataProtectionKeysToRedis)
             {
                 //store keys in Redis
-                services.AddDataProtection().PersistKeysToRedis(
-                    () =>
-                    {
-                        var redisConnectionWrapper = EngineContext.Current.Resolve<IRedisConnectionWrapper>();
-                        return redisConnectionWrapper.GetDatabase();
-                    }, RedisConfiguration.DataProtectionKeysName);
+                services.AddDataProtection().PersistKeysToRedis(() =>
+                {
+                    var redisConnectionWrapper = EngineContext.Current.Resolve<IRedisConnectionWrapper>();
+                    return redisConnectionWrapper.GetDatabase();
+                }, RedisConfiguration.DataProtectionKeysName);
             }
             else
             {
-                var dataProtectionKeysPath = CommonHelper.MapPath("~/App_Data/DataProtectionKeys");
-                var dataProtectionKeysFolder = new DirectoryInfo(dataProtectionKeysPath);
+                var dataProtectionKeysPath = CommonHelper.DefaultFileProvider.MapPath("~/App_Data/DataProtectionKeys");
+                var dataProtectionKeysFolder = new System.IO.DirectoryInfo(dataProtectionKeysPath);
 
                 //configure the data protection system to persist keys to the specified directory
                 services.AddDataProtection().PersistKeysToFileSystem(dataProtectionKeysFolder);
@@ -218,7 +216,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 options.Cookie.SecurePolicy = DataSettingsHelper.DatabaseIsInstalled() && EngineContext.Current.Resolve<SecuritySettings>().ForceSslForAllPages
                     ? CookieSecurePolicy.SameAsRequest : CookieSecurePolicy.None;
             });
-
+            
             //register and configure external authentication plugins now
             var typeFinder = new WebAppTypeFinder();
             var externalAuthConfigurations = typeFinder.FindClassesOfType<IExternalAuthenticationRegistrar>();

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using Nop.Core;
+using Nop.Core.Infrastructure;
 using Nop.Services.Security;
 using Nop.Web.Framework.Mvc.Filters;
 
@@ -16,11 +16,19 @@ namespace Nop.Web.Areas.Admin.Controllers
     [AdminAntiForgery(true)]
     public partial class JbimagesController : BaseAdminController
     {
-        private readonly IPermissionService _permissionService;
+        #region Fields
 
-        public JbimagesController(IPermissionService permissionService)
+        private readonly IPermissionService _permissionService;
+        private readonly INopFileProvider _fileProvider;
+
+        #endregion
+
+
+        public JbimagesController(IPermissionService permissionService,
+            INopFileProvider fileProvider)
         {
             this._permissionService = permissionService;
+            this._fileProvider = fileProvider;
         }
 
         protected virtual IList<string> GetAllowedFileTypes()
@@ -49,7 +57,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return View();
             }
 
-            var fileName = Path.GetFileName(uploadFile.FileName);
+            var fileName = _fileProvider.GetFileName(uploadFile.FileName);
             if (string.IsNullOrEmpty(fileName))
             {
                 ViewData["resultCode"] = "failed";
@@ -58,9 +66,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             var directory = "~/wwwroot/images/uploaded/";
-            var filePath = Path.Combine(CommonHelper.MapPath(directory), fileName);
+            var filePath = _fileProvider.Combine(_fileProvider.MapPath(directory), fileName);
 
-            var fileExtension = Path.GetExtension(filePath);
+            var fileExtension = _fileProvider.GetFileExtension(filePath);
             if (!GetAllowedFileTypes().Contains(fileExtension))
             {
                 ViewData["resultCode"] = "failed";
@@ -72,7 +80,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 uploadFile.CopyTo(fileStream);
             }
-
+           
             ViewData["resultCode"] = "success";
             ViewData["result"] = "success";
             ViewData["filename"] = Url.Content($"{directory}{fileName}");

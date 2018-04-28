@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Reflection;
 
 namespace Nop.Core.Infrastructure
@@ -13,6 +14,14 @@ namespace Nop.Core.Infrastructure
 
         private bool _ensureBinFolderAssembliesLoaded = true;
         private bool _binFolderAssembliesLoaded;
+
+        #endregion
+
+        #region Ctor
+
+        public WebAppTypeFinder(INopFileProvider fileProvider = null) : base(fileProvider)
+        {
+        }
 
         #endregion
 
@@ -37,7 +46,7 @@ namespace Nop.Core.Infrastructure
         /// <returns>The physical path. E.g. "c:\inetpub\wwwroot\bin"</returns>
         public virtual string GetBinDirectory()
         {
-            return System.AppContext.BaseDirectory;
+            return AppContext.BaseDirectory;
         }
 
         /// <summary>

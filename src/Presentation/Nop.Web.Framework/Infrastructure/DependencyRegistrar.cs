@@ -68,6 +68,9 @@ namespace Nop.Web.Framework.Infrastructure
         /// <param name="config">Config</param>
         public virtual void Register(ContainerBuilder builder, ITypeFinder typeFinder, NopConfig config)
         {
+            //file provider
+            builder.RegisterType<NopFileProvider>().As<INopFileProvider>().InstancePerLifetimeScope();
+
             //web helper
             builder.RegisterType<WebHelper>().As<IWebHelper>().InstancePerLifetimeScope();
 
@@ -81,7 +84,7 @@ namespace Nop.Web.Framework.Infrastructure
             builder.Register(x => new EfDataProviderManager(x.Resolve<DataSettings>())).As<BaseDataProviderManager>().InstancePerDependency();
 
             builder.Register(x => x.Resolve<BaseDataProviderManager>().LoadDataProvider()).As<IDataProvider>().InstancePerDependency();
-
+            
             if (dataProviderSettings != null && dataProviderSettings.IsValid())
             {
                 var efDataProviderManager = new EfDataProviderManager(dataSettingsManager.LoadSettings());

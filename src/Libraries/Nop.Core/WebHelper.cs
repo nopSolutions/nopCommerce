@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -30,6 +29,7 @@ namespace Nop.Core
 
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly HostingConfig _hostingConfig;
+        private readonly INopFileProvider _fileProvider;
 
         #endregion
 
@@ -40,10 +40,13 @@ namespace Nop.Core
         /// </summary>
         /// <param name="hostingConfig">Hosting config</param>
         /// <param name="httpContextAccessor">HTTP context accessor</param>
-        public WebHelper(HostingConfig hostingConfig, IHttpContextAccessor httpContextAccessor)
+        /// <param name="fileProvider">File provider</param>
+        public WebHelper(HostingConfig hostingConfig, IHttpContextAccessor httpContextAccessor,
+            INopFileProvider fileProvider)
         {
             this._hostingConfig = hostingConfig;
             this._httpContextAccessor = httpContextAccessor;
+            this._fileProvider = fileProvider;
         }
 
         #endregion
@@ -90,7 +93,7 @@ namespace Nop.Core
         {
             try
             {
-                File.SetLastWriteTimeUtc(CommonHelper.MapPath("~/web.config"), DateTime.UtcNow);
+                _fileProvider.SetLastWriteTimeUtc(_fileProvider.MapPath("~/web.config"), DateTime.UtcNow);
                 return true;
             }
             catch

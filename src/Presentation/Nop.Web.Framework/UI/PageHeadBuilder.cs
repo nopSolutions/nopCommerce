@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -12,6 +11,7 @@ using Microsoft.AspNetCore.WebUtilities;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Seo;
+using Nop.Core.Infrastructure;
 using Nop.Services.Seo;
 
 namespace Nop.Web.Framework.UI
@@ -28,6 +28,7 @@ namespace Nop.Web.Framework.UI
         private readonly SeoSettings _seoSettings;
         private readonly IHostingEnvironment _hostingEnvironment;
         private readonly IStaticCacheManager _cacheManager;
+        private readonly INopFileProvider _fileProvider;
         private BundleFileProcessor _processor;
 
         private readonly List<string> _titleParts;
@@ -55,13 +56,16 @@ namespace Nop.Web.Framework.UI
         /// <param name="seoSettings">SEO settings</param>
         /// <param name="hostingEnvironment">Hosting environment</param>
         /// <param name="cacheManager">Cache manager</param>
+        /// <param name="fileProvider">File provider</param>
         public PageHeadBuilder(SeoSettings seoSettings, 
             IHostingEnvironment hostingEnvironment,
-            IStaticCacheManager cacheManager)
+            IStaticCacheManager cacheManager,
+            INopFileProvider fileProvider)
         {
             this._seoSettings = seoSettings;
             this._hostingEnvironment = hostingEnvironment;
             this._cacheManager = cacheManager;
+            this._fileProvider = fileProvider;
             this._processor = new BundleFileProcessor();
 
             this._titleParts = new List<string>();
@@ -340,7 +344,7 @@ namespace Nop.Web.Framework.UI
                 if (partsToBundle.Any())
                 {
                     //ensure \bundles directory exists
-                    Directory.CreateDirectory(Path.Combine(_hostingEnvironment.WebRootPath, "bundles"));
+                    _fileProvider.CreateDirectory(_fileProvider.GetAbsolutePath("bundles"));
 
                     var bundle = new Bundle();
                     foreach (var item in partsToBundle)
@@ -350,13 +354,13 @@ namespace Nop.Web.Framework.UI
                         var src = path.Value.TrimStart('/');
 
                         //check whether this file exists, if not it should be stored into /wwwroot directory
-                        if (!File.Exists(Path.Combine(_hostingEnvironment.ContentRootPath, src.Replace("/", "\\"))))
+                        if (!_fileProvider.FileExists(_fileProvider.MapPath(path)))
                             src = $"wwwroot/{src}";
 
                         bundle.InputFiles.Add(src);
                     }
                     //output file
-                    var outputFileName = GetBundleFileName(partsToBundle.Select(x => { return debugModel ? x.DebugSrc : x.Src; }).ToArray());
+                    var outputFileName = GetBundleFileName(partsToBundle.Select(x => debugModel ? x.DebugSrc : x.Src).ToArray());
                     bundle.OutputFileName = "wwwroot/bundles/" + outputFileName + ".js";
                     //save
                     var configFilePath = _hostingEnvironment.ContentRootPath + "\\" + outputFileName + ".json";
@@ -367,7 +371,7 @@ namespace Nop.Web.Framework.UI
                         //we periodically re-check already bundles file
                         //so if we have minification enabled, it could take up to several minutes to see changes in updated resource files (or just reset the cache or restart the site)
                         var cacheKey = $"Nop.minification.shouldrebuild.js-{outputFileName}";
-                        var shouldRebuild = _cacheManager.Get<bool>(cacheKey, RecheckBundledFilesPeriod, () => true);
+                        var shouldRebuild = _cacheManager.Get(cacheKey, RecheckBundledFilesPeriod, () => true);
                         if (shouldRebuild)
                         {
                             //store json file to see a generated config file (for debugging purposes)
@@ -556,7 +560,7 @@ namespace Nop.Web.Framework.UI
                 if (partsToBundle.Any())
                 {
                     //ensure \bundles directory exists
-                    Directory.CreateDirectory(Path.Combine(_hostingEnvironment.WebRootPath, "bundles"));
+                    _fileProvider.CreateDirectory(_fileProvider.GetAbsolutePath("bundles"));
 
                     var bundle = new Bundle();
                     foreach (var item in partsToBundle)
@@ -564,8 +568,8 @@ namespace Nop.Web.Framework.UI
                         var src = debugModel ? item.DebugSrc : item.Src;
                         src = urlHelper.Content(src);
                         //check whether this file exists 
-                        var srcPath = Path.Combine(_hostingEnvironment.ContentRootPath, src.Remove(0, 1).Replace("/", "\\"));
-                        if (File.Exists(srcPath))
+                        var srcPath = _fileProvider.Combine(_hostingEnvironment.ContentRootPath, src.Remove(0, 1).Replace("/", "\\"));
+                        if (_fileProvider.FileExists(srcPath))
                         {
                             //remove starting /
                             src = src.Remove(0, 1);

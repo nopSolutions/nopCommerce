@@ -19,6 +19,7 @@ using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Vendors;
+using Nop.Core.Infrastructure;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -69,6 +70,7 @@ namespace Nop.Web.Factories
         private readonly IProductTagService _productTagService;
         private readonly IUrlHelperFactory _urlHelperFactory;
         private readonly IActionContextAccessor _actionContextAccessor;
+        private readonly INopFileProvider _fileProvider;
 
         private readonly CatalogSettings _catalogSettings;
         private readonly StoreInformationSettings _storeInformationSettings;
@@ -117,7 +119,8 @@ namespace Nop.Web.Factories
             CaptchaSettings captchaSettings,
             VendorSettings vendorSettings,
             IProductTagService productTagService,
-            DisplayDefaultFooterItemSettings displayDefaultFooterItemSettings)
+            DisplayDefaultFooterItemSettings displayDefaultFooterItemSettings,
+            INopFileProvider fileProvider)
         {
             this._categoryService = categoryService;
             this._productService = productService;
@@ -152,6 +155,7 @@ namespace Nop.Web.Factories
             this._vendorSettings = vendorSettings;
             this._productTagService = productTagService;
             this._displayDefaultFooterItemSettings = displayDefaultFooterItemSettings;
+            this._fileProvider = fileProvider;
         }
 
         #endregion
@@ -716,13 +720,13 @@ namespace Nop.Web.Factories
             //try loading a store specific favicon
 
             var faviconFileName = $"favicon-{_storeContext.CurrentStore.Id}.ico";
-            var localFaviconPath = System.IO.Path.Combine(_hostingEnvironment.WebRootPath, faviconFileName);
-            if (!System.IO.File.Exists(localFaviconPath))
+            var localFaviconPath = _fileProvider.Combine(_hostingEnvironment.WebRootPath, faviconFileName);
+            if (!_fileProvider.FileExists(localFaviconPath))
             {
                 //try loading a generic favicon
                 faviconFileName = "favicon.ico";
-                localFaviconPath = System.IO.Path.Combine(_hostingEnvironment.WebRootPath, faviconFileName);
-                if (!System.IO.File.Exists(localFaviconPath))
+                localFaviconPath = _fileProvider.Combine(_hostingEnvironment.WebRootPath, faviconFileName);
+                if (!_fileProvider.FileExists(localFaviconPath))
                 {
                     return model;
                 }
@@ -741,11 +745,11 @@ namespace Nop.Web.Factories
             var sb = new StringBuilder();
 
             //if robots.custom.txt exists, let's use it instead of hard-coded data below
-            var robotsFilePath = System.IO.Path.Combine(CommonHelper.MapPath("~/"), "robots.custom.txt");
-            if (System.IO.File.Exists(robotsFilePath))
+            var robotsFilePath = _fileProvider.Combine(_fileProvider.MapPath("~/"), "robots.custom.txt");
+            if (_fileProvider.FileExists(robotsFilePath))
             {
                 //the robots.txt file exists
-                var robotsFileContent = System.IO.File.ReadAllText(robotsFilePath);
+                var robotsFileContent = _fileProvider.ReadAllText(robotsFilePath, Encoding.UTF8);
                 sb.Append(robotsFileContent);
             }
             else
@@ -871,10 +875,10 @@ namespace Nop.Web.Factories
                 }
 
                 //load and add robots.txt additions to the end of file.
-                var robotsAdditionsFile = System.IO.Path.Combine(CommonHelper.MapPath("~/"), "robots.additions.txt");
-                if (System.IO.File.Exists(robotsAdditionsFile))
+                var robotsAdditionsFile = _fileProvider.Combine(_fileProvider.MapPath("~/"), "robots.additions.txt");
+                if (_fileProvider.FileExists(robotsAdditionsFile))
                 {
-                    var robotsFileContent = System.IO.File.ReadAllText(robotsAdditionsFile);
+                    var robotsFileContent = _fileProvider.ReadAllText(robotsAdditionsFile, Encoding.UTF8);
                     sb.Append(robotsFileContent);
                 }
             }

@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using Microsoft.AspNetCore.Hosting;
+using System.Reflection;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Caching;
+using Nop.Core.Infrastructure;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Helpers;
@@ -15,13 +16,19 @@ using Nop.Services.Security;
 using Nop.Services.Seo;
 using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Areas.Admin.Models.Common;
-using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
+using Nop.Web.Framework;
 
 namespace Nop.Web.Areas.Admin.Controllers
 {
     public partial class CommonController : BaseAdminController
     {
+        #region Const
+
+        private const string EXPORT_IMPORT_PATH = @"files\exportimport";
+
+        #endregion
+
         #region Fields
 
         private readonly ICommonModelFactory _commonModelFactory;
@@ -37,6 +44,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly IUrlRecordService _urlRecordService;
         private readonly IWebHelper _webHelper;
         private readonly IWorkContext _workContext;
+        private readonly INopFileProvider _fileProvider;
 
         #endregion
 
@@ -54,7 +62,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             IStaticCacheManager cacheManager,
             IUrlRecordService urlRecordService,
             IWebHelper webHelper,
-            IWorkContext workContext)
+            IWorkContext workContext,
+            INopFileProvider fileProvider)
         {
             this._commonModelFactory = commonModelFactory;
             this._customerService = customerService;
@@ -69,6 +78,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             this._urlRecordService = urlRecordService;
             this._webHelper = webHelper;
             this._workContext = workContext;
+            this._fileProvider = fileProvider;
         }
 
         #endregion
@@ -153,20 +163,21 @@ namespace Nop.Web.Areas.Admin.Controllers
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.DeleteExportedFiles.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
 
             model.DeleteExportedFiles.NumberOfDeletedFiles = 0;
-            var path = Path.Combine(_hostingEnvironment.WebRootPath, "files\\exportimport");
-            foreach (var fullPath in Directory.GetFiles(path))
+           
+            foreach (var fullPath in _fileProvider.GetFiles(_fileProvider.GetAbsolutePath(EXPORT_IMPORT_PATH)))
             {
                 try
                 {
-                    var fileName = Path.GetFileName(fullPath);
+                    var fileName = _fileProvider.GetFileName(fullPath);
                     if (fileName.Equals("index.htm", StringComparison.InvariantCultureIgnoreCase))
                         continue;
 
-                    var info = new FileInfo(fullPath);
-                    if ((!startDateValue.HasValue || startDateValue.Value < info.CreationTimeUtc) &&
-                        (!endDateValue.HasValue || info.CreationTimeUtc < endDateValue.Value))
+                    var info = _fileProvider.GetFileInfo(_fileProvider.Combine(EXPORT_IMPORT_PATH, fileName));
+                    var lastModifiedTimeUtc = info.LastModified.UtcDateTime;
+                    if ((!startDateValue.HasValue || startDateValue.Value < lastModifiedTimeUtc) &&
+                        (!endDateValue.HasValue || lastModifiedTimeUtc < endDateValue.Value))
                     {
-                        System.IO.File.Delete(fullPath);
+                        _fileProvider.DeleteFile(fullPath);
                         model.DeleteExportedFiles.NumberOfDeletedFiles++;
                     }
                 }
@@ -229,7 +240,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 {
                     case "delete-backup":
                         {
-                            System.IO.File.Delete(backupPath);
+                            _fileProvider.DeleteFile(backupPath);
                             SuccessNotification(string.Format(_localizationService.GetResource("Admin.System.Maintenance.BackupDatabase.BackupDeleted"), fileName));
                         }
                         break;

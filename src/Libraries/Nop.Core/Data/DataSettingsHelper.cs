@@ -13,12 +13,13 @@
         /// <returns></returns>
         public static bool DatabaseIsInstalled()
         {
-            if (!_databaseIsInstalled.HasValue)
-            {
-                var manager = new DataSettingsManager();
-                var settings = manager.LoadSettings(reloadSettings:true);
-                _databaseIsInstalled = settings != null && !string.IsNullOrEmpty(settings.DataConnectionString);
-            }
+            if (_databaseIsInstalled.HasValue)
+                return _databaseIsInstalled.Value;
+
+            var manager = new DataSettingsManager();
+
+            var settings = manager.LoadSettings(reloadSettings:true);
+            _databaseIsInstalled = !string.IsNullOrEmpty(settings?.DataConnectionString);
             return _databaseIsInstalled.Value;
         }
 

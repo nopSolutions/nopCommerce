@@ -12,6 +12,7 @@ using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Vendors;
+using Nop.Core.Infrastructure;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
@@ -70,6 +71,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly IUrlRecordService _urlRecordService;
         private readonly IWorkContext _workContext;
         private readonly VendorSettings _vendorSettings;
+        private readonly INopFileProvider _fileProvider;
 
         #endregion
 
@@ -105,7 +107,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             IStoreService storeService,
             IUrlRecordService urlRecordService,
             IWorkContext workContext,
-            VendorSettings vendorSettings)
+            VendorSettings vendorSettings,
+            INopFileProvider fileProvider)
         {
             this._aclService = aclService;
             this._backInStockSubscriptionService = backInStockSubscriptionService;
@@ -138,6 +141,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             this._urlRecordService = urlRecordService;
             this._workContext = workContext;
             this._vendorSettings = vendorSettings;
+            this._fileProvider = fileProvider;
         }
 
         #endregion
@@ -464,8 +468,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                                     DownloadUrl = string.Empty,
                                     DownloadBinary = httpPostedFile.GetDownloadBits(),
                                     ContentType = httpPostedFile.ContentType,
-                                    Filename = Path.GetFileNameWithoutExtension(httpPostedFile.FileName),
-                                    Extension = Path.GetExtension(httpPostedFile.FileName),
+                                    Filename = _fileProvider.GetFileNameWithoutExtension(httpPostedFile.FileName),
+                                    Extension = _fileProvider.GetFileExtension(httpPostedFile.FileName),
                                     IsNew = true
                                 };
                                 _downloadService.InsertDownload(download);
