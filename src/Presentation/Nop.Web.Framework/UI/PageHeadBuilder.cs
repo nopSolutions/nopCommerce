@@ -848,14 +848,32 @@ namespace Nop.Web.Framework.UI
         /// </summary>
         private class ScriptInlineReference : IEquatable<ScriptInlineReference>
         {
+            /// <summary>
+            /// Inline script
+            /// </summary>
             public string InlineScript { get; set; }
+
+            /// <summary>
+            /// Showing order for inline script
+            /// </summary>
             public int Order { get; set; }
+
+            /// <summary>
+            /// Equals
+            /// </summary>
+            /// <param name="item">Other item</param>
+            /// <returns>Result</returns>
             public bool Equals(ScriptInlineReference item)
             {
                 if (item == null)
                     return false;
                 return this.InlineScript.Equals(item.InlineScript) && this.Order.Equals(item.Order);
             }
+
+            /// <summary>
+            /// Get hash code
+            /// </summary>
+            /// <returns></returns>
             public override int GetHashCode()
             {
                 return InlineScript == null ? 0 : base.GetHashCode();
