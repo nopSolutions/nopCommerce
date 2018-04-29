@@ -64,7 +64,7 @@ namespace Nop.Web.Framework.UI
         /// <param name="debugSrc">Script path (full debug version). If empty, then minified version will be used</param>
         /// <param name="excludeFromBundle">A value indicating whether to exclude this script from bundling</param>
         /// <param name="isAsync">A value indicating whether to add an attribute "async" or not for js files</param>
-        void AddScriptParts(ResourceLocation location, string src, string debugSrc, bool excludeFromBundle, bool isAsync);
+        void AddScriptParts(ResourceLocation location, string src, string debugSrc, bool excludeFromBundle, bool isAsync, int order = 0);
         /// <summary>
         /// Append script element
         /// </summary>
@@ -73,7 +73,7 @@ namespace Nop.Web.Framework.UI
         /// <param name="debugSrc">Script path (full debug version). If empty, then minified version will be used</param>
         /// <param name="excludeFromBundle">A value indicating whether to exclude this script from bundling</param>
         /// <param name="isAsync">A value indicating whether to add an attribute "async" or not for js files</param>
-        void AppendScriptParts(ResourceLocation location, string src, string debugSrc, bool excludeFromBundle, bool isAsync);
+        void AppendScriptParts(ResourceLocation location, string src, string debugSrc, bool excludeFromBundle, bool isAsync, int order = 0);
         /// <summary>
         /// Generate all script parts
         /// </summary>
@@ -88,13 +88,13 @@ namespace Nop.Web.Framework.UI
         /// </summary>
         /// <param name="location">A location of the script element</param>
         /// <param name="script">Script</param>
-        void AddInlineScriptParts(ResourceLocation location, string script);
+        void AddInlineScriptParts(ResourceLocation location, string script, int order = 0);
         /// <summary>
         /// Append inline script element
         /// </summary>
         /// <param name="location">A location of the script element</param>
         /// <param name="script">Script</param>
-        void AppendInlineScriptParts(ResourceLocation location, string script);
+        void AppendInlineScriptParts(ResourceLocation location, string script, int order = 0);
         /// <summary>
         /// Generate all inline script parts
         /// </summary>

@@ -34,7 +34,7 @@ namespace Nop.Web.Framework.UI
         private readonly List<string> _metaDescriptionParts;
         private readonly List<string> _metaKeywordParts;
         private readonly Dictionary<ResourceLocation, List<ScriptReferenceMeta>> _scriptParts;
-        private readonly Dictionary<ResourceLocation, List<string>> _inlineScriptParts;
+        private readonly Dictionary<ResourceLocation, List<ScriptInlineReference>> _inlineScriptParts;
         private readonly Dictionary<ResourceLocation, List<CssReferenceMeta>> _cssParts;
         private readonly List<string> _canonicalUrlParts;
         private readonly List<string> _headCustomParts;
@@ -55,7 +55,7 @@ namespace Nop.Web.Framework.UI
         /// <param name="seoSettings">SEO settings</param>
         /// <param name="hostingEnvironment">Hosting environment</param>
         /// <param name="cacheManager">Cache manager</param>
-        public PageHeadBuilder(SeoSettings seoSettings, 
+        public PageHeadBuilder(SeoSettings seoSettings,
             IHostingEnvironment hostingEnvironment,
             IStaticCacheManager cacheManager)
         {
@@ -68,7 +68,7 @@ namespace Nop.Web.Framework.UI
             this._metaDescriptionParts = new List<string>();
             this._metaKeywordParts = new List<string>();
             this._scriptParts = new Dictionary<ResourceLocation, List<ScriptReferenceMeta>>();
-            this._inlineScriptParts = new Dictionary<ResourceLocation, List<string>>();
+            this._inlineScriptParts = new Dictionary<ResourceLocation, List<ScriptInlineReference>>();
             this._cssParts = new Dictionary<ResourceLocation, List<CssReferenceMeta>>();
             this._canonicalUrlParts = new List<string>();
             this._headCustomParts = new List<string>();
@@ -106,7 +106,7 @@ namespace Nop.Web.Framework.UI
             }
             //ensure only valid chars
             hash = SeoExtensions.GetSeName(hash);
-            
+
             return hash;
         }
 
@@ -133,7 +133,7 @@ namespace Nop.Web.Framework.UI
         {
             if (string.IsNullOrEmpty(part))
                 return;
-            
+
             _titleParts.Insert(0, part);
         }
         /// <summary>
@@ -163,7 +163,7 @@ namespace Nop.Web.Framework.UI
                                 result = string.Join(_seoSettings.PageTitleSeparator, specificTitle, _seoSettings.DefaultTitle);
                             }
                             break;
-                            
+
                     }
                 }
                 else
@@ -188,7 +188,7 @@ namespace Nop.Web.Framework.UI
         {
             if (string.IsNullOrEmpty(part))
                 return;
-            
+
             _metaDescriptionParts.Add(part);
         }
         /// <summary>
@@ -199,7 +199,7 @@ namespace Nop.Web.Framework.UI
         {
             if (string.IsNullOrEmpty(part))
                 return;
-            
+
             _metaDescriptionParts.Insert(0, part);
         }
         /// <summary>
@@ -221,7 +221,7 @@ namespace Nop.Web.Framework.UI
         {
             if (string.IsNullOrEmpty(part))
                 return;
-            
+
             _metaKeywordParts.Add(part);
         }
         /// <summary>
@@ -254,7 +254,7 @@ namespace Nop.Web.Framework.UI
         /// <param name="debugSrc">Script path (full debug version). If empty, then minified version will be used</param>
         /// <param name="excludeFromBundle">A value indicating whether to exclude this script from bundling</param>
         /// <param name="isAsync">A value indicating whether to add an attribute "async" or not for js files</param>
-        public virtual void AddScriptParts(ResourceLocation location, string src, string debugSrc, bool excludeFromBundle, bool isAsync)
+        public virtual void AddScriptParts(ResourceLocation location, string src, string debugSrc, bool excludeFromBundle, bool isAsync, int order = 0)
         {
             if (!_scriptParts.ContainsKey(location))
                 _scriptParts.Add(location, new List<ScriptReferenceMeta>());
@@ -270,7 +270,8 @@ namespace Nop.Web.Framework.UI
                 ExcludeFromBundle = excludeFromBundle,
                 IsAsync = isAsync,
                 Src = src,
-                DebugSrc = debugSrc
+                DebugSrc = debugSrc,
+                Order = order
             });
         }
         /// <summary>
@@ -281,7 +282,7 @@ namespace Nop.Web.Framework.UI
         /// <param name="debugSrc">Script path (full debug version). If empty, then minified version will be used</param>
         /// <param name="excludeFromBundle">A value indicating whether to exclude this script from bundling</param>
         /// <param name="isAsync">A value indicating whether to add an attribute "async" or not for js files</param>
-        public virtual void AppendScriptParts(ResourceLocation location, string src, string debugSrc, bool excludeFromBundle, bool isAsync)
+        public virtual void AppendScriptParts(ResourceLocation location, string src, string debugSrc, bool excludeFromBundle, bool isAsync, int order)
         {
             if (!_scriptParts.ContainsKey(location))
                 _scriptParts.Add(location, new List<ScriptReferenceMeta>());
@@ -297,7 +298,8 @@ namespace Nop.Web.Framework.UI
                 ExcludeFromBundle = excludeFromBundle,
                 IsAsync = isAsync,
                 Src = src,
-                DebugSrc = debugSrc
+                DebugSrc = debugSrc,
+                Order = order
             });
         }
         /// <summary>
@@ -316,7 +318,7 @@ namespace Nop.Web.Framework.UI
                 return "";
 
             var debugModel = _hostingEnvironment.IsDevelopment();
-            
+
             if (!bundleFiles.HasValue)
             {
                 //use setting if no value is specified
@@ -328,11 +330,13 @@ namespace Nop.Web.Framework.UI
                 var partsToBundle = _scriptParts[location]
                     .Where(x => !x.ExcludeFromBundle)
                     .Distinct()
-                    .ToArray();
+                    .ToArray()
+                    .OrderBy(o => o.Order);
                 var partsToDontBundle = _scriptParts[location]
                     .Where(x => x.ExcludeFromBundle)
                     .Distinct()
-                    .ToArray();
+                    .ToArray()
+                    .OrderBy(o => o.Order);
 
                 var result = new StringBuilder();
 
@@ -397,10 +401,10 @@ namespace Nop.Web.Framework.UI
             {
                 //bundling is disabled
                 var result = new StringBuilder();
-                foreach (var item in _scriptParts[location].Distinct())
+                foreach (var item in _scriptParts[location].Distinct().OrderBy(o => o.Order))
                 {
                     var src = debugModel ? item.DebugSrc : item.Src;
-                    result.AppendFormat("<script {2}src=\"{0}\" type=\"{1}\"></script>", urlHelper.Content(src), MimeTypes.TextJavascript, item.IsAsync ? "async ":"");
+                    result.AppendFormat("<script {2}src=\"{0}\" type=\"{1}\"></script>", urlHelper.Content(src), MimeTypes.TextJavascript, item.IsAsync ? "async " : "");
                     result.Append(Environment.NewLine);
                 }
                 return result.ToString();
@@ -412,30 +416,40 @@ namespace Nop.Web.Framework.UI
         /// </summary>
         /// <param name="location">A location of the script element</param>
         /// <param name="script">Script</param>
-        public virtual void AddInlineScriptParts(ResourceLocation location, string script)
+        public virtual void AddInlineScriptParts(ResourceLocation location, string script, int order = 0)
         {
             if (!_inlineScriptParts.ContainsKey(location))
-                _inlineScriptParts.Add(location, new List<string>());
+                _inlineScriptParts.Add(location, new List<ScriptInlineReference>());
 
             if (string.IsNullOrEmpty(script))
                 return;
 
-            _inlineScriptParts[location].Add(script);
+            _inlineScriptParts[location].Add(
+                new ScriptInlineReference
+                {
+                    InlineScript = script,
+                    Order = order
+                });
         }
         /// <summary>
         /// Append inline script element
         /// </summary>
         /// <param name="location">A location of the script element</param>
         /// <param name="script">Script</param>
-        public virtual void AppendInlineScriptParts(ResourceLocation location, string script)
+        public virtual void AppendInlineScriptParts(ResourceLocation location, string script, int order = 0)
         {
             if (!_inlineScriptParts.ContainsKey(location))
-                _inlineScriptParts.Add(location, new List<string>());
+                _inlineScriptParts.Add(location, new List<ScriptInlineReference>());
 
             if (string.IsNullOrEmpty(script))
                 return;
 
-            _inlineScriptParts[location].Insert(0, script);
+            _inlineScriptParts[location].Insert(0,
+                new ScriptInlineReference
+                {
+                    InlineScript = script,
+                    Order = order
+                });
         }
         /// <summary>
         /// Generate all inline script parts
@@ -452,9 +466,9 @@ namespace Nop.Web.Framework.UI
                 return "";
 
             var result = new StringBuilder();
-            foreach (var item in _inlineScriptParts[location])
+            foreach (var item in _inlineScriptParts[location].OrderBy(o => o.Order))
             {
-                result.Append(item);
+                result.Append(item.InlineScript);
                 result.Append(Environment.NewLine);
             }
             return result.ToString();
@@ -527,7 +541,7 @@ namespace Nop.Web.Framework.UI
 
 
             var debugModel = _hostingEnvironment.IsDevelopment();
-            
+
             if (!bundleFiles.HasValue)
             {
                 //use setting if no value is specified
@@ -596,7 +610,7 @@ namespace Nop.Web.Framework.UI
                             //BundleHandler.AddBundle(configFilePath, bundle);
 
                             //process
-                            _processor.Process(configFilePath, new List<Bundle> {bundle});
+                            _processor.Process(configFilePath, new List<Bundle> { bundle });
                             _cacheManager.Set(cacheKey, false, RecheckBundledFilesPeriod);
                         }
                     }
@@ -637,7 +651,7 @@ namespace Nop.Web.Framework.UI
         {
             if (string.IsNullOrEmpty(part))
                 return;
-                       
+
             _canonicalUrlParts.Add(part);
         }
         /// <summary>
@@ -648,7 +662,7 @@ namespace Nop.Web.Framework.UI
         {
             if (string.IsNullOrEmpty(part))
                 return;
-                       
+
             _canonicalUrlParts.Insert(0, part);
         }
         /// <summary>
@@ -739,7 +753,7 @@ namespace Nop.Web.Framework.UI
             var result = string.Join(" ", _pageCssClassParts.AsEnumerable().Reverse().ToArray());
             return result;
         }
-        
+
         /// <summary>
         /// Specify "edit page" URL
         /// </summary>
@@ -756,7 +770,7 @@ namespace Nop.Web.Framework.UI
         {
             return _editPageUrl;
         }
-        
+
         /// <summary>
         /// Specify system name of admin menu item that should be selected (expanded)
         /// </summary>
@@ -775,7 +789,7 @@ namespace Nop.Web.Framework.UI
         }
 
         #endregion
-        
+
         #region Nested classes
 
         /// <summary>
@@ -804,6 +818,11 @@ namespace Nop.Web.Framework.UI
             public string DebugSrc { get; set; }
 
             /// <summary>
+            /// Showing order of script
+            /// </summary>
+            public int Order { get; set; }
+
+            /// <summary>
             /// Equals
             /// </summary>
             /// <param name="item">Other item</param>
@@ -821,6 +840,25 @@ namespace Nop.Web.Framework.UI
             public override int GetHashCode()
             {
                 return Src == null ? 0 : Src.GetHashCode();
+            }
+        }
+
+        /// <summary>
+        /// Inline Scripts reference
+        /// </summary>
+        private class ScriptInlineReference : IEquatable<ScriptInlineReference>
+        {
+            public string InlineScript { get; set; }
+            public int Order { get; set; }
+            public bool Equals(ScriptInlineReference item)
+            {
+                if (item == null)
+                    return false;
+                return this.InlineScript.Equals(item.InlineScript) && this.Order.Equals(item.Order);
+            }
+            public override int GetHashCode()
+            {
+                return InlineScript == null ? 0 : base.GetHashCode();
             }
         }
 

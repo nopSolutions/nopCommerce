@@ -20,7 +20,7 @@ namespace Nop.Web.Framework.UI
         /// <param name="part">Title part</param>
         public static void AddTitleParts(this IHtmlHelper html, string part)
         {
-            var pageHeadBuilder  = EngineContext.Current.Resolve<IPageHeadBuilder>();
+            var pageHeadBuilder = EngineContext.Current.Resolve<IPageHeadBuilder>();
             pageHeadBuilder.AddTitleParts(part);
         }
         /// <summary>
@@ -30,7 +30,7 @@ namespace Nop.Web.Framework.UI
         /// <param name="part">Title part</param>
         public static void AppendTitleParts(this IHtmlHelper html, string part)
         {
-            var pageHeadBuilder  = EngineContext.Current.Resolve<IPageHeadBuilder>();
+            var pageHeadBuilder = EngineContext.Current.Resolve<IPageHeadBuilder>();
             pageHeadBuilder.AppendTitleParts(part);
         }
         /// <summary>
@@ -125,9 +125,9 @@ namespace Nop.Web.Framework.UI
         /// <param name="excludeFromBundle">A value indicating whether to exclude this script from bundling</param>
         /// <param name="isAsync">A value indicating whether to add an attribute "async" or not for js files</param>
         public static void AddScriptParts(this IHtmlHelper html, string src, string debugSrc = "",
-            bool excludeFromBundle = false, bool isAsync = false)
+            bool excludeFromBundle = false, bool isAsync = false, int order = 0)
         {
-            AddScriptParts(html, ResourceLocation.Head, src, debugSrc, excludeFromBundle, isAsync);
+            AddScriptParts(html, ResourceLocation.Head, src, debugSrc, excludeFromBundle, isAsync, order);
         }
         /// <summary>
         /// Add script element
@@ -139,10 +139,10 @@ namespace Nop.Web.Framework.UI
         /// <param name="excludeFromBundle">A value indicating whether to exclude this script from bundling</param>
         /// <param name="isAsync">A value indicating whether to add an attribute "async" or not for js files</param>
         public static void AddScriptParts(this IHtmlHelper html, ResourceLocation location,
-            string src, string debugSrc = "", bool excludeFromBundle = false, bool isAsync = false)
+            string src, string debugSrc = "", bool excludeFromBundle = false, bool isAsync = false, int order = 0)
         {
             var pageHeadBuilder = EngineContext.Current.Resolve<IPageHeadBuilder>();
-            pageHeadBuilder.AddScriptParts(location, src, debugSrc, excludeFromBundle, isAsync);
+            pageHeadBuilder.AddScriptParts(location, src, debugSrc, excludeFromBundle, isAsync, order);
         }
         /// <summary>
         /// Append script element
@@ -153,9 +153,9 @@ namespace Nop.Web.Framework.UI
         /// <param name="excludeFromBundle">A value indicating whether to exclude this script from bundling</param>
         /// <param name="isAsync">A value indicating whether to add an attribute "async" or not for js files</param>
         public static void AppendScriptParts(this IHtmlHelper html, string src, string debugSrc = "",
-            bool excludeFromBundle = false, bool isAsync = false)
+            bool excludeFromBundle = false, bool isAsync = false, int order = 0)
         {
-            AppendScriptParts(html, ResourceLocation.Head, src, debugSrc, excludeFromBundle, isAsync);
+            AppendScriptParts(html, ResourceLocation.Head, src, debugSrc, excludeFromBundle, isAsync, order);
         }
         /// <summary>
         /// Append script element
@@ -167,10 +167,10 @@ namespace Nop.Web.Framework.UI
         /// <param name="excludeFromBundle">A value indicating whether to exclude this script from bundling</param>
         /// <param name="isAsync">A value indicating whether to add an attribute "async" or not for js files</param>
         public static void AppendScriptParts(this IHtmlHelper html, ResourceLocation location,
-            string src, string debugSrc = "", bool excludeFromBundle = false, bool isAsync = false)
+            string src, string debugSrc = "", bool excludeFromBundle = false, bool isAsync = false, int order = 0)
         {
             var pageHeadBuilder = EngineContext.Current.Resolve<IPageHeadBuilder>();
-            pageHeadBuilder.AppendScriptParts(location, src, debugSrc, excludeFromBundle, isAsync);
+            pageHeadBuilder.AppendScriptParts(location, src, debugSrc, excludeFromBundle, isAsync, order);
         }
         /// <summary>
         /// Generate all script parts
@@ -196,10 +196,10 @@ namespace Nop.Web.Framework.UI
         /// <param name="html">HTML helper</param>
         /// <param name="location">A location of the script element</param>
         /// <param name="script">Script</param>
-        public static void AddInlineScriptParts(this IHtmlHelper html, ResourceLocation location, string script)
+        public static void AddInlineScriptParts(this IHtmlHelper html, ResourceLocation location, string script, int order = 0)
         {
             var pageHeadBuilder = EngineContext.Current.Resolve<IPageHeadBuilder>();
-            pageHeadBuilder.AddInlineScriptParts(location, script);
+            pageHeadBuilder.AddInlineScriptParts(location, script, order);
         }
         /// <summary>
         /// Append inline script element
@@ -207,10 +207,10 @@ namespace Nop.Web.Framework.UI
         /// <param name="html">HTML helper</param>
         /// <param name="location">A location of the script element</param>
         /// <param name="script">Script</param>
-        public static void AppendInlineScriptParts(this IHtmlHelper html, ResourceLocation location, string script)
+        public static void AppendInlineScriptParts(this IHtmlHelper html, ResourceLocation location, string script, int order = 0)
         {
             var pageHeadBuilder = EngineContext.Current.Resolve<IPageHeadBuilder>();
-            pageHeadBuilder.AppendInlineScriptParts(location, script);
+            pageHeadBuilder.AppendInlineScriptParts(location, script, order);
         }
         /// <summary>
         /// Generate all inline script parts
@@ -244,7 +244,7 @@ namespace Nop.Web.Framework.UI
         /// <param name="src">Script path (minified version)</param>
         /// <param name="debugSrc">Script path (full debug version). If empty, then minified version will be used</param>
         /// <param name="excludeFromBundle">A value indicating whether to exclude this script from bundling</param>
-        public static void AddCssFileParts(this IHtmlHelper html, ResourceLocation location, 
+        public static void AddCssFileParts(this IHtmlHelper html, ResourceLocation location,
             string src, string debugSrc = "", bool excludeFromBundle = false)
         {
             var pageHeadBuilder = EngineContext.Current.Resolve<IPageHeadBuilder>();
@@ -269,7 +269,7 @@ namespace Nop.Web.Framework.UI
         /// <param name="src">Script path (minified version)</param>
         /// <param name="debugSrc">Script path (full debug version). If empty, then minified version will be used</param>
         /// <param name="excludeFromBundle">A value indicating whether to exclude this script from bundling</param>
-        public static void AppendCssFileParts(this IHtmlHelper html, ResourceLocation location, 
+        public static void AppendCssFileParts(this IHtmlHelper html, ResourceLocation location,
             string src, string debugSrc = "", bool excludeFromBundle = false)
         {
             var pageHeadBuilder = EngineContext.Current.Resolve<IPageHeadBuilder>();

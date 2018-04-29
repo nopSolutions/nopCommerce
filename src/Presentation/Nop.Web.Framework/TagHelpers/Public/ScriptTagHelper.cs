@@ -16,6 +16,7 @@ namespace Nop.Web.Framework.TagHelpers.Public
     public class ScriptTagHelper : TagHelper
     {
         private const string LocationAttributeName = "asp-location";
+        private const string OrderAttributeName = "asp-order";
         private readonly IHtmlHelper _htmlHelper;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
@@ -24,6 +25,12 @@ namespace Nop.Web.Framework.TagHelpers.Public
         /// </summary>
         [HtmlAttributeName(LocationAttributeName)]
         public ResourceLocation Location { set; get; }
+
+        /// <summary>
+        /// Indicates showing order of the script
+        /// </summary>
+        [HtmlAttributeName(OrderAttributeName)]
+        public int ScriptOrder { get; set; }
 
         /// <summary>
         /// ViewContext
@@ -82,7 +89,7 @@ namespace Nop.Web.Framework.TagHelpers.Public
                 if (!attribute.Name.StartsWith("asp-"))
                     scriptTag.Attributes.Add(attribute.Name, attribute.Value.ToString());
 
-            _htmlHelper.AddInlineScriptParts(Location, scriptTag.RenderHtmlContent());
+            _htmlHelper.AddInlineScriptParts(Location, scriptTag.RenderHtmlContent(), ScriptOrder);
 
             //generate nothing
             output.SuppressOutput();
