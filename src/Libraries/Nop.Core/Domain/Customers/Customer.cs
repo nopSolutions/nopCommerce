@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Orders;
 
@@ -11,11 +12,11 @@ namespace Nop.Core.Domain.Customers
     public partial class Customer : BaseEntity
     {
         private ICollection<ExternalAuthenticationRecord> _externalAuthenticationRecords;
-        private ICollection<CustomerRole> _customerRoles;
+        private ICollection<CustomerCustomerRoleMapping> _customerCustomerRoleMappings;
         private ICollection<ShoppingCartItem> _shoppingCartItems;
         private ICollection<ReturnRequest> _returnRequests;
         private ICollection<Address> _addresses;
-
+        
         /// <summary>
         /// Ctor
         /// </summary>
@@ -158,10 +159,15 @@ namespace Nop.Core.Domain.Customers
         /// <summary>
         /// Gets or sets the customer roles
         /// </summary>
-        public virtual ICollection<CustomerRole> CustomerRoles
+        public IList<CustomerRole> CustomerRoles => CustomerCustomerRoleMappings.Select(mapping => mapping.CustomerRole).ToList();
+
+        /// <summary>
+        /// Gets or sets customer-customer role mappings
+        /// </summary>
+        public virtual ICollection<CustomerCustomerRoleMapping> CustomerCustomerRoleMappings
         {
-            get { return _customerRoles ?? (_customerRoles = new List<CustomerRole>()); }
-            protected set { _customerRoles = value; }
+            get { return _customerCustomerRoleMappings ?? (_customerCustomerRoleMappings = new List<CustomerCustomerRoleMapping>()); }
+            protected set { _customerCustomerRoleMappings = value; }
         }
 
         /// <summary>
@@ -200,7 +206,7 @@ namespace Nop.Core.Domain.Customers
             get { return _addresses ?? (_addresses = new List<Address>()); }
             protected set { _addresses = value; }
         }
-        
+
         #endregion
     }
 }

@@ -26,15 +26,10 @@ namespace Nop.Data.Mapping.Customers
             builder.Property(customer => customer.SystemName).HasMaxLength(400);
 
 #if EF6
-            builder.HasMany(customer => customer.CustomerRoles)
-                .WithMany()
-                .Map(mapping => mapping.ToTable("Customer_CustomerRole_Mapping"));
-
             builder.HasMany(customer => customer.Addresses)
                 .WithMany()
                 .Map(mapping => mapping.ToTable("CustomerAddresses"));
 #else
-            builder.Ignore(customer => customer.CustomerRoles);
             builder.Ignore(customer => customer.Addresses);
 #endif
 
@@ -46,6 +41,7 @@ namespace Nop.Data.Mapping.Customers
                 .WithMany()
                 .HasForeignKey(customer => customer.ShippingAddressId);
 
+            builder.Ignore(customer => customer.CustomerRoles);
 
             //add custom configuration
             this.PostConfigure(builder);

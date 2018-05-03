@@ -437,7 +437,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                     if (customerRole.SystemName == SystemCustomerRoleNames.Administrators && !_workContext.CurrentCustomer.IsAdmin())
                         continue;
 
-                    customer.CustomerRoles.Add(customerRole);
+                    //customer.CustomerRoles.Add(customerRole);
+                    customer.CustomerCustomerRoleMappings.Add(new CustomerCustomerRoleMapping { CustomerRole = customerRole });
                 }
                 _customerService.UpdateCustomer(customer);
 
@@ -458,7 +459,9 @@ namespace Nop.Web.Areas.Admin.Controllers
                     var vendorRole = customer
                         .CustomerRoles
                         .FirstOrDefault(x => x.SystemName == SystemCustomerRoleNames.Vendors);
-                    customer.CustomerRoles.Remove(vendorRole);
+                    //customer.CustomerRoles.Remove(vendorRole);
+                    customer.CustomerCustomerRoleMappings
+                        .Remove(customer.CustomerCustomerRoleMappings.FirstOrDefault(mapping => mapping.CustomerRoleId == vendorRole.Id));
                     _customerService.UpdateCustomer(customer);
                     ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.CannotBeInVendoRoleWithoutVendorAssociated"));
                 }
@@ -682,7 +685,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                         {
                             //new role
                             if (customer.CustomerRoles.Count(cr => cr.Id == customerRole.Id) == 0)
-                                customer.CustomerRoles.Add(customerRole);
+                                //customer.CustomerRoles.Add(customerRole);
+                                customer.CustomerCustomerRoleMappings.Add(new CustomerCustomerRoleMapping { CustomerRole = customerRole });
                         }
                         else
                         {
@@ -695,7 +699,11 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                             //remove role
                             if (customer.CustomerRoles.Count(cr => cr.Id == customerRole.Id) > 0)
-                                customer.CustomerRoles.Remove(customerRole);
+                            {
+                                //customer.CustomerRoles.Remove(customerRole);
+                                customer.CustomerCustomerRoleMappings
+                                    .Remove(customer.CustomerCustomerRoleMappings.FirstOrDefault(mapping => mapping.CustomerRoleId == customerRole.Id));
+                            }
                         }
                     }
                     _customerService.UpdateCustomer(customer);
@@ -716,7 +724,9 @@ namespace Nop.Web.Areas.Admin.Controllers
                         var vendorRole = customer
                             .CustomerRoles
                             .FirstOrDefault(x => x.SystemName == SystemCustomerRoleNames.Vendors);
-                        customer.CustomerRoles.Remove(vendorRole);
+                        //customer.CustomerRoles.Remove(vendorRole);
+                        customer.CustomerCustomerRoleMappings
+                            .Remove(customer.CustomerCustomerRoleMappings.FirstOrDefault(mapping => mapping.CustomerRoleId == vendorRole.Id));
                         _customerService.UpdateCustomer(customer);
                         ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.CannotBeInVendoRoleWithoutVendorAssociated"));
                     }

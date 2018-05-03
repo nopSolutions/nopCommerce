@@ -1165,7 +1165,8 @@ namespace Nop.Services.Orders
                     if (add)
                     {
                         //add
-                        customer.CustomerRoles.Add(customerRole);
+                        //customer.CustomerRoles.Add(customerRole);
+                        customer.CustomerCustomerRoleMappings.Add(new CustomerCustomerRoleMapping { CustomerRole = customerRole });
                     }
                 }
                 else
@@ -1174,7 +1175,9 @@ namespace Nop.Services.Orders
                     if (!add)
                     {
                         //remove
-                        customer.CustomerRoles.Remove(customerRole);
+                        //customer.CustomerRoles.Remove(customerRole);
+                        customer.CustomerCustomerRoleMappings
+                            .Remove(customer.CustomerCustomerRoleMappings.FirstOrDefault(mapping => mapping.CustomerRoleId == customerRole.Id));
                     }
                 }
             }

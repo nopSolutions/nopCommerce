@@ -4145,9 +4145,12 @@ namespace Nop.Services.Installation
             adminUser.BillingAddress = defaultAdminUserAddress;
             adminUser.ShippingAddress = defaultAdminUserAddress;
 
-            adminUser.CustomerRoles.Add(crAdministrators);
-            adminUser.CustomerRoles.Add(crForumModerators);
-            adminUser.CustomerRoles.Add(crRegistered);
+            //adminUser.CustomerRoles.Add(crAdministrators);
+            //adminUser.CustomerRoles.Add(crForumModerators);
+            //adminUser.CustomerRoles.Add(crRegistered);
+            adminUser.CustomerCustomerRoleMappings.Add(new CustomerCustomerRoleMapping { CustomerRole = crAdministrators });
+            adminUser.CustomerCustomerRoleMappings.Add(new CustomerCustomerRoleMapping { CustomerRole = crForumModerators });
+            adminUser.CustomerCustomerRoleMappings.Add(new CustomerCustomerRoleMapping { CustomerRole = crRegistered });
 
             _customerRepository.Insert(adminUser);
             //set default customer name
@@ -4191,7 +4194,8 @@ namespace Nop.Services.Installation
             secondUser.BillingAddress = defaultSecondUserAddress;
             secondUser.ShippingAddress = defaultSecondUserAddress;
 
-            secondUser.CustomerRoles.Add(crRegistered);
+            //secondUser.CustomerRoles.Add(crRegistered);
+            secondUser.CustomerCustomerRoleMappings.Add(new CustomerCustomerRoleMapping { CustomerRole = crRegistered });
 
             _customerRepository.Insert(secondUser);
             //set default customer name
@@ -4239,7 +4243,8 @@ namespace Nop.Services.Installation
             thirdUser.BillingAddress = defaultThirdUserAddress;
             thirdUser.ShippingAddress = defaultThirdUserAddress;
 
-            thirdUser.CustomerRoles.Add(crRegistered);
+            //thirdUser.CustomerRoles.Add(crRegistered);
+            thirdUser.CustomerCustomerRoleMappings.Add(new CustomerCustomerRoleMapping { CustomerRole = crRegistered });
 
             _customerRepository.Insert(thirdUser);
             //set default customer name
@@ -4287,7 +4292,8 @@ namespace Nop.Services.Installation
             fourthUser.BillingAddress = defaultFourthUserAddress;
             fourthUser.ShippingAddress = defaultFourthUserAddress;
 
-            fourthUser.CustomerRoles.Add(crRegistered);
+            //fourthUser.CustomerRoles.Add(crRegistered);
+            fourthUser.CustomerCustomerRoleMappings.Add(new CustomerCustomerRoleMapping { CustomerRole = crRegistered });
 
             _customerRepository.Insert(fourthUser);
             //set default customer name
@@ -4336,7 +4342,8 @@ namespace Nop.Services.Installation
             fifthUser.BillingAddress = defaultFifthUserAddress;
             fifthUser.ShippingAddress = defaultFifthUserAddress;
 
-            fifthUser.CustomerRoles.Add(crRegistered);
+            //fifthUser.CustomerRoles.Add(crRegistered);
+            fifthUser.CustomerCustomerRoleMappings.Add(new CustomerCustomerRoleMapping { CustomerRole = crRegistered });
 
             _customerRepository.Insert(fifthUser);
             //set default customer name
@@ -4385,7 +4392,8 @@ namespace Nop.Services.Installation
             sixthUser.BillingAddress = defaultSixthUserAddress;
             sixthUser.ShippingAddress = defaultSixthUserAddress;
 
-            sixthUser.CustomerRoles.Add(crRegistered);
+            //sixthUser.CustomerRoles.Add(crRegistered);
+            sixthUser.CustomerCustomerRoleMappings.Add(new CustomerCustomerRoleMapping { CustomerRole = crRegistered });
 
             _customerRepository.Insert(sixthUser);
             //set default customer name
@@ -4415,7 +4423,8 @@ namespace Nop.Services.Installation
                 LastActivityDateUtc = DateTime.UtcNow,
                 RegisteredInStoreId = storeId
             };
-            searchEngineUser.CustomerRoles.Add(crGuests);
+            //searchEngineUser.CustomerRoles.Add(crGuests);
+            searchEngineUser.CustomerCustomerRoleMappings.Add(new CustomerCustomerRoleMapping { CustomerRole = crGuests });
             _customerRepository.Insert(searchEngineUser);
 
 
@@ -4432,7 +4441,8 @@ namespace Nop.Services.Installation
                 LastActivityDateUtc = DateTime.UtcNow,
                 RegisteredInStoreId = storeId
             };
-            backgroundTaskUser.CustomerRoles.Add(crGuests);
+            //backgroundTaskUser.CustomerRoles.Add(crGuests);
+            backgroundTaskUser.CustomerCustomerRoleMappings.Add(new CustomerCustomerRoleMapping { CustomerRole = crGuests });
             _customerRepository.Insert(backgroundTaskUser);
         }
 

@@ -161,7 +161,7 @@ namespace Nop.Services.Customers
                 query = query.Where(c => createdFromUtc.Value <= c.CreatedOnUtc);
             if (createdToUtc.HasValue)
                 query = query.Where(c => createdToUtc.Value >= c.CreatedOnUtc);
-            query = query.Where(c => c.CustomerRoles.Select(cr => cr.Id).Contains(guestRole.Id));
+            query = query.Where(c => c.CustomerCustomerRoleMappings.Select(mapping => mapping.CustomerRoleId).Contains(guestRole.Id));
             if (onlyWithoutShoppingCart)
                 query = query.Where(c => !c.ShoppingCartItems.Any());
             //no orders
@@ -323,7 +323,7 @@ namespace Nop.Services.Customers
                 query = query.Where(c => vendorId == c.VendorId);
             query = query.Where(c => !c.Deleted);
             if (customerRoleIds != null && customerRoleIds.Length > 0)
-                query = query.Where(c => c.CustomerRoles.Select(cr => cr.Id).Intersect(customerRoleIds).Any());
+                query = query.Where(c => c.CustomerCustomerRoleMappings.Select(mapping => mapping.CustomerRoleId).Intersect(customerRoleIds).Any());
             if (!string.IsNullOrWhiteSpace(email))
                 query = query.Where(c => c.Email.Contains(email));
             if (!string.IsNullOrWhiteSpace(username))
@@ -463,7 +463,7 @@ namespace Nop.Services.Customers
             query = query.Where(c => lastActivityFromUtc <= c.LastActivityDateUtc);
             query = query.Where(c => !c.Deleted);
             if (customerRoleIds != null && customerRoleIds.Length > 0)
-                query = query.Where(c => c.CustomerRoles.Select(cr => cr.Id).Intersect(customerRoleIds).Any());
+                query = query.Where(c => c.CustomerCustomerRoleMappings.Select(mapping => mapping.CustomerRoleId).Intersect(customerRoleIds).Any());
             
             query = query.OrderByDescending(c => c.LastActivityDateUtc);
             var customers = new PagedList<Customer>(query, pageIndex, pageSize);
@@ -626,7 +626,8 @@ namespace Nop.Services.Customers
             var guestRole = GetCustomerRoleBySystemName(SystemCustomerRoleNames.Guests);
             if (guestRole == null)
                 throw new NopException("'Guests' role could not be loaded");
-            customer.CustomerRoles.Add(guestRole);
+            //customer.CustomerRoles.Add(guestRole);
+            customer.CustomerCustomerRoleMappings.Add(new CustomerCustomerRoleMapping { CustomerRole = guestRole });
 
             _customerRepository.Insert(customer);
 
@@ -736,9 +737,9 @@ namespace Nop.Services.Customers
             //stored procedures aren't supported. Use LINQ
             return DeleteGuestCustomersUseLinq(createdFromUtc, createdToUtc, onlyWithoutShoppingCart);
         }
-
-        #endregion
         
+        #endregion
+
         #region Customer roles
 
         /// <summary>

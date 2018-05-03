@@ -293,7 +293,7 @@ namespace Nop.Services.Messages
                         NewsletterSubscribers = nls,
                         Customer = c
                     });
-                query = query.Where(x => x.Customer.CustomerRoles.Any(cr => cr.Id == customerRoleId));
+                query = query.Where(x => x.Customer.CustomerCustomerRoleMappings.Any(mapping => mapping.CustomerRoleId == customerRoleId));
                 if (!string.IsNullOrEmpty(email))
                     query = query.Where(x => x.NewsletterSubscribers.Email.Contains(email));
                 if (createdFromUtc.HasValue)
