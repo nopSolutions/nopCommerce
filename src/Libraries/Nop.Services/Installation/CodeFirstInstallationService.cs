@@ -12175,7 +12175,8 @@ namespace Nop.Services.Installation
                     Name = tag,
                 };
             }
-            product.ProductTags.Add(productTag);
+            //product.ProductTags.Add(productTag);
+            product.ProductProductTagMappings.Add(new ProductProductTagMapping { ProductTag = productTag });
             _productRepository.Update(product);
 
             //search engine name

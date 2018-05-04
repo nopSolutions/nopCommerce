@@ -761,7 +761,8 @@ namespace Nop.Services.Catalog
             //copy product tags
             foreach (var productTag in product.ProductTags)
             {
-                productCopy.ProductTags.Add(productTag);
+                //productCopy.ProductTags.Add(productTag);
+                productCopy.ProductProductTagMappings.Add(new ProductProductTagMapping { ProductTag = productTag });
             }
             _productService.UpdateProduct(productCopy);
 

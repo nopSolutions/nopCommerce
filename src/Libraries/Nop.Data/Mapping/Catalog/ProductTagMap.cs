@@ -21,10 +21,9 @@ namespace Nop.Data.Mapping.Catalog
             builder.HasKey(productTag => productTag.Id);
 
             builder.Property(productTag => productTag.Name).HasMaxLength(400).IsRequired();
-
-#if !EF6
+            
             builder.Ignore(productTag => productTag.Products);
-#endif
+
             //add custom configuration
             this.PostConfigure(builder);
         }

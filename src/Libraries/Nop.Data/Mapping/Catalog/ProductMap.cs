@@ -41,12 +41,7 @@ namespace Nop.Data.Mapping.Catalog
             builder.Property(product => product.BasepriceAmount).HasColumnType("decimal(18, 4)");
             builder.Property(product => product.BasepriceBaseAmount).HasColumnType("decimal(18, 4)");
 
-#if EF6
-            builder.HasMany(product => product.ProductTags)
-                .WithMany(productTag => productTag.Products)
-                .Map(mapping => mapping.ToTable("Product_ProductTag_Mapping"));
-#else
-            builder.Ignore(product => product.ProductTags);
+#if !EF6
             builder.Ignore(product => product.AppliedDiscounts);
 #endif
 
@@ -58,6 +53,7 @@ namespace Nop.Data.Mapping.Catalog
             builder.Ignore(product => product.ManageInventoryMethod);
             builder.Ignore(product => product.RecurringCyclePeriod);
             builder.Ignore(product => product.RentalPricePeriod);
+            builder.Ignore(product => product.ProductTags);
 
             //add custom configuration
             this.PostConfigure(builder);

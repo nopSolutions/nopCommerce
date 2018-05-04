@@ -277,7 +277,7 @@ namespace Nop.Services.Catalog
                 query = from p in query
                         join lp in _localizedPropertyRepository.Table on p.Id equals lp.EntityId into p_lp
                         from lp in p_lp.DefaultIfEmpty()
-                        from pt in p.ProductTags.DefaultIfEmpty()
+                        from mapping in p.ProductProductTagMappings.DefaultIfEmpty()
                         where (p.Name.Contains(keywords)) ||
                               (searchDescriptions && p.ShortDescription.Contains(keywords)) ||
                               (searchDescriptions && p.FullDescription.Contains(keywords)) ||
@@ -286,7 +286,7 @@ namespace Nop.Services.Catalog
                               //SKU (exact match)
                               (searchSku && p.Sku == keywords) ||
                               //product tags (exact match)
-                              (searchProductTags && pt.Name == keywords) ||
+                              (searchProductTags && mapping.ProductTag.Name == keywords) ||
                               //localized values
                               (searchLocalizedValue && lp.LanguageId == languageId && lp.LocaleKeyGroup == "Product" &&
                                lp.LocaleKey == "Name" && lp.LocaleValue.Contains(keywords)) ||
@@ -376,7 +376,7 @@ namespace Nop.Services.Catalog
             if (productTagId > 0)
             {
                 query = from p in query
-                        from pt in p.ProductTags.Where(pt => pt.Id == productTagId)
+                        from pt in p.ProductProductTagMappings.Where(mapping => mapping.ProductTagId == productTagId)
                         select p;
             }
 

@@ -132,13 +132,13 @@ namespace Nop.Services.Catalog
                 {
                     pt.Id,
                     ProductCount = (storeId == 0 || _catalogSettings.IgnoreStoreLimitations) ?
-                        pt.Products.Count(p => !p.Deleted && p.Published)
-                        : (from p in pt.Products
+                        pt.ProductProductTagMappings.Count(mapping => !mapping.Product.Deleted && mapping.Product.Published)
+                        : (from mapping in pt.ProductProductTagMappings
                             join sm in _storeMappingRepository.Table
-                                on new { p1 = p.Id, p2 = "Product" } equals new { p1 = sm.EntityId, p2 = sm.EntityName } into p_sm
+                                on new { p1 = mapping.ProductId, p2 = "Product" } equals new { p1 = sm.EntityId, p2 = sm.EntityName } into p_sm
                             from sm in p_sm.DefaultIfEmpty()
-                            where (!p.LimitedToStores || storeId == sm.StoreId) && !p.Deleted && p.Published
-                            select p).Count()
+                            where (!mapping.Product.LimitedToStores || storeId == sm.StoreId) && !mapping.Product.Deleted && mapping.Product.Published
+                            select mapping).Count()
                 });
                 var dictionary = new Dictionary<int, int>();
                 foreach (var item in query)
@@ -293,7 +293,9 @@ namespace Nop.Services.Catalog
             }
             foreach (var productTag in productTagsToRemove)
             {
-                product.ProductTags.Remove(productTag);
+                //product.ProductTags.Remove(productTag);
+                product.ProductProductTagMappings
+                    .Remove(product.ProductProductTagMappings.FirstOrDefault(mapping => mapping.ProductTagId == productTag.Id));
                 _productService.UpdateProduct(product);
             }
             foreach (var productTagName in productTags)
@@ -315,7 +317,8 @@ namespace Nop.Services.Catalog
                 }
                 if (!product.ProductTagExists(productTag.Id))
                 {
-                    product.ProductTags.Add(productTag);
+                    //product.ProductTags.Add(productTag);
+                    product.ProductProductTagMappings.Add(new ProductProductTagMapping { ProductTag = productTag });
                     _productService.UpdateProduct(product);
                 }
 

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Seo;
 
@@ -9,7 +10,7 @@ namespace Nop.Core.Domain.Catalog
     /// </summary>
     public partial class ProductTag : BaseEntity, ILocalizedEntity, ISlugSupported
     {
-        private ICollection<Product> _products;
+        private ICollection<ProductProductTagMapping> _productProductTagMappings;
 
         /// <summary>
         /// Gets or sets the name
@@ -19,10 +20,15 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets the products
         /// </summary>
-        public virtual ICollection<Product> Products
+        public IList<Product> Products => ProductProductTagMappings.Select(mapping => mapping.Product).ToList();
+
+        /// <summary>
+        /// Gets or sets product-product tag mappings
+        /// </summary>
+        public virtual ICollection<ProductProductTagMapping> ProductProductTagMappings
         {
-            get => _products ?? (_products = new List<Product>());
-            protected set => _products = value;
+            get => _productProductTagMappings ?? (_productProductTagMappings = new List<ProductProductTagMapping>());
+            protected set => _productProductTagMappings = value;
         }
     }
 }

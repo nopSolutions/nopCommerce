@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Security;
@@ -18,7 +19,7 @@ namespace Nop.Core.Domain.Catalog
         private ICollection<ProductPicture> _productPictures;
         private ICollection<ProductReview> _productReviews;
         private ICollection<ProductSpecificationAttribute> _productSpecificationAttributes;
-        private ICollection<ProductTag> _productTags;
+        private ICollection<ProductProductTagMapping> _productProductTagMappings;
         private ICollection<ProductAttributeMapping> _productAttributeMappings;
         private ICollection<ProductAttributeCombination> _productAttributeCombinations;
         private ICollection<TierPrice> _tierPrices;
@@ -721,10 +722,15 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets the product tags
         /// </summary>
-        public virtual ICollection<ProductTag> ProductTags
+        public IList<ProductTag> ProductTags => ProductProductTagMappings.Select(mapping => mapping.ProductTag).ToList();
+
+        /// <summary>
+        /// Gets or sets product-product tag mappings
+        /// </summary>
+        public virtual ICollection<ProductProductTagMapping> ProductProductTagMappings
         {
-            get { return _productTags ?? (_productTags = new List<ProductTag>()); }
-            protected set { _productTags = value; }
+            get => _productProductTagMappings ?? (_productProductTagMappings = new List<ProductProductTagMapping>());
+            protected set => _productProductTagMappings = value;
         }
 
         /// <summary>
