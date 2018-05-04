@@ -21,14 +21,8 @@ namespace Nop.Data.Mapping.Shipping
             builder.HasKey(method => method.Id);
 
             builder.Property(method => method.Name).HasMaxLength(400).IsRequired();
-
-#if EF6
-            builder.HasMany(method => method.RestrictedCountries)
-                .WithMany(country => country.RestrictedShippingMethods)
-                .Map(mapping => mapping.ToTable("ShippingMethodRestrictions"));
-#else
+            
             builder.Ignore(method => method.RestrictedCountries);
-#endif
 
             //add custom configuration
             this.PostConfigure(builder);

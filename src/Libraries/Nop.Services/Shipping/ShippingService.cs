@@ -241,7 +241,7 @@ namespace Nop.Services.Shipping
             {
                 var query1 = from sm in _shippingMethodRepository.Table
                              where
-                             sm.RestrictedCountries.Select(c => c.Id).Contains(filterByCountryId.Value)
+                             sm.ShippingMethodCountryMappings.Select(mapping => mapping.CountryId).Contains(filterByCountryId.Value)
                              select sm.Id;
 
                 var query2 = from sm in _shippingMethodRepository.Table

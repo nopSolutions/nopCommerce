@@ -799,7 +799,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                     {
                         if (shippingMethod.RestrictedCountries.FirstOrDefault(c => c.Id == country.Id) == null)
                         {
-                            shippingMethod.RestrictedCountries.Add(country);
+                            //shippingMethod.RestrictedCountries.Add(country);
+                            shippingMethod.ShippingMethodCountryMappings.Add(new ShippingMethodCountryMapping { Country = country });
                             _shippingService.UpdateShippingMethod(shippingMethod);
                         }
                     }
@@ -807,7 +808,9 @@ namespace Nop.Web.Areas.Admin.Controllers
                     {
                         if (shippingMethod.RestrictedCountries.FirstOrDefault(c => c.Id == country.Id) != null)
                         {
-                            shippingMethod.RestrictedCountries.Remove(country);
+                            //shippingMethod.RestrictedCountries.Remove(country);
+                            shippingMethod.ShippingMethodCountryMappings
+                                .Remove(shippingMethod.ShippingMethodCountryMappings.FirstOrDefault(mapping => mapping.CountryId == country.Id));
                             _shippingService.UpdateShippingMethod(shippingMethod);
                         }
                     }
