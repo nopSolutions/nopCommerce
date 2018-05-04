@@ -4141,7 +4141,8 @@ namespace Nop.Services.Installation
                 ZipPostalCode = "10021",
                 CreatedOnUtc = DateTime.UtcNow,
             };
-            adminUser.Addresses.Add(defaultAdminUserAddress);
+            //adminUser.Addresses.Add(defaultAdminUserAddress);
+            adminUser.CustomerAddressMappings.Add(new CustomerAddressMapping { Address = defaultAdminUserAddress });
             adminUser.BillingAddress = defaultAdminUserAddress;
             adminUser.ShippingAddress = defaultAdminUserAddress;
 
@@ -4190,7 +4191,8 @@ namespace Nop.Services.Installation
                 ZipPostalCode = "90077",
                 CreatedOnUtc = DateTime.UtcNow,
             };
-            secondUser.Addresses.Add(defaultSecondUserAddress);
+            //secondUser.Addresses.Add(defaultSecondUserAddress);
+            secondUser.CustomerAddressMappings.Add(new CustomerAddressMapping { Address = defaultSecondUserAddress });
             secondUser.BillingAddress = defaultSecondUserAddress;
             secondUser.ShippingAddress = defaultSecondUserAddress;
 
@@ -4239,7 +4241,8 @@ namespace Nop.Services.Installation
                 ZipPostalCode = "NW1 6XE",
                 CreatedOnUtc = DateTime.UtcNow,
             };
-            thirdUser.Addresses.Add(defaultThirdUserAddress);
+            //thirdUser.Addresses.Add(defaultThirdUserAddress);
+            thirdUser.CustomerAddressMappings.Add(new CustomerAddressMapping { Address = defaultThirdUserAddress });
             thirdUser.BillingAddress = defaultThirdUserAddress;
             thirdUser.ShippingAddress = defaultThirdUserAddress;
 
@@ -4288,7 +4291,8 @@ namespace Nop.Services.Installation
                 ZipPostalCode = "KY16 9AX",
                 CreatedOnUtc = DateTime.UtcNow,
             };
-            fourthUser.Addresses.Add(defaultFourthUserAddress);
+            //fourthUser.Addresses.Add(defaultFourthUserAddress);
+            fourthUser.CustomerAddressMappings.Add(new CustomerAddressMapping { Address = defaultFourthUserAddress });
             fourthUser.BillingAddress = defaultFourthUserAddress;
             fourthUser.ShippingAddress = defaultFourthUserAddress;
 
@@ -4338,7 +4342,8 @@ namespace Nop.Services.Installation
                 ZipPostalCode = "99901",
                 CreatedOnUtc = DateTime.UtcNow,
             };
-            fifthUser.Addresses.Add(defaultFifthUserAddress);
+            //fifthUser.Addresses.Add(defaultFifthUserAddress);
+            fifthUser.CustomerAddressMappings.Add(new CustomerAddressMapping { Address = defaultFifthUserAddress });
             fifthUser.BillingAddress = defaultFifthUserAddress;
             fifthUser.ShippingAddress = defaultFifthUserAddress;
 
@@ -4388,7 +4393,8 @@ namespace Nop.Services.Installation
                 ZipPostalCode = "S7K 1J9",
                 CreatedOnUtc = DateTime.UtcNow,
             };
-            sixthUser.Addresses.Add(defaultSixthUserAddress);
+            //sixthUser.Addresses.Add(defaultSixthUserAddress);
+            sixthUser.CustomerAddressMappings.Add(new CustomerAddressMapping { Address = defaultSixthUserAddress });
             sixthUser.BillingAddress = defaultSixthUserAddress;
             sixthUser.ShippingAddress = defaultSixthUserAddress;
 

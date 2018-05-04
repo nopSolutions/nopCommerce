@@ -1222,7 +1222,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                     address.CountryId = null;
                 if (address.StateProvinceId == 0)
                     address.StateProvinceId = null;
-                customer.Addresses.Add(address);
+                //customer.Addresses.Add(address);
+                customer.CustomerAddressMappings.Add(new CustomerAddressMapping { Address = address });
                 _customerService.UpdateCustomer(customer);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Customers.Customers.Addresses.Added"));

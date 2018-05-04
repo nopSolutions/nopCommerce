@@ -155,7 +155,9 @@ namespace Nop.Core.Domain.Customers
                 if (customer.BillingAddress == address) customer.BillingAddress = null;
                 if (customer.ShippingAddress == address) customer.ShippingAddress = null;
 
-                customer.Addresses.Remove(address);
+                //customer.Addresses.Remove(address);
+                customer.CustomerAddressMappings
+                    .Remove(customer.CustomerAddressMappings.FirstOrDefault(mapping => mapping.AddressId == address.Id));
             }
         }
 

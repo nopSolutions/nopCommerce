@@ -25,14 +25,6 @@ namespace Nop.Data.Mapping.Customers
             builder.Property(customer => customer.EmailToRevalidate).HasMaxLength(1000);
             builder.Property(customer => customer.SystemName).HasMaxLength(400);
 
-#if EF6
-            builder.HasMany(customer => customer.Addresses)
-                .WithMany()
-                .Map(mapping => mapping.ToTable("CustomerAddresses"));
-#else
-            builder.Ignore(customer => customer.Addresses);
-#endif
-
             builder.HasOne(customer => customer.BillingAddress)
                 .WithMany()
                 .HasForeignKey(customer => customer.BillingAddressId);
@@ -42,6 +34,7 @@ namespace Nop.Data.Mapping.Customers
                 .HasForeignKey(customer => customer.ShippingAddressId);
 
             builder.Ignore(customer => customer.CustomerRoles);
+            builder.Ignore(customer => customer.Addresses);
 
             //add custom configuration
             this.PostConfigure(builder);

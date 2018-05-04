@@ -15,7 +15,7 @@ namespace Nop.Core.Domain.Customers
         private ICollection<CustomerCustomerRoleMapping> _customerCustomerRoleMappings;
         private ICollection<ShoppingCartItem> _shoppingCartItems;
         private ICollection<ReturnRequest> _returnRequests;
-        private ICollection<Address> _addresses;
+        private ICollection<CustomerAddressMapping> _customerAddressMappings;
         
         /// <summary>
         /// Ctor
@@ -201,10 +201,15 @@ namespace Nop.Core.Domain.Customers
         /// <summary>
         /// Gets or sets customer addresses
         /// </summary>
-        public virtual ICollection<Address> Addresses
+        public IList<Address> Addresses => CustomerAddressMappings.Select(mapping => mapping.Address).ToList();
+
+        /// <summary>
+        /// Gets or sets customer-address mappings
+        /// </summary>
+        public virtual ICollection<CustomerAddressMapping> CustomerAddressMappings
         {
-            get { return _addresses ?? (_addresses = new List<Address>()); }
-            protected set { _addresses = value; }
+            get { return _customerAddressMappings ?? (_customerAddressMappings = new List<CustomerAddressMapping>()); }
+            protected set { _customerAddressMappings = value; }
         }
 
         #endregion
