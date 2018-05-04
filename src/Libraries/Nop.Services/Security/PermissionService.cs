@@ -230,12 +230,13 @@ namespace Nop.Services.Security
                     var defaultMappingProvided = (from p in defaultPermission.PermissionRecords
                         where p.SystemName == permission1.SystemName
                         select p).Any();
-                    var mappingExists = (from p in customerRole.PermissionRecords
-                        where p.SystemName == permission1.SystemName
-                        select p).Any();
+                    var mappingExists = (from mapping in customerRole.PermissionRecordCustomerRoleMappings
+                        where mapping.PermissionRecord.SystemName == permission1.SystemName
+                        select mapping.PermissionRecord).Any();
                     if (defaultMappingProvided && !mappingExists)
                     {
-                        permission1.CustomerRoles.Add(customerRole);
+                        //permission1.CustomerRoles.Add(customerRole);
+                        permission1.PermissionRecordCustomerRoleMappings.Add(new PermissionRecordCustomerRoleMapping { CustomerRole = customerRole });
                     }
                 }
 

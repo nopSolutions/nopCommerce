@@ -22,10 +22,9 @@ namespace Nop.Data.Mapping.Customers
 
             builder.Property(role => role.Name).HasMaxLength(255).IsRequired();
             builder.Property(role => role.SystemName).HasMaxLength(255);
-
-#if !EF6
+            
             builder.Ignore(role => role.PermissionRecords);
-#endif
+
             //add custom configuration
             this.PostConfigure(builder);
         }

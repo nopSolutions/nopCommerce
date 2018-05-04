@@ -24,13 +24,7 @@ namespace Nop.Data.Mapping.Security
             builder.Property(record => record.SystemName).HasMaxLength(255).IsRequired();
             builder.Property(record => record.Category).HasMaxLength(255).IsRequired();
 
-#if EF6
-            builder.HasMany(record => record.CustomerRoles)
-                .WithMany(role => role.PermissionRecords)
-                .Map(mapping => mapping.ToTable("PermissionRecord_Role_Mapping"));
-#else
             builder.Ignore(record => record.CustomerRoles);
-#endif
 
             //add custom configuration
             this.PostConfigure(builder);

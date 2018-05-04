@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Security;
 using Nop.Services.Customers;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
@@ -97,7 +98,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                     {
                         if (pr.CustomerRoles.FirstOrDefault(x => x.Id == cr.Id) == null)
                         {
-                            pr.CustomerRoles.Add(cr);
+                            //pr.CustomerRoles.Add(cr);
+                            pr.PermissionRecordCustomerRoleMappings.Add(new PermissionRecordCustomerRoleMapping { CustomerRole = cr });
                             _permissionService.UpdatePermissionRecord(pr);
                         }
                     }
@@ -105,7 +107,9 @@ namespace Nop.Web.Areas.Admin.Controllers
                     {
                         if (pr.CustomerRoles.FirstOrDefault(x => x.Id == cr.Id) != null)
                         {
-                            pr.CustomerRoles.Remove(cr);
+                            //pr.CustomerRoles.Remove(cr);
+                            pr.PermissionRecordCustomerRoleMappings
+                                .Remove(pr.PermissionRecordCustomerRoleMappings.FirstOrDefault(mapping => mapping.CustomerRoleId == cr.Id));
                             _permissionService.UpdatePermissionRecord(pr);
                         }
                     }
