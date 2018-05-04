@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Nop.Core.Domain.Catalog;
 
 namespace Nop.Core.Domain.Discounts
@@ -10,9 +11,9 @@ namespace Nop.Core.Domain.Discounts
     public partial class Discount : BaseEntity
     {
         private ICollection<DiscountRequirement> _discountRequirements;
-        private ICollection<Category> _appliedToCategories;
-        private ICollection<Manufacturer> _appliedToManufacturers;
-        private ICollection<Product> _appliedToProducts;
+        private ICollection<DiscountCategoryMapping> _discountCategoryMappings;
+        private ICollection<DiscountManufacturerMapping> _discountManufacturerMappings;
+        private ICollection<DiscountProductMapping> _discountProductMappings;
 
         /// <summary>
         /// Gets or sets the name
@@ -133,28 +134,43 @@ namespace Nop.Core.Domain.Discounts
         /// <summary>
         /// Gets or sets the categories
         /// </summary>
-        public virtual ICollection<Category> AppliedToCategories
+        public IList<Category> AppliedToCategories => DiscountCategoryMappings.Select(mapping => mapping.Category).ToList();
+
+        /// <summary>
+        /// Gets or sets the discount-category mappings
+        /// </summary>
+        public virtual ICollection<DiscountCategoryMapping> DiscountCategoryMappings
         {
-            get { return _appliedToCategories ?? (_appliedToCategories = new List<Category>()); }
-            protected set { _appliedToCategories = value; }
+            get { return _discountCategoryMappings ?? (_discountCategoryMappings = new List<DiscountCategoryMapping>()); }
+            protected set { _discountCategoryMappings = value; }
         }
 
         /// <summary>
-        /// Gets or sets the categories
+        /// Gets or sets the manufacturers
         /// </summary>
-        public virtual ICollection<Manufacturer> AppliedToManufacturers
+        public IList<Manufacturer> AppliedToManufacturers => DiscountManufacturerMappings.Select(mapping => mapping.Manufacturer).ToList();
+
+        /// <summary>
+        /// Gets or sets the discount-manufacturer mappings
+        /// </summary>
+        public virtual ICollection<DiscountManufacturerMapping> DiscountManufacturerMappings
         {
-            get { return _appliedToManufacturers ?? (_appliedToManufacturers = new List<Manufacturer>()); }
-            protected set { _appliedToManufacturers = value; }
+            get { return _discountManufacturerMappings ?? (_discountManufacturerMappings = new List<DiscountManufacturerMapping>()); }
+            protected set { _discountManufacturerMappings = value; }
         }
 
         /// <summary>
         /// Gets or sets the products 
         /// </summary>
-        public virtual ICollection<Product> AppliedToProducts
+        public IList<Product> AppliedToProducts => DiscountProductMappings.Select(mapping => mapping.Product).ToList();
+
+        /// <summary>
+        /// Gets or sets the discount-product mappings
+        /// </summary>
+        public virtual ICollection<DiscountProductMapping> DiscountProductMappings
         {
-            get { return _appliedToProducts ?? (_appliedToProducts = new List<Product>()); }
-            protected set { _appliedToProducts = value; }
+            get { return _discountProductMappings ?? (_discountProductMappings = new List<DiscountProductMapping>()); }
+            protected set { _discountProductMappings = value; }
         }
     }
 }

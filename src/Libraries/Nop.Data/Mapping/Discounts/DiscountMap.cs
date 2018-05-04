@@ -31,24 +31,9 @@ namespace Nop.Data.Mapping.Discounts
                 .HasForeignKey(requirement => requirement.DiscountId)
                 .IsRequired();
 
-#if EF6
-            builder.HasMany(discount => discount.AppliedToCategories)
-                .WithMany(category => category.AppliedDiscounts)
-                .Map(mapping => mapping.ToTable("Discount_AppliedToCategories"));
-
-            builder.HasMany(discount => discount.AppliedToManufacturers)
-                .WithMany(manufacturer => manufacturer.AppliedDiscounts)
-                .Map(mapping => mapping.ToTable("Discount_AppliedToManufacturers"));
-
-            builder.HasMany(discount => discount.AppliedToProducts)
-                .WithMany(product => product.AppliedDiscounts)
-                .Map(mapping => mapping.ToTable("Discount_AppliedToProducts"));
-#else
             builder.Ignore(discount => discount.AppliedToCategories);
             builder.Ignore(discount => discount.AppliedToManufacturers);
             builder.Ignore(discount => discount.AppliedToProducts);
-#endif
-
             builder.Ignore(discount => discount.DiscountType);
             builder.Ignore(discount => discount.DiscountLimitation);
 

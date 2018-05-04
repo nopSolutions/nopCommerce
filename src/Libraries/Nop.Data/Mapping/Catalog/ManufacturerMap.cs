@@ -25,10 +25,9 @@ namespace Nop.Data.Mapping.Catalog
             builder.Property(manufacturer => manufacturer.MetaTitle).HasMaxLength(400);
             builder.Property(manufacturer => manufacturer.PriceRanges).HasMaxLength(400);
             builder.Property(manufacturer => manufacturer.PageSizeOptions).HasMaxLength(200);
-
-#if !EF6
+            
             builder.Ignore(manufacturer => manufacturer.AppliedDiscounts);
-#endif
+
             //add custom configuration
             this.PostConfigure(builder);
         }

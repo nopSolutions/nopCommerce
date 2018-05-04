@@ -40,11 +40,7 @@ namespace Nop.Data.Mapping.Catalog
             builder.Property(product => product.AllowedQuantities).HasMaxLength(1000);
             builder.Property(product => product.BasepriceAmount).HasColumnType("decimal(18, 4)");
             builder.Property(product => product.BasepriceBaseAmount).HasColumnType("decimal(18, 4)");
-
-#if !EF6
-            builder.Ignore(product => product.AppliedDiscounts);
-#endif
-
+            
             builder.Ignore(product => product.ProductType);
             builder.Ignore(product => product.BackorderMode);
             builder.Ignore(product => product.DownloadActivationType);
@@ -54,6 +50,7 @@ namespace Nop.Data.Mapping.Catalog
             builder.Ignore(product => product.RecurringCyclePeriod);
             builder.Ignore(product => product.RentalPricePeriod);
             builder.Ignore(product => product.ProductTags);
+            builder.Ignore(product => product.AppliedDiscounts);
 
             //add custom configuration
             this.PostConfigure(builder);

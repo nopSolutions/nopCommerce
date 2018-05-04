@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Media;
 using Nop.Services.Localization;
 using Nop.Services.Media;
@@ -93,7 +94,8 @@ namespace Nop.Services.Catalog
         {
             foreach (var discount in product.AppliedDiscounts)
             {
-                productCopy.AppliedDiscounts.Add(discount);
+                //productCopy.AppliedDiscounts.Add(discount);
+                productCopy.DiscountProductMappings.Add(new DiscountProductMapping { Discount = discount });
                 _productService.UpdateProduct(productCopy);
             }
         }

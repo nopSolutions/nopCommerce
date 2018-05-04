@@ -254,7 +254,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 foreach (var discount in allDiscounts)
                 {
                     if (model.SelectedDiscountIds != null && model.SelectedDiscountIds.Contains(discount.Id))
-                        category.AppliedDiscounts.Add(discount);
+                        //category.AppliedDiscounts.Add(discount);
+                        category.DiscountCategoryMappings.Add(new DiscountCategoryMapping { Discount = discount });
                 }
                 _categoryService.UpdateCategory(category);
 
@@ -340,13 +341,16 @@ namespace Nop.Web.Areas.Admin.Controllers
                     {
                         //new discount
                         if (category.AppliedDiscounts.Count(d => d.Id == discount.Id) == 0)
-                            category.AppliedDiscounts.Add(discount);
+                            //category.AppliedDiscounts.Add(discount);
+                            category.DiscountCategoryMappings.Add(new DiscountCategoryMapping { Discount = discount });
                     }
                     else
                     {
                         //remove discount
                         if (category.AppliedDiscounts.Count(d => d.Id == discount.Id) > 0)
-                            category.AppliedDiscounts.Remove(discount);
+                            //category.AppliedDiscounts.Remove(discount);
+                            category.DiscountCategoryMappings
+                                .Remove(category.DiscountCategoryMappings.FirstOrDefault(mapping => mapping.DiscountId == discount.Id));
                     }
                 }
                 _categoryService.UpdateCategory(category);

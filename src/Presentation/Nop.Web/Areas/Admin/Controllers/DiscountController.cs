@@ -198,14 +198,16 @@ namespace Nop.Web.Areas.Admin.Controllers
                 if (prevDiscountType == DiscountType.AssignedToCategories && discount.DiscountType != DiscountType.AssignedToCategories)
                 {
                     //applied to categories
-                    discount.AppliedToCategories.Clear();
+                    //discount.AppliedToCategories.Clear();
+                    discount.DiscountCategoryMappings.Clear();
                     _discountService.UpdateDiscount(discount);
                 }
 
                 if (prevDiscountType == DiscountType.AssignedToManufacturers && discount.DiscountType != DiscountType.AssignedToManufacturers)
                 {
                     //applied to manufacturers
-                    discount.AppliedToManufacturers.Clear();
+                    //discount.AppliedToManufacturers.Clear();
+                    discount.DiscountManufacturerMappings.Clear();
                     _discountService.UpdateDiscount(discount);
                 }
 
@@ -214,7 +216,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                     //applied to products
                     var products = _discountService.GetProductsWithAppliedDiscount(discount.Id, true);
 
-                    discount.AppliedToProducts.Clear();
+                    //discount.AppliedToProducts.Clear();
+                    discount.DiscountProductMappings.Clear();
                     _discountService.UpdateDiscount(discount);
 
                     //update "HasDiscountsApplied" property
@@ -460,7 +463,9 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //remove discount
             if (product.AppliedDiscounts.Count(d => d.Id == discount.Id) > 0)
-                product.AppliedDiscounts.Remove(discount);
+                //product.AppliedDiscounts.Remove(discount);
+                product.DiscountProductMappings
+                    .Remove(product.DiscountProductMappings.FirstOrDefault(mapping => mapping.DiscountId == discount.Id));
 
             _productService.UpdateProduct(product);
             _productService.UpdateHasDiscountsApplied(product);
@@ -508,7 +513,9 @@ namespace Nop.Web.Areas.Admin.Controllers
                 foreach (var product in selectedProducts)
                 {
                     if (product.AppliedDiscounts.Count(d => d.Id == discount.Id) == 0)
-                        product.AppliedDiscounts.Add(discount);
+                        //product.AppliedDiscounts.Add(discount);
+                        product.DiscountProductMappings
+                            .Remove(product.DiscountProductMappings.FirstOrDefault(mapping => mapping.DiscountId == discount.Id));
 
                     _productService.UpdateProduct(product);
                     _productService.UpdateHasDiscountsApplied(product);
@@ -555,7 +562,9 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //remove discount
             if (category.AppliedDiscounts.Count(d => d.Id == discount.Id) > 0)
-                category.AppliedDiscounts.Remove(discount);
+                //category.AppliedDiscounts.Remove(discount);
+                category.DiscountCategoryMappings
+                    .Remove(category.DiscountCategoryMappings.FirstOrDefault(mapping => mapping.DiscountId == discount.Id));
 
             _categoryService.UpdateCategory(category);
 
@@ -602,7 +611,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 if (category != null)
                 {
                     if (category.AppliedDiscounts.Count(d => d.Id == discount.Id) == 0)
-                        category.AppliedDiscounts.Add(discount);
+                        //category.AppliedDiscounts.Add(discount);
+                        category.DiscountCategoryMappings.Add(new DiscountCategoryMapping { Discount = discount });
 
                     _categoryService.UpdateCategory(category);
                 }
@@ -648,7 +658,9 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //remove discount
             if (manufacturer.AppliedDiscounts.Count(d => d.Id == discount.Id) > 0)
-                manufacturer.AppliedDiscounts.Remove(discount);
+                //manufacturer.AppliedDiscounts.Remove(discount);
+                manufacturer.DiscountManufacturerMappings
+                    .Remove(manufacturer.DiscountManufacturerMappings.FirstOrDefault(mapping => mapping.DiscountId == discount.Id));
 
             _manufacturerService.UpdateManufacturer(manufacturer);
 
@@ -695,7 +707,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 if (manufacturer != null)
                 {
                     if (manufacturer.AppliedDiscounts.Count(d => d.Id == discount.Id) == 0)
-                        manufacturer.AppliedDiscounts.Add(discount);
+                        //manufacturer.AppliedDiscounts.Add(discount);
+                        manufacturer.DiscountManufacturerMappings.Add(new DiscountManufacturerMapping { Discount = discount });
 
                     _manufacturerService.UpdateManufacturer(manufacturer);
                 }

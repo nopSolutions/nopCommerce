@@ -23,7 +23,7 @@ namespace Nop.Core.Domain.Catalog
         private ICollection<ProductAttributeMapping> _productAttributeMappings;
         private ICollection<ProductAttributeCombination> _productAttributeCombinations;
         private ICollection<TierPrice> _tierPrices;
-        private ICollection<Discount> _appliedDiscounts;
+        private ICollection<DiscountProductMapping> _discountProductMappings;
         private ICollection<ProductWarehouseInventory> _productWarehouseInventory;
 
         /// <summary>
@@ -763,10 +763,15 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets the collection of applied discounts
         /// </summary>
-        public virtual ICollection<Discount> AppliedDiscounts
+        public IList<Discount> AppliedDiscounts => DiscountProductMappings.Select(mapping => mapping.Discount).ToList();
+
+        /// <summary>
+        /// Gets or sets the discount-product mappings
+        /// </summary>
+        public virtual ICollection<DiscountProductMapping> DiscountProductMappings
         {
-            get { return _appliedDiscounts ?? (_appliedDiscounts = new List<Discount>()); }
-            set { _appliedDiscounts = value; }
+            get { return _discountProductMappings ?? (_discountProductMappings = new List<DiscountProductMapping>()); }
+            set { _discountProductMappings = value; }
         }
 
         /// <summary>

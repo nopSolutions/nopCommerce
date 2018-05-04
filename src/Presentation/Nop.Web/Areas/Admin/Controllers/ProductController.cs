@@ -333,13 +333,18 @@ namespace Nop.Web.Areas.Admin.Controllers
                 {
                     //new discount
                     if (product.AppliedDiscounts.Count(d => d.Id == discount.Id) == 0)
-                        product.AppliedDiscounts.Add(discount);
+                        //product.AppliedDiscounts.Add(discount);
+                        product.DiscountProductMappings.Add(new DiscountProductMapping { Discount = discount });
                 }
                 else
                 {
                     //remove discount
                     if (product.AppliedDiscounts.Count(d => d.Id == discount.Id) > 0)
-                        product.AppliedDiscounts.Remove(discount);
+                    {
+                        //product.AppliedDiscounts.Remove(discount);
+                        product.DiscountProductMappings
+                            .Remove(product.DiscountProductMappings.FirstOrDefault(mapping => mapping.DiscountId == discount.Id));
+                    }
                 }
             }
 
