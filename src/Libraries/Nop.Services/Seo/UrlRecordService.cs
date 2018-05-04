@@ -368,7 +368,7 @@ namespace Nop.Services.Seo
                 throw new ArgumentNullException(nameof(entity));
 
             var entityId = entity.Id;
-            var entityName = entity.GetUnproxiedEntityType().Name;
+            var entityName = entity.GetType().BaseType.Name;
 
             var query = from ur in _urlRecordRepository.Table
                 where ur.EntityId == entityId &&

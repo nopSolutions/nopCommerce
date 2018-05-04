@@ -185,7 +185,7 @@ namespace Nop.Services.Common
             if (key == null)
                 throw new ArgumentNullException(nameof(key));
 
-            var keyGroup = entity.GetUnproxiedEntityType().Name;
+            var keyGroup = entity.GetType().BaseType.Name;
 
             var props = GetAttributesForEntity(entity.Id, keyGroup)
                 .Where(x => x.StoreId == storeId)
