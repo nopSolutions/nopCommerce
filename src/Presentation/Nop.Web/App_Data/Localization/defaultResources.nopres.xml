@@ -7737,6 +7737,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.ActivationDelay.Hint">
     <Value>Specify how many days (hours) must elapse before earned points become active. Points earned by purchase cannot be redeemed until activated. For example, you may set the days before the points become available to 7. In this case, the points earned will be available for spending only 7 days after the purchase.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.MaximumRewardPointsToUsePerOrder">
+    <Value>Maximum reward points to use per order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.MaximumRewardPointsToUsePerOrder.Hint">
+    <Value>Customers won't be able to use more than X reward points per one order. Set to 0 if you do not want to use this setting.</Value>
+  </LocaleResource>  
   <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.MinOrderTotalToAwardPoints">
     <Value>Minimum order total</Value>
   </LocaleResource>
@@ -14206,7 +14212,7 @@
     <Value>Continue</Value>
   </LocaleResource>
   <LocaleResource Name="Checkout.UseRewardPoints">
-    <Value>Use my reward points, {0} reward points ({1}) available</Value>
+    <Value>Use my reward points, {0} reward points ({1}) available for this order</Value>
   </LocaleResource>
   <LocaleResource Name="Checkout.YourOrderHasBeenSuccessfullyProcessed">
     <Value>Your order has been successfully processed!</Value>

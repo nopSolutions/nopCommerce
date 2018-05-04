@@ -23,6 +23,11 @@ namespace Nop.Core.Domain.Customers
         public int MinimumRewardPointsToUse { get; set; }
 
         /// <summary>
+        /// Gets or sets the maximum reward points to use per order
+        /// </summary>
+        public int MaximumRewardPointsToUsePerOrder { get; set; }
+
+        /// <summary>
         /// Gets or sets a number of points awarded for registration
         /// </summary>
         public int PointsForRegistration { get; set; }
