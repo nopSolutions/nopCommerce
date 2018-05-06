@@ -84,15 +84,15 @@ namespace Nop.Services.Common
         /// <returns>Integer ident; null if cannot get the result</returns>
         public virtual int? GetTableIdent<T>() where T: BaseEntity
         {
-#if EF6
             if (_commonSettings.UseStoredProceduresIfSupported && _dataProvider.StoredProceduresSupported)
             {
                 //stored procedures are enabled and supported by the database
                 var tableName = _dbContext.GetTableName<T>();
-                var result = _dbContext.SqlQuery<decimal?>($"SELECT IDENT_CURRENT('[{tableName}]')").FirstOrDefault();
+                var result = _dbContext
+                    .QueryFromSql<DecimalQueryType>($"SELECT IDENT_CURRENT('[{tableName}]') as Value")
+                    .Select(decimalValue => decimalValue.Value).FirstOrDefault();
                 return result.HasValue ? Convert.ToInt32(result) : 1;
             }
-#endif
             
             //stored procedures aren't supported
             return null;

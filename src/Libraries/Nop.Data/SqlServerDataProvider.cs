@@ -1,10 +1,13 @@
-﻿using System.Data.Common;
+﻿using System;
+using System.Collections.Generic;
+using System.Data.Common;
 using System.Data.SqlClient;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Nop.Core;
 using Nop.Core.Data;
+using Nop.Core.Domain.Common;
 using Nop.Core.Infrastructure;
 using Nop.Data.Extensions;
 
@@ -24,14 +27,14 @@ namespace Nop.Data
         {
             var context = EngineContext.Current.Resolve<IDbContext>();
 
-#if EF6
             //check some of table names to ensure that we have nopCommerce 2.X installed
             var tableNamesToValidate = new List<string> { "Customer", "Discount", "Order", "Product", "ShoppingCartItem" };
-            var existingTableNames = new List<string>(context.SqlQuery<string>("SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE table_type = 'BASE TABLE'"));
+            var existingTableNames = context
+                .QueryFromSql<StringQueryType>("SELECT table_name AS Value FROM INFORMATION_SCHEMA.TABLES WHERE table_type = 'BASE TABLE'")
+                .Select(stringValue => stringValue.Value).ToList();
             var createTables = !existingTableNames.Intersect(tableNamesToValidate, StringComparer.InvariantCultureIgnoreCase).Any();
             if (!createTables)
                 return;
-#endif
 
             //create tables
             //EngineContext.Current.Resolve<IRelationalDatabaseCreator>().CreateTables();
