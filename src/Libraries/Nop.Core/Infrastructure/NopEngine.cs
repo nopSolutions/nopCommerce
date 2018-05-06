@@ -87,7 +87,7 @@ namespace Nop.Core.Infrastructure
 
             //create and sort instances of dependency registrars
             var instances = dependencyRegistrars
-                //.Where(dependencyRegistrar => PluginManager.FindPlugin(dependencyRegistrar).Return(plugin => plugin.Installed, true)) //ignore not installed plugins
+                //.Where(dependencyRegistrar => PluginManager.FindPlugin(dependencyRegistrar)?.Installed ?? true) //ignore not installed plugins
                 .Select(dependencyRegistrar => (IDependencyRegistrar)Activator.CreateInstance(dependencyRegistrar))
                 .OrderBy(dependencyRegistrar => dependencyRegistrar.Order);
 
@@ -185,7 +185,7 @@ namespace Nop.Core.Infrastructure
 
             //create and sort instances of startup configurations
             var instances = startupConfigurations
-                .Where(startup => PluginManager.FindPlugin(startup)?.Installed ?? true) //ignore not installed plugins
+                //.Where(startup => PluginManager.FindPlugin(startup)?.Installed ?? true) //ignore not installed plugins
                 .Select(startup => (INopStartup)Activator.CreateInstance(startup))
                 .OrderBy(startup => startup.Order);
 
@@ -225,7 +225,7 @@ namespace Nop.Core.Infrastructure
 
             //create and sort instances of startup configurations
             var instances = startupConfigurations
-                .Where(startup => PluginManager.FindPlugin(startup)?.Installed ?? true) //ignore not installed plugins
+                //.Where(startup => PluginManager.FindPlugin(startup)?.Installed ?? true) //ignore not installed plugins
                 .Select(startup => (INopStartup)Activator.CreateInstance(startup))
                 .OrderBy(startup => startup.Order);
 
