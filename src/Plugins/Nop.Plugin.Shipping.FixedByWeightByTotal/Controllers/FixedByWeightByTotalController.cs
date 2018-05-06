@@ -98,7 +98,6 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Controllers
             foreach (var warehouses in _shippingService.GetAllWarehouses())
                 model.AvailableWarehouses.Add(new SelectListItem { Text = warehouses.Name, Value = warehouses.Id.ToString() });
             //shipping methods
-            model.AvailableShippingMethods.Add(new SelectListItem { Text = "*", Value = "0" });
             foreach (var sm in _shippingService.GetAllShippingMethods())
                 model.AvailableShippingMethods.Add(new SelectListItem { Text = sm.Name, Value = sm.Id.ToString() });
             //countries
@@ -187,8 +186,7 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Controllers
                 return AccessDeniedKendoGridJson();
 
             //var records = _shippingByWeightService.GetAll(command.Page - 1, command.PageSize);
-            //var records = _shippingByWeightService.GetAll(command.Page - 1, command.PageSize);
-            var records = _shippingByWeightService.SearchShippingByWeightRecords(
+            var records = _shippingByWeightService.FindRecord(
               pageIndex: command.Page - 1,
               pageSize: command.PageSize,
               storeId: filter.SearchStoreId,
@@ -196,7 +194,9 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Controllers
               countryId: filter.SearchCountryId,
               stateProvinceId: filter.SearchStateProvinceId,
               zip: filter.SearchZip,
-              shippingMethodId: filter.SearchShippingMethodId
+              shippingMethodId: filter.SearchShippingMethodId,
+              weight: 0,
+              orderSubtotal: 0
               );
 
             var sbwModel = records.Select(record =>

@@ -32,6 +32,23 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Services
             int countryId, int stateProvinceId, string zip, decimal weight, decimal orderSubtotal);
 
         /// <summary>
+        /// Filter Shipping Weight Records
+        /// </summary>
+        /// <param name="shippingMethodId">Shipping method identifier</param>
+        /// <param name="storeId">Store identifier</param>
+        /// <param name="warehouseId">Warehouse identifier</param>
+        /// <param name="countryId">Country identifier</param>
+        /// <param name="stateProvinceId">State identifier</param>
+        /// <param name="zip">Zip postal code</param>
+        /// <param name="weight">Weight</param>
+        /// <param name="orderSubtotal">Order subtotal</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
+        /// <returns>List of the shipping by weight record</returns>
+        IPagedList<ShippingByWeightByTotalRecord> FindRecord(int shippingMethodId, int storeId, int warehouseId,
+            int countryId, int stateProvinceId, string zip, decimal weight, decimal orderSubtotal, int pageIndex, int pageSize);
+
+        /// <summary>
         /// Get a shipping by weight record by identifier
         /// </summary>
         /// <param name="shippingByWeightRecordId">Record identifier</param>
@@ -55,27 +72,5 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Services
         /// </summary>
         /// <param name="shippingByWeightRecord">Shipping by weight record</param>
         void DeleteShippingByWeightRecord(ShippingByWeightByTotalRecord shippingByWeightRecord);
-
-        /// <summary>
-        /// Filter shipping weight records
-        /// </summary>
-        /// <param name="shippingMethodId">Shipping method identifier</param>
-        /// <param name="storeId">Store identifier</param>
-        /// <param name="warehouseId">Warehouse identifier</param>
-        /// <param name="countryId">Country identifier</param>
-        /// <param name="stateProvinceId">State identifier</param>
-        /// <param name="zip">Zip postal code</param>
-        /// <param name="weight">Weight</param>
-        /// <returns>List of the shipping by weight record</returns>
-        IPagedList<ShippingByWeightByTotalRecord> SearchShippingByWeightRecords(
-               int pageIndex = 0,
-               int pageSize = int.MaxValue,
-               int storeId = 0,
-               int warehouseId = 0,
-               int countryId = 0,
-               int stateProvinceId = 0,
-               string zip = null,
-               int shippingMethodId = 0
-               );
     }
 }
