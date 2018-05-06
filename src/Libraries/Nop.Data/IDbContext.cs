@@ -32,21 +32,21 @@ namespace Nop.Data
         string GenerateCreateScript();
 
         /// <summary>
-        /// Creates a LINQ query based on an interpolated string representing a SQL query
+        /// Creates a LINQ query for the query type based on a raw SQL query
         /// </summary>
-        /// <typeparam name="TEntity">Entity type</typeparam>
-        /// <param name="sql">The interpolated string representing a SQL query</param>
-        /// <returns>An IQueryable representing the interpolated string SQL query</returns>
-        IQueryable<TEntity> SqlQuery<TEntity>(FormattableString sql) where TEntity : BaseEntity;
-
+        /// <typeparam name="TQuery">Query type</typeparam>
+        /// <param name="sql">The raw SQL query</param>
+        /// <returns>An IQueryable representing the raw SQL query</returns>
+        IQueryable<TQuery> QueryFromSql<TQuery>(string sql) where TQuery : class;
+        
         /// <summary>
-        /// Creates a LINQ query based on a raw SQL query
+        /// Creates a LINQ query for the entity based on a raw SQL query
         /// </summary>
         /// <typeparam name="TEntity">Entity type</typeparam>
         /// <param name="sql">The raw SQL query</param>
         /// <param name="parameters">The values to be assigned to parameters</param>
         /// <returns>An IQueryable representing the raw SQL query</returns>
-        IQueryable<TEntity> SqlQuery<TEntity>(string sql, params object[] parameters) where TEntity : BaseEntity;
+        IQueryable<TEntity> EntityFromSql<TEntity>(string sql, params object[] parameters) where TEntity : BaseEntity;
 
         /// <summary>
         /// Executes the given SQL against the database

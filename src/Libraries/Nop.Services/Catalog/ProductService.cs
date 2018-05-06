@@ -571,7 +571,7 @@ namespace Nop.Services.Catalog
             var pTotalRecords = _dataProvider.GetOutputInt32Parameter("TotalRecords");
 
             //invoke stored procedure
-            var products = _dbContext.SqlQuery<Product>("ProductLoadAllPaged",
+            var products = _dbContext.EntityFromSql<Product>("ProductLoadAllPaged",
                 pCategoryIds,
                 pManufacturerId,
                 pStoreId,

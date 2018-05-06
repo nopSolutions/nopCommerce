@@ -269,7 +269,7 @@ namespace Nop.Services.Catalog
                 var totalRecordsParameter = _dataProvider.GetOutputInt32Parameter("TotalRecords");
 
                 //invoke stored procedure
-                var categories = _dbContext.SqlQuery<Category>("CategoryLoadAllPaged",
+                var categories = _dbContext.EntityFromSql<Category>("CategoryLoadAllPaged",
                     showHiddenParameter, nameParameter, storeIdParameter, customerRoleIdsParameter,
                     pageIndexParameter, pageSizeParameter, totalRecordsParameter).ToList();
                 var totalRecords = (totalRecordsParameter.Value != DBNull.Value) ? Convert.ToInt32(totalRecordsParameter.Value) : 0;

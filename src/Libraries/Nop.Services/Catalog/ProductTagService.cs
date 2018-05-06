@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Nop.Core.Caching;
 using Nop.Core.Data;
-using Nop.Core.Data.Extensions;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Stores;
@@ -89,16 +88,6 @@ namespace Nop.Services.Catalog
         }
 
         #endregion
-
-        #region Nested classes
-
-        private class ProductTagWithCount
-        {
-            public int ProductTagId { get; set; }
-            public int ProductCount { get; set; }
-        }
-
-        #endregion
         
         #region Utilities
 
@@ -112,20 +101,14 @@ namespace Nop.Services.Catalog
             var key = string.Format(PRODUCTTAG_COUNT_KEY, storeId);
             return _cacheManager.Get(key, () =>
             {
-#if EF6
                 //stored procedures are enabled and supported by the database. 
                 //It's much faster than the LINQ implementation below 
                 if (_commonSettings.UseStoredProceduresIfSupported && _dataProvider.StoredProceduresSupported)
                 {
-                    //prepare parameters
-                    var pStoreId = _dataProvider.GetInt32Parameter("StoreId", storeId);
-
                     //invoke stored procedure
-                    var result = _dbContext.SqlQuery<ProductTagWithCount>("Exec ProductTagCountLoadAll @StoreId", pStoreId);
-
-                    return result.ToDictionary(item => item.ProductTagId, item => item.ProductCount);
+                    return _dbContext.QueryFromSql<ProductTagWithCount>($"Exec ProductTagCountLoadAll {storeId}")
+                        .ToDictionary(item => item.ProductTagId, item => item.ProductCount);
                 }
-#endif
 
                 //stored procedures aren't supported. Use LINQ
                 var query = _productTagRepository.Table.Select(pt => new

@@ -30,16 +30,18 @@ namespace Nop.Data
         /// <param name="builder">The builder being used to construct the model for this context</param>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //dynamically load all configurations
-            var entityTypeConfigurations = Assembly.GetExecutingAssembly().GetTypes().Where(type => 
-                (type.BaseType?.IsGenericType ?? false) && type.BaseType.GetGenericTypeDefinition() == typeof(NopEntityTypeConfiguration<>));
+            //dynamically load all entity and query type configurations
+            var typeConfigurations = Assembly.GetExecutingAssembly().GetTypes().Where(type => 
+                (type.BaseType?.IsGenericType ?? false) 
+                    && (type.BaseType.GetGenericTypeDefinition() == typeof(NopEntityTypeConfiguration<>) 
+                        || type.BaseType.GetGenericTypeDefinition() == typeof(NopQueryTypeConfiguration<>)));
 
-            foreach (var entityTypeConfiguration in entityTypeConfigurations)
+            foreach (var typeConfiguration in typeConfigurations)
             {
-                dynamic configuration = Activator.CreateInstance(entityTypeConfiguration);
+                dynamic configuration = Activator.CreateInstance(typeConfiguration);
                 modelBuilder.ApplyConfiguration(configuration);
             }
-
+            
             base.OnModelCreating(modelBuilder);
         }
 
@@ -67,24 +69,24 @@ namespace Nop.Data
         }
 
         /// <summary>
-        /// Creates a LINQ query based on an interpolated string representing a SQL query
+        /// Creates a LINQ query for the query type based on a raw SQL query
         /// </summary>
-        /// <typeparam name="TEntity">Entity type</typeparam>
-        /// <param name="sql">The interpolated string representing a SQL query</param>
-        /// <returns>An IQueryable representing the interpolated string SQL query</returns>
-        public virtual IQueryable<TEntity> SqlQuery<TEntity>(FormattableString sql) where TEntity : BaseEntity
+        /// <typeparam name="TQuery">Query type</typeparam>
+        /// <param name="sql">The raw SQL query</param>
+        /// <returns>An IQueryable representing the raw SQL query</returns>
+        public virtual IQueryable<TQuery> QueryFromSql<TQuery>(string sql) where TQuery : class
         {
-            return this.Set<TEntity>().FromSql(sql);
+            return this.Query<TQuery>().FromSql(sql);
         }
-
+        
         /// <summary>
-        /// Creates a LINQ query based on a raw SQL query
+        /// Creates a LINQ query for the entity based on a raw SQL query
         /// </summary>
         /// <typeparam name="TEntity">Entity type</typeparam>
         /// <param name="sql">The raw SQL query</param>
         /// <param name="parameters">The values to be assigned to parameters</param>
         /// <returns>An IQueryable representing the raw SQL query</returns>
-        public virtual IQueryable<TEntity> SqlQuery<TEntity>(string sql, params object[] parameters) where TEntity : BaseEntity
+        public virtual IQueryable<TEntity> EntityFromSql<TEntity>(string sql, params object[] parameters) where TEntity : BaseEntity
         {
             //add parameters to sql
             for (var i = 0; i <= (parameters?.Length ?? 0) - 1; i++)

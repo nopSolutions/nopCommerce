@@ -817,25 +817,6 @@ namespace Nop.Services.Media
         }
 
         /// <summary>
-        /// Helper class for making pictures hashes from DB
-        /// </summary>
-        private class HashItem: IComparable, IComparable<HashItem>
-        {
-            public int PictureId { get; set; }
-            public byte[] Hash { get; set; }
-
-            public int CompareTo(object obj)
-            {
-                return CompareTo(obj as HashItem);
-            }
-
-            public int CompareTo(HashItem other)
-            {
-                return other == null ? -1 : PictureId.CompareTo(other.PictureId);
-            }
-        }
-
-        /// <summary>
         /// Get pictures hashes
         /// </summary>
         /// <param name="picturesIds">Pictures Ids</param>
@@ -846,13 +827,10 @@ namespace Nop.Services.Media
             if(supportedLengthOfBinaryHash == 0 || !picturesIds.Any())
                 return new Dictionary<int, string>();
 
-#if EF6
             const string strCommand = "SELECT [Id] as [PictureId], HASHBYTES('sha1', substring([PictureBinary], 0, {0})) as [Hash] FROM [Picture] where [Id] in ({1})";
-            return _dbContext.SqlQuery<HashItem>(string.Format(strCommand, supportedLengthOfBinaryHash, picturesIds.Select(p => p.ToString()).Aggregate((all, current) => all + ", " + current))).Distinct()
+            return _dbContext
+                .QueryFromSql<PictureHashItem>(string.Format(strCommand, supportedLengthOfBinaryHash, picturesIds.Select(p => p.ToString()).Aggregate((all, current) => all + ", " + current))).Distinct()
                 .ToDictionary(p => p.PictureId, p => BitConverter.ToString(p.Hash).Replace("-", ""));
-#else
-            return null;
-#endif
         }
 
         #endregion
