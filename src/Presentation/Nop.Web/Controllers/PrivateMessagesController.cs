@@ -257,7 +257,8 @@ namespace Nop.Web.Controllers
                     _forumService.InsertPrivateMessage(privateMessage);
 
                     //activity log
-                    _customerActivityService.InsertActivity("PublicStore.SendPM", _localizationService.GetResource("ActivityLog.PublicStore.SendPM"), toCustomer.Email);
+                    _customerActivityService.InsertActivity("PublicStore.SendPM",
+                        string.Format(_localizationService.GetResource("ActivityLog.PublicStore.SendPM"), toCustomer.Email), toCustomer);
 
                     return RedirectToRoute("PrivateMessages", new { tab = "sent" });
                 }

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core.Infrastructure;
 using Nop.Services.Helpers;
 using Nop.Web.Framework.Kendoui;
+using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Framework.Extensions
 {
@@ -24,7 +25,19 @@ namespace Nop.Web.Framework.Extensions
         {
             return current.Skip((command.Page - 1) * command.PageSize).Take(command.PageSize);
         }
-        
+
+        /// <summary>
+        /// In-memory paging of objects
+        /// </summary>
+        /// <typeparam name="T">Type of objects</typeparam>
+        /// <param name="collection">Object collection</param>
+        /// <param name="requestModel">Paging request model</param>
+        /// <returns>Paged collection of objects</returns>
+        public static IEnumerable<T> PaginationByRequestModel<T>(this IEnumerable<T> collection, IPagingRequestModel requestModel)
+        {
+            return collection.Skip((requestModel.Page - 1) * requestModel.PageSize).Take(requestModel.PageSize);
+        }
+
         /// <summary>
         /// Returns a value indicating whether real selection is not possible
         /// </summary>

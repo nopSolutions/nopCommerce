@@ -1,11 +1,8 @@
-﻿@model DiscountModel.AddManufacturerToDiscountModel
-@inject AdminAreaSettings adminAreaSetting
+﻿@model AddManufacturerToDiscountSearchModel
 
 @{
     Layout = "_AdminPopupLayout";
-
-    var popupGridPageSize = adminAreaSetting.PopupGridPageSize;
-
+    
     //page title
     ViewBag.Title = T("Admin.Promotions.Discounts.AppliedToManufacturers.AddNew").Text;
 }
@@ -25,7 +22,7 @@
 
     @if (ViewBag.RefreshPage == true)
     {
-        <script type="text/javascript">
+        <script>
             try {window.opener.document.forms['@(Context.Request.Query["formId"])'].@(Context.Request.Query["btnId"]).click();}
             catch (e){}
             window.close();
@@ -64,7 +61,7 @@
                     <div class="panel-body">
                         <div id="manufacturers-grid"></div>
 
-                        <script type="text/javascript">
+                        <script>
                             $(document).ready(function () {
                                 $("#manufacturers-grid").kendoGrid({
                                     dataSource: {
@@ -74,7 +71,13 @@
                                                 url: "@Html.Raw(Url.Action("ManufacturerAddPopupList", "Discount"))",
                                                 type: "POST",
                                                 dataType: "json",
-                                                data: additionalData
+                                                data: function() {
+                                                    var data = {
+                                                        SearchManufacturerName: $('#@Html.IdFor(model => model.SearchManufacturerName)').val()
+                                                    };
+                                                    addAntiForgeryToken(data);
+                                                    return data;
+                                                }
                                             }
                                         },
                                         schema: {
@@ -87,13 +90,14 @@
                                             // Cancel the changes
                                             this.cancelChanges();
                                         },
-                                        pageSize: @(popupGridPageSize),
+                                        pageSize: @(Model.PageSize),
                                         serverPaging: true,
                                         serverFiltering: true,
                                         serverSorting: true
                                     },
                                     pageable: {
                                         refresh: true,
+                                        pageSizes: [@(Model.AvailablePageSizes)],
                                         @await Html.PartialAsync("_GridPagerMessages")
                                     },
                                     editable: {
@@ -123,7 +127,7 @@
                             });
                         </script>
 
-                        <script type="text/javascript">
+                        <script>
                             $(document).ready(function() {
                                 $('#search-manufacturers').click(function() {
                                     var grid = $('#manufacturers-grid').data('kendoGrid');
@@ -150,14 +154,6 @@
                                     updateMasterCheckbox();
                                 });
                             });
-
-                            function additionalData() {
-                                var data = {
-                                    SearchManufacturerName: $('#@Html.IdFor(model => model.SearchManufacturerName)').val()
-                                };
-                                addAntiForgeryToken(data);
-                                return data;
-                            }
 
                             function updateMasterCheckbox() {
                                 var numChkBoxes = $('#manufacturers-grid input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]').length;

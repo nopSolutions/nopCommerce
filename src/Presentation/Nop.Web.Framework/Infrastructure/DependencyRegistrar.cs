@@ -68,6 +68,9 @@ namespace Nop.Web.Framework.Infrastructure
         /// <param name="config">Config</param>
         public virtual void Register(ContainerBuilder builder, ITypeFinder typeFinder, NopConfig config)
         {
+            //file provider
+            builder.RegisterType<NopFileProvider>().As<INopFileProvider>().InstancePerLifetimeScope();
+
             //web helper
             builder.RegisterType<WebHelper>().As<IWebHelper>().InstancePerLifetimeScope();
 
@@ -81,7 +84,7 @@ namespace Nop.Web.Framework.Infrastructure
             builder.Register(x => new EfDataProviderManager(x.Resolve<DataSettings>())).As<BaseDataProviderManager>().InstancePerDependency();
 
             builder.Register(x => x.Resolve<BaseDataProviderManager>().LoadDataProvider()).As<IDataProvider>().InstancePerDependency();
-
+            
             if (dataProviderSettings != null && dataProviderSettings.IsValid())
             {
                 var efDataProviderManager = new EfDataProviderManager(dataSettingsManager.LoadSettings());
@@ -106,11 +109,19 @@ namespace Nop.Web.Framework.Infrastructure
             //static cache manager
             if (config.RedisCachingEnabled)
             {
-                builder.RegisterType<RedisConnectionWrapper>().As<IRedisConnectionWrapper>().SingleInstance();
+                builder.RegisterType<RedisConnectionWrapper>()
+                    .As<ILocker>()
+                    .As<IRedisConnectionWrapper>()
+                    .SingleInstance();
                 builder.RegisterType<RedisCacheManager>().As<IStaticCacheManager>().InstancePerLifetimeScope();
             }
             else
-                builder.RegisterType<MemoryCacheManager>().As<IStaticCacheManager>().SingleInstance();
+            {
+                builder.RegisterType<MemoryCacheManager>()
+                    .As<ILocker>()
+                    .As<IStaticCacheManager>()
+                    .SingleInstance();
+            }
 
             //work context
             builder.RegisterType<WebWorkContext>().As<IWorkContext>().InstancePerLifetimeScope();
@@ -142,6 +153,9 @@ namespace Nop.Web.Framework.Infrastructure
             builder.RegisterType<AddressService>().As<IAddressService>().InstancePerLifetimeScope();
             builder.RegisterType<AffiliateService>().As<IAffiliateService>().InstancePerLifetimeScope();
             builder.RegisterType<VendorService>().As<IVendorService>().InstancePerLifetimeScope();
+            builder.RegisterType<VendorAttributeFormatter>().As<IVendorAttributeFormatter>().InstancePerLifetimeScope();
+            builder.RegisterType<VendorAttributeParser>().As<IVendorAttributeParser>().InstancePerLifetimeScope();
+            builder.RegisterType<VendorAttributeService>().As<IVendorAttributeService>().InstancePerLifetimeScope();
             builder.RegisterType<SearchTermService>().As<ISearchTermService>().InstancePerLifetimeScope();
             builder.RegisterType<GenericAttributeService>().As<IGenericAttributeService>().InstancePerLifetimeScope();
             builder.RegisterType<FulltextService>().As<IFulltextService>().InstancePerLifetimeScope();

@@ -10,6 +10,7 @@ using Nop.Core.Domain.Stores;
 using Nop.Core.Domain.Topics;
 using Nop.Services.Customers;
 using Nop.Services.Events;
+using Nop.Services.Security;
 using Nop.Services.Stores;
 
 namespace Nop.Services.Topics
@@ -48,6 +49,7 @@ namespace Nop.Services.Topics
 
         private readonly IRepository<Topic> _topicRepository;
         private readonly IRepository<StoreMapping> _storeMappingRepository;
+        private readonly IAclService _aclService;
         private readonly IStoreMappingService _storeMappingService;
         private readonly IWorkContext _workContext;
         private readonly IRepository<AclRecord> _aclRepository;
@@ -64,6 +66,7 @@ namespace Nop.Services.Topics
         /// </summary>
         /// <param name="topicRepository">Topic repository</param>
         /// <param name="storeMappingRepository">Store mapping repository</param>
+        /// <param name="aclService">ACL service</param>
         /// <param name="storeMappingService">Store mapping service</param>
         /// <param name="workContext">Work context</param>
         /// <param name="aclRepository">ACL repository</param>
@@ -72,6 +75,7 @@ namespace Nop.Services.Topics
         /// <param name="cacheManager">Cache manager</param>
         public TopicService(IRepository<Topic> topicRepository, 
             IRepository<StoreMapping> storeMappingRepository,
+            IAclService aclService,
             IStoreMappingService storeMappingService,
             IWorkContext workContext,
             IRepository<AclRecord> aclRepository,
@@ -81,6 +85,7 @@ namespace Nop.Services.Topics
         {
             this._topicRepository = topicRepository;
             this._storeMappingRepository = storeMappingRepository;
+            this._aclService = aclService;
             this._storeMappingService = storeMappingService;
             this._workContext = workContext;
             this._aclRepository = aclRepository;
@@ -130,19 +135,28 @@ namespace Nop.Services.Topics
         /// </summary>
         /// <param name="systemName">The topic system name</param>
         /// <param name="storeId">Store identifier; pass 0 to ignore filtering by store and load the first one</param>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Topic</returns>
-        public virtual Topic GetTopicBySystemName(string systemName, int storeId = 0)
+        public virtual Topic GetTopicBySystemName(string systemName, int storeId = 0, bool showHidden = false)
         {
             if (string.IsNullOrEmpty(systemName))
                 return null;
 
             var query = _topicRepository.Table;
             query = query.Where(t => t.SystemName == systemName);
+            if (!showHidden)
+                query = query.Where(c => c.Published);
             query = query.OrderBy(t => t.Id);
             var topics = query.ToList();
             if (storeId > 0)
             {
+                //filter by store
                 topics = topics.Where(x => _storeMappingService.Authorize(x, storeId)).ToList();
+            }
+            if (!showHidden)
+            {
+                //ACL (access control list)
+                topics = topics.Where(x => _aclService.Authorize(x)).ToList();
             }
             return topics.FirstOrDefault();
         }

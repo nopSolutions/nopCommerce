@@ -59,7 +59,7 @@ namespace Nop.Web.Framework.Mvc.Filters
             protected void RedirectRequest(AuthorizationFilterContext filterContext, bool withWww)
             {
                 //get scheme depending on securing connection
-                var urlScheme = _webHelper.IsCurrentConnectionSecured() ? "https://" : "http://";
+                var urlScheme = $"{_webHelper.CurrentRequestProtocol}{Uri.SchemeDelimiter}";
 
                 //compose start of URL with WWW
                 var urlWith3W = $"{urlScheme}www.";

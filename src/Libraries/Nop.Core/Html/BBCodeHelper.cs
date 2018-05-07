@@ -66,12 +66,12 @@ namespace Nop.Core.Html
             if (replaceUrl)
             {
                 var newWindow = EngineContext.Current.Resolve<CommonSettings>().BbcodeEditorOpenLinksInNewWindow;
-                // format the URL tags: [url=http://www.nopCommerce.com]my site[/url]
-                // becomes: <a href="http://www.nopCommerce.com">my site</a>
+                // format the URL tags: [url=https://www.nopCommerce.com]my site[/url]
+                // becomes: <a href="https://www.nopCommerce.com">my site</a>
                 text = regexUrl1.Replace(text, $"<a href=\"$1\" rel=\"nofollow\"{(newWindow ? " target=_blank" : "")}>$2</a>");
 
-                // format the URL tags: [url]http://www.nopCommerce.com[/url]
-                // becomes: <a href="http://www.nopCommerce.com">http://www.nopCommerce.com</a>
+                // format the URL tags: [url]https://www.nopCommerce.com[/url]
+                // becomes: <a href="https://www.nopCommerce.com">https://www.nopCommerce.com</a>
                 text = regexUrl2.Replace(text, $"<a href=\"$1\" rel=\"nofollow\"{(newWindow ? " target=_blank" : "")}>$1</a>");
             }
 
@@ -88,8 +88,8 @@ namespace Nop.Core.Html
 
             if (replaceImg)
             {
-                // format the img tags: [img]http://www.nopCommerce.com/Content/Images/Image.jpg[/img]
-                // becomes: <img src="http://www.nopCommerce.com/Content/Images/Image.jpg">
+                // format the img tags: [img]https://www.nopCommerce.com/Content/Images/Image.jpg[/img]
+                // becomes: <img src="https://www.nopCommerce.com/Content/Images/Image.jpg">
                 text = regexImg.Replace(text, "<img src=\"$1\" class=\"user-posted-image\" alt=\"\">");
             }
             return text;

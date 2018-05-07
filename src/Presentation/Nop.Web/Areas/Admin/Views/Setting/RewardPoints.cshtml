@@ -20,7 +20,7 @@
                 <i class="fa fa-floppy-o"></i>
                 @T("Admin.Common.Save")
             </button>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_reward_points_settings_buttons" })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.RewardPointsSettingsButtons })
         </div>
     </div>
 
@@ -31,7 +31,7 @@
             <div asp-validation-summary="All"></div>
 
             <div class="panel-group">
-                @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_reward_points_settings_top" })
+                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.RewardPointsSettingsTop })
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         @T("Admin.Configuration.Settings.RewardPoints.BlockTitle.Common")
@@ -58,7 +58,7 @@
                             <div class="col-md-9">
                                 <div class="form-text-row pull-left margin-r-10">@T("Admin.Configuration.Settings.RewardPoints.ExchangeRate.Hint2")</div>
                                 <div class="pull-left">
-                                    <nop-editor asp-for="ExchangeRate" asp-postfix="@Model.PrimaryStoreCurrencyCode"  />
+                                    <nop-editor asp-for="ExchangeRate" asp-postfix="@Model.PrimaryStoreCurrencyCode" />
                                     <span asp-validation-for="ExchangeRate"></span>
                                 </div>
                             </div>
@@ -71,6 +71,16 @@
                             <div class="col-md-9">
                                 <nop-editor asp-for="MinimumRewardPointsToUse" />
                                 <span asp-validation-for="MinimumRewardPointsToUse"></span>
+                            </div>
+                        </div>
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="MaximumRewardPointsToUsePerOrder_OverrideForStore" asp-input="MaximumRewardPointsToUsePerOrder" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="MaximumRewardPointsToUsePerOrder" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="MaximumRewardPointsToUsePerOrder" />
+                                <span asp-validation-for="MaximumRewardPointsToUsePerOrder"></span>
                             </div>
                         </div>
                     </div>
@@ -97,12 +107,42 @@
                         </div>
                         <div class="form-group advanced-setting">
                             <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="PurchasesPointsValidity_OverrideForStore" asp-input="PurchasesPointsValidity" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="PurchasesPointsValidity" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="PurchasesPointsValidity" asp-postfix="@T("Admin.Configuration.Settings.RewardPoints.PurchasesPointsValidity.Postfix")" />
+                                <span asp-validation-for="PurchasesPointsValidity"></span>
+                            </div>
+                        </div>
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="MinOrderTotalToAwardPoints_OverrideForStore" asp-input="MinOrderTotalToAwardPoints" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="MinOrderTotalToAwardPoints" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="MinOrderTotalToAwardPoints" asp-postfix="@Model.PrimaryStoreCurrencyCode" />
+                                <span asp-validation-for="MinOrderTotalToAwardPoints"></span>
+                            </div>
+                        </div>
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
                                 <nop-override-store-checkbox asp-for="PointsForRegistration_OverrideForStore" asp-input="PointsForRegistration" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
                                 <nop-label asp-for="PointsForRegistration" />
                             </div>
                             <div class="col-md-9">
                                 <nop-editor asp-for="PointsForRegistration" />
                                 <span asp-validation-for="PointsForRegistration"></span>
+                            </div>
+                        </div>
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="RegistrationPointsValidity_OverrideForStore" asp-input="RegistrationPointsValidity" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="RegistrationPointsValidity" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="RegistrationPointsValidity" asp-postfix="@T("Admin.Configuration.Settings.RewardPoints.RegistrationPointsValidity.Postfix")" />
+                                <span asp-validation-for="RegistrationPointsValidity"></span>
                             </div>
                         </div>
                         <div class="form-group advanced-setting">
@@ -163,7 +203,7 @@
                         </div>
                     </div>
 
-                    <script type="text/javascript">
+                    <script>
                         $(document).ready(function () {
                             $("#@Html.IdFor(model => model.ActivatePointsImmediately)").click(activatePointsImmediately);
                             activatePointsImmediately();
@@ -178,7 +218,7 @@
                     </script>
 
                 </div>
-                @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_reward_points_settings_bottom" })
+                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.RewardPointsSettingsBottom })
             </div>
         </div>
     </div>

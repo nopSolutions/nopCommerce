@@ -96,6 +96,11 @@ namespace Nop.Core
         bool IsPostBeingDone { get; set; }
 
         /// <summary>
+        /// Gets current HTTP request protocol
+        /// </summary>
+        string CurrentRequestProtocol { get; }
+
+        /// <summary>
         /// Gets whether the specified HTTP request URI references the local host.
         /// </summary>
         /// <param name="req">HTTP request</param>

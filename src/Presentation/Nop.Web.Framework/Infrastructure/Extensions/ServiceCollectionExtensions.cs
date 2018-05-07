@@ -1,9 +1,9 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Internal;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,6 +12,7 @@ using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Configuration;
 using Nop.Core.Data;
+using Nop.Core.Domain.Security;
 using Nop.Core.Infrastructure;
 using Nop.Core.Plugins;
 using Nop.Services.Authentication;
@@ -19,8 +20,8 @@ using Nop.Services.Authentication.External;
 using Nop.Services.Logging;
 using Nop.Services.Tasks;
 using Nop.Web.Framework.FluentValidation;
-using Nop.Web.Framework.Mvc.Filters;
 using Nop.Web.Framework.Mvc.ModelBinding;
+using Nop.Web.Framework.Mvc.Routing;
 using Nop.Web.Framework.Themes;
 
 namespace Nop.Web.Framework.Infrastructure.Extensions
@@ -49,7 +50,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             var engine = EngineContext.Create();
             engine.Initialize(services);
             var serviceProvider = engine.ConfigureServices(services, configuration);
-            
+
             if (DataSettingsHelper.DatabaseIsInstalled())
             {
                 //implement schedule tasks
@@ -110,6 +111,10 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             services.AddAntiforgery(options =>
             {
                 options.Cookie.Name = ".Nop.Antiforgery";
+
+                //whether to allow the use of anti-forgery cookies from SSL protected page on the other store pages which are not
+                options.Cookie.SecurePolicy = DataSettingsHelper.DatabaseIsInstalled() && EngineContext.Current.Resolve<SecuritySettings>().ForceSslForAllPages
+                    ? CookieSecurePolicy.SameAsRequest : CookieSecurePolicy.None;
             });
         }
 
@@ -123,6 +128,10 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             {
                 options.Cookie.Name = ".Nop.Session";
                 options.Cookie.HttpOnly = true;
+
+                //whether to allow the use of session values from SSL protected page on the other store pages which are not
+                options.Cookie.SecurePolicy = DataSettingsHelper.DatabaseIsInstalled() && EngineContext.Current.Resolve<SecuritySettings>().ForceSslForAllPages
+                    ? CookieSecurePolicy.SameAsRequest : CookieSecurePolicy.None;
             });
         }
 
@@ -153,17 +162,16 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             if (nopConfig.RedisCachingEnabled && nopConfig.PersistDataProtectionKeysToRedis)
             {
                 //store keys in Redis
-                services.AddDataProtection().PersistKeysToRedis(
-                    () =>
-                    {
-                        var redisConnectionWrapper = EngineContext.Current.Resolve<IRedisConnectionWrapper>();
-                        return redisConnectionWrapper.GetDatabase();
-                    }, RedisConfiguration.DataProtectionKeysName);
+                services.AddDataProtection().PersistKeysToRedis(() =>
+                {
+                    var redisConnectionWrapper = EngineContext.Current.Resolve<IRedisConnectionWrapper>();
+                    return redisConnectionWrapper.GetDatabase();
+                }, RedisConfiguration.DataProtectionKeysName);
             }
             else
             {
-                var dataProtectionKeysPath = CommonHelper.MapPath("~/App_Data/DataProtectionKeys");
-                var dataProtectionKeysFolder = new DirectoryInfo(dataProtectionKeysPath);
+                var dataProtectionKeysPath = CommonHelper.DefaultFileProvider.MapPath("~/App_Data/DataProtectionKeys");
+                var dataProtectionKeysFolder = new System.IO.DirectoryInfo(dataProtectionKeysPath);
 
                 //configure the data protection system to persist keys to the specified directory
                 services.AddDataProtection().PersistKeysToFileSystem(dataProtectionKeysFolder);
@@ -179,7 +187,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             //set default authentication schemes
             var authenticationBuilder = services.AddAuthentication(options =>
             {
-                options.DefaultChallengeScheme = NopCookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultScheme = NopCookieAuthenticationDefaults.AuthenticationScheme;
                 options.DefaultSignInScheme = NopCookieAuthenticationDefaults.ExternalAuthenticationScheme;
             });
 
@@ -190,17 +198,25 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 options.Cookie.HttpOnly = true;
                 options.LoginPath = NopCookieAuthenticationDefaults.LoginPath;
                 options.AccessDeniedPath = NopCookieAuthenticationDefaults.AccessDeniedPath;
+
+                //whether to allow the use of authentication cookies from SSL protected page on the other store pages which are not
+                options.Cookie.SecurePolicy = DataSettingsHelper.DatabaseIsInstalled() && EngineContext.Current.Resolve<SecuritySettings>().ForceSslForAllPages
+                    ? CookieSecurePolicy.SameAsRequest : CookieSecurePolicy.None;
             });
 
             //add external authentication
             authenticationBuilder.AddCookie(NopCookieAuthenticationDefaults.ExternalAuthenticationScheme, options =>
-             {
-                 options.Cookie.Name = NopCookieAuthenticationDefaults.CookiePrefix + NopCookieAuthenticationDefaults.ExternalAuthenticationScheme;
-                 options.Cookie.HttpOnly = true;
-                 options.LoginPath = NopCookieAuthenticationDefaults.LoginPath;
-                 options.AccessDeniedPath = NopCookieAuthenticationDefaults.AccessDeniedPath;
-             });
+            {
+                options.Cookie.Name = NopCookieAuthenticationDefaults.CookiePrefix + NopCookieAuthenticationDefaults.ExternalAuthenticationScheme;
+                options.Cookie.HttpOnly = true;
+                options.LoginPath = NopCookieAuthenticationDefaults.LoginPath;
+                options.AccessDeniedPath = NopCookieAuthenticationDefaults.AccessDeniedPath;
 
+                //whether to allow the use of authentication cookies from SSL protected page on the other store pages which are not
+                options.Cookie.SecurePolicy = DataSettingsHelper.DatabaseIsInstalled() && EngineContext.Current.Resolve<SecuritySettings>().ForceSslForAllPages
+                    ? CookieSecurePolicy.SameAsRequest : CookieSecurePolicy.None;
+            });
+            
             //register and configure external authentication plugins now
             var typeFinder = new WebAppTypeFinder();
             var externalAuthConfigurations = typeFinder.FindClassesOfType<IExternalAuthenticationRegistrar>();
@@ -235,9 +251,24 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             mvcBuilder.AddMvcOptions(options => options.ModelBinderProviders.Insert(0, new NopModelBinderProvider()));
 
             //add fluent validation
-            mvcBuilder.AddFluentValidation(configuration => configuration.ValidatorFactoryType = typeof(NopValidatorFactory));
+            mvcBuilder.AddFluentValidation(configuration =>
+            {
+                configuration.ValidatorFactoryType = typeof(NopValidatorFactory);
+                //implicit/automatic validation of child properties
+                configuration.ImplicitlyValidateChildProperties = true;
+            });
 
             return mvcBuilder;
+        }
+
+        /// <summary>
+        /// Register custom RedirectResultExecutor
+        /// </summary>
+        /// <param name="services">Collection of service descriptors</param>
+        public static void AddNopRedirectResultExecutor(this IServiceCollection services)
+        {
+            //we use custom redirect executor as a workaround to allow using non-ASCII characters in redirect URLs
+            services.AddSingleton<RedirectResultExecutor, NopRedirectResultExecutor>();
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
@@ -7,6 +8,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
+using Nop.Core.Domain.Vendors;
 using Nop.Services.Catalog;
 using Nop.Services.Directory;
 using Nop.Services.Helpers;
@@ -17,6 +19,7 @@ using Nop.Services.Payments;
 using Nop.Services.Seo;
 using Nop.Services.Shipping;
 using Nop.Services.Shipping.Tracking;
+using Nop.Services.Vendors;
 using Nop.Web.Models.Common;
 using Nop.Web.Models.Order;
 
@@ -53,6 +56,8 @@ namespace Nop.Web.Factories
         private readonly AddressSettings _addressSettings;
         private readonly RewardPointsSettings _rewardPointsSettings;
         private readonly PdfSettings _pdfSettings;
+        private readonly IVendorService _vendorService;
+        private readonly VendorSettings _vendorSettings;
 
         #endregion
 
@@ -80,7 +85,9 @@ namespace Nop.Web.Factories
             ShippingSettings shippingSettings, 
             AddressSettings addressSettings,
             RewardPointsSettings rewardPointsSettings,
-            PdfSettings pdfSettings)
+            PdfSettings pdfSettings,
+            IVendorService vendorService,
+            VendorSettings vendorSettings)
         {
             this._addressModelFactory = addressModelFactory;
             this._orderService = orderService;
@@ -106,6 +113,8 @@ namespace Nop.Web.Factories
             this._addressSettings = addressSettings;
             this._rewardPointsSettings = rewardPointsSettings;
             this._pdfSettings = pdfSettings;
+            this._vendorService = vendorService;
+            this._vendorSettings = vendorSettings;
         }
 
         #endregion
@@ -203,6 +212,7 @@ namespace Nop.Web.Factories
                         {
                             Address1 = order.PickupAddress.Address1,
                             City = order.PickupAddress.City,
+                            County = order.PickupAddress.County,
                             CountryName = order.PickupAddress.Country != null ? order.PickupAddress.Country.Name : string.Empty,
                             ZipPostalCode = order.PickupAddress.ZipPostalCode
                         };
@@ -379,7 +389,12 @@ namespace Nop.Web.Factories
 
             //purchased products
             model.ShowSku = _catalogSettings.ShowSkuOnProductDetailsPage;
+            model.ShowVendorName = _vendorSettings.ShowVendorOnOrderDetailsPage;
+
             var orderItems = order.OrderItems;
+
+            var vendors = _vendorSettings.ShowVendorOnOrderDetailsPage ? _vendorService.GetVendorsByIds(orderItems.Select(item => item.Product.VendorId).ToArray()) : new List<Vendor>();
+            
             foreach (var orderItem in orderItems)
             {
                 var orderItemModel = new OrderDetailsModel.OrderItemModel
@@ -387,6 +402,7 @@ namespace Nop.Web.Factories
                     Id = orderItem.Id,
                     OrderItemGuid = orderItem.OrderItemGuid,
                     Sku = orderItem.Product.FormatSku(orderItem.AttributesXml, _productAttributeParser),
+                    VendorName = vendors.FirstOrDefault(v => v.Id == orderItem.Product.VendorId)?.Name ?? string.Empty,
                     ProductId = orderItem.Product.Id,
                     ProductName = orderItem.Product.GetLocalized(x => x.Name),
                     ProductSeName = orderItem.Product.GetSeName(),
@@ -526,29 +542,34 @@ namespace Nop.Web.Factories
         /// <returns>Customer reward points model</returns>
         public virtual CustomerRewardPointsModel PrepareCustomerRewardPoints(int? page)
         {
+            //get reward points history
             var customer = _workContext.CurrentCustomer;
+            var store = _storeContext.CurrentStore;
             var pageSize = _rewardPointsSettings.PageSize;
-            var model = new CustomerRewardPointsModel();
-            var list = _rewardPointService.GetRewardPointsHistory(customer.Id, showNotActivated: true, pageIndex: --page ?? 0, pageSize: pageSize);
+            var rewardPoints = _rewardPointService.GetRewardPointsHistory(customer.Id, store.Id, true, pageIndex: --page ?? 0, pageSize: pageSize);
 
-            model.RewardPoints = list.Select(rph =>
+            //prepare model
+            var model = new CustomerRewardPointsModel();
+            model.RewardPoints = rewardPoints.Select(historyEntry =>
             {
-                var activatingDate = _dateTimeHelper.ConvertToUserTime(rph.CreatedOnUtc, DateTimeKind.Utc);
+                var activatingDate = _dateTimeHelper.ConvertToUserTime(historyEntry.CreatedOnUtc, DateTimeKind.Utc);
                 return new CustomerRewardPointsModel.RewardPointsHistoryModel
                 {
-                    Points = rph.Points,
-                    PointsBalance = rph.PointsBalance.HasValue ? rph.PointsBalance.ToString()
+                    Points = historyEntry.Points,
+                    PointsBalance = historyEntry.PointsBalance.HasValue ? historyEntry.PointsBalance.ToString()
                         : string.Format(_localizationService.GetResource("RewardPoints.ActivatedLater"), activatingDate),
-                    Message = rph.Message,
-                    CreatedOn = activatingDate
+                    Message = historyEntry.Message,
+                    CreatedOn = activatingDate,
+                    EndDate = !historyEntry.EndDateUtc.HasValue ? null :
+                        (DateTime?)_dateTimeHelper.ConvertToUserTime(historyEntry.EndDateUtc.Value, DateTimeKind.Utc)
                 };
             }).ToList();
 
             model.PagerModel = new PagerModel
             {
-                PageSize = list.PageSize,
-                TotalRecords = list.TotalCount,
-                PageIndex = list.PageIndex,
+                PageSize = rewardPoints.PageSize,
+                TotalRecords = rewardPoints.TotalCount,
+                PageIndex = rewardPoints.PageIndex,
                 ShowTotalSummary = true,
                 RouteActionName = "CustomerRewardPointsPaged",
                 UseRouteLinks = true,
@@ -561,12 +582,14 @@ namespace Nop.Web.Factories
             var rewardPointsAmount = _currencyService.ConvertFromPrimaryStoreCurrency(rewardPointsAmountBase, _workContext.WorkingCurrency);
             model.RewardPointsBalance = rewardPointsBalance;
             model.RewardPointsAmount = _priceFormatter.FormatPrice(rewardPointsAmount, true, false);
+
             //minimum amount/balance
             var minimumRewardPointsBalance = _rewardPointsSettings.MinimumRewardPointsToUse;
             var minimumRewardPointsAmountBase = _orderTotalCalculationService.ConvertRewardPointsToAmount(minimumRewardPointsBalance);
             var minimumRewardPointsAmount = _currencyService.ConvertFromPrimaryStoreCurrency(minimumRewardPointsAmountBase, _workContext.WorkingCurrency);
             model.MinimumRewardPointsBalance = minimumRewardPointsBalance;
             model.MinimumRewardPointsAmount = _priceFormatter.FormatPrice(minimumRewardPointsAmount, true, false);
+
             return model;
         }
 

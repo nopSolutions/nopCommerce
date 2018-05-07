@@ -1,26 +1,28 @@
-﻿@model AffiliateModel
-@inject AdminAreaSettings adminAreaSettings
-@{
-    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
-    var gridPageSizes = adminAreaSettings.GridPageSizes;
-}
+@model AffiliateModel
+
 <div class="panel-group">
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_affiliate_details_customers_top", additionalData = Model.Id })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.AffiliateDetailsCustomersTop, additionalData = Model })
     <div class="panel panel-default">
         <div class="panel-body">
             <div id="customers-grid"></div>
 
-            <script type="text/javascript">
+            <script>
                 $(document).ready(function() {
                     $("#customers-grid").kendoGrid({
                         dataSource: {
                             type: "json",
                             transport: {
                                 read: {
-                                    url: "@Html.Raw(Url.Action("AffiliatedCustomerList", "Affiliate", new {affiliateId = Model.Id}))",
+                                    url: "@Html.Raw(Url.Action("AffiliatedCustomerList", "Affiliate"))",
                                     type: "POST",
                                     dataType: "json",
-                                    data: addAntiForgeryToken
+                                    data: function() {
+                                        var data = {
+                                            AffliateId: '@(Model.Id)'
+                                        };
+                                        addAntiForgeryToken(data);
+                                        return data;
+                                    }
                                 }
                             },
                             schema: {
@@ -33,14 +35,14 @@
                                 // Cancel the changes
                                 this.cancelChanges();
                             },
-                            pageSize: @(defaultGridPageSize),
+                            pageSize: @(Model.AffiliatedCustomerSearchModel.PageSize),
                             serverPaging: true,
                             serverFiltering: true,
                             serverSorting: true
                         },
                         pageable: {
                             refresh: true,
-                            pageSizes: [@(gridPageSizes)],
+                            pageSizes: [@(Model.AffiliatedCustomerSearchModel.AvailablePageSizes)],
                             @await Html.PartialAsync("_GridPagerMessages")
                         },
                         editable: {
@@ -71,5 +73,5 @@
             </script>
         </div>
     </div>
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_affiliate_details_customers_bottom", additionalData = Model.Id })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.AffiliateDetailsCustomersBottom, additionalData = Model })
 </div>

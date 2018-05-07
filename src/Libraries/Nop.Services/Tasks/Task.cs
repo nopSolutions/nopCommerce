@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using Nop.Core.Caching;
-using Nop.Core.Configuration;
 using Nop.Core.Domain.Tasks;
 using Nop.Core.Infrastructure;
 using Nop.Services.Logging;
@@ -125,28 +124,20 @@ namespace Nop.Services.Tasks
                     return;
 
                 //validation (so nobody else can invoke this method when he wants)
-                if (ScheduleTask.LastEndUtc.HasValue && (DateTime.UtcNow - ScheduleTask.LastEndUtc).Value.TotalSeconds <
-                    ScheduleTask.Seconds)
+                if (ScheduleTask.LastStartUtc.HasValue && (DateTime.UtcNow - ScheduleTask.LastStartUtc).Value.TotalSeconds < ScheduleTask.Seconds)
                     //too early
                     return;
             }
 
             try
             {
-                var nopConfig = EngineContext.Current.Resolve<NopConfig>();
-                if (nopConfig.RedisCachingEnabled)
-                {
-                    //get expiration time
-                    var expirationInSeconds = ScheduleTask.Seconds <= 300 ? ScheduleTask.Seconds - 1 : 300;
+                //get expiration time
+                var expirationInSeconds = Math.Min(ScheduleTask.Seconds, 300) - 1;
+                var expiration = TimeSpan.FromSeconds(expirationInSeconds);
 
-                    //execute task with lock
-                    var redisWrapper = EngineContext.Current.Resolve<IRedisConnectionWrapper>();
-                    redisWrapper.PerformActionWithLock(ScheduleTask.Type, TimeSpan.FromSeconds(expirationInSeconds), ExecuteTask);
-                }
-                else
-                {
-                    ExecuteTask();
-                }
+                //execute task with lock
+                var locker = EngineContext.Current.Resolve<ILocker>();
+                locker.PerformActionWithLock(ScheduleTask.Type, expiration, ExecuteTask);
             }
             catch (Exception exc)
             {

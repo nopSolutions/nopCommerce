@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml;
 using Microsoft.AspNetCore.Http;
 using Nop.Core;
+using Nop.Core.Infrastructure;
 
 namespace Nop.Web.Infrastructure.Installation
 {
@@ -17,6 +17,7 @@ namespace Nop.Web.Infrastructure.Installation
         #region Fields
 
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly INopFileProvider _fileProvider;
 
         #endregion
 
@@ -31,9 +32,11 @@ namespace Nop.Web.Infrastructure.Installation
 
         #region Ctor
 
-        public InstallationLocalizationService(IHttpContextAccessor httpContextAccessor)
+        public InstallationLocalizationService(IHttpContextAccessor httpContextAccessor,
+            INopFileProvider fileProvider)
         {
             this._httpContextAccessor = httpContextAccessor;
+            this._fileProvider = fileProvider;
         }
 
         #endregion
@@ -139,7 +142,7 @@ namespace Nop.Web.Infrastructure.Installation
                 return _availableLanguages;
 
             _availableLanguages = new List<InstallationLanguage>();
-            foreach (var filePath in Directory.EnumerateFiles(CommonHelper.MapPath("~/App_Data/Localization/Installation/"), "*.xml"))
+            foreach (var filePath in _fileProvider.EnumerateFiles(_fileProvider.MapPath("~/App_Data/Localization/Installation/"), "*.xml"))
             {
                 var xmlDocument = new XmlDocument();
                 xmlDocument.Load(filePath);
@@ -148,7 +151,7 @@ namespace Nop.Web.Infrastructure.Installation
                 var languageCode = "";
                 //we file name format: installation.{languagecode}.xml
                 var r = new Regex(Regex.Escape("installation.") + "(.*?)" + Regex.Escape(".xml"));
-                var matches = r.Matches(Path.GetFileName(filePath));
+                var matches = r.Matches(_fileProvider.GetFileName(filePath));
                 foreach (Match match in matches)
                     languageCode = match.Groups[1].Value;
 

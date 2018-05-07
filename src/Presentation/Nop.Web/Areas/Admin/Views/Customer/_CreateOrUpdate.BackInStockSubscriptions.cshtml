@@ -1,29 +1,33 @@
 ﻿@model CustomerModel
+
 @using Nop.Services.Stores
-@inject AdminAreaSettings adminAreaSettings
 @inject IStoreService storeService
 @{
-    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
-    var gridPageSizes = adminAreaSettings.GridPageSizes;
     var stores = storeService.GetAllStores();
 }
 
 <div class="panel-group">
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_customer_details_back_in_stock_top", additionalData = Model.Id })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CustomerDetailsBackInStockTop, additionalData = Model })
     <div class="panel panel-default">
         <div class="panel-body">
             <div id="backinstock-subscriptions-grid"></div>
-            <script type="text/javascript">
+            <script>
                 $(document).ready(function () {
                     $("#backinstock-subscriptions-grid").kendoGrid({
                         dataSource: {
                             type: "json",
                             transport: {
                                 read: {
-                                    url: "@Html.Raw(Url.Action("BackInStockSubscriptionList", "Customer", new { customerId = Model.Id }))",
+                                    url: "@Html.Raw(Url.Action("BackInStockSubscriptionList", "Customer"))",
                                     type: "POST",
                                     dataType: "json",
-                                    data: addAntiForgeryToken
+                                    data: function() {
+                                        var data = {
+                                            CustomerId: '@(Model.Id)'
+                                        };
+                                        addAntiForgeryToken(data);
+                                        return data;
+                                    }
                                 }
                             },
                             schema: {
@@ -36,14 +40,14 @@
                                 // Cancel the changes
                                 this.cancelChanges();
                             },
-                            pageSize: @(defaultGridPageSize),
+                            pageSize: @(Model.CustomerBackInStockSubscriptionSearchModel.PageSize),
                             serverPaging: true,
                             serverFiltering: true,
                             serverSorting: true
                         },
                         pageable: {
                             refresh: true,
-                            pageSizes: [@(gridPageSizes)],
+                            pageSizes: [@(Model.CustomerBackInStockSubscriptionSearchModel.AvailablePageSizes)],
                             @await Html.PartialAsync("_GridPagerMessages")
                         },
                         editable: {
@@ -73,5 +77,5 @@
             </script>
         </div>
     </div>
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_customer_details_back_in_stock_bottom", additionalData = Model.Id })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CustomerDetailsBackInStockBottom, additionalData = Model })
 </div>

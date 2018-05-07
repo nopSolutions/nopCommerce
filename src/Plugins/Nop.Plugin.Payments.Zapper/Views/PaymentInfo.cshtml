@@ -1,0 +1,54 @@
+﻿@model Nop.Plugin.Payments.Zapper.Models.PaymentInfoModel
+@{
+    Layout = "";
+    Html.AddScriptParts(location: ResourceLocation.Footer, src: "~/Plugins/Payments.Zapper/Scripts/paymentzapper.js", excludeFromBundle: true);
+}
+<script src="https://code.zapper.com/zapper.js"></script>
+
+<script>
+    $(window).load(function () {
+        doZapperTest();
+    });
+
+    function doZapperTest() {
+        var opts = {
+            selector: "#zapperPayment",
+            merchantId: 28798,
+            siteId: 30564,
+            billAmount: 11.00,
+            reference: "REF001",
+            isRetry: false,
+            paymentComplete: function (paymentResult) {
+                if (paymentResult.status === 1) {
+                    console.log(paymentResult);
+                    //$("#zapPaymentId").text(paymentResult.payment.paymentId);
+                    //$("#zapZapperId").text(paymentResult.payment.zapperId);
+                    //$("#zapMerchantOrderId").text(paymentResult.payment.reference);
+                    //$("#zapAmount").text(paymentResult.payment.amountPaid);
+
+                    //$(".cart-top").slideUp();
+
+                    //$("#zapperPaySummary").delay(800).slideDown();
+                }
+            }
+        }
+        zapper(opts)
+    }
+</script>
+
+
+
+@*<table width="100%" cellpadding="0" cellspacing="0" onload="doZapper('#zapperPayment','@(Model.MerchantId)', '@(Model.SiteId)', '@(Model.Amount)', '@(Model.MerchantReference)');">*@
+<table width="100%" cellpadding="0" cellspacing="0">
+    <tr>
+        <td></td>
+        <td>
+            <div id="zapperPayment" style="display:inline-block;"></div>
+        </td>
+        <td></td>
+    </tr>
+</table>
+
+
+
+

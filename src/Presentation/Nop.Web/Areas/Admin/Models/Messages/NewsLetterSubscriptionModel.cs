@@ -2,13 +2,18 @@
 using FluentValidation.Attributes;
 using Nop.Web.Areas.Admin.Validators.Messages;
 using Nop.Web.Framework.Mvc.ModelBinding;
-using Nop.Web.Framework.Mvc.Models;
+using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Areas.Admin.Models.Messages
 {
+    /// <summary>
+    /// Represents a newsletter subscription model
+    /// </summary>
     [Validator(typeof(NewsLetterSubscriptionValidator))]
-    public partial class NewsLetterSubscriptionModel : BaseNopEntityModel
+    public partial class NewsletterSubscriptionModel : BaseNopEntityModel
     {
+        #region Properties
+
         [DataType(DataType.EmailAddress)]
         [NopResourceDisplayName("Admin.Promotions.NewsLetterSubscriptions.Fields.Email")]
         public string Email { get; set; }
@@ -21,5 +26,7 @@ namespace Nop.Web.Areas.Admin.Models.Messages
 
         [NopResourceDisplayName("Admin.Promotions.NewsLetterSubscriptions.Fields.CreatedOn")]
         public string CreatedOn { get; set; }
+
+        #endregion
     }
 }

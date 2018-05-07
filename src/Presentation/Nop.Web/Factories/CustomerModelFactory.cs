@@ -278,6 +278,7 @@ namespace Nop.Web.Factories
                 model.StreetAddress2 = customer.GetAttribute<string>(SystemCustomerAttributeNames.StreetAddress2);
                 model.ZipPostalCode = customer.GetAttribute<string>(SystemCustomerAttributeNames.ZipPostalCode);
                 model.City = customer.GetAttribute<string>(SystemCustomerAttributeNames.City);
+                model.County = customer.GetAttribute<string>(SystemCustomerAttributeNames.County);
                 model.CountryId = customer.GetAttribute<int>(SystemCustomerAttributeNames.CountryId);
                 model.StateProvinceId = customer.GetAttribute<int>(SystemCustomerAttributeNames.StateProvinceId);
                 model.Phone = customer.GetAttribute<string>(SystemCustomerAttributeNames.Phone);
@@ -358,6 +359,8 @@ namespace Nop.Web.Factories
             model.ZipPostalCodeRequired = _customerSettings.ZipPostalCodeRequired;
             model.CityEnabled = _customerSettings.CityEnabled;
             model.CityRequired = _customerSettings.CityRequired;
+            model.CountyEnabled = _customerSettings.CountyEnabled;
+            model.CountyRequired = _customerSettings.CountyRequired;
             model.CountryEnabled = _customerSettings.CountryEnabled;
             model.CountryRequired = _customerSettings.CountryRequired;
             model.StateProvinceEnabled = _customerSettings.StateProvinceEnabled;
@@ -376,17 +379,18 @@ namespace Nop.Web.Factories
             model.AllowCustomersToRemoveAssociations = _externalAuthenticationSettings.AllowCustomersToRemoveAssociations;
             model.NumberOfExternalAuthenticationProviders = _externalAuthenticationService
                 .LoadActiveExternalAuthenticationMethods(_workContext.CurrentCustomer, _storeContext.CurrentStore.Id).Count;
-            foreach (var ear in customer.ExternalAuthenticationRecords)
+            foreach (var record in customer.ExternalAuthenticationRecords)
             {
-                var authMethod = _externalAuthenticationService.LoadExternalAuthenticationMethodBySystemName(ear.ProviderSystemName);
+                var authMethod = _externalAuthenticationService.LoadExternalAuthenticationMethodBySystemName(record.ProviderSystemName);
                 if (authMethod == null || !authMethod.IsMethodActive(_externalAuthenticationSettings))
                     continue;
 
                 model.AssociatedExternalAuthRecords.Add(new CustomerInfoModel.AssociatedExternalAuthModel
                 {
-                    Id = ear.Id,
-                    Email = ear.Email,
-                    ExternalIdentifier = ear.ExternalDisplayIdentifier,
+                    Id = record.Id,
+                    Email = record.Email,
+                    ExternalIdentifier = !string.IsNullOrEmpty(record.ExternalDisplayIdentifier)
+                        ? record.ExternalDisplayIdentifier : record.ExternalIdentifier,
                     AuthMethodName = authMethod.GetLocalizedFriendlyName(_localizationService, _workContext.WorkingLanguage.Id)
                 });
             }
@@ -432,6 +436,8 @@ namespace Nop.Web.Factories
             model.ZipPostalCodeRequired = _customerSettings.ZipPostalCodeRequired;
             model.CityEnabled = _customerSettings.CityEnabled;
             model.CityRequired = _customerSettings.CityRequired;
+            model.CountyEnabled = _customerSettings.CountyEnabled;
+            model.CountyRequired = _customerSettings.CountyRequired;
             model.CountryEnabled = _customerSettings.CountryEnabled;
             model.CountryRequired = _customerSettings.CountryRequired;
             model.StateProvinceEnabled = _customerSettings.StateProvinceEnabled;

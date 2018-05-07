@@ -233,7 +233,6 @@ namespace Nop.Services.Tests.Catalog
             _shoppingCartSettings = MockRepository.GenerateMock<ShoppingCartSettings>();
 
             _productAttributeFormatter = new ProductAttributeFormatter(_workContext,
-                _productAttributeService,
                 _productAttributeParser,
                 _currencyService,
                 _localizationService,

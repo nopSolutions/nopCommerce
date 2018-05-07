@@ -10,7 +10,7 @@
                 @for (var i = 0; i < Model.Count; i++)
                 {
                     <li class="tag">
-                        <a href="@Url.RouteUrl("ProductsByTag", new { productTagId = Model[i].Id, SeName = Model[i].SeName })" class="producttag">
+                        <a href="@Url.RouteUrl("ProductsByTag", new { Model[i].SeName })" class="producttag">
                             @Model[i].Name</a> <span>@T("Products.Tags.Count", Model[i].ProductCount)</span></li>
                     if (i != Model.Count - 1)
                     {

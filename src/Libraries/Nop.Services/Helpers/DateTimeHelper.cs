@@ -74,6 +74,9 @@ namespace Nop.Services.Helpers
         public virtual DateTime ConvertToUserTime(DateTime dt, DateTimeKind sourceDateTimeKind)
         {
             dt = DateTime.SpecifyKind(dt, sourceDateTimeKind);
+            if (sourceDateTimeKind == DateTimeKind.Local && TimeZoneInfo.Local.IsInvalidTime(dt))
+                return dt;
+
             var currentUserTimeZoneInfo = CurrentTimeZone;
             return TimeZoneInfo.ConvertTime(dt, currentUserTimeZoneInfo);
         }
@@ -99,6 +102,9 @@ namespace Nop.Services.Helpers
         /// <returns>A DateTime value that represents time that corresponds to the dateTime parameter in customer time zone.</returns>
         public virtual DateTime ConvertToUserTime(DateTime dt, TimeZoneInfo sourceTimeZone, TimeZoneInfo destinationTimeZone)
         {
+            if (sourceTimeZone.IsInvalidTime(dt))
+                return dt;
+
             return TimeZoneInfo.ConvertTime(dt, sourceTimeZone, destinationTimeZone);
         }
 
@@ -121,6 +127,9 @@ namespace Nop.Services.Helpers
         public virtual DateTime ConvertToUtcTime(DateTime dt, DateTimeKind sourceDateTimeKind)
         {
             dt = DateTime.SpecifyKind(dt, sourceDateTimeKind);
+            if (sourceDateTimeKind == DateTimeKind.Local && TimeZoneInfo.Local.IsInvalidTime(dt))
+                return dt;
+
             return TimeZoneInfo.ConvertTimeToUtc(dt);
         }
 

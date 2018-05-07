@@ -6,8 +6,8 @@ using System.Data.Entity.Infrastructure;
 using System.Data.SqlClient;
 using System.IO;
 using System.Text;
-using Nop.Core;
 using Nop.Core.Data;
+using Nop.Core.Infrastructure;
 using Nop.Data.Initializers;
 
 namespace Nop.Data
@@ -27,7 +27,9 @@ namespace Nop.Data
         /// <returns></returns>
         protected virtual string[] ParseCommands(string filePath, bool throwExceptionIfNonExists)
         {
-            if (!File.Exists(filePath))
+            var fileProvider = EngineContext.Current.Resolve<INopFileProvider>();
+
+            if (!fileProvider.FileExists(filePath))
             {
                 if (throwExceptionIfNonExists)
                     throw new ArgumentException($"Specified file doesn't exist - {filePath}");
@@ -36,8 +38,7 @@ namespace Nop.Data
             }
 
             var statements = new List<string>();
-            using (var stream = File.OpenRead(filePath))
-            using (var reader = new StreamReader(stream))
+            using (var reader = new StreamReader(filePath))
             {
                 string statement;
                 while ((statement = ReadNextStatementFromStream(reader)) != null)
@@ -112,9 +113,11 @@ namespace Nop.Data
 
             //custom commands (stored procedures, indexes)
 
+            var fileProvider = EngineContext.Current.Resolve<INopFileProvider>();
+
             var customCommands = new List<string>();
-            customCommands.AddRange(ParseCommands(CommonHelper.MapPath("~/App_Data/Install/SqlServer.Indexes.sql"), false));
-            customCommands.AddRange(ParseCommands(CommonHelper.MapPath("~/App_Data/Install/SqlServer.StoredProcedures.sql"), false));
+            customCommands.AddRange(ParseCommands(fileProvider.MapPath("~/App_Data/Install/SqlServer.Indexes.sql"), false));
+            customCommands.AddRange(ParseCommands(fileProvider.MapPath("~/App_Data/Install/SqlServer.StoredProcedures.sql"), false));
 
             var initializer = new CreateTablesIfNotExist<NopObjectContext>(tablesToValidate, customCommands.ToArray());
             Database.SetInitializer(initializer);

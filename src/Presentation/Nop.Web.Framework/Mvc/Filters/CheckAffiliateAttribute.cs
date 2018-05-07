@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using Nop.Core;
 using Nop.Core.Data;
 using Nop.Core.Domain.Affiliates;
+using Nop.Core.Domain.Customers;
 using Nop.Services.Affiliates;
 using Nop.Services.Customers;
 
@@ -73,6 +74,10 @@ namespace Nop.Web.Framework.Mvc.Filters
                     return;
 
                 if (affiliate.Id == _workContext.CurrentCustomer.AffiliateId)
+                    return;
+
+                //ignore search engines
+                if (_workContext.CurrentCustomer.IsSearchEngineAccount())
                     return;
 
                 //update affiliate identifier

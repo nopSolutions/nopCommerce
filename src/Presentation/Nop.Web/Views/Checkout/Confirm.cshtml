@@ -14,10 +14,10 @@
         <h1>@T("Checkout.ConfirmYourOrder")</h1>
     </div>
     <div class="page-body checkout-data">
-        @await Component.InvokeAsync("Widget", new { widgetZone = "checkout_confirm_top" })
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.CheckoutConfirmTop })
         <div class="section confirm-order">
             <form asp-route="CheckoutConfirm" method="post" id="confirm-order-form">
-                <script type="text/javascript" asp-location="Footer">
+                <script asp-location="Footer">
                     $(document).ready(function () {
                         $('.confirm-order-next-step-button').click(function () {
                             //terms of service
@@ -58,7 +58,7 @@
                             @if (Model.TermsOfServicePopup)
                             {
                                 <a class="read" id="read-terms">@T("Checkout.TermsOfService.Read")</a>
-                                <script type="text/javascript" asp-location="Footer">
+                                <script asp-location="Footer">
                                     $(document).ready(function() {
                                         $('#read-terms').on('click',
                                             function(e) {
@@ -77,7 +77,7 @@
                     <div class="buttons">
                         <input type="submit" name="nextstep" value="@T("Checkout.ConfirmButton")" class="button-1 confirm-order-next-step-button" />
                     </div>
-                    <script type="text/javascript" asp-location="Footer">
+                    <script asp-location="Footer">
                         $('#confirm-order-form').on('submit',
                             function () {
                                 var button = $(this).find('input[type="submit"][name="nextstep"]');
@@ -101,7 +101,7 @@
                 }
             </form>
         </div>
-        @await Component.InvokeAsync("Widget", new { widgetZone = "checkout_confirm_bottom" })
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.CheckoutConfirmBottom })
         <div class="section order-summary">
             @await Component.InvokeAsync("OrderSummary", new { prepareAndDisplayOrderReviewData = true })
         </div>

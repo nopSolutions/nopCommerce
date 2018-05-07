@@ -1,4 +1,6 @@
-﻿@{    
+@model DatesRangesSearchModel
+
+@{    
     //page title
     ViewBag.Title = T("Admin.Configuration.Shipping.DatesAndRanges").Text;
     //active menu item (system name)
@@ -12,7 +14,7 @@
     </h1>
     <div class="pull-right">
         &nbsp;
-        @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_dates_and_ranges_buttons" })
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.DatesAndRangesButtons })
     </div>
 </div>
 
@@ -29,7 +31,7 @@
                     </p>
                     <div id="deliverydate-grid"></div>
 
-                    <script type="text/javascript">
+                    <script>
                         $(document).ready(function() {
                             $("#deliverydate-grid").kendoGrid({
                                 dataSource: {
@@ -52,15 +54,14 @@
                                         // Cancel the changes
                                         this.cancelChanges();
                                     },
+                                    pageSize: @(Model.DeliveryDateSearchModel.PageSize),
                                     serverPaging: true,
                                     serverFiltering: true,
                                     serverSorting: true
                                 },
                                 pageable: {
                                     refresh: true,
-                                    numeric: false,
-                                    previousNext: false,
-                                    info: false,
+                                    pageSizes: [@(Model.DeliveryDateSearchModel.AvailablePageSizes)],
                                     @await Html.PartialAsync("_GridPagerMessages")
                                 },
                                 editable: {
@@ -107,7 +108,7 @@
                     </p>
                     <div id="productavailabilityrange-grid"></div>
 
-                    <script type="text/javascript">
+                    <script>
                         $(document).ready(function() {
                             $("#productavailabilityrange-grid").kendoGrid({
                                 dataSource: {
@@ -130,15 +131,14 @@
                                         // Cancel the changes
                                         this.cancelChanges();
                                     },
+                                    pageSize: @(Model.ProductAvailabilityRangeSearchModel.PageSize),
                                     serverPaging: true,
                                     serverFiltering: true,
                                     serverSorting: true
                                 },
                                 pageable: {
                                     refresh: true,
-                                    numeric: false,
-                                    previousNext: false,
-                                    info: false,
+                                    pageSizes: [@(Model.ProductAvailabilityRangeSearchModel.AvailablePageSizes)],
                                     @await Html.PartialAsync("_GridPagerMessages")
                                 },
                                 editable: {

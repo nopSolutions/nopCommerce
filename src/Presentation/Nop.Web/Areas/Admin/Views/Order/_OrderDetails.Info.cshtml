@@ -6,7 +6,7 @@
 
 @if (!Model.IsLoggedInAsVendor)
 {
-    <script type="text/javascript">
+    <script>
         $(document).ready(function () {
             toggleChangeOrderStatus(false);
             toggleOrderTotals(false);
@@ -75,7 +75,7 @@
     </script>
 }
 <div class="panel-group">
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_order_details_info_top", additionalData = Model.Id })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.OrderDetailsInfoTop, additionalData = Model })
     <div class="panel panel-default">
         <div class="panel-body">
             @if (!Model.IsLoggedInAsVendor)
@@ -403,7 +403,7 @@
                             <nop-label asp-for="RedeemedRewardPoints" />
                         </div>
                         <div class="col-md-9">
-                            <div class="form-text-row">@Model.RedeemedRewardPoints + @T("Admin.Orders.Fields.RedeemedRewardPoints.Points").Text + "/" + @Model.RedeemedRewardPointsAmount</div>
+                            <div class="form-text-row">@($"{Model.RedeemedRewardPoints}{T("Admin.Orders.Fields.RedeemedRewardPoints.Points")} {Model.RedeemedRewardPointsAmount}")</div>
                         </div>
                     </div>
                 }
@@ -823,5 +823,5 @@
             </div>
         </div>
     </div>
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_order_details_info_bottom", additionalData = Model.Id })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.OrderDetailsInfoBottom, additionalData = Model })
 </div>

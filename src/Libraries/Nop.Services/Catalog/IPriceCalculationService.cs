@@ -148,12 +148,14 @@ namespace Nop.Services.Catalog
         /// <param name="attributesXml">Shopping cart item attributes in XML</param>
         /// <returns>Product cost (one item)</returns>
         decimal GetProductCost(Product product, string attributesXml);
-        
+
         /// <summary>
         /// Get a price adjustment of a product attribute value
         /// </summary>
         /// <param name="value">Product attribute value</param>
+        /// <param name="customer">Customer</param>
+        /// <param name="productPrice">Product price (null for using the base product price)</param>
         /// <returns>Price adjustment</returns>
-        decimal GetProductAttributeValuePriceAdjustment(ProductAttributeValue value);
+        decimal GetProductAttributeValuePriceAdjustment(ProductAttributeValue value, Customer customer, decimal? productPrice = null);
     }
 }

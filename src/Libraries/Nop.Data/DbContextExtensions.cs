@@ -161,9 +161,9 @@ namespace Nop.Data
         /// <returns></returns>
         public static IDictionary<string, int> GetColumnsMaxLength(this IDbContext context, string entityTypeName, params string[] columnNames)
         {
-            var fildFacets = GetFildFacets(context, entityTypeName, "String", columnNames);
+            var fieldFacets = GetFieldFacets(context, entityTypeName, "String", columnNames);
 
-            var queryResult = fildFacets
+            var queryResult = fieldFacets
                 .Select(f => new { Name = f.Key, MaxLength = f.Value["MaxLength"].Value })
                 .Where(p => int.TryParse(p.MaxLength.ToString(), out int _))
                 .ToDictionary(p => p.Name, p => Convert.ToInt32(p.MaxLength));
@@ -181,13 +181,13 @@ namespace Nop.Data
         /// <returns></returns>
         public static IDictionary<string, decimal> GetDecimalMaxValue(this IDbContext context, string entityTypeName, params string[] columnNames)
         {
-            var fildFacets = GetFildFacets(context, entityTypeName, "Decimal", columnNames);
+            var fieldFacets = GetFieldFacets(context, entityTypeName, "Decimal", columnNames);
 
-            return fildFacets.ToDictionary(p => p.Key, p => int.Parse(p.Value["Precision"].Value.ToString()) - int.Parse(p.Value["Scale"].Value.ToString()))
+            return fieldFacets.ToDictionary(p => p.Key, p => int.Parse(p.Value["Precision"].Value.ToString()) - int.Parse(p.Value["Scale"].Value.ToString()))
                 .ToDictionary(p => p.Key, p => new decimal(Math.Pow(10, p.Value)));
         }
 
-        private static Dictionary<string, ReadOnlyMetadataCollection<Facet>> GetFildFacets(this IDbContext context,
+        private static Dictionary<string, ReadOnlyMetadataCollection<Facet>> GetFieldFacets(this IDbContext context,
             string entityTypeName, string edmTypeName, params string[] columnNames)
         {
             //original: http://stackoverflow.com/questions/5081109/entity-framework-4-0-automatically-truncate-trim-string-before-insert

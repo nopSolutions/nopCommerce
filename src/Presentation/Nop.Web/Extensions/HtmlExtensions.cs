@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Infrastructure;
+using Nop.Services.Customers;
 using Nop.Services.Localization;
 using Nop.Services.Seo;
 using Nop.Services.Topics;
@@ -201,7 +202,7 @@ namespace Nop.Web.Extensions
                 {
                     for (var x = 1; x <= totalPages; x++)
                     {
-                        var link = html.RouteLink(x.ToString(), "TopicSlugPaged", new { id = forumTopicId, page = (x), slug = forumTopicSlug }, new { title = string.Format(localizationService.GetResource("Pager.PageLinkTitle"), x.ToString()) });
+                        var link = html.RouteLink(x.ToString(), "TopicSlugPaged", new { id = forumTopicId, pageNumber = x, slug = forumTopicSlug }, new { title = string.Format(localizationService.GetResource("Pager.PageLinkTitle"), x.ToString()) });
                         links.Append(link.ToHtmlString());
                         if (x < totalPages)
                         {
@@ -211,13 +212,13 @@ namespace Nop.Web.Extensions
                 }
                 else
                 {
-                    var link1 = html.RouteLink("1", "TopicSlugPaged", new { id = forumTopicId, page = (1), slug = forumTopicSlug }, new { title = string.Format(localizationService.GetResource("Pager.PageLinkTitle"), 1) });
+                    var link1 = html.RouteLink("1", "TopicSlugPaged", new { id = forumTopicId, pageNumber = 1, slug = forumTopicSlug }, new { title = string.Format(localizationService.GetResource("Pager.PageLinkTitle"), 1) });
                     links.Append(link1.ToHtmlString());
                     links.Append(" ... ");
 
                     for (var x = (totalPages - 2); x <= totalPages; x++)
                     {
-                        var link2 = html.RouteLink(x.ToString(), "TopicSlugPaged", new { id = forumTopicId, page = (x), slug = forumTopicSlug }, new { title = string.Format(localizationService.GetResource("Pager.PageLinkTitle"), x.ToString()) });
+                        var link2 = html.RouteLink(x.ToString(), "TopicSlugPaged", new { id = forumTopicId, pageNumber = x, slug = forumTopicSlug }, new { title = string.Format(localizationService.GetResource("Pager.PageLinkTitle"), x.ToString()) });
                         links.Append(link2.ToHtmlString());
 
                         if (x < totalPages)
@@ -252,7 +253,9 @@ namespace Nop.Web.Extensions
 
             //static cache manager
             var cacheManager = EngineContext.Current.Resolve<IStaticCacheManager>();
-            var cacheKey = string.Format(ModelCacheEventConsumer.TOPIC_SENAME_BY_SYSTEMNAME, systemName, workContext.WorkingLanguage.Id, storeContext.CurrentStore.Id);
+            var cacheKey = string.Format(ModelCacheEventConsumer.TOPIC_SENAME_BY_SYSTEMNAME,
+                systemName, workContext.WorkingLanguage.Id, storeContext.CurrentStore.Id,
+                string.Join(",", workContext.CurrentCustomer.GetCustomerRoleIds()));
             var cachedSeName = cacheManager.Get(cacheKey, () =>
             {
                 var topicService = EngineContext.Current.Resolve<ITopicService>();
@@ -279,7 +282,9 @@ namespace Nop.Web.Extensions
 
             //static cache manager
             var cacheManager = EngineContext.Current.Resolve<IStaticCacheManager>();
-            var cacheKey = string.Format(ModelCacheEventConsumer.TOPIC_TITLE_BY_SYSTEMNAME, systemName, workContext.WorkingLanguage.Id, storeContext.CurrentStore.Id);
+            var cacheKey = string.Format(ModelCacheEventConsumer.TOPIC_TITLE_BY_SYSTEMNAME, 
+                systemName, workContext.WorkingLanguage.Id, storeContext.CurrentStore.Id,
+                string.Join(",", workContext.CurrentCustomer.GetCustomerRoleIds()));
             var cachedTitle = cacheManager.Get(cacheKey, () =>
             {
                 var topicService = EngineContext.Current.Resolve<ITopicService>();

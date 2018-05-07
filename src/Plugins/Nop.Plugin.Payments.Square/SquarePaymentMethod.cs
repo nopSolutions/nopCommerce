@@ -185,6 +185,7 @@ namespace Nop.Plugin.Payments.Square
                 AddressLine1: address.Address1,
                 AddressLine2: address.Address2,
                 AdministrativeDistrictLevel1: address.StateProvince?.Abbreviation,
+                AdministrativeDistrictLevel2: address.County,
                 Country: Enum.TryParse(address.Country?.TwoLetterIsoCode, out SquareModel.Address.CountryEnum countryCode)
                     ? (SquareModel.Address.CountryEnum?)countryCode : null,
                 FirstName: address.FirstName,
@@ -583,12 +584,12 @@ namespace Nop.Plugin.Payments.Square
         }
 
         /// <summary>
-        /// Gets a view component for displaying plugin in public store ("payment info" checkout step)
+        /// Gets a name of a view component for displaying plugin in public store ("payment info" checkout step)
         /// </summary>
-        /// <param name="viewComponentName">View component name</param>
-        public void GetPublicViewComponent(out string viewComponentName)
+        /// <returns>View component name</returns>
+        public string GetPublicViewComponentName()
         {
-            viewComponentName = "PaymentSquare";
+            return SquarePaymentDefaults.ViewComponentName;
         }
 
         /// <summary>

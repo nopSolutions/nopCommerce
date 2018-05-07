@@ -209,6 +209,7 @@ namespace Nop.Web.Factories
                                 ProviderSystemName = point.ProviderSystemName,
                                 Address = point.Address,
                                 City = point.City,
+                                County = point.County,
                                 StateName = state?.GetLocalized(x => x.Name, languageId) ?? string.Empty,
                                 CountryName = country?.GetLocalized(x => x.Name, languageId) ?? string.Empty,
                                 ZipPostalCode = point.ZipPostalCode,
@@ -373,6 +374,8 @@ namespace Nop.Web.Factories
             if (_rewardPointsSettings.Enabled && !cart.IsRecurring())
             {
                 var rewardPointsBalance = _rewardPointService.GetRewardPointsBalance(_workContext.CurrentCustomer.Id, _storeContext.CurrentStore.Id);
+                rewardPointsBalance = _rewardPointService.GetReducedPointsBalance(rewardPointsBalance);
+
                 var rewardPointsAmountBase = _orderTotalCalculationService.ConvertRewardPointsToAmount(rewardPointsBalance);
                 var rewardPointsAmount = _currencyService.ConvertFromPrimaryStoreCurrency(rewardPointsAmountBase, _workContext.WorkingCurrency);
                 if (rewardPointsAmount > decimal.Zero && 
@@ -444,15 +447,11 @@ namespace Nop.Web.Factories
         /// <returns>Payment info model</returns>
         public virtual CheckoutPaymentInfoModel PreparePaymentInfoModel(IPaymentMethod paymentMethod)
         {
-            paymentMethod.GetPublicViewComponent(out string viewComponentName);
-
-            var model = new CheckoutPaymentInfoModel
+            return new CheckoutPaymentInfoModel
             {
-                PaymentViewComponentName = viewComponentName,
+                PaymentViewComponentName = paymentMethod.GetPublicViewComponentName(),
                 DisplayOrderTotals = _orderSettings.OnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab
             };
-            
-            return model;
         }
 
         /// <summary>

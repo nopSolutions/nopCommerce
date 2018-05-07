@@ -1,7 +1,7 @@
-﻿@model OrderSettingsModel
+@model OrderSettingsModel
 
 <div class="panel-group">
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_order_settings_return_request_settings_top" })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.OrderSettingsReturnRequestSettingsTop })
     <div class="panel panel-default">
         <div class="panel-heading">
             @T("Admin.Configuration.Settings.Order.BlockTitle.Common")
@@ -74,7 +74,7 @@
             </div>
         </div>
     </div>
-    @await Html.PartialAsync("_ReturnRequestReasons")
-    @await Html.PartialAsync("_ReturnRequestActions")
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_order_settings_return_request_settings_bottom" })
+    @await Html.PartialAsync("../ReturnRequest/_ReturnRequestReasons.cshtml", Model.ReturnRequestReasonSearchModel)
+    @await Html.PartialAsync("../ReturnRequest/_ReturnRequestActions.cshtml", Model.ReturnRequestActionSearchModel)
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.OrderSettingsReturnRequestSettingsBottom })
 </div>

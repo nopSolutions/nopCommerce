@@ -2,7 +2,7 @@
 @using Nop.Core.Domain.Discounts
 @using Nop.Services
 
-<script type="text/javascript">
+<script>
     $(document).ready(function() {
         $("#@Html.IdFor(model => model.DiscountTypeId)").change(toggleDiscountType);
         $("#@Html.IdFor(model => model.UsePercentage)").click(toggleUsePercentage);
@@ -69,13 +69,22 @@
     function toggleRequiresCouponCode() {
         if ($('#@Html.IdFor(model => model.RequiresCouponCode)').is(':checked')) {
             $('#pnlCouponCode').show();
+            @if (!string.IsNullOrEmpty(Model.DiscountUrl))
+            {
+                <text>$('#pnlDiscountUrl').show();</text>
+            }
+            else
+            {
+                <text>$('#pnlDiscountUrl').hide();</text>
+            }
         } else {
             $('#pnlCouponCode').hide();
+            $('#pnlDiscountUrl').hide();
         }
     }
 </script>
 <div class="panel-group">
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_discount_details_info_top", additionalData = Model.Id })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.DiscountDetailsInfoTop, additionalData = Model })
     <div class="panel panel-default">
         <div class="panel-body">
             <div class="form-group">
@@ -163,6 +172,16 @@
                     </div>
                 </div>
             </nop-nested-setting>
+            <nop-nested-setting asp-for="RequiresCouponCode">
+                <div class="form-group" id="pnlDiscountUrl">
+                    <div class="col-md-3">
+                        <nop-label asp-for="DiscountUrl" />
+                    </div>
+                    <div class="col-md-9">
+                        <div class="form-text-row">@Model.DiscountUrl</div>
+                    </div>
+                </div>
+            </nop-nested-setting>
             <div class="form-group">
                 <div class="col-md-3">
                     <nop-label asp-for="StartDateUtc"/>
@@ -219,5 +238,5 @@
             </div>
         </div>
     </div>
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_discount_details_info_bottom", additionalData = Model.Id })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.DiscountDetailsInfoBottom, additionalData = Model })
 </div>

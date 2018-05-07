@@ -118,5 +118,10 @@ namespace Nop.Core.Domain.Shipping
         /// Gets or sets a value indicating whether to consider associated products dimensions and weight on shipping, false if main product includes them
         /// </summary>
         public bool ConsiderAssociatedProductsDimensions { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to send all the items of a product marked as "Ship Separately" separately; if false, all the items of a such product will be shipped in a single box, but separately from the other order items
+        /// </summary>
+        public bool ShipSeparatelyOneItemEach { get; set; }
     }
 }

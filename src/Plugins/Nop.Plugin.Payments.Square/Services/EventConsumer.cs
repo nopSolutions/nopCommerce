@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.Controllers;
+﻿using System.Linq;
 using Nop.Core.Domain.Payments;
 using Nop.Services.Events;
 using Nop.Services.Localization;
@@ -6,7 +6,7 @@ using Nop.Services.Payments;
 using Nop.Services.Tasks;
 using Nop.Web.Areas.Admin.Models.Tasks;
 using Nop.Web.Framework.Events;
-using Nop.Web.Framework.Mvc.Models;
+using Nop.Web.Framework.Models;
 using Nop.Web.Framework.UI;
 
 namespace Nop.Plugin.Payments.Square.Services
@@ -16,7 +16,7 @@ namespace Nop.Plugin.Payments.Square.Services
     /// </summary>
     public class EventConsumer : 
         IConsumer<PageRenderingEvent>,
-        IConsumer<ModelReceived<BaseNopModel>>
+        IConsumer<ModelReceivedEvent<BaseNopModel>>
     {
         #region Fields
 
@@ -60,10 +60,9 @@ namespace Nop.Plugin.Payments.Square.Services
                 return;
 
             //add js sсript to one page checkout
-            if (eventMessage.Helper.ViewContext.ActionDescriptor is ControllerActionDescriptor actionDescriptor &&
-                actionDescriptor.ControllerName == "Checkout" && actionDescriptor.ActionName == "OnePageCheckout")
+            if (eventMessage.GetRouteNames().Any(r => r.Equals("CheckoutOnePage")))
             {
-                eventMessage.Helper.AddScriptParts(ResourceLocation.Footer, "https://js.squareup.com/v2/paymentform");
+                eventMessage.Helper.AddScriptParts(ResourceLocation.Footer, SquarePaymentDefaults.PaymentFormScriptPath, excludeFromBundle: true);
             }
         }
 
@@ -71,7 +70,7 @@ namespace Nop.Plugin.Payments.Square.Services
         /// Handle model received event
         /// </summary>
         /// <param name="eventMessage">Event message</param>
-        public void HandleEvent(ModelReceived<BaseNopModel> eventMessage)
+        public void HandleEvent(ModelReceivedEvent<BaseNopModel> eventMessage)
         {
             //whether received model is ScheduleTaskModel
             if (!(eventMessage?.Model is ScheduleTaskModel scheduleTaskModel))

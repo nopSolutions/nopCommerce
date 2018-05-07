@@ -137,6 +137,7 @@ namespace Nop.Plugin.Pickup.PickupInStore.Controllers
             {
                 Address1 = model.Address.Address1,
                 City = model.Address.City,
+                County = model.Address.County,
                 CountryId = model.Address.CountryId,
                 StateProvinceId = model.Address.StateProvinceId,
                 ZipPostalCode = model.Address.ZipPostalCode,
@@ -188,6 +189,7 @@ namespace Nop.Plugin.Pickup.PickupInStore.Controllers
                 {
                     Address1 = address.Address1,
                     City = address.City,
+                    County = address.County,
                     CountryId = address.CountryId,
                     StateProvinceId = address.StateProvinceId,
                     ZipPostalCode = address.ZipPostalCode
@@ -230,6 +232,7 @@ namespace Nop.Plugin.Pickup.PickupInStore.Controllers
             var address = _addressService.GetAddressById(pickupPoint.AddressId) ?? new Address { CreatedOnUtc = DateTime.UtcNow };
             address.Address1 = model.Address.Address1;
             address.City = model.Address.City;
+            address.County = model.Address.County;
             address.CountryId = model.Address.CountryId;
             address.StateProvinceId = model.Address.StateProvinceId;
             address.ZipPostalCode = model.Address.ZipPostalCode;

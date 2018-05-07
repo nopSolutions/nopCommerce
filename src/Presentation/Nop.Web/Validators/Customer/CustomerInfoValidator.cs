@@ -24,6 +24,7 @@ namespace Nop.Web.Validators.Customer
             if (customerSettings.UsernamesEnabled && customerSettings.AllowUsersToChangeUsernames)
             {
                 RuleFor(x => x.Username).NotEmpty().WithMessage(localizationService.GetResource("Account.Fields.Username.Required"));
+                RuleFor(x => x.Username).IsUsername(customerSettings).WithMessage(localizationService.GetResource("Account.Fields.Username.NotValid"));
             }
 
             //form fields
@@ -90,6 +91,10 @@ namespace Nop.Web.Validators.Customer
             if (customerSettings.ZipPostalCodeRequired && customerSettings.ZipPostalCodeEnabled)
             {
                 RuleFor(x => x.ZipPostalCode).NotEmpty().WithMessage(localizationService.GetResource("Account.Fields.ZipPostalCode.Required"));
+            }
+            if (customerSettings.CountyRequired && customerSettings.CountyEnabled)
+            {
+                RuleFor(x => x.County).NotEmpty().WithMessage(localizationService.GetResource("Account.Fields.County.Required"));
             }
             if (customerSettings.CityRequired && customerSettings.CityEnabled)
             {

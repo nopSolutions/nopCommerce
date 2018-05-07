@@ -22,6 +22,7 @@ namespace Nop.Services.Common
         /// <param name="address1">Address 1</param>
         /// <param name="address2">Address 2</param>
         /// <param name="city">City</param>
+        /// <param name="county">County</param>
         /// <param name="stateProvinceId">State/province identifier</param>
         /// <param name="zipPostalCode">Zip postal code</param>
         /// <param name="countryId">Country identifier</param>
@@ -30,7 +31,7 @@ namespace Nop.Services.Common
         public static Address FindAddress(this List<Address> source,
             string firstName, string lastName, string phoneNumber,
             string email, string faxNumber, string company, string address1,
-            string address2, string city, int? stateProvinceId,
+            string address2, string city, string county, int? stateProvinceId,
             string zipPostalCode, int? countryId, string customAttributes)
         {
             return source.Find(a => ((string.IsNullOrEmpty(a.FirstName) && string.IsNullOrEmpty(firstName)) || a.FirstName == firstName) &&
@@ -42,6 +43,7 @@ namespace Nop.Services.Common
                 ((string.IsNullOrEmpty(a.Address1) && string.IsNullOrEmpty(address1)) || a.Address1 == address1) &&
                 ((string.IsNullOrEmpty(a.Address2) && string.IsNullOrEmpty(address2)) || a.Address2 == address2) &&
                 ((string.IsNullOrEmpty(a.City) && string.IsNullOrEmpty(city)) || a.City == city) &&
+                ((string.IsNullOrEmpty(a.County) && string.IsNullOrEmpty(county)) || a.County == county) &&
                 ((a.StateProvinceId.IsNullOrDefault() && stateProvinceId.IsNullOrDefault()) || a.StateProvinceId == stateProvinceId) &&
                 ((string.IsNullOrEmpty(a.ZipPostalCode) && string.IsNullOrEmpty(zipPostalCode)) || a.ZipPostalCode == zipPostalCode) &&
                 ((a.CountryId.IsNullOrDefault() && countryId.IsNullOrDefault()) || a.CountryId == countryId) &&

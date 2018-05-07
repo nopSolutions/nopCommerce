@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Html;
-using Microsoft.AspNetCore.Mvc.Controllers;
+﻿using System.Linq;
+using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Payments;
@@ -67,11 +67,8 @@ namespace Nop.Plugin.Payments.Worldpay.Services
                 return;
 
             //add js sсript to one page checkout
-            if (eventMessage.Helper.ViewContext.ActionDescriptor is ControllerActionDescriptor actionDescriptor &&
-                actionDescriptor.ControllerName == "Checkout" && actionDescriptor.ActionName == "OnePageCheckout")
-            {
-                eventMessage.Helper.AddScriptParts(ResourceLocation.Footer, "https://gwapi.demo.securenet.com/v1/PayOS.js");
-            }
+            if (eventMessage.GetRouteNames().Any(r => r.Equals("CheckoutOnePage")))
+                eventMessage.Helper.AddScriptParts(ResourceLocation.Footer, WorldpayPaymentDefaults.PaymentScriptPath, excludeFromBundle: true);
         }
 
         /// <summary>
@@ -116,7 +113,7 @@ namespace Nop.Plugin.Payments.Worldpay.Services
             //compose script to create a new tab
             var worldpayCustomerTabElementId = "tab-worldpay";
             var worldpayCustomerTab = new HtmlString($@"
-                <script type='text/javascript'>
+                <script>
                     $(document).ready(function() {{
                         $(`
                             <li>

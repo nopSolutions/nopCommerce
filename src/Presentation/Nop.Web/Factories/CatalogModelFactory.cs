@@ -130,35 +130,7 @@ namespace Nop.Web.Factories
         }
 
         #endregion
-
-        #region Utilities
-
-        /// <summary>
-        /// Get child category identifiers
-        /// </summary>
-        /// <param name="parentCategoryId">Parent category identifier</param>
-        /// <returns>List of child category identifiers</returns>
-        protected virtual List<int> GetChildCategoryIds(int parentCategoryId)
-        {
-            var cacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_CHILD_IDENTIFIERS_MODEL_KEY, 
-                parentCategoryId, 
-                string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()), 
-                _storeContext.CurrentStore.Id);
-            return _cacheManager.Get(cacheKey, () =>
-            {
-                var categoriesIds = new List<int>();
-                var categories = _categoryService.GetAllCategoriesByParentCategoryId(parentCategoryId);
-                foreach (var category in categories)
-                {
-                    categoriesIds.Add(category.Id);
-                    categoriesIds.AddRange(GetChildCategoryIds(category.Id));
-                }
-                return categoriesIds;
-            });
-        }
-
-        #endregion
-
+        
         #region Common
 
         /// <summary>
@@ -174,30 +146,38 @@ namespace Nop.Web.Factories
             if (command == null)
                 throw new ArgumentNullException(nameof(command));
 
-            var allDisabled = _catalogSettings.ProductSortingEnumDisabled.Count == Enum.GetValues(typeof(ProductSortingEnum)).Length;
-            pagingFilteringModel.AllowProductSorting = _catalogSettings.AllowProductSorting && !allDisabled;
+            //set the order by position by default
+            pagingFilteringModel.OrderBy = command.OrderBy;
+            command.OrderBy = (int)ProductSortingEnum.Position;
 
-            var activeOptions = Enum.GetValues(typeof(ProductSortingEnum)).Cast<int>()
-                .Except(_catalogSettings.ProductSortingEnumDisabled)
-                .Select((idOption) => new KeyValuePair<int, int>(idOption, _catalogSettings.ProductSortingEnumDisplayOrder.TryGetValue(idOption, out int order) ? order : idOption))
-                .OrderBy(x => x.Value);
-            if (command.OrderBy == null)
-                command.OrderBy = allDisabled ? 0 : activeOptions.First().Key;
+            //ensure that product sorting is enabled
+            if (!_catalogSettings.AllowProductSorting)
+                return;
 
-            if (pagingFilteringModel.AllowProductSorting)
+            //get active sorting options
+            var activeSortingOptionsIds = Enum.GetValues(typeof(ProductSortingEnum)).Cast<int>()
+                .Except(_catalogSettings.ProductSortingEnumDisabled).ToList();
+            if (!activeSortingOptionsIds.Any())
+                return;
+
+            //order sorting options
+            var orderedActiveSortingOptions = activeSortingOptionsIds
+                .Select(id => new { Id = id, Order = _catalogSettings.ProductSortingEnumDisplayOrder.TryGetValue(id, out int order) ? order : id })
+                .OrderBy(option => option.Order).ToList();
+
+            pagingFilteringModel.AllowProductSorting = true;
+            command.OrderBy = pagingFilteringModel.OrderBy ?? orderedActiveSortingOptions.FirstOrDefault().Id;
+
+            //prepare available model sorting options
+            var currentPageUrl = _webHelper.GetThisPageUrl(true);
+            foreach (var option in orderedActiveSortingOptions)
             {
-                foreach (var option in activeOptions)
+                pagingFilteringModel.AvailableSortOptions.Add(new SelectListItem
                 {
-                    var currentPageUrl = _webHelper.GetThisPageUrl(true);
-                    var sortUrl = _webHelper.ModifyQueryString(currentPageUrl, "orderby=" + (option.Key).ToString(), null);
-                    var sortValue = ((ProductSortingEnum)option.Key).GetLocalizedEnum(_localizationService, _workContext);
-                    pagingFilteringModel.AvailableSortOptions.Add(new SelectListItem
-                    {
-                        Text = sortValue,
-                        Value = sortUrl,
-                        Selected = option.Key == command.OrderBy
-                    });
-                }
+                    Text = ((ProductSortingEnum)option.Id).GetLocalizedEnum(_localizationService, _workContext),
+                    Value = _webHelper.ModifyQueryString(currentPageUrl, $"orderby={option.Id}", null),
+                    Selected = option.Id == command.OrderBy
+                });
             }
         }
 
@@ -484,7 +464,7 @@ namespace Nop.Web.Factories
             if (_catalogSettings.ShowProductsFromSubcategories)
             {
                 //include subcategories
-                categoryIds.AddRange(GetChildCategoryIds(category.Id));
+                categoryIds.AddRange(_categoryService.GetChildCategoryIds(category.Id, _storeContext.CurrentStore.Id));
             }
             //products
             IList<int> alreadyFilteredSpecOptionIds = model.PagingFilteringContext.SpecificationFilter.GetAlreadyFilteredSpecOptionIds(_webHelper);
@@ -506,7 +486,7 @@ namespace Nop.Web.Factories
 
             //specs
             model.PagingFilteringContext.SpecificationFilter.PrepareSpecsFilters(alreadyFilteredSpecOptionIds,
-                filterableSpecificationAttributeOptionIds != null ? filterableSpecificationAttributeOptionIds.ToArray() : null, 
+                filterableSpecificationAttributeOptionIds?.ToArray(), 
                 _specificationAttributeService, 
                 _webHelper, 
                 _workContext,
@@ -684,27 +664,17 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="rootCategoryId">Root category identifier</param>
         /// <param name="loadSubCategories">A value indicating whether subcategories should be loaded</param>
-        /// <param name="allCategories">All available categories; pass null to load them internally</param>
         /// <returns>List of category (simple) models</returns>
-        public virtual List<CategorySimpleModel> PrepareCategorySimpleModels(int rootCategoryId,
-            bool loadSubCategories = true, IList<Category> allCategories = null)
+        protected virtual List<CategorySimpleModel> PrepareCategorySimpleModels(int rootCategoryId, bool loadSubCategories = true)
         {
             var result = new List<CategorySimpleModel>();
 
-            //little hack for performance optimization.
+            //little hack for performance optimization
             //we know that this method is used to load top and left menu for categories.
             //it'll load all categories anyway.
             //so there's no need to invoke "GetAllCategoriesByParentCategoryId" multiple times (extra SQL commands) to load childs
-            //so we load all categories at once
-            //if you don't like this implementation if you can uncomment the line below (old behavior) and comment several next lines (before foreach)
-            //var categories = _categoryService.GetAllCategoriesByParentCategoryId(rootCategoryId);
-            if (allCategories == null)
-            {
-                //load categories if null passed
-                //we implemeneted it this way for performance optimization - recursive iterations (below)
-                //this way all categories are loaded only once
-                allCategories = _categoryService.GetAllCategories(storeId: _storeContext.CurrentStore.Id);
-            }
+            //so we load all categories at once (we know they are cached)
+            var allCategories = _categoryService.GetAllCategories(storeId: _storeContext.CurrentStore.Id);
             var categories = allCategories.Where(c => c.ParentCategoryId == rootCategoryId).ToList();
             foreach (var category in categories)
             {
@@ -729,14 +699,14 @@ namespace Nop.Web.Factories
                         categoryIds.Add(category.Id);
                         //include subcategories
                         if (_catalogSettings.ShowCategoryProductNumberIncludingSubcategories)
-                            categoryIds.AddRange(GetChildCategoryIds(category.Id));
+                            categoryIds.AddRange(_categoryService.GetChildCategoryIds(category.Id, _storeContext.CurrentStore.Id));
                         return _productService.GetNumberOfProductsInCategory(categoryIds, _storeContext.CurrentStore.Id);
                     });
                 }
 
                 if (loadSubCategories)
                 {
-                    var subCategories = PrepareCategorySimpleModels(category.Id, loadSubCategories, allCategories);
+                    var subCategories = PrepareCategorySimpleModels(category.Id, loadSubCategories);
                     categoryModel.SubCategories.AddRange(subCategories);
                 }
                 result.Add(categoryModel);
@@ -1343,7 +1313,7 @@ namespace Nop.Web.Factories
                             if (model.isc)
                             {
                                 //include subcategories
-                                categoryIds.AddRange(GetChildCategoryIds(categoryId));
+                                categoryIds.AddRange(_categoryService.GetChildCategoryIds(categoryId, _storeContext.CurrentStore.Id));
                             }
                         }
 

@@ -1,4 +1,6 @@
-﻿@{
+@model CustomerRoleSearchModel
+
+@{
     //page title
     ViewBag.Title = T("Admin.Customers.CustomerRoles").Text;
     //active menu item (system name)
@@ -15,7 +17,7 @@
             <i class="fa fa-plus-square"></i>
             @T("Admin.Common.AddNew")
         </a>
-        @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_customer_role_list_buttons" })
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CustomerRoleListButtons })
     </div>
 </div>
 
@@ -26,7 +28,7 @@
                 <div class="panel-body">
                     <div id="customerroles-grid"></div>
 
-                    <script type="text/javascript">
+                    <script>
                         $(document).ready(function () {
                             $("#customerroles-grid").kendoGrid({
                                 dataSource: {
@@ -49,15 +51,14 @@
                                         // Cancel the changes
                                         this.cancelChanges();
                                     },
+                                    pageSize: @(Model.PageSize),
                                     serverPaging: true,
                                     serverFiltering: true,
                                     serverSorting: true
                                 },
                                 pageable: {
                                     refresh: true,
-                                    numeric: false,
-                                    previousNext: false,
-                                    info: false,
+                                    pageSizes: [@(Model.AvailablePageSizes)],
                                     @await Html.PartialAsync("_GridPagerMessages")
                                 },
                                 editable: {

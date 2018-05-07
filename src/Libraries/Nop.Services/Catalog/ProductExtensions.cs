@@ -17,7 +17,7 @@ namespace Nop.Services.Catalog
     {
         #region Utilities
 
-        private static string GeStockMessage(Product product, string attributesXml, ILocalizationService localizationService, IProductAttributeParser productAttributeParser, IDateRangeService dateRangeService)
+        private static string GeStockMessage(Product product, string attributesXml, ILocalizationService localizationService, IProductAttributeParser productAttributeParser, IDateRangeService dateRangeService, IProductAttributeService productAttributeService)
         {
             if (!product.DisplayStockAvailability)
                 return string.Empty;
@@ -68,7 +68,8 @@ namespace Nop.Services.Catalog
                 }
                 else
                 {
-                    stockMessage = localizationService.GetResource("Products.Availability.InStock");
+                    stockMessage = !productAttributeService.GetProductAttributeMappingsByProductId(product.Id)
+                        .Any(pam => pam.IsRequired) ? localizationService.GetResource("Products.Availability.InStock") : localizationService.GetResource("Products.Availability.SelectRequiredAttributes");
                 }
             }
             return stockMessage;
@@ -185,9 +186,10 @@ namespace Nop.Services.Catalog
         /// <param name="localizationService">Localization service</param>
         /// <param name="productAttributeParser">Product attribute parser</param>
         /// <param name="dateRangeService">Date range service</param>
+        /// <param name="productAttributeService">Product attribute service</param>
         /// <returns>The stock message</returns>
         public static string FormatStockMessage(this Product product, string attributesXml,
-            ILocalizationService localizationService, IProductAttributeParser productAttributeParser, IDateRangeService dateRangeService)
+            ILocalizationService localizationService, IProductAttributeParser productAttributeParser, IDateRangeService dateRangeService, IProductAttributeService productAttributeService)
         {
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
@@ -209,7 +211,7 @@ namespace Nop.Services.Catalog
                     stockMessage = GetStockMessage(product, localizationService, dateRangeService, stockMessage);
                     break;
                 case ManageInventoryMethod.ManageStockByAttributes:
-                    stockMessage = GeStockMessage(product, attributesXml, localizationService, productAttributeParser, dateRangeService);
+                    stockMessage = GeStockMessage(product, attributesXml, localizationService, productAttributeParser, dateRangeService, productAttributeService);
                     break;
             }
 

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Data.Entity;
 using System.Data.SqlServerCe;
-using System.IO;
+using Nop.Core.Infrastructure;
 
 namespace Nop.Data.Initializers
 {
@@ -57,11 +57,12 @@ namespace Nop.Data.Initializers
                 data = string.Empty;
             }
             var length = "|DataDirectory|".Length;
-            if ((inputString.Length > "|DataDirectory|".Length) && ('\\' == inputString["|DataDirectory|".Length]))
+            if (inputString.Length > "|DataDirectory|".Length && ('\\' == inputString["|DataDirectory|".Length]))
             {
                 length++;
             }
-            return Path.Combine(data, inputString.Substring(length));
+            var fileProvider = EngineContext.Current.Resolve<INopFileProvider>();
+            return fileProvider.Combine(data, inputString.Substring(length));
         }
 
         #endregion

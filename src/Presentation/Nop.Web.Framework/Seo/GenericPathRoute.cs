@@ -151,6 +151,12 @@ namespace Nop.Web.Framework.Seo
                     currentRouteData.Values["productid"] = urlRecord.EntityId;
                     currentRouteData.Values["SeName"] = urlRecord.Slug;
                     break;
+                case "producttag":
+                    currentRouteData.Values["controller"] = "Catalog";
+                    currentRouteData.Values["action"] = "ProductsByTag";
+                    currentRouteData.Values["productTagId"] = urlRecord.EntityId;
+                    currentRouteData.Values["SeName"] = urlRecord.Slug;
+                    break;
                 case "category":
                     currentRouteData.Values["controller"] = "Catalog";
                     currentRouteData.Values["action"] = "Category";
@@ -189,7 +195,8 @@ namespace Nop.Web.Framework.Seo
                     break;
                 default:
                     //no record found, thus generate an event this way developers could insert their own types
-                    EngineContext.Current.Resolve<IEventPublisher>().Publish(new CustomUrlRecordEntityNameRequested(currentRouteData, urlRecord));
+                    EngineContext.Current.Resolve<IEventPublisher>()
+                        ?.Publish(new CustomUrlRecordEntityNameRequestedEvent(currentRouteData, urlRecord));
                     break;
             }
             context.RouteData = currentRouteData;

@@ -1,6 +1,6 @@
 ﻿namespace Nop.Services.ExportImport
 {
-    internal class ExportSpecificationAttribute
+    public class ExportSpecificationAttribute
     {
         public int AttributeTypeId { get; set; }
         public string CustomValue { get; set; }

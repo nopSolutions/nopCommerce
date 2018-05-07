@@ -6,8 +6,8 @@ using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
-using Nop.Core.Plugins;
 using Nop.Services.Events;
+using Nop.Services.Plugins;
 using Nop.Services.Stores;
 
 namespace Nop.Services.Directory

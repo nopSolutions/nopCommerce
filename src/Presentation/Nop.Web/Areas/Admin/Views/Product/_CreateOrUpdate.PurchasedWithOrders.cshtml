@@ -1,31 +1,31 @@
-﻿@model ProductModel
-@inject AdminAreaSettings adminAreaSettings
-
-@{
-    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
-    var gridPageSizes = adminAreaSettings.GridPageSizes;
-}
+@model ProductModel
 
 <div class="panel-group">
     <p>
         @T("Admin.Catalog.Products.PurchasedWithOrders.Hint")
     </p>
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_product_details_purchased_with_orders_top", additionalData = Model.Id })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductDetailsPurchasedWithOrdersTop, additionalData = Model })
     <div class="panel panel-default">
         <div class="panel-body">
             <div id="purchased-with-orders-grid"></div>
 
-            <script type="text/javascript">
+            <script>
                 $(document).ready(function() {
                     $("#purchased-with-orders-grid").kendoGrid({
                         dataSource: {
                             type: "json",
                             transport: {
                                 read: {
-                                    url: "@Html.Raw(Url.Action("PurchasedWithOrders", "Product", new {productId = Model.Id}))",
+                                    url: "@Html.Raw(Url.Action("PurchasedWithOrders", "Product"))",
                                     type: "POST",
                                     dataType: "json",
-                                    data: addAntiForgeryToken
+                                    data: function additionalData() {
+                                        var data = {
+                                            ProductId: '@(Model.Id)'
+                                        };
+                                        addAntiForgeryToken(data);
+                                        return data;
+                                    }
                                 }
                             },
                             schema: {
@@ -38,14 +38,14 @@
                                 // Cancel the changes
                                 this.cancelChanges();
                             },
-                            pageSize: @(defaultGridPageSize),
+                            pageSize: @(Model.ProductOrderSearchModel.PageSize),
                             serverPaging: true,
                             serverFiltering: true,
                             serverSorting: true
                         },
                         pageable: {
                             refresh: true,
-                            pageSizes: [@(gridPageSizes)],
+                            pageSizes: [@(Model.ProductOrderSearchModel.AvailablePageSizes)],
                             @await Html.PartialAsync("_GridPagerMessages")
                         },
                         editable: {
@@ -101,5 +101,5 @@
             </script>
         </div>
     </div>
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_product_details_purchased_with_orders_bottom", additionalData = Model.Id })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductDetailsPurchasedWithOrdersBottom, additionalData = Model })
 </div>

@@ -132,10 +132,6 @@ namespace Nop.Web.Infrastructure
             routeBuilder.MapLocalizedRoute("AddProductToCart-Details", "addproducttocart/details/{productId:min(0)}/{shoppingCartTypeId:min(0)}",
 				new { controller = "ShoppingCart", action = "AddProductToCart_Details" });
 
-            //product tags
-            routeBuilder.MapLocalizedRoute("ProductsByTag", "producttag/{productTagId:min(0)}/{SeName?}",
-				new { controller = "Catalog", action = "ProductsByTag" });
-
             //comparing products
             routeBuilder.MapLocalizedRoute("AddProductToCompare", "compareproducts/add/{productId:min(0)}",
 				new { controller = "Product", action = "AddProductToCompareList" });

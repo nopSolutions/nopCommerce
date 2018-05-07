@@ -1,29 +1,33 @@
 ﻿@model CustomerModel
+
 @using Nop.Services.Stores
-@inject AdminAreaSettings adminAreaSettings
 @inject IStoreService storeService
 @{
-    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
-    var gridPageSizes = adminAreaSettings.GridPageSizes;
     var stores = storeService.GetAllStores();
 }
 <div class="panel-group">
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_customer_details_orders_top", additionalData = Model.Id })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CustomerDetailsOrdersTop, additionalData = Model })
     <div class="panel panel-default">
         <div class="panel-body">
             <div id="order-grid"></div>
 
-            <script type="text/javascript">
+            <script>
                 $(document).ready(function () {
                     $("#order-grid").kendoGrid({
                         dataSource: {
                             type: "json",
                             transport: {
                                 read: {
-                                    url: "@Html.Raw(Url.Action("OrderList", "Customer", new { customerId = Model.Id }))",
+                                    url: "@Html.Raw(Url.Action("OrderList", "Customer"))",
                                     type: "POST",
                                     dataType: "json",
-                                    data: addAntiForgeryToken
+                                    data: function() {
+                                        var data = {
+                                            CustomerId: '@(Model.Id)'
+                                        };
+                                        addAntiForgeryToken(data);
+                                        return data;
+                                    }
                                 }
                             },
                             schema: {
@@ -36,14 +40,14 @@
                                 // Cancel the changes
                                 this.cancelChanges();
                             },
-                            pageSize: @(defaultGridPageSize),
+                            pageSize: @(Model.CustomerOrderSearchModel.PageSize),
                             serverPaging: true,
                             serverFiltering: true,
                             serverSorting: true
                         },
                         pageable: {
                             refresh: true,
-                            pageSizes: [@(gridPageSizes)],
+                            pageSizes: [@(Model.CustomerOrderSearchModel.AvailablePageSizes)],
                             @await Html.PartialAsync("_GridPagerMessages")
                         },
                         editable: {
@@ -101,5 +105,5 @@
             </script>
         </div>
     </div>
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_customer_details_orders_bottom", additionalData = Model.Id })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CustomerDetailsOrdersBottom, additionalData = Model })
 </div>

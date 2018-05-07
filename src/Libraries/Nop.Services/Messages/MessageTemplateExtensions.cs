@@ -27,9 +27,11 @@ namespace Nop.Services.Messages
 
                 case MessageTemplateSystemNames.OrderPlacedVendorNotification:
                 case MessageTemplateSystemNames.OrderPlacedStoreOwnerNotification:
+                case MessageTemplateSystemNames.OrderPlacedAffiliateNotification:
                 case MessageTemplateSystemNames.OrderPaidStoreOwnerNotification:
                 case MessageTemplateSystemNames.OrderPaidCustomerNotification:
                 case MessageTemplateSystemNames.OrderPaidVendorNotification:
+                case MessageTemplateSystemNames.OrderPaidAffiliateNotification:
                 case MessageTemplateSystemNames.OrderPlacedCustomerNotification:
                 case MessageTemplateSystemNames.OrderCompletedCustomerNotification:
                 case MessageTemplateSystemNames.OrderCancelledCustomerNotification:
@@ -64,7 +66,7 @@ namespace Nop.Services.Messages
                 case MessageTemplateSystemNames.NewReturnRequestStoreOwnerNotification:
                 case MessageTemplateSystemNames.NewReturnRequestCustomerNotification:
                 case MessageTemplateSystemNames.ReturnRequestStatusChangedCustomerNotification:
-                    return new[] { TokenGroupNames.StoreTokens, TokenGroupNames.CustomerTokens, TokenGroupNames.ReturnRequestTokens };
+                    return new[] { TokenGroupNames.StoreTokens, TokenGroupNames.OrderTokens, TokenGroupNames.CustomerTokens, TokenGroupNames.ReturnRequestTokens };
 
                 case MessageTemplateSystemNames.NewForumTopicMessage:
                     return new[] { TokenGroupNames.StoreTokens, TokenGroupNames.ForumTopicTokens, TokenGroupNames.ForumTokens, TokenGroupNames.CustomerTokens };
@@ -84,7 +86,8 @@ namespace Nop.Services.Messages
                 case MessageTemplateSystemNames.GiftCardNotification:
                     return new[] { TokenGroupNames.StoreTokens, TokenGroupNames.GiftCardTokens};
 
-                case MessageTemplateSystemNames.ProductReviewNotification:
+                case MessageTemplateSystemNames.ProductReviewStoreOwnerNotification:
+                case MessageTemplateSystemNames.ProductReviewReplyCustomerNotification:
                     return new[] { TokenGroupNames.StoreTokens, TokenGroupNames.ProductReviewTokens, TokenGroupNames.CustomerTokens };
 
                 case MessageTemplateSystemNames.QuantityBelowStoreOwnerNotification:

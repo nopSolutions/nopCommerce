@@ -795,13 +795,24 @@ namespace Nop.Web.Factories
                         //display price if allowed
                         if (_permissionService.Authorize(StandardPermissionProvider.DisplayPrices))
                         {
-                            var attributeValuePriceAdjustment = _priceCalculationService.GetProductAttributeValuePriceAdjustment(attributeValue);
+                            var attributeValuePriceAdjustment = _priceCalculationService.GetProductAttributeValuePriceAdjustment(attributeValue, updatecartitem?.Customer ?? _workContext.CurrentCustomer);
                             var priceAdjustmentBase = _taxService.GetProductPrice(product, attributeValuePriceAdjustment, out decimal _);
                             var priceAdjustment = _currencyService.ConvertFromPrimaryStoreCurrency(priceAdjustmentBase, _workContext.WorkingCurrency);
-                            if (priceAdjustmentBase > decimal.Zero)
-                                valueModel.PriceAdjustment = "+" + _priceFormatter.FormatPrice(priceAdjustment, false, false);
-                            else if (priceAdjustmentBase < decimal.Zero)
-                                valueModel.PriceAdjustment = "-" + _priceFormatter.FormatPrice(-priceAdjustment, false, false);
+
+                            if (attributeValue.PriceAdjustmentUsePercentage)
+                            {
+                                var priceAdjustmentStr = attributeValue.PriceAdjustment.ToString("G29");
+                                if (attributeValue.PriceAdjustment > decimal.Zero)
+                                    valueModel.PriceAdjustment = "+";
+                                valueModel.PriceAdjustment += priceAdjustmentStr + "%";
+                            }
+                            else
+                            {
+                                if (priceAdjustmentBase > decimal.Zero)
+                                    valueModel.PriceAdjustment = "+" + _priceFormatter.FormatPrice(priceAdjustment, false, false);
+                                else if (priceAdjustmentBase < decimal.Zero)
+                                    valueModel.PriceAdjustment = "-" + _priceFormatter.FormatPrice(-priceAdjustment, false, false);
+                            }
 
                             valueModel.PriceAdjustmentValue = priceAdjustment;
                         }
@@ -1190,7 +1201,7 @@ namespace Nop.Web.Factories
                 ShowGtin = _catalogSettings.ShowGtin,
                 Gtin = product.Gtin,
                 ManageInventoryMethod = product.ManageInventoryMethod,
-                StockAvailability = product.FormatStockMessage("", _localizationService, _productAttributeParser, _dateRangeService),
+                StockAvailability = product.FormatStockMessage("", _localizationService, _productAttributeParser, _dateRangeService, _productAttributeService),
                 HasSampleDownload = product.IsDownload && product.HasSampleDownload,
                 DisplayDiscontinuedMessage = !product.Published && _catalogSettings.DisplayDiscontinuedMessageForUnpublishedProducts
             };
@@ -1383,8 +1394,13 @@ namespace Nop.Web.Factories
             model.ProductSeName = product.GetSeName();
 
             var productReviews = _catalogSettings.ShowProductReviewsPerStore
-                ? product.ProductReviews.Where(pr => pr.IsApproved && pr.StoreId == _storeContext.CurrentStore.Id).OrderBy(pr => pr.CreatedOnUtc)
-                : product.ProductReviews.Where(pr => pr.IsApproved).OrderBy(pr => pr.CreatedOnUtc);
+                ? product.ProductReviews.Where(pr => pr.IsApproved && pr.StoreId == _storeContext.CurrentStore.Id)
+                : product.ProductReviews.Where(pr => pr.IsApproved);
+
+            productReviews = _catalogSettings.ProductReviewsSortByCreatedDateAscending
+                ? productReviews.OrderBy(pr => pr.CreatedOnUtc)
+                : productReviews.OrderByDescending(pr => pr.CreatedOnUtc);
+
             foreach (var pr in productReviews)
             {
                 var customer = pr.Customer;
@@ -1431,6 +1447,7 @@ namespace Nop.Web.Factories
 
             var list = _productService.GetAllProductReviews(customerId: _workContext.CurrentCustomer.Id, 
                 approved: null, 
+                storeId: _storeContext.CurrentStore.Id,
                 pageIndex: pageIndex, 
                 pageSize: pageSize);
 
@@ -1448,7 +1465,7 @@ namespace Nop.Web.Factories
                     Rating = review.Rating,
                     ReviewText = review.ReviewText,
                     ReplyText = review.ReplyText,
-                    WrittenOnStr = _dateTimeHelper.ConvertToUserTime(product.CreatedOnUtc, DateTimeKind.Utc).ToString("g")
+                    WrittenOnStr = _dateTimeHelper.ConvertToUserTime(review.CreatedOnUtc, DateTimeKind.Utc).ToString("g")
                 };
 
                 if (_catalogSettings.ProductReviewsMustBeApproved)

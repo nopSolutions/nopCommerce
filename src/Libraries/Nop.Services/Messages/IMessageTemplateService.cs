@@ -34,12 +34,12 @@ namespace Nop.Services.Messages
         MessageTemplate GetMessageTemplateById(int messageTemplateId);
 
         /// <summary>
-        /// Gets a message template by name
+        /// Gets message templates by the name
         /// </summary>
         /// <param name="messageTemplateName">Message template name</param>
-        /// <param name="storeId">Store identifier</param>
-        /// <returns>Message template</returns>
-        MessageTemplate GetMessageTemplateByName(string messageTemplateName, int storeId);
+        /// <param name="storeId">Store identifier; pass null to load all records</param>
+        /// <returns>List of message templates</returns>
+        IList<MessageTemplate> GetMessageTemplatesByName(string messageTemplateName, int? storeId = null);
 
         /// <summary>
         /// Gets all message templates

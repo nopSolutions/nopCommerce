@@ -1,9 +1,6 @@
-﻿@model AffiliateListModel
-@inject AdminAreaSettings adminAreaSettings
-@{
-    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
-    var gridPageSizes = adminAreaSettings.GridPageSizes;
+@model AffiliateSearchModel
 
+@{
     //page title
     ViewBag.Title = T("Admin.Affiliates").Text;
     //active menu item (system name)
@@ -20,11 +17,11 @@
             <i class="fa fa-plus-square"></i>
             @T("Admin.Common.AddNew")
         </a>
-        @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_affiliate_list_buttons" })
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.AffiliateListButtons })
     </div>
 </div>
 
-<script type="text/javascript">
+<script>
     $(document).ready(function() {
         $("#@Html.IdFor(model => model.LoadOnlyWithOrders)").click(toggleLoadOnlyWithOrders);
         toggleLoadOnlyWithOrders();
@@ -118,7 +115,7 @@
                 <div class="panel-body">
                     <div id="affiliates-grid"></div>
 
-                    <script type="text/javascript">
+                    <script>
                         $(document).ready(function() {
                             $("#affiliates-grid").kendoGrid({
                                 dataSource: {
@@ -128,7 +125,18 @@
                                             url: "@Html.Raw(Url.Action("List", "Affiliate"))",
                                             type: "POST",
                                             dataType: "json",
-                                            data: additionalData
+                                            data: function() {
+                                                var data = {
+                                                    SearchFirstName: $('#@Html.IdFor(model => model.SearchFirstName)').val(),
+                                                    SearchLastName: $('#@Html.IdFor(model => model.SearchLastName)').val(),
+                                                    SearchFriendlyUrlName: $('#@Html.IdFor(model => model.SearchFriendlyUrlName)').val(),
+                                                    LoadOnlyWithOrders: $('#@Html.IdFor(model => model.LoadOnlyWithOrders)').is(':checked'),
+                                                    OrdersCreatedFromUtc: $('#@Html.IdFor(model => model.OrdersCreatedFromUtc)').val(),
+                                                    OrdersCreatedToUtc: $('#@Html.IdFor(model => model.OrdersCreatedToUtc)').val()
+                                                };
+                                                addAntiForgeryToken(data);
+                                                return data;
+                                            }
                                         }
                                     },
                                     schema: {
@@ -141,14 +149,14 @@
                                         // Cancel the changes
                                         this.cancelChanges();
                                     },
-                                    pageSize: @(defaultGridPageSize),
+                                    pageSize: @(Model.PageSize),
                                     serverPaging: true,
                                     serverFiltering: true,
                                     serverSorting: true
                                 },
                                 pageable: {
                                     refresh: true,
-                                    pageSizes: [@(gridPageSizes)],
+                                    pageSizes: [@(Model.AvailablePageSizes)],
                                     @await Html.PartialAsync("_GridPagerMessages")
                                 },
                                 editable: {
@@ -185,7 +193,7 @@
                         });
                     </script>
 
-                    <script type="text/javascript">
+                    <script>
                         $(document).ready(function() {
                             $('#search-affiliates').click(function() {
                                 var grid = $('#affiliates-grid').data('kendoGrid');
@@ -204,19 +212,6 @@
                                     return false;
                                 }
                             });
-
-                        function additionalData() {
-                            var data = {
-                                SearchFirstName: $('#@Html.IdFor(model => model.SearchFirstName)').val(),
-                                SearchLastName: $('#@Html.IdFor(model => model.SearchLastName)').val(),
-                                SearchFriendlyUrlName: $('#@Html.IdFor(model => model.SearchFriendlyUrlName)').val(),
-                                LoadOnlyWithOrders: $('#@Html.IdFor(model => model.LoadOnlyWithOrders)').is(':checked'),
-                                OrdersCreatedFromUtc: $('#@Html.IdFor(model => model.OrdersCreatedFromUtc)').val(),
-                                OrdersCreatedToUtc: $('#@Html.IdFor(model => model.OrdersCreatedToUtc)').val()
-                            };
-                            addAntiForgeryToken(data);
-                            return data;
-                        }
                     </script>
                 </div>
             </div>

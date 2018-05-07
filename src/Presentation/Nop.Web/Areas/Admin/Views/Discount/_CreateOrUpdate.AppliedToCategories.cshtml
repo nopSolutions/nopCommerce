@@ -1,26 +1,33 @@
-﻿@model DiscountModel
+@model DiscountModel
+
 <div class="panel-group">
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_discount_details_applied_to_categories_top", additionalData = Model.Id })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.DiscountDetailsAppliedToCategoriesTop, additionalData = Model })
     <div class="panel panel-default">
         @if (Model.Id > 0)
         {
             <div class="panel-body">
                 <div id="categories-grid"></div>
 
-                <script type="text/javascript">
+                <script>
                     $(document).ready(function() {
                         $("#categories-grid").kendoGrid({
                             dataSource: {
                                 type: "json",
                                 transport: {
                                     read: {
-                                        url: "@Html.Raw(Url.Action("CategoryList", "Discount", new {discountId = Model.Id}))",
+                                        url: "@Html.Raw(Url.Action("CategoryList", "Discount"))",
                                         type: "POST",
                                         dataType: "json",
-                                        data: addAntiForgeryToken
+                                        data: function() {
+                                            var data = {
+                                                DiscountId: '@(Model.Id)'
+                                            };
+                                            addAntiForgeryToken(data);
+                                            return data;
+                                        }
                                     },
                                     destroy: {
-                                        url: "@Html.Raw(Url.Action("CategoryDelete", "Discount", new {discountId = Model.Id}))",
+                                        url: "@Html.Raw(Url.Action("CategoryDelete", "Discount", new { discountId = Model.Id }))",
                                         type: "POST",
                                         dataType: "json",
                                         data: addAntiForgeryToken
@@ -43,15 +50,14 @@
                                     // Cancel the changes
                                     this.cancelChanges();
                                 },
+                                pageSize: @(Model.DiscountCategorySearchModel.PageSize),
                                 serverPaging: true,
                                 serverFiltering: true,
                                 serverSorting: true
                             },
                             pageable: {
                                 refresh: true,
-                                numeric: false,
-                                previousNext: false,
-                                info: false,
+                                pageSizes: [@(Model.DiscountCategorySearchModel.AvailablePageSizes)],
                                 @await Html.PartialAsync("_GridPagerMessages")
                             },
                             editable: {
@@ -85,11 +91,11 @@
                 </script>
             </div>
             <div class="panel-footer">
-                <button type="submit" id="btnAddNewCategory" onclick="javascript:OpenWindow('@(Url.Action("CategoryAddPopup", "Discount", new {discountId = Model.Id, btnId = "btnRefreshCategories", formId = "discount-form"}))', 800, 800, true); return false;" class="btn btn-primary">
+                <button type="submit" id="btnAddNewCategory" onclick="javascript:OpenWindow('@(Url.Action("CategoryAddPopup", "Discount", new { discountId = Model.Id, btnId = "btnRefreshCategories", formId = "discount-form" }))', 800, 800, true); return false;" class="btn btn-primary">
                     @T("Admin.Promotions.Discounts.AppliedToCategories.AddNew")
                 </button>
                 <input type="submit" id="btnRefreshCategories" style="display: none" />
-                <script type="text/javascript">
+                <script>
                     $(document).ready(function() {
                         $('#btnRefreshCategories').click(function() {
                             //refresh grid
@@ -110,5 +116,5 @@
             </div>
         }
     </div>
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_discount_details_applied_to_categories_bottom", additionalData = Model.Id })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.DiscountDetailsAppliedToCategoriesBottom, additionalData = Model })
 </div>

@@ -1,9 +1,5 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Nop.Web.Areas.Admin.Extensions;
-using Nop.Web.Areas.Admin.Models.Topics;
 using Nop.Core.Domain.Topics;
 using Nop.Services.Customers;
 using Nop.Services.Localization;
@@ -12,7 +8,9 @@ using Nop.Services.Security;
 using Nop.Services.Seo;
 using Nop.Services.Stores;
 using Nop.Services.Topics;
-using Nop.Web.Framework.Kendoui;
+using Nop.Web.Areas.Admin.Extensions;
+using Nop.Web.Areas.Admin.Factories;
+using Nop.Web.Areas.Admin.Models.Topics;
 using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Web.Areas.Admin.Controllers
@@ -21,70 +19,51 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
-        private readonly ITopicService _topicService;
-        private readonly ILanguageService _languageService;
-        private readonly ILocalizedEntityService _localizedEntityService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IPermissionService _permissionService;
-        private readonly IStoreService _storeService;
-        private readonly IStoreMappingService _storeMappingService;
-        private readonly IUrlRecordService _urlRecordService;
-        private readonly ITopicTemplateService _topicTemplateService;
-        private readonly ICustomerService _customerService;
-        private readonly ICustomerActivityService _customerActivityService;
         private readonly IAclService _aclService;
+        private readonly ICustomerActivityService _customerActivityService;
+        private readonly ICustomerService _customerService;
+        private readonly ILocalizationService _localizationService;
+        private readonly ILocalizedEntityService _localizedEntityService;
+        private readonly IPermissionService _permissionService;
+        private readonly IStoreMappingService _storeMappingService;
+        private readonly IStoreService _storeService;
+        private readonly ITopicModelFactory _topicModelFactory;
+        private readonly ITopicService _topicService;
+        private readonly IUrlRecordService _urlRecordService;
 
         #endregion Fields
 
         #region Ctor
 
-        public TopicController(ITopicService topicService,
-            ILanguageService languageService,
-            ILocalizedEntityService localizedEntityService, 
-            ILocalizationService localizationService,
-            IPermissionService permissionService, 
-            IStoreService storeService,
-            IStoreMappingService storeMappingService,
-            IUrlRecordService urlRecordService,
-            ITopicTemplateService topicTemplateService,
-            ICustomerService customerService,
+        public TopicController(IAclService aclService,
             ICustomerActivityService customerActivityService,
-            IAclService aclService)
+            ICustomerService customerService,
+            ILocalizationService localizationService,
+            ILocalizedEntityService localizedEntityService,
+            IPermissionService permissionService,
+            IStoreMappingService storeMappingService,
+            IStoreService storeService,
+            ITopicModelFactory topicModelFactory,
+            ITopicService topicService,
+            IUrlRecordService urlRecordService)
         {
-            this._topicService = topicService;
-            this._languageService = languageService;
-            this._localizedEntityService = localizedEntityService;
-            this._localizationService = localizationService;
-            this._permissionService = permissionService;
-            this._storeService = storeService;
-            this._storeMappingService = storeMappingService;
-            this._urlRecordService = urlRecordService;
-            this._topicTemplateService = topicTemplateService;
-            this._customerService = customerService;
-            this._customerActivityService = customerActivityService;
             this._aclService = aclService;
+            this._customerActivityService = customerActivityService;
+            this._customerService = customerService;
+            this._localizationService = localizationService;
+            this._localizedEntityService = localizedEntityService;
+            this._permissionService = permissionService;
+            this._storeMappingService = storeMappingService;
+            this._storeService = storeService;
+            this._topicModelFactory = topicModelFactory;
+            this._topicService = topicService;
+            this._urlRecordService = urlRecordService;
         }
 
         #endregion
-        
+
         #region Utilities
-
-        protected virtual void PrepareTemplatesModel(TopicModel model)
-        {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
-
-            var templates = _topicTemplateService.GetAllTopicTemplates();
-            foreach (var template in templates)
-            {
-                model.AvailableTopicTemplates.Add(new SelectListItem
-                {
-                    Text = template.Name,
-                    Value = template.Id.ToString()
-                });
-            }
-        }
-
+        
         protected virtual void UpdateLocales(Topic topic, TopicModel model)
         {
             foreach (var localized in model.Locales)
@@ -120,26 +99,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
         }
 
-        protected virtual void PrepareAclModel(TopicModel model, Topic topic, bool excludeProperties)
-        {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
-
-            if (!excludeProperties && topic != null)
-                model.SelectedCustomerRoleIds = _aclService.GetCustomerRoleIdsWithAccess(topic).ToList();
-
-            var allRoles = _customerService.GetAllCustomerRoles(true);
-            foreach (var role in allRoles)
-            {
-                model.AvailableCustomerRoles.Add(new SelectListItem
-                {
-                    Text = role.Name,
-                    Value = role.Id.ToString(),
-                    Selected = model.SelectedCustomerRoleIds.Contains(role.Id)
-                });
-            }
-        }
-
         protected virtual void SaveTopicAcl(Topic topic, TopicModel model)
         {
             topic.SubjectToAcl = model.SelectedCustomerRoleIds.Any();
@@ -161,26 +120,6 @@ namespace Nop.Web.Areas.Admin.Controllers
                     if (aclRecordToDelete != null)
                         _aclService.DeleteAclRecord(aclRecordToDelete);
                 }
-            }
-        }
-
-        protected virtual void PrepareStoresMappingModel(TopicModel model, Topic topic, bool excludeProperties)
-        {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
-
-            if (!excludeProperties && topic != null)
-                model.SelectedStoreIds = _storeMappingService.GetStoresIdsWithAccess(topic).ToList();
-
-            var allStores = _storeService.GetAllStores();
-            foreach (var store in allStores)
-            {
-                model.AvailableStores.Add(new SelectListItem
-                {
-                    Text = store.Name,
-                    Value = store.Id.ToString(),
-                    Selected = model.SelectedStoreIds.Contains(store.Id)
-                });
             }
         }
 
@@ -209,7 +148,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         #endregion
-        
+
         #region List
 
         public virtual IActionResult Index()
@@ -222,36 +161,22 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageTopics))
                 return AccessDeniedView();
 
-            var model = new TopicListModel();
-            //stores
-            model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
-            foreach (var s in _storeService.GetAllStores())
-                model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
-            
+            //prepare model
+            var model = _topicModelFactory.PrepareTopicSearchModel(new TopicSearchModel());
+
             return View(model);
         }
 
         [HttpPost]
-        public virtual IActionResult List(DataSourceRequest command, TopicListModel model)
+        public virtual IActionResult List(TopicSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageTopics))
                 return AccessDeniedKendoGridJson();
 
-            var topicModels = _topicService.GetAllTopics(model.SearchStoreId, true, true)
-                .Select(x =>x.ToModel())
-                .ToList();
-            //little performance optimization: ensure that "Body" is not returned
-            foreach (var topic in topicModels)
-            {
-                topic.Body = "";
-            }
-            var gridModel = new DataSourceResult
-            {
-                Data = topicModels,
-                Total = topicModels.Count
-            };
+            //prepare model
+            var model = _topicModelFactory.PrepareTopicListModel(searchModel);
 
-            return Json(gridModel);
+            return Json(model);
         }
 
         #endregion
@@ -263,19 +188,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageTopics))
                 return AccessDeniedView();
 
-            var model = new TopicModel();
-            //templates
-            PrepareTemplatesModel(model);
-            //ACL
-            PrepareAclModel(model, null, false);
-            //Stores
-            PrepareStoresMappingModel(model, null, false);
-            //locales
-            AddLocales(_languageService, model.Locales);
-            
-            //default values
-            model.DisplayOrder = 1;
-            model.Published = true;
+            //prepare model
+            var model = _topicModelFactory.PrepareTopicModel(new TopicModel(), null);
 
             return View(model);
         }
@@ -289,46 +203,43 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 if (!model.IsPasswordProtected)
-                {
                     model.Password = null;
-                }
 
                 var topic = model.ToEntity();
                 _topicService.InsertTopic(topic);
+
                 //search engine name
                 model.SeName = topic.ValidateSeName(model.SeName, topic.Title ?? topic.SystemName, true);
                 _urlRecordService.SaveSlug(topic, model.SeName, 0);
+
                 //ACL (customer roles)
                 SaveTopicAcl(topic, model);
-                //Stores
+
+                //stores
                 SaveStoreMappings(topic, model);
+
                 //locales
                 UpdateLocales(topic, model);
 
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Topics.Added"));
 
                 //activity log
-                _customerActivityService.InsertActivity("AddNewTopic", _localizationService.GetResource("ActivityLog.AddNewTopic"), topic.Title ?? topic.SystemName);
+                _customerActivityService.InsertActivity("AddNewTopic",
+                    string.Format(_localizationService.GetResource("ActivityLog.AddNewTopic"), topic.Title ?? topic.SystemName), topic);
 
-                if (continueEditing)
-                {
-                    //selected tab
-                    SaveSelectedTabName();
+                if (!continueEditing)
+                    return RedirectToAction("List");
 
-                    return RedirectToAction("Edit", new { id = topic.Id });
-                }
-                return RedirectToAction("List");
+                //selected tab
+                SaveSelectedTabName();
 
+                return RedirectToAction("Edit", new { id = topic.Id });
             }
 
-            //If we got this far, something failed, redisplay form
+            //prepare model
+            model = _topicModelFactory.PrepareTopicModel(model, null, true);
 
-            //templates
-            PrepareTemplatesModel(model);
-            //ACL
-            PrepareAclModel(model, null, true);
-            //Stores
-            PrepareStoresMappingModel(model, null, true);
+            //if we got this far, something failed, redisplay form
             return View(model);
         }
 
@@ -337,29 +248,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageTopics))
                 return AccessDeniedView();
 
+            //try to get a topic with the specified id
             var topic = _topicService.GetTopicById(id);
             if (topic == null)
-                //No topic found with the specified id
                 return RedirectToAction("List");
 
-            var model = topic.ToModel();
-            model.Url = Url.RouteUrl("Topic", new { SeName = topic.GetSeName() }, "http");
-            //templates
-            PrepareTemplatesModel(model);
-            //ACL
-            PrepareAclModel(model, topic, false);
-            //Store
-            PrepareStoresMappingModel(model, topic, false);
-            //locales
-            AddLocales(_languageService, model.Locales, (locale, languageId) =>
-            {
-                locale.Title = topic.GetLocalized(x => x.Title, languageId, false, false);
-                locale.Body = topic.GetLocalized(x => x.Body, languageId, false, false);
-                locale.MetaKeywords = topic.GetLocalized(x => x.MetaKeywords, languageId, false, false);
-                locale.MetaDescription = topic.GetLocalized(x => x.MetaDescription, languageId, false, false);
-                locale.MetaTitle = topic.GetLocalized(x => x.MetaTitle, languageId, false, false);
-                locale.SeName = topic.GetSeName(languageId, false, false);
-            });
+            //prepare model
+            var model = _topicModelFactory.PrepareTopicModel(null, topic);
 
             return View(model);
         }
@@ -370,54 +265,51 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageTopics))
                 return AccessDeniedView();
 
+            //try to get a topic with the specified id
             var topic = _topicService.GetTopicById(model.Id);
             if (topic == null)
-                //No topic found with the specified id
                 return RedirectToAction("List");
 
             if (!model.IsPasswordProtected)
-            {
                 model.Password = null;
-            }
 
             if (ModelState.IsValid)
             {
                 topic = model.ToEntity(topic);
                 _topicService.UpdateTopic(topic);
+
                 //search engine name
                 model.SeName = topic.ValidateSeName(model.SeName, topic.Title ?? topic.SystemName, true);
                 _urlRecordService.SaveSlug(topic, model.SeName, 0);
+
                 //ACL (customer roles)
                 SaveTopicAcl(topic, model);
-                //Stores
+
+                //stores
                 SaveStoreMappings(topic, model);
+
                 //locales
                 UpdateLocales(topic, model);
-                
+
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Topics.Updated"));
-                
+
                 //activity log
-                _customerActivityService.InsertActivity("EditTopic", _localizationService.GetResource("ActivityLog.EditTopic"), topic.Title ?? topic.SystemName);
+                _customerActivityService.InsertActivity("EditTopic",
+                    string.Format(_localizationService.GetResource("ActivityLog.EditTopic"), topic.Title ?? topic.SystemName), topic);
 
-                if (continueEditing)
-                {
-                    //selected tab
-                    SaveSelectedTabName();
+                if (!continueEditing)
+                    return RedirectToAction("List");
 
-                    return RedirectToAction("Edit",  new {id = topic.Id});
-                }
-                return RedirectToAction("List");
+                //selected tab
+                SaveSelectedTabName();
+
+                return RedirectToAction("Edit", new { id = topic.Id });
             }
 
-            //If we got this far, something failed, redisplay form
+            //prepare model
+            model = _topicModelFactory.PrepareTopicModel(model, topic, true);
 
-            model.Url = Url.RouteUrl("Topic", new { SeName = topic.GetSeName() }, "http");
-            //templates
-            PrepareTemplatesModel(model);
-            //ACL
-            PrepareAclModel(model, topic, true);
-            //Store
-            PrepareStoresMappingModel(model, topic, true);
+            //if we got this far, something failed, redisplay form
             return View(model);
         }
 
@@ -427,9 +319,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageTopics))
                 return AccessDeniedView();
 
+            //try to get a topic with the specified id
             var topic = _topicService.GetTopicById(id);
             if (topic == null)
-                //No topic found with the specified id
                 return RedirectToAction("List");
 
             _topicService.DeleteTopic(topic);
@@ -437,11 +329,12 @@ namespace Nop.Web.Areas.Admin.Controllers
             SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Topics.Deleted"));
 
             //activity log
-            _customerActivityService.InsertActivity("DeleteTopic", _localizationService.GetResource("ActivityLog.DeleteTopic"), topic.Title ?? topic.SystemName);
+            _customerActivityService.InsertActivity("DeleteTopic",
+                string.Format(_localizationService.GetResource("ActivityLog.DeleteTopic"), topic.Title ?? topic.SystemName), topic);
 
             return RedirectToAction("List");
         }
-        
+
         #endregion
     }
 }

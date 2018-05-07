@@ -16,7 +16,7 @@ namespace Nop.Web.Framework.Events
         /// <param name="model">Model</param>
         public static void ModelPrepared<T>(this IEventPublisher eventPublisher, T model)
         {
-            eventPublisher.Publish(new ModelPrepared<T>(model));
+            eventPublisher.Publish(new ModelPreparedEvent<T>(model));
         }
 
         /// <summary>
@@ -28,7 +28,7 @@ namespace Nop.Web.Framework.Events
         /// <param name="modelState">Model state</param>
         public static void ModelReceived<T>(this IEventPublisher eventPublisher, T model, ModelStateDictionary modelState)
         {
-            eventPublisher.Publish(new ModelReceived<T>(model, modelState));
+            eventPublisher.Publish(new ModelReceivedEvent<T>(model, modelState));
         }
     }
 }

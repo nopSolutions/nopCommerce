@@ -19,7 +19,6 @@ namespace Nop.Services.Catalog
     public partial class ProductAttributeFormatter : IProductAttributeFormatter
     {
         private readonly IWorkContext _workContext;
-        private readonly IProductAttributeService _productAttributeService;
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly ICurrencyService _currencyService;
         private readonly ILocalizationService _localizationService;
@@ -34,7 +33,6 @@ namespace Nop.Services.Catalog
         /// Ctor
         /// </summary>
         /// <param name="workContext">Work context</param>
-        /// <param name="productAttributeService">Product attribute service</param>
         /// <param name="productAttributeParser">Product attribute parser</param>
         /// <param name="currencyService">Currency service</param>
         /// <param name="localizationService">Localization service</param>
@@ -45,7 +43,6 @@ namespace Nop.Services.Catalog
         /// <param name="priceCalculationService">Price calculation service</param>
         /// <param name="shoppingCartSettings">Shopping cart settings</param>
         public ProductAttributeFormatter(IWorkContext workContext,
-            IProductAttributeService productAttributeService,
             IProductAttributeParser productAttributeParser,
             ICurrencyService currencyService,
             ILocalizationService localizationService,
@@ -57,7 +54,6 @@ namespace Nop.Services.Catalog
             ShoppingCartSettings shoppingCartSettings)
         {
             this._workContext = workContext;
-            this._productAttributeService = productAttributeService;
             this._productAttributeParser = productAttributeParser;
             this._currencyService = currencyService;
             this._localizationService = localizationService;
@@ -80,7 +76,7 @@ namespace Nop.Services.Catalog
             var customer = _workContext.CurrentCustomer;
             return FormatAttributes(product, attributesXml, customer);
         }
-        
+
         /// <summary>
         /// Formats attributes
         /// </summary>
@@ -177,13 +173,24 @@ namespace Nop.Services.Catalog
 
                             if (renderPrices)
                             {
-                                var attributeValuePriceAdjustment = _priceCalculationService.GetProductAttributeValuePriceAdjustment(attributeValue);
-                                var priceAdjustmentBase = _taxService.GetProductPrice(product, attributeValuePriceAdjustment, customer, out decimal _);
-                                var priceAdjustment = _currencyService.ConvertFromPrimaryStoreCurrency(priceAdjustmentBase, _workContext.WorkingCurrency);
-                                if (priceAdjustmentBase > 0)
-                                    formattedAttribute += $" [+{_priceFormatter.FormatPrice(priceAdjustment, false, false)}]";
-                                else if (priceAdjustmentBase < decimal.Zero)
-                                    formattedAttribute += $" [-{_priceFormatter.FormatPrice(-priceAdjustment, false, false)}]";
+                                if (attributeValue.PriceAdjustmentUsePercentage)
+                                {
+                                    var priceAdjustmentStr = attributeValue.PriceAdjustment.ToString("G29");
+                                    if (attributeValue.PriceAdjustment > decimal.Zero)
+                                        formattedAttribute += $" [+{priceAdjustmentStr}%]";
+                                    else if (attributeValue.PriceAdjustment < decimal.Zero)
+                                        formattedAttribute += $" [{priceAdjustmentStr}%]";
+                                }
+                                else
+                                {
+                                    var attributeValuePriceAdjustment = _priceCalculationService.GetProductAttributeValuePriceAdjustment(attributeValue, customer);
+                                    var priceAdjustmentBase = _taxService.GetProductPrice(product, attributeValuePriceAdjustment, customer, out decimal _);
+                                    var priceAdjustment = _currencyService.ConvertFromPrimaryStoreCurrency(priceAdjustmentBase, _workContext.WorkingCurrency);
+                                    if (priceAdjustmentBase > decimal.Zero)
+                                        formattedAttribute += $" [+{_priceFormatter.FormatPrice(priceAdjustment, false, false)}]";
+                                    else if (priceAdjustmentBase < decimal.Zero)
+                                        formattedAttribute += $" [-{_priceFormatter.FormatPrice(-priceAdjustment, false, false)}]";
+                                }
                             }
 
                             //display quantity

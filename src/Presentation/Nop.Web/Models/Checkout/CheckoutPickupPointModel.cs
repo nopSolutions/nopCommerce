@@ -1,4 +1,4 @@
-﻿using Nop.Web.Framework.Mvc.Models;
+﻿using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Models.Checkout
 {
@@ -15,6 +15,8 @@ namespace Nop.Web.Models.Checkout
         public string Address { get; set; }
 
         public string City { get; set; }
+
+        public string County { get; set; }
 
         public string StateName { get; set; }
 

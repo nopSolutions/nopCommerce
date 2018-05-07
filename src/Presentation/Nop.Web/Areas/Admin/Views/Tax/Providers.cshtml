@@ -1,4 +1,6 @@
-﻿@{    
+@model TaxProviderSearchModel
+
+@{    
     //page title
     ViewBag.Title = T("Admin.Configuration.Tax.Providers").Text;
     //active menu item (system name)
@@ -12,7 +14,7 @@
     </h1>
     <div class="pull-right">
         &nbsp;
-        @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_tax_provider_list_buttons" })
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.TaxProviderListButtons })
     </div>
 </div>
 
@@ -26,7 +28,7 @@
                     </p>
                     <div id="tax-providers-grid"></div>
 
-                    <script type="text/javascript">
+                    <script>
                         $(document).ready(function() {
                             $("#tax-providers-grid").kendoGrid({
                                 dataSource: {
@@ -49,9 +51,15 @@
                                         // Cancel the changes
                                         this.cancelChanges();
                                     },
+                                    pageSize: @(Model.PageSize),
                                     serverPaging: true,
                                     serverFiltering: true,
                                     serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    pageSizes: [@(Model.AvailablePageSizes)],
+                                    @await Html.PartialAsync("_GridPagerMessages")
                                 },
                                 editable: {
                                     confirmation: "@T("Admin.Common.DeleteConfirmation")",

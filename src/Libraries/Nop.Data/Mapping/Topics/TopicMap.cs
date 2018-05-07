@@ -5,7 +5,7 @@ namespace Nop.Data.Mapping.Topics
     /// <summary>
     /// Mapping class
     /// </summary>
-    public class TopicMap : NopEntityTypeConfiguration<Topic>
+    public partial class TopicMap : NopEntityTypeConfiguration<Topic>
     {
         /// <summary>
         /// Ctor

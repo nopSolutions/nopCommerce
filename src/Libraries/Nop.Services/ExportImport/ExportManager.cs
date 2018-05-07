@@ -369,6 +369,7 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<ExportProductAttribute>("ColorSquaresRgb", p => p.ColorSquaresRgb),
                 new PropertyByName<ExportProductAttribute>("ImageSquaresPictureId", p => p.ImageSquaresPictureId),
                 new PropertyByName<ExportProductAttribute>("PriceAdjustment", p => p.PriceAdjustment),
+                new PropertyByName<ExportProductAttribute>("PriceAdjustmentUsePercentage", p => p.PriceAdjustmentUsePercentage),
                 new PropertyByName<ExportProductAttribute>("WeightAdjustment", p => p.WeightAdjustment),
                 new PropertyByName<ExportProductAttribute>("Cost", p => p.Cost),
                 new PropertyByName<ExportProductAttribute>("CustomerEntersQty", p => p.CustomerEntersQty),
@@ -471,6 +472,7 @@ namespace Nop.Services.ExportImport
                     ColorSquaresRgb = pav.ColorSquaresRgb,
                     ImageSquaresPictureId = pav.ImageSquaresPictureId,
                     PriceAdjustment = pav.PriceAdjustment,
+                    PriceAdjustmentUsePercentage = pav.PriceAdjustmentUsePercentage,
                     WeightAdjustment = pav.WeightAdjustment,
                     Cost = pav.Cost,
                     CustomerEntersQty = pav.CustomerEntersQty,
@@ -987,6 +989,7 @@ namespace Nop.Services.ExportImport
                             xmlWriter.WriteString("ColorSquaresRgb", productAttributeValue.ColorSquaresRgb);
                             xmlWriter.WriteString("ImageSquaresPictureId", productAttributeValue.ImageSquaresPictureId);
                             xmlWriter.WriteString("PriceAdjustment", productAttributeValue.PriceAdjustment);
+                            xmlWriter.WriteString("PriceAdjustmentUsePercentage", productAttributeValue.PriceAdjustmentUsePercentage);
                             xmlWriter.WriteString("WeightAdjustment", productAttributeValue.WeightAdjustment);
                             xmlWriter.WriteString("Cost", productAttributeValue.Cost);
                             xmlWriter.WriteString("CustomerEntersQty", productAttributeValue.CustomerEntersQty);
@@ -1457,6 +1460,7 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Order>("BillingCompany", p => p.BillingAddress?.Company ?? string.Empty),
                 new PropertyByName<Order>("BillingCountry", p => p.BillingAddress?.Country?.Name ?? string.Empty),
                 new PropertyByName<Order>("BillingStateProvince", p => p.BillingAddress?.StateProvince?.Name ?? string.Empty),
+                new PropertyByName<Order>("BillingCounty", p => p.BillingAddress?.County ?? string.Empty),
                 new PropertyByName<Order>("BillingCity", p => p.BillingAddress?.City ?? string.Empty),
                 new PropertyByName<Order>("BillingAddress1", p => p.BillingAddress?.Address1 ?? string.Empty),
                 new PropertyByName<Order>("BillingAddress2", p => p.BillingAddress?.Address2 ?? string.Empty),
@@ -1469,6 +1473,7 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Order>("ShippingCompany", p => p.ShippingAddress?.Company ?? string.Empty),
                 new PropertyByName<Order>("ShippingCountry", p => p.ShippingAddress?.Country?.Name ?? string.Empty),
                 new PropertyByName<Order>("ShippingStateProvince", p => p.ShippingAddress?.StateProvince?.Name ?? string.Empty),
+                new PropertyByName<Order>("ShippingCounty", p => p.ShippingAddress?.County ?? string.Empty),
                 new PropertyByName<Order>("ShippingCity", p => p.ShippingAddress?.City ?? string.Empty),
                 new PropertyByName<Order>("ShippingAddress1", p => p.ShippingAddress?.Address1 ?? string.Empty),
                 new PropertyByName<Order>("ShippingAddress2", p => p.ShippingAddress?.Address2 ?? string.Empty),
@@ -1514,6 +1519,7 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Customer>("StreetAddress2", p => p.GetAttribute<string>(SystemCustomerAttributeNames.StreetAddress2)),
                 new PropertyByName<Customer>("ZipPostalCode", p => p.GetAttribute<string>(SystemCustomerAttributeNames.ZipPostalCode)),
                 new PropertyByName<Customer>("City", p => p.GetAttribute<string>(SystemCustomerAttributeNames.City)),
+                new PropertyByName<Customer>("County", p => p.GetAttribute<string>(SystemCustomerAttributeNames.County)),
                 new PropertyByName<Customer>("CountryId", p => p.GetAttribute<int>(SystemCustomerAttributeNames.CountryId)),
                 new PropertyByName<Customer>("StateProvinceId", p => p.GetAttribute<int>(SystemCustomerAttributeNames.StateProvinceId)),
                 new PropertyByName<Customer>("Phone", p => p.GetAttribute<string>(SystemCustomerAttributeNames.Phone)),
@@ -1578,6 +1584,7 @@ namespace Nop.Services.ExportImport
                 xmlWriter.WriteElementString("StreetAddress2", null, customer.GetAttribute<string>(SystemCustomerAttributeNames.StreetAddress2));
                 xmlWriter.WriteElementString("ZipPostalCode", null, customer.GetAttribute<string>(SystemCustomerAttributeNames.ZipPostalCode));
                 xmlWriter.WriteElementString("City", null, customer.GetAttribute<string>(SystemCustomerAttributeNames.City));
+                xmlWriter.WriteElementString("County", null, customer.GetAttribute<string>(SystemCustomerAttributeNames.County));
                 xmlWriter.WriteElementString("StateProvinceId", null, customer.GetAttribute<int>(SystemCustomerAttributeNames.StateProvinceId).ToString());
                 xmlWriter.WriteElementString("Phone", null, customer.GetAttribute<string>(SystemCustomerAttributeNames.Phone));
                 xmlWriter.WriteElementString("Fax", null, customer.GetAttribute<string>(SystemCustomerAttributeNames.Fax));

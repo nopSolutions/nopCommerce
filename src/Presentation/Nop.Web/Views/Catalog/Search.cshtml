@@ -7,7 +7,7 @@
     //page class
     Html.AppendPageCssClassParts("html-search-page");
 }
-<script type="text/javascript" asp-location="Footer">
+<script asp-location="Footer">
     $(document).ready(function () {
         $("#@Html.IdFor(model => model.adv)").click(toggleAdvancedSearch);
         toggleAdvancedSearch();
@@ -94,7 +94,7 @@
         {
             @await Html.PartialAsync("_CatalogSelectors", Model.PagingFilteringContext)
         }
-        @await Component.InvokeAsync("Widget", new { widgetZone = "productsearch_page_before_results" })
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProductSearchPageBeforeResults })
         <div class="search-results">
             @if (!string.IsNullOrEmpty(Model.Warning))
             {
@@ -132,6 +132,6 @@
                 </div>
             }
         </div>
-        @await Component.InvokeAsync("Widget", new { widgetZone = "productsearch_page_after_results" })
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProductSearchPageAfterResults })
     </div>
 </div>

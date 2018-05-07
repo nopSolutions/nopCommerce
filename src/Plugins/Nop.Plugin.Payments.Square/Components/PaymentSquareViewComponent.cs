@@ -10,7 +10,7 @@ using Nop.Services.Localization;
 
 namespace Nop.Plugin.Payments.Square.Components
 {
-    [ViewComponent(Name = "PaymentSquare")]
+    [ViewComponent(Name = SquarePaymentDefaults.ViewComponentName)]
     public class PaymentSquareViewComponent : ViewComponent
     {
         #region Fields
