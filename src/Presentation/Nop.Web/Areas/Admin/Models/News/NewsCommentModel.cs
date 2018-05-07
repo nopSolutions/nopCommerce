@@ -1,18 +1,25 @@
 ﻿using System;
 using Nop.Web.Framework.Mvc.ModelBinding;
-using Nop.Web.Framework.Mvc.Models;
+using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Areas.Admin.Models.News
 {
+    /// <summary>
+    /// Represents a news comment model
+    /// </summary>
     public partial class NewsCommentModel : BaseNopEntityModel
     {
+        #region Properties
+
         [NopResourceDisplayName("Admin.ContentManagement.News.Comments.Fields.NewsItem")]
         public int NewsItemId { get; set; }
+
         [NopResourceDisplayName("Admin.ContentManagement.News.Comments.Fields.NewsItem")]
         public string NewsItemTitle { get; set; }
 
         [NopResourceDisplayName("Admin.ContentManagement.News.Comments.Fields.Customer")]
         public int CustomerId { get; set; }
+
         [NopResourceDisplayName("Admin.ContentManagement.News.Comments.Fields.Customer")]
         public string CustomerInfo { get; set; }
         
@@ -27,9 +34,12 @@ namespace Nop.Web.Areas.Admin.Models.News
 
         [NopResourceDisplayName("Admin.ContentManagement.News.Comments.Fields.StoreName")]
         public int StoreId { get; set; }
+
         public string StoreName { get; set; }
 
         [NopResourceDisplayName("Admin.ContentManagement.News.Comments.Fields.CreatedOn")]
         public DateTime CreatedOn { get; set; }
+
+        #endregion
     }
 }

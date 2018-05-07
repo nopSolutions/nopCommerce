@@ -1,4 +1,4 @@
-﻿@model CatalogSettingsModel
+@model CatalogSettingsModel
 
 @{
     //page title
@@ -18,7 +18,7 @@
                 <i class="fa fa-floppy-o"></i>
                 @T("Admin.Common.Save")
             </button>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_catalog_settings_buttons" })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CatalogSettingsButtons })
         </div>
     </div>
 
@@ -29,7 +29,7 @@
             <div asp-validation-summary="All"></div>
 
             <div class="panel-group">
-                @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_catalog_settings_top" })
+                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CatalogSettingsTop })
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         @T("Admin.Configuration.Settings.Catalog.BlockTitle.Search")
@@ -110,7 +110,7 @@
                             </div>
                         </nop-nested-setting>
                     </div>
-                    <script type="text/javascript">
+                    <script>
                         $(document).ready(function () {
                             $("#@Html.IdFor(model => model.SearchPageAllowCustomersToSelectPageSize)").click(toggleSearchPagePageSize);
                             $("#@Html.IdFor(model => model.ProductSearchAutoCompleteEnabled)").click(toggleProductSearchAutoComplete);
@@ -185,6 +185,16 @@
                                 <span asp-validation-for="NotifyStoreOwnerAboutNewProductReviews"></span>
                             </div>
                         </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="NotifyCustomerAboutProductReviewReply_OverrideForStore" asp-input="NotifyCustomerAboutProductReviewReply" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="NotifyCustomerAboutProductReviewReply" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="NotifyCustomerAboutProductReviewReply" />
+                                <span asp-validation-for="NotifyCustomerAboutProductReviewReply"></span>
+                            </div>
+                        </div>
                         <div class="form-group advanced-setting">
                             <div class="col-md-3">
                                 <nop-override-store-checkbox asp-for="ShowProductReviewsPerStore_OverrideForStore" asp-input="ShowProductReviewsPerStore" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
@@ -217,8 +227,18 @@
                                 </div>
                             </div>
                         </nop-nested-setting>
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="ProductReviewsSortByCreatedDateAscending_OverrideForStore" asp-input="ProductReviewsSortByCreatedDateAscending" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="ProductReviewsSortByCreatedDateAscending" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="ProductReviewsSortByCreatedDateAscending" />
+                                <span asp-validation-for="ProductReviewsSortByCreatedDateAscending"></span>
+                            </div>
+                        </div>
                     </div>
-                    <script type="text/javascript">
+                    <script>
                         $(document).ready(function () {
                             $("#@Html.IdFor(model => model.ShowProductReviewsTabOnAccountPage)").click(toggleProductReviewsPageSizeOnAccountPage);
 
@@ -335,7 +355,7 @@
                                 </div>
                             </div>
                         </nop-nested-setting>
-                        <script type="text/javascript">
+                        <script>
                             $(document).ready(function () {
                                 $("#@Html.IdFor(model => model.ShowShareButton)").click(togglePageShareCode);
                                 togglePageShareCode();
@@ -388,7 +408,7 @@
                                 </div>
                             </div>
                         </nop-nested-setting>
-                        <script type="text/javascript">
+                        <script>
                             $(document).ready(function () {
                                 $("#@Html.IdFor(model => model.CompareProductsEnabled)").click(toggleCompareProductsEnabled);
                                 toggleCompareProductsEnabled();
@@ -411,6 +431,16 @@
                         @T("Admin.Configuration.Settings.Catalog.BlockTitle.AdditionalSections")
                     </div>
                     <div class="panel-body">
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="RemoveRequiredProducts_OverrideForStore" asp-input="RemoveRequiredProducts" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="RemoveRequiredProducts" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="RemoveRequiredProducts" />
+                                <span asp-validation-for="RemoveRequiredProducts"></span>
+                            </div>
+                        </div>
                         <div class="form-group">
                             <div class="col-md-3">
                                 <nop-override-store-checkbox asp-for="ShowBestsellersOnHomepage_OverrideForStore" asp-input="ShowBestsellersOnHomepage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
@@ -602,6 +632,16 @@
                         </div>
                         <div class="form-group">
                             <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="DefaultViewMode_OverrideForStore" asp-input="DefaultViewMode" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="DefaultViewMode" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-select asp-for="DefaultViewMode" asp-items="Model.AvailableViewModes"/>
+                                <span asp-validation-for="DefaultViewMode"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
                                 <nop-override-store-checkbox asp-for="ShowProductsFromSubcategories_OverrideForStore" asp-input="ShowProductsFromSubcategories" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
                                 <nop-label asp-for="ShowProductsFromSubcategories" />
                             </div>
@@ -703,7 +743,7 @@
                         </nop-nested-setting>                        
                     </div>
 
-                    <script type="text/javascript">
+                    <script>
                         $(document).ready(function () {
                             $("#@Html.IdFor(model => model.ShowCategoryProductNumber)").click(toggleShowCategoryProductNumberIncludingSubcategories);
                             $("#@Html.IdFor(model => model.EmailAFriendEnabled)").click(toggleEmailAFriend);
@@ -894,6 +934,26 @@
                                 <span asp-validation-for="ExportImportCategoriesUsingCategoryName"></span>
                             </div>
                         </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="ExportImportAllowDownloadImages_OverrideForStore" asp-input="ExportImportAllowDownloadImages" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="ExportImportAllowDownloadImages" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="ExportImportAllowDownloadImages" />
+                                <span asp-validation-for="ExportImportAllowDownloadImages"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="ExportImportSplitProductsFile_OverrideForStore" asp-input="ExportImportSplitProductsFile" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="ExportImportSplitProductsFile" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="ExportImportSplitProductsFile" />
+                                <span asp-validation-for="ExportImportSplitProductsFile"></span>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="panel panel-default advanced-setting">
@@ -913,7 +973,7 @@
                         </div>
                         <div id="sortoptions-grid"></div>
 
-                        <script type="text/javascript">
+                        <script>
                             $(document).ready(function () {
                                 $("#sortoptions-grid").kendoGrid({
                                     dataSource: {
@@ -955,15 +1015,14 @@
                                             // Cancel the changes
                                             this.cancelChanges();
                                         },
+                                        pageSize: @(Model.SortOptionSearchModel.PageSize),
                                         serverPaging: true,
                                         serverFiltering: true,
                                         serverSorting: true
                                     },
                                     pageable: {
                                         refresh: true,
-                                        numeric: false,
-                                        previousNext: false,
-                                        info: false,
+                                        pageSizes: [@(Model.SortOptionSearchModel.AvailablePageSizes)],
                                         @await Html.PartialAsync("_GridPagerMessages")
                                     },
                                     editable: {
@@ -1007,7 +1066,7 @@
                         </script>
                     </div>
                 </div>
-                @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_catalog_settings_bottom" })
+                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CatalogSettingsBottom })
             </div>
         </div>
     </div>

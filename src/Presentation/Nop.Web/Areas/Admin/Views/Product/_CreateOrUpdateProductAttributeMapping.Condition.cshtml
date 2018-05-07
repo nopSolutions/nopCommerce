@@ -1,14 +1,15 @@
-﻿@model ProductModel.ProductAttributeMappingModel
+﻿@model ProductAttributeMappingModel
+
 @using System.Collections.Generic
 @using Microsoft.AspNetCore.Mvc.Rendering
 @using Nop.Core.Domain.Catalog
 
 <div class="panel-group">
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_product_attribute_mapping_details_condition_top", additionalData = Model.Id })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductAttributeMappingDetailsConditionTop, additionalData = Model })
     <div class="panel panel-default">
         @if(Model.Id > 0)
         {
-            <script type="text/javascript">
+            <script>
             $(document).ready(function() {
                 $("#@Html.IdFor(model => model.ConditionModel.EnableCondition)").click(toggleEnableCondition);
                 toggleEnableCondition();
@@ -52,7 +53,7 @@
                             <div class="col-sm-9">
                                 <nop-select asp-for="ConditionModel.SelectedProductAttributeId" asp-items="@attributesList" />
 
-                                <script type="text/javascript">
+                                <script>
                                 $(document).ready(function() {
                                     $("#@Html.IdFor(model => model.ConditionModel.SelectedProductAttributeId)")
                                         .change(toggleProductAttributes);
@@ -154,5 +155,5 @@
             </div>
         }
     </div>
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_product_attribute_mapping_details_condition_bottom", additionalData = Model.Id })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductAttributeMappingDetailsConditionBottom, additionalData = Model })
 </div>

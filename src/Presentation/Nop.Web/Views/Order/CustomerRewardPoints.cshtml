@@ -33,15 +33,16 @@
                 <div class="table-wrapper">
                     <table class="data-table">
                         <colgroup>
-                            <col width="25%"/>
+                            <col width="20%"/>
                             <col width="10%"/>
-                            <col width="25%"/>
+                            <col width="10%"/>
                             <col/>
+                            <col width="20%"/>
                         </colgroup>
                         <thead>
                         <tr>
                             <th class="date">
-                                @T("RewardPoints.Fields.Date")
+                                @T("RewardPoints.Fields.CreatedDate")
                             </th>
                             <th class="points">
                                 @T("RewardPoints.Fields.Points")
@@ -51,6 +52,9 @@
                             </th>
                             <th class="message">
                                 @T("RewardPoints.Fields.Message")
+                            </th>
+                            <th class="endDate">
+                                @T("RewardPoints.Fields.EndDate")
                             </th>
                         </tr>
                         </thead>
@@ -70,6 +74,9 @@
                                 </td>
                                 <td class="message">
                                     @item.Message
+                                </td>
+                                <td class="endDate">
+                                    @item.EndDate
                                 </td>
                             </tr>
                         }

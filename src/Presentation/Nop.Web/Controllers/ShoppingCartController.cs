@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Text;
 using Microsoft.AspNetCore.Http;
@@ -14,6 +13,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Html;
+using Nop.Core.Infrastructure;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -70,6 +70,7 @@ namespace Nop.Web.Controllers
         private readonly IWebHelper _webHelper;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly IGenericAttributeService _genericAttributeService;
+        private readonly INopFileProvider _fileProvider;
 
         private readonly MediaSettings _mediaSettings;
         private readonly ShoppingCartSettings _shoppingCartSettings;
@@ -110,7 +111,8 @@ namespace Nop.Web.Controllers
             ShoppingCartSettings shoppingCartSettings,
             OrderSettings orderSettings,
             CaptchaSettings captchaSettings,
-            CustomerSettings customerSettings)
+            CustomerSettings customerSettings,
+            INopFileProvider fileProvider)
         {
             this._shoppingCartModelFactory = shoppingCartModelFactory;
             this._productService = productService;
@@ -138,6 +140,7 @@ namespace Nop.Web.Controllers
             this._webHelper = webHelper;
             this._customerActivityService = customerActivityService;
             this._genericAttributeService = genericAttributeService;
+            this._fileProvider = fileProvider;
 
             this._mediaSettings = mediaSettings;
             this._shoppingCartSettings = shoppingCartSettings;
@@ -553,7 +556,7 @@ namespace Nop.Web.Controllers
                     {
                         //activity log
                         _customerActivityService.InsertActivity("PublicStore.AddToWishlist",
-                            _localizationService.GetResource("ActivityLog.PublicStore.AddToWishlist"), product.Name);
+                            string.Format(_localizationService.GetResource("ActivityLog.PublicStore.AddToWishlist"), product.Name), product);
 
                         if (_shoppingCartSettings.DisplayWishlistAfterAddingProduct)
                         {
@@ -587,7 +590,7 @@ namespace Nop.Web.Controllers
                     {
                         //activity log
                         _customerActivityService.InsertActivity("PublicStore.AddToShoppingCart",
-                            _localizationService.GetResource("ActivityLog.PublicStore.AddToShoppingCart"), product.Name);
+                            string.Format(_localizationService.GetResource("ActivityLog.PublicStore.AddToShoppingCart"), product.Name), product);
 
                         if (_shoppingCartSettings.DisplayCartAfterAddingProduct)
                         {
@@ -730,7 +733,7 @@ namespace Nop.Web.Controllers
             var addToCartWarnings = _shoppingCartService
                 .GetShoppingCartItemWarnings(_workContext.CurrentCustomer, cartType,
                 product, _storeContext.CurrentStore.Id, string.Empty, 
-                decimal.Zero, null, null, quantityToValidate, false, true, false, false, false);
+                decimal.Zero, null, null, quantityToValidate, false, shoppingCartItem?.Id ?? 0, true, false, false, false);
             if (addToCartWarnings.Any())
             {
                 //cannot be added to the cart
@@ -765,7 +768,8 @@ namespace Nop.Web.Controllers
                 case ShoppingCartType.Wishlist:
                     {
                         //activity log
-                        _customerActivityService.InsertActivity("PublicStore.AddToWishlist", _localizationService.GetResource("ActivityLog.PublicStore.AddToWishlist"), product.Name);
+                        _customerActivityService.InsertActivity("PublicStore.AddToWishlist",
+                            string.Format(_localizationService.GetResource("ActivityLog.PublicStore.AddToWishlist"), product.Name), product);
 
                         if (_shoppingCartSettings.DisplayWishlistAfterAddingProduct || forceredirection)
                         {
@@ -794,7 +798,8 @@ namespace Nop.Web.Controllers
                 default:
                     {
                         //activity log
-                        _customerActivityService.InsertActivity("PublicStore.AddToShoppingCart", _localizationService.GetResource("ActivityLog.PublicStore.AddToShoppingCart"), product.Name);
+                        _customerActivityService.InsertActivity("PublicStore.AddToShoppingCart",
+                            string.Format(_localizationService.GetResource("ActivityLog.PublicStore.AddToShoppingCart"), product.Name), product);
 
                         if (_shoppingCartSettings.DisplayCartAfterAddingProduct || forceredirection)
                         {
@@ -980,7 +985,7 @@ namespace Nop.Web.Controllers
             }
 
             //stock
-            var stockAvailability = product.FormatStockMessage(attributeXml, _localizationService, _productAttributeParser, _dateRangeService);
+            var stockAvailability = product.FormatStockMessage(attributeXml, _localizationService, _productAttributeParser, _dateRangeService, _productAttributeService);
 
             //conditional attributes
             var enabledAttributeMappingIds = new List<int>();
@@ -1002,32 +1007,32 @@ namespace Nop.Web.Controllers
             }
 
             //picture. used when we want to override a default product picture when some attribute is selected
-            var pictureFullSizeUrl = "";
-            var pictureDefaultSizeUrl = "";
+            var pictureFullSizeUrl = string.Empty;
+            var pictureDefaultSizeUrl = string.Empty;
             if (loadPicture)
             {
-                //just load (return) the first found picture (in case if we have several distinct attributes with associated pictures)
-                //actually we're going to support pictures associated to attribute combinations (not attribute values) soon. it'll more flexible approach
-                var attributeValues = _productAttributeParser.ParseProductAttributeValues(attributeXml);
-                var attributeValueWithPicture = attributeValues.FirstOrDefault(x => x.PictureId > 0);
-                if (attributeValueWithPicture != null)
+                //first, try to get product attribute combination picture
+                var pictureId = _productAttributeParser.FindProductAttributeCombination(product, attributeXml)?.PictureId ?? 0;
+
+                //then, let's see whether we have attribute values with pictures
+                if (pictureId == 0)
                 {
-                    var productAttributePictureCacheKey = string.Format(ModelCacheEventConsumer.PRODUCTATTRIBUTE_PICTURE_MODEL_KEY,
-                                    attributeValueWithPicture.PictureId,
-                                    _webHelper.IsCurrentConnectionSecured(),
-                                    _storeContext.CurrentStore.Id);
+                    pictureId = _productAttributeParser.ParseProductAttributeValues(attributeXml)
+                        .FirstOrDefault(attributeValue => attributeValue.PictureId > 0)?.PictureId ?? 0;
+                }
+
+                if (pictureId > 0)
+                {
+                    var productAttributePictureCacheKey = string.Format(ModelCacheEventConsumer.PRODUCTATTRIBUTE_PICTURE_MODEL_KEY, 
+                        pictureId, _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore.Id);
                     var pictureModel = _cacheManager.Get(productAttributePictureCacheKey, () =>
                     {
-                        var valuePicture = _pictureService.GetPictureById(attributeValueWithPicture.PictureId);
-                        if (valuePicture != null)
+                        var picture = _pictureService.GetPictureById(pictureId);
+                        return picture == null ? new PictureModel() : new PictureModel
                         {
-                            return new PictureModel
-                            {
-                                FullSizeImageUrl = _pictureService.GetPictureUrl(valuePicture),
-                                ImageUrl = _pictureService.GetPictureUrl(valuePicture, _mediaSettings.ProductDetailsPictureSize)
-                            };
-                        }
-                        return new PictureModel();
+                            FullSizeImageUrl = _pictureService.GetPictureUrl(picture),
+                            ImageUrl = _pictureService.GetPictureUrl(picture, _mediaSettings.ProductDetailsPictureSize)
+                        };
                     });
                     pictureFullSizeUrl = pictureModel.FullSizeImageUrl;
                     pictureDefaultSizeUrl = pictureModel.ImageUrl;
@@ -1134,11 +1139,11 @@ namespace Nop.Web.Controllers
             if (string.IsNullOrEmpty(fileName) && Request.Form.ContainsKey(qqFileNameParameter))
                 fileName = Request.Form[qqFileNameParameter].ToString();
             //remove path (passed in IE)
-            fileName = Path.GetFileName(fileName);
+            fileName = _fileProvider.GetFileName(fileName);
 
             var contentType = httpPostedFile.ContentType;
 
-            var fileExtension = Path.GetExtension(fileName);
+            var fileExtension = _fileProvider.GetFileExtension(fileName);
             if (!string.IsNullOrEmpty(fileExtension))
                 fileExtension = fileExtension.ToLowerInvariant();
 
@@ -1167,7 +1172,7 @@ namespace Nop.Web.Controllers
                 DownloadBinary = fileBinary,
                 ContentType = contentType,
                 //we store filename without extension for downloads
-                Filename = Path.GetFileNameWithoutExtension(fileName),
+                Filename = _fileProvider.GetFileNameWithoutExtension(fileName),
                 Extension = fileExtension,
                 IsNew = true
             };
@@ -1215,11 +1220,11 @@ namespace Nop.Web.Controllers
             if (string.IsNullOrEmpty(fileName) && Request.Form.ContainsKey(qqFileNameParameter))
                 fileName = Request.Form[qqFileNameParameter].ToString();
             //remove path (passed in IE)
-            fileName = Path.GetFileName(fileName);
+            fileName = _fileProvider.GetFileName(fileName);
 
             var contentType = httpPostedFile.ContentType;
 
-            var fileExtension = Path.GetExtension(fileName);
+            var fileExtension = _fileProvider.GetFileExtension(fileName);
             if (!string.IsNullOrEmpty(fileExtension))
                 fileExtension = fileExtension.ToLowerInvariant();
 
@@ -1248,7 +1253,7 @@ namespace Nop.Web.Controllers
                 DownloadBinary = fileBinary,
                 ContentType = contentType,
                 //we store filename without extension for downloads
-                Filename = Path.GetFileNameWithoutExtension(fileName),
+                Filename = _fileProvider.GetFileNameWithoutExtension(fileName),
                 Extension = fileExtension,
                 IsNew = true
             };
@@ -1292,35 +1297,37 @@ namespace Nop.Web.Controllers
                 .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
 
-            var allIdsToRemove = form.ContainsKey("removefromcart") ?
-                form["removefromcart"].ToString().Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(x => int.Parse(x)).ToList() :
-                new List<int>();
+            //get identifiers of items to remove
+            var itemIdsToRemove = form["removefromcart"]
+                .SelectMany(value => value.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                .Select(idString => int.TryParse(idString, out int id) ? id : 0)
+                .Distinct().ToList();
 
-            //current warnings <cart item identifier, warnings>
-            var innerWarnings = new Dictionary<int, IList<string>>();
-            foreach (var sci in cart)
+            //get order items with changed quantity
+            var itemsWithNewQuantity = cart.Select(item => new
             {
-                var remove = allIdsToRemove.Contains(sci.Id);
-                if (remove)
-                    _shoppingCartService.DeleteShoppingCartItem(sci, ensureOnlyActiveCheckoutAttributes: true);
-                else
-                {
-                    foreach (var formKey in form.Keys)
-                        if (formKey.Equals($"itemquantity{sci.Id}", StringComparison.InvariantCultureIgnoreCase))
-                        {
-                            int newQuantity;
-                            if (int.TryParse(form[formKey], out newQuantity))
-                            {
-                                var currSciWarnings = _shoppingCartService.UpdateShoppingCartItem(_workContext.CurrentCustomer,
-                                    sci.Id, sci.AttributesXml, sci.CustomerEnteredPrice,
-                                    sci.RentalStartDateUtc, sci.RentalEndDateUtc,
-                                    newQuantity, true);
-                                innerWarnings.Add(sci.Id, currSciWarnings);
-                            }
-                            break;
-                        }
-                }
-            }
+                //try to get a new quantity for the item, set 0 for items to remove
+                NewQuantity = itemIdsToRemove.Contains(item.Id) ? 0 : int.TryParse(form[$"itemquantity{item.Id}"], out int quantity) ? quantity : item.Quantity,
+                Item = item
+            }).Where(item => item.NewQuantity != item.Item.Quantity);
+
+            //order cart items
+            //first should be items with a reduced quantity and that require other products; or items with an increased quantity and are required for other products
+            var orderedCart = itemsWithNewQuantity
+                .OrderByDescending(cartItem =>
+                    (cartItem.NewQuantity < cartItem.Item.Quantity && (cartItem.Item.Product?.RequireOtherProducts ?? false)) ||
+                    (cartItem.NewQuantity > cartItem.Item.Quantity && 
+                        cart.Any(item => item.Product != null && item.Product.RequireOtherProducts && item.Product.ParseRequiredProductIds().Contains(cartItem.Item.ProductId))))
+                .ToList();
+
+            //try to update cart items with new quantities and get warnings
+            var warnings = orderedCart.Select(cartItem => new
+            {
+                ItemId = cartItem.Item.Id,
+                Warnings = _shoppingCartService.UpdateShoppingCartItem(_workContext.CurrentCustomer,
+                    cartItem.Item.Id, cartItem.Item.AttributesXml, cartItem.Item.CustomerEnteredPrice,
+                    cartItem.Item.RentalStartDateUtc, cartItem.Item.RentalEndDateUtc, cartItem.NewQuantity, true)
+            }).ToList();
             
             //parse and save checkout attributes
             ParseAndSaveCheckoutAttributes(cart, form);
@@ -1330,21 +1337,20 @@ namespace Nop.Web.Controllers
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
                 .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
+
+            //prepare model
             var model = new ShoppingCartModel();
             model = _shoppingCartModelFactory.PrepareShoppingCartModel(model, cart);
+
             //update current warnings
-            foreach (var kvp in innerWarnings)
+            foreach (var warningItem in warnings.Where(warningItem => warningItem.Warnings.Any()))
             {
-                //kvp = <cart item identifier, warnings>
-                var sciId = kvp.Key;
-                var warnings = kvp.Value;
-                //find model
-                var sciModel = model.Items.FirstOrDefault(x => x.Id == sciId);
-                if (sciModel != null)
-                    foreach (var w in warnings)
-                        if (!sciModel.Warnings.Contains(w))
-                            sciModel.Warnings.Add(w);
+                //find shopping cart item model to display appropriate warnings
+                var itemModel = model.Items.FirstOrDefault(item => item.Id == warningItem.ItemId);
+                if (itemModel != null)
+                    itemModel.Warnings = warningItem.Warnings.Concat(itemModel.Warnings).Distinct().ToList();
             }
+
             return View(model);
         }
 

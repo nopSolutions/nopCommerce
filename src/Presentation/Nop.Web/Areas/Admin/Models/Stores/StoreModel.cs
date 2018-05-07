@@ -2,20 +2,28 @@
 using FluentValidation.Attributes;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Web.Areas.Admin.Validators.Stores;
-using Nop.Web.Framework.Localization;
+using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Mvc.ModelBinding;
-using Nop.Web.Framework.Mvc.Models;
 
 namespace Nop.Web.Areas.Admin.Models.Stores
 {
+    /// <summary>
+    /// Represents a store model
+    /// </summary>
     [Validator(typeof(StoreValidator))]
     public partial class StoreModel : BaseNopEntityModel, ILocalizedModel<StoreLocalizedModel>
     {
+        #region Ctor
+
         public StoreModel()
         {
             Locales = new List<StoreLocalizedModel>();
             AvailableLanguages = new List<SelectListItem>();
         }
+
+        #endregion
+
+        #region Properties
 
         [NopResourceDisplayName("Admin.Configuration.Stores.Fields.Name")]
         public string Name { get; set; }
@@ -26,15 +34,13 @@ namespace Nop.Web.Areas.Admin.Models.Stores
         [NopResourceDisplayName("Admin.Configuration.Stores.Fields.SslEnabled")]
         public virtual bool SslEnabled { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Stores.Fields.SecureUrl")]
-        public virtual string SecureUrl { get; set; }
-
         [NopResourceDisplayName("Admin.Configuration.Stores.Fields.Hosts")]
         public string Hosts { get; set; }
 
         //default language
         [NopResourceDisplayName("Admin.Configuration.Stores.Fields.DefaultLanguage")]
         public int DefaultLanguageId { get; set; }
+
         public IList<SelectListItem> AvailableLanguages { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Stores.Fields.DisplayOrder")]
@@ -53,9 +59,11 @@ namespace Nop.Web.Areas.Admin.Models.Stores
         public string CompanyVat { get; set; }
         
         public IList<StoreLocalizedModel> Locales { get; set; }
+
+        #endregion
     }
 
-    public partial class StoreLocalizedModel : ILocalizedModelLocal
+    public partial class StoreLocalizedModel : ILocalizedLocaleModel
     {
         public int LanguageId { get; set; }
 

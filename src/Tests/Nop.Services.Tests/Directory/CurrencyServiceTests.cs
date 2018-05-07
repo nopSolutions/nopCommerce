@@ -4,9 +4,9 @@ using System.Linq;
 using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Directory;
-using Nop.Core.Plugins;
 using Nop.Services.Directory;
 using Nop.Services.Events;
+using Nop.Services.Plugins;
 using Nop.Services.Stores;
 using Nop.Tests;
 using NUnit.Framework;
@@ -89,7 +89,7 @@ namespace Nop.Services.Tests.Directory
             _eventPublisher = MockRepository.GenerateMock<IEventPublisher>();
             _eventPublisher.Expect(x => x.Publish(Arg<object>.Is.Anything));
             
-            var pluginFinder = new PluginFinder();
+            var pluginFinder = new PluginFinder(_eventPublisher);
             _currencyService = new CurrencyService(cacheManager,
                 _currencyRepository, _storeMappingService, 
                 _currencySettings, pluginFinder, _eventPublisher);

@@ -395,6 +395,23 @@ namespace Nop.Services.Catalog
             return query.Count();
         }
 
+        /// <summary>
+        /// Get mapped products for specification attribute
+        /// </summary>
+        /// <param name="specificationAttributeId">The specification attribute identifier</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
+        /// <returns>Products</returns>
+        public virtual IPagedList<Product> GetProductsBySpecificationAttributeId(int specificationAttributeId, int pageIndex, int pageSize)
+        {
+            var query = _productSpecificationAttributeRepository.Table;
+
+            var products = query.Where(psa => psa.SpecificationAttributeOption.SpecificationAttributeId == specificationAttributeId)
+                .Select(psa => psa.Product).Distinct().OrderBy(p => p.Name);
+
+            return new PagedList<Product>(products, pageIndex, pageSize);
+        }
+
         #endregion
 
         #endregion

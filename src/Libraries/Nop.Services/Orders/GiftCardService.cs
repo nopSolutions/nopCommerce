@@ -18,6 +18,7 @@ namespace Nop.Services.Orders
         #region Fields
         
         private readonly IRepository<GiftCard> _giftCardRepository;
+        private readonly IRepository<GiftCardUsageHistory> _giftCardUsageHistoryRepository;
         private readonly IEventPublisher _eventPublisher;
 
         #endregion
@@ -29,10 +30,13 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="giftCardRepository">Gift card context</param>
         /// <param name="eventPublisher">Event published</param>
-        public GiftCardService(IRepository<GiftCard> giftCardRepository, IEventPublisher eventPublisher)
+        /// <param name="giftCardUsageHistoryRepository">Gift card usage history repository</param>
+        public GiftCardService(IRepository<GiftCard> giftCardRepository, IEventPublisher eventPublisher,
+            IRepository<GiftCardUsageHistory> giftCardUsageHistoryRepository)
         {
             _giftCardRepository = giftCardRepository;
             _eventPublisher = eventPublisher;
+            _giftCardUsageHistoryRepository = giftCardUsageHistoryRepository;
         }
 
         #endregion
@@ -191,6 +195,22 @@ namespace Nop.Services.Orders
             if (result.Length > length)
                 result = result.Substring(0, length);
             return result;
+        }
+        
+        /// <summary>
+        /// Delete gift card usage history
+        /// </summary>
+        /// <param name="order">Order</param>
+        public virtual void DeleteGiftCardUsageHistory(Order order)
+        {
+            var giftCardUsageHistory = order.GiftCardUsageHistory.ToList();
+            var giftCards = giftCardUsageHistory.Select(gcuh => gcuh.GiftCard).ToList();
+            _giftCardUsageHistoryRepository.Delete(giftCardUsageHistory);
+
+            foreach (var giftCard in giftCards)
+            {
+                UpdateGiftCard(giftCard);
+            }
         }
 
         #endregion

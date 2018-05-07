@@ -1,14 +1,10 @@
-﻿@model AllSettingsListModel
-@inject AdminAreaSettings adminAreaSettings
-@inject IStoreService storeService
+﻿@model SettingSearchModel
 
+@inject IStoreService storeService
 @using System.Text.Encodings.Web
 @using Nop.Services.Stores
 
 @{
-    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
-    var gridPageSizes = adminAreaSettings.GridPageSizes;
-
     //page title
     ViewBag.Title = T("Admin.Configuration.Settings.AllSettings").Text;
     //active menu item (system name)
@@ -22,14 +18,14 @@
     </h1>
     <div class="pull-right">
         &nbsp;
-        @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_all_setting_list_buttons" })
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.AllSettingListButtons })
     </div>
 </div>
 
 <div class="content">
     <div class="form-horizontal">
         <div class="panel-group">
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_all_settings_top" })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.AllSettingsTop })
             <div class="panel panel-default panel-search">
                 <div class="panel-body">
                     <div class="row">
@@ -67,7 +63,7 @@
                 <div class="panel-body">
                     <div id="settings-grid"></div>
 
-                    <script type="text/javascript">
+                    <script>
                         $(document).ready(function() {
                             $("#settings-grid").kendoGrid({
                                 dataSource: {
@@ -77,7 +73,14 @@
                                             url: "@Html.Raw(Url.Action("AllSettings", "Setting"))",
                                             type: "POST",
                                             dataType: "json",
-                                            data: additionalData
+                                            data: function() {
+                                                var data = {
+                                                    SearchSettingName: $('#@Html.IdFor(model => model.SearchSettingName)').val(),
+                                                    SearchSettingValue: $('#@Html.IdFor(model => model.SearchSettingValue)').val()
+                                                };
+                                                addAntiForgeryToken(data);
+                                                return data;
+                                            }
                                         },
                                         create: {
                                             url: "@Html.Raw(Url.Action("SettingAdd", "Setting"))",
@@ -123,14 +126,14 @@
                                         // Cancel the changes
                                         this.cancelChanges();
                                     },
-                                    pageSize: @(defaultGridPageSize),
+                                    pageSize: @(Model.PageSize),
                                     serverPaging: true,
                                     serverFiltering: true,
                                     serverSorting: true
                                 },
                                 pageable: {
                                     refresh: true,
-                                    pageSizes: [@(gridPageSizes)],
+                                    pageSizes: [@(Model.AvailablePageSizes)],
                                     @await Html.PartialAsync("_GridPagerMessages")
                                 },
                                 toolbar: [{ name: "create", text: "@T("Admin.Common.AddNewRecord")" }],
@@ -204,7 +207,7 @@
                         }
                     </script>
 
-                    <script type="text/javascript">
+                    <script>
                         $(document).ready(function() {
                             $('#search-settings').click(function() {
                                 var grid = $('#settings-grid').data('kendoGrid');
@@ -212,15 +215,6 @@
                                 return false;
                             });
                         });
-
-                        function additionalData() {
-                            var data = {
-                                SearchSettingName: $('#@Html.IdFor(model => model.SearchSettingName)').val(),
-                                SearchSettingValue: $('#@Html.IdFor(model => model.SearchSettingValue)').val()
-                            };
-                            addAntiForgeryToken(data);
-                            return data;
-                        }
 
                         $("".concat("#@Html.IdFor(model => model.SearchSettingName),",
                             "#@Html.IdFor(model => model.SearchSettingValue)")).keydown(function(event) {
@@ -232,7 +226,7 @@
                     </script>
                 </div>
             </div>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_all_settings_bottom" })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.AllSettingsBottom })
         </div>
     </div>
 </div>

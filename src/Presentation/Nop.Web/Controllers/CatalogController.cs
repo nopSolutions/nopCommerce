@@ -123,7 +123,8 @@ namespace Nop.Web.Controllers
                 DisplayEditLink(Url.Action("Edit", "Category", new { id = category.Id, area = AreaNames.Admin }));
 
             //activity log
-            _customerActivityService.InsertActivity("PublicStore.ViewCategory", _localizationService.GetResource("ActivityLog.PublicStore.ViewCategory"), category.Name);
+            _customerActivityService.InsertActivity("PublicStore.ViewCategory",
+                string.Format(_localizationService.GetResource("ActivityLog.PublicStore.ViewCategory"), category.Name), category);
 
             //model
             var model = _catalogModelFactory.PrepareCategoryModel(category, command);
@@ -167,7 +168,8 @@ namespace Nop.Web.Controllers
                 DisplayEditLink(Url.Action("Edit", "Manufacturer", new { id = manufacturer.Id, area = AreaNames.Admin }));
 
             //activity log
-            _customerActivityService.InsertActivity("PublicStore.ViewManufacturer", _localizationService.GetResource("ActivityLog.PublicStore.ViewManufacturer"), manufacturer.Name);
+            _customerActivityService.InsertActivity("PublicStore.ViewManufacturer",
+                string.Format(_localizationService.GetResource("ActivityLog.PublicStore.ViewManufacturer"), manufacturer.Name), manufacturer);
 
             //model
             var model = _catalogModelFactory.PrepareManufacturerModel(manufacturer, command);

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Web.Framework.Mvc.ModelBinding;
-using Nop.Web.Framework.Mvc.Models;
+using Nop.Web.Framework.Models;
 
 namespace Nop.Plugin.Widgets.GoogleAnalytics.Models
 {
@@ -34,5 +34,9 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Models
         [NopResourceDisplayName("Plugins.Widgets.GoogleAnalytics.IncludingTax")]
         public bool IncludingTax { get; set; }
         public bool IncludingTax_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Plugins.Widgets.GoogleAnalytics.IncludeCustomerId")]
+        public bool IncludeCustomerId { get; set; }
+        public bool IncludeCustomerId_OverrideForStore { get; set; }
     }
 }

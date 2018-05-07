@@ -1,9 +1,6 @@
-﻿@model ActivityLogSearchModel
-@inject AdminAreaSettings adminAreaSettings
-@{
-    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
-    var gridPageSizes = adminAreaSettings.GridPageSizes;
+@model ActivityLogSearchModel
 
+@{
     //page title
     ViewBag.Title = T("Admin.Configuration.ActivityLog.ActivityLog").Text;
     //active menu item (system name)
@@ -20,7 +17,7 @@
             <i class="fa fa-trash-o"></i>
             @T("Admin.Common.Clear")
         </a>
-        @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_activity_log_list_buttons" })
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ActivityLogListButtons })
     </div>
 </div>
 
@@ -80,7 +77,7 @@
                 <div class="panel-body">
                     <div id="activityLog-grid"></div>
 
-                    <script type="text/javascript">
+                    <script>
                         $(document).ready(function() {
                             $("#activityLog-grid").kendoGrid({
                                 dataSource: {
@@ -90,7 +87,16 @@
                                             url: "@Html.Raw(Url.Action("ListLogs", "ActivityLog"))",
                                             type: "POST",
                                             dataType: "json",
-                                            data: additionalData
+                                            data: function() {
+                                                var data = {
+                                                    CreatedOnFrom: $('#@Html.IdFor(model => model.CreatedOnFrom)').val(),
+                                                    CreatedOnTo: $('#@Html.IdFor(model => model.CreatedOnTo)').val(),
+                                                    IpAddress: $('#@Html.IdFor(model => model.IpAddress)').val(),
+                                                    ActivityLogTypeId: $('#ActivityLogTypeId').val()
+                                                };
+                                                addAntiForgeryToken(data);
+                                                return data;
+                                            }
                                         },
                                         destroy: {
                                             url: "@Html.Raw(Url.Action("AcivityLogDelete", "ActivityLog"))",
@@ -118,14 +124,14 @@
                                         // Cancel the changes
                                         this.cancelChanges();
                                     },
-                                    pageSize: @(defaultGridPageSize),
+                                    pageSize: @(Model.PageSize),
                                     serverPaging: true,
                                     serverFiltering: true,
                                     serverSorting: true
                                 },
                                 pageable: {
                                     refresh: true,
-                                    pageSizes: [@(gridPageSizes)],
+                                    pageSizes: [@(Model.AvailablePageSizes)],
                                     @await Html.PartialAsync("_GridPagerMessages")
                                 },
                                 editable: {
@@ -165,7 +171,7 @@
                             });
                         });
                     </script>
-                    <script type="text/javascript">
+                    <script>
                         $(document).ready(function() {
                             $('#search-log').click(function() {
                                 var grid = $('#activityLog-grid').data('kendoGrid');
@@ -174,17 +180,6 @@
                                 return false;
                             });
                         });
-
-                        function additionalData() {
-                            var data = {
-                                CreatedOnFrom: $('#@Html.IdFor(model => model.CreatedOnFrom)').val(),
-                                CreatedOnTo: $('#@Html.IdFor(model => model.CreatedOnTo)').val(),
-                                IpAddress: $('#@Html.IdFor(model => model.IpAddress)').val(),
-                                ActivityLogTypeId: $('#ActivityLogTypeId').val()
-                            };
-                            addAntiForgeryToken(data);
-                            return data;
-                        }
                     </script>
                 </div>
             </div>

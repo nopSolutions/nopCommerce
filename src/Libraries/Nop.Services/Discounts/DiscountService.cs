@@ -4,16 +4,17 @@ using System.Linq;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Orders;
-using Nop.Core.Plugins;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Services.Discounts.Cache;
 using Nop.Services.Events;
 using Nop.Services.Localization;
 using Nop.Services.Orders;
+using Nop.Services.Plugins;
 
 namespace Nop.Services.Discounts
 {
@@ -27,6 +28,9 @@ namespace Nop.Services.Discounts
         private readonly IRepository<Discount> _discountRepository;
         private readonly IRepository<DiscountRequirement> _discountRequirementRepository;
         private readonly IRepository<DiscountUsageHistory> _discountUsageHistoryRepository;
+        private readonly IRepository<Category> _categoryRepository;
+        private readonly IRepository<Manufacturer> _manufacturerRepository;
+        private readonly IRepository<Product> _productRepository;
         private readonly IStaticCacheManager _cacheManager;
         private readonly IStoreContext _storeContext;
         private readonly ILocalizationService _localizationService;
@@ -45,6 +49,9 @@ namespace Nop.Services.Discounts
         /// <param name="discountRepository">Discount repository</param>
         /// <param name="discountRequirementRepository">Discount requirement repository</param>
         /// <param name="discountUsageHistoryRepository">Discount usage history repository</param>
+        /// <param name="categoryRepository">Category repository</param>
+        /// <param name="manufacturerRepository">Manufacturer repository</param>
+        /// <param name="productRepository">Product repository</param>
         /// <param name="storeContext">Store context</param>
         /// <param name="localizationService">Localization service</param>
         /// <param name="categoryService">Category service</param>
@@ -54,6 +61,9 @@ namespace Nop.Services.Discounts
             IRepository<Discount> discountRepository,
             IRepository<DiscountRequirement> discountRequirementRepository,
             IRepository<DiscountUsageHistory> discountUsageHistoryRepository,
+            IRepository<Category> categoryRepository,
+            IRepository<Manufacturer> manufacturerRepository,
+            IRepository<Product> productRepository,
             IStoreContext storeContext,
             ILocalizationService localizationService,
             ICategoryService categoryService,
@@ -64,6 +74,9 @@ namespace Nop.Services.Discounts
             this._discountRepository = discountRepository;
             this._discountRequirementRepository = discountRequirementRepository;
             this._discountUsageHistoryRepository = discountUsageHistoryRepository;
+            this._categoryRepository = categoryRepository;
+            this._manufacturerRepository = manufacturerRepository;
+            this._productRepository = productRepository;
             this._storeContext = storeContext;
             this._localizationService = localizationService;
             this._categoryService = categoryService;
@@ -214,42 +227,49 @@ namespace Nop.Services.Discounts
         /// <summary>
         /// Gets all discounts
         /// </summary>
-        /// <param name="discountType">Discount type; null to load all discount</param>
-        /// <param name="couponCode">Coupon code to find (exact match)</param>
-        /// <param name="discountName">Discount name</param>
-        /// <param name="showHidden">A value indicating whether to show hidden records</param>
+        /// <param name="discountType">Discount type; pass null to load all records</param>
+        /// <param name="couponCode">Coupon code to find (exact match); pass null or empty to load all records</param>
+        /// <param name="discountName">Discount name; pass null or empty to load all records</param>
+        /// <param name="showHidden">A value indicating whether to show expired and not started discounts</param>
+        /// <param name="startDateUtc">Discount start date; pass null to load all records</param>
+        /// <param name="endDateUtc">Discount end date; pass null to load all records</param>
         /// <returns>Discounts</returns>
         public virtual IList<Discount> GetAllDiscounts(DiscountType? discountType = null,
-            string couponCode = "", string discountName = "", bool showHidden = false)
+            string couponCode = null, string discountName = null, bool showHidden = false, 
+            DateTime? startDateUtc = null, DateTime? endDateUtc = null)
         {
             var query = _discountRepository.Table;
+
             if (!showHidden)
             {
-                //The function 'CurrentUtcDateTime' is not supported by SQL Server Compact. 
-                //That's why we pass the date value
+                //The function 'CurrentUtcDateTime' is not supported by SQL Server Compact, that's why we pass the date value
                 var nowUtc = DateTime.UtcNow;
-                query = query.Where(d =>
-                    (!d.StartDateUtc.HasValue || d.StartDateUtc <= nowUtc)
-                    && (!d.EndDateUtc.HasValue || d.EndDateUtc >= nowUtc));
+                query = query.Where(discount => 
+                    (!discount.StartDateUtc.HasValue || discount.StartDateUtc <= nowUtc)  && 
+                    (!discount.EndDateUtc.HasValue || discount.EndDateUtc >= nowUtc));
             }
+
+            //filter by dates
+            if (startDateUtc.HasValue)
+                query = query.Where(discount => !discount.StartDateUtc.HasValue || discount.StartDateUtc >= startDateUtc.Value);
+            if (endDateUtc.HasValue)
+                query = query.Where(discount => !discount.EndDateUtc.HasValue || discount.EndDateUtc <= endDateUtc.Value);
+
+            //filter by coupon code
             if (!string.IsNullOrEmpty(couponCode))
-            {
-                query = query.Where(d => d.CouponCode == couponCode);
-            }
+                query = query.Where(discount => discount.CouponCode == couponCode);
+
+            //filter by name
             if (!string.IsNullOrEmpty(discountName))
-            {
-                query = query.Where(d => d.Name.Contains(discountName));
-            }
+                query = query.Where(discount => discount.Name.Contains(discountName));
+
+            //filter by type
             if (discountType.HasValue)
-            {
-                var discountTypeId = (int) discountType.Value;
-                query = query.Where(d => d.DiscountTypeId == discountTypeId);
-            }
+                query = query.Where(discount => discount.DiscountTypeId == (int)discountType.Value);
 
-            query = query.OrderBy(d => d.Name);
+            query = query.OrderBy(discount => discount.Name).ThenBy(discount => discount.Id);
 
-            var discounts = query.ToList();
-            return discounts;
+            return query.ToList();
         }
 
         /// <summary>
@@ -281,7 +301,80 @@ namespace Nop.Services.Discounts
             //event notification
             _eventPublisher.EntityUpdated(discount);
         }
-        
+
+        /// <summary>
+        /// Get categories for which a discount is applied
+        /// </summary>
+        /// <param name="discountId">Discount identifier; pass null to load all records</param>
+        /// <param name="showHidden">A value indicating whether to load deleted categories</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
+        /// <returns>List of categories</returns>
+        public virtual IPagedList<Category> GetCategoriesWithAppliedDiscount(int? discountId = null, 
+            bool showHidden = false, int pageIndex = 0, int pageSize = int.MaxValue)
+        {
+            var categories = _categoryRepository.Table;
+
+            if (discountId.HasValue)
+                categories = categories.Where(category => category.AppliedDiscounts.Any(discount => discount.Id == discountId.Value));
+
+            if (!showHidden)
+                categories = categories.Where(category => !category.Deleted);
+
+            categories = categories.OrderBy(category => category.DisplayOrder).ThenBy(category => category.Id);
+
+            return new PagedList<Category>(categories, pageIndex, pageSize);
+        }
+
+        /// <summary>
+        /// Get manufacturers for which a discount is applied
+        /// </summary>
+        /// <param name="discountId">Discount identifier; pass null to load all records</param>
+        /// <param name="showHidden">A value indicating whether to load deleted manufacturers</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
+        /// <returns>List of manufacturers</returns>
+        public virtual IPagedList<Manufacturer> GetManufacturersWithAppliedDiscount(int? discountId = null,
+            bool showHidden = false, int pageIndex = 0, int pageSize = int.MaxValue)
+        {
+            var manufacturers = _manufacturerRepository.Table;
+
+            if (discountId.HasValue)
+                manufacturers = manufacturers.Where(manufacturer => manufacturer.AppliedDiscounts.Any(discount => discount.Id == discountId.Value));
+
+            if (!showHidden)
+                manufacturers = manufacturers.Where(manufacturer => !manufacturer.Deleted);
+
+            manufacturers = manufacturers.OrderBy(manufacturer => manufacturer.DisplayOrder).ThenBy(manufacturer => manufacturer.Id);
+
+            return new PagedList<Manufacturer>(manufacturers, pageIndex, pageSize);
+
+        }
+
+        /// <summary>
+        /// Get products for which a discount is applied
+        /// </summary>
+        /// <param name="discountId">Discount identifier; pass null to load all records</param>
+        /// <param name="showHidden">A value indicating whether to load deleted products</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
+        /// <returns>List of products</returns>
+        public virtual IPagedList<Product> GetProductsWithAppliedDiscount(int? discountId = null,
+            bool showHidden = false, int pageIndex = 0, int pageSize = int.MaxValue)
+        {
+            var products = _productRepository.Table.Where(product => product.HasDiscountsApplied);
+
+            if (discountId.HasValue)
+                products = products.Where(product => product.AppliedDiscounts.Any(discount => discount.Id == discountId.Value));
+
+            if (!showHidden)
+                products = products.Where(product => !product.Deleted);
+
+            products = products.OrderBy(product => product.DisplayOrder).ThenBy(product => product.Id);
+
+            return new PagedList<Product>(products, pageIndex, pageSize);
+        }
+
         #endregion
 
         #region Discounts (caching)
@@ -289,13 +382,13 @@ namespace Nop.Services.Discounts
         /// <summary>
         /// Gets all discounts (cachable models)
         /// </summary>
-        /// <param name="discountType">Discount type; null to load all discount</param>
-        /// <param name="couponCode">Coupon code to find (exact match)</param>
-        /// <param name="discountName">Discount name</param>
-        /// <param name="showHidden">A value indicating whether to show hidden records</param>
+        /// <param name="discountType">Discount type; pass null to load all records</param>
+        /// <param name="couponCode">Coupon code to find (exact match); pass null or empty to load all records</param>
+        /// <param name="discountName">Discount name; pass null or empty to load all records</param>
+        /// <param name="showHidden">A value indicating whether to show expired and not started discounts</param>
         /// <returns>Discounts</returns>
         public virtual IList<DiscountForCaching> GetAllDiscountsForCaching(DiscountType? discountType = null,
-            string couponCode = "", string discountName = "", bool showHidden = false)
+            string couponCode = null, string discountName = null, bool showHidden = false)
         {
             //we cache discounts between requests. Otherwise, they will be loaded for almost each HTTP request
             //we have to use the following workaround with cachable model (DiscountForCaching) because
@@ -304,19 +397,20 @@ namespace Nop.Services.Discounts
             //we load all discounts, and filter them using "discountType" parameter later (in memory)
             //we do it because we know that this method is invoked several times per HTTP request with distinct "discountType" parameter
             //that's why let's access the database only once
-            var key = string.Format(DiscountEventConsumer.DISCOUNT_ALL_KEY, showHidden, couponCode, discountName);
-            var result = _cacheManager.Get(key, () =>
+            var cacheKey = string.Format(DiscountEventConsumer.DISCOUNT_ALL_KEY, 
+                showHidden, couponCode ?? string.Empty, discountName ?? string.Empty);
+            var discounts = _cacheManager.Get(cacheKey, () =>
             {
-                var discounts = GetAllDiscounts(null, couponCode, discountName, showHidden);
-                return discounts.Select(d => d.MapDiscount()).ToList();
+                return GetAllDiscounts(couponCode: couponCode, discountName: discountName, showHidden: showHidden)
+                    .Select(discount => discount.MapDiscount()).ToList();
             });
+
             //we know that this method is usually inkoved multiple times
             //that's why we filter discounts by type on the application layer
             if (discountType.HasValue)
-            {
-                result = result.Where(d => d.DiscountType == discountType.Value).ToList();
-            }
-            return result;
+                discounts = discounts.Where(discount => discount.DiscountType == discountType.Value).ToList();
+
+            return discounts;
         }
 
         /// <summary>
@@ -348,9 +442,7 @@ namespace Nop.Services.Discounts
                     if (discount.AppliedToSubCategories)
                     {
                         //include subcategories
-                        foreach (var childCategoryId in _categoryService
-                            .GetAllCategoriesByParentCategoryId(categoryId, false, true)
-                            .Select(x => x.Id))
+                        foreach (var childCategoryId in _categoryService.GetChildCategoryIds(categoryId, _storeContext.CurrentStore.Id))
                         {
                             if (!ids.Contains(childCategoryId))
                                 ids.Add(childCategoryId);

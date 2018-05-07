@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc.ViewComponents;
 using Nop.Core.Infrastructure;
 using Nop.Services.Events;
 using Nop.Web.Framework.Events;
-using Nop.Web.Framework.Mvc.Models;
+using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Framework.Components
 {

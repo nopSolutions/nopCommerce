@@ -54,7 +54,7 @@
                                         <input type="text" name="@(controlId)_@(attributeValue.Id)_qty" id="@(controlId)_@(attributeValue.Id)_qty" value="@(attributeValue.Quantity)" />
                                     </div>
                                 }
-                                <script type="text/javascript" asp-location="Footer">
+                                <script asp-location="Footer">
                                     $(document).ready(function() {
                                         showHideDropdownQuantity("@controlId");
                                     });
@@ -85,7 +85,7 @@
                                         </li>
                                     }
                                 </ul>
-                                <script type="text/javascript" asp-location="Footer">
+                                <script asp-location="Footer">
                                     $(document).ready(function() {
                                         showHideRadioQuantity("@controlId");
                                     });
@@ -112,7 +112,7 @@
                                                 <div class="qty-box" id="@(controlId)_@(attributeValue.Id)_qty_box" style="display:none">
                                                     <label for="@(controlId)_@(attributeValue.Id)_qty">@(T("Products.ProductAttributes.PriceAdjustment.Quantity").Text)</label>
                                                     <input type="text" name="@(controlId)_@(attributeValue.Id)_qty" id="@(controlId)_@(attributeValue.Id)_qty" value="@(attributeValue.Quantity)" />
-                                                    <script type="text/javascript" asp-location="Footer">
+                                                    <script asp-location="Footer">
                                                         $(document).ready(function() {
                                                             showHideCheckboxQuantity('@(controlId)_@(attributeValue.Id)');
                                                         })
@@ -205,7 +205,7 @@
                                         </ul>
                                     </div>
                                 </script>
-                                <script type="text/javascript" asp-location="Footer">
+                                <script asp-location="Footer">
                                     $(document).ready(function() {
                                         $("#@(controlId)uploader").fineUploader({
                                             request: {
@@ -279,7 +279,7 @@
                                         <input type="text" name="@(controlId)_@(attributeValue.Id)_qty" id="@(controlId)_@(attributeValue.Id)_qty" value="@(attributeValue.Quantity)" />
                                     </div>
                                 }
-                                <script type="text/javascript" asp-location="Footer">
+                                <script asp-location="Footer">
                                     $(document).ready(function() {
                                         $('.attributes #color-squares-@(attribute.Id)').delegate('input', 'click', function(event) {
                                             $('.attributes #color-squares-@(attribute.Id)').find('li').removeClass('selected-value');
@@ -320,7 +320,7 @@
                                         <input type="text" name="@(controlId)_@(attributeValue.Id)_qty" id="@(controlId)_@(attributeValue.Id)_qty" value="@(attributeValue.Quantity)" />
                                     </div>
                                 }
-                                <script type="text/javascript" asp-location="Footer">
+                                <script asp-location="Footer">
                                     $(document).ready(function() {
                                         $('.attributes #image-squares-@(attribute.Id)').delegate('input', 'click', function(event) {
                                             $('.attributes #image-squares-@(attribute.Id)').find('li').removeClass('selected-value');
@@ -335,7 +335,7 @@
                 </dd>
             }
         </dl>
-        <script type="text/javascript" asp-location="Footer">
+        <script asp-location="Footer">
             function showHideDropdownQuantity(id) {
                 $('select[name=' + id + '] > option').each(function() {
                     $('#' + id + '_' + this.value + '_qty_box').hide();
@@ -411,7 +411,7 @@
 
         //render scripts
         //almost the same implementation is used in the \Views\Product\_RentalInfo.cshtml file
-        <script type="text/javascript" asp-location="Footer">
+        <script asp-location="Footer">
             function @(attributeChangeHandlerFuncName)() {
                 $.ajax({
                     cache: false,

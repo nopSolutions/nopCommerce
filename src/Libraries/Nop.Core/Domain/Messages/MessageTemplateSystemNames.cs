@@ -47,6 +47,11 @@ namespace Nop.Core.Domain.Messages
         public const string OrderPlacedStoreOwnerNotification = "OrderPlaced.StoreOwnerNotification";
 
         /// <summary>
+        /// Represents system name of notification affiliate about placed order
+        /// </summary>
+        public const string OrderPlacedAffiliateNotification = "OrderPlaced.AffiliateNotification";
+
+        /// <summary>
         /// Represents system name of notification store owner about paid order
         /// </summary>
         public const string OrderPaidStoreOwnerNotification = "OrderPaid.StoreOwnerNotification";
@@ -60,6 +65,11 @@ namespace Nop.Core.Domain.Messages
         /// Represents system name of notification vendor about paid order
         /// </summary>
         public const string OrderPaidVendorNotification = "OrderPaid.VendorNotification";
+
+        /// <summary>
+        /// Represents system name of notification affiliate about paid order
+        /// </summary>
+        public const string OrderPaidAffiliateNotification = "OrderPaid.AffiliateNotification";
 
         /// <summary>
         /// Represents system name of notification customer about placed order
@@ -204,7 +214,12 @@ namespace Nop.Core.Domain.Messages
         /// <summary>
         /// Represents system name of notification store owner about new product review
         /// </summary>
-        public const string ProductReviewNotification = "Product.ProductReview";
+        public const string ProductReviewStoreOwnerNotification = "Product.ProductReview";
+
+        /// <summary>
+        /// Represents system name of notification customer about product review reply
+        /// </summary>
+        public const string ProductReviewReplyCustomerNotification = "ProductReview.Reply.CustomerNotification";
 
         /// <summary>
         /// Represents system name of notification store owner about below quantity of product

@@ -1,4 +1,4 @@
-﻿@model MessageTemplateListModel
+@model MessageTemplateSearchModel
 
 @{
     //page title
@@ -14,7 +14,7 @@
     </h1>
     <div class="pull-right">
         &nbsp;
-        @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_message_template_list_buttons" })
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.MessageTemplateListButtons })
     </div>
 </div>
 
@@ -51,7 +51,7 @@
                 <div class="panel-body">
                     <div id="templates-grid"></div>
 
-                    <script type="text/javascript">
+                    <script>
                         $(document).ready(function () {
                             $("#templates-grid").kendoGrid({
                                 dataSource: {
@@ -61,7 +61,13 @@
                                             url: "@Html.Raw(Url.Action("List", "MessageTemplate"))",
                                             type: "POST",
                                             dataType: "json",
-                                            data: additionalData
+                                            data: function() {
+                                                var data = {
+                                                    SearchStoreId: $('#SearchStoreId').val()
+                                                };
+                                                addAntiForgeryToken(data);
+                                                return data;
+                                            }
                                         }
                                     },
                                     schema: {
@@ -74,15 +80,14 @@
                                         // Cancel the changes
                                         this.cancelChanges();
                                     },
+                                    pageSize: @(Model.PageSize),
                                     serverPaging: true,
                                     serverFiltering: true,
                                     serverSorting: true
                                 },
                                 pageable: {
                                     refresh: true,
-                                    numeric: false,
-                                    previousNext: false,
-                                    info: false,
+                                    pageSizes: [@(Model.AvailablePageSizes)],
                                     @await Html.PartialAsync("_GridPagerMessages")
                                 },
                                 editable: {
@@ -121,7 +126,7 @@
                         });
                     </script>
 
-                    <script type="text/javascript">
+                    <script>
                         $(document).ready(function () {
                             //search button
                             $('#search-templates').click(function () {
@@ -130,14 +135,6 @@
                                 grid.dataSource.read();
                             });
                         });
-
-                        function additionalData() {
-                            var data = {
-                                SearchStoreId: $('#SearchStoreId').val()
-                            };
-                            addAntiForgeryToken(data);
-                            return data;
-                        }
                     </script>
                 </div>
             </div>

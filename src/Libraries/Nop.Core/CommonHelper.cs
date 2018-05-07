@@ -2,12 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Text.RegularExpressions;
+using Nop.Core.Infrastructure;
 
 namespace Nop.Core
 {
@@ -315,17 +315,6 @@ namespace Nop.Core
         }
 
         /// <summary>
-        /// Maps a virtual path to a physical disk path.
-        /// </summary>
-        /// <param name="path">The path to map. E.g. "~/bin"</param>
-        /// <returns>The physical path. E.g. "c:\inetpub\wwwroot\bin"</returns>
-        public static string MapPath(string path)
-        {
-            path = path.Replace("~/", "").TrimStart('/').Replace('/', '\\');
-            return Path.Combine(BaseDirectory??string.Empty, path);
-        }
-
-        /// <summary>
         /// Get private fields property value
         /// </summary>
         /// <param name="target">Target object</param>
@@ -363,46 +352,15 @@ namespace Nop.Core
             return fi.GetValue(target);
         }
 
-        /// <summary>
-        ///  Depth-first recursive delete, with handling for descendant directories open in Windows Explorer.
-        /// </summary>
-        /// <param name="path">Directory path</param>
-        public static void DeleteDirectory(string path)
-        {
-            if (string.IsNullOrEmpty(path))
-                throw new ArgumentNullException(path);
-
-            //find more info about directory deletion
-            //and why we use this approach at https://stackoverflow.com/questions/329355/cannot-delete-directory-with-directory-deletepath-true
-
-            foreach (var directory in Directory.GetDirectories(path))
-            {
-                DeleteDirectory(directory);
-            }
-
-            try
-            {
-                Directory.Delete(path, true);
-            }
-            catch (IOException)
-            {
-                Directory.Delete(path, true);
-            }
-            catch (UnauthorizedAccessException)
-            {
-                Directory.Delete(path, true);
-            }
-        }
-
         #endregion
 
         #region Properties
 
         /// <summary>
-        /// Gets or sets application base path
+        /// Gets or sets the default file provider
         /// </summary>
-        internal static string BaseDirectory { get; set; }
-        
+        public static INopFileProvider DefaultFileProvider { get; set; }
+
         #endregion
     }
 }

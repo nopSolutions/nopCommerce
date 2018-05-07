@@ -1,27 +1,12 @@
-﻿@model StoreModel
+@model StoreModel
 
 <div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
 
-<script type="text/javascript">
-    $(document).ready(function () {
-        $("#@Html.IdFor(model => model.SslEnabled)").click(toggleSslEnabled);
-        toggleSslEnabled();
-    });
-
-    function toggleSslEnabled() {
-        if ($('#@Html.IdFor(model => model.SslEnabled)').is(':checked')) {
-            $('#pnlSecureUrl').show();
-        } else {
-            $('#pnlSecureUrl').hide();
-        }
-    }
-</script>
-
 <div class="content">
     <div class="form-horizontal">
         <div class="panel-group">
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_store_details_top", additionalData = Model.Id })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.StoreDetailsTop, additionalData = Model })
             <div class="panel panel-default">
                 <div class="panel-body">
                     @(Html.LocalizedEditor<StoreModel, StoreLocalizedModel>("store-localized",
@@ -69,17 +54,6 @@
                             <span asp-validation-for="SslEnabled"></span>
                         </div>
                     </div>
-                    <nop-nested-setting asp-for="SslEnabled">
-                        <div class="form-group" id="pnlSecureUrl">
-                            <div class="col-md-3">
-                                <nop-label asp-for="SecureUrl" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="SecureUrl" />
-                                <span asp-validation-for="SecureUrl"></span>
-                            </div>
-                        </div>
-                    </nop-nested-setting>
                     <div class="form-group">
                         <div class="col-md-3">
                             <nop-label asp-for="Hosts" />
@@ -145,7 +119,7 @@
                     </div>
                 </div>
             </div>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_store_details_bottom", additionalData = Model.Id })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.StoreDetailsBottom, additionalData = Model })
         </div>
     </div>
 </div>

@@ -43,6 +43,11 @@ namespace Nop.Core.Domain.Catalog
         public decimal PriceAdjustment { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether "price adjustment" is specified as percentage (used only with AttributeValueType.Simple)
+        /// </summary>
+        public bool PriceAdjustmentUsePercentage { get; set; }
+
+        /// <summary>
         /// Gets or sets the weight adjustment (used only with AttributeValueType.Simple)
         /// </summary>
         public decimal WeightAdjustment { get; set; }

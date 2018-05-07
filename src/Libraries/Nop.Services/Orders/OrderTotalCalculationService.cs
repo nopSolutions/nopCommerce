@@ -251,7 +251,7 @@ namespace Nop.Services.Orders
             }
 
             //reward points
-            var rewardPointsOfOrder = _rewardPointService.GetRewardPointsHistory(customer.Id, true)
+            var rewardPointsOfOrder = _rewardPointService.GetRewardPointsHistory(customer.Id)
                 .FirstOrDefault(history => history.UsedWithOrder == updatedOrder);
             if (rewardPointsOfOrder != null)
             {
@@ -661,7 +661,8 @@ namespace Nop.Services.Orders
                 return;
 
             var rewardPointsBalance = _rewardPointService.GetRewardPointsBalance(customer.Id, _storeContext.CurrentStore.Id);
-
+            rewardPointsBalance = _rewardPointService.GetReducedPointsBalance(rewardPointsBalance);
+            
             if (!CheckMinimumRewardPointsToUseRequirement(rewardPointsBalance))
                 return;
 
@@ -1418,7 +1419,13 @@ namespace Nop.Services.Orders
             //do you give reward points for order total? or do you exclude shipping?
             //since shipping costs vary some of store owners don't give reward points based on shipping total
             //you can put your custom logic here
-            return orderTotal - orderShippingInclTax;
+            var totalForRewardPoints = orderTotal - orderShippingInclTax;
+
+            //check the minimum total to award points
+            if (totalForRewardPoints < _rewardPointsSettings.MinOrderTotalToAwardPoints)
+                return decimal.Zero;
+
+            return totalForRewardPoints;
         }
 
         /// <summary>

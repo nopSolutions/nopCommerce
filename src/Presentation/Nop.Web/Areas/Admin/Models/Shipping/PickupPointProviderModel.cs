@@ -1,11 +1,16 @@
 ﻿using Microsoft.AspNetCore.Routing;
 using Nop.Web.Framework.Mvc.ModelBinding;
-using Nop.Web.Framework.Mvc.Models;
+using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Areas.Admin.Models.Shipping
 {
+    /// <summary>
+    /// Represents a pickup point provider model
+    /// </summary>
     public partial class PickupPointProviderModel : BaseNopModel
     {
+        #region Properties
+
         [NopResourceDisplayName("Admin.Configuration.Shipping.PickupPointProviders.Fields.FriendlyName")]
         public string FriendlyName { get; set; }
 
@@ -25,7 +30,11 @@ namespace Nop.Web.Areas.Admin.Models.Shipping
         public string ConfigurationUrl { get; set; }
 
         public string ConfigurationActionName { get; set; }
+
         public string ConfigurationControllerName { get; set; }
+
         public RouteValueDictionary ConfigurationRouteValues { get; set; }
+
+        #endregion
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Text;
 using Newtonsoft.Json;
 using Nop.Core.Infrastructure;
 
@@ -12,8 +13,14 @@ namespace Nop.Core.Data
     {
         #region Const
 
-        private const string ObsoleteDataSettingsFilePath = "~/App_Data/Settings.txt";
-        private const string DataSettingsFilePath_ = "~/App_Data/dataSettings.json";
+        private const string OBSOLETE_DATA_SETTINGS_FILE_PATH = "~/App_Data/Settings.txt";
+        private const string DATA_SETTINGS_FILE_PATH_ = "~/App_Data/dataSettings.json";
+
+        #endregion
+
+        #region Fields
+
+        protected INopFileProvider _fileProvider;
 
         #endregion
 
@@ -22,7 +29,16 @@ namespace Nop.Core.Data
         /// <summary>
         /// Gets the path to file that contains data settings
         /// </summary>
-        public static string DataSettingsFilePath => DataSettingsFilePath_;
+        public static string DataSettingsFilePath => DATA_SETTINGS_FILE_PATH_;
+
+        #endregion
+
+        #region Ctor
+
+        public DataSettingsManager(INopFileProvider fileProvider = null)
+        {
+            this._fileProvider = fileProvider ?? CommonHelper.DefaultFileProvider;
+        }
 
         #endregion
 
@@ -39,21 +55,21 @@ namespace Nop.Core.Data
             if (!reloadSettings && Singleton<DataSettings>.Instance != null)
                 return Singleton<DataSettings>.Instance;
 
-            filePath = filePath ?? CommonHelper.MapPath(DataSettingsFilePath);
+            filePath = filePath ?? _fileProvider.MapPath(DataSettingsFilePath);
 
             //check whether file exists
-            if (!File.Exists(filePath))
+            if (!_fileProvider.FileExists(filePath))
             {
                 //if not, try to parse the file that was used in previous nopCommerce versions
-                filePath = CommonHelper.MapPath(ObsoleteDataSettingsFilePath);
-                if (!File.Exists(filePath))
+                filePath = _fileProvider.MapPath(OBSOLETE_DATA_SETTINGS_FILE_PATH);
+                if (!_fileProvider.FileExists(filePath))
                     return new DataSettings();
 
                 //get data settings from the old txt file
                 var dataSettings = new DataSettings();
-                using (var reader = new StringReader(File.ReadAllText(filePath)))
+                using (var reader = new StringReader(_fileProvider.ReadAllText(filePath, Encoding.UTF8)))
                 {
-                    var settingsLine = string.Empty;
+                    string settingsLine;
                     while ((settingsLine = reader.ReadLine()) != null)
                     {
                         var separatorIndex = settingsLine.IndexOf(':');
@@ -82,13 +98,13 @@ namespace Nop.Core.Data
                 SaveSettings(dataSettings);
 
                 //and delete the old one
-                File.Delete(filePath);
+                _fileProvider.DeleteFile(filePath);
 
                 Singleton<DataSettings>.Instance = dataSettings;
                 return Singleton<DataSettings>.Instance;
             }
 
-            var text = File.ReadAllText(filePath);
+            var text = _fileProvider.ReadAllText(filePath, Encoding.UTF8);
             if (string.IsNullOrEmpty(text))
                 return new DataSettings();
 
@@ -104,19 +120,15 @@ namespace Nop.Core.Data
         public virtual void SaveSettings(DataSettings settings)
         {
             Singleton<DataSettings>.Instance = settings ?? throw new ArgumentNullException(nameof(settings));
-
-            var filePath = CommonHelper.MapPath(DataSettingsFilePath);
+            
+            var filePath = _fileProvider.MapPath(DataSettingsFilePath);
 
             //create file if not exists
-            if (!File.Exists(filePath))
-            {
-                //we use 'using' to close the file after it's created
-                using (File.Create(filePath)) { }
-            }
+            _fileProvider.CreateFile(filePath);
 
             //save data settings to the file
             var text = JsonConvert.SerializeObject(Singleton<DataSettings>.Instance, Formatting.Indented);
-            File.WriteAllText(filePath, text);
+            _fileProvider.WriteAllText(filePath, text, Encoding.UTF8);
         }
 
         #endregion

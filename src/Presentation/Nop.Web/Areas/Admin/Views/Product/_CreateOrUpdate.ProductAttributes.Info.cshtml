@@ -1,20 +1,26 @@
-﻿@model ProductModel
+@model ProductModel
 
-@await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_product_details_product_attributes_info_top", additionalData = Model.Id })
+@await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductDetailsProductAttributesInfoTop, additionalData = Model })
 <div class="panel panel-default">
     <div class="panel-body">
         <div id="productattributemappings-grid"></div>
-        <script type="text/javascript">
+        <script>
             $(document).ready(function() {
                 $("#productattributemappings-grid").kendoGrid({
                     dataSource: {
                         type: "json",
                         transport: {
                             read: {
-                                url: "@Html.Raw(Url.Action("ProductAttributeMappingList", "Product", new { productId = Model.Id }))",
+                                url: "@Html.Raw(Url.Action("ProductAttributeMappingList", "Product"))",
                                 type: "POST",
                                 dataType: "json",
-                                data: addAntiForgeryToken
+                                data: function additionalData() {
+                                    var data = {
+                                        ProductId: '@(Model.Id)'
+                                    };
+                                    addAntiForgeryToken(data);
+                                    return data;
+                                }
                             }
                         },
                         schema: {
@@ -27,15 +33,14 @@
                             // Cancel the changes
                             this.cancelChanges();
                         },
+                        pageSize: @(Model.ProductAttributeMappingSearchModel.PageSize),
                         serverPaging: true,
                         serverFiltering: true,
                         serverSorting: true
                     },
                     pageable: {
                         refresh: true,
-                        numeric: false,
-                        previousNext: false,
-                        info: false,
+                        pageSizes: [@(Model.ProductAttributeMappingSearchModel.AvailablePageSizes)],
                         @await Html.PartialAsync("_GridPagerMessages")
                     },
                     editable: {
@@ -108,4 +113,4 @@
         </a>
     </div>
 </div>
-@await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_product_details_product_attributes_info_bottom", additionalData = Model.Id })
+@await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductDetailsProductAttributesInfoBottom, additionalData = Model })

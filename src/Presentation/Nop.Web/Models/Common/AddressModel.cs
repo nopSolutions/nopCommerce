@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using FluentValidation.Attributes;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Web.Framework.Mvc.ModelBinding;
-using Nop.Web.Framework.Mvc.Models;
+using Nop.Web.Framework.Models;
 using Nop.Web.Validators.Common;
 
 namespace Nop.Web.Models.Common
@@ -43,6 +43,11 @@ namespace Nop.Web.Models.Common
         public int? StateProvinceId { get; set; }
         [NopResourceDisplayName("Address.Fields.StateProvince")]
         public string StateProvinceName { get; set; }
+
+        public bool CountyEnabled { get; set; }
+        public bool CountyRequired { get; set; }
+        [NopResourceDisplayName("Address.Fields.County")]
+        public string County { get; set; }
 
         public bool CityEnabled { get; set; }
         public bool CityRequired { get; set; }

@@ -16,7 +16,6 @@ using Nop.Services.Logging;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
 using Nop.Services.Security;
-using Nop.Services.Stores;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc.Filters;
@@ -28,7 +27,6 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
         #region Fields
 
         private readonly IWorkContext _workContext;
-        private readonly IStoreService _storeService;
         private readonly ISettingService _settingService;
         private readonly IPaymentService _paymentService;
         private readonly IOrderService _orderService;
@@ -48,7 +46,6 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
         #region Ctor
 
         public PaymentPayPalStandardController(IWorkContext workContext,
-            IStoreService storeService, 
             ISettingService settingService, 
             IPaymentService paymentService, 
             IOrderService orderService, 
@@ -64,7 +61,6 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
             ShoppingCartSettings shoppingCartSettings)
         {
             this._workContext = workContext;
-            this._storeService = storeService;
             this._settingService = settingService;
             this._paymentService = paymentService;
             this._orderService = orderService;
@@ -92,7 +88,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                 return AccessDeniedView();
 
             //load settings for a chosen store scope
-            var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var storeScope = _storeContext.ActiveStoreScopeConfiguration;
             var payPalStandardPaymentSettings = _settingService.LoadSetting<PayPalStandardPaymentSettings>(storeScope);
 
             var model = new ConfigurationModel
@@ -131,7 +127,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                 return Configure();
 
             //load settings for a chosen store scope
-            var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var storeScope = _storeContext.ActiveStoreScopeConfiguration;
             var payPalStandardPaymentSettings = _settingService.LoadSetting<PayPalStandardPaymentSettings>(storeScope);
 
             //save settings

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Mail;
 using Nop.Core.Domain.Messages;
+using Nop.Core.Infrastructure;
 using Nop.Services.Media;
 
 namespace Nop.Services.Messages
@@ -15,14 +16,18 @@ namespace Nop.Services.Messages
     public partial class EmailSender : IEmailSender
     {
         private readonly IDownloadService _downloadService;
+        private readonly INopFileProvider _fileProvider;
 
         /// <summary>
         /// Ctor
         /// </summary>
         /// <param name="downloadService">Download service</param>
-        public EmailSender(IDownloadService downloadService)
+        /// <param name="fileProvider">File provider</param>
+        public EmailSender(IDownloadService downloadService,
+            INopFileProvider fileProvider)
         {
             this._downloadService = downloadService;
+            this._fileProvider = fileProvider;
         }
 
         /// <summary>
@@ -93,12 +98,12 @@ namespace Nop.Services.Messages
 
             //create the file attachment for this e-mail message
             if (!string.IsNullOrEmpty(attachmentFilePath) &&
-                File.Exists(attachmentFilePath))
+                _fileProvider.FileExists(attachmentFilePath))
             {
                 var attachment = new Attachment(attachmentFilePath);
-                attachment.ContentDisposition.CreationDate = File.GetCreationTime(attachmentFilePath);
-                attachment.ContentDisposition.ModificationDate = File.GetLastWriteTime(attachmentFilePath);
-                attachment.ContentDisposition.ReadDate = File.GetLastAccessTime(attachmentFilePath);
+                attachment.ContentDisposition.CreationDate = _fileProvider.GetCreationTime(attachmentFilePath);
+                attachment.ContentDisposition.ModificationDate = _fileProvider.GetLastWriteTime(attachmentFilePath);
+                attachment.ContentDisposition.ReadDate = _fileProvider.GetLastAccessTime(attachmentFilePath);
                 if (!string.IsNullOrEmpty(attachmentFileName))
                 {
                     attachment.Name = attachmentFileName;

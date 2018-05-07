@@ -1,19 +1,11 @@
-﻿using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Nop.Web.Framework.Mvc.ModelBinding;
-using Nop.Web.Framework.Mvc.Models;
+﻿using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Areas.Admin.Models.News
 {
-    public partial class NewsItemListModel : BaseNopModel
+    /// <summary>
+    /// Represents a news item list model
+    /// </summary>
+    public partial class NewsItemListModel : BasePagedListModel<NewsItemModel>
     {
-        public NewsItemListModel()
-        {
-            AvailableStores = new List<SelectListItem>();
-        }
-
-        [NopResourceDisplayName("Admin.ContentManagement.News.NewsItems.List.SearchStore")]
-        public int SearchStoreId { get; set; }
-        public IList<SelectListItem> AvailableStores { get; set; }
     }
 }

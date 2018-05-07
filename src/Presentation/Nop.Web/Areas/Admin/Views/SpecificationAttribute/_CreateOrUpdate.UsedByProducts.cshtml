@@ -1,0 +1,83 @@
+@model SpecificationAttributeModel
+
+<div class="panel-group">
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.SpecificationAttributeDetailsUsedByProductsTop, additionalData = Model })
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div id="used-by-products-grid"></div>
+
+            <script>
+                $(document).ready(function () {
+                    $("#used-by-products-grid").kendoGrid({
+                        dataSource: {
+                            type: "json",
+                            transport: {
+                                read: {
+                                    url: "@Html.Raw(Url.Action("UsedByProducts", "SpecificationAttribute"))",
+                                    type: "POST",
+                                    dataType: "json",
+                                    data: function() {
+                                        var data = {
+                                            SpecificationAttributeId: '@(Model.Id)'
+                                        };
+                                        addAntiForgeryToken(data);
+                                        return data;
+                                    }
+                                }
+                            },
+                            schema: {
+                                data: "Data",
+                                total: "Total",
+                                errors: "Errors",
+                                model: {
+                                    id: "Id"
+                                }
+                            },
+                            error: function (e) {
+                                display_kendoui_grid_error(e);
+                                // Cancel the changes
+                                this.cancelChanges();
+                            },
+                            pageSize: @(Model.SpecificationAttributeProductSearchModel.PageSize),
+                            serverPaging: true,
+                            serverFiltering: true,
+                            serverSorting: true
+                        },
+                        editable: {
+                            confirmation: "@T("Admin.Common.DeleteConfirmation")",
+                            mode: "inline"
+                        },
+                        pageable: {
+                            refresh: true,
+                            pageSizes: [@(Model.SpecificationAttributeProductSearchModel.AvailablePageSizes)],
+                            @await Html.PartialAsync("_GridPagerMessages")
+                        },
+                        scrollable: false,
+                        columns: [
+                            {
+                                field: "ProductName",
+                                title: "@T("Admin.Catalog.Attributes.SpecificationAttributes.UsedByProducts.Product")"
+                            }, {
+                                field: "Published",
+                                title: "@T("Admin.Catalog.Attributes.SpecificationAttributes.UsedByProducts.Published")",
+                                width: 100,
+                                headerAttributes: { style: "text-align:center" },
+                                attributes: { style: "text-align:center" },
+                                template: '# if(Published) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
+                            },
+                            {
+                                field: "ProductId",
+                                title: "@T("Admin.Common.View")",
+                                width: 100,
+                                headerAttributes: { style: "text-align:center" },
+                                attributes: { style: "text-align:center" },
+                                template: '<a class="btn btn-default" href="@Url.Content("~/Admin/Product/Edit/")#=ProductId#"><i class="fa fa-eye"></i>@T("Admin.Common.View")</a>'
+                            }
+                        ]
+                    });
+                });
+            </script>
+        </div>
+    </div>
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.SpecificationAttributeDetailsUsedByProductsBottom, additionalData = Model })
+</div>

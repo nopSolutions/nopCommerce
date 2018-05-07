@@ -5,10 +5,12 @@ using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
+using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Stores;
 using Nop.Core.Extensions;
 using Nop.Data;
 using Nop.Services.Events;
+using Nop.Services.Seo;
 
 namespace Nop.Services.Catalog
 {
@@ -45,6 +47,7 @@ namespace Nop.Services.Catalog
         private readonly IStaticCacheManager _cacheManager;
         private readonly IEventPublisher _eventPublisher;
         private readonly IProductService _productService;
+        private readonly IUrlRecordService _urlRecordService;
 
         #endregion
 
@@ -62,6 +65,7 @@ namespace Nop.Services.Catalog
         /// <param name="storeMappingRepository">Store mapping repository</param>
         /// <param name="catalogSettings">Catalog settings</param>
         /// <param name="productService">Product service</param>
+        /// <param name="urlRecordService">Url record service</param>
         public ProductTagService(IRepository<ProductTag> productTagRepository,
             IRepository<StoreMapping> storeMappingRepository,
             IDataProvider dataProvider,
@@ -70,7 +74,8 @@ namespace Nop.Services.Catalog
             CatalogSettings catalogSettings,
             IStaticCacheManager cacheManager,
             IEventPublisher eventPublisher,
-            IProductService productService)
+            IProductService productService,
+            IUrlRecordService urlRecordService)
         {
             this._productTagRepository = productTagRepository;
             this._storeMappingRepository = storeMappingRepository;
@@ -81,6 +86,7 @@ namespace Nop.Services.Catalog
             this._cacheManager = cacheManager;
             this._eventPublisher = eventPublisher;
             this._productService = productService;
+            this._urlRecordService = urlRecordService;
         }
 
         #endregion
@@ -200,7 +206,7 @@ namespace Nop.Services.Catalog
             var productTag = query.FirstOrDefault();
             return productTag;
         }
-
+        
         /// <summary>
         /// Inserts a product tag
         /// </summary>
@@ -229,6 +235,9 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException(nameof(productTag));
 
             _productTagRepository.Update(productTag);
+
+            var seName = productTag.ValidateSeName("", productTag.Name, true);
+            _urlRecordService.SaveSlug(productTag, seName, 0);
 
             //cache
             _cacheManager.RemoveByPattern(PRODUCTTAG_PATTERN_KEY);
@@ -308,6 +317,10 @@ namespace Nop.Services.Catalog
                     product.ProductTags.Add(productTag);
                     _productService.UpdateProduct(product);
                 }
+
+                var seName = productTag.ValidateSeName("", productTag.Name, true);
+                _urlRecordService.SaveSlug(productTag, seName, 0);
+
             }
         }
 

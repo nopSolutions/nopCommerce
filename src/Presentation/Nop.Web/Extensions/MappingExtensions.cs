@@ -30,6 +30,8 @@ namespace Nop.Web.Extensions
                     model.Email = model.Email.Trim();
                 if (model.Company != null)
                     model.Company = model.Company.Trim();
+                if (model.County != null)
+                    model.County = model.County.Trim();
                 if (model.City != null)
                     model.City = model.City.Trim();
                 if (model.Address1 != null)
@@ -50,6 +52,7 @@ namespace Nop.Web.Extensions
             destination.Company = model.Company;
             destination.CountryId = model.CountryId;
             destination.StateProvinceId = model.StateProvinceId;
+            destination.County = model.County;
             destination.City = model.City;
             destination.Address1 = model.Address1;
             destination.Address2 = model.Address2;

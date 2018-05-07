@@ -39,6 +39,11 @@ namespace Nop.Core.Domain.Orders
         public bool AnonymousCheckoutAllowed { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether checkout is disabled
+        /// </summary>
+        public bool CheckoutDisabled { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether 'Terms of service' enabled on the shopping cart page
         /// </summary>
         public bool TermsOfServiceOnShoppingCartPage { get; set; }
@@ -152,5 +157,10 @@ namespace Nop.Core.Domain.Orders
         /// Gets or sets a value indicating whether administrators (in impersonation mode) are allowed to buy products marked as "Call for price"
         /// </summary>
         public bool AllowAdminsToBuyCallForPriceProducts { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the gift card usage history have to delete when an order is cancelled
+        /// </summary>
+        public bool DeleteGiftCardUsageHistory { get; set; }
     }
 }

@@ -7,13 +7,13 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Stores;
-using Nop.Core.Plugins;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Events;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Orders;
+using Nop.Services.Plugins;
 using Nop.Services.Shipping;
 using Nop.Tests;
 using NUnit.Framework;
@@ -46,7 +46,8 @@ namespace Nop.Services.Tests.Shipping
             _shippingSettings = new ShippingSettings
             {
                 UseCubeRootMethod = true,
-                ConsiderAssociatedProductsDimensions = true
+                ConsiderAssociatedProductsDimensions = true,
+                ShipSeparatelyOneItemEach = false
             };
 
             _shippingMethodRepository = MockRepository.GenerateMock<IRepository<ShippingMethod>>();
@@ -57,11 +58,12 @@ namespace Nop.Services.Tests.Shipping
 
             var cacheManager = new NopNullCache();
 
-            var pluginFinder = new PluginFinder();
             _productService = MockRepository.GenerateMock<IProductService>();
 
             _eventPublisher = MockRepository.GenerateMock<IEventPublisher>();
             _eventPublisher.Expect(x => x.Publish(Arg<object>.Is.Anything));
+
+            var pluginFinder = new PluginFinder(_eventPublisher);
 
             _localizationService = MockRepository.GenerateMock<ILocalizationService>();
             _addressService = MockRepository.GenerateMock<IAddressService>();

@@ -23,9 +23,19 @@ namespace Nop.Core.Domain.Customers
         public int MinimumRewardPointsToUse { get; set; }
 
         /// <summary>
+        /// Gets or sets the maximum reward points to use per order
+        /// </summary>
+        public int MaximumRewardPointsToUsePerOrder { get; set; }
+
+        /// <summary>
         /// Gets or sets a number of points awarded for registration
         /// </summary>
         public int PointsForRegistration { get; set; }
+
+        /// <summary>
+        /// Gets or sets a number of days when the points awarded for registration will be valid 
+        /// </summary>
+        public int? RegistrationPointsValidity { get; set; }
 
         /// <summary>
         /// Gets or sets a number of points awarded for purchases (amount in primary store currency)
@@ -36,6 +46,16 @@ namespace Nop.Core.Domain.Customers
         /// Gets or sets a number of points awarded for purchases
         /// </summary>
         public int PointsForPurchases_Points { get; set; }
+
+        /// <summary>
+        /// Gets or sets a number of days when the points awarded for purchases will be valid 
+        /// </summary>
+        public int? PurchasesPointsValidity { get; set; }
+
+        /// <summary>
+        /// Gets or sets the minimum order total (exclude shipping cost) to award points for purchases
+        /// </summary>
+        public decimal MinOrderTotalToAwardPoints { get; set; }
 
         /// <summary>
         /// Gets or sets a delay before activation points

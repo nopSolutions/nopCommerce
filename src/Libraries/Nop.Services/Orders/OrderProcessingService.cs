@@ -475,7 +475,7 @@ namespace Nop.Services.Orders
             {
                 var sciWarnings = _shoppingCartService.GetShoppingCartItemWarnings(details.Customer,
                     sci.ShoppingCartType, sci.Product, processPaymentRequest.StoreId, sci.AttributesXml,
-                    sci.CustomerEnteredPrice, sci.RentalStartDateUtc, sci.RentalEndDateUtc, sci.Quantity, false);
+                    sci.CustomerEnteredPrice, sci.RentalStartDateUtc, sci.RentalEndDateUtc, sci.Quantity, false, sci.Id);
                 if (sciWarnings.Any())
                     throw new NopException(sciWarnings.Aggregate(string.Empty, (current, next) => $"{current}{next};"));
             }
@@ -531,6 +531,7 @@ namespace Nop.Services.Orders
                     {
                         Address1 = pickupPoint.Address,
                         City = pickupPoint.City,
+                        County = pickupPoint.County,
                         Country = country,
                         StateProvince = state,
                         ZipPostalCode = pickupPoint.ZipPostalCode,
@@ -725,6 +726,9 @@ namespace Nop.Services.Orders
             //tax total
             details.OrderTaxTotal = details.InitialOrder.OrderTax;
 
+            //tax rates
+            details.TaxRates = details.InitialOrder.TaxRates;
+
             //VAT number
             details.VatNumber = details.InitialOrder.VatNumber;
 
@@ -841,32 +845,33 @@ namespace Nop.Services.Orders
                 : "Order placed");
 
             //send email notifications
-            var orderPlacedStoreOwnerNotificationQueuedEmailId = _workflowMessageService.SendOrderPlacedStoreOwnerNotification(order, _localizationSettings.DefaultAdminLanguageId);
-            if (orderPlacedStoreOwnerNotificationQueuedEmailId > 0)
-            {
-                AddOrderNote(order, $"\"Order placed\" email (to store owner) has been queued. Queued email identifier: {orderPlacedStoreOwnerNotificationQueuedEmailId}.");
-            }
+            var orderPlacedStoreOwnerNotificationQueuedEmailIds = _workflowMessageService.SendOrderPlacedStoreOwnerNotification(order, _localizationSettings.DefaultAdminLanguageId);
+            if (orderPlacedStoreOwnerNotificationQueuedEmailIds.Any())
+                AddOrderNote(order, $"\"Order placed\" email (to store owner) has been queued. Queued email identifiers: {string.Join(", ", orderPlacedStoreOwnerNotificationQueuedEmailIds)}.");
 
             var orderPlacedAttachmentFilePath = _orderSettings.AttachPdfInvoiceToOrderPlacedEmail ?
                 _pdfService.PrintOrderToPdf(order) : null;
             var orderPlacedAttachmentFileName = _orderSettings.AttachPdfInvoiceToOrderPlacedEmail ?
                 "order.pdf" : null;
-            var orderPlacedCustomerNotificationQueuedEmailId = _workflowMessageService
+            var orderPlacedCustomerNotificationQueuedEmailIds = _workflowMessageService
                 .SendOrderPlacedCustomerNotification(order, order.CustomerLanguageId, orderPlacedAttachmentFilePath, orderPlacedAttachmentFileName);
-            if (orderPlacedCustomerNotificationQueuedEmailId > 0)
-            {
-                AddOrderNote(order, $"\"Order placed\" email (to customer) has been queued. Queued email identifier: {orderPlacedCustomerNotificationQueuedEmailId}.");
-            }
+            if (orderPlacedCustomerNotificationQueuedEmailIds.Any())
+                AddOrderNote(order, $"\"Order placed\" email (to customer) has been queued. Queued email identifiers: {string.Join(", ", orderPlacedCustomerNotificationQueuedEmailIds)}.");
 
             var vendors = GetVendorsInOrder(order);
             foreach (var vendor in vendors)
             {
-                var orderPlacedVendorNotificationQueuedEmailId = _workflowMessageService.SendOrderPlacedVendorNotification(order, vendor, _localizationSettings.DefaultAdminLanguageId);
-                if (orderPlacedVendorNotificationQueuedEmailId > 0)
-                {
-                    AddOrderNote(order, $"\"Order placed\" email (to vendor) has been queued. Queued email identifier: {orderPlacedVendorNotificationQueuedEmailId}.");
-                }
+                var orderPlacedVendorNotificationQueuedEmailIds = _workflowMessageService.SendOrderPlacedVendorNotification(order, vendor, _localizationSettings.DefaultAdminLanguageId);
+                if (orderPlacedVendorNotificationQueuedEmailIds.Any())
+                    AddOrderNote(order, $"\"Order placed\" email (to vendor) has been queued. Queued email identifiers: {string.Join(", ", orderPlacedVendorNotificationQueuedEmailIds)}.");
             }
+
+            if (order.AffiliateId == 0)
+                return;
+
+            var orderPlacedAffiliateNotificationQueuedEmailIds = _workflowMessageService.SendOrderPlacedAffiliateNotification(order, _localizationSettings.DefaultAdminLanguageId);
+            if (orderPlacedAffiliateNotificationQueuedEmailIds.Any())
+                AddOrderNote(order, $"\"Order placed\" email (to affiliate) has been queued. Queued email identifiers: {string.Join(", ", orderPlacedAffiliateNotificationQueuedEmailIds)}.");
         }
         /// <summary>
         /// Award (earn) reward points (for placing a new order)
@@ -874,8 +879,10 @@ namespace Nop.Services.Orders
         /// <param name="order">Order</param>
         protected virtual void AwardRewardPoints(Order order)
         {
-            var totalForRewardPoints = _orderTotalCalculationService.CalculateApplicableOrderTotalForRewardPoints(order.OrderShippingInclTax, order.OrderTotal);
-            var points = _orderTotalCalculationService.CalculateRewardPoints(order.Customer, totalForRewardPoints);
+            var totalForRewardPoints = _orderTotalCalculationService
+                .CalculateApplicableOrderTotalForRewardPoints(order.OrderShippingInclTax, order.OrderTotal);
+            var points = totalForRewardPoints > decimal.Zero ?
+                _orderTotalCalculationService.CalculateRewardPoints(order.Customer, totalForRewardPoints) : 0;
             if (points == 0)
                 return;
 
@@ -892,9 +899,15 @@ namespace Nop.Services.Orders
                 activatingDate = DateTime.UtcNow.AddHours(delayInHours);
             }
 
+            //whether points validity is set
+            DateTime? endDate = null;
+            if (_rewardPointsSettings.PurchasesPointsValidity > 0)
+                endDate = (activatingDate ?? DateTime.UtcNow).AddDays(_rewardPointsSettings.PurchasesPointsValidity.Value);
+
             //add reward points
             order.RewardPointsHistoryEntryId = _rewardPointService.AddRewardPointsHistoryEntry(order.Customer, points, order.StoreId,
-                string.Format(_localizationService.GetResource("RewardPoints.Message.EarnedForOrder"), order.CustomOrderNumber), activatingDate: activatingDate);
+                string.Format(_localizationService.GetResource("RewardPoints.Message.EarnedForOrder"), order.CustomOrderNumber), 
+                activatingDate: activatingDate, endDate: endDate);
 
             _orderService.UpdateOrder(order);
         }
@@ -905,8 +918,10 @@ namespace Nop.Services.Orders
         /// <param name="order">Order</param>
         protected virtual void ReduceRewardPoints(Order order)
         {
-            var totalForRewardPoints = _orderTotalCalculationService.CalculateApplicableOrderTotalForRewardPoints(order.OrderShippingInclTax, order.OrderTotal);
-            var points = _orderTotalCalculationService.CalculateRewardPoints(order.Customer, totalForRewardPoints);
+            var totalForRewardPoints = _orderTotalCalculationService
+                .CalculateApplicableOrderTotalForRewardPoints(order.OrderShippingInclTax, order.OrderTotal);
+            var points = totalForRewardPoints > decimal.Zero ?
+                _orderTotalCalculationService.CalculateRewardPoints(order.Customer, totalForRewardPoints) : 0;
             if (points == 0)
                 return;
 
@@ -973,8 +988,8 @@ namespace Nop.Services.Orders
                                 customerLang = _languageService.GetAllLanguages().FirstOrDefault();
                             if (customerLang == null)
                                 throw new Exception("No languages could be loaded");
-                            var queuedEmailId = _workflowMessageService.SendGiftCardNotification(gc, customerLang.Id);
-                            if (queuedEmailId > 0)
+                            var queuedEmailIds = _workflowMessageService.SendGiftCardNotification(gc, customerLang.Id);
+                            if (queuedEmailIds.Any())
                                 isRecipientNotified = true;
                         }
                     }
@@ -1022,13 +1037,11 @@ namespace Nop.Services.Orders
                     _pdfService.PrintOrderToPdf(order) : null;
                 var orderCompletedAttachmentFileName = _orderSettings.AttachPdfInvoiceToOrderCompletedEmail ?
                     "order.pdf" : null;
-                var orderCompletedCustomerNotificationQueuedEmailId = _workflowMessageService
+                var orderCompletedCustomerNotificationQueuedEmailIds = _workflowMessageService
                     .SendOrderCompletedCustomerNotification(order, order.CustomerLanguageId, orderCompletedAttachmentFilePath,
                     orderCompletedAttachmentFileName);
-                if (orderCompletedCustomerNotificationQueuedEmailId > 0)
-                {
-                    AddOrderNote(order, $"\"Order completed\" email (to customer) has been queued. Queued email identifier: {orderCompletedCustomerNotificationQueuedEmailId}.");
-                }
+                if (orderCompletedCustomerNotificationQueuedEmailIds.Any())
+                    AddOrderNote(order, $"\"Order completed\" email (to customer) has been queued. Queued email identifiers: {string.Join(", ", orderCompletedCustomerNotificationQueuedEmailIds)}.");
             }
 
             if (prevOrderStatus != OrderStatus.Cancelled &&
@@ -1036,12 +1049,9 @@ namespace Nop.Services.Orders
                 && notifyCustomer)
             {
                 //notification
-                var orderCancelledCustomerNotificationQueuedEmailId = _workflowMessageService.SendOrderCancelledCustomerNotification(order, order.CustomerLanguageId);
-                if (orderCancelledCustomerNotificationQueuedEmailId > 0)
-                {
-                    AddOrderNote(order, $"\"Order cancelled\" email (to customer) has been queued. Queued email identifier: {orderCancelledCustomerNotificationQueuedEmailId}.");
-                       
-                }
+                var orderCancelledCustomerNotificationQueuedEmailIds = _workflowMessageService.SendOrderCancelledCustomerNotification(order, order.CustomerLanguageId);
+                if (orderCancelledCustomerNotificationQueuedEmailIds.Any())
+                    AddOrderNote(order, $"\"Order cancelled\" email (to customer) has been queued. Queued email identifiers: {string.Join(", ", orderCancelledCustomerNotificationQueuedEmailIds)}.");
             }
 
             //reward points
@@ -1098,6 +1108,10 @@ namespace Nop.Services.Orders
                 {
                     _workflowMessageService.SendOrderPaidVendorNotification(order, vendor, _localizationSettings.DefaultAdminLanguageId);
                 }
+
+                if(order.AffiliateId != 0)
+                    _workflowMessageService.SendOrderPaidAffiliateNotification(order, _localizationSettings.DefaultAdminLanguageId);
+
                 //TODO add "order paid email sent" order note
             }
 
@@ -1415,7 +1429,7 @@ namespace Nop.Services.Orders
                 _giftCardService.UpdateGiftCard(agc.GiftCard);
             }
         }
-
+       
         /// <summary>
         /// Save discount usage history
         /// </summary>
@@ -1562,7 +1576,8 @@ namespace Nop.Services.Orders
 
                     //reset checkout data
                     _customerService.ResetCheckoutData(details.Customer, processPaymentRequest.StoreId, clearCouponCodes: true, clearCheckoutAttributes: true);
-                    _customerActivityService.InsertActivity("PublicStore.PlaceOrder", _localizationService.GetResource("ActivityLog.PublicStore.PlaceOrder"), order.Id);
+                    _customerActivityService.InsertActivity("PublicStore.PlaceOrder",
+                        string.Format(_localizationService.GetResource("ActivityLog.PublicStore.PlaceOrder"), order.Id), order);
 
                     //check order status
                     CheckOrderStatus(order);
@@ -1630,7 +1645,7 @@ namespace Nop.Services.Orders
             if (!itemDeleted)
                 updateOrderParameters.Warnings.AddRange(_shoppingCartService.GetShoppingCartItemWarnings(updatedOrder.Customer, updatedShoppingCartItem.ShoppingCartType,
                     updatedShoppingCartItem.Product, updatedOrder.StoreId, updatedShoppingCartItem.AttributesXml, updatedShoppingCartItem.CustomerEnteredPrice,
-                    updatedShoppingCartItem.RentalStartDateUtc, updatedShoppingCartItem.RentalEndDateUtc, updatedShoppingCartItem.Quantity, false));
+                    updatedShoppingCartItem.RentalStartDateUtc, updatedShoppingCartItem.RentalEndDateUtc, updatedShoppingCartItem.Quantity, false, updatedShoppingCartItem.Id));
 
             _orderTotalCalculationService.UpdateOrderTotals(updateOrderParameters, restoredCart);
 
@@ -1641,6 +1656,7 @@ namespace Nop.Services.Orders
                 {
                     Address1 = updateOrderParameters.PickupPoint.Address,
                     City = updateOrderParameters.PickupPoint.City,
+                    County = updateOrderParameters.PickupPoint.County,
                     Country = _countryService.GetCountryByTwoLetterIsoCode(updateOrderParameters.PickupPoint.CountryCode),
                     ZipPostalCode = updateOrderParameters.PickupPoint.ZipPostalCode,
                     CreatedOnUtc = DateTime.UtcNow,
@@ -2116,11 +2132,9 @@ namespace Nop.Services.Orders
             if (notifyCustomer)
             {
                 //notify customer
-                var queuedEmailId = _workflowMessageService.SendShipmentSentCustomerNotification(shipment, order.CustomerLanguageId);
-                if (queuedEmailId > 0)
-                {
-                    AddOrderNote(order, $"\"Shipped\" email (to customer) has been queued. Queued email identifier: {queuedEmailId}.");
-                }
+                var queuedEmailIds = _workflowMessageService.SendShipmentSentCustomerNotification(shipment, order.CustomerLanguageId);
+                if (queuedEmailIds.Any())
+                    AddOrderNote(order, $"\"Shipped\" email (to customer) has been queued. Queued email identifiers: {string.Join(", ", queuedEmailIds)}.");
             }
 
             //event
@@ -2163,11 +2177,9 @@ namespace Nop.Services.Orders
             if (notifyCustomer)
             {
                 //send email notification
-                var queuedEmailId = _workflowMessageService.SendShipmentDeliveredCustomerNotification(shipment, order.CustomerLanguageId);
-                if (queuedEmailId > 0)
-                {
-                    AddOrderNote(order, $"\"Delivered\" email (to customer) has been queued. Queued email identifier: {queuedEmailId}.");
-                }
+                var queuedEmailIds = _workflowMessageService.SendShipmentDeliveredCustomerNotification(shipment, order.CustomerLanguageId);
+                if (queuedEmailIds.Any())
+                    AddOrderNote(order, $"\"Delivered\" email (to customer) has been queued. Queued email identifiers: {string.Join(", ", queuedEmailIds)}.");
             }
 
             //event
@@ -2214,6 +2226,12 @@ namespace Nop.Services.Orders
 
             //return (add) back redeemded reward points
             ReturnBackRedeemedRewardPoints(order);
+
+            //delete gift card usage history
+            if (_orderSettings.DeleteGiftCardUsageHistory)
+            {
+                _giftCardService.DeleteGiftCardUsageHistory(order);
+            }
 
             //cancel recurring payments
             var recurringPayments = _orderService.SearchRecurringPayments(initialOrderId: order.Id);
@@ -2491,16 +2509,13 @@ namespace Nop.Services.Orders
                     CheckOrderStatus(order);
 
                     //notifications
-                    var orderRefundedStoreOwnerNotificationQueuedEmailId = _workflowMessageService.SendOrderRefundedStoreOwnerNotification(order, request.AmountToRefund, _localizationSettings.DefaultAdminLanguageId);
-                    if (orderRefundedStoreOwnerNotificationQueuedEmailId > 0)
-                    {
-                        AddOrderNote(order, $"\"Order refunded\" email (to store owner) has been queued. Queued email identifier: {orderRefundedStoreOwnerNotificationQueuedEmailId}.");
-                    }
-                    var orderRefundedCustomerNotificationQueuedEmailId = _workflowMessageService.SendOrderRefundedCustomerNotification(order, request.AmountToRefund, order.CustomerLanguageId);
-                    if (orderRefundedCustomerNotificationQueuedEmailId > 0)
-                    {
-                        AddOrderNote(order, $"\"Order refunded\" email (to customer) has been queued. Queued email identifier: {orderRefundedCustomerNotificationQueuedEmailId}.");
-                    }
+                    var orderRefundedStoreOwnerNotificationQueuedEmailIds = _workflowMessageService.SendOrderRefundedStoreOwnerNotification(order, request.AmountToRefund, _localizationSettings.DefaultAdminLanguageId);
+                    if (orderRefundedStoreOwnerNotificationQueuedEmailIds.Any())
+                        AddOrderNote(order, $"\"Order refunded\" email (to store owner) has been queued. Queued email identifiers: {string.Join(", ", orderRefundedStoreOwnerNotificationQueuedEmailIds)}.");
+
+                    var orderRefundedCustomerNotificationQueuedEmailIds = _workflowMessageService.SendOrderRefundedCustomerNotification(order, request.AmountToRefund, order.CustomerLanguageId);
+                    if (orderRefundedCustomerNotificationQueuedEmailIds.Any())
+                        AddOrderNote(order, $"\"Order refunded\" email (to customer) has been queued. Queued email identifiers: {string.Join(", ", orderRefundedCustomerNotificationQueuedEmailIds)}.");
 
                     //raise event       
                     _eventPublisher.Publish(new OrderRefundedEvent(order, request.AmountToRefund));
@@ -2591,16 +2606,13 @@ namespace Nop.Services.Orders
             CheckOrderStatus(order);
 
             //notifications
-            var orderRefundedStoreOwnerNotificationQueuedEmailId = _workflowMessageService.SendOrderRefundedStoreOwnerNotification(order, amountToRefund, _localizationSettings.DefaultAdminLanguageId);
-            if (orderRefundedStoreOwnerNotificationQueuedEmailId > 0)
-            {
-                AddOrderNote(order, $"\"Order refunded\" email (to store owner) has been queued. Queued email identifier: {orderRefundedStoreOwnerNotificationQueuedEmailId}.");
-            }
-            var orderRefundedCustomerNotificationQueuedEmailId = _workflowMessageService.SendOrderRefundedCustomerNotification(order, amountToRefund, order.CustomerLanguageId);
-            if (orderRefundedCustomerNotificationQueuedEmailId > 0)
-            {
-                AddOrderNote(order, $"\"Order refunded\" email (to customer) has been queued. Queued email identifier: {orderRefundedCustomerNotificationQueuedEmailId}.");
-            }
+            var orderRefundedStoreOwnerNotificationQueuedEmailIds = _workflowMessageService.SendOrderRefundedStoreOwnerNotification(order, amountToRefund, _localizationSettings.DefaultAdminLanguageId);
+            if (orderRefundedStoreOwnerNotificationQueuedEmailIds.Any())
+                AddOrderNote(order, $"\"Order refunded\" email (to store owner) has been queued. Queued email identifiers: {string.Join(", ", orderRefundedStoreOwnerNotificationQueuedEmailIds)}.");
+
+            var orderRefundedCustomerNotificationQueuedEmailIds = _workflowMessageService.SendOrderRefundedCustomerNotification(order, amountToRefund, order.CustomerLanguageId);
+            if (orderRefundedCustomerNotificationQueuedEmailIds.Any())
+                AddOrderNote(order, $"\"Order refunded\" email (to customer) has been queued. Queued email identifiers: {string.Join(", ", orderRefundedCustomerNotificationQueuedEmailIds)}.");
 
             //raise event       
             _eventPublisher.Publish(new OrderRefundedEvent(order, amountToRefund));
@@ -2682,16 +2694,13 @@ namespace Nop.Services.Orders
                     CheckOrderStatus(order);
 
                     //notifications
-                    var orderRefundedStoreOwnerNotificationQueuedEmailId = _workflowMessageService.SendOrderRefundedStoreOwnerNotification(order, amountToRefund, _localizationSettings.DefaultAdminLanguageId);
-                    if (orderRefundedStoreOwnerNotificationQueuedEmailId > 0)
-                    {
-                        AddOrderNote(order, $"\"Order refunded\" email (to store owner) has been queued. Queued email identifier: {orderRefundedStoreOwnerNotificationQueuedEmailId}.");
-                    }
-                    var orderRefundedCustomerNotificationQueuedEmailId = _workflowMessageService.SendOrderRefundedCustomerNotification(order, amountToRefund, order.CustomerLanguageId);
-                    if (orderRefundedCustomerNotificationQueuedEmailId > 0)
-                    {
-                        AddOrderNote(order, $"\"Order refunded\" email (to customer) has been queued. Queued email identifier: {orderRefundedCustomerNotificationQueuedEmailId}.");
-                    }
+                    var orderRefundedStoreOwnerNotificationQueuedEmailIds = _workflowMessageService.SendOrderRefundedStoreOwnerNotification(order, amountToRefund, _localizationSettings.DefaultAdminLanguageId);
+                    if (orderRefundedStoreOwnerNotificationQueuedEmailIds.Any())
+                        AddOrderNote(order, $"\"Order refunded\" email (to store owner) has been queued. Queued email identifiers: {string.Join(", ", orderRefundedStoreOwnerNotificationQueuedEmailIds)}.");
+
+                    var orderRefundedCustomerNotificationQueuedEmailIds = _workflowMessageService.SendOrderRefundedCustomerNotification(order, amountToRefund, order.CustomerLanguageId);
+                    if (orderRefundedCustomerNotificationQueuedEmailIds.Any())
+                        AddOrderNote(order, $"\"Order refunded\" email (to customer) has been queued. Queued email identifiers: {string.Join(", ", orderRefundedCustomerNotificationQueuedEmailIds)}.");
 
                     //raise event       
                     _eventPublisher.Publish(new OrderRefundedEvent(order, amountToRefund));
@@ -2786,16 +2795,14 @@ namespace Nop.Services.Orders
             CheckOrderStatus(order);
 
             //notifications
-            var orderRefundedStoreOwnerNotificationQueuedEmailId = _workflowMessageService.SendOrderRefundedStoreOwnerNotification(order, amountToRefund, _localizationSettings.DefaultAdminLanguageId);
-            if (orderRefundedStoreOwnerNotificationQueuedEmailId > 0)
-            {
-                AddOrderNote(order, $"\"Order refunded\" email (to store owner) has been queued. Queued email identifier: {orderRefundedStoreOwnerNotificationQueuedEmailId}.");
-            }
-            var orderRefundedCustomerNotificationQueuedEmailId = _workflowMessageService.SendOrderRefundedCustomerNotification(order, amountToRefund, order.CustomerLanguageId);
-            if (orderRefundedCustomerNotificationQueuedEmailId > 0)
-            {
-                AddOrderNote(order, $"\"Order refunded\" email (to customer) has been queued. Queued email identifier: {orderRefundedCustomerNotificationQueuedEmailId}.");
-            }
+            var orderRefundedStoreOwnerNotificationQueuedEmailIds = _workflowMessageService.SendOrderRefundedStoreOwnerNotification(order, amountToRefund, _localizationSettings.DefaultAdminLanguageId);
+            if (orderRefundedStoreOwnerNotificationQueuedEmailIds.Any())
+                AddOrderNote(order, $"\"Order refunded\" email (to store owner) has been queued. Queued email identifiers: {string.Join(", ", orderRefundedStoreOwnerNotificationQueuedEmailIds)}.");
+
+            var orderRefundedCustomerNotificationQueuedEmailIds = _workflowMessageService.SendOrderRefundedCustomerNotification(order, amountToRefund, order.CustomerLanguageId);
+            if (orderRefundedCustomerNotificationQueuedEmailIds.Any())
+                AddOrderNote(order, $"\"Order refunded\" email (to customer) has been queued. Queued email identifiers: {string.Join(", ", orderRefundedCustomerNotificationQueuedEmailIds)}.");
+
             //raise event       
             _eventPublisher.Publish(new OrderRefundedEvent(order, amountToRefund));
         }
@@ -2855,6 +2862,9 @@ namespace Nop.Services.Orders
 
                     //check order status
                     CheckOrderStatus(order);
+
+                    //raise event       
+                    _eventPublisher.Publish(new OrderVoidedEvent(order));
                 }
             }
             catch (Exception exc)
@@ -2928,6 +2938,9 @@ namespace Nop.Services.Orders
 
             //check order status
             CheckOrderStatus(order);
+
+            //raise event       
+            _eventPublisher.Publish(new OrderVoidedEvent(order));
         }
 
         /// <summary>

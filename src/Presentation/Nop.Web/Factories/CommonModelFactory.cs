@@ -4,6 +4,9 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc.Routing;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain;
@@ -16,6 +19,7 @@ using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Vendors;
+using Nop.Core.Infrastructure;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -32,9 +36,7 @@ using Nop.Web.Framework.Security.Captcha;
 using Nop.Web.Framework.Themes;
 using Nop.Web.Framework.UI;
 using Nop.Web.Infrastructure.Cache;
-using Nop.Web.Models.Catalog;
 using Nop.Web.Models.Common;
-using Nop.Web.Models.Topics;
 
 namespace Nop.Web.Factories
 {
@@ -66,6 +68,9 @@ namespace Nop.Web.Factories
         private readonly IPictureService _pictureService;
         private readonly IHostingEnvironment _hostingEnvironment;
         private readonly IProductTagService _productTagService;
+        private readonly IUrlHelperFactory _urlHelperFactory;
+        private readonly IActionContextAccessor _actionContextAccessor;
+        private readonly INopFileProvider _fileProvider;
 
         private readonly CatalogSettings _catalogSettings;
         private readonly StoreInformationSettings _storeInformationSettings;
@@ -76,6 +81,7 @@ namespace Nop.Web.Factories
         private readonly LocalizationSettings _localizationSettings;
         private readonly CaptchaSettings _captchaSettings;
         private readonly VendorSettings _vendorSettings;
+        private readonly DisplayDefaultFooterItemSettings _displayDefaultFooterItemSettings;
 
         #endregion
 
@@ -101,6 +107,8 @@ namespace Nop.Web.Factories
             IPageHeadBuilder pageHeadBuilder,
             IPictureService pictureService,
             IHostingEnvironment hostingEnvironment,
+            IUrlHelperFactory urlHelperFactory,
+            IActionContextAccessor actionContextAccessor,
             CatalogSettings catalogSettings,
             StoreInformationSettings storeInformationSettings,
             CommonSettings commonSettings,
@@ -110,7 +118,9 @@ namespace Nop.Web.Factories
             LocalizationSettings localizationSettings,
             CaptchaSettings captchaSettings,
             VendorSettings vendorSettings,
-            IProductTagService productTagService)
+            IProductTagService productTagService,
+            DisplayDefaultFooterItemSettings displayDefaultFooterItemSettings,
+            INopFileProvider fileProvider)
         {
             this._categoryService = categoryService;
             this._productService = productService;
@@ -132,6 +142,8 @@ namespace Nop.Web.Factories
             this._pageHeadBuilder = pageHeadBuilder;
             this._pictureService = pictureService;
             this._hostingEnvironment = hostingEnvironment;
+            this._urlHelperFactory = urlHelperFactory;
+            this._actionContextAccessor = actionContextAccessor;
             this._catalogSettings = catalogSettings;
             this._storeInformationSettings = storeInformationSettings;
             this._commonSettings = commonSettings;
@@ -142,6 +154,8 @@ namespace Nop.Web.Factories
             this._captchaSettings = captchaSettings;
             this._vendorSettings = vendorSettings;
             this._productTagService = productTagService;
+            this._displayDefaultFooterItemSettings = displayDefaultFooterItemSettings;
+            this._fileProvider = fileProvider;
         }
 
         #endregion
@@ -422,7 +436,22 @@ namespace Nop.Web.Factories
                 DisplayTaxShippingInfoFooter = _catalogSettings.DisplayTaxShippingInfoFooter,
                 HidePoweredByNopCommerce = _storeInformationSettings.HidePoweredByNopCommerce,
                 AllowCustomersToApplyForVendorAccount = _vendorSettings.AllowCustomersToApplyForVendorAccount,
-                Topics = cachedTopicModel
+                Topics = cachedTopicModel,
+                DisplaySitemapFooterItem = _displayDefaultFooterItemSettings.DisplaySitemapFooterItem,
+                DisplayContactUsFooterItem = _displayDefaultFooterItemSettings.DisplayContactUsFooterItem,
+                DisplayProductSearchFooterItem = _displayDefaultFooterItemSettings.DisplayProductSearchFooterItem,
+                DisplayNewsFooterItem = _displayDefaultFooterItemSettings.DisplayNewsFooterItem,
+                DisplayBlogFooterItem = _displayDefaultFooterItemSettings.DisplayBlogFooterItem,
+                DisplayForumsFooterItem = _displayDefaultFooterItemSettings.DisplayForumsFooterItem,
+                DisplayRecentlyViewedProductsFooterItem = _displayDefaultFooterItemSettings.DisplayRecentlyViewedProductsFooterItem,
+                DisplayCompareProductsFooterItem = _displayDefaultFooterItemSettings.DisplayCompareProductsFooterItem,
+                DisplayNewProductsFooterItem = _displayDefaultFooterItemSettings.DisplayNewProductsFooterItem,
+                DisplayCustomerInfoFooterItem = _displayDefaultFooterItemSettings.DisplayCustomerInfoFooterItem,
+                DisplayCustomerOrdersFooterItem = _displayDefaultFooterItemSettings.DisplayCustomerOrdersFooterItem,
+                DisplayCustomerAddressesFooterItem = _displayDefaultFooterItemSettings.DisplayCustomerAddressesFooterItem,
+                DisplayShoppingCartFooterItem = _displayDefaultFooterItemSettings.DisplayShoppingCartFooterItem,
+                DisplayWishlistFooterItem = _displayDefaultFooterItemSettings.DisplayWishlistFooterItem,
+                DisplayApplyVendorAccountFooterItem = _displayDefaultFooterItemSettings.DisplayApplyVendorAccountFooterItem
             };
 
             return model;
@@ -482,87 +511,163 @@ namespace Nop.Web.Factories
         /// <summary>
         /// Prepare the sitemap model
         /// </summary>
+        /// <param name="pageModel">Sitemap page model</param>
         /// <returns>Sitemap model</returns>
-        public virtual SitemapModel PrepareSitemapModel()
+        public virtual SitemapModel PrepareSitemapModel(SitemapPageModel pageModel)
         {
             var cacheKey = string.Format(ModelCacheEventConsumer.SITEMAP_PAGE_MODEL_KEY,
                 _workContext.WorkingLanguage.Id,
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                 _storeContext.CurrentStore.Id);
+
             var cachedModel = _cacheManager.Get(cacheKey, () =>
             {
-                var model = new SitemapModel
+                //get URL helper
+                var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
+                
+                var model = new SitemapModel();
+
+                //prepare common items
+                var commonGroupTitle = _localizationService.GetResource("Sitemap.General");
+
+                //home page
+                model.Items.Add(new SitemapModel.SitemapItemModel
                 {
-                    BlogEnabled = _blogSettings.Enabled,
-                    ForumEnabled = _forumSettings.ForumsEnabled,
-                    NewsEnabled = _newsSettings.Enabled,
-                };
+                    GroupTitle = commonGroupTitle,
+                    Name = _localizationService.GetResource("HomePage"),
+                    Url = urlHelper.RouteUrl("HomePage")
+                });
+
+                //search
+                model.Items.Add(new SitemapModel.SitemapItemModel
+                {
+                    GroupTitle = commonGroupTitle,
+                    Name = _localizationService.GetResource("Search"),
+                    Url = urlHelper.RouteUrl("ProductSearch")
+                });
+
+                //news
+                if (_newsSettings.Enabled)
+                {
+                    model.Items.Add(new SitemapModel.SitemapItemModel
+                    {
+                        GroupTitle = commonGroupTitle,
+                        Name = _localizationService.GetResource("News"),
+                        Url = urlHelper.RouteUrl("NewsArchive")
+                    });
+                }
+
+                //blog
+                if (_blogSettings.Enabled)
+                {
+                    model.Items.Add(new SitemapModel.SitemapItemModel
+                    {
+                        GroupTitle = commonGroupTitle,
+                        Name = _localizationService.GetResource("Blog"),
+                        Url = urlHelper.RouteUrl("Blog")
+                    });
+                }
+
+                //forums
+                if (_forumSettings.ForumsEnabled)
+                {
+                    model.Items.Add(new SitemapModel.SitemapItemModel
+                    {
+                        GroupTitle = commonGroupTitle,
+                        Name = _localizationService.GetResource("Forum.Forums"),
+                        Url = urlHelper.RouteUrl("Boards")
+                    });
+                }
+
+                //contact us
+                model.Items.Add(new SitemapModel.SitemapItemModel
+                {
+                    GroupTitle = commonGroupTitle,
+                    Name = _localizationService.GetResource("ContactUs"),
+                    Url = urlHelper.RouteUrl("ContactUs")
+                });
+
+                //customer info
+                model.Items.Add(new SitemapModel.SitemapItemModel
+                {
+                    GroupTitle = commonGroupTitle,
+                    Name = _localizationService.GetResource("Account.MyAccount"),
+                    Url = urlHelper.RouteUrl("CustomerInfo")
+                });
+
+                //at the moment topics are in general category too
+                var topics = _topicService.GetAllTopics(_storeContext.CurrentStore.Id).Where(topic => topic.IncludeInSitemap);
+                model.Items.AddRange(topics.Select(topic => new SitemapModel.SitemapItemModel
+                {
+                    GroupTitle = commonGroupTitle,
+                    Name = topic.GetLocalized(x => x.Title),
+                    Url = urlHelper.RouteUrl("Topic", new { SeName = topic.GetSeName() })
+                }));
+
                 //categories
                 if (_commonSettings.SitemapIncludeCategories)
                 {
+                    var categoriesGroupTitle = _localizationService.GetResource("Sitemap.Categories");
                     var categories = _categoryService.GetAllCategories(storeId: _storeContext.CurrentStore.Id);
-                    model.Categories = categories.Select(category => new CategorySimpleModel
+                    model.Items.AddRange(categories.Select(category => new SitemapModel.SitemapItemModel
                     {
-                        Id = category.Id,
+                        GroupTitle = categoriesGroupTitle,
                         Name = category.GetLocalized(x => x.Name),
-                        SeName = category.GetSeName(),
-                    }).ToList();
+                        Url = urlHelper.RouteUrl("Category", new { SeName = category.GetSeName() })
+                    }));
                 }
+
                 //manufacturers
                 if (_commonSettings.SitemapIncludeManufacturers)
                 {
+                    var manufacturersGroupTitle = _localizationService.GetResource("Sitemap.Manufacturers");
                     var manufacturers = _manufacturerService.GetAllManufacturers(storeId: _storeContext.CurrentStore.Id);
-                    model.Manufacturers = manufacturers.Select(category => new ManufacturerBriefInfoModel
+                    model.Items.AddRange(manufacturers.Select(manufacturer => new SitemapModel.SitemapItemModel
                     {
-                        Id = category.Id,
-                        Name = category.GetLocalized(x => x.Name),
-                        SeName = category.GetSeName(),
-                    }).ToList();
+                        GroupTitle = manufacturersGroupTitle,
+                        Name = manufacturer.GetLocalized(x => x.Name),
+                        Url = urlHelper.RouteUrl("Manufacturer", new { SeName = manufacturer.GetSeName() })
+                    }));
                 }
+
                 //products
                 if (_commonSettings.SitemapIncludeProducts)
                 {
-                    //limit product to 200 until paging is supported on this page
-                    var products = _productService.SearchProducts(storeId: _storeContext.CurrentStore.Id,
-                        visibleIndividuallyOnly: true,
-                        pageSize: 200);
-                    model.Products = products.Select(product => new ProductOverviewModel
+                    var productsGroupTitle = _localizationService.GetResource("Sitemap.Products");
+                    var products = _productService.SearchProducts(storeId: _storeContext.CurrentStore.Id, visibleIndividuallyOnly: true);
+                    model.Items.AddRange(products.Select(product => new SitemapModel.SitemapItemModel
                     {
-                        Id = product.Id,
+                        GroupTitle = productsGroupTitle,
                         Name = product.GetLocalized(x => x.Name),
-                        ShortDescription = product.GetLocalized(x => x.ShortDescription),
-                        FullDescription = product.GetLocalized(x => x.FullDescription),
-                        SeName = product.GetSeName(),
-                    }).ToList();
+                        Url = urlHelper.RouteUrl("Product", new { SeName = product.GetSeName() })
+                    }));
                 }
+
                 //product tags
                 if (_commonSettings.SitemapIncludeProductTags)
                 {
-                    model.ProductTags = _productTagService.GetAllProductTags().Select(pt => new ProductTagModel
+                    var productTagsGroupTitle = _localizationService.GetResource("Sitemap.ProductTags");
+                    var productTags = _productTagService.GetAllProductTags();
+                    model.Items.AddRange(productTags.Select(productTag => new SitemapModel.SitemapItemModel
                     {
-                        Id = pt.Id,
-                        Name = pt.GetLocalized(x => x.Name),
-                        SeName = pt.GetSeName()
-                    }).ToList();
+                        GroupTitle = productTagsGroupTitle,
+                        Name = productTag.GetLocalized(x => x.Name),
+                        Url = urlHelper.RouteUrl("ProductsByTag", new { SeName = productTag.GetSeName() })
+                    }));
                 }
 
-                //topics
-                var topics = _topicService.GetAllTopics(_storeContext.CurrentStore.Id)
-                    .Where(t => t.IncludeInSitemap)
-                    .ToList();
-                model.Topics = topics.Select(topic => new TopicModel
-                {
-                    Id = topic.Id,
-                    SystemName = topic.SystemName,
-                    IncludeInSitemap = topic.IncludeInSitemap,
-                    IsPasswordProtected = topic.IsPasswordProtected,
-                    Title = topic.GetLocalized(x => x.Title),
-                })
-                .ToList();
                 return model;
             });
 
-            return cachedModel;
+            //prepare model with pagination
+            pageModel.PageSize = Math.Max(pageModel.PageSize, _commonSettings.SitemapPageSize);
+            pageModel.PageNumber = Math.Max(pageModel.PageNumber, 1);
+
+            var pagedItems = new PagedList<SitemapModel.SitemapItemModel>(cachedModel.Items, pageModel.PageNumber - 1, pageModel.PageSize);
+            var sitemapModel = new SitemapModel { Items = pagedItems };
+            sitemapModel.PageModel.LoadPagedList(pagedItems);
+
+            return sitemapModel;
         }
 
         /// <summary>
@@ -615,13 +720,13 @@ namespace Nop.Web.Factories
             //try loading a store specific favicon
 
             var faviconFileName = $"favicon-{_storeContext.CurrentStore.Id}.ico";
-            var localFaviconPath = System.IO.Path.Combine(_hostingEnvironment.WebRootPath, faviconFileName);
-            if (!System.IO.File.Exists(localFaviconPath))
+            var localFaviconPath = _fileProvider.Combine(_hostingEnvironment.WebRootPath, faviconFileName);
+            if (!_fileProvider.FileExists(localFaviconPath))
             {
                 //try loading a generic favicon
                 faviconFileName = "favicon.ico";
-                localFaviconPath = System.IO.Path.Combine(_hostingEnvironment.WebRootPath, faviconFileName);
-                if (!System.IO.File.Exists(localFaviconPath))
+                localFaviconPath = _fileProvider.Combine(_hostingEnvironment.WebRootPath, faviconFileName);
+                if (!_fileProvider.FileExists(localFaviconPath))
                 {
                     return model;
                 }
@@ -640,11 +745,11 @@ namespace Nop.Web.Factories
             var sb = new StringBuilder();
 
             //if robots.custom.txt exists, let's use it instead of hard-coded data below
-            var robotsFilePath = System.IO.Path.Combine(CommonHelper.MapPath("~/"), "robots.custom.txt");
-            if (System.IO.File.Exists(robotsFilePath))
+            var robotsFilePath = _fileProvider.Combine(_fileProvider.MapPath("~/"), "robots.custom.txt");
+            if (_fileProvider.FileExists(robotsFilePath))
             {
                 //the robots.txt file exists
-                var robotsFileContent = System.IO.File.ReadAllText(robotsFilePath);
+                var robotsFileContent = _fileProvider.ReadAllText(robotsFilePath, Encoding.UTF8);
                 sb.Append(robotsFileContent);
             }
             else
@@ -730,16 +835,19 @@ namespace Nop.Web.Factories
                     //URLs are localizable. Append SEO code
                     foreach (var language in _languageService.GetAllLanguages(storeId: _storeContext.CurrentStore.Id))
                     {
-                        sb.AppendFormat("Sitemap: {0}{1}/sitemap.xml", _storeContext.CurrentStore.Url, language.UniqueSeoCode);
+                        sb.AppendFormat("Sitemap: {0}{1}/sitemap.xml", _webHelper.GetStoreLocation(), language.UniqueSeoCode);
                         sb.Append(newLine);
                     }
                 }
                 else
                 {
                     //localizable paths (without SEO code)
-                    sb.AppendFormat("Sitemap: {0}sitemap.xml", _storeContext.CurrentStore.Url);
+                    sb.AppendFormat("Sitemap: {0}sitemap.xml", _webHelper.GetStoreLocation());
                     sb.Append(newLine);
                 }
+                //host
+                sb.AppendFormat("Host: {0}", _webHelper.GetStoreLocation());
+                sb.Append(newLine);
 
                 //usual paths
                 foreach (var path in disallowPaths)
@@ -767,10 +875,10 @@ namespace Nop.Web.Factories
                 }
 
                 //load and add robots.txt additions to the end of file.
-                var robotsAdditionsFile = System.IO.Path.Combine(CommonHelper.MapPath("~/"), "robots.additions.txt");
-                if (System.IO.File.Exists(robotsAdditionsFile))
+                var robotsAdditionsFile = _fileProvider.Combine(_fileProvider.MapPath("~/"), "robots.additions.txt");
+                if (_fileProvider.FileExists(robotsAdditionsFile))
                 {
-                    var robotsFileContent = System.IO.File.ReadAllText(robotsAdditionsFile);
+                    var robotsFileContent = _fileProvider.ReadAllText(robotsAdditionsFile, Encoding.UTF8);
                     sb.Append(robotsFileContent);
                 }
             }

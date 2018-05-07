@@ -1,7 +1,7 @@
 ﻿@model Nop.Plugin.Payments.Square.Models.PaymentInfoModel
 @{
     Layout = "";
-    Html.AddScriptParts(ResourceLocation.Footer, "https://js.squareup.com/v2/paymentform");
+    Html.AddScriptParts(ResourceLocation.Footer, SquarePaymentDefaults.PaymentFormScriptPath, excludeFromBundle: true);
 }
 @inject SquarePaymentSettings squarePaymentSettings
 @inject Nop.Core.Domain.Orders.OrderSettings orderSettings
@@ -29,7 +29,7 @@
     }
 </style>
 
-<script type="text/javascript">
+<script>
     $(document).ready(function () {
         $('#@Html.IdFor(model => model.StoredCardId)').change(toggleStoredCard);
         toggleStoredCard();

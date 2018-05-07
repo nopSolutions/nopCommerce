@@ -10,10 +10,10 @@ using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
-using Nop.Core.Plugins;
 using Nop.Services.Common;
 using Nop.Services.Directory;
 using Nop.Services.Logging;
+using Nop.Services.Plugins;
 
 namespace Nop.Services.Tax
 {
@@ -167,18 +167,18 @@ namespace Nop.Services.Tax
 
             //new EU VAT rules starting January 1st 2015
             //find more info at http://ec.europa.eu/taxation_customs/taxation/vat/how_vat_works/telecom/index_en.htm#new_rules
-            var overridenBasedOn = _taxSettings.EuVatEnabled                                            //EU VAT enabled?
+            var overriddenBasedOn = _taxSettings.EuVatEnabled                                            //EU VAT enabled?
                 && product != null && product.IsTelecommunicationsOrBroadcastingOrElectronicServices    //telecommunications, broadcasting and electronic services?
                 && DateTime.UtcNow > new DateTime(2015, 1, 1, 0, 0, 0, DateTimeKind.Utc)                //January 1st 2015 passed?
                 && IsEuConsumer(customer);                                                              //Europe Union consumer?
-            if (overridenBasedOn)
+            if (overriddenBasedOn)
             {
                 //We must charge VAT in the EU country where the customer belongs (not where the business is based)
                 basedOn = TaxBasedOn.BillingAddress;
             }
 
             //tax is based on pickup point address
-            if (!overridenBasedOn && _taxSettings.TaxBasedOnPickupPointAddress && _shippingSettings.AllowPickUpInStore)
+            if (!overriddenBasedOn && _taxSettings.TaxBasedOnPickupPointAddress && _shippingSettings.AllowPickUpInStore)
             {
                 var pickupPoint = customer.GetAttribute<PickupPoint>(SystemCustomerAttributeNames.SelectedPickupPoint, _storeContext.CurrentStore.Id);
                 if (pickupPoint != null)
@@ -190,6 +190,7 @@ namespace Nop.Services.Tax
                     {
                         Address1 = pickupPoint.Address,
                         City = pickupPoint.City,
+                        County = pickupPoint.County,
                         Country = country,
                         CountryId = country?.Id ?? 0,
                         StateProvince = state,

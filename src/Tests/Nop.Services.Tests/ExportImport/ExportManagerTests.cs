@@ -135,6 +135,12 @@ namespace Nop.Services.Tests.ExportImport
             _exportManager = new ExportManager(_categoryService, _manufacturerService, _customerService, _productAttributeService, _pictureService, _newsLetterSubscriptionService, _storeService, _workContext, _productEditorSettings, _vendorService, _productTemplateService, _dateRangeService, _taxCategoryService, _measureService, _catalogSettings, _genericAttributeService, _customerAttributeFormatter, _orderSettings, _specificationAttributeService);
         }
 
+        [OneTimeTearDown]
+        public void TearDown()
+        {
+            EngineContext.Replace(null);
+        }
+
         #region Utilities
 
         protected static T PropertiesShouldEqual<T, Tp>(T actual, PropertyManager<Tp> manager, IDictionary<string, string> replacePairs, params string[] filter)
@@ -227,6 +233,7 @@ namespace Nop.Services.Tests.ExportImport
                 Email = "Email 1",
                 Company = "Company 1",
                 City = "City 1",
+                County = "County 1",
                 Address1 = "Address1a",
                 Address2 = "Address1a",
                 ZipPostalCode = "ZipPostalCode 1",
@@ -246,6 +253,7 @@ namespace Nop.Services.Tests.ExportImport
                 Email = "Email 2",
                 Company = "Company 2",
                 City = "City 2",
+                County = "County 2",
                 Address1 = "Address2a",
                 Address2 = "Address2b",
                 ZipPostalCode = "ZipPostalCode 2",
@@ -407,6 +415,7 @@ namespace Nop.Services.Tests.ExportImport
                 "Country",
                 "StateProvince",
                 "City",
+                "County",
                 "Address1",
                 "Address2",
                 "ZipPostalCode",

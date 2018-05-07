@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Reflection;
 using Newtonsoft.Json;
 using Nop.Core.Infrastructure;
@@ -200,7 +199,7 @@ namespace Nop.Core.Plugins
         /// Gets or sets the original assembly file that a shadow copy was made from it
         /// </summary>
         [JsonIgnore]
-        public virtual FileInfo OriginalAssemblyFile { get; internal set; }
+        public virtual string OriginalAssemblyFile { get; internal set; }
 
         /// <summary>
         /// Gets or sets the assembly that has been shadow copied that is active in the application

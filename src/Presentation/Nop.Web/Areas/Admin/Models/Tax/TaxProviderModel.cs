@@ -1,10 +1,15 @@
 ﻿using Nop.Web.Framework.Mvc.ModelBinding;
-using Nop.Web.Framework.Mvc.Models;
+using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Areas.Admin.Models.Tax
 {
+    /// <summary>
+    /// Represents a tax provider model
+    /// </summary>
     public partial class TaxProviderModel : BaseNopModel
     {
+        #region Properties
+
         [NopResourceDisplayName("Admin.Configuration.Tax.Providers.Fields.FriendlyName")]
         public string FriendlyName { get; set; }
 
@@ -16,5 +21,7 @@ namespace Nop.Web.Areas.Admin.Models.Tax
         
         [NopResourceDisplayName("Admin.Configuration.Tax.Providers.Configure")]
         public string ConfigurationUrl { get; set; }
+
+        #endregion
     }
 }

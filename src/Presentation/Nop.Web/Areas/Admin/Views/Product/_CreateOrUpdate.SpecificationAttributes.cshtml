@@ -1,12 +1,13 @@
-﻿@using Nop.Core.Domain.Catalog
+﻿@model ProductModel
+
+@using Nop.Core.Domain.Catalog
 @using Nop.Services
-@model ProductModel
 
 <div class="panel-group">
     <p>
         @T("Admin.Catalog.Products.SpecificationAttributes.Hint")
     </p>
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_product_details_specification_attributes_top", additionalData = Model.Id })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductDetailsSpecificationAttributesTop, additionalData = Model })
     @if (Model.Id > 0)
     {
         /*hide "add spec" table if no attributes are defined*/
@@ -16,17 +17,23 @@
                 <div class="panel-body">
                     <div id="specificationattributes-grid"></div>
 
-                    <script type="text/javascript">
+                    <script>
                         $(document).ready(function() {
                             $("#specificationattributes-grid").kendoGrid({
                                 dataSource: {
                                     type: "json",
                                     transport: {
                                         read: {
-                                            url: "@Html.Raw(Url.Action("ProductSpecAttrList", "Product", new {productId = Model.Id}))",
+                                            url: "@Html.Raw(Url.Action("ProductSpecAttrList", "Product"))",
                                             type: "POST",
                                             dataType: "json",
-                                            data: addAntiForgeryToken
+                                            data: function additionalData() {
+                                                var data = {
+                                                    ProductId: '@(Model.Id)'
+                                                };
+                                                addAntiForgeryToken(data);
+                                                return data;
+                                            }
                                         },
                                         update: {
                                             url: "@Html.Raw(Url.Action("ProductSpecAttrUpdate", "Product"))",
@@ -69,15 +76,14 @@
                                         // Cancel the changes
                                         this.cancelChanges();
                                     },
+                                    pageSize: @(Model.ProductSpecificationAttributeSearchModel.PageSize),
                                     serverPaging: true,
                                     serverFiltering: true,
                                     serverSorting: true
                                 },
                                 pageable: {
                                     refresh: true,
-                                    numeric: false,
-                                    previousNext: false,
-                                    info: false,
+                                    pageSizes: [@(Model.ProductSpecificationAttributeSearchModel.AvailablePageSizes)],
                                     @await Html.PartialAsync("_GridPagerMessages")
                                 },
                                 editable: {
@@ -174,7 +180,7 @@
                     @T("Admin.Catalog.Products.SpecificationAttributes.AddNew")
                 </div>
                 <div class="panel-body">
-                    <script type="text/javascript">
+                    <script>
                         $(document).ready(function() {
                             $("#@Html.IdFor(model => model.AddSpecificationAttributeModel.SpecificationAttributeId)").change(function() {
                                 var selectedAttributeId = $(this).val();
@@ -225,8 +231,8 @@
                                 allowFiltering: allowFiltering,
                                 showOnProductPage: showOnProductPage,
                                 displayOrder: displayOrder,
-                                productId: @(Model.Id)
-                                };
+                                productId: '@(Model.Id)'
+                            };
                             addAntiForgeryToken(postData);
 
                             $.ajax({
@@ -364,5 +370,5 @@
             </div>
         </div>
     }
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_product_details_specification_attributes_bottom", additionalData = Model.Id })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductDetailsSpecificationAttributesBottom, additionalData = Model })
 </div>

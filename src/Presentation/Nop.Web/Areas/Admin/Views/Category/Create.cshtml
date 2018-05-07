@@ -1,4 +1,4 @@
-﻿@model CategoryModel
+@model CategoryModel
 @{
     //page title
     ViewBag.Title = T("Admin.Catalog.Categories.AddNew").Text;
@@ -24,7 +24,7 @@
                 <i class="fa fa-floppy-o"></i>
                 @T("Admin.Common.SaveContinue")
             </button>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_category_details_buttons" })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CategoryDetailsButtons })
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdate", Model)

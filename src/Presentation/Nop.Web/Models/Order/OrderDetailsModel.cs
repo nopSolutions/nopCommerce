@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Nop.Web.Framework.Mvc.Models;
+using Nop.Web.Framework.Models;
 using Nop.Web.Models.Common;
 
 namespace Nop.Web.Models.Order
@@ -77,7 +77,10 @@ namespace Nop.Web.Models.Order
         
         public IList<OrderNote> OrderNotes { get; set; }
 
-		#region Nested Classes
+        public bool ShowVendorName { get; set; }
+        
+
+        #region Nested Classes
 
         public partial class OrderItemModel : BaseNopEntityModel
         {
@@ -91,6 +94,8 @@ namespace Nop.Web.Models.Order
             public int Quantity { get; set; }
             public string AttributeInfo { get; set; }
             public string RentalInfo { get; set; }
+
+            public string VendorName { get; set; }
 
             //downloadable product properties
             public int DownloadId { get; set; }

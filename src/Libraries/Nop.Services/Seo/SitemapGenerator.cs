@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -26,12 +27,12 @@ namespace Nop.Services.Seo
     {
         #region Constants
 
-        private const string DateFormat = @"yyyy-MM-dd";
+        private const string DATE_FORMAT = @"yyyy-MM-dd";
 
         /// <summary>
         /// At now each provided sitemap file must have no more than 50000 URLs
         /// </summary>
-        private const int maxSitemapUrlNumber = 50000;
+        private const int MAX_SITEMAP_URL_NUMBER = 50000;
 
         #endregion
 
@@ -208,7 +209,7 @@ namespace Nop.Services.Seo
 
             //categories
             if (_commonSettings.SitemapIncludeCategories)
-                sitemapUrls.AddRange(GetCategoryUrls(0));
+                sitemapUrls.AddRange(GetCategoryUrls());
 
             //manufacturers
             if (_commonSettings.SitemapIncludeManufacturers)
@@ -234,19 +235,14 @@ namespace Nop.Services.Seo
         /// <summary>
         /// Get category URLs for the sitemap
         /// </summary>
-        /// <param name="parentCategoryId">Parent category identifier</param>
         /// <returns>Sitemap URLs</returns>
-        protected virtual IEnumerable<SitemapUrl> GetCategoryUrls(int parentCategoryId)
+        protected virtual IEnumerable<SitemapUrl> GetCategoryUrls()
         {
             var urlHelper = GetUrlHelper();
-            return _categoryService.GetAllCategoriesByParentCategoryId(parentCategoryId).SelectMany(category =>
+            return _categoryService.GetAllCategories().Select(category =>
             {
-                var sitemapUrls = new List<SitemapUrl>();
                 var url = urlHelper.RouteUrl("Category", new { SeName = category.GetSeName() }, GetHttpProtocol());
-                sitemapUrls.Add(new SitemapUrl(url, UpdateFrequency.Weekly, category.UpdatedOnUtc));
-                sitemapUrls.AddRange(GetCategoryUrls(category.Id));
-
-                return sitemapUrls;
+                return new SitemapUrl(url, UpdateFrequency.Weekly, category.UpdatedOnUtc);
             });
         }
 
@@ -288,7 +284,7 @@ namespace Nop.Services.Seo
             var urlHelper = GetUrlHelper();
             return _productTagService.GetAllProductTags().Select(productTag =>
             {
-                var url = urlHelper.RouteUrl("ProductsByTag", new { productTagId = productTag.Id, SeName = productTag.GetSeName() }, GetHttpProtocol());
+                var url = urlHelper.RouteUrl("ProductsByTag", new { SeName = productTag.GetSeName() }, GetHttpProtocol());
                 return new SitemapUrl(url, UpdateFrequency.Weekly, DateTime.UtcNow);
             });
         }
@@ -344,7 +340,7 @@ namespace Nop.Services.Seo
 
                     writer.WriteStartElement("sitemap");
                     writer.WriteElementString("loc", location);
-                    writer.WriteElementString("lastmod", DateTime.UtcNow.ToString(DateFormat));
+                    writer.WriteElementString("lastmod", DateTime.UtcNow.ToString(DATE_FORMAT));
                     writer.WriteEndElement();
                 }
 
@@ -359,7 +355,6 @@ namespace Nop.Services.Seo
         /// <param name="sitemapUrls">List of sitemap URLs</param>
         protected virtual void WriteSitemap(Stream stream, IList<SitemapUrl> sitemapUrls)
         {
-            var urlHelper = GetUrlHelper();
             using (var writer = new XmlTextWriter(stream, Encoding.UTF8))
             {
                 writer.Formatting = Formatting.Indented;
@@ -377,7 +372,7 @@ namespace Nop.Services.Seo
 
                     writer.WriteElementString("loc", location);
                     writer.WriteElementString("changefreq", url.UpdateFrequency.ToString().ToLowerInvariant());
-                    writer.WriteElementString("lastmod", url.UpdatedOn.ToString(DateFormat));
+                    writer.WriteElementString("lastmod", url.UpdatedOn.ToString(DATE_FORMAT, CultureInfo.InvariantCulture));
                     writer.WriteEndElement();
                 }
 
@@ -417,7 +412,7 @@ namespace Nop.Services.Seo
 
             //split URLs into separate lists based on the max size 
             var sitemaps = sitemapUrls.Select((url, index) => new { Index = index, Value = url })
-                .GroupBy(group => group.Index / maxSitemapUrlNumber).Select(group => group.Select(url => url.Value).ToList()).ToList();
+                .GroupBy(group => group.Index / MAX_SITEMAP_URL_NUMBER).Select(group => group.Select(url => url.Value).ToList()).ToList();
 
             if (!sitemaps.Any())
                 return;
@@ -435,7 +430,7 @@ namespace Nop.Services.Seo
             else
             {
                 //URLs more than the maximum allowable, so generate a sitemap index file
-                if (sitemapUrls.Count >= maxSitemapUrlNumber)
+                if (sitemapUrls.Count >= MAX_SITEMAP_URL_NUMBER)
                 {
                     //write a sitemap index file into the stream
                     WriteSitemapIndex(stream, sitemaps.Count);
