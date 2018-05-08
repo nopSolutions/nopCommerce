@@ -1,5 +1,6 @@
 ﻿@model InstallModel
 @using System.Text.Encodings.Web
+@using Nop.Core.Data
 @using Nop.Web.Models.Install
 @using Nop.Web.Infrastructure.Installation
 @*localization service for installation service
@@ -216,7 +217,7 @@
                                     }*@
                                     <div class="radio">
                                         <label>
-                                            <input asp-for="DataProvider" value="sqlserver" type="radio" checked="@(Model.DataProvider == "sqlserver")" id="provider_sqlserver" />
+                                            <input asp-for="DataProvider" value="sqlserver" type="radio" checked="@(Model.DataProvider == DataProviderType.SqlServer)" id="provider_sqlserver" />
                                             @ILS.GetResource("SqlStandard") <strong>@ILS.GetResource("Recommended")</strong>
                                         </label>
                                     </div>

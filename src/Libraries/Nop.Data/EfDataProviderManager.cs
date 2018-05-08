@@ -18,12 +18,9 @@ namespace Nop.Data
             get
             {
                 var providerName = DataSettingsManager.LoadSettings()?.DataProvider;
-                if (string.IsNullOrEmpty(providerName))
-                    throw new NopException("Data settings doesn't contain a provider name");
-
-                switch (providerName.ToLowerInvariant())
+                switch (providerName)
                 {
-                    case "sqlserver":
+                    case DataProviderType.SqlServer:
                         return new SqlServerDataProvider();
 
                     //case "sqlce":

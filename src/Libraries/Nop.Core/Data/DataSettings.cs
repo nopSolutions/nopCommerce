@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace Nop.Core.Data
 {
@@ -22,7 +23,8 @@ namespace Nop.Core.Data
         /// <summary>
         /// Gets or sets a data provider
         /// </summary>
-        public string DataProvider { get; set; }
+        [JsonConverter(typeof(StringEnumConverter))]
+        public DataProviderType DataProvider { get; set; }
 
         /// <summary>
         /// Gets or sets a connection string
@@ -39,7 +41,7 @@ namespace Nop.Core.Data
         /// </summary>
         /// <returns></returns>
         [JsonIgnore]
-        public bool IsValid => !string.IsNullOrEmpty(this.DataProvider) && !string.IsNullOrEmpty(this.DataConnectionString);
+        public bool IsValid => this.DataProvider != DataProviderType.Unknown && !string.IsNullOrEmpty(this.DataConnectionString);
 
         #endregion
     }

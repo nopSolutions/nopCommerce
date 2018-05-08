@@ -183,7 +183,7 @@ namespace Nop.Web.Controllers
                 AdminEmail = "admin@yourStore.com",
                 InstallSampleData = false,
                 DatabaseConnectionString = "",
-                DataProvider = "sqlserver",
+                DataProvider = DataProviderType.SqlServer,
                 //fast installation service does not support SQL compact
                 DisableSqlCompact = _config.UseFastInstallationService,
                 DisableSampleDataOption = _config.DisableSampleDataDuringInstallation,
@@ -230,7 +230,7 @@ namespace Nop.Web.Controllers
             model.DisableSampleDataOption = _config.DisableSampleDataDuringInstallation;
 
             //SQL Server
-            if (model.DataProvider.Equals("sqlserver", StringComparison.InvariantCultureIgnoreCase))
+            if (model.DataProvider == DataProviderType.SqlServer)
             {
                 if (model.SqlConnectionInfo.Equals("sqlconnectioninfo_raw", StringComparison.InvariantCultureIgnoreCase))
                 {
@@ -291,7 +291,7 @@ namespace Nop.Web.Controllers
                 try
                 {
                     string connectionString;
-                    if (model.DataProvider.Equals("sqlserver", StringComparison.InvariantCultureIgnoreCase))
+                    if (model.DataProvider == DataProviderType.SqlServer)
                     {
                         //SQL Server
 
