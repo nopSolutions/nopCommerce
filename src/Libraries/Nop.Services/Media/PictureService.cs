@@ -11,7 +11,6 @@ using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Services.Configuration;
 using Nop.Services.Events;
-using Nop.Services.Logging;
 using Nop.Services.Seo;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats;
@@ -19,7 +18,6 @@ using SixLabors.ImageSharp.Formats.Bmp;
 using SixLabors.ImageSharp.Formats.Gif;
 using SixLabors.ImageSharp.Formats.Jpeg;
 using SixLabors.ImageSharp.Formats.Png;
-using SixLabors.ImageSharp.Memory;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 using SixLabors.ImageSharp.Processing.Transforms;
@@ -46,12 +44,12 @@ namespace Nop.Services.Media
         private readonly IRepository<ProductPicture> _productPictureRepository;
         private readonly ISettingService _settingService;
         private readonly IWebHelper _webHelper;
-        private readonly ILogger _logger;
         private readonly IDbContext _dbContext;
         private readonly IEventPublisher _eventPublisher;
         private readonly MediaSettings _mediaSettings;
         private readonly IDataProvider _dataProvider;
         private readonly INopFileProvider _fileProvider;
+        private readonly IRepository<PictureBinary> _pictureBinaryRepository;
 
         #endregion
 
@@ -64,33 +62,33 @@ namespace Nop.Services.Media
         /// <param name="productPictureRepository">Product picture repository</param>
         /// <param name="settingService">Setting service</param>
         /// <param name="webHelper">Web helper</param>
-        /// <param name="logger">Logger</param>
         /// <param name="dbContext">Database context</param>
         /// <param name="eventPublisher">Event publisher</param>
         /// <param name="mediaSettings">Media settings</param>
         /// <param name="dataProvider">Data provider</param>
         /// <param name="fileProvider">File provider</param>
+        /// <param name="pictureBinaryRepository">PictureBinary repository</param>
         public PictureService(IRepository<Picture> pictureRepository,
             IRepository<ProductPicture> productPictureRepository,
             ISettingService settingService,
             IWebHelper webHelper,
-            ILogger logger,
             IDbContext dbContext,
             IEventPublisher eventPublisher,
             MediaSettings mediaSettings,
             IDataProvider dataProvider,
-            INopFileProvider fileProvider)
+            INopFileProvider fileProvider,
+            IRepository<PictureBinary> pictureBinaryRepository)
         {
             this._pictureRepository = pictureRepository;
             this._productPictureRepository = productPictureRepository;
             this._settingService = settingService;
             this._webHelper = webHelper;
-            this._logger = logger;
             this._dbContext = dbContext;
             this._eventPublisher = eventPublisher;
             this._mediaSettings = mediaSettings;
             this._dataProvider = dataProvider;
             this._fileProvider = fileProvider;
+            this._pictureBinaryRepository = pictureBinaryRepository;
         }
 
         #endregion
@@ -299,7 +297,7 @@ namespace Nop.Services.Media
         {
             return _fileProvider.GetAbsolutePath("images", fileName);
         }
-
+        
         /// <summary>
         /// Gets the loaded picture binary depending on picture storage settings
         /// </summary>
@@ -312,8 +310,9 @@ namespace Nop.Services.Media
                 throw new ArgumentNullException(nameof(picture));
 
             var result = fromDb
-                ? picture.PictureBinary
+                ? picture.PictureBinary?.BinaryData ?? new byte[0]
                 : LoadPictureFromFile(picture.Id, picture.MimeType);
+
             return result;
         }
 
@@ -388,7 +387,38 @@ namespace Nop.Services.Media
                 return stream.ToArray();
             }
         }
-        
+
+        /// <summary>
+        /// Updates the picture binary data
+        /// </summary>
+        /// <param name="picture">The picture object</param>
+        /// <param name="binaryData">The picture binary data</param>
+        /// <returns>Picture binary</returns>
+        protected virtual PictureBinary UpdatePictureBinary(Picture picture, byte[] binaryData)
+        {
+            if (picture == null)
+                throw new ArgumentNullException(nameof(picture));
+
+            var pictureBinary = picture.PictureBinary;
+
+            var isNew = pictureBinary == null;
+
+            if (isNew)
+                pictureBinary = new PictureBinary
+                {
+                    PictureId = picture.Id
+                };
+
+            pictureBinary.BinaryData = binaryData;
+
+            if (isNew)
+                _pictureBinaryRepository.Insert(pictureBinary);
+            else
+                _pictureBinaryRepository.Update(pictureBinary);
+
+            return pictureBinary;
+        }
+
         #endregion
 
         #region Getting picture local path/URL methods
@@ -717,14 +747,14 @@ namespace Nop.Services.Media
 
             var picture = new Picture
             {
-                PictureBinary = StoreInDb ? pictureBinary : new byte[0],
                 MimeType = mimeType,
                 SeoFilename = seoFilename,
                 AltAttribute = altAttribute,
                 TitleAttribute = titleAttribute,
-                IsNew = isNew,
+                IsNew = isNew
             };
             _pictureRepository.Insert(picture);
+            UpdatePictureBinary(picture, StoreInDb ? pictureBinary : new byte[0]);
 
             if (!StoreInDb)
                 SavePictureInFile(picture.Id, pictureBinary, mimeType);
@@ -766,8 +796,7 @@ namespace Nop.Services.Media
             //delete old thumbs if a picture has been changed
             if (seoFilename != picture.SeoFilename)
                 DeletePictureThumbs(picture);
-
-            picture.PictureBinary = StoreInDb ? pictureBinary : new byte[0];
+           
             picture.MimeType = mimeType;
             picture.SeoFilename = seoFilename;
             picture.AltAttribute = altAttribute;
@@ -775,6 +804,7 @@ namespace Nop.Services.Media
             picture.IsNew = isNew;
 
             _pictureRepository.Update(picture);
+            UpdatePictureBinary(picture, StoreInDb ? pictureBinary : new byte[0]);
 
             if (!StoreInDb)
                 SavePictureInFile(picture.Id, pictureBinary, mimeType);
@@ -907,7 +937,7 @@ namespace Nop.Services.Media
                                 //now on file system
                                 SavePictureInFile(picture.Id, pictureBinary, picture.MimeType);
                             //update appropriate properties
-                            picture.PictureBinary = value ? pictureBinary : new byte[0];
+                            UpdatePictureBinary(picture, value ? pictureBinary : new byte[0]);
                             picture.IsNew = true;
                             //raise event?
                             //_eventPublisher.EntityUpdated(picture);
