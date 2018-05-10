@@ -27,7 +27,7 @@ namespace Nop.Data
         /// <summary>
         /// Further configuration the model
         /// </summary>
-        /// <param name="builder">The builder being used to construct the model for this context</param>
+        /// <param name="modelBuilder">Model muilder</param>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             //dynamically load all entity and query type configurations
