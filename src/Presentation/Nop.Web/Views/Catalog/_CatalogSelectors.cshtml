@@ -20,7 +20,7 @@
     {
         <div class="product-sorting">
             <span>@T("Catalog.OrderBy")</span>
-            @Html.DropDownList("products-orderby", Model.AvailableSortOptions, new { onchange = "setLocation(this.value);" })
+            @Html.DropDownList("products-orderby", Model.AvailableSortOptions, new { onchange = "setLocation(this.value);", aria_label = T("Catalog.OrderBy.Label") })
         </div>
     }
     @*page size*@
@@ -28,7 +28,7 @@
     {
         <div class="product-page-size">
             <span>@T("Catalog.PageSize")</span>
-            @Html.DropDownList("products-pagesize", Model.PageSizeOptions, new { onchange = "setLocation(this.value);" })
+            @Html.DropDownList("products-pagesize", Model.PageSizeOptions, new { onchange = "setLocation(this.value);", aria_label = T("Catalog.PageSize.Label") })
             <span>@T("Catalog.PageSize.PerPage")</span>
         </div>
     }

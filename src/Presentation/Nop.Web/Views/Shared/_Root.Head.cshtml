@@ -5,11 +5,13 @@
 @using Nop.Services.Events
 @using Nop.Services.Security
 @using Nop.Web.Framework.Events
+@using Nop.Core
 @inject CommonSettings commonSettings
 @inject IEventPublisher eventPublisher
 @inject IPermissionService permissionService
 @inject SeoSettings seoSettings
 @inject StoreInformationSettings storeInformationSettings
+@inject IWorkContext workContext
 @{
     Html.AppendScriptParts(ResourceLocation.Footer, "~/js/public.ajaxcart.js");
     Html.AppendScriptParts(ResourceLocation.Footer, "~/js/public.common.js");
@@ -36,7 +38,7 @@
     eventPublisher.Publish(new PageRenderingEvent(this.Html));
 }
 <!DOCTYPE html>
-<html @(this.ShouldUseRtlTheme() ? Html.Raw(" dir=\"rtl\"") : null) @Html.NopPageCssClasses()>
+<html lang="@workContext.WorkingLanguage.UniqueSeoCode" @(this.ShouldUseRtlTheme() ? Html.Raw(" dir=\"rtl\"") : null) @Html.NopPageCssClasses()>
     <head>
         <title>@Html.NopTitle()</title>
         <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />

@@ -14019,8 +14019,14 @@
   <LocaleResource Name="Catalog.OrderBy">
     <Value>Sort by</Value>
   </LocaleResource>
+  <LocaleResource Name="Catalog.OrderBy.Label">
+    <Value>Select Product Sort Order</Value>
+  </LocaleResource>
   <LocaleResource Name="Catalog.PageSize">
     <Value>Display</Value>
+  </LocaleResource>
+  <LocaleResource Name="Catalog.PageSize.Label">
+    <Value>Select Products per Page</Value>
   </LocaleResource>
   <LocaleResource Name="Catalog.PageSize.PerPage">
     <Value>per page</Value>
@@ -16848,6 +16854,9 @@
   <LocaleResource Name="Search.PriceRange.To">
     <Value>to</Value>
   </LocaleResource>
+  <LocaleResource Name="Search.SearchBox.TextLabel">
+    <Value>Search store</Value>
+  </LocaleResource>
   <LocaleResource Name="Search.SearchBox.Tooltip">
     <Value>Search store</Value>
   </LocaleResource>
@@ -16868,6 +16877,12 @@
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.AddToCart">
     <Value>Add to cart</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.AddToCart.CustomerEnteredPriceLabel">
+    <Value>Enter item price</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.AddToCart.QuantityLabel">
+    <Value>Enter item quantity</Value>
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.AddToCart.Update">
     <Value>Update</Value>
@@ -16941,6 +16956,9 @@
   <LocaleResource Name="ShoppingCart.DiscountCouponCode.CurrentCode">
     <Value>Entered coupon code - {0}</Value>
   </LocaleResource>
+  <LocaleResource Name="ShoppingCart.DiscountCouponCode.Label">
+    <Value>Enter discount coupon code</Value>
+  </LocaleResource>
   <LocaleResource Name="ShoppingCart.DiscountCouponCode.Tooltip">
     <Value>Enter your coupon here</Value>
   </LocaleResource>
@@ -16988,6 +17006,9 @@
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.GiftCardCouponCode.DontWorkWithAutoshipProducts">
     <Value>You cannot use gift cards with auto-ship (recurring) items.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.GiftCardCouponCode.Label">
+    <Value>Enter Gift Card Code</Value>
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.GiftCardCouponCode.Tooltip">
     <Value>Enter gift card code</Value>
@@ -17070,6 +17091,9 @@
   <LocaleResource Name="ShoppingCart.QuantityShouldPositive">
     <Value>Quantity should be positive</Value>
   </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Quantity.Label">
+    <Value>Quantity</Value>
+  </LocaleResource>
   <LocaleResource Name="ShoppingCart.RecipientEmailError">
     <Value>Enter valid recipient email</Value>
   </LocaleResource>
@@ -17081,6 +17105,9 @@
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.Remove">
     <Value>Remove</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Remove.Label">
+    <Value>Remove item from cart</Value>
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.Rent">
     <Value>Rent</Value>

@@ -91,6 +91,7 @@ namespace Nop.Plugin.Widgets.NivoSlider
             this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.NivoSlider.Text.Hint", "Enter comment for picture. Leave empty if you don't want to display any text.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.NivoSlider.Link", "URL");
             this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.NivoSlider.Link.Hint", "Enter URL. Leave empty if you don't want this picture to be clickable.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.NivoSlider.AltText", "Image Alt Text");
 
             base.Install();
         }
