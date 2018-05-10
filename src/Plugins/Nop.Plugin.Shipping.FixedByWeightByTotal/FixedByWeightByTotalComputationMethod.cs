@@ -88,7 +88,7 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal
         private decimal? GetRate(decimal subTotal, decimal weight, int shippingMethodId,
             int storeId, int warehouseId, int countryId, int stateProvinceId, string zip)
         {
-            var shippingByWeightByTotalRecord = _shippingByWeightByTotalService.FindRecord(shippingMethodId, storeId, warehouseId, countryId, stateProvinceId, zip, weight, subTotal);
+            var shippingByWeightByTotalRecord = _shippingByWeightByTotalService.FindRecords(shippingMethodId, storeId, warehouseId, countryId, stateProvinceId, zip, weight, subTotal);
             if (shippingByWeightByTotalRecord == null)
             {
                 if (_fixedByWeightByTotalSettings.LimitMethodsToCreated)

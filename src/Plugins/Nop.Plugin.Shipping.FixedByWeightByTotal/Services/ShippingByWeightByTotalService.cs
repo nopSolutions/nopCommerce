@@ -66,7 +66,21 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Services
             });
         }
 
-        public virtual IPagedList<ShippingByWeightByTotalRecord> FindRecord(int shippingMethodId, int storeId, int warehouseId,
+        /// <summary>
+        /// Filter Shipping Weight Records
+        /// </summary>
+        /// <param name="shippingMethodId">Shipping method identifier</param>
+        /// <param name="storeId">Store identifier</param>
+        /// <param name="warehouseId">Warehouse identifier</param>
+        /// <param name="countryId">Country identifier</param>
+        /// <param name="stateProvinceId">State identifier</param>
+        /// <param name="zip">Zip postal code</param>
+        /// <param name="weight">Weight</param>
+        /// <param name="orderSubtotal">Order subtotal</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
+        /// <returns>List of the shipping by weight record</returns>
+        public virtual IPagedList<ShippingByWeightByTotalRecord> FindRecords(int shippingMethodId, int storeId, int warehouseId,
             int countryId, int stateProvinceId, string zip, decimal weight, decimal orderSubtotal, int pageIndex, int pageSize)
         {
             zip = zip?.Trim() ?? string.Empty;
@@ -126,10 +140,10 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Services
         /// <param name="weight">Weight</param>
         /// <param name="orderSubtotal">Order subtotal</param>
         /// <returns>Shipping by weight record</returns>
-        public virtual ShippingByWeightByTotalRecord FindRecord(int shippingMethodId, int storeId, int warehouseId, 
+        public virtual ShippingByWeightByTotalRecord FindRecords(int shippingMethodId, int storeId, int warehouseId, 
             int countryId, int stateProvinceId, string zip, decimal weight, decimal orderSubtotal)
         {
-            var foundRecords = FindRecord(shippingMethodId, storeId, warehouseId,countryId, stateProvinceId, zip, weight, orderSubtotal,0,0);
+            var foundRecords = FindRecords(shippingMethodId, storeId, warehouseId,countryId, stateProvinceId, zip, weight, orderSubtotal,0,0);
 
             return foundRecords.FirstOrDefault();
         }

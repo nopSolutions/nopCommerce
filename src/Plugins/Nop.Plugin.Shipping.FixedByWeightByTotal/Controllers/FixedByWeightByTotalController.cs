@@ -186,7 +186,7 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Controllers
                 return AccessDeniedKendoGridJson();
 
             //var records = _shippingByWeightService.GetAll(command.Page - 1, command.PageSize);
-            var records = _shippingByWeightService.FindRecord(
+            var records = _shippingByWeightService.FindRecords(
               pageIndex: command.Page - 1,
               pageSize: command.PageSize,
               storeId: filter.SearchStoreId,

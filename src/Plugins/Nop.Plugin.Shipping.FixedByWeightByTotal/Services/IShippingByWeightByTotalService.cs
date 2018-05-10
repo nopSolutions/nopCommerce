@@ -28,7 +28,7 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Services
         /// <param name="weight">Weight</param>
         /// <param name="orderSubtotal">Order subtotal</param>
         /// <returns>Shipping by weight record</returns>
-        ShippingByWeightByTotalRecord FindRecord(int shippingMethodId, int storeId, int warehouseId,  
+        ShippingByWeightByTotalRecord FindRecords(int shippingMethodId, int storeId, int warehouseId,  
             int countryId, int stateProvinceId, string zip, decimal weight, decimal orderSubtotal);
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Services
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>List of the shipping by weight record</returns>
-        IPagedList<ShippingByWeightByTotalRecord> FindRecord(int shippingMethodId, int storeId, int warehouseId,
+        IPagedList<ShippingByWeightByTotalRecord> FindRecords(int shippingMethodId, int storeId, int warehouseId,
             int countryId, int stateProvinceId, string zip, decimal weight, decimal orderSubtotal, int pageIndex, int pageSize);
 
         /// <summary>
