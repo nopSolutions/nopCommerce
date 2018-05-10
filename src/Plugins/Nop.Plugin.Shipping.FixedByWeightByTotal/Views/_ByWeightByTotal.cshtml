@@ -4,17 +4,110 @@
 @{
     var stores = storeService.GetAllStores();
 }
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#@Html.IdFor(model => model.SearchCountryId)").change(function () {
+            var selectedItem = $(this).val();
+            var ddlStates = $("#@Html.IdFor(model => model.SearchStateProvinceId)");
+            $.ajax({
+                cache: false,
+                type: "GET",
+                url: "@(Url.Action("GetStatesByCountryId", "Country"))",
+                data: { "countryId": selectedItem, "addAsterisk": "true" },
+                success: function (data) {
+                    ddlStates.html('');
+                    $.each(data, function (id, option) {
+                        ddlStates.append($('<option></option>').val(option.id).html(option.name));
+                    });
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert('Failed to retrieve states.');
+                }
+            });
+        });
+    });
+</script>
 
 <form asp-controller="FixedByWeightByTotal" asp-action="Configure" method="post" id="shipping-byweight-form">
-    <div class="panel-group advanced-setting">
-        <div class="panel panel-default">
-            <div class="panel-body">
-                <p>
-                    <b>@T("Plugins.Shipping.FixedByWeightByTotal.Formula")</b>
-                    @T("Plugins.Shipping.FixedByWeightByTotal.Formula.Value")
-                </p>
-                <div id="shipping-byweight-grid"></div>
-                <script>
+    <div class="content">
+        <div class="form-horizontal">
+            <div class="panel-group">
+                <div class="panel panel-default formula">
+                    <p>
+                        <b>@T("Plugins.Shipping.FixedByWeightByTotal.Formula")</b>
+                        @T("Plugins.Shipping.FixedByWeightByTotal.Formula.Value")
+                    </p>
+                </div>
+                <div class="panel panel-default panel-search">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="SearchStoreId" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-select asp-for="SearchStoreId" asp-items="Model.AvailableStores" />
+                                    </div>
+                                </div>
+                                <div class="form-group" )>
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="SearchWarehouseId" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-select asp-for="SearchWarehouseId" asp-items="Model.AvailableWarehouses" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="SearchShippingMethodId" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-select asp-for="SearchShippingMethodId" asp-items="Model.AvailableShippingMethods" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-7">
+                                <div class="form-group" )>
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="SearchCountryId" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-select asp-for="SearchCountryId" asp-items="Model.AvailableCountries" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="SearchStateProvinceId" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-select asp-for="SearchStateProvinceId" asp-items="Model.AvailableStates" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="SearchZip" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-editor asp-for="SearchZip" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-7 col-md-offset-5">
+                                <button type="button" id="search-shipping-byweight-records" class="btn btn-primary btn-search">
+                                    <i class="fa fa-search"></i>
+                                    @T("Admin.Common.Search")
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div id="shipping-byweight-grid"></div>
+                        <script>
                     $(document)
                         .ready(function() {
                             $("#shipping-byweight-grid")
@@ -26,7 +119,7 @@
                                                 url: "@Html.Raw(Url.Action("RateByWeightByTotalList", "FixedByWeightByTotal"))",
                                                 type: "POST",
                                                 dataType: "json",
-                                                data: addAntiForgeryToken
+                                                data: additionalData
                                             },
                                             destroy: {
                                                 url: "@Html.Raw(Url.Action("DeleteRateByWeightByTotal", "FixedByWeightByTotal"))",
@@ -114,50 +207,33 @@
                                     ]
                                 });
                         });
-                </script>
-            </div>
-            <div class="panel-footer">
-                <button type="submit" id="btnAddNewRecord" class="btn btn-primary"
-                        onclick="javascript:OpenWindow('@(Url.Action("AddRateByWeightByTotalPopup", "FixedByWeightByTotal", new { btnId = "btnRefresh", formId = "shipping-byweight-form" }))', 800, 800, true); return false;">
-                    @T("Plugins.Shipping.FixedByWeightByTotal.AddRecord")
-                </button>
-                <input type="submit" id="btnRefresh" class="btn btn-default" style="display: none" />
-            </div>
-            <script>
-                $(document)
-                    .ready(function () {
-                        $('#btnRefresh')
-                            .click(function () {
-                                //refresh grid
-                                var grid = $("#shipping-byweight-grid").data('kendoGrid');
-                                //grid.dataSource.page(1); //new search. Set page size to 1
-                                grid.dataSource.read();
-
-                                //return false to don't reload a page
-                                return false;
-                            });
-                    });
-            </script>
-        </div>
-        <div class="panel panel-default">
-            <div class="panel-body">
-                <div class="form-group">
-                    <div class="col-md-3">
-                        <nop-label asp-for="LimitMethodsToCreated" />
+                        </script>
                     </div>
-                    <div class="col-md-9">
-                        <nop-editor asp-for="LimitMethodsToCreated" />
-                        <span asp-validation-for="LimitMethodsToCreated"></span>
+                    <div class="panel-footer">
+                        <button type="submit" id="btnAddNewRecord" class="btn btn-primary"
+                                onclick="javascript:OpenWindow('@(Url.Action("AddRateByWeightByTotalPopup", "FixedByWeightByTotal", new { btnId = "btnRefresh", formId = "shipping-byweight-form" }))', 800, 800, true); return false;">
+                            @T("Plugins.Shipping.FixedByWeightByTotal.AddRecord")
+                        </button>
+                        <input type="submit" id="btnRefresh" class="btn btn-default" style="display: none" />
                     </div>
                 </div>
-                <div class="form-group">
-                    <div class="col-md-3">
-                        &nbsp;
+                <div class="panel panel-advanced-setting">
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="LimitMethodsToCreated" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="LimitMethodsToCreated" />
+                            <span asp-validation-for="LimitMethodsToCreated"></span>
+                        </div>
                     </div>
-                    <div class="col-md-9">
-                        <input type="button" id="savegeneralsettings" class="btn btn-primary" value="@T("Admin.Common.Save")" />
-
-                        <script>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            &nbsp;
+                        </div>
+                        <div class="col-md-9">
+                            <input type="button" id="savegeneralsettings" class="btn btn-primary" value="@T("Admin.Common.Save")" />
+                            <script>
                             $(document)
                                 .ready(function() {
                                     $('#savegeneralsettings').click(function() {
@@ -180,10 +256,46 @@
                                         return false;
                                     });
                                 });
-                        </script>
+                            </script>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    <script>
+                $(document)
+                    .ready(function () {
+                        $('#btnRefresh')
+                            .click(function () {
+                                //refresh grid
+                                var grid = $("#shipping-byweight-grid").data('kendoGrid');
+                                //grid.dataSource.page(1); //new search. Set page size to 1
+                                grid.dataSource.read();
+
+                                //return false to don't reload a page
+                                return false;
+                            });
+                        $('#search-shipping-byweight-records').click(function () {
+                            //search
+                            var grid = $('#shipping-byweight-grid').data('kendoGrid');
+                            grid.dataSource.page(1); //new search. Set page size to 1
+                            return false;
+                        });
+                    });
+
+                  function additionalData() {
+                                var data = {
+                                    SearchStoreId: $('#SearchStoreId').val(),
+                                    SearchWarehouseId: $('#SearchWarehouseId').val(),
+                                    SearchCountryId: $('#SearchCountryId').val(),
+                                    SearchStateProvinceId: $('#SearchStateProvinceId').val(),
+                                    SearchZip: $('#@Html.IdFor(model => model.SearchZip)').val(),
+                                    SearchShippingMethodId: $('#SearchShippingMethodId').val()
+                                };
+                                addAntiForgeryToken(data);
+                                return data;
+                            }
+    </script>
+
 </form>
