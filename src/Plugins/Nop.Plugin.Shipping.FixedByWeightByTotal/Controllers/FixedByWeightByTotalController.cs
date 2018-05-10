@@ -89,6 +89,25 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Controllers
                 ShippingByWeightByTotalEnabled = _fixedByWeightByTotalSettings.ShippingByWeightByTotalEnabled
             };
 
+            //stores
+            model.AvailableStores.Add(new SelectListItem { Text = "*", Value = "0" });
+            foreach (var store in _storeService.GetAllStores())
+                model.AvailableStores.Add(new SelectListItem { Text = store.Name, Value = store.Id.ToString() });
+            //warehouses
+            model.AvailableWarehouses.Add(new SelectListItem { Text = "*", Value = "0" });
+            foreach (var warehouses in _shippingService.GetAllWarehouses())
+                model.AvailableWarehouses.Add(new SelectListItem { Text = warehouses.Name, Value = warehouses.Id.ToString() });
+            //shipping methods
+            foreach (var sm in _shippingService.GetAllShippingMethods())
+                model.AvailableShippingMethods.Add(new SelectListItem { Text = sm.Name, Value = sm.Id.ToString() });
+            //countries
+            model.AvailableCountries.Add(new SelectListItem { Text = "*", Value = "0" });
+            var countries = _countryService.GetAllCountries();
+            foreach (var c in countries)
+                model.AvailableCountries.Add(new SelectListItem { Text = c.Name, Value = c.Id.ToString() });
+            //states
+            model.AvailableStates.Add(new SelectListItem { Text = "*", Value = "0" });
+
             return View("~/Plugins/Shipping.FixedByWeightByTotal/Views/Configure.cshtml", model);
         }
 
@@ -161,12 +180,25 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Controllers
 
         [HttpPost]
         [AdminAntiForgery]
-        public IActionResult RateByWeightByTotalList(DataSourceRequest command)
+        public IActionResult RateByWeightByTotalList(DataSourceRequest command, ConfigurationModel filter)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedKendoGridJson();
 
-            var records = _shippingByWeightService.GetAll(command.Page - 1, command.PageSize);
+            //var records = _shippingByWeightService.GetAll(command.Page - 1, command.PageSize);
+            var records = _shippingByWeightService.FindRecords(
+              pageIndex: command.Page - 1,
+              pageSize: command.PageSize,
+              storeId: filter.SearchStoreId,
+              warehouseId: filter.SearchWarehouseId,
+              countryId: filter.SearchCountryId,
+              stateProvinceId: filter.SearchStateProvinceId,
+              zip: filter.SearchZip,
+              shippingMethodId: filter.SearchShippingMethodId,
+              weight: 0,
+              orderSubtotal: 0
+              );
+
             var sbwModel = records.Select(record =>
             {
                 var model = new ShippingByWeightByTotalModel

@@ -526,7 +526,7 @@ namespace Nop.Web.Controllers
                 //update existing item
                 addToCartWarnings.AddRange(_shoppingCartService.UpdateShoppingCartItem(_workContext.CurrentCustomer,
                     updatecartitem.Id, attributes, customerEnteredPriceConverted,
-                    rentalStartDate, rentalEndDate, quantity, true));
+                    rentalStartDate, rentalEndDate, quantity + (otherCartItemWithSameParameters?.Quantity ?? 0), true));
                 if (otherCartItemWithSameParameters != null && !addToCartWarnings.Any())
                 {
                     //delete the same shopping cart item (the other one)

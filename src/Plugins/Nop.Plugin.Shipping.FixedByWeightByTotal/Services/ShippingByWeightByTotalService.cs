@@ -67,7 +67,7 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Services
         }
 
         /// <summary>
-        /// Get a shipping by weight record by passed parameters
+        /// Filter Shipping Weight Records
         /// </summary>
         /// <param name="shippingMethodId">Shipping method identifier</param>
         /// <param name="storeId">Store identifier</param>
@@ -77,9 +77,11 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Services
         /// <param name="zip">Zip postal code</param>
         /// <param name="weight">Weight</param>
         /// <param name="orderSubtotal">Order subtotal</param>
-        /// <returns>Shipping by weight record</returns>
-        public virtual ShippingByWeightByTotalRecord FindRecord(int shippingMethodId, int storeId, int warehouseId, 
-            int countryId, int stateProvinceId, string zip, decimal weight, decimal orderSubtotal)
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
+        /// <returns>List of the shipping by weight record</returns>
+        public virtual IPagedList<ShippingByWeightByTotalRecord> FindRecords(int shippingMethodId, int storeId, int warehouseId,
+            int countryId, int stateProvinceId, string zip, decimal weight, decimal orderSubtotal, int pageIndex, int pageSize)
         {
             zip = zip?.Trim() ?? string.Empty;
 
@@ -96,7 +98,7 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Services
             var matchedByStore = storeId == 0
                 ? matchedBySubtotal
                 : matchedBySubtotal.Where(r => r.StoreId == storeId || r.StoreId == 0);
-           
+
             //filter by warehouse
             var matchedByWarehouse = warehouseId == 0
                 ? matchedByStore
@@ -121,6 +123,27 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Services
             var foundRecords = matchedByZip.OrderBy(r => r.StoreId == 0).ThenBy(r => r.WarehouseId == 0)
                 .ThenBy(r => r.CountryId == 0).ThenBy(r => r.StateProvinceId == 0)
                 .ThenBy(r => string.IsNullOrEmpty(r.Zip));
+
+            var records = new PagedList<ShippingByWeightByTotalRecord>(foundRecords.AsQueryable(), pageIndex, pageSize);
+            return records;
+        }
+
+        /// <summary>
+        /// Get a shipping by weight record by passed parameters
+        /// </summary>
+        /// <param name="shippingMethodId">Shipping method identifier</param>
+        /// <param name="storeId">Store identifier</param>
+        /// <param name="warehouseId">Warehouse identifier</param>
+        /// <param name="countryId">Country identifier</param>
+        /// <param name="stateProvinceId">State identifier</param>
+        /// <param name="zip">Zip postal code</param>
+        /// <param name="weight">Weight</param>
+        /// <param name="orderSubtotal">Order subtotal</param>
+        /// <returns>Shipping by weight record</returns>
+        public virtual ShippingByWeightByTotalRecord FindRecords(int shippingMethodId, int storeId, int warehouseId, 
+            int countryId, int stateProvinceId, string zip, decimal weight, decimal orderSubtotal)
+        {
+            var foundRecords = FindRecords(shippingMethodId, storeId, warehouseId,countryId, stateProvinceId, zip, weight, orderSubtotal,0,0);
 
             return foundRecords.FirstOrDefault();
         }
