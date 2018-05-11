@@ -965,6 +965,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 model.ExportImportAllowDownloadImages_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.ExportImportAllowDownloadImages, storeId);
                 model.ExportImportSplitProductsFile_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.ExportImportSplitProductsFile, storeId);
                 model.RemoveRequiredProducts_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.RemoveRequiredProducts, storeId);
+                model.ExportImportRelatedEntitiesByName_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.ExportImportRelatedEntitiesByName, storeId);
             }
 
             //prepare nested search model

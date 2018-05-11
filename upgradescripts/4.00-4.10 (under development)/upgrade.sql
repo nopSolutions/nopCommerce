@@ -959,6 +959,18 @@ set @resources='
   <LocaleResource Name="Checkout.UseRewardPoints">
     <Value>Use my reward points, {0} reward points ({1}) available for this order</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ExportImportRelatedEntitiesByName">
+    <Value>Export/Import related entities using name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ExportImportRelatedEntitiesByName.Hint">
+    <Value>Check if related entities should be exported/imported using name.</Value>
+  </LocaleResource>    
+  <LocaleResource Name="Admin.Catalog.Products.Import.ManufacturersDontExist">
+    <Value>Manufacturers with the following names and/or IDs don''t exist: {0}</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Catalog.Products.Import.CategoriesDontExist">
+    <Value>Categories with the following names and/or IDs don''t exist: {0}</Value>
+  </LocaleResource>  
 </Language>
 '
 
@@ -2544,5 +2556,13 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'rewardpointssettings.max
 BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId])
 	VALUES (N'rewardpointssettings.maximumrewardpointstouseperorder', N'0', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'catalogsettings.exportimportrelatedentitiesbyname')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'catalogsettings.exportimportrelatedentitiesbyname', N'true', 0)
 END
 GO

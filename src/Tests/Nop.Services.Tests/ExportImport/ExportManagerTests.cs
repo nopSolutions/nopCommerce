@@ -192,7 +192,7 @@ namespace Nop.Services.Tests.ExportImport
             //the columns
             var properties = ImportManager.GetPropertiesByExcelCells<T>(worksheet);
 
-            return new PropertyManager<T>(properties);
+            return new PropertyManager<T>(properties, _catalogSettings);
         }
 
         protected ExcelWorksheet GetWorksheets(byte[] excelData)

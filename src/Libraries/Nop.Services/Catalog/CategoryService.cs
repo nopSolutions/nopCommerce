@@ -705,18 +705,28 @@ namespace Nop.Services.Catalog
         /// <summary>
         /// Returns a list of names of not existing categories
         /// </summary>
-        /// <param name="categoryNames">The nemes of the categories to check</param>
-        /// <returns>List of names not existing categories</returns>
-        public virtual string[] GetNotExistingCategories(string[] categoryNames)
+        /// <param name="categoryIdsNames">The names and/or IDs of the categories to check</param>
+        /// <returns>List of names and/or IDs not existing categories</returns>
+        public virtual string[] GetNotExistingCategories(string[] categoryIdsNames)
         {
-            if (categoryNames == null)
-                throw new ArgumentNullException(nameof(categoryNames));
+            if (categoryIdsNames == null)
+                throw new ArgumentNullException(nameof(categoryIdsNames));
 
             var query = _categoryRepository.Table;
-            var queryFilter = categoryNames.Distinct().ToArray();
+            var queryFilter = categoryIdsNames.Distinct().ToArray();
+            //filtering by name
             var filter = query.Select(c => c.Name).Where(c => queryFilter.Contains(c)).ToList();
+            queryFilter = queryFilter.Except(filter).ToArray();
 
-            return queryFilter.Except(filter).ToArray();
+            //if some names not found
+            if (queryFilter.Any())
+            {
+                //filtering by IDs
+                filter = query.Select(c => c.Id.ToString()).Where(c => queryFilter.Contains(c)).ToList();
+                queryFilter = queryFilter.Except(filter).ToArray();
+            }
+
+            return queryFilter.ToArray();
         }
 
         /// <summary>
