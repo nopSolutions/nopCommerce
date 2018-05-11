@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.Data.SqlClient;
 using System.Linq;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
 using Nop.Core;
 using Nop.Core.Data;
 using Nop.Core.Domain.Common;
@@ -27,7 +25,7 @@ namespace Nop.Data
         {
             var context = EngineContext.Current.Resolve<IDbContext>();
 
-            //check some of table names to ensure that we have nopCommerce 2.X installed
+            //check some of table names to ensure that we have nopCommerce 2.00+ installed
             var tableNamesToValidate = new List<string> { "Customer", "Discount", "Order", "Product", "ShoppingCartItem" };
             var existingTableNames = context
                 .QueryFromSql<StringQueryType>("SELECT table_name AS Value FROM INFORMATION_SCHEMA.TABLES WHERE table_type = 'BASE TABLE'")
@@ -60,11 +58,6 @@ namespace Nop.Data
         #endregion
 
         #region Properties
-
-        /// <summary>
-        /// Gets a value indicating whether this data provider supports stored procedures
-        /// </summary>
-        public virtual bool StoredProceduresSupported => true;
 
         /// <summary>
         /// Gets a value indicating whether this data provider supports backup

@@ -120,22 +120,13 @@ namespace Nop.Services.Logging
         /// </summary>
         public virtual void ClearLog()
         {
-            if (_commonSettings.UseStoredProceduresIfSupported && _dataProvider.StoredProceduresSupported)
-            {
-                //although it's not a stored procedure we use it to ensure that a database supports them
-                //we cannot wait until EF team has it implemented - http://data.uservoice.com/forums/72025-entity-framework-feature-suggestions/suggestions/1015357-batch-cud-support
+            //do all databases support "Truncate command"?
+            var logTableName = _dbContext.GetTableName<Log>();
+            _dbContext.ExecuteSqlCommand($"TRUNCATE TABLE [{logTableName}]");
 
-
-                //do all databases support "Truncate command"?
-                var logTableName = _dbContext.GetTableName<Log>();
-                _dbContext.ExecuteSqlCommand($"TRUNCATE TABLE [{logTableName}]");
-            }
-            else
-            {
-                var log = _logRepository.Table.ToList();
-                foreach (var logItem in log)
-                    _logRepository.Delete(logItem);
-            }
+            //var log = _logRepository.Table.ToList();
+            //foreach (var logItem in log)
+            //    _logRepository.Delete(logItem);
         }
 
         /// <summary>

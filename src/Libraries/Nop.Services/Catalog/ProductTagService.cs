@@ -101,32 +101,9 @@ namespace Nop.Services.Catalog
             var key = string.Format(PRODUCTTAG_COUNT_KEY, storeId);
             return _cacheManager.Get(key, () =>
             {
-                //stored procedures are enabled and supported by the database. 
-                //It's much faster than the LINQ implementation below 
-                if (_commonSettings.UseStoredProceduresIfSupported && _dataProvider.StoredProceduresSupported)
-                {
-                    //invoke stored procedure
-                    return _dbContext.QueryFromSql<ProductTagWithCount>($"Exec ProductTagCountLoadAll {storeId}")
-                        .ToDictionary(item => item.ProductTagId, item => item.ProductCount);
-                }
-
-                //stored procedures aren't supported. Use LINQ
-                var query = _productTagRepository.Table.Select(pt => new
-                {
-                    pt.Id,
-                    ProductCount = (storeId == 0 || _catalogSettings.IgnoreStoreLimitations) ?
-                        pt.ProductProductTagMappings.Count(mapping => !mapping.Product.Deleted && mapping.Product.Published)
-                        : (from mapping in pt.ProductProductTagMappings
-                            join sm in _storeMappingRepository.Table
-                                on new { p1 = mapping.ProductId, p2 = "Product" } equals new { p1 = sm.EntityId, p2 = sm.EntityName } into p_sm
-                            from sm in p_sm.DefaultIfEmpty()
-                            where (!mapping.Product.LimitedToStores || storeId == sm.StoreId) && !mapping.Product.Deleted && mapping.Product.Published
-                            select mapping).Count()
-                });
-                var dictionary = new Dictionary<int, int>();
-                foreach (var item in query)
-                    dictionary.Add(item.Id, item.ProductCount);
-                return dictionary;
+                return _dbContext.QueryFromSql<ProductTagWithCount>($"Exec ProductTagCountLoadAll {storeId}")
+                    .ToDictionary(item => item.ProductTagId, item => item.ProductCount);
+                
             });
         }
 

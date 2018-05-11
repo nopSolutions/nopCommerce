@@ -185,7 +185,6 @@ namespace Nop.Web.Controllers
                 DatabaseConnectionString = "",
                 DataProvider = DataProviderType.SqlServer,
                 //fast installation service does not support SQL compact
-                DisableSqlCompact = _config.UseFastInstallationService,
                 DisableSampleDataOption = _config.DisableSampleDataDuringInstallation,
                 SqlAuthenticationType = "sqlauthentication",
                 SqlConnectionInfo = "sqlconnectioninfo_values",
@@ -226,7 +225,6 @@ namespace Nop.Web.Controllers
                 });
             }
 
-            model.DisableSqlCompact = _config.UseFastInstallationService;
             model.DisableSampleDataOption = _config.DisableSampleDataDuringInstallation;
 
             //SQL Server

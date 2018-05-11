@@ -25,11 +25,6 @@ namespace Nop.Core.Data
         #region Properties
 
         /// <summary>
-        /// Gets a value indicating whether this data provider supports stored procedures
-        /// </summary>
-        bool StoredProceduresSupported { get; }
-
-        /// <summary>
         /// Gets a value indicating whether this data provider supports backup
         /// </summary>
         bool BackupSupported { get; }

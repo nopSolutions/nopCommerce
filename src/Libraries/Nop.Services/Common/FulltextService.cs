@@ -45,17 +45,10 @@ namespace Nop.Services.Common
         /// <returns>Result</returns>
         public virtual bool IsFullTextSupported()
         {
-            if (_commonSettings.UseStoredProceduresIfSupported && _dataProvider.StoredProceduresSupported)
-            {
-                //stored procedures are enabled and supported by the database. 
-                var result = _dbContext
-                    .QueryFromSql<IntQueryType>("EXEC [FullText_IsSupported]")
-                    .Select(intValue => intValue.Value).FirstOrDefault();
-                return result > 0;
-            }
-
-            //stored procedures aren't supported
-            return false;
+            var result = _dbContext
+                .QueryFromSql<IntQueryType>("EXEC [FullText_IsSupported]")
+                .Select(intValue => intValue.Value).FirstOrDefault();
+            return result > 0;
         }
 
         /// <summary>
@@ -63,15 +56,8 @@ namespace Nop.Services.Common
         /// </summary>
         public virtual void EnableFullText()
         {
-            if (_commonSettings.UseStoredProceduresIfSupported && _dataProvider.StoredProceduresSupported)
-            {
-                //stored procedures are enabled and supported by the database.
-                _dbContext.ExecuteSqlCommand("EXEC [FullText_Enable]", true);
-            }
-            else
-            {
-                throw new Exception("Stored procedures are not supported by your database");
-            }
+            _dbContext.ExecuteSqlCommand("EXEC [FullText_Enable]", true);
+            
         }
 
         /// <summary>
@@ -79,15 +65,7 @@ namespace Nop.Services.Common
         /// </summary>
         public virtual void DisableFullText()
         {
-            if (_commonSettings.UseStoredProceduresIfSupported && _dataProvider.StoredProceduresSupported)
-            {
-                //stored procedures are enabled and supported by the database.
-                _dbContext.ExecuteSqlCommand("EXEC [FullText_Disable]", true);
-            }
-            else
-            {
-                throw new Exception("Stored procedures are not supported by your database");
-            }
+            _dbContext.ExecuteSqlCommand("EXEC [FullText_Disable]", true);
         }
 
         #endregion

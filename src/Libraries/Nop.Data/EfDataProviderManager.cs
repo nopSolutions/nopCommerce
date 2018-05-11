@@ -23,6 +23,9 @@ namespace Nop.Data
                     case DataProviderType.SqlServer:
                         return new SqlServerDataProvider();
 
+                    //starting version 4.10 we support MS SQL Server only. SQL Server Compact is not supported anymore
+                    //but we leave this code because we plan to support other databases soon (e.g. MySQL)
+
                     //case "sqlce":
                     //    return new SqlCeDataProvider();
 

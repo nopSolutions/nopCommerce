@@ -2520,3 +2520,9 @@ GO
 DELETE FROM [Setting]
 WHERE [Name] = N'captchasettings.recaptchaversion'
 GO
+
+
+--delete setting
+DELETE FROM [Setting]
+WHERE [Name] = N'commonsettings.usestoredproceduresifsupported'
+GO

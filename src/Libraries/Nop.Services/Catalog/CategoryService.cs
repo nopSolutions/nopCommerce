@@ -251,8 +251,7 @@ namespace Nop.Services.Catalog
         public virtual IPagedList<Category> GetAllCategories(string categoryName, int storeId = 0, 
             int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false)
         {
-            if (_commonSettings.UseStoredProcedureForLoadingCategories &&
-                _commonSettings.UseStoredProceduresIfSupported && _dataProvider.StoredProceduresSupported)
+            if (_commonSettings.UseStoredProcedureForLoadingCategories)
             {
                 //stored procedures are enabled for loading categories and supported by the database. 
                 //It's much faster with a large number of categories than the LINQ implementation below 
@@ -278,7 +277,7 @@ namespace Nop.Services.Catalog
                 return new PagedList<Category>(categories, pageIndex, pageSize, totalRecords);
             }
 
-            //stored procedures aren't supported. Use LINQ
+            //don't use a stored procedure. Use LINQ
             var query = _categoryRepository.Table;
             if (!showHidden)
                 query = query.Where(c => c.Published);

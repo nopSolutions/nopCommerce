@@ -82,20 +82,13 @@ namespace Nop.Services.Common
         /// </summary>
         /// <typeparam name="T">Entity</typeparam>
         /// <returns>Integer ident; null if cannot get the result</returns>
-        public virtual int? GetTableIdent<T>() where T: BaseEntity
+        public virtual int? GetTableIdent<T>() where T : BaseEntity
         {
-            if (_commonSettings.UseStoredProceduresIfSupported && _dataProvider.StoredProceduresSupported)
-            {
-                //stored procedures are enabled and supported by the database
-                var tableName = _dbContext.GetTableName<T>();
-                var result = _dbContext
-                    .QueryFromSql<DecimalQueryType>($"SELECT IDENT_CURRENT('[{tableName}]') as Value")
-                    .Select(decimalValue => decimalValue.Value).FirstOrDefault();
-                return result.HasValue ? Convert.ToInt32(result) : 1;
-            }
-            
-            //stored procedures aren't supported
-            return null;
+            var tableName = _dbContext.GetTableName<T>();
+            var result = _dbContext
+                .QueryFromSql<DecimalQueryType>($"SELECT IDENT_CURRENT('[{tableName}]') as Value")
+                .Select(decimalValue => decimalValue.Value).FirstOrDefault();
+            return result.HasValue ? Convert.ToInt32(result) : 1;
         }
 
         /// <summary>
@@ -105,20 +98,11 @@ namespace Nop.Services.Common
         /// <param name="ident">Ident value</param>
         public virtual void SetTableIdent<T>(int ident) where T : BaseEntity
         {
-            if (_commonSettings.UseStoredProceduresIfSupported && _dataProvider.StoredProceduresSupported)
+            var currentIdent = GetTableIdent<T>();
+            if (currentIdent.HasValue && ident > currentIdent.Value)
             {
-                //stored procedures are enabled and supported by the database.
-
-                var currentIdent = GetTableIdent<T>();
-                if (currentIdent.HasValue && ident > currentIdent.Value)
-                {
-                    var tableName = _dbContext.GetTableName<T>();
-                    _dbContext.ExecuteSqlCommand($"DBCC CHECKIDENT([{tableName}], RESEED, {ident})");
-                }
-            }
-            else
-            {
-                throw new Exception("Stored procedures are not supported by your database");
+                var tableName = _dbContext.GetTableName<T>();
+                _dbContext.ExecuteSqlCommand($"DBCC CHECKIDENT([{tableName}], RESEED, {ident})");
             }
         }
 

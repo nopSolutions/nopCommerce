@@ -206,19 +206,20 @@
                                     </label>
                                 </div>
                                 <div class="col-xs-7">
-                                    @*@if (!Model.DisableSqlCompact)
-                                    {
+                                    @*
+                                        starting version 4.10 we support MS SQL Server only. SQL Server Compact is not supported anymore
+                                        but we leave this code because we plan to support other databases soon (e.g. MySQL)
                                         <div class="radio">
                                             <label>
                                                 <input asp-for="DataProvider" value="sqlce" type="radio" checked="@(Model.DataProvider == "sqlce")" id="provider_sqlce"/>
                                                 @ILS.GetResource("SqlCompact")
                                             </label>
                                         </div>
-                                    }*@
+                                    *@
                                     <div class="radio">
                                         <label>
                                             <input asp-for="DataProvider" value="sqlserver" type="radio" checked="@(Model.DataProvider == DataProviderType.SqlServer)" id="provider_sqlserver" />
-                                            @ILS.GetResource("SqlStandard") <strong>@ILS.GetResource("Recommended")</strong>
+                                            @ILS.GetResource("SqlStandard") @*<strong>@ILS.GetResource("Recommended")</strong>*@
                                         </label>
                                     </div>
                                 </div>
