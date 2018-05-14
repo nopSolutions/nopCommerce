@@ -230,7 +230,7 @@ namespace Nop.Data.Extensions
 
             return queryResult;
 #else
-            return null;
+            return new Dictionary<string, int>();
 #endif
         }
 
@@ -250,7 +250,7 @@ namespace Nop.Data.Extensions
             return fieldFacets.ToDictionary(p => p.Key, p => int.Parse(p.Value["Precision"].Value.ToString()) - int.Parse(p.Value["Scale"].Value.ToString()))
                 .ToDictionary(p => p.Key, p => new decimal(Math.Pow(10, p.Value)));
 #else
-            return null;
+            return new Dictionary<string, decimal>();
 #endif
         }
 
