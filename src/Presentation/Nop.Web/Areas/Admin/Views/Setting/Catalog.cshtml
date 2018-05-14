@@ -254,6 +254,7 @@
                         }
                     </script>
                 </div>
+                @await Html.PartialAsync("../ReviewType/List", Model.ReviewTypeSearchModel)
                 <div class="panel panel-default advanced-setting">
                     <div class="panel-heading">
                         @T("Admin.Configuration.Settings.Catalog.BlockTitle.Performance")
@@ -636,7 +637,7 @@
                                 <nop-label asp-for="DefaultViewMode" />
                             </div>
                             <div class="col-md-9">
-                                <nop-select asp-for="DefaultViewMode" asp-items="Model.AvailableViewModes"/>
+                                <nop-select asp-for="DefaultViewMode" asp-items="Model.AvailableViewModes" />
                                 <span asp-validation-for="DefaultViewMode"></span>
                             </div>
                         </div>
@@ -740,7 +741,7 @@
                                     <span asp-validation-for="ProductsByTagPageSizeOptions"></span>
                                 </div>
                             </div>
-                        </nop-nested-setting>                        
+                        </nop-nested-setting>
                     </div>
 
                     <script>
@@ -922,8 +923,8 @@
                             <div class="col-md-9">
                                 <nop-editor asp-for="ExportImportProductCategoryBreadcrumb" />
                                 <span asp-validation-for="ExportImportProductCategoryBreadcrumb"></span>
-							</div>
-						</div>
+                            </div>
+                        </div>
                         <div class="form-group">
                             <div class="col-md-3">
                                 <nop-override-store-checkbox asp-for="ExportImportCategoriesUsingCategoryName_OverrideForStore" asp-input="ExportImportCategoriesUsingCategoryName" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />

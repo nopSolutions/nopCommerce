@@ -55,6 +55,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IMaintenanceService _maintenanceService;
         private readonly IPictureService _pictureService;
         private readonly IReturnRequestModelFactory _returnRequestModelFactory;
+        private readonly IReviewTypeModelFactory _reviewTypeModelFactory;
         private readonly ISettingService _settingService;
         private readonly IStoreContext _storeContext;
         private readonly IStoreService _storeService;
@@ -83,6 +84,7 @@ namespace Nop.Web.Areas.Admin.Factories
             IStoreService storeService,
             IThemeProvider themeProvider,
             IVendorAttributeModelFactory vendorAttributeModelFactory,
+            IReviewTypeModelFactory reviewTypeModelFactory,
             IWorkContext workContext)
         {
             this._currencySettings = currencySettings;
@@ -102,6 +104,7 @@ namespace Nop.Web.Areas.Admin.Factories
             this._storeService = storeService;
             this._themeProvider = themeProvider;
             this._vendorAttributeModelFactory = vendorAttributeModelFactory;
+            this._reviewTypeModelFactory = reviewTypeModelFactory;
             this._workContext = workContext;
         }
 
@@ -969,6 +972,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare nested search model
             PrepareSortOptionSearchModel(model.SortOptionSearchModel);
+            _reviewTypeModelFactory.PrepareReviewTypeSearchModel(model.ReviewTypeSearchModel);
 
             return model;
         }

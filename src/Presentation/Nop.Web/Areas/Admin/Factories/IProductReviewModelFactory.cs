@@ -8,6 +8,8 @@ namespace Nop.Web.Areas.Admin.Factories
     /// </summary>
     public partial interface IProductReviewModelFactory
     {
+        #region ProducrReview
+
         /// <summary>
         /// Prepare product review search model
         /// </summary>
@@ -31,5 +33,20 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>Product review model</returns>
         ProductReviewModel PrepareProductReviewModel(ProductReviewModel model,
             ProductReview productReview, bool excludeProperties = false);
+
+        #endregion
+
+        #region ProductReviewReveiwTypeMapping
+
+        /// <summary>
+        /// Prepare paged product reviews mapping list model
+        /// </summary>
+        /// <param name="searchModel">Product review and review type mapping search model</param>
+        /// <param name="productReview">Product review</param>
+        /// <returns>Product review and review type mapping list model</returns>
+        ProductReviewReviewTypeMappingListModel PrepareProductReviewReviewTypeMappingListModel(ProductReviewReviewTypeMappingSearchModel searchModel,
+            ProductReview productReview);
+
+        #endregion
     }
 }

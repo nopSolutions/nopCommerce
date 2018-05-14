@@ -115,6 +115,7 @@
                             <div class="form-text-row">@Model.CreatedOn</div>
                         </div>
                     </div>
+                    @await Html.PartialAsync("_ProductReviewReviewTypeMappingList", Model.ProductReviewReviewTypeMappingSearchModel)
                 </div>
             </div>
         </div>

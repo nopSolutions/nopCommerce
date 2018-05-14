@@ -753,6 +753,9 @@
   <LocaleResource Name="ActivityLog.AddNewProductAttribute">
     <Value>Added a new product attribute ('{0}')</Value>
   </LocaleResource>
+  <LocaleResource Name="ActivityLog.AddNewReviewType">
+    <Value>Added a new review type (ID = {0})</Value>
+  </LocaleResource>
   <LocaleResource Name="ActivityLog.AddNewSetting">
     <Value>Added a new setting ('{0}')</Value>
   </LocaleResource>
@@ -767,7 +770,7 @@
   </LocaleResource>  
   <LocaleResource Name="ActivityLog.AddNewTopic">
     <Value>Added a new topic ('{0}')</Value>
-  </LocaleResource>
+  </LocaleResource>    
   <LocaleResource Name="ActivityLog.AddNewVendor">
     <Value>Added a new vendor (ID = {0})</Value>
   </LocaleResource>
@@ -873,6 +876,9 @@
   <LocaleResource Name="ActivityLog.DeleteProductReview">
    <Value>Deleted a product review (ID = {0})</Value>
   </LocaleResource>  
+  <LocaleResource Name="ActivityLog.DeleteReviewType">
+   <Value>Deleted a review type (ID = {0})</Value>
+  </LocaleResource>
   <LocaleResource Name="ActivityLog.DeleteReturnRequest">
     <Value>Deleted a return request (ID = {0})</Value>
   </LocaleResource>
@@ -1002,6 +1008,9 @@
   <LocaleResource Name="ActivityLog.EditReturnRequest">
     <Value>Edited a return request (ID = {0})</Value>
   </LocaleResource>
+  <LocaleResource Name="ActivityLog.EditReviewType">
+    <Value>Edited a review type (ID = {0})</Value>
+  </LocaleResource>
   <LocaleResource Name="ActivityLog.EditSettings">
     <Value>Edited settings</Value>
   </LocaleResource>
@@ -1019,7 +1028,7 @@
   </LocaleResource>  
   <LocaleResource Name="ActivityLog.EditTopic">
     <Value>Edited a topic ('{0}')</Value>
-  </LocaleResource>
+  </LocaleResource>  
   <LocaleResource Name="ActivityLog.EditVendor">
    <Value>Edited a vendor (ID = {0})</Value>
   </LocaleResource>
@@ -2546,6 +2555,18 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.ProductReviews.Updated">
     <Value>The product review has been updated successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.AdditionalProductReviews.Fields.Description">
+    <Value>Description</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.AdditionalProductReviews.Fields.Name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.AdditionalProductReviews.Fields.Rating">
+    <Value>Rating</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.AdditionalProductReviews.Fields.VisibleToAllCustomers">
+    <Value>Visible to all customers</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products">
     <Value>Products</Value>
@@ -12927,6 +12948,67 @@
   <LocaleResource Name="Admin.SearchTermReport.Keyword">
     <Value>Keyword</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Settings.ReviewType">
+    <Value>Review types</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Settings.ReviewType.Added">
+    <Value>The new review type has been added successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Settings.ReviewType.AddNew">
+    <Value>Add a new review type</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Settings.ReviewType.BackToList">
+    <Value>back to catalog settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Settings.ReviewType.Deleted">
+    <Value>The review type has been deleted successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Settings.ReviewType.Description">
+    <Value>You can configure a list of review types if you think that a basic review is not enough.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Settings.ReviewType.EditDetails">
+    <Value>Edit review type details</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Settings.ReviewType.Fields.Description">
+    <Value>Description</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Settings.ReviewType.Fields.Description.Hint">
+    <Value>The description of the review type.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Settings.ReviewType.Fields.Description.Required">
+    <Value>Please provide a description.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Settings.ReviewType.Fields.DisplayOrder">
+    <Value>Display order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Settings.ReviewType.Fields.DisplayOrder.Hint">
+    <Value>The review type display order. 1 represents the first item on the list.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Settings.ReviewType.Fields.IsRequired">
+    <Value>Required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Settings.ReviewType.Fields.IsRequired.Hint">
+    <Value>When an attribute is required, the customer must choose an appropriate the rating value before they can continue.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Settings.ReviewType.Fields.Name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Settings.ReviewType.Fields.Name.Hint">
+    <Value>The name of the review type.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Settings.ReviewType.Fields.Name.Required">
+    <Value>Please provide a name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Settings.ReviewType.Fields.VisibleToAllCustomers">
+    <Value>Visible to all customers</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Settings.ReviewType.Fields.VisibleToAllCustomers.Hint">
+    <Value>Sets visibility of the review type for all customers.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Settings.ReviewType.Updated">
+    <Value>The review type has been updated successfully.</Value>
+  </LocaleResource>
+  <!--Review type-->
   <LocaleResource Name="Admin.ShoppingCartType.ShoppingCartType">
     <Value>Shopping cart type</Value>
   </LocaleResource>

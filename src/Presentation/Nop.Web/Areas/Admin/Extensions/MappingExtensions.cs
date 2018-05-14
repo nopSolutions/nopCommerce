@@ -1087,6 +1087,25 @@ namespace Nop.Web.Areas.Admin.Extensions
 
         #endregion
 
+        #region ReviewType
+
+        public static ReviewTypeModel ToModel(this ReviewType entity)
+        {
+            return entity.MapTo<ReviewType, ReviewTypeModel>();
+        }
+
+        public static ReviewType ToEntity(this ReviewTypeModel model)
+        {
+            return model.MapTo<ReviewTypeModel, ReviewType>();
+        }
+
+        public static ReviewType ToEntity(this ReviewTypeModel model, ReviewType destination)
+        {
+            return model.MapTo(destination);
+        }
+
+        #endregion
+
         #region Stores
 
         public static StoreModel ToModel(this Store entity)

@@ -310,6 +310,9 @@
         public static string ProductReviewDetailsButtons => "admin_product_review_details_buttons";
         public static string ProductReviewDetailsTop => "admin_product_review_details_top";
         public static string ProductReviewListButtons => "admin_product_review_list_buttons";
+        public static string ProductReviewTypeTop => "admin_product_review_type_top";
+        public static string ProductReviewTypeBottom => "admin_product_review_type_bottom";
+        public static string ProductReviewTypeButtons => "admin_product_review_type_buttons";
         public static string ProductTagDetailsBottom => "admin_product_tag_details_bottom";
         public static string ProductTagDetailsButtons => "admin_product_tag_details_buttons";
         public static string ProductTagDetailsTop => "admin_product_tag_details_top";

@@ -50,6 +50,13 @@ namespace Nop.Web.Factories
         ProductReviewsModel PrepareProductReviewsModel(ProductReviewsModel model, Product product);
 
         /// <summary>
+        /// Calculate average review rating
+        /// </summary>
+        /// <param name="model">Product reviews model</param>
+        /// <returns>Product reviews model</returns>
+        ProductReviewsModel CalcAverageReviewRating(ProductReviewsModel model);
+
+        /// <summary>
         /// Prepare the customer product reviews model
         /// </summary>
         /// <param name="page">Number of items page; pass null to load the first page</param>

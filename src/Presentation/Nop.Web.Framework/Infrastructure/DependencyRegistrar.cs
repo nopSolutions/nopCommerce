@@ -228,6 +228,7 @@ namespace Nop.Web.Framework.Infrastructure
             builder.RegisterType<ThemeContext>().As<IThemeContext>().InstancePerLifetimeScope();
             builder.RegisterType<ExternalAuthenticationService>().As<IExternalAuthenticationService>().InstancePerLifetimeScope();
             builder.RegisterType<RoutePublisher>().As<IRoutePublisher>().SingleInstance();
+            builder.RegisterType<ReviewTypeService>().As<IReviewTypeService>().SingleInstance();
             builder.RegisterType<EventPublisher>().As<IEventPublisher>().SingleInstance();
             builder.RegisterType<SubscriptionService>().As<ISubscriptionService>().SingleInstance();
             builder.RegisterType<SettingService>().As<ISettingService>().InstancePerLifetimeScope();

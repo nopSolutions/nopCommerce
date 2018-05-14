@@ -283,6 +283,12 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.AttributeControlType, mo => mo.Ignore())
                 .ForMember(dest => dest.VendorAttributeValues, mo => mo.Ignore());
 
+            //Review type
+            CreateMap<ReviewType, ReviewTypeModel>()
+                .ForMember(dest => dest.Locales, mo => mo.Ignore())
+                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore())
+                .ForMember(dest => dest.Form, mo => mo.Ignore());
+
             //products
             CreateMap<Product, ProductModel>()
                 .ForMember(dest => dest.ProductsTypesSupportedByProductTemplates, mo => mo.Ignore())

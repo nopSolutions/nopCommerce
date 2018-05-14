@@ -1,0 +1,74 @@
+﻿@model ProductReviewReviewTypeMappingSearchModel
+
+@await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductReviewDetailsTop, additionalData = Model })
+<div class="panel panel-default">
+    <div class="panel-heading">
+        @T("Admin.Settings.ReviewType")
+    </div>
+    <div class="panel-body">
+        <div id="reviewext-grid"></div>
+        <script>
+                $(document).ready(function () {
+                    $("#reviewext-grid").kendoGrid({
+                        dataSource: {
+                            type: "json",
+                            transport: {
+                                read: {
+                                    url: "@Html.Raw(Url.Action("ProductReviewReviewTypeMappingList", "ProductReview"))",
+                                    type: "POST",
+                                    dataType: "json",
+                                    data: function additionalData() {
+                                    var data = {
+                                        ProductReviewId: '@(Model.ProductReviewId)'
+                                    };
+                                    addAntiForgeryToken(data);
+                                    return data;
+                                }
+                                }
+                            },
+                            schema: {
+                                data: "Data",
+                                total: "Total",
+                                errors: "Errors"
+                            },
+                            error: function(e) {
+                                display_kendoui_grid_error(e);
+                                // Cancel the changes
+                                this.cancelChanges();
+                            },
+                            pageSize: @(Model.PageSize),
+                            serverPaging: true,
+                            serverFiltering: true,
+                            serverSorting: true
+                        },
+                        pageable: {
+                            refresh: true,
+                            pageSizes: [@(Model.AvailablePageSizes)],
+                            @await Html.PartialAsync("_GridPagerMessages")
+                        },
+                        editable: {
+                            confirmation: "@T("Admin.Common.DeleteConfirmation")",
+                            mode: "inline"
+                        },
+                        scrollable: false,
+                        columns: [{
+                            field: "Name",
+                            title: "@T("Admin.Catalog.AdditionalProductReviews.Fields.Name")",
+                            width: 300
+                        }, {
+                            field: "Rating",
+                            title: "@T("Admin.Catalog.AdditionalProductReviews.Fields.Rating")",
+                            width: 100
+                        }, {
+                            field: "VisibleToAllCustomers",
+                            title: "@T("Admin.Catalog.AdditionalProductReviews.Fields.VisibleToAllCustomers")",
+                            width: 100,
+                            headerAttributes: { style: "text-align:center" },
+                            attributes: { style: "text-align:center" },
+                            template: '# if(VisibleToAllCustomers) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
+                        }]
+                    });
+                });
+        </script>
+    </div>
+</div>
