@@ -2526,3 +2526,22 @@ GO
 DELETE FROM [Setting]
 WHERE [Name] = N'commonsettings.usestoredproceduresifsupported'
 GO
+
+--drop some indexes
+IF EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_PMM_ProductId' and object_id=object_id(N'[Product_Manufacturer_Mapping]'))
+BEGIN
+	DROP INDEX [IX_PMM_ProductId] ON [Product_Manufacturer_Mapping]
+END
+GO
+
+IF EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_PCM_ProductId' and object_id=object_id(N'[Product_Category_Mapping]'))
+BEGIN
+	DROP INDEX [IX_PCM_ProductId] ON [Product_Category_Mapping]
+END
+GO
+
+IF EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_PSAM_ProductId' and object_id=object_id(N'[Product_SpecificationAttribute_Mapping]'))
+BEGIN
+	DROP INDEX [IX_PSAM_ProductId] ON [Product_SpecificationAttribute_Mapping]
+END
+GO
