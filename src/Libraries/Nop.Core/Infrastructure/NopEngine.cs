@@ -207,7 +207,7 @@ namespace Nop.Core.Infrastructure
             //resolve assemblies here. otherwise, plugins can throw an exception when rendering views
             AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
 
-            //set App_Data path as base data directory (required to create and save SQL Server Compact database file in App_Data folder)
+            //set App_Data path as base data directory
             AppDomain.CurrentDomain.SetData("DataDirectory", CommonHelper.MapPath("~/App_Data/"));
 
             return _serviceProvider;

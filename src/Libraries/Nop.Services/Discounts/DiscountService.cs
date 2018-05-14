@@ -242,11 +242,9 @@ namespace Nop.Services.Discounts
 
             if (!showHidden)
             {
-                //The function 'CurrentUtcDateTime' is not supported by SQL Server Compact, that's why we pass the date value
-                var nowUtc = DateTime.UtcNow;
                 query = query.Where(discount => 
-                    (!discount.StartDateUtc.HasValue || discount.StartDateUtc <= nowUtc)  && 
-                    (!discount.EndDateUtc.HasValue || discount.EndDateUtc >= nowUtc));
+                    (!discount.StartDateUtc.HasValue || discount.StartDateUtc <= DateTime.UtcNow)  && 
+                    (!discount.EndDateUtc.HasValue || discount.EndDateUtc >= DateTime.UtcNow));
             }
 
             //filter by dates

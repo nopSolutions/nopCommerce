@@ -117,11 +117,8 @@ namespace Nop.Services.Blogs
                 query = query.Where(b => languageId == b.LanguageId);
             if (!showHidden)
             {
-                //The function 'CurrentUtcDateTime' is not supported by SQL Server Compact. 
-                //That's why we pass the date value
-                var utcNow = DateTime.UtcNow;
-                query = query.Where(b => !b.StartDateUtc.HasValue || b.StartDateUtc <= utcNow);
-                query = query.Where(b => !b.EndDateUtc.HasValue || b.EndDateUtc >= utcNow);
+                query = query.Where(b => !b.StartDateUtc.HasValue || b.StartDateUtc <= DateTime.UtcNow);
+                query = query.Where(b => !b.EndDateUtc.HasValue || b.EndDateUtc >= DateTime.UtcNow);
             }
 
             if (storeId > 0 && !_catalogSettings.IgnoreStoreLimitations)

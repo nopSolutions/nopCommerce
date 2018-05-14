@@ -353,10 +353,7 @@ namespace Nop.Services.Customers
             {
                 //both are specified
                 var dateOfBirthStr = monthOfBirth.ToString("00", CultureInfo.InvariantCulture) + "-" + dayOfBirth.ToString("00", CultureInfo.InvariantCulture);
-                //EndsWith is not supported by SQL Server Compact
-                //so let's use the following workaround http://social.msdn.microsoft.com/Forums/is/sqlce/thread/0f810be1-2132-4c59-b9ae-8f7013c0cc00
                 
-                //we also cannot use Length function in SQL Server Compact (not supported in this context)
                 //z.Attribute.Value.Length - dateOfBirthStr.Length = 5
                 //dateOfBirthStr.Length = 5
                 query = query
@@ -370,10 +367,7 @@ namespace Nop.Services.Customers
             {
                 //only day is specified
                 var dateOfBirthStr = dayOfBirth.ToString("00", CultureInfo.InvariantCulture);
-                //EndsWith is not supported by SQL Server Compact
-                //so let's use the following workaround http://social.msdn.microsoft.com/Forums/is/sqlce/thread/0f810be1-2132-4c59-b9ae-8f7013c0cc00
-                
-                //we also cannot use Length function in SQL Server Compact (not supported in this context)
+
                 //z.Attribute.Value.Length - dateOfBirthStr.Length = 8
                 //dateOfBirthStr.Length = 2
                 query = query

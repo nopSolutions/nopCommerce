@@ -74,9 +74,7 @@ namespace Nop.Services.Orders
             //whether to show only the points that already activated
             if (!showNotActivated)
             {
-                //the function 'CurrentUtcDateTime' is not supported by SQL Server Compact, that's why we pass the date value
-                var nowUtc = DateTime.UtcNow;
-                query = query.Where(historyEntry => historyEntry.CreatedOnUtc < nowUtc);
+                query = query.Where(historyEntry => historyEntry.CreatedOnUtc < DateTime.UtcNow);
             }
             
             //update points balance
