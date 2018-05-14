@@ -132,11 +132,6 @@ namespace Nop.Core.Domain.Discounts
         }
 
         /// <summary>
-        /// Gets or sets the categories
-        /// </summary>
-        public IList<Category> AppliedToCategories => DiscountCategoryMappings.Select(mapping => mapping.Category).ToList();
-
-        /// <summary>
         /// Gets or sets the discount-category mappings
         /// </summary>
         public virtual ICollection<DiscountCategoryMapping> DiscountCategoryMappings
@@ -146,11 +141,6 @@ namespace Nop.Core.Domain.Discounts
         }
 
         /// <summary>
-        /// Gets or sets the manufacturers
-        /// </summary>
-        public IList<Manufacturer> AppliedToManufacturers => DiscountManufacturerMappings.Select(mapping => mapping.Manufacturer).ToList();
-
-        /// <summary>
         /// Gets or sets the discount-manufacturer mappings
         /// </summary>
         public virtual ICollection<DiscountManufacturerMapping> DiscountManufacturerMappings
@@ -158,12 +148,6 @@ namespace Nop.Core.Domain.Discounts
             get { return _discountManufacturerMappings ?? (_discountManufacturerMappings = new List<DiscountManufacturerMapping>()); }
             protected set { _discountManufacturerMappings = value; }
         }
-
-        /// <summary>
-        /// Gets or sets the products 
-        /// </summary>
-        public IList<Product> AppliedToProducts => DiscountProductMappings.Select(mapping => mapping.Product).ToList();
-
         /// <summary>
         /// Gets or sets the discount-product mappings
         /// </summary>

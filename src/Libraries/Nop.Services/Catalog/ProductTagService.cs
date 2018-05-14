@@ -28,6 +28,14 @@ namespace Nop.Services.Catalog
         private const string PRODUCTTAG_COUNT_KEY = "Nop.producttag.count-{0}";
 
         /// <summary>
+        /// Key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : product ID
+        /// </remarks>
+        private const string PRODUCTTAG_ALLBYPRODUCTID_KEY = "Nop.producttag.allbyproductid-{0}";
+
+        /// <summary>
         /// Key pattern to clear cache
         /// </summary>
         private const string PRODUCTTAG_PATTERN_KEY = "Nop.producttag.";
@@ -37,11 +45,8 @@ namespace Nop.Services.Catalog
         #region Fields
 
         private readonly IRepository<ProductTag> _productTagRepository;
-        private readonly IRepository<StoreMapping> _storeMappingRepository;
-        private readonly IDataProvider _dataProvider;
+        private readonly IRepository<ProductProductTagMapping> _productProductTagMappingRepository;
         private readonly IDbContext _dbContext;
-        private readonly CommonSettings _commonSettings;
-        private readonly CatalogSettings _catalogSettings;
         private readonly IStaticCacheManager _cacheManager;
         private readonly IEventPublisher _eventPublisher;
         private readonly IProductService _productService;
@@ -55,32 +60,23 @@ namespace Nop.Services.Catalog
         /// Ctor
         /// </summary>
         /// <param name="productTagRepository">Product tag repository</param>
-        /// <param name="dataProvider">Data provider</param>
+        /// <param name="productProductTagMappingRepository">Product - product tag repository</param>
         /// <param name="dbContext">Database Context</param>
-        /// <param name="commonSettings">Common settings</param>
         /// <param name="cacheManager">Static cache manager</param>
         /// <param name="eventPublisher">Event published</param>
-        /// <param name="storeMappingRepository">Store mapping repository</param>
-        /// <param name="catalogSettings">Catalog settings</param>
         /// <param name="productService">Product service</param>
         /// <param name="urlRecordService">Url record service</param>
         public ProductTagService(IRepository<ProductTag> productTagRepository,
-            IRepository<StoreMapping> storeMappingRepository,
-            IDataProvider dataProvider,
+            IRepository<ProductProductTagMapping> productProductTagMappingRepository,
             IDbContext dbContext,
-            CommonSettings commonSettings,
-            CatalogSettings catalogSettings,
             IStaticCacheManager cacheManager,
             IEventPublisher eventPublisher,
             IProductService productService,
             IUrlRecordService urlRecordService)
         {
             this._productTagRepository = productTagRepository;
-            this._storeMappingRepository = storeMappingRepository;
-            this._dataProvider = dataProvider;
+            this._productProductTagMappingRepository = productProductTagMappingRepository;
             this._dbContext = dbContext;
-            this._commonSettings = commonSettings;
-            this._catalogSettings = catalogSettings;
             this._cacheManager = cacheManager;
             this._eventPublisher = eventPublisher;
             this._productService = productService;
@@ -138,6 +134,27 @@ namespace Nop.Services.Catalog
             var query = _productTagRepository.Table;
             var productTags = query.ToList();
             return productTags;
+        }
+
+        /// <summary>
+        /// Gets all product tags by product identifier
+        /// </summary>
+        /// <param name="productId">Product identifier</param>
+        /// <returns>Product tags</returns>
+        public virtual IList<ProductTag> GetAllProductTagsByProductId(int productId)
+        {
+            var key = string.Format(PRODUCTTAG_ALLBYPRODUCTID_KEY, productId);
+            return _cacheManager.Get(key, () =>
+            {
+                var query = from pt in _productTagRepository.Table
+                    join ppt in _productProductTagMappingRepository.Table on pt.Id equals ppt.ProductTagId
+                    where ppt.ProductId == productId
+                    orderby pt.Id
+                    select pt;
+
+                var productTags = query.ToList();
+                return productTags;
+            });
         }
 
         /// <summary>
@@ -233,7 +250,7 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException(nameof(product));
 
             //product tags
-            var existingProductTags = product.ProductTags.ToList();
+            var existingProductTags = GetAllProductTagsByProductId(product.Id);
             var productTagsToRemove = new List<ProductTag>();
             foreach (var existingProductTag in existingProductTags)
             {

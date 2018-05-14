@@ -31,9 +31,6 @@ namespace Nop.Data.Mapping.Discounts
                 .HasForeignKey(requirement => requirement.DiscountId)
                 .IsRequired();
 
-            builder.Ignore(discount => discount.AppliedToCategories);
-            builder.Ignore(discount => discount.AppliedToManufacturers);
-            builder.Ignore(discount => discount.AppliedToProducts);
             builder.Ignore(discount => discount.DiscountType);
             builder.Ignore(discount => discount.DiscountLimitation);
 

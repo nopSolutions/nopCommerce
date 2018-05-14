@@ -720,11 +720,6 @@ namespace Nop.Core.Domain.Catalog
         }
 
         /// <summary>
-        /// Gets or sets the product tags
-        /// </summary>
-        public IList<ProductTag> ProductTags => ProductProductTagMappings.Select(mapping => mapping.ProductTag).ToList();
-
-        /// <summary>
         /// Gets or sets product-product tag mappings
         /// </summary>
         public virtual ICollection<ProductProductTagMapping> ProductProductTagMappings

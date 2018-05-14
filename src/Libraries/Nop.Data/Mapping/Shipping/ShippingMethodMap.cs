@@ -22,8 +22,6 @@ namespace Nop.Data.Mapping.Shipping
 
             builder.Property(method => method.Name).HasMaxLength(400).IsRequired();
             
-            builder.Ignore(method => method.RestrictedCountries);
-
             //add custom configuration
             this.PostConfigure(builder);
         }

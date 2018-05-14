@@ -24,8 +24,6 @@ namespace Nop.Data.Mapping.Directory
             builder.Property(country => country.TwoLetterIsoCode).HasMaxLength(2);
             builder.Property(country => country.ThreeLetterIsoCode).HasMaxLength(3);
             
-            builder.Ignore(country => country.RestrictedShippingMethods);
-
             //add custom configuration
             this.PostConfigure(builder);
         }

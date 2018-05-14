@@ -18,11 +18,6 @@ namespace Nop.Core.Domain.Catalog
         public string Name { get; set; }
 
         /// <summary>
-        /// Gets or sets the products
-        /// </summary>
-        public IList<Product> Products => ProductProductTagMappings.Select(mapping => mapping.Product).ToList();
-
-        /// <summary>
         /// Gets or sets product-product tag mappings
         /// </summary>
         public virtual ICollection<ProductProductTagMapping> ProductProductTagMappings

@@ -28,11 +28,6 @@ namespace Nop.Core.Domain.Shipping
         public int DisplayOrder { get; set; }
 
         /// <summary>
-        /// Gets or sets the restricted countries
-        /// </summary>
-        public IList<Country> RestrictedCountries => ShippingMethodCountryMappings.Select(mapping => mapping.Country).ToList();
-
-        /// <summary>
         /// Gets or sets the shipping method-country mappings
         /// </summary>
         public virtual ICollection<ShippingMethodCountryMapping> ShippingMethodCountryMappings

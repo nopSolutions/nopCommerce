@@ -198,7 +198,6 @@ namespace Nop.Web.Areas.Admin.Controllers
                 if (prevDiscountType == DiscountType.AssignedToCategories && discount.DiscountType != DiscountType.AssignedToCategories)
                 {
                     //applied to categories
-                    //discount.AppliedToCategories.Clear();
                     discount.DiscountCategoryMappings.Clear();
                     _discountService.UpdateDiscount(discount);
                 }
@@ -206,7 +205,6 @@ namespace Nop.Web.Areas.Admin.Controllers
                 if (prevDiscountType == DiscountType.AssignedToManufacturers && discount.DiscountType != DiscountType.AssignedToManufacturers)
                 {
                     //applied to manufacturers
-                    //discount.AppliedToManufacturers.Clear();
                     discount.DiscountManufacturerMappings.Clear();
                     _discountService.UpdateDiscount(discount);
                 }
@@ -216,7 +214,6 @@ namespace Nop.Web.Areas.Admin.Controllers
                     //applied to products
                     var products = _discountService.GetProductsWithAppliedDiscount(discount.Id, true);
 
-                    //discount.AppliedToProducts.Clear();
                     discount.DiscountProductMappings.Clear();
                     _discountService.UpdateDiscount(discount);
 

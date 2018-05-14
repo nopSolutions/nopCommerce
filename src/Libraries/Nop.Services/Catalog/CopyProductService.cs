@@ -761,10 +761,9 @@ namespace Nop.Services.Catalog
             CopyLocalizationData(product, productCopy);
 
             //copy product tags
-            foreach (var productTag in product.ProductTags)
+            foreach (var productProductTagMapping in product.ProductProductTagMappings)
             {
-                //productCopy.ProductTags.Add(productTag);
-                productCopy.ProductProductTagMappings.Add(new ProductProductTagMapping { ProductTag = productTag });
+                productCopy.ProductProductTagMappings.Add(new ProductProductTagMapping { ProductTag = productProductTagMapping.ProductTag });
             }
             _productService.UpdateProduct(productCopy);
 

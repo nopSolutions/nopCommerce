@@ -72,12 +72,7 @@ namespace Nop.Core.Domain.Directory
             get { return _stateProvinces ?? (_stateProvinces = new List<StateProvince>()); }
             protected set { _stateProvinces = value; }
         }
-
-        /// <summary>
-        /// Gets or sets the restricted shipping methods
-        /// </summary>
-        public IList<ShippingMethod> RestrictedShippingMethods => ShippingMethodCountryMappings.Select(mapping => mapping.ShippingMethod).ToList();
-
+        
         /// <summary>
         /// Gets or sets the shipping method-country mappings
         /// </summary>

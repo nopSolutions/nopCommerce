@@ -22,8 +22,6 @@ namespace Nop.Data.Mapping.Catalog
 
             builder.Property(productTag => productTag.Name).HasMaxLength(400).IsRequired();
             
-            builder.Ignore(productTag => productTag.Products);
-
             //add custom configuration
             this.PostConfigure(builder);
         }

@@ -49,7 +49,6 @@ namespace Nop.Data.Mapping.Catalog
             builder.Ignore(product => product.ManageInventoryMethod);
             builder.Ignore(product => product.RecurringCyclePeriod);
             builder.Ignore(product => product.RentalPricePeriod);
-            builder.Ignore(product => product.ProductTags);
             builder.Ignore(product => product.AppliedDiscounts);
 
             //add custom configuration
