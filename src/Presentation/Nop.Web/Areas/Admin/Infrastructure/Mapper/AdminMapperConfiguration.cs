@@ -340,7 +340,6 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.ProductAttributesExist, mo => mo.Ignore())
                 .ForMember(dest => dest.Form, mo => mo.Ignore());
             CreateMap<ProductModel, Product>()
-                .ForMember(dest => dest.ProductTags, mo => mo.Ignore())
                 .ForMember(dest => dest.CreatedOnUtc, mo => mo.Ignore())
                 .ForMember(dest => dest.UpdatedOnUtc, mo => mo.Ignore())
                 .ForMember(dest => dest.ParentGroupedProductId, mo => mo.Ignore())
