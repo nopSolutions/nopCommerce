@@ -26,6 +26,15 @@ namespace Nop.Services.Security
         /// {1} : permission system name
         /// </remarks>
         private const string PERMISSIONS_ALLOWED_KEY = "Nop.permission.allowed-{0}-{1}";
+
+        /// <summary>
+        /// Key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : customer role ID
+        /// </remarks>
+        private const string PERMISSIONS_ALLBYCUSTOMERTROLEID_KEY = "Nop.permission.allbycustomerroleid-{0}";
+
         /// <summary>
         /// Key pattern to clear cache
         /// </summary>
@@ -36,11 +45,13 @@ namespace Nop.Services.Security
         #region Fields
 
         private readonly IRepository<PermissionRecord> _permissionRecordRepository;
+        private readonly IRepository<PermissionRecordCustomerRoleMapping> _permissionRecordCustomerRoleMappingRepository;
         private readonly ICustomerService _customerService;
         private readonly IWorkContext _workContext;
         private readonly ILocalizationService _localizationService;
         private readonly ILanguageService _languageService;
-        private readonly IStaticCacheManager _cacheManager;
+        private readonly ICacheManager _cacheManager;
+        private readonly IStaticCacheManager _staticCacheManager;
 
         #endregion
 
@@ -50,29 +61,55 @@ namespace Nop.Services.Security
         /// Ctor
         /// </summary>
         /// <param name="permissionRecordRepository">Permission repository</param>
+        /// <param name="permissionRecordCustomerRoleMappingRepository">Permission -customer role mapping repository</param>
         /// <param name="customerService">Customer service</param>
         /// <param name="workContext">Work context</param>
         /// <param name="localizationService">Localization service</param>
         /// <param name="languageService">Language service</param>
-        /// <param name="cacheManager">Static cache manager</param>
+        /// <param name="cacheManager">Cache manager</param>
+        /// <param name="staticCacheManager">Static cache manager</param>
         public PermissionService(IRepository<PermissionRecord> permissionRecordRepository,
+            IRepository<PermissionRecordCustomerRoleMapping> permissionRecordCustomerRoleMappingRepository,
             ICustomerService customerService,
             IWorkContext workContext,
             ILocalizationService localizationService,
             ILanguageService languageService,
-            IStaticCacheManager cacheManager)
+            ICacheManager cacheManager,
+            IStaticCacheManager staticCacheManager)
         {
             this._permissionRecordRepository = permissionRecordRepository;
+            this._permissionRecordCustomerRoleMappingRepository = permissionRecordCustomerRoleMappingRepository;
             this._customerService = customerService;
             this._workContext = workContext;
             this._localizationService = localizationService;
             this._languageService = languageService;
             this._cacheManager = cacheManager;
+            this._staticCacheManager = staticCacheManager;
         }
 
         #endregion
 
         #region Utilities
+
+        /// <summary>
+        /// Get permission records by customer role identifier
+        /// </summary>
+        /// <param name="customerRoleId">Customer role identifier</param>
+        /// <returns>Permissions</returns>
+        protected virtual IList<PermissionRecord> GetPermissionRecordsByCustomerRoleId(int customerRoleId)
+        {
+            var key = string.Format(PERMISSIONS_ALLBYCUSTOMERTROLEID_KEY, customerRoleId);
+            return _cacheManager.Get(key, () =>
+            {
+                var query = from pr in _permissionRecordRepository.Table
+                    join prcrm in _permissionRecordCustomerRoleMappingRepository.Table on pr.Id equals prcrm.PermissionRecordId
+                    where prcrm.CustomerRoleId == customerRoleId
+                    orderby pr.Id
+                    select pr;
+
+                return query.ToList();
+            });
+        }
 
         /// <summary>
         /// Authorize permission
@@ -86,9 +123,10 @@ namespace Nop.Services.Security
                 return false;
             
             var key = string.Format(PERMISSIONS_ALLOWED_KEY, customerRole.Id, permissionRecordSystemName);
-            return _cacheManager.Get(key, () =>
+            return _staticCacheManager.Get(key, () =>
             {
-                foreach (var permission1 in customerRole.PermissionRecords)
+                var permissions = GetPermissionRecordsByCustomerRoleId(customerRole.Id);
+                foreach (var permission1 in permissions)
                     if (permission1.SystemName.Equals(permissionRecordSystemName, StringComparison.InvariantCultureIgnoreCase))
                         return true;
 
@@ -112,6 +150,7 @@ namespace Nop.Services.Security
             _permissionRecordRepository.Delete(permission);
 
             _cacheManager.RemoveByPattern(PERMISSIONS_PATTERN_KEY);
+            _staticCacheManager.RemoveByPattern(PERMISSIONS_PATTERN_KEY);
         }
 
         /// <summary>
@@ -171,6 +210,7 @@ namespace Nop.Services.Security
             _permissionRecordRepository.Insert(permission);
 
             _cacheManager.RemoveByPattern(PERMISSIONS_PATTERN_KEY);
+            _staticCacheManager.RemoveByPattern(PERMISSIONS_PATTERN_KEY);
         }
 
         /// <summary>
@@ -185,6 +225,7 @@ namespace Nop.Services.Security
             _permissionRecordRepository.Update(permission);
 
             _cacheManager.RemoveByPattern(PERMISSIONS_PATTERN_KEY);
+            _staticCacheManager.RemoveByPattern(PERMISSIONS_PATTERN_KEY);
         }
 
         /// <summary>

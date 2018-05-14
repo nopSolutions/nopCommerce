@@ -62,11 +62,6 @@ namespace Nop.Core.Domain.Customers
         public int PurchasedWithProductId { get; set; }
 
         /// <summary>
-        /// Gets or sets the permission records
-        /// </summary>
-        public IList<PermissionRecord> PermissionRecords => PermissionRecordCustomerRoleMappings.Select(mapping => mapping.PermissionRecord).ToList();
-
-        /// <summary>
         /// Gets or sets the permission record-customer role mappings
         /// </summary>
         public virtual ICollection<PermissionRecordCustomerRoleMapping> PermissionRecordCustomerRoleMappings

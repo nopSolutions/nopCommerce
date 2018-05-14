@@ -1,6 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
-using Nop.Core.Domain.Customers;
 
 namespace Nop.Core.Domain.Security
 {
@@ -25,11 +23,6 @@ namespace Nop.Core.Domain.Security
         /// Gets or sets the permission category
         /// </summary>
         public string Category { get; set; }
-
-        /// <summary>
-        /// Gets or sets the customer roles
-        /// </summary>
-        public IList<CustomerRole> CustomerRoles => PermissionRecordCustomerRoleMappings.Select(mapping => mapping.CustomerRole).ToList();
 
         /// <summary>
         /// Gets or sets the permission record-customer role mappings

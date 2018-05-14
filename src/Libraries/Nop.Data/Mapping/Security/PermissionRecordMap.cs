@@ -24,8 +24,6 @@ namespace Nop.Data.Mapping.Security
             builder.Property(record => record.SystemName).HasMaxLength(255).IsRequired();
             builder.Property(record => record.Category).HasMaxLength(255).IsRequired();
 
-            builder.Ignore(record => record.CustomerRoles);
-
             //add custom configuration
             this.PostConfigure(builder);
         }

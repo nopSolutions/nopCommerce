@@ -614,8 +614,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.TaxDisplayTypeValues, mo => mo.Ignore())
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore())
                 .ForMember(dest => dest.Form, mo => mo.Ignore());
-            CreateMap<CustomerRoleModel, CustomerRole>()
-                .ForMember(dest => dest.PermissionRecords, mo => mo.Ignore());
+            CreateMap<CustomerRoleModel, CustomerRole>();
 
             //product attributes
             CreateMap<ProductAttribute, ProductAttributeModel>()
