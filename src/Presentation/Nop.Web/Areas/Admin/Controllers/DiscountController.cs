@@ -459,8 +459,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ?? throw new ArgumentException("No product found with the specified id", nameof(productId));
 
             //remove discount
-            if (product.AppliedDiscounts.Count(d => d.Id == discount.Id) > 0)
-                //product.AppliedDiscounts.Remove(discount);
+            if (product.DiscountProductMappings.Count(mapping => mapping.DiscountId == discount.Id) > 0)
                 product.DiscountProductMappings
                     .Remove(product.DiscountProductMappings.FirstOrDefault(mapping => mapping.DiscountId == discount.Id));
 
@@ -509,8 +508,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 foreach (var product in selectedProducts)
                 {
-                    if (product.AppliedDiscounts.Count(d => d.Id == discount.Id) == 0)
-                        //product.AppliedDiscounts.Add(discount);
+                    if (product.DiscountProductMappings.Count(mapping => mapping.DiscountId == discount.Id) == 0)
                         product.DiscountProductMappings
                             .Remove(product.DiscountProductMappings.FirstOrDefault(mapping => mapping.DiscountId == discount.Id));
 
@@ -558,8 +556,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ?? throw new ArgumentException("No category found with the specified id", nameof(categoryId));
 
             //remove discount
-            if (category.AppliedDiscounts.Count(d => d.Id == discount.Id) > 0)
-                //category.AppliedDiscounts.Remove(discount);
+            if (category.DiscountCategoryMappings.Count(mapping => mapping.DiscountId == discount.Id) > 0)
                 category.DiscountCategoryMappings
                     .Remove(category.DiscountCategoryMappings.FirstOrDefault(mapping => mapping.DiscountId == discount.Id));
 
@@ -607,8 +604,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 var category = _categoryService.GetCategoryById(id);
                 if (category != null)
                 {
-                    if (category.AppliedDiscounts.Count(d => d.Id == discount.Id) == 0)
-                        //category.AppliedDiscounts.Add(discount);
+                    if (category.DiscountCategoryMappings.Count(mapping => mapping.DiscountId == discount.Id) == 0)
                         category.DiscountCategoryMappings.Add(new DiscountCategoryMapping { Discount = discount });
 
                     _categoryService.UpdateCategory(category);
@@ -654,8 +650,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ?? throw new ArgumentException("No manufacturer found with the specified id", nameof(manufacturerId));
 
             //remove discount
-            if (manufacturer.AppliedDiscounts.Count(d => d.Id == discount.Id) > 0)
-                //manufacturer.AppliedDiscounts.Remove(discount);
+            if (manufacturer.DiscountManufacturerMappings.Count(mapping => mapping.DiscountId == discount.Id) > 0)
                 manufacturer.DiscountManufacturerMappings
                     .Remove(manufacturer.DiscountManufacturerMappings.FirstOrDefault(mapping => mapping.DiscountId == discount.Id));
 
@@ -703,8 +698,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 var manufacturer = _manufacturerService.GetManufacturerById(id);
                 if (manufacturer != null)
                 {
-                    if (manufacturer.AppliedDiscounts.Count(d => d.Id == discount.Id) == 0)
-                        //manufacturer.AppliedDiscounts.Add(discount);
+                    if (manufacturer.DiscountManufacturerMappings.Count(mapping => mapping.DiscountId== discount.Id) == 0)
                         manufacturer.DiscountManufacturerMappings.Add(new DiscountManufacturerMapping { Discount = discount });
 
                     _manufacturerService.UpdateManufacturer(manufacturer);

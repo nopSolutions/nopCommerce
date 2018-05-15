@@ -92,10 +92,9 @@ namespace Nop.Services.Catalog
         /// <param name="productCopy">New product</param>
         protected virtual void CopyDiscountsMapping(Product product, Product productCopy)
         {
-            foreach (var discount in product.AppliedDiscounts)
+            foreach (var discountMapping in product.DiscountProductMappings)
             {
-                //productCopy.AppliedDiscounts.Add(discount);
-                productCopy.DiscountProductMappings.Add(new DiscountProductMapping { Discount = discount });
+                productCopy.DiscountProductMappings.Add(new DiscountProductMapping { Discount = discountMapping.Discount });
                 _productService.UpdateProduct(productCopy);
             }
         }

@@ -878,7 +878,7 @@ namespace Nop.Services.Catalog
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
-            product.HasDiscountsApplied = product.AppliedDiscounts.Any();
+            product.HasDiscountsApplied = product.DiscountProductMappings.Any();
             UpdateProduct(product);
         }
 

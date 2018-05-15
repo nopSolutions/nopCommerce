@@ -340,15 +340,13 @@ namespace Nop.Web.Areas.Admin.Controllers
                     if (model.SelectedDiscountIds != null && model.SelectedDiscountIds.Contains(discount.Id))
                     {
                         //new discount
-                        if (category.AppliedDiscounts.Count(d => d.Id == discount.Id) == 0)
-                            //category.AppliedDiscounts.Add(discount);
+                        if (category.DiscountCategoryMappings.Count(mapping => mapping.DiscountId == discount.Id) == 0)
                             category.DiscountCategoryMappings.Add(new DiscountCategoryMapping { Discount = discount });
                     }
                     else
                     {
                         //remove discount
-                        if (category.AppliedDiscounts.Count(d => d.Id == discount.Id) > 0)
-                            //category.AppliedDiscounts.Remove(discount);
+                        if (category.DiscountCategoryMappings.Count(mapping => mapping.DiscountId == discount.Id) > 0)
                             category.DiscountCategoryMappings
                                 .Remove(category.DiscountCategoryMappings.FirstOrDefault(mapping => mapping.DiscountId == discount.Id));
                     }

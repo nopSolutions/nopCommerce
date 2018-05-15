@@ -332,16 +332,14 @@ namespace Nop.Web.Areas.Admin.Controllers
                 if (model.SelectedDiscountIds != null && model.SelectedDiscountIds.Contains(discount.Id))
                 {
                     //new discount
-                    if (product.AppliedDiscounts.Count(d => d.Id == discount.Id) == 0)
-                        //product.AppliedDiscounts.Add(discount);
+                    if (product.DiscountProductMappings.Count(mapping => mapping.DiscountId == discount.Id) == 0)
                         product.DiscountProductMappings.Add(new DiscountProductMapping { Discount = discount });
                 }
                 else
                 {
                     //remove discount
-                    if (product.AppliedDiscounts.Count(d => d.Id == discount.Id) > 0)
+                    if (product.DiscountProductMappings.Count(mapping => mapping.DiscountId == discount.Id) > 0)
                     {
-                        //product.AppliedDiscounts.Remove(discount);
                         product.DiscountProductMappings
                             .Remove(product.DiscountProductMappings.FirstOrDefault(mapping => mapping.DiscountId == discount.Id));
                     }
