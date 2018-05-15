@@ -1,4 +1,3 @@
-
 namespace Nop.Core.Html.CodeFormatter
 {
 	/// <summary>
@@ -36,7 +35,7 @@ namespace Nop.Core.Html.CodeFormatter
 		}
 
 		/// <summary>
-		/// Use preprocessors property to hilight operators.
+		/// Use preprocessors property to highlight operators.
 		/// </summary>
 		protected override string Preprocessors
 		{
@@ -47,6 +46,5 @@ namespace Nop.Core.Html.CodeFormatter
 					+ " -inotlike -ieq -ine -igt -ige -ilt -ile";
 			}
 		}
-
 	}
 }

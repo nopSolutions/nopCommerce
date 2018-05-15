@@ -43,6 +43,16 @@ namespace Nop.Core.Domain.Catalog
         public string ReviewText { get; set; }
 
         /// <summary>
+        /// Gets or sets the reply text
+        /// </summary>
+        public string ReplyText { get; set; }
+
+        /// <summary>
+        /// Gets or sets the value indicating whether the customer is already notified of the reply to review
+        /// </summary>
+        public bool CustomerNotifiedOfReply { get; set; }
+
+        /// <summary>
         /// Review rating
         /// </summary>
         public int Rating { get; set; }
@@ -63,7 +73,7 @@ namespace Nop.Core.Domain.Catalog
         public DateTime CreatedOnUtc { get; set; }
 
         /// <summary>
-        /// Gets or sets the product
+        /// Gets or sets the customer
         /// </summary>
         public virtual Customer Customer { get; set; }
 

@@ -7,10 +7,14 @@ using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Security;
 using Nop.Core.Infrastructure;
 using Nop.Core.Plugins;
+using Nop.Data;
 using Nop.Services.Configuration;
 
 namespace Nop.Services.Localization
 {
+    /// <summary>
+    /// Localization extensions
+    /// </summary>
     public static class LocalizationExtensions
     {
         /// <summary>
@@ -27,6 +31,7 @@ namespace Nop.Services.Localization
             var workContext = EngineContext.Current.Resolve<IWorkContext>();
             return GetLocalized(entity, keySelector, workContext.WorkingLanguage.Id);
         }
+
         /// <summary>
         /// Get localized property of an entity
         /// </summary>
@@ -44,6 +49,7 @@ namespace Nop.Services.Localization
         {
             return GetLocalized<T, string>(entity, keySelector, languageId, returnDefaultValue, ensureTwoPublishedLanguages);
         }
+
         /// <summary>
         /// Get localized property of an entity
         /// </summary>
@@ -61,35 +67,30 @@ namespace Nop.Services.Localization
             where T : BaseEntity, ILocalizedEntity
         {
             if (entity == null)
-                throw new ArgumentNullException("entity");
+                throw new ArgumentNullException(nameof(entity));
 
             var member = keySelector.Body as MemberExpression;
             if (member == null)
             {
-                throw new ArgumentException(string.Format(
-                    "Expression '{0}' refers to a method, not a property.",
-                    keySelector));
+                throw new ArgumentException($"Expression '{keySelector}' refers to a method, not a property.");
             }
 
             var propInfo = member.Member as PropertyInfo;
             if (propInfo == null)
             {
-                throw new ArgumentException(string.Format(
-                       "Expression '{0}' refers to a field, not a property.",
-                       keySelector));
+                throw new ArgumentException($"Expression '{keySelector}' refers to a field, not a property.");
             }
 
-            TPropType result = default(TPropType);
-            string resultStr = string.Empty;
+            var result = default(TPropType);
+            var resultStr = string.Empty;
 
-            //load localized value
-            string localeKeyGroup = typeof(T).Name;
-            string localeKey = propInfo.Name;
+            var localeKeyGroup = entity.GetUnproxiedEntityType().Name;
+            var localeKey = propInfo.Name;
 
             if (languageId > 0)
             {
                 //ensure that we have at least two published languages
-                bool loadLocalizedValue = true;
+                var loadLocalizedValue = true;
                 if (ensureTwoPublishedLanguages)
                 {
                     var lService = EngineContext.Current.Resolve<ILanguageService>();
@@ -102,13 +103,13 @@ namespace Nop.Services.Localization
                 {
                     var leService = EngineContext.Current.Resolve<ILocalizedEntityService>();
                     resultStr = leService.GetLocalizedValue(languageId, entity.Id, localeKeyGroup, localeKey);
-                    if (!String.IsNullOrEmpty(resultStr))
+                    if (!string.IsNullOrEmpty(resultStr))
                         result = CommonHelper.To<TPropType>(resultStr);
                 }
             }
 
             //set default value if required
-            if (String.IsNullOrEmpty(resultStr) && returnDefaultValue)
+            if (string.IsNullOrEmpty(resultStr) && returnDefaultValue)
             {
                 var localizer = keySelector.Compile();
                 result = localizer(entity);
@@ -117,8 +118,6 @@ namespace Nop.Services.Localization
             return result;
         }
 
-
-
         /// <summary>
         /// Get localized property of setting
         /// </summary>
@@ -126,20 +125,21 @@ namespace Nop.Services.Localization
         /// <param name="settings">Settings</param>
         /// <param name="keySelector">Key selector</param>
         /// <param name="languageId">Language identifier</param>
+        /// <param name="storeId">Store identifier</param>
         /// <param name="returnDefaultValue">A value indicating whether to return default value (if localized is not found)</param>
         /// <param name="ensureTwoPublishedLanguages">A value indicating whether to ensure that we have at least two published languages; otherwise, load only default value</param>
         /// <returns>Localized property</returns>
         public static string GetLocalizedSetting<T>(this T settings,
-            Expression<Func<T, string>> keySelector, int languageId,
+            Expression<Func<T, string>> keySelector, int languageId, int storeId,
             bool returnDefaultValue = true, bool ensureTwoPublishedLanguages = true)
             where T : ISettings, new()
         {
             var settingService = EngineContext.Current.Resolve<ISettingService>();
 
-            string key = settings.GetSettingKey(keySelector);
+            var key = settings.GetSettingKey(keySelector);
 
             //we do not support localized settings per store (overridden store settings)
-            var setting = settingService.GetSetting(key, storeId: 0, loadSharedValueIfNotFound: false);
+            var setting = settingService.GetSetting(key, storeId: storeId, loadSharedValueIfNotFound: true);
             if (setting == null)
                 return null;
 
@@ -152,7 +152,7 @@ namespace Nop.Services.Localization
         /// <param name="settings">Settings</param>
         /// <param name="keySelector">Key selector</param>
         /// <param name="languageId">Language identifier</param>
-        /// <param name="value">Localizaed value</param>
+        /// <param name="value">Localized value</param>
         /// <returns>Localized property</returns>
         public static void SaveLocalizedSetting<T>(this T settings,
             Expression<Func<T, string>> keySelector, int languageId,
@@ -162,7 +162,7 @@ namespace Nop.Services.Localization
             var settingService = EngineContext.Current.Resolve<ISettingService>();
             var localizedEntityService = EngineContext.Current.Resolve<ILocalizedEntityService>();
 
-            string key = settings.GetSettingKey(keySelector);
+            var key = settings.GetSettingKey(keySelector);
 
             //we do not support localized settings per store (overridden store settings)
             var setting = settingService.GetSetting(key, storeId: 0, loadSharedValueIfNotFound: false);
@@ -171,7 +171,6 @@ namespace Nop.Services.Localization
 
             localizedEntityService.SaveLocalizedValue(setting, x => x.Value, value, languageId);
         }
-
 
         /// <summary>
         /// Get localized value of enum
@@ -185,10 +184,11 @@ namespace Nop.Services.Localization
             where T : struct
         {
             if (workContext == null)
-                throw new ArgumentNullException("workContext");
+                throw new ArgumentNullException(nameof(workContext));
 
             return GetLocalizedEnum(enumValue, localizationService, workContext.WorkingLanguage.Id);
         }
+
         /// <summary>
         /// Get localized value of enum
         /// </summary>
@@ -201,24 +201,20 @@ namespace Nop.Services.Localization
             where T : struct
         {
             if (localizationService == null)
-                throw new ArgumentNullException("localizationService");
+                throw new ArgumentNullException(nameof(localizationService));
 
             if (!typeof(T).IsEnum) throw new ArgumentException("T must be an enumerated type");
 
             //localized value
-            string resourceName = string.Format("Enums.{0}.{1}", 
-                typeof(T).ToString(), 
-                //Convert.ToInt32(enumValue)
-                enumValue.ToString());
-            string result = localizationService.GetResource(resourceName, languageId, false, "", true);
+            var resourceName = $"Enums.{typeof(T)}.{enumValue}";
+            var result = localizationService.GetResource(resourceName, languageId, false, "", true);
 
             //set default value if required
-            if (String.IsNullOrEmpty(result))
+            if (string.IsNullOrEmpty(result))
                 result = CommonHelper.ConvertEnum(enumValue.ToString());
 
             return result;
         }
-
 
         /// <summary>
         /// Get localized value of permission
@@ -232,10 +228,11 @@ namespace Nop.Services.Localization
             ILocalizationService localizationService, IWorkContext workContext)
         {
             if (workContext == null)
-                throw new ArgumentNullException("workContext");
+                throw new ArgumentNullException(nameof(workContext));
 
             return GetLocalizedPermissionName(permissionRecord, localizationService, workContext.WorkingLanguage.Id);
         }
+
         /// <summary>
         /// Get localized value of enum
         /// We don't have UI to manage permission localizable name. That's why we're using this extension method
@@ -248,21 +245,22 @@ namespace Nop.Services.Localization
             ILocalizationService localizationService, int languageId)
         {
             if (permissionRecord == null)
-                throw new ArgumentNullException("permissionRecord");
+                throw new ArgumentNullException(nameof(permissionRecord));
 
             if (localizationService == null)
-                throw new ArgumentNullException("localizationService");
+                throw new ArgumentNullException(nameof(localizationService));
 
             //localized value
-            string resourceName = string.Format("Permission.{0}", permissionRecord.SystemName);
-            string result = localizationService.GetResource(resourceName, languageId, false, "", true);
+            var resourceName = $"Permission.{permissionRecord.SystemName}";
+            var result = localizationService.GetResource(resourceName, languageId, false, "", true);
 
             //set default value if required
-            if (String.IsNullOrEmpty(result))
+            if (string.IsNullOrEmpty(result))
                 result = permissionRecord.Name;
 
             return result;
         }
+
         /// <summary>
         /// Save localized name of a permission
         /// </summary>
@@ -273,14 +271,14 @@ namespace Nop.Services.Localization
             ILocalizationService localizationService, ILanguageService languageService)
         {
             if (permissionRecord == null)
-                throw new ArgumentNullException("permissionRecord");
+                throw new ArgumentNullException(nameof(permissionRecord));
             if (localizationService == null)
-                throw new ArgumentNullException("localizationService");
+                throw new ArgumentNullException(nameof(localizationService));
             if (languageService == null)
-                throw new ArgumentNullException("languageService");
+                throw new ArgumentNullException(nameof(languageService));
 
-            string resourceName = string.Format("Permission.{0}", permissionRecord.SystemName);
-            string resourceValue = permissionRecord.Name;
+            var resourceName = $"Permission.{permissionRecord.SystemName}";
+            var resourceValue = permissionRecord.Name;
 
             foreach (var lang in languageService.GetAllLanguages(true))
             {
@@ -302,6 +300,7 @@ namespace Nop.Services.Localization
                 }
             }
         }
+
         /// <summary>
         /// Delete a localized name of a permission
         /// </summary>
@@ -312,13 +311,13 @@ namespace Nop.Services.Localization
             ILocalizationService localizationService, ILanguageService languageService)
         {
             if (permissionRecord == null)
-                throw new ArgumentNullException("permissionRecord");
+                throw new ArgumentNullException(nameof(permissionRecord));
             if (localizationService == null)
-                throw new ArgumentNullException("localizationService");
+                throw new ArgumentNullException(nameof(localizationService));
             if (languageService == null)
-                throw new ArgumentNullException("languageService");
+                throw new ArgumentNullException(nameof(languageService));
 
-            string resourceName = string.Format("Permission.{0}", permissionRecord.SystemName);
+            var resourceName = $"Permission.{permissionRecord.SystemName}";
             foreach (var lang in languageService.GetAllLanguages(true))
             {
                 var lsr = localizationService.GetLocaleStringResourceByName(resourceName, lang.Id, false);
@@ -326,8 +325,6 @@ namespace Nop.Services.Localization
                     localizationService.DeleteLocaleStringResource(lsr);
             }
         }
-
-
 
         /// <summary>
         /// Delete a locale resource
@@ -342,6 +339,7 @@ namespace Nop.Services.Localization
             DeletePluginLocaleResource(plugin, localizationService,
                 languageService, resourceName);
         }
+
         /// <summary>
         /// Delete a locale resource
         /// </summary>
@@ -355,11 +353,11 @@ namespace Nop.Services.Localization
         {
             //actually plugin instance is not required
             if (plugin == null)
-                throw new ArgumentNullException("plugin");
+                throw new ArgumentNullException(nameof(plugin));
             if (localizationService == null)
-                throw new ArgumentNullException("localizationService");
+                throw new ArgumentNullException(nameof(localizationService));
             if (languageService == null)
-                throw new ArgumentNullException("languageService");
+                throw new ArgumentNullException(nameof(languageService));
 
             foreach (var lang in languageService.GetAllLanguages(true))
             {
@@ -368,6 +366,7 @@ namespace Nop.Services.Localization
                     localizationService.DeleteLocaleStringResource(lsr);
             }
         }
+
         /// <summary>
         /// Add a locale resource (if new) or update an existing one
         /// </summary>
@@ -383,6 +382,7 @@ namespace Nop.Services.Localization
              AddOrUpdatePluginLocaleResource(plugin, localizationService,
                  languageService, resourceName, resourceValue, languageCulture);
         }
+
         /// <summary>
         /// Add a locale resource (if new) or update an existing one
         /// </summary>
@@ -398,15 +398,15 @@ namespace Nop.Services.Localization
         {
             //actually plugin instance is not required
             if (plugin == null)
-                throw new ArgumentNullException("plugin");
+                throw new ArgumentNullException(nameof(plugin));
             if (localizationService == null)
-                throw new ArgumentNullException("localizationService");
+                throw new ArgumentNullException(nameof(localizationService));
             if (languageService == null)
-                throw new ArgumentNullException("languageService");
+                throw new ArgumentNullException(nameof(languageService));
             
             foreach (var lang in languageService.GetAllLanguages(true))
             {
-                if (!String.IsNullOrEmpty(languageCulture) && !languageCulture.Equals(lang.LanguageCulture))
+                if (!string.IsNullOrEmpty(languageCulture) && !languageCulture.Equals(lang.LanguageCulture))
                     continue;
 
                 var lsr = localizationService.GetLocaleStringResourceByName(resourceName, lang.Id, false);
@@ -428,8 +428,6 @@ namespace Nop.Services.Localization
             }
         }
 
-
-
         /// <summary>
         /// Get localized friendly name of a plugin
         /// </summary>
@@ -444,26 +442,26 @@ namespace Nop.Services.Localization
             where T : IPlugin
         {   
             if (localizationService == null)
-                throw new ArgumentNullException("localizationService");
+                throw new ArgumentNullException(nameof(localizationService));
 
             if (plugin == null)
-                throw new ArgumentNullException("plugin");
+                throw new ArgumentNullException(nameof(plugin));
 
             if (plugin.PluginDescriptor == null)
                 throw new ArgumentException("Plugin descriptor cannot be loaded");
 
-            string systemName = plugin.PluginDescriptor.SystemName;
+            var systemName = plugin.PluginDescriptor.SystemName;
             //localized value
-            string resourceName = string.Format("Plugins.FriendlyName.{0}",
-                systemName);
-            string result = localizationService.GetResource(resourceName, languageId, false, "", true);
+            var resourceName = $"Plugins.FriendlyName.{systemName}";
+            var result = localizationService.GetResource(resourceName, languageId, false, "", true);
 
             //set default value if required
-            if (String.IsNullOrEmpty(result) && returnDefaultValue)
+            if (string.IsNullOrEmpty(result) && returnDefaultValue)
                 result = plugin.PluginDescriptor.FriendlyName;
 
             return result;
         }
+
         /// <summary>
         /// Save localized friendly name of a plugin
         /// </summary>
@@ -478,20 +476,20 @@ namespace Nop.Services.Localization
             where T : IPlugin
         {
             if (localizationService == null)
-                throw new ArgumentNullException("localizationService");
+                throw new ArgumentNullException(nameof(localizationService));
 
             if (languageId == 0)
                 throw new ArgumentOutOfRangeException("languageId", "Language ID should not be 0");
 
             if (plugin == null)
-                throw new ArgumentNullException("plugin");
+                throw new ArgumentNullException(nameof(plugin));
 
             if (plugin.PluginDescriptor == null)
                 throw new ArgumentException("Plugin descriptor cannot be loaded");
 
-            string systemName = plugin.PluginDescriptor.SystemName;
+            var systemName = plugin.PluginDescriptor.SystemName;
             //localized value
-            string resourceName = string.Format("Plugins.FriendlyName.{0}", systemName);
+            var resourceName = $"Plugins.FriendlyName.{systemName}";
             var resource = localizationService.GetLocaleStringResourceByName(resourceName, languageId, false);
 
             if (resource != null)
@@ -510,17 +508,17 @@ namespace Nop.Services.Localization
             }
             else
             {
-                if (!string.IsNullOrWhiteSpace(localizedFriendlyName))
+                if (string.IsNullOrWhiteSpace(localizedFriendlyName))
+                    return;
+
+                //insert
+                resource = new LocaleStringResource
                 {
-                    //insert
-                    resource = new LocaleStringResource
-                    {
-                        LanguageId = languageId,
-                        ResourceName = resourceName,
-                        ResourceValue = localizedFriendlyName,
-                    };
-                    localizationService.InsertLocaleStringResource(resource);
-                }
+                    LanguageId = languageId,
+                    ResourceName = resourceName,
+                    ResourceValue = localizedFriendlyName,
+                };
+                localizationService.InsertLocaleStringResource(resource);
             }
         }
     }

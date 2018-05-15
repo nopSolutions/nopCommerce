@@ -2,8 +2,14 @@ using Nop.Core.Domain.Polls;
 
 namespace Nop.Data.Mapping.Polls
 {
+    /// <summary>
+    /// Mapping class
+    /// </summary>
     public partial class PollVotingRecordMap : NopEntityTypeConfiguration<PollVotingRecord>
     {
+        /// <summary>
+        /// Ctor
+        /// </summary>
         public PollVotingRecordMap()
         {
             this.ToTable("PollVotingRecord");

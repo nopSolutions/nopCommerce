@@ -45,7 +45,6 @@ namespace Nop.Services.Security
         public static readonly PermissionRecord ManageTaxSettings = new PermissionRecord { Name = "Admin area. Manage Tax Settings", SystemName = "ManageTaxSettings", Category = "Configuration" };
         public static readonly PermissionRecord ManageShippingSettings = new PermissionRecord { Name = "Admin area. Manage Shipping Settings", SystemName = "ManageShippingSettings", Category = "Configuration" };
         public static readonly PermissionRecord ManageCurrencies = new PermissionRecord { Name = "Admin area. Manage Currencies", SystemName = "ManageCurrencies", Category = "Configuration" };
-        public static readonly PermissionRecord ManageMeasures = new PermissionRecord { Name = "Admin area. Manage Measures", SystemName = "ManageMeasures", Category = "Configuration" };
         public static readonly PermissionRecord ManageActivityLog = new PermissionRecord { Name = "Admin area. Manage Activity Log", SystemName = "ManageActivityLog", Category = "Configuration" };
         public static readonly PermissionRecord ManageAcl = new PermissionRecord { Name = "Admin area. Manage ACL", SystemName = "ManageACL", Category = "Configuration" };
         public static readonly PermissionRecord ManageEmailAccounts = new PermissionRecord { Name = "Admin area. Manage Email Accounts", SystemName = "ManageEmailAccounts", Category = "Configuration" };
@@ -57,7 +56,6 @@ namespace Nop.Services.Security
         public static readonly PermissionRecord HtmlEditorManagePictures = new PermissionRecord { Name = "Admin area. HTML Editor. Manage pictures", SystemName = "HtmlEditor.ManagePictures", Category = "Configuration" };
         public static readonly PermissionRecord ManageScheduleTasks = new PermissionRecord { Name = "Admin area. Manage Schedule Tasks", SystemName = "ManageScheduleTasks", Category = "Configuration" };
         
-
         //public store permissions
         public static readonly PermissionRecord DisplayPrices = new PermissionRecord { Name = "Public store. Display Prices", SystemName = "DisplayPrices", Category = "PublicStore" };
         public static readonly PermissionRecord EnableShoppingCart = new PermissionRecord { Name = "Public store. Enable shopping cart", SystemName = "EnableShoppingCart", Category = "PublicStore" };
@@ -65,7 +63,10 @@ namespace Nop.Services.Security
         public static readonly PermissionRecord PublicStoreAllowNavigation = new PermissionRecord { Name = "Public store. Allow navigation", SystemName = "PublicStoreAllowNavigation", Category = "PublicStore" };
         public static readonly PermissionRecord AccessClosedStore = new PermissionRecord { Name = "Public store. Access a closed store", SystemName = "AccessClosedStore", Category = "PublicStore" };
 
-
+        /// <summary>
+        /// Get permissions
+        /// </summary>
+        /// <returns>Permissions</returns>
         public virtual IEnumerable<PermissionRecord> GetPermissions()
         {
             return new[] 
@@ -105,7 +106,6 @@ namespace Nop.Services.Security
                 ManageTaxSettings,
                 ManageShippingSettings,
                 ManageCurrencies,
-                ManageMeasures,
                 ManageActivityLog,
                 ManageAcl,
                 ManageEmailAccounts,
@@ -124,6 +124,10 @@ namespace Nop.Services.Security
             };
         }
 
+        /// <summary>
+        /// Get default permissions
+        /// </summary>
+        /// <returns>Permissions</returns>
         public virtual IEnumerable<DefaultPermissionRecord> GetDefaultPermissions()
         {
             return new[] 
@@ -168,7 +172,6 @@ namespace Nop.Services.Security
                         ManageTaxSettings,
                         ManageShippingSettings,
                         ManageCurrencies,
-                        ManageMeasures,
                         ManageActivityLog,
                         ManageAcl,
                         ManageEmailAccounts,
@@ -226,6 +229,7 @@ namespace Nop.Services.Security
                     {
                         AccessAdminPanel,
                         ManageProducts,
+                        ManageProductReviews,
                         ManageOrders
                     }
                 }

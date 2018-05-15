@@ -12,6 +12,9 @@ using Nop.Services.Stores;
 
 namespace Nop.Services.Messages
 {
+    /// <summary>
+    /// Message template service
+    /// </summary>
     public partial class MessageTemplateService: IMessageTemplateService
     {
         #region Constants
@@ -94,7 +97,7 @@ namespace Nop.Services.Messages
         public virtual void DeleteMessageTemplate(MessageTemplate messageTemplate)
         {
             if (messageTemplate == null)
-                throw new ArgumentNullException("messageTemplate");
+                throw new ArgumentNullException(nameof(messageTemplate));
 
             _messageTemplateRepository.Delete(messageTemplate);
 
@@ -111,7 +114,7 @@ namespace Nop.Services.Messages
         public virtual void InsertMessageTemplate(MessageTemplate messageTemplate)
         {
             if (messageTemplate == null)
-                throw new ArgumentNullException("messageTemplate");
+                throw new ArgumentNullException(nameof(messageTemplate));
 
             _messageTemplateRepository.Insert(messageTemplate);
 
@@ -128,7 +131,7 @@ namespace Nop.Services.Messages
         public virtual void UpdateMessageTemplate(MessageTemplate messageTemplate)
         {
             if (messageTemplate == null)
-                throw new ArgumentNullException("messageTemplate");
+                throw new ArgumentNullException(nameof(messageTemplate));
 
             _messageTemplateRepository.Update(messageTemplate);
 
@@ -152,36 +155,30 @@ namespace Nop.Services.Messages
         }
 
         /// <summary>
-        /// Gets a message template
+        /// Gets message templates by the name
         /// </summary>
         /// <param name="messageTemplateName">Message template name</param>
-        /// <param name="storeId">Store identifier</param>
-        /// <returns>Message template</returns>
-        public virtual MessageTemplate GetMessageTemplateByName(string messageTemplateName, int storeId)
+        /// <param name="storeId">Store identifier; pass null to load all records</param>
+        /// <returns>List of message templates</returns>
+        public virtual IList<MessageTemplate> GetMessageTemplatesByName(string messageTemplateName, int? storeId = null)
         {
             if (string.IsNullOrWhiteSpace(messageTemplateName))
-                throw new ArgumentException("messageTemplateName");
+                throw new ArgumentException(nameof(messageTemplateName));
 
-            string key = string.Format(MESSAGETEMPLATES_BY_NAME_KEY, messageTemplateName, storeId);
+            var key = string.Format(MESSAGETEMPLATES_BY_NAME_KEY, messageTemplateName, storeId ?? 0);
             return _cacheManager.Get(key, () =>
             {
-                var query = _messageTemplateRepository.Table;
-                query = query.Where(t => t.Name == messageTemplateName);
-                query = query.OrderBy(t => t.Id);
-                query = query.OrderBy(t => t.Id);
-                var templates = query.ToList();
+                //get message templates with the passed name
+                var templates = _messageTemplateRepository.Table
+                    .Where(messageTemplate => messageTemplate.Name.Equals(messageTemplateName))
+                    .OrderBy(messageTemplate => messageTemplate.Id).ToList();
 
-                //store mapping
-                if (storeId > 0)
-                {
-                    templates = templates
-                        .Where(t => _storeMappingService.Authorize(t, storeId))
-                        .ToList();
-                }
+                //filter by the store
+                if (storeId.HasValue && storeId.Value > 0)
+                    templates = templates.Where(messageTemplate => _storeMappingService.Authorize(messageTemplate, storeId.Value)).ToList();
 
-                return templates.FirstOrDefault();
+                return templates;
             });
-
         }
 
         /// <summary>
@@ -191,7 +188,7 @@ namespace Nop.Services.Messages
         /// <returns>Message template list</returns>
         public virtual IList<MessageTemplate> GetAllMessageTemplates(int storeId)
         {
-            string key = string.Format(MESSAGETEMPLATES_ALL_KEY, storeId);
+            var key = string.Format(MESSAGETEMPLATES_ALL_KEY, storeId);
             return _cacheManager.Get(key, () =>
             {
                 var query = _messageTemplateRepository.Table;
@@ -202,8 +199,8 @@ namespace Nop.Services.Messages
                 {
                     query = from t in query
                             join sm in _storeMappingRepository.Table
-                            on new { c1 = t.Id, c2 = "MessageTemplate" } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into t_sm
-                            from sm in t_sm.DefaultIfEmpty()
+                            on new { c1 = t.Id, c2 = "MessageTemplate" } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into tSm
+                            from sm in tSm.DefaultIfEmpty()
                             where !t.LimitedToStores || storeId == sm.StoreId
                             select t;
 
@@ -228,7 +225,7 @@ namespace Nop.Services.Messages
         public virtual MessageTemplate CopyMessageTemplate(MessageTemplate messageTemplate)
         {
             if (messageTemplate == null)
-                throw new ArgumentNullException("messageTemplate");
+                throw new ArgumentNullException(nameof(messageTemplate));
 
             var mtCopy = new MessageTemplate
             {
@@ -252,15 +249,15 @@ namespace Nop.Services.Messages
             foreach (var lang in languages)
             {
                 var bccEmailAddresses = messageTemplate.GetLocalized(x => x.BccEmailAddresses, lang.Id, false, false);
-                if (!String.IsNullOrEmpty(bccEmailAddresses))
+                if (!string.IsNullOrEmpty(bccEmailAddresses))
                     _localizedEntityService.SaveLocalizedValue(mtCopy, x => x.BccEmailAddresses, bccEmailAddresses, lang.Id);
 
                 var subject = messageTemplate.GetLocalized(x => x.Subject, lang.Id, false, false);
-                if (!String.IsNullOrEmpty(subject))
+                if (!string.IsNullOrEmpty(subject))
                     _localizedEntityService.SaveLocalizedValue(mtCopy, x => x.Subject, subject, lang.Id);
 
                 var body = messageTemplate.GetLocalized(x => x.Body, lang.Id, false, false);
-                if (!String.IsNullOrEmpty(body))
+                if (!string.IsNullOrEmpty(body))
                     _localizedEntityService.SaveLocalizedValue(mtCopy, x => x.Body, body, lang.Id);
 
                 var emailAccountId = messageTemplate.GetLocalized(x => x.EmailAccountId, lang.Id, false, false);

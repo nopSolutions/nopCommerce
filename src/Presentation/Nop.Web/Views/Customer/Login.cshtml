@@ -1,27 +1,27 @@
 ﻿@model LoginModel
-@using Nop.Web.Models.Customer;
-@using Nop.Core;
-@using Nop.Core.Infrastructure;
+@using System.Net
+@using Nop.Core
+@inject IWebHelper webHelper
 @{
-    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+    Layout = "_ColumnsOne";
 
     //title
     Html.AddTitleParts(T("PageTitle.Login").Text);
+    //page class
+    Html.AppendPageCssClassParts("html-login-page");
 
     //register URL with return URL (if specified)
     var registerUrl = Url.RouteUrl("Register");
-    if (!String.IsNullOrEmpty(this.Context.Request.QueryString["returnUrl"]))
+    if (!string.IsNullOrEmpty(this.Context.Request.Query["returnUrl"]))
     {
-        var webHelper = EngineContext.Current.Resolve<IWebHelper>();
-        registerUrl = webHelper.ModifyQueryString(registerUrl, "returnurl=" + HttpUtility.UrlEncode(this.Context.Request.QueryString["returnUrl"]), null);
+        registerUrl = webHelper.ModifyQueryString(registerUrl, "returnurl=" + WebUtility.UrlEncode(this.Context.Request.Query["returnUrl"]), null);
     }
 }
 <div class="page login-page">
     <div class="page-title">
         <h1>@T("Account.Login.Welcome")</h1>
     </div>
-    @Html.Partial("_ExternalAuthentication.AssociateMessage")
-    @Html.Partial("_ExternalAuthentication.Errors")
+    @await Html.PartialAsync("_ExternalAuthentication.Errors")
     <div class="page-body">
         <div class="customer-blocks">
             @if (Model.CheckoutAsGuest)
@@ -31,7 +31,7 @@
                         <strong>@T("Account.Login.CheckoutAsGuestOrRegister")</strong>
                     </div>
                     <div class="text">
-                        @Html.Action("TopicBlock", "Topic", new { systemName = "CheckoutAsGuestOrRegister" })
+                        @await Component.InvokeAsync("TopicBlock", new { systemName = "CheckoutAsGuestOrRegister" })
                     </div>
                     <div class="buttons">
                         <input type="button" class="button-1 checkout-as-guest-button" onclick="location.href='@Url.RouteUrl("Checkout")'" value="@T("Account.Login.CheckoutAsGuest")" />
@@ -54,61 +54,56 @@
                 </div>
             }
             <div class="returning-wrapper fieldset">
-                @using (Html.BeginForm())
-                {
-                    var validationSummary = Html.ValidationSummary(true, T("Account.Login.Unsuccessful").Text);
+                <form asp-route="Login" asp-route-returnurl="@Context.Request.Query["ReturnUrl"]" method="post">
+                    <div asp-validation-summary="ModelOnly" class="message-error">@T("Account.Login.Unsuccessful")</div>
                     <div class="title">
                         <strong>@T("Account.Login.ReturningCustomer")</strong>
                     </div>
-                    if (!MvcHtmlString.IsNullOrEmpty(validationSummary))
-                    {
-                        <div class="message-error">@validationSummary</div>
-                    }
                     <div class="form-fields">
                         @if (Model.UsernamesEnabled)
                         {
                             <div class="inputs">
-                                @Html.LabelFor(m => m.Username, new { }, ":")
-                                @Html.TextBoxFor(m => m.Username, new { @class = "username", autofocus = "autofocus" })
-                                @Html.ValidationMessageFor(m => m.Username)
+                                <label asp-for="Username" asp-postfix=":"></label>
+                                <input asp-for="Username" class="username" autofocus="autofocus" />
+                                <span asp-validation-for="Username"></span>
                             </div>
                         }
                         else
                         {
                             <div class="inputs">
-                                @Html.LabelFor(m => m.Email, new { }, ":")
-                                @Html.TextBoxFor(m => m.Email, new { @class = "email", autofocus = "autofocus" })
-                                @Html.ValidationMessageFor(m => m.Email)
+                                <label asp-for="Email" asp-postfix=":"></label>
+                                <input asp-for="Email" class="email" autofocus="autofocus" />
+                                <span asp-validation-for="Email"></span>
                             </div>
                         }
                         <div class="inputs">
-                            @Html.LabelFor(m => m.Password, new { }, ":")
-                            @Html.PasswordFor(m => m.Password, new { @class = "password" })
-                            @Html.ValidationMessageFor(m => m.Password)
+                            <label asp-for="Password" asp-postfix=":"></label>
+                            <input asp-for="Password" class="password" />
+                            <span asp-validation-for="Password"></span>
                         </div>
                         <div class="inputs reversed">
-                            @Html.CheckBoxFor(m => m.RememberMe)
-                            @Html.LabelFor(m => m.RememberMe)
+                            <input asp-for="RememberMe" />
+                            <label asp-for="RememberMe"></label>
                             <span class="forgot-password">
-                                @Html.RouteLink(T("Account.Login.ForgotPassword").Text, "PasswordRecovery")
+                                <a asp-route="PasswordRecovery">@T("Account.Login.ForgotPassword")</a>
                             </span>
                         </div>
                         @if (Model.DisplayCaptcha)
                         {
                             <div class="captcha-box">
-                                @Html.Raw(Html.GenerateCaptcha())
+                                <nop-captcha />
                             </div>
                         }
                     </div>
                     <div class="buttons">
                         <input class="button-1 login-button" type="submit" value="@T("Account.Login.LoginButton")" />
                     </div>
-                }
+                </form>
             </div>
         </div>
         <div class="external-authentication">
-            @Html.Action("ExternalMethods", "ExternalAuthentication")
+            @await Component.InvokeAsync("ExternalMethods", "ExternalAuthentication")
         </div>
-        @Html.Action("TopicBlock", "Topic", new { systemName = "LoginRegistrationInfo" })
+        @await Component.InvokeAsync("TopicBlock", new { systemName = "LoginRegistrationInfo" })
     </div>
 </div>

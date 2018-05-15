@@ -1,70 +1,69 @@
-﻿using System.Web.Mvc;
-using System.Web.Routing;
+﻿using Microsoft.AspNetCore.Routing;
 using Nop.Core.Configuration;
 using Nop.Core.Infrastructure;
 using Nop.Web.Framework.Localization;
-using Nop.Web.Framework.Mvc.Routes;
+using Nop.Web.Framework.Mvc.Routing;
 
 namespace Nop.Web.Infrastructure
 {
-    //Routes used for backward compatibility with 2.x versions of nopCommerce
+    /// <summary>
+    /// Represents provider that provided routes used for backward compatibility with 2.x versions of nopCommerce
+    /// </summary>
     public partial class BackwardCompatibility2XRouteProvider : IRouteProvider
     {
-        public void RegisterRoutes(RouteCollection routes)
+        #region Methods
+
+        /// <summary>
+        /// Register routes
+        /// </summary>
+        /// <param name="routeBuilder">Route builder</param>
+        public void RegisterRoutes(IRouteBuilder routeBuilder)
         {
-            var config = EngineContext.Current.Resolve<NopConfig>();
-            if (!config.SupportPreviousNopcommerceVersions)
+            if (!EngineContext.Current.Resolve<NopConfig>().SupportPreviousNopcommerceVersions)
                 return;
 
             //products
-            routes.MapLocalizedRoute("", "p/{productId}/{SeName}",
-                new { controller = "BackwardCompatibility2X", action = "RedirectProductById", SeName = UrlParameter.Optional },
-                new { productId = @"\d+" },
-                new[] { "Nop.Web.Controllers" });
+            routeBuilder.MapLocalizedRoute("", "p/{productId:min(0)}/{SeName?}",
+                new { controller = "BackwardCompatibility2X", action = "RedirectProductById" });
 
             //categories
-            routes.MapLocalizedRoute("", "c/{categoryId}/{SeName}",
-                new { controller = "BackwardCompatibility2X", action = "RedirectCategoryById", SeName = UrlParameter.Optional },
-                new { categoryId = @"\d+" },
-                new[] { "Nop.Web.Controllers" });
+            routeBuilder.MapLocalizedRoute("", "c/{categoryId:min(0)}/{SeName?}",
+                new { controller = "BackwardCompatibility2X", action = "RedirectCategoryById" });
 
             //manufacturers
-            routes.MapLocalizedRoute("", "m/{manufacturerId}/{SeName}",
-                new { controller = "BackwardCompatibility2X", action = "RedirectManufacturerById", SeName = UrlParameter.Optional },
-                new { manufacturerId = @"\d+" },
-                new[] { "Nop.Web.Controllers" });
+            routeBuilder.MapLocalizedRoute("", "m/{manufacturerId:min(0)}/{SeName?}",
+                new { controller = "BackwardCompatibility2X", action = "RedirectManufacturerById" });
 
             //news
-            routes.MapLocalizedRoute("", "news/{newsItemId}/{SeName}",
-                new { controller = "BackwardCompatibility2X", action = "RedirectNewsItemById", SeName = UrlParameter.Optional },
-                new { newsItemId = @"\d+" },
-                new[] { "Nop.Web.Controllers" });
+            routeBuilder.MapLocalizedRoute("", "news/{newsItemId:min(0)}/{SeName?}",
+                new { controller = "BackwardCompatibility2X", action = "RedirectNewsItemById" });
 
             //blog
-            routes.MapLocalizedRoute("", "blog/{blogPostId}/{SeName}",
-                new { controller = "BackwardCompatibility2X", action = "RedirectBlogPostById", SeName = UrlParameter.Optional },
-                new { blogPostId = @"\d+" },
-                new[] { "Nop.Web.Controllers" });
+            routeBuilder.MapLocalizedRoute("", "blog/{blogPostId:min(0)}/{SeName?}",
+                new { controller = "BackwardCompatibility2X", action = "RedirectBlogPostById" });
 
             //topic
-            routes.MapLocalizedRoute("", "t/{SystemName}",
-                new { controller = "BackwardCompatibility2X", action = "RedirectTopicBySystemName" },
-                new[] { "Nop.Web.Controllers" });
+            routeBuilder.MapLocalizedRoute("", "t/{SystemName}",
+                new { controller = "BackwardCompatibility2X", action = "RedirectTopicBySystemName" });
 
             //vendors
-            routes.MapLocalizedRoute("", "vendor/{vendorId}/{SeName}",
-                new { controller = "BackwardCompatibility2X", action = "RedirectVendorById", SeName = UrlParameter.Optional },
-                new { vendorId = @"\d+" },
-                new[] { "Nop.Web.Controllers" });
+            routeBuilder.MapLocalizedRoute("", "vendor/{vendorId:min(0)}/{SeName?}",
+                new { controller = "BackwardCompatibility2X", action = "RedirectVendorById" });
         }
 
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// Gets a priority of route provider
+        /// </summary>
         public int Priority
         {
-            get
-            {
-                //register it after all other IRouteProvider are processed
-                return -1000;
-            }
+            //register it after all other IRouteProvider are processed
+            get { return -1000; }
         }
+
+        #endregion
     }
 }

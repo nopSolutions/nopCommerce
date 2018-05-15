@@ -76,7 +76,7 @@ namespace Nop.Plugin.Shipping.Fedex.RateServiceWebReference {
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://fedex.com/ws/rate/v16/getRates", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Bare)]
         [return: System.Xml.Serialization.XmlElementAttribute("RateReply", Namespace="http://fedex.com/ws/rate/v16")]
         public RateReply getRates([System.Xml.Serialization.XmlElementAttribute(Namespace="http://fedex.com/ws/rate/v16")] RateRequest RateRequest) {
-            object[] results = this.Invoke("getRates", new object[] {
+            var results = this.Invoke("getRates", new object[] {
                         RateRequest});
             return ((RateReply)(results[0]));
         }
@@ -97,7 +97,7 @@ namespace Nop.Plugin.Shipping.Fedex.RateServiceWebReference {
         
         private void OngetRatesOperationCompleted(object arg) {
             if ((this.getRatesCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.getRatesCompleted(this, new getRatesCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -112,7 +112,7 @@ namespace Nop.Plugin.Shipping.Fedex.RateServiceWebReference {
                         || (url == string.Empty))) {
                 return false;
             }
-            System.Uri wsUri = new System.Uri(url);
+            var wsUri = new System.Uri(url);
             if (((wsUri.Port >= 1024) 
                         && (string.Compare(wsUri.Host, "localHost", System.StringComparison.OrdinalIgnoreCase) == 0))) {
                 return true;

@@ -1,7 +1,6 @@
 ﻿using Nop.Core.Caching;
 using Nop.Core.Domain.Configuration;
 using Nop.Core.Events;
-using Nop.Core.Infrastructure;
 using Nop.Services.Events;
 
 namespace Nop.Plugin.Widgets.NivoSlider.Infrastructure.Cache
@@ -9,10 +8,10 @@ namespace Nop.Plugin.Widgets.NivoSlider.Infrastructure.Cache
     /// <summary>
     /// Model cache event consumer (used for caching of presentation layer models)
     /// </summary>
-    public partial class ModelCacheEventConsumer: 
-        IConsumer<EntityInserted<Setting>>,
-        IConsumer<EntityUpdated<Setting>>,
-        IConsumer<EntityDeleted<Setting>>
+    public partial class ModelCacheEventConsumer :
+        IConsumer<EntityInsertedEvent<Setting>>,
+        IConsumer<EntityUpdatedEvent<Setting>>,
+        IConsumer<EntityDeletedEvent<Setting>>
     {
         /// <summary>
         /// Key for caching
@@ -20,26 +19,25 @@ namespace Nop.Plugin.Widgets.NivoSlider.Infrastructure.Cache
         /// <remarks>
         /// {0} : picture id
         /// </remarks>
-        public const string PICTURE_URL_MODEL_KEY = "Nop.plugins.widgets.nivosrlider.pictureurl-{0}";
-        public const string PICTURE_URL_PATTERN_KEY = "Nop.plugins.widgets.nivosrlider";
+        public const string PICTURE_URL_MODEL_KEY = "Nop.plugins.widgets.nivoslider.pictureurl-{0}";
+        public const string PICTURE_URL_PATTERN_KEY = "Nop.plugins.widgets.nivoslider";
 
-        private readonly ICacheManager _cacheManager;
+        private readonly IStaticCacheManager _cacheManager;
 
-        public ModelCacheEventConsumer()
+        public ModelCacheEventConsumer(IStaticCacheManager cacheManager)
         {
-            //TODO inject static cache manager using constructor
-            this._cacheManager = EngineContext.Current.ContainerManager.Resolve<ICacheManager>("nop_cache_static");
+            this._cacheManager = cacheManager;
         }
 
-        public void HandleEvent(EntityInserted<Setting> eventMessage)
-        {
-            _cacheManager.RemoveByPattern(PICTURE_URL_PATTERN_KEY);
-        }
-        public void HandleEvent(EntityUpdated<Setting> eventMessage)
+        public void HandleEvent(EntityInsertedEvent<Setting> eventMessage)
         {
             _cacheManager.RemoveByPattern(PICTURE_URL_PATTERN_KEY);
         }
-        public void HandleEvent(EntityDeleted<Setting> eventMessage)
+        public void HandleEvent(EntityUpdatedEvent<Setting> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(PICTURE_URL_PATTERN_KEY);
+        }
+        public void HandleEvent(EntityDeletedEvent<Setting> eventMessage)
         {
             _cacheManager.RemoveByPattern(PICTURE_URL_PATTERN_KEY);
         }

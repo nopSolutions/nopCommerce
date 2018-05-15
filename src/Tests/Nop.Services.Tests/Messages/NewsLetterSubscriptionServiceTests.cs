@@ -41,7 +41,7 @@ namespace Nop.Services.Tests.Messages
             var subscription = new NewsLetterSubscription { Active = true, Email = "test@test.com" };
             service.InsertNewsLetterSubscription(subscription, true);
 
-            _eventPublisher.AssertWasCalled(x => x.Publish(new EmailSubscribedEvent(subscription.Email)));
+            _eventPublisher.AssertWasCalled(x => x.Publish(new EmailSubscribedEvent(subscription)));
         }
 
         /// <summary>
@@ -56,51 +56,9 @@ namespace Nop.Services.Tests.Messages
             var subscription = new NewsLetterSubscription { Active = true, Email = "test@test.com" };
             service.DeleteNewsLetterSubscription(subscription, true);
 
-            _eventPublisher.AssertWasCalled(x => x.Publish(new EmailUnsubscribedEvent(subscription.Email)));
+            _eventPublisher.AssertWasCalled(x => x.Publish(new EmailUnsubscribedEvent(subscription)));
         }
-
-        /// <summary>
-        /// Verifies the email update triggers unsubscribe and subscribe event.
-        /// </summary>
-        [Test]
-        [Ignore("Ignoring until a solution to the IDbContext methods are found. -SRS")]
-        public void VerifyEmailUpdateTriggersUnsubscribeAndSubscribeEvent()
-        {
-            //Prepare the original result
-            var originalSubscription = new NewsLetterSubscription { Active = true, Email = "test@test.com" };
-            _newsLetterSubscriptionRepository.Stub(m => m.GetById(Arg<object>.Is.Anything)).Return(originalSubscription);
-
-            var service = new NewsLetterSubscriptionService(_dbContext, _newsLetterSubscriptionRepository,
-                _customerRepository, _eventPublisher, _customerService);
-
-            var subscription = new NewsLetterSubscription { Active = true, Email = "test@somenewdomain.com" };
-            service.UpdateNewsLetterSubscription(subscription, true);
-
-            _eventPublisher.AssertWasCalled(x => x.Publish(new EmailUnsubscribedEvent(originalSubscription.Email)));
-            _eventPublisher.AssertWasCalled(x => x.Publish(new EmailSubscribedEvent(subscription.Email)));
-        }
-
-        /// <summary>
-        /// Verifies the inactive to active update triggers subscribe event.
-        /// </summary>
-        [Test]
-        [Ignore("Ignoring until a solution to the IDbContext methods are found. -SRS")]
-        public void VerifyInactiveToActiveUpdateTriggersSubscribeEvent()
-        {
-            //Prepare the original result
-            var originalSubscription = new NewsLetterSubscription { Active = false, Email = "test@test.com" };
-            _newsLetterSubscriptionRepository.Stub(m => m.GetById(Arg<object>.Is.Anything)).Return(originalSubscription);
-
-            var service = new NewsLetterSubscriptionService(_dbContext, _newsLetterSubscriptionRepository,
-                _customerRepository, _eventPublisher, _customerService);
-
-            var subscription = new NewsLetterSubscription { Active = true, Email = "test@test.com" };
-
-            service.UpdateNewsLetterSubscription(subscription, true);
-
-            _eventPublisher.AssertWasCalled(x => x.Publish(new EmailSubscribedEvent(subscription.Email)));
-        }
-
+        
         /// <summary>
         /// Verifies the insert event is fired.
         /// </summary>
@@ -113,25 +71,6 @@ namespace Nop.Services.Tests.Messages
             service.InsertNewsLetterSubscription(new NewsLetterSubscription { Email = "test@test.com" });
 
             _eventPublisher.AssertWasCalled(x => x.EntityInserted(Arg<NewsLetterSubscription>.Is.Anything));
-        }
-
-        /// <summary>
-        /// Verifies the update event is fired.
-        /// </summary>
-        [Test]
-        [Ignore("Ignoring until a solution to the IDbContext methods are found. -SRS")]
-        public void VerifyUpdateEventIsFired()
-        {
-            //Prepare the original result
-            var originalSubscription = new NewsLetterSubscription { Active = false, Email = "test@test.com" };
-
-            _newsLetterSubscriptionRepository.Stub(m => m.GetById(Arg<object>.Is.Anything)).Return(originalSubscription);
-            var service = new NewsLetterSubscriptionService(_dbContext, _newsLetterSubscriptionRepository,
-                _customerRepository, _eventPublisher, _customerService);
-
-            service.UpdateNewsLetterSubscription(new NewsLetterSubscription { Email = "test@test.com" });
-
-            _eventPublisher.AssertWasCalled(x => x.EntityUpdated(Arg<NewsLetterSubscription>.Is.Anything));
         }
     }
 }

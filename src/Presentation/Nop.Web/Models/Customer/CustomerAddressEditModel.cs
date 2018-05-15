@@ -1,4 +1,4 @@
-﻿using Nop.Web.Framework.Mvc;
+﻿using Nop.Web.Framework.Models;
 using Nop.Web.Models.Common;
 
 namespace Nop.Web.Models.Customer
@@ -9,6 +9,7 @@ namespace Nop.Web.Models.Customer
         {
             this.Address = new AddressModel();
         }
+        
         public AddressModel Address { get; set; }
     }
 }

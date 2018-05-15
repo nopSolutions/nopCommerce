@@ -10,6 +10,9 @@ namespace Nop.Services.Payments
     [Serializable]
     public partial class ProcessPaymentRequest
     {
+        /// <summary>
+        /// Ctor
+        /// </summary>
         public ProcessPaymentRequest()
         {
             this.CustomValues = new Dictionary<string, object>();
@@ -77,11 +80,6 @@ namespace Nop.Services.Payments
         #endregion
 
         #region Recurring payments
-
-        /// <summary>
-        /// Gets or sets a value idicating whether it's a recurring payment (initial payment was already processed)
-        /// </summary>
-        public bool IsRecurringPayment { get; set; }
 
         /// <summary>
         /// Gets or sets an initial (parent) order identifier if order is recurring

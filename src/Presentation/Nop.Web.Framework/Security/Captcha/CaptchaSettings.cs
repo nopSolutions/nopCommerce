@@ -54,15 +54,11 @@ namespace Nop.Web.Framework.Security.Captcha
         /// <summary>
         /// reCAPTCHA private key
         /// </summary>
-        public string ReCaptchaPrivateKey { get; set; }
+        public string ReCaptchaPrivateKey { get; set; }        
         /// <summary>
         /// reCAPTCHA theme
         /// </summary>
         public string ReCaptchaTheme { get; set; }
-        /// <summary>
-        /// reCAPTCHA version
-        /// </summary>
-        public ReCaptchaVersion ReCaptchaVersion { get; set; }
         /// <summary>
         /// reCAPTCHA language
         /// </summary>

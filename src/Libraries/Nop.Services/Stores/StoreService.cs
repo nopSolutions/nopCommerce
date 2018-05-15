@@ -32,12 +32,12 @@ namespace Nop.Services.Stores
         private const string STORES_PATTERN_KEY = "Nop.stores.";
 
         #endregion
-        
+
         #region Fields
-        
+
         private readonly IRepository<Store> _storeRepository;
         private readonly IEventPublisher _eventPublisher;
-        private readonly ICacheManager _cacheManager;
+        private readonly IStaticCacheManager _cacheManager;
 
         #endregion
 
@@ -49,7 +49,7 @@ namespace Nop.Services.Stores
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="storeRepository">Store repository</param>
         /// <param name="eventPublisher">Event published</param>
-        public StoreService(ICacheManager cacheManager,
+        public StoreService(IStaticCacheManager cacheManager,
             IRepository<Store> storeRepository,
             IEventPublisher eventPublisher)
         {
@@ -69,7 +69,10 @@ namespace Nop.Services.Stores
         public virtual void DeleteStore(Store store)
         {
             if (store == null)
-                throw new ArgumentNullException("store");
+                throw new ArgumentNullException(nameof(store));
+
+            if (store is IEntityForCaching)
+                throw new ArgumentException("Cacheable entities are not supported by Entity Framework");
 
             var allStores = GetAllStores();
             if (allStores.Count == 1)
@@ -86,33 +89,64 @@ namespace Nop.Services.Stores
         /// <summary>
         /// Gets all stores
         /// </summary>
+        /// <param name="loadCacheableCopy">A value indicating whether to load a copy that could be cached (workaround until Entity Framework supports 2-level caching)</param>
         /// <returns>Stores</returns>
-        public virtual IList<Store> GetAllStores()
+        public virtual IList<Store> GetAllStores(bool loadCacheableCopy = true)
         {
-            string key = STORES_ALL_KEY;
-            return _cacheManager.Get(key, () =>
+            Func<IList<Store>> loadStoresFunc = () =>
             {
                 var query = from s in _storeRepository.Table
-                            orderby s.DisplayOrder, s.Id
-                            select s;
-                var stores = query.ToList();
-                return stores;
-            });
+                    orderby s.DisplayOrder, s.Id
+                    select s;
+                return query.ToList();
+            };
+
+            if (loadCacheableCopy)
+            {
+                //cacheable copy
+                return _cacheManager.Get(STORES_ALL_KEY, () =>
+                {
+                    var result = new List<Store>();
+                    foreach (var store in loadStoresFunc())
+                        result.Add(new StoreForCaching(store));
+                    return result;
+                });
+            }
+
+            return loadStoresFunc();
         }
 
         /// <summary>
         /// Gets a store 
         /// </summary>
         /// <param name="storeId">Store identifier</param>
+        /// <param name="loadCacheableCopy">A value indicating whether to load a copy that could be cached (workaround until Entity Framework supports 2-level caching)</param>
         /// <returns>Store</returns>
-        public virtual Store GetStoreById(int storeId)
+        public virtual Store GetStoreById(int storeId, bool loadCacheableCopy = true)
         {
             if (storeId == 0)
                 return null;
-            
-            string key = string.Format(STORES_BY_ID_KEY, storeId);
-            return _cacheManager.Get(key, () => _storeRepository.GetById(storeId));
-        }
+
+            Func<Store> loadStoreFunc = () =>
+            {
+                return _storeRepository.GetById(storeId);
+            };
+
+            if (loadCacheableCopy)
+            {
+                //cacheable copy
+                var key = string.Format(STORES_BY_ID_KEY, storeId);
+                return _cacheManager.Get(key, () =>
+                {
+                    var store = loadStoreFunc();
+                    if (store == null)
+                        return null;
+                    return new StoreForCaching(store);
+                });
+            }
+
+            return loadStoreFunc();
+        } 
 
         /// <summary>
         /// Inserts a store
@@ -121,7 +155,10 @@ namespace Nop.Services.Stores
         public virtual void InsertStore(Store store)
         {
             if (store == null)
-                throw new ArgumentNullException("store");
+                throw new ArgumentNullException(nameof(store));
+            
+            if (store is IEntityForCaching)
+                throw  new ArgumentException("Cacheable entities are not supported by Entity Framework");
 
             _storeRepository.Insert(store);
 
@@ -138,7 +175,10 @@ namespace Nop.Services.Stores
         public virtual void UpdateStore(Store store)
         {
             if (store == null)
-                throw new ArgumentNullException("store");
+                throw new ArgumentNullException(nameof(store));
+
+            if (store is IEntityForCaching)
+                throw new ArgumentException("Cacheable entities are not supported by Entity Framework");
 
             _storeRepository.Update(store);
 

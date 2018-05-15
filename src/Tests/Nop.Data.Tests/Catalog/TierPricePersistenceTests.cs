@@ -1,7 +1,4 @@
-﻿using System;
-using Nop.Core.Domain.Catalog;
-using Nop.Core.Domain.Customers;
-using Nop.Tests;
+﻿using Nop.Tests;
 using NUnit.Framework;
 
 namespace Nop.Data.Tests.Catalog
@@ -12,57 +9,28 @@ namespace Nop.Data.Tests.Catalog
         [Test]
         public void Can_save_and_load_tierPrice()
         {
-            var tierPrice = new TierPrice
-            {
-                StoreId = 7,
-                Quantity = 1,
-                Price = 2.1M,
-                Product = GetTestProduct(),
-           };
-
+            var tierPrice = this.GetTestTierPrice();
+            tierPrice.Product = this.GetTestProduct();
             var fromDb = SaveAndLoadEntity(tierPrice);
             fromDb.ShouldNotBeNull();
-            fromDb.StoreId.ShouldEqual(7);
-            fromDb.Quantity.ShouldEqual(1);
-            fromDb.Price.ShouldEqual(2.1M);
-
+            fromDb.PropertiesShouldEqual(this.GetTestTierPrice());
             fromDb.Product.ShouldNotBeNull();
+            fromDb.Product.PropertiesShouldEqual(this.GetTestProduct());
         }
 
         [Test]
         public void Can_save_and_load_tierPriceWithCustomerRole()
         {
-            var tierPrice = new TierPrice
-            {
-                Quantity = 1,
-                Price = 2,
-                Product = GetTestProduct(),
-                CustomerRole = new CustomerRole
-                {
-                    Name = "Administrators",
-                    FreeShipping = true,
-                    TaxExempt = true,
-                    Active = true,
-                    IsSystemRole = true,
-                    SystemName = "Administrators"
-                }
-            };
+            var tierPrice = this.GetTestTierPrice();
+            tierPrice.CustomerRole = this.GetTestCustomerRole();
+            tierPrice.Product = this.GetTestProduct();
 
             var fromDb = SaveAndLoadEntity(tierPrice);
             fromDb.ShouldNotBeNull();
+            fromDb.PropertiesShouldEqual(this.GetTestTierPrice());
 
             fromDb.CustomerRole.ShouldNotBeNull();
-            fromDb.CustomerRole.Name.ShouldEqual("Administrators");
-        }
-
-        protected Product GetTestProduct()
-        {
-            return new Product
-            {
-                Name = "Product name 1",
-                CreatedOnUtc = new DateTime(2010, 01, 03),
-                UpdatedOnUtc = new DateTime(2010, 01, 04),
-            };
+            fromDb.CustomerRole.PropertiesShouldEqual(this.GetTestCustomerRole());
         }
     }
 }

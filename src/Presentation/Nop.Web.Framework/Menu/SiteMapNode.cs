@@ -1,9 +1,12 @@
 ﻿using System.Collections.Generic;
-using System.Web.Routing;
+using Microsoft.AspNetCore.Routing;
 
 //code from Telerik MVC Extensions
 namespace Nop.Web.Framework.Menu
 {
+    /// <summary>
+    /// Sitemap node
+    /// </summary>
     public class SiteMapNode
     {
         /// <summary>
@@ -51,13 +54,18 @@ namespace Nop.Web.Framework.Menu
         public IList<SiteMapNode> ChildNodes { get; set; }
 
         /// <summary>
-        /// Gets or sets the image path
+        /// Gets or sets the icon class (Font Awesome: http://fontawesome.io/)
         /// </summary>
-        public string ImageUrl { get; set; }
+        public string IconClass { get; set; }
 
         /// <summary>
         /// Gets or sets the item is visible
         /// </summary>
         public bool Visible { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to open url in new tab (window) or not
+        /// </summary>
+        public bool OpenUrlInNewTab { get; set; }
     }
 }

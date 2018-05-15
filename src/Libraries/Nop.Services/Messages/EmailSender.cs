@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Mail;
 using Nop.Core.Domain.Messages;
+using Nop.Core.Infrastructure;
 using Nop.Services.Media;
 
 namespace Nop.Services.Messages
@@ -15,10 +16,18 @@ namespace Nop.Services.Messages
     public partial class EmailSender : IEmailSender
     {
         private readonly IDownloadService _downloadService;
+        private readonly INopFileProvider _fileProvider;
 
-        public EmailSender(IDownloadService downloadService)
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="downloadService">Download service</param>
+        /// <param name="fileProvider">File provider</param>
+        public EmailSender(IDownloadService downloadService,
+            INopFileProvider fileProvider)
         {
             this._downloadService = downloadService;
+            this._fileProvider = fileProvider;
         }
 
         /// <summary>
@@ -38,18 +47,21 @@ namespace Nop.Services.Messages
         /// <param name="attachmentFilePath">Attachment file path</param>
         /// <param name="attachmentFileName">Attachment file name. If specified, then this file name will be sent to a recipient. Otherwise, "AttachmentFilePath" name will be used.</param>
         /// <param name="attachedDownloadId">Attachment download ID (another attachedment)</param>
+        /// <param name="headers">Headers</param>
         public virtual void SendEmail(EmailAccount emailAccount, string subject, string body,
             string fromAddress, string fromName, string toAddress, string toName,
              string replyTo = null, string replyToName = null,
             IEnumerable<string> bcc = null, IEnumerable<string> cc = null,
             string attachmentFilePath = null, string attachmentFileName = null,
-            int attachedDownloadId = 0)
+            int attachedDownloadId = 0, IDictionary<string, string> headers = null)
         {
-            var message = new MailMessage();
-            //from, to, reply to
-            message.From = new MailAddress(fromAddress, fromName);
+            var message = new MailMessage
+            {
+                //from, to, reply to
+                From = new MailAddress(fromAddress, fromName)
+            };
             message.To.Add(new MailAddress(toAddress, toName));
-            if (!String.IsNullOrEmpty(replyTo))
+            if (!string.IsNullOrEmpty(replyTo))
             {
                 message.ReplyToList.Add(new MailAddress(replyTo, replyToName));
             }
@@ -57,7 +69,7 @@ namespace Nop.Services.Messages
             //BCC
             if (bcc != null)
             {
-                foreach (var address in bcc.Where(bccValue => !String.IsNullOrWhiteSpace(bccValue)))
+                foreach (var address in bcc.Where(bccValue => !string.IsNullOrWhiteSpace(bccValue)))
                 {
                     message.Bcc.Add(address.Trim());
                 }
@@ -66,7 +78,7 @@ namespace Nop.Services.Messages
             //CC
             if (cc != null)
             {
-                foreach (var address in cc.Where(ccValue => !String.IsNullOrWhiteSpace(ccValue)))
+                foreach (var address in cc.Where(ccValue => !string.IsNullOrWhiteSpace(ccValue)))
                 {
                     message.CC.Add(address.Trim());
                 }
@@ -77,15 +89,22 @@ namespace Nop.Services.Messages
             message.Body = body;
             message.IsBodyHtml = true;
 
-            //create  the file attachment for this e-mail message
-            if (!String.IsNullOrEmpty(attachmentFilePath) &&
-                File.Exists(attachmentFilePath))
+            //headers
+            if (headers != null)
+                foreach (var header in headers)
+                {
+                    message.Headers.Add(header.Key, header.Value);
+                }
+
+            //create the file attachment for this e-mail message
+            if (!string.IsNullOrEmpty(attachmentFilePath) &&
+                _fileProvider.FileExists(attachmentFilePath))
             {
                 var attachment = new Attachment(attachmentFilePath);
-                attachment.ContentDisposition.CreationDate = File.GetCreationTime(attachmentFilePath);
-                attachment.ContentDisposition.ModificationDate = File.GetLastWriteTime(attachmentFilePath);
-                attachment.ContentDisposition.ReadDate = File.GetLastAccessTime(attachmentFilePath);
-                if (!String.IsNullOrEmpty(attachmentFileName))
+                attachment.ContentDisposition.CreationDate = _fileProvider.GetCreationTime(attachmentFilePath);
+                attachment.ContentDisposition.ModificationDate = _fileProvider.GetLastWriteTime(attachmentFilePath);
+                attachment.ContentDisposition.ReadDate = _fileProvider.GetLastAccessTime(attachmentFilePath);
+                if (!string.IsNullOrEmpty(attachmentFileName))
                 {
                     attachment.Name = attachmentFileName;
                 }
@@ -100,18 +119,18 @@ namespace Nop.Services.Messages
                     //we do not support URLs as attachments
                     if (!download.UseDownloadUrl)
                     {
-                        string fileName = !String.IsNullOrWhiteSpace(download.Filename) ? download.Filename : download.Id.ToString();
+                        var fileName = !string.IsNullOrWhiteSpace(download.Filename) ? download.Filename : download.Id.ToString();
                         fileName += download.Extension;
 
-                        
-                        var ms = new MemoryStream(download.DownloadBinary);
+
+                        var ms = new MemoryStream(download.DownloadBinary);                        
                         var attachment = new Attachment(ms, fileName);
-                        //string contentType = !String.IsNullOrWhiteSpace(download.ContentType) ? download.ContentType : "application/octet-stream";
+                        //string contentType = !string.IsNullOrWhiteSpace(download.ContentType) ? download.ContentType : "application/octet-stream";
                         //var attachment = new Attachment(ms, fileName, contentType);
                         attachment.ContentDisposition.CreationDate = DateTime.UtcNow;
                         attachment.ContentDisposition.ModificationDate = DateTime.UtcNow;
                         attachment.ContentDisposition.ReadDate = DateTime.UtcNow;
-                        message.Attachments.Add(attachment);
+                        message.Attachments.Add(attachment);                        
                     }
                 }
             }
@@ -129,6 +148,5 @@ namespace Nop.Services.Messages
                 smtpClient.Send(message);
             }
         }
-
     }
 }

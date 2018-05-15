@@ -18,6 +18,7 @@ namespace Nop.Services.Catalog
     public partial class ManufacturerService : IManufacturerService
     {
         #region Constants
+
         /// <summary>
         /// Key for caching
         /// </summary>
@@ -110,6 +111,7 @@ namespace Nop.Services.Catalog
             this._catalogSettings = catalogSettings;
             this._eventPublisher = eventPublisher;
         }
+
         #endregion
 
         #region Methods
@@ -121,10 +123,13 @@ namespace Nop.Services.Catalog
         public virtual void DeleteManufacturer(Manufacturer manufacturer)
         {
             if (manufacturer == null)
-                throw new ArgumentNullException("manufacturer");
+                throw new ArgumentNullException(nameof(manufacturer));
             
             manufacturer.Deleted = true;
             UpdateManufacturer(manufacturer);
+
+            //event notification
+            _eventPublisher.EntityDeleted(manufacturer);
         }
 
         /// <summary>
@@ -145,13 +150,13 @@ namespace Nop.Services.Catalog
             var query = _manufacturerRepository.Table;
             if (!showHidden)
                 query = query.Where(m => m.Published);
-            if (!String.IsNullOrWhiteSpace(manufacturerName))
+            if (!string.IsNullOrWhiteSpace(manufacturerName))
                 query = query.Where(m => m.Name.Contains(manufacturerName));
             query = query.Where(m => !m.Deleted);
-            query = query.OrderBy(m => m.DisplayOrder);
+            query = query.OrderBy(m => m.DisplayOrder).ThenBy(m => m.Id);
 
-            if ((!showHidden && (!_catalogSettings.IgnoreAcl || !_catalogSettings.IgnoreStoreLimitations)) || storeId > 0)
-            { 
+            if ((storeId > 0 && !_catalogSettings.IgnoreStoreLimitations) || (!showHidden && !_catalogSettings.IgnoreAcl))
+            {
                 if (!showHidden && !_catalogSettings.IgnoreAcl)
                 {
                     //ACL (access control list)
@@ -163,7 +168,7 @@ namespace Nop.Services.Catalog
                             where !m.SubjectToAcl || allowedCustomerRolesIds.Contains(acl.CustomerRoleId)
                             select m;
                 }
-                if ((!showHidden && !_catalogSettings.IgnoreStoreLimitations) || storeId > 0)
+                if (storeId > 0 && !_catalogSettings.IgnoreStoreLimitations)
                 {
                     //Store mapping
                     query = from m in query
@@ -179,7 +184,7 @@ namespace Nop.Services.Catalog
                             into mGroup
                             orderby mGroup.Key
                             select mGroup.FirstOrDefault();
-                query = query.OrderBy(m => m.DisplayOrder);
+                query = query.OrderBy(m => m.DisplayOrder).ThenBy(m => m.Id);
             }
 
             return new PagedList<Manufacturer>(query, pageIndex, pageSize);
@@ -195,7 +200,7 @@ namespace Nop.Services.Catalog
             if (manufacturerId == 0)
                 return null;
             
-            string key = string.Format(MANUFACTURERS_BY_ID_KEY, manufacturerId);
+            var key = string.Format(MANUFACTURERS_BY_ID_KEY, manufacturerId);
             return _cacheManager.Get(key, () => _manufacturerRepository.GetById(manufacturerId));
         }
 
@@ -206,7 +211,7 @@ namespace Nop.Services.Catalog
         public virtual void InsertManufacturer(Manufacturer manufacturer)
         {
             if (manufacturer == null)
-                throw new ArgumentNullException("manufacturer");
+                throw new ArgumentNullException(nameof(manufacturer));
 
             _manufacturerRepository.Insert(manufacturer);
 
@@ -225,7 +230,7 @@ namespace Nop.Services.Catalog
         public virtual void UpdateManufacturer(Manufacturer manufacturer)
         {
             if (manufacturer == null)
-                throw new ArgumentNullException("manufacturer");
+                throw new ArgumentNullException(nameof(manufacturer));
 
             _manufacturerRepository.Update(manufacturer);
 
@@ -236,7 +241,6 @@ namespace Nop.Services.Catalog
             //event notification
             _eventPublisher.EntityUpdated(manufacturer);
         }
-        
 
         /// <summary>
         /// Deletes a product manufacturer mapping
@@ -245,7 +249,7 @@ namespace Nop.Services.Catalog
         public virtual void DeleteProductManufacturer(ProductManufacturer productManufacturer)
         {
             if (productManufacturer == null)
-                throw new ArgumentNullException("productManufacturer");
+                throw new ArgumentNullException(nameof(productManufacturer));
 
             _productManufacturerRepository.Delete(productManufacturer);
 
@@ -271,7 +275,7 @@ namespace Nop.Services.Catalog
             if (manufacturerId == 0)
                 return new PagedList<ProductManufacturer>(new List<ProductManufacturer>(), pageIndex, pageSize);
 
-            string key = string.Format(PRODUCTMANUFACTURERS_ALLBYMANUFACTURERID_KEY, showHidden, manufacturerId, pageIndex, pageSize, _workContext.CurrentCustomer.Id, _storeContext.CurrentStore.Id);
+            var key = string.Format(PRODUCTMANUFACTURERS_ALLBYMANUFACTURERID_KEY, showHidden, manufacturerId, pageIndex, pageSize, _workContext.CurrentCustomer.Id, _storeContext.CurrentStore.Id);
             return _cacheManager.Get(key, () =>
             {
                 var query = from pm in _productManufacturerRepository.Table
@@ -279,7 +283,7 @@ namespace Nop.Services.Catalog
                             where pm.ManufacturerId == manufacturerId &&
                                   !p.Deleted &&
                                   (showHidden || p.Published)
-                            orderby pm.DisplayOrder
+                            orderby pm.DisplayOrder, pm.Id
                             select pm;
 
                 if (!showHidden && (!_catalogSettings.IgnoreAcl || !_catalogSettings.IgnoreStoreLimitations))
@@ -315,7 +319,7 @@ namespace Nop.Services.Catalog
                             into pmGroup
                             orderby pmGroup.Key
                             select pmGroup.FirstOrDefault();
-                    query = query.OrderBy(pm => pm.DisplayOrder);
+                    query = query.OrderBy(pm => pm.DisplayOrder).ThenBy(pm => pm.Id);
                 }
 
                 var productManufacturers = new PagedList<ProductManufacturer>(query, pageIndex, pageSize);
@@ -334,7 +338,7 @@ namespace Nop.Services.Catalog
             if (productId == 0)
                 return new List<ProductManufacturer>();
 
-            string key = string.Format(PRODUCTMANUFACTURERS_ALLBYPRODUCTID_KEY, showHidden, productId, _workContext.CurrentCustomer.Id, _storeContext.CurrentStore.Id);
+            var key = string.Format(PRODUCTMANUFACTURERS_ALLBYPRODUCTID_KEY, showHidden, productId, _workContext.CurrentCustomer.Id, _storeContext.CurrentStore.Id);
             return _cacheManager.Get(key, () =>
             {
                 var query = from pm in _productManufacturerRepository.Table
@@ -342,7 +346,7 @@ namespace Nop.Services.Catalog
                             where pm.ProductId == productId &&
                                 !m.Deleted &&
                                 (showHidden || m.Published)
-                            orderby pm.DisplayOrder
+                            orderby pm.DisplayOrder, pm.Id
                             select pm;
 
 
@@ -380,7 +384,7 @@ namespace Nop.Services.Catalog
                             into mGroup
                             orderby mGroup.Key
                             select mGroup.FirstOrDefault();
-                    query = query.OrderBy(pm => pm.DisplayOrder);
+                    query = query.OrderBy(pm => pm.DisplayOrder).ThenBy(pm => pm.Id);
                 }
 
                 var productManufacturers = query.ToList();
@@ -408,7 +412,7 @@ namespace Nop.Services.Catalog
         public virtual void InsertProductManufacturer(ProductManufacturer productManufacturer)
         {
             if (productManufacturer == null)
-                throw new ArgumentNullException("productManufacturer");
+                throw new ArgumentNullException(nameof(productManufacturer));
 
             _productManufacturerRepository.Insert(productManufacturer);
 
@@ -427,7 +431,7 @@ namespace Nop.Services.Catalog
         public virtual void UpdateProductManufacturer(ProductManufacturer productManufacturer)
         {
             if (productManufacturer == null)
-                throw new ArgumentNullException("productManufacturer");
+                throw new ArgumentNullException(nameof(productManufacturer));
 
             _productManufacturerRepository.Update(productManufacturer);
 
@@ -455,21 +459,31 @@ namespace Nop.Services.Catalog
                 .ToDictionary(items => items.Key, items => items.Select(a => a.ManufacturerId).ToArray());
         }
 
-
         /// <summary>
-        /// Returns a list of IDs of not existing manufacturers
+        /// Returns a list of names of not existing manufacturers
         /// </summary>
-        /// <param name="manufacturerIds">The IDs of the manufacturers to check</param>
-        /// <returns>List of IDs not existing manufacturers</returns>
-        public virtual int[] GetNotExistingManufacturers(int[] manufacturerIds)
+        /// <param name="manufacturerIdsNames">The names and/or IDs of the manufacturers to check</param>
+        /// <returns>List of names and/or IDs not existing manufacturers</returns>
+        public virtual string[] GetNotExistingManufacturers(string[] manufacturerIdsNames)
         {
-            if (manufacturerIds == null)
-                throw new ArgumentNullException("manufacturerIds");
+            if (manufacturerIdsNames == null)
+                throw new ArgumentNullException(nameof(manufacturerIdsNames));
 
             var query = _manufacturerRepository.Table;
-            var queryFilter = manufacturerIds.Distinct().ToArray();
-            var filter = query.Select(m => m.Id).Where(m => queryFilter.Contains(m)).ToList();
-            return queryFilter.Except(filter).ToArray();
+            var queryFilter = manufacturerIdsNames.Distinct().ToArray();
+            //filtering by name
+            var filter = query.Select(m => m.Name).Where(m => queryFilter.Contains(m)).ToList();
+            queryFilter = queryFilter.Except(filter).ToArray();
+
+            //if some names not found
+            if (queryFilter.Any())
+            {
+                //filtering by IDs
+                filter = query.Select(c => c.Id.ToString()).Where(c => queryFilter.Contains(c)).ToList();
+                queryFilter = queryFilter.Except(filter).ToArray();
+            }
+
+            return queryFilter.ToArray();
         }
 
         #endregion

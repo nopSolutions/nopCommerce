@@ -88,7 +88,7 @@ namespace Nop.Plugin.Shipping.UPS.track {
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://onlinetools.ups.com/webservices/TrackBinding/v2.0", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Bare)]
         [return: System.Xml.Serialization.XmlElementAttribute("TrackResponse", Namespace="http://www.ups.com/XMLSchema/XOLTWS/Track/v2.0")]
         public TrackResponse ProcessTrack([System.Xml.Serialization.XmlElementAttribute(Namespace="http://www.ups.com/XMLSchema/XOLTWS/Track/v2.0")] TrackRequest TrackRequest) {
-            object[] results = this.Invoke("ProcessTrack", new object[] {
+            var results = this.Invoke("ProcessTrack", new object[] {
                         TrackRequest});
             return ((TrackResponse)(results[0]));
         }
@@ -109,7 +109,7 @@ namespace Nop.Plugin.Shipping.UPS.track {
         
         private void OnProcessTrackOperationCompleted(object arg) {
             if ((this.ProcessTrackCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.ProcessTrackCompleted(this, new ProcessTrackCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -124,7 +124,7 @@ namespace Nop.Plugin.Shipping.UPS.track {
                         || (url == string.Empty))) {
                 return false;
             }
-            System.Uri wsUri = new System.Uri(url);
+            var wsUri = new System.Uri(url);
             if (((wsUri.Port >= 1024) 
                         && (string.Compare(wsUri.Host, "localHost", System.StringComparison.OrdinalIgnoreCase) == 0))) {
                 return true;

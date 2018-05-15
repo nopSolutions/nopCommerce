@@ -2,8 +2,14 @@ using Nop.Core.Domain.Shipping;
 
 namespace Nop.Data.Mapping.Shipping
 {
+    /// <summary>
+    /// Mapping class
+    /// </summary>
     public partial class ShipmentItemMap : NopEntityTypeConfiguration<ShipmentItem>
     {
+        /// <summary>
+        /// Ctor
+        /// </summary>
         public ShipmentItemMap()
         {
             this.ToTable("ShipmentItem");

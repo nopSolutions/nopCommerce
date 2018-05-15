@@ -1,0 +1,140 @@
+@model NewsSettingsModel
+
+@{
+    //page title
+    ViewBag.Title = T("Admin.Configuration.Settings.News").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("News settings");
+}
+
+
+<form asp-controller="Setting" asp-action="News" method="post">
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("Admin.Configuration.Settings.News")
+        </h1>
+        <div class="pull-right">
+            <button type="submit" name="save" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.Save")
+            </button>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.NewsSettingsButtons })
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="form-horizontal">
+            @await Component.InvokeAsync("StoreScopeConfiguration")
+            @await Component.InvokeAsync("SettingMode")
+            <div asp-validation-summary="All"></div>
+
+            <div class="panel-group">
+                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.NewsSettingsTop })
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        @T("Admin.Configuration.Settings.News.BlockTitle.Common")
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="Enabled_OverrideForStore" asp-input="Enabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="Enabled" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="Enabled" />
+                                <span asp-validation-for="Enabled"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="ShowNewsOnMainPage_OverrideForStore" asp-input="ShowNewsOnMainPage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="ShowNewsOnMainPage" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="ShowNewsOnMainPage" />
+                                <span asp-validation-for="ShowNewsOnMainPage"></span>
+                            </div>
+                        </div>
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="MainPageNewsCount_OverrideForStore" asp-input="MainPageNewsCount" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="MainPageNewsCount" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="MainPageNewsCount" />
+                                <span asp-validation-for="MainPageNewsCount"></span>
+                            </div>
+                        </div>
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="NewsArchivePageSize_OverrideForStore" asp-input="NewsArchivePageSize" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="NewsArchivePageSize" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="NewsArchivePageSize" />
+                                <span asp-validation-for="NewsArchivePageSize"></span>
+                            </div>
+                        </div>
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="ShowHeaderRssUrl_OverrideForStore" asp-input="ShowHeaderRssUrl" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="ShowHeaderRssUrl" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="ShowHeaderRssUrl" />
+                                <span asp-validation-for="ShowHeaderRssUrl"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        @T("Admin.Configuration.Settings.News.BlockTitle.NewsComments")
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="AllowNotRegisteredUsersToLeaveComments_OverrideForStore" asp-input="AllowNotRegisteredUsersToLeaveComments" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="AllowNotRegisteredUsersToLeaveComments" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="AllowNotRegisteredUsersToLeaveComments" />
+                                <span asp-validation-for="AllowNotRegisteredUsersToLeaveComments"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="NewsCommentsMustBeApproved_OverrideForStore" asp-input="NewsCommentsMustBeApproved" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="NewsCommentsMustBeApproved" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="NewsCommentsMustBeApproved" />
+                                <span asp-validation-for="NewsCommentsMustBeApproved"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="NotifyAboutNewNewsComments_OverrideForStore" asp-input="NotifyAboutNewNewsComments" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="NotifyAboutNewNewsComments" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="NotifyAboutNewNewsComments" />
+                                <span asp-validation-for="NotifyAboutNewNewsComments"></span>
+                            </div>
+                        </div>
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
+                                <nop-label asp-for="ShowNewsCommentsPerStore" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="ShowNewsCommentsPerStore" />
+                                <span asp-validation-for="ShowNewsCommentsPerStore"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.NewsSettingsBottom })
+            </div>
+        </div>
+    </div>
+</form>

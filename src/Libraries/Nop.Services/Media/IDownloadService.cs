@@ -54,6 +54,5 @@ namespace Nop.Services.Media
         /// <param name="orderItem">Order item to check</param>
         /// <returns>True if license download is allowed; otherwise, false.</returns>
         bool IsLicenseDownloadAllowed(OrderItem orderItem);
-
     }
 }

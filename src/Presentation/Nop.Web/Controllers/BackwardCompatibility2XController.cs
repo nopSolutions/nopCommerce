@@ -1,4 +1,4 @@
-﻿using System.Web.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Services.Blogs;
 using Nop.Services.Catalog;
 using Nop.Services.News;
@@ -22,7 +22,7 @@ namespace Nop.Web.Controllers
 
         #endregion
 
-		#region Constructors
+		#region Ctor
 
         public BackwardCompatibility2XController(IProductService productService,
             ICategoryService categoryService, 
@@ -46,7 +46,7 @@ namespace Nop.Web.Controllers
         #region Methods
         
         //in versions 2.00-2.65 we had ID in product URLs
-        public ActionResult RedirectProductById(int productId)
+        public virtual IActionResult RedirectProductById(int productId)
         {
             var product = _productService.GetProductById(productId);
             if (product == null)
@@ -54,8 +54,9 @@ namespace Nop.Web.Controllers
 
             return RedirectToRoutePermanent("Product", new { SeName = product.GetSeName() });
         }
+
         //in versions 2.00-2.65 we had ID in category URLs
-        public ActionResult RedirectCategoryById(int categoryId)
+        public virtual IActionResult RedirectCategoryById(int categoryId)
         {
             var category = _categoryService.GetCategoryById(categoryId);
             if (category == null)
@@ -63,8 +64,9 @@ namespace Nop.Web.Controllers
 
             return RedirectToRoutePermanent("Category", new { SeName = category.GetSeName() });
         }
+
         //in versions 2.00-2.65 we had ID in manufacturer URLs
-        public ActionResult RedirectManufacturerById(int manufacturerId)
+        public virtual IActionResult RedirectManufacturerById(int manufacturerId)
         {
             var manufacturer = _manufacturerService.GetManufacturerById(manufacturerId);
             if (manufacturer == null)
@@ -72,8 +74,9 @@ namespace Nop.Web.Controllers
 
             return RedirectToRoutePermanent("Manufacturer", new { SeName = manufacturer.GetSeName() });
         }
+
         //in versions 2.00-2.70 we had ID in news URLs
-        public ActionResult RedirectNewsItemById(int newsItemId)
+        public virtual IActionResult RedirectNewsItemById(int newsItemId)
         {
             var newsItem = _newsService.GetNewsById(newsItemId);
             if (newsItem == null)
@@ -81,8 +84,9 @@ namespace Nop.Web.Controllers
 
             return RedirectToRoutePermanent("NewsItem", new { SeName = newsItem.GetSeName(newsItem.LanguageId, ensureTwoPublishedLanguages: false) });
         }
+
         //in versions 2.00-2.70 we had ID in blog URLs
-        public ActionResult RedirectBlogPostById(int blogPostId)
+        public virtual IActionResult RedirectBlogPostById(int blogPostId)
         {
             var blogPost = _blogService.GetBlogPostById(blogPostId);
             if (blogPost == null)
@@ -90,8 +94,9 @@ namespace Nop.Web.Controllers
 
             return RedirectToRoutePermanent("BlogPost", new { SeName = blogPost.GetSeName(blogPost.LanguageId, ensureTwoPublishedLanguages: false) });
         }
+
         //in versions 2.00-3.20 we had SystemName in topic URLs
-        public ActionResult RedirectTopicBySystemName(string systemName)
+        public virtual IActionResult RedirectTopicBySystemName(string systemName)
         {
             var topic = _topicService.GetTopicBySystemName(systemName);
             if (topic == null)
@@ -99,8 +104,9 @@ namespace Nop.Web.Controllers
 
             return RedirectToRoutePermanent("Topic", new { SeName = topic.GetSeName() });
         }
+
         //in versions 3.00-3.20 we had ID in vendor URLs
-        public ActionResult RedirectVendorById(int vendorId)
+        public virtual IActionResult RedirectVendorById(int vendorId)
         {
             var vendor = _vendorService.GetVendorById(vendorId);
             if (vendor == null)
@@ -108,6 +114,7 @@ namespace Nop.Web.Controllers
 
             return RedirectToRoutePermanent("Vendor", new { SeName = vendor.GetSeName() });
         }
+
         #endregion
     }
 }

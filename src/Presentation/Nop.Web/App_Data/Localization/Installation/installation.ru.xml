@@ -47,6 +47,9 @@
   <LocaleResource Name="DatabaseCreationError">
     <Value>Ошибка при создании базы данных: {0}</Value>
   </LocaleResource>
+  <LocaleResource Name="Database">
+    <Value>База данных</Value>
+  </LocaleResource>
   <LocaleResource Name="DatabaseInformation">
     <Value>Информация о базе данных</Value>
   </LocaleResource>
@@ -135,7 +138,8 @@
     <Value>Для того, что успешно установить nopCommerce, вам необходимо знать строку подключения к вашей базе данных. Если у вас нет этой информации, то вы можете узнать ее у вашего хостинг-провайдера. Если же вы устанавливаете nopCommerce на локальный компьютер, то вы можете узнать её у вашего системного администратора.</Value>
   </LocaleResource>
   <LocaleResource Name="WindowsAuthentication">
-    <Value>Проверка подлинности Windows
+    <Value>
+      Проверка подлинности Windows
     </Value>
   </LocaleResource>
 </Language>

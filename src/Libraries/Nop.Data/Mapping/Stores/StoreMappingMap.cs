@@ -2,8 +2,14 @@ using Nop.Core.Domain.Stores;
 
 namespace Nop.Data.Mapping.Stores
 {
+    /// <summary>
+    /// Mapping class
+    /// </summary>
     public partial class StoreMappingMap : NopEntityTypeConfiguration<StoreMapping>
     {
+        /// <summary>
+        /// Ctor
+        /// </summary>
         public StoreMappingMap()
         {
             this.ToTable("StoreMapping");

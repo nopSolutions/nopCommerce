@@ -1,10 +1,10 @@
 ﻿nopCommerce
 ===========
-nopCommerce is the best open-source e-commerce shopping cart. nopCommerce is available for free. Today it's the best and most popular ASP.NET ecommerce software. It has been downloaded more than 1.5 million times!
+nopCommerce is the best open-source e-commerce shopping cart. nopCommerce is available for free. Today it's the best and most popular ASP.NET ecommerce software. It has been downloaded more than 1.8 million times!
 
 nopCommerce is a fully customizable shopping cart. It's stable and highly usable. nopCommerce is an open source ecommerce solution that is **ASP.NET (MVC)** based with a MS SQL 2008 (or higher) backend database. Our easy-to-use shopping cart solution is uniquely suited for merchants that have outgrown existing systems, and may be hosted with your current web host or our hosting partners. It has everything you need to get started in selling physical and digital goods over the internet.
 
-![nopCommerce demo](http://www.nopcommerce.com/images/features/responsive_devices_codeplex.jpg)
+![nopCommerce demo](https://www.nopcommerce.com/images/features/responsive_devices_codeplex.jpg)
 
 nopCommerce can be up-and-running in just a few minutes. Simply download the software, and follow the simple installation instructions. nopCommerce is developed to take full advantage of the latest technologies available. With its pluggable architecture, additional functionality and presentation elements can be dynamically added to the application at runtime.
 
@@ -15,24 +15,30 @@ nopCommerce offers unprecedented flexibility and control. Since it is open-sourc
 
 ## nopCommerce resources: ##
 
-nopCommerce Site: [http://www.nopcommerce.com](http://www.nopcommerce.com)
+nopCommerce official site: [https://www.nopcommerce.com](https://www.nopcommerce.com)
 
-nopCommerce demo store: [http://www.nopCommerce.com/demo.aspx](http://www.nopCommerce.com/demo.aspx)
+nopCommerce demo store: [https://www.nopCommerce.com/demo.aspx](https://www.nopCommerce.com/demo.aspx)
 
-Complete feature list: [http://www.nopcommerce.com/featurelist.aspx](http://www.nopcommerce.com/featurelist.aspx)
+Feature list: [https://www.nopcommerce.com/featurelist.aspx](https://www.nopcommerce.com/featurelist.aspx)
 
-Technology & System Requirements: [http://www.nopcommerce.com/technologysystemrequirements.aspx](http://www.nopcommerce.com/technologysystemrequirements.aspx)
+Technology & system Requirements: [http://docs.nopcommerce.com/pages/viewpage.action?pageId=10256757](http://docs.nopcommerce.com/pages/viewpage.action?pageId=10256757)
 
-Documentation: [http://www.nopcommerce.com/documentation.asp](http://www.nopcommerce.com/documentation.aspx)
+Documentation: [http://docs.nopcommerce.com/](http://docs.nopcommerce.com/)
 
-Forums: [http://www.nopcommerce.com/boards/](http://www.nopcommerce.com/boards/)
+Forums: [https://www.nopcommerce.com/boards/](https://www.nopcommerce.com/boards/)
+
+Gitter.im chat room: [https://gitter.im/nopCommerce-official/Lobby](https://gitter.im/nopCommerce-official/Lobby)
 
 ## Store demo: ##
 
 Browse our shopping cart demo store to get a feel for nopCommerce shopping cart. Browse through the store from the customer's perspective and place an order. You won't be billed for or receive any products – the demo store examples are there only to show the extensive functionality of the shopping cart. Get a better feel for it by going through the admin panel and make changes.
 
-##### Front End:
-[![ScreenShot](http://www.nopcommerce.com/images/demo/demo3.png)](http://demo.nopcommerce.com/)
 
-##### Admin area: 
-[![ScreenShot](http://www.nopcommerce.com/images/demo/demo4.png)](http://admin-demo.nopcommerce.com/)
+Front End | Admin area
+----|------
+[![ScreenShot](https://www.nopcommerce.com/images/demo/demo3.png)](https://demo.nopcommerce.com/) | [![ScreenShot](https://www.nopcommerce.com/images/demo/admindemo_500.png)](https://admin-demo.nopcommerce.com/)
+
+
+## Survey for developers and product managers: ##
+
+We want to make sure our users get what they need from the platform. That is why we prepared a short survey to know you better. Your opinion really matters and we hope you can participate to give us food for thought for making nopCommerce even better! [Participate](https://www.surveymonkey.com/r/CDMQYHY)

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 
 namespace Nop.Services.Payments
@@ -8,14 +9,16 @@ namespace Nop.Services.Payments
     /// </summary>
     public partial interface IPaymentService
     {
+        #region Payment methods
+
         /// <summary>
         /// Load active payment methods
         /// </summary>
-        /// <param name="filterByCustomerId">Filter payment methods by customer; null to load all records</param>
+        /// <param name="customer">Load records allowed only to a specified customer; pass null to ignore ACL permissions</param>
         /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
         /// <param name="filterByCountryId">Load records allowed only in a specified country; pass 0 to load all records</param>
         /// <returns>Payment methods</returns>
-        IList<IPaymentMethod> LoadActivePaymentMethods(int? filterByCustomerId = null, int storeId = 0, int filterByCountryId = 0);
+        IList<IPaymentMethod> LoadActivePaymentMethods(Customer customer = null, int storeId = 0, int filterByCountryId = 0);
 
         /// <summary>
         /// Load payment provider by system name
@@ -27,25 +30,33 @@ namespace Nop.Services.Payments
         /// <summary>
         /// Load all payment providers
         /// </summary>
+        /// <param name="customer">Load records allowed only to a specified customer; pass null to ignore ACL permissions</param>
         /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
         /// <param name="filterByCountryId">Load records allowed only in a specified country; pass 0 to load all records</param>
         /// <returns>Payment providers</returns>
-        IList<IPaymentMethod> LoadAllPaymentMethods(int storeId = 0, int filterByCountryId = 0);
+        IList<IPaymentMethod> LoadAllPaymentMethods(Customer customer = null, int storeId = 0, int filterByCountryId = 0);
+
+        #endregion
+
+        #region Restrictions
 
         /// <summary>
-        /// Gets a list of coutnry identifiers in which a certain payment method is now allowed
+        /// Gets a list of country identifiers in which a certain payment method is now allowed
         /// </summary>
         /// <param name="paymentMethod">Payment method</param>
         /// <returns>A list of country identifiers</returns>
         IList<int> GetRestictedCountryIds(IPaymentMethod paymentMethod);
 
         /// <summary>
-        /// Saves a list of coutnry identifiers in which a certain payment method is now allowed
+        /// Saves a list of country identifiers in which a certain payment method is now allowed
         /// </summary>
         /// <param name="paymentMethod">Payment method</param>
         /// <param name="countryIds">A list of country identifiers</param>
         void SaveRestictedCountryIds(IPaymentMethod paymentMethod, List<int> countryIds);
 
+        #endregion
+
+        #region Processing
 
         /// <summary>
         /// Process a payment
@@ -67,16 +78,13 @@ namespace Nop.Services.Payments
         /// <returns>Result</returns>
         bool CanRePostProcessPayment(Order order);
 
-
         /// <summary>
         /// Gets an additional handling fee of a payment method
         /// </summary>
-        /// <param name="cart">Shoping cart</param>
+        /// <param name="cart">Shopping cart</param>
         /// <param name="paymentMethodSystemName">Payment method system name</param>
         /// <returns>Additional handling fee</returns>
         decimal GetAdditionalHandlingFee(IList<ShoppingCartItem> cart, string paymentMethodSystemName);
-
-
 
         /// <summary>
         /// Gets a value indicating whether capture is supported by payment method
@@ -91,8 +99,6 @@ namespace Nop.Services.Payments
         /// <param name="capturePaymentRequest">Capture payment request</param>
         /// <returns>Capture payment result</returns>
         CapturePaymentResult Capture(CapturePaymentRequest capturePaymentRequest);
-
-
 
         /// <summary>
         /// Gets a value indicating whether partial refund is supported by payment method
@@ -115,8 +121,6 @@ namespace Nop.Services.Payments
         /// <returns>Result</returns>
         RefundPaymentResult Refund(RefundPaymentRequest refundPaymentRequest);
 
-
-
         /// <summary>
         /// Gets a value indicating whether void is supported by payment method
         /// </summary>
@@ -130,8 +134,6 @@ namespace Nop.Services.Payments
         /// <param name="voidPaymentRequest">Request</param>
         /// <returns>Result</returns>
         VoidPaymentResult Void(VoidPaymentRequest voidPaymentRequest);
-
-
 
         /// <summary>
         /// Gets a recurring payment type of payment method
@@ -154,13 +156,13 @@ namespace Nop.Services.Payments
         /// <returns>Result</returns>
         CancelRecurringPaymentResult CancelRecurringPayment(CancelRecurringPaymentRequest cancelPaymentRequest);
 
-
         /// <summary>
         /// Gets masked credit card number
         /// </summary>
         /// <param name="creditCardNumber">Credit card number</param>
         /// <returns>Masked credit card number</returns>
         string GetMaskedCreditCardNumber(string creditCardNumber);
-        
+
+        #endregion
     }
 }

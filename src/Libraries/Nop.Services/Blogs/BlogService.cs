@@ -27,6 +27,14 @@ namespace Nop.Services.Blogs
 
         #region Ctor
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="blogPostRepository">Blog post repository</param>
+        /// <param name="blogCommentRepository">Blog comment repository</param>
+        /// <param name="storeMappingRepository">Store mapping repository</param>
+        /// <param name="catalogSettings">Catalog settings</param>
+        /// <param name="eventPublisher">Event publisher</param>
         public BlogService(IRepository<BlogPost> blogPostRepository,
             IRepository<BlogComment> blogCommentRepository,
             IRepository<StoreMapping> storeMappingRepository,
@@ -44,6 +52,8 @@ namespace Nop.Services.Blogs
 
         #region Methods
 
+        #region Blog posts
+
         /// <summary>
         /// Deletes a blog post
         /// </summary>
@@ -51,7 +61,7 @@ namespace Nop.Services.Blogs
         public virtual void DeleteBlogPost(BlogPost blogPost)
         {
             if (blogPost == null)
-                throw new ArgumentNullException("blogPost");
+                throw new ArgumentNullException(nameof(blogPost));
 
             _blogPostRepository.Delete(blogPost);
 
@@ -80,7 +90,7 @@ namespace Nop.Services.Blogs
         public virtual IList<BlogPost> GetBlogPostsByIds(int[] blogPostIds)
         {
             var query = _blogPostRepository.Table;
-            return query.Where(p => blogPostIds.Contains(p.Id)).ToList();
+            return query.Where(bp => blogPostIds.Contains(bp.Id)).ToList();
         }
 
         /// <summary>
@@ -107,6 +117,8 @@ namespace Nop.Services.Blogs
                 query = query.Where(b => languageId == b.LanguageId);
             if (!showHidden)
             {
+                //The function 'CurrentUtcDateTime' is not supported by SQL Server Compact. 
+                //That's why we pass the date value
                 var utcNow = DateTime.UtcNow;
                 query = query.Where(b => !b.StartDateUtc.HasValue || b.StartDateUtc <= utcNow);
                 query = query.Where(b => !b.EndDateUtc.HasValue || b.EndDateUtc >= utcNow);
@@ -140,7 +152,7 @@ namespace Nop.Services.Blogs
         /// Gets all blog posts
         /// </summary>
         /// <param name="storeId">The store identifier; pass 0 to load all records</param>
-        /// <param name="languageId">Language identifier. 0 if you want to get all news</param>
+        /// <param name="languageId">Language identifier. 0 if you want to get all blog posts</param>
         /// <param name="tag">Tag</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
@@ -158,7 +170,7 @@ namespace Nop.Services.Blogs
             foreach (var blogPost in blogPostsAll)
             {
                 var tags = blogPost.ParseTags();
-                if (!String.IsNullOrEmpty(tags.FirstOrDefault(t => t.Equals(tag, StringComparison.InvariantCultureIgnoreCase))))
+                if (!string.IsNullOrEmpty(tags.FirstOrDefault(t => t.Equals(tag, StringComparison.InvariantCultureIgnoreCase))))
                     taggedBlogPosts.Add(blogPost);
             }
 
@@ -171,7 +183,7 @@ namespace Nop.Services.Blogs
         /// Gets all blog post tags
         /// </summary>
         /// <param name="storeId">The store identifier; pass 0 to load all records</param>
-        /// <param name="languageId">Language identifier. 0 if you want to get all news</param>
+        /// <param name="languageId">Language identifier. 0 if you want to get all blog posts</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Blog post tags</returns>
         public virtual IList<BlogPostTag> GetAllBlogPostTags(int storeId, int languageId, bool showHidden = false)
@@ -182,7 +194,7 @@ namespace Nop.Services.Blogs
             foreach (var blogPost in blogPosts)
             {
                 var tags = blogPost.ParseTags();
-                foreach (string tag in tags)
+                foreach (var tag in tags)
                 {
                     var foundBlogPostTag = blogPostTags.Find(bpt => bpt.Name.Equals(tag, StringComparison.InvariantCultureIgnoreCase));
                     if (foundBlogPostTag == null)
@@ -209,7 +221,7 @@ namespace Nop.Services.Blogs
         public virtual void InsertBlogPost(BlogPost blogPost)
         {
             if (blogPost == null)
-                throw new ArgumentNullException("blogPost");
+                throw new ArgumentNullException(nameof(blogPost));
 
             _blogPostRepository.Insert(blogPost);
 
@@ -224,27 +236,58 @@ namespace Nop.Services.Blogs
         public virtual void UpdateBlogPost(BlogPost blogPost)
         {
             if (blogPost == null)
-                throw new ArgumentNullException("blogPost");
+                throw new ArgumentNullException(nameof(blogPost));
 
             _blogPostRepository.Update(blogPost);
 
             //event notification
             _eventPublisher.EntityUpdated(blogPost);
         }
-        
+
+        #endregion
+
+        #region Blog comments
+
         /// <summary>
         /// Gets all comments
         /// </summary>
         /// <param name="customerId">Customer identifier; 0 to load all records</param>
+        /// <param name="storeId">Store identifier; pass 0 to load all records</param>
+        /// <param name="blogPostId">Blog post ID; 0 or null to load all records</param>
+        /// <param name="approved">A value indicating whether to content is approved; null to load all records</param> 
+        /// <param name="fromUtc">Item creation from; null to load all records</param>
+        /// <param name="toUtc">Item creation to; null to load all records</param>
+        /// <param name="commentText">Search comment text; null to load all records</param>
         /// <returns>Comments</returns>
-        public virtual IList<BlogComment> GetAllComments(int customerId)
+        public virtual IList<BlogComment> GetAllComments(int customerId = 0, int storeId = 0, int? blogPostId = null,
+            bool? approved = null, DateTime? fromUtc = null, DateTime? toUtc = null, string commentText = null)
         {
-            var query = from c in _blogCommentRepository.Table
-                        orderby c.CreatedOnUtc
-                        where (customerId == 0 || c.CustomerId == customerId)
-                        select c;
-            var content = query.ToList();
-            return content;
+            var query = _blogCommentRepository.Table;
+
+            if (approved.HasValue)
+                query = query.Where(comment => comment.IsApproved == approved);
+
+            if (blogPostId > 0)
+                query = query.Where(comment => comment.BlogPostId == blogPostId);
+
+            if (customerId > 0)
+                query = query.Where(comment => comment.CustomerId == customerId);
+
+            if (storeId > 0)
+                query = query.Where(comment => comment.StoreId == storeId);
+
+            if (fromUtc.HasValue)
+                query = query.Where(comment => fromUtc.Value <= comment.CreatedOnUtc);
+
+            if (toUtc.HasValue)
+                query = query.Where(comment => toUtc.Value >= comment.CreatedOnUtc);
+
+            if (!string.IsNullOrEmpty(commentText))
+                query = query.Where(c => c.CommentText.Contains(commentText));
+
+            query = query.OrderBy(comment => comment.CreatedOnUtc);
+
+            return query.ToList();
         }
 
         /// <summary>
@@ -276,7 +319,7 @@ namespace Nop.Services.Blogs
             var comments = query.ToList();
             //sort by passed identifiers
             var sortedComments = new List<BlogComment>();
-            foreach (int id in commentIds)
+            foreach (var id in commentIds)
             {
                 var comment = comments.Find(x => x.Id == id);
                 if (comment != null)
@@ -286,15 +329,38 @@ namespace Nop.Services.Blogs
         }
 
         /// <summary>
+        /// Get the count of blog comments
+        /// </summary>
+        /// <param name="blogPost">Blog post</param>
+        /// <param name="storeId">Store identifier; pass 0 to load all records</param>
+        /// <param name="isApproved">A value indicating whether to count only approved or not approved comments; pass null to get number of all comments</param>
+        /// <returns>Number of blog comments</returns>
+        public virtual int GetBlogCommentsCount(BlogPost blogPost, int storeId = 0, bool? isApproved = null)
+        {
+            var query = _blogCommentRepository.Table.Where(comment => comment.BlogPostId == blogPost.Id);
+
+            if (storeId > 0)
+                query = query.Where(comment => comment.StoreId == storeId);
+
+            if (isApproved.HasValue)
+                query = query.Where(comment => comment.IsApproved == isApproved.Value);
+
+            return query.Count();
+        }
+
+        /// <summary>
         /// Deletes a blog comment
         /// </summary>
         /// <param name="blogComment">Blog comment</param>
         public virtual void DeleteBlogComment(BlogComment blogComment)
         {
             if (blogComment == null)
-                throw new ArgumentNullException("blogComment");
+                throw new ArgumentNullException(nameof(blogComment));
 
             _blogCommentRepository.Delete(blogComment);
+
+            //event notification
+            _eventPublisher.EntityDeleted(blogComment);
         }
 
         /// <summary>
@@ -304,10 +370,15 @@ namespace Nop.Services.Blogs
         public virtual void DeleteBlogComments(IList<BlogComment> blogComments)
         {
             if (blogComments == null)
-                throw new ArgumentNullException("blogComments");
+                throw new ArgumentNullException(nameof(blogComments));
 
-            _blogCommentRepository.Delete(blogComments);
+            foreach (var blogComment in blogComments)
+            {
+                DeleteBlogComment(blogComment);
+            }
         }
+
+        #endregion
 
         #endregion
     }

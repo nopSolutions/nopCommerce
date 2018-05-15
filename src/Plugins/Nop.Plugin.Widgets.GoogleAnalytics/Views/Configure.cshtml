@@ -1,0 +1,137 @@
+﻿@model Nop.Plugin.Widgets.GoogleAnalytics.Models.ConfigurationModel
+@{
+    Layout = "_ConfigurePlugin";
+}
+
+@await Component.InvokeAsync("StoreScopeConfiguration")
+
+@{
+    //default values
+    var googleAnalytics_trackingScript = Html.Raw(JavaScriptEncoder.Default.Encode("<!-- Google code for Analytics tracking -->" + "\r\n" +
+        "<script>" + "\r\n" +
+        "var _gaq = _gaq || [];" + "\r\n" +
+        "_gaq.push(['_setAccount', '{GOOGLEID}']);" + "\r\n" +
+        "{CustomerID}" +
+        "_gaq.push(['_trackPageview']);" + "\r\n" +
+        "(function() {" + "\r\n" +
+        "var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;" + "\r\n" +
+        "ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';" + "\r\n" +
+        "var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);" + "\r\n" +
+        "})();" + "\r\n" +
+        "</script>"));
+    
+
+    var universalAnalytics_trackingScript = Html.Raw(JavaScriptEncoder.Default.Encode("<!-- Google code for Analytics tracking -->" + "\r\n" +
+        "<script>" + "\r\n" +
+        "(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){" + "\r\n" +
+        "(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o)," + "\r\n" +
+        "m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)" + "\r\n" +
+        "})(window,document,'script','//www.google-analytics.com/analytics.js','ga');" + "\r\n" +
+        "ga('create', '{GOOGLEID}', 'auto');" + "\r\n" +
+        "{CustomerID}" +
+        "ga('send', 'pageview');" + "\r\n" +
+        "</script>"));
+}
+
+<form asp-controller="WidgetsGoogleAnalytics" asp-action="Configure" method="post">
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                @T("Plugins.Widgets.GoogleAnalytics.Instructions")              
+            </div>
+            <div class="panel-footer">
+                <input type="button" id="pre-configure-google-analytics" class="btn btn-primary" value="Pre-configure Google Analytics" />
+                <input type="button" id="pre-configure-universal-analytics" class="btn bg-aqua" value="Pre-configure Universal Analytics" />
+
+                <script>
+                    $(document).ready(function () {
+
+                        $("#pre-configure-google-analytics").click(preConfigureGoogleAnalytic);
+                        $("#pre-configure-universal-analytics").click(preConfigureUniversalAnalytic);
+                    });
+
+                    function preConfigureGoogleAnalytic() {
+                        $('#@Html.IdFor(model => model.TrackingScript)').val('@googleAnalytics_trackingScript');
+                    }
+
+                    function preConfigureUniversalAnalytic() {
+                        $('#@Html.IdFor(model => model.TrackingScript)').val('@universalAnalytics_trackingScript');
+                    }
+
+                </script>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                @T("Plugins.Widgets.GoogleAnalytics.Note")
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="GoogleId_OverrideForStore" asp-input="GoogleId" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="GoogleId" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="GoogleId" />
+                        <span asp-validation-for="GoogleId"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="TrackingScript_OverrideForStore" asp-input="TrackingScript" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="TrackingScript" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-textarea asp-for="TrackingScript" />
+                        <span asp-validation-for="TrackingScript"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="EnableEcommerce_OverrideForStore" asp-input="EnableEcommerce" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="EnableEcommerce" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="EnableEcommerce" />
+                        <span asp-validation-for="EnableEcommerce"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="IncludeCustomerId_OverrideForStore" asp-input="IncludeCustomerId" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="IncludeCustomerId" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="IncludeCustomerId" />
+                        <span asp-validation-for="IncludeCustomerId"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="IncludingTax_OverrideForStore" asp-input="IncludingTax" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="IncludingTax" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="IncludingTax" />
+                        <span asp-validation-for="IncludingTax"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="ZoneId" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-select asp-for="ZoneId" asp-items="Model.AvailableZones" />
+                        <span asp-validation-for="ZoneId"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        &nbsp;
+                    </div>
+                    <div class="col-md-9">
+                        <input type="submit" name="save" class="btn bg-blue" value="@T("Admin.Common.Save")" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

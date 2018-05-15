@@ -1,14 +1,16 @@
 ﻿@model CustomerDownloadableProductsModel
-@using Nop.Web.Models.Customer;
 @{
-    Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
+    Layout = "_ColumnsTwo";
 
     //title
     Html.AddTitleParts(T("PageTitle.Account").Text);
+    //page class
+    Html.AppendPageCssClassParts("html-account-page");
+    Html.AppendPageCssClassParts("html-downloadable-products-page");
 }
 @section left
 {
-    @Html.Action("CustomerNavigation", "Customer", new { selectedTabId = CustomerNavigationEnum.DownloadableProducts })
+    @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.DownloadableProducts })
 }
 <div class="page account-page downloadable-products-page">
     <div class="page-title">
@@ -42,19 +44,19 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @for (int i = 0; i < Model.Items.Count; i++)
+                        @for (var i = 0; i < Model.Items.Count; i++)
                         {
                             var item = Model.Items[i];
                             <tr @(i % 2 == 0 ? Html.Raw(" class=\"odd\"") : Html.Raw(" class=\"even\""))>
                                 <td class="order">
-                                    <a href="@Url.RouteUrl("OrderDetails", new { orderId = item.OrderId })">@item.OrderId</a>
+                                    <a href="@Url.RouteUrl("OrderDetails", new { orderId = item.OrderId })">@item.CustomOrderNumber</a>
                                 </td>
                                 <td class="date">
                                     @item.CreatedOn.ToString("d")
                                 </td>
                                 <td class="product">
                                     <a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })">@item.ProductName</a>
-                                    @if (!String.IsNullOrEmpty(item.ProductAttributes))
+                                    @if (!string.IsNullOrEmpty(item.ProductAttributes))
                                     {
                                         <div class="attributes">
                                             @Html.Raw(item.ProductAttributes)

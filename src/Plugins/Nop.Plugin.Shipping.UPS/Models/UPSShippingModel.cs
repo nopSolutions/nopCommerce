@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
-using System.Web.Mvc;
-using Nop.Web.Framework;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Nop.Web.Framework.Mvc.ModelBinding;
+using Nop.Web.Framework.Models;
 
 namespace Nop.Plugin.Shipping.UPS.Models
 {
-    public class UPSShippingModel
+    public class UPSShippingModel : BaseNopModel
     {
         public UPSShippingModel()
         {
@@ -16,6 +17,9 @@ namespace Nop.Plugin.Shipping.UPS.Models
         }
         [NopResourceDisplayName("Plugins.Shipping.UPS.Fields.Url")]
         public string Url { get; set; }
+
+        [NopResourceDisplayName("Plugins.Shipping.UPS.Fields.AccountNumber")]
+        public string AccountNumber { get; set; }
 
         [NopResourceDisplayName("Plugins.Shipping.UPS.Fields.AccessKey")]
         public string AccessKey { get; set; }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Nop.Core.Domain.Payments;
 
 namespace Nop.Services.Payments
@@ -23,7 +24,7 @@ namespace Nop.Services.Payments
         /// </summary>
         public bool Success
         {
-            get { return (this.Errors.Count == 0); }
+            get { return (!Errors.Any()); }
         }
 
         /// <summary>
@@ -32,7 +33,7 @@ namespace Nop.Services.Payments
         /// <param name="error">Error</param>
         public void AddError(string error) 
         {
-            this.Errors.Add(error);
+            Errors.Add(error);
         }
 
         /// <summary>

@@ -34,9 +34,19 @@ namespace Nop.Core.Domain.Shipping
         public string Description { get; set; }
     }
 
-
+    /// <summary>
+    /// Type converted for ShippingOption
+    /// </summary>
     public class ShippingOptionTypeConverter : TypeConverter
     {
+        /// <summary>
+        /// Gets a value indicating whether this converter can        
+        /// convert an object in the given source type to the native type of the converter
+        /// using the context.
+        /// </summary>
+        /// <param name="context">Context</param>
+        /// <param name="sourceType">Source type</param>
+        /// <returns>Result</returns>
         public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
         {
             if (sourceType == typeof(string))
@@ -47,13 +57,20 @@ namespace Nop.Core.Domain.Shipping
             return base.CanConvertFrom(context, sourceType);
         }
 
+        /// <summary>
+        /// Converts the given value object to the specified destination type using the specified context and arguments
+        /// </summary>
+        /// <param name="context">Context</param>
+        /// <param name="culture">Culture</param>
+        /// <param name="value">Value</param>
+        /// <returns>Result</returns>
         public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
         {
             if (value is string)
             {
                 ShippingOption shippingOption = null;
                 var valueStr = value as string;
-                if (!String.IsNullOrEmpty(valueStr))
+                if (!string.IsNullOrEmpty(valueStr))
                 {
                     try
                     {
@@ -65,7 +82,7 @@ namespace Nop.Core.Domain.Shipping
                     }
                     catch
                     {
-                        //xml error
+                        //XML error
                     }
                 }
                 return shippingOption;
@@ -73,6 +90,14 @@ namespace Nop.Core.Domain.Shipping
             return base.ConvertFrom(context, culture, value);
         }
 
+        /// <summary>
+        /// Convert to
+        /// </summary>
+        /// <param name="context">Context</param>
+        /// <param name="culture">Culture</param>
+        /// <param name="value">Value</param>
+        /// <param name="destinationType">Destination type</param>
+        /// <returns>Result</returns>
         public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
         {
             if (destinationType == typeof(string))
@@ -85,7 +110,7 @@ namespace Nop.Core.Domain.Shipping
                     {
                         var xmlS = new XmlSerializer(typeof(ShippingOption));
                         xmlS.Serialize(tw, value);
-                        string serialized = sb.ToString();
+                        var serialized = sb.ToString();
                         return serialized;
                     }
                 }
@@ -97,9 +122,19 @@ namespace Nop.Core.Domain.Shipping
         }
     }
 
-
+    /// <summary>
+    /// Type converter of list of ShippingOption
+    /// </summary>
     public class ShippingOptionListTypeConverter : TypeConverter
     {
+        /// <summary>
+        /// Gets a value indicating whether this converter can        
+        /// convert an object in the given source type to the native type of the converter
+        /// using the context.
+        /// </summary>
+        /// <param name="context">Context</param>
+        /// <param name="sourceType">Source type</param>
+        /// <returns>Result</returns>
         public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
         {
             if (sourceType == typeof(string))
@@ -110,13 +145,20 @@ namespace Nop.Core.Domain.Shipping
             return base.CanConvertFrom(context, sourceType);
         }
 
+        /// <summary>
+        /// Converts the given object to the converter's native type.
+        /// </summary>
+        /// <param name="context">Context</param>
+        /// <param name="culture">Culture</param>
+        /// <param name="value">Value</param>
+        /// <returns>Result</returns>
         public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
         {
             if (value is string)
             {
                 List<ShippingOption> shippingOptions = null;
                 var valueStr = value as string;
-                if (!String.IsNullOrEmpty(valueStr))
+                if (!string.IsNullOrEmpty(valueStr))
                 {
                     try
                     {
@@ -128,7 +170,7 @@ namespace Nop.Core.Domain.Shipping
                     }
                     catch
                     {
-                        //xml error
+                        //XML error
                     }
                 }
                 return shippingOptions;
@@ -136,6 +178,14 @@ namespace Nop.Core.Domain.Shipping
             return base.ConvertFrom(context, culture, value);
         }
 
+        /// <summary>
+        /// Converts the given value object to the specified destination type using the specified context and arguments
+        /// </summary>
+        /// <param name="context">Context</param>
+        /// <param name="culture">Culture</param>
+        /// <param name="value">Value</param>
+        /// <param name="destinationType">Destination type</param>
+        /// <returns>Result</returns>
         public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
         {
             if (destinationType == typeof(string))
@@ -148,7 +198,7 @@ namespace Nop.Core.Domain.Shipping
                     {
                         var xmlS = new XmlSerializer(typeof(List<ShippingOption>));
                         xmlS.Serialize(tw, value);
-                        string serialized = sb.ToString();
+                        var serialized = sb.ToString();
                         return serialized;
                     }
                 }

@@ -1,0 +1,88 @@
+﻿@model CustomerAttributeSearchModel
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        @T("Admin.Customers.CustomerAttributes")
+    </div>
+    <div class="panel-body">
+        <p>
+            <em>@T("Admin.Customers.CustomerAttributes.Description")</em>
+        </p>
+        <div id="customerattributes-grid"></div>
+
+        <script>
+                $(document).ready(function () {
+                    $("#customerattributes-grid").kendoGrid({
+                        dataSource: {
+                            type: "json",
+                            transport: {
+                                read: {
+                                    url: "@Html.Raw(Url.Action("List", "CustomerAttribute"))",
+                                    type: "POST",
+                                    dataType: "json",
+                                    data: addAntiForgeryToken
+                                }
+                            },
+                            schema: {
+                                data: "Data",
+                                total: "Total",
+                                errors: "Errors"
+                            },
+                            error: function(e) {
+                                display_kendoui_grid_error(e);
+                                // Cancel the changes
+                                this.cancelChanges();
+                            },
+                            pageSize: @(Model.PageSize),
+                            serverPaging: true,
+                            serverFiltering: true,
+                            serverSorting: true
+                        },
+                        pageable: {
+                            refresh: true,
+                            pageSizes: [@(Model.AvailablePageSizes)],
+                            @await Html.PartialAsync("_GridPagerMessages")
+                        },
+                        editable: {
+                            confirmation: "@T("Admin.Common.DeleteConfirmation")",
+                            mode: "inline"
+                        },
+                        scrollable: false,
+                        columns: [{
+                            field: "Name",
+                            title: "@T("Admin.Customers.CustomerAttributes.Fields.Name")",
+                            width: 300
+                        }, {
+                            field: "AttributeControlTypeName",
+                            title: "@T("Admin.Customers.CustomerAttributes.Fields.AttributeControlType")",
+                            width: 200
+                        },{
+                            field: "IsRequired",
+                            title: "@T("Admin.Customers.CustomerAttributes.Fields.IsRequired")",
+                            width: 100,
+                            headerAttributes: { style: "text-align:center" },
+                            attributes: { style: "text-align:center" },
+                            template: '# if(IsRequired) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
+                        }, {
+                            field: "DisplayOrder",
+                            title: "@T("Admin.Customers.CustomerAttributes.Fields.DisplayOrder")",
+                            width: 100
+                        }, {
+                            field: "Id",
+                            title: "@T("Admin.Common.Edit")",
+                            width: 80,
+                            headerAttributes: { style: "text-align:center" },
+                            attributes: { style: "text-align:center" },
+                            template: '<a class="btn btn-default" href="@Url.Content("~/Admin/CustomerAttribute/Edit/")#=Id#"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>'
+                        }]
+                    });
+                });
+        </script>
+    </div>
+    <div class="panel-footer">
+        <a class="btn btn-primary" href="@Url.Action("Create", "CustomerAttribute")">
+            <i class="fa fa-plus-square"></i>
+            @T("Admin.Common.AddNew")
+        </a>
+    </div>
+</div>

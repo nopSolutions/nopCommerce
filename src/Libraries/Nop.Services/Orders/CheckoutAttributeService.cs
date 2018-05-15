@@ -21,7 +21,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <remarks>
         /// {0} : store ID
-        /// {1} : >A value indicating whether we should exlude shippable attributes
+        /// {1} : >A value indicating whether we should exclude shippable attributes
         /// </remarks>
         private const string CHECKOUTATTRIBUTES_ALL_KEY = "Nop.checkoutattribute.all-{0}-{1}";
         /// <summary>
@@ -53,6 +53,7 @@ namespace Nop.Services.Orders
         /// Key pattern to clear cache
         /// </summary>
         private const string CHECKOUTATTRIBUTEVALUES_PATTERN_KEY = "Nop.checkoutattributevalue.";
+
         #endregion
         
         #region Fields
@@ -101,7 +102,7 @@ namespace Nop.Services.Orders
         public virtual void DeleteCheckoutAttribute(CheckoutAttribute checkoutAttribute)
         {
             if (checkoutAttribute == null)
-                throw new ArgumentNullException("checkoutAttribute");
+                throw new ArgumentNullException(nameof(checkoutAttribute));
 
             _checkoutAttributeRepository.Delete(checkoutAttribute);
 
@@ -116,15 +117,15 @@ namespace Nop.Services.Orders
         /// Gets all checkout attributes
         /// </summary>
         /// <param name="storeId">Store identifier</param>
-        /// <param name="excludeShippableAttributes">A value indicating whether we should exlude shippable attributes</param>
+        /// <param name="excludeShippableAttributes">A value indicating whether we should exclude shippable attributes</param>
         /// <returns>Checkout attributes</returns>
         public virtual IList<CheckoutAttribute> GetAllCheckoutAttributes(int storeId = 0, bool excludeShippableAttributes = false)
         {
-            string key = string.Format(CHECKOUTATTRIBUTES_ALL_KEY, storeId, excludeShippableAttributes);
+            var key = string.Format(CHECKOUTATTRIBUTES_ALL_KEY, storeId, excludeShippableAttributes);
             return _cacheManager.Get(key, () =>
             {
                 var query = from ca in _checkoutAttributeRepository.Table
-                            orderby ca.DisplayOrder
+                            orderby ca.DisplayOrder, ca.Id
                             select ca;
                 var checkoutAttributes = query.ToList();
                 if (storeId > 0)
@@ -151,7 +152,7 @@ namespace Nop.Services.Orders
             if (checkoutAttributeId == 0)
                 return null;
             
-            string key = string.Format(CHECKOUTATTRIBUTES_BY_ID_KEY, checkoutAttributeId);
+            var key = string.Format(CHECKOUTATTRIBUTES_BY_ID_KEY, checkoutAttributeId);
             return _cacheManager.Get(key, () => _checkoutAttributeRepository.GetById(checkoutAttributeId));
         }
 
@@ -162,7 +163,7 @@ namespace Nop.Services.Orders
         public virtual void InsertCheckoutAttribute(CheckoutAttribute checkoutAttribute)
         {
             if (checkoutAttribute == null)
-                throw new ArgumentNullException("checkoutAttribute");
+                throw new ArgumentNullException(nameof(checkoutAttribute));
 
             _checkoutAttributeRepository.Insert(checkoutAttribute);
 
@@ -180,7 +181,7 @@ namespace Nop.Services.Orders
         public virtual void UpdateCheckoutAttribute(CheckoutAttribute checkoutAttribute)
         {
             if (checkoutAttribute == null)
-                throw new ArgumentNullException("checkoutAttribute");
+                throw new ArgumentNullException(nameof(checkoutAttribute));
 
             _checkoutAttributeRepository.Update(checkoutAttribute);
 
@@ -202,7 +203,7 @@ namespace Nop.Services.Orders
         public virtual void DeleteCheckoutAttributeValue(CheckoutAttributeValue checkoutAttributeValue)
         {
             if (checkoutAttributeValue == null)
-                throw new ArgumentNullException("checkoutAttributeValue");
+                throw new ArgumentNullException(nameof(checkoutAttributeValue));
 
             _checkoutAttributeValueRepository.Delete(checkoutAttributeValue);
 
@@ -220,11 +221,11 @@ namespace Nop.Services.Orders
         /// <returns>Checkout attribute values</returns>
         public virtual IList<CheckoutAttributeValue> GetCheckoutAttributeValues(int checkoutAttributeId)
         {
-            string key = string.Format(CHECKOUTATTRIBUTEVALUES_ALL_KEY, checkoutAttributeId);
+            var key = string.Format(CHECKOUTATTRIBUTEVALUES_ALL_KEY, checkoutAttributeId);
             return _cacheManager.Get(key, () =>
             {
                 var query = from cav in _checkoutAttributeValueRepository.Table
-                            orderby cav.DisplayOrder
+                            orderby cav.DisplayOrder, cav.Id
                             where cav.CheckoutAttributeId == checkoutAttributeId
                             select cav;
                 var checkoutAttributeValues = query.ToList();
@@ -242,7 +243,7 @@ namespace Nop.Services.Orders
             if (checkoutAttributeValueId == 0)
                 return null;
             
-            string key = string.Format(CHECKOUTATTRIBUTEVALUES_BY_ID_KEY, checkoutAttributeValueId);
+            var key = string.Format(CHECKOUTATTRIBUTEVALUES_BY_ID_KEY, checkoutAttributeValueId);
             return _cacheManager.Get(key, () => _checkoutAttributeValueRepository.GetById(checkoutAttributeValueId));
         }
 
@@ -253,7 +254,7 @@ namespace Nop.Services.Orders
         public virtual void InsertCheckoutAttributeValue(CheckoutAttributeValue checkoutAttributeValue)
         {
             if (checkoutAttributeValue == null)
-                throw new ArgumentNullException("checkoutAttributeValue");
+                throw new ArgumentNullException(nameof(checkoutAttributeValue));
 
             _checkoutAttributeValueRepository.Insert(checkoutAttributeValue);
 
@@ -271,7 +272,7 @@ namespace Nop.Services.Orders
         public virtual void UpdateCheckoutAttributeValue(CheckoutAttributeValue checkoutAttributeValue)
         {
             if (checkoutAttributeValue == null)
-                throw new ArgumentNullException("checkoutAttributeValue");
+                throw new ArgumentNullException(nameof(checkoutAttributeValue));
 
             _checkoutAttributeValueRepository.Update(checkoutAttributeValue);
 

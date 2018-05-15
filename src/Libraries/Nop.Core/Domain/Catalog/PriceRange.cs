@@ -9,6 +9,7 @@
         /// From
         /// </summary>
         public decimal? From { get; set; }
+
         /// <summary>
         /// To
         /// </summary>

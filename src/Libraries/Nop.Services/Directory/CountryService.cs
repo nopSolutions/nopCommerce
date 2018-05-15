@@ -82,7 +82,7 @@ namespace Nop.Services.Directory
         public virtual void DeleteCountry(Country country)
         {
             if (country == null)
-                throw new ArgumentNullException("country");
+                throw new ArgumentNullException(nameof(country));
 
             _countryRepository.Delete(country);
 
@@ -100,7 +100,7 @@ namespace Nop.Services.Directory
         /// <returns>Countries</returns>
         public virtual IList<Country> GetAllCountries(int languageId = 0, bool showHidden = false)
         {
-            string key = string.Format(COUNTRIES_ALL_KEY, languageId, showHidden);
+            var key = string.Format(COUNTRIES_ALL_KEY, languageId, showHidden);
             return _cacheManager.Get(key, () =>
             {
                 var query = _countryRepository.Table;
@@ -193,7 +193,7 @@ namespace Nop.Services.Directory
             var countries = query.ToList();
             //sort by passed identifiers
             var sortedCountries = new List<Country>();
-            foreach (int id in countryIds)
+            foreach (var id in countryIds)
             {
                 var country = countries.Find(x => x.Id == id);
                 if (country != null)
@@ -209,7 +209,7 @@ namespace Nop.Services.Directory
         /// <returns>Country</returns>
         public virtual Country GetCountryByTwoLetterIsoCode(string twoLetterIsoCode)
         {
-            if (String.IsNullOrEmpty(twoLetterIsoCode))
+            if (string.IsNullOrEmpty(twoLetterIsoCode))
                 return null;
 
             var query = from c in _countryRepository.Table
@@ -226,7 +226,7 @@ namespace Nop.Services.Directory
         /// <returns>Country</returns>
         public virtual Country GetCountryByThreeLetterIsoCode(string threeLetterIsoCode)
         {
-            if (String.IsNullOrEmpty(threeLetterIsoCode))
+            if (string.IsNullOrEmpty(threeLetterIsoCode))
                 return null;
 
             var query = from c in _countryRepository.Table
@@ -243,7 +243,7 @@ namespace Nop.Services.Directory
         public virtual void InsertCountry(Country country)
         {
             if (country == null)
-                throw new ArgumentNullException("country");
+                throw new ArgumentNullException(nameof(country));
 
             _countryRepository.Insert(country);
 
@@ -260,7 +260,7 @@ namespace Nop.Services.Directory
         public virtual void UpdateCountry(Country country)
         {
             if (country == null)
-                throw new ArgumentNullException("country");
+                throw new ArgumentNullException(nameof(country));
 
             _countryRepository.Update(country);
 

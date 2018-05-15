@@ -2,21 +2,29 @@
 
 namespace Nop.Data.Mapping.Logging
 {
+    /// <summary>
+    /// Mapping class
+    /// </summary>
     public partial class ActivityLogMap : NopEntityTypeConfiguration<ActivityLog>
     {
+        /// <summary>
+        /// Ctor
+        /// </summary>
         public ActivityLogMap()
         {
             this.ToTable("ActivityLog");
-            this.HasKey(al => al.Id);
-            this.Property(al => al.Comment).IsRequired();
+            this.HasKey(logItem => logItem.Id);
+            this.Property(logItem => logItem.Comment).IsRequired();
+            this.Property(logItem => logItem.IpAddress).HasMaxLength(200);
+            this.Property(logItem => logItem.EntityName).HasMaxLength(400);
 
-            this.HasRequired(al => al.ActivityLogType)
+            this.HasRequired(logItem => logItem.ActivityLogType)
                 .WithMany()
-                .HasForeignKey(al => al.ActivityLogTypeId);
+                .HasForeignKey(logItem => logItem.ActivityLogTypeId);
 
-            this.HasRequired(al => al.Customer)
+            this.HasRequired(logItem => logItem.Customer)
                 .WithMany()
-                .HasForeignKey(al => al.CustomerId);
+                .HasForeignKey(logItem => logItem.CustomerId);
         }
     }
 }

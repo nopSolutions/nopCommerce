@@ -1,0 +1,28 @@
+﻿@model GiftCardModel
+
+@inject IEventPublisher eventPublisher
+
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
+
+<div class="content">
+    <div class="form-horizontal">
+        <nop-tabs id="giftcard-edit">
+            <nop-tab asp-name="tab-info" asp-title="@T("Admin.GiftCards.Info")" asp-default="true">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-tab>
+            @if (Model.Id > 0)
+            {
+                <nop-tab asp-name="tab-history" asp-title="@T("Admin.GiftCards.History")">@await Html.PartialAsync("_CreateOrUpdate.History", Model)</nop-tab>
+            }
+        </nop-tabs>
+    </div>
+</div>
+
+@{
+    //custom tabs
+    var eventMessage = new AdminTabStripCreated(this.Html, "giftcard-edit");
+    eventPublisher.Publish(eventMessage);
+    foreach (var eventBlock in eventMessage.BlocksToRender)
+    {
+        @eventBlock
+    }
+}

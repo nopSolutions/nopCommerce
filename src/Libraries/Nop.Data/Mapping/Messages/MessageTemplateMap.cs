@@ -2,8 +2,14 @@ using Nop.Core.Domain.Messages;
 
 namespace Nop.Data.Mapping.Messages
 {
+    /// <summary>
+    /// Mapping class
+    /// </summary>
     public partial class MessageTemplateMap : NopEntityTypeConfiguration<MessageTemplate>
     {
+        /// <summary>
+        /// Ctor
+        /// </summary>
         public MessageTemplateMap()
         {
             this.ToTable("MessageTemplate");

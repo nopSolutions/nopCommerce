@@ -1,0 +1,301 @@
+@model CountrySearchModel
+
+@{
+    //page title
+    ViewBag.Title = T("Admin.Configuration.Countries").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Countries");
+}
+
+<nop-antiforgery-token />
+<div class="content-header clearfix">
+    <h1 class="pull-left">
+        @T("Admin.Configuration.Countries")
+    </h1>
+    <div class="pull-right">
+        <a asp-action="Create" class="btn bg-blue">
+            <i class="fa fa-plus-square"></i>
+            @T("Admin.Common.AddNew")
+        </a>
+        <button type="button" id="publish-selected" class="btn bg-teal">
+            <i class="fa fa-check-square-o"></i>
+            @T("Admin.Configuration.Countries.PublishSelected")
+        </button>
+        <button type="button" id="unpublish-selected" class="btn bg-navy">
+            <i class="fa fa-minus-square-o"></i>
+            @T("Admin.Configuration.Countries.UnpublishSelected")
+        </button>
+        <a asp-action="ExportCsv" class="btn bg-green">
+            <i class="fa fa-download"></i>
+            @T("Admin.Configuration.Countries.ExportToCsv")
+        </a>
+        <button type="submit" name="importcsv" class="btn bg-olive" data-toggle="modal" data-target="#importcsv-window">
+            <i class="fa fa-upload"></i>
+            @T("Admin.Configuration.Countries.ImportFromCsv")
+        </button>
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CountryListButtons })
+    </div>
+</div>
+
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div id="countries-grid"></div>
+
+                    <script>
+                        $(document).ready(function () {
+                            $("#countries-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("CountryList", "Country"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: addAntiForgeryToken
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors"
+                                    },
+                                    error: function (e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    pageSize: @(Model.PageSize),
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    pageSizes: [@(Model.AvailablePageSizes)],
+                                    @await Html.PartialAsync("_GridPagerMessages")
+                                },
+                                scrollable: false,
+                                dataBound: onDataBound,
+                                columns: [
+                                    {
+                                        field: "Id",
+                                        headerTemplate: "<input id='mastercheckbox' type='checkbox'/>",
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:center" },
+                                        template: "<input type='checkbox' value='#=Id#' class='checkboxGroups'/>",
+                                        width: 50
+                                    }, {
+                                        field: "Name",
+                                        title: "@T("Admin.Configuration.Countries.Fields.Name")",
+                                        width: 200
+                                    }, {
+                                        field: "AllowsBilling",
+                                        title: "@T("Admin.Configuration.Countries.Fields.AllowsBilling")",
+                                        width: 100,
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:center" },
+                                        template: '# if(AllowsBilling) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
+                                    }, {
+                                        field: "AllowsShipping",
+                                        title: "@T("Admin.Configuration.Countries.Fields.AllowsShipping")",
+                                        width: 150,
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:center" },
+                                        template: '# if(AllowsShipping) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
+                                    }, {
+                                        field: "TwoLetterIsoCode",
+                                        title: "@T("Admin.Configuration.Countries.Fields.TwoLetterIsoCode")",
+                                        width: 150
+                                    }, {
+                                        field: "ThreeLetterIsoCode",
+                                        title: "@T("Admin.Configuration.Countries.Fields.ThreeLetterIsoCode")",
+                                        width: 150
+                                    }, {
+                                        field: "NumericIsoCode",
+                                        title: "@T("Admin.Configuration.Countries.Fields.NumericIsoCode")",
+                                        width: 150
+                                    }, {
+                                        field: "SubjectToVat",
+                                        title: "@T("Admin.Configuration.Countries.Fields.SubjectToVat")",
+                                        width: 100,
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:center" },
+                                        template: '# if(SubjectToVat) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
+                                    }, {
+                                        field: "NumberOfStates",
+                                        title: "@T("Admin.Configuration.Countries.Fields.NumberOfStates")",
+                                        width: 150
+                                    }, {
+                                        field: "DisplayOrder",
+                                        title: "@T("Admin.Configuration.Countries.Fields.DisplayOrder")",
+                                        width: 100
+                                    }, {
+                                        field: "Published",
+                                        title: "@T("Admin.Configuration.Countries.Fields.Published")",
+                                        width: 100,
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:center" },
+                                        template: '# if(Published) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
+                                    }, {
+                                        field: "Id",
+                                        title: "@T("Admin.Common.Edit")",
+                                        width: 50,
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:center" },
+                                        template: '<a class="btn btn-default" href="Edit/#=Id#"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>'
+                                    }
+                                ]
+                            });
+                        });
+                    </script>
+
+                    <script>
+                        var selectedIds = [];
+
+                        $(document).ready(function () {
+                            //"publish selected" button
+                            $('#publish-selected').click(function (e) {
+                                e.preventDefault();
+
+                                var postData = {
+                                    selectedIds: selectedIds
+                                };
+                                addAntiForgeryToken(postData);
+
+                                $.ajax({
+                                    cache: false,
+                                    type: "POST",
+                                    url: "@(Url.Action("PublishSelected", "Country"))",
+                                    data: postData,
+                                    complete: function (data) {
+                                        //reload grid
+                                        var grid = $('#countries-grid').data('kendoGrid');
+                                        grid.dataSource.read();
+                                    },
+                                    error: function (xhr, ajaxOptions, thrownError) {
+                                        alert(thrownError);
+                                    },
+                                    traditional: true
+                                });
+                                return false;
+                            });
+
+                            //"unpublish selected" button
+                            $('#unpublish-selected').click(function (e) {
+                                e.preventDefault();
+
+                                var postData = {
+                                    selectedIds: selectedIds
+                                };
+                                addAntiForgeryToken(postData);
+
+                                $.ajax({
+                                    cache: false,
+                                    type: "POST",
+                                    url: "@(Url.Action("UnpublishSelected", "Country"))",
+                                    data: postData,
+                                    complete: function (data) {
+                                        //reload grid
+                                        var grid = $('#countries-grid').data('kendoGrid');
+                                        grid.dataSource.read();
+                                    },
+                                    error: function (xhr, ajaxOptions, thrownError) {
+                                        alert(thrownError);
+                                    },
+                                    traditional: true
+                                });
+                                return false;
+                            });
+
+                            $('#mastercheckbox').click(function () {
+                                $('.checkboxGroups').attr('checked', $(this).is(':checked')).change();
+                            });
+
+                            //wire up checkboxes.
+                            $('#countries-grid').on('change', 'input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]', function (e) {
+                                var $check = $(this);
+                                var checked = jQuery.inArray($check.val(), selectedIds);
+                                if ($check.is(":checked") == true) {
+                                    if (checked == -1) {
+                                        //add id to selectedIds.
+                                        selectedIds.push($check.val());
+                                    }
+                                } else if (checked > -1) {
+                                    //remove id from selectedIds.
+                                    selectedIds = $.grep(selectedIds, function (item, index) {
+                                        return item != $check.val();
+                                    });
+                                }
+                                updateMasterCheckbox();
+                            });
+                        });
+
+                        function onDataBound(e) {
+
+                            $('#countries-grid input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]').each(function () {
+                                var currentId = $(this).val();
+                                var checked = jQuery.inArray(currentId, selectedIds);
+                                //set checked based on if current checkbox's value is in selectedIds.
+                                $(this).attr('checked', checked > -1);
+                            });
+
+                            updateMasterCheckbox();
+                        }
+
+                        function updateMasterCheckbox() {
+                            var numChkBoxes = $('#countries-grid input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]').length;
+                            var numChkBoxesChecked = $('#countries-grid input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]:checked').length;
+                            $('#mastercheckbox').attr('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
+                        }
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*import states form*@
+<div id="importcsv-window" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="importcsv-window-title">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="importcsv-window-title">@T("Admin.Common.ImportFromCsv")</h4>
+            </div>
+            <form asp-controller="Country" asp-action="ImportCsv" method="post" enctype="multipart/form-data">
+                <div class="form-horizontal">
+                    <div class="modal-body">
+                        <ul class="common-list">
+                            <li>
+                                <em>@T("Admin.Configuration.Countries.ImportTip")</em>
+                            </li>
+                            <li>
+                                <em><a href="https://www.nopcommerce.com/p/1622/all-states-provinces-package.aspx?utm_source=admin-panel&utm_medium=countries&utm_campaign=admin-panel" target="_blank">https://www.nopcommerce.com/p/1622/all-states-provinces-package.aspx</a></em>
+                            </li>
+                        </ul>
+                        <div class="form-group">
+                            <div class="col-md-2">
+                                <div class="label-wrapper">
+                                    <label class="control-label">
+                                        @T("Admin.Common.CsvFile")
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-10">
+                                <input type="file" id="importcsvfile" name="importcsvfile" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">
+                            @T("Admin.Common.ImportFromCsv")
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

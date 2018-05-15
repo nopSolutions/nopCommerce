@@ -1,33 +1,60 @@
 using System;
+using System.Linq;
 using System.Net;
 using Nop.Core.Configuration;
+using RedLockNet.SERedis;
+using RedLockNet.SERedis.Configuration;
 using StackExchange.Redis;
 
 namespace Nop.Core.Caching
 {
     /// <summary>
-    /// Redis connection wrapper
+    /// Represents Redis connection wrapper implementation
     /// </summary>
-    public class RedisConnectionWrapper : IRedisConnectionWrapper
+    public class RedisConnectionWrapper : IRedisConnectionWrapper, ILocker
     {
-        private readonly NopConfig _config;
-        private readonly Lazy<string> _connectionString;
+        #region Fields
 
+        private readonly NopConfig _config;
+
+        private readonly Lazy<string> _connectionString;
         private volatile ConnectionMultiplexer _connection;
+        private volatile RedLockFactory _redisLockFactory;
         private readonly object _lock = new object();
 
+        #endregion
+
+        #region Ctor
+
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="config">Config</param>
         public RedisConnectionWrapper(NopConfig config)
         {
             this._config = config;
             this._connectionString = new Lazy<string>(GetConnectionString);
+            this._redisLockFactory = CreateRedisLockFactory();
         }
 
-        private string GetConnectionString()
+        #endregion
+
+        #region Utilities
+
+        /// <summary>
+        /// Get connection string to Redis cache from configuration
+        /// </summary>
+        /// <returns></returns>
+        protected string GetConnectionString()
         {
             return _config.RedisCachingConnectionString;
         }
 
-        private ConnectionMultiplexer GetConnection()
+        /// <summary>
+        /// Get connection to Redis servers
+        /// </summary>
+        /// <returns></returns>
+        protected ConnectionMultiplexer GetConnection()
         {
             if (_connection != null && _connection.IsConnected) return _connection;
 
@@ -35,11 +62,8 @@ namespace Nop.Core.Caching
             {
                 if (_connection != null && _connection.IsConnected) return _connection;
 
-                if (_connection != null)
-                {
-                    //Connection disconnected. Disposing connection...
-                    _connection.Dispose();
-                }
+                //Connection disconnected. Disposing connection...
+                _connection?.Dispose();
 
                 //Creating new instance of Redis Connection
                 _connection = ConnectionMultiplexer.Connect(_connectionString.Value);
@@ -48,37 +72,111 @@ namespace Nop.Core.Caching
             return _connection;
         }
 
-        public IDatabase Database(int? db = null)
+        /// <summary>
+        /// Create instance of RedLock factory
+        /// </summary>
+        /// <returns>RedLock factory</returns>
+        protected RedLockFactory CreateRedisLockFactory()
         {
-            return GetConnection().GetDatabase(db ?? -1); //_settings.DefaultDb);
+            //get RedLock endpoints
+            var configurationOptions = ConfigurationOptions.Parse(_connectionString.Value);
+            var redLockEndPoints = GetEndPoints().Select(endPoint => new RedLockEndPoint
+            {
+                EndPoint = endPoint,
+                Password = configurationOptions.Password,
+                Ssl = configurationOptions.Ssl,
+                RedisDatabase = configurationOptions.DefaultDatabase,
+                ConfigCheckSeconds = configurationOptions.ConfigCheckSeconds,
+                ConnectionTimeout = configurationOptions.ConnectTimeout,
+                SyncTimeout = configurationOptions.SyncTimeout
+            }).ToList();
+
+            //create RedLock factory to use RedLock distributed lock algorithm
+            return RedLockFactory.Create(redLockEndPoints);
         }
 
-        public IServer Server(EndPoint endPoint)
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Obtain an interactive connection to a database inside Redis
+        /// </summary>
+        /// <param name="db">Database number; pass null to use the default value</param>
+        /// <returns>Redis cache database</returns>
+        public IDatabase GetDatabase(int? db = null)
+        {
+            return GetConnection().GetDatabase(db ?? -1);
+        }
+
+        /// <summary>
+        /// Obtain a configuration API for an individual server
+        /// </summary>
+        /// <param name="endPoint">The network endpoint</param>
+        /// <returns>Redis server</returns>
+        public IServer GetServer(EndPoint endPoint)
         {
             return GetConnection().GetServer(endPoint);
         }
 
-        public EndPoint[] GetEndpoints()
+        /// <summary>
+        /// Gets all endpoints defined on the server
+        /// </summary>
+        /// <returns>Array of endpoints</returns>
+        public EndPoint[] GetEndPoints()
         {
             return GetConnection().GetEndPoints();
         }
 
-        public void FlushDb(int? db = null)
+        /// <summary>
+        /// Delete all the keys of the database
+        /// </summary>
+        /// <param name="db">Database number; pass null to use the default value</param>
+        public void FlushDatabase(int? db = null)
         {
-            var endPoints = GetEndpoints();
+            var endPoints = GetEndPoints();
 
             foreach (var endPoint in endPoints)
             {
-                Server(endPoint).FlushDatabase(db ?? -1); //_settings.DefaultDb);
+                GetServer(endPoint).FlushDatabase(db ?? -1);
             }
         }
 
-        public void Dispose()
+        /// <summary>
+        /// Perform some action with Redis distributed lock
+        /// </summary>
+        /// <param name="resource">The thing we are locking on</param>
+        /// <param name="expirationTime">The time after which the lock will automatically be expired by Redis</param>
+        /// <param name="action">Action to be performed with locking</param>
+        /// <returns>True if lock was acquired and action was performed; otherwise false</returns>
+        public bool PerformActionWithLock(string resource, TimeSpan expirationTime, Action action)
         {
-            if (_connection != null)
+            //use RedLock library
+            using (var redisLock = _redisLockFactory.CreateLock(resource, expirationTime))
             {
-                _connection.Dispose();
+                //ensure that lock is acquired
+                if (!redisLock.IsAcquired)
+                    return false;
+
+                //perform action
+                action();
+
+                return true;
             }
         }
+
+        /// <summary>
+        /// Release all resources associated with this object
+        /// </summary>
+        public void Dispose()
+        {
+            //dispose ConnectionMultiplexer
+            _connection?.Dispose();
+
+            //dispose RedLock factory
+            _redisLockFactory?.Dispose();
+        }
+
+        #endregion
     }
 }

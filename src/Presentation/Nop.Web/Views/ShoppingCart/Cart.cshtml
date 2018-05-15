@@ -1,21 +1,21 @@
 ﻿@model ShoppingCartModel
-@using Nop.Web.Models.Checkout
-@using Nop.Web.Models.ShoppingCart;
 @{
-    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+    Layout = "_ColumnsOne";
 
     //title
     Html.AddTitleParts(T("PageTitle.ShoppingCart").Text);
+    //page class
+    Html.AppendPageCssClassParts("html-shopping-cart-page");
 }
 @if (!Model.OnePageCheckoutEnabled)
 {
-    @Html.Action("CheckoutProgress", "Checkout", new {step = CheckoutProgressStep.Cart})
+    @await Component.InvokeAsync("CheckoutProgress", new {step = CheckoutProgressStep.Cart})
 }
 <div class="page shopping-cart-page">
     <div class="page-title">
         <h1>@T("ShoppingCart")</h1>
     </div>
     <div class="page-body">
-        @Html.Partial("OrderSummary", Model)
+        @await Component.InvokeAsync("OrderSummary", new { overriddenModel = Model})
     </div>
 </div>

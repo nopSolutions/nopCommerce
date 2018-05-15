@@ -17,15 +17,17 @@ namespace Nop.Services.Stores
         /// <summary>
         /// Gets all stores
         /// </summary>
+        /// <param name="loadCacheableCopy">A value indicating whether to load a copy that could be cached (workaround until Entity Framework supports 2-level caching)</param>
         /// <returns>Stores</returns>
-        IList<Store> GetAllStores();
+        IList<Store> GetAllStores(bool loadCacheableCopy = true);
 
         /// <summary>
         /// Gets a store 
         /// </summary>
         /// <param name="storeId">Store identifier</param>
+        /// <param name="loadCacheableCopy">A value indicating whether to load a copy that could be cached (workaround until Entity Framework supports 2-level caching)</param>
         /// <returns>Store</returns>
-        Store GetStoreById(int storeId);
+        Store GetStoreById(int storeId, bool loadCacheableCopy = true);
 
         /// <summary>
         /// Inserts a store

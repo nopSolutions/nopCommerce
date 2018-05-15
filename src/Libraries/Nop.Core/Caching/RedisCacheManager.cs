@@ -1,56 +1,177 @@
 using System;
-using System.Text;
+using System.Linq;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Nop.Core.Configuration;
-using Nop.Core.Infrastructure;
 using StackExchange.Redis;
 
 namespace Nop.Core.Caching
 {
     /// <summary>
     /// Represents a manager for caching in Redis store (http://redis.io/).
-    /// Mostly it'll be used when running in a web farm or Azure.
-    /// But of course it can be also used on any server or environment
+    /// Mostly it'll be used when running in a web farm or Azure. But of course it can be also used on any server or environment
     /// </summary>
-    public partial class RedisCacheManager : ICacheManager
+    public partial class RedisCacheManager : IStaticCacheManager
     {
         #region Fields
+
+        private readonly ICacheManager _perRequestCacheManager;
         private readonly IRedisConnectionWrapper _connectionWrapper;
         private readonly IDatabase _db;
-        private readonly ICacheManager _perRequestCacheManager;
 
         #endregion
 
         #region Ctor
 
-        public RedisCacheManager(NopConfig config, IRedisConnectionWrapper connectionWrapper)
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="perRequestCacheManager">Cache manager</param>
+        /// <param name="connectionWrapper">ConnectionW wrapper</param>
+        /// <param name="config">Config</param>
+        public RedisCacheManager(ICacheManager perRequestCacheManager,
+            IRedisConnectionWrapper connectionWrapper, 
+            NopConfig config)
         {
-            if (String.IsNullOrEmpty(config.RedisCachingConnectionString))
+            if (string.IsNullOrEmpty(config.RedisCachingConnectionString))
                 throw new Exception("Redis connection string is empty");
+
+            this._perRequestCacheManager = perRequestCacheManager;
 
             // ConnectionMultiplexer.Connect should only be called once and shared between callers
             this._connectionWrapper = connectionWrapper;
 
-            this._db = _connectionWrapper.Database();
-            this._perRequestCacheManager = EngineContext.Current.Resolve<ICacheManager>();
+            this._db = _connectionWrapper.GetDatabase();
         }
 
         #endregion
 
         #region Utilities
 
-        protected virtual byte[] Serialize(object item)
+        /// <summary>
+        /// Gets or sets the value associated with the specified key.
+        /// </summary>
+        /// <typeparam name="T">Type of cached item</typeparam>
+        /// <param name="key">Key of cached item</param>
+        /// <returns>The cached value associated with the specified key</returns>
+        protected virtual async Task<T> GetAsync<T>(string key)
         {
-            var jsonString = JsonConvert.SerializeObject(item);
-            return Encoding.UTF8.GetBytes(jsonString);
-        }
-        protected virtual T Deserialize<T>(byte[] serializedObject)
-        {
-            if (serializedObject == null)
+            //little performance workaround here:
+            //we use "PerRequestCacheManager" to cache a loaded object in memory for the current HTTP request.
+            //this way we won't connect to Redis server many times per HTTP request (e.g. each time to load a locale or setting)
+            if (_perRequestCacheManager.IsSet(key))
+                return _perRequestCacheManager.Get<T>(key);
+
+            //get serialized item from cache
+            var serializedItem = await _db.StringGetAsync(key);
+            if (!serializedItem.HasValue)
                 return default(T);
 
-            var jsonString = Encoding.UTF8.GetString(serializedObject);
-            return JsonConvert.DeserializeObject<T>(jsonString);
+            //deserialize item
+            var item = JsonConvert.DeserializeObject<T>(serializedItem);
+            if (item == null)
+                return default(T);
+
+            //set item in the per-request cache
+            _perRequestCacheManager.Set(key, item, 0);
+
+            return item;
+        }
+
+        /// <summary>
+        /// Adds the specified key and object to the cache
+        /// </summary>
+        /// <param name="key">Key of cached item</param>
+        /// <param name="data">Value for caching</param>
+        /// <param name="cacheTime">Cache time in minutes</param>
+        protected virtual async Task SetAsync(string key, object data, int cacheTime)
+        {
+            if (data == null)
+                return;
+
+            //set cache time
+            var expiresIn = TimeSpan.FromMinutes(cacheTime);
+
+            //serialize item
+            var serializedItem = JsonConvert.SerializeObject(data);
+
+            //and set it to cache
+            await _db.StringSetAsync(key, serializedItem, expiresIn);
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether the value associated with the specified key is cached
+        /// </summary>
+        /// <param name="key">Key of cached item</param>
+        /// <returns>True if item already is in cache; otherwise false</returns>
+        protected virtual async Task<bool> IsSetAsync(string key)
+        {
+            //little performance workaround here:
+            //we use "PerRequestCacheManager" to cache a loaded object in memory for the current HTTP request.
+            //this way we won't connect to Redis server many times per HTTP request (e.g. each time to load a locale or setting)
+            if (_perRequestCacheManager.IsSet(key))
+                return true;
+
+            return await _db.KeyExistsAsync(key);
+        }
+
+        /// <summary>
+        /// Removes the value with the specified key from the cache
+        /// </summary>
+        /// <param name="key">Key of cached item</param>
+        protected virtual async Task RemoveAsync(string key)
+        {
+            //we should always persist the data protection key list
+            if (key.Equals(RedisConfiguration.DataProtectionKeysName, StringComparison.OrdinalIgnoreCase))
+                return;
+
+            //remove item from caches
+            await _db.KeyDeleteAsync(key);
+            _perRequestCacheManager.Remove(key);
+        }
+
+        /// <summary>
+        /// Removes items by key pattern
+        /// </summary>
+        /// <param name="pattern">String key pattern</param>
+        protected virtual async Task RemoveByPatternAsync(string pattern)
+        {
+            _perRequestCacheManager.RemoveByPattern(pattern);
+
+            foreach (var endPoint in _connectionWrapper.GetEndPoints())
+            {
+                var server = _connectionWrapper.GetServer(endPoint);
+                var keys = server.Keys(database: _db.Database, pattern: $"*{pattern}*");
+
+                //we should always persist the data protection key list
+                keys = keys.Where(key => !key.ToString().Equals(RedisConfiguration.DataProtectionKeysName, StringComparison.OrdinalIgnoreCase));
+
+                await _db.KeyDeleteAsync(keys.ToArray());
+            }
+        }
+
+        /// <summary>
+        /// Clear all cache data
+        /// </summary>
+        protected virtual async Task ClearAsync()
+        {
+            _perRequestCacheManager.Clear();
+
+            foreach (var endPoint in _connectionWrapper.GetEndPoints())
+            {
+                var server = _connectionWrapper.GetServer(endPoint);
+
+                //we can use the code below (commented), but it requires administration permission - ",allowAdmin=true"
+                //server.FlushDatabase();
+
+                //that's why we manually delete all elements
+                var keys = server.Keys(database: _db.Database);
+
+                //we should always persist the data protection key list
+                keys = keys.Where(key => !key.ToString().Equals(RedisConfiguration.DataProtectionKeysName, StringComparison.OrdinalIgnoreCase));
+
+                await _db.KeyDeleteAsync(keys.ToArray());
+            }
         }
 
         #endregion
@@ -60,105 +181,63 @@ namespace Nop.Core.Caching
         /// <summary>
         /// Gets or sets the value associated with the specified key.
         /// </summary>
-        /// <typeparam name="T">Type</typeparam>
-        /// <param name="key">The key of the value to get.</param>
-        /// <returns>The value associated with the specified key.</returns>
+        /// <typeparam name="T">Type of cached item</typeparam>
+        /// <param name="key">Key of cached item</param>
+        /// <returns>The cached value associated with the specified key</returns>
         public virtual T Get<T>(string key)
         {
-            //little performance workaround here:
-            //we use "PerRequestCacheManager" to cache a loaded object in memory for the current HTTP request.
-            //this way we won't connect to Redis server 500 times per HTTP request (e.g. each time to load a locale or setting)
-            if (_perRequestCacheManager.IsSet(key))
-                return _perRequestCacheManager.Get<T>(key);
-
-            var rValue = _db.StringGet(key);
-            if (!rValue.HasValue)
-                return default(T);
-            var result = Deserialize<T>(rValue);
-
-            _perRequestCacheManager.Set(key, result, 0);
-            return result;
+            return this.GetAsync<T>(key).Result;
         }
 
         /// <summary>
-        /// Adds the specified key and object to the cache.
+        /// Adds the specified key and object to the cache
         /// </summary>
-        /// <param name="key">key</param>
-        /// <param name="data">Data</param>
-        /// <param name="cacheTime">Cache time</param>
-        public virtual void Set(string key, object data, int cacheTime)
+        /// <param name="key">Key of cached item</param>
+        /// <param name="data">Value for caching</param>
+        /// <param name="cacheTime">Cache time in minutes</param>
+        public virtual async void Set(string key, object data, int cacheTime)
         {
-            if (data == null)
-                return;
-
-            var entryBytes = Serialize(data);
-            var expiresIn = TimeSpan.FromMinutes(cacheTime);
-
-            _db.StringSet(key, entryBytes, expiresIn);
+            await this.SetAsync(key, data, cacheTime);
         }
 
         /// <summary>
         /// Gets a value indicating whether the value associated with the specified key is cached
         /// </summary>
-        /// <param name="key">key</param>
-        /// <returns>Result</returns>
+        /// <param name="key">Key of cached item</param>
+        /// <returns>True if item already is in cache; otherwise false</returns>
         public virtual bool IsSet(string key)
         {
-            //little performance workaround here:
-            //we use "PerRequestCacheManager" to cache a loaded object in memory for the current HTTP request.
-            //this way we won't connect to Redis server 500 times per HTTP request (e.g. each time to load a locale or setting)
-            if (_perRequestCacheManager.IsSet(key))
-                return true;
-
-            return _db.KeyExists(key);
+            return this.IsSetAsync(key).Result;
         }
 
         /// <summary>
         /// Removes the value with the specified key from the cache
         /// </summary>
-        /// <param name="key">/key</param>
-        public virtual void Remove(string key)
+        /// <param name="key">Key of cached item</param>
+        public virtual async void Remove(string key)
         {
-            _db.KeyDelete(key);
-            _perRequestCacheManager.Remove(key);
+            await this.RemoveAsync(key);
         }
 
         /// <summary>
-        /// Removes items by pattern
+        /// Removes items by key pattern
         /// </summary>
-        /// <param name="pattern">pattern</param>
-        public virtual void RemoveByPattern(string pattern)
+        /// <param name="pattern">String key pattern</param>
+        public virtual async void RemoveByPattern(string pattern)
         {
-            foreach (var ep in _connectionWrapper.GetEndpoints())
-            {
-                var server = _connectionWrapper.Server(ep);
-                var keys = server.Keys(pattern: "*" + pattern + "*");
-                foreach (var key in keys)
-                    _db.KeyDelete(key);
-            }
+            await this.RemoveByPatternAsync(pattern);
         }
 
         /// <summary>
         /// Clear all cache data
         /// </summary>
-        public virtual void Clear()
+        public virtual async void Clear()
         {
-            foreach (var ep in _connectionWrapper.GetEndpoints())
-            {
-                var server = _connectionWrapper.Server(ep);
-                //we can use the code below (commented)
-                //but it requires administration permission - ",allowAdmin=true"
-                //server.FlushDatabase();
-
-                //that's why we simply interate through all elements now
-                var keys = server.Keys();
-                foreach (var key in keys)
-                    _db.KeyDelete(key);
-            }
+            await this.ClearAsync();
         }
 
         /// <summary>
-        /// Dispose
+        /// Dispose cache manager
         /// </summary>
         public virtual void Dispose()
         {
@@ -167,6 +246,5 @@ namespace Nop.Core.Caching
         }
 
         #endregion
-
     }
 }

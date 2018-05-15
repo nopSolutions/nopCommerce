@@ -1,0 +1,105 @@
+@model ProductModel
+
+<div class="panel-group">
+    <p>
+        @T("Admin.Catalog.Products.PurchasedWithOrders.Hint")
+    </p>
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductDetailsPurchasedWithOrdersTop, additionalData = Model })
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div id="purchased-with-orders-grid"></div>
+
+            <script>
+                $(document).ready(function() {
+                    $("#purchased-with-orders-grid").kendoGrid({
+                        dataSource: {
+                            type: "json",
+                            transport: {
+                                read: {
+                                    url: "@Html.Raw(Url.Action("PurchasedWithOrders", "Product"))",
+                                    type: "POST",
+                                    dataType: "json",
+                                    data: function additionalData() {
+                                        var data = {
+                                            ProductId: '@(Model.Id)'
+                                        };
+                                        addAntiForgeryToken(data);
+                                        return data;
+                                    }
+                                }
+                            },
+                            schema: {
+                                data: "Data",
+                                total: "Total",
+                                errors: "Errors"
+                            },
+                            error: function(e) {
+                                display_kendoui_grid_error(e);
+                                // Cancel the changes
+                                this.cancelChanges();
+                            },
+                            pageSize: @(Model.ProductOrderSearchModel.PageSize),
+                            serverPaging: true,
+                            serverFiltering: true,
+                            serverSorting: true
+                        },
+                        pageable: {
+                            refresh: true,
+                            pageSizes: [@(Model.ProductOrderSearchModel.AvailablePageSizes)],
+                            @await Html.PartialAsync("_GridPagerMessages")
+                        },
+                        editable: {
+                            confirmation: "@T("Admin.Common.DeleteConfirmation")",
+                            mode: "inline"
+                        },
+                        scrollable: false,
+                        columns: [
+                            {
+                                field: "CustomOrderNumber",
+                                title: "@T("Admin.Orders.Fields.CustomOrderNumber")",
+                                width: 200
+                            }, {
+                                field: "CustomerEmail",
+                                title: "@T("Admin.Orders.Fields.CustomerEmail")",
+                                width: 200
+                            },
+                            @if (!Model.IsLoggedInAsVendor)
+                            {
+                                <text>{
+                                field: "OrderStatus",
+                                title: "@T("Admin.Orders.Fields.OrderStatus")",
+                                width: 100
+                            },{
+                                field: "PaymentStatus",
+                                title: "@T("Admin.Orders.Fields.PaymentStatus")",
+                                width: 100
+                            },{
+                                field: "ShippingStatus",
+                                title: "@T("Admin.Orders.Fields.ShippingStatus")",
+                                width: 100
+                            },</text>
+                            }
+
+                            {
+                                field: "CreatedOn",
+                                title: "@T("Admin.Orders.Fields.CreatedOn")",
+                                width: 200,
+                                type: "date",
+                                format: "{0:G}"
+                            },
+                            {
+                                field: "Id",
+                                title: "@T("Admin.Common.View")",
+                                width: 200,
+                                headerAttributes: { style: "text-align:center" },
+                                attributes: { style: "text-align:center" },
+                                template: '<a class="btn btn-default" href="@Url.Content("~/Admin/Order/Edit/")#=Id#"><i class="fa fa-eye"></i>@T("Admin.Common.View")</a>'
+                            }
+                        ]
+                    });
+                });
+            </script>
+        </div>
+    </div>
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductDetailsPurchasedWithOrdersBottom, additionalData = Model })
+</div>

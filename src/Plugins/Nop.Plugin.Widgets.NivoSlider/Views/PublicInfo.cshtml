@@ -1,0 +1,73 @@
+﻿@model Nop.Plugin.Widgets.NivoSlider.Models.PublicInfoModel
+@{
+    Layout = "";
+
+    Html.AddScriptParts(ResourceLocation.Footer, "~/Plugins/Widgets.NivoSlider/Scripts/jquery.nivo.slider.js");
+    Html.AddCssFileParts("~/Plugins/Widgets.NivoSlider/Content/nivoslider/nivo-slider.css");
+    Html.AddCssFileParts("~/Plugins/Widgets.NivoSlider/Content/nivoslider/themes/custom/custom.css");
+}
+
+<div class="slider-wrapper theme-custom">
+    <div id="nivo-slider" class="nivoSlider">
+        @{
+            var dataSlide1 = new ViewDataDictionary(ViewData)
+            {
+                {"pictureUrl", Model.Picture1Url},
+                { "text", Model.Text1},
+                { "link", Model.Link1}
+            };
+
+            @await Html.PartialAsync("~/Plugins/Widgets.NivoSlider/Views/_PublicInfo.SliderLine.cshtml", dataSlide1)
+        }
+        
+        @{
+            var dataSlide2 = new ViewDataDictionary(ViewData)
+            {
+                {"pictureUrl", Model.Picture2Url},
+                { "text", Model.Text2},
+                { "link", Model.Link2}
+            };
+
+            @await Html.PartialAsync("~/Plugins/Widgets.NivoSlider/Views/_PublicInfo.SliderLine.cshtml", dataSlide2)
+        }
+        
+        @{
+            var dataSlide3 = new ViewDataDictionary(ViewData)
+            {
+                {"pictureUrl", Model.Picture3Url},
+                { "text", Model.Text3},
+                { "link", Model.Link3},
+                { "dataTransition", "slideInLeft"}
+            };
+
+            @await Html.PartialAsync("~/Plugins/Widgets.NivoSlider/Views/_PublicInfo.SliderLine.cshtml", dataSlide3)
+        }
+
+        @{
+            var dataSlide4 = new ViewDataDictionary(ViewData)
+            {
+                {"pictureUrl", Model.Picture4Url},
+                { "text", Model.Text4},
+                { "link", Model.Link4}
+            };
+
+            @await Html.PartialAsync("~/Plugins/Widgets.NivoSlider/Views/_PublicInfo.SliderLine.cshtml", dataSlide4)
+        }
+        
+        @{
+            var dataSlide5 = new ViewDataDictionary(ViewData)
+            {
+                {"pictureUrl", Model.Picture5Url},
+                { "text", Model.Text5},
+                { "link", Model.Link5}
+            };
+
+            @await Html.PartialAsync("~/Plugins/Widgets.NivoSlider/Views/_PublicInfo.SliderLine.cshtml", dataSlide5)
+        }
+    </div>
+</div>
+<script asp-location="Footer">
+    $(window).load(function () {
+        $('#nivo-slider').nivoSlider();
+    });
+</script>

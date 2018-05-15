@@ -1,26 +1,28 @@
-﻿using System.Web.Mvc;
-using System.Web.Routing;
-using Nop.Web.Framework.Mvc.Routes;
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Routing;
+using Nop.Web.Framework.Mvc.Routing;
 
 namespace Nop.Plugin.Payments.PayPalDirect
 {
     public partial class RouteProvider : IRouteProvider
     {
-        public void RegisterRoutes(RouteCollection routes)
+        /// <summary>
+        /// Register routes
+        /// </summary>
+        /// <param name="routeBuilder">Route builder</param>
+        public void RegisterRoutes(IRouteBuilder routeBuilder)
         {
-            //IPN
-            routes.MapRoute("Plugin.Payments.PayPalDirect.IPNHandler",
-                 "Plugins/PaymentPayPalDirect/IPNHandler",
-                 new { controller = "PaymentPayPalDirect", action = "IPNHandler" },
-                 new[] { "Nop.Plugin.Payments.PayPalDirect.Controllers" }
-            );
+            routeBuilder.MapRoute("Plugin.Payments.PayPalDirect.Webhook", "Plugins/PaymentPayPalDirect/Webhook/",
+                new { controller = "PaymentPayPalDirect", action = "WebhookEventsHandler" });
+
         }
+
+        /// <summary>
+        /// Gets a priority of route provider
+        /// </summary>
         public int Priority
         {
-            get
-            {
-                return 0;
-            }
+            get { return -1; }
         }
     }
 }

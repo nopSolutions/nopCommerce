@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Web.Services.Protocols;
 using Nop.Services.Logging;
 using Nop.Services.Shipping.Tracking;
 
@@ -34,10 +32,10 @@ namespace Nop.Plugin.Shipping.Fedex
         }
 
         /// <summary>
-        /// Gets a url for a page to show tracking info (third party tracking page).
+        /// Gets an URL for a page to show tracking info (third party tracking page).
         /// </summary>
         /// <param name="trackingNumber">The tracking number to track.</param>
-        /// <returns>A url to a tracking page.</returns>
+        /// <returns>URL of a tracking page.</returns>
         public virtual string GetUrl(string trackingNumber)
         {
             //What is a FedEx tracking page URL?
@@ -60,40 +58,52 @@ namespace Nop.Plugin.Shipping.Fedex
                 //use try-catch to ensure exception won't be thrown is web service is not available
 
                 //build the TrackRequest
-                var request = new TrackRequest();
+                var request = new TrackRequest
+                {
 
-                //
-                request.WebAuthenticationDetail = new WebAuthenticationDetail();
-                request.WebAuthenticationDetail.UserCredential = new WebAuthenticationCredential();
-                request.WebAuthenticationDetail.UserCredential.Key = _fedexSettings.Key; // Replace "XXX" with the Key
-                request.WebAuthenticationDetail.UserCredential.Password = _fedexSettings.Password; // Replace "XXX" with the Password
-                //
-                request.ClientDetail = new ClientDetail();
-                request.ClientDetail.AccountNumber = _fedexSettings.AccountNumber; // Replace "XXX" with client's account number
-                request.ClientDetail.MeterNumber = _fedexSettings.MeterNumber; // Replace "XXX" with client's meter number
-                //
-                request.TransactionDetail = new TransactionDetail();
-                request.TransactionDetail.CustomerTransactionId = "***nopCommerce v16 Request using VC#***";
+                    //
+                    WebAuthenticationDetail = new WebAuthenticationDetail
+                    {
+                        UserCredential = new WebAuthenticationCredential
+                        {
+                            Key = _fedexSettings.Key, // Replace "XXX" with the Key
+                            Password = _fedexSettings.Password // Replace "XXX" with the Password
+                        }
+                    },
+                    //
+                    ClientDetail = new ClientDetail
+                    {
+                        AccountNumber = _fedexSettings.AccountNumber, // Replace "XXX" with client's account number
+                        MeterNumber = _fedexSettings.MeterNumber // Replace "XXX" with client's meter number
+                    },
+                    //
+                    TransactionDetail = new TransactionDetail
+                    {
+                        CustomerTransactionId = "***nopCommerce v16 Request using VC#***"
+                    },
 
-                //creates the Version element with all child elements populated from the wsdl
-                request.Version = new VersionId();
-                //tracking information
-                request.PackageIdentifier = new TrackPackageIdentifier();
-                request.PackageIdentifier.Value = trackingNumber;
-                request.PackageIdentifier.Type = TrackIdentifierType.TRACKING_NUMBER_OR_DOORTAG;
+                    //creates the Version element with all child elements populated from the wsdl
+                    Version = new VersionId(),
+                    //tracking information
+                    PackageIdentifier = new TrackPackageIdentifier
+                    {
+                        Value = trackingNumber,
+                        Type = TrackIdentifierType.TRACKING_NUMBER_OR_DOORTAG
+                    },
 
-                request.IncludeDetailedScans = true;
-                request.IncludeDetailedScansSpecified = true;
+                    IncludeDetailedScans = true,
+                    IncludeDetailedScansSpecified = true
+                };
 
                 //initialize the service
                 var service = new TrackService(_fedexSettings.Url);
                 //this is the call to the web service passing in a TrackRequest and returning a TrackReply
-                TrackReply reply = service.track(request);
+                var reply = service.track(request);
                 //parse response
                 if (reply.HighestSeverity == NotificationSeverityType.SUCCESS || reply.HighestSeverity == NotificationSeverityType.NOTE || reply.HighestSeverity == NotificationSeverityType.WARNING) // check if the call was successful
                 {
 
-                    foreach (TrackDetail trackDetail in reply.TrackDetails)
+                    foreach (var trackDetail in reply.TrackDetails)
                     {
 
                         if (trackDetail.Events != null)
@@ -114,21 +124,21 @@ namespace Nop.Plugin.Shipping.Fedex
 
                             //if (trackDetail.ShipmentWeight != null)
                             //{
-                            //    var shipmentWeight = string.Format("{0} {1}", trackDetail.ShipmentWeight.Value, trackDetail.ShipmentWeight.Units);
+                            //    var shipmentWeight = $"{trackDetail.ShipmentWeight.Value} {trackDetail.ShipmentWeight.Units}";
                             //}
                             //else
                             //{
-                            //    var shipmentWeight = string.Format("{0} {1}", trackDetail.PackageWeight.Value, trackDetail.PackageWeight.Units);
+                            //    var shipmentWeight = $"{trackDetail.PackageWeight.Value} {trackDetail.PackageWeight.Units}";
                             //}
 
                             //var shipDate = trackDetail.ShipTimestamp;
                             //var serviceType = trackDetail.ServiceInfo;
                             //var packageCount = int.Parse(trackDetail.PackageCount);
-                            //var destination = string.Format("{0}, {1} {2}", trackDetail.DestinationAddress.City, trackDetail.DestinationAddress.StateOrProvinceCode, trackDetail.DestinationAddress.CountryCode);
+                            //var destination = $"{trackDetail.DestinationAddress.City}, {trackDetail.DestinationAddress.StateOrProvinceCode} {trackDetail.DestinationAddress.CountryCode}";
                             //var deliveryDate = trackDetail.ActualDeliveryTimestamp;
 
                             //Set the TrackingActivity
-                            foreach (TrackEvent trackevent in trackDetail.Events)
+                            foreach (var trackevent in trackDetail.Events)
                             {
                                 var sse = new ShipmentStatusEvent();
 
@@ -136,7 +146,7 @@ namespace Nop.Plugin.Shipping.Fedex
                                 {
                                     sse.Date = trackevent.Timestamp;
                                 }
-                                sse.EventName = String.Format("{0} ({1})", trackevent.EventDescription, trackevent.EventType);
+                                sse.EventName = $"{trackevent.EventDescription} ({trackevent.EventType})";
                                 sse.Location = trackevent.Address.City;
                                 sse.CountryCode = trackevent.Address.CountryCode;
                                 //other properties (not used yet)
@@ -155,18 +165,11 @@ namespace Nop.Plugin.Shipping.Fedex
 
                 //result.AddRange(trackResponse.Shipment.SelectMany(c => c.Package[0].Activity.Select(x => ToStatusEvent(x))).ToList());
             }
-            catch (SoapException ex)
+            catch (Exception ex)
             {
-                var sb = new StringBuilder();
-                sb.AppendFormat("SoapException Message= {0}.", ex.Message);
-                sb.AppendFormat("SoapException Category:Code:Message= {0}.", ex.Detail.LastChild.InnerText);
-                //sb.AppendFormat("SoapException XML String for all= {0}.", ex.Detail.LastChild.OuterXml);
-                _logger.Error(string.Format("Error while getting Fedex shipment tracking info - {0}", trackingNumber), new Exception(sb.ToString()));
+                _logger.Error($"Error while getting Fedex shipment tracking info - {trackingNumber}", ex);
             }
-            catch (Exception exc)
-            {
-                _logger.Error(string.Format("Error while getting Fedex shipment tracking info - {0}", trackingNumber), exc);
-            }
+
             return result;
         }
     }

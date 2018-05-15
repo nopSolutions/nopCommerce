@@ -29,6 +29,7 @@ namespace Nop.Services.Common
         /// Key pattern to clear cache
         /// </summary>
         private const string GENERICATTRIBUTE_PATTERN_KEY = "Nop.genericattribute.";
+
         #endregion
 
         #region Fields
@@ -67,7 +68,7 @@ namespace Nop.Services.Common
         public virtual void DeleteAttribute(GenericAttribute attribute)
         {
             if (attribute == null)
-                throw new ArgumentNullException("attribute");
+                throw new ArgumentNullException(nameof(attribute));
 
             _genericAttributeRepository.Delete(attribute);
 
@@ -85,7 +86,7 @@ namespace Nop.Services.Common
         public virtual void DeleteAttributes(IList<GenericAttribute> attributes)
         {
             if (attributes == null)
-                throw new ArgumentNullException("attributes");
+                throw new ArgumentNullException(nameof(attributes));
 
             _genericAttributeRepository.Delete(attributes);
 
@@ -119,7 +120,7 @@ namespace Nop.Services.Common
         public virtual void InsertAttribute(GenericAttribute attribute)
         {
             if (attribute == null)
-                throw new ArgumentNullException("attribute");
+                throw new ArgumentNullException(nameof(attribute));
 
             _genericAttributeRepository.Insert(attribute);
             
@@ -137,7 +138,7 @@ namespace Nop.Services.Common
         public virtual void UpdateAttribute(GenericAttribute attribute)
         {
             if (attribute == null)
-                throw new ArgumentNullException("attribute");
+                throw new ArgumentNullException(nameof(attribute));
 
             _genericAttributeRepository.Update(attribute);
 
@@ -156,7 +157,7 @@ namespace Nop.Services.Common
         /// <returns>Get attributes</returns>
         public virtual IList<GenericAttribute> GetAttributesForEntity(int entityId, string keyGroup)
         {
-            string key = string.Format(GENERICATTRIBUTE_KEY, entityId, keyGroup);
+            var key = string.Format(GENERICATTRIBUTE_KEY, entityId, keyGroup);
             return _cacheManager.Get(key, () =>
             {
                 var query = from ga in _genericAttributeRepository.Table
@@ -179,12 +180,12 @@ namespace Nop.Services.Common
         public virtual void SaveAttribute<TPropType>(BaseEntity entity, string key, TPropType value, int storeId = 0)
         {
             if (entity == null)
-                throw new ArgumentNullException("entity");
+                throw new ArgumentNullException(nameof(entity));
 
             if (key == null)
-                throw new ArgumentNullException("key");
+                throw new ArgumentNullException(nameof(key));
 
-            string keyGroup = entity.GetUnproxiedEntityType().Name;
+            var keyGroup = entity.GetUnproxiedEntityType().Name;
 
             var props = GetAttributesForEntity(entity.Id, keyGroup)
                 .Where(x => x.StoreId == storeId)

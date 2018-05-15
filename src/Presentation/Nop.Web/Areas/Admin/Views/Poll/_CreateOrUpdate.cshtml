@@ -1,0 +1,25 @@
+﻿@model PollModel
+
+@inject IEventPublisher eventPublisher
+
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
+
+<div class="content">
+    <div class="form-horizontal">
+        <nop-tabs id="poll-edit">
+            <nop-tab asp-name="tab-info" asp-title="@T("Admin.ContentManagement.Polls.Info")" asp-default="true">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-tab>
+            <nop-tab asp-name="tab-answers" asp-title="@T("Admin.ContentManagement.Polls.Answers")">@await Html.PartialAsync("_CreateOrUpdate.Answers", Model)</nop-tab>
+        </nop-tabs>
+    </div>
+</div>
+
+@{
+    //custom tabs
+    var eventMessage = new AdminTabStripCreated(this.Html, "poll-edit");
+    eventPublisher.Publish(eventMessage);
+    foreach (var eventBlock in eventMessage.BlocksToRender)
+    {
+        @eventBlock
+    }
+}

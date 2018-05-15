@@ -1,9 +1,13 @@
 using System;
 using System.Linq;
 using Nop.Core.Domain.Common;
+using Nop.Core.Domain.Tax;
 
 namespace Nop.Core.Domain.Customers
 {
+    /// <summary>
+    /// Customer extensions
+    /// </summary>
     public static class CustomerExtensions
     {
         #region Customer role
@@ -19,10 +23,10 @@ namespace Nop.Core.Domain.Customers
             string customerRoleSystemName, bool onlyActiveCustomerRoles = true)
         {
             if (customer == null)
-                throw new ArgumentNullException("customer");
+                throw new ArgumentNullException(nameof(customer));
 
-            if (String.IsNullOrEmpty(customerRoleSystemName))
-                throw new ArgumentNullException("customerRoleSystemName");
+            if (string.IsNullOrEmpty(customerRoleSystemName))
+                throw new ArgumentNullException(nameof(customerRoleSystemName));
 
             var result = customer.CustomerRoles
                 .FirstOrDefault(cr => (!onlyActiveCustomerRoles || cr.Active) && (cr.SystemName == customerRoleSystemName)) != null;
@@ -37,9 +41,9 @@ namespace Nop.Core.Domain.Customers
         public static bool IsSearchEngineAccount(this Customer customer)
         {
             if (customer == null)
-                throw new ArgumentNullException("customer");
+                throw new ArgumentNullException(nameof(customer));
 
-            if (!customer.IsSystemAccount || String.IsNullOrEmpty(customer.SystemName))
+            if (!customer.IsSystemAccount || string.IsNullOrEmpty(customer.SystemName))
                 return false;
 
             var result = customer.SystemName.Equals(SystemCustomerNames.SearchEngine, StringComparison.InvariantCultureIgnoreCase);
@@ -54,9 +58,9 @@ namespace Nop.Core.Domain.Customers
         public static bool IsBackgroundTaskAccount(this Customer customer)
         {
             if (customer == null)
-                throw new ArgumentNullException("customer");
+                throw new ArgumentNullException(nameof(customer));
 
-            if (!customer.IsSystemAccount || String.IsNullOrEmpty(customer.SystemName))
+            if (!customer.IsSystemAccount || string.IsNullOrEmpty(customer.SystemName))
                 return false;
 
             var result = customer.SystemName.Equals(SystemCustomerNames.BackgroundTask, StringComparison.InvariantCultureIgnoreCase);
@@ -117,10 +121,33 @@ namespace Nop.Core.Domain.Customers
         {
             return IsInCustomerRole(customer, SystemCustomerRoleNames.Vendors, onlyActiveCustomerRoles);
         }
+
+        /// <summary>
+        /// Gets a default tax display type (if configured)
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <returns>Result</returns>
+        public static TaxDisplayType? GetDefaultTaxDisplayType(this Customer customer)
+        {
+            if (customer == null)
+                throw new ArgumentNullException(nameof(customer));
+
+            var roleWithOVerriddenTaxType = customer.CustomerRoles.FirstOrDefault(cr => cr.Active && cr.OverrideTaxDisplayType);
+            if (roleWithOVerriddenTaxType == null)
+                return null;
+
+            return (TaxDisplayType)roleWithOVerriddenTaxType.DefaultTaxDisplayTypeId;
+        }
+
         #endregion
 
         #region Addresses
 
+        /// <summary>
+        /// Remove address
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="address">Address</param>
         public static void RemoveAddress(this Customer customer, Address address)
         {
             if (customer.Addresses.Contains(address))

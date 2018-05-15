@@ -1,5 +1,4 @@
-﻿
-using System.Data.Common;
+﻿using System.Data.Common;
 
 namespace Nop.Core.Data
 {
@@ -38,5 +37,12 @@ namespace Nop.Core.Data
         /// </summary>
         /// <returns>Parameter</returns>
         DbParameter GetParameter();
+
+        /// <summary>
+        /// Maximum length of the data for HASHBYTES functions
+        /// returns 0 if HASHBYTES function is not supported
+        /// </summary>
+        /// <returns>Length of the data for HASHBYTES functions</returns>
+        int SupportedLengthOfBinaryHash();
     }
 }

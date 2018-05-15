@@ -2,8 +2,14 @@
 
 namespace Nop.Data.Mapping.Topics
 {
-    public class TopicMap : NopEntityTypeConfiguration<Topic>
+    /// <summary>
+    /// Mapping class
+    /// </summary>
+    public partial class TopicMap : NopEntityTypeConfiguration<Topic>
     {
+        /// <summary>
+        /// Ctor
+        /// </summary>
         public TopicMap()
         {
             this.ToTable("Topic");

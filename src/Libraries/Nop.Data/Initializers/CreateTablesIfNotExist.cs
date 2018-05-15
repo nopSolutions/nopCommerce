@@ -7,6 +7,10 @@ using System.Transactions;
 
 namespace Nop.Data.Initializers
 {
+    /// <summary>
+    /// CreateTablesIfNotExist database initializer
+    /// </summary>
+    /// <typeparam name="TContext">Type of context</typeparam>
     public class CreateTablesIfNotExist<TContext> : IDatabaseInitializer<TContext> where TContext : DbContext
     {
         private readonly string[] _tablesToValidate;
@@ -22,6 +26,11 @@ namespace Nop.Data.Initializers
             this._tablesToValidate = tablesToValidate;
             this._customCommands = customCommands;
         }
+
+        /// <summary>
+        /// Initialize database
+        /// </summary>
+        /// <param name="context">Context</param>
         public void InitializeDatabase(TContext context)
         {
             bool dbExists;
@@ -41,7 +50,7 @@ namespace Nop.Data.Initializers
                 else
                 {
                     //check whether tables are already created
-                    int numberOfTables = 0;
+                    var numberOfTables = 0;
                     foreach (var t1 in context.Database.SqlQuery<int>("SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES WHERE table_type = 'BASE TABLE' "))
                         numberOfTables = t1;
 

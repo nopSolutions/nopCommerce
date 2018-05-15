@@ -1,5 +1,5 @@
-﻿using FluentValidation;
-using FluentValidation.Results;
+﻿using System.Linq;
+using FluentValidation;
 using Nop.Core.Domain.Common;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
@@ -8,7 +8,7 @@ using Nop.Web.Models.Common;
 
 namespace Nop.Web.Validators.Common
 {
-    public class AddressValidator : BaseNopValidator<AddressModel>
+    public partial class AddressValidator : BaseNopValidator<AddressModel>
     {
         public AddressValidator(ILocalizationService localizationService,
             IStateProvinceService stateProvinceService,
@@ -37,22 +37,21 @@ namespace Nop.Web.Validators.Common
             }
             if (addressSettings.CountryEnabled && addressSettings.StateProvinceEnabled)
             {
-                Custom(x =>
+                RuleFor(x => x.StateProvinceId).Must((x, context) =>
                 {
                     //does selected country has states?
                     var countryId = x.CountryId.HasValue ? x.CountryId.Value : 0;
-                    var hasStates = stateProvinceService.GetStateProvincesByCountryId(countryId).Count > 0;
+                    var hasStates = stateProvinceService.GetStateProvincesByCountryId(countryId).Any();
 
                     if (hasStates)
                     {
                         //if yes, then ensure that state is selected
                         if (!x.StateProvinceId.HasValue || x.StateProvinceId.Value == 0)
-                        {
-                            return new ValidationFailure("StateProvinceId", localizationService.GetResource("Address.Fields.StateProvince.Required"));
-                        }
+                           return false;
                     }
-                    return null;
-                });
+
+                    return true;
+                }).WithMessage(localizationService.GetResource("Address.Fields.StateProvince.Required"));
             }
             if (addressSettings.CompanyRequired && addressSettings.CompanyEnabled)
             {
@@ -69,6 +68,10 @@ namespace Nop.Web.Validators.Common
             if (addressSettings.ZipPostalCodeRequired && addressSettings.ZipPostalCodeEnabled)
             {
                 RuleFor(x => x.ZipPostalCode).NotEmpty().WithMessage(localizationService.GetResource("Account.Fields.ZipPostalCode.Required"));
+            }
+            if (addressSettings.CountyEnabled && addressSettings.CountyRequired)
+            {
+                RuleFor(x => x.County).NotEmpty().WithMessage(localizationService.GetResource("Address.Fields.County.Required"));
             }
             if (addressSettings.CityRequired && addressSettings.CityEnabled)
             {

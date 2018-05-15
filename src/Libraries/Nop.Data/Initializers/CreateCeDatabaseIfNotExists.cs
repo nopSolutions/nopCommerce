@@ -14,11 +14,15 @@ namespace Nop.Data.Initializers
     {
         #region Strategy implementation
 
+        /// <summary>
+        /// Initialize database
+        /// </summary>
+        /// <param name="context">Context</param>
         public override void InitializeDatabase(TContext context)
         {
             if (context == null)
             {
-                throw new ArgumentNullException("context");
+                throw new ArgumentNullException(nameof(context));
             }
             var replacedContext = ReplaceSqlCeConnection(context);
 
@@ -35,7 +39,7 @@ namespace Nop.Data.Initializers
                 // these scenarios are database/model first and/or an existing database.
                 if (!context.Database.CompatibleWithModel(throwIfNoMetadata: false))
                 {
-                    throw new InvalidOperationException(string.Format("The model backing the '{0}' context has changed since the database was created. Either manually delete/update the database, or call Database.SetInitializer with an IDatabaseInitializer instance. For example, the DropCreateDatabaseIfModelChanges strategy will automatically delete and recreate the database, and optionally seed it with new data.", context.GetType().Name));
+                    throw new InvalidOperationException($"The model backing the '{context.GetType().Name}' context has changed since the database was created. Either manually delete/update the database, or call Database.SetInitializer with an IDatabaseInitializer instance. For example, the DropCreateDatabaseIfModelChanges strategy will automatically delete and recreate the database, and optionally seed it with new data.");
                 }
             }
             else
@@ -61,6 +65,4 @@ namespace Nop.Data.Initializers
 
         #endregion
     }
-
-
 }

@@ -1,0 +1,77 @@
+@model CustomerModel
+
+<div class="panel-group">
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CustomerDetailsActivityLogTop, additionalData = Model })
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div id="activitylog-grid"></div>
+
+            <script>
+                $(document).ready(function () {
+                    $("#activitylog-grid").kendoGrid({
+                        dataSource: {
+                            type: "json",
+                            transport: {
+                                read: {
+                                    url: "@Html.Raw(Url.Action("ListActivityLog", "Customer"))",
+                                    type: "POST",
+                                    dataType: "json",
+                                    data: function() {
+                                        var data = {
+                                            CustomerId: '@(Model.Id)'
+                                        };
+                                        addAntiForgeryToken(data);
+                                        return data;
+                                    }
+                                }
+                            },
+                            schema: {
+                                data: "Data",
+                                total: "Total",
+                                errors: "Errors"
+                            },
+                            error: function(e) {
+                                display_kendoui_grid_error(e);
+                                // Cancel the changes
+                                this.cancelChanges();
+                            },
+                            pageSize: @(Model.CustomerActivityLogSearchModel.PageSize),
+                            serverPaging: true,
+                            serverFiltering: true,
+                            serverSorting: true
+                        },
+                        pageable: {
+                            refresh: true,
+                            pageSizes: [@(Model.CustomerActivityLogSearchModel.AvailablePageSizes)],
+                            @await Html.PartialAsync("_GridPagerMessages")
+                        },
+                        editable: {
+                            confirmation: "@T("Admin.Common.DeleteConfirmation")",
+                            mode: "inline"
+                        },
+                        scrollable: false,
+                        columns: [{
+                            field: "ActivityLogTypeName",
+                            title: "@T("Admin.Customers.Customers.ActivityLog.ActivityLogType")",
+                            width: 300,
+                        }, {
+                            field: "IpAddress",
+                            title: "@T("Admin.Customers.Customers.ActivityLog.IpAddress")",
+                            width: 100
+                        }, {
+                            field: "Comment",
+                            title: "@T("Admin.Customers.Customers.ActivityLog.Comment")"
+                        }, {
+                            field: "CreatedOn",
+                            title: "@T("Admin.Customers.Customers.ActivityLog.CreatedOn")",
+                            width: 200,
+                            type: "date",
+                            format: "{0:G}"
+                        }]
+                    });
+                });
+            </script>
+        </div>
+    </div>
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CustomerDetailsActivityLogBottom, additionalData = Model })
+</div>

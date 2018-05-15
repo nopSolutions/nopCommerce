@@ -1,0 +1,185 @@
+@model LanguageModel
+
+<div class="panel-group">
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.LanguageDetailsResourcesTop, additionalData = Model })
+    <div class="panel panel-default panel-search">
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-md-6">
+                    @if (Model.Id > 0)
+                    {
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="LocaleResourceSearchModel.SearchResourceName" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="LocaleResourceSearchModel.SearchResourceName" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="LocaleResourceSearchModel.SearchResourceValue" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="LocaleResourceSearchModel.SearchResourceValue" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-9 col-md-offset-4">
+                                <button type="button" id="search-resources" class="btn btn-primary btn-search">
+                                    <i class="fa fa-search"></i>
+                                    @T("Admin.Common.Search")
+                                </button>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                @T("Admin.Configuration.Languages.Resources.SaveBeforeEdit")
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (Model.Id > 0)
+    {
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div id="resources-grid"></div>
+
+                <script>
+                    $(document).ready(function() {
+                        $("#resources-grid").kendoGrid({
+                            dataSource: {
+                                type: "json",
+                                transport: {
+                                    read: {
+                                        url: "@Html.Raw(Url.Action("Resources", "Language"))",
+                                        type: "POST",
+                                        dataType: "json",
+                                        data: function() {
+                                            var data = {
+                                                LanguageId: '@(Model.Id)',
+                                                SearchResourceName: $('#@Html.IdFor(model => model.LocaleResourceSearchModel.SearchResourceName)').val(),
+                                                SearchResourceValue: $('#@Html.IdFor(model => model.LocaleResourceSearchModel.SearchResourceValue)').val()
+                                            };
+                                            addAntiForgeryToken(data);
+                                            return data;
+                                        }
+                                    },
+                                    create: {
+                                        url: "@Html.Raw(Url.Action("ResourceAdd", "Language", new { languageId = Model.Id }))",
+                                        type: "POST",
+                                        dataType: "json",
+                                        data: addAntiForgeryToken
+                                    },
+                                    update: {
+                                        url: "@Html.Raw(Url.Action("ResourceUpdate", "Language"))",
+                                        type: "POST",
+                                        dataType: "json",
+                                        data: addAntiForgeryToken
+                                    },
+                                    destroy: {
+                                        url: "@Html.Raw(Url.Action("ResourceDelete", "Language"))",
+                                        type: "POST",
+                                        dataType: "json",
+                                        data: addAntiForgeryToken
+                                    }
+                                },
+                                schema: {
+                                    data: "Data",
+                                    total: "Total",
+                                    errors: "Errors",
+                                    model: {
+                                        id: "Id",
+                                        fields: {
+                                            Name: { editable: true, type: "string" },
+                                            Value: { editable: true, type: "string" },
+                                            Id: { editable: false, type: "number" }
+                                        }
+                                    }
+                                },
+                                requestEnd: function(e) {
+                                    if (e.type == "create" || e.type == "update") {
+                                        this.read();
+                                    }
+                                },
+                                error: function(e) {
+                                    display_kendoui_grid_error(e);
+                                    // Cancel the changes
+                                    this.cancelChanges();
+                                },
+                                pageSize: @(Model.LocaleResourceSearchModel.PageSize),
+                                serverPaging: true,
+                                serverFiltering: true,
+                                serverSorting: true
+                            },
+                            pageable: {
+                                refresh: true,
+                                pageSizes: [@(Model.LocaleResourceSearchModel.AvailablePageSizes)],
+                                @await Html.PartialAsync("_GridPagerMessages")
+                            },
+                            toolbar: [{ name: "create", text: "@T("Admin.Common.AddNewRecord")" }],
+                            editable: {
+                                confirmation: "@T("Admin.Common.DeleteConfirmation")",
+                                mode: "inline"
+                            },
+                            scrollable: false,
+                            columns: [
+                                {
+                                    field: "Name",
+                                    title: "@T("Admin.Configuration.Languages.Resources.Fields.Name")",
+                                    width: 300
+                                }, {
+                                    field: "Value",
+                                    title: "@T("Admin.Configuration.Languages.Resources.Fields.Value")",
+                                    width: 300
+
+                                }, {
+                                    command: [
+                                        {
+                                            name: "edit",
+                                            text: {
+                                                edit: "@T("Admin.Common.Edit")",
+                                                update: "@T("Admin.Common.Update")",
+                                                cancel: "@T("Admin.Common.Cancel")"
+                                            }
+                                        }, {
+                                            name: "destroy",
+                                            text: "@T("Admin.Common.Delete")"
+                                        }
+                                    ],
+                                    width: 200
+                                }
+                            ]
+                        });
+                    });
+                </script>
+
+                <script>
+                    $(document).ready(function() {
+                        $('#search-resources').click(function() {
+                            var grid = $('#resources-grid').data('kendoGrid');
+                            grid.dataSource.page(1);
+                            return false;
+                        });
+                    });
+
+                    $("".concat("#@Html.IdFor(model => model.LocaleResourceSearchModel.SearchResourceName),",
+                        "#@Html.IdFor(model => model.LocaleResourceSearchModel.SearchResourceValue)")).keydown(function(event) {
+                        if (event.keyCode === 13) {
+                            $("#search-resources").click();
+                            return false;
+                        }
+                    });
+                </script>
+            </div>
+        </div>
+    }
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.LanguageDetailsResourcesBottom, additionalData = Model })
+</div>

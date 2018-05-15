@@ -1,0 +1,164 @@
+@model CampaignModel
+@inject AdminAreaSettings adminAreaSettings
+
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
+
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CampaignDetailsTop, additionalData = Model })
+            @if (Model.Id > 0)
+            {
+                <div class="panel panel-default">
+                    <div class="panel panel-body">
+                        <div class="callout bg-gray-light">
+                            @T("Admin.Promotions.Campaigns.Warning")
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="EmailAccountId" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-select asp-for="EmailAccountId" asp-items="Model.AvailableEmailAccounts"/>
+                                <span asp-validation-for="EmailAccountId"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="TestEmail" />
+                            </div>
+                            <div class="col-md-9">
+                                <div class="input-group">
+                                    <nop-editor asp-for="TestEmail" />
+                                    <div class="input-group-btn">
+                                        <button type="submit" name="send-test-email" class="btn btn-info">
+                                            @T("Admin.Promotions.Campaigns.SendTestEmail")
+                                        </button>
+                                    </div>
+                                </div>
+                                <span asp-validation-for="TestEmail"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                            </div>
+                            <div class="col-md-9">
+                                <button type="submit" name="send-mass-email" class="btn btn-primary">
+                                    @T("Admin.Promotions.Campaigns.SendMassEmail")
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <div class="panel panel-default">
+                <div class="panel panel-body">
+                    <div class="form-group">
+                        <script>
+                            function toggleLoadedAllowedTokens() {
+                                $('#pnlAllowedTokens').toggle();
+                                if ($('#pnlAllowedTokens').css('display') == 'none') {
+                                    $('#allowedTokensShowHide').html('@T("Admin.Common.Show")');
+                                } else {
+                                    $('#allowedTokensShowHide').html('@T("Admin.Common.Hide")');
+                                }
+                            }
+                        </script>
+
+                        <div class="col-md-3">
+                            <nop-label asp-for="AllowedTokens" />
+                        </div>
+                        <div class="col-md-9">
+                            <a id="allowedTokensShowHide" href="javascript:toggleLoadedAllowedTokens();">@T("Admin.Common.Show")</a>
+                            <div id="pnlAllowedTokens" style="display: none">
+                                <div class="form-text-row">@Model.AllowedTokens</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="Name" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="Name" asp-required="true"/>
+                            <span asp-validation-for="Name"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="Subject" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="Subject" asp-required="true"/>
+                            <span asp-validation-for="Subject"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="Body" />
+                        </div>
+                        <div class="col-md-9">
+                            @if (adminAreaSettings.UseRichEditorInMessageTemplates)
+                            {
+                                //we use rich editor with BODY tag supported
+                                //it could be a better practice to implement one more editor (similar to RichEditor.cshtml)
+                                //with "enableFullPage" property set to "true". but we do not want to duplicate source code
+                                //that's why we use this workaround
+                                //we store a value into "ViewData" and then use it in the RichEditor.cshtml file
+                                ViewData["nop.RichEditor.EnableFullPage"] = true;
+                                <div class="input-group input-group-required">
+                                    <nop-editor asp-for="Body" asp-template="RichEditor" />
+                                    <div class="input-group-btn">
+                                        <nop-required/>
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <nop-textarea asp-for="Body" asp-required="true"></nop-textarea>
+                                <text>
+                                    <script>
+                                        $(document).ready(function () {
+                                            $('#@Html.IdFor(model => model.Body)').height($('#@Html.IdFor(model => model.Body)')[0].scrollHeight);
+                                        });
+                                    </script>
+                                </text>
+                            }
+                            <span asp-validation-for="Body"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="DontSendBeforeDate" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="DontSendBeforeDate" />
+                            <span asp-validation-for="DontSendBeforeDate"></span>
+                        </div>
+                    </div>
+                    <div class="form-group" @(Model.AvailableStores.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
+                        <div class="col-md-3">
+                            <nop-label asp-for="StoreId" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-select asp-for="StoreId" asp-items="Model.AvailableStores"/>
+                            <span asp-validation-for="StoreId"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="CustomerRoleId" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-select asp-for="CustomerRoleId" asp-items="Model.AvailableCustomerRoles"/>
+                            <span asp-validation-for="CustomerRoleId"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CampaignDetailsBottom, additionalData = Model })
+        </div>
+    </div>
+</div>

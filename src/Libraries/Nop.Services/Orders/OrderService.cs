@@ -6,8 +6,6 @@ using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
-using Nop.Core.Domain.Payments;
-using Nop.Core.Domain.Shipping;
 using Nop.Services.Events;
 
 namespace Nop.Services.Orders
@@ -78,6 +76,19 @@ namespace Nop.Services.Orders
         }
 
         /// <summary>
+        /// Gets an order
+        /// </summary>
+        /// <param name="customOrderNumber">The custom order number</param>
+        /// <returns>Order</returns>
+        public virtual Order GetOrderByCustomOrderNumber(string customOrderNumber)
+        {
+            if (string.IsNullOrEmpty(customOrderNumber))
+                return null;
+           
+            return _orderRepository.Table.FirstOrDefault(o => o.CustomOrderNumber == customOrderNumber);
+        }
+
+        /// <summary>
         /// Get orders by identifiers
         /// </summary>
         /// <param name="orderIds">Order identifiers</param>
@@ -88,12 +99,12 @@ namespace Nop.Services.Orders
                 return new List<Order>();
 
             var query = from o in _orderRepository.Table
-                        where orderIds.Contains(o.Id)
+                        where orderIds.Contains(o.Id) && !o.Deleted
                         select o;
             var orders = query.ToList();
             //sort by passed identifiers
             var sortedOrders = new List<Order>();
-            foreach (int id in orderIds)
+            foreach (var id in orderIds)
             {
                 var order = orders.Find(x => x.Id == id);
                 if (order != null)
@@ -126,10 +137,13 @@ namespace Nop.Services.Orders
         public virtual void DeleteOrder(Order order)
         {
             if (order == null)
-                throw new ArgumentNullException("order");
+                throw new ArgumentNullException(nameof(order));
 
             order.Deleted = true;
             UpdateOrder(order);
+
+            //event notification
+            _eventPublisher.EntityDeleted(order);
         }
 
         /// <summary>
@@ -148,12 +162,13 @@ namespace Nop.Services.Orders
         /// <param name="osIds">Order status identifiers; null to load all orders</param>
         /// <param name="psIds">Payment status identifiers; null to load all orders</param>
         /// <param name="ssIds">Shipping status identifiers; null to load all orders</param>
+        /// <param name="billingPhone">Billing phone. Leave empty to load all records.</param>
         /// <param name="billingEmail">Billing email. Leave empty to load all records.</param>
         /// <param name="billingLastName">Billing last name. Leave empty to load all records.</param>
         /// <param name="orderNotes">Search in order notes. Leave empty to load all records.</param>
-        /// <param name="orderGuid">Search by order GUID (Global unique identifier) or part of GUID. Leave empty to load all orders.</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
+        /// <param name="getOnlyTotalCount">A value in indicating whether you want to load only total number of records. Set to "true" if you don't want to load data from database</param>
         /// <returns>Orders</returns>
         public virtual IPagedList<Order> SearchOrders(int storeId = 0,
             int vendorId = 0, int customerId = 0,
@@ -161,26 +176,21 @@ namespace Nop.Services.Orders
             int billingCountryId = 0, string paymentMethodSystemName = null,
             DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
             List<int> osIds = null, List<int> psIds = null, List<int> ssIds = null,
-            string billingEmail = null, string billingLastName = "",
-            string orderNotes = null, string orderGuid = null,
-            int pageIndex = 0, int pageSize = int.MaxValue)
+            string billingPhone = null, string billingEmail = null, string billingLastName = "",
+            string orderNotes = null, int pageIndex = 0, int pageSize = int.MaxValue, bool getOnlyTotalCount = false)
         {
             var query = _orderRepository.Table;
             if (storeId > 0)
                 query = query.Where(o => o.StoreId == storeId);
             if (vendorId > 0)
             {
-                query = query
-                    .Where(o => o.OrderItems
-                    .Any(orderItem => orderItem.Product.VendorId == vendorId));
+                query = query.Where(o => o.OrderItems.Any(orderItem => orderItem.Product.VendorId == vendorId));
             }
             if (customerId > 0)
                 query = query.Where(o => o.CustomerId == customerId);
             if (productId > 0)
             {
-                query = query
-                    .Where(o => o.OrderItems
-                    .Any(orderItem => orderItem.Product.Id == productId));
+                query = query.Where(o => o.OrderItems.Any(orderItem => orderItem.ProductId == productId));
             }
             if (warehouseId > 0)
             {
@@ -203,7 +213,7 @@ namespace Nop.Services.Orders
             }
             if (billingCountryId > 0)
                 query = query.Where(o => o.BillingAddress != null && o.BillingAddress.CountryId == billingCountryId);
-            if (!String.IsNullOrEmpty(paymentMethodSystemName))
+            if (!string.IsNullOrEmpty(paymentMethodSystemName))
                 query = query.Where(o => o.PaymentMethodSystemName == paymentMethodSystemName);
             if (affiliateId > 0)
                 query = query.Where(o => o.AffiliateId == affiliateId);
@@ -211,33 +221,25 @@ namespace Nop.Services.Orders
                 query = query.Where(o => createdFromUtc.Value <= o.CreatedOnUtc);
             if (createdToUtc.HasValue)
                 query = query.Where(o => createdToUtc.Value >= o.CreatedOnUtc);
-            if (osIds != null && osIds.Count > 0)
+            if (osIds != null && osIds.Any())
                 query = query.Where(o => osIds.Contains(o.OrderStatusId));
-            if (psIds != null && psIds.Count > 0)
+            if (psIds != null && psIds.Any())
                 query = query.Where(o => psIds.Contains(o.PaymentStatusId));
-            if (ssIds != null && ssIds.Count > 0)
+            if (ssIds != null && ssIds.Any())
                 query = query.Where(o => ssIds.Contains(o.ShippingStatusId));
-            if (!String.IsNullOrEmpty(billingEmail))
-                query = query.Where(o => o.BillingAddress != null && !String.IsNullOrEmpty(o.BillingAddress.Email) && o.BillingAddress.Email.Contains(billingEmail));
-            if (!String.IsNullOrEmpty(billingLastName))
-                query = query.Where(o => o.BillingAddress != null && !String.IsNullOrEmpty(o.BillingAddress.LastName) && o.BillingAddress.LastName.Contains(billingLastName));
-            if (!String.IsNullOrEmpty(orderNotes))
+            if (!string.IsNullOrEmpty(billingPhone))
+                query = query.Where(o => o.BillingAddress != null && !string.IsNullOrEmpty(o.BillingAddress.PhoneNumber) && o.BillingAddress.PhoneNumber.Contains(billingPhone));
+            if (!string.IsNullOrEmpty(billingEmail))
+                query = query.Where(o => o.BillingAddress != null && !string.IsNullOrEmpty(o.BillingAddress.Email) && o.BillingAddress.Email.Contains(billingEmail));
+            if (!string.IsNullOrEmpty(billingLastName))
+                query = query.Where(o => o.BillingAddress != null && !string.IsNullOrEmpty(o.BillingAddress.LastName) && o.BillingAddress.LastName.Contains(billingLastName));
+            if (!string.IsNullOrEmpty(orderNotes))
                 query = query.Where(o => o.OrderNotes.Any(on => on.Note.Contains(orderNotes)));
             query = query.Where(o => !o.Deleted);
             query = query.OrderByDescending(o => o.CreatedOnUtc);
 
-            
-           
-            if (!String.IsNullOrEmpty(orderGuid))
-            {
-                //filter by GUID. Filter in BLL because EF doesn't support casting of GUID to string
-                var orders = query.ToList();
-                orders = orders.FindAll(o => o.OrderGuid.ToString().ToLowerInvariant().Contains(orderGuid.ToLowerInvariant()));
-                return new PagedList<Order>(orders, pageIndex, pageSize);
-            }
-            
             //database layer paging
-            return new PagedList<Order>(query, pageIndex, pageSize);
+            return new PagedList<Order>(query, pageIndex, pageSize, getOnlyTotalCount);
         }
 
         /// <summary>
@@ -247,7 +249,7 @@ namespace Nop.Services.Orders
         public virtual void InsertOrder(Order order)
         {
             if (order == null)
-                throw new ArgumentNullException("order");
+                throw new ArgumentNullException(nameof(order));
 
             _orderRepository.Insert(order);
 
@@ -262,7 +264,7 @@ namespace Nop.Services.Orders
         public virtual void UpdateOrder(Order order)
         {
             if (order == null)
-                throw new ArgumentNullException("order");
+                throw new ArgumentNullException(nameof(order));
 
             _orderRepository.Update(order);
 
@@ -280,10 +282,10 @@ namespace Nop.Services.Orders
             string paymentMethodSystemName)
         { 
             var query = _orderRepository.Table;
-            if (!String.IsNullOrWhiteSpace(authorizationTransactionId))
+            if (!string.IsNullOrWhiteSpace(authorizationTransactionId))
                 query = query.Where(o => o.AuthorizationTransactionId == authorizationTransactionId);
             
-            if (!String.IsNullOrWhiteSpace(paymentMethodSystemName))
+            if (!string.IsNullOrWhiteSpace(paymentMethodSystemName))
                 query = query.Where(o => o.PaymentMethodSystemName == paymentMethodSystemName);
             
             query = query.OrderByDescending(o => o.CreatedOnUtc);
@@ -292,7 +294,7 @@ namespace Nop.Services.Orders
         }
         
         #endregion
-        
+
         #region Orders items
 
         /// <summary>
@@ -326,46 +328,20 @@ namespace Nop.Services.Orders
         }
         
         /// <summary>
-        /// Gets all order items
+        /// Gets all downloadable order items
         /// </summary>
-        /// <param name="orderId">Order identifier; null to load all records</param>
         /// <param name="customerId">Customer identifier; null to load all records</param>
-        /// <param name="createdFromUtc">Order created date from (UTC); null to load all records</param>
-        /// <param name="createdToUtc">Order created date to (UTC); null to load all records</param>
-        /// <param name="os">Order status; null to load all records</param>
-        /// <param name="ps">Order payment status; null to load all records</param>
-        /// <param name="ss">Order shipment status; null to load all records</param>
-        /// <param name="loadDownloableProductsOnly">Value indicating whether to load downloadable products only</param>
-        /// <returns>Orders</returns>
-        public virtual IList<OrderItem> GetAllOrderItems(int? orderId,
-            int? customerId, DateTime? createdFromUtc, DateTime? createdToUtc, 
-            OrderStatus? os, PaymentStatus? ps, ShippingStatus? ss,
-            bool loadDownloableProductsOnly)
+        /// <returns>Order items</returns>
+        public virtual IList<OrderItem> GetDownloadableOrderItems(int customerId)
         {
-            int? orderStatusId = null;
-            if (os.HasValue)
-                orderStatusId = (int)os.Value;
-
-            int? paymentStatusId = null;
-            if (ps.HasValue)
-                paymentStatusId = (int)ps.Value;
-
-            int? shippingStatusId = null;
-            if (ss.HasValue)
-                shippingStatusId = (int)ss.Value;
-
+            if (customerId == 0)
+                throw new ArgumentOutOfRangeException("customerId");
 
             var query = from orderItem in _orderItemRepository.Table
                         join o in _orderRepository.Table on orderItem.OrderId equals o.Id
                         join p in _productRepository.Table on orderItem.ProductId equals p.Id
-                        where (!orderId.HasValue || orderId.Value == 0 || orderId == o.Id) &&
-                        (!customerId.HasValue || customerId.Value == 0 || customerId == o.CustomerId) &&
-                        (!createdFromUtc.HasValue || createdFromUtc.Value <= o.CreatedOnUtc) &&
-                        (!createdToUtc.HasValue || createdToUtc.Value >= o.CreatedOnUtc) &&
-                        (!orderStatusId.HasValue || orderStatusId == o.OrderStatusId) &&
-                        (!paymentStatusId.HasValue || paymentStatusId.Value == o.PaymentStatusId) &&
-                        (!shippingStatusId.HasValue || shippingStatusId.Value == o.ShippingStatusId) &&
-                        (!loadDownloableProductsOnly || p.IsDownload) &&
+                        where customerId == o.CustomerId &&
+                        p.IsDownload &&
                         !o.Deleted
                         orderby o.CreatedOnUtc descending, orderItem.Id
                         select orderItem;
@@ -381,7 +357,7 @@ namespace Nop.Services.Orders
         public virtual void DeleteOrderItem(OrderItem orderItem)
         {
             if (orderItem == null)
-                throw new ArgumentNullException("orderItem");
+                throw new ArgumentNullException(nameof(orderItem));
 
             _orderItemRepository.Delete(orderItem);
 
@@ -413,7 +389,7 @@ namespace Nop.Services.Orders
         public virtual void DeleteOrderNote(OrderNote orderNote)
         {
             if (orderNote == null)
-                throw new ArgumentNullException("orderNote");
+                throw new ArgumentNullException(nameof(orderNote));
 
             _orderNoteRepository.Delete(orderNote);
 
@@ -432,10 +408,13 @@ namespace Nop.Services.Orders
         public virtual void DeleteRecurringPayment(RecurringPayment recurringPayment)
         {
             if (recurringPayment == null)
-                throw new ArgumentNullException("recurringPayment");
+                throw new ArgumentNullException(nameof(recurringPayment));
 
             recurringPayment.Deleted = true;
             UpdateRecurringPayment(recurringPayment);
+
+            //event notification
+            _eventPublisher.EntityDeleted(recurringPayment);
         }
 
         /// <summary>
@@ -458,7 +437,7 @@ namespace Nop.Services.Orders
         public virtual void InsertRecurringPayment(RecurringPayment recurringPayment)
         {
             if (recurringPayment == null)
-                throw new ArgumentNullException("recurringPayment");
+                throw new ArgumentNullException(nameof(recurringPayment));
 
             _recurringPaymentRepository.Insert(recurringPayment);
 
@@ -473,7 +452,7 @@ namespace Nop.Services.Orders
         public virtual void UpdateRecurringPayment(RecurringPayment recurringPayment)
         {
             if (recurringPayment == null)
-                throw new ArgumentNullException("recurringPayment");
+                throw new ArgumentNullException(nameof(recurringPayment));
 
             _recurringPaymentRepository.Update(recurringPayment);
 
@@ -501,22 +480,23 @@ namespace Nop.Services.Orders
                 initialOrderStatusId = (int)initialOrderStatus.Value;
 
             var query1 = from rp in _recurringPaymentRepository.Table
-                         join c in _customerRepository.Table on rp.InitialOrder.CustomerId equals c.Id
-                         where
-                         (!rp.Deleted) &&
-                         (showHidden || !rp.InitialOrder.Deleted) &&
-                         (showHidden || !c.Deleted) &&
-                         (showHidden || rp.IsActive) &&
-                         (customerId == 0 || rp.InitialOrder.CustomerId == customerId) &&
-                         (storeId == 0 || rp.InitialOrder.StoreId == storeId) &&
-                         (initialOrderId == 0 || rp.InitialOrder.Id == initialOrderId) &&
-                         (!initialOrderStatusId.HasValue || initialOrderStatusId.Value == 0 || rp.InitialOrder.OrderStatusId == initialOrderStatusId.Value)
-                         select rp.Id;
+                join c in _customerRepository.Table on rp.InitialOrder.CustomerId equals c.Id
+                where
+                (!rp.Deleted) &&
+                (showHidden || !rp.InitialOrder.Deleted) &&
+                (showHidden || !c.Deleted) &&
+                (showHidden || rp.IsActive) &&
+                (customerId == 0 || rp.InitialOrder.CustomerId == customerId) &&
+                (storeId == 0 || rp.InitialOrder.StoreId == storeId) &&
+                (initialOrderId == 0 || rp.InitialOrder.Id == initialOrderId) &&
+                (!initialOrderStatusId.HasValue || initialOrderStatusId.Value == 0 ||
+                 rp.InitialOrder.OrderStatusId == initialOrderStatusId.Value)
+                select rp.Id;
 
             var query2 = from rp in _recurringPaymentRepository.Table
-                         where query1.Contains(rp.Id)
-                         orderby rp.StartDateUtc, rp.Id
-                         select rp;
+                where query1.Contains(rp.Id)
+                orderby rp.StartDateUtc, rp.Id
+                select rp;
 
             var recurringPayments = new PagedList<RecurringPayment>(query2, pageIndex, pageSize);
             return recurringPayments;

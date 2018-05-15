@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using Nop.Core.Domain.Catalog;
 using Nop.Tests;
 using NUnit.Framework;
 
@@ -11,42 +10,25 @@ namespace Nop.Data.Tests.Catalog
         [Test]
         public void Can_save_and_load_specificationAttribute()
         {
-            var specificationAttribute = new SpecificationAttribute
-            {
-                Name = "Name 1",
-                DisplayOrder = 1,
-            };
+            var specificationAttribute = this.GetTestSpecificationAttribute();
 
-            var fromDb = SaveAndLoadEntity(specificationAttribute);
+            var fromDb = SaveAndLoadEntity(this.GetTestSpecificationAttribute());
             fromDb.ShouldNotBeNull();
-            fromDb.Name.ShouldEqual("Name 1");
-            fromDb.DisplayOrder.ShouldEqual(1);
+            fromDb.PropertiesShouldEqual(specificationAttribute);
         }
 
         [Test]
         public void Can_save_and_load_specificationAttribute_with_specificationAttributeOptions()
         {
-            var specificationAttribute = new SpecificationAttribute
-            {
-                Name = "Name 1",
-                DisplayOrder = 1
-            };
-            specificationAttribute.SpecificationAttributeOptions.Add
-                (
-                    new SpecificationAttributeOption
-                    {
-                        Name = "SpecificationAttributeOption name 1",
-                        DisplayOrder = 1,
-                    }
-                );
+            var specificationAttribute = this.GetTestSpecificationAttribute();
+            specificationAttribute.SpecificationAttributeOptions.Add(this.GetTestSpecificationAttributeOption());
             var fromDb = SaveAndLoadEntity(specificationAttribute);
             fromDb.ShouldNotBeNull();
-            fromDb.Name.ShouldEqual("Name 1");
-
+            fromDb.PropertiesShouldEqual(this.GetTestSpecificationAttribute());
 
             fromDb.SpecificationAttributeOptions.ShouldNotBeNull();
             (fromDb.SpecificationAttributeOptions.Count == 1).ShouldBeTrue();
-            fromDb.SpecificationAttributeOptions.First().Name.ShouldEqual("SpecificationAttributeOption name 1");
+            fromDb.SpecificationAttributeOptions.First().PropertiesShouldEqual(this.GetTestSpecificationAttributeOption());
         }
     }
 }

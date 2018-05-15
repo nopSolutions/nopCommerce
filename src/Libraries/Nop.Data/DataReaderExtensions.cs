@@ -7,6 +7,9 @@ using System.Reflection;
 
 namespace Nop.Data
 {
+    /// <summary>
+    /// Data reader extensions
+    /// </summary>
     public static class DataReaderExtensions
     {
         /// <summary>
@@ -91,9 +94,9 @@ namespace Nop.Data
                     piList.Add(prop.Name.ToLower(), prop);
             }
 
-            for (int index = 0; index < reader.FieldCount; index++)
+            for (var index = 0; index < reader.FieldCount; index++)
             {
-                string name = reader.GetName(index).ToLower();
+                var name = reader.GetName(index).ToLower();
                 if (piList.ContainsKey(name))
                 {
                     var prop = piList[name];

@@ -1,0 +1,50 @@
+﻿@model Nop.Plugin.ExternalAuth.Facebook.Models.ConfigurationModel
+@{
+    Layout = "_ConfigurePlugin";
+}
+@inject Nop.Core.IWebHelper webHelper
+
+<form asp-controller="FacebookAuthentication" asp-action="Configure" method="post">
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <p>
+                    To configure authentication with Facebook follow these steps:<br />
+                    <br />
+                    1. Navigate to the <a href="https://developers.facebook.com/apps" target="_blank">Facebook for Developers</a> page and sign in. If you don't already have a Facebook account, use the <b>Sign up for Facebook</b> link on the login page to create one.<br />
+                    2. Tap the <b>+ Add a New App button</b> in the upper right corner to create a new App ID. (If this is your first app with Facebook, the text of the button will be <b>Create a New App</b>.)<br />
+                    3. Fill out the form and tap the <b>Create App ID button</b>.<br />
+                    4. The <b>Product Setup</b> page is displayed, letting you select the features for your new app. Click <b>Get Started</b> on <b>Facebook Login</b>.<br />
+                    5. Click the <b>Settings</b> link in the menu at the left, you are presented with the <b>Client OAuth Settings</b> page with some defaults already set.<br />
+                    6. Enter "@($"{webHelper.GetStoreLocation()}signin-facebook")" into the <b>Valid OAuth Redirect URIs</b> field.<br />
+                    7. Click <b>Save Changes</b>.<br />
+                    8. Click the <b>Dashboard</b> link in the left navigation.<br />
+                    9. Copy your App ID and App secret below.<br />
+                </p>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="ClientId" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="ClientId" />
+                        <span asp-validation-for="ClientId"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="ClientSecret" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="ClientSecret" />
+                        <span asp-validation-for="ClientSecret"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-9 col-md-offset-3">
+                        <input type="submit" name="save" class="btn bg-primary" value="@T("Admin.Common.Save")" />
+                    </div>
+                </div> 
+            </div>
+        </div>
+    </div> 
+</form>

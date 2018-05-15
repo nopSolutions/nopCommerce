@@ -2,8 +2,14 @@ using Nop.Core.Domain.Directory;
 
 namespace Nop.Data.Mapping.Directory
 {
+    /// <summary>
+    /// Mapping class
+    /// </summary>
     public partial class CurrencyMap : NopEntityTypeConfiguration<Currency>
     {
+        /// <summary>
+        /// Ctor
+        /// </summary>
         public CurrencyMap()
         {
             this.ToTable("Currency");
@@ -13,6 +19,8 @@ namespace Nop.Data.Mapping.Directory
             this.Property(c => c.DisplayLocale).HasMaxLength(50);
             this.Property(c => c.CustomFormatting).HasMaxLength(50);
             this.Property(c => c.Rate).HasPrecision(18, 4);
+
+            this.Ignore(c => c.RoundingType);
         }
     }
 }

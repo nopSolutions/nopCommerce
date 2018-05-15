@@ -1,0 +1,87 @@
+@model LanguageModel
+
+@{
+    //page title
+    ViewBag.Title = T("Admin.Configuration.Languages.EditLanguageDetails").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Languages");
+}
+
+
+<form asp-controller="Language" asp-action="Edit" method="post">
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("Admin.Configuration.Languages.EditLanguageDetails") - @Model.Name
+            <small>
+                <i class="fa fa-arrow-circle-left"></i>
+                <a asp-action="List">@T("Admin.Configuration.Languages.BackToList")</a>
+            </small>
+        </h1>
+        <div class="pull-right">
+            <button type="submit" name="save" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.Save")
+            </button>
+            <button type="submit" name="save-continue" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.SaveContinue")
+            </button>
+            <a asp-action="ExportXml" asp-route-id="@Model.Id" class="btn bg-green">
+                <i class="fa fa-download"></i>
+                @T("Admin.Configuration.Languages.Export")
+            </a>
+            <button type="button" class="btn bg-olive" data-toggle="modal" data-target="#importxml-window">
+                <i class="fa fa-upload"></i>
+                @T("Admin.Configuration.Languages.Import")
+            </button>
+            <span id="language-delete" class="btn bg-red">
+                <i class="fa fa-trash-o"></i>
+                @T("Admin.Common.Delete")
+            </span>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.LanguageDetailsButtons, additionalData = Model })
+        </div>
+    </div>
+    @await Html.PartialAsync("_CreateOrUpdate", Model)
+</form>
+<nop-delete-confirmation asp-model-id="@Model.Id" asp-button-id="language-delete" />
+
+@*import resources form*@
+<div id="importxml-window" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="importxml-window-title">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="importxml-window-title">@T("Admin.Configuration.Languages.Import")</h4>
+            </div>
+            <form asp-controller="Language" asp-route-id="@Model.Id" asp-action="ImportXml" method="post" enctype="multipart/form-data">
+                <div class="form-horizontal">
+                    <div class="modal-body">
+                        <ul class="common-list">
+                            <li>
+                                <strong>@T("Admin.Configuration.Languages.XmlFile.Note1")</strong>
+                            </li>
+                            <li>
+                                <strong>@T("Admin.Configuration.Languages.XmlFile.Note2")</strong>
+                            </li>
+                        </ul>
+                        <div class="form-group">
+                            <div class="col-md-2">
+                                <div class="label-wrapper">
+                                    <label class="control-label">
+                                        @T("Admin.Configuration.Languages.XmlFile")
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-10">
+                                <input type="file" id="importxmlfile" name="importxmlfile" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <input id="importxmlsubmit" type="submit" class="btn btn-primary" value="@T("Admin.Configuration.Languages.Import")" />
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

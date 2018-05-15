@@ -1,0 +1,131 @@
+﻿@model CheckoutAttributeModel
+@using Nop.Core.Domain.Catalog
+
+<div class="panel-group">
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CheckoutAttributeDetailsConditionTop, additionalData = Model })
+    <div class="panel panel-default">
+        @if (Model.Id > 0)
+        {
+            <script>
+                $(document).ready(function () {
+                    $("#@Html.IdFor(model => model.ConditionModel.EnableCondition)").click(toggleEnableCondition);
+                    toggleEnableCondition();
+                });
+
+                function toggleEnableCondition() {
+                    if ($('#@Html.IdFor(model => model.ConditionModel.EnableCondition)').is(':checked')) {
+                        $('#pnlAttributes').show();
+                    } else {
+                        $('#pnlAttributes').hide();
+                    }
+                }
+            </script>
+
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="ConditionModel.EnableCondition"/>
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="ConditionModel.EnableCondition"/>
+                        <span asp-validation-for="ConditionModel.EnableCondition"></span>
+                    </div>
+                </div>
+                <nop-nested-setting asp-for="ConditionModel.EnableCondition" id="pnlAttributes">
+                    @if (Model.ConditionModel.ConditionAttributes.Count > 0)
+                    {
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="ConditionModel.SelectedAttributeId"/>
+                            </div>
+                            <div class="col-md-9">
+                                <nop-select asp-for="ConditionModel.SelectedAttributeId" asp-items="@(Model.ConditionModel.ConditionAttributes.Select(x => new SelectListItem() {Text = x.Name, Value = x.Id.ToString()}))"/>
+                                
+                                <script>
+                                    $(document).ready(function() {
+                                        $("#@Html.IdFor(model => model.ConditionModel.SelectedAttributeId)")
+                                            .change(toggleConditionAttributes);
+
+                                        toggleConditionAttributes();
+                                    });
+
+                                    function toggleConditionAttributes() {
+                                        var selectedCheckoutAttributeId =
+                                            $("#@Html.IdFor(model => model.ConditionModel.SelectedAttributeId)").val();
+                                        $('[id^="pnl_attribute_values_"]').hide();
+                                        $('#pnl_attribute_values_' + selectedCheckoutAttributeId).show();
+                                    }
+                                </script>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">&nbsp;</div>
+                            <div class="col-md-9">
+                                @for (var i = 0; i < Model.ConditionModel.ConditionAttributes.Count; i++)
+                                {
+                                    <input type="hidden" asp-for="@Model.ConditionModel.ConditionAttributes[i].Id"/>
+                                    <div id="@($"pnl_attribute_values_{Model.ConditionModel.ConditionAttributes[i].Id}")">
+                                        @switch (Model.ConditionModel.ConditionAttributes[i].AttributeControlType)
+                                        {
+                                            case AttributeControlType.DropdownList:
+                                                <nop-select asp-for="@Model.ConditionModel.ConditionAttributes[i].SelectedValueId" asp-items="Model.ConditionModel.ConditionAttributes[i].Values"/>
+                                                break;
+                                            case AttributeControlType.RadioList:
+                                            case AttributeControlType.ColorSquares:
+                                            case AttributeControlType.ImageSquares:
+                                                foreach (var value in Model.ConditionModel.ConditionAttributes[i].Values)
+                                                {
+                                                    <div class="radio">
+                                                        <label>
+                                                            <input type="radio" asp-for="@Model.ConditionModel.ConditionAttributes[i].SelectedValueId" value="@value.Value" checked="@value.Selected"/>
+                                                            @value.Text
+                                                        </label>
+                                                    </div>
+                                                }
+                                                break;
+                                            case AttributeControlType.Checkboxes:
+                                                for (var j = 0; j < Model.ConditionModel.ConditionAttributes[i].Values.Count; j++)
+                                                {
+                                                    <div class="checkbox">
+                                                        <label>
+                                                            <input type="hidden" asp-for="@Model.ConditionModel.ConditionAttributes[i].Values[j].Value"/>
+                                                            <nop-editor asp-for="@Model.ConditionModel.ConditionAttributes[i].Values[j].Selected"/>
+                                                            @Model.ConditionModel.ConditionAttributes[i].Values[j].Text
+                                                        </label>
+                                                    </div>
+                                                }
+                                                break;
+                                            case AttributeControlType.ReadonlyCheckboxes:
+                                            case AttributeControlType.TextBox:
+                                            case AttributeControlType.MultilineTextbox:
+                                            case AttributeControlType.Datepicker:
+                                            case AttributeControlType.FileUpload:
+                                            default:
+                                                //not supported as conditions
+                                                break;
+                                        }
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="form-group">
+                            <div class="col-md-9 col-md-offset-3">
+                                @T("Admin.Catalog.Attributes.CheckoutAttributes.Condition.NoAttributeExists")
+                            </div>
+                        </div>
+                    }
+                </nop-nested-setting>
+            </div>
+        }
+        else
+        {
+            <div class="panel-body">
+                @T("Admin.Catalog.Attributes.CheckoutAttributes.Condition.SaveBeforeEdit")
+            </div>
+        }
+    </div>
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CheckoutAttributeDetailsConditionBottom, additionalData = Model })
+</div>

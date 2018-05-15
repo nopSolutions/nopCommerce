@@ -2,8 +2,14 @@ using Nop.Core.Domain.Common;
 
 namespace Nop.Data.Mapping.Common
 {
+    /// <summary>
+    /// Mapping class
+    /// </summary>
     public partial class GenericAttributeMap : NopEntityTypeConfiguration<GenericAttribute>
     {
+        /// <summary>
+        /// Ctor
+        /// </summary>
         public GenericAttributeMap()
         {
             this.ToTable("GenericAttribute");

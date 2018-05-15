@@ -65,7 +65,7 @@ namespace Nop.Services.Tests.Localization
         {
             var languages = _languageService.GetAllLanguages();
             languages.ShouldNotBeNull();
-            (languages.Count > 0).ShouldBeTrue();
+            (languages.Any()).ShouldBeTrue();
         }
     }
 }

@@ -1,0 +1,184 @@
+﻿@{
+    Layout = "_ConfigurePlugin";
+}
+
+@model Nop.Plugin.Shipping.UPS.Models.UPSShippingModel
+@using Nop.Plugin.Shipping.UPS;
+
+<form asp-controller="ShippingUPS" asp-action="Configure" method="post">
+    <script>
+        $(document).ready(function () {
+            $("#PackingType").change(togglePackingType);
+            togglePackingType();
+        });
+
+        function togglePackingType() {
+            var selectedPackingTypeId = $("#PackingType").val();
+            if (selectedPackingTypeId == @(((int)PackingType.PackByDimensions).ToString())) {
+                $('#pnlPassDimensions').show();
+                $('#pnlPackingPackageVolume').hide();
+            }
+            else if (selectedPackingTypeId == @(((int)PackingType.PackByOneItemPerPackage).ToString())) {
+                $('#pnlPassDimensions').hide();
+                $('#pnlPackingPackageVolume').hide();
+            }
+            else if (selectedPackingTypeId == @(((int)PackingType.PackByVolume).ToString())) {
+                $('#pnlPassDimensions').hide();
+                $('#pnlPackingPackageVolume').show();
+            }
+        }
+    </script>
+
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="Url" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="Url" />
+                        <span asp-validation-for="Url"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="AccountNumber" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="AccountNumber" />
+                        <span asp-validation-for="AccountNumber"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="AccessKey" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="AccessKey" />
+                        <span asp-validation-for="AccessKey"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="Username" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="Username" />
+                        <span asp-validation-for="Username"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="Password" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="Password" />
+                        <span asp-validation-for="Password"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="CustomerClassification" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-select asp-for="CustomerClassification" asp-items="Model.AvailableCustomerClassifications" />
+                        <span asp-validation-for="CustomerClassification"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="PickupType" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-select asp-for="PickupType" asp-items="Model.AvailablePickupTypes" />
+                        <span asp-validation-for="PickupType"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="PackagingType" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-select asp-for="PackagingType" asp-items="Model.AvailablePackagingTypes" />
+                        <span asp-validation-for="PackagingType"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="InsurePackage" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="InsurePackage" />
+                        <span asp-validation-for="InsurePackage"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="AdditionalHandlingCharge" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="AdditionalHandlingCharge" />
+                        <span asp-validation-for="AdditionalHandlingCharge"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="AvailableCarrierServices" />
+                    </div>
+                    <div class="col-md-9">
+                        @foreach (var csd in Model.AvailableCarrierServices)
+                        {
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" name="CheckedCarrierServices" value="@(csd)" checked="@Model.CarrierServicesOffered.Contains(csd)" />
+                                    @csd
+                                </label>
+                            </div>
+                        }
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="PackingTypeValues" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-select asp-for="PackingType" asp-items="Model.PackingTypeValues" />
+                    </div>
+                </div>
+                <div class="form-group" id="pnlPassDimensions">
+                    <div class="col-md-3">
+                        <nop-label asp-for="PassDimensions" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="PassDimensions" />
+                        <span asp-validation-for="PassDimensions"></span>
+                    </div>
+                </div>
+                <div class="form-group" id="pnlPackingPackageVolume">
+                    <div class="col-md-3">
+                        <nop-label asp-for="PackingPackageVolume" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="PackingPackageVolume" />
+                        <span asp-validation-for="PackingPackageVolume"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="Tracing" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="Tracing" />
+                        <span asp-validation-for="Tracing"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-9 col-md-offset-3">
+                        <input type="submit" name="save" class="btn bg-blue" value="@T("Admin.Common.Save")" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

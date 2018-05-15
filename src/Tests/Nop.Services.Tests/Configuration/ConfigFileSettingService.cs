@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Linq;
 using Nop.Core;
 using Nop.Core.Caching;
@@ -13,7 +12,7 @@ namespace Nop.Services.Tests.Configuration
 {
     public class ConfigFileSettingService : SettingService
     {
-        public ConfigFileSettingService(ICacheManager cacheManager, 
+        public ConfigFileSettingService(IStaticCacheManager cacheManager, 
             IEventPublisher eventPublisher,
             IRepository<Setting> settingRepository):
             base (cacheManager, eventPublisher, settingRepository)
@@ -29,7 +28,7 @@ namespace Nop.Services.Tests.Configuration
             int storeId = 0, bool loadSharedValueIfNotFound = false)
         {
 
-            if (String.IsNullOrEmpty(key))
+            if (string.IsNullOrEmpty(key))
                 return defaultValue;
 
             var settings = GetAllSettings();
@@ -64,14 +63,24 @@ namespace Nop.Services.Tests.Configuration
         public override IList<Setting> GetAllSettings()
         {
             var settings = new List<Setting>();
-            var appSettings = ConfigurationManager.AppSettings;
-            foreach (var setting in appSettings.AllKeys)
+            var appSettings = new Dictionary<string, string>
+            {
+                { "Setting1", "SomeValue"},
+                { "Setting2", "25"},
+                { "Setting3", "12/25/2010"},
+                { "TestSettings.ServerName", "Ruby"},
+                { "TestSettings.Ip", "192.168.0.1"},
+                { "TestSettings.PortNumber", "21"},
+                { "TestSettings.Username", "admin"},
+                { "TestSettings.Password", "password"}
+            };
+            foreach (var setting in appSettings)
             {
                 settings.Add(new Setting
-                                 {
-                                     Name = setting.ToLowerInvariant(),
-                                     Value = appSettings[setting]
-                                 });
+                {
+                    Name = setting.Key.ToLowerInvariant(),
+                    Value = setting.Value
+                });
             }
 
             return settings;

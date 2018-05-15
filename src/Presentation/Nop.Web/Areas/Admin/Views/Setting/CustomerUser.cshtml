@@ -1,0 +1,47 @@
+@model CustomerUserSettingsModel
+@inject IEventPublisher eventPublisher
+
+@{
+    //page title
+    ViewBag.Title = T("Admin.Configuration.Settings.CustomerUser").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Customer and user settings");
+}
+
+<form asp-controller="Setting" asp-action="CustomerUser" method="post">
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("Admin.Configuration.Settings.CustomerUser")
+        </h1>
+        <div class="pull-right">
+            <button type="submit" name="save" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.Save")
+            </button>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CustomerUserSettingsButtons })
+        </div>
+    </div>
+    <div asp-validation-summary="All"></div>
+    
+    <div class="content">
+        <div class="form-horizontal">
+            @await Component.InvokeAsync("SettingMode")
+
+            <nop-tabs id="customersettings-edit">
+                <nop-tab asp-name="tab-customer" asp-default="true" asp-title="@T("Admin.Configuration.Settings.CustomerUser.CustomerSettings")">@await Html.PartialAsync("_CustomerUser.Settings", Model)</nop-tab>
+                <nop-tab asp-name="tab-customerformfields" asp-title="@T("Admin.Configuration.Settings.CustomerUser.CustomerFormFields")">@await Html.PartialAsync("_CustomerUser.CustomerFormFields", Model)</nop-tab>
+                <nop-tab asp-name="tab-addressformfields" asp-title="@T("Admin.Configuration.Settings.CustomerUser.AddressFormFields")">@await Html.PartialAsync("_CustomerUser.AddressFormFields", Model)</nop-tab>
+            </nop-tabs>
+        </div>
+    </div>
+
+    @{
+        //custom tabs
+        var eventMessage = new AdminTabStripCreated(this.Html, "customersettings-edit");
+        eventPublisher.Publish(eventMessage);
+        foreach (var eventBlock in eventMessage.BlocksToRender)
+        {
+            @eventBlock
+        }
+    }
+</form>

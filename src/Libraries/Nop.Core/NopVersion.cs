@@ -1,6 +1,8 @@
-﻿
-namespace Nop.Core
+﻿namespace Nop.Core
 {
+    /// <summary>
+    /// nopCommere version
+    /// </summary>
     public static class NopVersion
     {
         /// <summary>
@@ -10,7 +12,7 @@ namespace Nop.Core
         {
             get
             {
-                return "3.80";
+                return "4.10";
             }
         }
     }

@@ -172,15 +172,6 @@ namespace Nop.Core.Tests.Domain.Customers
             customer.IsRegistered().ShouldBeTrue();
         }
 
-
-
-        [Test]
-        public void New_customer_has_clear_password_type()
-        {
-            var customer = new Customer();
-            customer.PasswordFormat.ShouldEqual(PasswordFormat.Clear);
-        }
-
         [Test]
         public void Can_add_address()
         {

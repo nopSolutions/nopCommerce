@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Nop.Core.Domain.Orders;
 
 namespace Nop.Services.Orders
@@ -21,7 +22,7 @@ namespace Nop.Services.Orders
         /// </summary>
         public bool Success
         {
-            get { return (this.Errors.Count == 0); }
+            get { return (!Errors.Any()); }
         }
 
         /// <summary>
@@ -30,7 +31,7 @@ namespace Nop.Services.Orders
         /// <param name="error">Error</param>
         public void AddError(string error)
         {
-            this.Errors.Add(error);
+            Errors.Add(error);
         }
 
         /// <summary>

@@ -47,6 +47,9 @@
   <LocaleResource Name="DatabaseCreationError">
     <Value>حدث خطأ اثناء إنشاء قاعدة البيانات : {0}</Value>
   </LocaleResource>
+  <LocaleResource Name="Database">
+    <Value>قاعدة بيانات</Value>
+  </LocaleResource>
   <LocaleResource Name="DatabaseInformation">
     <Value>معلومات قاعدة البيانات</Value>
   </LocaleResource>
@@ -90,7 +93,7 @@
     <Value>إعادة التثبيت</Value>
   </LocaleResource>
   <LocaleResource Name="RestartInstallationTooltip">
-	    <Value>اضغط هنا لإعادة عملية التثبيت (إزالة جميع الملفات المؤقته)</Value>
+    <Value>اضغط هنا لإعادة عملية التثبيت (إزالة جميع الملفات المؤقته)</Value>
   </LocaleResource>
   <LocaleResource Name="SetupFailed">
     <Value>فشل في تنصيب: {0}</Value>
@@ -120,7 +123,7 @@
     <Value>SQL اسم المستخدم مطلوب</Value>
   </LocaleResource>
   <LocaleResource Name="SqlStandard">
-	   <Value>استخدم قاعدة بيانات SQL (أو SQL Express)</Value>
+    <Value>استخدم قاعدة بيانات SQL (أو SQL Express)</Value>
   </LocaleResource>
   <LocaleResource Name="StoreInformation">
     <Value>معلومات المتجر</Value>

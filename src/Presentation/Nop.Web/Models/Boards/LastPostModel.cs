@@ -1,7 +1,8 @@
-﻿
+﻿using Nop.Web.Framework.Models;
+
 namespace Nop.Web.Models.Boards
 {
-    public partial class LastPostModel
+    public partial class LastPostModel : BaseNopModel
     {
         public int Id { get; set; }
         public int ForumTopicId { get; set; }

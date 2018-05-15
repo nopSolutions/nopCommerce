@@ -1,0 +1,18 @@
+@model CustomerModel
+
+<div class="panel-group">
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CustomerDetailsImpersonateTop, additionalData = Model })
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <ul class="common-list">
+                <li>@T("Admin.Customers.Customers.Impersonate.Description1")</li>
+                <li>@T("Admin.Customers.Customers.Impersonate.Description2")</li>
+            </ul>
+            <button type="submit" name="impersonate" class="btn btn-primary">
+                <i class="fa fa-shopping-cart"></i>
+                @T("Admin.Customers.Customers.Impersonate.Button")
+            </button>
+        </div>
+    </div>
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CustomerDetailsImpersonateBottom, additionalData = Model })
+</div>

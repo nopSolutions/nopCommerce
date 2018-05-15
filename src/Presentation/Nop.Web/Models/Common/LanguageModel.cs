@@ -1,4 +1,4 @@
-﻿using Nop.Web.Framework.Mvc;
+﻿using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Models.Common
 {
@@ -7,6 +7,5 @@ namespace Nop.Web.Models.Common
         public string Name { get; set; }
 
         public string FlagImageFileName { get; set; }
-
     }
 }

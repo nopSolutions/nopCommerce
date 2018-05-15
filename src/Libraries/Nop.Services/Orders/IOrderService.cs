@@ -2,8 +2,6 @@ using System;
 using System.Collections.Generic;
 using Nop.Core;
 using Nop.Core.Domain.Orders;
-using Nop.Core.Domain.Payments;
-using Nop.Core.Domain.Shipping;
 
 namespace Nop.Services.Orders
 {
@@ -20,6 +18,13 @@ namespace Nop.Services.Orders
         /// <param name="orderId">The order identifier</param>
         /// <returns>Order</returns>
         Order GetOrderById(int orderId);
+
+        /// <summary>
+        /// Gets an order
+        /// </summary>
+        /// <param name="customOrderNumber">The custom order number</param>
+        /// <returns>Order</returns>
+        Order GetOrderByCustomOrderNumber(string customOrderNumber);
 
         /// <summary>
         /// Get orders by identifiers
@@ -57,12 +62,13 @@ namespace Nop.Services.Orders
         /// <param name="osIds">Order status identifiers; null to load all orders</param>
         /// <param name="psIds">Payment status identifiers; null to load all orders</param>
         /// <param name="ssIds">Shipping status identifiers; null to load all orders</param>
+        /// <param name="billingPhone">Billing phone. Leave empty to load all records.</param>
         /// <param name="billingEmail">Billing email. Leave empty to load all records.</param>
         /// <param name="billingLastName">Billing last name. Leave empty to load all records.</param>
         /// <param name="orderNotes">Search in order notes. Leave empty to load all records.</param>
-        /// <param name="orderGuid">Search by order GUID (Global unique identifier) or part of GUID. Leave empty to load all records.</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
+        /// <param name="getOnlyTotalCount">A value in indicating whether you want to load only total number of records. Set to "true" if you don't want to load data from database</param>
         /// <returns>Orders</returns>
         IPagedList<Order> SearchOrders(int storeId = 0,
             int vendorId = 0, int customerId = 0,
@@ -70,9 +76,8 @@ namespace Nop.Services.Orders
             int billingCountryId = 0, string paymentMethodSystemName = null,
             DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
             List<int> osIds = null, List<int> psIds = null, List<int> ssIds = null,
-            string billingEmail = null, string billingLastName = "", 
-            string orderNotes = null, string orderGuid = null,
-            int pageIndex = 0, int pageSize = int.MaxValue);
+            string billingPhone = null, string billingEmail = null, string billingLastName = "", 
+            string orderNotes = null, int pageIndex = 0, int pageSize = int.MaxValue, bool getOnlyTotalCount = false);
         
         /// <summary>
         /// Inserts an order
@@ -93,11 +98,11 @@ namespace Nop.Services.Orders
         /// <param name="paymentMethodSystemName">Payment method system name</param>
         /// <returns>Order</returns>
         Order GetOrderByAuthorizationTransactionIdAndPaymentMethod(string authorizationTransactionId, string paymentMethodSystemName);
-        
+
         #endregion
 
         #region Orders items
-        
+
         /// <summary>
         /// Gets an order item
         /// </summary>
@@ -113,21 +118,11 @@ namespace Nop.Services.Orders
         OrderItem GetOrderItemByGuid(Guid orderItemGuid);
 
         /// <summary>
-        /// Gets all order items
+        /// Gets all downloadable order items
         /// </summary>
-        /// <param name="orderId">Order identifier; null to load all records</param>
         /// <param name="customerId">Customer identifier; null to load all records</param>
-        /// <param name="createdFromUtc">Order created date from (UTC); null to load all records</param>
-        /// <param name="createdToUtc">Order created date to (UTC); null to load all records</param>
-        /// <param name="os">Order status; null to load all records</param>
-        /// <param name="ps">Order payment status; null to load all records</param>
-        /// <param name="ss">Order shipment status; null to load all records</param>
-        /// <param name="loadDownloableProductsOnly">Value indicating whether to load downloadable products only</param>
         /// <returns>Order items</returns>
-        IList<OrderItem> GetAllOrderItems(int? orderId,
-           int? customerId, DateTime? createdFromUtc, DateTime? createdToUtc, 
-           OrderStatus? os, PaymentStatus? ps, ShippingStatus? ss,
-           bool loadDownloableProductsOnly = false);
+        IList<OrderItem> GetDownloadableOrderItems(int customerId);
 
         /// <summary>
         /// Delete an order item

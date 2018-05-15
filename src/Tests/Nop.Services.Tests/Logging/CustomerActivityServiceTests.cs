@@ -15,7 +15,7 @@ namespace Nop.Services.Tests.Logging
     [TestFixture]
     public class CustomerActivityServiceTests : ServiceTest
     {
-        private ICacheManager _cacheManager;
+        private IStaticCacheManager _cacheManager;
         private IRepository<ActivityLog> _activityLogRepository;
         private IRepository<ActivityLogType> _activityLogTypeRepository;
         private IWorkContext _workContext;
@@ -23,6 +23,7 @@ namespace Nop.Services.Tests.Logging
         private ActivityLogType _activityType1, _activityType2;
         private ActivityLog _activity1, _activity2;
         private Customer _customer1, _customer2;
+        private IWebHelper _webHelper;
 
         [SetUp]
         public new void SetUp()
@@ -65,27 +66,30 @@ namespace Nop.Services.Tests.Logging
             _activity2 = new ActivityLog
             {
                 Id = 2,
-                ActivityLogType = _activityType1,
+                ActivityLogType = _activityType2,
                 CustomerId = _customer2.Id,
                 Customer = _customer2
             };
             _cacheManager = new NopNullCache();
             _workContext = MockRepository.GenerateMock<IWorkContext>();
+            _webHelper = MockRepository.GenerateMock<IWebHelper>();
             _activityLogRepository = MockRepository.GenerateMock<IRepository<ActivityLog>>();
             _activityLogTypeRepository = MockRepository.GenerateMock<IRepository<ActivityLogType>>();
             _activityLogTypeRepository.Expect(x => x.Table).Return(new List<ActivityLogType> { _activityType1, _activityType2 }.AsQueryable());
             _activityLogRepository.Expect(x => x.Table).Return(new List<ActivityLog> { _activity1, _activity2 }.AsQueryable());
-            _customerActivityService = new CustomerActivityService(_cacheManager, _activityLogRepository, _activityLogTypeRepository, _workContext, null, null, null);
+            _customerActivityService = new CustomerActivityService(_cacheManager, _activityLogRepository, _activityLogTypeRepository, _workContext, null, null, null, _webHelper);
         }
 
         [Test]
         public void Can_Find_Activities()
         {
-            var activities = _customerActivityService.GetAllActivities(null, null, 1, 0,0,10);
+            var activities = _customerActivityService.GetAllActivities(customerId: 1, pageSize: 10);
             activities.Contains(_activity1).ShouldBeTrue();
-            activities = _customerActivityService.GetAllActivities(null, null, 2, 0, 0, 10);
+
+            activities = _customerActivityService.GetAllActivities(customerId: 2, pageSize: 10);
             activities.Contains(_activity1).ShouldBeFalse();
-            activities = _customerActivityService.GetAllActivities(null, null, 2, 0, 0, 10);
+
+            activities = _customerActivityService.GetAllActivities(customerId: 2, pageSize: 10);
             activities.Contains(_activity2).ShouldBeTrue();
         }
     }

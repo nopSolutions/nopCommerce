@@ -65,12 +65,12 @@ namespace Nop.Services.Catalog
         void UpdateProducts(IList<Product> products);
 
         /// <summary>
-        /// Get (visible) product number in certain category
+        /// Get number of product (published and visible) in certain category
         /// </summary>
         /// <param name="categoryIds">Category identifiers</param>
         /// <param name="storeId">Store identifier; 0 to load all records</param>
-        /// <returns>Product number</returns>
-        int GetCategoryProductNumber(IList<int> categoryIds = null, int storeId = 0);
+        /// <returns>Number of products</returns>
+        int GetNumberOfProductsInCategory(IList<int> categoryIds = null, int storeId = 0);
 
         /// <summary>
         /// Search products
@@ -91,6 +91,7 @@ namespace Nop.Services.Catalog
         /// <param name="productTagId">Product tag identifier; 0 to load all records</param>
         /// <param name="keywords">Keywords</param>
         /// <param name="searchDescriptions">A value indicating whether to search by a specified "keyword" in product descriptions</param>
+        /// <param name="searchManufacturerPartNumber">A value indicating whether to search by a specified "keyword" in manufacturer part number</param>
         /// <param name="searchSku">A value indicating whether to search by a specified "keyword" in product SKU</param>
         /// <param name="searchProductTags">A value indicating whether to search by a specified "keyword" in product tags</param>
         /// <param name="languageId">Language identifier (search for text searching)</param>
@@ -120,6 +121,7 @@ namespace Nop.Services.Catalog
             int productTagId = 0,
             string keywords = null,
             bool searchDescriptions = false,
+            bool searchManufacturerPartNumber = true,
             bool searchSku = true,
             bool searchProductTags = false,
             int languageId = 0,
@@ -149,6 +151,7 @@ namespace Nop.Services.Catalog
         /// <param name="productTagId">Product tag identifier; 0 to load all records</param>
         /// <param name="keywords">Keywords</param>
         /// <param name="searchDescriptions">A value indicating whether to search by a specified "keyword" in product descriptions</param>
+        /// <param name="searchManufacturerPartNumber">A value indicating whether to search by a specified "keyword" in manufacturer part number</param>
         /// <param name="searchSku">A value indicating whether to search by a specified "keyword" in product SKU</param>
         /// <param name="searchProductTags">A value indicating whether to search by a specified "keyword" in product tags</param>
         /// <param name="languageId">Language identifier (search for text searching)</param>
@@ -180,6 +183,7 @@ namespace Nop.Services.Catalog
             int productTagId = 0,
             string keywords = null,
             bool searchDescriptions = false,
+            bool searchManufacturerPartNumber = true,
             bool searchSku = true,
             bool searchProductTags = false, 
             int languageId = 0,
@@ -218,12 +222,26 @@ namespace Nop.Services.Catalog
         /// <summary>
         /// Get low stock products
         /// </summary>
-        /// <param name="vendorId">Vendor identifier; 0 to load all records</param>
-        /// <param name="products">Low stock products</param>
-        /// <param name="combinations">Low stock attribute combinations</param>
-        void GetLowStockProducts(int vendorId,
-            out IList<Product> products,
-            out IList<ProductAttributeCombination> combinations);
+        /// <param name="vendorId">Vendor identifier; pass null to load all records</param>
+        /// <param name="loadPublishedOnly">Whether to load published products only; pass null to load all products, pass true to load only published products, pass false to load only unpublished products</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
+        /// <param name="getOnlyTotalCount">A value in indicating whether you want to load only total number of records. Set to "true" if you don't want to load data from database</param>
+        /// <returns>Products</returns>
+        IPagedList<Product> GetLowStockProducts(int? vendorId = null, bool? loadPublishedOnly = true,
+            int pageIndex = 0, int pageSize = int.MaxValue, bool getOnlyTotalCount = false);
+
+        /// <summary>
+        /// Get low stock product combinations
+        /// </summary>
+        /// <param name="vendorId">Vendor identifier; pass null to load all records</param>
+        /// <param name="loadPublishedOnly">Whether to load combinations of published products only; pass null to load all products, pass true to load only published products, pass false to load only unpublished products</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
+        /// <param name="getOnlyTotalCount">A value in indicating whether you want to load only total number of records. Set to "true" if you don't want to load data from database</param>
+        /// <returns>Product combinations</returns>
+        IPagedList<ProductAttributeCombination> GetLowStockProductCombinations(int? vendorId = null, bool? loadPublishedOnly = true,
+            int pageIndex = 0, int pageSize = int.MaxValue, bool getOnlyTotalCount = false);
 
         /// <summary>
         /// Gets a product by SKU
@@ -236,8 +254,9 @@ namespace Nop.Services.Catalog
         /// Gets a products by SKU array
         /// </summary>
         /// <param name="skuArray">SKU array</param>
+        /// <param name="vendorId">Vendor ID; 0 to load all records</param>
         /// <returns>Products</returns>
-        IList<Product> GetProductsBySku(string[] skuArray);
+        IList<Product> GetProductsBySku(string[] skuArray, int vendorId = 0);
 
         /// <summary>
         /// Update HasTierPrices property (used for performance optimization)
@@ -251,6 +270,13 @@ namespace Nop.Services.Catalog
         /// <param name="product">Product</param>
         void UpdateHasDiscountsApplied(Product product);
 
+        /// <summary>
+        /// Gets number of products by vendor identifier
+        /// </summary>
+        /// <param name="vendorId">Vendor identifier</param>
+        /// <returns>Number of products</returns>
+        int GetNumberOfProductsByVendorId(int vendorId);
+
         #endregion
 
         #region Inventory management methods
@@ -259,9 +285,10 @@ namespace Nop.Services.Catalog
         /// Adjust inventory
         /// </summary>
         /// <param name="product">Product</param>
-        /// <param name="quantityToChange">Quantity to increase or descrease</param>
+        /// <param name="quantityToChange">Quantity to increase or decrease</param>
         /// <param name="attributesXml">Attributes in XML format</param>
-        void AdjustInventory(Product product, int quantityToChange, string attributesXml = "");
+        /// <param name="message">Message for the stock quantity history</param>
+        void AdjustInventory(Product product, int quantityToChange, string attributesXml = "", string message = "");
 
         /// <summary>
         /// Reserve the given quantity in the warehouses.
@@ -283,7 +310,8 @@ namespace Nop.Services.Catalog
         /// <param name="product">Product</param>
         /// <param name="warehouseId">Warehouse identifier</param>
         /// <param name="quantity">Quantity, must be negative</param>
-        void BookReservedInventory(Product product, int warehouseId, int quantity);
+        /// <param name="message">Message for the stock quantity history</param>
+        void BookReservedInventory(Product product, int warehouseId, int quantity, string message = "");
 
         /// <summary>
         /// Reverse booked inventory (if acceptable)
@@ -291,7 +319,8 @@ namespace Nop.Services.Catalog
         /// <param name="product">product</param>
         /// <param name="shipmentItem">Shipment item</param>
         /// <returns>Quantity reversed</returns>
-        int ReverseBookedInventory(Product product, ShipmentItem shipmentItem);
+        /// <param name="message">Message for the stock quantity history</param>
+        int ReverseBookedInventory(Product product, ShipmentItem shipmentItem, string message = "");
 
         #endregion
 
@@ -347,6 +376,14 @@ namespace Nop.Services.Catalog
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Cross-sell products</returns>
         IList<CrossSellProduct> GetCrossSellProductsByProductId1(int productId1, bool showHidden = false);
+
+        /// <summary>
+        /// Gets cross-sell products by product identifier
+        /// </summary>
+        /// <param name="productIds">The first product identifiers</param>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
+        /// <returns>Cross-sell products</returns>
+        IList<CrossSellProduct> GetCrossSellProductsByProductIds(int[] productIds, bool showHidden = false);
 
         /// <summary>
         /// Gets a cross-sell product
@@ -440,6 +477,13 @@ namespace Nop.Services.Catalog
         /// <param name="productPicture">Product picture</param>
         void UpdateProductPicture(ProductPicture productPicture);
 
+        /// <summary>
+        /// Get the IDs of all product images 
+        /// </summary>
+        /// <param name="productsIds">Products IDs</param>
+        /// <returns>All picture identifiers grouped by product ID</returns>
+        IDictionary<int, int[]> GetProductsImagesIds(int [] productsIds);
+
         #endregion
 
         #region Product reviews
@@ -447,17 +491,22 @@ namespace Nop.Services.Catalog
         /// <summary>
         /// Gets all product reviews
         /// </summary>
-        /// <param name="customerId">Customer identifier; 0 to load all records</param>
+        /// <param name="customerId">Customer identifier (who wrote a review); 0 to load all records</param>
         /// <param name="approved">A value indicating whether to content is approved; null to load all records</param> 
         /// <param name="fromUtc">Item creation from; null to load all records</param>
         /// <param name="toUtc">Item item creation to; null to load all records</param>
         /// <param name="message">Search title or review text; null to load all records</param>
         /// <param name="storeId">The store identifier; pass 0 to load all records</param>
         /// <param name="productId">The product identifier; pass 0 to load all records</param>
+        /// <param name="vendorId">The vendor identifier (limit to products of this vendor); pass 0 to load all records</param>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
         /// <returns>Reviews</returns>
-        IList<ProductReview> GetAllProductReviews(int customerId, bool? approved,
+        IPagedList<ProductReview> GetAllProductReviews(int customerId, bool? approved,
             DateTime? fromUtc = null, DateTime? toUtc = null,
-            string message = null, int storeId = 0, int productId = 0);
+            string message = null, int storeId = 0, int productId = 0, int vendorId = 0, bool showHidden = false,
+            int pageIndex = 0, int pageSize = int.MaxValue);
 
         /// <summary>
         /// Gets product review
@@ -494,6 +543,34 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="pwi">ProductWarehouseInventory</param>
         void DeleteProductWarehouseInventory(ProductWarehouseInventory pwi);
+
+        #endregion
+
+        #region Stock quantity history
+
+        /// <summary>
+        /// Add stock quantity change entry
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="quantityAdjustment">Quantity adjustment</param>
+        /// <param name="stockQuantity">Current stock quantity</param>
+        /// <param name="warehouseId">Warehouse identifier</param>
+        /// <param name="message">Message</param>
+        /// <param name="combinationId">Product attribute combination identifier</param>
+        void AddStockQuantityHistoryEntry(Product product, int quantityAdjustment, int stockQuantity,
+            int warehouseId = 0, string message = "", int? combinationId = null);
+
+        /// <summary>
+        /// Get the history of the product stock quantity changes
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="warehouseId">Warehouse identifier; pass 0 to load all entries</param>
+        /// <param name="combinationId">Product attribute combination identifier; pass 0 to load all entries</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
+        /// <returns>List of stock quantity change entries</returns>
+        IPagedList<StockQuantityHistory> GetStockQuantityHistory(Product product, int warehouseId = 0, int combinationId = 0,
+            int pageIndex = 0, int pageSize = int.MaxValue);
 
         #endregion
     }

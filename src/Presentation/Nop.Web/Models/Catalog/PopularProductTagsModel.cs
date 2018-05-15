@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Models.Catalog
 {
@@ -15,9 +15,10 @@ namespace Nop.Web.Models.Catalog
 
         protected virtual int GetFontSize(double weight, double mean, double stdDev)
         {
-            double factor = (weight - mean);
+            var factor = (weight - mean);
 
-            if (factor != 0 && stdDev != 0) factor /= stdDev;
+            if (factor != 0 && stdDev != 0)
+                factor /= stdDev;
 
             return (factor > 2) ? 150 :
                 (factor > 1) ? 120 :
@@ -31,14 +32,16 @@ namespace Nop.Web.Models.Catalog
         protected virtual double Mean(IEnumerable<double> values)
         {
             double sum = 0;
-            int count = 0;
+            var count = 0;
 
-            foreach (double d in values)
+            foreach (var d in values)
             {
                 sum += d;
                 count++;
             }
 
+            if (count == 0)
+                return 0;
             return sum / count;
         }
 
@@ -46,15 +49,17 @@ namespace Nop.Web.Models.Catalog
         {
             mean = Mean(values);
             double sumOfDiffSquares = 0;
-            int count = 0;
+            var count = 0;
 
-            foreach (double d in values)
+            foreach (var d in values)
             {
-                double diff = (d - mean);
+                var diff = (d - mean);
                 sumOfDiffSquares += diff * diff;
                 count++;
             }
 
+            if (count == 0)
+                return 0;
             return Math.Sqrt(sumOfDiffSquares / count);
         }
 
@@ -67,8 +72,7 @@ namespace Nop.Web.Models.Catalog
             var itemWeights = new List<double>();
             foreach (var tag in Tags)
                 itemWeights.Add(tag.ProductCount);
-            double mean;
-            double stdDev = StdDev(itemWeights, out mean);
+            var stdDev = StdDev(itemWeights, out double mean);
 
             return GetFontSize(productTag.ProductCount, mean, stdDev);
         }

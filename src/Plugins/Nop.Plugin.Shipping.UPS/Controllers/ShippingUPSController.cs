@@ -1,55 +1,77 @@
 ﻿using System;
 using System.Text;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Plugin.Shipping.UPS.Domain;
 using Nop.Plugin.Shipping.UPS.Models;
+using Nop.Services;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
+using Nop.Services.Security;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
+using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Plugin.Shipping.UPS.Controllers
 {
-    [AdminAuthorize]
+    [AuthorizeAdmin]
+    [Area(AreaNames.Admin)]
     public class ShippingUPSController : BasePluginController
     {
-        private readonly UPSSettings _upsSettings;
-        private readonly ISettingService _settingService;
-        private readonly ILocalizationService _localizationService;
+        #region Fields
 
-        public ShippingUPSController(UPSSettings upsSettings,
+        private readonly ILocalizationService _localizationService;
+        private readonly IPermissionService _permissionService;
+        private readonly ISettingService _settingService;
+        private readonly UPSSettings _upsSettings;
+
+        #endregion
+
+        #region Ctor
+
+        public ShippingUPSController(ILocalizationService localizationService,
+            IPermissionService permissionService,
             ISettingService settingService,
-            ILocalizationService localizationService)
+            UPSSettings upsSettings)
         {
-            this._upsSettings = upsSettings;
-            this._settingService = settingService;
             this._localizationService = localizationService;
+            this._permissionService = permissionService;
+            this._settingService = settingService;
+            this._upsSettings = upsSettings;
         }
 
-        [ChildActionOnly]
-        public ActionResult Configure()
-        {
-            var model = new UPSShippingModel();
-            model.Url = _upsSettings.Url;
-            model.AccessKey = _upsSettings.AccessKey;
-            model.Username = _upsSettings.Username;
-            model.Password = _upsSettings.Password;
-            model.AdditionalHandlingCharge = _upsSettings.AdditionalHandlingCharge;
-            model.InsurePackage = _upsSettings.InsurePackage;
-            model.PackingPackageVolume = _upsSettings.PackingPackageVolume;
-            model.PackingType = Convert.ToInt32(_upsSettings.PackingType);
-            model.PackingTypeValues = _upsSettings.PackingType.ToSelectList();
-            model.PassDimensions = _upsSettings.PassDimensions;
+        #endregion
 
+        #region Methods
+
+        public IActionResult Configure()
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+                return AccessDeniedView();
+
+            var model = new UPSShippingModel
+            {
+                Url = _upsSettings.Url,
+                AccountNumber = _upsSettings.AccountNumber,
+                AccessKey = _upsSettings.AccessKey,
+                Username = _upsSettings.Username,
+                Password = _upsSettings.Password,
+                AdditionalHandlingCharge = _upsSettings.AdditionalHandlingCharge,
+                InsurePackage = _upsSettings.InsurePackage,
+                PackingPackageVolume = _upsSettings.PackingPackageVolume,
+                PackingType = (int)_upsSettings.PackingType,
+                PackingTypeValues = _upsSettings.PackingType.ToSelectList(),
+                PassDimensions = _upsSettings.PassDimensions
+            };
             foreach (UPSCustomerClassification customerClassification in Enum.GetValues(typeof(UPSCustomerClassification)))
             {
                 model.AvailableCustomerClassifications.Add(new SelectListItem
-                    {
-                        Text = CommonHelper.ConvertEnum(customerClassification.ToString()),
-                        Value = customerClassification.ToString(),
-                        Selected = customerClassification == _upsSettings.CustomerClassification
-                    });
+                {
+                    Text = CommonHelper.ConvertEnum(customerClassification.ToString()),
+                    Value = customerClassification.ToString(),
+                    Selected = customerClassification == _upsSettings.CustomerClassification
+                });
             }
             foreach (UPSPickupType pickupType in Enum.GetValues(typeof(UPSPickupType)))
             {
@@ -71,36 +93,38 @@ namespace Nop.Plugin.Shipping.UPS.Controllers
             }
 
             // Load Domestic service names
-            string carrierServicesOfferedDomestic = _upsSettings.CarrierServicesOffered;
-            foreach (string service in UPSServices.Services)
+            var carrierServicesOfferedDomestic = _upsSettings.CarrierServicesOffered;
+            foreach (var service in UPSServices.Services)
                 model.AvailableCarrierServices.Add(service);
 
-            if (!String.IsNullOrEmpty(carrierServicesOfferedDomestic))
-                foreach (string service in UPSServices.Services)
+            if (!string.IsNullOrEmpty(carrierServicesOfferedDomestic))
+                foreach (var service in UPSServices.Services)
                 {
-                    string serviceId = UPSServices.GetServiceId(service);
-                    if (!String.IsNullOrEmpty(serviceId) && !String.IsNullOrEmpty(carrierServicesOfferedDomestic))
+                    var serviceId = UPSServices.GetServiceId(service);
+                    if (!string.IsNullOrEmpty(serviceId))
                     {
                         // Add delimiters [] so that single digit IDs aren't found in multi-digit IDs
-                        if (carrierServicesOfferedDomestic.Contains(String.Format("[{0}]", serviceId)))
+                        if (carrierServicesOfferedDomestic.Contains($"[{serviceId}]"))
                             model.CarrierServicesOffered.Add(service);
                     }
                 }
 
-            return View("~/Plugins/Shipping.UPS/Views/ShippingUPS/Configure.cshtml", model);
+            return View("~/Plugins/Shipping.UPS/Views/Configure.cshtml", model);
         }
 
         [HttpPost]
-        [ChildActionOnly]
-        public ActionResult Configure(UPSShippingModel model)
+        [AdminAntiForgery]
+        public IActionResult Configure(UPSShippingModel model)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+                return AccessDeniedView();
+
             if (!ModelState.IsValid)
-            {
                 return Configure();
-            }
 
             //save settings
             _upsSettings.Url = model.Url;
+            _upsSettings.AccountNumber = model.AccountNumber;
             _upsSettings.AccessKey = model.AccessKey;
             _upsSettings.Username = model.Username;
             _upsSettings.Password = model.Password;
@@ -117,14 +141,14 @@ namespace Nop.Plugin.Shipping.UPS.Controllers
 
             // Save selected services
             var carrierServicesOfferedDomestic = new StringBuilder();
-            int carrierServicesDomesticSelectedCount = 0;
+            var carrierServicesDomesticSelectedCount = 0;
             if (model.CheckedCarrierServices != null)
             {
                 foreach (var cs in model.CheckedCarrierServices)
                 {
                     carrierServicesDomesticSelectedCount++;
-                    string serviceId = UPSServices.GetServiceId(cs);
-                    if (!String.IsNullOrEmpty(serviceId))
+                    var serviceId = UPSServices.GetServiceId(cs);
+                    if (!string.IsNullOrEmpty(serviceId))
                     {
                         // Add delimiters [] so that single digit IDs aren't found in multi-digit IDs
                         carrierServicesOfferedDomestic.AppendFormat("[{0}]:", serviceId);
@@ -144,5 +168,6 @@ namespace Nop.Plugin.Shipping.UPS.Controllers
             return Configure();
         }
 
+        #endregion
     }
 }

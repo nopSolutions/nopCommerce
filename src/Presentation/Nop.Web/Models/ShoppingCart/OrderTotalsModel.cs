@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Models.ShoppingCart
 {
@@ -15,11 +15,11 @@ namespace Nop.Web.Models.ShoppingCart
         public string SubTotal { get; set; }
 
         public string SubTotalDiscount { get; set; }
-        public bool AllowRemovingSubTotalDiscount { get; set; }
 
         public string Shipping { get; set; }
         public bool RequiresShipping { get; set; }
         public string SelectedShippingMethod { get; set; }
+        public bool HideShippingTotal { get; set; }
 
         public string PaymentMethodAdditionalFee { get; set; }
 
@@ -28,11 +28,9 @@ namespace Nop.Web.Models.ShoppingCart
         public bool DisplayTax { get; set; }
         public bool DisplayTaxRates { get; set; }
 
-
         public IList<GiftCard> GiftCards { get; set; }
 
         public string OrderTotalDiscount { get; set; }
-        public bool AllowRemovingOrderTotalDiscount { get; set; }
         public int RedeemedRewardPoints { get; set; }
         public string RedeemedRewardPointsAmount { get; set; }
 
@@ -54,6 +52,7 @@ namespace Nop.Web.Models.ShoppingCart
             public string Amount { get; set; }
             public string Remaining { get; set; }
         }
+
         #endregion
     }
 }

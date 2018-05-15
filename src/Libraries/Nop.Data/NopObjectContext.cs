@@ -18,16 +18,24 @@ namespace Nop.Data
     {
         #region Ctor
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="nameOrConnectionString">Connecting string</param>
         public NopObjectContext(string nameOrConnectionString)
             : base(nameOrConnectionString)
         {
             //((IObjectContextAdapter) this).ObjectContext.ContextOptions.LazyLoadingEnabled = true;
         }
-        
+
         #endregion
 
         #region Utilities
 
+        /// <summary>
+        /// On model creating
+        /// </summary>
+        /// <param name="modelBuilder">Model builder</param>
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             //dynamically load all configuration
@@ -35,7 +43,7 @@ namespace Nop.Data
             //var typesToRegister = Assembly.GetAssembly(configType).GetTypes()
 
             var typesToRegister = Assembly.GetExecutingAssembly().GetTypes()
-            .Where(type => !String.IsNullOrEmpty(type.Namespace))
+            .Where(type => !string.IsNullOrEmpty(type.Namespace))
             .Where(type => type.BaseType != null && type.BaseType.IsGenericType &&
                 type.BaseType.GetGenericTypeDefinition() == typeof(NopEntityTypeConfiguration<>));
             foreach (var type in typesToRegister)
@@ -45,8 +53,6 @@ namespace Nop.Data
             }
             //...or do it manually below. For example,
             //modelBuilder.Configurations.Add(new LanguageMap());
-
-
 
             base.OnModelCreating(modelBuilder);
         }
@@ -108,7 +114,7 @@ namespace Nop.Data
             //add parameters to command
             if (parameters != null && parameters.Length > 0)
             {
-                for (int i = 0; i <= parameters.Length - 1; i++)
+                for (var i = 0; i <= parameters.Length - 1; i++)
                 {
                     var p = parameters[i] as DbParameter;
                     if (p == null)
@@ -125,20 +131,20 @@ namespace Nop.Data
                 }
             }
 
-            var result = this.Database.SqlQuery<TEntity>(commandText, parameters).ToList();
+            var result = Database.SqlQuery<TEntity>(commandText, parameters).ToList();
 
-            //performance hack applied as described here - http://www.nopcommerce.com/boards/t/25483/fix-very-important-speed-improvement.aspx
-            bool acd = this.Configuration.AutoDetectChangesEnabled;
+            //performance hack applied as described here - https://www.nopcommerce.com/boards/t/25483/fix-very-important-speed-improvement.aspx
+            var acd = Configuration.AutoDetectChangesEnabled;
             try
             {
-                this.Configuration.AutoDetectChangesEnabled = false;
+                Configuration.AutoDetectChangesEnabled = false;
 
-                for (int i = 0; i < result.Count; i++)
+                for (var i = 0; i < result.Count; i++)
                     result[i] = AttachEntityToContext(result[i]);
             }
             finally
             {
-                this.Configuration.AutoDetectChangesEnabled = acd;
+                Configuration.AutoDetectChangesEnabled = acd;
             }
 
             return result;
@@ -153,7 +159,7 @@ namespace Nop.Data
         /// <returns>Result</returns>
         public IEnumerable<TElement> SqlQuery<TElement>(string sql, params object[] parameters)
         {
-            return this.Database.SqlQuery<TElement>(sql, parameters);
+            return Database.SqlQuery<TElement>(sql, parameters);
         }
     
         /// <summary>
@@ -177,7 +183,7 @@ namespace Nop.Data
             var transactionalBehavior = doNotEnsureTransaction
                 ? TransactionalBehavior.DoNotEnsureTransaction
                 : TransactionalBehavior.EnsureTransaction;
-            var result = this.Database.ExecuteSqlCommand(transactionalBehavior, sql, parameters);
+            var result = Database.ExecuteSqlCommand(transactionalBehavior, sql, parameters);
 
             if (timeout.HasValue)
             {
@@ -196,7 +202,7 @@ namespace Nop.Data
         public void Detach(object entity)
         {
             if (entity == null)
-                throw new ArgumentNullException("entity");
+                throw new ArgumentNullException(nameof(entity));
 
             ((IObjectContextAdapter)this).ObjectContext.Detach(entity);
         }
@@ -212,11 +218,11 @@ namespace Nop.Data
         {
             get
             {
-                return this.Configuration.ProxyCreationEnabled;
+                return Configuration.ProxyCreationEnabled;
             }
             set
             {
-                this.Configuration.ProxyCreationEnabled = value;
+                Configuration.ProxyCreationEnabled = value;
             }
         }
 
@@ -227,11 +233,11 @@ namespace Nop.Data
         {
             get
             {
-                return this.Configuration.AutoDetectChangesEnabled;
+                return Configuration.AutoDetectChangesEnabled;
             }
             set
             {
-                this.Configuration.AutoDetectChangesEnabled = value;
+                Configuration.AutoDetectChangesEnabled = value;
             }
         }
 

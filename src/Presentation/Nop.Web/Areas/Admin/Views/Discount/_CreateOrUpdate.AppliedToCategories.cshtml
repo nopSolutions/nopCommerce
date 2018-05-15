@@ -1,0 +1,120 @@
+@model DiscountModel
+
+<div class="panel-group">
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.DiscountDetailsAppliedToCategoriesTop, additionalData = Model })
+    <div class="panel panel-default">
+        @if (Model.Id > 0)
+        {
+            <div class="panel-body">
+                <div id="categories-grid"></div>
+
+                <script>
+                    $(document).ready(function() {
+                        $("#categories-grid").kendoGrid({
+                            dataSource: {
+                                type: "json",
+                                transport: {
+                                    read: {
+                                        url: "@Html.Raw(Url.Action("CategoryList", "Discount"))",
+                                        type: "POST",
+                                        dataType: "json",
+                                        data: function() {
+                                            var data = {
+                                                DiscountId: '@(Model.Id)'
+                                            };
+                                            addAntiForgeryToken(data);
+                                            return data;
+                                        }
+                                    },
+                                    destroy: {
+                                        url: "@Html.Raw(Url.Action("CategoryDelete", "Discount", new { discountId = Model.Id }))",
+                                        type: "POST",
+                                        dataType: "json",
+                                        data: addAntiForgeryToken
+                                    }
+                                },
+                                schema: {
+                                    data: "Data",
+                                    total: "Total",
+                                    errors: "Errors",
+                                    model: {
+                                        id: "CategoryId",
+                                        fields: {
+                                            CategoryName: { editable: false, type: "string" },
+                                            CategoryId: { editable: false, type: "number" }
+                                        }
+                                    }
+                                },
+                                error: function(e) {
+                                    display_kendoui_grid_error(e);
+                                    // Cancel the changes
+                                    this.cancelChanges();
+                                },
+                                pageSize: @(Model.DiscountCategorySearchModel.PageSize),
+                                serverPaging: true,
+                                serverFiltering: true,
+                                serverSorting: true
+                            },
+                            pageable: {
+                                refresh: true,
+                                pageSizes: [@(Model.DiscountCategorySearchModel.AvailablePageSizes)],
+                                @await Html.PartialAsync("_GridPagerMessages")
+                            },
+                            editable: {
+                                confirmation: "@T("Admin.Common.DeleteConfirmation")",
+                                mode: "inline"
+                            },
+                            scrollable: false,
+                            columns: [
+                                {
+                                    field: "CategoryName",
+                                    title: "@T("Admin.Promotions.Discounts.AppliedToCategories.Category")"
+                                }, {
+                                    field: "CategoryId",
+                                    title: "@T("Admin.Common.View")",
+                                    width: 150,
+                                    headerAttributes: { style: "text-align:center" },
+                                    attributes: { style: "text-align:center" },
+                                    template: '<a class="btn btn-default" href="@Url.Content("~/Admin/Category/Edit/")#=CategoryId#"><i class="fa fa-eye"></i>@T("Admin.Common.View")</a>'
+                                }, {
+                                    command: [
+                                        {
+                                            name: "destroy",
+                                            text: "@T("Admin.Common.Delete")"
+                                        }
+                                    ],
+                                    width: 150
+                                }
+                            ]
+                        });
+                    });
+                </script>
+            </div>
+            <div class="panel-footer">
+                <button type="submit" id="btnAddNewCategory" onclick="javascript:OpenWindow('@(Url.Action("CategoryAddPopup", "Discount", new { discountId = Model.Id, btnId = "btnRefreshCategories", formId = "discount-form" }))', 800, 800, true); return false;" class="btn btn-primary">
+                    @T("Admin.Promotions.Discounts.AppliedToCategories.AddNew")
+                </button>
+                <input type="submit" id="btnRefreshCategories" style="display: none" />
+                <script>
+                    $(document).ready(function() {
+                        $('#btnRefreshCategories').click(function() {
+                            //refresh grid
+                            var grid = $("#categories-grid").data('kendoGrid');
+                            grid.dataSource.read();
+
+                            //return false to don't reload a page
+                            return false;
+                        });
+                    });
+                </script>
+            </div>
+        }
+        else
+        {
+            <div class="panel-body">
+                @T("Admin.Promotions.Discounts.AppliedToCategories.SaveBeforeEdit")
+            </div>
+        }
+    </div>
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.DiscountDetailsAppliedToCategoriesBottom, additionalData = Model })
+</div>

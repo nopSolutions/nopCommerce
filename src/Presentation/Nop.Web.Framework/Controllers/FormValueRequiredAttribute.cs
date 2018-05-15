@@ -1,61 +1,115 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Reflection;
-using System.Web.Mvc;
+using System.Linq;
+using System.Net;
+using Microsoft.AspNetCore.Mvc.Abstractions;
+using Microsoft.AspNetCore.Mvc.ActionConstraints;
+using Microsoft.AspNetCore.Routing;
 
 namespace Nop.Web.Framework.Controllers
 {
+    /// <summary>
+    /// Attribute to validate whether a certain form name (or value) was submitted
+    /// </summary>
     public class FormValueRequiredAttribute : ActionMethodSelectorAttribute
     {
         private readonly string[] _submitButtonNames;
         private readonly FormValueRequirement _requirement;
+        private readonly bool _validateNameOnly;
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="submitButtonNames">Submit button names</param>
         public FormValueRequiredAttribute(params string[] submitButtonNames):
             this(FormValueRequirement.Equal, submitButtonNames)
         {
         }
-
-        public FormValueRequiredAttribute(FormValueRequirement requirement, params string[] submitButtonNames)
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="requirement">Requirement</param>
+        /// <param name="submitButtonNames">Submit button names</param>
+        public FormValueRequiredAttribute(FormValueRequirement requirement, params string[] submitButtonNames):
+            this(requirement, true, submitButtonNames)
+        {
+        }
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="requirement">Requirement</param>
+        /// <param name="validateNameOnly">A value indicating whether we should check "name" attribute only (not "value")</param>
+        /// <param name="submitButtonNames">Submit button names</param>
+        public FormValueRequiredAttribute(FormValueRequirement requirement, bool validateNameOnly, params string[] submitButtonNames)
         {
             //at least one submit button should be found
             this._submitButtonNames = submitButtonNames;
+            this._validateNameOnly = validateNameOnly;
             this._requirement = requirement;
         }
 
-        public override bool IsValidForRequest(ControllerContext controllerContext, MethodInfo methodInfo)
+
+        /// <summary>
+        /// Is valid?
+        /// </summary>
+        /// <param name="routeContext">Route context</param>
+        /// <param name="action">Action descriptor</param>
+        /// <returns>Result</returns>
+        public override bool IsValidForRequest(RouteContext routeContext, ActionDescriptor action)
         {
-            foreach (string buttonName in _submitButtonNames)
+            if (routeContext.HttpContext.Request.Method != WebRequestMethods.Http.Post)
+                return false;
+
+            foreach (var buttonName in _submitButtonNames)
             {
                 try
                 {
-                    string value = "";
                     switch (this._requirement)
                     {
                         case FormValueRequirement.Equal:
                             {
-                                //do not iterate because "Invalid request" exception can be thrown
-                                value = controllerContext.HttpContext.Request.Form[buttonName];
+                                if (_validateNameOnly)
+                                {
+                                    //"name" only
+                                    if (routeContext.HttpContext.Request.Form.Keys.Any(x => x.Equals(buttonName, StringComparison.InvariantCultureIgnoreCase)))
+                                        return true;
+                                }
+                                else
+                                {
+                                    //validate "value"
+                                    //do not iterate because "Invalid request" exception can be thrown
+                                    string value = routeContext.HttpContext.Request.Form[buttonName];
+                                    if (!string.IsNullOrEmpty(value))
+                                        return true;
+                                }
                             }
                             break;
                         case FormValueRequirement.StartsWith:
                             {
-                                foreach (var formValue in controllerContext.HttpContext.Request.Form.AllKeys)
+                                if (_validateNameOnly)
                                 {
-                                    if (formValue.StartsWith(buttonName, StringComparison.InvariantCultureIgnoreCase))
-                                    {
-                                        value = controllerContext.HttpContext.Request.Form[formValue];
-                                        break;
-                                    }
+                                    //"name" only
+                                    if (routeContext.HttpContext.Request.Form.Keys.Any(x => x.StartsWith(buttonName, StringComparison.InvariantCultureIgnoreCase)))
+                                        return true;
+                                }
+                                else
+                                {
+                                    //validate "value"
+                                    foreach (var formValue in routeContext.HttpContext.Request.Form.Keys)
+                                        if (formValue.StartsWith(buttonName, StringComparison.InvariantCultureIgnoreCase))
+                                        { 
+                                            var value = routeContext.HttpContext.Request.Form[formValue];
+                                            if (!string.IsNullOrEmpty(value))
+                                                return true;
+                                        }
                                 }
                             }
                             break;
                     }
-                    if (!String.IsNullOrEmpty(value))
-                        return true;
                 }
                 catch (Exception exc)
                 {
-                    //try-catch to ensure that 
+                    //try-catch to ensure that no exception is throw
                     Debug.WriteLine(exc.Message);
                 }
             }
@@ -63,9 +117,18 @@ namespace Nop.Web.Framework.Controllers
         }
     }
 
+    /// <summary>
+    /// Requirement
+    /// </summary>
     public enum FormValueRequirement
     {
+        /// <summary>
+        /// Equal
+        /// </summary>
         Equal,
+        /// <summary>
+        /// Starts with
+        /// </summary>
         StartsWith
     }
 }

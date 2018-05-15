@@ -1,0 +1,169 @@
+﻿body {
+    background: #ecf0f5 !important;
+    color: #868686;
+    font-size: 15px;
+}
+
+hr {
+    margin-top: 25px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #e7e7e7;
+}
+
+.btn-install {
+    padding: 6px 35px;
+    font-size: 22px;
+    background-color: #367fa9;
+    color: #ffffff;
+}
+
+.btn-install:hover {
+    background-color: #2b7199;
+    color: #ffffff;
+}
+
+.btn-default {
+    border-radius: 0;
+    padding: 7px 25px 6px;
+    background: #ffffff;
+    font-size: 16px;
+}
+
+.btn-default:hover {
+    background-color: #f5f5f5;
+    border-color: #dfdede;
+}
+
+.margin-t-10 {
+    margin-top: 10px;
+}
+
+.margin-t-30 {
+    margin-top: 30px;
+}
+
+.margin-l-5 {
+    margin-left: 5px;
+}
+
+.wrapper {
+    width: 960px; 
+    margin: 0 auto;
+}
+
+.content-header{
+    color: #ffffff;
+    padding: 0;
+}
+
+.content-header > h1 {
+    margin-bottom: 15px;
+    text-align: center;
+    font-size: 35px;
+}
+
+.logo-wrapper {
+    background-color: #3c8dbc;
+    padding: 25px;
+}
+
+.logo {
+    background: url(images/logo.png) no-repeat 50% 50%;
+    height: 50px;
+}
+
+.language-selector {
+    margin: 10px 0;
+}
+
+.content{
+    background-color: #ffffff;
+    padding: 20px;
+}
+
+.form-horizontal {
+    padding: 0 60px;
+}
+
+.form-horizontal .control-label {
+    float: right;
+    color: #8a8a8a;
+    margin-right: 5px;
+}
+
+.form-group input[type=checkbox] {
+    margin-top: 11px;
+}
+
+.form-group .checkbox input[type=checkbox] {
+    margin-top: 4px;
+}
+
+.panel {
+    box-shadow: none;
+    margin-bottom: 0;
+}
+
+.panel>.panel-heading {
+    background-color: #fff;
+    font-size: 23px;
+    padding: 0;
+    margin-bottom: 10px;
+}
+
+.panel-body {
+    padding: 10px;
+}
+
+.credentials {
+    background: #eeeeee;
+    padding: 22px 10px 7px;
+    margin-bottom: 15px;
+    margin-top: 20px;
+}
+
+.content-footer {
+    padding: 20px;
+}
+
+.validation-summary-errors {
+    color: red;
+}
+
+.validation-summary-errors ul{
+    padding-left: 0;
+    list-style: none;
+}
+
+.throbber-header {
+    font-size: 145%;
+}
+
+.throbber {
+    display: none;
+}
+
+    .throbber .curtain {
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: #5e7b8c;
+        opacity: 0.9;
+        filter: alpha(opacity=90);
+    }
+
+    .throbber .curtain-content {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+    }
+
+        .throbber .curtain-content div {
+            text-align: center;
+            padding: 250px;
+            color: #FFF;
+        }

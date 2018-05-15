@@ -1,0 +1,93 @@
+﻿@model OnlineCustomerSearchModel
+
+@{
+    //page title
+    ViewBag.Title = T("Admin.Customers.OnlineCustomers").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Online customers");
+}
+
+<nop-antiforgery-token />
+<div class="content-header clearfix">
+    <h1 class="pull-left">
+        @T("Admin.Customers.OnlineCustomers")
+    </h1>
+    <div class="pull-right">
+        &nbsp;
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.OnlineCustomerListButtons })
+    </div>
+</div>
+
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div id="onlinecustomers-grid"></div>
+
+                    <script>
+                        $(document).ready(function () {
+                            $("#onlinecustomers-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("List", "OnlineCustomer"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: addAntiForgeryToken
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors"
+                                    },
+                                    error: function(e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    pageSize: @(Model.PageSize),
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    pageSizes: [@(Model.AvailablePageSizes)],
+                                    @await Html.PartialAsync("_GridPagerMessages")
+                                },
+                                editable: {
+                                    confirmation: "@T("Admin.Common.DeleteConfirmation")",
+                                    mode: "inline"
+                                },
+                                scrollable: false,
+                                columns: [{
+                                    field: "Id",
+                                    title: "@T("Admin.Customers.OnlineCustomers.Fields.CustomerInfo")",
+                                    template: '<a href="@Url.Content("~/Admin/Customer/Edit/")#=Id#">#:CustomerInfo#</a>'
+                                }, {
+                                    field: "LastIpAddress",
+                                    title: "@T("Admin.Customers.OnlineCustomers.Fields.IPAddress")"
+                                }, {
+                                    field: "Location",
+                                    title: "@T("Admin.Customers.OnlineCustomers.Fields.Location")"
+                                }, {
+                                    field: "LastActivityDate",
+                                    title: "@T("Admin.Customers.OnlineCustomers.Fields.LastActivityDate")",
+                                    width: 200,
+                                    type: "date",
+                                    format: "{0:G}"
+                                }, {
+                                    field: "LastVisitedPage",
+                                    title: "@T("Admin.Customers.OnlineCustomers.Fields.LastVisitedPage")"
+                                }]
+                            });
+                        });
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

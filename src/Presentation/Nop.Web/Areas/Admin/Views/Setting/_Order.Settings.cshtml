@@ -1,0 +1,323 @@
+@model OrderSettingsModel
+
+<script>
+    $(document).ready(function () {
+        $("#@Html.IdFor(model => model.OnePageCheckoutEnabled)").click(toggleOnePageCheckoutEnabled);
+        toggleOnePageCheckoutEnabled();
+    });
+
+    function toggleOnePageCheckoutEnabled() {
+        if ($('#@Html.IdFor(model => model.OnePageCheckoutEnabled)').is(':checked')) {
+            $('#pnlOnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab').show();
+        }
+        else {
+            $('#pnlOnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab').hide();
+        }
+    }
+</script>
+
+<div class="panel-group">
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.OrderSettingsSettingsTop })
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            @T("Admin.Configuration.Settings.Order.BlockTitle.Checkout")
+        </div>
+        <div class="panel-body">
+            <div class="form-group advanced-setting">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="CheckoutDisabled_OverrideForStore" asp-input="CheckoutDisabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="CheckoutDisabled" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="CheckoutDisabled" />
+                    <span asp-validation-for="CheckoutDisabled"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="AnonymousCheckoutAllowed_OverrideForStore" asp-input="AnonymousCheckoutAllowed" asp-store-scope="@Model.ActiveStoreScopeConfiguration"/>
+                    <nop-label asp-for="AnonymousCheckoutAllowed"/>
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="AnonymousCheckoutAllowed"/>
+                    <span asp-validation-for="AnonymousCheckoutAllowed"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="OnePageCheckoutEnabled_OverrideForStore" asp-input="OnePageCheckoutEnabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration"/>
+                    <nop-label asp-for="OnePageCheckoutEnabled"/>
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="OnePageCheckoutEnabled"/>
+                    <span asp-validation-for="OnePageCheckoutEnabled"></span>
+                </div>
+            </div>
+            <nop-nested-setting asp-for="OnePageCheckoutEnabled">
+                <div class="form-group advanced-setting" id="pnlOnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="OnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab_OverrideForStore" asp-input="OnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab" asp-store-scope="@Model.ActiveStoreScopeConfiguration"/>
+                        <nop-label asp-for="OnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab"/>
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="OnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab"/>
+                        <span asp-validation-for="OnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab"></span>
+                    </div>
+                </div>
+            </nop-nested-setting>
+            <div class="form-group advanced-setting">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="TermsOfServiceOnShoppingCartPage_OverrideForStore" asp-input="TermsOfServiceOnShoppingCartPage" asp-store-scope="@Model.ActiveStoreScopeConfiguration"/>
+                    <nop-label asp-for="TermsOfServiceOnShoppingCartPage"/>
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="TermsOfServiceOnShoppingCartPage"/>
+                    <span asp-validation-for="TermsOfServiceOnShoppingCartPage"></span>
+                </div>
+            </div>
+            <div class="form-group advanced-setting">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="TermsOfServiceOnOrderConfirmPage_OverrideForStore" asp-input="TermsOfServiceOnOrderConfirmPage" asp-store-scope="@Model.ActiveStoreScopeConfiguration"/>
+                    <nop-label asp-for="TermsOfServiceOnOrderConfirmPage"/>
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="TermsOfServiceOnOrderConfirmPage"/>
+                    <span asp-validation-for="TermsOfServiceOnOrderConfirmPage"></span>
+                </div>
+            </div>
+            <div class="form-group advanced-setting">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="DisableBillingAddressCheckoutStep_OverrideForStore" asp-input="DisableBillingAddressCheckoutStep" asp-store-scope="@Model.ActiveStoreScopeConfiguration"/>
+                    <nop-label asp-for="DisableBillingAddressCheckoutStep"/>
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="DisableBillingAddressCheckoutStep"/>
+                    <span asp-validation-for="DisableBillingAddressCheckoutStep"></span>
+                </div>
+            </div>
+            <div class="form-group advanced-setting">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="DisableOrderCompletedPage_OverrideForStore" asp-input="DisableOrderCompletedPage" asp-store-scope="@Model.ActiveStoreScopeConfiguration"/>
+                    <nop-label asp-for="DisableOrderCompletedPage"/>
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="DisableOrderCompletedPage"/>
+                    <span asp-validation-for="DisableOrderCompletedPage"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-default advanced-setting">
+        <div class="panel-heading">
+            @T("Admin.Configuration.Settings.Order.BlockTitle.OrderTotals")
+        </div>
+        <div class="panel-body">
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="MinOrderSubtotalAmount_OverrideForStore" asp-input="MinOrderSubtotalAmount" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="MinOrderSubtotalAmount" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="MinOrderSubtotalAmount" asp-postfix="@Model.PrimaryStoreCurrencyCode" />
+                    <span asp-validation-for="MinOrderSubtotalAmount"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="MinOrderSubtotalAmountIncludingTax_OverrideForStore" asp-input="MinOrderSubtotalAmountIncludingTax" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="MinOrderSubtotalAmountIncludingTax" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="MinOrderSubtotalAmountIncludingTax" />
+                    <span asp-validation-for="MinOrderSubtotalAmountIncludingTax"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="MinOrderTotalAmount_OverrideForStore" asp-input="MinOrderTotalAmount" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="MinOrderTotalAmount" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="MinOrderTotalAmount" />
+                    <span asp-validation-for="MinOrderTotalAmount"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="AutoUpdateOrderTotalsOnEditingOrder_OverrideForStore" asp-input="AutoUpdateOrderTotalsOnEditingOrder" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="AutoUpdateOrderTotalsOnEditingOrder" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="AutoUpdateOrderTotalsOnEditingOrder" />
+                    <span asp-validation-for="AutoUpdateOrderTotalsOnEditingOrder"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-default advanced-setting">
+        <div class="panel-heading">
+            @T("Admin.Configuration.Settings.Order.BlockTitle.Common")
+        </div>
+        <div class="panel-body">
+            @if (Model.OrderIdent.HasValue)
+            {
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="OrderIdent" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="OrderIdent" />
+                    </div>
+                </div>
+            }
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="CustomOrderNumberMask_OverrideForStore" asp-input="CustomOrderNumberMask" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="CustomOrderNumberMask" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="CustomOrderNumberMask" />
+                    <span asp-validation-for="CustomOrderNumberMask"></span>
+                    <ul class="common-list">
+                        <li>
+                            @T("Admin.Configuration.Settings.Order.CustomOrderNumberMask.Description.YYYY")
+                        </li>
+                        <li>
+                            @T("Admin.Configuration.Settings.Order.CustomOrderNumberMask.Description.YY")
+                        </li>
+                        <li>
+                            @T("Admin.Configuration.Settings.Order.CustomOrderNumberMask.Description.MM")
+                        </li>
+                        <li>
+                            @T("Admin.Configuration.Settings.Order.CustomOrderNumberMask.Description.DD")
+                        </li>
+                        <li>
+                            @T("Admin.Configuration.Settings.Order.CustomOrderNumberMask.Description.ID")
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="IsReOrderAllowed_OverrideForStore" asp-input="IsReOrderAllowed" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="IsReOrderAllowed" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="IsReOrderAllowed" />
+                    <span asp-validation-for="IsReOrderAllowed"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-label asp-for="CompleteOrderWhenDelivered" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="CompleteOrderWhenDelivered" />
+                    <span asp-validation-for="CompleteOrderWhenDelivered"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="ExportWithProducts_OverrideForStore" asp-input="ExportWithProducts" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="ExportWithProducts" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="ExportWithProducts" />
+                    <span asp-validation-for="ExportWithProducts"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="AllowAdminsToBuyCallForPriceProducts_OverrideForStore" asp-input="AllowAdminsToBuyCallForPriceProducts" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="AllowAdminsToBuyCallForPriceProducts" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="AllowAdminsToBuyCallForPriceProducts" />
+                    <span asp-validation-for="AllowAdminsToBuyCallForPriceProducts"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-default advanced-setting">
+        <div class="panel-heading">
+            @T("Admin.Configuration.Settings.Order.BlockTitle.PdfInvoice")
+        </div>
+        <div class="panel-body">
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="AttachPdfInvoiceToOrderPlacedEmail_OverrideForStore" asp-input="AttachPdfInvoiceToOrderPlacedEmail" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="AttachPdfInvoiceToOrderPlacedEmail" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="AttachPdfInvoiceToOrderPlacedEmail" />
+                    <span asp-validation-for="AttachPdfInvoiceToOrderPlacedEmail"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="AttachPdfInvoiceToOrderPaidEmail_OverrideForStore" asp-input="AttachPdfInvoiceToOrderPaidEmail" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="AttachPdfInvoiceToOrderPaidEmail" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="AttachPdfInvoiceToOrderPaidEmail" />
+                    <span asp-validation-for="AttachPdfInvoiceToOrderPaidEmail"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="AttachPdfInvoiceToOrderCompletedEmail_OverrideForStore" asp-input="AttachPdfInvoiceToOrderCompletedEmail" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="AttachPdfInvoiceToOrderCompletedEmail" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="AttachPdfInvoiceToOrderCompletedEmail" />
+                    <span asp-validation-for="AttachPdfInvoiceToOrderCompletedEmail"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-default advanced-setting">
+        <div class="panel-heading">
+            @T("Admin.Configuration.Settings.Order.BlockTitle.GiftCards")
+        </div>
+        <div class="panel-body">
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-label asp-for="ActivateGiftCardsAfterCompletingOrder" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="ActivateGiftCardsAfterCompletingOrder" />
+                    <span asp-validation-for="ActivateGiftCardsAfterCompletingOrder"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-label asp-for="DeactivateGiftCardsAfterCancellingOrder" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="DeactivateGiftCardsAfterCancellingOrder" />
+                    <span asp-validation-for="DeactivateGiftCardsAfterCancellingOrder"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-label asp-for="DeactivateGiftCardsAfterDeletingOrder" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="DeactivateGiftCardsAfterDeletingOrder" />
+                    <span asp-validation-for="DeactivateGiftCardsAfterDeletingOrder"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="DeleteGiftCardUsageHistory_OverrideForStore" asp-input="DeleteGiftCardUsageHistory" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="DeleteGiftCardUsageHistory" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="DeleteGiftCardUsageHistory" />
+                    <span asp-validation-for="DeleteGiftCardUsageHistory"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.OrderSettingsSettingsBottom })
+</div>

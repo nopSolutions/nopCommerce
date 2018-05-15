@@ -7,6 +7,7 @@ using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Security;
+using Nop.Data;
 using Nop.Services.Events;
 
 namespace Nop.Services.Security
@@ -37,7 +38,7 @@ namespace Nop.Services.Security
 
         private readonly IRepository<AclRecord> _aclRecordRepository;
         private readonly IWorkContext _workContext;
-        private readonly ICacheManager _cacheManager;
+        private readonly IStaticCacheManager _cacheManager;
         private readonly IEventPublisher _eventPublisher;
         private readonly CatalogSettings _catalogSettings;
 
@@ -48,12 +49,12 @@ namespace Nop.Services.Security
         /// <summary>
         /// Ctor
         /// </summary>
-        /// <param name="cacheManager">Cache manager</param>
+        /// <param name="cacheManager">Static cache manager</param>
         /// <param name="workContext">Work context</param>
         /// <param name="aclRecordRepository">ACL record repository</param>
         /// <param name="catalogSettings">Catalog settings</param>
         /// <param name="eventPublisher">Event publisher</param>
-        public AclService(ICacheManager cacheManager, 
+        public AclService(IStaticCacheManager cacheManager, 
             IWorkContext workContext,
             IRepository<AclRecord> aclRecordRepository,
             IEventPublisher eventPublisher,
@@ -77,7 +78,7 @@ namespace Nop.Services.Security
         public virtual void DeleteAclRecord(AclRecord aclRecord)
         {
             if (aclRecord == null)
-                throw new ArgumentNullException("aclRecord");
+                throw new ArgumentNullException(nameof(aclRecord));
 
             _aclRecordRepository.Delete(aclRecord);
 
@@ -110,10 +111,10 @@ namespace Nop.Services.Security
         public virtual IList<AclRecord> GetAclRecords<T>(T entity) where T : BaseEntity, IAclSupported
         {
             if (entity == null)
-                throw new ArgumentNullException("entity");
+                throw new ArgumentNullException(nameof(entity));
 
-            int entityId = entity.Id;
-            string entityName = typeof(T).Name;
+            var entityId = entity.Id;
+            var entityName = entity.GetUnproxiedEntityType().Name;
 
             var query = from ur in _aclRecordRepository.Table
                         where ur.EntityId == entityId &&
@@ -131,7 +132,7 @@ namespace Nop.Services.Security
         public virtual void InsertAclRecord(AclRecord aclRecord)
         {
             if (aclRecord == null)
-                throw new ArgumentNullException("aclRecord");
+                throw new ArgumentNullException(nameof(aclRecord));
 
             _aclRecordRepository.Insert(aclRecord);
 
@@ -151,13 +152,13 @@ namespace Nop.Services.Security
         public virtual void InsertAclRecord<T>(T entity, int customerRoleId) where T : BaseEntity, IAclSupported
         {
             if (entity == null)
-                throw new ArgumentNullException("entity");
+                throw new ArgumentNullException(nameof(entity));
 
             if (customerRoleId == 0)
                 throw new ArgumentOutOfRangeException("customerRoleId");
 
-            int entityId = entity.Id;
-            string entityName = typeof(T).Name;
+            var entityId = entity.Id;
+            var entityName = entity.GetUnproxiedEntityType().Name;
 
             var aclRecord = new AclRecord
             {
@@ -176,7 +177,7 @@ namespace Nop.Services.Security
         public virtual void UpdateAclRecord(AclRecord aclRecord)
         {
             if (aclRecord == null)
-                throw new ArgumentNullException("aclRecord");
+                throw new ArgumentNullException(nameof(aclRecord));
 
             _aclRecordRepository.Update(aclRecord);
 
@@ -191,17 +192,17 @@ namespace Nop.Services.Security
         /// Find customer role identifiers with granted access
         /// </summary>
         /// <typeparam name="T">Type</typeparam>
-        /// <param name="entity">Wntity</param>
+        /// <param name="entity">Entity</param>
         /// <returns>Customer role identifiers</returns>
         public virtual int[] GetCustomerRoleIdsWithAccess<T>(T entity) where T : BaseEntity, IAclSupported
         {
             if (entity == null)
-                throw new ArgumentNullException("entity");
+                throw new ArgumentNullException(nameof(entity));
 
-            int entityId = entity.Id;
-            string entityName = typeof(T).Name;
+            var entityId = entity.Id;
+            var entityName = entity.GetUnproxiedEntityType().Name;
 
-            string key = string.Format(ACLRECORD_BY_ENTITYID_NAME_KEY, entityId, entityName);
+            var key = string.Format(ACLRECORD_BY_ENTITYID_NAME_KEY, entityId, entityName);
             return _cacheManager.Get(key, () =>
             {
                 var query = from ur in _aclRecordRepository.Table
@@ -216,7 +217,7 @@ namespace Nop.Services.Security
         /// Authorize ACL permission
         /// </summary>
         /// <typeparam name="T">Type</typeparam>
-        /// <param name="entity">Wntity</param>
+        /// <param name="entity">Entity</param>
         /// <returns>true - authorized; otherwise, false</returns>
         public virtual bool Authorize<T>(T entity) where T : BaseEntity, IAclSupported
         {
@@ -227,7 +228,7 @@ namespace Nop.Services.Security
         /// Authorize ACL permission
         /// </summary>
         /// <typeparam name="T">Type</typeparam>
-        /// <param name="entity">Wntity</param>
+        /// <param name="entity">Entity</param>
         /// <param name="customer">Customer</param>
         /// <returns>true - authorized; otherwise, false</returns>
         public virtual bool Authorize<T>(T entity, Customer customer) where T : BaseEntity, IAclSupported
@@ -253,6 +254,7 @@ namespace Nop.Services.Security
             //no permission found
             return false;
         }
+
         #endregion
     }
 }

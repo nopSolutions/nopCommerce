@@ -4,8 +4,14 @@ using Nop.Core.Infrastructure;
 
 namespace Nop.Data
 {
+    /// <summary>
+    /// Entity Framework startup task
+    /// </summary>
     public class EfStartUpTask : IStartupTask
     {
+        /// <summary>
+        /// Execute
+        /// </summary>
         public void Execute()
         {
             var settings = EngineContext.Current.Resolve<DataSettings>();
@@ -18,6 +24,9 @@ namespace Nop.Data
             }
         }
 
+        /// <summary>
+        /// Gets order of this startup task implementation
+        /// </summary>
         public int Order
         {
             //ensure that this task is run first 

@@ -2,8 +2,14 @@
 
 namespace Nop.Data.Mapping.Shipping
 {
-    public class DeliveryDateMap : NopEntityTypeConfiguration<DeliveryDate>
+    /// <summary>
+    /// Mapping class
+    /// </summary>
+    public partial class DeliveryDateMap : NopEntityTypeConfiguration<DeliveryDate>
     {
+        /// <summary>
+        /// Ctor
+        /// </summary>
         public DeliveryDateMap()
         {
             this.ToTable("DeliveryDate");

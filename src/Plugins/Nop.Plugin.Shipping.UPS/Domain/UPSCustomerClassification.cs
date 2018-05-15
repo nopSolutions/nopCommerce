@@ -2,7 +2,7 @@
 namespace Nop.Plugin.Shipping.UPS.Domain
 {
     /// <summary>
-    /// UPS customer lassification
+    /// UPS customer Classification
     /// </summary>
     public enum UPSCustomerClassification
     {

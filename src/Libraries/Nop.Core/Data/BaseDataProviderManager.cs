@@ -14,14 +14,14 @@ namespace Nop.Core.Data
         protected BaseDataProviderManager(DataSettings settings)
         {
             if (settings == null)
-                throw new ArgumentNullException("settings");
+                throw new ArgumentNullException(nameof(settings));
             this.Settings = settings;
         }
 
         /// <summary>
         /// Gets or sets settings
         /// </summary>
-        protected DataSettings Settings { get; private set; }
+        protected DataSettings Settings { get; }
 
         /// <summary>
         /// Load data provider

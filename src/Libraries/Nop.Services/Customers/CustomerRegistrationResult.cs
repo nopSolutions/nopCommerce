@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace Nop.Services.Customers 
 {
@@ -20,7 +21,7 @@ namespace Nop.Services.Customers
         /// </summary>
         public bool Success 
         {
-            get { return this.Errors.Count == 0; }
+            get { return !this.Errors.Any(); }
         }
 
         /// <summary>

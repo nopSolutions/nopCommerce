@@ -67,7 +67,7 @@ namespace Nop.Web.Framework.Kendoui
         {
             if (Filters != null && Filters.Any())
             {
-                foreach (Filter filter in Filters)
+                foreach (var filter in Filters)
                 {
                     filters.Add(filter);
 
@@ -88,29 +88,29 @@ namespace Nop.Web.Framework.Kendoui
         {
             if (Filters != null && Filters.Any())
             {
-                return "(" + String.Join(" " + Logic + " ", Filters.Select(filter => filter.ToExpression(filters)).ToArray()) + ")";
+                return "(" + string.Join(" " + Logic + " ", Filters.Select(filter => filter.ToExpression(filters)).ToArray()) + ")";
             }
 
-            int index = filters.IndexOf(this);
+            var index = filters.IndexOf(this);
 
-            string comparison = operators[Operator];
+            var comparison = operators[Operator];
 
             //original code below (case sensitive) commented
             //if (comparison == "StartsWith" || comparison == "EndsWith" || comparison == "Contains")
             //{
-            //    return String.Format("{0}.{1}(@{2})", Field, comparison, index);
+            //    return $"{Field}.{comparison}(@{index})";
             //}
 
             //we ignore case
             if (comparison == "Contains")
             {
-                return String.Format("{0}.IndexOf(@{1}, System.StringComparison.InvariantCultureIgnoreCase) >= 0", Field, index);
+                return $"{Field}.IndexOf(@{index}, System.StringComparison.InvariantCultureIgnoreCase) >= 0";
             }
             if (comparison == "DoesNotContain")
             {
-                return String.Format("{0}.IndexOf(@{1}, System.StringComparison.InvariantCultureIgnoreCase) < 0", Field, index);
+                return $"{Field}.IndexOf(@{index}, System.StringComparison.InvariantCultureIgnoreCase) < 0";
             }
-            if (comparison == "=" && Value is String)
+            if (comparison == "=" && Value is string)
             {
                 //string only
                 comparison = "Equals";
@@ -118,10 +118,10 @@ namespace Nop.Web.Framework.Kendoui
             }
             if (comparison == "StartsWith" || comparison == "EndsWith" || comparison == "Equals")
             {
-                return String.Format("{0}.{1}(@{2}, System.StringComparison.InvariantCultureIgnoreCase)", Field, comparison, index);
+                return $"{Field}.{comparison}(@{index}, System.StringComparison.InvariantCultureIgnoreCase)";
             }
 
-            return String.Format("{0} {1} @{2}", Field, comparison, index);
+            return $"{Field} {comparison} @{index}";
         }
     }
 }

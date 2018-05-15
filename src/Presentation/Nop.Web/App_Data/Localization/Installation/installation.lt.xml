@@ -47,6 +47,9 @@
   <LocaleResource Name="DatabaseCreationError">
     <Value>Klaida kuriant duomenu baze: {0}</Value>
   </LocaleResource>
+  <LocaleResource Name="Database">
+    <Value>Duomenų bazė</Value>
+  </LocaleResource>
   <LocaleResource Name="DatabaseInformation">
     <Value>Duomenų bazės informacija</Value>
   </LocaleResource>

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Nop.Services.Tax
 {
@@ -21,7 +22,7 @@ namespace Nop.Services.Tax
         public decimal TaxRate { get; set; }
 
         /// <summary>
-        /// Gets or sets an address
+        /// Gets or sets errors
         /// </summary>
         public IList<string> Errors { get; set; }
 
@@ -32,7 +33,7 @@ namespace Nop.Services.Tax
         {
             get 
             { 
-                return this.Errors.Count == 0; 
+                return !Errors.Any(); 
             }
         }
 
@@ -42,7 +43,7 @@ namespace Nop.Services.Tax
         /// <param name="error">Error</param>
         public void AddError(string error)
         {
-            this.Errors.Add(error);
+            Errors.Add(error);
         }
     }
 }

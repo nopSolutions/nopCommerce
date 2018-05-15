@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Models.Checkout
 {
@@ -15,6 +15,7 @@ namespace Nop.Web.Models.Checkout
         public bool DisplayRewardPoints { get; set; }
         public int RewardPointsBalance { get; set; }
         public string RewardPointsAmount { get; set; }
+        public bool RewardPointsEnoughToPayForOrder { get; set; }
         public bool UseRewardPoints { get; set; }
 
         #region Nested classes
@@ -23,10 +24,12 @@ namespace Nop.Web.Models.Checkout
         {
             public string PaymentMethodSystemName { get; set; }
             public string Name { get; set; }
+            public string Description { get; set; }
             public string Fee { get; set; }
             public bool Selected { get; set; }
             public string LogoUrl { get; set; }
         }
+
         #endregion
     }
 }

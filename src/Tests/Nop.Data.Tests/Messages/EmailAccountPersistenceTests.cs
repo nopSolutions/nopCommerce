@@ -1,5 +1,4 @@
-﻿using Nop.Core.Domain.Messages;
-using Nop.Tests;
+﻿using Nop.Tests;
 using NUnit.Framework;
 
 namespace Nop.Data.Tests.Messages
@@ -10,29 +9,11 @@ namespace Nop.Data.Tests.Messages
         [Test]
         public void Can_save_and_load_emailAccount()
         {
-            var emailAccount = new EmailAccount
-            {
-                Email = "admin@yourstore.com",
-                DisplayName = "Administrator",
-                Host = "127.0.0.1",
-                Port = 125,
-                Username = "John",
-                Password = "111",
-                EnableSsl = true,
-                UseDefaultCredentials = true
-            };
+            var emailAccount = this.GetTestEmailAccount();
 
-            var fromDb = SaveAndLoadEntity(emailAccount);
+            var fromDb = SaveAndLoadEntity(this.GetTestEmailAccount());
             fromDb.ShouldNotBeNull();
-            fromDb.Email.ShouldEqual("admin@yourstore.com");
-            fromDb.DisplayName.ShouldEqual("Administrator");
-            fromDb.Host.ShouldEqual("127.0.0.1");
-            fromDb.Port.ShouldEqual(125);
-            fromDb.Username.ShouldEqual("John");
-            fromDb.Password.ShouldEqual("111");
-            fromDb.EnableSsl.ShouldBeTrue();
-            fromDb.UseDefaultCredentials.ShouldBeTrue();
+            fromDb.PropertiesShouldEqual(emailAccount);
         }
-
     }
 }

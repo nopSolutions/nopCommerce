@@ -14,7 +14,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="manufacturer">Manufacturer</param>
         void DeleteManufacturer(Manufacturer manufacturer);
-        
+
         /// <summary>
         /// Gets all manufacturers
         /// </summary>
@@ -48,14 +48,13 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="manufacturer">Manufacturer</param>
         void UpdateManufacturer(Manufacturer manufacturer);
-        
 
         /// <summary>
         /// Deletes a product manufacturer mapping
         /// </summary>
         /// <param name="productManufacturer">Product manufacturer mapping</param>
         void DeleteProductManufacturer(ProductManufacturer productManufacturer);
-        
+
         /// <summary>
         /// Gets product manufacturer collection
         /// </summary>
@@ -74,7 +73,7 @@ namespace Nop.Services.Catalog
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Product manufacturer mapping collection</returns>
         IList<ProductManufacturer> GetProductManufacturersByProductId(int productId, bool showHidden = false);
-        
+
         /// <summary>
         /// Gets a product manufacturer mapping 
         /// </summary>
@@ -102,10 +101,10 @@ namespace Nop.Services.Catalog
         IDictionary<int, int[]> GetProductManufacturerIds(int[] productIds);
 
         /// <summary>
-        /// Returns a list of IDs of not existing manufacturers
+        /// Returns a list of names of not existing manufacturers
         /// </summary>
-        /// <param name="manufacturerIds">The IDs of the manufacturers to check</param>
-        /// <returns>List of IDs not existing manufacturers</returns>
-        int[] GetNotExistingManufacturers(int[] manufacturerIds);
+        /// <param name="manufacturerIdsNames">The names and/or IDs of the manufacturers to check</param>
+        /// <returns>List of names and/or IDs not existing manufacturers</returns>
+        string[] GetNotExistingManufacturers(string[] manufacturerIdsNames);
     }
 }

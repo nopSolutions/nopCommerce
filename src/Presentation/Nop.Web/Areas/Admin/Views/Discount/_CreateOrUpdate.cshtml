@@ -1,0 +1,32 @@
+﻿@model DiscountModel
+
+@inject IEventPublisher eventPublisher
+
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
+
+<div class="content">
+    <div class="form-horizontal">
+        <nop-tabs id="discount-edit">
+            <nop-tab asp-name="tab-info" asp-title="@T("Admin.Promotions.Discounts.Info")" asp-default="true">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-tab>
+            <nop-tab asp-name="tab-requirements" asp-title="@T("Admin.Promotions.Discounts.Requirements")">@await Html.PartialAsync("_CreateOrUpdate.Requirements", Model)</nop-tab>
+            <nop-tab asp-name="tab-applied-to-products" asp-title="@T("Admin.Promotions.Discounts.AppliedToProducts")">@await Html.PartialAsync("_CreateOrUpdate.AppliedToProducts", Model)</nop-tab>
+            <nop-tab asp-name="tab-applied-to-categories" asp-title="@T("Admin.Promotions.Discounts.AppliedToCategories")">@await Html.PartialAsync("_CreateOrUpdate.AppliedToCategories", Model)</nop-tab>
+            <nop-tab asp-name="tab-applied-to-manufacturers" asp-title="@T("Admin.Promotions.Discounts.AppliedToManufacturers")">@await Html.PartialAsync("_CreateOrUpdate.AppliedToManufacturers", Model)</nop-tab>
+            @if (Model.Id > 0)
+            {
+                <nop-tab asp-name="tab-history" asp-title="@T("Admin.Promotions.Discounts.History")">@await Html.PartialAsync("_CreateOrUpdate.History", Model)</nop-tab>
+            }
+        </nop-tabs>
+    </div>
+</div>
+
+@{
+    //custom tabs
+    var eventMessage = new AdminTabStripCreated(this.Html, "discount-edit");
+    eventPublisher.Publish(eventMessage);
+    foreach (var eventBlock in eventMessage.BlocksToRender)
+    {
+        @eventBlock
+    }
+}

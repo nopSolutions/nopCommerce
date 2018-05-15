@@ -1,5 +1,4 @@
 ﻿@model IList<ProductSpecificationModel>
-@using Nop.Web.Models.Catalog;
 @if (Model.Count > 0)
 {
     <div class="product-specs-box">
@@ -13,7 +12,7 @@
                     <col />
                 </colgroup>
                 <tbody>
-                    @for (int i = 0; i < Model.Count; i++)
+                    @for (var i = 0; i < Model.Count; i++)
                     {
                         var item = Model[i];
                         <tr @(i % 2 == 0 ? Html.Raw(" class=\"odd\"") : Html.Raw(" class=\"even\""))>
@@ -21,7 +20,18 @@
                                 @item.SpecificationAttributeName
                             </td>
                             <td class="spec-value">
-                                @Html.Raw(item.ValueRaw)
+                                @if (string.IsNullOrEmpty(item.ColorSquaresRgb))
+                                {
+                                    @Html.Raw(item.ValueRaw)
+                                }
+                                else
+                                {
+                                    <div class="attribute-squares color-squares">
+                                        <span class="attribute-square-container" title="@Html.Raw(item.ValueRaw)">
+                                            <span class="attribute-square" style="background-color: @(item.ColorSquaresRgb);">&nbsp;</span>
+                                        </span>
+                                    </div>
+                                }
                             </td>
                         </tr>
                     }

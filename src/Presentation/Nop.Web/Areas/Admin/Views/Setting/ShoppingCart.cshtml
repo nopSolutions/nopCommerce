@@ -1,0 +1,270 @@
+@model ShoppingCartSettingsModel
+
+@{
+    //page title
+    ViewBag.Title = T("Admin.Configuration.Settings.ShoppingCart").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Shopping cart settings");
+}
+
+<form asp-controller="Setting" asp-action="ShoppingCart" method="post">
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("Admin.Configuration.Settings.ShoppingCart")
+        </h1>
+        <div class="pull-right">
+            <button type="submit" name="save" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.Save")
+            </button>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ShoppingCartSettingsButtons })
+        </div>
+    </div>
+    
+    <div class="content">
+        <div class="form-horizontal">
+            @await Component.InvokeAsync("StoreScopeConfiguration")
+            @await Component.InvokeAsync("SettingMode")
+            <div asp-validation-summary="All"></div>
+
+            <div class="panel-group">
+                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ShoppingCartSettingsTop })
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        @T("Admin.Configuration.Settings.ShoppingCart.BlockTitle.Common")
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="ShowDiscountBox_OverrideForStore" asp-input="ShowDiscountBox" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="ShowDiscountBox" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="ShowDiscountBox" />
+                                <span asp-validation-for="ShowDiscountBox"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="ShowGiftCardBox_OverrideForStore" asp-input="ShowGiftCardBox" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="ShowGiftCardBox" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="ShowGiftCardBox" />
+                                <span asp-validation-for="ShowGiftCardBox"></span>
+                            </div>
+                        </div>
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="AllowCartItemEditing_OverrideForStore" asp-input="AllowCartItemEditing" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="AllowCartItemEditing" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="AllowCartItemEditing" />
+                                <span asp-validation-for="AllowCartItemEditing"></span>
+                            </div>
+                        </div>
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="MaximumShoppingCartItems_OverrideForStore" asp-input="MaximumShoppingCartItems" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="MaximumShoppingCartItems" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="MaximumShoppingCartItems" />
+                                <span asp-validation-for="MaximumShoppingCartItems"></span>
+                            </div>
+                        </div>
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="CartsSharedBetweenStores_OverrideForStore" asp-input="CartsSharedBetweenStores" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="CartsSharedBetweenStores" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="CartsSharedBetweenStores" />
+                                <span asp-validation-for="CartsSharedBetweenStores"></span>
+                            </div>
+                        </div>
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="ShowProductImagesOnShoppingCart_OverrideForStore" asp-input="ShowProductImagesOnShoppingCart" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="ShowProductImagesOnShoppingCart" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="ShowProductImagesOnShoppingCart" />
+                                <span asp-validation-for="ShowProductImagesOnShoppingCart"></span>
+                            </div>
+                        </div>
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="DisplayCartAfterAddingProduct_OverrideForStore" asp-input="DisplayCartAfterAddingProduct" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="DisplayCartAfterAddingProduct" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="DisplayCartAfterAddingProduct" />
+                                <span asp-validation-for="DisplayCartAfterAddingProduct"></span>
+                            </div>
+                        </div>
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="CrossSellsNumber_OverrideForStore" asp-input="CrossSellsNumber" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="CrossSellsNumber" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="CrossSellsNumber" />
+                                <span asp-validation-for="CrossSellsNumber"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        @T("Admin.Configuration.Settings.ShoppingCart.BlockTitle.MiniShoppingCart")
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="MiniShoppingCartEnabled_OverrideForStore" asp-input="MiniShoppingCartEnabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="MiniShoppingCartEnabled" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="MiniShoppingCartEnabled" />
+                                <span asp-validation-for="MiniShoppingCartEnabled"></span>
+                            </div>
+                        </div>
+                        <nop-nested-setting asp-for="MiniShoppingCartEnabled">
+                            <div class="form-group advanced-setting" id="pnlMiniShoppingCartProductNumber">
+                                <div class="col-md-3">
+                                    <nop-override-store-checkbox asp-for="MiniShoppingCartProductNumber_OverrideForStore" asp-input="MiniShoppingCartProductNumber" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                    <nop-label asp-for="MiniShoppingCartProductNumber" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-editor asp-for="MiniShoppingCartProductNumber" />
+                                    <span asp-validation-for="MiniShoppingCartProductNumber"></span>
+                                </div>
+                            </div>
+                            <div class="form-group advanced-setting" id="pnlShowProductImagesInMiniShoppingCart">
+                                <div class="col-md-3">
+                                    <nop-override-store-checkbox asp-for="ShowProductImagesInMiniShoppingCart_OverrideForStore" asp-input="ShowProductImagesInMiniShoppingCart" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                    <nop-label asp-for="ShowProductImagesInMiniShoppingCart" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-editor asp-for="ShowProductImagesInMiniShoppingCart" />
+                                    <span asp-validation-for="ShowProductImagesInMiniShoppingCart"></span>
+                                </div>
+                            </div>
+                        </nop-nested-setting>
+                    </div>
+                </div>
+                <div class="panel panel-default advanced-setting">
+                    <div class="panel-heading">
+                        @T("Admin.Configuration.Settings.ShoppingCart.BlockTitle.Wishlist")
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="MaximumWishlistItems_OverrideForStore" asp-input="MaximumWishlistItems" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="MaximumWishlistItems" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="MaximumWishlistItems" />
+                                <span asp-validation-for="MaximumWishlistItems"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="ShowProductImagesOnWishList_OverrideForStore" asp-input="ShowProductImagesOnWishList" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="ShowProductImagesOnWishList" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="ShowProductImagesOnWishList" />
+                                <span asp-validation-for="ShowProductImagesOnWishList"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="EmailWishlistEnabled_OverrideForStore" asp-input="EmailWishlistEnabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="EmailWishlistEnabled" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="EmailWishlistEnabled" />
+                                <span asp-validation-for="EmailWishlistEnabled"></span>
+                            </div>
+                        </div>
+                        <nop-nested-setting asp-for="EmailWishlistEnabled">
+                            <div class="form-group" id="pnlAllowAnonymousUsersToEmailWishlist">
+                                <div class="col-md-3">
+                                    <nop-override-store-checkbox asp-for="AllowAnonymousUsersToEmailWishlist_OverrideForStore" asp-input="AllowAnonymousUsersToEmailWishlist" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                    <nop-label asp-for="AllowAnonymousUsersToEmailWishlist" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-editor asp-for="AllowAnonymousUsersToEmailWishlist" />
+                                    <span asp-validation-for="AllowAnonymousUsersToEmailWishlist"></span>
+                                </div>
+                            </div>
+                        </nop-nested-setting>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="AllowOutOfStockItemsToBeAddedToWishlist_OverrideForStore" asp-input="AllowOutOfStockItemsToBeAddedToWishlist" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="AllowOutOfStockItemsToBeAddedToWishlist" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="AllowOutOfStockItemsToBeAddedToWishlist" />
+                                <span asp-validation-for="AllowOutOfStockItemsToBeAddedToWishlist"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="MoveItemsFromWishlistToCart_OverrideForStore" asp-input="MoveItemsFromWishlistToCart" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="MoveItemsFromWishlistToCart" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="MoveItemsFromWishlistToCart" />
+                                <span asp-validation-for="MoveItemsFromWishlistToCart"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="DisplayWishlistAfterAddingProduct_OverrideForStore" asp-input="DisplayWishlistAfterAddingProduct" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="DisplayWishlistAfterAddingProduct" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="DisplayWishlistAfterAddingProduct" />
+                                <span asp-validation-for="DisplayWishlistAfterAddingProduct"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <script>
+                        $(document).ready(function () {
+                            $("#@Html.IdFor(model => model.MiniShoppingCartEnabled)").click(toggleMiniShoppingCartEnabled);
+                            $("#@Html.IdFor(model => model.EmailWishlistEnabled)").click(toggleEmailWishlistEnabled);
+
+                            toggleMiniShoppingCartEnabled();
+                            toggleEmailWishlistEnabled();
+                        });
+
+                        function toggleMiniShoppingCartEnabled() {
+                            if ($('#@Html.IdFor(model => model.MiniShoppingCartEnabled)').is(':checked')) {
+                                $('#pnlMiniShoppingCartProductNumber').show();
+                                $('#pnlShowProductImagesInMiniShoppingCart').show();
+                            } else {
+                                $('#pnlMiniShoppingCartProductNumber').hide();
+                                $('#pnlShowProductImagesInMiniShoppingCart').hide();
+                            }
+                        }
+
+                        function toggleEmailWishlistEnabled() {
+                            if ($('#@Html.IdFor(model => model.EmailWishlistEnabled)').is(':checked')) {
+                                $('#pnlAllowAnonymousUsersToEmailWishlist').show();
+                            } else {
+                                $('#pnlAllowAnonymousUsersToEmailWishlist').hide();
+                            }
+                        }
+
+                    </script>
+                </div>
+                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ShoppingCartSettingsBottom })
+            </div>
+        </div>
+    </div>
+</form>

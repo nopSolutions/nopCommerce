@@ -47,6 +47,9 @@
   <LocaleResource Name="DatabaseCreationError">
     <Value>Грешка при създаването на база данни: {0}</Value>
   </LocaleResource>
+  <LocaleResource Name="Database">
+    <Value>База данни</Value>
+  </LocaleResource>
   <LocaleResource Name="DatabaseInformation">
     <Value>Информация за базата данни</Value>
   </LocaleResource>

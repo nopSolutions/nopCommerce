@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
-using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Models;
 using Nop.Web.Models.Common;
 
 namespace Nop.Web.Models.Catalog
 {
-    public partial class CustomerBackInStockSubscriptionsModel
+    public partial class CustomerBackInStockSubscriptionsModel : BaseNopModel
     {
         public CustomerBackInStockSubscriptionsModel()
         {

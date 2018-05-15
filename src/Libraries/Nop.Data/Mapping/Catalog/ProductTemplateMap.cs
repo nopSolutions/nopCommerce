@@ -2,8 +2,14 @@ using Nop.Core.Domain.Catalog;
 
 namespace Nop.Data.Mapping.Catalog
 {
+    /// <summary>
+    /// Mapping class
+    /// </summary>
     public partial class ProductTemplateMap : NopEntityTypeConfiguration<ProductTemplate>
     {
+        /// <summary>
+        /// Ctor
+        /// </summary>
         public ProductTemplateMap()
         {
             this.ToTable("ProductTemplate");

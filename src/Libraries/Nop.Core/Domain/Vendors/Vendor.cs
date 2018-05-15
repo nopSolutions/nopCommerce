@@ -32,6 +32,11 @@ namespace Nop.Core.Domain.Vendors
         public int PictureId { get; set; }
 
         /// <summary>
+        /// Gets or sets the address identifier
+        /// </summary>
+        public int AddressId { get; set; }
+
+        /// <summary>
         /// Gets or sets the admin comment
         /// </summary>
         public string AdminComment { get; set; }
@@ -50,8 +55,7 @@ namespace Nop.Core.Domain.Vendors
         /// Gets or sets the display order
         /// </summary>
         public int DisplayOrder { get; set; }
-
-
+        
         /// <summary>
         /// Gets or sets the meta keywords
         /// </summary>
@@ -90,6 +94,5 @@ namespace Nop.Core.Domain.Vendors
             get { return _vendorNotes ?? (_vendorNotes = new List<VendorNote>()); }
             protected set { _vendorNotes = value; }
         }
-
     }
 }

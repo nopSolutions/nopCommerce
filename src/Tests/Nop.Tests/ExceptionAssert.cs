@@ -110,7 +110,7 @@ namespace Nop.Tests
         [Test]
         public void ReturnsTheException()
         {
-            Exception ex = ExceptionAssert.Throws(
+            var ex = ExceptionAssert.Throws(
                 typeof(ArgumentException),
                 delegate
                 {

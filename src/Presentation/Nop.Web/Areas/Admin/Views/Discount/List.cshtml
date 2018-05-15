@@ -1,0 +1,200 @@
+@model DiscountSearchModel
+
+@{
+    //page title
+    ViewBag.Title = T("Admin.Promotions.Discounts").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Discounts");
+}
+
+<nop-antiforgery-token/>
+<div class="content-header clearfix">
+    <h1 class="pull-left">
+        @T("Admin.Promotions.Discounts")
+    </h1>
+    <div class="pull-right">
+        <a asp-action="Create" class="btn bg-blue">
+            <i class="fa fa-plus-square"></i>
+            @T("Admin.Common.AddNew")
+        </a>
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.DiscountListButtons })
+    </div>
+</div>
+
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default panel-search">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <div class="col-md-4">
+                                    <nop-label asp-for="SearchDiscountName"/>
+                                </div>
+                                <div class="col-md-8">
+                                    <nop-editor asp-for="SearchDiscountName"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-4">
+                                    <nop-label asp-for="SearchDiscountCouponCode"/>
+                                </div>
+                                <div class="col-md-8">
+                                    <nop-editor asp-for="SearchDiscountCouponCode"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-4">
+                                    <nop-label asp-for="SearchDiscountTypeId"/>
+                                </div>
+                                <div class="col-md-8">
+                                    <nop-select asp-for="SearchDiscountTypeId" asp-items="Model.AvailableDiscountTypes"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-4">
+                                    <nop-label asp-for="SearchStartDate"/>
+                                </div>
+                                <div class="col-md-8">
+                                    <nop-editor asp-for="SearchStartDate"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-4">
+                                    <nop-label asp-for="SearchEndDate"/>
+                                </div>
+                                <div class="col-md-8">
+                                    <nop-editor asp-for="SearchEndDate"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-8 col-md-offset-4">
+                                    <button type="button" id="search-discounts" class="btn btn-primary btn-search">
+                                        <i class="fa fa-search"></i>
+                                        @T("Admin.Common.Search")
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div id="discounts-grid"></div>
+
+                    <script>
+                        $(document).ready(function() {
+                            $("#discounts-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("List", "Discount"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: function() {
+                                                var data = {
+                                                    SearchDiscountTypeId: $('#@Html.IdFor(model => model.SearchDiscountTypeId)').val(),
+                                                    SearchDiscountCouponCode: $('#@Html.IdFor(model => model.SearchDiscountCouponCode)').val(),
+                                                    SearchDiscountName: $('#@Html.IdFor(model => model.SearchDiscountName)').val(),
+                                                    SearchStartDate: $('#@Html.IdFor(model => model.SearchStartDate)').val(),
+                                                    SearchEndDate: $('#@Html.IdFor(model => model.SearchEndDate)').val(),
+                                                };
+                                                addAntiForgeryToken(data);
+                                                return data;
+                                            }
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors"
+                                    },
+                                    error: function(e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    pageSize: @(Model.PageSize),
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    pageSizes: [@(Model.AvailablePageSizes)],
+                                    @await Html.PartialAsync("_GridPagerMessages")
+                                },
+                                editable: {
+                                    confirmation: "@T("Admin.Common.DeleteConfirmation")",
+                                    mode: "inline"
+                                },
+                                scrollable: false,
+                                columns: [
+                                {
+                                    field: "Name",
+                                    title: "@T("Admin.Promotions.Discounts.Fields.Name")",
+                                    width: 350
+                                }, {
+                                    field: "DiscountTypeName",
+                                    title: "@T("Admin.Promotions.Discounts.Fields.DiscountType")",
+                                    width: 250
+                                }, {
+                                    field: "DiscountAmount",
+                                    title: "@T("Admin.Promotions.Discounts.Fields.Discount")",
+                                    width: 200,
+                                    template: '# if(UsePercentage) {# #=DiscountPercentage# % #} else {#  #=DiscountAmount# #=PrimaryStoreCurrencyCode# #} #'
+                                }, {
+                                    field: "StartDateUtc",
+                                    title: "@T("Admin.Promotions.Discounts.Fields.StartDate")",
+                                    width: 200,
+                                    type: "date",
+                                    format: "{0:G}"
+                                }, {
+                                    field: "EndDateUtc",
+                                    title: "@T("Admin.Promotions.Discounts.Fields.EndDate")",
+                                    width: 200,
+                                    type: "date",
+                                    format: "{0:G}"
+                                }, {
+                                    field: "TimesUsed",
+                                    title: "@T("Admin.Promotions.Discounts.Fields.TimesUsed")",
+                                    width: 200
+                                }, {
+                                    field: "Id",
+                                    title: "@T("Admin.Common.Edit")",
+                                    width: 100,
+                                    headerAttributes: { style: "text-align:center" },
+                                    attributes: { style: "text-align:center" },
+                                    template: '<a class="btn btn-default" href="Edit/#=Id#"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>'
+                                }
+                                ]
+                            });
+                        });
+                    </script>
+                    <script>
+                        $(document).ready(function() {
+                            $('#search-discounts').click(function() {
+                                var grid = $('#discounts-grid').data('kendoGrid');
+                                grid.dataSource.page(1); //new search. Set page size to 1
+                                //grid.dataSource.read(); we already loaded the grid above using "page" function
+                                return false;
+                            });
+                        });
+
+                        $("".concat("#@Html.IdFor(model => model.SearchDiscountName),",
+                            "#@Html.IdFor(model => model.SearchDiscountCouponCode)")).keydown(function(event) {
+                                if (event.keyCode === 13) {
+                                    $("#search-discounts").click();
+                                    return false;
+                                }
+                        });
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

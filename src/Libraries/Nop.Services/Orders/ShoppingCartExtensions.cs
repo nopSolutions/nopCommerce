@@ -4,6 +4,8 @@ using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Infrastructure;
+using Nop.Services.Catalog;
 using Nop.Services.Localization;
 
 namespace Nop.Services.Orders
@@ -17,13 +19,13 @@ namespace Nop.Services.Orders
         /// Indicates whether the shopping cart requires shipping
         /// </summary>
         /// <param name="shoppingCart">Shopping cart</param>
+        /// <param name="productService">Product service</param>
+        /// <param name="productAttributeParser">Product attribute parser</param>
         /// <returns>True if the shopping cart requires shipping; otherwise, false.</returns>
-        public static bool RequiresShipping(this IList<ShoppingCartItem> shoppingCart)
+        public static bool RequiresShipping(this IList<ShoppingCartItem> shoppingCart,
+            IProductService productService = null, IProductAttributeParser productAttributeParser = null)
         {
-            foreach (var shoppingCartItem in shoppingCart)
-                if (shoppingCartItem.IsShipEnabled)
-                    return true;
-            return false;
+            return shoppingCart.Any(shoppingCartItem => shoppingCartItem.IsShipEnabled(productService, productAttributeParser));
         }
 
         /// <summary>
@@ -33,8 +35,8 @@ namespace Nop.Services.Orders
         /// <returns>Result</returns>
         public static int GetTotalProducts(this IList<ShoppingCartItem> shoppingCart)
         {
-            int result = 0;
-            foreach (ShoppingCartItem sci in shoppingCart)
+            var result = 0;
+            foreach (var sci in shoppingCart)
             {
                 result += sci.Quantity;
             }
@@ -48,7 +50,7 @@ namespace Nop.Services.Orders
         /// <returns>Result</returns>
         public static bool IsRecurring(this IList<ShoppingCartItem> shoppingCart)
         {
-            foreach (ShoppingCartItem sci in shoppingCart)
+            foreach (var sci in shoppingCart)
             {
                 var product = sci.Product;
                 if (product != null && product.IsRecurring)
@@ -83,12 +85,12 @@ namespace Nop.Services.Orders
                 var product= sci.Product;
                 if (product == null)
                 {
-                    throw new NopException(string.Format("Product (Id={0}) cannot be loaded", sci.ProductId));
+                    throw new NopException($"Product (Id={sci.ProductId}) cannot be loaded");
                 }
 
                 if (product.IsRecurring)
                 {
-                    string conflictError = localizationService.GetResource("ShoppingCart.ConflictingShipmentSchedules");
+                    var conflictError = localizationService.GetResource("ShoppingCart.ConflictingShipmentSchedules");
 
                     //cycle length
                     if (_cycleLength.HasValue && _cycleLength.Value != product.RecurringCycleLength)
@@ -124,16 +126,23 @@ namespace Nop.Services.Orders
         /// <returns>Customer of shopping cart</returns>
         public static Customer GetCustomer(this IList<ShoppingCartItem> shoppingCart)
         {
-            if (shoppingCart.Count == 0)
+            if (!shoppingCart.Any())
                 return null;
 
             return shoppingCart[0].Customer;
         }
 
+        /// <summary>
+        /// Limit cart by store (if carts are not shared between stores)
+        /// </summary>
+        /// <param name="cart">Cart</param>
+        /// <param name="storeId">Store identifier</param>
+        /// <returns>Cart</returns>
         public static IEnumerable<ShoppingCartItem> LimitPerStore(this IEnumerable<ShoppingCartItem> cart, int storeId)
         {
-            //simply replace the following code with "return cart"
-            //if you want to share shopping carts between stores
+            var shoppingCartSettings = EngineContext.Current.Resolve<ShoppingCartSettings>();
+            if (shoppingCartSettings.CartsSharedBetweenStores)
+                return cart;
 
             return cart.Where(x => x.StoreId == storeId);
         }

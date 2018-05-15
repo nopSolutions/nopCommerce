@@ -111,9 +111,11 @@ namespace Nop.Services.Tests.Directory
 
             var cacheManager = new NopNullCache();
 
-            _measureSettings = new MeasureSettings();
-            _measureSettings.BaseDimensionId = measureDimension1.Id; //inch(es)
-            _measureSettings.BaseWeightId = measureWeight2.Id; //lb(s)
+            _measureSettings = new MeasureSettings
+            {
+                BaseDimensionId = measureDimension1.Id, //inch(es)
+                BaseWeightId = measureWeight2.Id //lb(s)
+            };
 
             _eventPublisher = MockRepository.GenerateMock<IEventPublisher>();
             _eventPublisher.Expect(x => x.Publish(Arg<object>.Is.Anything));

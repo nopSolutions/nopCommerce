@@ -1,79 +1,96 @@
 ﻿using System;
 using System.Text;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Nop.Plugin.Shipping.Fedex.Domain;
 using Nop.Plugin.Shipping.Fedex.Models;
+using Nop.Services;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
+using Nop.Services.Security;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
+using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Plugin.Shipping.Fedex.Controllers
 {
-    [AdminAuthorize]
+    [AuthorizeAdmin]
+    [Area(AreaNames.Admin)]
     public class ShippingFedexController : BasePluginController
     {
-        private readonly FedexSettings _fedexSettings;
-        private readonly ISettingService _settingService;
-        private readonly ILocalizationService _localizationService;
+        #region Fields
 
+        private readonly FedexSettings _fedexSettings;
+        private readonly ILocalizationService _localizationService;
+        private readonly IPermissionService _permissionService;
+        private readonly ISettingService _settingService;
+
+        #endregion
+
+        #region Ctor
+        
         public ShippingFedexController(FedexSettings fedexSettings,
-            ISettingService settingService,
-            ILocalizationService localizationService)
+            ILocalizationService localizationService,
+            IPermissionService permissionService,
+            ISettingService settingService)
         {
             this._fedexSettings = fedexSettings;
-            this._settingService = settingService;
             this._localizationService = localizationService;
+            this._permissionService = permissionService;
+            this._settingService = settingService;
         }
 
-        [ChildActionOnly]
-        public ActionResult Configure()
+        #endregion
+
+        #region Methods
+
+        public IActionResult Configure()
         {
-            var model = new FedexShippingModel();
-            model.Url = _fedexSettings.Url;
-            model.Key = _fedexSettings.Key;
-            model.Password = _fedexSettings.Password;
-            model.AccountNumber = _fedexSettings.AccountNumber;
-            model.MeterNumber = _fedexSettings.MeterNumber;
-            model.DropoffType = Convert.ToInt32(_fedexSettings.DropoffType);
-            model.AvailableDropOffTypes = _fedexSettings.DropoffType.ToSelectList();
-            model.UseResidentialRates = _fedexSettings.UseResidentialRates;
-            model.ApplyDiscounts = _fedexSettings.ApplyDiscounts;
-            model.AdditionalHandlingCharge = _fedexSettings.AdditionalHandlingCharge;
-            model.PackingPackageVolume = _fedexSettings.PackingPackageVolume;
-            model.PackingType = Convert.ToInt32(_fedexSettings.PackingType);
-            model.PackingTypeValues = _fedexSettings.PackingType.ToSelectList();
-            model.PassDimensions = _fedexSettings.PassDimensions;
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+                return AccessDeniedView();
 
+            var model = new FedexShippingModel()
+            {
+                Url = _fedexSettings.Url,
+                Key = _fedexSettings.Key,
+                Password = _fedexSettings.Password,
+                AccountNumber = _fedexSettings.AccountNumber,
+                MeterNumber = _fedexSettings.MeterNumber,
+                DropoffType = Convert.ToInt32(_fedexSettings.DropoffType),
+                AvailableDropOffTypes = _fedexSettings.DropoffType.ToSelectList(),
+                UseResidentialRates = _fedexSettings.UseResidentialRates,
+                ApplyDiscounts = _fedexSettings.ApplyDiscounts,
+                AdditionalHandlingCharge = _fedexSettings.AdditionalHandlingCharge,
+                PackingPackageVolume = _fedexSettings.PackingPackageVolume,
+                PackingType = Convert.ToInt32(_fedexSettings.PackingType),
+                PackingTypeValues = _fedexSettings.PackingType.ToSelectList(),
+                PassDimensions = _fedexSettings.PassDimensions
+            };
 
-            var services = new FedexServices();
             // Load service names
-            string carrierServicesOfferedDomestic = _fedexSettings.CarrierServicesOffered;
-            foreach (string service in services.Services)
-                model.AvailableCarrierServices.Add(service);
-
-            if (!String.IsNullOrEmpty(carrierServicesOfferedDomestic))
-                foreach (string service in services.Services)
+            var availableServices = new FedexServices().Services;
+            model.AvailableCarrierServices = availableServices;
+            if (!string.IsNullOrEmpty(_fedexSettings.CarrierServicesOffered))
+            {
+                foreach (var service in availableServices)
                 {
-                    string serviceId = FedexServices.GetServiceId(service);
-                    if (!String.IsNullOrEmpty(serviceId) && !String.IsNullOrEmpty(carrierServicesOfferedDomestic))
-                    {
-                        if (carrierServicesOfferedDomestic.Contains(serviceId))
-                            model.CarrierServicesOffered.Add(service);
-                    }
+                    var serviceId = FedexServices.GetServiceId(service);
+                    if (!string.IsNullOrEmpty(serviceId) && _fedexSettings.CarrierServicesOffered.Contains(serviceId))
+                        model.CarrierServicesOffered.Add(service);
                 }
+            }
 
-            return View("~/Plugins/Shipping.Fedex/Views/ShippingFedex/Configure.cshtml", model);
+            return View("~/Plugins/Shipping.Fedex/Views/Configure.cshtml", model);
         }
 
         [HttpPost]
-        [ChildActionOnly]
-        public ActionResult Configure(FedexShippingModel model)
+        [AdminAntiForgery]
+        public IActionResult Configure(FedexShippingModel model)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+                return AccessDeniedView();
+
             if (!ModelState.IsValid)
-            {
                 return Configure();
-            }
 
             //save settings
             _fedexSettings.Url = model.Url;
@@ -89,18 +106,16 @@ namespace Nop.Plugin.Shipping.Fedex.Controllers
             _fedexSettings.PackingType = (PackingType)model.PackingType;
             _fedexSettings.PassDimensions = model.PassDimensions;
 
-
-
             // Save selected services
             var carrierServicesOfferedDomestic = new StringBuilder();
-            int carrierServicesDomesticSelectedCount = 0;
+            var carrierServicesDomesticSelectedCount = 0;
             if (model.CheckedCarrierServices != null)
             {
                 foreach (var cs in model.CheckedCarrierServices)
                 {
                     carrierServicesDomesticSelectedCount++;
-                    string serviceId = FedexServices.GetServiceId(cs);
-                    if (!String.IsNullOrEmpty(serviceId))
+                    var serviceId = FedexServices.GetServiceId(cs);
+                    if (!string.IsNullOrEmpty(serviceId))
                         carrierServicesOfferedDomestic.AppendFormat("{0}:", serviceId);
                 }
             }
@@ -110,12 +125,13 @@ namespace Nop.Plugin.Shipping.Fedex.Controllers
             else
                 _fedexSettings.CarrierServicesOffered = carrierServicesOfferedDomestic.ToString();
 
-
             _settingService.SaveSetting(_fedexSettings);
 
             SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
 
             return Configure();
         }
+
+        #endregion
     }
 }

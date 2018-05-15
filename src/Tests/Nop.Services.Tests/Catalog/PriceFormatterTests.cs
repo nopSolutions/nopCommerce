@@ -3,16 +3,20 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Tax;
-using Nop.Core.Plugins;
+using Nop.Core.Infrastructure;
 using Nop.Services.Catalog;
 using Nop.Services.Directory;
+using Nop.Services.Events;
 using Nop.Services.Localization;
+using Nop.Services.Plugins;
 using Nop.Services.Stores;
 using Nop.Tests;
 using NUnit.Framework;
@@ -24,6 +28,7 @@ namespace Nop.Services.Tests.Catalog
     public class PriceFormatterTests : ServiceTest
     {
         private IRepository<Currency> _currencyRepo;
+        private IEventPublisher _eventPublisher;
         private IStoreMappingService _storeMappingService;
         private ICurrencyService _currencyService;
         private CurrencySettings _currencySettings;
@@ -37,7 +42,8 @@ namespace Nop.Services.Tests.Catalog
         {
             var cacheManager = new NopNullCache();
 
-            _workContext = null;
+            _workContext = MockRepository.GenerateMock<IWorkContext>();
+            _workContext.Expect(w => w.WorkingCurrency).Return(new Currency { RoundingType = RoundingType.Rounding001 });
 
             _currencySettings = new CurrencySettings();
             var currency1 = new Currency
@@ -69,7 +75,11 @@ namespace Nop.Services.Tests.Catalog
 
             _storeMappingService = MockRepository.GenerateMock<IStoreMappingService>();
 
-            var pluginFinder = new PluginFinder();
+            _eventPublisher = MockRepository.GenerateMock<IEventPublisher>();
+            _eventPublisher.Expect(x => x.Publish(Arg<object>.Is.Anything));
+
+            var pluginFinder = new PluginFinder(_eventPublisher);
+
             _currencyService = new CurrencyService(cacheManager, _currencyRepo, _storeMappingService,
                 _currencySettings, pluginFinder, null);
 
@@ -81,6 +91,20 @@ namespace Nop.Services.Tests.Catalog
             
             _priceFormatter = new PriceFormatter(_workContext, _currencyService,_localizationService, 
                 _taxSettings, _currencySettings);
+
+            var nopEngine = MockRepository.GenerateMock<NopEngine>();
+            var serviceProvider = MockRepository.GenerateMock<IServiceProvider>();
+            var httpContextAccessor = MockRepository.GenerateMock<IHttpContextAccessor>();
+            serviceProvider.Expect(x => x.GetRequiredService(typeof(IHttpContextAccessor))).Return(httpContextAccessor);
+            serviceProvider.Expect(x => x.GetRequiredService(typeof(IWorkContext))).Return(_workContext);
+            nopEngine.Expect(x => x.ServiceProvider).Return(serviceProvider);
+            EngineContext.Replace(nopEngine);
+        }
+
+        [OneTimeTearDown]
+        public void TearDown()
+        {
+            EngineContext.Replace(null);
         }
 
         [Test]

@@ -5,6 +5,10 @@ namespace Nop.Core.Domain.Orders
     /// </summary>
     public class OrderPaidEvent
     {
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="order">Order</param>
         public OrderPaidEvent(Order order)
         {
             this.Order = order;
@@ -13,7 +17,7 @@ namespace Nop.Core.Domain.Orders
         /// <summary>
         /// Order
         /// </summary>
-        public Order Order { get; private set; }
+        public Order Order { get; }
     }
 
     /// <summary>
@@ -21,6 +25,10 @@ namespace Nop.Core.Domain.Orders
     /// </summary>
     public class OrderPlacedEvent
     {
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="order">Order</param>
         public OrderPlacedEvent(Order order)
         {
             this.Order = order;
@@ -29,7 +37,7 @@ namespace Nop.Core.Domain.Orders
         /// <summary>
         /// Order
         /// </summary>
-        public Order Order { get; private set; }
+        public Order Order { get; }
     }
 
     /// <summary>
@@ -37,6 +45,10 @@ namespace Nop.Core.Domain.Orders
     /// </summary>
     public class OrderCancelledEvent
     {
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="order">Order</param>
         public OrderCancelledEvent(Order order)
         {
             this.Order = order;
@@ -45,7 +57,7 @@ namespace Nop.Core.Domain.Orders
         /// <summary>
         /// Order
         /// </summary>
-        public Order Order { get; private set; }
+        public Order Order { get; }
     }
 
     /// <summary>
@@ -53,6 +65,11 @@ namespace Nop.Core.Domain.Orders
     /// </summary>
     public class OrderRefundedEvent
     {
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="order">Order</param>
+        /// <param name="amount">Amount</param>
         public OrderRefundedEvent(Order order, decimal amount)
         {
             this.Order = order;
@@ -62,12 +79,39 @@ namespace Nop.Core.Domain.Orders
         /// <summary>
         /// Order
         /// </summary>
-        public Order Order { get; private set; }
+        public Order Order { get; }
 
         /// <summary>
         /// Amount
         /// </summary>
-        public decimal Amount { get; private set; }
+        public decimal Amount { get; }
     }
 
+    /// <summary>
+    /// Order voided event
+    /// </summary>
+    public class OrderVoidedEvent
+    {
+        #region Ctor
+
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="order">Order</param>
+        public OrderVoidedEvent(Order order)
+        {
+            this.Order = order;
+        }
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// Voided order
+        /// </summary>
+        public Order Order { get; }
+
+        #endregion
+    }
 }

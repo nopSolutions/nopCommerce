@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using System.Web;
+using Microsoft.AspNetCore.Http;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Media;
 using Nop.Services.Catalog;
@@ -16,29 +16,27 @@ namespace Nop.Services.Media
         /// <summary>
         /// Gets the download binary array
         /// </summary>
-        /// <param name="postedFile">Posted file</param>
+        /// <param name="file">File</param>
         /// <returns>Download binary array</returns>
-        public static byte[] GetDownloadBits(this HttpPostedFileBase postedFile)
+        public static byte[] GetDownloadBits(this IFormFile file)
         {
-            Stream fs = postedFile.InputStream;
-            int size = postedFile.ContentLength;
-            var binary = new byte[size];
-            fs.Read(binary, 0, size);
-            return binary;
+            using (var fileStream = file.OpenReadStream())
+            using (var ms = new MemoryStream())
+            {
+                fileStream.CopyTo(ms);
+                var fileBytes = ms.ToArray();
+                return fileBytes;
+            }
         }
 
         /// <summary>
         /// Gets the picture binary array
         /// </summary>
-        /// <param name="postedFile">Posted file</param>
+        /// <param name="file">File</param>
         /// <returns>Picture binary array</returns>
-        public static byte[] GetPictureBits(this HttpPostedFileBase postedFile)
+        public static byte[] GetPictureBits(this IFormFile file)
         {
-            Stream fs = postedFile.InputStream;
-            int size = postedFile.ContentLength;
-            var img = new byte[size];
-            fs.Read(img, 0, size);
-            return img;
+            return GetDownloadBits(file);
         }
 
         /// <summary>
@@ -54,39 +52,41 @@ namespace Nop.Services.Media
             IProductAttributeParser productAttributeParser)
         {
             if (product == null)
-                throw new ArgumentNullException("product");
+                throw new ArgumentNullException(nameof(product));
+
             if (pictureService == null)
-                throw new ArgumentNullException("pictureService");
+                throw new ArgumentNullException(nameof(pictureService));
+
             if (productAttributeParser == null)
-                throw new ArgumentNullException("productAttributeParser");
+                throw new ArgumentNullException(nameof(productAttributeParser));
 
-            Picture picture = null;
+            //first, try to get product attribute combination picture
+            var combination = productAttributeParser.FindProductAttributeCombination(product, attributesXml);
+            var combinationPicture = pictureService.GetPictureById(combination?.PictureId ?? 0);
+            if (combinationPicture != null)
+                return combinationPicture;
 
-            //first, let's see whether we have some attribute values with custom pictures
-            var attributeValues = productAttributeParser.ParseProductAttributeValues(attributesXml);
-            foreach (var attributeValue in attributeValues)
-            {
-                var attributePicture = pictureService.GetPictureById(attributeValue.PictureId);
-                if (attributePicture != null)
-                {
-                    picture = attributePicture;
-                    break;
-                }
-            }
+            //then, let's see whether we have attribute values with pictures
+            var attributePicture = productAttributeParser.ParseProductAttributeValues(attributesXml)
+                .Select(attributeValue => pictureService.GetPictureById(attributeValue?.PictureId ?? 0))
+                .FirstOrDefault(picture => picture != null);
+            if (attributePicture != null)
+                return attributePicture;
 
             //now let's load the default product picture
-            if (picture == null)
+            var productPicture = pictureService.GetPicturesByProductId(product.Id, 1).FirstOrDefault();
+            if (productPicture != null)
+                return productPicture;
+
+            //finally, let's check whether this product has some parent "grouped" product
+            if (!product.VisibleIndividually && product.ParentGroupedProductId > 0)
             {
-                picture = pictureService.GetPicturesByProductId(product.Id, 1).FirstOrDefault();
+                var parentGroupedProductPicture = pictureService.GetPicturesByProductId(product.ParentGroupedProductId, 1).FirstOrDefault();
+                if (parentGroupedProductPicture != null)
+                    return parentGroupedProductPicture;
             }
 
-            //let's check whether this product has some parent "grouped" product
-            if (picture == null && !product.VisibleIndividually && product.ParentGroupedProductId > 0)
-            {
-                picture = pictureService.GetPicturesByProductId(product.ParentGroupedProductId, 1).FirstOrDefault();
-            }
-
-            return picture;
+            return null;
         }
     }
 }

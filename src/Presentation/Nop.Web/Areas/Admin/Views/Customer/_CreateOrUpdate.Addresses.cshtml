@@ -1,0 +1,106 @@
+@model CustomerModel
+
+<div class="panel-group">
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CustomerDetailsAddressesTop, additionalData = Model })
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div id="customer-addresses-grid"></div>
+
+            <script>
+                $(document).ready(function () {
+                    $("#customer-addresses-grid").kendoGrid({
+                        dataSource: {
+                            type: "json",
+                            transport: {
+                                read: {
+                                    url: "@Html.Raw(Url.Action("AddressesSelect", "Customer"))",
+                                    type: "POST",
+                                    dataType: "json",
+                                    data: function() {
+                                        var data = {
+                                            CustomerId: '@(Model.Id)'
+                                        };
+                                        addAntiForgeryToken(data);
+                                        return data;
+                                    }
+                                },
+                                destroy: {
+                                    url: "@Html.Raw(Url.Action("AddressDelete", "Customer", new { customerId = Model.Id }))",
+                                    type: "POST",
+                                    dataType: "json",
+                                    data: addAntiForgeryToken
+                                }
+                            },
+                            schema: {
+                                data: "Data",
+                                total: "Total",
+                                errors: "Errors",
+                                model: {
+                                    id: "Id"
+                                }
+                            },
+                            error: function(e) {
+                                display_kendoui_grid_error(e);
+                                // Cancel the changes
+                                this.cancelChanges();
+                            },
+                            pageSize: @(Model.CustomerAddressSearchModel.PageSize),
+                            serverPaging: true,
+                            serverFiltering: true,
+                            serverSorting: true
+                        },
+                        pageable: {
+                            refresh: true,
+                            pageSizes: [@(Model.CustomerAddressSearchModel.AvailablePageSizes)],
+                            @await Html.PartialAsync("_GridPagerMessages")
+                        },
+                        editable: {
+                            confirmation: "@T("Admin.Common.DeleteConfirmation")",
+                            mode: "inline"
+                        },
+                        scrollable: false,
+                        columns: [{
+                            field: "FirstName",
+                            title: "@T("Admin.Address.Fields.FirstName")"
+                        }, {
+                            field: "LastName",
+                            title: "@T("Admin.Address.Fields.LastName")"
+                        }, {
+                            field: "Email",
+                            title: "@T("Admin.Address.Fields.Email")"
+                        }, {
+                            field: "PhoneNumber",
+                            title: "@T("Admin.Address.Fields.PhoneNumber")"
+                        }, {
+                            field: "FaxNumber",
+                            title: "@T("Admin.Address.Fields.FaxNumber")"
+                        }, {
+                            field: "AddressHtml",
+                            title: "@T("Admin.Address")",
+                            encoded: false
+                        }, {
+                            field: "Id",
+                            title: "@T("Admin.Common.Edit")",
+                            width: 100,
+                            headerAttributes: { style: "text-align:center" },
+                            attributes: { style: "text-align:center" },
+                            template: '<a class="btn btn-default" href="@Url.Content("~/Admin/Customer/AddressEdit?customerId=")@Model.Id&addressid=#=Id#"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>'
+                        }, {
+                            command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
+                            title: "@T("Admin.Common.Delete")",
+                            width: 100,
+                            headerAttributes: { style: "text-align:center" },
+                            attributes: { style: "text-align:center" }
+                        }]
+                    });
+                });
+            </script>
+        </div>
+        <div class="panel-footer">
+            <button type="button" class="btn btn-primary" onclick="location.href = '@Url.Action("AddressCreate", new { customerId = Model.Id })'">
+                @T("Admin.Customers.Customers.Addresses.AddButton")
+            </button>
+        </div>
+    </div>
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CustomerDetailsAddressesBottom, additionalData = Model })
+</div>

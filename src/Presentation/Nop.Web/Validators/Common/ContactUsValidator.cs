@@ -6,7 +6,7 @@ using Nop.Web.Models.Common;
 
 namespace Nop.Web.Validators.Common
 {
-    public class ContactUsValidator : BaseNopValidator<ContactUsModel>
+    public partial class ContactUsValidator : BaseNopValidator<ContactUsModel>
     {
         public ContactUsValidator(ILocalizationService localizationService, CommonSettings commonSettings)
         {
@@ -18,5 +18,6 @@ namespace Nop.Web.Validators.Common
                 RuleFor(x => x.Subject).NotEmpty().WithMessage(localizationService.GetResource("ContactUs.Subject.Required"));
             }
             RuleFor(x => x.Enquiry).NotEmpty().WithMessage(localizationService.GetResource("ContactUs.Enquiry.Required"));
-        }}
+        }
+    }
 }

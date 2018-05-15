@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Nop.Core;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
@@ -59,7 +60,7 @@ namespace Nop.Services.Tests.Helpers
         {
             var systemTimeZones = _dateTimeHelper.GetSystemTimeZones();
             systemTimeZones.ShouldNotBeNull();
-            (systemTimeZones.Count > 0).ShouldBeTrue();
+            (systemTimeZones.Any()).ShouldBeTrue();
         }
 
         [Test]

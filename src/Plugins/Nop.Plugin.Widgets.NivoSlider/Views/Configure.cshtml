@@ -1,0 +1,205 @@
+﻿@model Nop.Plugin.Widgets.NivoSlider.Models.ConfigurationModel
+
+@{
+    Layout = "_ConfigurePlugin";
+}
+
+@await Component.InvokeAsync("StoreScopeConfiguration")
+<form asp-controller="WidgetsNivoSlider" asp-action="Configure" method="post">
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                @T("Plugins.Widgets.NivoSlider.Picture1")
+            </div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="Picture1Id_OverrideForStore" asp-input="Picture1Id" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="Picture1Id" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="Picture1Id" />
+                        <span asp-validation-for="Picture1Id"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="Text1_OverrideForStore" asp-input="Text1" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="Text1" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="Text1" />
+                        <span asp-validation-for="Text1"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="Link1_OverrideForStore" asp-input="Link1" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="Link1" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="Link1" />
+                        <span asp-validation-for="Link1"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                @T("Plugins.Widgets.NivoSlider.Picture2")
+            </div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="Picture2Id_OverrideForStore" asp-input="Picture2Id" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="Picture2Id" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="Picture2Id" />
+                        <span asp-validation-for="Picture2Id"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="Text2_OverrideForStore" asp-input="Text2" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="Text2" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="Text2" />
+                        <span asp-validation-for="Text2"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="Link2_OverrideForStore" asp-input="Link2" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="Link2" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="Link2" />
+                        <span asp-validation-for="Link2"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                @T("Plugins.Widgets.NivoSlider.Picture3")
+            </div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="Picture3Id_OverrideForStore" asp-input="Picture3Id" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="Picture3Id" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="Picture3Id" />
+                        <span asp-validation-for="Picture3Id"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="Text3_OverrideForStore" asp-input="Text3" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="Text3" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="Text3" />
+                        <span asp-validation-for="Text3"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="Link3_OverrideForStore" asp-input="Link3" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="Link3" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="Link3" />
+                        <span asp-validation-for="Link3"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                @T("Plugins.Widgets.NivoSlider.Picture4")
+            </div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="Picture4Id_OverrideForStore" asp-input="Picture4Id" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="Picture4Id" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="Picture4Id" />
+                        <span asp-validation-for="Picture4Id"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="Text4_OverrideForStore" asp-input="Text4" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="Text4" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="Text4" />
+                        <span asp-validation-for="Text4"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="Link4_OverrideForStore" asp-input="Link4" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="Link4" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="Link4" />
+                        <span asp-validation-for="Link4"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                @T("Plugins.Widgets.NivoSlider.Picture5")
+            </div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="Picture5Id_OverrideForStore" asp-input="Picture5Id" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="Picture5Id" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="Picture5Id" />
+                        <span asp-validation-for="Picture5Id"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="Text5_OverrideForStore" asp-input="Text5" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="Text5" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="Text5" />
+                        <span asp-validation-for="Text5"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="Link5_OverrideForStore" asp-input="Link5" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="Link5" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="Link5" />
+                        <span asp-validation-for="Link5"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="col-md-9 col-md-offset-3">
+                        <input type="submit" name="save" class="btn bg-blue" value="@T("Admin.Common.Save")" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

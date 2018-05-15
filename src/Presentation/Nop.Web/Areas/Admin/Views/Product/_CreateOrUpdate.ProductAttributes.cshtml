@@ -1,0 +1,35 @@
+@model ProductModel
+
+<div class="panel-group">
+    <p>
+        @T("Admin.Catalog.Products.ProductAttributes.Hint")
+    </p>
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductDetailsProductAttributesTop, additionalData = Model })
+    @if (Model.Id > 0)
+    {
+        if (Model.ProductAttributesExist)
+        {
+            <nop-tabs id="productattribute-edit" asp-tab-name-to-select="tab-attributes" asp-render-selected-tab-input="false">
+                <nop-tab asp-name="tab-attributes" asp-title="@T("Admin.Catalog.Products.ProductAttributes.Attributes")" asp-default="true">@await Html.PartialAsync("_CreateOrUpdate.ProductAttributes.Info", Model)</nop-tab>
+                <nop-tab asp-name="tab-attribute-combinations" asp-title="@T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations")">@await Html.PartialAsync("_CreateOrUpdate.ProductAttributes.Combinations", Model)</nop-tab>
+            </nop-tabs>
+        }
+        else
+        {
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    @T("Admin.Catalog.Products.ProductAttributes.NoAttributesAvailable")
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="panel panel-default">
+            <div class="panel-body">
+                @T("Admin.Catalog.Products.ProductAttributes.SaveBeforeEdit")
+            </div>
+        </div>
+    }
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductDetailsProductAttributesBottom, additionalData = Model })
+</div>

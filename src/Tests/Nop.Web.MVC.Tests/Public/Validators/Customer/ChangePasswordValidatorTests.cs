@@ -22,8 +22,10 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
         [Test]
         public void Should_have_error_when_oldPassword_is_null_or_empty()
         {
-            var model = new ChangePasswordModel();
-            model.OldPassword = null;
+            var model = new ChangePasswordModel
+            {
+                OldPassword = null
+            };
             _validator.ShouldHaveValidationErrorFor(x => x.OldPassword, model);
             model.OldPassword = "";
             _validator.ShouldHaveValidationErrorFor(x => x.OldPassword, model);
@@ -32,16 +34,20 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
         [Test]
         public void Should_not_have_error_when_oldPassword_is_specified()
         {
-            var model = new ChangePasswordModel();
-            model.OldPassword = "old password";
+            var model = new ChangePasswordModel
+            {
+                OldPassword = "old password"
+            };
             _validator.ShouldNotHaveValidationErrorFor(x => x.OldPassword, model);
         }
 
         [Test]
         public void Should_have_error_when_newPassword_is_null_or_empty()
         {
-            var model = new ChangePasswordModel();
-            model.NewPassword = null;
+            var model = new ChangePasswordModel
+            {
+                NewPassword = null
+            };
             //we know that new password should equal confirmation password
             model.ConfirmNewPassword = model.NewPassword;
             _validator.ShouldHaveValidationErrorFor(x => x.NewPassword, model);
@@ -54,8 +60,10 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
         [Test]
         public void Should_not_have_error_when_newPassword_is_specified()
         {
-            var model = new ChangePasswordModel();
-            model.NewPassword = "new password";
+            var model = new ChangePasswordModel
+            {
+                NewPassword = "new password"
+            };
             //we know that new password should equal confirmation password
             model.ConfirmNewPassword = model.NewPassword;
             _validator.ShouldNotHaveValidationErrorFor(x => x.NewPassword, model);
@@ -64,8 +72,10 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
         [Test]
         public void Should_have_error_when_confirmNewPassword_is_null_or_empty()
         {
-            var model = new ChangePasswordModel();
-            model.ConfirmNewPassword = null;
+            var model = new ChangePasswordModel
+            {
+                ConfirmNewPassword = null
+            };
             _validator.ShouldHaveValidationErrorFor(x => x.ConfirmNewPassword, model);
             model.ConfirmNewPassword = "";
             _validator.ShouldHaveValidationErrorFor(x => x.ConfirmNewPassword, model);
@@ -74,8 +84,10 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
         [Test]
         public void Should_not_have_error_when_confirmNewPassword_is_specified()
         {
-            var model = new ChangePasswordModel();
-            model.ConfirmNewPassword = "some password";
+            var model = new ChangePasswordModel
+            {
+                ConfirmNewPassword = "some password"
+            };
             //we know that new password should equal confirmation password
             model.NewPassword = model.ConfirmNewPassword;
             _validator.ShouldNotHaveValidationErrorFor(x => x.ConfirmNewPassword, model);
@@ -84,18 +96,22 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
         [Test]
         public void Should_have_error_when_newPassword_doesnot_equal_confirmationPassword()
         {
-            var model = new ChangePasswordModel();
-            model.NewPassword = "some password";
-            model.ConfirmNewPassword = "another password";
+            var model = new ChangePasswordModel
+            {
+                NewPassword = "some password",
+                ConfirmNewPassword = "another password"
+            };
             _validator.ShouldHaveValidationErrorFor(x => x.ConfirmNewPassword, model);
         }
 
         [Test]
         public void Should_not_have_error_when_newPassword_equals_confirmationPassword()
         {
-            var model = new ChangePasswordModel();
-            model.NewPassword = "some password";
-            model.ConfirmNewPassword = "some password";
+            var model = new ChangePasswordModel
+            {
+                NewPassword = "some password",
+                ConfirmNewPassword = "some password"
+            };
             _validator.ShouldNotHaveValidationErrorFor(x => x.NewPassword, model);
         }
 
@@ -105,8 +121,10 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
             _customerSettings.PasswordMinLength = 5;
             _validator = new ChangePasswordValidator(_localizationService, _customerSettings);
 
-            var model = new ChangePasswordModel();
-            model.NewPassword = "1234";
+            var model = new ChangePasswordModel
+            {
+                NewPassword = "1234"
+            };
             //we know that new password should equal confirmation password
             model.ConfirmNewPassword = model.NewPassword;
             _validator.ShouldHaveValidationErrorFor(x => x.NewPassword, model);

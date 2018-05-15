@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
 using Nop.Core.Data;
@@ -61,10 +62,13 @@ namespace Nop.Services.Vendors
         public virtual void DeleteVendor(Vendor vendor)
         {
             if (vendor == null)
-                throw new ArgumentNullException("vendor");
+                throw new ArgumentNullException(nameof(vendor));
 
             vendor.Deleted = true;
             UpdateVendor(vendor);
+
+            //event notification
+            _eventPublisher.EntityDeleted(vendor);
         }
 
         /// <summary>
@@ -75,19 +79,33 @@ namespace Nop.Services.Vendors
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Vendors</returns>
-        public virtual IPagedList<Vendor> GetAllVendors(string name = "",
-            int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false)
+        public virtual IPagedList<Vendor> GetAllVendors(string name = "", int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false)
         {
             var query = _vendorRepository.Table;
-            if (!String.IsNullOrWhiteSpace(name))
+            if (!string.IsNullOrWhiteSpace(name))
                 query = query.Where(v => v.Name.Contains(name));
             if (!showHidden)
                 query = query.Where(v => v.Active);
+           
             query = query.Where(v => !v.Deleted);
             query = query.OrderBy(v => v.DisplayOrder).ThenBy(v => v.Name);
 
             var vendors = new PagedList<Vendor>(query, pageIndex, pageSize);
             return vendors;
+        }
+
+        /// <summary>
+        /// Gets vendors
+        /// </summary>
+        /// <param name="vendorIds">Vendor identifiers</param>
+        /// <returns>Vendors</returns>
+        public virtual IList<Vendor> GetVendorsByIds(int[] vendorIds)
+        {
+            var query = _vendorRepository.Table;
+            if (vendorIds != null)
+                query = query.Where(v => vendorIds.Contains(v.Id));
+
+            return query.ToList();
         }
 
         /// <summary>
@@ -97,7 +115,7 @@ namespace Nop.Services.Vendors
         public virtual void InsertVendor(Vendor vendor)
         {
             if (vendor == null)
-                throw new ArgumentNullException("vendor");
+                throw new ArgumentNullException(nameof(vendor));
 
             _vendorRepository.Insert(vendor);
 
@@ -112,15 +130,13 @@ namespace Nop.Services.Vendors
         public virtual void UpdateVendor(Vendor vendor)
         {
             if (vendor == null)
-                throw new ArgumentNullException("vendor");
+                throw new ArgumentNullException(nameof(vendor));
 
             _vendorRepository.Update(vendor);
 
             //event notification
             _eventPublisher.EntityUpdated(vendor);
         }
-
-
 
         /// <summary>
         /// Gets a vendor note note
@@ -142,7 +158,7 @@ namespace Nop.Services.Vendors
         public virtual void DeleteVendorNote(VendorNote vendorNote)
         {
             if (vendorNote == null)
-                throw new ArgumentNullException("vendorNote");
+                throw new ArgumentNullException(nameof(vendorNote));
 
             _vendorNoteRepository.Delete(vendorNote);
 

@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
-using Nop.Core.Plugins;
 using Nop.Services.Configuration;
+using Nop.Services.Events;
 using Nop.Services.Payments;
+using Nop.Services.Plugins;
 using Nop.Tests;
 using NUnit.Framework;
 using Rhino.Mocks;
@@ -15,17 +17,23 @@ namespace Nop.Services.Tests.Payments
     {
         private PaymentSettings _paymentSettings;
         private ShoppingCartSettings _shoppingCartSettings;
+        private IEventPublisher _eventPublisher;
         private ISettingService _settingService;
         private IPaymentService _paymentService;
         
         [SetUp]
         public new void SetUp()
         {
-            _paymentSettings = new PaymentSettings();
-            _paymentSettings.ActivePaymentMethodSystemNames = new List<string>();
+            _paymentSettings = new PaymentSettings
+            {
+                ActivePaymentMethodSystemNames = new List<string>()
+            };
             _paymentSettings.ActivePaymentMethodSystemNames.Add("Payments.TestMethod");
 
-            var pluginFinder = new PluginFinder();
+            _eventPublisher = MockRepository.GenerateMock<IEventPublisher>();
+            _eventPublisher.Expect(x => x.Publish(Arg<object>.Is.Anything));
+
+            var pluginFinder = new PluginFinder(_eventPublisher);
 
             _shoppingCartSettings = new ShoppingCartSettings();
             _settingService = MockRepository.GenerateMock<ISettingService>();
@@ -36,9 +44,9 @@ namespace Nop.Services.Tests.Payments
         [Test]
         public void Can_load_paymentMethods()
         {
-            var srcm = _paymentService.LoadActivePaymentMethods();
+            var srcm = _paymentService.LoadAllPaymentMethods();
             srcm.ShouldNotBeNull();
-            (srcm.Count > 0).ShouldBeTrue();
+            (srcm.Any()).ShouldBeTrue();
         }
 
         [Test]
@@ -53,7 +61,7 @@ namespace Nop.Services.Tests.Payments
         {
             var srcm = _paymentService.LoadActivePaymentMethods();
             srcm.ShouldNotBeNull();
-            (srcm.Count > 0).ShouldBeTrue();
+            (srcm.Any()).ShouldBeTrue();
         }
 
         [Test]

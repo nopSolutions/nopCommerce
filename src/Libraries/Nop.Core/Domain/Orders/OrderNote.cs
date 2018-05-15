@@ -37,5 +37,4 @@ namespace Nop.Core.Domain.Orders
         /// </summary>
         public virtual Order Order { get; set; }
     }
-
 }

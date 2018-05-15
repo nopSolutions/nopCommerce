@@ -1,7 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
+using System.Text;
+using Microsoft.AspNetCore.Hosting;
 using Nop.Core;
 using Nop.Core.Data;
 using Nop.Core.Domain;
@@ -41,6 +42,9 @@ using Nop.Services.Seo;
 
 namespace Nop.Services.Installation
 {
+    /// <summary>
+    /// Code first installation service
+    /// </summary>
     public partial class CodeFirstInstallationService : IInstallationService
     {
         #region Fields
@@ -52,6 +56,7 @@ namespace Nop.Services.Installation
         private readonly IRepository<Language> _languageRepository;
         private readonly IRepository<Currency> _currencyRepository;
         private readonly IRepository<Customer> _customerRepository;
+        private readonly IRepository<CustomerPassword> _customerPasswordRepository;
         private readonly IRepository<CustomerRole> _customerRoleRepository;
         private readonly IRepository<SpecificationAttribute> _specificationAttributeRepository;
         private readonly IRepository<CheckoutAttribute> _checkoutAttributeRepository;
@@ -74,7 +79,9 @@ namespace Nop.Services.Installation
         private readonly IRepository<Poll> _pollRepository;
         private readonly IRepository<ShippingMethod> _shippingMethodRepository;
         private readonly IRepository<DeliveryDate> _deliveryDateRepository;
+        private readonly IRepository<ProductAvailabilityRange> _productAvailabilityRangeRepository;
         private readonly IRepository<ActivityLogType> _activityLogTypeRepository;
+        private readonly IRepository<ActivityLog> _activityLogRepository;
         private readonly IRepository<ProductTag> _productTagRepository;
         private readonly IRepository<ProductTemplate> _productTemplateRepository;
         private readonly IRepository<CategoryTemplate> _categoryTemplateRepository;
@@ -87,8 +94,18 @@ namespace Nop.Services.Installation
         private readonly IRepository<Warehouse> _warehouseRepository;
         private readonly IRepository<Vendor> _vendorRepository;
         private readonly IRepository<Affiliate> _affiliateRepository;
+        private readonly IRepository<Order> _orderRepository;
+        private readonly IRepository<OrderItem> _orderItemRepository;
+        private readonly IRepository<OrderNote> _orderNoteRepository;
+        private readonly IRepository<GiftCard> _giftCardRepository;
+        private readonly IRepository<Shipment> _shipmentRepository;
+        private readonly IRepository<SearchTerm> _searchTermRepository;
+        private readonly IRepository<ShipmentItem> _shipmentItemRepository;
+        private readonly IRepository<StockQuantityHistory> _stockQuantityHistoryRepository;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IWebHelper _webHelper;
+        private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly INopFileProvider _fileProvider;
 
         #endregion
 
@@ -101,6 +118,7 @@ namespace Nop.Services.Installation
             IRepository<Language> languageRepository,
             IRepository<Currency> currencyRepository,
             IRepository<Customer> customerRepository,
+            IRepository<CustomerPassword> customerPasswordRepository,
             IRepository<CustomerRole> customerRoleRepository,
             IRepository<SpecificationAttribute> specificationAttributeRepository,
             IRepository<CheckoutAttribute> checkoutAttributeRepository,
@@ -123,7 +141,9 @@ namespace Nop.Services.Installation
             IRepository<Poll> pollRepository,
             IRepository<ShippingMethod> shippingMethodRepository,
             IRepository<DeliveryDate> deliveryDateRepository,
+            IRepository<ProductAvailabilityRange> productAvailabilityRangeRepository,
             IRepository<ActivityLogType> activityLogTypeRepository,
+            IRepository<ActivityLog> activityLogRepository,
             IRepository<ProductTag> productTagRepository,
             IRepository<ProductTemplate> productTemplateRepository,
             IRepository<CategoryTemplate> categoryTemplateRepository,
@@ -136,8 +156,18 @@ namespace Nop.Services.Installation
             IRepository<Warehouse> warehouseRepository,
             IRepository<Vendor> vendorRepository,
             IRepository<Affiliate> affiliateRepository,
+            IRepository<Order> orderRepository,
+            IRepository<OrderItem> orderItemRepository,
+            IRepository<OrderNote> orderNoteRepository,
+            IRepository<GiftCard> giftCardRepository,
+            IRepository<Shipment> shipmentRepository,
+            IRepository<ShipmentItem> shipmentItemRepository,
+            IRepository<SearchTerm> searchTermRepository,
+            IRepository<StockQuantityHistory> stockQuantityHistoryRepository,
             IGenericAttributeService genericAttributeService,
-            IWebHelper webHelper)
+            IWebHelper webHelper,
+            IHostingEnvironment hostingEnvironment,
+            INopFileProvider fileProvider)
         {
             this._storeRepository = storeRepository;
             this._measureDimensionRepository = measureDimensionRepository;
@@ -146,6 +176,7 @@ namespace Nop.Services.Installation
             this._languageRepository = languageRepository;
             this._currencyRepository = currencyRepository;
             this._customerRepository = customerRepository;
+            this._customerPasswordRepository = customerPasswordRepository;
             this._customerRoleRepository = customerRoleRepository;
             this._specificationAttributeRepository = specificationAttributeRepository;
             this._checkoutAttributeRepository = checkoutAttributeRepository;
@@ -168,7 +199,9 @@ namespace Nop.Services.Installation
             this._pollRepository = pollRepository;
             this._shippingMethodRepository = shippingMethodRepository;
             this._deliveryDateRepository = deliveryDateRepository;
+            this._productAvailabilityRangeRepository = productAvailabilityRangeRepository;
             this._activityLogTypeRepository = activityLogTypeRepository;
+            this._activityLogRepository = activityLogRepository;
             this._productTagRepository = productTagRepository;
             this._productTemplateRepository = productTemplateRepository;
             this._categoryTemplateRepository = categoryTemplateRepository;
@@ -181,13 +214,28 @@ namespace Nop.Services.Installation
             this._warehouseRepository = warehouseRepository;
             this._vendorRepository = vendorRepository;
             this._affiliateRepository = affiliateRepository;
+            this._orderRepository = orderRepository;
+            this._orderItemRepository = orderItemRepository;
+            this._orderNoteRepository = orderNoteRepository;
+            this._giftCardRepository = giftCardRepository;
+            this._shipmentRepository = shipmentRepository;
+            this._shipmentItemRepository = shipmentItemRepository;
+            this._searchTermRepository = searchTermRepository;
+            this._stockQuantityHistoryRepository = stockQuantityHistoryRepository;
             this._genericAttributeService = genericAttributeService;
             this._webHelper = webHelper;
+            this._hostingEnvironment = hostingEnvironment;
+            this._fileProvider = fileProvider;
         }
 
         #endregion
 
         #region Utilities
+
+        protected virtual string GetSamplesPath()
+        {
+            return _fileProvider.GetAbsolutePath("images\\samples\\");
+        }
 
         protected virtual void InstallStores()
         {
@@ -338,9 +386,9 @@ namespace Nop.Services.Installation
             var language = _languageRepository.Table.Single(l => l.Name == "English");
 
             //save resources
-            foreach (var filePath in System.IO.Directory.EnumerateFiles(CommonHelper.MapPath("~/App_Data/Localization/"), "*.nopres.xml", SearchOption.TopDirectoryOnly))
+            foreach (var filePath in _fileProvider.EnumerateFiles(_fileProvider.MapPath("~/App_Data/Localization/"), "*.nopres.xml"))
             {
-                var localesXml = File.ReadAllText(filePath);
+                var localesXml = _fileProvider.ReadAllText(filePath, Encoding.UTF8);
                 var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
                 localizationService.ImportResourcesFromXml(language, localesXml);
             }
@@ -362,67 +410,73 @@ namespace Nop.Services.Installation
                     DisplayOrder = 1,
                     CreatedOnUtc = DateTime.UtcNow,
                     UpdatedOnUtc = DateTime.UtcNow,
+                    RoundingType = RoundingType.Rounding001
                 },
                 new Currency
                 {
                     Name = "Australian Dollar",
                     CurrencyCode = "AUD",
-                    Rate = 1.14M,
+                    Rate = 1.36M,
                     DisplayLocale = "en-AU",
                     CustomFormatting = "",
                     Published = false,
                     DisplayOrder = 2,
                     CreatedOnUtc = DateTime.UtcNow,
                     UpdatedOnUtc = DateTime.UtcNow,
+                    RoundingType = RoundingType.Rounding001
                 },
                 new Currency
                 {
                     Name = "British Pound",
                     CurrencyCode = "GBP",
-                    Rate = 0.62M,
+                    Rate = 0.82M,
                     DisplayLocale = "en-GB",
                     CustomFormatting = "",
                     Published = false,
                     DisplayOrder = 3,
                     CreatedOnUtc = DateTime.UtcNow,
                     UpdatedOnUtc = DateTime.UtcNow,
+                    RoundingType = RoundingType.Rounding001
                 },
                 new Currency
                 {
                     Name = "Canadian Dollar",
                     CurrencyCode = "CAD",
-                    Rate = 1.12M,
+                    Rate = 1.32M,
                     DisplayLocale = "en-CA",
                     CustomFormatting = "",
                     Published = false,
                     DisplayOrder = 4,
                     CreatedOnUtc = DateTime.UtcNow,
                     UpdatedOnUtc = DateTime.UtcNow,
+                    RoundingType = RoundingType.Rounding001
                 },
                 new Currency
                 {
                     Name = "Chinese Yuan Renminbi",
                     CurrencyCode = "CNY",
-                    Rate = 6.11M,
+                    Rate = 6.93M,
                     DisplayLocale = "zh-CN",
                     CustomFormatting = "",
                     Published = false,
                     DisplayOrder = 5,
                     CreatedOnUtc = DateTime.UtcNow,
                     UpdatedOnUtc = DateTime.UtcNow,
+                    RoundingType = RoundingType.Rounding001
                 },
                 new Currency
                 {
                     Name = "Euro",
                     CurrencyCode = "EUR",
-                    Rate = 0.79M,
+                    Rate = 0.95M,
                     DisplayLocale = "",
                     //CustomFormatting = "ˆ0.00",
-                    CustomFormatting = string.Format("{0}0.00", "\u20ac"),
+                    CustomFormatting = $"{"\u20ac"}0.00",
                     Published = true,
                     DisplayOrder = 6,
                     CreatedOnUtc = DateTime.UtcNow,
                     UpdatedOnUtc = DateTime.UtcNow,
+                    RoundingType = RoundingType.Rounding001
                 },
                 new Currency
                 {
@@ -435,54 +489,72 @@ namespace Nop.Services.Installation
                     DisplayOrder = 7,
                     CreatedOnUtc = DateTime.UtcNow,
                     UpdatedOnUtc = DateTime.UtcNow,
+                    RoundingType = RoundingType.Rounding001
                 },
                 new Currency
                 {
                     Name = "Japanese Yen",
                     CurrencyCode = "JPY",
-                    Rate = 109.27M,
+                    Rate = 116.64M,
                     DisplayLocale = "ja-JP",
                     CustomFormatting = "",
                     Published = false,
                     DisplayOrder = 8,
                     CreatedOnUtc = DateTime.UtcNow,
                     UpdatedOnUtc = DateTime.UtcNow,
+                    RoundingType = RoundingType.Rounding001
                 },
                 new Currency
                 {
                     Name = "Russian Rouble",
                     CurrencyCode = "RUB",
-                    Rate = 43.51M,
+                    Rate = 59.75M,
                     DisplayLocale = "ru-RU",
                     CustomFormatting = "",
                     Published = false,
                     DisplayOrder = 9,
                     CreatedOnUtc = DateTime.UtcNow,
                     UpdatedOnUtc = DateTime.UtcNow,
+                    RoundingType = RoundingType.Rounding001
                 },
                 new Currency
                 {
                     Name = "Swedish Krona",
                     CurrencyCode = "SEK",
-                    Rate = 7.39M,
+                    Rate = 9.08M,
                     DisplayLocale = "sv-SE",
                     CustomFormatting = "",
                     Published = false,
                     DisplayOrder = 10,
                     CreatedOnUtc = DateTime.UtcNow,
                     UpdatedOnUtc = DateTime.UtcNow,
+                    RoundingType = RoundingType.Rounding1
                 },
                 new Currency
                 {
                     Name = "Romanian Leu",
                     CurrencyCode = "RON",
-                    Rate = 3.52M,
+                    Rate = 4.28M,
                     DisplayLocale = "ro-RO",
                     CustomFormatting = "",
                     Published = false,
                     DisplayOrder = 11,
                     CreatedOnUtc = DateTime.UtcNow,
                     UpdatedOnUtc = DateTime.UtcNow,
+                    RoundingType = RoundingType.Rounding001
+                },
+                new Currency
+                {
+                    Name = "Indian Rupee",
+                    CurrencyCode = "INR",
+                    Rate = 68.17M,
+                    DisplayLocale = "en-IN",
+                    CustomFormatting = "",
+                    Published = false,
+                    DisplayOrder = 12,
+                    CreatedOnUtc = DateTime.UtcNow,
+                    UpdatedOnUtc = DateTime.UtcNow,
+                    RoundingType = RoundingType.Rounding001
                 },
             };
             _currencyRepository.Insert(currencies);
@@ -1040,2881 +1112,2953 @@ namespace Nop.Services.Installation
                 DisplayOrder = 1,
             });
             var countries = new List<Country>
-                                {
-                                    cUsa,
-                                    cCanada,
-                                    //other countries
-                                    new Country
-                                    {
-                                        Name = "Argentina",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "AR",
-                                        ThreeLetterIsoCode = "ARG",
-                                        NumericIsoCode = 32,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Armenia",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "AM",
-                                        ThreeLetterIsoCode = "ARM",
-                                        NumericIsoCode = 51,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Aruba",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "AW",
-                                        ThreeLetterIsoCode = "ABW",
-                                        NumericIsoCode = 533,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Australia",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "AU",
-                                        ThreeLetterIsoCode = "AUS",
-                                        NumericIsoCode = 36,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Austria",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "AT",
-                                        ThreeLetterIsoCode = "AUT",
-                                        NumericIsoCode = 40,
-                                        SubjectToVat = true,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Azerbaijan",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "AZ",
-                                        ThreeLetterIsoCode = "AZE",
-                                        NumericIsoCode = 31,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Bahamas",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "BS",
-                                        ThreeLetterIsoCode = "BHS",
-                                        NumericIsoCode = 44,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Bangladesh",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "BD",
-                                        ThreeLetterIsoCode = "BGD",
-                                        NumericIsoCode = 50,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Belarus",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "BY",
-                                        ThreeLetterIsoCode = "BLR",
-                                        NumericIsoCode = 112,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Belgium",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "BE",
-                                        ThreeLetterIsoCode = "BEL",
-                                        NumericIsoCode = 56,
-                                        SubjectToVat = true,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Belize",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "BZ",
-                                        ThreeLetterIsoCode = "BLZ",
-                                        NumericIsoCode = 84,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Bermuda",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "BM",
-                                        ThreeLetterIsoCode = "BMU",
-                                        NumericIsoCode = 60,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Bolivia",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "BO",
-                                        ThreeLetterIsoCode = "BOL",
-                                        NumericIsoCode = 68,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Bosnia and Herzegowina",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "BA",
-                                        ThreeLetterIsoCode = "BIH",
-                                        NumericIsoCode = 70,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Brazil",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "BR",
-                                        ThreeLetterIsoCode = "BRA",
-                                        NumericIsoCode = 76,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Bulgaria",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "BG",
-                                        ThreeLetterIsoCode = "BGR",
-                                        NumericIsoCode = 100,
-                                        SubjectToVat = true,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Cayman Islands",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "KY",
-                                        ThreeLetterIsoCode = "CYM",
-                                        NumericIsoCode = 136,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Chile",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "CL",
-                                        ThreeLetterIsoCode = "CHL",
-                                        NumericIsoCode = 152,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "China",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "CN",
-                                        ThreeLetterIsoCode = "CHN",
-                                        NumericIsoCode = 156,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Colombia",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "CO",
-                                        ThreeLetterIsoCode = "COL",
-                                        NumericIsoCode = 170,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Costa Rica",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "CR",
-                                        ThreeLetterIsoCode = "CRI",
-                                        NumericIsoCode = 188,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Croatia",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "HR",
-                                        ThreeLetterIsoCode = "HRV",
-                                        NumericIsoCode = 191,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Cuba",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "CU",
-                                        ThreeLetterIsoCode = "CUB",
-                                        NumericIsoCode = 192,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Cyprus",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "CY",
-                                        ThreeLetterIsoCode = "CYP",
-                                        NumericIsoCode = 196,
-                                        SubjectToVat = true,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Czech Republic",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "CZ",
-                                        ThreeLetterIsoCode = "CZE",
-                                        NumericIsoCode = 203,
-                                        SubjectToVat = true,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Denmark",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "DK",
-                                        ThreeLetterIsoCode = "DNK",
-                                        NumericIsoCode = 208,
-                                        SubjectToVat = true,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Dominican Republic",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "DO",
-                                        ThreeLetterIsoCode = "DOM",
-                                        NumericIsoCode = 214,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Ecuador",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "EC",
-                                        ThreeLetterIsoCode = "ECU",
-                                        NumericIsoCode = 218,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Egypt",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "EG",
-                                        ThreeLetterIsoCode = "EGY",
-                                        NumericIsoCode = 818,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Finland",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "FI",
-                                        ThreeLetterIsoCode = "FIN",
-                                        NumericIsoCode = 246,
-                                        SubjectToVat = true,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "France",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "FR",
-                                        ThreeLetterIsoCode = "FRA",
-                                        NumericIsoCode = 250,
-                                        SubjectToVat = true,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Georgia",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "GE",
-                                        ThreeLetterIsoCode = "GEO",
-                                        NumericIsoCode = 268,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Germany",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "DE",
-                                        ThreeLetterIsoCode = "DEU",
-                                        NumericIsoCode = 276,
-                                        SubjectToVat = true,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Gibraltar",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "GI",
-                                        ThreeLetterIsoCode = "GIB",
-                                        NumericIsoCode = 292,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Greece",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "GR",
-                                        ThreeLetterIsoCode = "GRC",
-                                        NumericIsoCode = 300,
-                                        SubjectToVat = true,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Guatemala",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "GT",
-                                        ThreeLetterIsoCode = "GTM",
-                                        NumericIsoCode = 320,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Hong Kong",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "HK",
-                                        ThreeLetterIsoCode = "HKG",
-                                        NumericIsoCode = 344,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Hungary",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "HU",
-                                        ThreeLetterIsoCode = "HUN",
-                                        NumericIsoCode = 348,
-                                        SubjectToVat = true,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "India",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "IN",
-                                        ThreeLetterIsoCode = "IND",
-                                        NumericIsoCode = 356,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Indonesia",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "ID",
-                                        ThreeLetterIsoCode = "IDN",
-                                        NumericIsoCode = 360,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Ireland",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "IE",
-                                        ThreeLetterIsoCode = "IRL",
-                                        NumericIsoCode = 372,
-                                        SubjectToVat = true,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Israel",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "IL",
-                                        ThreeLetterIsoCode = "ISR",
-                                        NumericIsoCode = 376,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Italy",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "IT",
-                                        ThreeLetterIsoCode = "ITA",
-                                        NumericIsoCode = 380,
-                                        SubjectToVat = true,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Jamaica",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "JM",
-                                        ThreeLetterIsoCode = "JAM",
-                                        NumericIsoCode = 388,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Japan",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "JP",
-                                        ThreeLetterIsoCode = "JPN",
-                                        NumericIsoCode = 392,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Jordan",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "JO",
-                                        ThreeLetterIsoCode = "JOR",
-                                        NumericIsoCode = 400,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Kazakhstan",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "KZ",
-                                        ThreeLetterIsoCode = "KAZ",
-                                        NumericIsoCode = 398,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Korea, Democratic People's Republic of",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "KP",
-                                        ThreeLetterIsoCode = "PRK",
-                                        NumericIsoCode = 408,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Kuwait",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "KW",
-                                        ThreeLetterIsoCode = "KWT",
-                                        NumericIsoCode = 414,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Malaysia",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "MY",
-                                        ThreeLetterIsoCode = "MYS",
-                                        NumericIsoCode = 458,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Mexico",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "MX",
-                                        ThreeLetterIsoCode = "MEX",
-                                        NumericIsoCode = 484,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Netherlands",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "NL",
-                                        ThreeLetterIsoCode = "NLD",
-                                        NumericIsoCode = 528,
-                                        SubjectToVat = true,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "New Zealand",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "NZ",
-                                        ThreeLetterIsoCode = "NZL",
-                                        NumericIsoCode = 554,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Norway",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "NO",
-                                        ThreeLetterIsoCode = "NOR",
-                                        NumericIsoCode = 578,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Pakistan",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "PK",
-                                        ThreeLetterIsoCode = "PAK",
-                                        NumericIsoCode = 586,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Paraguay",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "PY",
-                                        ThreeLetterIsoCode = "PRY",
-                                        NumericIsoCode = 600,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Peru",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "PE",
-                                        ThreeLetterIsoCode = "PER",
-                                        NumericIsoCode = 604,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Philippines",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "PH",
-                                        ThreeLetterIsoCode = "PHL",
-                                        NumericIsoCode = 608,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Poland",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "PL",
-                                        ThreeLetterIsoCode = "POL",
-                                        NumericIsoCode = 616,
-                                        SubjectToVat = true,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Portugal",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "PT",
-                                        ThreeLetterIsoCode = "PRT",
-                                        NumericIsoCode = 620,
-                                        SubjectToVat = true,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Puerto Rico",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "PR",
-                                        ThreeLetterIsoCode = "PRI",
-                                        NumericIsoCode = 630,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Qatar",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "QA",
-                                        ThreeLetterIsoCode = "QAT",
-                                        NumericIsoCode = 634,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Romania",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "RO",
-                                        ThreeLetterIsoCode = "ROM",
-                                        NumericIsoCode = 642,
-                                        SubjectToVat = true,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Russia",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "RU",
-                                        ThreeLetterIsoCode = "RUS",
-                                        NumericIsoCode = 643,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Saudi Arabia",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "SA",
-                                        ThreeLetterIsoCode = "SAU",
-                                        NumericIsoCode = 682,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Singapore",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "SG",
-                                        ThreeLetterIsoCode = "SGP",
-                                        NumericIsoCode = 702,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Slovakia (Slovak Republic)",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "SK",
-                                        ThreeLetterIsoCode = "SVK",
-                                        NumericIsoCode = 703,
-                                        SubjectToVat = true,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Slovenia",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "SI",
-                                        ThreeLetterIsoCode = "SVN",
-                                        NumericIsoCode = 705,
-                                        SubjectToVat = true,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "South Africa",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "ZA",
-                                        ThreeLetterIsoCode = "ZAF",
-                                        NumericIsoCode = 710,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Spain",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "ES",
-                                        ThreeLetterIsoCode = "ESP",
-                                        NumericIsoCode = 724,
-                                        SubjectToVat = true,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Sweden",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "SE",
-                                        ThreeLetterIsoCode = "SWE",
-                                        NumericIsoCode = 752,
-                                        SubjectToVat = true,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Switzerland",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "CH",
-                                        ThreeLetterIsoCode = "CHE",
-                                        NumericIsoCode = 756,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Taiwan",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "TW",
-                                        ThreeLetterIsoCode = "TWN",
-                                        NumericIsoCode = 158,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Thailand",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "TH",
-                                        ThreeLetterIsoCode = "THA",
-                                        NumericIsoCode = 764,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Turkey",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "TR",
-                                        ThreeLetterIsoCode = "TUR",
-                                        NumericIsoCode = 792,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Ukraine",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "UA",
-                                        ThreeLetterIsoCode = "UKR",
-                                        NumericIsoCode = 804,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "United Arab Emirates",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "AE",
-                                        ThreeLetterIsoCode = "ARE",
-                                        NumericIsoCode = 784,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "United Kingdom",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "GB",
-                                        ThreeLetterIsoCode = "GBR",
-                                        NumericIsoCode = 826,
-                                        SubjectToVat = true,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "United States minor outlying islands",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "UM",
-                                        ThreeLetterIsoCode = "UMI",
-                                        NumericIsoCode = 581,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Uruguay",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "UY",
-                                        ThreeLetterIsoCode = "URY",
-                                        NumericIsoCode = 858,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Uzbekistan",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "UZ",
-                                        ThreeLetterIsoCode = "UZB",
-                                        NumericIsoCode = 860,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Venezuela",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "VE",
-                                        ThreeLetterIsoCode = "VEN",
-                                        NumericIsoCode = 862,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Serbia",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "RS",
-                                        ThreeLetterIsoCode = "SRB",
-                                        NumericIsoCode = 688,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Afghanistan",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "AF",
-                                        ThreeLetterIsoCode = "AFG",
-                                        NumericIsoCode = 4,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Albania",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "AL",
-                                        ThreeLetterIsoCode = "ALB",
-                                        NumericIsoCode = 8,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Algeria",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "DZ",
-                                        ThreeLetterIsoCode = "DZA",
-                                        NumericIsoCode = 12,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "American Samoa",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "AS",
-                                        ThreeLetterIsoCode = "ASM",
-                                        NumericIsoCode = 16,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Andorra",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "AD",
-                                        ThreeLetterIsoCode = "AND",
-                                        NumericIsoCode = 20,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Angola",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "AO",
-                                        ThreeLetterIsoCode = "AGO",
-                                        NumericIsoCode = 24,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Anguilla",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "AI",
-                                        ThreeLetterIsoCode = "AIA",
-                                        NumericIsoCode = 660,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Antarctica",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "AQ",
-                                        ThreeLetterIsoCode = "ATA",
-                                        NumericIsoCode = 10,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Antigua and Barbuda",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "AG",
-                                        ThreeLetterIsoCode = "ATG",
-                                        NumericIsoCode = 28,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Bahrain",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "BH",
-                                        ThreeLetterIsoCode = "BHR",
-                                        NumericIsoCode = 48,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Barbados",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "BB",
-                                        ThreeLetterIsoCode = "BRB",
-                                        NumericIsoCode = 52,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Benin",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "BJ",
-                                        ThreeLetterIsoCode = "BEN",
-                                        NumericIsoCode = 204,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Bhutan",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "BT",
-                                        ThreeLetterIsoCode = "BTN",
-                                        NumericIsoCode = 64,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Botswana",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "BW",
-                                        ThreeLetterIsoCode = "BWA",
-                                        NumericIsoCode = 72,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Bouvet Island",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "BV",
-                                        ThreeLetterIsoCode = "BVT",
-                                        NumericIsoCode = 74,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "British Indian Ocean Territory",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "IO",
-                                        ThreeLetterIsoCode = "IOT",
-                                        NumericIsoCode = 86,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Brunei Darussalam",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "BN",
-                                        ThreeLetterIsoCode = "BRN",
-                                        NumericIsoCode = 96,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Burkina Faso",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "BF",
-                                        ThreeLetterIsoCode = "BFA",
-                                        NumericIsoCode = 854,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Burundi",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "BI",
-                                        ThreeLetterIsoCode = "BDI",
-                                        NumericIsoCode = 108,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Cambodia",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "KH",
-                                        ThreeLetterIsoCode = "KHM",
-                                        NumericIsoCode = 116,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Cameroon",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "CM",
-                                        ThreeLetterIsoCode = "CMR",
-                                        NumericIsoCode = 120,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Cape Verde",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "CV",
-                                        ThreeLetterIsoCode = "CPV",
-                                        NumericIsoCode = 132,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Central African Republic",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "CF",
-                                        ThreeLetterIsoCode = "CAF",
-                                        NumericIsoCode = 140,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Chad",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "TD",
-                                        ThreeLetterIsoCode = "TCD",
-                                        NumericIsoCode = 148,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Christmas Island",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "CX",
-                                        ThreeLetterIsoCode = "CXR",
-                                        NumericIsoCode = 162,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Cocos (Keeling) Islands",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "CC",
-                                        ThreeLetterIsoCode = "CCK",
-                                        NumericIsoCode = 166,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Comoros",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "KM",
-                                        ThreeLetterIsoCode = "COM",
-                                        NumericIsoCode = 174,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Congo",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "CG",
-                                        ThreeLetterIsoCode = "COG",
-                                        NumericIsoCode = 178,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Cook Islands",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "CK",
-                                        ThreeLetterIsoCode = "COK",
-                                        NumericIsoCode = 184,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Cote D'Ivoire",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "CI",
-                                        ThreeLetterIsoCode = "CIV",
-                                        NumericIsoCode = 384,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Djibouti",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "DJ",
-                                        ThreeLetterIsoCode = "DJI",
-                                        NumericIsoCode = 262,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Dominica",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "DM",
-                                        ThreeLetterIsoCode = "DMA",
-                                        NumericIsoCode = 212,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "El Salvador",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "SV",
-                                        ThreeLetterIsoCode = "SLV",
-                                        NumericIsoCode = 222,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Equatorial Guinea",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "GQ",
-                                        ThreeLetterIsoCode = "GNQ",
-                                        NumericIsoCode = 226,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Eritrea",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "ER",
-                                        ThreeLetterIsoCode = "ERI",
-                                        NumericIsoCode = 232,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Estonia",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "EE",
-                                        ThreeLetterIsoCode = "EST",
-                                        NumericIsoCode = 233,
-                                        SubjectToVat = true,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Ethiopia",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "ET",
-                                        ThreeLetterIsoCode = "ETH",
-                                        NumericIsoCode = 231,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Falkland Islands (Malvinas)",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "FK",
-                                        ThreeLetterIsoCode = "FLK",
-                                        NumericIsoCode = 238,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Faroe Islands",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "FO",
-                                        ThreeLetterIsoCode = "FRO",
-                                        NumericIsoCode = 234,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Fiji",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "FJ",
-                                        ThreeLetterIsoCode = "FJI",
-                                        NumericIsoCode = 242,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "French Guiana",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "GF",
-                                        ThreeLetterIsoCode = "GUF",
-                                        NumericIsoCode = 254,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "French Polynesia",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "PF",
-                                        ThreeLetterIsoCode = "PYF",
-                                        NumericIsoCode = 258,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "French Southern Territories",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "TF",
-                                        ThreeLetterIsoCode = "ATF",
-                                        NumericIsoCode = 260,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Gabon",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "GA",
-                                        ThreeLetterIsoCode = "GAB",
-                                        NumericIsoCode = 266,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Gambia",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "GM",
-                                        ThreeLetterIsoCode = "GMB",
-                                        NumericIsoCode = 270,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Ghana",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "GH",
-                                        ThreeLetterIsoCode = "GHA",
-                                        NumericIsoCode = 288,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Greenland",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "GL",
-                                        ThreeLetterIsoCode = "GRL",
-                                        NumericIsoCode = 304,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Grenada",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "GD",
-                                        ThreeLetterIsoCode = "GRD",
-                                        NumericIsoCode = 308,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Guadeloupe",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "GP",
-                                        ThreeLetterIsoCode = "GLP",
-                                        NumericIsoCode = 312,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Guam",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "GU",
-                                        ThreeLetterIsoCode = "GUM",
-                                        NumericIsoCode = 316,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Guinea",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "GN",
-                                        ThreeLetterIsoCode = "GIN",
-                                        NumericIsoCode = 324,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Guinea-bissau",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "GW",
-                                        ThreeLetterIsoCode = "GNB",
-                                        NumericIsoCode = 624,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Guyana",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "GY",
-                                        ThreeLetterIsoCode = "GUY",
-                                        NumericIsoCode = 328,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Haiti",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "HT",
-                                        ThreeLetterIsoCode = "HTI",
-                                        NumericIsoCode = 332,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Heard and Mc Donald Islands",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "HM",
-                                        ThreeLetterIsoCode = "HMD",
-                                        NumericIsoCode = 334,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Honduras",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "HN",
-                                        ThreeLetterIsoCode = "HND",
-                                        NumericIsoCode = 340,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Iceland",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "IS",
-                                        ThreeLetterIsoCode = "ISL",
-                                        NumericIsoCode = 352,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Iran (Islamic Republic of)",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "IR",
-                                        ThreeLetterIsoCode = "IRN",
-                                        NumericIsoCode = 364,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Iraq",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "IQ",
-                                        ThreeLetterIsoCode = "IRQ",
-                                        NumericIsoCode = 368,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Kenya",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "KE",
-                                        ThreeLetterIsoCode = "KEN",
-                                        NumericIsoCode = 404,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Kiribati",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "KI",
-                                        ThreeLetterIsoCode = "KIR",
-                                        NumericIsoCode = 296,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Korea",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "KR",
-                                        ThreeLetterIsoCode = "KOR",
-                                        NumericIsoCode = 410,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Kyrgyzstan",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "KG",
-                                        ThreeLetterIsoCode = "KGZ",
-                                        NumericIsoCode = 417,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Lao People's Democratic Republic",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "LA",
-                                        ThreeLetterIsoCode = "LAO",
-                                        NumericIsoCode = 418,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Latvia",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "LV",
-                                        ThreeLetterIsoCode = "LVA",
-                                        NumericIsoCode = 428,
-                                        SubjectToVat = true,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Lebanon",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "LB",
-                                        ThreeLetterIsoCode = "LBN",
-                                        NumericIsoCode = 422,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Lesotho",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "LS",
-                                        ThreeLetterIsoCode = "LSO",
-                                        NumericIsoCode = 426,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Liberia",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "LR",
-                                        ThreeLetterIsoCode = "LBR",
-                                        NumericIsoCode = 430,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Libyan Arab Jamahiriya",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "LY",
-                                        ThreeLetterIsoCode = "LBY",
-                                        NumericIsoCode = 434,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Liechtenstein",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "LI",
-                                        ThreeLetterIsoCode = "LIE",
-                                        NumericIsoCode = 438,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Lithuania",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "LT",
-                                        ThreeLetterIsoCode = "LTU",
-                                        NumericIsoCode = 440,
-                                        SubjectToVat = true,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Luxembourg",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "LU",
-                                        ThreeLetterIsoCode = "LUX",
-                                        NumericIsoCode = 442,
-                                        SubjectToVat = true,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Macau",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "MO",
-                                        ThreeLetterIsoCode = "MAC",
-                                        NumericIsoCode = 446,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Macedonia",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "MK",
-                                        ThreeLetterIsoCode = "MKD",
-                                        NumericIsoCode = 807,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Madagascar",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "MG",
-                                        ThreeLetterIsoCode = "MDG",
-                                        NumericIsoCode = 450,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Malawi",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "MW",
-                                        ThreeLetterIsoCode = "MWI",
-                                        NumericIsoCode = 454,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Maldives",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "MV",
-                                        ThreeLetterIsoCode = "MDV",
-                                        NumericIsoCode = 462,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Mali",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "ML",
-                                        ThreeLetterIsoCode = "MLI",
-                                        NumericIsoCode = 466,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Malta",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "MT",
-                                        ThreeLetterIsoCode = "MLT",
-                                        NumericIsoCode = 470,
-                                        SubjectToVat = true,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Marshall Islands",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "MH",
-                                        ThreeLetterIsoCode = "MHL",
-                                        NumericIsoCode = 584,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Martinique",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "MQ",
-                                        ThreeLetterIsoCode = "MTQ",
-                                        NumericIsoCode = 474,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Mauritania",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "MR",
-                                        ThreeLetterIsoCode = "MRT",
-                                        NumericIsoCode = 478,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Mauritius",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "MU",
-                                        ThreeLetterIsoCode = "MUS",
-                                        NumericIsoCode = 480,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Mayotte",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "YT",
-                                        ThreeLetterIsoCode = "MYT",
-                                        NumericIsoCode = 175,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Micronesia",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "FM",
-                                        ThreeLetterIsoCode = "FSM",
-                                        NumericIsoCode = 583,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Moldova",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "MD",
-                                        ThreeLetterIsoCode = "MDA",
-                                        NumericIsoCode = 498,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Monaco",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "MC",
-                                        ThreeLetterIsoCode = "MCO",
-                                        NumericIsoCode = 492,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Mongolia",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "MN",
-                                        ThreeLetterIsoCode = "MNG",
-                                        NumericIsoCode = 496,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Montenegro",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "ME",
-                                        ThreeLetterIsoCode = "MNE",
-                                        NumericIsoCode = 499,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Montserrat",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "MS",
-                                        ThreeLetterIsoCode = "MSR",
-                                        NumericIsoCode = 500,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Morocco",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "MA",
-                                        ThreeLetterIsoCode = "MAR",
-                                        NumericIsoCode = 504,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Mozambique",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "MZ",
-                                        ThreeLetterIsoCode = "MOZ",
-                                        NumericIsoCode = 508,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Myanmar",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "MM",
-                                        ThreeLetterIsoCode = "MMR",
-                                        NumericIsoCode = 104,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Namibia",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "NA",
-                                        ThreeLetterIsoCode = "NAM",
-                                        NumericIsoCode = 516,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Nauru",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "NR",
-                                        ThreeLetterIsoCode = "NRU",
-                                        NumericIsoCode = 520,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Nepal",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "NP",
-                                        ThreeLetterIsoCode = "NPL",
-                                        NumericIsoCode = 524,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Netherlands Antilles",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "AN",
-                                        ThreeLetterIsoCode = "ANT",
-                                        NumericIsoCode = 530,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "New Caledonia",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "NC",
-                                        ThreeLetterIsoCode = "NCL",
-                                        NumericIsoCode = 540,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Nicaragua",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "NI",
-                                        ThreeLetterIsoCode = "NIC",
-                                        NumericIsoCode = 558,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Niger",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "NE",
-                                        ThreeLetterIsoCode = "NER",
-                                        NumericIsoCode = 562,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Nigeria",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "NG",
-                                        ThreeLetterIsoCode = "NGA",
-                                        NumericIsoCode = 566,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Niue",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "NU",
-                                        ThreeLetterIsoCode = "NIU",
-                                        NumericIsoCode = 570,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Norfolk Island",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "NF",
-                                        ThreeLetterIsoCode = "NFK",
-                                        NumericIsoCode = 574,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Northern Mariana Islands",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "MP",
-                                        ThreeLetterIsoCode = "MNP",
-                                        NumericIsoCode = 580,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Oman",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "OM",
-                                        ThreeLetterIsoCode = "OMN",
-                                        NumericIsoCode = 512,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Palau",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "PW",
-                                        ThreeLetterIsoCode = "PLW",
-                                        NumericIsoCode = 585,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Panama",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "PA",
-                                        ThreeLetterIsoCode = "PAN",
-                                        NumericIsoCode = 591,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Papua New Guinea",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "PG",
-                                        ThreeLetterIsoCode = "PNG",
-                                        NumericIsoCode = 598,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Pitcairn",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "PN",
-                                        ThreeLetterIsoCode = "PCN",
-                                        NumericIsoCode = 612,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Reunion",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "RE",
-                                        ThreeLetterIsoCode = "REU",
-                                        NumericIsoCode = 638,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Rwanda",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "RW",
-                                        ThreeLetterIsoCode = "RWA",
-                                        NumericIsoCode = 646,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Saint Kitts and Nevis",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "KN",
-                                        ThreeLetterIsoCode = "KNA",
-                                        NumericIsoCode = 659,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Saint Lucia",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "LC",
-                                        ThreeLetterIsoCode = "LCA",
-                                        NumericIsoCode = 662,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Saint Vincent and the Grenadines",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "VC",
-                                        ThreeLetterIsoCode = "VCT",
-                                        NumericIsoCode = 670,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Samoa",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "WS",
-                                        ThreeLetterIsoCode = "WSM",
-                                        NumericIsoCode = 882,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "San Marino",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "SM",
-                                        ThreeLetterIsoCode = "SMR",
-                                        NumericIsoCode = 674,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Sao Tome and Principe",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "ST",
-                                        ThreeLetterIsoCode = "STP",
-                                        NumericIsoCode = 678,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Senegal",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "SN",
-                                        ThreeLetterIsoCode = "SEN",
-                                        NumericIsoCode = 686,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Seychelles",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "SC",
-                                        ThreeLetterIsoCode = "SYC",
-                                        NumericIsoCode = 690,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Sierra Leone",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "SL",
-                                        ThreeLetterIsoCode = "SLE",
-                                        NumericIsoCode = 694,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Solomon Islands",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "SB",
-                                        ThreeLetterIsoCode = "SLB",
-                                        NumericIsoCode = 90,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Somalia",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "SO",
-                                        ThreeLetterIsoCode = "SOM",
-                                        NumericIsoCode = 706,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "South Georgia & South Sandwich Islands",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "GS",
-                                        ThreeLetterIsoCode = "SGS",
-                                        NumericIsoCode = 239,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Sri Lanka",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "LK",
-                                        ThreeLetterIsoCode = "LKA",
-                                        NumericIsoCode = 144,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "St. Helena",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "SH",
-                                        ThreeLetterIsoCode = "SHN",
-                                        NumericIsoCode = 654,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "St. Pierre and Miquelon",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "PM",
-                                        ThreeLetterIsoCode = "SPM",
-                                        NumericIsoCode = 666,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Sudan",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "SD",
-                                        ThreeLetterIsoCode = "SDN",
-                                        NumericIsoCode = 736,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Suriname",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "SR",
-                                        ThreeLetterIsoCode = "SUR",
-                                        NumericIsoCode = 740,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Svalbard and Jan Mayen Islands",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "SJ",
-                                        ThreeLetterIsoCode = "SJM",
-                                        NumericIsoCode = 744,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Swaziland",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "SZ",
-                                        ThreeLetterIsoCode = "SWZ",
-                                        NumericIsoCode = 748,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Syrian Arab Republic",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "SY",
-                                        ThreeLetterIsoCode = "SYR",
-                                        NumericIsoCode = 760,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Tajikistan",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "TJ",
-                                        ThreeLetterIsoCode = "TJK",
-                                        NumericIsoCode = 762,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Tanzania",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "TZ",
-                                        ThreeLetterIsoCode = "TZA",
-                                        NumericIsoCode = 834,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Togo",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "TG",
-                                        ThreeLetterIsoCode = "TGO",
-                                        NumericIsoCode = 768,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Tokelau",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "TK",
-                                        ThreeLetterIsoCode = "TKL",
-                                        NumericIsoCode = 772,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Tonga",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "TO",
-                                        ThreeLetterIsoCode = "TON",
-                                        NumericIsoCode = 776,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Trinidad and Tobago",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "TT",
-                                        ThreeLetterIsoCode = "TTO",
-                                        NumericIsoCode = 780,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Tunisia",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "TN",
-                                        ThreeLetterIsoCode = "TUN",
-                                        NumericIsoCode = 788,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Turkmenistan",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "TM",
-                                        ThreeLetterIsoCode = "TKM",
-                                        NumericIsoCode = 795,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Turks and Caicos Islands",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "TC",
-                                        ThreeLetterIsoCode = "TCA",
-                                        NumericIsoCode = 796,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Tuvalu",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "TV",
-                                        ThreeLetterIsoCode = "TUV",
-                                        NumericIsoCode = 798,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Uganda",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "UG",
-                                        ThreeLetterIsoCode = "UGA",
-                                        NumericIsoCode = 800,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Vanuatu",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "VU",
-                                        ThreeLetterIsoCode = "VUT",
-                                        NumericIsoCode = 548,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Vatican City State (Holy See)",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "VA",
-                                        ThreeLetterIsoCode = "VAT",
-                                        NumericIsoCode = 336,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Viet Nam",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "VN",
-                                        ThreeLetterIsoCode = "VNM",
-                                        NumericIsoCode = 704,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Virgin Islands (British)",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "VG",
-                                        ThreeLetterIsoCode = "VGB",
-                                        NumericIsoCode = 92,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Virgin Islands (U.S.)",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "VI",
-                                        ThreeLetterIsoCode = "VIR",
-                                        NumericIsoCode = 850,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Wallis and Futuna Islands",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "WF",
-                                        ThreeLetterIsoCode = "WLF",
-                                        NumericIsoCode = 876,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Western Sahara",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "EH",
-                                        ThreeLetterIsoCode = "ESH",
-                                        NumericIsoCode = 732,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Yemen",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "YE",
-                                        ThreeLetterIsoCode = "YEM",
-                                        NumericIsoCode = 887,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Zambia",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "ZM",
-                                        ThreeLetterIsoCode = "ZMB",
-                                        NumericIsoCode = 894,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                    new Country
-                                    {
-                                        Name = "Zimbabwe",
-                                        AllowsBilling = true,
-                                        AllowsShipping = true,
-                                        TwoLetterIsoCode = "ZW",
-                                        ThreeLetterIsoCode = "ZWE",
-                                        NumericIsoCode = 716,
-                                        SubjectToVat = false,
-                                        DisplayOrder = 100,
-                                        Published = true
-                                    },
-                                };
+            {
+                cUsa,
+                cCanada,
+                //other countries
+                new Country
+                {
+                    Name = "Argentina",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "AR",
+                    ThreeLetterIsoCode = "ARG",
+                    NumericIsoCode = 32,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Armenia",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "AM",
+                    ThreeLetterIsoCode = "ARM",
+                    NumericIsoCode = 51,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Aruba",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "AW",
+                    ThreeLetterIsoCode = "ABW",
+                    NumericIsoCode = 533,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Australia",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "AU",
+                    ThreeLetterIsoCode = "AUS",
+                    NumericIsoCode = 36,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Austria",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "AT",
+                    ThreeLetterIsoCode = "AUT",
+                    NumericIsoCode = 40,
+                    SubjectToVat = true,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Azerbaijan",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "AZ",
+                    ThreeLetterIsoCode = "AZE",
+                    NumericIsoCode = 31,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Bahamas",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "BS",
+                    ThreeLetterIsoCode = "BHS",
+                    NumericIsoCode = 44,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Bangladesh",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "BD",
+                    ThreeLetterIsoCode = "BGD",
+                    NumericIsoCode = 50,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Belarus",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "BY",
+                    ThreeLetterIsoCode = "BLR",
+                    NumericIsoCode = 112,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Belgium",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "BE",
+                    ThreeLetterIsoCode = "BEL",
+                    NumericIsoCode = 56,
+                    SubjectToVat = true,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Belize",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "BZ",
+                    ThreeLetterIsoCode = "BLZ",
+                    NumericIsoCode = 84,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Bermuda",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "BM",
+                    ThreeLetterIsoCode = "BMU",
+                    NumericIsoCode = 60,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Bolivia",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "BO",
+                    ThreeLetterIsoCode = "BOL",
+                    NumericIsoCode = 68,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Bosnia and Herzegowina",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "BA",
+                    ThreeLetterIsoCode = "BIH",
+                    NumericIsoCode = 70,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Brazil",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "BR",
+                    ThreeLetterIsoCode = "BRA",
+                    NumericIsoCode = 76,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Bulgaria",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "BG",
+                    ThreeLetterIsoCode = "BGR",
+                    NumericIsoCode = 100,
+                    SubjectToVat = true,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Cayman Islands",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "KY",
+                    ThreeLetterIsoCode = "CYM",
+                    NumericIsoCode = 136,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Chile",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "CL",
+                    ThreeLetterIsoCode = "CHL",
+                    NumericIsoCode = 152,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "China",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "CN",
+                    ThreeLetterIsoCode = "CHN",
+                    NumericIsoCode = 156,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Colombia",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "CO",
+                    ThreeLetterIsoCode = "COL",
+                    NumericIsoCode = 170,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Costa Rica",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "CR",
+                    ThreeLetterIsoCode = "CRI",
+                    NumericIsoCode = 188,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Croatia",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "HR",
+                    ThreeLetterIsoCode = "HRV",
+                    NumericIsoCode = 191,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Cuba",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "CU",
+                    ThreeLetterIsoCode = "CUB",
+                    NumericIsoCode = 192,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Cyprus",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "CY",
+                    ThreeLetterIsoCode = "CYP",
+                    NumericIsoCode = 196,
+                    SubjectToVat = true,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Czech Republic",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "CZ",
+                    ThreeLetterIsoCode = "CZE",
+                    NumericIsoCode = 203,
+                    SubjectToVat = true,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Denmark",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "DK",
+                    ThreeLetterIsoCode = "DNK",
+                    NumericIsoCode = 208,
+                    SubjectToVat = true,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Dominican Republic",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "DO",
+                    ThreeLetterIsoCode = "DOM",
+                    NumericIsoCode = 214,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "East Timor",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "TL",
+                    ThreeLetterIsoCode = "TLS",
+                    NumericIsoCode = 626,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Ecuador",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "EC",
+                    ThreeLetterIsoCode = "ECU",
+                    NumericIsoCode = 218,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Egypt",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "EG",
+                    ThreeLetterIsoCode = "EGY",
+                    NumericIsoCode = 818,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Finland",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "FI",
+                    ThreeLetterIsoCode = "FIN",
+                    NumericIsoCode = 246,
+                    SubjectToVat = true,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "France",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "FR",
+                    ThreeLetterIsoCode = "FRA",
+                    NumericIsoCode = 250,
+                    SubjectToVat = true,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Georgia",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "GE",
+                    ThreeLetterIsoCode = "GEO",
+                    NumericIsoCode = 268,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Germany",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "DE",
+                    ThreeLetterIsoCode = "DEU",
+                    NumericIsoCode = 276,
+                    SubjectToVat = true,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Gibraltar",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "GI",
+                    ThreeLetterIsoCode = "GIB",
+                    NumericIsoCode = 292,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Greece",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "GR",
+                    ThreeLetterIsoCode = "GRC",
+                    NumericIsoCode = 300,
+                    SubjectToVat = true,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Guatemala",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "GT",
+                    ThreeLetterIsoCode = "GTM",
+                    NumericIsoCode = 320,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Hong Kong",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "HK",
+                    ThreeLetterIsoCode = "HKG",
+                    NumericIsoCode = 344,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Hungary",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "HU",
+                    ThreeLetterIsoCode = "HUN",
+                    NumericIsoCode = 348,
+                    SubjectToVat = true,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "India",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "IN",
+                    ThreeLetterIsoCode = "IND",
+                    NumericIsoCode = 356,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Indonesia",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "ID",
+                    ThreeLetterIsoCode = "IDN",
+                    NumericIsoCode = 360,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Ireland",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "IE",
+                    ThreeLetterIsoCode = "IRL",
+                    NumericIsoCode = 372,
+                    SubjectToVat = true,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Israel",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "IL",
+                    ThreeLetterIsoCode = "ISR",
+                    NumericIsoCode = 376,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Italy",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "IT",
+                    ThreeLetterIsoCode = "ITA",
+                    NumericIsoCode = 380,
+                    SubjectToVat = true,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Jamaica",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "JM",
+                    ThreeLetterIsoCode = "JAM",
+                    NumericIsoCode = 388,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Japan",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "JP",
+                    ThreeLetterIsoCode = "JPN",
+                    NumericIsoCode = 392,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Jordan",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "JO",
+                    ThreeLetterIsoCode = "JOR",
+                    NumericIsoCode = 400,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Kazakhstan",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "KZ",
+                    ThreeLetterIsoCode = "KAZ",
+                    NumericIsoCode = 398,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Korea, Democratic People's Republic of",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "KP",
+                    ThreeLetterIsoCode = "PRK",
+                    NumericIsoCode = 408,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Kuwait",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "KW",
+                    ThreeLetterIsoCode = "KWT",
+                    NumericIsoCode = 414,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Malaysia",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "MY",
+                    ThreeLetterIsoCode = "MYS",
+                    NumericIsoCode = 458,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Mexico",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "MX",
+                    ThreeLetterIsoCode = "MEX",
+                    NumericIsoCode = 484,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Netherlands",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "NL",
+                    ThreeLetterIsoCode = "NLD",
+                    NumericIsoCode = 528,
+                    SubjectToVat = true,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "New Zealand",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "NZ",
+                    ThreeLetterIsoCode = "NZL",
+                    NumericIsoCode = 554,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Norway",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "NO",
+                    ThreeLetterIsoCode = "NOR",
+                    NumericIsoCode = 578,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Pakistan",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "PK",
+                    ThreeLetterIsoCode = "PAK",
+                    NumericIsoCode = 586,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Palestine",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "PS",
+                    ThreeLetterIsoCode = "PSE",
+                    NumericIsoCode = 275,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Paraguay",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "PY",
+                    ThreeLetterIsoCode = "PRY",
+                    NumericIsoCode = 600,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Peru",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "PE",
+                    ThreeLetterIsoCode = "PER",
+                    NumericIsoCode = 604,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Philippines",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "PH",
+                    ThreeLetterIsoCode = "PHL",
+                    NumericIsoCode = 608,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Poland",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "PL",
+                    ThreeLetterIsoCode = "POL",
+                    NumericIsoCode = 616,
+                    SubjectToVat = true,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Portugal",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "PT",
+                    ThreeLetterIsoCode = "PRT",
+                    NumericIsoCode = 620,
+                    SubjectToVat = true,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Puerto Rico",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "PR",
+                    ThreeLetterIsoCode = "PRI",
+                    NumericIsoCode = 630,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Qatar",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "QA",
+                    ThreeLetterIsoCode = "QAT",
+                    NumericIsoCode = 634,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Romania",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "RO",
+                    ThreeLetterIsoCode = "ROM",
+                    NumericIsoCode = 642,
+                    SubjectToVat = true,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Russian Federation",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "RU",
+                    ThreeLetterIsoCode = "RUS",
+                    NumericIsoCode = 643,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Saudi Arabia",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "SA",
+                    ThreeLetterIsoCode = "SAU",
+                    NumericIsoCode = 682,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Singapore",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "SG",
+                    ThreeLetterIsoCode = "SGP",
+                    NumericIsoCode = 702,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Slovakia (Slovak Republic)",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "SK",
+                    ThreeLetterIsoCode = "SVK",
+                    NumericIsoCode = 703,
+                    SubjectToVat = true,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Slovenia",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "SI",
+                    ThreeLetterIsoCode = "SVN",
+                    NumericIsoCode = 705,
+                    SubjectToVat = true,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "South Africa",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "ZA",
+                    ThreeLetterIsoCode = "ZAF",
+                    NumericIsoCode = 710,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Spain",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "ES",
+                    ThreeLetterIsoCode = "ESP",
+                    NumericIsoCode = 724,
+                    SubjectToVat = true,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Sweden",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "SE",
+                    ThreeLetterIsoCode = "SWE",
+                    NumericIsoCode = 752,
+                    SubjectToVat = true,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Switzerland",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "CH",
+                    ThreeLetterIsoCode = "CHE",
+                    NumericIsoCode = 756,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Taiwan",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "TW",
+                    ThreeLetterIsoCode = "TWN",
+                    NumericIsoCode = 158,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Thailand",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "TH",
+                    ThreeLetterIsoCode = "THA",
+                    NumericIsoCode = 764,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Turkey",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "TR",
+                    ThreeLetterIsoCode = "TUR",
+                    NumericIsoCode = 792,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Ukraine",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "UA",
+                    ThreeLetterIsoCode = "UKR",
+                    NumericIsoCode = 804,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "United Arab Emirates",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "AE",
+                    ThreeLetterIsoCode = "ARE",
+                    NumericIsoCode = 784,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "United Kingdom",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "GB",
+                    ThreeLetterIsoCode = "GBR",
+                    NumericIsoCode = 826,
+                    SubjectToVat = true,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "United States minor outlying islands",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "UM",
+                    ThreeLetterIsoCode = "UMI",
+                    NumericIsoCode = 581,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Uruguay",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "UY",
+                    ThreeLetterIsoCode = "URY",
+                    NumericIsoCode = 858,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Uzbekistan",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "UZ",
+                    ThreeLetterIsoCode = "UZB",
+                    NumericIsoCode = 860,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Venezuela",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "VE",
+                    ThreeLetterIsoCode = "VEN",
+                    NumericIsoCode = 862,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Serbia",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "RS",
+                    ThreeLetterIsoCode = "SRB",
+                    NumericIsoCode = 688,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Afghanistan",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "AF",
+                    ThreeLetterIsoCode = "AFG",
+                    NumericIsoCode = 4,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Albania",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "AL",
+                    ThreeLetterIsoCode = "ALB",
+                    NumericIsoCode = 8,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Algeria",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "DZ",
+                    ThreeLetterIsoCode = "DZA",
+                    NumericIsoCode = 12,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "American Samoa",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "AS",
+                    ThreeLetterIsoCode = "ASM",
+                    NumericIsoCode = 16,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Andorra",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "AD",
+                    ThreeLetterIsoCode = "AND",
+                    NumericIsoCode = 20,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Angola",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "AO",
+                    ThreeLetterIsoCode = "AGO",
+                    NumericIsoCode = 24,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Anguilla",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "AI",
+                    ThreeLetterIsoCode = "AIA",
+                    NumericIsoCode = 660,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Antarctica",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "AQ",
+                    ThreeLetterIsoCode = "ATA",
+                    NumericIsoCode = 10,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Antigua and Barbuda",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "AG",
+                    ThreeLetterIsoCode = "ATG",
+                    NumericIsoCode = 28,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Bahrain",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "BH",
+                    ThreeLetterIsoCode = "BHR",
+                    NumericIsoCode = 48,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Barbados",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "BB",
+                    ThreeLetterIsoCode = "BRB",
+                    NumericIsoCode = 52,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Benin",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "BJ",
+                    ThreeLetterIsoCode = "BEN",
+                    NumericIsoCode = 204,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Bhutan",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "BT",
+                    ThreeLetterIsoCode = "BTN",
+                    NumericIsoCode = 64,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Botswana",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "BW",
+                    ThreeLetterIsoCode = "BWA",
+                    NumericIsoCode = 72,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Bouvet Island",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "BV",
+                    ThreeLetterIsoCode = "BVT",
+                    NumericIsoCode = 74,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "British Indian Ocean Territory",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "IO",
+                    ThreeLetterIsoCode = "IOT",
+                    NumericIsoCode = 86,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Brunei Darussalam",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "BN",
+                    ThreeLetterIsoCode = "BRN",
+                    NumericIsoCode = 96,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Burkina Faso",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "BF",
+                    ThreeLetterIsoCode = "BFA",
+                    NumericIsoCode = 854,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Burundi",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "BI",
+                    ThreeLetterIsoCode = "BDI",
+                    NumericIsoCode = 108,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Cambodia",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "KH",
+                    ThreeLetterIsoCode = "KHM",
+                    NumericIsoCode = 116,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Cameroon",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "CM",
+                    ThreeLetterIsoCode = "CMR",
+                    NumericIsoCode = 120,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Cape Verde",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "CV",
+                    ThreeLetterIsoCode = "CPV",
+                    NumericIsoCode = 132,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Central African Republic",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "CF",
+                    ThreeLetterIsoCode = "CAF",
+                    NumericIsoCode = 140,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Chad",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "TD",
+                    ThreeLetterIsoCode = "TCD",
+                    NumericIsoCode = 148,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Christmas Island",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "CX",
+                    ThreeLetterIsoCode = "CXR",
+                    NumericIsoCode = 162,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Cocos (Keeling) Islands",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "CC",
+                    ThreeLetterIsoCode = "CCK",
+                    NumericIsoCode = 166,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Comoros",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "KM",
+                    ThreeLetterIsoCode = "COM",
+                    NumericIsoCode = 174,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Congo",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "CG",
+                    ThreeLetterIsoCode = "COG",
+                    NumericIsoCode = 178,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Congo (Democratic Republic of the)",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "CD",
+                    ThreeLetterIsoCode = "COD",
+                    NumericIsoCode = 180,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Cook Islands",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "CK",
+                    ThreeLetterIsoCode = "COK",
+                    NumericIsoCode = 184,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Cote D'Ivoire",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "CI",
+                    ThreeLetterIsoCode = "CIV",
+                    NumericIsoCode = 384,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Djibouti",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "DJ",
+                    ThreeLetterIsoCode = "DJI",
+                    NumericIsoCode = 262,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Dominica",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "DM",
+                    ThreeLetterIsoCode = "DMA",
+                    NumericIsoCode = 212,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "El Salvador",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "SV",
+                    ThreeLetterIsoCode = "SLV",
+                    NumericIsoCode = 222,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Equatorial Guinea",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "GQ",
+                    ThreeLetterIsoCode = "GNQ",
+                    NumericIsoCode = 226,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Eritrea",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "ER",
+                    ThreeLetterIsoCode = "ERI",
+                    NumericIsoCode = 232,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Estonia",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "EE",
+                    ThreeLetterIsoCode = "EST",
+                    NumericIsoCode = 233,
+                    SubjectToVat = true,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Ethiopia",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "ET",
+                    ThreeLetterIsoCode = "ETH",
+                    NumericIsoCode = 231,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Falkland Islands (Malvinas)",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "FK",
+                    ThreeLetterIsoCode = "FLK",
+                    NumericIsoCode = 238,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Faroe Islands",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "FO",
+                    ThreeLetterIsoCode = "FRO",
+                    NumericIsoCode = 234,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Fiji",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "FJ",
+                    ThreeLetterIsoCode = "FJI",
+                    NumericIsoCode = 242,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "French Guiana",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "GF",
+                    ThreeLetterIsoCode = "GUF",
+                    NumericIsoCode = 254,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "French Polynesia",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "PF",
+                    ThreeLetterIsoCode = "PYF",
+                    NumericIsoCode = 258,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "French Southern Territories",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "TF",
+                    ThreeLetterIsoCode = "ATF",
+                    NumericIsoCode = 260,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Gabon",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "GA",
+                    ThreeLetterIsoCode = "GAB",
+                    NumericIsoCode = 266,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Gambia",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "GM",
+                    ThreeLetterIsoCode = "GMB",
+                    NumericIsoCode = 270,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Ghana",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "GH",
+                    ThreeLetterIsoCode = "GHA",
+                    NumericIsoCode = 288,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Greenland",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "GL",
+                    ThreeLetterIsoCode = "GRL",
+                    NumericIsoCode = 304,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Grenada",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "GD",
+                    ThreeLetterIsoCode = "GRD",
+                    NumericIsoCode = 308,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Guadeloupe",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "GP",
+                    ThreeLetterIsoCode = "GLP",
+                    NumericIsoCode = 312,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Guam",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "GU",
+                    ThreeLetterIsoCode = "GUM",
+                    NumericIsoCode = 316,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Guinea",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "GN",
+                    ThreeLetterIsoCode = "GIN",
+                    NumericIsoCode = 324,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Guinea-bissau",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "GW",
+                    ThreeLetterIsoCode = "GNB",
+                    NumericIsoCode = 624,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Guyana",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "GY",
+                    ThreeLetterIsoCode = "GUY",
+                    NumericIsoCode = 328,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Haiti",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "HT",
+                    ThreeLetterIsoCode = "HTI",
+                    NumericIsoCode = 332,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Heard and Mc Donald Islands",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "HM",
+                    ThreeLetterIsoCode = "HMD",
+                    NumericIsoCode = 334,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Honduras",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "HN",
+                    ThreeLetterIsoCode = "HND",
+                    NumericIsoCode = 340,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Iceland",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "IS",
+                    ThreeLetterIsoCode = "ISL",
+                    NumericIsoCode = 352,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Iran (Islamic Republic of)",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "IR",
+                    ThreeLetterIsoCode = "IRN",
+                    NumericIsoCode = 364,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Iraq",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "IQ",
+                    ThreeLetterIsoCode = "IRQ",
+                    NumericIsoCode = 368,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Kenya",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "KE",
+                    ThreeLetterIsoCode = "KEN",
+                    NumericIsoCode = 404,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Kiribati",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "KI",
+                    ThreeLetterIsoCode = "KIR",
+                    NumericIsoCode = 296,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Korea",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "KR",
+                    ThreeLetterIsoCode = "KOR",
+                    NumericIsoCode = 410,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Kyrgyzstan",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "KG",
+                    ThreeLetterIsoCode = "KGZ",
+                    NumericIsoCode = 417,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Lao People's Democratic Republic",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "LA",
+                    ThreeLetterIsoCode = "LAO",
+                    NumericIsoCode = 418,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Latvia",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "LV",
+                    ThreeLetterIsoCode = "LVA",
+                    NumericIsoCode = 428,
+                    SubjectToVat = true,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Lebanon",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "LB",
+                    ThreeLetterIsoCode = "LBN",
+                    NumericIsoCode = 422,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Lesotho",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "LS",
+                    ThreeLetterIsoCode = "LSO",
+                    NumericIsoCode = 426,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Liberia",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "LR",
+                    ThreeLetterIsoCode = "LBR",
+                    NumericIsoCode = 430,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Libyan Arab Jamahiriya",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "LY",
+                    ThreeLetterIsoCode = "LBY",
+                    NumericIsoCode = 434,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Liechtenstein",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "LI",
+                    ThreeLetterIsoCode = "LIE",
+                    NumericIsoCode = 438,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Lithuania",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "LT",
+                    ThreeLetterIsoCode = "LTU",
+                    NumericIsoCode = 440,
+                    SubjectToVat = true,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Luxembourg",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "LU",
+                    ThreeLetterIsoCode = "LUX",
+                    NumericIsoCode = 442,
+                    SubjectToVat = true,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Macau",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "MO",
+                    ThreeLetterIsoCode = "MAC",
+                    NumericIsoCode = 446,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Macedonia",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "MK",
+                    ThreeLetterIsoCode = "MKD",
+                    NumericIsoCode = 807,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Madagascar",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "MG",
+                    ThreeLetterIsoCode = "MDG",
+                    NumericIsoCode = 450,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Malawi",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "MW",
+                    ThreeLetterIsoCode = "MWI",
+                    NumericIsoCode = 454,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Maldives",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "MV",
+                    ThreeLetterIsoCode = "MDV",
+                    NumericIsoCode = 462,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Mali",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "ML",
+                    ThreeLetterIsoCode = "MLI",
+                    NumericIsoCode = 466,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Malta",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "MT",
+                    ThreeLetterIsoCode = "MLT",
+                    NumericIsoCode = 470,
+                    SubjectToVat = true,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Marshall Islands",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "MH",
+                    ThreeLetterIsoCode = "MHL",
+                    NumericIsoCode = 584,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Martinique",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "MQ",
+                    ThreeLetterIsoCode = "MTQ",
+                    NumericIsoCode = 474,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Mauritania",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "MR",
+                    ThreeLetterIsoCode = "MRT",
+                    NumericIsoCode = 478,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Mauritius",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "MU",
+                    ThreeLetterIsoCode = "MUS",
+                    NumericIsoCode = 480,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Mayotte",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "YT",
+                    ThreeLetterIsoCode = "MYT",
+                    NumericIsoCode = 175,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Micronesia",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "FM",
+                    ThreeLetterIsoCode = "FSM",
+                    NumericIsoCode = 583,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Moldova",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "MD",
+                    ThreeLetterIsoCode = "MDA",
+                    NumericIsoCode = 498,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Monaco",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "MC",
+                    ThreeLetterIsoCode = "MCO",
+                    NumericIsoCode = 492,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Mongolia",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "MN",
+                    ThreeLetterIsoCode = "MNG",
+                    NumericIsoCode = 496,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Montenegro",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "ME",
+                    ThreeLetterIsoCode = "MNE",
+                    NumericIsoCode = 499,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Montserrat",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "MS",
+                    ThreeLetterIsoCode = "MSR",
+                    NumericIsoCode = 500,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Morocco",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "MA",
+                    ThreeLetterIsoCode = "MAR",
+                    NumericIsoCode = 504,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Mozambique",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "MZ",
+                    ThreeLetterIsoCode = "MOZ",
+                    NumericIsoCode = 508,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Myanmar",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "MM",
+                    ThreeLetterIsoCode = "MMR",
+                    NumericIsoCode = 104,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Namibia",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "NA",
+                    ThreeLetterIsoCode = "NAM",
+                    NumericIsoCode = 516,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Nauru",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "NR",
+                    ThreeLetterIsoCode = "NRU",
+                    NumericIsoCode = 520,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Nepal",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "NP",
+                    ThreeLetterIsoCode = "NPL",
+                    NumericIsoCode = 524,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Netherlands Antilles",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "AN",
+                    ThreeLetterIsoCode = "ANT",
+                    NumericIsoCode = 530,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "New Caledonia",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "NC",
+                    ThreeLetterIsoCode = "NCL",
+                    NumericIsoCode = 540,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Nicaragua",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "NI",
+                    ThreeLetterIsoCode = "NIC",
+                    NumericIsoCode = 558,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Niger",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "NE",
+                    ThreeLetterIsoCode = "NER",
+                    NumericIsoCode = 562,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Nigeria",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "NG",
+                    ThreeLetterIsoCode = "NGA",
+                    NumericIsoCode = 566,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Niue",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "NU",
+                    ThreeLetterIsoCode = "NIU",
+                    NumericIsoCode = 570,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Norfolk Island",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "NF",
+                    ThreeLetterIsoCode = "NFK",
+                    NumericIsoCode = 574,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Northern Mariana Islands",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "MP",
+                    ThreeLetterIsoCode = "MNP",
+                    NumericIsoCode = 580,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Oman",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "OM",
+                    ThreeLetterIsoCode = "OMN",
+                    NumericIsoCode = 512,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Palau",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "PW",
+                    ThreeLetterIsoCode = "PLW",
+                    NumericIsoCode = 585,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Panama",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "PA",
+                    ThreeLetterIsoCode = "PAN",
+                    NumericIsoCode = 591,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Papua New Guinea",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "PG",
+                    ThreeLetterIsoCode = "PNG",
+                    NumericIsoCode = 598,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Pitcairn",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "PN",
+                    ThreeLetterIsoCode = "PCN",
+                    NumericIsoCode = 612,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Reunion",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "RE",
+                    ThreeLetterIsoCode = "REU",
+                    NumericIsoCode = 638,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Rwanda",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "RW",
+                    ThreeLetterIsoCode = "RWA",
+                    NumericIsoCode = 646,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Saint Kitts and Nevis",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "KN",
+                    ThreeLetterIsoCode = "KNA",
+                    NumericIsoCode = 659,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Saint Lucia",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "LC",
+                    ThreeLetterIsoCode = "LCA",
+                    NumericIsoCode = 662,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Saint Vincent and the Grenadines",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "VC",
+                    ThreeLetterIsoCode = "VCT",
+                    NumericIsoCode = 670,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Samoa",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "WS",
+                    ThreeLetterIsoCode = "WSM",
+                    NumericIsoCode = 882,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "San Marino",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "SM",
+                    ThreeLetterIsoCode = "SMR",
+                    NumericIsoCode = 674,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Sao Tome and Principe",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "ST",
+                    ThreeLetterIsoCode = "STP",
+                    NumericIsoCode = 678,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Senegal",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "SN",
+                    ThreeLetterIsoCode = "SEN",
+                    NumericIsoCode = 686,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Seychelles",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "SC",
+                    ThreeLetterIsoCode = "SYC",
+                    NumericIsoCode = 690,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Sierra Leone",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "SL",
+                    ThreeLetterIsoCode = "SLE",
+                    NumericIsoCode = 694,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Solomon Islands",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "SB",
+                    ThreeLetterIsoCode = "SLB",
+                    NumericIsoCode = 90,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Somalia",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "SO",
+                    ThreeLetterIsoCode = "SOM",
+                    NumericIsoCode = 706,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "South Georgia & South Sandwich Islands",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "GS",
+                    ThreeLetterIsoCode = "SGS",
+                    NumericIsoCode = 239,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "South Sudan",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "SS",
+                    ThreeLetterIsoCode = "SSD",
+                    NumericIsoCode = 728,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Sri Lanka",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "LK",
+                    ThreeLetterIsoCode = "LKA",
+                    NumericIsoCode = 144,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "St. Helena",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "SH",
+                    ThreeLetterIsoCode = "SHN",
+                    NumericIsoCode = 654,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "St. Pierre and Miquelon",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "PM",
+                    ThreeLetterIsoCode = "SPM",
+                    NumericIsoCode = 666,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Sudan",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "SD",
+                    ThreeLetterIsoCode = "SDN",
+                    NumericIsoCode = 736,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Suriname",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "SR",
+                    ThreeLetterIsoCode = "SUR",
+                    NumericIsoCode = 740,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Svalbard and Jan Mayen Islands",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "SJ",
+                    ThreeLetterIsoCode = "SJM",
+                    NumericIsoCode = 744,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Swaziland",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "SZ",
+                    ThreeLetterIsoCode = "SWZ",
+                    NumericIsoCode = 748,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Syrian Arab Republic",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "SY",
+                    ThreeLetterIsoCode = "SYR",
+                    NumericIsoCode = 760,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Tajikistan",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "TJ",
+                    ThreeLetterIsoCode = "TJK",
+                    NumericIsoCode = 762,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Tanzania",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "TZ",
+                    ThreeLetterIsoCode = "TZA",
+                    NumericIsoCode = 834,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Togo",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "TG",
+                    ThreeLetterIsoCode = "TGO",
+                    NumericIsoCode = 768,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Tokelau",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "TK",
+                    ThreeLetterIsoCode = "TKL",
+                    NumericIsoCode = 772,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Tonga",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "TO",
+                    ThreeLetterIsoCode = "TON",
+                    NumericIsoCode = 776,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Trinidad and Tobago",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "TT",
+                    ThreeLetterIsoCode = "TTO",
+                    NumericIsoCode = 780,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Tunisia",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "TN",
+                    ThreeLetterIsoCode = "TUN",
+                    NumericIsoCode = 788,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Turkmenistan",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "TM",
+                    ThreeLetterIsoCode = "TKM",
+                    NumericIsoCode = 795,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Turks and Caicos Islands",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "TC",
+                    ThreeLetterIsoCode = "TCA",
+                    NumericIsoCode = 796,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Tuvalu",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "TV",
+                    ThreeLetterIsoCode = "TUV",
+                    NumericIsoCode = 798,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Uganda",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "UG",
+                    ThreeLetterIsoCode = "UGA",
+                    NumericIsoCode = 800,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Vanuatu",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "VU",
+                    ThreeLetterIsoCode = "VUT",
+                    NumericIsoCode = 548,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Vatican City State (Holy See)",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "VA",
+                    ThreeLetterIsoCode = "VAT",
+                    NumericIsoCode = 336,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Viet Nam",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "VN",
+                    ThreeLetterIsoCode = "VNM",
+                    NumericIsoCode = 704,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Virgin Islands (British)",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "VG",
+                    ThreeLetterIsoCode = "VGB",
+                    NumericIsoCode = 92,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Virgin Islands (U.S.)",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "VI",
+                    ThreeLetterIsoCode = "VIR",
+                    NumericIsoCode = 850,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Wallis and Futuna Islands",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "WF",
+                    ThreeLetterIsoCode = "WLF",
+                    NumericIsoCode = 876,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Western Sahara",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "EH",
+                    ThreeLetterIsoCode = "ESH",
+                    NumericIsoCode = 732,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Yemen",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "YE",
+                    ThreeLetterIsoCode = "YEM",
+                    NumericIsoCode = 887,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Zambia",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "ZM",
+                    ThreeLetterIsoCode = "ZMB",
+                    NumericIsoCode = 894,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Zimbabwe",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "ZW",
+                    ThreeLetterIsoCode = "ZWE",
+                    NumericIsoCode = 716,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+            };
             _countryRepository.Insert(countries);
         }
 
         protected virtual void InstallShippingMethods()
         {
             var shippingMethods = new List<ShippingMethod>
-                                {
-                                    new ShippingMethod
-                                        {
-                                            Name = "Ground",
-                                            Description ="Compared to other shipping methods, ground shipping is carried out closer to the earth",
-                                            DisplayOrder = 1
-                                        },
-                                    new ShippingMethod
-                                        {
-                                            Name = "Next Day Air",
-                                            Description ="The one day air shipping",
-                                            DisplayOrder = 3
-                                        },
-                                    new ShippingMethod
-                                        {
-                                            Name = "2nd Day Air",
-                                            Description ="The two day air shipping",
-                                            DisplayOrder = 3
-                                        }
-                                };
+            {
+                new ShippingMethod
+                {
+                    Name = "Ground",
+                    Description =
+                        "Compared to other shipping methods, ground shipping is carried out closer to the earth",
+                    DisplayOrder = 1
+                },
+                new ShippingMethod
+                {
+                    Name = "Next Day Air",
+                    Description = "The one day air shipping",
+                    DisplayOrder = 2
+                },
+                new ShippingMethod
+                {
+                    Name = "2nd Day Air",
+                    Description = "The two day air shipping",
+                    DisplayOrder = 3
+                }
+            };
             _shippingMethodRepository.Insert(shippingMethods);
         }
 
         protected virtual void InstallDeliveryDates()
         {
             var deliveryDates = new List<DeliveryDate>
-                                {
-                                    new DeliveryDate
-                                        {
-                                            Name = "1-2 days",
-                                            DisplayOrder = 1
-                                        },
-                                    new DeliveryDate
-                                        {
-                                            Name = "3-5 days",
-                                            DisplayOrder = 5
-                                        },
-                                    new DeliveryDate
-                                        {
-                                            Name = "1 week",
-                                            DisplayOrder = 10
-                                        },
-                                };
+            {
+                new DeliveryDate
+                {
+                    Name = "1-2 days",
+                    DisplayOrder = 1
+                },
+                new DeliveryDate
+                {
+                    Name = "3-5 days",
+                    DisplayOrder = 5
+                },
+                new DeliveryDate
+                {
+                    Name = "1 week",
+                    DisplayOrder = 10
+                },
+            };
             _deliveryDateRepository.Insert(deliveryDates);
+        }
+
+        protected virtual void InstallProductAvailabilityRanges()
+        {
+            var productAvailabilityRanges = new List<ProductAvailabilityRange>
+            {
+                new ProductAvailabilityRange
+                {
+                    Name = "2-4 days",
+                    DisplayOrder = 1
+                },
+                new ProductAvailabilityRange
+                {
+                    Name = "7-10 days",
+                    DisplayOrder = 2
+                },
+                new ProductAvailabilityRange
+                {
+                    Name = "2 week",
+                    DisplayOrder = 3
+                },
+            };
+            _productAvailabilityRangeRepository.Insert(productAvailabilityRanges);
         }
 
         protected virtual void InstallCustomersAndUsers(string defaultUserEmail, string defaultUserPassword)
@@ -3955,14 +4099,22 @@ namespace Nop.Services.Installation
                 SystemName = SystemCustomerRoleNames.Vendors,
             };
             var customerRoles = new List<CustomerRole>
-                                {
-                                    crAdministrators,
-                                    crForumModerators,
-                                    crRegistered,
-                                    crGuests,
-                                    crVendors
-                                };
+            {
+                crAdministrators,
+                crForumModerators,
+                crRegistered,
+                crGuests,
+                crVendors
+            };
             _customerRoleRepository.Insert(customerRoles);
+
+            //default store 
+            var defaultStore = _storeRepository.Table.FirstOrDefault();
+
+            if (defaultStore == null)
+                throw new Exception("No default store could be loaded");
+
+            var storeId = defaultStore.Id;
 
             //admin user
             var adminUser = new Customer
@@ -3970,21 +4122,20 @@ namespace Nop.Services.Installation
                 CustomerGuid = Guid.NewGuid(),
                 Email = defaultUserEmail,
                 Username = defaultUserEmail,
-                Password = defaultUserPassword,
-                PasswordFormat = PasswordFormat.Clear,
-                PasswordSalt = "",
                 Active = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 LastActivityDateUtc = DateTime.UtcNow,
+                RegisteredInStoreId = storeId
             };
+
             var defaultAdminUserAddress = new Address
             {
                 FirstName = "John",
                 LastName = "Smith",
                 PhoneNumber = "12345678",
-                Email = "admin@yourStore.com",
+                Email = defaultUserEmail,
                 FaxNumber = "",
-                Company = "Nop Solutions",
+                Company = "Nop Solutions Ltd",
                 Address1 = "21 West 52nd Street",
                 Address2 = "",
                 City = "New York",
@@ -3996,27 +4147,276 @@ namespace Nop.Services.Installation
             adminUser.Addresses.Add(defaultAdminUserAddress);
             adminUser.BillingAddress = defaultAdminUserAddress;
             adminUser.ShippingAddress = defaultAdminUserAddress;
+
             adminUser.CustomerRoles.Add(crAdministrators);
             adminUser.CustomerRoles.Add(crForumModerators);
             adminUser.CustomerRoles.Add(crRegistered);
+
             _customerRepository.Insert(adminUser);
             //set default customer name
             _genericAttributeService.SaveAttribute(adminUser, SystemCustomerAttributeNames.FirstName, "John");
             _genericAttributeService.SaveAttribute(adminUser, SystemCustomerAttributeNames.LastName, "Smith");
 
+            //set hashed admin password
+            var customerRegistrationService = EngineContext.Current.Resolve<ICustomerRegistrationService>();
+            customerRegistrationService.ChangePassword(new ChangePasswordRequest(defaultUserEmail, false,
+                 PasswordFormat.Hashed, defaultUserPassword));
+
+            //second user
+            var secondUserEmail = "steve_gates@nopCommerce.com";
+            var secondUser = new Customer
+            {
+                CustomerGuid = Guid.NewGuid(),
+                Email = secondUserEmail,
+                Username = secondUserEmail,
+                Active = true,
+                CreatedOnUtc = DateTime.UtcNow,
+                LastActivityDateUtc = DateTime.UtcNow,
+                RegisteredInStoreId = storeId
+            };
+            var defaultSecondUserAddress = new Address
+            {
+                FirstName = "Steve",
+                LastName = "Gates",
+                PhoneNumber = "87654321",
+                Email = secondUserEmail,
+                FaxNumber = "",
+                Company = "Steve Company",
+                Address1 = "750 Bel Air Rd.",
+                Address2 = "",
+                City = "Los Angeles",
+                StateProvince = _stateProvinceRepository.Table.FirstOrDefault(sp => sp.Name == "California"),
+                Country = _countryRepository.Table.FirstOrDefault(c => c.ThreeLetterIsoCode == "USA"),
+                ZipPostalCode = "90077",
+                CreatedOnUtc = DateTime.UtcNow,
+            };
+            secondUser.Addresses.Add(defaultSecondUserAddress);
+            secondUser.BillingAddress = defaultSecondUserAddress;
+            secondUser.ShippingAddress = defaultSecondUserAddress;
+
+            secondUser.CustomerRoles.Add(crRegistered);
+
+            _customerRepository.Insert(secondUser);
+            //set default customer name
+            _genericAttributeService.SaveAttribute(secondUser, SystemCustomerAttributeNames.FirstName, defaultSecondUserAddress.FirstName);
+            _genericAttributeService.SaveAttribute(secondUser, SystemCustomerAttributeNames.LastName, defaultSecondUserAddress.LastName);
+
+            //set customer password
+            _customerPasswordRepository.Insert(new CustomerPassword
+            {
+                Customer = secondUser,
+                Password = "123456",
+                PasswordFormat = PasswordFormat.Clear,
+                PasswordSalt = string.Empty,
+                CreatedOnUtc = DateTime.UtcNow
+            });
+
+            //third user
+            var thirdUserEmail = "arthur_holmes@nopCommerce.com";
+            var thirdUser = new Customer
+            {
+                CustomerGuid = Guid.NewGuid(),
+                Email = thirdUserEmail,
+                Username = thirdUserEmail,
+                Active = true,
+                CreatedOnUtc = DateTime.UtcNow,
+                LastActivityDateUtc = DateTime.UtcNow,
+                RegisteredInStoreId = storeId
+            };
+            var defaultThirdUserAddress = new Address
+            {
+                FirstName = "Arthur",
+                LastName = "Holmes",
+                PhoneNumber = "111222333",
+                Email = thirdUserEmail,
+                FaxNumber = "",
+                Company = "Holmes Company",
+                Address1 = "221B Baker Street",
+                Address2 = "",
+                City = "London",
+                Country = _countryRepository.Table.FirstOrDefault(c => c.ThreeLetterIsoCode == "GBR"),
+                ZipPostalCode = "NW1 6XE",
+                CreatedOnUtc = DateTime.UtcNow,
+            };
+            thirdUser.Addresses.Add(defaultThirdUserAddress);
+            thirdUser.BillingAddress = defaultThirdUserAddress;
+            thirdUser.ShippingAddress = defaultThirdUserAddress;
+
+            thirdUser.CustomerRoles.Add(crRegistered);
+
+            _customerRepository.Insert(thirdUser);
+            //set default customer name
+            _genericAttributeService.SaveAttribute(thirdUser, SystemCustomerAttributeNames.FirstName, defaultThirdUserAddress.FirstName);
+            _genericAttributeService.SaveAttribute(thirdUser, SystemCustomerAttributeNames.LastName, defaultThirdUserAddress.LastName);
+
+            //set customer password
+            _customerPasswordRepository.Insert(new CustomerPassword
+            {
+                Customer = thirdUser,
+                Password = "123456",
+                PasswordFormat = PasswordFormat.Clear,
+                PasswordSalt = string.Empty,
+                CreatedOnUtc = DateTime.UtcNow
+            });
+
+            //fourth user
+            var fourthUserEmail = "james_pan@nopCommerce.com";
+            var fourthUser = new Customer
+            {
+                CustomerGuid = Guid.NewGuid(),
+                Email = fourthUserEmail,
+                Username = fourthUserEmail,
+                Active = true,
+                CreatedOnUtc = DateTime.UtcNow,
+                LastActivityDateUtc = DateTime.UtcNow,
+                RegisteredInStoreId = storeId
+            };
+            var defaultFourthUserAddress = new Address
+            {
+                FirstName = "James",
+                LastName = "Pan",
+                PhoneNumber = "369258147",
+                Email = fourthUserEmail,
+                FaxNumber = "",
+                Company = "Pan Company",
+                Address1 = "St Katharine’s West 16",
+                Address2 = "",
+                City = "St Andrews",
+                Country = _countryRepository.Table.FirstOrDefault(c => c.ThreeLetterIsoCode == "GBR"),
+                ZipPostalCode = "KY16 9AX",
+                CreatedOnUtc = DateTime.UtcNow,
+            };
+            fourthUser.Addresses.Add(defaultFourthUserAddress);
+            fourthUser.BillingAddress = defaultFourthUserAddress;
+            fourthUser.ShippingAddress = defaultFourthUserAddress;
+
+            fourthUser.CustomerRoles.Add(crRegistered);
+
+            _customerRepository.Insert(fourthUser);
+            //set default customer name
+            _genericAttributeService.SaveAttribute(fourthUser, SystemCustomerAttributeNames.FirstName, defaultFourthUserAddress.FirstName);
+            _genericAttributeService.SaveAttribute(fourthUser, SystemCustomerAttributeNames.LastName, defaultFourthUserAddress.LastName);
+
+            //set customer password
+            _customerPasswordRepository.Insert(new CustomerPassword
+            {
+                Customer = fourthUser,
+                Password = "123456",
+                PasswordFormat = PasswordFormat.Clear,
+                PasswordSalt = string.Empty,
+                CreatedOnUtc = DateTime.UtcNow
+            });
+
+            //fifth user
+            var fifthUserEmail = "brenda_lindgren@nopCommerce.com";
+            var fifthUser = new Customer
+            {
+                CustomerGuid = Guid.NewGuid(),
+                Email = fifthUserEmail,
+                Username = fifthUserEmail,
+                Active = true,
+                CreatedOnUtc = DateTime.UtcNow,
+                LastActivityDateUtc = DateTime.UtcNow,
+                RegisteredInStoreId = storeId
+            };
+            var defaultFifthUserAddress = new Address
+            {
+                FirstName = "Brenda",
+                LastName = "Lindgren",
+                PhoneNumber = "14785236",
+                Email = fifthUserEmail,
+                FaxNumber = "",
+                Company = "Brenda Company",
+                Address1 = "1249 Tongass Avenue, Suite B",
+                Address2 = "",
+                City = "Ketchikan",
+                StateProvince = _stateProvinceRepository.Table.FirstOrDefault(sp => sp.Name == "Alaska"),
+                Country = _countryRepository.Table.FirstOrDefault(c => c.ThreeLetterIsoCode == "USA"),
+                ZipPostalCode = "99901",
+                CreatedOnUtc = DateTime.UtcNow,
+            };
+            fifthUser.Addresses.Add(defaultFifthUserAddress);
+            fifthUser.BillingAddress = defaultFifthUserAddress;
+            fifthUser.ShippingAddress = defaultFifthUserAddress;
+
+            fifthUser.CustomerRoles.Add(crRegistered);
+
+            _customerRepository.Insert(fifthUser);
+            //set default customer name
+            _genericAttributeService.SaveAttribute(fifthUser, SystemCustomerAttributeNames.FirstName, defaultFifthUserAddress.FirstName);
+            _genericAttributeService.SaveAttribute(fifthUser, SystemCustomerAttributeNames.LastName, defaultFifthUserAddress.LastName);
+
+            //set customer password
+            _customerPasswordRepository.Insert(new CustomerPassword
+            {
+                Customer = fifthUser,
+                Password = "123456",
+                PasswordFormat = PasswordFormat.Clear,
+                PasswordSalt = string.Empty,
+                CreatedOnUtc = DateTime.UtcNow
+            });
+
+            //sixth user
+            var sixthUserEmail = "victoria_victoria@nopCommerce.com";
+            var sixthUser = new Customer
+            {
+                CustomerGuid = Guid.NewGuid(),
+                Email = sixthUserEmail,
+                Username = sixthUserEmail,
+                Active = true,
+                CreatedOnUtc = DateTime.UtcNow,
+                LastActivityDateUtc = DateTime.UtcNow,
+                RegisteredInStoreId = storeId
+            };
+            var defaultSixthUserAddress = new Address
+            {
+                FirstName = "Victoria",
+                LastName = "Terces",
+                PhoneNumber = "45612378",
+                Email = sixthUserEmail,
+                FaxNumber = "",
+                Company = "Terces Company",
+                Address1 = "201 1st Avenue South",
+                Address2 = "",
+                City = "Saskatoon",
+                StateProvince = _stateProvinceRepository.Table.FirstOrDefault(sp => sp.Name == "Saskatchewan"),
+                Country = _countryRepository.Table.FirstOrDefault(c => c.ThreeLetterIsoCode == "CAN"),
+                ZipPostalCode = "S7K 1J9",
+                CreatedOnUtc = DateTime.UtcNow,
+            };
+            sixthUser.Addresses.Add(defaultSixthUserAddress);
+            sixthUser.BillingAddress = defaultSixthUserAddress;
+            sixthUser.ShippingAddress = defaultSixthUserAddress;
+
+            sixthUser.CustomerRoles.Add(crRegistered);
+
+            _customerRepository.Insert(sixthUser);
+            //set default customer name
+            _genericAttributeService.SaveAttribute(sixthUser, SystemCustomerAttributeNames.FirstName, defaultSixthUserAddress.FirstName);
+            _genericAttributeService.SaveAttribute(sixthUser, SystemCustomerAttributeNames.LastName, defaultSixthUserAddress.LastName);
+
+            //set customer password
+            _customerPasswordRepository.Insert(new CustomerPassword
+            {
+                Customer = sixthUser,
+                Password = "123456",
+                PasswordFormat = PasswordFormat.Clear,
+                PasswordSalt = string.Empty,
+                CreatedOnUtc = DateTime.UtcNow
+            });
 
             //search engine (crawler) built-in user
             var searchEngineUser = new Customer
             {
                 Email = "builtin@search_engine_record.com",
                 CustomerGuid = Guid.NewGuid(),
-                PasswordFormat = PasswordFormat.Clear,
                 AdminComment = "Built-in system guest record used for requests from search engines.",
                 Active = true,
                 IsSystemAccount = true,
                 SystemName = SystemCustomerNames.SearchEngine,
                 CreatedOnUtc = DateTime.UtcNow,
                 LastActivityDateUtc = DateTime.UtcNow,
+                RegisteredInStoreId = storeId
             };
             searchEngineUser.CustomerRoles.Add(crGuests);
             _customerRepository.Insert(searchEngineUser);
@@ -4027,41 +4427,908 @@ namespace Nop.Services.Installation
             {
                 Email = "builtin@background-task-record.com",
                 CustomerGuid = Guid.NewGuid(),
-                PasswordFormat = PasswordFormat.Clear,
                 AdminComment = "Built-in system record used for background tasks.",
                 Active = true,
                 IsSystemAccount = true,
                 SystemName = SystemCustomerNames.BackgroundTask,
                 CreatedOnUtc = DateTime.UtcNow,
                 LastActivityDateUtc = DateTime.UtcNow,
+                RegisteredInStoreId = storeId
             };
             backgroundTaskUser.CustomerRoles.Add(crGuests);
             _customerRepository.Insert(backgroundTaskUser);
         }
 
-        protected virtual void HashDefaultCustomerPassword(string defaultUserEmail, string defaultUserPassword)
+        protected virtual void InstallOrders()
         {
-            var customerRegistrationService = EngineContext.Current.Resolve<ICustomerRegistrationService>();
-            customerRegistrationService.ChangePassword(new ChangePasswordRequest(defaultUserEmail, false,
-                 PasswordFormat.Hashed, defaultUserPassword));
+            //default store
+            var defaultStore = _storeRepository.Table.FirstOrDefault();
+            if (defaultStore == null)
+                throw new Exception("No default store could be loaded");
+
+            //first order
+            var firstCustomer = _customerRepository.Table.First(c => c.Email.Equals("steve_gates@nopCommerce.com"));
+            var firstOrder = new Order()
+            {
+                StoreId = defaultStore.Id,
+                OrderGuid = Guid.NewGuid(),
+                Customer = firstCustomer,
+                CustomerLanguageId = _languageRepository.Table.First().Id,
+                CustomerIp = "127.0.0.1",
+                OrderSubtotalInclTax = 1855M,
+                OrderSubtotalExclTax = 1855M,
+                OrderSubTotalDiscountInclTax = decimal.Zero,
+                OrderSubTotalDiscountExclTax = decimal.Zero,
+                OrderShippingInclTax = decimal.Zero,
+                OrderShippingExclTax = decimal.Zero,
+                PaymentMethodAdditionalFeeInclTax = decimal.Zero,
+                PaymentMethodAdditionalFeeExclTax = decimal.Zero,
+                TaxRates = "0:0;",
+                OrderTax = decimal.Zero,
+                OrderTotal = 1855M,
+                RefundedAmount = decimal.Zero,
+                OrderDiscount = decimal.Zero,
+                CheckoutAttributeDescription = string.Empty,
+                CheckoutAttributesXml = string.Empty,
+                CustomerCurrencyCode = "USD",
+                CurrencyRate = 1M,
+                AffiliateId = 0,
+                OrderStatus = OrderStatus.Processing,
+                AllowStoringCreditCardNumber = false,
+                CardType = string.Empty,
+                CardName = string.Empty,
+                CardNumber = string.Empty,
+                MaskedCreditCardNumber = string.Empty,
+                CardCvv2 = string.Empty,
+                CardExpirationMonth = string.Empty,
+                CardExpirationYear = string.Empty,
+                PaymentMethodSystemName = "Payments.CheckMoneyOrder",
+                AuthorizationTransactionId = string.Empty,
+                AuthorizationTransactionCode = string.Empty,
+                AuthorizationTransactionResult = string.Empty,
+                CaptureTransactionId = string.Empty,
+                CaptureTransactionResult = string.Empty,
+                SubscriptionTransactionId = string.Empty,
+                PaymentStatus = PaymentStatus.Paid,
+                PaidDateUtc = DateTime.UtcNow,
+                BillingAddress = (Address)firstCustomer.BillingAddress.Clone(),
+                ShippingAddress = (Address)firstCustomer.ShippingAddress.Clone(),
+                ShippingStatus = ShippingStatus.NotYetShipped,
+                ShippingMethod = "Ground",
+                PickUpInStore = false,
+                ShippingRateComputationMethodSystemName = "Shipping.FixedByWeightByTotal",
+                CustomValuesXml = string.Empty,
+                VatNumber = string.Empty,
+                CreatedOnUtc = DateTime.UtcNow,
+                CustomOrderNumber = string.Empty
+            };
+            _orderRepository.Insert(firstOrder);
+            firstOrder.CustomOrderNumber = firstOrder.Id.ToString();
+            _orderRepository.Update(firstOrder);
+
+            //item Apple iCam
+            var firstOrderItem1 = new OrderItem()
+            {
+                OrderItemGuid = Guid.NewGuid(),
+                Order = firstOrder,
+                ProductId = _productRepository.Table.First(p => p.Name.Equals("Apple iCam")).Id,
+                UnitPriceInclTax = 1300M,
+                UnitPriceExclTax = 1300M,
+                PriceInclTax = 1300M,
+                PriceExclTax = 1300M,
+                OriginalProductCost = decimal.Zero,
+                AttributeDescription = string.Empty,
+                AttributesXml = string.Empty,
+                Quantity = 1,
+                DiscountAmountInclTax = decimal.Zero,
+                DiscountAmountExclTax = decimal.Zero,
+                DownloadCount = 0,
+                IsDownloadActivated = false,
+                LicenseDownloadId = 0,
+                ItemWeight = null,
+                RentalStartDateUtc = null,
+                RentalEndDateUtc = null
+            };
+            _orderItemRepository.Insert(firstOrderItem1);
+
+            //item Leica T Mirrorless Digital Camera
+            var fierstOrderItem2 = new OrderItem()
+            {
+                OrderItemGuid = Guid.NewGuid(),
+                Order = firstOrder,
+                ProductId = _productRepository.Table.First(p => p.Name.Equals("Leica T Mirrorless Digital Camera")).Id,
+                UnitPriceInclTax = 530M,
+                UnitPriceExclTax = 530M,
+                PriceInclTax = 530M,
+                PriceExclTax = 530M,
+                OriginalProductCost = decimal.Zero,
+                AttributeDescription = string.Empty,
+                AttributesXml = string.Empty,
+                Quantity = 1,
+                DiscountAmountInclTax = decimal.Zero,
+                DiscountAmountExclTax = decimal.Zero,
+                DownloadCount = 0,
+                IsDownloadActivated = false,
+                LicenseDownloadId = 0,
+                ItemWeight = null,
+                RentalStartDateUtc = null,
+                RentalEndDateUtc = null
+            };
+            _orderItemRepository.Insert(fierstOrderItem2);
+
+            //item $25 Virtual Gift Card
+            var firstOrderItem3 = new OrderItem()
+            {
+                OrderItemGuid = Guid.NewGuid(),
+                Order = firstOrder,
+                ProductId = _productRepository.Table.First(p => p.Name.Equals("$25 Virtual Gift Card")).Id,
+                UnitPriceInclTax = 25M,
+                UnitPriceExclTax = 25M,
+                PriceInclTax = 25M,
+                PriceExclTax = 25M,
+                OriginalProductCost = decimal.Zero,
+                AttributeDescription = "From: Steve Gates &lt;steve_gates@nopCommerce.com&gt;<br />For: Brenda Lindgren &lt;brenda_lindgren@nopCommerce.com&gt;",
+                AttributesXml = "<Attributes><GiftCardInfo><RecipientName>Brenda Lindgren</RecipientName><RecipientEmail>brenda_lindgren@nopCommerce.com</RecipientEmail><SenderName>Steve Gates</SenderName><SenderEmail>steve_gates@gmail.com</SenderEmail><Message></Message></GiftCardInfo></Attributes>",
+                Quantity = 1,
+                DiscountAmountInclTax = decimal.Zero,
+                DiscountAmountExclTax = decimal.Zero,
+                DownloadCount = 0,
+                IsDownloadActivated = false,
+                LicenseDownloadId = 0,
+                ItemWeight = null,
+                RentalStartDateUtc = null,
+                RentalEndDateUtc = null
+            };
+            _orderItemRepository.Insert(firstOrderItem3);
+
+            var firstOrderGiftcard = new GiftCard
+            {
+                GiftCardType = GiftCardType.Virtual,
+                PurchasedWithOrderItem = firstOrderItem3,
+                Amount = 25M,
+                IsGiftCardActivated = false,
+                GiftCardCouponCode = string.Empty,
+                RecipientName = "Brenda Lindgren",
+                RecipientEmail = "brenda_lindgren@nopCommerce.com",
+                SenderName = "Steve Gates",
+                SenderEmail = "steve_gates@nopCommerce.com",
+                Message = string.Empty,
+                IsRecipientNotified = false,
+                CreatedOnUtc = DateTime.UtcNow
+            };
+            _giftCardRepository.Insert(firstOrderGiftcard);
+
+            //order notes
+            _orderNoteRepository.Insert(new OrderNote()
+            {
+                CreatedOnUtc = DateTime.UtcNow,
+                Note = "Order placed",
+                Order = firstOrder
+            });
+            _orderNoteRepository.Insert(new OrderNote()
+            {
+                CreatedOnUtc = DateTime.UtcNow,
+                Note = "Order paid",
+                Order = firstOrder
+            });
+
+
+            //second order
+            var secondCustomer = _customerRepository.Table.First(c => c.Email.Equals("arthur_holmes@nopCommerce.com"));
+            var secondOrder = new Order()
+            {
+                StoreId = defaultStore.Id,
+                OrderGuid = Guid.NewGuid(),
+                Customer = secondCustomer,
+                CustomerLanguageId = _languageRepository.Table.First().Id,
+                CustomerIp = "127.0.0.1",
+                OrderSubtotalInclTax = 2460M,
+                OrderSubtotalExclTax = 2460M,
+                OrderSubTotalDiscountInclTax = decimal.Zero,
+                OrderSubTotalDiscountExclTax = decimal.Zero,
+                OrderShippingInclTax = decimal.Zero,
+                OrderShippingExclTax = decimal.Zero,
+                PaymentMethodAdditionalFeeInclTax = decimal.Zero,
+                PaymentMethodAdditionalFeeExclTax = decimal.Zero,
+                TaxRates = "0:0;",
+                OrderTax = decimal.Zero,
+                OrderTotal = 2460M,
+                RefundedAmount = decimal.Zero,
+                OrderDiscount = decimal.Zero,
+                CheckoutAttributeDescription = string.Empty,
+                CheckoutAttributesXml = string.Empty,
+                CustomerCurrencyCode = "USD",
+                CurrencyRate = 1M,
+                AffiliateId = 0,
+                OrderStatus = OrderStatus.Pending,
+                AllowStoringCreditCardNumber = false,
+                CardType = string.Empty,
+                CardName = string.Empty,
+                CardNumber = string.Empty,
+                MaskedCreditCardNumber = string.Empty,
+                CardCvv2 = string.Empty,
+                CardExpirationMonth = string.Empty,
+                CardExpirationYear = string.Empty,
+                PaymentMethodSystemName = "Payments.CheckMoneyOrder",
+                AuthorizationTransactionId = string.Empty,
+                AuthorizationTransactionCode = string.Empty,
+                AuthorizationTransactionResult = string.Empty,
+                CaptureTransactionId = string.Empty,
+                CaptureTransactionResult = string.Empty,
+                SubscriptionTransactionId = string.Empty,
+                PaymentStatus = PaymentStatus.Pending,
+                PaidDateUtc = null,
+                BillingAddress = (Address)secondCustomer.BillingAddress.Clone(),
+                ShippingAddress = (Address)secondCustomer.ShippingAddress.Clone(),
+                ShippingStatus = ShippingStatus.NotYetShipped,
+                ShippingMethod = "Next Day Air",
+                PickUpInStore = false,
+                ShippingRateComputationMethodSystemName = "Shipping.FixedByWeightByTotal",
+                CustomValuesXml = string.Empty,
+                VatNumber = string.Empty,
+                CreatedOnUtc = DateTime.UtcNow,
+                CustomOrderNumber = string.Empty
+            };
+            _orderRepository.Insert(secondOrder);
+            secondOrder.CustomOrderNumber = secondOrder.Id.ToString();
+            _orderRepository.Update(secondOrder);
+
+            //order notes
+            _orderNoteRepository.Insert(new OrderNote()
+            {
+                CreatedOnUtc = DateTime.UtcNow,
+                Note = "Order placed",
+                Order = secondOrder
+            });
+
+            //item Vintage Style Engagement Ring
+            var secondOrderItem1 = new OrderItem()
+            {
+                OrderItemGuid = Guid.NewGuid(),
+                Order = secondOrder,
+                ProductId = _productRepository.Table.First(p => p.Name.Equals("Vintage Style Engagement Ring")).Id,
+                UnitPriceInclTax = 2100M,
+                UnitPriceExclTax = 2100M,
+                PriceInclTax = 2100M,
+                PriceExclTax = 2100M,
+                OriginalProductCost = decimal.Zero,
+                AttributeDescription = string.Empty,
+                AttributesXml = string.Empty,
+                Quantity = 1,
+                DiscountAmountInclTax = decimal.Zero,
+                DiscountAmountExclTax = decimal.Zero,
+                DownloadCount = 0,
+                IsDownloadActivated = false,
+                LicenseDownloadId = 0,
+                ItemWeight = null,
+                RentalStartDateUtc = null,
+                RentalEndDateUtc = null
+            };
+            _orderItemRepository.Insert(secondOrderItem1);
+
+            //item Flower Girl Bracelet
+            var secondOrderItem2 = new OrderItem()
+            {
+                OrderItemGuid = Guid.NewGuid(),
+                Order = secondOrder,
+                ProductId = _productRepository.Table.First(p => p.Name.Equals("Flower Girl Bracelet")).Id,
+                UnitPriceInclTax = 360M,
+                UnitPriceExclTax = 360M,
+                PriceInclTax = 360M,
+                PriceExclTax = 360M,
+                OriginalProductCost = decimal.Zero,
+                AttributeDescription = string.Empty,
+                AttributesXml = string.Empty,
+                Quantity = 1,
+                DiscountAmountInclTax = decimal.Zero,
+                DiscountAmountExclTax = decimal.Zero,
+                DownloadCount = 0,
+                IsDownloadActivated = false,
+                LicenseDownloadId = 0,
+                ItemWeight = null,
+                RentalStartDateUtc = null,
+                RentalEndDateUtc = null
+            };
+            _orderItemRepository.Insert(secondOrderItem2);
+
+
+            //third order
+            var thirdCustomer = _customerRepository.Table.First(c => c.Email.Equals("james_pan@nopCommerce.com"));
+            var thirdOrder = new Order()
+            {
+                StoreId = defaultStore.Id,
+                OrderGuid = Guid.NewGuid(),
+                Customer = thirdCustomer,
+                CustomerLanguageId = _languageRepository.Table.First().Id,
+                CustomerIp = "127.0.0.1",
+                OrderSubtotalInclTax = 8.80M,
+                OrderSubtotalExclTax = 8.80M,
+                OrderSubTotalDiscountInclTax = decimal.Zero,
+                OrderSubTotalDiscountExclTax = decimal.Zero,
+                OrderShippingInclTax = decimal.Zero,
+                OrderShippingExclTax = decimal.Zero,
+                PaymentMethodAdditionalFeeInclTax = decimal.Zero,
+                PaymentMethodAdditionalFeeExclTax = decimal.Zero,
+                TaxRates = "0:0;",
+                OrderTax = decimal.Zero,
+                OrderTotal = 8.80M,
+                RefundedAmount = decimal.Zero,
+                OrderDiscount = decimal.Zero,
+                CheckoutAttributeDescription = string.Empty,
+                CheckoutAttributesXml = string.Empty,
+                CustomerCurrencyCode = "USD",
+                CurrencyRate = 1M,
+                AffiliateId = 0,
+                OrderStatus = OrderStatus.Pending,
+                AllowStoringCreditCardNumber = false,
+                CardType = string.Empty,
+                CardName = string.Empty,
+                CardNumber = string.Empty,
+                MaskedCreditCardNumber = string.Empty,
+                CardCvv2 = string.Empty,
+                CardExpirationMonth = string.Empty,
+                CardExpirationYear = string.Empty,
+                PaymentMethodSystemName = "Payments.CheckMoneyOrder",
+                AuthorizationTransactionId = string.Empty,
+                AuthorizationTransactionCode = string.Empty,
+                AuthorizationTransactionResult = string.Empty,
+                CaptureTransactionId = string.Empty,
+                CaptureTransactionResult = string.Empty,
+                SubscriptionTransactionId = string.Empty,
+                PaymentStatus = PaymentStatus.Pending,
+                PaidDateUtc = null,
+                BillingAddress = (Address)thirdCustomer.BillingAddress.Clone(),
+                ShippingAddress = null,
+                ShippingStatus = ShippingStatus.ShippingNotRequired,
+                ShippingMethod = string.Empty,
+                PickUpInStore = false,
+                ShippingRateComputationMethodSystemName = string.Empty,
+                CustomValuesXml = string.Empty,
+                VatNumber = string.Empty,
+                CreatedOnUtc = DateTime.UtcNow,
+                CustomOrderNumber = string.Empty
+            };
+            _orderRepository.Insert(thirdOrder);
+            thirdOrder.CustomOrderNumber = thirdOrder.Id.ToString();
+            _orderRepository.Update(thirdOrder);
+
+            //order notes
+            _orderNoteRepository.Insert(new OrderNote()
+            {
+                CreatedOnUtc = DateTime.UtcNow,
+                Note = "Order placed",
+                Order = thirdOrder
+            });
+
+            //item If You Wait
+            var thirdOrderItem1 = new OrderItem()
+            {
+                OrderItemGuid = Guid.NewGuid(),
+                Order = thirdOrder,
+                ProductId = _productRepository.Table.First(p => p.Name.Equals("If You Wait (donation)")).Id,
+                UnitPriceInclTax = 3M,
+                UnitPriceExclTax = 3M,
+                PriceInclTax = 3M,
+                PriceExclTax = 3M,
+                OriginalProductCost = decimal.Zero,
+                AttributeDescription = string.Empty,
+                AttributesXml = string.Empty,
+                Quantity = 1,
+                DiscountAmountInclTax = decimal.Zero,
+                DiscountAmountExclTax = decimal.Zero,
+                DownloadCount = 0,
+                IsDownloadActivated = false,
+                LicenseDownloadId = 0,
+                ItemWeight = null,
+                RentalStartDateUtc = null,
+                RentalEndDateUtc = null
+            };
+            _orderItemRepository.Insert(thirdOrderItem1);
+
+            //item Night Visions
+            var thirdOrderItem2 = new OrderItem()
+            {
+                OrderItemGuid = Guid.NewGuid(),
+                Order = thirdOrder,
+                ProductId = _productRepository.Table.First(p => p.Name.Equals("Night Visions")).Id,
+                UnitPriceInclTax = 2.8M,
+                UnitPriceExclTax = 2.8M,
+                PriceInclTax = 2.8M,
+                PriceExclTax = 2.8M,
+                OriginalProductCost = decimal.Zero,
+                AttributeDescription = string.Empty,
+                AttributesXml = string.Empty,
+                Quantity = 1,
+                DiscountAmountInclTax = decimal.Zero,
+                DiscountAmountExclTax = decimal.Zero,
+                DownloadCount = 0,
+                IsDownloadActivated = false,
+                LicenseDownloadId = 0,
+                ItemWeight = null,
+                RentalStartDateUtc = null,
+                RentalEndDateUtc = null
+            };
+            _orderItemRepository.Insert(thirdOrderItem2);
+
+            //item Science & Faith
+            var thirdOrderItem3 = new OrderItem()
+            {
+                OrderItemGuid = Guid.NewGuid(),
+                Order = thirdOrder,
+                ProductId = _productRepository.Table.First(p => p.Name.Equals("Science & Faith")).Id,
+                UnitPriceInclTax = 3M,
+                UnitPriceExclTax = 3M,
+                PriceInclTax = 3M,
+                PriceExclTax = 3M,
+                OriginalProductCost = decimal.Zero,
+                AttributeDescription = string.Empty,
+                AttributesXml = string.Empty,
+                Quantity = 1,
+                DiscountAmountInclTax = decimal.Zero,
+                DiscountAmountExclTax = decimal.Zero,
+                DownloadCount = 0,
+                IsDownloadActivated = false,
+                LicenseDownloadId = 0,
+                ItemWeight = null,
+                RentalStartDateUtc = null,
+                RentalEndDateUtc = null
+            };
+            _orderItemRepository.Insert(thirdOrderItem3);
+
+            //fourth order
+            var fourthCustomer = _customerRepository.Table.First(c => c.Email.Equals("brenda_lindgren@nopCommerce.com"));
+            var fourthOrder = new Order()
+            {
+                StoreId = defaultStore.Id,
+                OrderGuid = Guid.NewGuid(),
+                Customer = fourthCustomer,
+                CustomerLanguageId = _languageRepository.Table.First().Id,
+                CustomerIp = "127.0.0.1",
+                OrderSubtotalInclTax = 102M,
+                OrderSubtotalExclTax = 102M,
+                OrderSubTotalDiscountInclTax = decimal.Zero,
+                OrderSubTotalDiscountExclTax = decimal.Zero,
+                OrderShippingInclTax = decimal.Zero,
+                OrderShippingExclTax = decimal.Zero,
+                PaymentMethodAdditionalFeeInclTax = decimal.Zero,
+                PaymentMethodAdditionalFeeExclTax = decimal.Zero,
+                TaxRates = "0:0;",
+                OrderTax = decimal.Zero,
+                OrderTotal = 102M,
+                RefundedAmount = decimal.Zero,
+                OrderDiscount = decimal.Zero,
+                CheckoutAttributeDescription = string.Empty,
+                CheckoutAttributesXml = string.Empty,
+                CustomerCurrencyCode = "USD",
+                CurrencyRate = 1M,
+                AffiliateId = 0,
+                OrderStatus = OrderStatus.Processing,
+                AllowStoringCreditCardNumber = false,
+                CardType = string.Empty,
+                CardName = string.Empty,
+                CardNumber = string.Empty,
+                MaskedCreditCardNumber = string.Empty,
+                CardCvv2 = string.Empty,
+                CardExpirationMonth = string.Empty,
+                CardExpirationYear = string.Empty,
+                PaymentMethodSystemName = "Payments.CheckMoneyOrder",
+                AuthorizationTransactionId = string.Empty,
+                AuthorizationTransactionCode = string.Empty,
+                AuthorizationTransactionResult = string.Empty,
+                CaptureTransactionId = string.Empty,
+                CaptureTransactionResult = string.Empty,
+                SubscriptionTransactionId = string.Empty,
+                PaymentStatus = PaymentStatus.Paid,
+                PaidDateUtc = DateTime.UtcNow,
+                BillingAddress = (Address)fourthCustomer.BillingAddress.Clone(),
+                ShippingAddress = (Address)fourthCustomer.ShippingAddress.Clone(),
+                ShippingStatus = ShippingStatus.Shipped,
+                ShippingMethod = "Pickup in store",
+                PickUpInStore = true,
+                PickupAddress = (Address)fourthCustomer.ShippingAddress.Clone(),
+                ShippingRateComputationMethodSystemName = "Pickup.PickupInStore",
+                CustomValuesXml = string.Empty,
+                VatNumber = string.Empty,
+                CreatedOnUtc = DateTime.UtcNow,
+                CustomOrderNumber = string.Empty
+            };
+            _orderRepository.Insert(fourthOrder);
+            fourthOrder.CustomOrderNumber = fourthOrder.Id.ToString();
+            _orderRepository.Update(fourthOrder);
+
+            //order notes
+            _orderNoteRepository.Insert(new OrderNote()
+            {
+                CreatedOnUtc = DateTime.UtcNow,
+                Note = "Order placed",
+                Order = fourthOrder
+            });
+            _orderNoteRepository.Insert(new OrderNote()
+            {
+                CreatedOnUtc = DateTime.UtcNow,
+                Note = "Order paid",
+                Order = fourthOrder
+            });
+            _orderNoteRepository.Insert(new OrderNote()
+            {
+                CreatedOnUtc = DateTime.UtcNow,
+                Note = "Order shipped",
+                Order = fourthOrder
+            });
+
+            //item Pride and Prejudice
+            var fourthOrderItem1 = new OrderItem()
+            {
+                OrderItemGuid = Guid.NewGuid(),
+                Order = fourthOrder,
+                ProductId = _productRepository.Table.First(p => p.Name.Equals("Pride and Prejudice")).Id,
+                UnitPriceInclTax = 24M,
+                UnitPriceExclTax = 24M,
+                PriceInclTax = 24M,
+                PriceExclTax = 24M,
+                OriginalProductCost = decimal.Zero,
+                AttributeDescription = string.Empty,
+                AttributesXml = string.Empty,
+                Quantity = 1,
+                DiscountAmountInclTax = decimal.Zero,
+                DiscountAmountExclTax = decimal.Zero,
+                DownloadCount = 0,
+                IsDownloadActivated = false,
+                LicenseDownloadId = 0,
+                ItemWeight = null,
+                RentalStartDateUtc = null,
+                RentalEndDateUtc = null
+            };
+            _orderItemRepository.Insert(fourthOrderItem1);
+
+            //item First Prize Pies
+            var fourthOrderItem2 = new OrderItem()
+            {
+                OrderItemGuid = Guid.NewGuid(),
+                Order = fourthOrder,
+                ProductId = _productRepository.Table.First(p => p.Name.Equals("First Prize Pies")).Id,
+                UnitPriceInclTax = 51M,
+                UnitPriceExclTax = 51M,
+                PriceInclTax = 51M,
+                PriceExclTax = 51M,
+                OriginalProductCost = decimal.Zero,
+                AttributeDescription = string.Empty,
+                AttributesXml = string.Empty,
+                Quantity = 1,
+                DiscountAmountInclTax = decimal.Zero,
+                DiscountAmountExclTax = decimal.Zero,
+                DownloadCount = 0,
+                IsDownloadActivated = false,
+                LicenseDownloadId = 0,
+                ItemWeight = null,
+                RentalStartDateUtc = null,
+                RentalEndDateUtc = null
+            };
+            _orderItemRepository.Insert(fourthOrderItem2);
+
+            //item Fahrenheit 451 by Ray Bradbury
+            var fourthOrderItem3 = new OrderItem()
+            {
+                OrderItemGuid = Guid.NewGuid(),
+                Order = fourthOrder,
+                ProductId = _productRepository.Table.First(p => p.Name.Equals("Fahrenheit 451 by Ray Bradbury")).Id,
+                UnitPriceInclTax = 27M,
+                UnitPriceExclTax = 27M,
+                PriceInclTax = 27M,
+                PriceExclTax = 27M,
+                OriginalProductCost = decimal.Zero,
+                AttributeDescription = string.Empty,
+                AttributesXml = string.Empty,
+                Quantity = 1,
+                DiscountAmountInclTax = decimal.Zero,
+                DiscountAmountExclTax = decimal.Zero,
+                DownloadCount = 0,
+                IsDownloadActivated = false,
+                LicenseDownloadId = 0,
+                ItemWeight = null,
+                RentalStartDateUtc = null,
+                RentalEndDateUtc = null
+            };
+            _orderItemRepository.Insert(fourthOrderItem3);
+
+            //shipments
+            //shipment 1
+            var fourthOrderShipment1 = new Shipment
+            {
+                Order = fourthOrder,
+                TrackingNumber = string.Empty,
+                TotalWeight = 4M,
+                ShippedDateUtc = DateTime.UtcNow,
+                DeliveryDateUtc = DateTime.UtcNow,
+                AdminComment = string.Empty,
+                CreatedOnUtc = DateTime.UtcNow
+            };
+            _shipmentRepository.Insert(fourthOrderShipment1);
+
+            var fourthOrderShipment1Item1 = new ShipmentItem()
+            {
+                OrderItemId = fourthOrderItem1.Id,
+                Quantity = 1,
+                WarehouseId = 0,
+                Shipment = fourthOrderShipment1
+            };
+            _shipmentItemRepository.Insert(fourthOrderShipment1Item1);
+
+            var fourthOrderShipment1Item2 = new ShipmentItem()
+            {
+                OrderItemId = fourthOrderItem2.Id,
+                Quantity = 1,
+                WarehouseId = 0,
+                Shipment = fourthOrderShipment1
+            };
+            _shipmentItemRepository.Insert(fourthOrderShipment1Item2);
+
+            //shipment 2
+            var fourthOrderShipment2 = new Shipment
+            {
+                Order = fourthOrder,
+                TrackingNumber = string.Empty,
+                TotalWeight = 2M,
+                ShippedDateUtc = DateTime.UtcNow,
+                DeliveryDateUtc = DateTime.UtcNow,
+                AdminComment = string.Empty,
+                CreatedOnUtc = DateTime.UtcNow
+            };
+            _shipmentRepository.Insert(fourthOrderShipment2);
+
+            var fourthOrderShipment2Item1 = new ShipmentItem()
+            {
+                OrderItemId = fourthOrderItem3.Id,
+                Quantity = 1,
+                WarehouseId = 0,
+                Shipment = fourthOrderShipment2
+            };
+            _shipmentItemRepository.Insert(fourthOrderShipment2Item1);
+
+            //fifth order
+            var fifthCustomer = _customerRepository.Table.First(c => c.Email.Equals("victoria_victoria@nopCommerce.com"));
+            var fifthOrder = new Order()
+            {
+                StoreId = defaultStore.Id,
+                OrderGuid = Guid.NewGuid(),
+                Customer = fifthCustomer,
+                CustomerLanguageId = _languageRepository.Table.First().Id,
+                CustomerIp = "127.0.0.1",
+                OrderSubtotalInclTax = 43.50M,
+                OrderSubtotalExclTax = 43.50M,
+                OrderSubTotalDiscountInclTax = decimal.Zero,
+                OrderSubTotalDiscountExclTax = decimal.Zero,
+                OrderShippingInclTax = decimal.Zero,
+                OrderShippingExclTax = decimal.Zero,
+                PaymentMethodAdditionalFeeInclTax = decimal.Zero,
+                PaymentMethodAdditionalFeeExclTax = decimal.Zero,
+                TaxRates = "0:0;",
+                OrderTax = decimal.Zero,
+                OrderTotal = 43.50M,
+                RefundedAmount = decimal.Zero,
+                OrderDiscount = decimal.Zero,
+                CheckoutAttributeDescription = string.Empty,
+                CheckoutAttributesXml = string.Empty,
+                CustomerCurrencyCode = "USD",
+                CurrencyRate = 1M,
+                AffiliateId = 0,
+                OrderStatus = OrderStatus.Complete,
+                AllowStoringCreditCardNumber = false,
+                CardType = string.Empty,
+                CardName = string.Empty,
+                CardNumber = string.Empty,
+                MaskedCreditCardNumber = string.Empty,
+                CardCvv2 = string.Empty,
+                CardExpirationMonth = string.Empty,
+                CardExpirationYear = string.Empty,
+                PaymentMethodSystemName = "Payments.CheckMoneyOrder",
+                AuthorizationTransactionId = string.Empty,
+                AuthorizationTransactionCode = string.Empty,
+                AuthorizationTransactionResult = string.Empty,
+                CaptureTransactionId = string.Empty,
+                CaptureTransactionResult = string.Empty,
+                SubscriptionTransactionId = string.Empty,
+                PaymentStatus = PaymentStatus.Paid,
+                PaidDateUtc = DateTime.UtcNow,
+                BillingAddress = (Address)fifthCustomer.BillingAddress.Clone(),
+                ShippingAddress = (Address)fifthCustomer.ShippingAddress.Clone(),
+                ShippingStatus = ShippingStatus.Delivered,
+                ShippingMethod = "Ground",
+                PickUpInStore = false,
+                ShippingRateComputationMethodSystemName = "Shipping.FixedByWeightByTotal",
+                CustomValuesXml = string.Empty,
+                VatNumber = string.Empty,
+                CreatedOnUtc = DateTime.UtcNow,
+                CustomOrderNumber = string.Empty
+            };
+            _orderRepository.Insert(fifthOrder);
+            fifthOrder.CustomOrderNumber = fifthOrder.Id.ToString();
+            _orderRepository.Update(fifthOrder);
+
+            //order notes
+            _orderNoteRepository.Insert(new OrderNote()
+            {
+                CreatedOnUtc = DateTime.UtcNow,
+                Note = "Order placed",
+                Order = fifthOrder
+            });
+            _orderNoteRepository.Insert(new OrderNote()
+            {
+                CreatedOnUtc = DateTime.UtcNow,
+                Note = "Order paid",
+                Order = fifthOrder
+            });
+            _orderNoteRepository.Insert(new OrderNote()
+            {
+                CreatedOnUtc = DateTime.UtcNow,
+                Note = "Order shipped",
+                Order = fifthOrder
+            });
+            _orderNoteRepository.Insert(new OrderNote()
+            {
+                CreatedOnUtc = DateTime.UtcNow,
+                Note = "Order delivered",
+                Order = fifthOrder
+            });
+
+            //item Levi's 511 Jeans
+            var fifthOrderItem1 = new OrderItem()
+            {
+                OrderItemGuid = Guid.NewGuid(),
+                Order = fifthOrder,
+                ProductId = _productRepository.Table.First(p => p.Name.Equals("Levi's 511 Jeans")).Id,
+                UnitPriceInclTax = 43.50M,
+                UnitPriceExclTax = 43.50M,
+                PriceInclTax = 43.50M,
+                PriceExclTax = 43.50M,
+                OriginalProductCost = decimal.Zero,
+                AttributeDescription = string.Empty,
+                AttributesXml = string.Empty,
+                Quantity = 1,
+                DiscountAmountInclTax = decimal.Zero,
+                DiscountAmountExclTax = decimal.Zero,
+                DownloadCount = 0,
+                IsDownloadActivated = false,
+                LicenseDownloadId = 0,
+                ItemWeight = null,
+                RentalStartDateUtc = null,
+                RentalEndDateUtc = null
+            };
+            _orderItemRepository.Insert(fifthOrderItem1);
+
+            //shipment 1
+            var fifthOrderShipment1 = new Shipment
+            {
+                Order = fifthOrder,
+                TrackingNumber = string.Empty,
+                TotalWeight = 2M,
+                ShippedDateUtc = DateTime.UtcNow,
+                DeliveryDateUtc = DateTime.UtcNow,
+                AdminComment = string.Empty,
+                CreatedOnUtc = DateTime.UtcNow
+            };
+            _shipmentRepository.Insert(fifthOrderShipment1);
+
+            var fifthOrderShipment1Item1 = new ShipmentItem()
+            {
+                OrderItemId = fifthOrderItem1.Id,
+                Quantity = 1,
+                WarehouseId = 0,
+                Shipment = fifthOrderShipment1
+            };
+            _shipmentItemRepository.Insert(fifthOrderShipment1Item1);
+        }
+
+        protected virtual void InstallActivityLog(string defaultUserEmail)
+        {
+            //default customer/user
+            var defaultCustomer = _customerRepository.Table.FirstOrDefault(x => x.Email == defaultUserEmail);
+            if (defaultCustomer == null)
+                throw new Exception("Cannot load default customer");
+
+            _activityLogRepository.Insert(new ActivityLog()
+            {
+                ActivityLogType = _activityLogTypeRepository.Table.First(alt => alt.SystemKeyword.Equals("EditCategory")),
+                Comment = "Edited a category ('Computers')",
+                CreatedOnUtc = DateTime.UtcNow,
+                Customer = defaultCustomer,
+                IpAddress = "127.0.0.1"
+            });
+            _activityLogRepository.Insert(new ActivityLog()
+            {
+                ActivityLogType = _activityLogTypeRepository.Table.First(alt => alt.SystemKeyword.Equals("EditDiscount")),
+                Comment = "Edited a discount ('Sample discount with coupon code')",
+                CreatedOnUtc = DateTime.UtcNow,
+                Customer = defaultCustomer,
+                IpAddress = "127.0.0.1"
+            });
+            _activityLogRepository.Insert(new ActivityLog()
+            {
+                ActivityLogType = _activityLogTypeRepository.Table.First(alt => alt.SystemKeyword.Equals("EditSpecAttribute")),
+                Comment = "Edited a specification attribute ('CPU Type')",
+                CreatedOnUtc = DateTime.UtcNow,
+                Customer = defaultCustomer,
+                IpAddress = "127.0.0.1"
+            });
+            _activityLogRepository.Insert(new ActivityLog()
+            {
+                ActivityLogType = _activityLogTypeRepository.Table.First(alt => alt.SystemKeyword.Equals("AddNewProductAttribute")),
+                Comment = "Added a new product attribute ('Some attribute')",
+                CreatedOnUtc = DateTime.UtcNow,
+                Customer = defaultCustomer,
+                IpAddress = "127.0.0.1"
+            });
+            _activityLogRepository.Insert(new ActivityLog()
+            {
+                ActivityLogType = _activityLogTypeRepository.Table.First(alt => alt.SystemKeyword.Equals("DeleteGiftCard")),
+                Comment = "Deleted a gift card ('bdbbc0ef-be57')",
+                CreatedOnUtc = DateTime.UtcNow,
+                Customer = defaultCustomer,
+                IpAddress = "127.0.0.1"
+            });
+        }
+
+        protected virtual void InstallSearchTerms()
+        {
+            //default store
+            var defaultStore = _storeRepository.Table.FirstOrDefault();
+            if (defaultStore == null)
+                throw new Exception("No default store could be loaded");
+
+            _searchTermRepository.Insert(new SearchTerm()
+            {
+                Count = 34,
+                Keyword = "computer",
+                StoreId = defaultStore.Id
+            });
+            _searchTermRepository.Insert(new SearchTerm()
+            {
+                Count = 30,
+                Keyword = "camera",
+                StoreId = defaultStore.Id
+            });
+            _searchTermRepository.Insert(new SearchTerm()
+            {
+                Count = 27,
+                Keyword = "jewelry",
+                StoreId = defaultStore.Id
+            });
+            _searchTermRepository.Insert(new SearchTerm()
+            {
+                Count = 26,
+                Keyword = "shoes",
+                StoreId = defaultStore.Id
+            });
+            _searchTermRepository.Insert(new SearchTerm()
+            {
+                Count = 19,
+                Keyword = "jeans",
+                StoreId = defaultStore.Id
+            });
+            _searchTermRepository.Insert(new SearchTerm()
+            {
+                Count = 10,
+                Keyword = "gift",
+                StoreId = defaultStore.Id
+            });
         }
 
         protected virtual void InstallEmailAccounts()
         {
             var emailAccounts = new List<EmailAccount>
-                               {
-                                   new EmailAccount
-                                       {
-                                           Email = "test@mail.com",
-                                           DisplayName = "Store name",
-                                           Host = "smtp.mail.com",
-                                           Port = 25,
-                                           Username = "123",
-                                           Password = "123",
-                                           EnableSsl = false,
-                                           UseDefaultCredentials = false
-                                       },
-                               };
+            {
+                new EmailAccount
+                {
+                    Email = "test@mail.com",
+                    DisplayName = "Store name",
+                    Host = "smtp.mail.com",
+                    Port = 25,
+                    Username = "123",
+                    Password = "123",
+                    EnableSsl = false,
+                    UseDefaultCredentials = false
+                },
+            };
             _emailAccountRepository.Insert(emailAccounts);
         }
 
@@ -4070,303 +5337,386 @@ namespace Nop.Services.Installation
             var eaGeneral = _emailAccountRepository.Table.FirstOrDefault();
             if (eaGeneral == null)
                 throw new Exception("Default email account cannot be loaded");
+
             var messageTemplates = new List<MessageTemplate>
-                               {
-                                   new MessageTemplate
-                                       {
-                                           Name = "Blog.BlogComment",
-                                           Subject = "%Store.Name%. New blog comment.",
-                                           Body = "<p><a href=\"%Store.URL%\">%Store.Name%</a> <br /><br />A new blog comment has been created for blog post \"%BlogComment.BlogPostTitle%\".</p>",
-                                           IsActive = true,
-                                           EmailAccountId = eaGeneral.Id,
-                                       },
-                                   new MessageTemplate
-                                       {
-                                           Name = "Customer.BackInStock",
-                                           Subject = "%Store.Name%. Back in stock notification",
-                                           Body = "<p><a href=\"%Store.URL%\">%Store.Name%</a> <br /><br />Hello %Customer.FullName%, <br />Product <a target=\"_blank\" href=\"%BackInStockSubscription.ProductUrl%\">%BackInStockSubscription.ProductName%</a> is in stock.</p>",
-                                           IsActive = true,
-                                           EmailAccountId = eaGeneral.Id,
-                                       },
-                                   new MessageTemplate
-                                       {
-                                           Name = "Customer.EmailValidationMessage",
-                                           Subject = "%Store.Name%. Email validation",
-                                           Body = "<a href=\"%Store.URL%\">%Store.Name%</a>  <br />  <br />  To activate your account <a href=\"%Customer.AccountActivationURL%\">click here</a>.     <br />  <br />  %Store.Name%",
-                                           IsActive = true,
-                                           EmailAccountId = eaGeneral.Id,
-                                       },
-                                   new MessageTemplate
-                                       {
-                                           Name = "Customer.NewPM",
-                                           Subject = "%Store.Name%. You have received a new private message",
-                                           Body = "<p><a href=\"%Store.URL%\">%Store.Name%</a> <br /><br />You have received a new private message.</p>",
-                                           IsActive = true,
-                                           EmailAccountId = eaGeneral.Id,
-                                       },
-                                   new MessageTemplate
-                                       {
-                                           Name = "Customer.PasswordRecovery",
-                                           Subject = "%Store.Name%. Password recovery",
-                                           Body = "<a href=\"%Store.URL%\">%Store.Name%</a>  <br />  <br />  To change your password <a href=\"%Customer.PasswordRecoveryURL%\">click here</a>.     <br />  <br />  %Store.Name%",
-                                           IsActive = true,
-                                           EmailAccountId = eaGeneral.Id,
-                                       },
-                                   new MessageTemplate
-                                       {
-                                           Name = "Customer.WelcomeMessage",
-                                           Subject = "Welcome to %Store.Name%",
-                                           Body = "We welcome you to <a href=\"%Store.URL%\"> %Store.Name%</a>.<br /><br />You can now take part in the various services we have to offer you. Some of these services include:<br /><br />Permanent Cart - Any products added to your online cart remain there until you remove them, or check them out.<br />Address Book - We can now deliver your products to another address other than yours! This is perfect to send birthday gifts direct to the birthday-person themselves.<br />Order History - View your history of purchases that you have made with us.<br />Products Reviews - Share your opinions on products with our other customers.<br /><br />For help with any of our online services, please email the store-owner: <a href=\"mailto:%Store.Email%\">%Store.Email%</a>.<br /><br />Note: This email address was provided on our registration page. If you own the email and did not register on our site, please send an email to <a href=\"mailto:%Store.Email%\">%Store.Email%</a>.",
-                                           IsActive = true,
-                                           EmailAccountId = eaGeneral.Id,
-                                       },
-                                   new MessageTemplate
-                                       {
-                                           Name = "Forums.NewForumPost",
-                                           Subject = "%Store.Name%. New Post Notification.",
-                                           Body = "<p><a href=\"%Store.URL%\">%Store.Name%</a> <br /><br />A new post has been created in the topic <a href=\"%Forums.TopicURL%\">\"%Forums.TopicName%\"</a> at <a href=\"%Forums.ForumURL%\">\"%Forums.ForumName%\"</a> forum.<br /><br />Click <a href=\"%Forums.TopicURL%\">here</a> for more info.<br /><br />Post author: %Forums.PostAuthor%<br />Post body: %Forums.PostBody%</p>",
-                                           IsActive = true,
-                                           EmailAccountId = eaGeneral.Id,
-                                       },
-                                   new MessageTemplate
-                                       {
-                                           Name = "Forums.NewForumTopic",
-                                           Subject = "%Store.Name%. New Topic Notification.",
-                                           Body = "<p><a href=\"%Store.URL%\">%Store.Name%</a> <br /><br />A new topic <a href=\"%Forums.TopicURL%\">\"%Forums.TopicName%\"</a> has been created at <a href=\"%Forums.ForumURL%\">\"%Forums.ForumName%\"</a> forum.<br /><br />Click <a href=\"%Forums.TopicURL%\">here</a> for more info.</p>",
-                                           IsActive = true,
-                                           EmailAccountId = eaGeneral.Id,
-                                       },
-                                   new MessageTemplate
-                                       {
-                                           Name = "GiftCard.Notification",
-                                           Subject = "%GiftCard.SenderName% has sent you a gift card for %Store.Name%",
-                                           Body = "<p>You have received a gift card for %Store.Name%</p><p>Dear %GiftCard.RecipientName%, <br /><br />%GiftCard.SenderName% (%GiftCard.SenderEmail%) has sent you a %GiftCard.Amount% gift cart for <a href=\"%Store.URL%\"> %Store.Name%</a></p><p>You gift card code is %GiftCard.CouponCode%</p><p>%GiftCard.Message%</p>",
-                                           IsActive = true,
-                                           EmailAccountId = eaGeneral.Id,
-                                       },
-                                   new MessageTemplate
-                                       {
-                                           Name = "NewCustomer.Notification",
-                                           Subject = "%Store.Name%. New customer registration",
-                                           Body = "<p><a href=\"%Store.URL%\">%Store.Name%</a> <br /><br />A new customer registered with your store. Below are the customer's details:<br />Full name: %Customer.FullName%<br />Email: %Customer.Email%</p>",
-                                           IsActive = true,
-                                           EmailAccountId = eaGeneral.Id,
-                                       },
-                                   new MessageTemplate
-                                       {
-                                           Name = "NewReturnRequest.StoreOwnerNotification",
-                                           Subject = "%Store.Name%. New return request.",
-                                           Body = "<p><a href=\"%Store.URL%\">%Store.Name%</a> <br /><br />%Customer.FullName% has just submitted a new return request. Details are below:<br />Request ID: %ReturnRequest.ID%<br />Product: %ReturnRequest.Product.Quantity% x Product: %ReturnRequest.Product.Name%<br />Reason for return: %ReturnRequest.Reason%<br />Requested action: %ReturnRequest.RequestedAction%<br />Customer comments:<br />%ReturnRequest.CustomerComment%</p>",
-                                           IsActive = true,
-                                           EmailAccountId = eaGeneral.Id,
-                                       },
-                                   new MessageTemplate
-                                       {
-                                           Name = "News.NewsComment",
-                                           Subject = "%Store.Name%. New news comment.",
-                                           Body = "<p><a href=\"%Store.URL%\">%Store.Name%</a> <br /><br />A new news comment has been created for news \"%NewsComment.NewsTitle%\".</p>",
-                                           IsActive = true,
-                                           EmailAccountId = eaGeneral.Id,
-                                       },
-                                   new MessageTemplate
-                                       {
-                                           Name = "NewsLetterSubscription.ActivationMessage",
-                                           Subject = "%Store.Name%. Subscription activation message.",
-                                           Body = "<p><a href=\"%NewsLetterSubscription.ActivationUrl%\">Click here to confirm your subscription to our list.</a></p><p>If you received this email by mistake, simply delete it.</p>",
-                                           IsActive = true,
-                                           EmailAccountId = eaGeneral.Id,
-                                       },
-                                   new MessageTemplate
-                                       {
-                                           Name = "NewsLetterSubscription.DeactivationMessage",
-                                           Subject = "%Store.Name%. Subscription deactivation message.",
-                                           Body = "<p><a href=\"%NewsLetterSubscription.DeactivationUrl%\">Click here to unsubscribe from our newsletter.</a></p><p>If you received this email by mistake, simply delete it.</p>",
-                                           IsActive = true,
-                                           EmailAccountId = eaGeneral.Id,
-                                       },
-                                   new MessageTemplate
-                                       {
-                                           Name = "NewVATSubmitted.StoreOwnerNotification",
-                                           Subject = "%Store.Name%. New VAT number is submitted.",
-                                           Body = "<p><a href=\"%Store.URL%\">%Store.Name%</a> <br /><br />%Customer.FullName% (%Customer.Email%) has just submitted a new VAT number. Details are below:<br />VAT number: %Customer.VatNumber%<br />VAT number status: %Customer.VatNumberStatus%<br />Received name: %VatValidationResult.Name%<br />Received address: %VatValidationResult.Address%</p>",
-                                           IsActive = true,
-                                           EmailAccountId = eaGeneral.Id,
-                                       },
-                                   new MessageTemplate
-                                       {
-                                           Name = "OrderCancelled.CustomerNotification",
-                                           Subject = "%Store.Name%. Your order cancelled",
-                                           Body = "<p><a href=\"%Store.URL%\">%Store.Name%</a> <br /><br />Hello %Order.CustomerFullName%, <br />Your order has been cancelled. Below is the summary of the order. <br /><br />Order Number: %Order.OrderNumber%<br />Order Details: <a target=\"_blank\" href=\"%Order.OrderURLForCustomer%\">%Order.OrderURLForCustomer%</a><br />Date Ordered: %Order.CreatedOn%<br /><br /><br /><br />Billing Address<br />%Order.BillingFirstName% %Order.BillingLastName%<br />%Order.BillingAddress1%<br />%Order.BillingCity% %Order.BillingZipPostalCode%<br />%Order.BillingStateProvince% %Order.BillingCountry%<br /><br /><br /><br />Shipping Address<br />%Order.ShippingFirstName% %Order.ShippingLastName%<br />%Order.ShippingAddress1%<br />%Order.ShippingCity% %Order.ShippingZipPostalCode%<br />%Order.ShippingStateProvince% %Order.ShippingCountry%<br /><br />Shipping Method: %Order.ShippingMethod%<br /><br />%Order.Product(s)%</p>",
-                                           IsActive = true,
-                                           EmailAccountId = eaGeneral.Id,
-                                       },
-                                   new MessageTemplate
-                                       {
-                                           Name = "OrderCompleted.CustomerNotification",
-                                           Subject = "%Store.Name%. Your order completed",
-                                           Body = "<p><a href=\"%Store.URL%\">%Store.Name%</a> <br /><br />Hello %Order.CustomerFullName%, <br />Your order has been completed. Below is the summary of the order. <br /><br />Order Number: %Order.OrderNumber%<br />Order Details: <a target=\"_blank\" href=\"%Order.OrderURLForCustomer%\">%Order.OrderURLForCustomer%</a><br />Date Ordered: %Order.CreatedOn%<br /><br /><br /><br />Billing Address<br />%Order.BillingFirstName% %Order.BillingLastName%<br />%Order.BillingAddress1%<br />%Order.BillingCity% %Order.BillingZipPostalCode%<br />%Order.BillingStateProvince% %Order.BillingCountry%<br /><br /><br /><br />Shipping Address<br />%Order.ShippingFirstName% %Order.ShippingLastName%<br />%Order.ShippingAddress1%<br />%Order.ShippingCity% %Order.ShippingZipPostalCode%<br />%Order.ShippingStateProvince% %Order.ShippingCountry%<br /><br />Shipping Method: %Order.ShippingMethod%<br /><br />%Order.Product(s)%</p>",
-                                           IsActive = true,
-                                           EmailAccountId = eaGeneral.Id,
-                                       },
-                                   new MessageTemplate
-                                       {
-                                           Name = "ShipmentDelivered.CustomerNotification",
-                                           Subject = "Your order from %Store.Name% has been delivered.",
-                                           Body = "<p><a href=\"%Store.URL%\"> %Store.Name%</a> <br /> <br /> Hello %Order.CustomerFullName%, <br /> Good news! You order has been delivered. <br /> Order Number: %Order.OrderNumber%<br /> Order Details: <a href=\"%Order.OrderURLForCustomer%\" target=\"_blank\">%Order.OrderURLForCustomer%</a><br /> Date Ordered: %Order.CreatedOn%<br /> <br /> <br /> <br /> Billing Address<br /> %Order.BillingFirstName% %Order.BillingLastName%<br /> %Order.BillingAddress1%<br /> %Order.BillingCity% %Order.BillingZipPostalCode%<br /> %Order.BillingStateProvince% %Order.BillingCountry%<br /> <br /> <br /> <br /> Shipping Address<br /> %Order.ShippingFirstName% %Order.ShippingLastName%<br /> %Order.ShippingAddress1%<br /> %Order.ShippingCity% %Order.ShippingZipPostalCode%<br /> %Order.ShippingStateProvince% %Order.ShippingCountry%<br /> <br /> Shipping Method: %Order.ShippingMethod% <br /> <br /> Delivered Products: <br /> <br /> %Shipment.Product(s)%</p>",
-                                           IsActive = true,
-                                           EmailAccountId = eaGeneral.Id,
-                                       },
-                                   new MessageTemplate
-                                       {
-                                           Name = "OrderPlaced.CustomerNotification",
-                                           Subject = "Order receipt from %Store.Name%.",
-                                           Body = "<p><a href=\"%Store.URL%\">%Store.Name%</a> <br /><br />Hello %Order.CustomerFullName%, <br />Thanks for buying from <a href=\"%Store.URL%\">%Store.Name%</a>. Below is the summary of the order. <br /><br />Order Number: %Order.OrderNumber%<br />Order Details: <a target=\"_blank\" href=\"%Order.OrderURLForCustomer%\">%Order.OrderURLForCustomer%</a><br />Date Ordered: %Order.CreatedOn%<br /><br /><br /><br />Billing Address<br />%Order.BillingFirstName% %Order.BillingLastName%<br />%Order.BillingAddress1%<br />%Order.BillingCity% %Order.BillingZipPostalCode%<br />%Order.BillingStateProvince% %Order.BillingCountry%<br /><br /><br /><br />Shipping Address<br />%Order.ShippingFirstName% %Order.ShippingLastName%<br />%Order.ShippingAddress1%<br />%Order.ShippingCity% %Order.ShippingZipPostalCode%<br />%Order.ShippingStateProvince% %Order.ShippingCountry%<br /><br />Shipping Method: %Order.ShippingMethod%<br /><br />%Order.Product(s)%</p>",
-                                           IsActive = true,
-                                           EmailAccountId = eaGeneral.Id,
-                                       },
-                                   new MessageTemplate
-                                       {
-                                           Name = "OrderPlaced.StoreOwnerNotification",
-                                           Subject = "%Store.Name%. Purchase Receipt for Order #%Order.OrderNumber%",
-                                           Body = "<p><a href=\"%Store.URL%\">%Store.Name%</a> <br /><br />%Order.CustomerFullName% (%Order.CustomerEmail%) has just placed an order from your store. Below is the summary of the order. <br /><br />Order Number: %Order.OrderNumber%<br />Date Ordered: %Order.CreatedOn%<br /><br /><br /><br />Billing Address<br />%Order.BillingFirstName% %Order.BillingLastName%<br />%Order.BillingAddress1%<br />%Order.BillingCity% %Order.BillingZipPostalCode%<br />%Order.BillingStateProvince% %Order.BillingCountry%<br /><br /><br /><br />Shipping Address<br />%Order.ShippingFirstName% %Order.ShippingLastName%<br />%Order.ShippingAddress1%<br />%Order.ShippingCity% %Order.ShippingZipPostalCode%<br />%Order.ShippingStateProvince% %Order.ShippingCountry%<br /><br />Shipping Method: %Order.ShippingMethod%<br /><br />%Order.Product(s)%</p>",
-                                           IsActive = true,
-                                           EmailAccountId = eaGeneral.Id,
-                                       },
-                                   new MessageTemplate
-                                       {
-                                           Name = "ShipmentSent.CustomerNotification",
-                                           Subject = "Your order from %Store.Name% has been shipped.",
-                                           Body = "<p><a href=\"%Store.URL%\"> %Store.Name%</a> <br /><br />Hello %Order.CustomerFullName%!, <br />Good news! You order has been shipped. <br />Order Number: %Order.OrderNumber%<br />Order Details: <a href=\"%Order.OrderURLForCustomer%\" target=\"_blank\">%Order.OrderURLForCustomer%</a><br />Date Ordered: %Order.CreatedOn%<br /><br /><br /><br />Billing Address<br />%Order.BillingFirstName% %Order.BillingLastName%<br />%Order.BillingAddress1%<br />%Order.BillingCity% %Order.BillingZipPostalCode%<br />%Order.BillingStateProvince% %Order.BillingCountry%<br /><br /><br /><br />Shipping Address<br />%Order.ShippingFirstName% %Order.ShippingLastName%<br />%Order.ShippingAddress1%<br />%Order.ShippingCity% %Order.ShippingZipPostalCode%<br />%Order.ShippingStateProvince% %Order.ShippingCountry%<br /><br />Shipping Method: %Order.ShippingMethod% <br /> <br /> Shipped Products: <br /> <br /> %Shipment.Product(s)%</p>",
-                                           IsActive = true,
-                                           EmailAccountId = eaGeneral.Id,
-                                       },
-                                   new MessageTemplate
-                                       {
-                                           Name = "Product.ProductReview",
-                                           Subject = "%Store.Name%. New product review.",
-                                           Body = "<p><a href=\"%Store.URL%\">%Store.Name%</a> <br /><br />A new product review has been written for product \"%ProductReview.ProductName%\".</p>",
-                                           IsActive = true,
-                                           EmailAccountId = eaGeneral.Id,
-                                       },
-                                   new MessageTemplate
-                                       {
-                                           Name = "QuantityBelow.StoreOwnerNotification",
-                                           Subject = "%Store.Name%. Quantity below notification. %Product.Name%",
-                                           Body = "<p><a href=\"%Store.URL%\">%Store.Name%</a> <br /><br />%Product.Name% (ID: %Product.ID%) low quantity. <br /><br />Quantity: %Product.StockQuantity%<br /></p>",
-                                           IsActive = true,
-                                           EmailAccountId = eaGeneral.Id,
-                                       },
-                                   new MessageTemplate
-                                       {
-                                           Name = "QuantityBelow.AttributeCombination.StoreOwnerNotification",
-                                           Subject = "%Store.Name%. Quantity below notification. %Product.Name%",
-                                           Body = "<p><a href=\"%Store.URL%\">%Store.Name%</a> <br /><br />%Product.Name% (ID: %Product.ID%) low quantity. <br />%AttributeCombination.Formatted%<br />Quantity: %AttributeCombination.StockQuantity%<br /></p>",
-                                           IsActive = true,
-                                           EmailAccountId = eaGeneral.Id,
-                                       },
-                                   new MessageTemplate
-                                       {
-                                           Name = "ReturnRequestStatusChanged.CustomerNotification",
-                                           Subject = "%Store.Name%. Return request status was changed.",
-                                           Body = "<p><a href=\"%Store.URL%\">%Store.Name%</a> <br /><br />Hello %Customer.FullName%,<br />Your return request #%ReturnRequest.ID% status has been changed.</p>",
-                                           IsActive = true,
-                                           EmailAccountId = eaGeneral.Id,
-                                       },
-                                   new MessageTemplate
-                                       {
-                                           Name = "Service.EmailAFriend",
-                                           Subject = "%Store.Name%. Referred Item",
-                                           Body = "<p><a href=\"%Store.URL%\"> %Store.Name%</a> <br /><br />%EmailAFriend.Email% was shopping on %Store.Name% and wanted to share the following item with you. <br /><br /><b><a target=\"_blank\" href=\"%Product.ProductURLForCustomer%\">%Product.Name%</a></b> <br />%Product.ShortDescription% <br /><br />For more info click <a target=\"_blank\" href=\"%Product.ProductURLForCustomer%\">here</a> <br /><br /><br />%EmailAFriend.PersonalMessage%<br /><br />%Store.Name%</p>",
-                                           IsActive = true,
-                                           EmailAccountId = eaGeneral.Id,
-                                       },
-                                   new MessageTemplate
-                                       {
-                                           Name = "Wishlist.EmailAFriend",
-                                           Subject = "%Store.Name%. Wishlist",
-                                           Body = "<p><a href=\"%Store.URL%\"> %Store.Name%</a> <br /><br />%Wishlist.Email% was shopping on %Store.Name% and wanted to share a wishlist with you. <br /><br /><br />For more info click <a target=\"_blank\" href=\"%Wishlist.URLForCustomer%\">here</a> <br /><br /><br />%Wishlist.PersonalMessage%<br /><br />%Store.Name%</p>",
-                                           IsActive = true,
-                                           EmailAccountId = eaGeneral.Id,
-                                       },
-                                   new MessageTemplate
-                                       {
-                                           Name = "Customer.NewOrderNote",
-                                           Subject = "%Store.Name%. New order note has been added",
-                                           Body = "<p><a href=\"%Store.URL%\">%Store.Name%</a> <br /><br />Hello %Customer.FullName%, <br />New order note has been added to your account:<br />\"%Order.NewNoteText%\".<br /><a target=\"_blank\" href=\"%Order.OrderURLForCustomer%\">%Order.OrderURLForCustomer%</a></p>",
-                                           IsActive = true,
-                                           EmailAccountId = eaGeneral.Id,
-                                       },
-                                   new MessageTemplate
-                                       {
-                                           Name = "RecurringPaymentCancelled.StoreOwnerNotification",
-                                           Subject = "%Store.Name%. Recurring payment cancelled",
-                                           Body = "<p><a href=\"%Store.URL%\">%Store.Name%</a> <br /><br />%Customer.FullName% (%Customer.Email%) has just cancelled a recurring payment ID=%RecurringPayment.ID%.</p>",
-                                           IsActive = true,
-                                           EmailAccountId = eaGeneral.Id,
-                                       },
-                                   new MessageTemplate
-                                       {
-                                           Name = "OrderPlaced.VendorNotification",
-                                           Subject = "%Store.Name%. Order placed",
-                                           Body = "<p><a href=\"%Store.URL%\">%Store.Name%</a> <br /><br />%Customer.FullName% (%Customer.Email%) has just placed an order. <br /><br />Order Number: %Order.OrderNumber%<br />Date Ordered: %Order.CreatedOn%<br /><br />%Order.Product(s)%</p>",
-                                           //this template is disabled by default
-                                           IsActive = false,
-                                           EmailAccountId = eaGeneral.Id,
-                                       },
-                                    new MessageTemplate
-                                        {
-                                           Name = "OrderRefunded.CustomerNotification",
-                                           Subject = "%Store.Name%. Order #%Order.OrderNumber% refunded",
-                                           Body = "<p><a href=\"%Store.URL%\">%Store.Name%</a> <br /><br />Hello %Order.CustomerFullName%, <br />Thanks for buying from <a href=\"%Store.URL%\">%Store.Name%</a>. Order #%Order.OrderNumber% has been has been refunded. Please allow 7-14 days for the refund to be reflected in your account.<br /><br />Amount refunded: %Order.AmountRefunded%<br /><br />Below is the summary of the order. <br /><br />Order Number: %Order.OrderNumber%<br />Order Details: <a href=\"%Order.OrderURLForCustomer%\" target=\"_blank\">%Order.OrderURLForCustomer%</a><br />Date Ordered: %Order.CreatedOn%<br /><br /><br /><br />Billing Address<br />%Order.BillingFirstName% %Order.BillingLastName%<br />%Order.BillingAddress1%<br />%Order.BillingCity% %Order.BillingZipPostalCode%<br />%Order.BillingStateProvince% %Order.BillingCountry%<br /><br /><br /><br />Shipping Address<br />%Order.ShippingFirstName% %Order.ShippingLastName%<br />%Order.ShippingAddress1%<br />%Order.ShippingCity% %Order.ShippingZipPostalCode%<br />%Order.ShippingStateProvince% %Order.ShippingCountry%<br /><br />Shipping Method: %Order.ShippingMethod%<br /><br />%Order.Product(s)%</p>",
-                                           //this template is disabled by default
-                                           IsActive = false,
-                                           EmailAccountId = eaGeneral.Id,
-                                       },
-                                    new MessageTemplate
-                                        {
-                                           Name = "OrderRefunded.StoreOwnerNotification",
-                                           Subject = "%Store.Name%. Order #%Order.OrderNumber% refunded",
-                                           Body = "%Store.Name%. Order #%Order.OrderNumber% refunded', N'<p><a href=\"%Store.URL%\">%Store.Name%</a> <br /><br />Order #%Order.OrderNumber% has been just refunded<br /><br />Amount refunded: %Order.AmountRefunded%<br /><br />Date Ordered: %Order.CreatedOn%</p>",
-                                           //this template is disabled by default
-                                           IsActive = false,
-                                           EmailAccountId = eaGeneral.Id,
-                                       },
-                                   new MessageTemplate
-                                       {
-                                           Name = "OrderPaid.StoreOwnerNotification",
-                                           Subject = "%Store.Name%. Order #%Order.OrderNumber% paid",
-                                           Body = "<p><a href=\"%Store.URL%\">%Store.Name%</a> <br /><br />Order #%Order.OrderNumber% has been just paid<br />Date Ordered: %Order.CreatedOn%</p>",
-                                           //this template is disabled by default
-                                           IsActive = false,
-                                           EmailAccountId = eaGeneral.Id,
-                                       },
-                                   new MessageTemplate
-                                       {
-                                           Name = "OrderPaid.CustomerNotification",
-                                           Subject = "%Store.Name%. Order #%Order.OrderNumber% paid",
-                                           Body = "<p><a href=\"%Store.URL%\">%Store.Name%</a> <br /><br />Hello %Order.CustomerFullName%, <br />Thanks for buying from <a href=\"%Store.URL%\">%Store.Name%</a>. Order #%Order.OrderNumber% has been just paid. Below is the summary of the order. <br /><br />Order Number: %Order.OrderNumber%<br />Order Details: <a href=\"%Order.OrderURLForCustomer%\" target=\"_blank\">%Order.OrderURLForCustomer%</a><br />Date Ordered: %Order.CreatedOn%<br /><br /><br /><br />Billing Address<br />%Order.BillingFirstName% %Order.BillingLastName%<br />%Order.BillingAddress1%<br />%Order.BillingCity% %Order.BillingZipPostalCode%<br />%Order.BillingStateProvince% %Order.BillingCountry%<br /><br /><br /><br />Shipping Address<br />%Order.ShippingFirstName% %Order.ShippingLastName%<br />%Order.ShippingAddress1%<br />%Order.ShippingCity% %Order.ShippingZipPostalCode%<br />%Order.ShippingStateProvince% %Order.ShippingCountry%<br /><br />Shipping Method: %Order.ShippingMethod%<br /><br />%Order.Product(s)%</p>",
-                                           //this template is disabled by default
-                                           IsActive = false,
-                                           EmailAccountId = eaGeneral.Id,
-                                       },
-                                   new MessageTemplate
-                                       {
-                                           Name = "OrderPaid.VendorNotification",
-                                           Subject = "%Store.Name%. Order #%Order.OrderNumber% paid",
-                                           Body = "<p><a href=\"%Store.URL%\">%Store.Name%</a> <br /><br />Order #%Order.OrderNumber% has been just paid. <br /><br />Order Number: %Order.OrderNumber%<br />Date Ordered: %Order.CreatedOn%<br /><br />%Order.Product(s)%</p>",
-                                           //this template is disabled by default
-                                           IsActive = false,
-                                           EmailAccountId = eaGeneral.Id,
-                                       },
-                                   new MessageTemplate
-                                       {
-                                           Name = "VendorAccountApply.StoreOwnerNotification",
-                                           Subject = "%Store.Name%. New vendor account submitted.",
-                                           Body = "<p><a href=\"%Store.URL%\">%Store.Name%</a> <br /><br />%Customer.FullName% (%Customer.Email%) has just submitted for a vendor account. Details are below:<br />Vendor name: %Vendor.Name%<br />Vendor email: %Vendor.Email%<br /><br />You can activate it in admin area.</p>",
-                                           IsActive = true,
-                                           EmailAccountId = eaGeneral.Id,
-                                       }
-                               };
+            {
+                new MessageTemplate
+                {
+                    Name = MessageTemplateSystemNames.BlogCommentNotification,
+                    Subject = "%Store.Name%. New blog comment.",
+                    Body = $"<p>{Environment.NewLine}<a href=\"%Store.URL%\">%Store.Name%</a>{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}A new blog comment has been created for blog post \"%BlogComment.BlogPostTitle%\".{Environment.NewLine}</p>{Environment.NewLine}",
+                    IsActive = true,
+                    EmailAccountId = eaGeneral.Id,
+                },
+                new MessageTemplate
+                {
+                    Name = MessageTemplateSystemNames.BackInStockNotification,
+                    Subject = "%Store.Name%. Back in stock notification",
+                    Body = $"<p>{Environment.NewLine}<a href=\"%Store.URL%\">%Store.Name%</a>{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}Hello %Customer.FullName%,{Environment.NewLine}<br />{Environment.NewLine}Product <a target=\"_blank\" href=\"%BackInStockSubscription.ProductUrl%\">%BackInStockSubscription.ProductName%</a> is in stock.{Environment.NewLine}</p>{Environment.NewLine}",
+                    IsActive = true,
+                    EmailAccountId = eaGeneral.Id,
+                },
+                new MessageTemplate
+                {
+                    Name = MessageTemplateSystemNames.CustomerEmailValidationMessage,
+                    Subject = "%Store.Name%. Email validation",
+                    Body = $"<a href=\"%Store.URL%\">%Store.Name%</a>{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}To activate your account <a href=\"%Customer.AccountActivationURL%\">click here</a>.{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}%Store.Name%{Environment.NewLine}",
+                    IsActive = true,
+                    EmailAccountId = eaGeneral.Id,
+                },
+                new MessageTemplate
+                {
+                    Name = MessageTemplateSystemNames.CustomerEmailRevalidationMessage,
+                    Subject = "%Store.Name%. Email validation",
+                    Body = $"<p>{Environment.NewLine}<a href=\"%Store.URL%\">%Store.Name%</a>{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}Hello %Customer.FullName%!{Environment.NewLine}<br />{Environment.NewLine}To validate your new email address <a href=\"%Customer.EmailRevalidationURL%\">click here</a>.{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}%Store.Name%{Environment.NewLine}</p>{Environment.NewLine}",
+                    IsActive = true,
+                    EmailAccountId = eaGeneral.Id,
+                },
+                new MessageTemplate
+                {
+                    Name = MessageTemplateSystemNames.PrivateMessageNotification,
+                    Subject = "%Store.Name%. You have received a new private message",
+                    Body = $"<p>{Environment.NewLine}<a href=\"%Store.URL%\">%Store.Name%</a>{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}You have received a new private message.{Environment.NewLine}</p>{Environment.NewLine}",
+                    IsActive = true,
+                    EmailAccountId = eaGeneral.Id,
+                },
+                new MessageTemplate
+                {
+                    Name = MessageTemplateSystemNames.CustomerPasswordRecoveryMessage,
+                    Subject = "%Store.Name%. Password recovery",
+                    Body = $"<a href=\"%Store.URL%\">%Store.Name%</a>{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}To change your password <a href=\"%Customer.PasswordRecoveryURL%\">click here</a>.{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}%Store.Name%{Environment.NewLine}",
+                    IsActive = true,
+                    EmailAccountId = eaGeneral.Id,
+                },
+                new MessageTemplate
+                {
+                    Name = MessageTemplateSystemNames.CustomerWelcomeMessage,
+                    Subject = "Welcome to %Store.Name%",
+                    Body = $"We welcome you to <a href=\"%Store.URL%\"> %Store.Name%</a>.{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}You can now take part in the various services we have to offer you. Some of these services include:{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}Permanent Cart - Any products added to your online cart remain there until you remove them, or check them out.{Environment.NewLine}<br />{Environment.NewLine}Address Book - We can now deliver your products to another address other than yours! This is perfect to send birthday gifts direct to the birthday-person themselves.{Environment.NewLine}<br />{Environment.NewLine}Order History - View your history of purchases that you have made with us.{Environment.NewLine}<br />{Environment.NewLine}Products Reviews - Share your opinions on products with our other customers.{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}For help with any of our online services, please email the store-owner: <a href=\"mailto:%Store.Email%\">%Store.Email%</a>.{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}Note: This email address was provided on our registration page. If you own the email and did not register on our site, please send an email to <a href=\"mailto:%Store.Email%\">%Store.Email%</a>.{Environment.NewLine}",
+                    IsActive = true,
+                    EmailAccountId = eaGeneral.Id,
+                },
+                new MessageTemplate
+                {
+                    Name = MessageTemplateSystemNames.NewForumPostMessage,
+                    Subject = "%Store.Name%. New Post Notification.",
+                    Body = $"<p>{Environment.NewLine}<a href=\"%Store.URL%\">%Store.Name%</a>{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}A new post has been created in the topic <a href=\"%Forums.TopicURL%\">\"%Forums.TopicName%\"</a> at <a href=\"%Forums.ForumURL%\">\"%Forums.ForumName%\"</a> forum.{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}Click <a href=\"%Forums.TopicURL%\">here</a> for more info.{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}Post author: %Forums.PostAuthor%{Environment.NewLine}<br />{Environment.NewLine}Post body: %Forums.PostBody%{Environment.NewLine}</p>{Environment.NewLine}",
+                    IsActive = true,
+                    EmailAccountId = eaGeneral.Id,
+                },
+                new MessageTemplate
+                {
+                    Name = MessageTemplateSystemNames.NewForumTopicMessage,
+                    Subject = "%Store.Name%. New Topic Notification.",
+                    Body = $"<p>{Environment.NewLine}<a href=\"%Store.URL%\">%Store.Name%</a>{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}A new topic <a href=\"%Forums.TopicURL%\">\"%Forums.TopicName%\"</a> has been created at <a href=\"%Forums.ForumURL%\">\"%Forums.ForumName%\"</a> forum.{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}Click <a href=\"%Forums.TopicURL%\">here</a> for more info.{Environment.NewLine}</p>{Environment.NewLine}",
+                    IsActive = true,
+                    EmailAccountId = eaGeneral.Id,
+                },
+                new MessageTemplate
+                {
+                    Name = MessageTemplateSystemNames.GiftCardNotification,
+                    Subject = "%GiftCard.SenderName% has sent you a gift card for %Store.Name%",
+                    Body = $"<p>{Environment.NewLine}You have received a gift card for %Store.Name%{Environment.NewLine}</p>{Environment.NewLine}<p>{Environment.NewLine}Dear %GiftCard.RecipientName%,{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}%GiftCard.SenderName% (%GiftCard.SenderEmail%) has sent you a %GiftCard.Amount% gift cart for <a href=\"%Store.URL%\"> %Store.Name%</a>{Environment.NewLine}</p>{Environment.NewLine}<p>{Environment.NewLine}You gift card code is %GiftCard.CouponCode%{Environment.NewLine}</p>{Environment.NewLine}<p>{Environment.NewLine}%GiftCard.Message%{Environment.NewLine}</p>{Environment.NewLine}",
+                    IsActive = true,
+                    EmailAccountId = eaGeneral.Id,
+                },
+                new MessageTemplate
+                {
+                    Name = MessageTemplateSystemNames.CustomerRegisteredNotification,
+                    Subject = "%Store.Name%. New customer registration",
+                    Body = $"<p>{Environment.NewLine}<a href=\"%Store.URL%\">%Store.Name%</a>{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}A new customer registered with your store. Below are the customer's details:{Environment.NewLine}<br />{Environment.NewLine}Full name: %Customer.FullName%{Environment.NewLine}<br />{Environment.NewLine}Email: %Customer.Email%{Environment.NewLine}</p>{Environment.NewLine}",
+                    IsActive = true,
+                    EmailAccountId = eaGeneral.Id,
+                },
+                new MessageTemplate
+                {
+                    Name = MessageTemplateSystemNames.NewReturnRequestStoreOwnerNotification,
+                    Subject = "%Store.Name%. New return request.",
+                    Body = $"<p>{Environment.NewLine}<a href=\"%Store.URL%\">%Store.Name%</a>{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}%Customer.FullName% has just submitted a new return request. Details are below:{Environment.NewLine}<br />{Environment.NewLine}Request ID: %ReturnRequest.CustomNumber%{Environment.NewLine}<br />{Environment.NewLine}Product: %ReturnRequest.Product.Quantity% x Product: %ReturnRequest.Product.Name%{Environment.NewLine}<br />{Environment.NewLine}Reason for return: %ReturnRequest.Reason%{Environment.NewLine}<br />{Environment.NewLine}Requested action: %ReturnRequest.RequestedAction%{Environment.NewLine}<br />{Environment.NewLine}Customer comments:{Environment.NewLine}<br />{Environment.NewLine}%ReturnRequest.CustomerComment%{Environment.NewLine}</p>{Environment.NewLine}",
+                    IsActive = true,
+                    EmailAccountId = eaGeneral.Id,
+                },
+                new MessageTemplate
+                {
+                    Name = MessageTemplateSystemNames.NewReturnRequestCustomerNotification,
+                    Subject = "%Store.Name%. New return request.",
+                    Body = $"<p>{Environment.NewLine}<a href=\"%Store.URL%\">%Store.Name%</a>{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}Hello %Customer.FullName%!{Environment.NewLine}<br />{Environment.NewLine}You have just submitted a new return request. Details are below:{Environment.NewLine}<br />{Environment.NewLine}Request ID: %ReturnRequest.CustomNumber%{Environment.NewLine}<br />{Environment.NewLine}Product: %ReturnRequest.Product.Quantity% x Product: %ReturnRequest.Product.Name%{Environment.NewLine}<br />{Environment.NewLine}Reason for return: %ReturnRequest.Reason%{Environment.NewLine}<br />{Environment.NewLine}Requested action: %ReturnRequest.RequestedAction%{Environment.NewLine}<br />{Environment.NewLine}Customer comments:{Environment.NewLine}<br />{Environment.NewLine}%ReturnRequest.CustomerComment%{Environment.NewLine}</p>{Environment.NewLine}",
+                    IsActive = true,
+                    EmailAccountId = eaGeneral.Id,
+                },
+                new MessageTemplate
+                {
+                    Name = MessageTemplateSystemNames.NewsCommentNotification,
+                    Subject = "%Store.Name%. New news comment.",
+                    Body = $"<p>{Environment.NewLine}<a href=\"%Store.URL%\">%Store.Name%</a>{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}A new news comment has been created for news \"%NewsComment.NewsTitle%\".{Environment.NewLine}</p>{Environment.NewLine}",
+                    IsActive = true,
+                    EmailAccountId = eaGeneral.Id,
+                },
+                new MessageTemplate
+                {
+                    Name = MessageTemplateSystemNames.NewsletterSubscriptionActivationMessage,
+                    Subject = "%Store.Name%. Subscription activation message.",
+                    Body = $"<p>{Environment.NewLine}<a href=\"%NewsLetterSubscription.ActivationUrl%\">Click here to confirm your subscription to our list.</a>{Environment.NewLine}</p>{Environment.NewLine}<p>{Environment.NewLine}If you received this email by mistake, simply delete it.{Environment.NewLine}</p>{Environment.NewLine}",
+                    IsActive = true,
+                    EmailAccountId = eaGeneral.Id,
+                },
+                new MessageTemplate
+                {
+                    Name = MessageTemplateSystemNames.NewsletterSubscriptionDeactivationMessage,
+                    Subject = "%Store.Name%. Subscription deactivation message.",
+                    Body = $"<p>{Environment.NewLine}<a href=\"%NewsLetterSubscription.DeactivationUrl%\">Click here to unsubscribe from our newsletter.</a>{Environment.NewLine}</p>{Environment.NewLine}<p>{Environment.NewLine}If you received this email by mistake, simply delete it.{Environment.NewLine}</p>{Environment.NewLine}",
+                    IsActive = true,
+                    EmailAccountId = eaGeneral.Id,
+                },
+                new MessageTemplate
+                {
+                    Name = MessageTemplateSystemNames.NewVatSubmittedStoreOwnerNotification,
+                    Subject = "%Store.Name%. New VAT number is submitted.",
+                    Body = $"<p>{Environment.NewLine}<a href=\"%Store.URL%\">%Store.Name%</a>{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}%Customer.FullName% (%Customer.Email%) has just submitted a new VAT number. Details are below:{Environment.NewLine}<br />{Environment.NewLine}VAT number: %Customer.VatNumber%{Environment.NewLine}<br />{Environment.NewLine}VAT number status: %Customer.VatNumberStatus%{Environment.NewLine}<br />{Environment.NewLine}Received name: %VatValidationResult.Name%{Environment.NewLine}<br />{Environment.NewLine}Received address: %VatValidationResult.Address%{Environment.NewLine}</p>{Environment.NewLine}",
+                    IsActive = true,
+                    EmailAccountId = eaGeneral.Id,
+                },
+                new MessageTemplate
+                {
+                    Name = MessageTemplateSystemNames.OrderCancelledCustomerNotification,
+                    Subject = "%Store.Name%. Your order cancelled",
+                    Body = $"<p>{Environment.NewLine}<a href=\"%Store.URL%\">%Store.Name%</a>{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}Hello %Order.CustomerFullName%,{Environment.NewLine}<br />{Environment.NewLine}Your order has been cancelled. Below is the summary of the order.{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}Order Number: %Order.OrderNumber%{Environment.NewLine}<br />{Environment.NewLine}Order Details: <a target=\"_blank\" href=\"%Order.OrderURLForCustomer%\">%Order.OrderURLForCustomer%</a>{Environment.NewLine}<br />{Environment.NewLine}Date Ordered: %Order.CreatedOn%{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}Billing Address{Environment.NewLine}<br />{Environment.NewLine}%Order.BillingFirstName% %Order.BillingLastName%{Environment.NewLine}<br />{Environment.NewLine}%Order.BillingAddress1%{Environment.NewLine}<br />{Environment.NewLine}%Order.BillingCity% %Order.BillingZipPostalCode%{Environment.NewLine}<br />{Environment.NewLine}%Order.BillingStateProvince% %Order.BillingCountry%{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}%if (%Order.Shippable%) Shipping Address{Environment.NewLine}<br />{Environment.NewLine}%Order.ShippingFirstName% %Order.ShippingLastName%{Environment.NewLine}<br />{Environment.NewLine}%Order.ShippingAddress1%{Environment.NewLine}<br />{Environment.NewLine}%Order.ShippingCity% %Order.ShippingZipPostalCode%{Environment.NewLine}<br />{Environment.NewLine}%Order.ShippingStateProvince% %Order.ShippingCountry%{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}Shipping Method: %Order.ShippingMethod%{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine} endif% %Order.Product(s)%{Environment.NewLine}</p>{Environment.NewLine}",
+                    IsActive = true,
+                    EmailAccountId = eaGeneral.Id,
+                },
+                new MessageTemplate
+                {
+                    Name = MessageTemplateSystemNames.OrderCompletedCustomerNotification,
+                    Subject = "%Store.Name%. Your order completed",
+                    Body = $"<p>{Environment.NewLine}<a href=\"%Store.URL%\">%Store.Name%</a>{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}Hello %Order.CustomerFullName%,{Environment.NewLine}<br />{Environment.NewLine}Your order has been completed. Below is the summary of the order.{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}Order Number: %Order.OrderNumber%{Environment.NewLine}<br />{Environment.NewLine}Order Details: <a target=\"_blank\" href=\"%Order.OrderURLForCustomer%\">%Order.OrderURLForCustomer%</a>{Environment.NewLine}<br />{Environment.NewLine}Date Ordered: %Order.CreatedOn%{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}Billing Address{Environment.NewLine}<br />{Environment.NewLine}%Order.BillingFirstName% %Order.BillingLastName%{Environment.NewLine}<br />{Environment.NewLine}%Order.BillingAddress1%{Environment.NewLine}<br />{Environment.NewLine}%Order.BillingCity% %Order.BillingZipPostalCode%{Environment.NewLine}<br />{Environment.NewLine}%Order.BillingStateProvince% %Order.BillingCountry%{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}%if (%Order.Shippable%) Shipping Address{Environment.NewLine}<br />{Environment.NewLine}%Order.ShippingFirstName% %Order.ShippingLastName%{Environment.NewLine}<br />{Environment.NewLine}%Order.ShippingAddress1%{Environment.NewLine}<br />{Environment.NewLine}%Order.ShippingCity% %Order.ShippingZipPostalCode%{Environment.NewLine}<br />{Environment.NewLine}%Order.ShippingStateProvince% %Order.ShippingCountry%{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}Shipping Method: %Order.ShippingMethod%{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine} endif% %Order.Product(s)%{Environment.NewLine}</p>{Environment.NewLine}",
+                    IsActive = true,
+                    EmailAccountId = eaGeneral.Id,
+                },
+                new MessageTemplate
+                {
+                    Name = MessageTemplateSystemNames.ShipmentDeliveredCustomerNotification,
+                    Subject = "Your order from %Store.Name% has been delivered.",
+                    Body = $"<p>{Environment.NewLine}<a href=\"%Store.URL%\"> %Store.Name%</a>{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}Hello %Order.CustomerFullName%,{Environment.NewLine}<br />{Environment.NewLine}Good news! You order has been delivered.{Environment.NewLine}<br />{Environment.NewLine}Order Number: %Order.OrderNumber%{Environment.NewLine}<br />{Environment.NewLine}Order Details: <a href=\"%Order.OrderURLForCustomer%\" target=\"_blank\">%Order.OrderURLForCustomer%</a>{Environment.NewLine}<br />{Environment.NewLine}Date Ordered: %Order.CreatedOn%{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}Billing Address{Environment.NewLine}<br />{Environment.NewLine}%Order.BillingFirstName% %Order.BillingLastName%{Environment.NewLine}<br />{Environment.NewLine}%Order.BillingAddress1%{Environment.NewLine}<br />{Environment.NewLine}%Order.BillingCity% %Order.BillingZipPostalCode%{Environment.NewLine}<br />{Environment.NewLine}%Order.BillingStateProvince% %Order.BillingCountry%{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}%if (%Order.Shippable%) Shipping Address{Environment.NewLine}<br />{Environment.NewLine}%Order.ShippingFirstName% %Order.ShippingLastName%{Environment.NewLine}<br />{Environment.NewLine}%Order.ShippingAddress1%{Environment.NewLine}<br />{Environment.NewLine}%Order.ShippingCity% %Order.ShippingZipPostalCode%{Environment.NewLine}<br />{Environment.NewLine}%Order.ShippingStateProvince% %Order.ShippingCountry%{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}Shipping Method: %Order.ShippingMethod%{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine} endif% Delivered Products:{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}%Shipment.Product(s)%{Environment.NewLine}</p>{Environment.NewLine}",
+                    IsActive = true,
+                    EmailAccountId = eaGeneral.Id,
+                },
+                new MessageTemplate
+                {
+                    Name = MessageTemplateSystemNames.OrderPlacedCustomerNotification,
+                    Subject = "Order receipt from %Store.Name%.",
+                    Body = $"<p>{Environment.NewLine}<a href=\"%Store.URL%\">%Store.Name%</a>{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}Hello %Order.CustomerFullName%,{Environment.NewLine}<br />{Environment.NewLine}Thanks for buying from <a href=\"%Store.URL%\">%Store.Name%</a>. Below is the summary of the order.{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}Order Number: %Order.OrderNumber%{Environment.NewLine}<br />{Environment.NewLine}Order Details: <a target=\"_blank\" href=\"%Order.OrderURLForCustomer%\">%Order.OrderURLForCustomer%</a>{Environment.NewLine}<br />{Environment.NewLine}Date Ordered: %Order.CreatedOn%{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}Billing Address{Environment.NewLine}<br />{Environment.NewLine}%Order.BillingFirstName% %Order.BillingLastName%{Environment.NewLine}<br />{Environment.NewLine}%Order.BillingAddress1%{Environment.NewLine}<br />{Environment.NewLine}%Order.BillingCity% %Order.BillingZipPostalCode%{Environment.NewLine}<br />{Environment.NewLine}%Order.BillingStateProvince% %Order.BillingCountry%{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}%if (%Order.Shippable%) Shipping Address{Environment.NewLine}<br />{Environment.NewLine}%Order.ShippingFirstName% %Order.ShippingLastName%{Environment.NewLine}<br />{Environment.NewLine}%Order.ShippingAddress1%{Environment.NewLine}<br />{Environment.NewLine}%Order.ShippingCity% %Order.ShippingZipPostalCode%{Environment.NewLine}<br />{Environment.NewLine}%Order.ShippingStateProvince% %Order.ShippingCountry%{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}Shipping Method: %Order.ShippingMethod%{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine} endif% %Order.Product(s)%{Environment.NewLine}</p>{Environment.NewLine}",
+                    IsActive = true,
+                    EmailAccountId = eaGeneral.Id,
+                },
+                new MessageTemplate
+                {
+                    Name = MessageTemplateSystemNames.OrderPlacedStoreOwnerNotification,
+                    Subject = "%Store.Name%. Purchase Receipt for Order #%Order.OrderNumber%",
+                    Body = $"<p>{Environment.NewLine}<a href=\"%Store.URL%\">%Store.Name%</a>{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}%Order.CustomerFullName% (%Order.CustomerEmail%) has just placed an order from your store. Below is the summary of the order.{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}Order Number: %Order.OrderNumber%{Environment.NewLine}<br />{Environment.NewLine}Date Ordered: %Order.CreatedOn%{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}Billing Address{Environment.NewLine}<br />{Environment.NewLine}%Order.BillingFirstName% %Order.BillingLastName%{Environment.NewLine}<br />{Environment.NewLine}%Order.BillingAddress1%{Environment.NewLine}<br />{Environment.NewLine}%Order.BillingCity% %Order.BillingZipPostalCode%{Environment.NewLine}<br />{Environment.NewLine}%Order.BillingStateProvince% %Order.BillingCountry%{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}%if (%Order.Shippable%) Shipping Address{Environment.NewLine}<br />{Environment.NewLine}%Order.ShippingFirstName% %Order.ShippingLastName%{Environment.NewLine}<br />{Environment.NewLine}%Order.ShippingAddress1%{Environment.NewLine}<br />{Environment.NewLine}%Order.ShippingCity% %Order.ShippingZipPostalCode%{Environment.NewLine}<br />{Environment.NewLine}%Order.ShippingStateProvince% %Order.ShippingCountry%{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}Shipping Method: %Order.ShippingMethod%{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine} endif% %Order.Product(s)%{Environment.NewLine}</p>{Environment.NewLine}",
+                    IsActive = true,
+                    EmailAccountId = eaGeneral.Id,
+                },
+                new MessageTemplate
+                {
+                    Name = MessageTemplateSystemNames.ShipmentSentCustomerNotification,
+                    Subject = "Your order from %Store.Name% has been shipped.",
+                    Body = $"<p>{Environment.NewLine}<a href=\"%Store.URL%\"> %Store.Name%</a>{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}Hello %Order.CustomerFullName%!,{Environment.NewLine}<br />{Environment.NewLine}Good news! You order has been shipped.{Environment.NewLine}<br />{Environment.NewLine}Order Number: %Order.OrderNumber%{Environment.NewLine}<br />{Environment.NewLine}Order Details: <a href=\"%Order.OrderURLForCustomer%\" target=\"_blank\">%Order.OrderURLForCustomer%</a>{Environment.NewLine}<br />{Environment.NewLine}Date Ordered: %Order.CreatedOn%{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}Billing Address{Environment.NewLine}<br />{Environment.NewLine}%Order.BillingFirstName% %Order.BillingLastName%{Environment.NewLine}<br />{Environment.NewLine}%Order.BillingAddress1%{Environment.NewLine}<br />{Environment.NewLine}%Order.BillingCity% %Order.BillingZipPostalCode%{Environment.NewLine}<br />{Environment.NewLine}%Order.BillingStateProvince% %Order.BillingCountry%{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}%if (%Order.Shippable%) Shipping Address{Environment.NewLine}<br />{Environment.NewLine}%Order.ShippingFirstName% %Order.ShippingLastName%{Environment.NewLine}<br />{Environment.NewLine}%Order.ShippingAddress1%{Environment.NewLine}<br />{Environment.NewLine}%Order.ShippingCity% %Order.ShippingZipPostalCode%{Environment.NewLine}<br />{Environment.NewLine}%Order.ShippingStateProvince% %Order.ShippingCountry%{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}Shipping Method: %Order.ShippingMethod%{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine} endif% Shipped Products:{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}%Shipment.Product(s)%{Environment.NewLine}</p>{Environment.NewLine}",
+                    IsActive = true,
+                    EmailAccountId = eaGeneral.Id,
+                },
+                new MessageTemplate
+                {
+                    Name = MessageTemplateSystemNames.ProductReviewStoreOwnerNotification,
+                    Subject = "%Store.Name%. New product review.",
+                    Body = $"<p>{Environment.NewLine}<a href=\"%Store.URL%\">%Store.Name%</a>{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}A new product review has been written for product \"%ProductReview.ProductName%\".{Environment.NewLine}</p>{Environment.NewLine}",
+                    IsActive = true,
+                    EmailAccountId = eaGeneral.Id,
+                },
+                new MessageTemplate
+                {
+                    Name = MessageTemplateSystemNames.ProductReviewReplyCustomerNotification,
+                    Subject = "%Store.Name%. Product review reply.",
+                    Body = $"<p>{Environment.NewLine}<a href=\"%Store.URL%\">%Store.Name%</a>{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}Hello %Customer.FullName%,{Environment.NewLine}<br />{Environment.NewLine}You received a reply from the store administration to your review for product \"%ProductReview.ProductName%\".{Environment.NewLine}</p>{Environment.NewLine}",
+                    IsActive = false,
+                    EmailAccountId = eaGeneral.Id,
+                },
+                new MessageTemplate
+                {
+                    Name = MessageTemplateSystemNames.QuantityBelowStoreOwnerNotification,
+                    Subject = "%Store.Name%. Quantity below notification. %Product.Name%",
+                    Body = $"<p>{Environment.NewLine}<a href=\"%Store.URL%\">%Store.Name%</a>{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}%Product.Name% (ID: %Product.ID%) low quantity.{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}Quantity: %Product.StockQuantity%{Environment.NewLine}<br />{Environment.NewLine}</p>{Environment.NewLine}",
+                    IsActive = true,
+                    EmailAccountId = eaGeneral.Id,
+                },
+                new MessageTemplate
+                {
+                    Name = MessageTemplateSystemNames.QuantityBelowAttributeCombinationStoreOwnerNotification,
+                    Subject = "%Store.Name%. Quantity below notification. %Product.Name%",
+                    Body = $"<p>{Environment.NewLine}<a href=\"%Store.URL%\">%Store.Name%</a>{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}%Product.Name% (ID: %Product.ID%) low quantity.{Environment.NewLine}<br />{Environment.NewLine}%AttributeCombination.Formatted%{Environment.NewLine}<br />{Environment.NewLine}Quantity: %AttributeCombination.StockQuantity%{Environment.NewLine}<br />{Environment.NewLine}</p>{Environment.NewLine}",
+                    IsActive = true,
+                    EmailAccountId = eaGeneral.Id,
+                },
+                new MessageTemplate
+                {
+                    Name = MessageTemplateSystemNames.ReturnRequestStatusChangedCustomerNotification,
+                    Subject = "%Store.Name%. Return request status was changed.",
+                    Body = $"<p>{Environment.NewLine}<a href=\"%Store.URL%\">%Store.Name%</a>{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}Hello %Customer.FullName%,{Environment.NewLine}<br />{Environment.NewLine}Your return request #%ReturnRequest.CustomNumber% status has been changed.{Environment.NewLine}</p>{Environment.NewLine}",
+                    IsActive = true,
+                    EmailAccountId = eaGeneral.Id,
+                },
+                new MessageTemplate
+                {
+                    Name = MessageTemplateSystemNames.EmailAFriendMessage,
+                    Subject = "%Store.Name%. Referred Item",
+                    Body = $"<p>{Environment.NewLine}<a href=\"%Store.URL%\"> %Store.Name%</a>{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}%EmailAFriend.Email% was shopping on %Store.Name% and wanted to share the following item with you.{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}<b><a target=\"_blank\" href=\"%Product.ProductURLForCustomer%\">%Product.Name%</a></b>{Environment.NewLine}<br />{Environment.NewLine}%Product.ShortDescription%{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}For more info click <a target=\"_blank\" href=\"%Product.ProductURLForCustomer%\">here</a>{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}%EmailAFriend.PersonalMessage%{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}%Store.Name%{Environment.NewLine}</p>{Environment.NewLine}",
+                    IsActive = true,
+                    EmailAccountId = eaGeneral.Id,
+                },
+                new MessageTemplate
+                {
+                    Name = MessageTemplateSystemNames.WishlistToFriendMessage,
+                    Subject = "%Store.Name%. Wishlist",
+                    Body = $"<p>{Environment.NewLine}<a href=\"%Store.URL%\"> %Store.Name%</a>{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}%Wishlist.Email% was shopping on %Store.Name% and wanted to share a wishlist with you.{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}For more info click <a target=\"_blank\" href=\"%Wishlist.URLForCustomer%\">here</a>{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}%Wishlist.PersonalMessage%{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}%Store.Name%{Environment.NewLine}</p>{Environment.NewLine}",
+                    IsActive = true,
+                    EmailAccountId = eaGeneral.Id,
+                },
+                new MessageTemplate
+                {
+                    Name = MessageTemplateSystemNames.NewOrderNoteAddedCustomerNotification,
+                    Subject = "%Store.Name%. New order note has been added",
+                    Body = $"<p>{Environment.NewLine}<a href=\"%Store.URL%\">%Store.Name%</a>{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}Hello %Customer.FullName%,{Environment.NewLine}<br />{Environment.NewLine}New order note has been added to your account:{Environment.NewLine}<br />{Environment.NewLine}\"%Order.NewNoteText%\".{Environment.NewLine}<br />{Environment.NewLine}<a target=\"_blank\" href=\"%Order.OrderURLForCustomer%\">%Order.OrderURLForCustomer%</a>{Environment.NewLine}</p>{Environment.NewLine}",
+                    IsActive = true,
+                    EmailAccountId = eaGeneral.Id,
+                },
+                new MessageTemplate
+                {
+                    Name = MessageTemplateSystemNames.RecurringPaymentCancelledStoreOwnerNotification,
+                    Subject = "%Store.Name%. Recurring payment cancelled",
+                    Body = $"<p>{Environment.NewLine}<a href=\"%Store.URL%\">%Store.Name%</a>{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}%if (%RecurringPayment.CancelAfterFailedPayment%) The last payment for the recurring payment ID=%RecurringPayment.ID% failed, so it was cancelled. endif% %if (!%RecurringPayment.CancelAfterFailedPayment%) %Customer.FullName% (%Customer.Email%) has just cancelled a recurring payment ID=%RecurringPayment.ID%. endif%{Environment.NewLine}</p>{Environment.NewLine}",
+                    IsActive = true,
+                    EmailAccountId = eaGeneral.Id,
+                },
+                new MessageTemplate
+                {
+                    Name = MessageTemplateSystemNames.RecurringPaymentCancelledCustomerNotification,
+                    Subject = "%Store.Name%. Recurring payment cancelled",
+                    Body = $"<p>{Environment.NewLine}<a href=\"%Store.URL%\">%Store.Name%</a>{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}Hello %Customer.FullName%,{Environment.NewLine}<br />{Environment.NewLine}%if (%RecurringPayment.CancelAfterFailedPayment%) It appears your credit card didn't go through for this recurring payment (<a href=\"%Order.OrderURLForCustomer%\" target=\"_blank\">%Order.OrderURLForCustomer%</a>){Environment.NewLine}<br />{Environment.NewLine}So your subscription has been canceled. endif% %if (!%RecurringPayment.CancelAfterFailedPayment%) The recurring payment ID=%RecurringPayment.ID% was cancelled. endif%{Environment.NewLine}</p>{Environment.NewLine}",
+                    IsActive = true,
+                    EmailAccountId = eaGeneral.Id,
+                },
+                new MessageTemplate
+                {
+                    Name = MessageTemplateSystemNames.RecurringPaymentFailedCustomerNotification,
+                    Subject = "%Store.Name%. Last recurring payment failed",
+                    Body = $"<p>{Environment.NewLine}<a href=\"%Store.URL%\">%Store.Name%</a>{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}Hello %Customer.FullName%,{Environment.NewLine}<br />{Environment.NewLine}It appears your credit card didn't go through for this recurring payment (<a href=\"%Order.OrderURLForCustomer%\" target=\"_blank\">%Order.OrderURLForCustomer%</a>){Environment.NewLine}<br /> %if (%RecurringPayment.RecurringPaymentType% == \"Manual\") {Environment.NewLine}You can recharge balance and manually retry payment or cancel it on the order history page. endif% %if (%RecurringPayment.RecurringPaymentType% == \"Automatic\") {Environment.NewLine}You can recharge balance and wait, we will try to make the payment again, or you can cancel it on the order history page. endif%{Environment.NewLine}</p>{Environment.NewLine}",
+                    IsActive = true,
+                    EmailAccountId = eaGeneral.Id,
+                },
+                new MessageTemplate
+                {
+                    Name = MessageTemplateSystemNames.OrderPlacedVendorNotification,
+                    Subject = "%Store.Name%. Order placed",
+                    Body = $"<p>{Environment.NewLine}<a href=\"%Store.URL%\">%Store.Name%</a>{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}%Customer.FullName% (%Customer.Email%) has just placed an order.{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}Order Number: %Order.OrderNumber%{Environment.NewLine}<br />{Environment.NewLine}Date Ordered: %Order.CreatedOn%{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}%Order.Product(s)%{Environment.NewLine}</p>{Environment.NewLine}",
+                    //this template is disabled by default
+                    IsActive = false,
+                    EmailAccountId = eaGeneral.Id,
+                },
+                new MessageTemplate
+                {
+                    Name = MessageTemplateSystemNames.OrderPlacedAffiliateNotification,
+                    Subject = "%Store.Name%. Order placed",
+                    Body = $"<p>{Environment.NewLine}<a href=\"%Store.URL%\">%Store.Name%</a>{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}%Customer.FullName% (%Customer.Email%) has just placed an order.{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}Order Number: %Order.OrderNumber%{Environment.NewLine}<br />{Environment.NewLine}Date Ordered: %Order.CreatedOn%{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}%Order.Product(s)%{Environment.NewLine}</p>{Environment.NewLine}",
+                    //this template is disabled by default
+                    IsActive = false,
+                    EmailAccountId = eaGeneral.Id,
+                },
+                new MessageTemplate
+                {
+                    Name = MessageTemplateSystemNames.OrderRefundedCustomerNotification,
+                    Subject = "%Store.Name%. Order #%Order.OrderNumber% refunded",
+                    Body = $"<p>{Environment.NewLine}<a href=\"%Store.URL%\">%Store.Name%</a>{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}Hello %Order.CustomerFullName%,{Environment.NewLine}<br />{Environment.NewLine}Thanks for buying from <a href=\"%Store.URL%\">%Store.Name%</a>. Order #%Order.OrderNumber% has been has been refunded. Please allow 7-14 days for the refund to be reflected in your account.{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}Amount refunded: %Order.AmountRefunded%{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}Below is the summary of the order.{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}Order Number: %Order.OrderNumber%{Environment.NewLine}<br />{Environment.NewLine}Order Details: <a href=\"%Order.OrderURLForCustomer%\" target=\"_blank\">%Order.OrderURLForCustomer%</a>{Environment.NewLine}<br />{Environment.NewLine}Date Ordered: %Order.CreatedOn%{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}Billing Address{Environment.NewLine}<br />{Environment.NewLine}%Order.BillingFirstName% %Order.BillingLastName%{Environment.NewLine}<br />{Environment.NewLine}%Order.BillingAddress1%{Environment.NewLine}<br />{Environment.NewLine}%Order.BillingCity% %Order.BillingZipPostalCode%{Environment.NewLine}<br />{Environment.NewLine}%Order.BillingStateProvince% %Order.BillingCountry%{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}%if (%Order.Shippable%) Shipping Address{Environment.NewLine}<br />{Environment.NewLine}%Order.ShippingFirstName% %Order.ShippingLastName%{Environment.NewLine}<br />{Environment.NewLine}%Order.ShippingAddress1%{Environment.NewLine}<br />{Environment.NewLine}%Order.ShippingCity% %Order.ShippingZipPostalCode%{Environment.NewLine}<br />{Environment.NewLine}%Order.ShippingStateProvince% %Order.ShippingCountry%{Environment.NewLine}<br />{Environment.NewLine}<br /{Environment.NewLine}>Shipping Method: %Order.ShippingMethod%{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine} endif% %Order.Product(s)%{Environment.NewLine}</p>{Environment.NewLine}",
+                    //this template is disabled by default
+                    IsActive = false,
+                    EmailAccountId = eaGeneral.Id,
+                },
+                new MessageTemplate
+                {
+                    Name = MessageTemplateSystemNames.OrderRefundedStoreOwnerNotification,
+                    Subject = "%Store.Name%. Order #%Order.OrderNumber% refunded",
+                    Body = $"%Store.Name%. Order #%Order.OrderNumber% refunded', N'{Environment.NewLine}<p>{Environment.NewLine}<a href=\"%Store.URL%\">%Store.Name%</a>{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}Order #%Order.OrderNumber% has been just refunded{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}Amount refunded: %Order.AmountRefunded%{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}Date Ordered: %Order.CreatedOn%{Environment.NewLine}</p>{Environment.NewLine}",
+                    //this template is disabled by default
+                    IsActive = false,
+                    EmailAccountId = eaGeneral.Id,
+                },
+                new MessageTemplate
+                {
+                    Name = MessageTemplateSystemNames.OrderPaidStoreOwnerNotification,
+                    Subject = "%Store.Name%. Order #%Order.OrderNumber% paid",
+                    Body = $"<p>{Environment.NewLine}<a href=\"%Store.URL%\">%Store.Name%</a>{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}Order #%Order.OrderNumber% has been just paid{Environment.NewLine}<br />{Environment.NewLine}Date Ordered: %Order.CreatedOn%{Environment.NewLine}</p>{Environment.NewLine}",
+                    //this template is disabled by default
+                    IsActive = false,
+                    EmailAccountId = eaGeneral.Id,
+                },
+                new MessageTemplate
+                {
+                    Name = MessageTemplateSystemNames.OrderPaidCustomerNotification,
+                    Subject = "%Store.Name%. Order #%Order.OrderNumber% paid",
+                    Body = $"<p>{Environment.NewLine}<a href=\"%Store.URL%\">%Store.Name%</a>{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}Hello %Order.CustomerFullName%,{Environment.NewLine}<br />{Environment.NewLine}Thanks for buying from <a href=\"%Store.URL%\">%Store.Name%</a>. Order #%Order.OrderNumber% has been just paid. Below is the summary of the order.{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}Order Number: %Order.OrderNumber%{Environment.NewLine}<br />{Environment.NewLine}Order Details: <a href=\"%Order.OrderURLForCustomer%\" target=\"_blank\">%Order.OrderURLForCustomer%</a>{Environment.NewLine}<br />{Environment.NewLine}Date Ordered: %Order.CreatedOn%{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}Billing Address{Environment.NewLine}<br />{Environment.NewLine}%Order.BillingFirstName% %Order.BillingLastName%{Environment.NewLine}<br />{Environment.NewLine}%Order.BillingAddress1%{Environment.NewLine}<br />{Environment.NewLine}%Order.BillingCity% %Order.BillingZipPostalCode%{Environment.NewLine}<br />{Environment.NewLine}%Order.BillingStateProvince% %Order.BillingCountry%{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}%if (%Order.Shippable%) Shipping Address{Environment.NewLine}<br />{Environment.NewLine}%Order.ShippingFirstName% %Order.ShippingLastName%{Environment.NewLine}<br />{Environment.NewLine}%Order.ShippingAddress1%{Environment.NewLine}<br />{Environment.NewLine}%Order.ShippingCity% %Order.ShippingZipPostalCode%{Environment.NewLine}<br />{Environment.NewLine}%Order.ShippingStateProvince% %Order.ShippingCountry%{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}Shipping Method: %Order.ShippingMethod%{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine} endif% %Order.Product(s)%{Environment.NewLine}</p>{Environment.NewLine}",
+                    //this template is disabled by default
+                    IsActive = false,
+                    EmailAccountId = eaGeneral.Id,
+                },
+                new MessageTemplate
+                {
+                    Name = MessageTemplateSystemNames.OrderPaidVendorNotification,
+                    Subject = "%Store.Name%. Order #%Order.OrderNumber% paid",
+                    Body = $"<p>{Environment.NewLine}<a href=\"%Store.URL%\">%Store.Name%</a>{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}Order #%Order.OrderNumber% has been just paid.{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}Order Number: %Order.OrderNumber%{Environment.NewLine}<br />{Environment.NewLine}Date Ordered: %Order.CreatedOn%{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}%Order.Product(s)%{Environment.NewLine}</p>{Environment.NewLine}",
+                    //this template is disabled by default
+                    IsActive = false,
+                    EmailAccountId = eaGeneral.Id,
+                },
+                new MessageTemplate
+                {
+                    Name = MessageTemplateSystemNames.OrderPaidAffiliateNotification,
+                    Subject = "%Store.Name%. Order #%Order.OrderNumber% paid",
+                    Body = $"<p>{Environment.NewLine}<a href=\"%Store.URL%\">%Store.Name%</a>{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}Order #%Order.OrderNumber% has been just paid.{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}Order Number: %Order.OrderNumber%{Environment.NewLine}<br />{Environment.NewLine}Date Ordered: %Order.CreatedOn%{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}%Order.Product(s)%{Environment.NewLine}</p>{Environment.NewLine}",
+                    //this template is disabled by default
+                    IsActive = false,
+                    EmailAccountId = eaGeneral.Id,
+                },
+                new MessageTemplate
+                {
+                    Name = MessageTemplateSystemNames.NewVendorAccountApplyStoreOwnerNotification,
+                    Subject = "%Store.Name%. New vendor account submitted.",
+                    Body = $"<p>{Environment.NewLine}<a href=\"%Store.URL%\">%Store.Name%</a>{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}%Customer.FullName% (%Customer.Email%) has just submitted for a vendor account. Details are below:{Environment.NewLine}<br />{Environment.NewLine}Vendor name: %Vendor.Name%{Environment.NewLine}<br />{Environment.NewLine}Vendor email: %Vendor.Email%{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}You can activate it in admin area.{Environment.NewLine}</p>{Environment.NewLine}",
+                    IsActive = true,
+                    EmailAccountId = eaGeneral.Id,
+                },
+                new MessageTemplate
+                {
+                    Name = MessageTemplateSystemNames.VendorInformationChangeNotification,
+                    Subject = "%Store.Name%. Vendor information change.",
+                    Body = $"<p>{Environment.NewLine}<a href=\"%Store.URL%\">%Store.Name%</a>{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}Vendor %Vendor.Name% (%Vendor.Email%) has just changed information about itself.{Environment.NewLine}</p>{Environment.NewLine}",
+                    IsActive = true,
+                    EmailAccountId = eaGeneral.Id
+                },
+                new MessageTemplate
+                {
+                    Name = MessageTemplateSystemNames.ContactUsMessage,
+                    Subject = "%Store.Name%. Contact us",
+                    Body = $"<p>{Environment.NewLine}%ContactUs.Body%{Environment.NewLine}</p>{Environment.NewLine}",
+                    IsActive = true,
+                    EmailAccountId = eaGeneral.Id,
+                },
+                new MessageTemplate
+                {
+                    Name = MessageTemplateSystemNames.ContactVendorMessage,
+                    Subject = "%Store.Name%. Contact us",
+                    Body = $"<p>{Environment.NewLine}%ContactUs.Body%{Environment.NewLine}</p>{Environment.NewLine}",
+                    IsActive = true,
+                    EmailAccountId = eaGeneral.Id,
+                }
+            };
             _messageTemplateRepository.Insert(messageTemplates);
         }
 
@@ -4378,135 +5728,152 @@ namespace Nop.Services.Installation
                 throw new Exception("Topic template cannot be loaded");
 
             var topics = new List<Topic>
-                               {
-                                   new Topic
-                                       {
-                                           SystemName = "AboutUs",
-                                           IncludeInSitemap = false,
-                                           IsPasswordProtected = false,
-                                           IncludeInFooterColumn1 = true,
-                                           DisplayOrder = 20,
-                                           Published = true,
-                                           Title = "About us",
-                                           Body = "<p>Put your &quot;About Us&quot; information here. You can edit this in the admin site.</p>",
-                                           TopicTemplateId = defaultTopicTemplate.Id
-                                       },
-                                   new Topic
-                                       {
-                                           SystemName = "CheckoutAsGuestOrRegister",
-                                           IncludeInSitemap = false,
-                                           IsPasswordProtected = false,
-                                           DisplayOrder = 1,
-                                           Published = true,
-                                           Title = "",
-                                           Body = "<p><strong>Register and save time!</strong><br />Register with us for future convenience:</p><ul><li>Fast and easy check out</li><li>Easy access to your order history and status</li></ul>",
-                                           TopicTemplateId = defaultTopicTemplate.Id
-                                       },
-                                   new Topic
-                                       {
-                                           SystemName = "ConditionsOfUse",
-                                           IncludeInSitemap = false,
-                                           IsPasswordProtected = false,
-                                           IncludeInFooterColumn1 = true,
-                                           DisplayOrder = 15,
-                                           Published = true,
-                                           Title = "Conditions of Use",
-                                           Body = "<p>Put your conditions of use information here. You can edit this in the admin site.</p>",
-                                           TopicTemplateId = defaultTopicTemplate.Id
-                                       },
-                                   new Topic
-                                       {
-                                           SystemName = "ContactUs",
-                                           IncludeInSitemap = false,
-                                           IsPasswordProtected = false,
-                                           DisplayOrder = 1,
-                                           Published = true,
-                                           Title = "",
-                                           Body = "<p>Put your contact information here. You can edit this in the admin site.</p>",
-                                           TopicTemplateId = defaultTopicTemplate.Id
-                                       },
-                                   new Topic
-                                       {
-                                           SystemName = "ForumWelcomeMessage",
-                                           IncludeInSitemap = false,
-                                           IsPasswordProtected = false,
-                                           DisplayOrder = 1,
-                                           Published = true,
-                                           Title = "Forums",
-                                           Body = "<p>Put your welcome message here. You can edit this in the admin site.</p>",
-                                           TopicTemplateId = defaultTopicTemplate.Id
-                                       },
-                                   new Topic
-                                       {
-                                           SystemName = "HomePageText",
-                                           IncludeInSitemap = false,
-                                           IsPasswordProtected = false,
-                                           DisplayOrder = 1,
-                                           Published = true,
-                                           Title = "Welcome to our store",
-                                           Body = "<p>Online shopping is the process consumers go through to purchase products or services over the Internet. You can edit this in the admin site.</p><p>If you have questions, see the <a href=\"http://www.nopcommerce.com/documentation.aspx\">Documentation</a>, or post in the <a href=\"http://www.nopcommerce.com/boards/\">Forums</a> at <a href=\"http://www.nopcommerce.com\">nopCommerce.com</a></p>",
-                                           TopicTemplateId = defaultTopicTemplate.Id
-                                       },
-                                   new Topic
-                                       {
-                                           SystemName = "LoginRegistrationInfo",
-                                           IncludeInSitemap = false,
-                                           IsPasswordProtected = false,
-                                           DisplayOrder = 1,
-                                           Published = true,
-                                           Title = "About login / registration",
-                                           Body = "<p>Put your login / registration information here. You can edit this in the admin site.</p>",
-                                           TopicTemplateId = defaultTopicTemplate.Id
-                                       },
-                                   new Topic
-                                       {
-                                           SystemName = "PrivacyInfo",
-                                           IncludeInSitemap = false,
-                                           IsPasswordProtected = false,
-                                           IncludeInFooterColumn1 = true,
-                                           DisplayOrder = 10,
-                                           Published = true,
-                                           Title = "Privacy notice",
-                                           Body = "<p>Put your privacy policy information here. You can edit this in the admin site.</p>",
-                                           TopicTemplateId = defaultTopicTemplate.Id
-                                       },
-                                   new Topic
-                                       {
-                                           SystemName = "PageNotFound",
-                                           IncludeInSitemap = false,
-                                           IsPasswordProtected = false,
-                                           DisplayOrder = 1,
-                                           Published = true,
-                                           Title = "",
-                                           Body = "<p><strong>The page you requested was not found, and we have a fine guess why.</strong></p><ul><li>If you typed the URL directly, please make sure the spelling is correct.</li><li>The page no longer exists. In this case, we profusely apologize for the inconvenience and for any damage this may cause.</li></ul>",
-                                           TopicTemplateId = defaultTopicTemplate.Id
-                                       },
-                                   new Topic
-                                       {
-                                           SystemName = "ShippingInfo",
-                                           IncludeInSitemap = false,
-                                           IsPasswordProtected = false,
-                                           IncludeInFooterColumn1 = true,
-                                           DisplayOrder = 5,
-                                           Published = true,
-                                           Title = "Shipping & returns",
-                                           Body = "<p>Put your shipping &amp; returns information here. You can edit this in the admin site.</p>",
-                                           TopicTemplateId = defaultTopicTemplate.Id
-                                       },
-                                   new Topic
-                                       {
-                                           SystemName = "ApplyVendor",
-                                           IncludeInSitemap = false,
-                                           IsPasswordProtected = false,
-                                           DisplayOrder = 1,
-                                           Published = true,
-                                           Title = "",
-                                           Body = "<p>Put your apply vendor instructions here. You can edit this in the admin site.</p>",
-                                           TopicTemplateId = defaultTopicTemplate.Id
-                                       },
-                               };
+            {
+                new Topic
+                {
+                    SystemName = "AboutUs",
+                    IncludeInSitemap = false,
+                    IsPasswordProtected = false,
+                    IncludeInFooterColumn1 = true,
+                    DisplayOrder = 20,
+                    Published = true,
+                    Title = "About us",
+                    Body =
+                        "<p>Put your &quot;About Us&quot; information here. You can edit this in the admin site.</p>",
+                    TopicTemplateId = defaultTopicTemplate.Id
+                },
+                new Topic
+                {
+                    SystemName = "CheckoutAsGuestOrRegister",
+                    IncludeInSitemap = false,
+                    IsPasswordProtected = false,
+                    DisplayOrder = 1,
+                    Published = true,
+                    Title = "",
+                    Body =
+                        "<p><strong>Register and save time!</strong><br />Register with us for future convenience:</p><ul><li>Fast and easy check out</li><li>Easy access to your order history and status</li></ul>",
+                    TopicTemplateId = defaultTopicTemplate.Id
+                },
+                new Topic
+                {
+                    SystemName = "ConditionsOfUse",
+                    IncludeInSitemap = false,
+                    IsPasswordProtected = false,
+                    IncludeInFooterColumn1 = true,
+                    DisplayOrder = 15,
+                    Published = true,
+                    Title = "Conditions of Use",
+                    Body = "<p>Put your conditions of use information here. You can edit this in the admin site.</p>",
+                    TopicTemplateId = defaultTopicTemplate.Id
+                },
+                new Topic
+                {
+                    SystemName = "ContactUs",
+                    IncludeInSitemap = false,
+                    IsPasswordProtected = false,
+                    DisplayOrder = 1,
+                    Published = true,
+                    Title = "",
+                    Body = "<p>Put your contact information here. You can edit this in the admin site.</p>",
+                    TopicTemplateId = defaultTopicTemplate.Id
+                },
+                new Topic
+                {
+                    SystemName = "ForumWelcomeMessage",
+                    IncludeInSitemap = false,
+                    IsPasswordProtected = false,
+                    DisplayOrder = 1,
+                    Published = true,
+                    Title = "Forums",
+                    Body = "<p>Put your welcome message here. You can edit this in the admin site.</p>",
+                    TopicTemplateId = defaultTopicTemplate.Id
+                },
+                new Topic
+                {
+                    SystemName = "HomePageText",
+                    IncludeInSitemap = false,
+                    IsPasswordProtected = false,
+                    DisplayOrder = 1,
+                    Published = true,
+                    Title = "Welcome to our store",
+                    Body =
+                        "<p>Online shopping is the process consumers go through to purchase products or services over the Internet. You can edit this in the admin site.</p><p>If you have questions, see the <a href=\"http://docs.nopcommerce.com/\">Documentation</a>, or post in the <a href=\"https://www.nopcommerce.com/boards/\">Forums</a> at <a href=\"https://www.nopcommerce.com\">nopCommerce.com</a></p>",
+                    TopicTemplateId = defaultTopicTemplate.Id
+                },
+                new Topic
+                {
+                    SystemName = "LoginRegistrationInfo",
+                    IncludeInSitemap = false,
+                    IsPasswordProtected = false,
+                    DisplayOrder = 1,
+                    Published = true,
+                    Title = "About login / registration",
+                    Body =
+                        "<p>Put your login / registration information here. You can edit this in the admin site.</p>",
+                    TopicTemplateId = defaultTopicTemplate.Id
+                },
+                new Topic
+                {
+                    SystemName = "PrivacyInfo",
+                    IncludeInSitemap = false,
+                    IsPasswordProtected = false,
+                    IncludeInFooterColumn1 = true,
+                    DisplayOrder = 10,
+                    Published = true,
+                    Title = "Privacy notice",
+                    Body = "<p>Put your privacy policy information here. You can edit this in the admin site.</p>",
+                    TopicTemplateId = defaultTopicTemplate.Id
+                },
+                new Topic
+                {
+                    SystemName = "PageNotFound",
+                    IncludeInSitemap = false,
+                    IsPasswordProtected = false,
+                    DisplayOrder = 1,
+                    Published = true,
+                    Title = "",
+                    Body =
+                        "<p><strong>The page you requested was not found, and we have a fine guess why.</strong></p><ul><li>If you typed the URL directly, please make sure the spelling is correct.</li><li>The page no longer exists. In this case, we profusely apologize for the inconvenience and for any damage this may cause.</li></ul>",
+                    TopicTemplateId = defaultTopicTemplate.Id
+                },
+                new Topic
+                {
+                    SystemName = "ShippingInfo",
+                    IncludeInSitemap = false,
+                    IsPasswordProtected = false,
+                    IncludeInFooterColumn1 = true,
+                    DisplayOrder = 5,
+                    Published = true,
+                    Title = "Shipping & returns",
+                    Body =
+                        "<p>Put your shipping &amp; returns information here. You can edit this in the admin site.</p>",
+                    TopicTemplateId = defaultTopicTemplate.Id
+                },
+                new Topic
+                {
+                    SystemName = "ApplyVendor",
+                    IncludeInSitemap = false,
+                    IsPasswordProtected = false,
+                    DisplayOrder = 1,
+                    Published = true,
+                    Title = "",
+                    Body = "<p>Put your apply vendor instructions here. You can edit this in the admin site.</p>",
+                    TopicTemplateId = defaultTopicTemplate.Id
+                },
+                new Topic
+                {
+                    SystemName = "VendorTermsOfService",
+                    IncludeInSitemap = false,
+                    IsPasswordProtected = false,
+                    IncludeInFooterColumn1 = true,
+                    DisplayOrder = 1,
+                    Published = true,
+                    Title = "",
+                    Body = "<p>Put your terms of service information here. You can edit this in the admin site.</p>",
+                    TopicTemplateId = defaultTopicTemplate.Id
+                }
+            };
             _topicRepository.Insert(topics);
-
 
             //search engine names
             foreach (var topic in topics)
@@ -4517,13 +5884,12 @@ namespace Nop.Services.Installation
                     EntityName = "Topic",
                     LanguageId = 0,
                     IsActive = true,
-                    Slug = topic.ValidateSeName("", !String.IsNullOrEmpty(topic.Title) ? topic.Title : topic.SystemName, true)
+                    Slug = topic.ValidateSeName("", !string.IsNullOrEmpty(topic.Title) ? topic.Title : topic.SystemName, true)
                 });
             }
-
         }
 
-        protected virtual void InstallSettings()
+        protected virtual void InstallSettings(bool installSampleData)
         {
             var settingService = EngineContext.Current.Resolve<ISettingService>();
             settingService.SaveSetting(new PdfSettings
@@ -4540,17 +5906,22 @@ namespace Nop.Services.Installation
             {
                 UseSystemEmailForContactUsForm = true,
                 UseStoredProceduresIfSupported = true,
+                UseStoredProcedureForLoadingCategories = true,
                 SitemapEnabled = true,
+                SitemapPageSize = 200,
                 SitemapIncludeCategories = true,
                 SitemapIncludeManufacturers = true,
                 SitemapIncludeProducts = false,
+                SitemapIncludeProductTags = false,
                 DisplayJavaScriptDisabledWarning = false,
                 UseFullTextSearch = false,
                 FullTextMode = FulltextSearchMode.ExactMatch,
                 Log404Errors = true,
                 BreadcrumbDelimiter = "/",
                 RenderXuaCompatible = false,
-                XuaCompatibleValue = "IE=edge"
+                XuaCompatibleValue = "IE=edge",
+                BbcodeEditorOpenLinksInNewWindow = false,
+                PopupForTermsOfServiceLinks = true
             });
 
             settingService.SaveSetting(new SeoSettings
@@ -4564,6 +5935,7 @@ namespace Nop.Services.Installation
                 ConvertNonWesternChars = false,
                 AllowUnicodeCharsInUrls = true,
                 CanonicalUrlsEnabled = false,
+                QueryStringInCanonicalUrlsEnabled = false,
                 WwwRequirement = WwwRequirement.NoMatter,
                 //we disable bundling out of the box because it requires a lot of server resources
                 EnableJsBundling = false,
@@ -4571,44 +5943,80 @@ namespace Nop.Services.Installation
                 TwitterMetaTags = true,
                 OpenGraphMetaTags = true,
                 ReservedUrlRecordSlugs = new List<string>
-                    {
-                        "admin",
-                        "install",
-                        "recentlyviewedproducts",
-                        "newproducts",
-                        "compareproducts",
-                        "clearcomparelist",
-                        "setproductreviewhelpfulness",
-                        "login",
-                        "register",
-                        "logout",
-                        "cart",
-                        "wishlist",
-                        "emailwishlist",
-                        "checkout",
-                        "onepagecheckout",
-                        "contactus",
-                        "passwordrecovery",
-                        "subscribenewsletter",
-                        "blog",
-                        "boards",
-                        "inboxupdate",
-                        "sentupdate",
-                        "news",
-                        "sitemap",
-                        "search",
-                        "config",
-                        "eucookielawaccept",
-                        "page-not-found"
-                    },
+                {
+                    "admin",
+                    "install",
+                    "recentlyviewedproducts",
+                    "newproducts",
+                    "compareproducts",
+                    "clearcomparelist",
+                    "setproductreviewhelpfulness",
+                    "login",
+                    "register",
+                    "logout",
+                    "cart",
+                    "wishlist",
+                    "emailwishlist",
+                    "checkout",
+                    "onepagecheckout",
+                    "contactus",
+                    "passwordrecovery",
+                    "subscribenewsletter",
+                    "blog",
+                    "boards",
+                    "inboxupdate",
+                    "sentupdate",
+                    "news",
+                    "sitemap",
+                    "search",
+                    "config",
+                    "eucookielawaccept",
+                    "page-not-found",
+                    //system names are not allowed (anyway they will cause a runtime error),
+                    "con",
+                    "lpt1",
+                    "lpt2",
+                    "lpt3",
+                    "lpt4",
+                    "lpt5",
+                    "lpt6",
+                    "lpt7",
+                    "lpt8",
+                    "lpt9",
+                    "com1",
+                    "com2",
+                    "com3",
+                    "com4",
+                    "com5",
+                    "com6",
+                    "com7",
+                    "com8",
+                    "com9",
+                    "null",
+                    "prn",
+                    "aux"
+                },
+                CustomHeadTags = ""
             });
 
             settingService.SaveSetting(new AdminAreaSettings
             {
                 DefaultGridPageSize = 15,
+                PopupGridPageSize = 10,
                 GridPageSizes = "10, 15, 20, 50, 100",
                 RichEditorAdditionalSettings = null,
-                RichEditorAllowJavaScript = false
+                RichEditorAllowJavaScript = false,
+                UseRichEditorInMessageTemplates = false,
+                UseIsoDateFormatInJsonResult = true,
+                UseNestedSetting = true
+            });
+
+            settingService.SaveSetting(new ProductEditorSettings
+            {
+                Weight = true,
+                Dimensions = true,
+                ProductAttributes = true,
+                SpecificationAttributes =true
             });
 
             settingService.SaveSetting(new CatalogSettings
@@ -4616,23 +6024,26 @@ namespace Nop.Services.Installation
                 AllowViewUnpublishedProductPage = true,
                 DisplayDiscontinuedMessageForUnpublishedProducts = true,
                 PublishBackProductWhenCancellingOrders = false,
-                ShowProductSku = false,
+                ShowSkuOnProductDetailsPage = true,
+                ShowSkuOnCatalogPages = false,
                 ShowManufacturerPartNumber = false,
                 ShowGtin = false,
                 ShowFreeShippingNotification = true,
                 AllowProductSorting = true,
                 AllowProductViewModeChanging = true,
                 DefaultViewMode = "grid",
-                ShowProductsFromSubcategories = true,
+                ShowProductsFromSubcategories = false,
                 ShowCategoryProductNumber = false,
                 ShowCategoryProductNumberIncludingSubcategories = false,
                 CategoryBreadcrumbEnabled = true,
                 ShowShareButton = true,
-                PageShareCode = "<!-- AddThis Button BEGIN --><div class=\"addthis_toolbox addthis_default_style \"><a class=\"addthis_button_preferred_1\"></a><a class=\"addthis_button_preferred_2\"></a><a class=\"addthis_button_preferred_3\"></a><a class=\"addthis_button_preferred_4\"></a><a class=\"addthis_button_compact\"></a><a class=\"addthis_counter addthis_bubble_style\"></a></div><script type=\"text/javascript\" src=\"http://s7.addthis.com/js/250/addthis_widget.js#pubid=nopsolutions\"></script><!-- AddThis Button END -->",
+                PageShareCode = "<!-- AddThis Button BEGIN --><div class=\"addthis_toolbox addthis_default_style \"><a class=\"addthis_button_preferred_1\"></a><a class=\"addthis_button_preferred_2\"></a><a class=\"addthis_button_preferred_3\"></a><a class=\"addthis_button_preferred_4\"></a><a class=\"addthis_button_compact\"></a><a class=\"addthis_counter addthis_bubble_style\"></a></div><script src=\"http://s7.addthis.com/js/250/addthis_widget.js#pubid=nopsolutions\"></script><!-- AddThis Button END -->",
                 ProductReviewsMustBeApproved = false,
                 DefaultProductRatingValue = 5,
                 AllowAnonymousUsersToReviewProduct = false,
+                ProductReviewPossibleOnlyAfterPurchasing = false,
                 NotifyStoreOwnerAboutNewProductReviews = false,
+                NotifyCustomerAboutProductReviewReply = false,
                 EmailAFriendEnabled = true,
                 AllowAnonymousUsersToEmailAFriend = false,
                 RecentlyViewedProductsNumber = 3,
@@ -4658,6 +6069,7 @@ namespace Nop.Services.Installation
                 IncludeShortDescriptionInCompareProducts = false,
                 IncludeFullDescriptionInCompareProducts = false,
                 IncludeFeaturedProductsInNormalLists = false,
+                UseLinksInRequiredProductWarnings = true,
                 DisplayTierPricesWithDiscounts = true,
                 IgnoreDiscounts = false,
                 IgnoreFeaturedProducts = false,
@@ -4677,7 +6089,16 @@ namespace Nop.Services.Installation
                 DefaultCategoryPageSizeOptions = "6, 3, 9",
                 DefaultCategoryPageSize = 6,
                 DefaultManufacturerPageSizeOptions = "6, 3, 9",
-                DefaultManufacturerPageSize = 6
+                DefaultManufacturerPageSize = 6,
+                ShowProductReviewsTabOnAccountPage = true,
+                ProductReviewsPageSizeOnAccountPage = 10,
+                ProductReviewsSortByCreatedDateAscending = false,
+                ExportImportProductAttributes = true,
+                ExportImportProductSpecificationAttributes = true,
+                ExportImportUseDropdownlistsForAssociatedEntities = true,
+                ExportImportProductsCountInOneFile = 500,
+                ExportImportSplitProductsFile = false,
+                ExportImportRelatedEntitiesByName = true
             });
 
             settingService.SaveSetting(new LocalizationSettings
@@ -4689,7 +6110,7 @@ namespace Nop.Services.Installation
                 LoadAllLocaleRecordsOnStartup = true,
                 LoadAllLocalizedPropertiesOnStartup = true,
                 LoadAllUrlRecordsOnStartup = false,
-                IgnoreRtlPropertyForAdminArea = false,
+                IgnoreRtlPropertyForAdminArea = false
             });
 
             settingService.SaveSetting(new CustomerSettings
@@ -4698,9 +6119,13 @@ namespace Nop.Services.Installation
                 CheckUsernameAvailabilityEnabled = false,
                 AllowUsersToChangeUsernames = false,
                 DefaultPasswordFormat = PasswordFormat.Hashed,
-                HashedPasswordFormat = "SHA1",
+                HashedPasswordFormat = "SHA512",
                 PasswordMinLength = 6,
+                UnduplicatedPasswordsNumber = 4,
                 PasswordRecoveryLinkDaysValid = 7,
+                PasswordLifetime = 90,
+                FailedPasswordAllowedAttempts = 0,
+                FailedPasswordLockoutMinutes = 30,
                 UserRegistrationType = UserRegistrationType.Standard,
                 AllowCustomersToUploadAvatars = false,
                 AvatarMaximumSizeBytes = 20000,
@@ -4722,6 +6147,8 @@ namespace Nop.Services.Installation
                 StreetAddress2Enabled = false,
                 ZipPostalCodeEnabled = false,
                 CityEnabled = false,
+                CountyEnabled = false,
+                CountyRequired = false,
                 CountryEnabled = false,
                 CountryRequired = false,
                 StateProvinceEnabled = false,
@@ -4735,7 +6162,11 @@ namespace Nop.Services.Installation
                 NewsletterBlockAllowToUnsubscribe = false,
                 OnlineCustomerMinutes = 20,
                 StoreLastVisitedPage = false,
+                StoreIpAddresses = true,
                 SuffixDeletedCustomers = false,
+                EnteringEmailTwice = false,
+                RequireRegistrationForDownloadableProducts = false,
+                DeleteGuestTaskOlderThanMinutes = 1440
             });
 
             settingService.SaveSetting(new AddressSettings
@@ -4748,6 +6179,8 @@ namespace Nop.Services.Installation
                 ZipPostalCodeRequired = true,
                 CityEnabled = true,
                 CityRequired = true,
+                CountyEnabled = false,
+                CountyRequired = false,
                 CountryEnabled = true,
                 StateProvinceEnabled = true,
                 PhoneEnabled = true,
@@ -4772,15 +6205,18 @@ namespace Nop.Services.Installation
                 MaximumImageSize = 1980,
                 DefaultPictureZoomEnabled = false,
                 DefaultImageQuality = 80,
-                MultipleThumbDirectories = false
+                MultipleThumbDirectories = false,
+                ImportProductImagesUsingHash = true,
+                AzureCacheControlHeader = string.Empty
             });
 
             settingService.SaveSetting(new StoreInformationSettings
             {
                 StoreClosed = false,
                 DefaultStoreTheme = "DefaultClean",
-                AllowCustomerToSelectTheme = true,
+                AllowCustomerToSelectTheme = false,
                 DisplayMiniProfilerInPublicStore = false,
+                DisplayMiniProfilerForAdminOnly = false,
                 DisplayEuCookieLawWarning = false,
                 FacebookLink = "http://www.facebook.com/nopCommerce",
                 TwitterLink = "https://twitter.com/nopCommerce",
@@ -4791,8 +6227,8 @@ namespace Nop.Services.Installation
 
             settingService.SaveSetting(new ExternalAuthenticationSettings
             {
-                AutoRegisterEnabled = true,
-                RequireEmailValidation = false
+                RequireEmailValidation = false,
+                AllowCustomersToRemoveAssociations = true
             });
 
             settingService.SaveSetting(new RewardPointsSettings
@@ -4800,10 +6236,14 @@ namespace Nop.Services.Installation
                 Enabled = true,
                 ExchangeRate = 1,
                 PointsForRegistration = 0,
+                RegistrationPointsValidity = 30,
                 PointsForPurchases_Amount = 10,
                 PointsForPurchases_Points = 1,
-                PointsForPurchases_Awarded = OrderStatus.Complete,
-                PointsForPurchases_Canceled = OrderStatus.Cancelled,
+                MinOrderTotalToAwardPoints = 0,
+                MaximumRewardPointsToUsePerOrder = 0,
+                PurchasesPointsValidity = 45,
+                ActivationDelay = 0,
+                ActivationDelayPeriodId = 0,
                 DisplayHowMuchWillBeEarned = true,
                 PointsAccumulatedForAllStores = true,
                 PageSize = 10
@@ -4840,6 +6280,7 @@ namespace Nop.Services.Installation
                 MaximumWishlistItems = 1000,
                 AllowOutOfStockItemsToBeAddedToWishlist = false,
                 MoveItemsFromWishlistToCart = true,
+                CartsSharedBetweenStores = false,
                 ShowProductImagesOnShoppingCart = true,
                 ShowProductImagesOnWishList = true,
                 ShowDiscountBox = true,
@@ -4853,15 +6294,17 @@ namespace Nop.Services.Installation
                 RoundPricesDuringCalculation = true,
                 GroupTierPricesForDistinctShoppingCartItems = false,
                 AllowCartItemEditing = true,
-                RenderAssociatedAttributeValueQuantity = false
+                RenderAssociatedAttributeValueQuantity = true
             });
 
             settingService.SaveSetting(new OrderSettings
             {
+                ReturnRequestNumberMask = "{ID}",
                 IsReOrderAllowed = true,
                 MinOrderSubtotalAmount = 0,
                 MinOrderSubtotalAmountIncludingTax = false,
                 MinOrderTotalAmount = 0,
+                AutoUpdateOrderTotalsOnEditingOrder = false,
                 AnonymousCheckoutAllowed = true,
                 TermsOfServiceOnShoppingCartPage = true,
                 TermsOfServiceOnOrderConfirmPage = false,
@@ -4871,28 +6314,41 @@ namespace Nop.Services.Installation
                 DisableOrderCompletedPage = false,
                 AttachPdfInvoiceToOrderPlacedEmail = false,
                 AttachPdfInvoiceToOrderCompletedEmail = false,
+                GeneratePdfInvoiceInCustomerLanguage = true,
                 AttachPdfInvoiceToOrderPaidEmail = false,
                 ReturnRequestsEnabled = true,
+                ReturnRequestsAllowFiles = false,
+                ReturnRequestsFileMaximumSize = 2048,
                 NumberOfDaysReturnRequestAvailable = 365,
                 MinimumOrderPlacementInterval = 30,
+                ActivateGiftCardsAfterCompletingOrder = false,
+                DeactivateGiftCardsAfterCancellingOrder = false,
+                DeactivateGiftCardsAfterDeletingOrder = false,
+                CompleteOrderWhenDelivered = true,
+                CustomOrderNumberMask = "{ID}",
+                ExportWithProducts = true,
+                AllowAdminsToBuyCallForPriceProducts = true
             });
 
             settingService.SaveSetting(new SecuritySettings
             {
-                ForceSslForAllPages = false,
+                ForceSslForAllPages = true,
                 EncryptionKey = CommonHelper.GenerateRandomDigitCode(16),
                 AdminAreaAllowedIpAddresses = null,
                 EnableXsrfProtectionForAdminArea = true,
                 EnableXsrfProtectionForPublicStore = true,
                 HoneypotEnabled = false,
-                HoneypotInputName = "hpinput"
+                HoneypotInputName = "hpinput",
+                AllowNonAsciiCharactersInHeaders = true
             });
 
             settingService.SaveSetting(new ShippingSettings
             {
-                ActiveShippingRateComputationMethodSystemNames = new List<string> { "Shipping.FixedRate" },
+                ActiveShippingRateComputationMethodSystemNames = new List<string> { "Shipping.FixedByWeightByTotal" },
+                ActivePickupPointProviderSystemNames = new List<string> { "Pickup.PickupInStore" },
+                ShipToSameAddress = true,
                 AllowPickUpInStore = true,
-                PickUpInStoreFee = decimal.Zero,
+                DisplayPickupPointsOnMap = false,
                 UseWarehouseLocation = false,
                 NotifyCustomerAboutShippingFromMultipleLocations = false,
                 FreeShippingOverXEnabled = false,
@@ -4901,9 +6357,12 @@ namespace Nop.Services.Installation
                 EstimateShippingEnabled = true,
                 DisplayShipmentEventsToCustomers = false,
                 DisplayShipmentEventsToStoreOwner = false,
+                HideShippingTotal = false,
                 ReturnValidOptionsIfThereAreAny = true,
                 BypassShippingMethodSelectionIfOnlyOne = false,
-                UseCubeRootMethod = true
+                UseCubeRootMethod = true,
+                ConsiderAssociatedProductsDimensions = true,
+                ShipSeparatelyOneItemEach = true
             });
 
             settingService.SaveSetting(new PaymentSettings
@@ -4911,25 +6370,28 @@ namespace Nop.Services.Installation
                 ActivePaymentMethodSystemNames = new List<string>
                     {
                         "Payments.CheckMoneyOrder",
-                        "Payments.Manual",
-                        "Payments.PayInStore",
-                        "Payments.PurchaseOrder",
+                        "Payments.Manual"
                     },
                 AllowRePostingPayments = true,
                 BypassPaymentMethodSelectionIfOnlyOne = true,
+                ShowPaymentMethodDescriptions = true,
+                SkipPaymentInfoStepForRedirectionPaymentMethods = false,
+                CancelRecurringPaymentsAfterFailedPayment = false
             });
 
             settingService.SaveSetting(new TaxSettings
             {
                 TaxBasedOn = TaxBasedOn.BillingAddress,
+                TaxBasedOnPickupPointAddress = false,
                 TaxDisplayType = TaxDisplayType.ExcludingTax,
-                ActiveTaxProviderSystemName = "Tax.FixedRate",
+                ActiveTaxProviderSystemName = "Tax.FixedOrByCountryStateZip",
                 DefaultTaxAddressId = 0,
                 DisplayTaxSuffix = false,
                 DisplayTaxRates = false,
                 PricesIncludeTax = false,
                 AllowCustomersToSelectTaxDisplayType = false,
                 ForceTaxExclusionFromOrderSubtotal = false,
+                DefaultTaxCategoryId = 0,
                 HideZeroTax = false,
                 HideTaxInOrderSummary = false,
                 ShippingIsTaxable = false,
@@ -4943,7 +6405,8 @@ namespace Nop.Services.Installation
                 EuVatAllowVatExemption = true,
                 EuVatUseWebService = false,
                 EuVatAssumeValid = false,
-                EuVatEmailAdminWhenNewVatSubmitted = false
+                EuVatEmailAdminWhenNewVatSubmitted = false,
+                LogErrors = false
             });
 
             settingService.SaveSetting(new DateTimeSettings
@@ -4960,6 +6423,8 @@ namespace Nop.Services.Installation
                 NotifyAboutNewBlogComments = false,
                 NumberOfTags = 15,
                 ShowHeaderRssUrl = false,
+                BlogCommentsMustBeApproved = false,
+                ShowBlogCommentsPerStore = false
             });
             settingService.SaveSetting(new NewsSettings
             {
@@ -4970,6 +6435,8 @@ namespace Nop.Services.Installation
                 MainPageNewsCount = 3,
                 NewsArchivePageSize = 10,
                 ShowHeaderRssUrl = false,
+                NewsCommentsMustBeApproved = false,
+                ShowNewsCommentsPerStore = false
             });
 
             settingService.SaveSetting(new ForumSettings
@@ -4981,6 +6448,8 @@ namespace Nop.Services.Installation
                 AllowCustomersToManageSubscriptions = false,
                 AllowGuestsToCreatePosts = false,
                 AllowGuestsToCreateTopics = false,
+                AllowPostVoting = true,
+                MaxVotesPerDay = 30,
                 TopicSubjectMaxLength = 450,
                 PostMaxLength = 4000,
                 StrippedTopicMaxLength = 45,
@@ -5013,7 +6482,12 @@ namespace Nop.Services.Installation
                 VendorsBlockItemsToDisplay = 0,
                 ShowVendorOnProductDetailsPage = true,
                 AllowCustomersToContactVendors = true,
-                AllowCustomersToApplyForVendorAccount = true
+                AllowCustomersToApplyForVendorAccount = true,
+                TermsOfServiceEnabled = false,
+                AllowVendorsToEditInfo = false,
+                NotifyStoreOwnerAboutVendorInformationChange = true,
+                MaximumProductNumber = 3000,
+                AllowVendorsToImportProducts = true
             });
 
             var eaGeneral = _emailAccountRepository.Table.FirstOrDefault();
@@ -5027,6 +6501,36 @@ namespace Nop.Services.Installation
             settingService.SaveSetting(new WidgetSettings
             {
                 ActiveWidgetSystemNames = new List<string> { "Widgets.NivoSlider" },
+            });
+
+            settingService.SaveSetting(new DisplayDefaultMenuItemSettings
+            {
+                DisplayHomePageMenuItem = !installSampleData,
+                DisplayNewProductsMenuItem = !installSampleData,
+                DisplayProductSearchMenuItem = !installSampleData,
+                DisplayCustomerInfoMenuItem = !installSampleData,
+                DisplayBlogMenuItem = !installSampleData,
+                DisplayForumsMenuItem = !installSampleData,
+                DisplayContactUsMenuItem = !installSampleData
+            });
+
+            settingService.SaveSetting(new DisplayDefaultFooterItemSettings
+            {
+                DisplaySitemapFooterItem = true,
+                DisplayContactUsFooterItem = true,
+                DisplayProductSearchFooterItem = true,
+                DisplayNewsFooterItem = true,
+                DisplayBlogFooterItem = true,
+                DisplayForumsFooterItem = true,
+                DisplayRecentlyViewedProductsFooterItem = true,
+                DisplayCompareProductsFooterItem = true,
+                DisplayNewProductsFooterItem = true,
+                DisplayCustomerInfoFooterItem = true,
+                DisplayCustomerOrdersFooterItem = true,
+                DisplayCustomerAddressesFooterItem = true,
+                DisplayShoppingCartFooterItem = true,
+                DisplayWishlistFooterItem = true,
+                DisplayApplyVendorAccountFooterItem = true
             });
         }
 
@@ -5054,9 +6558,9 @@ namespace Nop.Services.Installation
                 DisplayOrder = 2,
             });
             var checkoutAttributes = new List<CheckoutAttribute>
-                                {
-                                    ca1,
-                                };
+            {
+                ca1,
+            };
             _checkoutAttributeRepository.Insert(checkoutAttributes);
         }
 
@@ -5129,7 +6633,7 @@ namespace Nop.Services.Installation
             });
             var sa4 = new SpecificationAttribute
             {
-                Name = "Hardrive",
+                Name = "Hard drive",
                 DisplayOrder = 5,
             };
             sa4.SpecificationAttributeOptions.Add(new SpecificationAttributeOption
@@ -5147,13 +6651,37 @@ namespace Nop.Services.Installation
                 Name = "1 TB",
                 DisplayOrder = 3,
             });
+            var sa5 = new SpecificationAttribute
+            {
+                Name = "Color",
+                DisplayOrder = 1,
+            };
+            sa5.SpecificationAttributeOptions.Add(new SpecificationAttributeOption
+            {
+                Name = "Grey",
+                DisplayOrder = 2,
+                ColorSquaresRgb = "#8a97a8"
+            });
+            sa5.SpecificationAttributeOptions.Add(new SpecificationAttributeOption
+            {
+                Name = "Red",
+                DisplayOrder = 3,
+                ColorSquaresRgb = "#8a374a"
+            });
+            sa5.SpecificationAttributeOptions.Add(new SpecificationAttributeOption
+            {
+                Name = "Blue",
+                DisplayOrder = 4,
+                ColorSquaresRgb = "#47476f"
+            });
             var specificationAttributes = new List<SpecificationAttribute>
-                                {
-                                    sa1,
-                                    sa2,
-                                    sa3,
-                                    sa4
-                                };
+            {
+                sa1,
+                sa2,
+                sa3,
+                sa4,
+                sa5
+            };
             _specificationAttributeRepository.Insert(specificationAttributes);
         }
 
@@ -5164,6 +6692,10 @@ namespace Nop.Services.Installation
                 new ProductAttribute
                 {
                     Name = "Color",
+                },
+                new ProductAttribute
+                {
+                    Name = "Print",
                 },
                 new ProductAttribute
                 {
@@ -5201,9 +6733,7 @@ namespace Nop.Services.Installation
         {
             //pictures
             var pictureService = EngineContext.Current.Resolve<IPictureService>();
-            var sampleImagesPath = CommonHelper.MapPath("~/content/samples/");
-
-
+            var sampleImagesPath = GetSamplesPath();
 
             var categoryTemplateInGridAndLines = _categoryTemplateRepository
                 .Table.FirstOrDefault(pt => pt.Name == "Products in Grid or Lines");
@@ -5220,7 +6750,7 @@ namespace Nop.Services.Installation
                 PageSize = 6,
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_computers.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName("Computers")).Id,
+                PictureId = pictureService.InsertPicture(_fileProvider.ReadAllBytes(sampleImagesPath + "category_computers.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName("Computers")).Id,
                 IncludeInTopMenu = true,
                 Published = true,
                 DisplayOrder = 1,
@@ -5230,7 +6760,6 @@ namespace Nop.Services.Installation
             allCategories.Add(categoryComputers);
             _categoryRepository.Insert(categoryComputers);
 
-
             var categoryDesktops = new Category
             {
                 Name = "Desktops",
@@ -5239,7 +6768,7 @@ namespace Nop.Services.Installation
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 ParentCategoryId = categoryComputers.Id,
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_desktops.jpg"), MimeTypes.ImagePJpeg, pictureService.GetPictureSeName("Desktops")).Id,
+                PictureId = pictureService.InsertPicture(_fileProvider.ReadAllBytes(sampleImagesPath + "category_desktops.jpg"), MimeTypes.ImagePJpeg, pictureService.GetPictureSeName("Desktops")).Id,
                 PriceRanges = "-1000;1000-1200;1200-;",
                 IncludeInTopMenu = true,
                 Published = true,
@@ -5250,7 +6779,6 @@ namespace Nop.Services.Installation
             allCategories.Add(categoryDesktops);
             _categoryRepository.Insert(categoryDesktops);
 
-
             var categoryNotebooks = new Category
             {
                 Name = "Notebooks",
@@ -5259,7 +6787,7 @@ namespace Nop.Services.Installation
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 ParentCategoryId = categoryComputers.Id,
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_notebooks.jpg"), MimeTypes.ImagePJpeg, pictureService.GetPictureSeName("Notebooks")).Id,
+                PictureId = pictureService.InsertPicture(_fileProvider.ReadAllBytes(sampleImagesPath + "category_notebooks.jpg"), MimeTypes.ImagePJpeg, pictureService.GetPictureSeName("Notebooks")).Id,
                 IncludeInTopMenu = true,
                 Published = true,
                 DisplayOrder = 2,
@@ -5269,7 +6797,6 @@ namespace Nop.Services.Installation
             allCategories.Add(categoryNotebooks);
             _categoryRepository.Insert(categoryNotebooks);
 
-
             var categorySoftware = new Category
             {
                 Name = "Software",
@@ -5278,7 +6805,7 @@ namespace Nop.Services.Installation
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 ParentCategoryId = categoryComputers.Id,
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_software.jpg"), MimeTypes.ImagePJpeg, pictureService.GetPictureSeName("Software")).Id,
+                PictureId = pictureService.InsertPicture(_fileProvider.ReadAllBytes(sampleImagesPath + "category_software.jpg"), MimeTypes.ImagePJpeg, pictureService.GetPictureSeName("Software")).Id,
                 IncludeInTopMenu = true,
                 Published = true,
                 DisplayOrder = 3,
@@ -5288,7 +6815,6 @@ namespace Nop.Services.Installation
             allCategories.Add(categorySoftware);
             _categoryRepository.Insert(categorySoftware);
 
-
             var categoryElectronics = new Category
             {
                 Name = "Electronics",
@@ -5296,7 +6822,7 @@ namespace Nop.Services.Installation
                 PageSize = 6,
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_electronics.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName("Electronics")).Id,
+                PictureId = pictureService.InsertPicture(_fileProvider.ReadAllBytes(sampleImagesPath + "category_electronics.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName("Electronics")).Id,
                 IncludeInTopMenu = true,
                 Published = true,
                 ShowOnHomePage = true,
@@ -5307,7 +6833,6 @@ namespace Nop.Services.Installation
             allCategories.Add(categoryElectronics);
             _categoryRepository.Insert(categoryElectronics);
 
-
             var categoryCameraPhoto = new Category
             {
                 Name = "Camera & photo",
@@ -5316,7 +6841,7 @@ namespace Nop.Services.Installation
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 ParentCategoryId = categoryElectronics.Id,
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_camera_photo.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName("Camera, photo")).Id,
+                PictureId = pictureService.InsertPicture(_fileProvider.ReadAllBytes(sampleImagesPath + "category_camera_photo.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName("Camera, photo")).Id,
                 PriceRanges = "-500;500-;",
                 IncludeInTopMenu = true,
                 Published = true,
@@ -5327,7 +6852,6 @@ namespace Nop.Services.Installation
             allCategories.Add(categoryCameraPhoto);
             _categoryRepository.Insert(categoryCameraPhoto);
 
-
             var categoryCellPhones = new Category
             {
                 Name = "Cell phones",
@@ -5336,7 +6860,7 @@ namespace Nop.Services.Installation
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 ParentCategoryId = categoryElectronics.Id,
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_cell_phones.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName("Cell phones")).Id,
+                PictureId = pictureService.InsertPicture(_fileProvider.ReadAllBytes(sampleImagesPath + "category_cell_phones.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName("Cell phones")).Id,
                 IncludeInTopMenu = true,
                 Published = true,
                 DisplayOrder = 2,
@@ -5346,7 +6870,6 @@ namespace Nop.Services.Installation
             allCategories.Add(categoryCellPhones);
             _categoryRepository.Insert(categoryCellPhones);
 
-
             var categoryOthers = new Category
             {
                 Name = "Others",
@@ -5355,7 +6878,7 @@ namespace Nop.Services.Installation
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 ParentCategoryId = categoryElectronics.Id,
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_accessories.jpg"), MimeTypes.ImagePJpeg, pictureService.GetPictureSeName("Accessories")).Id,
+                PictureId = pictureService.InsertPicture(_fileProvider.ReadAllBytes(sampleImagesPath + "category_accessories.jpg"), MimeTypes.ImagePJpeg, pictureService.GetPictureSeName("Accessories")).Id,
                 IncludeInTopMenu = true,
                 PriceRanges = "-100;100-;",
                 Published = true,
@@ -5366,7 +6889,6 @@ namespace Nop.Services.Installation
             allCategories.Add(categoryOthers);
             _categoryRepository.Insert(categoryOthers);
 
-
             var categoryApparel = new Category
             {
                 Name = "Apparel",
@@ -5374,7 +6896,7 @@ namespace Nop.Services.Installation
                 PageSize = 6,
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_apparel.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName("Apparel")).Id,
+                PictureId = pictureService.InsertPicture(_fileProvider.ReadAllBytes(sampleImagesPath + "category_apparel.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName("Apparel")).Id,
                 IncludeInTopMenu = true,
                 Published = true,
                 ShowOnHomePage = true,
@@ -5385,7 +6907,6 @@ namespace Nop.Services.Installation
             allCategories.Add(categoryApparel);
             _categoryRepository.Insert(categoryApparel);
 
-
             var categoryShoes = new Category
             {
                 Name = "Shoes",
@@ -5394,7 +6915,7 @@ namespace Nop.Services.Installation
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 ParentCategoryId = categoryApparel.Id,
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_shoes.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName("Shoes")).Id,
+                PictureId = pictureService.InsertPicture(_fileProvider.ReadAllBytes(sampleImagesPath + "category_shoes.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName("Shoes")).Id,
                 PriceRanges = "-500;500-;",
                 IncludeInTopMenu = true,
                 Published = true,
@@ -5405,7 +6926,6 @@ namespace Nop.Services.Installation
             allCategories.Add(categoryShoes);
             _categoryRepository.Insert(categoryShoes);
 
-
             var categoryClothing = new Category
             {
                 Name = "Clothing",
@@ -5414,7 +6934,7 @@ namespace Nop.Services.Installation
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 ParentCategoryId = categoryApparel.Id,
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_clothing.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName("Clothing")).Id,
+                PictureId = pictureService.InsertPicture(_fileProvider.ReadAllBytes(sampleImagesPath + "category_clothing.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName("Clothing")).Id,
                 IncludeInTopMenu = true,
                 Published = true,
                 DisplayOrder = 2,
@@ -5424,7 +6944,6 @@ namespace Nop.Services.Installation
             allCategories.Add(categoryClothing);
             _categoryRepository.Insert(categoryClothing);
 
-
             var categoryAccessories = new Category
             {
                 Name = "Accessories",
@@ -5433,7 +6952,7 @@ namespace Nop.Services.Installation
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 ParentCategoryId = categoryApparel.Id,
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_apparel_accessories.jpg"), MimeTypes.ImagePJpeg, pictureService.GetPictureSeName("Apparel Accessories")).Id,
+                PictureId = pictureService.InsertPicture(_fileProvider.ReadAllBytes(sampleImagesPath + "category_apparel_accessories.jpg"), MimeTypes.ImagePJpeg, pictureService.GetPictureSeName("Apparel Accessories")).Id,
                 IncludeInTopMenu = true,
                 PriceRanges = "-100;100-;",
                 Published = true,
@@ -5444,7 +6963,6 @@ namespace Nop.Services.Installation
             allCategories.Add(categoryAccessories);
             _categoryRepository.Insert(categoryAccessories);
 
-
             var categoryDigitalDownloads = new Category
             {
                 Name = "Digital downloads",
@@ -5452,7 +6970,7 @@ namespace Nop.Services.Installation
                 PageSize = 6,
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_digital_downloads.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName("Digital downloads")).Id,
+                PictureId = pictureService.InsertPicture(_fileProvider.ReadAllBytes(sampleImagesPath + "category_digital_downloads.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName("Digital downloads")).Id,
                 IncludeInTopMenu = true,
                 Published = true,
                 ShowOnHomePage = true,
@@ -5463,7 +6981,6 @@ namespace Nop.Services.Installation
             allCategories.Add(categoryDigitalDownloads);
             _categoryRepository.Insert(categoryDigitalDownloads);
 
-
             var categoryBooks = new Category
             {
                 Name = "Books",
@@ -5473,7 +6990,7 @@ namespace Nop.Services.Installation
                 PageSize = 6,
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_book.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName("Book")).Id,
+                PictureId = pictureService.InsertPicture(_fileProvider.ReadAllBytes(sampleImagesPath + "category_book.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName("Book")).Id,
                 PriceRanges = "-25;25-50;50-;",
                 IncludeInTopMenu = true,
                 Published = true,
@@ -5484,7 +7001,6 @@ namespace Nop.Services.Installation
             allCategories.Add(categoryBooks);
             _categoryRepository.Insert(categoryBooks);
 
-
             var categoryJewelry = new Category
             {
                 Name = "Jewelry",
@@ -5492,7 +7008,7 @@ namespace Nop.Services.Installation
                 PageSize = 6,
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_jewelry.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName("Jewelry")).Id,
+                PictureId = pictureService.InsertPicture(_fileProvider.ReadAllBytes(sampleImagesPath + "category_jewelry.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName("Jewelry")).Id,
                 PriceRanges = "0-500;500-700;700-3000;",
                 IncludeInTopMenu = true,
                 Published = true,
@@ -5510,7 +7026,7 @@ namespace Nop.Services.Installation
                 PageSize = 6,
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_gift_cards.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName("Gift Cards")).Id,
+                PictureId = pictureService.InsertPicture(_fileProvider.ReadAllBytes(sampleImagesPath + "category_gift_cards.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName("Gift Cards")).Id,
                 IncludeInTopMenu = true,
                 Published = true,
                 DisplayOrder = 7,
@@ -5519,8 +7035,6 @@ namespace Nop.Services.Installation
             };
             allCategories.Add(categoryGiftCards);
             _categoryRepository.Insert(categoryGiftCards);
-
-
 
             //search engine names
             foreach (var category in allCategories)
@@ -5539,7 +7053,7 @@ namespace Nop.Services.Installation
         protected virtual void InstallManufacturers()
         {
             var pictureService = EngineContext.Current.Resolve<IPictureService>();
-            var sampleImagesPath = CommonHelper.MapPath("~/content/samples/");
+            var sampleImagesPath = GetSamplesPath();
 
             var manufacturerTemplateInGridAndLines =
                 _manufacturerTemplateRepository.Table.FirstOrDefault(pt => pt.Name == "Products in Grid or Lines");
@@ -5555,14 +7069,13 @@ namespace Nop.Services.Installation
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 Published = true,
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "manufacturer_apple.jpg"), MimeTypes.ImagePJpeg, pictureService.GetPictureSeName("Apple")).Id,
+                PictureId = pictureService.InsertPicture(_fileProvider.ReadAllBytes(sampleImagesPath + "manufacturer_apple.jpg"), MimeTypes.ImagePJpeg, pictureService.GetPictureSeName("Apple")).Id,
                 DisplayOrder = 1,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
             _manufacturerRepository.Insert(manufacturerAsus);
             allManufacturers.Add(manufacturerAsus);
-
 
             var manufacturerHp = new Manufacturer
             {
@@ -5572,14 +7085,13 @@ namespace Nop.Services.Installation
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 Published = true,
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "manufacturer_hp.jpg"), MimeTypes.ImagePJpeg, pictureService.GetPictureSeName("Hp")).Id,
+                PictureId = pictureService.InsertPicture(_fileProvider.ReadAllBytes(sampleImagesPath + "manufacturer_hp.jpg"), MimeTypes.ImagePJpeg, pictureService.GetPictureSeName("Hp")).Id,
                 DisplayOrder = 5,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
             _manufacturerRepository.Insert(manufacturerHp);
             allManufacturers.Add(manufacturerHp);
-
 
             var manufacturerNike = new Manufacturer
             {
@@ -5589,7 +7101,7 @@ namespace Nop.Services.Installation
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 Published = true,
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "manufacturer_nike.jpg"), MimeTypes.ImagePJpeg, pictureService.GetPictureSeName("Nike")).Id,
+                PictureId = pictureService.InsertPicture(_fileProvider.ReadAllBytes(sampleImagesPath + "manufacturer_nike.jpg"), MimeTypes.ImagePJpeg, pictureService.GetPictureSeName("Nike")).Id,
                 DisplayOrder = 5,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
@@ -5625,6 +7137,11 @@ namespace Nop.Services.Installation
             if (deliveryDate == null)
                 throw new Exception("No default deliveryDate could be loaded");
 
+            //product availability range
+            var productAvailabilityRange = _productAvailabilityRangeRepository.Table.FirstOrDefault();
+            if (productAvailabilityRange == null)
+                throw new Exception("No default product availability range could be loaded");
+
             //default customer/user
             var defaultCustomer = _customerRepository.Table.FirstOrDefault(x => x.Email == defaultUserEmail);
             if (defaultCustomer == null)
@@ -5635,20 +7152,18 @@ namespace Nop.Services.Installation
             if (defaultStore == null)
                 throw new Exception("No default store could be loaded");
 
-
             //pictures
             var pictureService = EngineContext.Current.Resolve<IPictureService>();
-            var sampleImagesPath = CommonHelper.MapPath("~/content/samples/");
+            var sampleImagesPath = GetSamplesPath();
 
             //downloads
             var downloadService = EngineContext.Current.Resolve<IDownloadService>();
-            var sampleDownloadsPath = CommonHelper.MapPath("~/content/samples/");
+            var sampleDownloadsPath = GetSamplesPath();
 
             //products
             var allProducts = new List<Product>();
 
             #region Desktops
-
 
             var productBuildComputer = new Product
             {
@@ -5826,19 +7341,15 @@ namespace Nop.Services.Installation
             allProducts.Add(productBuildComputer);
             productBuildComputer.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Desktops_1.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productBuildComputer.Name)),
+                Picture = pictureService.InsertPicture(_fileProvider.ReadAllBytes(sampleImagesPath + "product_Desktops_1.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productBuildComputer.Name)),
                 DisplayOrder = 1,
             });
             productBuildComputer.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Desktops_2.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productBuildComputer.Name)),
+                Picture = pictureService.InsertPicture(_fileProvider.ReadAllBytes(sampleImagesPath + "product_Desktops_2.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productBuildComputer.Name)),
                 DisplayOrder = 2,
             });
             _productRepository.Insert(productBuildComputer);
-
-
-
-
 
             var productDigitalStorm = new Product
             {
@@ -5882,14 +7393,10 @@ namespace Nop.Services.Installation
             allProducts.Add(productDigitalStorm);
             productDigitalStorm.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_DigitalStorm.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productDigitalStorm.Name)),
+                Picture = pictureService.InsertPicture(_fileProvider.ReadAllBytes(sampleImagesPath + "product_DigitalStorm.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productDigitalStorm.Name)),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productDigitalStorm);
-
-
-
-
 
             var productLenovoIdeaCentre = new Product
             {
@@ -5933,13 +7440,10 @@ namespace Nop.Services.Installation
             allProducts.Add(productLenovoIdeaCentre);
             productLenovoIdeaCentre.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_LenovoIdeaCentre.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productLenovoIdeaCentre.Name)),
+                Picture = pictureService.InsertPicture(_fileProvider.ReadAllBytes(sampleImagesPath + "product_LenovoIdeaCentre.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productLenovoIdeaCentre.Name)),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productLenovoIdeaCentre);
-
-
-
 
             #endregion
 
@@ -6021,26 +7525,22 @@ namespace Nop.Services.Installation
                     //    AllowFiltering = false,
                     //    ShowOnProductPage = true,
                     //    DisplayOrder = 4,
-                    //    SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Hardrive").SpecificationAttributeOptions.Single(sao => sao.Name == "160 GB")
+                    //    SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Hard drive").SpecificationAttributeOptions.Single(sao => sao.Name == "160 GB")
                     //}
                 }
             };
             allProducts.Add(productAppleMacBookPro);
             productAppleMacBookPro.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_macbook_1.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productAppleMacBookPro.Name)),
+                Picture = pictureService.InsertPicture(_fileProvider.ReadAllBytes(sampleImagesPath + "product_macbook_1.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productAppleMacBookPro.Name)),
                 DisplayOrder = 1,
             });
             productAppleMacBookPro.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_macbook_2.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productAppleMacBookPro.Name)),
+                Picture = pictureService.InsertPicture(_fileProvider.ReadAllBytes(sampleImagesPath + "product_macbook_2.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productAppleMacBookPro.Name)),
                 DisplayOrder = 2,
             });
             _productRepository.Insert(productAppleMacBookPro);
-
-
-
-
 
             var productAsusN551JK = new Product
             {
@@ -6108,21 +7608,17 @@ namespace Nop.Services.Installation
                         AllowFiltering = false,
                         ShowOnProductPage = true,
                         DisplayOrder = 4,
-                        SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Hardrive").SpecificationAttributeOptions.Single(sao => sao.Name == "1 TB")
+                        SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Hard drive").SpecificationAttributeOptions.Single(sao => sao.Name == "1 TB")
                     }
                 }
             };
             allProducts.Add(productAsusN551JK);
             productAsusN551JK.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_asuspc_N551JK.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productAsusN551JK.Name)),
+                Picture = pictureService.InsertPicture(_fileProvider.ReadAllBytes(sampleImagesPath + "product_asuspc_N551JK.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productAsusN551JK.Name)),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productAsusN551JK);
-
-
-
-
 
             var productSamsungSeries = new Product
             {
@@ -6191,21 +7687,17 @@ namespace Nop.Services.Installation
                         AllowFiltering = false,
                         ShowOnProductPage = true,
                         DisplayOrder = 4,
-                        SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Hardrive").SpecificationAttributeOptions.Single(sao => sao.Name == "128 GB")
+                        SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Hard drive").SpecificationAttributeOptions.Single(sao => sao.Name == "128 GB")
                     }
                 }
             };
             allProducts.Add(productSamsungSeries);
             productSamsungSeries.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_SamsungNP900X4C.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productSamsungSeries.Name)),
+                Picture = pictureService.InsertPicture(_fileProvider.ReadAllBytes(sampleImagesPath + "product_SamsungNP900X4C.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productSamsungSeries.Name)),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productSamsungSeries);
-
-
-
-
 
             var productHpSpectre = new Product
             {
@@ -6281,24 +7773,22 @@ namespace Nop.Services.Installation
                         AllowFiltering = false,
                         ShowOnProductPage = true,
                         DisplayOrder = 4,
-                        SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Hardrive").SpecificationAttributeOptions.Single(sao => sao.Name == "128 GB")
+                        SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Hard drive").SpecificationAttributeOptions.Single(sao => sao.Name == "128 GB")
                     }
                 }
             };
             allProducts.Add(productHpSpectre);
             productHpSpectre.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HPSpectreXT_1.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productHpSpectre.Name)),
+                Picture = pictureService.InsertPicture(_fileProvider.ReadAllBytes(sampleImagesPath + "product_HPSpectreXT_1.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productHpSpectre.Name)),
                 DisplayOrder = 1,
             });
             productHpSpectre.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HPSpectreXT_2.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productHpSpectre.Name)),
+                Picture = pictureService.InsertPicture(_fileProvider.ReadAllBytes(sampleImagesPath + "product_HPSpectreXT_2.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productHpSpectre.Name)),
                 DisplayOrder = 2,
             });
             _productRepository.Insert(productHpSpectre);
-
-
 
             var productHpEnvy = new Product
             {
@@ -6307,7 +7797,7 @@ namespace Nop.Services.Installation
                 Name = "HP Envy 6-1180ca 15.6-Inch Sleekbook",
                 Sku = "HP_ESB_15",
                 ShortDescription = "HP ENVY 6-1202ea Ultrabook Beats Audio, 3rd generation Intel® CoreTM i7-3517U processor, 8GB RAM, 500GB HDD, Microsoft Windows 8, AMD Radeon HD 8750M (2 GB DDR3 dedicated)",
-                FullDescription = "The UltrabookTM that's up for anything. Thin and light, the HP ENVY is the large screen UltrabookTM with Beats AudioTM. With a soft-touch base that makes it easy to grab and go, it's a laptop that's up for anything.<br><br><b>Features</b><br><br>- Windows 8 or other operating systems available<br><br><b>Top performance. Stylish design. Take notice.</b><br><br>- At just 19.8 mm (0.78 in) thin, the HP ENVY UltrabookTM is slim and light enough to take anywhere. It's the laptop that gets you noticed with the power to get it done.<br>- With an eye-catching metal design, it's a laptop that you want to carry with you. The soft-touch, slip-resistant base gives you the confidence to carry it with ease.<br><br><b>More entertaining. More gaming. More fun.</b><br><br>- Own the UltrabookTM with Beats AudioTM, dual speakers, a subwoofer, and an awesome display. Your music, movies and photo slideshows will always look and sound their best.<br>- Tons of video memory let you experience incredible gaming and multimedia without slowing down. Create and edit videos in a flash. And enjoy more of what you love to the fullest.<br>- The HP ENVY UltrabookTM is loaded with the ports you'd expect on a world-class laptop, but on a Sleekbook instead. Like HDMI, USB, RJ-45, and a headphone jack. You get all the right connections without compromising size.<br><br><b>Only from HP.</b><br><br>- Life heats up. That's why there's HP CoolSense technology, which automatically adjusts your notebook's temperature based on usage and conditions. It stays cool. You stay comfortable.<br>- With HP ProtectSmart, your notebook's data stays safe from accidental bumps and bruises. It senses motion and plans ahead, stopping your hard drive and protecting your entire digital life.<br>- Keep playing even in dimly lit rooms or on red eye flights. The optional backlit keyboard[1] is full-size so you don't compromise comfort. Backlit keyboard. Another bright idea.<br><br><b>",
+                FullDescription = "The UltrabookTM that's up for anything. Thin and light, the HP ENVY is the large screen UltrabookTM with Beats AudioTM. With a soft-touch base that makes it easy to grab and go, it's a laptop that's up for anything.<br /><br /><b>Features</b><br /><br />- Windows 8 or other operating systems available<br /><br /><b>Top performance. Stylish design. Take notice.</b><br /><br />- At just 19.8 mm (0.78 in) thin, the HP ENVY UltrabookTM is slim and light enough to take anywhere. It's the laptop that gets you noticed with the power to get it done.<br />- With an eye-catching metal design, it's a laptop that you want to carry with you. The soft-touch, slip-resistant base gives you the confidence to carry it with ease.<br /><br /><b>More entertaining. More gaming. More fun.</b><br /><br />- Own the UltrabookTM with Beats AudioTM, dual speakers, a subwoofer, and an awesome display. Your music, movies and photo slideshows will always look and sound their best.<br />- Tons of video memory let you experience incredible gaming and multimedia without slowing down. Create and edit videos in a flash. And enjoy more of what you love to the fullest.<br />- The HP ENVY UltrabookTM is loaded with the ports you'd expect on a world-class laptop, but on a Sleekbook instead. Like HDMI, USB, RJ-45, and a headphone jack. You get all the right connections without compromising size.<br /><br /><b>Only from HP.</b><br /><br />- Life heats up. That's why there's HP CoolSense technology, which automatically adjusts your notebook's temperature based on usage and conditions. It stays cool. You stay comfortable.<br />- With HP ProtectSmart, your notebook's data stays safe from accidental bumps and bruises. It senses motion and plans ahead, stopping your hard drive and protecting your entire digital life.<br />- Keep playing even in dimly lit rooms or on red eye flights. The optional backlit keyboard[1] is full-size so you don't compromise comfort. Backlit keyboard. Another bright idea.<br /><br />",
                 ProductTemplateId = productTemplateSimple.Id,
                 //SeName = "hp-pavilion-g60-230us-160-inch-laptop",
                 AllowCustomerReviews = true,
@@ -6374,21 +7864,17 @@ namespace Nop.Services.Installation
                         AllowFiltering = false,
                         ShowOnProductPage = true,
                         DisplayOrder = 4,
-                        SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Hardrive").SpecificationAttributeOptions.Single(sao => sao.Name == "500 GB")
+                        SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Hard drive").SpecificationAttributeOptions.Single(sao => sao.Name == "500 GB")
                     }
                 }
             };
             allProducts.Add(productHpEnvy);
             productHpEnvy.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HpEnvy6.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productHpEnvy.Name)),
+                Picture = pictureService.InsertPicture(_fileProvider.ReadAllBytes(sampleImagesPath + "product_HpEnvy6.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productHpEnvy.Name)),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productHpEnvy);
-
-
-
-
 
             var productLenovoThinkpad = new Product
             {
@@ -6444,26 +7930,12 @@ namespace Nop.Services.Installation
                         DisplayOrder = 2,
                         SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "CPU Type").SpecificationAttributeOptions.Single(sao => sao.Name == "Intel Core i7")
                     }
-                    //new ProductSpecificationAttribute
-                    //{
-                    //    AllowFiltering = true,
-                    //    ShowOnProductPage = true,
-                    //    DisplayOrder = 3,
-                    //    SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Memory").SpecificationAttributeOptions.Single(sao => sao.Name == "1 GB")
-                    //},
-                    //new ProductSpecificationAttribute
-                    //{
-                    //    AllowFiltering = false,
-                    //    ShowOnProductPage = true,
-                    //    DisplayOrder = 4,
-                    //    SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Hardrive").SpecificationAttributeOptions.Single(sao => sao.Name == "250 GB")
-                    //}
                 }
             };
             allProducts.Add(productLenovoThinkpad);
             productLenovoThinkpad.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_LenovoThinkpad.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productLenovoThinkpad.Name)),
+                Picture = pictureService.InsertPicture(_fileProvider.ReadAllBytes(sampleImagesPath + "product_LenovoThinkpad.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productLenovoThinkpad.Name)),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productLenovoThinkpad);
@@ -6471,7 +7943,6 @@ namespace Nop.Services.Installation
             #endregion
 
             #region Software
-
 
             var productAdobePhotoshop = new Product
             {
@@ -6515,15 +7986,10 @@ namespace Nop.Services.Installation
             allProducts.Add(productAdobePhotoshop);
             productAdobePhotoshop.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_AdobePhotoshop.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productAdobePhotoshop.Name)),
+                Picture = pictureService.InsertPicture(_fileProvider.ReadAllBytes(sampleImagesPath + "product_AdobePhotoshop.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productAdobePhotoshop.Name)),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productAdobePhotoshop);
-
-
-
-
-
 
             var productWindows8Pro = new Product
             {
@@ -6567,25 +8033,25 @@ namespace Nop.Services.Installation
             allProducts.Add(productWindows8Pro);
             productWindows8Pro.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Windows8.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productWindows8Pro.Name)),
+                Picture = pictureService.InsertPicture(_fileProvider.ReadAllBytes(sampleImagesPath + "product_Windows8.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productWindows8Pro.Name)),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productWindows8Pro);
-
-
-
-
 
             var productSoundForge = new Product
             {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "Sound Forge Pro 11",
+                Name = "Sound Forge Pro 11 (recurring)",
                 Sku = "SF_PRO_11",
                 ShortDescription = "Advanced audio waveform editor.",
                 FullDescription = "<p>Sound Forge™ Pro is the application of choice for a generation of creative and prolific artists, producers, and editors. Record audio quickly on a rock-solid platform, address sophisticated audio processing tasks with surgical precision, and render top-notch master files with ease. New features include one-touch recording, metering for the new critical standards, more repair and restoration tools, and exclusive round-trip interoperability with SpectraLayers Pro. Taken together, these enhancements make this edition of Sound Forge Pro the deepest and most advanced audio editing platform available.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 //SeName = "major-league-baseball-2k9",
+                IsRecurring = true,
+                RecurringCycleLength = 30,
+                RecurringCyclePeriod = RecurringProductCyclePeriod.Months,
+                RecurringTotalCycles = 12,
                 AllowCustomerReviews = true,
                 Price = 54.99M,
                 IsShipEnabled = true,
@@ -6618,18 +8084,14 @@ namespace Nop.Services.Installation
             allProducts.Add(productSoundForge);
             productSoundForge.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_SoundForge.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productSoundForge.Name)),
+                Picture = pictureService.InsertPicture(_fileProvider.ReadAllBytes(sampleImagesPath + "product_SoundForge.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productSoundForge.Name)),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productSoundForge);
 
-
-
-
             #endregion
 
             #region Camera, Photo
-
 
             //this one is a grouped product with two associated ones
             var productNikonD5500DSLR = new Product
@@ -6674,12 +8136,12 @@ namespace Nop.Services.Installation
             allProducts.Add(productNikonD5500DSLR);
             productNikonD5500DSLR.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikonCamera_1.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productNikonD5500DSLR.Name)),
+                Picture = pictureService.InsertPicture(_fileProvider.ReadAllBytes(sampleImagesPath + "product_NikonCamera_1.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productNikonD5500DSLR.Name)),
                 DisplayOrder = 1,
             });
             productNikonD5500DSLR.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikonCamera_2.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productNikonD5500DSLR.Name)),
+                Picture = pictureService.InsertPicture(_fileProvider.ReadAllBytes(sampleImagesPath + "product_NikonCamera_2.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productNikonD5500DSLR.Name)),
                 DisplayOrder = 2,
             });
             _productRepository.Insert(productNikonD5500DSLR);
@@ -6716,7 +8178,7 @@ namespace Nop.Services.Installation
             allProducts.Add(productNikonD5500DSLR_associated_1);
             productNikonD5500DSLR_associated_1.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikonCamera_black.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName("Canon Digital SLR Camera - Black")),
+                Picture = pictureService.InsertPicture(_fileProvider.ReadAllBytes(sampleImagesPath + "product_NikonCamera_black.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName("Canon Digital SLR Camera - Black")),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productNikonD5500DSLR_associated_1);
@@ -6753,14 +8215,10 @@ namespace Nop.Services.Installation
             allProducts.Add(productNikonD5500DSLR_associated_2);
             productNikonD5500DSLR_associated_2.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikonCamera_red.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName("Canon Digital SLR Camera - Silver")),
+                Picture = pictureService.InsertPicture(_fileProvider.ReadAllBytes(sampleImagesPath + "product_NikonCamera_red.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName("Canon Digital SLR Camera - Silver")),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productNikonD5500DSLR_associated_2);
-
-
-
-
 
             var productLeica = new Product
             {
@@ -6804,15 +8262,10 @@ namespace Nop.Services.Installation
             allProducts.Add(productLeica);
             productLeica.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_LeicaT.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productLeica.Name)),
+                Picture = pictureService.InsertPicture(_fileProvider.ReadAllBytes(sampleImagesPath + "product_LeicaT.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productLeica.Name)),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productLeica);
-
-
-
-
-
 
             var productAppleICam = new Product
             {
@@ -6864,13 +8317,10 @@ namespace Nop.Services.Installation
             allProducts.Add(productAppleICam);
             productAppleICam.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_iCam.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productAppleICam.Name)),
+                Picture = pictureService.InsertPicture(_fileProvider.ReadAllBytes(sampleImagesPath + "product_iCam.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productAppleICam.Name)),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productAppleICam);
-
-
-
 
             #endregion
 
@@ -6883,7 +8333,7 @@ namespace Nop.Services.Installation
                 Name = "HTC One M8 Android L 5.0 Lollipop",
                 Sku = "M8_HTC_5L",
                 ShortDescription = "HTC - One (M8) 4G LTE Cell Phone with 32GB Memory - Gunmetal (Sprint)",
-                FullDescription = "<p><b>HTC One (M8) Cell Phone for Sprint:</b> With its brushed-metal design and wrap-around unibody frame, the HTC One (M8) is designed to fit beautifully in your hand. It's fun to use with amped up sound and a large Full HD touch screen, and intuitive gesture controls make it seem like your phone almost knows what you need before you do. <br><br>Sprint Easy Pay option available in store.</p>",
+                FullDescription = "<p><b>HTC One (M8) Cell Phone for Sprint:</b> With its brushed-metal design and wrap-around unibody frame, the HTC One (M8) is designed to fit beautifully in your hand. It's fun to use with amped up sound and a large Full HD touch screen, and intuitive gesture controls make it seem like your phone almost knows what you need before you do. <br /><br />Sprint Easy Pay option available in store.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 //SeName = "blackberry-bold-9000-phone-black-att",
                 AllowCustomerReviews = true,
@@ -6920,15 +8370,10 @@ namespace Nop.Services.Installation
             allProducts.Add(productHtcOne);
             productHtcOne.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HTC_One_M8.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productHtcOne.Name)),
+                Picture = pictureService.InsertPicture(_fileProvider.ReadAllBytes(sampleImagesPath + "product_HTC_One_M8.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productHtcOne.Name)),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productHtcOne);
-
-
-
-
-
 
             var productHtcOneMini = new Product
             {
@@ -6973,20 +8418,15 @@ namespace Nop.Services.Installation
             allProducts.Add(productHtcOneMini);
             productHtcOneMini.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HTC_One_Mini_1.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productHtcOneMini.Name)),
+                Picture = pictureService.InsertPicture(_fileProvider.ReadAllBytes(sampleImagesPath + "product_HTC_One_Mini_1.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productHtcOneMini.Name)),
                 DisplayOrder = 1,
             });
             productHtcOneMini.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HTC_One_Mini_2.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productHtcOneMini.Name)),
+                Picture = pictureService.InsertPicture(_fileProvider.ReadAllBytes(sampleImagesPath + "product_HTC_One_Mini_2.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productHtcOneMini.Name)),
                 DisplayOrder = 2,
             });
             _productRepository.Insert(productHtcOneMini);
-
-
-
-
-
 
             var productNokiaLumia = new Product
             {
@@ -7030,17 +8470,14 @@ namespace Nop.Services.Installation
             allProducts.Add(productNokiaLumia);
             productNokiaLumia.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Lumia1020.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productNokiaLumia.Name)),
+                Picture = pictureService.InsertPicture(_fileProvider.ReadAllBytes(sampleImagesPath + "product_Lumia1020.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productNokiaLumia.Name)),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productNokiaLumia);
 
-
             #endregion
 
             #region Others
-
-
 
             var productBeatsPill = new Product
             {
@@ -7049,7 +8486,7 @@ namespace Nop.Services.Installation
                 Name = "Beats Pill 2.0 Wireless Speaker",
                 Sku = "BP_20_WSP",
                 ShortDescription = "<b>Pill 2.0 Portable Bluetooth Speaker (1-Piece):</b> Watch your favorite movies and listen to music with striking sound quality. This lightweight, portable speaker is easy to take with you as you travel to any destination, keeping you entertained wherever you are. ",
-                FullDescription = "<p<ul><li>Pair and play with your Bluetooth® device with 30 foot range</li><li>Built-in speakerphone</li><li>7 hour rechargeable battery</li><li>Power your other devices with USB charge out</li><li>Tap two Beats Pills™ together for twice the sound with Beats Bond™</li></ul></p>",
+                FullDescription = "<ul><li>Pair and play with your Bluetooth® device with 30 foot range</li><li>Built-in speakerphone</li><li>7 hour rechargeable battery</li><li>Power your other devices with USB charge out</li><li>Tap two Beats Pills™ together for twice the sound with Beats Bond™</li></ul>",
                 ProductTemplateId = productTemplateSimple.Id,
                 //SeName = "acer-aspire-one-89-mini-notebook-case-black",
                 AllowCustomerReviews = true,
@@ -7089,7 +8526,9 @@ namespace Nop.Services.Installation
                     new TierPrice
                     {
                         Quantity = 10,
-                        Price = 15
+                        Price = 15,
+                        StartDateTimeUtc = DateTime.UtcNow.AddDays(-7),
+                        EndDateTimeUtc = DateTime.UtcNow.AddDays(7)
                     }
                 },
                 HasTierPrices = true,
@@ -7105,19 +8544,15 @@ namespace Nop.Services.Installation
             allProducts.Add(productBeatsPill);
             productBeatsPill.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_PillBeats_1.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productBeatsPill.Name)),
+                Picture = pictureService.InsertPicture(_fileProvider.ReadAllBytes(sampleImagesPath + "product_PillBeats_1.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productBeatsPill.Name)),
                 DisplayOrder = 1,
             });
             productBeatsPill.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_PillBeats_2.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productBeatsPill.Name)),
+                Picture = pictureService.InsertPicture(_fileProvider.ReadAllBytes(sampleImagesPath + "product_PillBeats_2.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productBeatsPill.Name)),
                 DisplayOrder = 2,
             });
             _productRepository.Insert(productBeatsPill);
-
-
-
-
 
             var productUniversalTabletCover = new Product
             {
@@ -7161,13 +8596,10 @@ namespace Nop.Services.Installation
             allProducts.Add(productUniversalTabletCover);
             productUniversalTabletCover.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_TabletCover.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productUniversalTabletCover.Name)),
+                Picture = pictureService.InsertPicture(_fileProvider.ReadAllBytes(sampleImagesPath + "product_TabletCover.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productUniversalTabletCover.Name)),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productUniversalTabletCover);
-
-
-
 
             var productPortableSoundSpeakers = new Product
             {
@@ -7211,16 +8643,14 @@ namespace Nop.Services.Installation
             allProducts.Add(productPortableSoundSpeakers);
             productPortableSoundSpeakers.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Speakers.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productPortableSoundSpeakers.Name)),
+                Picture = pictureService.InsertPicture(_fileProvider.ReadAllBytes(sampleImagesPath + "product_Speakers.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productPortableSoundSpeakers.Name)),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productPortableSoundSpeakers);
 
-
             #endregion
 
             #region Shoes
-
 
             var productNikeFloral = new Product
             {
@@ -7307,6 +8737,29 @@ namespace Nop.Services.Installation
                                 DisplayOrder = 2,
                             },
                         }
+                    },
+                    new ProductAttributeMapping
+                    {
+                        ProductAttribute = _productAttributeRepository.Table.Single(x => x.Name == "Print"),
+                        AttributeControlType = AttributeControlType.ImageSquares,
+                        IsRequired = true,
+                        ProductAttributeValues =
+                        {
+                            new ProductAttributeValue
+                            {
+                                AttributeValueType = AttributeValueType.Simple,
+                                Name = "Natural",
+                                DisplayOrder = 1,
+                                ImageSquaresPictureId = pictureService.InsertPicture(_fileProvider.ReadAllBytes(sampleImagesPath + "p_attribute_print_2.jpg"), MimeTypes.ImagePJpeg, pictureService.GetPictureSeName("Natural Print")).Id,
+                            },
+                            new ProductAttributeValue
+                            {
+                                AttributeValueType = AttributeValueType.Simple,
+                                Name = "Fresh",
+                                DisplayOrder = 2,
+                                ImageSquaresPictureId = pictureService.InsertPicture(_fileProvider.ReadAllBytes(sampleImagesPath + "p_attribute_print_1.jpg"), MimeTypes.ImagePJpeg, pictureService.GetPictureSeName("Fresh Print")).Id,
+                            },
+                        }
                     }
                 },
                 ProductCategories =
@@ -7324,23 +8777,36 @@ namespace Nop.Services.Installation
                         Manufacturer = _manufacturerRepository.Table.Single(c => c.Name == "Nike"),
                         DisplayOrder = 2,
                     }
+                },
+                ProductSpecificationAttributes =
+                {
+                    new ProductSpecificationAttribute
+                    {
+                        AllowFiltering = true,
+                        ShowOnProductPage = false,
+                        DisplayOrder = 1,
+                        SpecificationAttributeOption =
+                            _specificationAttributeRepository.Table.Single(sa => sa.Name == "Color")
+                                .SpecificationAttributeOptions.Single(sao => sao.Name == "Grey")
+                    }
                 }
             };
             allProducts.Add(productNikeFloral);
             productNikeFloral.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikeFloralShoe_1.jpg"), MimeTypes.ImagePJpeg, pictureService.GetPictureSeName(productNikeFloral.Name)),
+                Picture = pictureService.InsertPicture(_fileProvider.ReadAllBytes(sampleImagesPath + "product_NikeFloralShoe_1.jpg"), MimeTypes.ImagePJpeg, pictureService.GetPictureSeName(productNikeFloral.Name)),
                 DisplayOrder = 1,
             });
             productNikeFloral.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikeFloralShoe_2.jpg"), MimeTypes.ImagePJpeg, pictureService.GetPictureSeName(productNikeFloral.Name)),
+                Picture = pictureService.InsertPicture(_fileProvider.ReadAllBytes(sampleImagesPath + "product_NikeFloralShoe_2.jpg"), MimeTypes.ImagePJpeg, pictureService.GetPictureSeName(productNikeFloral.Name)),
                 DisplayOrder = 2,
             });
             _productRepository.Insert(productNikeFloral);
 
-
-
+            productNikeFloral.ProductAttributeMappings.First(x => x.ProductAttribute.Name == "Print").ProductAttributeValues.First(x => x.Name == "Natural").PictureId = productNikeFloral.ProductPictures.ElementAt(0).PictureId;
+            productNikeFloral.ProductAttributeMappings.First(x => x.ProductAttribute.Name == "Print").ProductAttributeValues.First(x => x.Name == "Fresh").PictureId = productNikeFloral.ProductPictures.ElementAt(1).PictureId;
+            _productRepository.Update(productNikeFloral);
 
             var productAdidas = new Product
             {
@@ -7447,25 +8913,54 @@ namespace Nop.Services.Installation
                         Category = _categoryRepository.Table.Single(c => c.Name == "Shoes"),
                         DisplayOrder = 1,
                     }
+                },
+                ProductSpecificationAttributes =
+                {
+                    new ProductSpecificationAttribute
+                    {
+                        AllowFiltering = true,
+                        ShowOnProductPage = false,
+                        DisplayOrder = 1,
+                        SpecificationAttributeOption =
+                            _specificationAttributeRepository.Table.Single(sa => sa.Name == "Color")
+                                .SpecificationAttributeOptions.Single(sao => sao.Name == "Grey")
+                    },
+                    new ProductSpecificationAttribute
+                    {
+                        AllowFiltering = true,
+                        ShowOnProductPage = false,
+                        DisplayOrder = 2,
+                        SpecificationAttributeOption =
+                            _specificationAttributeRepository.Table.Single(sa => sa.Name == "Color")
+                                .SpecificationAttributeOptions.Single(sao => sao.Name == "Red")
+                    },
+                    new ProductSpecificationAttribute
+                    {
+                        AllowFiltering = true,
+                        ShowOnProductPage = false,
+                        DisplayOrder = 3,
+                        SpecificationAttributeOption =
+                            _specificationAttributeRepository.Table.Single(sa => sa.Name == "Color")
+                                .SpecificationAttributeOptions.Single(sao => sao.Name == "Blue")
+                    },
                 }
             };
             allProducts.Add(productAdidas);
             productAdidas.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_adidas.jpg"), MimeTypes.ImagePJpeg, pictureService.GetPictureSeName(productAdidas.Name)),
+                Picture = pictureService.InsertPicture(_fileProvider.ReadAllBytes(sampleImagesPath + "product_adidas.jpg"), MimeTypes.ImagePJpeg, pictureService.GetPictureSeName(productAdidas.Name)),
                 DisplayOrder = 1,
             });
             productAdidas.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_adidas_2.jpg"), MimeTypes.ImagePJpeg, pictureService.GetPictureSeName(productAdidas.Name)),
+                Picture = pictureService.InsertPicture(_fileProvider.ReadAllBytes(sampleImagesPath + "product_adidas_2.jpg"), MimeTypes.ImagePJpeg, pictureService.GetPictureSeName(productAdidas.Name)),
                 DisplayOrder = 2,
             });
             productAdidas.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_adidas_3.jpg"), MimeTypes.ImagePJpeg, pictureService.GetPictureSeName(productAdidas.Name)),
+                Picture = pictureService.InsertPicture(_fileProvider.ReadAllBytes(sampleImagesPath + "product_adidas_3.jpg"), MimeTypes.ImagePJpeg, pictureService.GetPictureSeName(productAdidas.Name)),
                 DisplayOrder = 3,
             });
-
 
             _productRepository.Insert(productAdidas);
 
@@ -7473,9 +8968,6 @@ namespace Nop.Services.Installation
             productAdidas.ProductAttributeMappings.First(x => x.ProductAttribute.Name == "Color").ProductAttributeValues.First(x => x.Name == "Blue").PictureId = productAdidas.ProductPictures.ElementAt(1).PictureId;
             productAdidas.ProductAttributeMappings.First(x => x.ProductAttribute.Name == "Color").ProductAttributeValues.First(x => x.Name == "Silver").PictureId = productAdidas.ProductPictures.ElementAt(2).PictureId;
             _productRepository.Update(productAdidas);
-
-
-
 
             var productNikeZoom = new Product
             {
@@ -7522,16 +9014,28 @@ namespace Nop.Services.Installation
                         Manufacturer = _manufacturerRepository.Table.Single(c => c.Name == "Nike"),
                         DisplayOrder = 2,
                     }
+                },
+                ProductSpecificationAttributes =
+                {
+                    new ProductSpecificationAttribute
+                    {
+                        AllowFiltering = true,
+                        ShowOnProductPage = false,
+                        DisplayOrder = 1,
+                        SpecificationAttributeOption =
+                            _specificationAttributeRepository.Table.Single(sa => sa.Name == "Color")
+                                .SpecificationAttributeOptions.Single(sao => sao.Name == "Grey")
+                    }
                 }
             };
+
             allProducts.Add(productNikeZoom);
             productNikeZoom.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikeZoom.jpg"), MimeTypes.ImagePJpeg, pictureService.GetPictureSeName(productNikeZoom.Name)),
+                Picture = pictureService.InsertPicture(_fileProvider.ReadAllBytes(sampleImagesPath + "product_NikeZoom.jpg"), MimeTypes.ImagePJpeg, pictureService.GetPictureSeName(productNikeZoom.Name)),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productNikeZoom);
-
 
             #endregion
 
@@ -7635,13 +9139,10 @@ namespace Nop.Services.Installation
             allProducts.Add(productNikeTailwind);
             productNikeTailwind.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikeShirt.jpg"), MimeTypes.ImagePJpeg, pictureService.GetPictureSeName(productNikeTailwind.Name)),
+                Picture = pictureService.InsertPicture(_fileProvider.ReadAllBytes(sampleImagesPath + "product_NikeShirt.jpg"), MimeTypes.ImagePJpeg, pictureService.GetPictureSeName(productNikeTailwind.Name)),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productNikeTailwind);
-
-
-
 
             var productOversizedWomenTShirt = new Product
             {
@@ -7704,13 +9205,10 @@ namespace Nop.Services.Installation
             allProducts.Add(productOversizedWomenTShirt);
             productOversizedWomenTShirt.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_WomenTShirt.jpg"), MimeTypes.ImagePJpeg, pictureService.GetPictureSeName(productOversizedWomenTShirt.Name)),
+                Picture = pictureService.InsertPicture(_fileProvider.ReadAllBytes(sampleImagesPath + "product_WomenTShirt.jpg"), MimeTypes.ImagePJpeg, pictureService.GetPictureSeName(productOversizedWomenTShirt.Name)),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productOversizedWomenTShirt);
-
-
-
 
             var productCustomTShirt = new Product
             {
@@ -7764,15 +9262,10 @@ namespace Nop.Services.Installation
             allProducts.Add(productCustomTShirt);
             productCustomTShirt.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_CustomTShirt.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productCustomTShirt.Name)),
+                Picture = pictureService.InsertPicture(_fileProvider.ReadAllBytes(sampleImagesPath + "product_CustomTShirt.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productCustomTShirt.Name)),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productCustomTShirt);
-
-
-
-
-
 
             var productLeviJeans = new Product
             {
@@ -7837,21 +9330,19 @@ namespace Nop.Services.Installation
 
             productLeviJeans.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_LeviJeans_1.jpg"), MimeTypes.ImagePJpeg, pictureService.GetPictureSeName(productLeviJeans.Name)),
+                Picture = pictureService.InsertPicture(_fileProvider.ReadAllBytes(sampleImagesPath + "product_LeviJeans_1.jpg"), MimeTypes.ImagePJpeg, pictureService.GetPictureSeName(productLeviJeans.Name)),
                 DisplayOrder = 1,
             });
             productLeviJeans.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_LeviJeans_2.jpg"), MimeTypes.ImagePJpeg, pictureService.GetPictureSeName(productLeviJeans.Name)),
+                Picture = pictureService.InsertPicture(_fileProvider.ReadAllBytes(sampleImagesPath + "product_LeviJeans_2.jpg"), MimeTypes.ImagePJpeg, pictureService.GetPictureSeName(productLeviJeans.Name)),
                 DisplayOrder = 2,
             });
             _productRepository.Insert(productLeviJeans);
 
-
             #endregion
 
             #region Accessories
-
 
             var productObeyHat = new Product
             {
@@ -7931,16 +9422,10 @@ namespace Nop.Services.Installation
             allProducts.Add(productObeyHat);
             productObeyHat.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_hat.jpg"), MimeTypes.ImagePJpeg, pictureService.GetPictureSeName(productObeyHat.Name)),
+                Picture = pictureService.InsertPicture(_fileProvider.ReadAllBytes(sampleImagesPath + "product_hat.jpg"), MimeTypes.ImagePJpeg, pictureService.GetPictureSeName(productObeyHat.Name)),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productObeyHat);
-
-
-
-
-
-
 
             var productBelt = new Product
             {
@@ -7961,7 +9446,8 @@ namespace Nop.Services.Installation
                 Height = 7,
                 TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Apparel").Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
-                StockQuantity = 10000,
+                ProductAvailabilityRangeId = productAvailabilityRange.Id,
+                StockQuantity = 0,
                 NotifyAdminForQuantityBelow = 1,
                 AllowBackInStockSubscriptions = false,
                 DisplayStockAvailability = true,
@@ -7984,15 +9470,10 @@ namespace Nop.Services.Installation
             allProducts.Add(productBelt);
             productBelt.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Belt.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productBelt.Name)),
+                Picture = pictureService.InsertPicture(_fileProvider.ReadAllBytes(sampleImagesPath + "product_Belt.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productBelt.Name)),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productBelt);
-
-
-
-
-
 
             var productSunglasses = new Product
             {
@@ -8036,7 +9517,7 @@ namespace Nop.Services.Installation
             allProducts.Add(productSunglasses);
             productSunglasses.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Sunglasses.jpg"), MimeTypes.ImagePJpeg, pictureService.GetPictureSeName(productSunglasses.Name)),
+                Picture = pictureService.InsertPicture(_fileProvider.ReadAllBytes(sampleImagesPath + "product_Sunglasses.jpg"), MimeTypes.ImagePJpeg, pictureService.GetPictureSeName(productSunglasses.Name)),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productSunglasses);
@@ -8045,12 +9526,11 @@ namespace Nop.Services.Installation
 
             #region Digital Downloads
 
-
             var downloadNightVision1 = new Download
             {
                 DownloadGuid = Guid.NewGuid(),
                 ContentType = MimeTypes.ApplicationXZipCo,
-                DownloadBinary = File.ReadAllBytes(sampleDownloadsPath + "product_NightVision_1.zip"),
+                DownloadBinary = _fileProvider.ReadAllBytes(sampleDownloadsPath + "product_NightVision_1.zip"),
                 Extension = ".zip",
                 Filename = "Night_Vision_1",
                 IsNew = true,
@@ -8060,7 +9540,7 @@ namespace Nop.Services.Installation
             {
                 DownloadGuid = Guid.NewGuid(),
                 ContentType = MimeTypes.TextPlain,
-                DownloadBinary = File.ReadAllBytes(sampleDownloadsPath + "product_NightVision_2.txt"),
+                DownloadBinary = _fileProvider.ReadAllBytes(sampleDownloadsPath + "product_NightVision_2.txt"),
                 Extension = ".txt",
                 Filename = "Night_Vision_1",
                 IsNew = true,
@@ -8110,20 +9590,16 @@ namespace Nop.Services.Installation
             allProducts.Add(productNightVision);
             productNightVision.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NightVisions.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productNightVision.Name)),
+                Picture = pictureService.InsertPicture(_fileProvider.ReadAllBytes(sampleImagesPath + "product_NightVisions.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productNightVision.Name)),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productNightVision);
-
-
-
-
 
             var downloadIfYouWait1 = new Download
             {
                 DownloadGuid = Guid.NewGuid(),
                 ContentType = MimeTypes.ApplicationXZipCo,
-                DownloadBinary = File.ReadAllBytes(sampleDownloadsPath + "product_IfYouWait_1.zip"),
+                DownloadBinary = _fileProvider.ReadAllBytes(sampleDownloadsPath + "product_IfYouWait_1.zip"),
                 Extension = ".zip",
                 Filename = "If_You_Wait_1",
                 IsNew = true,
@@ -8133,7 +9609,7 @@ namespace Nop.Services.Installation
             {
                 DownloadGuid = Guid.NewGuid(),
                 ContentType = MimeTypes.TextPlain,
-                DownloadBinary = File.ReadAllBytes(sampleDownloadsPath + "product_IfYouWait_2.txt"),
+                DownloadBinary = _fileProvider.ReadAllBytes(sampleDownloadsPath + "product_IfYouWait_2.txt"),
                 Extension = ".txt",
                 Filename = "If_You_Wait_1",
                 IsNew = true,
@@ -8143,14 +9619,16 @@ namespace Nop.Services.Installation
             {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "If You Wait",
+                Name = "If You Wait (donation)",
                 Sku = "IF_YOU_WT",
                 ShortDescription = "If You Wait is the debut studio album by English indie pop band London Grammar",
                 FullDescription = "<p>Original Release Date: September 6, 2013</p><p>Genre - Electronica, dream pop downtempo, pop</p><p>Label - Metal & Dust/Ministry of Sound</p><p>Producer - Tim Bran, Roy Kerr London, Grammar</p><p>Length - 43:22</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 //SeName = "single-ladies-put-a-ring-on-it",
+                CustomerEntersPrice = true,
+                MinimumCustomerEnteredPrice = 0.5M,
+                MaximumCustomerEnteredPrice = 100M,
                 AllowCustomerReviews = true,
-                Price = 3M,
                 TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Downloadable Products").Id,
                 ManageInventoryMethod = ManageInventoryMethod.DontManageStock,
                 StockQuantity = 10000,
@@ -8184,20 +9662,16 @@ namespace Nop.Services.Installation
 
             productIfYouWait.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_IfYouWait.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productIfYouWait.Name)),
+                Picture = pictureService.InsertPicture(_fileProvider.ReadAllBytes(sampleImagesPath + "product_IfYouWait.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productIfYouWait.Name)),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productIfYouWait);
-
-
-
-
 
             var downloadScienceAndFaith = new Download
             {
                 DownloadGuid = Guid.NewGuid(),
                 ContentType = MimeTypes.ApplicationXZipCo,
-                DownloadBinary = File.ReadAllBytes(sampleDownloadsPath + "product_ScienceAndFaith_1.zip"),
+                DownloadBinary = _fileProvider.ReadAllBytes(sampleDownloadsPath + "product_ScienceAndFaith_1.zip"),
                 Extension = ".zip",
                 Filename = "Science_And_Faith",
                 IsNew = true,
@@ -8214,7 +9688,10 @@ namespace Nop.Services.Installation
                 ProductTemplateId = productTemplateSimple.Id,
                 //SeName = "the-battle-of-los-angeles",
                 AllowCustomerReviews = true,
-                Price = 3M,
+                CustomerEntersPrice = true,
+                MinimumCustomerEnteredPrice = 0.5M,
+                MaximumCustomerEnteredPrice = 1000M,
+                Price = decimal.Zero,
                 TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Downloadable Products").Id,
                 ManageInventoryMethod = ManageInventoryMethod.DontManageStock,
                 StockQuantity = 10000,
@@ -8245,12 +9722,10 @@ namespace Nop.Services.Installation
             allProducts.Add(productScienceAndFaith);
             productScienceAndFaith.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_ScienceAndFaith.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productScienceAndFaith.Name)),
+                Picture = pictureService.InsertPicture(_fileProvider.ReadAllBytes(sampleImagesPath + "product_ScienceAndFaith.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productScienceAndFaith.Name)),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productScienceAndFaith);
-
-
 
             #endregion
 
@@ -8300,12 +9775,10 @@ namespace Nop.Services.Installation
             allProducts.Add(productFahrenheit);
             productFahrenheit.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Fahrenheit451.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productFahrenheit.Name)),
+                Picture = pictureService.InsertPicture(_fileProvider.ReadAllBytes(sampleImagesPath + "product_Fahrenheit451.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productFahrenheit.Name)),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productFahrenheit);
-
-
 
             var productFirstPrizePies = new Product
             {
@@ -8350,16 +9823,10 @@ namespace Nop.Services.Installation
             allProducts.Add(productFirstPrizePies);
             productFirstPrizePies.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_FirstPrizePies.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productFirstPrizePies.Name)),
+                Picture = pictureService.InsertPicture(_fileProvider.ReadAllBytes(sampleImagesPath + "product_FirstPrizePies.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productFirstPrizePies.Name)),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productFirstPrizePies);
-
-
-
-
-
-
 
             var productPrideAndPrejudice = new Product
             {
@@ -8404,31 +9871,30 @@ namespace Nop.Services.Installation
             allProducts.Add(productPrideAndPrejudice);
             productPrideAndPrejudice.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_PrideAndPrejudice.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productPrideAndPrejudice.Name)),
+                Picture = pictureService.InsertPicture(_fileProvider.ReadAllBytes(sampleImagesPath + "product_PrideAndPrejudice.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productPrideAndPrejudice.Name)),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productPrideAndPrejudice);
 
-
-
             #endregion
 
             #region Jewelry
-
-
-
+            
             var productElegantGemstoneNecklace = new Product
             {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "Elegant Gemstone Necklace",
+                Name = "Elegant Gemstone Necklace (rental)",
                 Sku = "EG_GEM_NL",
                 ShortDescription = "Classic and elegant gemstone necklace now available in our store",
                 FullDescription = "<p>For those who like jewelry, creating their ownelegant jewelry from gemstone beads provides an economical way to incorporate genuine gemstones into your jewelry wardrobe. Manufacturers create beads from all kinds of precious gemstones and semi-precious gemstones, which are available in bead shops, craft stores, and online marketplaces.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 //SeName = "diamond-pave-earrings",
                 AllowCustomerReviews = true,
-                Price = 569M,
+                IsRental = true,
+                RentalPriceLength = 1,
+                RentalPricePeriod = RentalPricePeriod.Days,
+                Price = 30M,
                 IsShipEnabled = true,
                 Weight = 2,
                 Length = 2,
@@ -8460,14 +9926,10 @@ namespace Nop.Services.Installation
             allProducts.Add(productElegantGemstoneNecklace);
             productElegantGemstoneNecklace.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_GemstoneNecklaces.jpg"), MimeTypes.ImagePJpeg, pictureService.GetPictureSeName(productElegantGemstoneNecklace.Name)),
+                Picture = pictureService.InsertPicture(_fileProvider.ReadAllBytes(sampleImagesPath + "product_GemstoneNecklaces.jpg"), MimeTypes.ImagePJpeg, pictureService.GetPictureSeName(productElegantGemstoneNecklace.Name)),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productElegantGemstoneNecklace);
-
-
-
-
 
             var productFlowerGirlBracelet = new Product
             {
@@ -8512,17 +9974,10 @@ namespace Nop.Services.Installation
             allProducts.Add(productFlowerGirlBracelet);
             productFlowerGirlBracelet.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_FlowerBracelet.jpg"), MimeTypes.ImagePJpeg, pictureService.GetPictureSeName(productFlowerGirlBracelet.Name)),
+                Picture = pictureService.InsertPicture(_fileProvider.ReadAllBytes(sampleImagesPath + "product_FlowerBracelet.jpg"), MimeTypes.ImagePJpeg, pictureService.GetPictureSeName(productFlowerGirlBracelet.Name)),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productFlowerGirlBracelet);
-
-
-
-
-
-
-
 
             var productEngagementRing = new Product
             {
@@ -8566,17 +10021,14 @@ namespace Nop.Services.Installation
             allProducts.Add(productEngagementRing);
             productEngagementRing.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_EngagementRing_1.jpg"), MimeTypes.ImagePJpeg, pictureService.GetPictureSeName(productEngagementRing.Name)),
+                Picture = pictureService.InsertPicture(_fileProvider.ReadAllBytes(sampleImagesPath + "product_EngagementRing_1.jpg"), MimeTypes.ImagePJpeg, pictureService.GetPictureSeName(productEngagementRing.Name)),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productEngagementRing);
 
-
-
             #endregion
 
             #region Gift Cards
-
 
             var product25GiftCard = new Product
             {
@@ -8614,14 +10066,10 @@ namespace Nop.Services.Installation
             allProducts.Add(product25GiftCard);
             product25GiftCard.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_25giftcart.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(product25GiftCard.Name)),
+                Picture = pictureService.InsertPicture(_fileProvider.ReadAllBytes(sampleImagesPath + "product_25giftcart.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(product25GiftCard.Name)),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(product25GiftCard);
-
-
-
-
 
             var product50GiftCard = new Product
             {
@@ -8666,14 +10114,10 @@ namespace Nop.Services.Installation
             allProducts.Add(product50GiftCard);
             product50GiftCard.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_50giftcart.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(product50GiftCard.Name)),
+                Picture = pictureService.InsertPicture(_fileProvider.ReadAllBytes(sampleImagesPath + "product_50giftcart.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(product50GiftCard.Name)),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(product50GiftCard);
-
-
-
-
 
             var product100GiftCard = new Product
             {
@@ -8716,14 +10160,12 @@ namespace Nop.Services.Installation
             allProducts.Add(product100GiftCard);
             product100GiftCard.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_100giftcart.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(product100GiftCard.Name)),
+                Picture = pictureService.InsertPicture(_fileProvider.ReadAllBytes(sampleImagesPath + "product_100giftcart.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(product100GiftCard.Name)),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(product100GiftCard);
 
             #endregion
-
-
 
             //search engine names
             foreach (var product in allProducts)
@@ -8737,7 +10179,6 @@ namespace Nop.Services.Installation
                     Slug = product.ValidateSeName("", product.Name, true)
                 });
             }
-
 
             #region Related Products
 
@@ -9227,8 +10668,9 @@ namespace Nop.Services.Installation
             AddProductTag(productEngagementRing, "jewelry");
             AddProductTag(productEngagementRing, "awesome");
 
-
             #endregion
+
+            #region  Reviews
 
             //reviews
             var random = new Random();
@@ -9250,7 +10692,7 @@ namespace Nop.Services.Installation
                     StoreId = defaultStore.Id,
                     IsApproved = true,
                     Title = "Some sample review",
-                    ReviewText = string.Format("This sample review is for the {0}. I've been waiting for this product to be available. It is priced just right.", product.Name),
+                    ReviewText = $"This sample review is for the {product.Name}. I've been waiting for this product to be available. It is priced just right.",
                     //random (4 or 5)
                     Rating = rating,
                     HelpfulYesTotal = 0,
@@ -9262,6 +10704,26 @@ namespace Nop.Services.Installation
 
             }
             _productRepository.Update(allProducts);
+
+            #endregion
+
+            #region Stock quantity history
+
+            foreach (var product in allProducts)
+            {
+                if (product.StockQuantity > 0)
+                    _stockQuantityHistoryRepository.Insert(new StockQuantityHistory
+                    {
+                        ProductId = product.Id,
+                        WarehouseId = product.WarehouseId > 0 ? (int?)product.WarehouseId : null,
+                        QuantityAdjustment = product.StockQuantity,
+                        StockQuantity = product.StockQuantity,
+                        Message = "The stock quantity has been edited",
+                        CreatedOnUtc = DateTime.UtcNow
+                    });
+            }
+
+            #endregion
         }
 
         protected virtual void InstallForums()
@@ -9324,59 +10786,60 @@ namespace Nop.Services.Installation
         protected virtual void InstallDiscounts()
         {
             var discounts = new List<Discount>
-                                {
-                                    new Discount
-                                        {
-                                            Name = "Sample discount with coupon code",
-                                            DiscountType = DiscountType.AssignedToSkus,
-                                            DiscountLimitation = DiscountLimitationType.Unlimited,
-                                            UsePercentage = false,
-                                            DiscountAmount = 10,
-                                            RequiresCouponCode = true,
-                                            CouponCode = "123",
-                                        },
-                                    new Discount
-                                        {
-                                            Name = "'20% order total' discount",
-                                            DiscountType = DiscountType.AssignedToOrderTotal,
-                                            DiscountLimitation = DiscountLimitationType.Unlimited,
-                                            UsePercentage = true,
-                                            DiscountPercentage = 20,
-                                            StartDateUtc = new DateTime(2010,1,1),
-                                            EndDateUtc = new DateTime(2020,1,1),
-                                            RequiresCouponCode = true,
-                                            CouponCode = "456",
-                                        },
-                                };
+            {
+                new Discount
+                {
+                    Name = "Sample discount with coupon code",
+                    DiscountType = DiscountType.AssignedToSkus,
+                    DiscountLimitation = DiscountLimitationType.Unlimited,
+                    UsePercentage = false,
+                    DiscountAmount = 10,
+                    RequiresCouponCode = true,
+                    CouponCode = "123",
+                },
+                new Discount
+                {
+                    Name = "'20% order total' discount",
+                    DiscountType = DiscountType.AssignedToOrderTotal,
+                    DiscountLimitation = DiscountLimitationType.Unlimited,
+                    UsePercentage = true,
+                    DiscountPercentage = 20,
+                    StartDateUtc = new DateTime(2010, 1, 1),
+                    EndDateUtc = new DateTime(2020, 1, 1),
+                    RequiresCouponCode = true,
+                    CouponCode = "456",
+                },
+            };
             _discountRepository.Insert(discounts);
         }
 
         protected virtual void InstallBlogPosts(string defaultUserEmail)
         {
             var defaultLanguage = _languageRepository.Table.FirstOrDefault();
+
             var blogPosts = new List<BlogPost>
-                                {
-                                    new BlogPost
-                                        {
-                                             AllowComments = true,
-                                             Language = defaultLanguage,
-                                             Title = "How a blog can help your growing e-Commerce business",
-                                             BodyOverview = "<p>When you start an online business, your main aim is to sell the products, right? As a business owner, you want to showcase your store to more audience. So, you decide to go on social media, why? Because everyone is doing it, then why shouldn&rsquo;t you? It is tempting as everyone is aware of the hype that it is the best way to market your brand.</p><p>Do you know having a blog for your online store can be very helpful? Many businesses do not understand the importance of having a blog because they don&rsquo;t have time to post quality content.</p><p>Today, we will talk about how a blog can play an important role for the growth of your e-Commerce business. Later, we will also discuss some tips that will be helpful to you for writing business related blog posts.</p>",
-                                             Body = "<p>When you start an online business, your main aim is to sell the products, right? As a business owner, you want to showcase your store to more audience. So, you decide to go on social media, why? Because everyone is doing it, then why shouldn&rsquo;t you? It is tempting as everyone is aware of the hype that it is the best way to market your brand.</p><p>Do you know having a blog for your online store can be very helpful? Many businesses do not understand the importance of having a blog because they don&rsquo;t have time to post quality content.</p><p>Today, we will talk about how a blog can play an important role for the growth of your e-Commerce business. Later, we will also discuss some tips that will be helpful to you for writing business related blog posts.</p><h3>1) Blog is useful in educating your customers</h3><p>Blogging is one of the best way by which you can educate your customers about your products/services that you offer. This helps you as a business owner to bring more value to your brand. When you provide useful information to the customers about your products, they are more likely to buy products from you. You can use your blog for providing tutorials in regard to the use of your products.</p><p><strong>For example:</strong> If you have an online store that offers computer parts. You can write tutorials about how to build a computer or how to make your computer&rsquo;s performance better. While talking about these things, you can mention products in the tutorials and provide link to your products within the blog post from your website. Your potential customers might get different ideas of using your product and will likely to buy products from your online store.</p><h3>2) Blog helps your business in Search Engine Optimization (SEO)</h3><p>Blog posts create more internal links to your website which helps a lot in SEO. Blog is a great way to have quality content on your website related to your products/services which is indexed by all major search engines like Google, Bing and Yahoo. The more original content you write in your blog post, the better ranking you will get in search engines. SEO is an on-going process and posting blog posts regularly keeps your site active all the time which is beneficial when it comes to search engine optimization.</p><p><strong>For example:</strong> Let&rsquo;s say you sell &ldquo;Sony Television Model XYZ&rdquo; and you regularly publish blog posts about your product. Now, whenever someone searches for &ldquo;Sony Television Model XYZ&rdquo;, Google will crawl on your website knowing that you have something to do with this particular product. Hence, your website will show up on the search result page whenever this item is being searched.</p><h3>3) Blog helps in boosting your sales by convincing the potential customers to buy</h3><p>If you own an online business, there are so many ways you can share different stories with your audience in regard your products/services that you offer. Talk about how you started your business, share stories that educate your audience about what&rsquo;s new in your industry, share stories about how your product/service was beneficial to someone or share anything that you think your audience might find interesting (it does not have to be related to your product). This kind of blogging shows that you are an expert in your industry and interested in educating your audience. It sets you apart in the competitive market. This gives you an opportunity to showcase your expertise by educating the visitors and it can turn your audience into buyers.</p><p><strong>Fun Fact:</strong> Did you know that 92% of companies who decided to blog acquired customers through their blog?</p><p><a href=\"http://www.nopcommerce.com/\">nopCommerce</a> is great e-Commerce solution that also offers a variety of CMS features including blog. A store owner has full access for managing the blog posts and related comments.</p>",
-                                             Tags = "e-commerce, blog, moey",
-                                             CreatedOnUtc = DateTime.UtcNow,
-                                        },
-                                    new BlogPost
-                                        {
-                                             AllowComments = true,
-                                             Language = defaultLanguage,
-                                             Title = "Why your online store needs a wish list",
-                                             BodyOverview = "<p>What comes to your mind, when you hear the term&rdquo; wish list&rdquo;? The application of this feature is exactly how it sounds like: a list of things that you wish to get. As an online store owner, would you like your customers to be able to save products in a wish list so that they review or buy them later? Would you like your customers to be able to share their wish list with friends and family for gift giving?</p><p>Offering your customers a feature of wish list as part of shopping cart is a great way to build loyalty to your store site. Having the feature of wish list on a store site allows online businesses to engage with their customers in a smart way as it allows the shoppers to create a list of what they desire and their preferences for future purchase.</p>",
-                                             Body = "<p>What comes to your mind, when you hear the term&rdquo; wish list&rdquo;? The application of this feature is exactly how it sounds like: a list of things that you wish to get. As an online store owner, would you like your customers to be able to save products in a wish list so that they review or buy them later? Would you like your customers to be able to share their wish list with friends and family for gift giving?</p><p>Offering your customers a feature of wish list as part of shopping cart is a great way to build loyalty to your store site. Having the feature of wish list on a store site allows online businesses to engage with their customers in a smart way as it allows the shoppers to create a list of what they desire and their preferences for future purchase.</p><p>Does every e-Commerce store needs a wish list? The answer to this question in most cases is yes, because of the following reasons:</p><p><strong>Understanding the needs of your customers</strong> - A wish list is a great way to know what is in your customer&rsquo;s mind. Try to think the purchase history as a small portion of the customer&rsquo;s preferences. But, the wish list is like a wide open door that can give any online business a lot of valuable information about their customer and what they like or desire.</p><p><strong>Shoppers like to share their wish list with friends and family</strong> - Providing your customers a way to email their wish list to their friends and family is a pleasant way to make online shopping enjoyable for the shoppers. It is always a good idea to make the wish list sharable by a unique link so that it can be easily shared though different channels like email or on social media sites.</p><p><strong>Wish list can be a great marketing tool</strong> &ndash; Another way to look at wish list is a great marketing tool because it is extremely targeted and the recipients are always motivated to use it. For example: when your younger brother tells you that his wish list is on a certain e-Commerce store. What is the first thing you are going to do? You are most likely to visit the e-Commerce store, check out the wish list and end up buying something for your younger brother.</p><p>So, how a wish list is a marketing tool? The reason is quite simple, it introduce your online store to new customers just how it is explained in the above example.</p><p><strong>Encourage customers to return to the store site</strong> &ndash; Having a feature of wish list on the store site can increase the return traffic because it encourages customers to come back and buy later. Allowing the customers to save the wish list to their online accounts gives them a reason return to the store site and login to the account at any time to view or edit the wish list items.</p><p><strong>Wish list can be used for gifts for different occasions like weddings or birthdays. So, what kind of benefits a gift-giver gets from a wish list?</strong></p><ul><li>It gives them a surety that they didn&rsquo;t buy a wrong gift</li><li>It guarantees that the recipient will like the gift</li><li>It avoids any awkward moments when the recipient unwraps the gift and as a gift-giver you got something that the recipient do not want</li></ul><p><strong>Wish list is a great feature to have on a store site &ndash; So, what kind of benefits a business owner gets from a wish list</strong></p><ul><li>It is a great way to advertise an online store as many people do prefer to shop where their friend or family shop online</li><li>It allows the current customers to return to the store site and open doors for the new customers</li><li>It allows store admins to track what&rsquo;s in customers wish list and run promotions accordingly to target specific customer segments</li></ul><p><a href=\"http://www.nopcommerce.com/\">nopCommerce</a> offers the feature of wish list that allows customers to create a list of products that they desire or planning to buy in future.</p>",
-                                             Tags = "e-commerce, nopCommerce, sample tag, money",
-                                             CreatedOnUtc = DateTime.UtcNow.AddSeconds(1),
-                                        },
-                                };
+            {
+                new BlogPost
+                {
+                    AllowComments = true,
+                    Language = defaultLanguage,
+                    Title = "How a blog can help your growing e-Commerce business",
+                    BodyOverview = "<p>When you start an online business, your main aim is to sell the products, right? As a business owner, you want to showcase your store to more audience. So, you decide to go on social media, why? Because everyone is doing it, then why shouldn&rsquo;t you? It is tempting as everyone is aware of the hype that it is the best way to market your brand.</p><p>Do you know having a blog for your online store can be very helpful? Many businesses do not understand the importance of having a blog because they don&rsquo;t have time to post quality content.</p><p>Today, we will talk about how a blog can play an important role for the growth of your e-Commerce business. Later, we will also discuss some tips that will be helpful to you for writing business related blog posts.</p>",
+                    Body = "<p>When you start an online business, your main aim is to sell the products, right? As a business owner, you want to showcase your store to more audience. So, you decide to go on social media, why? Because everyone is doing it, then why shouldn&rsquo;t you? It is tempting as everyone is aware of the hype that it is the best way to market your brand.</p><p>Do you know having a blog for your online store can be very helpful? Many businesses do not understand the importance of having a blog because they don&rsquo;t have time to post quality content.</p><p>Today, we will talk about how a blog can play an important role for the growth of your e-Commerce business. Later, we will also discuss some tips that will be helpful to you for writing business related blog posts.</p><h3>1) Blog is useful in educating your customers</h3><p>Blogging is one of the best way by which you can educate your customers about your products/services that you offer. This helps you as a business owner to bring more value to your brand. When you provide useful information to the customers about your products, they are more likely to buy products from you. You can use your blog for providing tutorials in regard to the use of your products.</p><p><strong>For example:</strong> If you have an online store that offers computer parts. You can write tutorials about how to build a computer or how to make your computer&rsquo;s performance better. While talking about these things, you can mention products in the tutorials and provide link to your products within the blog post from your website. Your potential customers might get different ideas of using your product and will likely to buy products from your online store.</p><h3>2) Blog helps your business in Search Engine Optimization (SEO)</h3><p>Blog posts create more internal links to your website which helps a lot in SEO. Blog is a great way to have quality content on your website related to your products/services which is indexed by all major search engines like Google, Bing and Yahoo. The more original content you write in your blog post, the better ranking you will get in search engines. SEO is an on-going process and posting blog posts regularly keeps your site active all the time which is beneficial when it comes to search engine optimization.</p><p><strong>For example:</strong> Let&rsquo;s say you sell &ldquo;Sony Television Model XYZ&rdquo; and you regularly publish blog posts about your product. Now, whenever someone searches for &ldquo;Sony Television Model XYZ&rdquo;, Google will crawl on your website knowing that you have something to do with this particular product. Hence, your website will show up on the search result page whenever this item is being searched.</p><h3>3) Blog helps in boosting your sales by convincing the potential customers to buy</h3><p>If you own an online business, there are so many ways you can share different stories with your audience in regard your products/services that you offer. Talk about how you started your business, share stories that educate your audience about what&rsquo;s new in your industry, share stories about how your product/service was beneficial to someone or share anything that you think your audience might find interesting (it does not have to be related to your product). This kind of blogging shows that you are an expert in your industry and interested in educating your audience. It sets you apart in the competitive market. This gives you an opportunity to showcase your expertise by educating the visitors and it can turn your audience into buyers.</p><p><strong>Fun Fact:</strong> Did you know that 92% of companies who decided to blog acquired customers through their blog?</p><p><a href=\"https://www.nopcommerce.com/\">nopCommerce</a> is great e-Commerce solution that also offers a variety of CMS features including blog. A store owner has full access for managing the blog posts and related comments.</p>",
+                    Tags = "e-commerce, blog, moey",
+                    CreatedOnUtc = DateTime.UtcNow,
+                },
+                new BlogPost
+                {
+                    AllowComments = true,
+                    Language = defaultLanguage,
+                    Title = "Why your online store needs a wish list",
+                    BodyOverview = "<p>What comes to your mind, when you hear the term&rdquo; wish list&rdquo;? The application of this feature is exactly how it sounds like: a list of things that you wish to get. As an online store owner, would you like your customers to be able to save products in a wish list so that they review or buy them later? Would you like your customers to be able to share their wish list with friends and family for gift giving?</p><p>Offering your customers a feature of wish list as part of shopping cart is a great way to build loyalty to your store site. Having the feature of wish list on a store site allows online businesses to engage with their customers in a smart way as it allows the shoppers to create a list of what they desire and their preferences for future purchase.</p>",
+                    Body = "<p>What comes to your mind, when you hear the term&rdquo; wish list&rdquo;? The application of this feature is exactly how it sounds like: a list of things that you wish to get. As an online store owner, would you like your customers to be able to save products in a wish list so that they review or buy them later? Would you like your customers to be able to share their wish list with friends and family for gift giving?</p><p>Offering your customers a feature of wish list as part of shopping cart is a great way to build loyalty to your store site. Having the feature of wish list on a store site allows online businesses to engage with their customers in a smart way as it allows the shoppers to create a list of what they desire and their preferences for future purchase.</p><p>Does every e-Commerce store needs a wish list? The answer to this question in most cases is yes, because of the following reasons:</p><p><strong>Understanding the needs of your customers</strong> - A wish list is a great way to know what is in your customer&rsquo;s mind. Try to think the purchase history as a small portion of the customer&rsquo;s preferences. But, the wish list is like a wide open door that can give any online business a lot of valuable information about their customer and what they like or desire.</p><p><strong>Shoppers like to share their wish list with friends and family</strong> - Providing your customers a way to email their wish list to their friends and family is a pleasant way to make online shopping enjoyable for the shoppers. It is always a good idea to make the wish list sharable by a unique link so that it can be easily shared though different channels like email or on social media sites.</p><p><strong>Wish list can be a great marketing tool</strong> &ndash; Another way to look at wish list is a great marketing tool because it is extremely targeted and the recipients are always motivated to use it. For example: when your younger brother tells you that his wish list is on a certain e-Commerce store. What is the first thing you are going to do? You are most likely to visit the e-Commerce store, check out the wish list and end up buying something for your younger brother.</p><p>So, how a wish list is a marketing tool? The reason is quite simple, it introduce your online store to new customers just how it is explained in the above example.</p><p><strong>Encourage customers to return to the store site</strong> &ndash; Having a feature of wish list on the store site can increase the return traffic because it encourages customers to come back and buy later. Allowing the customers to save the wish list to their online accounts gives them a reason return to the store site and login to the account at any time to view or edit the wish list items.</p><p><strong>Wish list can be used for gifts for different occasions like weddings or birthdays. So, what kind of benefits a gift-giver gets from a wish list?</strong></p><ul><li>It gives them a surety that they didn&rsquo;t buy a wrong gift</li><li>It guarantees that the recipient will like the gift</li><li>It avoids any awkward moments when the recipient unwraps the gift and as a gift-giver you got something that the recipient do not want</li></ul><p><strong>Wish list is a great feature to have on a store site &ndash; So, what kind of benefits a business owner gets from a wish list</strong></p><ul><li>It is a great way to advertise an online store as many people do prefer to shop where their friend or family shop online</li><li>It allows the current customers to return to the store site and open doors for the new customers</li><li>It allows store admins to track what&rsquo;s in customers wish list and run promotions accordingly to target specific customer segments</li></ul><p><a href=\"https://www.nopcommerce.com/\">nopCommerce</a> offers the feature of wish list that allows customers to create a list of products that they desire or planning to buy in future.</p>",
+                    Tags = "e-commerce, nopCommerce, sample tag, money",
+                    CreatedOnUtc = DateTime.UtcNow.AddSeconds(1),
+                },
+            };
             _blogPostRepository.Insert(blogPosts);
 
             //search engine names
@@ -9396,6 +10859,12 @@ namespace Nop.Services.Installation
             var defaultCustomer = _customerRepository.Table.FirstOrDefault(x => x.Email == defaultUserEmail);
             if (defaultCustomer == null)
                 throw new Exception("Cannot load default customer");
+
+            //default store
+            var defaultStore = _storeRepository.Table.FirstOrDefault();
+            if (defaultStore == null)
+                throw new Exception("No default store could be loaded");
+
             foreach (var blogPost in blogPosts)
             {
                 blogPost.BlogComments.Add(new BlogComment
@@ -9403,11 +10872,10 @@ namespace Nop.Services.Installation
                     BlogPostId = blogPost.Id,
                     CustomerId = defaultCustomer.Id,
                     CommentText = "This is a sample comment for this blog post",
+                    IsApproved = true,
+                    StoreId = defaultStore.Id,
                     CreatedOnUtc = DateTime.UtcNow
                 });
-                //update totals
-                blogPost.CommentCount = blogPost.BlogComments.Count;
-
             }
             _blogPostRepository.Update(blogPosts);
         }
@@ -9415,40 +10883,40 @@ namespace Nop.Services.Installation
         protected virtual void InstallNews(string defaultUserEmail)
         {
             var defaultLanguage = _languageRepository.Table.FirstOrDefault();
-            var news = new List<NewsItem>
-                                {
-                                    new NewsItem
-                                    {
-                                         AllowComments = true,
-                                         Language = defaultLanguage,
-                                         Title = "About nopCommerce",
-                                         Short = "It's stable and highly usable. From downloads to documentation, www.nopCommerce.com offers a comprehensive base of information, resources, and support to the nopCommerce community.",
-                                         Full = "<p>For full feature list go to <a href=\"http://www.nopCommerce.com\">nopCommerce.com</a></p><p>Providing outstanding custom search engine optimization, web development services and e-commerce development solutions to our clients at a fair price in a professional manner.</p>",
-                                         Published  = true,
-                                         CreatedOnUtc = DateTime.UtcNow,
-                                    },
-                                    new NewsItem
-                                    {
-                                         AllowComments = true,
-                                         Language = defaultLanguage,
-                                         Title = "nopCommerce new release!",
-                                         Short = "nopCommerce includes everything you need to begin your e-commerce online store. We have thought of everything and it's all included! nopCommerce is a fully customizable shopping cart",
-                                         Full = "<p>nopCommerce includes everything you need to begin your e-commerce online store. We have thought of everything and it's all included!</p>",
-                                         Published  = true,
-                                         CreatedOnUtc = DateTime.UtcNow.AddSeconds(1),
-                                    },
-                                    new NewsItem
-                                    {
-                                         AllowComments = true,
-                                         Language = defaultLanguage,
-                                         Title = "New online store is open!",
-                                         Short = "The new nopCommerce store is open now! We are very excited to offer our new range of products. We will be constantly adding to our range so please register on our site.",
-                                         Full = "<p>Our online store is officially up and running. Stock up for the holiday season! We have a great selection of items. We will be constantly adding to our range so please register on our site, this will enable you to keep up to date with any new products.</p><p>All shipping is worldwide and will leave the same day an order is placed! Happy Shopping and spread the word!!</p>",
-                                         Published  = true,
-                                         CreatedOnUtc = DateTime.UtcNow.AddSeconds(2),
-                                    },
 
-                                };
+            var news = new List<NewsItem>
+            {
+                new NewsItem
+                {
+                    AllowComments = true,
+                    Language = defaultLanguage,
+                    Title = "About nopCommerce",
+                    Short = "It's stable and highly usable. From downloads to documentation, www.nopCommerce.com offers a comprehensive base of information, resources, and support to the nopCommerce community.",
+                    Full = "<p>For full feature list go to <a href=\"https://www.nopCommerce.com\">nopCommerce.com</a></p><p>Providing outstanding custom search engine optimization, web development services and e-commerce development solutions to our clients at a fair price in a professional manner.</p>",
+                    Published = true,
+                    CreatedOnUtc = DateTime.UtcNow,
+                },
+                new NewsItem
+                {
+                    AllowComments = true,
+                    Language = defaultLanguage,
+                    Title = "nopCommerce new release!",
+                    Short = "nopCommerce includes everything you need to begin your e-commerce online store. We have thought of everything and it's all included! nopCommerce is a fully customizable shopping cart",
+                    Full = "<p>nopCommerce includes everything you need to begin your e-commerce online store. We have thought of everything and it's all included!</p>",
+                    Published = true,
+                    CreatedOnUtc = DateTime.UtcNow.AddSeconds(1),
+                },
+                new NewsItem
+                {
+                    AllowComments = true,
+                    Language = defaultLanguage,
+                    Title = "New online store is open!",
+                    Short = "The new nopCommerce store is open now! We are very excited to offer our new range of products. We will be constantly adding to our range so please register on our site.",
+                    Full = "<p>Our online store is officially up and running. Stock up for the holiday season! We have a great selection of items. We will be constantly adding to our range so please register on our site, this will enable you to keep up to date with any new products.</p><p>All shipping is worldwide and will leave the same day an order is placed! Happy Shopping and spread the word!!</p>",
+                    Published = true,
+                    CreatedOnUtc = DateTime.UtcNow.AddSeconds(2),
+                },
+            };
             _newsItemRepository.Insert(news);
 
             //search engine names
@@ -9468,6 +10936,12 @@ namespace Nop.Services.Installation
             var defaultCustomer = _customerRepository.Table.FirstOrDefault(x => x.Email == defaultUserEmail);
             if (defaultCustomer == null)
                 throw new Exception("Cannot load default customer");
+
+            //default store
+            var defaultStore = _storeRepository.Table.FirstOrDefault();
+            if (defaultStore == null)
+                throw new Exception("No default store could be loaded");
+
             foreach (var newsItem in news)
             {
                 newsItem.NewsComments.Add(new NewsComment
@@ -9476,11 +10950,10 @@ namespace Nop.Services.Installation
                     CustomerId = defaultCustomer.Id,
                     CommentTitle = "Sample comment title",
                     CommentText = "This is a sample comment...",
+                    IsApproved = true,
+                    StoreId = defaultStore.Id,
                     CreatedOnUtc = DateTime.UtcNow
                 });
-                //update totals
-                newsItem.CommentCount = newsItem.NewsComments.Count;
-
             }
             _newsItemRepository.Update(news);
         }
@@ -9523,456 +10996,950 @@ namespace Nop.Services.Installation
         protected virtual void InstallActivityLogTypes()
         {
             var activityLogTypes = new List<ActivityLogType>
-                                      {
-                                          //admin area activities
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "AddNewCategory",
-                                                  Enabled = true,
-                                                  Name = "Add a new category"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "AddNewCheckoutAttribute",
-                                                  Enabled = true,
-                                                  Name = "Add a new checkout attribute"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "AddNewCustomer",
-                                                  Enabled = true,
-                                                  Name = "Add a new customer"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "AddNewCustomerRole",
-                                                  Enabled = true,
-                                                  Name = "Add a new customer role"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "AddNewDiscount",
-                                                  Enabled = true,
-                                                  Name = "Add a new discount"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "AddNewGiftCard",
-                                                  Enabled = true,
-                                                  Name = "Add a new gift card"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "AddNewManufacturer",
-                                                  Enabled = true,
-                                                  Name = "Add a new manufacturer"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "AddNewProduct",
-                                                  Enabled = true,
-                                                  Name = "Add a new product"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "AddNewProductAttribute",
-                                                  Enabled = true,
-                                                  Name = "Add a new product attribute"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "AddNewSetting",
-                                                  Enabled = true,
-                                                  Name = "Add a new setting"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "AddNewSpecAttribute",
-                                                  Enabled = true,
-                                                  Name = "Add a new specification attribute"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "AddNewTopic",
-                                                  Enabled = true,
-                                                  Name = "Add a new topic"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "AddNewWidget",
-                                                  Enabled = true,
-                                                  Name = "Add a new widget"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "DeleteCategory",
-                                                  Enabled = true,
-                                                  Name = "Delete category"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "DeleteCheckoutAttribute",
-                                                  Enabled = true,
-                                                  Name = "Delete a checkout attribute"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "DeleteCustomer",
-                                                  Enabled = true,
-                                                  Name = "Delete a customer"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "DeleteCustomerRole",
-                                                  Enabled = true,
-                                                  Name = "Delete a customer role"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "DeleteDiscount",
-                                                  Enabled = true,
-                                                  Name = "Delete a discount"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "DeleteGiftCard",
-                                                  Enabled = true,
-                                                  Name = "Delete a gift card"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "DeleteManufacturer",
-                                                  Enabled = true,
-                                                  Name = "Delete a manufacturer"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "DeleteOrder",
-                                                  Enabled = true,
-                                                  Name = "Delete an order"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "DeleteProduct",
-                                                  Enabled = true,
-                                                  Name = "Delete a product"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "DeleteProductAttribute",
-                                                  Enabled = true,
-                                                  Name = "Delete a product attribute"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "DeleteReturnRequest",
-                                                  Enabled = true,
-                                                  Name = "Delete a return request"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "DeleteSetting",
-                                                  Enabled = true,
-                                                  Name = "Delete a setting"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "DeleteSpecAttribute",
-                                                  Enabled = true,
-                                                  Name = "Delete a specification attribute"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "DeleteTopic",
-                                                  Enabled = true,
-                                                  Name = "Delete a topic"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "DeleteWidget",
-                                                  Enabled = true,
-                                                  Name = "Delete a widget"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "EditCategory",
-                                                  Enabled = true,
-                                                  Name = "Edit category"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "EditCheckoutAttribute",
-                                                  Enabled = true,
-                                                  Name = "Edit a checkout attribute"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "EditCustomer",
-                                                  Enabled = true,
-                                                  Name = "Edit a customer"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "EditCustomerRole",
-                                                  Enabled = true,
-                                                  Name = "Edit a customer role"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "EditDiscount",
-                                                  Enabled = true,
-                                                  Name = "Edit a discount"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "EditGiftCard",
-                                                  Enabled = true,
-                                                  Name = "Edit a gift card"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "EditManufacturer",
-                                                  Enabled = true,
-                                                  Name = "Edit a manufacturer"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "EditOrder",
-                                                  Enabled = true,
-                                                  Name = "Edit an order"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "EditProduct",
-                                                  Enabled = true,
-                                                  Name = "Edit a product"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "EditProductAttribute",
-                                                  Enabled = true,
-                                                  Name = "Edit a product attribute"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "EditPromotionProviders",
-                                                  Enabled = true,
-                                                  Name = "Edit promotion providers"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "EditReturnRequest",
-                                                  Enabled = true,
-                                                  Name = "Edit a return request"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "EditSettings",
-                                                  Enabled = true,
-                                                  Name = "Edit setting(s)"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "EditSpecAttribute",
-                                                  Enabled = true,
-                                                  Name = "Edit a specification attribute"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "EditTopic",
-                                                  Enabled = true,
-                                                  Name = "Edit a topic"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "EditWidget",
-                                                  Enabled = true,
-                                                  Name = "Edit a widget"
-                                              },
-                                              //public store activities
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "PublicStore.ViewCategory",
-                                                  Enabled = false,
-                                                  Name = "Public store. View a category"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "PublicStore.ViewManufacturer",
-                                                  Enabled = false,
-                                                  Name = "Public store. View a manufacturer"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "PublicStore.ViewProduct",
-                                                  Enabled = false,
-                                                  Name = "Public store. View a product"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "PublicStore.PlaceOrder",
-                                                  Enabled = false,
-                                                  Name = "Public store. Place an order"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "PublicStore.SendPM",
-                                                  Enabled = false,
-                                                  Name = "Public store. Send PM"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "PublicStore.ContactUs",
-                                                  Enabled = false,
-                                                  Name = "Public store. Use contact us form"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "PublicStore.AddToCompareList",
-                                                  Enabled = false,
-                                                  Name = "Public store. Add to compare list"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "PublicStore.AddToShoppingCart",
-                                                  Enabled = false,
-                                                  Name = "Public store. Add to shopping cart"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "PublicStore.AddToWishlist",
-                                                  Enabled = false,
-                                                  Name = "Public store. Add to wishlist"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "PublicStore.Login",
-                                                  Enabled = false,
-                                                  Name = "Public store. Login"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "PublicStore.Logout",
-                                                  Enabled = false,
-                                                  Name = "Public store. Logout"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "PublicStore.AddProductReview",
-                                                  Enabled = false,
-                                                  Name = "Public store. Add product review"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "PublicStore.AddNewsComment",
-                                                  Enabled = false,
-                                                  Name = "Public store. Add news comment"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "PublicStore.AddBlogComment",
-                                                  Enabled = false,
-                                                  Name = "Public store. Add blog comment"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "PublicStore.AddForumTopic",
-                                                  Enabled = false,
-                                                  Name = "Public store. Add forum topic"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "PublicStore.EditForumTopic",
-                                                  Enabled = false,
-                                                  Name = "Public store. Edit forum topic"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "PublicStore.DeleteForumTopic",
-                                                  Enabled = false,
-                                                  Name = "Public store. Delete forum topic"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "PublicStore.AddForumPost",
-                                                  Enabled = false,
-                                                  Name = "Public store. Add forum post"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "PublicStore.EditForumPost",
-                                                  Enabled = false,
-                                                  Name = "Public store. Edit forum post"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "PublicStore.DeleteForumPost",
-                                                  Enabled = false,
-                                                  Name = "Public store. Delete forum post"
-                                              },
-                                      };
+            {
+                //admin area activities
+                new ActivityLogType
+                {
+                    SystemKeyword = "AddNewAddressAttribute",
+                    Enabled = true,
+                    Name = "Add a new address attribute"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "AddNewAddressAttributeValue",
+                    Enabled = true,
+                    Name = "Add a new address attribute value"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "AddNewAffiliate",
+                    Enabled = true,
+                    Name = "Add a new affiliate"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "AddNewBlogPost",
+                    Enabled = true,
+                    Name = "Add a new blog post"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "AddNewCampaign",
+                    Enabled = true,
+                    Name = "Add a new campaign"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "AddNewCategory",
+                    Enabled = true,
+                    Name = "Add a new category"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "AddNewCheckoutAttribute",
+                    Enabled = true,
+                    Name = "Add a new checkout attribute"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "AddNewCountry",
+                    Enabled = true,
+                    Name = "Add a new country"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "AddNewCurrency",
+                    Enabled = true,
+                    Name = "Add a new currency"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "AddNewCustomer",
+                    Enabled = true,
+                    Name = "Add a new customer"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "AddNewCustomerAttribute",
+                    Enabled = true,
+                    Name = "Add a new customer attribute"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "AddNewCustomerAttributeValue",
+                    Enabled = true,
+                    Name = "Add a new customer attribute value"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "AddNewCustomerRole",
+                    Enabled = true,
+                    Name = "Add a new customer role"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "AddNewDiscount",
+                    Enabled = true,
+                    Name = "Add a new discount"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "AddNewEmailAccount",
+                    Enabled = true,
+                    Name = "Add a new email account"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "AddNewGiftCard",
+                    Enabled = true,
+                    Name = "Add a new gift card"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "AddNewLanguage",
+                    Enabled = true,
+                    Name = "Add a new language"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "AddNewManufacturer",
+                    Enabled = true,
+                    Name = "Add a new manufacturer"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "AddNewMeasureDimension",
+                    Enabled = true,
+                    Name = "Add a new measure dimension"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "AddNewMeasureWeight",
+                    Enabled = true,
+                    Name = "Add a new measure weight"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "AddNewNews",
+                    Enabled = true,
+                    Name = "Add a new news"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "AddNewProduct",
+                    Enabled = true,
+                    Name = "Add a new product"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "AddNewProductAttribute",
+                    Enabled = true,
+                    Name = "Add a new product attribute"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "AddNewSetting",
+                    Enabled = true,
+                    Name = "Add a new setting"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "AddNewSpecAttribute",
+                    Enabled = true,
+                    Name = "Add a new specification attribute"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "AddNewStateProvince",
+                    Enabled = true,
+                    Name = "Add a new state or province"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "AddNewStore",
+                    Enabled = true,
+                    Name = "Add a new store"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "AddNewTopic",
+                    Enabled = true,
+                    Name = "Add a new topic"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "AddNewVendor",
+                    Enabled = true,
+                    Name = "Add a new vendor"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "AddNewVendorAttribute",
+                    Enabled = true,
+                    Name = "Add a new vendor attribute"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "AddNewVendorAttributeValue",
+                    Enabled = true,
+                    Name = "Add a new vendor attribute value"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "AddNewWarehouse",
+                    Enabled = true,
+                    Name = "Add a new warehouse"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "AddNewWidget",
+                    Enabled = true,
+                    Name = "Add a new widget"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "DeleteActivityLog",
+                    Enabled = true,
+                    Name = "Delete activity log"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "DeleteAddressAttribute",
+                    Enabled = true,
+                    Name = "Delete an address attribute"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "DeleteAddressAttributeValue",
+                    Enabled = true,
+                    Name = "Delete an address attribute value"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "DeleteAffiliate",
+                    Enabled = true,
+                    Name = "Delete an affiliate"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "DeleteBlogPost",
+                    Enabled = true,
+                    Name = "Delete a blog post"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "DeleteBlogPostComment",
+                    Enabled = true,
+                    Name = "Delete a blog post comment"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "DeleteCampaign",
+                    Enabled = true,
+                    Name = "Delete a campaign"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "DeleteCategory",
+                    Enabled = true,
+                    Name = "Delete category"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "DeleteCheckoutAttribute",
+                    Enabled = true,
+                    Name = "Delete a checkout attribute"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "DeleteCountry",
+                    Enabled = true,
+                    Name = "Delete a country"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "DeleteCurrency",
+                    Enabled = true,
+                    Name = "Delete a currency"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "DeleteCustomer",
+                    Enabled = true,
+                    Name = "Delete a customer"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "DeleteCustomerAttribute",
+                    Enabled = true,
+                    Name = "Delete a customer attribute"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "DeleteCustomerAttributeValue",
+                    Enabled = true,
+                    Name = "Delete a customer attribute value"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "DeleteCustomerRole",
+                    Enabled = true,
+                    Name = "Delete a customer role"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "DeleteDiscount",
+                    Enabled = true,
+                    Name = "Delete a discount"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "DeleteEmailAccount",
+                    Enabled = true,
+                    Name = "Delete an email account"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "DeleteGiftCard",
+                    Enabled = true,
+                    Name = "Delete a gift card"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "DeleteLanguage",
+                    Enabled = true,
+                    Name = "Delete a language"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "DeleteManufacturer",
+                    Enabled = true,
+                    Name = "Delete a manufacturer"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "DeleteMeasureDimension",
+                    Enabled = true,
+                    Name = "Delete a measure dimension"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "DeleteMeasureWeight",
+                    Enabled = true,
+                    Name = "Delete a measure weight"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "DeleteMessageTemplate",
+                    Enabled = true,
+                    Name = "Delete a message template"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "DeleteNews",
+                    Enabled = true,
+                    Name = "Delete a news"
+                },
+                 new ActivityLogType
+                {
+                    SystemKeyword = "DeleteNewsComment",
+                    Enabled = true,
+                    Name = "Delete a news comment"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "DeleteOrder",
+                    Enabled = true,
+                    Name = "Delete an order"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "DeletePlugin",
+                    Enabled = true,
+                    Name = "Delete a plugin"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "DeleteProduct",
+                    Enabled = true,
+                    Name = "Delete a product"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "DeleteProductAttribute",
+                    Enabled = true,
+                    Name = "Delete a product attribute"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "DeleteProductReview",
+                    Enabled = true,
+                    Name = "Delete a product review"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "DeleteReturnRequest",
+                    Enabled = true,
+                    Name = "Delete a return request"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "DeleteSetting",
+                    Enabled = true,
+                    Name = "Delete a setting"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "DeleteSpecAttribute",
+                    Enabled = true,
+                    Name = "Delete a specification attribute"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "DeleteStateProvince",
+                    Enabled = true,
+                    Name = "Delete a state or province"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "DeleteStore",
+                    Enabled = true,
+                    Name = "Delete a store"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "DeleteSystemLog",
+                    Enabled = true,
+                    Name = "Delete system log"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "DeleteTopic",
+                    Enabled = true,
+                    Name = "Delete a topic"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "DeleteVendor",
+                    Enabled = true,
+                    Name = "Delete a vendor"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "DeleteVendorAttribute",
+                    Enabled = true,
+                    Name = "Delete a vendor attribute"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "DeleteVendorAttributeValue",
+                    Enabled = true,
+                    Name = "Delete a vendor attribute value"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "DeleteWarehouse",
+                    Enabled = true,
+                    Name = "Delete a warehouse"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "DeleteWidget",
+                    Enabled = true,
+                    Name = "Delete a widget"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "EditActivityLogTypes",
+                    Enabled = true,
+                    Name = "Edit activity log types"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "EditAddressAttribute",
+                    Enabled = true,
+                    Name = "Edit an address attribute"
+                },
+                 new ActivityLogType
+                {
+                    SystemKeyword = "EditAddressAttributeValue",
+                    Enabled = true,
+                    Name = "Edit an address attribute value"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "EditAffiliate",
+                    Enabled = true,
+                    Name = "Edit an affiliate"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "EditBlogPost",
+                    Enabled = true,
+                    Name = "Edit a blog post"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "EditCampaign",
+                    Enabled = true,
+                    Name = "Edit a campaign"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "EditCategory",
+                    Enabled = true,
+                    Name = "Edit category"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "EditCheckoutAttribute",
+                    Enabled = true,
+                    Name = "Edit a checkout attribute"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "EditCountry",
+                    Enabled = true,
+                    Name = "Edit a country"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "EditCurrency",
+                    Enabled = true,
+                    Name = "Edit a currency"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "EditCustomer",
+                    Enabled = true,
+                    Name = "Edit a customer"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "EditCustomerAttribute",
+                    Enabled = true,
+                    Name = "Edit a customer attribute"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "EditCustomerAttributeValue",
+                    Enabled = true,
+                    Name = "Edit a customer attribute value"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "EditCustomerRole",
+                    Enabled = true,
+                    Name = "Edit a customer role"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "EditDiscount",
+                    Enabled = true,
+                    Name = "Edit a discount"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "EditEmailAccount",
+                    Enabled = true,
+                    Name = "Edit an email account"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "EditGiftCard",
+                    Enabled = true,
+                    Name = "Edit a gift card"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "EditLanguage",
+                    Enabled = true,
+                    Name = "Edit a language"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "EditManufacturer",
+                    Enabled = true,
+                    Name = "Edit a manufacturer"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "EditMeasureDimension",
+                    Enabled = true,
+                    Name = "Edit a measure dimension"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "EditMeasureWeight",
+                    Enabled = true,
+                    Name = "Edit a measure weight"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "EditMessageTemplate",
+                    Enabled = true,
+                    Name = "Edit a message template"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "EditNews",
+                    Enabled = true,
+                    Name = "Edit a news"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "EditOrder",
+                    Enabled = true,
+                    Name = "Edit an order"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "EditPlugin",
+                    Enabled = true,
+                    Name = "Edit a plugin"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "EditProduct",
+                    Enabled = true,
+                    Name = "Edit a product"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "EditProductAttribute",
+                    Enabled = true,
+                    Name = "Edit a product attribute"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "EditProductReview",
+                    Enabled = true,
+                    Name = "Edit a product review"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "EditPromotionProviders",
+                    Enabled = true,
+                    Name = "Edit promotion providers"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "EditReturnRequest",
+                    Enabled = true,
+                    Name = "Edit a return request"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "EditSettings",
+                    Enabled = true,
+                    Name = "Edit setting(s)"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "EditStateProvince",
+                    Enabled = true,
+                    Name = "Edit a state or province"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "EditStore",
+                    Enabled = true,
+                    Name = "Edit a store"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "EditTask",
+                    Enabled = true,
+                    Name = "Edit a task"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "EditSpecAttribute",
+                    Enabled = true,
+                    Name = "Edit a specification attribute"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "EditVendor",
+                    Enabled = true,
+                    Name = "Edit a vendor"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "EditVendorAttribute",
+                    Enabled = true,
+                    Name = "Edit a vendor attribute"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "EditVendorAttributeValue",
+                    Enabled = true,
+                    Name = "Edit a vendor attribute value"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "EditWarehouse",
+                    Enabled = true,
+                    Name = "Edit a warehouse"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "EditTopic",
+                    Enabled = true,
+                    Name = "Edit a topic"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "EditWidget",
+                    Enabled = true,
+                    Name = "Edit a widget"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "Impersonation.Started",
+                    Enabled = true,
+                    Name = "Customer impersonation session. Started"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "Impersonation.Finished",
+                    Enabled = true,
+                    Name = "Customer impersonation session. Finished"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "ImportCategories",
+                    Enabled = true,
+                    Name = "Categories were imported"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "ImportManufacturers",
+                    Enabled = true,
+                    Name = "Manufacturers were imported"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "ImportProducts",
+                    Enabled = true,
+                    Name = "Products were imported"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "ImportStates",
+                    Enabled = true,
+                    Name = "States were imported"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "InstallNewPlugin",
+                    Enabled = true,
+                    Name = "Install a new plugin"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "UninstallPlugin",
+                    Enabled = true,
+                    Name = "Uninstall a plugin"
+                },
+                //public store activities
+                new ActivityLogType
+                {
+                    SystemKeyword = "PublicStore.ViewCategory",
+                    Enabled = false,
+                    Name = "Public store. View a category"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "PublicStore.ViewManufacturer",
+                    Enabled = false,
+                    Name = "Public store. View a manufacturer"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "PublicStore.ViewProduct",
+                    Enabled = false,
+                    Name = "Public store. View a product"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "PublicStore.PlaceOrder",
+                    Enabled = false,
+                    Name = "Public store. Place an order"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "PublicStore.SendPM",
+                    Enabled = false,
+                    Name = "Public store. Send PM"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "PublicStore.ContactUs",
+                    Enabled = false,
+                    Name = "Public store. Use contact us form"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "PublicStore.AddToCompareList",
+                    Enabled = false,
+                    Name = "Public store. Add to compare list"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "PublicStore.AddToShoppingCart",
+                    Enabled = false,
+                    Name = "Public store. Add to shopping cart"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "PublicStore.AddToWishlist",
+                    Enabled = false,
+                    Name = "Public store. Add to wishlist"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "PublicStore.Login",
+                    Enabled = false,
+                    Name = "Public store. Login"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "PublicStore.Logout",
+                    Enabled = false,
+                    Name = "Public store. Logout"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "PublicStore.AddProductReview",
+                    Enabled = false,
+                    Name = "Public store. Add product review"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "PublicStore.AddNewsComment",
+                    Enabled = false,
+                    Name = "Public store. Add news comment"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "PublicStore.AddBlogComment",
+                    Enabled = false,
+                    Name = "Public store. Add blog comment"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "PublicStore.AddForumTopic",
+                    Enabled = false,
+                    Name = "Public store. Add forum topic"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "PublicStore.EditForumTopic",
+                    Enabled = false,
+                    Name = "Public store. Edit forum topic"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "PublicStore.DeleteForumTopic",
+                    Enabled = false,
+                    Name = "Public store. Delete forum topic"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "PublicStore.AddForumPost",
+                    Enabled = false,
+                    Name = "Public store. Add forum post"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "PublicStore.EditForumPost",
+                    Enabled = false,
+                    Name = "Public store. Edit forum post"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "PublicStore.DeleteForumPost",
+                    Enabled = false,
+                    Name = "Public store. Delete forum post"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "UploadNewPlugin",
+                    Enabled = true,
+                    Name = "Upload a plugin"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "UploadNewTheme",
+                    Enabled = true,
+                    Name = "Upload a theme"
+                }
+            };
             _activityLogTypeRepository.Insert(activityLogTypes);
         }
 
         protected virtual void InstallProductTemplates()
         {
             var productTemplates = new List<ProductTemplate>
-                               {
-                                   new ProductTemplate
-                                       {
-                                           Name = "Simple product",
-                                           ViewPath = "ProductTemplate.Simple",
-                                           DisplayOrder = 10
-                                       },
-                                   new ProductTemplate
-                                       {
-                                           Name = "Grouped product (with variants)",
-                                           ViewPath = "ProductTemplate.Grouped",
-                                           DisplayOrder = 100
-                                       },
-                               };
+            {
+                new ProductTemplate
+                {
+                    Name = "Simple product",
+                    ViewPath = "ProductTemplate.Simple",
+                    DisplayOrder = 10,
+                    IgnoredProductTypes = ((int) ProductType.GroupedProduct).ToString()
+                },
+                new ProductTemplate
+                {
+                    Name = "Grouped product (with variants)",
+                    ViewPath = "ProductTemplate.Grouped",
+                    DisplayOrder = 100,
+                    IgnoredProductTypes = ((int) ProductType.SimpleProduct).ToString()
+                }
+            };
             _productTemplateRepository.Insert(productTemplates);
         }
 
         protected virtual void InstallCategoryTemplates()
         {
             var categoryTemplates = new List<CategoryTemplate>
-                               {
-                                   new CategoryTemplate
-                                       {
-                                           Name = "Products in Grid or Lines",
-                                           ViewPath = "CategoryTemplate.ProductsInGridOrLines",
-                                           DisplayOrder = 1
-                                       },
-                               };
+            {
+                new CategoryTemplate
+                {
+                    Name = "Products in Grid or Lines",
+                    ViewPath = "CategoryTemplate.ProductsInGridOrLines",
+                    DisplayOrder = 1
+                },
+            };
             _categoryTemplateRepository.Insert(categoryTemplates);
         }
 
         protected virtual void InstallManufacturerTemplates()
         {
             var manufacturerTemplates = new List<ManufacturerTemplate>
-                               {
-                                   new ManufacturerTemplate
-                                       {
-                                           Name = "Products in Grid or Lines",
-                                           ViewPath = "ManufacturerTemplate.ProductsInGridOrLines",
-                                           DisplayOrder = 1
-                                       },
-                               };
+            {
+                new ManufacturerTemplate
+                {
+                    Name = "Products in Grid or Lines",
+                    ViewPath = "ManufacturerTemplate.ProductsInGridOrLines",
+                    DisplayOrder = 1
+                },
+            };
             _manufacturerTemplateRepository.Insert(manufacturerTemplates);
         }
 
         protected virtual void InstallTopicTemplates()
         {
             var topicTemplates = new List<TopicTemplate>
-                               {
-                                   new TopicTemplate
-                                       {
-                                           Name = "Default template",
-                                           ViewPath = "TopicDetails",
-                                           DisplayOrder = 1
-                                       },
-                               };
+            {
+                new TopicTemplate
+                {
+                    Name = "Default template",
+                    ViewPath = "TopicDetails",
+                    DisplayOrder = 1
+                },
+            };
             _topicTemplateRepository.Insert(topicTemplates);
         }
 
@@ -10038,45 +12005,46 @@ namespace Nop.Services.Installation
         protected virtual void InstallReturnRequestReasons()
         {
             var returnRequestReasons = new List<ReturnRequestReason>
-                                {
-                                    new ReturnRequestReason
-                                        {
-                                            Name = "Received Wrong Product",
-                                            DisplayOrder = 1
-                                        },
-                                    new ReturnRequestReason
-                                        {
-                                            Name = "Wrong Product Ordered",
-                                            DisplayOrder = 2
-                                        },
-                                    new ReturnRequestReason
-                                        {
-                                            Name = "There Was A Problem With The Product",
-                                            DisplayOrder = 3
-                                        }
-                                };
+            {
+                new ReturnRequestReason
+                {
+                    Name = "Received Wrong Product",
+                    DisplayOrder = 1
+                },
+                new ReturnRequestReason
+                {
+                    Name = "Wrong Product Ordered",
+                    DisplayOrder = 2
+                },
+                new ReturnRequestReason
+                {
+                    Name = "There Was A Problem With The Product",
+                    DisplayOrder = 3
+                }
+            };
             _returnRequestReasonRepository.Insert(returnRequestReasons);
         }
+
         protected virtual void InstallReturnRequestActions()
         {
             var returnRequestActions = new List<ReturnRequestAction>
-                                {
-                                    new ReturnRequestAction
-                                        {
-                                            Name = "Repair",
-                                            DisplayOrder = 1
-                                        },
-                                    new ReturnRequestAction
-                                        {
-                                            Name = "Replacement",
-                                            DisplayOrder = 2
-                                        },
-                                    new ReturnRequestAction
-                                        {
-                                            Name = "Store Credit",
-                                            DisplayOrder = 3
-                                        }
-                                };
+            {
+                new ReturnRequestAction
+                {
+                    Name = "Repair",
+                    DisplayOrder = 1
+                },
+                new ReturnRequestAction
+                {
+                    Name = "Replacement",
+                    DisplayOrder = 2
+                },
+                new ReturnRequestAction
+                {
+                    Name = "Store Credit",
+                    DisplayOrder = 3
+                }
+            };
             _returnRequestActionRepository.Insert(returnRequestActions);
         }
 
@@ -10204,12 +12172,28 @@ namespace Nop.Services.Installation
             }
             product.ProductTags.Add(productTag);
             _productRepository.Update(product);
+
+            //search engine name
+            _urlRecordRepository.Insert(new UrlRecord()
+            {
+                EntityId = productTag.Id,
+                EntityName = "ProductTag",
+                LanguageId = 0,
+                IsActive = true,
+                Slug = productTag.ValidateSeName("", productTag.Name, true)
+            });
         }
 
         #endregion
 
         #region Methods
 
+        /// <summary>
+        /// Install data
+        /// </summary>
+        /// <param name="defaultUserEmail">Default user email</param>
+        /// <param name="defaultUserPassword">Default user password</param>
+        /// <param name="installSampleData">A value indicating whether to install sample data</param>
         public virtual void InstallData(string defaultUserEmail,
             string defaultUserPassword, bool installSampleData = true)
         {
@@ -10221,15 +12205,15 @@ namespace Nop.Services.Installation
             InstallCountriesAndStates();
             InstallShippingMethods();
             InstallDeliveryDates();
-            InstallCustomersAndUsers(defaultUserEmail, defaultUserPassword);
+            InstallProductAvailabilityRanges();
             InstallEmailAccounts();
             InstallMessageTemplates();
-            InstallSettings();
             InstallTopicTemplates();
+            InstallSettings(installSampleData);
+            InstallCustomersAndUsers(defaultUserEmail, defaultUserPassword);
             InstallTopics();
             InstallLocaleResources();
             InstallActivityLogTypes();
-            HashDefaultCustomerPassword(defaultUserEmail, defaultUserPassword);
             InstallProductTemplates();
             InstallCategoryTemplates();
             InstallManufacturerTemplates();
@@ -10253,6 +12237,9 @@ namespace Nop.Services.Installation
                 InstallWarehouses();
                 InstallVendors();
                 InstallAffiliates();
+                InstallOrders();
+                InstallActivityLog(defaultUserEmail);
+                InstallSearchTerms();
             }
         }
 

@@ -3,8 +3,14 @@ using Nop.Core.Configuration;
 
 namespace Nop.Core.Domain.Payments
 {
+    /// <summary>
+    /// Payment settings
+    /// </summary>
     public class PaymentSettings : ISettings
     {
+        /// <summary>
+        /// Ctor
+        /// </summary>
         public PaymentSettings()
         {
             ActivePaymentMethodSystemNames = new List<string>();
@@ -24,5 +30,20 @@ namespace Nop.Core.Domain.Payments
         /// Gets or sets a value indicating whether we should bypass 'select payment method' page if we have only one payment method
         /// </summary>
         public bool BypassPaymentMethodSelectionIfOnlyOne { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to show payment method descriptions on "choose payment method" checkout page in the public store
+        /// </summary>
+        public bool ShowPaymentMethodDescriptions { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether we should skip 'payment info' page for redirection payment methods
+        /// </summary>
+        public bool SkipPaymentInfoStepForRedirectionPaymentMethods { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to cancel the recurring payment after failed last payment 
+        /// </summary>
+        public bool CancelRecurringPaymentsAfterFailedPayment { get; set; }
     }
 }

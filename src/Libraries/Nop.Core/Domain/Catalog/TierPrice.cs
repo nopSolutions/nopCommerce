@@ -1,3 +1,4 @@
+using System;
 using Nop.Core.Domain.Customers;
 
 namespace Nop.Core.Domain.Catalog
@@ -31,6 +32,16 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets the price
         /// </summary>
         public decimal Price { get; set; }
+
+        /// <summary>
+        /// Gets or sets the start date and time in UTC
+        /// </summary>
+        public DateTime? StartDateTimeUtc { get; set; }
+
+        /// <summary>
+        /// Gets or sets the end date and time in UTC
+        /// </summary>
+        public DateTime? EndDateTimeUtc { get; set; }
 
         /// <summary>
         /// Gets or sets the product

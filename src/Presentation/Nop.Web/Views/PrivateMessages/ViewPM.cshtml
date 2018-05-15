@@ -1,9 +1,12 @@
 ﻿@model PrivateMessageModel
-@using Nop.Web.Models.PrivateMessages;
 @{
-    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+    Layout = "_ColumnsOne";
 
+    //title
     Html.AddTitleParts(T("PageTitle.ViewPM").Text);
+    //page class
+    Html.AppendPageCssClassParts("html-private-messages");
+    Html.AppendPageCssClassParts("html-private-message-view-page");
 }
 <div class="page private-messages private-message-view-page">
     <div class="page-title">

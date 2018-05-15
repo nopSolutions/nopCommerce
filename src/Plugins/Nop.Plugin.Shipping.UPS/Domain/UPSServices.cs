@@ -35,7 +35,8 @@ namespace Nop.Plugin.Shipping.UPS.Domain
             {"UPS Today Standard", "82"}, //82-86, for Polish Domestic Shipments
             {"UPS Today Dedicated Courier", "83"},
             {"UPS Today Express", "85"},
-            {"UPS Today Express Saver", "86"}
+            {"UPS Today Express Saver", "86"},
+            {"Saturday Delivery", "sa"},
         };
 
         #endregion
@@ -50,7 +51,7 @@ namespace Nop.Plugin.Shipping.UPS.Domain
         public static string GetServiceId(string service)
         {
             var serviceId = "";
-            if (String.IsNullOrEmpty(service))
+            if (string.IsNullOrEmpty(service))
                 return serviceId;
 
             if (_services.ContainsKey(service))

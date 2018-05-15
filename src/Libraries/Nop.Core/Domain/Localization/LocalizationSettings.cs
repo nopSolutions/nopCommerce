@@ -2,6 +2,9 @@
 
 namespace Nop.Core.Domain.Localization
 {
+    /// <summary>
+    /// Localization settings
+    /// </summary>
     public class LocalizationSettings : ISettings
     {
         /// <summary>
@@ -40,7 +43,8 @@ namespace Nop.Core.Domain.Localization
         public bool LoadAllUrlRecordsOnStartup { get; set; }
 
         /// <summary>
-        /// A value indicating whether to we should ignore RTL language property for admin area
+        /// A value indicating whether to we should ignore RTL language property for admin area.
+        /// It's useful for store owners with RTL languages for public store but preferring LTR for admin area
         /// </summary>
         public bool IgnoreRtlPropertyForAdminArea { get; set; }
     }

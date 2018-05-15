@@ -1,6 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
+using System.Text;
+using Newtonsoft.Json;
+using Nop.Core.Infrastructure;
 
 namespace Nop.Core.Data
 {
@@ -9,114 +11,126 @@ namespace Nop.Core.Data
     /// </summary>
     public partial class DataSettingsManager
     {
-        protected const char separator = ':';
-        protected const string filename = "Settings.txt";
-               
-        /// <summary>
-        /// Parse settings
-        /// </summary>
-        /// <param name="text">Text of settings file</param>
-        /// <returns>Parsed data settings</returns>
-        protected virtual DataSettings ParseSettings(string text)
-        {
-            var shellSettings = new DataSettings();
-            if (String.IsNullOrEmpty(text))
-                return shellSettings;
+        #region Const
 
-            //Old way of file reading. This leads to unexpected behavior when a user's FTP program transfers these files as ASCII (\r\n becomes \n).
-            //var settings = text.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
-            var settings = new List<string>();
-            using (var reader = new StringReader(text))
-            {
-                string str;
-                while ((str = reader.ReadLine()) != null)
-                    settings.Add(str);
-            }
+        private const string OBSOLETE_DATA_SETTINGS_FILE_PATH = "~/App_Data/Settings.txt";
+        private const string DATA_SETTINGS_FILE_PATH_ = "~/App_Data/dataSettings.json";
 
-            foreach (var setting in settings)
-            {
-                var separatorIndex = setting.IndexOf(separator);
-                if (separatorIndex == -1)
-                {
-                    continue;
-                }
-                string key = setting.Substring(0, separatorIndex).Trim();
-                string value = setting.Substring(separatorIndex + 1).Trim();
+        #endregion
 
-                switch (key)
-                {
-                    case "DataProvider":
-                        shellSettings.DataProvider = value;
-                        break;
-                    case "DataConnectionString":
-                        shellSettings.DataConnectionString = value;
-                        break;
-                    default:
-                        shellSettings.RawDataSettings.Add(key,value);
-                        break;
-                }
-            }
+        #region Fields
 
-            return shellSettings;
-        }
+        protected INopFileProvider _fileProvider;
+
+        #endregion
+
+        #region Properties
 
         /// <summary>
-        /// Convert data settings to string representation
+        /// Gets the path to file that contains data settings
         /// </summary>
-        /// <param name="settings">Settings</param>
-        /// <returns>Text</returns>
-        protected virtual string ComposeSettings(DataSettings settings)
-        {
-            if (settings == null)
-                return "";
+        public static string DataSettingsFilePath => DATA_SETTINGS_FILE_PATH_;
 
-            return string.Format("DataProvider: {0}{2}DataConnectionString: {1}{2}",
-                                 settings.DataProvider,
-                                 settings.DataConnectionString,
-                                 Environment.NewLine
-                );
+        #endregion
+
+        #region Ctor
+
+        public DataSettingsManager(INopFileProvider fileProvider = null)
+        {
+            this._fileProvider = fileProvider ?? CommonHelper.DefaultFileProvider;
         }
+
+        #endregion
+
+        #region Methods
 
         /// <summary>
         /// Load settings
         /// </summary>
         /// <param name="filePath">File path; pass null to use default settings file path</param>
-        /// <returns></returns>
-        public virtual DataSettings LoadSettings(string filePath = null)
+        /// <param name="reloadSettings">Indicates whether to reload data, if they already loaded</param>
+        /// <returns>Data settings</returns>
+        public virtual DataSettings LoadSettings(string filePath = null, bool reloadSettings = false)
         {
-            if (String.IsNullOrEmpty(filePath))
+            if (!reloadSettings && Singleton<DataSettings>.Instance != null)
+                return Singleton<DataSettings>.Instance;
+
+            filePath = filePath ?? _fileProvider.MapPath(DataSettingsFilePath);
+
+            //check whether file exists
+            if (!_fileProvider.FileExists(filePath))
             {
-                filePath = Path.Combine(CommonHelper.MapPath("~/App_Data/"), filename);
+                //if not, try to parse the file that was used in previous nopCommerce versions
+                filePath = _fileProvider.MapPath(OBSOLETE_DATA_SETTINGS_FILE_PATH);
+                if (!_fileProvider.FileExists(filePath))
+                    return new DataSettings();
+
+                //get data settings from the old txt file
+                var dataSettings = new DataSettings();
+                using (var reader = new StringReader(_fileProvider.ReadAllText(filePath, Encoding.UTF8)))
+                {
+                    string settingsLine;
+                    while ((settingsLine = reader.ReadLine()) != null)
+                    {
+                        var separatorIndex = settingsLine.IndexOf(':');
+                        if (separatorIndex == -1)
+                            continue;
+
+                        var key = settingsLine.Substring(0, separatorIndex).Trim();
+                        var value = settingsLine.Substring(separatorIndex + 1).Trim();
+
+                        switch (key)
+                        {
+                            case "DataProvider":
+                                dataSettings.DataProvider = value;
+                                continue;
+                            case "DataConnectionString":
+                                dataSettings.DataConnectionString = value;
+                                continue;
+                            default:
+                                dataSettings.RawDataSettings.Add(key, value);
+                                continue;
+                        }
+                    }
+                }
+
+                //save data settings to the new file
+                SaveSettings(dataSettings);
+
+                //and delete the old one
+                _fileProvider.DeleteFile(filePath);
+
+                Singleton<DataSettings>.Instance = dataSettings;
+                return Singleton<DataSettings>.Instance;
             }
-            if (File.Exists(filePath))
-            {
-                string text = File.ReadAllText(filePath);
-                return ParseSettings(text);
-            }
-            
-            return new DataSettings();
+
+            var text = _fileProvider.ReadAllText(filePath, Encoding.UTF8);
+            if (string.IsNullOrEmpty(text))
+                return new DataSettings();
+
+            //get data settings from the JSON file
+            Singleton<DataSettings>.Instance = JsonConvert.DeserializeObject<DataSettings>(text);
+            return Singleton<DataSettings>.Instance;
         }
 
         /// <summary>
         /// Save settings to a file
         /// </summary>
-        /// <param name="settings"></param>
+        /// <param name="settings">Data settings</param>
         public virtual void SaveSettings(DataSettings settings)
         {
-            if (settings == null)
-                throw new ArgumentNullException("settings");
+            Singleton<DataSettings>.Instance = settings ?? throw new ArgumentNullException(nameof(settings));
             
-            string filePath = Path.Combine(CommonHelper.MapPath("~/App_Data/"), filename);
-            if (!File.Exists(filePath))
-            {
-                using (File.Create(filePath))
-                {
-                    //we use 'using' to close the file after it's created
-                }
-            }
-            
-            var text = ComposeSettings(settings);
-            File.WriteAllText(filePath, text);
+            var filePath = _fileProvider.MapPath(DataSettingsFilePath);
+
+            //create file if not exists
+            _fileProvider.CreateFile(filePath);
+
+            //save data settings to the file
+            var text = JsonConvert.SerializeObject(Singleton<DataSettings>.Instance, Formatting.Indented);
+            _fileProvider.WriteAllText(filePath, text, Encoding.UTF8);
         }
+
+        #endregion
     }
 }

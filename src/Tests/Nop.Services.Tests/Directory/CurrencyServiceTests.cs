@@ -4,9 +4,9 @@ using System.Linq;
 using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Directory;
-using Nop.Core.Plugins;
 using Nop.Services.Directory;
 using Nop.Services.Events;
+using Nop.Services.Plugins;
 using Nop.Services.Stores;
 using Nop.Tests;
 using NUnit.Framework;
@@ -40,6 +40,7 @@ namespace Nop.Services.Tests.Directory
                 DisplayOrder = 1,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow,
+                RoundingType = RoundingType.Rounding001
             };
             currencyEUR = new Currency
             {
@@ -53,6 +54,7 @@ namespace Nop.Services.Tests.Directory
                 DisplayOrder = 2,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow,
+                RoundingType = RoundingType.Rounding001
             };
             currencyRUR = new Currency
             {
@@ -66,6 +68,7 @@ namespace Nop.Services.Tests.Directory
                 DisplayOrder = 3,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow,
+                RoundingType = RoundingType.Rounding001
             };
             _currencyRepository = MockRepository.GenerateMock<IRepository<Currency>>();
             _currencyRepository.Expect(x => x.Table).Return(new List<Currency> { currencyUSD, currencyEUR, currencyRUR }.AsQueryable());
@@ -76,15 +79,17 @@ namespace Nop.Services.Tests.Directory
             _storeMappingService = MockRepository.GenerateMock<IStoreMappingService>();
 
             var cacheManager = new NopNullCache();
-            
-            _currencySettings = new CurrencySettings();
-            _currencySettings.PrimaryStoreCurrencyId = currencyUSD.Id;
-            _currencySettings.PrimaryExchangeRateCurrencyId = currencyEUR.Id;
+
+            _currencySettings = new CurrencySettings
+            {
+                PrimaryStoreCurrencyId = currencyUSD.Id,
+                PrimaryExchangeRateCurrencyId = currencyEUR.Id
+            };
 
             _eventPublisher = MockRepository.GenerateMock<IEventPublisher>();
             _eventPublisher.Expect(x => x.Publish(Arg<object>.Is.Anything));
             
-            var pluginFinder = new PluginFinder();
+            var pluginFinder = new PluginFinder(_eventPublisher);
             _currencyService = new CurrencyService(cacheManager,
                 _currencyRepository, _storeMappingService, 
                 _currencySettings, pluginFinder, _eventPublisher);
@@ -95,7 +100,7 @@ namespace Nop.Services.Tests.Directory
         {
             var providers = _currencyService.LoadAllExchangeRateProviders();
             providers.ShouldNotBeNull();
-            (providers.Count > 0).ShouldBeTrue();
+            (providers.Any()).ShouldBeTrue();
         }
 
         [Test]

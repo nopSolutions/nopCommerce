@@ -2,8 +2,14 @@
 
 namespace Nop.Data.Mapping.Tax
 {
-    public class TaxCategoryMap : NopEntityTypeConfiguration<TaxCategory>
+    /// <summary>
+    /// Mapping class
+    /// </summary>
+    public partial class TaxCategoryMap : NopEntityTypeConfiguration<TaxCategory>
     {
+        /// <summary>
+        /// Ctor
+        /// </summary>
         public TaxCategoryMap()
         {
             this.ToTable("TaxCategory");

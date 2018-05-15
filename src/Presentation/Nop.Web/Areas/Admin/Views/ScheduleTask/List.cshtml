@@ -1,0 +1,165 @@
+﻿@model ScheduleTaskSearchModel
+
+@using System.Text.Encodings.Web
+
+@{
+    //page title
+    ViewBag.Title = T("Admin.System.ScheduleTasks").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Schedule tasks");
+}
+
+<nop-antiforgery-token />
+<div class="content-header clearfix">
+    <h1 class="pull-left">
+        @T("Admin.System.ScheduleTasks")
+    </h1>
+    <div class="pull-right">
+        &nbsp;
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ScheduleTaskListButtons })
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $("#schedule-tasks-grid").on("click", ".run-now", function (e) {
+            showThrobber('@Html.Raw(JavaScriptEncoder.Default.Encode(T("Admin.System.ScheduleTasks.RunNow.Progress").Text))');
+        });
+    });
+</script>
+
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <p>
+                        @T("Admin.System.ScheduleTasks.24days")
+                    </p>
+                    <p>
+                        <strong>@T("Admin.System.ScheduleTasks.RestartApplication")</strong>
+                    </p>
+                    <div id="schedule-tasks-grid"></div>
+
+                    <script>
+                        $(document).ready(function () {
+                            $("#schedule-tasks-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("List", "ScheduleTask"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: addAntiForgeryToken
+                                        },
+                                        update: {
+                                            url: "@Html.Raw(Url.Action("TaskUpdate", "ScheduleTask"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: addAntiForgeryToken
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors",
+                                        model: {
+                                            id: "Id",
+                                            fields: {
+                                                Name: { editable: true, type: "string" },
+                                                Seconds: { editable: true, type: "number" },
+                                                Enabled: { editable: true, type: "boolean" },
+                                                StopOnError: { editable: true, type: "boolean" },
+                                                LastStartUtc: { editable: false, type: "date" },
+                                                LastEndUtc: { editable: false, type: "date" },
+                                                LastSuccessUtc: { editable: false, type: "date" },
+                                                Id: { editable: false, type: "number" }
+                                            }
+                                        }
+                                    },
+                                    error: function (e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    pageSize: @(Model.PageSize),
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    pageSizes: [@(Model.AvailablePageSizes)],
+                                    @await Html.PartialAsync("_GridPagerMessages")
+                                },
+                                editable: {
+                                    confirmation: "@T("Admin.Common.DeleteConfirmation")",
+                                    mode: "inline"
+                                },
+                                scrollable: false,
+                                columns: [{
+                                    field: "Name",
+                                    title: "@T("Admin.System.ScheduleTasks.Name")",
+                                    width: 300
+                                }, {
+                                    field: "Seconds",
+                                    title: "@T("Admin.System.ScheduleTasks.Seconds")",
+                                    width: 150
+                                }, {
+                                    field: "Enabled",
+                                    title: "@T("Admin.System.ScheduleTasks.Enabled")",
+                                    width: 100,
+                                    headerAttributes: { style: "text-align:center" },
+                                    attributes: { style: "text-align:center" },
+                                    template: '# if(Enabled) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
+                                }, {
+                                    field: "StopOnError",
+                                    title: "@T("Admin.System.ScheduleTasks.StopOnError")",
+                                    width: 100,
+                                    headerAttributes: { style: "text-align:center" },
+                                    attributes: { style: "text-align:center" },
+                                    template: '# if(StopOnError) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
+                                }, {
+                                    field: "LastStartUtc",
+                                    title: "@T("Admin.System.ScheduleTasks.LastStart")",
+                                    width: 200,
+                                    type: "date",
+                                    format: "{0:G}"
+                                }, {
+                                    field: "LastEndUtc",
+                                    title: "@T("Admin.System.ScheduleTasks.LastEnd")",
+                                    width: 200,
+                                    type: "date",
+                                    format: "{0:G}"
+                                }, {
+                                    field: "LastSuccessUtc",
+                                    title: "@T("Admin.System.ScheduleTasks.LastSuccess")",
+                                    width: 200,
+                                    type: "date",
+                                    format: "{0:G}"
+                                }, {
+                                    field: "Id",
+                                    title: "@T("Admin.System.ScheduleTasks.RunNow")",
+                                    width: 100,
+                                    template: '<a href="@Url.Content("~/Admin/ScheduleTask/RunNow/")#=Id#" class="btn bg-green">@T("Admin.System.ScheduleTasks.RunNow")</a>'
+                                }, {
+                                    command: {
+                                        name: "edit",
+                                        text: {
+                                            edit: "@T("Admin.Common.Edit")",
+                                            update: "@T("Admin.Common.Update")",
+                                            cancel: "@T("Admin.Common.Cancel")"
+                                        }
+                                    },
+                                    title: "@T("Admin.Common.Edit")",
+                                    width: 100
+                                }]
+                            });
+                        });
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

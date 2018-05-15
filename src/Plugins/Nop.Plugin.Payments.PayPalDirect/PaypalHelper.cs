@@ -1,119 +1,51 @@
-using System;
-using System.Text;
-using Nop.Core.Domain.Directory;
-using Nop.Core.Domain.Payments;
-using PayPal.PayPalAPIInterfaceService.Model;
+using System.Collections.Generic;
+using PayPal.Api;
 
 namespace Nop.Plugin.Payments.PayPalDirect
 {
     /// <summary>
-    /// Represents paypal helper
+    /// Represents PayPal helper
     /// </summary>
     public class PaypalHelper
     {
-        /// <summary>
-        /// Gets a payment status
-        /// </summary>
-        /// <param name="paymentStatus">PayPal payment status</param>
-        /// <param name="pendingReason">PayPal pending reason</param>
-        /// <returns>Payment status</returns>
-        public static PaymentStatus GetPaymentStatus(string paymentStatus, string pendingReason)
-        {
-            var result = PaymentStatus.Pending;
-
-            if (paymentStatus == null)
-                paymentStatus = string.Empty;
-
-            if (pendingReason == null)
-                pendingReason = string.Empty;
-
-            switch (paymentStatus.ToLowerInvariant())
-            {
-                case "pending":
-                    switch (pendingReason.ToLowerInvariant())
-                    {
-                        case "authorization":
-                            result = PaymentStatus.Authorized;
-                            break;
-                        default:
-                            result = PaymentStatus.Pending;
-                            break;
-                    }
-                    break;
-                case "processed":
-                case "completed":
-                case "canceled_reversal":
-                    result = PaymentStatus.Paid;
-                    break;
-                case "denied":
-                case "expired":
-                case "failed":
-                case "voided":
-                    result = PaymentStatus.Voided;
-                    break;
-                case "refunded":
-                case "reversed":
-                    result = PaymentStatus.Refunded;
-                    break;
-                default:
-                    break;
-            }
-            return result;
-        }
+        #region Constants
 
         /// <summary>
-        /// Checks response
+        /// nopCommerce partner code
         /// </summary>
-        /// <param name="abstractResponse">response</param>
-        /// <param name="errorMsg">Error message if exists</param>
-        /// <returns>True - response OK; otherwise, false</returns>
-        public static bool CheckSuccess(AbstractResponseType abstractResponse, out string errorMsg)
-        {
-            bool success = false;
-            var sb = new StringBuilder();
-            switch (abstractResponse.Ack)
-            {
-                case AckCodeType.SUCCESS:
-                case AckCodeType.SUCCESSWITHWARNING:
-                    success = true;
-                    break;
-                default:
-                    break;
-            }
-            if (null != abstractResponse.Errors)
-            {
-                foreach (ErrorType errorType in abstractResponse.Errors)
-                {
-                    if (sb.Length <= 0)
-                    {
-                        sb.Append(Environment.NewLine);
-                    }
-                    sb.Append("LongMessage: ").Append(errorType.LongMessage).Append(Environment.NewLine);
-                    sb.Append("ShortMessage: ").Append(errorType.ShortMessage).Append(Environment.NewLine);
-                    sb.Append("ErrorCode: ").Append(errorType.ErrorCode).Append(Environment.NewLine);
-                }
-            }
-            errorMsg = sb.ToString();
-            return success;
-        }
+        private const string BN_CODE = "nopCommerce_SP";
+
+        #endregion
+
+        #region Methods
 
         /// <summary>
-        /// Get Paypal currency code
+        /// Get PayPal Api context 
         /// </summary>
-        /// <param name="currency">Currency</param>
-        /// <returns>Paypal currency code</returns>
-        public static CurrencyCodeType GetPaypalCurrency(Currency currency)
+        /// <param name="paypalDirectPaymentSettings">PayPalDirectPayment settings</param>
+        /// <returns>ApiContext</returns>
+        public static APIContext GetApiContext(PayPalDirectPaymentSettings payPalDirectPaymentSettings)
         {
-            var currencyCodeType = CurrencyCodeType.USD;
-            try
+            var mode = payPalDirectPaymentSettings.UseSandbox ? "sandbox" : "live";
+
+            var config = new Dictionary<string, string>
             {
-                currencyCodeType = (CurrencyCodeType)Enum.Parse(typeof(CurrencyCodeType), currency.CurrencyCode, true);
-            }
-            catch
-            {
-            }
-            return currencyCodeType;
+                { "clientId", payPalDirectPaymentSettings.ClientId },
+                { "clientSecret", payPalDirectPaymentSettings.ClientSecret },
+                { "mode", mode }
+            };
+
+            var accessToken = new OAuthTokenCredential(config).GetAccessToken();
+            var apiContext = new APIContext(accessToken) { Config = config };
+
+            if (apiContext.HTTPHeaders == null)
+                apiContext.HTTPHeaders = new Dictionary<string, string>();
+            apiContext.HTTPHeaders["PayPal-Partner-Attribution-Id"] = BN_CODE;
+
+            return apiContext;
         }
+
+        #endregion
     }
 }
 

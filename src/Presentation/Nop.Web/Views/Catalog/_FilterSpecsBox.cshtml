@@ -1,7 +1,7 @@
 ﻿@model CatalogPagingFilteringModel.SpecificationFilterModel
-@using Nop.Web.Models.Catalog;
 @{
     var notFilteredItemsGroups = Model.NotFilteredItems.GroupBy(x => x.SpecificationAttributeName);
+    var alreadyFilteredItemsGroups = Model.AlreadyFilteredItems.GroupBy(x => x.SpecificationAttributeName);
 }
 @if (Model.Enabled)
 {
@@ -17,15 +17,27 @@
                     {
                         var groupList = group.ToList();
                         
-                        <ul class="group product-spec-group">
+                        <ul class="group product-spec-group @(groupList.Any(x => !string.IsNullOrEmpty(x.SpecificationAttributeOptionColorRgb)) ? "product-spec-color" : null )">
                             <li class="title">
                                 <strong>@groupList[0].SpecificationAttributeName</strong>
                             </li>
-
                             @foreach (var spec in groupList)
                             {
-                                <li class="item">
-                                    <a href="@spec.FilterUrl">@spec.SpecificationAttributeOptionName</a>
+                                <li class="item @(!string.IsNullOrEmpty(spec.SpecificationAttributeOptionColorRgb) ? "color-item" : null)">
+                                    <a href="@spec.FilterUrl">
+                                        @if (string.IsNullOrEmpty(spec.SpecificationAttributeOptionColorRgb))
+                                        {
+                                            @spec.SpecificationAttributeOptionName
+                                        }
+                                        else
+                                        {
+                                            <div class="attribute-squares color-squares">
+                                                <span class="attribute-square-container" title="@spec.SpecificationAttributeOptionName">
+                                                    <span class="attribute-square" style="background-color: @(spec.SpecificationAttributeOptionColorRgb);">&nbsp;</span>
+                                                </span>
+                                            </div>
+                                        }
+                                    </a>
                                 </li>
                             }
                         </ul>
@@ -39,10 +51,12 @@
                         <li class="title">
                             @T("Filtering.SpecificationFilter.CurrentlyFilteredBy")
                         </li>
-                        @foreach (var item in Model.AlreadyFilteredItems)
+                        @foreach (var group in alreadyFilteredItemsGroups)
                         {
                             <li class="item">
-                                <strong>@(item.SpecificationAttributeName):</strong> @item.SpecificationAttributeOptionName
+                                <strong>@group.First().SpecificationAttributeName</strong>:
+                                @group.ToList().Aggregate(string.Empty, (current, next) =>
+                                    $"{(string.IsNullOrEmpty(current) ? string.Empty : $"{current} {T("Filtering.SpecificationFilter.Separator")}")}{next.SpecificationAttributeOptionName}")
                             </li>
                         }
                     </ul>

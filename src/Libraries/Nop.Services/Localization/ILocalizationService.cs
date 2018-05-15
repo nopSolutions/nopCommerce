@@ -61,8 +61,9 @@ namespace Nop.Services.Localization
         /// Gets all locale string resources by language identifier
         /// </summary>
         /// <param name="languageId">Language identifier</param>
+        /// <param name="loadPublicLocales">A value indicating whether to load data for the public store only (if "false", then for admin area only. If null, then load all locales. We use it for performance optimization of the site startup</param>
         /// <returns>Locale string resources</returns>
-        Dictionary<string, KeyValuePair<int, string>> GetAllResourceValues(int languageId);
+        Dictionary<string, KeyValuePair<int, string>> GetAllResourceValues(int languageId, bool? loadPublicLocales);
 
         /// <summary>
         /// Gets a resource string based on the specified ResourceKey property.
@@ -84,7 +85,7 @@ namespace Nop.Services.Localization
             bool logIfNotFound = true, string defaultValue = "", bool returnEmptyIfNotFound = false);
 
         /// <summary>
-        /// Export language resources to xml
+        /// Export language resources to XML
         /// </summary>
         /// <param name="language">Language</param>
         /// <returns>Result in XML format</returns>
@@ -95,6 +96,7 @@ namespace Nop.Services.Localization
         /// </summary>
         /// <param name="language">Language</param>
         /// <param name="xml">XML</param>
-        void ImportResourcesFromXml(Language language, string xml);
+        /// <param name="updateExistingResources">A value indicating whether to update existing resources</param>
+        void ImportResourcesFromXml(Language language, string xml, bool updateExistingResources = true);
     }
 }

@@ -47,6 +47,9 @@
   <LocaleResource Name="DatabaseCreationError">
     <Value>Hiba történt az adatbázis megteremtésekor: {0}</Value>
   </LocaleResource>
+  <LocaleResource Name="Database">
+    <Value>Adatbázis</Value>
+  </LocaleResource>
   <LocaleResource Name="DatabaseInformation">
     <Value>Adatbázis információk</Value>
   </LocaleResource>

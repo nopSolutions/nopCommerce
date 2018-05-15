@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace Nop.Services.Customers 
 {
@@ -12,7 +13,7 @@ namespace Nop.Services.Customers
         /// </summary>
         public ChangePasswordResult() 
         {
-            this.Errors = new List<string>();
+            Errors = new List<string>();
         }
 
         /// <summary>
@@ -20,7 +21,7 @@ namespace Nop.Services.Customers
         /// </summary>
         public bool Success
         {
-            get { return (this.Errors.Count == 0); }
+            get { return (!Errors.Any()); }
         }
 
         /// <summary>

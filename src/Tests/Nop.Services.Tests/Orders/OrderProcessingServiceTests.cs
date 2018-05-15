@@ -13,7 +13,6 @@ using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Stores;
 using Nop.Core.Domain.Tax;
-using Nop.Core.Plugins;
 using Nop.Services.Affiliates;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
@@ -26,6 +25,7 @@ using Nop.Services.Logging;
 using Nop.Services.Messages;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
+using Nop.Services.Plugins;
 using Nop.Services.Security;
 using Nop.Services.Shipping;
 using Nop.Services.Tax;
@@ -60,7 +60,6 @@ namespace Nop.Services.Tests.Orders
         private ShippingSettings _shippingSettings;
         private ILogger _logger;
         private IRepository<ShippingMethod> _shippingMethodRepository;
-        private IRepository<DeliveryDate> _deliveryDateRepository;
         private IRepository<Warehouse> _warehouseRepository;
         private IOrderService _orderService;
         private IWebHelper _webHelper;
@@ -91,8 +90,10 @@ namespace Nop.Services.Tests.Orders
 
         private IGeoLookupService _geoLookupService;
         private ICountryService _countryService;
+        private IStateProvinceService _stateProvinceService;
         private CustomerSettings _customerSettings;
         private AddressSettings _addressSettings;
+        private ICustomNumberFormatter _customNumberFormatter;
 
         private Store _store;
 
@@ -104,8 +105,6 @@ namespace Nop.Services.Tests.Orders
             _store = new Store { Id = 1 };
             _storeContext = MockRepository.GenerateMock<IStoreContext>();
             _storeContext.Expect(x => x.CurrentStore).Return(_store);
-
-            var pluginFinder = new PluginFinder();
 
             _shoppingCartSettings = new ShoppingCartSettings();
             _catalogSettings = new CatalogSettings();
@@ -128,18 +127,20 @@ namespace Nop.Services.Tests.Orders
             _eventPublisher = MockRepository.GenerateMock<IEventPublisher>();
             _eventPublisher.Expect(x => x.Publish(Arg<object>.Is.Anything));
 
+            var pluginFinder = new PluginFinder(_eventPublisher);
+
             _localizationService = MockRepository.GenerateMock<ILocalizationService>();
 
             //shipping
-            _shippingSettings = new ShippingSettings();
-            _shippingSettings.ActiveShippingRateComputationMethodSystemNames = new List<string>();
+            _shippingSettings = new ShippingSettings
+            {
+                ActiveShippingRateComputationMethodSystemNames = new List<string>()
+            };
             _shippingSettings.ActiveShippingRateComputationMethodSystemNames.Add("FixedRateTestShippingRateComputationMethod");
             _shippingMethodRepository = MockRepository.GenerateMock<IRepository<ShippingMethod>>();
-            _deliveryDateRepository = MockRepository.GenerateMock<IRepository<DeliveryDate>>();
             _warehouseRepository = MockRepository.GenerateMock<IRepository<Warehouse>>();
             _logger = new NullLogger();
-            _shippingService = new ShippingService(_shippingMethodRepository, 
-                _deliveryDateRepository,
+            _shippingService = new ShippingService(_shippingMethodRepository,
                 _warehouseRepository,
                 _logger,
                 _productService,
@@ -164,24 +165,28 @@ namespace Nop.Services.Tests.Orders
 
             _geoLookupService = MockRepository.GenerateMock<IGeoLookupService>();
             _countryService = MockRepository.GenerateMock<ICountryService>();
+            _stateProvinceService = MockRepository.GenerateMock<IStateProvinceService>();
             _customerSettings = new CustomerSettings();
             _addressSettings = new AddressSettings();
 
             //tax
-            _taxSettings = new TaxSettings();
-            _taxSettings.ShippingIsTaxable = true;
-            _taxSettings.PaymentMethodAdditionalFeeIsTaxable = true;
-            _taxSettings.DefaultTaxAddressId = 10;
+            _taxSettings = new TaxSettings
+            {
+                ShippingIsTaxable = true,
+                PaymentMethodAdditionalFeeIsTaxable = true,
+                DefaultTaxAddressId = 10
+            };
             _addressService = MockRepository.GenerateMock<IAddressService>();
             _addressService.Expect(x => x.GetAddressById(_taxSettings.DefaultTaxAddressId)).Return(new Address { Id = _taxSettings.DefaultTaxAddressId });
-            _taxService = new TaxService(_addressService, _workContext, _taxSettings,
-                pluginFinder, _geoLookupService, _countryService, _customerSettings, _addressSettings);
+            _taxService = new TaxService(_addressService, _workContext, _storeContext, _taxSettings,
+                pluginFinder, _geoLookupService, _countryService, _stateProvinceService, _logger, _webHelper,
+                _customerSettings, _shippingSettings, _addressSettings);
 
             _rewardPointService = MockRepository.GenerateMock<IRewardPointService>();
             _rewardPointsSettings = new RewardPointsSettings();
 
             _orderTotalCalcService = new OrderTotalCalculationService(_workContext, _storeContext,
-                _priceCalcService, _taxService, _shippingService, _paymentService,
+                _priceCalcService, _productService, _productAttributeParser, _taxService, _shippingService, _paymentService,
                 _checkoutAttributeParser, _discountService, _giftCardService,
                 _genericAttributeService, _rewardPointService,
                 _taxSettings, _rewardPointsSettings, _shippingSettings, _shoppingCartSettings, _catalogSettings);
@@ -201,6 +206,7 @@ namespace Nop.Services.Tests.Orders
             _affiliateService = MockRepository.GenerateMock<IAffiliateService>();
             _vendorService = MockRepository.GenerateMock<IVendorService>();
             _pdfService = MockRepository.GenerateMock<IPdfService>();
+            _customNumberFormatter = MockRepository.GenerateMock<ICustomNumberFormatter>();
 
             _paymentSettings = new PaymentSettings
             {
@@ -232,9 +238,10 @@ namespace Nop.Services.Tests.Orders
                 _customerActivityService, _currencyService, _affiliateService,
                 _eventPublisher,_pdfService, _rewardPointService,
                 _genericAttributeService,
+                _countryService, _stateProvinceService,
                 _shippingSettings, _paymentSettings, _rewardPointsSettings,
                 _orderSettings, _taxSettings, _localizationSettings,
-                _currencySettings);
+                _currencySettings, _customNumberFormatter);
         }
         
         [Test]
@@ -278,10 +285,10 @@ namespace Nop.Services.Tests.Orders
         {
             _paymentService.Expect(ps => ps.SupportCapture("paymentMethodSystemName_that_supports_capture")).Return(true);
             _paymentService.Expect(ps => ps.SupportCapture("paymentMethodSystemName_that_doesn't_support_capture")).Return(false);
-            var order = new Order();
-
-
-            order.PaymentMethodSystemName = "paymentMethodSystemName_that_supports_capture";
+            var order = new Order
+            {
+                PaymentMethodSystemName = "paymentMethodSystemName_that_supports_capture"
+            };
             foreach (OrderStatus os in Enum.GetValues(typeof(OrderStatus)))
                 foreach (PaymentStatus ps in Enum.GetValues(typeof(PaymentStatus)))
                     foreach (ShippingStatus ss in Enum.GetValues(typeof(ShippingStatus)))
@@ -335,9 +342,11 @@ namespace Nop.Services.Tests.Orders
         {
             _paymentService.Expect(ps => ps.SupportRefund("paymentMethodSystemName_that_supports_refund")).Return(true);
             _paymentService.Expect(ps => ps.SupportRefund("paymentMethodSystemName_that_doesn't_support_refund")).Return(false);
-            var order = new Order();
-            order.OrderTotal = 1;
-            order.PaymentMethodSystemName = "paymentMethodSystemName_that_supports_refund";
+            var order = new Order
+            {
+                OrderTotal = 1,
+                PaymentMethodSystemName = "paymentMethodSystemName_that_supports_refund"
+            };
 
             foreach (OrderStatus os in Enum.GetValues(typeof(OrderStatus)))
                 foreach (PaymentStatus ps in Enum.GetValues(typeof(PaymentStatus)))
@@ -372,8 +381,10 @@ namespace Nop.Services.Tests.Orders
         public void Ensure_order_cannot_be_refunded_when_orderTotal_is_zero()
         {
             _paymentService.Expect(ps => ps.SupportRefund("paymentMethodSystemName_that_supports_refund")).Return(true);
-            var order = new Order();
-            order.PaymentMethodSystemName = "paymentMethodSystemName_that_supports_refund";
+            var order = new Order
+            {
+                PaymentMethodSystemName = "paymentMethodSystemName_that_supports_refund"
+            };
 
             foreach (OrderStatus os in Enum.GetValues(typeof(OrderStatus)))
                 foreach (PaymentStatus ps in Enum.GetValues(typeof(PaymentStatus)))
@@ -431,9 +442,11 @@ namespace Nop.Services.Tests.Orders
         {
             _paymentService.Expect(ps => ps.SupportVoid("paymentMethodSystemName_that_supports_void")).Return(true);
             _paymentService.Expect(ps => ps.SupportVoid("paymentMethodSystemName_that_doesn't_support_void")).Return(false);
-            var order = new Order();
-            order.OrderTotal = 1;
-            order.PaymentMethodSystemName = "paymentMethodSystemName_that_supports_void";
+            var order = new Order
+            {
+                OrderTotal = 1,
+                PaymentMethodSystemName = "paymentMethodSystemName_that_supports_void"
+            };
 
             foreach (OrderStatus os in Enum.GetValues(typeof(OrderStatus)))
                 foreach (PaymentStatus ps in Enum.GetValues(typeof(PaymentStatus)))
@@ -468,8 +481,10 @@ namespace Nop.Services.Tests.Orders
         public void Ensure_order_cannot_be_voided_when_orderTotal_is_zero()
         {
             _paymentService.Expect(ps => ps.SupportVoid("paymentMethodSystemName_that_supports_void")).Return(true);
-            var order = new Order();
-            order.PaymentMethodSystemName = "paymentMethodSystemName_that_supports_void";
+            var order = new Order
+            {
+                PaymentMethodSystemName = "paymentMethodSystemName_that_supports_void"
+            };
 
             foreach (OrderStatus os in Enum.GetValues(typeof(OrderStatus)))
                 foreach (PaymentStatus ps in Enum.GetValues(typeof(PaymentStatus)))
@@ -527,9 +542,11 @@ namespace Nop.Services.Tests.Orders
         {
             _paymentService.Expect(ps => ps.SupportPartiallyRefund("paymentMethodSystemName_that_supports_partialrefund")).Return(true);
             _paymentService.Expect(ps => ps.SupportPartiallyRefund("paymentMethodSystemName_that_doesn't_support_partialrefund")).Return(false);
-            var order = new Order();
-            order.OrderTotal = 100;
-            order.PaymentMethodSystemName = "paymentMethodSystemName_that_supports_partialrefund";
+            var order = new Order
+            {
+                OrderTotal = 100,
+                PaymentMethodSystemName = "paymentMethodSystemName_that_supports_partialrefund"
+            };
 
             foreach (OrderStatus os in Enum.GetValues(typeof(OrderStatus)))
                 foreach (PaymentStatus ps in Enum.GetValues(typeof(PaymentStatus)))
@@ -586,8 +603,10 @@ namespace Nop.Services.Tests.Orders
         [Test]
         public void Ensure_order_can_only_be_partially_refunded_offline_when_paymentstatus_is_paid_or_partiallyRefunded()
         {
-            var order = new Order();
-            order.OrderTotal = 100;
+            var order = new Order
+            {
+                OrderTotal = 100
+            };
 
             foreach (OrderStatus os in Enum.GetValues(typeof(OrderStatus)))
                 foreach (PaymentStatus ps in Enum.GetValues(typeof(PaymentStatus)))

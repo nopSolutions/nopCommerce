@@ -54,14 +54,6 @@ namespace Nop.Core.Domain.News
         public bool AllowComments { get; set; }
 
         /// <summary>
-        /// Gets or sets the total number of comments
-        /// <remarks>
-        /// We use this property for performance optimization (no SQL command executed)
-        /// </remarks>
-        /// </summary>
-        public int CommentCount { get; set; }
-
-        /// <summary>
         /// Gets or sets a value indicating whether the entity is limited/restricted to certain stores
         /// </summary>
         public bool LimitedToStores { get; set; }

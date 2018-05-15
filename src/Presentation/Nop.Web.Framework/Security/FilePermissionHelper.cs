@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
-using System.IO;
+
 using System.Security.AccessControl;
 using System.Security.Principal;
-using Nop.Core;
+using Nop.Core.Data;
+using Nop.Core.Infrastructure;
+using Nop.Core.Plugins;
 
 namespace Nop.Web.Framework.Security
 {
@@ -22,19 +24,20 @@ namespace Nop.Web.Framework.Security
         /// <returns>Result</returns>
         public static bool CheckPermissions(string path, bool checkRead, bool checkWrite, bool checkModify, bool checkDelete)
         {
-            bool flag = false;
-            bool flag2 = false;
-            bool flag3 = false;
-            bool flag4 = false;
-            bool flag5 = false;
-            bool flag6 = false;
-            bool flag7 = false;
-            bool flag8 = false;
-            WindowsIdentity current = WindowsIdentity.GetCurrent();
+            var flag = false;
+            var flag2 = false;
+            var flag3 = false;
+            var flag4 = false;
+            var flag5 = false;
+            var flag6 = false;
+            var flag7 = false;
+            var flag8 = false;
+            var current = WindowsIdentity.GetCurrent();
             AuthorizationRuleCollection rules;
             try
             {
-                rules = Directory.GetAccessControl(path).GetAccessRules(true, true, typeof(SecurityIdentifier));
+                var fileProvider = EngineContext.Current.Resolve<INopFileProvider>();
+                rules = fileProvider.GetAccessControl(path).GetAccessRules(true, true, typeof(SecurityIdentifier));
             }
             catch
             {
@@ -83,7 +86,7 @@ namespace Nop.Web.Framework.Security
                         }
                     }
                 }
-                foreach (IdentityReference reference in current.Groups)
+                foreach (var reference in current.Groups)
                 {
                     foreach (FileSystemAccessRule rule2 in rules)
                     {
@@ -116,14 +119,15 @@ namespace Nop.Web.Framework.Security
                         }
                     }
                 }
-                bool flag9 = !flag4 && flag8;
-                bool flag10 = !flag3 && flag7;
-                bool flag11 = !flag && flag5;
-                bool flag12 = !flag2 && flag6;
-                bool flag13 = true;
+                var flag9 = !flag4 && flag8;
+                var flag10 = !flag3 && flag7;
+                var flag11 = !flag && flag5;
+                var flag12 = !flag2 && flag6;
+                var flag13 = true;
                 if (checkRead)
                 {
-                    flag13 = flag13 && flag11;
+                    //flag13 = flag13 && flag11;
+                    flag13 = flag11;
                 }
                 if (checkWrite)
                 {
@@ -139,7 +143,7 @@ namespace Nop.Web.Framework.Security
                 }
                 return flag13;
             }
-            catch (IOException)
+            catch (System.IO.IOException)
             {
             }
             return false;
@@ -151,19 +155,25 @@ namespace Nop.Web.Framework.Security
         /// <returns>Result</returns>
         public static IEnumerable<string> GetDirectoriesWrite()
         {
-            string rootDir = CommonHelper.MapPath("~/");
-            var dirsToCheck = new List<string>();
-            //dirsToCheck.Add(rootDir);
-            dirsToCheck.Add(Path.Combine(rootDir, "App_Data"));
-            dirsToCheck.Add(Path.Combine(rootDir, "Administration\\db_backups"));
-            dirsToCheck.Add(Path.Combine(rootDir, "bin"));
-            dirsToCheck.Add(Path.Combine(rootDir, "content"));
-            dirsToCheck.Add(Path.Combine(rootDir, "content\\images"));
-            dirsToCheck.Add(Path.Combine(rootDir, "content\\images\\thumbs"));
-            dirsToCheck.Add(Path.Combine(rootDir, "content\\images\\uploaded"));
-            dirsToCheck.Add(Path.Combine(rootDir, "content\\files\\exportimport"));
-            dirsToCheck.Add(Path.Combine(rootDir, "plugins"));
-            dirsToCheck.Add(Path.Combine(rootDir, "plugins\\bin"));
+            var fileProvider = EngineContext.Current.Resolve<INopFileProvider>();
+
+            var rootDir = fileProvider.MapPath("~/");
+            
+            var dirsToCheck = new List<string>
+            {
+                fileProvider.Combine(rootDir, "App_Data"),
+                fileProvider.Combine(rootDir, "bin"),
+                fileProvider.Combine(rootDir, "log"),
+                fileProvider.Combine(rootDir, "plugins"),
+                fileProvider.Combine(rootDir, "plugins\\bin"),
+                fileProvider.Combine(rootDir, "wwwroot\\bundles"),
+                fileProvider.Combine(rootDir, "wwwroot\\db_backups"),
+                fileProvider.Combine(rootDir, "wwwroot\\files\\exportimport"),
+                fileProvider.Combine(rootDir, "wwwroot\\images"),
+                fileProvider.Combine(rootDir, "wwwroot\\images\\thumbs"),
+                fileProvider.Combine(rootDir, "wwwroot\\images\\uploaded")
+            };
+            
             return dirsToCheck;
         }
 
@@ -173,13 +183,13 @@ namespace Nop.Web.Framework.Security
         /// <returns>Result</returns>
         public static IEnumerable<string> GetFilesWrite()
         {
-            string rootDir = CommonHelper.MapPath("~/");
-            var filesToCheck = new List<string>();
-            filesToCheck.Add(Path.Combine(rootDir, "Global.asax"));
-            filesToCheck.Add(Path.Combine(rootDir, "web.config"));
-            filesToCheck.Add(Path.Combine(rootDir, "App_Data\\InstalledPlugins.txt"));
-            filesToCheck.Add(Path.Combine(rootDir, "App_Data\\Settings.txt"));
-            return filesToCheck;
+            var fileProvider = EngineContext.Current.Resolve<INopFileProvider>();
+
+            return new List<string>
+            {
+                fileProvider.MapPath(PluginManager.InstalledPluginsFilePath),
+                fileProvider.MapPath(DataSettingsManager.DataSettingsFilePath)
+            };
         }
     }
 }

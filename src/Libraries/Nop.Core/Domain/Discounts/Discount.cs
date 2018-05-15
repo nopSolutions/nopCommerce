@@ -23,7 +23,7 @@ namespace Nop.Core.Domain.Discounts
         /// Gets or sets the discount type identifier
         /// </summary>
         public int DiscountTypeId { get; set; }
-        
+
         /// <summary>
         /// Gets or sets a value indicating whether to use percentage
         /// </summary>
@@ -65,6 +65,11 @@ namespace Nop.Core.Domain.Discounts
         public string CouponCode { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether discount can be used simultaneously with other discounts (with the same discount type)
+        /// </summary>
+        public bool IsCumulative { get; set; }
+
+        /// <summary>
         /// Gets or sets the discount limitation identifier
         /// </summary>
         public int DiscountLimitationId { get; set; }
@@ -93,11 +98,11 @@ namespace Nop.Core.Domain.Discounts
         {
             get
             {
-                return (DiscountType)this.DiscountTypeId;
+                return (DiscountType)DiscountTypeId;
             }
             set
             {
-                this.DiscountTypeId = (int)value;
+                DiscountTypeId = (int)value;
             }
         }
 
@@ -108,11 +113,11 @@ namespace Nop.Core.Domain.Discounts
         {
             get
             {
-                return (DiscountLimitationType)this.DiscountLimitationId;
+                return (DiscountLimitationType)DiscountLimitationId;
             }
             set
             {
-                this.DiscountLimitationId = (int)value;
+                DiscountLimitationId = (int)value;
             }
         }
 
@@ -142,6 +147,7 @@ namespace Nop.Core.Domain.Discounts
             get { return _appliedToManufacturers ?? (_appliedToManufacturers = new List<Manufacturer>()); }
             protected set { _appliedToManufacturers = value; }
         }
+
         /// <summary>
         /// Gets or sets the products 
         /// </summary>

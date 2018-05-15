@@ -11,6 +11,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators
         public int Id { get; set; }
         public string Surname { get; set; }
         public string Forename { get; set; }
+        public string Username { get; set; }
 
         public List<Person> Children { get; set; }
 

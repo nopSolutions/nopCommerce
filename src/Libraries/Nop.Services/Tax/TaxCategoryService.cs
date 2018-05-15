@@ -69,7 +69,7 @@ namespace Nop.Services.Tax
         public virtual void DeleteTaxCategory(TaxCategory taxCategory)
         {
             if (taxCategory == null)
-                throw new ArgumentNullException("taxCategory");
+                throw new ArgumentNullException(nameof(taxCategory));
 
             _taxCategoryRepository.Delete(taxCategory);
 
@@ -85,11 +85,11 @@ namespace Nop.Services.Tax
         /// <returns>Tax categories</returns>
         public virtual IList<TaxCategory> GetAllTaxCategories()
         {
-            string key = string.Format(TAXCATEGORIES_ALL_KEY);
+            var key = string.Format(TAXCATEGORIES_ALL_KEY);
             return _cacheManager.Get(key, () =>
             {
                 var query = from tc in _taxCategoryRepository.Table
-                            orderby tc.DisplayOrder
+                            orderby tc.DisplayOrder, tc.Id
                             select tc;
                 var taxCategories = query.ToList();
                 return taxCategories;
@@ -106,7 +106,7 @@ namespace Nop.Services.Tax
             if (taxCategoryId == 0)
                 return null;
             
-            string key = string.Format(TAXCATEGORIES_BY_ID_KEY, taxCategoryId);
+            var key = string.Format(TAXCATEGORIES_BY_ID_KEY, taxCategoryId);
             return _cacheManager.Get(key, () => _taxCategoryRepository.GetById(taxCategoryId));
         }
 
@@ -117,7 +117,7 @@ namespace Nop.Services.Tax
         public virtual void InsertTaxCategory(TaxCategory taxCategory)
         {
             if (taxCategory == null)
-                throw new ArgumentNullException("taxCategory");
+                throw new ArgumentNullException(nameof(taxCategory));
 
             _taxCategoryRepository.Insert(taxCategory);
 
@@ -134,7 +134,7 @@ namespace Nop.Services.Tax
         public virtual void UpdateTaxCategory(TaxCategory taxCategory)
         {
             if (taxCategory == null)
-                throw new ArgumentNullException("taxCategory");
+                throw new ArgumentNullException(nameof(taxCategory));
 
             _taxCategoryRepository.Update(taxCategory);
 
@@ -143,6 +143,7 @@ namespace Nop.Services.Tax
             //event notification
             _eventPublisher.EntityUpdated(taxCategory);
         }
+
         #endregion
     }
 }

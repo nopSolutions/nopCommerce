@@ -44,7 +44,7 @@ namespace Nop.Services.Catalog
         public virtual void DeleteManufacturerTemplate(ManufacturerTemplate manufacturerTemplate)
         {
             if (manufacturerTemplate == null)
-                throw new ArgumentNullException("manufacturerTemplate");
+                throw new ArgumentNullException(nameof(manufacturerTemplate));
 
             _manufacturerTemplateRepository.Delete(manufacturerTemplate);
 
@@ -59,7 +59,7 @@ namespace Nop.Services.Catalog
         public virtual IList<ManufacturerTemplate> GetAllManufacturerTemplates()
         {
             var query = from pt in _manufacturerTemplateRepository.Table
-                        orderby pt.DisplayOrder
+                        orderby pt.DisplayOrder, pt.Id
                         select pt;
 
             var templates = query.ToList();
@@ -86,7 +86,7 @@ namespace Nop.Services.Catalog
         public virtual void InsertManufacturerTemplate(ManufacturerTemplate manufacturerTemplate)
         {
             if (manufacturerTemplate == null)
-                throw new ArgumentNullException("manufacturerTemplate");
+                throw new ArgumentNullException(nameof(manufacturerTemplate));
 
             _manufacturerTemplateRepository.Insert(manufacturerTemplate);
 
@@ -101,7 +101,7 @@ namespace Nop.Services.Catalog
         public virtual void UpdateManufacturerTemplate(ManufacturerTemplate manufacturerTemplate)
         {
             if (manufacturerTemplate == null)
-                throw new ArgumentNullException("manufacturerTemplate");
+                throw new ArgumentNullException(nameof(manufacturerTemplate));
 
             _manufacturerTemplateRepository.Update(manufacturerTemplate);
 

@@ -87,6 +87,13 @@ namespace Nop.Services.Catalog
         /// <param name="specificationAttributeOption">The specification attribute option</param>
         void UpdateSpecificationAttributeOption(SpecificationAttributeOption specificationAttributeOption);
 
+        /// <summary>
+        /// Returns a list of IDs of not existing specification attribute options
+        /// </summary>
+        /// <param name="attributeOptionIds">The IDs of the attribute options to check</param>
+        /// <returns>List of IDs not existing specification attribute options</returns>
+        int[] GetNotExistingSpecificationAttributeOptions(int[] attributeOptionIds);
+
         #endregion
 
         #region Product specification attribute
@@ -135,6 +142,16 @@ namespace Nop.Services.Catalog
         /// <returns>Count</returns>
         int GetProductSpecificationAttributeCount(int productId = 0, int specificationAttributeOptionId = 0);
 
+        /// <summary>
+        /// Get mapped products for specification attribute
+        /// </summary>
+        /// <param name="specificationAttributeId">The specification attribute identifier</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
+        /// <returns>Products</returns>
+        IPagedList<Product> GetProductsBySpecificationAttributeId(int specificationAttributeId, int pageIndex, int pageSize);
+
         #endregion
+
     }
 }

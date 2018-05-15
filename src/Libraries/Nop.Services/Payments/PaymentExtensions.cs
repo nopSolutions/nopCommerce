@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
@@ -25,14 +26,14 @@ namespace Nop.Services.Payments
             PaymentSettings paymentSettings)
         {
             if (paymentMethod == null)
-                throw new ArgumentNullException("paymentMethod");
+                throw new ArgumentNullException(nameof(paymentMethod));
 
             if (paymentSettings == null)
-                throw new ArgumentNullException("paymentSettings");
+                throw new ArgumentNullException(nameof(paymentSettings));
 
             if (paymentSettings.ActivePaymentMethodSystemNames == null)
                 return false;
-            foreach (string activeMethodSystemName in paymentSettings.ActivePaymentMethodSystemNames)
+            foreach (var activeMethodSystemName in paymentSettings.ActivePaymentMethodSystemNames)
                 if (paymentMethod.PluginDescriptor.SystemName.Equals(activeMethodSystemName, StringComparison.InvariantCultureIgnoreCase))
                     return true;
             return false;
@@ -52,7 +53,7 @@ namespace Nop.Services.Payments
             decimal fee, bool usePercentage)
         {
             if (paymentMethod == null)
-                throw new ArgumentNullException("paymentMethod");
+                throw new ArgumentNullException(nameof(paymentMethod));
             if (fee <= 0)
                 return fee;
 
@@ -61,7 +62,7 @@ namespace Nop.Services.Payments
             {
                 //percentage
                 var orderTotalWithoutPaymentFee = orderTotalCalculationService.GetShoppingCartTotal(cart, usePaymentMethodAdditionalFee: false);
-                result = (decimal)((((float)orderTotalWithoutPaymentFee) * ((float)fee)) / 100f);
+                result = (decimal)((float)orderTotalWithoutPaymentFee * (float)fee / 100f);
             }
             else
             {
@@ -80,9 +81,9 @@ namespace Nop.Services.Payments
         public static string SerializeCustomValues(this ProcessPaymentRequest request)
         {
             if (request == null)
-                throw new ArgumentNullException("request");
+                throw new ArgumentNullException(nameof(request));
 
-            if (request.CustomValues.Count == 0)
+            if (!request.CustomValues.Any())
                 return null;
 
             //XmlSerializer won't serialize objects that implement IDictionary by default.
@@ -103,21 +104,23 @@ namespace Nop.Services.Payments
                 return result;
             }
         }
+
         /// <summary>
-        /// Deerialize CustomValues of Order
+        /// Deserialize CustomValues of Order
         /// </summary>
         /// <param name="order">Order</param>
         /// <returns>Serialized CustomValues CustomValues</returns>
         public static Dictionary<string, object> DeserializeCustomValues(this Order order)
         {
             if (order == null)
-                throw new ArgumentNullException("order");
+                throw new ArgumentNullException(nameof(order));
 
             var request = new ProcessPaymentRequest();
             return request.DeserializeCustomValues(order.CustomValuesXml);
         }
+
         /// <summary>
-        /// Deerialize CustomValues of ProcessPaymentRequest
+        /// Deserialize CustomValues of ProcessPaymentRequest
         /// </summary>
         /// <param name="request">Request</param>
         /// <param name="customValuesXml">Serialized CustomValues</param>
@@ -142,66 +145,89 @@ namespace Nop.Services.Payments
                 }
             }
         }
+
         /// <summary>
-        /// Dictonary serializer
+        /// Dictionary serializer
         /// </summary>
         public class DictionarySerializer : IXmlSerializable
         {
-            public Dictionary<string, object> Dictionary;
-
+            /// <summary>
+            /// Ctor
+            /// </summary>
             public DictionarySerializer()
             {
-                this.Dictionary = new Dictionary<string, object>();
+                Dictionary = new Dictionary<string, object>();
             }
 
+            /// <summary>
+            /// Ctor
+            /// </summary>
+            /// <param name="dictionary">Dictionary</param>
             public DictionarySerializer(Dictionary<string, object> dictionary)
             {
-                this.Dictionary = dictionary;
+                Dictionary = dictionary;
             }
 
+            /// <summary>
+            /// Write XML
+            /// </summary>
+            /// <param name="writer">Writer</param>
             public void WriteXml(XmlWriter writer)
             {
-                if (Dictionary.Count == 0)
+                if (!Dictionary.Any())
                     return;
 
-                foreach (var key in this.Dictionary.Keys)
+                foreach (var key in Dictionary.Keys)
                 {
                     writer.WriteStartElement("item");
                     writer.WriteElementString("key", key);
-                    var value = this.Dictionary[key];
+                    var value = Dictionary[key];
                     //please note that we use ToString() for objects here
                     //of course, we can Serialize them
                     //but let's keep it simple and leave it for developers to handle it
                     //just put required serialization into ToString method of your object(s)
                     //because some objects don't implement ISerializable
                     //the question is how should we deserialize null values?
-                    writer.WriteElementString("value", value != null ? value.ToString() : null);
+                    writer.WriteElementString("value", value?.ToString());
                     writer.WriteEndElement();
                 }
             }
 
+            /// <summary>
+            /// Read XML
+            /// </summary>
+            /// <param name="reader">Reader</param>
             public void ReadXml(XmlReader reader)
             {
-                bool wasEmpty = reader.IsEmptyElement;
+                var wasEmpty = reader.IsEmptyElement;
                 reader.Read();
                 if (wasEmpty)
                     return;
                 while (reader.NodeType != XmlNodeType.EndElement)
                 {
                     reader.ReadStartElement("item");
-                    string key = reader.ReadElementString("key");
-                    string value = reader.ReadElementString("value");
-                    this.Dictionary.Add(key, value);
+                    var key = reader.ReadElementString("key");
+                    var value = reader.ReadElementString("value");
+                    Dictionary.Add(key, value);
                     reader.ReadEndElement();
                     reader.MoveToContent();
                 }
                 reader.ReadEndElement();
             }
 
+            /// <summary>
+            /// Get schema
+            /// </summary>
+            /// <returns>XML schema</returns>
             public XmlSchema GetSchema()
             {
                 return null;
             }
+
+            /// <summary>
+            /// Dictionary
+            /// </summary>
+            public Dictionary<string, object> Dictionary;
         }
     }
 }

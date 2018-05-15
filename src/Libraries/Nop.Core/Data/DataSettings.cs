@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Nop.Core.Data
 {
@@ -29,7 +28,7 @@ namespace Nop.Core.Data
         /// <summary>
         /// Raw settings file
         /// </summary>
-        public IDictionary<string, string> RawDataSettings { get; private set; }
+        public IDictionary<string, string> RawDataSettings { get; }
 
         /// <summary>
         /// A value indicating whether entered information is valid
@@ -37,7 +36,7 @@ namespace Nop.Core.Data
         /// <returns></returns>
         public bool IsValid()
         {
-            return !String.IsNullOrEmpty(this.DataProvider) && !String.IsNullOrEmpty(this.DataConnectionString);
+            return !string.IsNullOrEmpty(this.DataProvider) && !string.IsNullOrEmpty(this.DataConnectionString);
         }
     }
 }

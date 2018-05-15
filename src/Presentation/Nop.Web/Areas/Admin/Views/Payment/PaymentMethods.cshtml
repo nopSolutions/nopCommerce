@@ -1,0 +1,46 @@
+@model PaymentMethodsModel
+
+@inject IEventPublisher eventPublisher
+
+@{
+    //page title
+    ViewBag.Title = T("Admin.Configuration.PaymentMethodsAndRestrictions").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("PaymentMethods");
+}
+
+<nop-antiforgery-token/>
+
+<form asp-controller="Payment" asp-action="MethodRestrictions" method="post">
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("Admin.Configuration.PaymentMethodsAndRestrictions")
+        </h1>
+        <div class="pull-right">
+            <button type="submit" name="save" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.Save")
+            </button>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.PaymentsListButtons })
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="form-horizontal">
+            <nop-tabs id="payment-methods">
+                <nop-tab asp-name="tab-payment" asp-title="@T("Admin.Configuration.Payment.Methods")" asp-default="true">@await Html.PartialAsync("_PaymentMethods.Methods", Model)</nop-tab>
+                <nop-tab asp-name="tab-methodrestrictions" asp-title="@T("Admin.Configuration.Payment.MethodRestrictions")">@await Html.PartialAsync("_PaymentMethods.MethodRestrictions", Model)</nop-tab>
+            </nop-tabs>
+        </div>
+    </div>
+
+    @{
+        //custom tabs
+        var eventMessage = new AdminTabStripCreated(this.Html, "payment-methods");
+        eventPublisher.Publish(eventMessage);
+        foreach (var eventBlock in eventMessage.BlocksToRender)
+        {
+            @eventBlock
+        }
+    }
+</form>

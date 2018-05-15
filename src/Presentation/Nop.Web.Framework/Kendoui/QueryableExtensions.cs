@@ -1,11 +1,21 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Nop.Core;
+using System.Linq.Dynamic;
 
 namespace Nop.Web.Framework.Kendoui
 {
+    /// <summary>
+    /// Extensions
+    /// </summary>
     public static class QueryableExtensions
     {
+        /// <summary>
+        /// Filter a collection
+        /// </summary>
+        /// <typeparam name="T">Type</typeparam>
+        /// <param name="queryable">Collection</param>
+        /// <param name="filter">Filter parameters</param>
+        /// <returns>Result</returns>
         public static IQueryable<T> Filter<T>(this IQueryable<T> queryable, Filter filter)
         {
             if (filter != null && filter.Logic != null)
@@ -17,7 +27,7 @@ namespace Nop.Web.Framework.Kendoui
                 var values = filters.Select(f => f.Value).ToArray();
 
                 // Create a predicate expression e.g. Field1 = @0 And Field2 > @1
-                string predicate = filter.ToExpression(filters);
+                var predicate = filter.ToExpression(filters);
 
                 // Use the Where method of Dynamic Linq to filter the data
                 queryable = queryable.Where(predicate, values);
@@ -26,6 +36,13 @@ namespace Nop.Web.Framework.Kendoui
             return queryable;
         }
 
+        /// <summary>
+        /// Sort a collection
+        /// </summary>
+        /// <typeparam name="T">Type</typeparam>
+        /// <param name="queryable">Collection</param>
+        /// <param name="sort">Sort parameters</param>
+        /// <returns>Result</returns>
         public static IQueryable<T> Sort<T>(this IQueryable<T> queryable, IEnumerable<Sort> sort)
         {
             if (sort != null && sort.Any())

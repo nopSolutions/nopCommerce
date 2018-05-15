@@ -1,11 +1,12 @@
 ﻿@model IList<ManufacturerModel>
 @{
-    Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
+    Layout = "_ColumnsTwo";
 
     //title
     Html.AddTitleParts(T("PageTitle.Manufacturers").Text);
+    //page class
+    Html.AppendPageCssClassParts("html-manufacturer-list-page");
 }
-@using Nop.Web.Models.Catalog;
 <div class="page manufacturer-list-page">
     <div class="page-title">
         <h1>@T("Manufacturers.List")</h1>

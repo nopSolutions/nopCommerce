@@ -5,6 +5,10 @@ namespace Nop.Core.Domain.Catalog
     /// </summary>
     public class ProductReviewApprovedEvent
     {
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="productReview">Product review</param>
         public ProductReviewApprovedEvent(ProductReview productReview)
         {
             this.ProductReview = productReview;
@@ -13,6 +17,6 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Product review
         /// </summary>
-        public ProductReview ProductReview { get; private set; }
+        public ProductReview ProductReview { get; }
     }
 }

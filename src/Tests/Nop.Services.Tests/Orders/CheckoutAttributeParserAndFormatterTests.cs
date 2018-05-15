@@ -36,6 +36,8 @@ namespace Nop.Services.Tests.Orders
         private IDownloadService _downloadService;
         private IWebHelper _webHelper;
         private ICheckoutAttributeFormatter _checkoutAttributeFormatter;
+        private IProductAttributeParser _productAttributeParser;
+        private IProductService _productService;
 
         private CheckoutAttribute ca1, ca2, ca3;
         private CheckoutAttributeValue cav1_1, cav1_2, cav2_1, cav2_2;
@@ -143,7 +145,9 @@ namespace Nop.Services.Tests.Orders
                 _storeMappingService,
                 _eventPublisher);
 
-            _checkoutAttributeParser = new CheckoutAttributeParser(_checkoutAttributeService);
+            _productService = MockRepository.GenerateMock<IProductService>();
+            _productAttributeParser = MockRepository.GenerateMock<IProductAttributeParser>();
+            _checkoutAttributeParser = new CheckoutAttributeParser(_checkoutAttributeService, _productAttributeParser, _productService);
 
 
 
@@ -169,7 +173,7 @@ namespace Nop.Services.Tests.Orders
         [Test]
         public void Can_add_and_parse_checkoutAttributes()
         {
-            string attributes = "";
+            var attributes = "";
             //color: green
             attributes = _checkoutAttributeParser.AddCheckoutAttribute(attributes, ca1, cav1_1.Id.ToString());
             //custom option: option 1, option 2
@@ -194,7 +198,7 @@ namespace Nop.Services.Tests.Orders
         [Test]
         public void Can_add_render_attributes_withoutPrices()
         {
-            string attributes = "";
+            var attributes = "";
             //color: green
             attributes = _checkoutAttributeParser.AddCheckoutAttribute(attributes, ca1, cav1_1.Id.ToString());
             //custom option: option 1, option 2
@@ -205,14 +209,14 @@ namespace Nop.Services.Tests.Orders
 
 
             var customer = new Customer();
-            string formattedAttributes = _checkoutAttributeFormatter.FormatAttributes(attributes, customer, "<br />", false, false);
+            var formattedAttributes = _checkoutAttributeFormatter.FormatAttributes(attributes, customer, "<br />", false, false);
             formattedAttributes.ShouldEqual("Color: Green<br />Custom option: Option 1<br />Custom option: Option 2<br />Custom text: Some custom text goes here");
         }
 
         [Test]
         public void Can_add_and_remove_checkoutAttributes()
         {
-            string attributes = "";
+            var attributes = "";
             //color: green
             attributes = _checkoutAttributeParser.AddCheckoutAttribute(attributes, ca1, cav1_1.Id.ToString());
             //custom option: option 1, option 2

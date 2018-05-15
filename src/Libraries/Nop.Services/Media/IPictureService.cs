@@ -153,5 +153,12 @@ namespace Nop.Services.Media
         /// Gets or sets a value indicating whether the images should be stored in data base.
         /// </summary>
         bool StoreInDb { get; set; }
+
+        /// <summary>
+        /// Get pictures hashes
+        /// </summary>
+        /// <param name="picturesIds">Pictures Ids</param>
+        /// <returns></returns>
+        IDictionary<int, string> GetPicturesHash(int [] picturesIds);
     }
 }

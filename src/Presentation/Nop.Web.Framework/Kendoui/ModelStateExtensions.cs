@@ -1,39 +1,50 @@
-﻿
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.ViewFeatures.Internal;
 
 namespace Nop.Web.Framework.Kendoui
 {
+    /// <summary>
+    /// ModelState extensions
+    /// </summary>
     public static class ModelStateExtensions
     {
-        private static string GetErrorMessage(ModelError error, ModelState modelState)
+        private static Dictionary<string, object> SerializeModelState(ModelStateEntry modelState)
         {
-            if (!string.IsNullOrEmpty(error.ErrorMessage))
+            var errors = new List<string>();
+            for (var i = 0; i < modelState.Errors.Count; i++)
             {
-                return error.ErrorMessage;
-            }
-            if (modelState.Value == null)
-            {
-                return error.ErrorMessage;
-            }
-            var args = new object[] { modelState.Value.AttemptedValue };
-            return string.Format("ValueNotValidForProperty=The value '{0}' is invalid", args);
-        }
+                var modelError = modelState.Errors[i];
+                var errorText = ValidationHelpers.GetModelErrorMessageOrDefault(modelError);
 
-        public static object SerializeErrors(this ModelStateDictionary modelState)
-        {
-            return modelState.Where(entry => entry.Value.Errors.Any())
-                .ToDictionary(entry => entry.Key, entry => SerializeModelState(entry.Value));
-        }
+                if (!string.IsNullOrEmpty(errorText))
+                {
+                    errors.Add(errorText);
+                }
+            }
 
-        private static Dictionary<string, object> SerializeModelState(ModelState modelState)
-        {
             var dictionary = new Dictionary<string, object>();
-            dictionary["errors"] = modelState.Errors.Select(x => GetErrorMessage(x, modelState)).ToArray();
+            dictionary["errors"] = errors.ToArray();
             return dictionary;
         }
 
+        /// <summary>
+        /// Serialize errors
+        /// </summary>
+        /// <param name="modelStateDictionary">ModelStateDictionary</param>
+        /// <returns>Result</returns>
+        public static object SerializeErrors(this ModelStateDictionary modelStateDictionary)
+        {
+            return modelStateDictionary.Where(entry => entry.Value.Errors.Any())
+                .ToDictionary(entry => entry.Key, entry => SerializeModelState(entry.Value));
+        }
+
+        /// <summary>
+        /// Serialized ModelStateDictionary errors
+        /// </summary>
+        /// <param name="modelState">ModelStateDictionary</param>
+        /// <returns>Result</returns>
         public static object ToDataSourceResult(this ModelStateDictionary modelState)
         {
             if (!modelState.IsValid)

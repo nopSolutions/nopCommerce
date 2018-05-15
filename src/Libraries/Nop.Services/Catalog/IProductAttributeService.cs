@@ -44,6 +44,13 @@ namespace Nop.Services.Catalog
         /// <param name="productAttribute">Product attribute</param>
         void UpdateProductAttribute(ProductAttribute productAttribute);
 
+        /// <summary>
+        /// Returns a list of IDs of not existing attributes
+        /// </summary>
+        /// <param name="attributeId">The IDs of the attributes to check</param>
+        /// <returns>List of IDs not existing attributes</returns>
+        int[] GetNotExistingAttributes(int[] attributeId);
+
         #endregion
 
         #region Product attributes mappings
@@ -196,5 +203,6 @@ namespace Nop.Services.Catalog
         void UpdateProductAttributeCombination(ProductAttributeCombination combination);
 
         #endregion
+       
     }
 }

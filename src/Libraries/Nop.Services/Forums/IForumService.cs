@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Forums;
@@ -350,5 +351,39 @@ namespace Nop.Services.Forums
         /// <param name="postId">Post identifier</param>
         /// <returns>Page index</returns>
         int CalculateTopicPageIndex(int forumTopicId, int pageSize, int postId);
+
+        /// <summary>
+        /// Get a post vote 
+        /// </summary>
+        /// <param name="postId">Post identifier</param>
+        /// <param name="customer">Customer</param>
+        /// <returns>Post vote</returns>
+        ForumPostVote GetPostVote(int postId, Customer customer);
+
+        /// <summary>
+        /// Get post vote made since the parameter date
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="сreatedFromUtc">Date</param>
+        /// <returns>Post votes count</returns>
+        int GetNumberOfPostVotes(Customer customer, DateTime сreatedFromUtc);
+
+        /// <summary>
+        /// Insert a post vote
+        /// </summary>
+        /// <param name="postVote">Post vote</param>
+        void InsertPostVote(ForumPostVote postVote);
+
+        /// <summary>
+        /// Update a post vote
+        /// </summary>
+        /// <param name="postVote">Post vote</param>
+        void UpdatePostVote(ForumPostVote postVote);
+
+        /// <summary>
+        /// Delete a post vote
+        /// </summary>
+        /// <param name="postVote">Post vote</param>
+        void DeletePostVote(ForumPostVote postVote);
     }
 }

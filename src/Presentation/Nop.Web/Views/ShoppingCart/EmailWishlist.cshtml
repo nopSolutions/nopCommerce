@@ -1,10 +1,11 @@
 ﻿@model WishlistEmailAFriendModel
-@using Nop.Web.Models.ShoppingCart;
 @{
-    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+    Layout = "_ColumnsOne";
 
     //title
     Html.AddTitleParts(T("PageTitle.WishlistEmailAFriend").Text);
+    //page class
+    Html.AppendPageCssClassParts("html-email-a-friend-page");
 }
 <div class="page email-a-friend-page">
     <div class="page-title">
@@ -19,35 +20,29 @@
         }
         else
         {
-            using (Html.BeginForm())
-            {
-                @Html.AntiForgeryToken()
-                var validationSummary = Html.ValidationSummary(true);
-                if (!MvcHtmlString.IsNullOrEmpty(validationSummary))
-                {
-                    <div class="message-error">@validationSummary</div>
-                }
+            <form asp-route="EmailWishlist" method="post">
+                <div asp-validation-summary="ModelOnly" class="message-error"></div>
                 <div class="fieldset">
                     <div class="form-fields">
                         <div class="inputs">
-                            @Html.LabelFor(model => model.FriendEmail)
-                            @Html.TextBoxFor(model => model.FriendEmail, new { @class = "friend-email", placeholder = T("Wishlist.EmailAFriend.FriendEmail.Hint") })
-                            @Html.ValidationMessageFor(model => model.FriendEmail)
+                            <label asp-for="FriendEmail" asp-postfix=":"></label>
+                            <input asp-for="FriendEmail" class="friend-email" placeholder="@T("Wishlist.EmailAFriend.FriendEmail.Hint")"/>
+                            <span asp-validation-for="FriendEmail"></span>
                         </div>
                         <div class="inputs">
-                            @Html.LabelFor(model => model.YourEmailAddress)
-                            @Html.TextBoxFor(model => model.YourEmailAddress, new { @class = "your-email", placeholder = T("Wishlist.EmailAFriend.YourEmailAddress.Hint") })
-                            @Html.ValidationMessageFor(model => model.YourEmailAddress)
+                            <label asp-for="YourEmailAddress" asp-postfix=":"></label>
+                            <input asp-for="YourEmailAddress" class="your-email" placeholder="@T("Wishlist.EmailAFriend.YourEmailAddress.Hint")"/>
+                            <span asp-validation-for="YourEmailAddress"></span>
                         </div>
                         <div class="inputs">
-                            @Html.LabelFor(model => model.PersonalMessage)
-                            @Html.TextAreaFor(model => model.PersonalMessage, new { @class = "personal-message", placeholder = T("Wishlist.EmailAFriend.PersonalMessage.Hint") })
-                            @Html.ValidationMessageFor(model => model.PersonalMessage)
+                            <label asp-for="PersonalMessage" asp-postfix=":"></label>
+                            <input asp-for="PersonalMessage" class="personal-message" placeholder="@T("Wishlist.EmailAFriend.PersonalMessage.Hint")"/>
+                            <span asp-validation-for="PersonalMessage"></span>
                         </div>
                         @if (Model.DisplayCaptcha)
                         {
                             <div class="captcha-box">
-                                @Html.Raw(Html.GenerateCaptcha())
+                                <nop-captcha />
                             </div>
                         }
                     </div>
@@ -55,7 +50,7 @@
                 <div class="buttons">
                     <input type="submit" name="send-email" class="button-1 send-email-a-friend-button" value="@T("Wishlist.EmailAFriend.Button")" />
                 </div>
-            }
+            </form>
         }
     </div>
 </div>
