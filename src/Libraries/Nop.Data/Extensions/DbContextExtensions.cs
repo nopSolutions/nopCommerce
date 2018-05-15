@@ -4,6 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Nop.Core;
 
 namespace Nop.Data.Extensions
@@ -14,9 +16,8 @@ namespace Nop.Data.Extensions
     public static class DbContextExtensions
     {
         #region Utilities
-#if EF6
 
-        private static T InnerGetCopy<T>(IDbContext context, T currentCopy, Func<DbEntityEntry<T>, DbPropertyValues> func) where T : BaseEntity
+        private static T InnerGetCopy<T>(IDbContext context, T currentCopy, Func<EntityEntry<T>, PropertyValues> func) where T : BaseEntity
         {
             //Get the database context
             var dbContext = CastOrThrow(context);
@@ -24,17 +25,17 @@ namespace Nop.Data.Extensions
             //Get the entity tracking object
             var entry = GetEntityOrReturnNull(currentCopy, dbContext);
 
+            //Try and get the values
+            if (entry == null) 
+                return null;
+
             //The output 
             T output = null;
 
-            //Try and get the values
-            if (entry != null)
+            var dbPropertyValues = func(entry);
+            if (dbPropertyValues != null)
             {
-                var dbPropertyValues = func(entry);
-                if (dbPropertyValues != null)
-                {
-                    output = dbPropertyValues.ToObject() as T;
-                }
+                output = dbPropertyValues.ToObject() as T;
             }
 
             return output;
@@ -47,23 +48,20 @@ namespace Nop.Data.Extensions
         /// <param name="currentCopy">The current copy.</param>
         /// <param name="dbContext">The db context.</param>
         /// <returns></returns>
-        private static DbEntityEntry<T> GetEntityOrReturnNull<T>(T currentCopy, DbContext dbContext) where T : BaseEntity
+        private static EntityEntry<T> GetEntityOrReturnNull<T>(T currentCopy, DbContext dbContext) where T : BaseEntity
         {
             return dbContext.ChangeTracker.Entries<T>().FirstOrDefault(e => e.Entity == currentCopy);
         }
 
         private static DbContext CastOrThrow(IDbContext context)
         {
-            var output = context as DbContext;
-
-            if (output == null)
+            if (!(context is DbContext output))
             {
                 throw new InvalidOperationException("Context does not support operation.");
             }
 
             return output;
         }
-#endif
 
         /// <summary>
         /// Get SQL commands from the script
@@ -118,11 +116,7 @@ namespace Nop.Data.Extensions
         /// <returns></returns>
         public static T LoadOriginalCopy<T>(this IDbContext context, T currentCopy) where T : BaseEntity
         {
-#if EF6
             return InnerGetCopy(context, currentCopy, e => e.OriginalValues);
-#else
-            return null;
-#endif
         }
 
         /// <summary>
@@ -134,11 +128,8 @@ namespace Nop.Data.Extensions
         /// <returns></returns>
         public static T LoadDatabaseCopy<T>(this IDbContext context, T currentCopy) where T : BaseEntity
         {
-#if EF6
             return InnerGetCopy(context, currentCopy, e => e.GetDatabaseValues());
-#else
-            return null;
-#endif
+
         }
 
         /// <summary>
@@ -148,7 +139,6 @@ namespace Nop.Data.Extensions
         /// <param name="tableName">Table name</param>
         public static void DropPluginTable(this IDbContext context, string tableName)
         {
-#if EF6
             if (context == null)
                 throw new ArgumentNullException(nameof(context));
 
@@ -156,13 +146,9 @@ namespace Nop.Data.Extensions
                 throw new ArgumentNullException(nameof(tableName));
 
             //drop the table
-            if (context.Database.SqlQuery<int>("SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = {0}", tableName).Any<int>())
-            {
-                var dbScript = "DROP TABLE [" + tableName + "]";
-                context.Database.ExecuteSqlCommand(dbScript);
-            }
+            var dbScript = "DROP TABLE IF EXISTS [" + tableName + "]";
+            context.ExecuteSqlCommand(dbScript);
             context.SaveChanges();
-#endif
         }
 
         /// <summary>
@@ -173,25 +159,9 @@ namespace Nop.Data.Extensions
         /// <returns>Table name</returns>
         public static string GetTableName<T>(this IDbContext context) where T : BaseEntity
         {
-#if EF6
-            //var tableName = typeof(T).Name;
-            //return tableName;
-
-            //this code works only with Entity Framework.
-            //If you want to support other database, then use the code above (commented)
-
-            var adapter = ((IObjectContextAdapter)context).ObjectContext;
-            var storageModel = (StoreItemCollection)adapter.MetadataWorkspace.GetItemCollection(DataSpace.SSpace);
-            var containers = storageModel.GetItems<EntityContainer>();
-            var entitySetBase = containers.SelectMany(c => c.BaseEntitySets.Where(bes => bes.Name == typeof(T).Name)).First();
-
-            // Here are variables that will hold table and schema name
-            var tableName = entitySetBase.MetadataProperties.First(p => p.Name == "Table").Value.ToString();
-            //string schemaName = productEntitySetBase.MetadataProperties.First(p => p.Name == "Schema").Value.ToString();
-            return tableName;
-#else
-            return null;
-#endif
+            var mapping = CastOrThrow(context).Model.FindEntityType(typeof(T)).Relational();
+            
+            return mapping.TableName;
         }
 
         /// <summary>
@@ -203,12 +173,8 @@ namespace Nop.Data.Extensions
         /// <returns>Maximum length. Null if such rule does not exist</returns>
         public static int? GetColumnMaxLength(this IDbContext context, string entityTypeName, string columnName)
         {
-#if EF6
             var rez = GetColumnsMaxLength(context, entityTypeName, columnName);
             return rez.ContainsKey(columnName) ? rez[columnName] as int? : null;
-#else
-            return null;
-#endif
         }
 
         /// <summary>
@@ -291,15 +257,9 @@ namespace Nop.Data.Extensions
         /// <returns>Database name</returns>
         public static string DbName(this IDbContext context)
         {
-#if EF6
-            var connection = ((IObjectContextAdapter)context).ObjectContext.Connection as EntityConnection;
-            if (connection == null)
-                return string.Empty;
+            var databaseName = CastOrThrow(context).Database.GetDbConnection().Database;
 
-            return connection.StoreConnection.Database;
-#else
-            return null;
-#endif
+            return databaseName;
         }
 
         /// <summary>
