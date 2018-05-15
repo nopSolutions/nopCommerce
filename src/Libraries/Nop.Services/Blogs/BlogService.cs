@@ -130,13 +130,8 @@ namespace Nop.Services.Blogs
                         from sm in bp_sm.DefaultIfEmpty()
                         where !bp.LimitedToStores || storeId == sm.StoreId
                         select bp;
-
-                //only distinct blog posts (group by ID)
-                query = from bp in query
-                        group bp by bp.Id
-                        into bpGroup
-                        orderby bpGroup.Key
-                        select bpGroup.FirstOrDefault();
+                
+                query = query.Distinct();
             }
 
             query = query.OrderByDescending(b => b.StartDateUtc ?? b.CreatedOnUtc);

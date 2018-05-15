@@ -309,14 +309,8 @@ namespace Nop.Services.Catalog
                         where !c.LimitedToStores || storeId == sm.StoreId
                         select c;
                 }
-
-                //only distinct categories (group by ID)
-                query = from c in query
-                    group c by c.Id
-                    into cGroup
-                    orderby cGroup.Key
-                    select cGroup.FirstOrDefault();
-                query = query.OrderBy(c => c.ParentCategoryId).ThenBy(c => c.DisplayOrder).ThenBy(c => c.Id);
+                
+                query = query.Distinct().OrderBy(c => c.ParentCategoryId).ThenBy(c => c.DisplayOrder).ThenBy(c => c.Id);
             }
             
             var unsortedCategories = query.ToList();
@@ -372,13 +366,8 @@ namespace Nop.Services.Catalog
                                 where !c.LimitedToStores || currentStoreId == sm.StoreId
                                 select c;
                     }
-                    //only distinct categories (group by ID)
-                    query = from c in query
-                            group c by c.Id
-                            into cGroup
-                            orderby cGroup.Key
-                            select cGroup.FirstOrDefault();
-                    query = query.OrderBy(c => c.DisplayOrder).ThenBy(c => c.Id);
+
+                    query = query.Distinct().OrderBy(c => c.DisplayOrder).ThenBy(c => c.Id);
                 }
 
                 var categories = query.ToList();
@@ -583,13 +572,8 @@ namespace Nop.Services.Catalog
                                 where !c.LimitedToStores || currentStoreId == sm.StoreId
                                 select pc;
                     }
-                    //only distinct categories (group by ID)
-                    query = from c in query
-                            group c by c.Id
-                            into cGroup
-                            orderby cGroup.Key
-                            select cGroup.FirstOrDefault();
-                    query = query.OrderBy(pc => pc.DisplayOrder).ThenBy(pc => pc.Id);
+
+                    query = query.Distinct().OrderBy(pc => pc.DisplayOrder).ThenBy(pc => pc.Id);
                 }
 
                 var productCategories = new PagedList<ProductCategory>(query, pageIndex, pageSize);
