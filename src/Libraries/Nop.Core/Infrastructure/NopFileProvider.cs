@@ -248,7 +248,7 @@ namespace Nop.Core.Infrastructure
         /// <returns>An object that encapsulates the access control rules for the file described by the path parameter</returns>
         public virtual DirectorySecurity GetAccessControl(string path)
         {
-            return Directory.GetAccessControl(path);
+            return new DirectoryInfo(path).GetAccessControl();
         }
 
         /// <summary>
