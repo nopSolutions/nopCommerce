@@ -146,7 +146,7 @@ namespace Nop.Data.Extensions
                 throw new ArgumentNullException(nameof(tableName));
 
             //drop the table
-            var dbScript = "DROP TABLE IF EXISTS [" + tableName + "]";
+            var dbScript = $"IF OBJECT_ID('{tableName}', 'U') IS NOT NULL DROP TABLE [{tableName}]";
             context.ExecuteSqlCommand(dbScript);
             context.SaveChanges();
         }
