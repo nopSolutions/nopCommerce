@@ -103,6 +103,36 @@ namespace Nop.Data.Extensions
             return commands;
         }
 
+#if EF6
+        private static Dictionary<string, ReadOnlyMetadataCollection<Facet>> GetFieldFacets(this IDbContext context,
+            string entityTypeName, string edmTypeName, params string[] columnNames)
+        {
+            //original: http://stackoverflow.com/questions/5081109/entity-framework-4-0-automatically-truncate-trim-string-before-insert
+
+            var entType = Type.GetType(entityTypeName);
+            var adapter = ((IObjectContextAdapter)context).ObjectContext;
+            var metadataWorkspace = adapter.MetadataWorkspace;
+            var q = from meta in metadataWorkspace.GetItems(DataSpace.CSpace).Where(m => m.BuiltInTypeKind == BuiltInTypeKind.EntityType)
+                    from p in (meta as EntityType).Properties.Where(p => columnNames.Contains(p.Name) && p.TypeUsage.EdmType.Name == edmTypeName)
+                    select p;
+
+            var queryResult = q.Where(p =>
+            {
+                var match = p.DeclaringType.Name == entityTypeName;
+                if (!match && entType != null)
+                {
+                    //Is a fully qualified name....
+                    match = entType.Name == p.DeclaringType.Name;
+                }
+
+                return match;
+
+            }).ToDictionary(p => p.Name, p => p.TypeUsage.Facets);
+
+            return queryResult;
+        }
+#endif
+
         #endregion
 
         #region Methods
@@ -196,6 +226,7 @@ namespace Nop.Data.Extensions
 
             return queryResult;
 #else
+            //TODO .NET Core doesn't support access to this information, that's why we return empty data
             return new Dictionary<string, int>();
 #endif
         }
@@ -216,39 +247,10 @@ namespace Nop.Data.Extensions
             return fieldFacets.ToDictionary(p => p.Key, p => int.Parse(p.Value["Precision"].Value.ToString()) - int.Parse(p.Value["Scale"].Value.ToString()))
                 .ToDictionary(p => p.Key, p => new decimal(Math.Pow(10, p.Value)));
 #else
+            //TODO .NET Core doesn't support access to this information, that's why we return empty data
             return new Dictionary<string, decimal>();
 #endif
         }
-
-#if EF6
-        private static Dictionary<string, ReadOnlyMetadataCollection<Facet>> GetFieldFacets(this IDbContext context,
-            string entityTypeName, string edmTypeName, params string[] columnNames)
-        {
-            //original: http://stackoverflow.com/questions/5081109/entity-framework-4-0-automatically-truncate-trim-string-before-insert
-
-            var entType = Type.GetType(entityTypeName);
-            var adapter = ((IObjectContextAdapter)context).ObjectContext;
-            var metadataWorkspace = adapter.MetadataWorkspace;
-            var q = from meta in metadataWorkspace.GetItems(DataSpace.CSpace).Where(m => m.BuiltInTypeKind == BuiltInTypeKind.EntityType)
-                    from p in (meta as EntityType).Properties.Where(p => columnNames.Contains(p.Name) && p.TypeUsage.EdmType.Name == edmTypeName)
-                    select p;
-
-            var queryResult = q.Where(p =>
-            {
-                var match = p.DeclaringType.Name == entityTypeName;
-                if (!match && entType != null)
-                {
-                    //Is a fully qualified name....
-                    match = entType.Name == p.DeclaringType.Name;
-                }
-
-                return match;
-
-            }).ToDictionary(p => p.Name, p => p.TypeUsage.Facets);
-
-            return queryResult;
-        }
-#endif
 
         /// <summary>
         /// Get database name
