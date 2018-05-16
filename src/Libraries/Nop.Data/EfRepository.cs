@@ -39,27 +39,17 @@ namespace Nop.Data
         /// <returns>Error message</returns>
         protected string GetFullErrorTextAndRollbackEntityChanges(DbUpdateException exception)
         {
-#if EF6
-            var fullErrorText = string.Empty;
-            foreach (var validationErrors in exception.EntityValidationErrors)
-                foreach (var error in validationErrors.ValidationErrors)
-                    fullErrorText += $"Property: {error.PropertyName} Error: {error.ErrorMessage}" + Environment.NewLine;
-
-            foreach (var entry in exception.EntityValidationErrors.Select(error => error.Entry))
+            //rollback entity changes
+            if (_context is DbContext dbContext)
             {
-                if (entry == null)
-                    continue;
+                var entries = dbContext.ChangeTracker.Entries()
+                    .Where(e => e.State == EntityState.Added || e.State == EntityState.Modified).ToList();
 
-                //rollback of entity changes
-                entry.State = EntityState.Unchanged;
+                entries.ForEach(entry => entry.State = EntityState.Unchanged);
             }
 
             _context.SaveChanges();
-
-            return fullErrorText;
-#else
-            return string.Empty;
-#endif
+            return exception.ToString();
         }
 
         #endregion
