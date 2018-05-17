@@ -5,8 +5,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using iTextSharp.text;
-using iTextSharp.text.pdf;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
@@ -151,6 +149,7 @@ namespace Nop.Services.Common
 
         #endregion
 
+#if NET451
         #region Utilities
 
         /// <summary>
@@ -1634,5 +1633,28 @@ namespace Nop.Services.Common
         }
 
         #endregion
+#else
+
+        public void PrintOrdersToPdf(Stream stream, IList<Order> orders, int languageId = 0, int vendorId = 0)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string PrintOrderToPdf(Order order, int languageId = 0, int vendorId = 0)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void PrintPackagingSlipsToPdf(Stream stream, IList<Shipment> shipments, int languageId = 0)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void PrintProductsToPdf(Stream stream, IList<Product> products)
+        {
+            throw new NotImplementedException();
+        }
+
+#endif
     }
 }
