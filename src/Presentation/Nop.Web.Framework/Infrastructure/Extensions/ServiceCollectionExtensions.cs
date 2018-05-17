@@ -240,9 +240,6 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             //add basic MVC feature
             var mvcBuilder = services.AddMvc();
 
-            //use session temp data provider
-            mvcBuilder.AddSessionStateTempDataProvider();
-
             //MVC now serializes JSON with camel case names by default, use this code to avoid it
             mvcBuilder.AddJsonOptions(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver());
 
