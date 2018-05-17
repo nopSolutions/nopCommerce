@@ -102,8 +102,8 @@ namespace Nop.Services.Security
         {
             if (string.IsNullOrEmpty(hashAlgorithm))
                 throw new ArgumentNullException(nameof(hashAlgorithm));
-
-            var algorithm = HashAlgorithm.Create(hashAlgorithm);
+            
+            var algorithm = (HashAlgorithm)CryptoConfig.CreateFromName(hashAlgorithm);
             if (algorithm == null)
                 throw new ArgumentException("Unrecognized hash name");
 
