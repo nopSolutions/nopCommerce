@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Text;
 using Newtonsoft.Json;
 using Nop.Core.Infrastructure;
 
@@ -23,25 +24,27 @@ namespace Nop.Core.Data
         /// </summary>
         /// <param name="filePath">File path; pass null to use the default settings file</param>
         /// <param name="reloadSettings">Whether to reload data, if they already loaded</param>
+        /// <param name="fileProvider">File provider</param>
         /// <returns>Data settings</returns>
-        public static DataSettings LoadSettings(string filePath = null, bool reloadSettings = false)
+        public static DataSettings LoadSettings(string filePath = null, bool reloadSettings = false, INopFileProvider fileProvider = null)
         {
             if (!reloadSettings && Singleton<DataSettings>.Instance != null)
                 return Singleton<DataSettings>.Instance;
 
-            filePath = filePath ?? CommonHelper.MapPath(DataSettingsFilePath);
+            fileProvider = fileProvider ?? CommonHelper.DefaultFileProvider;
+            filePath = filePath ?? fileProvider.MapPath(DataSettingsFilePath);
 
             //check whether file exists
-            if (!File.Exists(filePath))
+            if (!fileProvider.FileExists(filePath))
             {
                 //if not, try to parse the file that was used in previous nopCommerce versions
-                filePath = CommonHelper.MapPath(ObsoleteDataSettingsFilePath);
-                if (!File.Exists(filePath))
+                filePath = fileProvider.MapPath(ObsoleteDataSettingsFilePath);
+                if (!fileProvider.FileExists(filePath))
                     return new DataSettings();
 
                 //get data settings from the old txt file
                 var dataSettings = new DataSettings();
-                using (var reader = new StringReader(File.ReadAllText(filePath)))
+                using (var reader = new StringReader(fileProvider.ReadAllText(filePath, Encoding.UTF8)))
                 {
                     var settingsLine = string.Empty;
                     while ((settingsLine = reader.ReadLine()) != null)
@@ -69,16 +72,16 @@ namespace Nop.Core.Data
                 }
 
                 //save data settings to the new file
-                SaveSettings(dataSettings);
+                SaveSettings(dataSettings, fileProvider);
 
                 //and delete the old one
-                File.Delete(filePath);
+                fileProvider.DeleteFile(filePath);
 
                 Singleton<DataSettings>.Instance = dataSettings;
                 return Singleton<DataSettings>.Instance;
             }
 
-            var text = File.ReadAllText(filePath);
+            var text = fileProvider.ReadAllText(filePath, Encoding.UTF8);
             if (string.IsNullOrEmpty(text))
                 return new DataSettings();
 
@@ -92,22 +95,20 @@ namespace Nop.Core.Data
         /// Save data settings to the file
         /// </summary>
         /// <param name="settings">Data settings</param>
-        public static void SaveSettings(DataSettings settings)
+        /// <param name="fileProvider">File provider</param>
+        public static void SaveSettings(DataSettings settings, INopFileProvider fileProvider = null)
         {
             Singleton<DataSettings>.Instance = settings ?? throw new ArgumentNullException(nameof(settings));
 
-            var filePath = CommonHelper.MapPath(DataSettingsFilePath);
+            fileProvider = fileProvider ?? CommonHelper.DefaultFileProvider;
+            var filePath = fileProvider.MapPath(DataSettingsFilePath);
 
             //create file if not exists
-            if (!File.Exists(filePath))
-            {
-                //we use 'using' to close the file after it's created
-                using (File.Create(filePath)) { }
-            }
+            fileProvider.CreateFile(filePath);
 
             //save data settings to the file
             var text = JsonConvert.SerializeObject(Singleton<DataSettings>.Instance, Formatting.Indented);
-            File.WriteAllText(filePath, text);
+            fileProvider.WriteAllText(filePath, text, Encoding.UTF8);
         }
 
         /// <summary>

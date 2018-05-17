@@ -1689,7 +1689,8 @@ namespace Nop.Services.ExportImport
 
                         //searching existing product tags by their id
                         var productTagIds = productTags.Where(pt => int.TryParse(pt, out int _)).Select(int.Parse);
-                        var pruductTagsByIds = product.ProductTags.Where(pt => productTagIds.Contains(pt.Id)).ToList();
+                        var pruductTagsByIds = product.ProductProductTagMappings
+                            .Select(mapping => mapping.ProductTag).Where(pt => productTagIds.Contains(pt.Id)).ToList();
                         productTags.AddRange(pruductTagsByIds.Select(pt => pt.Name));
                         var filter = pruductTagsByIds.Select(pt => pt.Id.ToString()).ToList();
 

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Security;
 using Nop.Services.Customers;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
@@ -94,18 +95,19 @@ namespace Nop.Web.Areas.Admin.Controllers
                     var allow = permissionRecordSystemNamesToRestrict.Contains(pr.SystemName);
                     if (allow)
                     {
-                        if (pr.CustomerRoles.FirstOrDefault(x => x.Id == cr.Id) != null)
+                        if (pr.PermissionRecordCustomerRoleMappings.FirstOrDefault(x => x.CustomerRoleId == cr.Id) != null)
                             continue;
 
-                        pr.CustomerRoles.Add(cr);
+                        pr.PermissionRecordCustomerRoleMappings.Add(new PermissionRecordCustomerRoleMapping { CustomerRole = cr });
                         _permissionService.UpdatePermissionRecord(pr);
                     }
                     else
                     {
-                        if (pr.CustomerRoles.FirstOrDefault(x => x.Id == cr.Id) == null)
+                        if (pr.PermissionRecordCustomerRoleMappings.FirstOrDefault(x => x.CustomerRoleId == cr.Id) == null)
                             continue;
 
-                        pr.CustomerRoles.Remove(cr);
+                        pr.PermissionRecordCustomerRoleMappings
+                            .Remove(pr.PermissionRecordCustomerRoleMappings.FirstOrDefault(mapping => mapping.CustomerRoleId == cr.Id));
                         _permissionService.UpdatePermissionRecord(pr);
                     }
                 }

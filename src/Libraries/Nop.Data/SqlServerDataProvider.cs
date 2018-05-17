@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.Data.SqlClient;
 using System.Linq;
-using Nop.Core;
 using Nop.Core.Data;
 using Nop.Core.Domain.Common;
 using Nop.Core.Infrastructure;
@@ -34,16 +33,18 @@ namespace Nop.Data
             if (!createTables)
                 return;
 
+            var fileProvider = EngineContext.Current.Resolve<INopFileProvider>();
+
             //create tables
             //EngineContext.Current.Resolve<IRelationalDatabaseCreator>().CreateTables();
             //(context as DbContext).Database.EnsureCreated();
             context.ExecuteSqlScript(context.GenerateCreateScript());
 
             //create indexes
-            context.ExecuteSqlScriptFromFile(CommonHelper.MapPath(this.SqlServerIndexesFilePath));
+            context.ExecuteSqlScriptFromFile(fileProvider.MapPath(this.SqlServerIndexesFilePath));
 
             //create stored procedures 
-            context.ExecuteSqlScriptFromFile(CommonHelper.MapPath(this.SqlServerStoredProceduresFilePath));
+            context.ExecuteSqlScriptFromFile(fileProvider.MapPath(this.SqlServerStoredProceduresFilePath));
         }
 
         /// <summary>
