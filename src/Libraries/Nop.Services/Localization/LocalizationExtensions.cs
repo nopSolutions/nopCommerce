@@ -7,7 +7,7 @@ using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Security;
 using Nop.Core.Infrastructure;
 using Nop.Core.Plugins;
-using Nop.Data;
+using Nop.Data.Extensions;
 using Nop.Services.Configuration;
 
 namespace Nop.Services.Localization
@@ -84,7 +84,7 @@ namespace Nop.Services.Localization
             var result = default(TPropType);
             var resultStr = string.Empty;
 
-            var localeKeyGroup = entity.GetUnproxiedEntityType().Name;
+            var localeKeyGroup = entity.GetType().BaseType.Name;
             var localeKey = propInfo.Name;
 
             if (languageId > 0)

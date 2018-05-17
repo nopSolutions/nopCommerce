@@ -203,14 +203,8 @@ namespace Nop.Services.Messages
                             from sm in tSm.DefaultIfEmpty()
                             where !t.LimitedToStores || storeId == sm.StoreId
                             select t;
-
-                    //only distinct items (group by ID)
-                    query = from t in query
-                            group t by t.Id
-                            into tGroup
-                            orderby tGroup.Key
-                            select tGroup.FirstOrDefault();
-                    query = query.OrderBy(t => t.Name);
+                    
+                    query = query.Distinct().OrderBy(t => t.Name);
                 }
 
                 return query.ToList();

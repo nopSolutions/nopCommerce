@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using Nop.Core;
 using Nop.Core.Infrastructure;
-using Nop.Data;
+using Nop.Data.Extensions;
 
 namespace Nop.Services.Common
 {
@@ -40,7 +40,7 @@ namespace Nop.Services.Common
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
 
-            var keyGroup = entity.GetUnproxiedEntityType().Name;
+            var keyGroup = entity.GetType().BaseType.Name;
 
             var props = genericAttributeService.GetAttributesForEntity(entity.Id, keyGroup);
             //little hack here (only for unit testing). we should write expect-return rules in unit tests for such cases

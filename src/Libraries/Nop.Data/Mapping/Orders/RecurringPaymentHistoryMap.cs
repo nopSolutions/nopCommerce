@@ -1,28 +1,34 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Orders;
 
 namespace Nop.Data.Mapping.Orders
 {
     /// <summary>
-    /// Mapping class
+    /// Represents a recurring payment history mapping configuration
     /// </summary>
     public partial class RecurringPaymentHistoryMap : NopEntityTypeConfiguration<RecurringPaymentHistory>
     {
+        #region Methods
+
         /// <summary>
-        /// Ctor
+        /// Configures the entity
         /// </summary>
-        public RecurringPaymentHistoryMap()
+        /// <param name="builder">The builder to be used to configure the entity</param>
+        public override void Configure(EntityTypeBuilder<RecurringPaymentHistory> builder)
         {
-            this.ToTable("RecurringPaymentHistory");
-            this.HasKey(rph => rph.Id);
+            builder.ToTable(nameof(RecurringPaymentHistory));
+            builder.HasKey(historyEntry => historyEntry.Id);
 
-            this.HasRequired(rph => rph.RecurringPayment)
-                .WithMany(rp => rp.RecurringPaymentHistory)
-                .HasForeignKey(rph => rph.RecurringPaymentId);
+            builder.HasOne(historyEntry => historyEntry.RecurringPayment)
+                .WithMany(recurringPayment => recurringPayment.RecurringPaymentHistory)
+                .HasForeignKey(historyEntry => historyEntry.RecurringPaymentId)
+                .IsRequired();
 
-            //entity framework issue if we have navigation property to 'Order'
-            //1. save recurring payment with an order
-            //2. save recurring payment history with an order
-            //3. update associated order => exception is thrown
+            //add custom configuration
+            this.PostConfigure(builder);
         }
+
+        #endregion
     }
 }

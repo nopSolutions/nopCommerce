@@ -27,19 +27,15 @@ namespace Nop.Web.Controllers
 
         private readonly IInstallationLocalizationService _locService;
         private readonly NopConfig _config;
-        private readonly INopFileProvider _fileProvider;
         
         #endregion
         
         #region Ctor
 
-        public InstallController(IInstallationLocalizationService locService, 
-            NopConfig config,
-            INopFileProvider fileProvider)
+        public InstallController(IInstallationLocalizationService locService, NopConfig config)
         {
             this._locService = locService;
             this._config = config;
-            this._fileProvider = fileProvider;
         }
         
         #endregion
@@ -179,7 +175,7 @@ namespace Nop.Web.Controllers
 
         public virtual IActionResult Index()
         {
-            if (DataSettingsHelper.DatabaseIsInstalled())
+            if (DataSettingsManager.DatabaseIsInstalled)
                 return RedirectToRoute("HomePage");
 
             var model = new InstallModel
@@ -187,9 +183,8 @@ namespace Nop.Web.Controllers
                 AdminEmail = "admin@yourStore.com",
                 InstallSampleData = false,
                 DatabaseConnectionString = "",
-                DataProvider = "sqlserver",
+                DataProvider = DataProviderType.SqlServer,
                 //fast installation service does not support SQL compact
-                DisableSqlCompact = _config.UseFastInstallationService,
                 DisableSampleDataOption = _config.DisableSampleDataDuringInstallation,
                 SqlAuthenticationType = "sqlauthentication",
                 SqlConnectionInfo = "sqlconnectioninfo_values",
@@ -213,7 +208,7 @@ namespace Nop.Web.Controllers
         [HttpPost]
         public virtual IActionResult Index(InstallModel model)
         {
-            if (DataSettingsHelper.DatabaseIsInstalled())
+            if (DataSettingsManager.DatabaseIsInstalled)
                 return RedirectToRoute("HomePage");
 
             if (model.DatabaseConnectionString != null)
@@ -230,11 +225,10 @@ namespace Nop.Web.Controllers
                 });
             }
 
-            model.DisableSqlCompact = _config.UseFastInstallationService;
             model.DisableSampleDataOption = _config.DisableSampleDataDuringInstallation;
 
             //SQL Server
-            if (model.DataProvider.Equals("sqlserver", StringComparison.InvariantCultureIgnoreCase))
+            if (model.DataProvider == DataProviderType.SqlServer)
             {
                 if (model.SqlConnectionInfo.Equals("sqlconnectioninfo_raw", StringComparison.InvariantCultureIgnoreCase))
                 {
@@ -292,11 +286,10 @@ namespace Nop.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                var settingsManager = new DataSettingsManager(_fileProvider);
                 try
                 {
                     string connectionString;
-                    if (model.DataProvider.Equals("sqlserver", StringComparison.InvariantCultureIgnoreCase))
+                    if (model.DataProvider == DataProviderType.SqlServer)
                     {
                         //SQL Server
 
@@ -347,32 +340,29 @@ namespace Nop.Web.Controllers
                         connectionString = "Data Source=" + databasePath + ";Persist Security Info=False";
 
                         //drop database if exists
-                        var databaseFullPath = _fileProvider.MapPath("~/App_Data/") + databaseFileName;
-                        if (_fileProvider.FileExists(databaseFullPath))
+                        var databaseFullPath = CommonHelper.MapPath("~/App_Data/") + databaseFileName;
+                        if (System.IO.File.Exists(databaseFullPath))
                         {
-                            _fileProvider.DeleteFile(databaseFullPath);
+                            System.IO.File.Delete(databaseFullPath);
                         }
                     }
 
                     //save settings
-                    var dataProvider = model.DataProvider;
-                    var settings = new DataSettings
+                    DataSettingsManager.SaveSettings(new DataSettings
                     {
-                        DataProvider = dataProvider,
+                        DataProvider = model.DataProvider,
                         DataConnectionString = connectionString
-                    };
-                    settingsManager.SaveSettings(settings);
+                    });
 
-                    //init data provider
-                    var dataProviderInstance = EngineContext.Current.Resolve<BaseDataProviderManager>().LoadDataProvider();
-                    dataProviderInstance.InitDatabase();
+                    //initialize database
+                    EngineContext.Current.Resolve<IDataProvider>().InitializeDatabase();
 
                     //now resolve installation service
                     var installationService = EngineContext.Current.Resolve<IInstallationService>();
                     installationService.InstallData(model.AdminEmail, model.AdminPassword, model.InstallSampleData);
 
                     //reset cache
-                    DataSettingsHelper.ResetCache();
+                    DataSettingsManager.ResetCache();
 
                     //install plugins
                     PluginManager.MarkAllPluginsAsUninstalled();
@@ -398,7 +388,8 @@ namespace Nop.Web.Controllers
 
                     //register default permissions
                     //var permissionProviders = EngineContext.Current.Resolve<ITypeFinder>().FindClassesOfType<IPermissionProvider>();
-                    var permissionProviders = new List<Type> {typeof(StandardPermissionProvider)};
+                    var permissionProviders = new List<Type>();
+                    permissionProviders.Add(typeof(StandardPermissionProvider));
                     foreach (var providerType in permissionProviders)
                     {
                         var provider = (IPermissionProvider)Activator.CreateInstance(providerType);
@@ -414,17 +405,13 @@ namespace Nop.Web.Controllers
                 catch (Exception exception)
                 {
                     //reset cache
-                    DataSettingsHelper.ResetCache();
+                    DataSettingsManager.ResetCache();
                     
                     var cacheManager = EngineContext.Current.Resolve<IStaticCacheManager>();
                     cacheManager.Clear();
 
                     //clear provider settings if something got wrong
-                    settingsManager.SaveSettings(new DataSettings
-                    {
-                        DataProvider = null,
-                        DataConnectionString = null
-                    });
+                    DataSettingsManager.SaveSettings(new DataSettings());
 
                     ModelState.AddModelError("", string.Format(_locService.GetResource("SetupFailed"), exception.Message));
                 }
@@ -434,7 +421,7 @@ namespace Nop.Web.Controllers
 
         public virtual IActionResult ChangeLanguage(string language)
         {
-            if (DataSettingsHelper.DatabaseIsInstalled())
+            if (DataSettingsManager.DatabaseIsInstalled)
                 return RedirectToRoute("HomePage");
 
             _locService.SaveCurrentLanguage(language);
@@ -446,7 +433,7 @@ namespace Nop.Web.Controllers
         [HttpPost]
         public virtual IActionResult RestartInstall()
         {
-            if (DataSettingsHelper.DatabaseIsInstalled())
+            if (DataSettingsManager.DatabaseIsInstalled)
                 return RedirectToRoute("HomePage");
 
             //restart application

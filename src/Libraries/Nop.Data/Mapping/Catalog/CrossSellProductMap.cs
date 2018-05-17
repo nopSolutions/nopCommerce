@@ -1,19 +1,29 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Catalog;
 
 namespace Nop.Data.Mapping.Catalog
 {
     /// <summary>
-    /// Mapping class
+    /// Represents a cross-sell product mapping configuration
     /// </summary>
     public partial class CrossSellProductMap : NopEntityTypeConfiguration<CrossSellProduct>
     {
+        #region Methods
+
         /// <summary>
-        /// Ctor
+        /// Configures the entity
         /// </summary>
-        public CrossSellProductMap()
+        /// <param name="builder">The builder to be used to configure the entity</param>
+        public override void Configure(EntityTypeBuilder<CrossSellProduct> builder)
         {
-            this.ToTable("CrossSellProduct");
-            this.HasKey(c => c.Id);
+            builder.ToTable(nameof(CrossSellProduct));
+            builder.HasKey(product => product.Id);
+
+            //add custom configuration
+            this.PostConfigure(builder);
         }
+
+        #endregion
     }
 }

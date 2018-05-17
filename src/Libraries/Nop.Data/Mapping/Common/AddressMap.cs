@@ -1,27 +1,37 @@
-﻿using Nop.Core.Domain.Common;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Nop.Core.Domain.Common;
 
 namespace Nop.Data.Mapping.Common
 {
     /// <summary>
-    /// Mapping class
+    /// Represents an address mapping configuration
     /// </summary>
     public partial class AddressMap : NopEntityTypeConfiguration<Address>
     {
+        #region Methods
+
         /// <summary>
-        /// Ctor
+        /// Configures the entity
         /// </summary>
-        public AddressMap()
+        /// <param name="builder">The builder to be used to configure the entity</param>
+        public override void Configure(EntityTypeBuilder<Address> builder)
         {
-            this.ToTable("Address");
-            this.HasKey(a => a.Id);
+            builder.ToTable(nameof(Address));
+            builder.HasKey(address => address.Id);
 
-            this.HasOptional(a => a.Country)
+            builder.HasOne(address => address.Country)
                 .WithMany()
-                .HasForeignKey(a => a.CountryId).WillCascadeOnDelete(false);
+                .HasForeignKey(address => address.CountryId);
 
-            this.HasOptional(a => a.StateProvince)
+            builder.HasOne(address => address.StateProvince)
                 .WithMany()
-                .HasForeignKey(a => a.StateProvinceId).WillCascadeOnDelete(false);
+                .HasForeignKey(address => address.StateProvinceId);
+
+            //add custom configuration
+            this.PostConfigure(builder);
         }
+
+        #endregion
     }
 }

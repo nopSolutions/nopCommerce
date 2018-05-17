@@ -8,7 +8,7 @@ using Nop.Data;
 using Nop.Plugin.Shipping.FixedByWeightByTotal.Data;
 using Nop.Plugin.Shipping.FixedByWeightByTotal.Domain;
 using Nop.Plugin.Shipping.FixedByWeightByTotal.Services;
-using Nop.Web.Framework.Infrastructure;
+using Nop.Web.Framework.Infrastructure.Extensions;
 
 namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Infrastructure
 {
@@ -28,11 +28,10 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Infrastructure
             builder.RegisterType<ShippingByWeightByTotalService>().As<IShippingByWeightByTotalService>().InstancePerLifetimeScope();
 
             //data context
-            this.RegisterPluginDataContext<ShippingByWeightByTotalObjectContext>(builder, "nop_object_context_shipping_weight_total_zip");
+            builder.RegisterPluginDataContext<ShippingByWeightByTotalObjectContext>("nop_object_context_shipping_weight_total_zip");
 
             //override required repository with our custom context
-            builder.RegisterType<EfRepository<ShippingByWeightByTotalRecord>>()
-                .As<IRepository<ShippingByWeightByTotalRecord>>()
+            builder.RegisterType<EfRepository<ShippingByWeightByTotalRecord>>().As<IRepository<ShippingByWeightByTotalRecord>>()
                 .WithParameter(ResolvedParameter.ForNamed<IDbContext>("nop_object_context_shipping_weight_total_zip"))
                 .InstancePerLifetimeScope();
         }
@@ -40,9 +39,6 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Infrastructure
         /// <summary>
         /// Order of this dependency registrar implementation
         /// </summary>
-        public int Order
-        {
-            get { return 1; }
-        }
+        public int Order => 1;
     }
 }

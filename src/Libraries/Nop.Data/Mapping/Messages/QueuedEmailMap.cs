@@ -1,36 +1,46 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Messages;
 
 namespace Nop.Data.Mapping.Messages
 {
     /// <summary>
-    /// Mapping class
+    /// Represents a queued email mapping configuration
     /// </summary>
     public partial class QueuedEmailMap : NopEntityTypeConfiguration<QueuedEmail>
     {
+        #region Methods
+
         /// <summary>
-        /// Ctor
+        /// Configures the entity
         /// </summary>
-        public QueuedEmailMap()
+        /// <param name="builder">The builder to be used to configure the entity</param>
+        public override void Configure(EntityTypeBuilder<QueuedEmail> builder)
         {
-            this.ToTable("QueuedEmail");
-            this.HasKey(qe => qe.Id);
+            builder.ToTable(nameof(QueuedEmail));
+            builder.HasKey(email => email.Id);
 
-            this.Property(qe => qe.From).IsRequired().HasMaxLength(500);
-            this.Property(qe => qe.FromName).HasMaxLength(500);
-            this.Property(qe => qe.To).IsRequired().HasMaxLength(500);
-            this.Property(qe => qe.ToName).HasMaxLength(500);
-            this.Property(qe => qe.ReplyTo).HasMaxLength(500);
-            this.Property(qe => qe.ReplyToName).HasMaxLength(500);
-            this.Property(qe => qe.CC).HasMaxLength(500);
-            this.Property(qe => qe.Bcc).HasMaxLength(500);
-            this.Property(qe => qe.Subject).HasMaxLength(1000);
+            builder.Property(email => email.From).HasMaxLength(500).IsRequired();
+            builder.Property(email => email.FromName).HasMaxLength(500);
+            builder.Property(email => email.To).HasMaxLength(500).IsRequired();
+            builder.Property(email => email.ToName).HasMaxLength(500);
+            builder.Property(email => email.ReplyTo).HasMaxLength(500);
+            builder.Property(email => email.ReplyToName).HasMaxLength(500);
+            builder.Property(email => email.CC).HasMaxLength(500);
+            builder.Property(email => email.Bcc).HasMaxLength(500);
+            builder.Property(email => email.Subject).HasMaxLength(1000);
 
-
-            this.Ignore(qe => qe.Priority);
-
-            this.HasRequired(qe => qe.EmailAccount)
+            builder.HasOne(email => email.EmailAccount)
                 .WithMany()
-                .HasForeignKey(qe => qe.EmailAccountId).WillCascadeOnDelete(true);
+                .HasForeignKey(email => email.EmailAccountId)
+                .IsRequired();
+
+            builder.Ignore(email => email.Priority);
+
+            //add custom configuration
+            this.PostConfigure(builder);
         }
+
+        #endregion
     }
 }

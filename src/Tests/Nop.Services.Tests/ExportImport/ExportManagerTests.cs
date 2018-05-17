@@ -52,6 +52,7 @@ namespace Nop.Services.Tests.ExportImport
         private IDateRangeService _dateRangeService;
         private IStoreService _storeService;
         private IProductAttributeService _productAttributeService;
+        private IProductTagService _productTagService;
         private ITaxCategoryService _taxCategoryService;
         private IMeasureService _measureService;
         private CatalogSettings _catalogSettings;
@@ -77,6 +78,7 @@ namespace Nop.Services.Tests.ExportImport
             _genericAttributeService = MockRepository.GenerateMock<IGenericAttributeService>();
             _storeService = MockRepository.GenerateMock<IStoreService>();
             _productAttributeService = MockRepository.GenerateMock<IProductAttributeService>();
+            _productTagService = MockRepository.GenerateMock<IProductTagService>();
             _taxCategoryService = MockRepository.GenerateMock<ITaxCategoryService>();
             _measureService = MockRepository.GenerateMock<IMeasureService>();
             _catalogSettings = new CatalogSettings();
@@ -132,7 +134,7 @@ namespace Nop.Services.Tests.ExportImport
             serviceProvider.Expect(x => x.GetRequiredService(typeof(IHttpContextAccessor))).Return(httpContextAccessor);
 
             EngineContext.Replace(nopEngine);
-            _exportManager = new ExportManager(_categoryService, _manufacturerService, _customerService, _productAttributeService, _pictureService, _newsLetterSubscriptionService, _storeService, _workContext, _productEditorSettings, _vendorService, _productTemplateService, _dateRangeService, _taxCategoryService, _measureService, _catalogSettings, _genericAttributeService, _customerAttributeFormatter, _orderSettings, _specificationAttributeService);
+            _exportManager = new ExportManager(_categoryService, _manufacturerService, _customerService, _productAttributeService, _productTagService, _pictureService, _newsLetterSubscriptionService, _storeService, _workContext, _productEditorSettings, _vendorService, _productTemplateService, _dateRangeService, _taxCategoryService, _measureService, _catalogSettings, _genericAttributeService, _customerAttributeFormatter, _orderSettings, _specificationAttributeService);
         }
 
         [OneTimeTearDown]
@@ -298,7 +300,7 @@ namespace Nop.Services.Tests.ExportImport
         #region Test export to excel
 
         [Test]
-        public void can_export_orders_xlsx()
+        public void Can_export_orders_xlsx()
         {
             var orderGuid = Guid.NewGuid();
             var billingAddress = GetTestBillingAddress();
@@ -435,7 +437,7 @@ namespace Nop.Services.Tests.ExportImport
         }
 
         [Test]
-        public void can_export_manufacturers_xlsx()
+        public void Can_export_manufacturers_xlsx()
         {
             var manufacturers = new List<Manufacturer>
             {
@@ -475,7 +477,7 @@ namespace Nop.Services.Tests.ExportImport
         }
 
         [Test]
-        public void can_export_customers_to_xlsx()
+        public void Can_export_customers_to_xlsx()
         {
             var customers = new List<Customer>
             {
@@ -510,7 +512,7 @@ namespace Nop.Services.Tests.ExportImport
         }
 
         [Test]
-        public void can_export_categories_to_xlsx()
+        public void Can_export_categories_to_xlsx()
         {
             var categories = new List<Category>
             {
@@ -552,7 +554,7 @@ namespace Nop.Services.Tests.ExportImport
         }
 
         [Test]
-        public void can_export_products_to_xlsx()
+        public void Can_export_products_to_xlsx()
         {
             var replacePairse = new Dictionary<string, string>
             {

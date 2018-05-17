@@ -1,25 +1,35 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Vendors;
 
 namespace Nop.Data.Mapping.Vendors
 {
     /// <summary>
-    /// Mapping class
+    /// Represents a vendor mapping configuration
     /// </summary>
     public partial class VendorMap : NopEntityTypeConfiguration<Vendor>
     {
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        public VendorMap()
-        {
-            this.ToTable("Vendor");
-            this.HasKey(v => v.Id);
+        #region Methods
 
-            this.Property(v => v.Name).IsRequired().HasMaxLength(400);
-            this.Property(v => v.Email).HasMaxLength(400);
-            this.Property(v => v.MetaKeywords).HasMaxLength(400);
-            this.Property(v => v.MetaTitle).HasMaxLength(400);
-            this.Property(v => v.PageSizeOptions).HasMaxLength(200);
+        /// <summary>
+        /// Configures the entity
+        /// </summary>
+        /// <param name="builder">The builder to be used to configure the entity</param>
+        public override void Configure(EntityTypeBuilder<Vendor> builder)
+        {
+            builder.ToTable(nameof(Vendor));
+            builder.HasKey(vendor => vendor.Id);
+
+            builder.Property(vendor => vendor.Name).HasMaxLength(400).IsRequired();
+            builder.Property(vendor => vendor.Email).HasMaxLength(400);
+            builder.Property(vendor => vendor.MetaKeywords).HasMaxLength(400);
+            builder.Property(vendor => vendor.MetaTitle).HasMaxLength(400);
+            builder.Property(vendor => vendor.PageSizeOptions).HasMaxLength(200);
+
+            //add custom configuration
+            this.PostConfigure(builder);
         }
+
+        #endregion
     }
 }

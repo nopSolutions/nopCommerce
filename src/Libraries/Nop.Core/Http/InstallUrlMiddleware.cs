@@ -40,7 +40,7 @@ namespace Nop.Core.Http
         public async Task Invoke(Microsoft.AspNetCore.Http.HttpContext context, IWebHelper webHelper)
         {
             //whether database is installed
-            if (!DataSettingsHelper.DatabaseIsInstalled())
+            if (!DataSettingsManager.DatabaseIsInstalled)
             {
                 var installUrl = $"{webHelper.GetStoreLocation()}install";
                 if (!webHelper.GetThisPageUrl(false).StartsWith(installUrl, StringComparison.InvariantCultureIgnoreCase))

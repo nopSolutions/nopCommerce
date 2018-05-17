@@ -1,22 +1,32 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Media;
 
 namespace Nop.Data.Mapping.Media
 {
     /// <summary>
-    /// Mapping class
+    /// Represents a picture mapping configuration
     /// </summary>
     public partial class PictureMap : NopEntityTypeConfiguration<Picture>
     {
+        #region Methods
+
         /// <summary>
-        /// Ctor
+        /// Configures the entity
         /// </summary>
-        public PictureMap()
+        /// <param name="builder">The builder to be used to configure the entity</param>
+        public override void Configure(EntityTypeBuilder<Picture> builder)
         {
-            this.ToTable("Picture");
-            this.HasKey(p => p.Id);
-            this.Property(p => p.PictureBinary).IsMaxLength();
-            this.Property(p => p.MimeType).IsRequired().HasMaxLength(40);
-            this.Property(p => p.SeoFilename).HasMaxLength(300);
+            builder.ToTable(nameof(Picture));
+            builder.HasKey(picture => picture.Id);
+            
+            builder.Property(picture => picture.MimeType).HasMaxLength(40).IsRequired();
+            builder.Property(picture => picture.SeoFilename).HasMaxLength(300);
+
+            //add custom configuration
+            this.PostConfigure(builder);
         }
+
+        #endregion
     }
 }

@@ -579,8 +579,6 @@ namespace Nop.Services.Forums
             {
                 limitDate = DateTime.UtcNow.AddDays(-limitDays);
             }
-            //we need to cast it to int, otherwise it won't work in SQLCE4
-            //we cannot use string.IsNullOrEmpty in query because it causes SqlCeException on SQLCE4
             var searchKeywords = !string.IsNullOrEmpty(keywords);
             var searchTopicTitles = searchType == ForumSearchType.All || searchType == ForumSearchType.TopicTitlesOnly;
             var searchPostText = searchType == ForumSearchType.All || searchType == ForumSearchType.PostTextOnly;

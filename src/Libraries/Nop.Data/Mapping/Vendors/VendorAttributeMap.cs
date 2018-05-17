@@ -1,19 +1,33 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Vendors;
 
 namespace Nop.Data.Mapping.Vendors
 {
     /// <summary>
-    /// Mapping class
+    /// Represents an vendor attribute mapping configuration
     /// </summary>
     public partial class VendorAttributeMap : NopEntityTypeConfiguration<VendorAttribute>
     {
-        public VendorAttributeMap()
-        {
-            this.ToTable("VendorAttribute");
-            this.HasKey(vendorAttribute => vendorAttribute.Id);
-            this.Property(vendorAttribute => vendorAttribute.Name).IsRequired().HasMaxLength(400);
+        #region Methods
 
-            this.Ignore(vendorAttribute => vendorAttribute.AttributeControlType);
+        /// <summary>
+        /// Configures the entity
+        /// </summary>
+        /// <param name="builder">The builder to be used to configure the entity</param>
+        public override void Configure(EntityTypeBuilder<VendorAttribute> builder)
+        {
+            builder.ToTable(nameof(VendorAttribute));
+            builder.HasKey(attribute => attribute.Id);
+
+            builder.Property(attribute => attribute.Name).HasMaxLength(400).IsRequired();
+
+            builder.Ignore(attribute => attribute.AttributeControlType);
+
+            //add custom configuration
+            this.PostConfigure(builder);
         }
+
+        #endregion
     }
 }

@@ -376,7 +376,8 @@ namespace Nop.Web.Controllers
                         address.CountryId = null;
                     if (address.StateProvinceId == 0)
                         address.StateProvinceId = null;
-                    _workContext.CurrentCustomer.Addresses.Add(address);
+                    //_workContext.CurrentCustomer.Addresses.Add(address);
+                    _workContext.CurrentCustomer.CustomerAddressMappings.Add(new CustomerAddressMapping { Address = address });
                 }
                 _workContext.CurrentCustomer.BillingAddress = address;
                 _customerService.UpdateCustomer(_workContext.CurrentCustomer);
@@ -547,7 +548,8 @@ namespace Nop.Web.Controllers
                         address.CountryId = null;
                     if (address.StateProvinceId == 0)
                         address.StateProvinceId = null;
-                    _workContext.CurrentCustomer.Addresses.Add(address);
+                    //_workContext.CurrentCustomer.Addresses.Add(address);
+                    _workContext.CurrentCustomer.CustomerAddressMappings.Add(new CustomerAddressMapping { Address = address});
                 }
                 _workContext.CurrentCustomer.ShippingAddress = address;
                 _customerService.UpdateCustomer(_workContext.CurrentCustomer);
@@ -1233,7 +1235,8 @@ namespace Nop.Web.Controllers
                         {
                             address.Country = _countryService.GetCountryById(address.CountryId.Value);
                         }
-                        _workContext.CurrentCustomer.Addresses.Add(address);
+                        //_workContext.CurrentCustomer.Addresses.Add(address);
+                        _workContext.CurrentCustomer.CustomerAddressMappings.Add(new CustomerAddressMapping { Address = address });
                     }
                     _workContext.CurrentCustomer.BillingAddress = address;
                     _customerService.UpdateCustomer(_workContext.CurrentCustomer);
@@ -1411,7 +1414,8 @@ namespace Nop.Web.Controllers
                             address.CountryId = null;
                         if (address.StateProvinceId == 0)
                             address.StateProvinceId = null;
-                        _workContext.CurrentCustomer.Addresses.Add(address);
+                        //_workContext.CurrentCustomer.Addresses.Add(address);
+                        _workContext.CurrentCustomer.CustomerAddressMappings.Add(new CustomerAddressMapping { Address = address });
                     }
                     _workContext.CurrentCustomer.ShippingAddress = address;
                     _customerService.UpdateCustomer(_workContext.CurrentCustomer);

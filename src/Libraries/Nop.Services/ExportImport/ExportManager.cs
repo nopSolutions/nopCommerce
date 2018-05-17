@@ -40,6 +40,7 @@ namespace Nop.Services.ExportImport
         private readonly IManufacturerService _manufacturerService;
         private readonly ICustomerService _customerService;
         private readonly IProductAttributeService _productAttributeService;
+        private readonly IProductTagService _productTagService;
         private readonly IPictureService _pictureService;
         private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
         private readonly IStoreService _storeService;
@@ -64,6 +65,7 @@ namespace Nop.Services.ExportImport
             IManufacturerService manufacturerService,
             ICustomerService customerService,
             IProductAttributeService productAttributeService,
+            IProductTagService productTagService,
             IPictureService pictureService,
             INewsLetterSubscriptionService newsLetterSubscriptionService,
             IStoreService storeService,
@@ -84,6 +86,7 @@ namespace Nop.Services.ExportImport
             this._manufacturerService = manufacturerService;
             this._customerService = customerService;
             this._productAttributeService = productAttributeService;
+            this._productTagService = productTagService;
             this._pictureService = pictureService;
             this._newsLetterSubscriptionService = newsLetterSubscriptionService;
             this._storeService = storeService;
@@ -231,7 +234,8 @@ namespace Nop.Services.ExportImport
         {
             string productTagNames = null;
 
-            foreach (var productTag in product.ProductTags)
+            var productTags = _productTagService.GetAllProductTagsByProductId(product.Id);
+            foreach (var productTag in productTags)
             {
                 productTagNames += _catalogSettings.ExportImportRelatedEntitiesByName
                     ? productTag.Name
@@ -1047,7 +1051,7 @@ namespace Nop.Services.ExportImport
                 if (!IgnoreExportPoductProperty(p => p.ProductTags))
                 {
                     xmlWriter.WriteStartElement("ProductTags");
-                    var productTags = product.ProductTags;
+                    var productTags = _productTagService.GetAllProductTagsByProductId(product.Id);
                     foreach (var productTag in productTags)
                     {
                         xmlWriter.WriteStartElement("ProductTag");

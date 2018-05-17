@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Security;
@@ -13,7 +14,7 @@ namespace Nop.Core.Domain.Catalog
     /// </summary>
     public partial class Category : BaseEntity, ILocalizedEntity, ISlugSupported, IAclSupported, IStoreMappingSupported, IDiscountSupported
     {
-        private ICollection<Discount> _appliedDiscounts;
+        private ICollection<DiscountCategoryMapping> _discountCategoryMappings;
 
         /// <summary>
         /// Gets or sets the name
@@ -123,10 +124,15 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets the collection of applied discounts
         /// </summary>
-        public virtual ICollection<Discount> AppliedDiscounts
+        public virtual IList<Discount> AppliedDiscounts => DiscountCategoryMappings.Select(mapping => mapping.Discount).ToList();
+
+        /// <summary>
+        /// Gets or sets the discount-category mappings
+        /// </summary>
+        public virtual ICollection<DiscountCategoryMapping> DiscountCategoryMappings
         {
-            get { return _appliedDiscounts ?? (_appliedDiscounts = new List<Discount>()); }
-            set { _appliedDiscounts = value; }
+            get { return _discountCategoryMappings ?? (_discountCategoryMappings = new List<DiscountCategoryMapping>()); }
+            set { _discountCategoryMappings = value; }
         }
     }
 }

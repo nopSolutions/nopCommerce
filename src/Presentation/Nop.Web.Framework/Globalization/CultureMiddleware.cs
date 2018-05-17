@@ -40,7 +40,7 @@ namespace Nop.Web.Framework.Globalization
         /// <param name="workContext">Work context</param>
         protected void SetWorkingCulture(IWebHelper webHelper, IWorkContext workContext)
         {
-            if (!DataSettingsHelper.DatabaseIsInstalled())
+            if (!DataSettingsManager.DatabaseIsInstalled)
                 return;
 
             if (webHelper.IsStaticResource())

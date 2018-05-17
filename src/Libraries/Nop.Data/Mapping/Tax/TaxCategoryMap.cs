@@ -1,20 +1,31 @@
-﻿using Nop.Core.Domain.Tax;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Nop.Core.Domain.Tax;
 
 namespace Nop.Data.Mapping.Tax
 {
     /// <summary>
-    /// Mapping class
+    /// Represents a tax category mapping configuration
     /// </summary>
     public partial class TaxCategoryMap : NopEntityTypeConfiguration<TaxCategory>
     {
+        #region Methods
+
         /// <summary>
-        /// Ctor
+        /// Configures the entity
         /// </summary>
-        public TaxCategoryMap()
+        /// <param name="builder">The builder to be used to configure the entity</param>
+        public override void Configure(EntityTypeBuilder<TaxCategory> builder)
         {
-            this.ToTable("TaxCategory");
-            this.HasKey(tc => tc.Id);
-            this.Property(tc => tc.Name).IsRequired().HasMaxLength(400);
+            builder.ToTable(nameof(TaxCategory));
+            builder.HasKey(taxCategory => taxCategory.Id);
+
+            builder.Property(taxCategory => taxCategory.Name).HasMaxLength(400).IsRequired();
+
+            //add custom configuration
+            this.PostConfigure(builder);
         }
+
+        #endregion
     }
 }

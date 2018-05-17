@@ -178,13 +178,8 @@ namespace Nop.Services.Catalog
                             where !m.LimitedToStores || storeId == sm.StoreId
                             select m;
                 }
-                //only distinct manufacturers (group by ID)
-                query = from m in query
-                        group m by m.Id
-                            into mGroup
-                            orderby mGroup.Key
-                            select mGroup.FirstOrDefault();
-                query = query.OrderBy(m => m.DisplayOrder).ThenBy(m => m.Id);
+
+                query = query.Distinct().OrderBy(m => m.DisplayOrder).ThenBy(m => m.Id);
             }
 
             return new PagedList<Manufacturer>(query, pageIndex, pageSize);
@@ -313,13 +308,7 @@ namespace Nop.Services.Catalog
                                 select pm;
                     }
 
-                    //only distinct manufacturers (group by ID)
-                    query = from pm in query
-                            group pm by pm.Id
-                            into pmGroup
-                            orderby pmGroup.Key
-                            select pmGroup.FirstOrDefault();
-                    query = query.OrderBy(pm => pm.DisplayOrder).ThenBy(pm => pm.Id);
+                    query = query.Distinct().OrderBy(pm => pm.DisplayOrder).ThenBy(pm => pm.Id);
                 }
 
                 var productManufacturers = new PagedList<ProductManufacturer>(query, pageIndex, pageSize);
@@ -378,13 +367,7 @@ namespace Nop.Services.Catalog
                                 select pm;
                     }
 
-                    //only distinct manufacturers (group by ID)
-                    query = from pm in query
-                            group pm by pm.Id
-                            into mGroup
-                            orderby mGroup.Key
-                            select mGroup.FirstOrDefault();
-                    query = query.OrderBy(pm => pm.DisplayOrder).ThenBy(pm => pm.Id);
+                    query = query.Distinct().OrderBy(pm => pm.DisplayOrder).ThenBy(pm => pm.Id);
                 }
 
                 var productManufacturers = query.ToList();

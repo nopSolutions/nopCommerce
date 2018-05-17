@@ -275,7 +275,7 @@ namespace Nop.Services.Tests.Catalog
                 DiscountAmount = 3,
                 DiscountLimitation = DiscountLimitationType.Unlimited
             };
-            discount1.AppliedToProducts.Add(product);
+            //discount1.AppliedToProducts.Add(product);
             product.AppliedDiscounts.Add(discount1);
             //set HasDiscountsApplied property
             product.HasDiscountsApplied = true;

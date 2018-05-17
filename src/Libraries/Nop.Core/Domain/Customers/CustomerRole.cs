@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Nop.Core.Domain.Security;
 
 namespace Nop.Core.Domain.Customers
@@ -8,7 +9,7 @@ namespace Nop.Core.Domain.Customers
     /// </summary>
     public partial class CustomerRole : BaseEntity
     {
-        private ICollection<PermissionRecord> _permissionRecords;
+        private ICollection<PermissionRecordCustomerRoleMapping> _permissionRecordCustomerRoleMappings;
 
         /// <summary>
         /// Gets or sets the customer role name
@@ -59,14 +60,14 @@ namespace Nop.Core.Domain.Customers
         /// A customer is added to this customer role once a specified product is purchased.
         /// </summary>
         public int PurchasedWithProductId { get; set; }
-        
+
         /// <summary>
-        /// Gets or sets the permission records
+        /// Gets or sets the permission record-customer role mappings
         /// </summary>
-        public virtual ICollection<PermissionRecord> PermissionRecords
+        public virtual ICollection<PermissionRecordCustomerRoleMapping> PermissionRecordCustomerRoleMappings
         {
-            get { return _permissionRecords ?? (_permissionRecords = new List<PermissionRecord>()); }
-            protected set { _permissionRecords = value; }
+            get { return _permissionRecordCustomerRoleMappings ?? (_permissionRecordCustomerRoleMappings = new List<PermissionRecordCustomerRoleMapping>()); }
+            protected set { _permissionRecordCustomerRoleMappings = value; }
         }
     }
 }

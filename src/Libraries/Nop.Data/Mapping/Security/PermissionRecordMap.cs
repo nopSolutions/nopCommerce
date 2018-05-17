@@ -1,26 +1,33 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Security;
 
 namespace Nop.Data.Mapping.Security
 {
     /// <summary>
-    /// Mapping class
+    /// Represents a permission record mapping configuration
     /// </summary>
     public partial class PermissionRecordMap : NopEntityTypeConfiguration<PermissionRecord>
     {
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        public PermissionRecordMap()
-        {
-            this.ToTable("PermissionRecord");
-            this.HasKey(pr => pr.Id);
-            this.Property(pr => pr.Name).IsRequired();
-            this.Property(pr => pr.SystemName).IsRequired().HasMaxLength(255);
-            this.Property(pr => pr.Category).IsRequired().HasMaxLength(255);
+        #region Methods
 
-            this.HasMany(pr => pr.CustomerRoles)
-                .WithMany(cr => cr.PermissionRecords)
-                .Map(m => m.ToTable("PermissionRecord_Role_Mapping"));
+        /// <summary>
+        /// Configures the entity
+        /// </summary>
+        /// <param name="builder">The builder to be used to configure the entity</param>
+        public override void Configure(EntityTypeBuilder<PermissionRecord> builder)
+        {
+            builder.ToTable(nameof(PermissionRecord));
+            builder.HasKey(record => record.Id);
+
+            builder.Property(record => record.Name).IsRequired();
+            builder.Property(record => record.SystemName).HasMaxLength(255).IsRequired();
+            builder.Property(record => record.Category).HasMaxLength(255).IsRequired();
+
+            //add custom configuration
+            this.PostConfigure(builder);
         }
+
+        #endregion
     }
 }

@@ -10,6 +10,6 @@ namespace Nop.Core.Domain.Discounts
         /// <summary>
         /// Gets or sets the collection of applied discounts
         /// </summary>
-        ICollection<Discount> AppliedDiscounts { get; set; }
+        IList<Discount> AppliedDiscounts { get; }
     }
 }

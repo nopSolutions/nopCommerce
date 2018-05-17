@@ -126,14 +126,8 @@ namespace Nop.Services.News
                         from sm in n_sm.DefaultIfEmpty()
                         where !n.LimitedToStores || storeId == sm.StoreId
                         select n;
-
-                //only distinct items (group by ID)
-                query = from n in query
-                        group n by n.Id
-                        into nGroup
-                        orderby nGroup.Key
-                        select nGroup.FirstOrDefault();
-                query = query.OrderByDescending(n => n.StartDateUtc ?? n.CreatedOnUtc);
+                
+                query = query.Distinct().OrderByDescending(n => n.StartDateUtc ?? n.CreatedOnUtc);
             }
 
             var news = new PagedList<NewsItem>(query, pageIndex, pageSize);
