@@ -4,7 +4,6 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading;
-using ImageResizer;
 using Nop.Core;
 using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
@@ -403,6 +402,7 @@ namespace Nop.Services.Media
                 var thumbFilePath = GetThumbLocalPath(thumbFileName);
                 if (!GeneratedThumbExists(thumbFilePath, thumbFileName))
                 {
+#if NET451
                     using (var b = new Bitmap(filePath))
                     {
                         using (var destStream = new MemoryStream())
@@ -419,6 +419,7 @@ namespace Nop.Services.Media
                             SaveThumb(thumbFilePath, thumbFileName, "", destBinary);
                         }
                     }
+#endif
                 }
                 var url = GetThumbUrl(thumbFileName, storeLocation);
                 return url;
@@ -518,6 +519,7 @@ namespace Nop.Services.Media
                     {
                         byte[] pictureBinaryResized;
 
+#if NET451
                         //resizing required
                         if (targetSize != 0)
                         {
@@ -556,6 +558,7 @@ namespace Nop.Services.Media
                             }
                         }
                         else
+#endif
                         {
                             //create a copy of pictureBinary
                             pictureBinaryResized = pictureBinary.ToArray();
@@ -797,6 +800,7 @@ namespace Nop.Services.Media
         /// <returns>Picture binary or throws an exception</returns>
         public virtual byte[] ValidatePicture(byte[] pictureBinary, string mimeType)
         {
+#if NET451
             using (var destStream = new MemoryStream())
             {
                 ImageBuilder.Current.Build(pictureBinary, destStream, new ResizeSettings
@@ -807,6 +811,9 @@ namespace Nop.Services.Media
                 });
                 return destStream.ToArray();
             }
+#else
+            return pictureBinary;
+#endif
         }
 
         /// <summary>
