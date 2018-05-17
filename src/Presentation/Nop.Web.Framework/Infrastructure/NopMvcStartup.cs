@@ -19,7 +19,7 @@ namespace Nop.Web.Framework.Infrastructure
         public void ConfigureServices(IServiceCollection services, IConfigurationRoot configuration)
         {
             //add MiniProfiler services
-            services.AddMiniProfiler();
+            services.AddNopMiniProfiler();
 
             //add and configure MVC feature
             services.AddNopMvc();
