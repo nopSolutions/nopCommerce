@@ -19,7 +19,7 @@
     <PackageReference Include="iTextSharp" Version="5.5.13" />
     <PackageReference Include="MaxMind.GeoIP2" Version="3.0.0" />
     <PackageReference Include="Microsoft.CSharp" Version="4.4.1" />
-    <PackageReference Include="System.Linq.Dynamic" Version="1.0.7" />
+    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.0.8.7" />
     <PackageReference Include="WindowsAzure.Storage" Version="9.1.1" />
     <PackageReference Include="System.ServiceModel.Duplex" Version="4.4.2" />
     <PackageReference Include="System.ServiceModel.Http" Version="4.4.2" />
