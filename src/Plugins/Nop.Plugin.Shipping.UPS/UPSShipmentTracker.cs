@@ -6,11 +6,10 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text;
-using Nop.Plugin.Shipping.UPS.track;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Shipping.Tracking;
+using UpsTracking;
 
 namespace Nop.Plugin.Shipping.UPS
 {
@@ -68,7 +67,7 @@ namespace Nop.Plugin.Shipping.UPS
             {
                 //use try-catch to ensure exception won't be thrown is web service is not available
 
-                var track = new TrackService();
+                var track = new TrackPortTypeClient();
                 var tr = new TrackRequest();
                 var upss = new UPSSecurity();
                 var upssSvcAccessToken = new UPSSecurityServiceAccessToken
@@ -82,14 +81,13 @@ namespace Nop.Plugin.Shipping.UPS
                     Password = _upsSettings.Password
                 };
                 upss.UsernameToken = upssUsrNameToken;
-                track.UPSSecurityValue = upss;
                 var request = new RequestType();
                 string[] requestOption = { "15" };
                 request.RequestOption = requestOption;
                 tr.Request = request;
                 tr.InquiryNumber = trackingNumber;
                 System.Net.ServicePointManager.ServerCertificateValidationCallback += delegate { return true; };
-                var trackResponse = track.ProcessTrack(tr);
+                var trackResponse = track.ProcessTrackAsync(upss, tr).Result.TrackResponse;
                 result.AddRange(trackResponse.Shipment.SelectMany(c => c.Package[0].Activity.Select(ToStatusEvent)).ToList());
             }
             catch (Exception exc)
