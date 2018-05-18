@@ -48,7 +48,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="System.Web.Services" />
+    <WCFMetadata Include="Connected Services" />
   </ItemGroup>
   
   <!-- This target execute after "Build" target -->

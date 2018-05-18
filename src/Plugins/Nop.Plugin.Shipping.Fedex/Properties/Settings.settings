@@ -1,9 +1,0 @@
-﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Nop.Plugin.Shipping.Fedex.Properties" GeneratedClassName="Settings">
-  <Profiles />
-  <Settings>
-    <Setting Name="Nop_Plugin_Shipping_Fedex_RateServiceWebReference_RateService" Type="(Web Service URL)" Scope="Application">
-      <Value Profile="(Default)">https://wsbeta.fedex.com:443/web-services/rate</Value>
-    </Setting>
-  </Settings>
-</SettingsFile>

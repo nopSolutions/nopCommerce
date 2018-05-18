@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using FedexTracking;
 using Nop.Services.Logging;
 using Nop.Services.Shipping.Tracking;
 
@@ -85,25 +87,28 @@ namespace Nop.Plugin.Shipping.Fedex
                     //creates the Version element with all child elements populated from the wsdl
                     Version = new VersionId(),
                     //tracking information
-                    PackageIdentifier = new TrackPackageIdentifier
+                    SelectionDetails = new[]
                     {
-                        Value = trackingNumber,
-                        Type = TrackIdentifierType.TRACKING_NUMBER_OR_DOORTAG
-                    },
-
-                    IncludeDetailedScans = true,
-                    IncludeDetailedScansSpecified = true
+                        new TrackSelectionDetail
+                        {
+                            PackageIdentifier = new TrackPackageIdentifier
+                            {
+                                Value = trackingNumber,
+                                Type = TrackIdentifierType.TRACKING_NUMBER_OR_DOORTAG
+                            }
+                        }
+                    }
                 };
 
                 //initialize the service
-                var service = new TrackService(_fedexSettings.Url);
+                var service = new TrackPortTypeClient(TrackPortTypeClient.EndpointConfiguration.TrackServicePort, _fedexSettings.Url);
                 //this is the call to the web service passing in a TrackRequest and returning a TrackReply
-                var reply = service.track(request);
+                var reply = service.trackAsync(request).Result.TrackReply;
                 //parse response
                 if (reply.HighestSeverity == NotificationSeverityType.SUCCESS || reply.HighestSeverity == NotificationSeverityType.NOTE || reply.HighestSeverity == NotificationSeverityType.WARNING) // check if the call was successful
                 {
 
-                    foreach (var trackDetail in reply.TrackDetails)
+                    foreach (var trackDetail in reply.CompletedTrackDetails.SelectMany(x => x.TrackDetails))
                     {
 
                         if (trackDetail.Events != null)

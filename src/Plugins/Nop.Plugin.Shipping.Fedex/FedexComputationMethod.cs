@@ -6,12 +6,12 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using FedexRate;
 using Nop.Core;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Plugins;
 using Nop.Plugin.Shipping.Fedex.Domain;
-using Nop.Plugin.Shipping.Fedex.RateServiceWebReference;
 using Nop.Services.Configuration;
 using Nop.Services.Directory;
 using Nop.Services.Discounts;
@@ -77,35 +77,35 @@ namespace Nop.Plugin.Shipping.Fedex
             // Build the RateRequest
             var request = new RateRequest
             {
-                WebAuthenticationDetail = new RateServiceWebReference.WebAuthenticationDetail
+                WebAuthenticationDetail = new FedexRate.WebAuthenticationDetail
                 {
-                    UserCredential = new RateServiceWebReference.WebAuthenticationCredential
+                    UserCredential = new FedexRate.WebAuthenticationCredential
                     {
                         Key = _fedexSettings.Key,
                         Password = _fedexSettings.Password
                     }
                 },
 
-                ClientDetail = new RateServiceWebReference.ClientDetail
+                ClientDetail = new FedexRate.ClientDetail
                 {
                     AccountNumber = _fedexSettings.AccountNumber,
                     MeterNumber = _fedexSettings.MeterNumber
                 },
 
-                TransactionDetail = new RateServiceWebReference.TransactionDetail
+                TransactionDetail = new FedexRate.TransactionDetail
                 {
                     CustomerTransactionId = "***Rate Available Services v16 Request - nopCommerce***" // This is a reference field for the customer.  Any value can be used and will be provided in the response.
                 },
 
-                Version = new RateServiceWebReference.VersionId(), // WSDL version information, value is automatically set from wsdl            
+                Version = new FedexRate.VersionId(), // WSDL version information, value is automatically set from wsdl            
 
                 ReturnTransitAndCommit = true,
                 ReturnTransitAndCommitSpecified = true,
-                CarrierCodes = new RateServiceWebReference.CarrierCodeType[2]
+                CarrierCodes = new FedexRate.CarrierCodeType[2]
             };
             // Insert the Carriers you would like to see the rates for
-            request.CarrierCodes[0] = RateServiceWebReference.CarrierCodeType.FDXE;
-            request.CarrierCodes[1] = RateServiceWebReference.CarrierCodeType.FDXG;
+            request.CarrierCodes[0] = FedexRate.CarrierCodeType.FDXE;
+            request.CarrierCodes[1] = FedexRate.CarrierCodeType.FDXG;
 
             //TODO we should use getShippingOptionRequest.Items.GetQuantity() method to get subtotal
             _orderTotalCalculationService.GetShoppingCartSubTotal(
@@ -159,22 +159,22 @@ namespace Nop.Plugin.Shipping.Fedex
             switch (_fedexSettings.DropoffType)
             {
                 case DropoffType.BusinessServiceCenter:
-                    request.RequestedShipment.DropoffType = RateServiceWebReference.DropoffType.BUSINESS_SERVICE_CENTER;
+                    request.RequestedShipment.DropoffType = FedexRate.DropoffType.BUSINESS_SERVICE_CENTER;
                     break;
                 case DropoffType.DropBox:
-                    request.RequestedShipment.DropoffType = RateServiceWebReference.DropoffType.DROP_BOX;
+                    request.RequestedShipment.DropoffType = FedexRate.DropoffType.DROP_BOX;
                     break;
                 case DropoffType.RegularPickup:
-                    request.RequestedShipment.DropoffType = RateServiceWebReference.DropoffType.REGULAR_PICKUP;
+                    request.RequestedShipment.DropoffType = FedexRate.DropoffType.REGULAR_PICKUP;
                     break;
                 case DropoffType.RequestCourier:
-                    request.RequestedShipment.DropoffType = RateServiceWebReference.DropoffType.REQUEST_COURIER;
+                    request.RequestedShipment.DropoffType = FedexRate.DropoffType.REQUEST_COURIER;
                     break;
                 case DropoffType.Station:
-                    request.RequestedShipment.DropoffType = RateServiceWebReference.DropoffType.STATION;
+                    request.RequestedShipment.DropoffType = FedexRate.DropoffType.STATION;
                     break;
                 default:
-                    request.RequestedShipment.DropoffType = RateServiceWebReference.DropoffType.BUSINESS_SERVICE_CENTER;
+                    request.RequestedShipment.DropoffType = FedexRate.DropoffType.BUSINESS_SERVICE_CENTER;
                     break;
             }
             request.RequestedShipment.TotalInsuredValue = new Money
@@ -247,7 +247,7 @@ namespace Nop.Plugin.Shipping.Fedex
         {
             request.RequestedShipment.Recipient = new Party
             {
-                Address = new RateServiceWebReference.Address()
+                Address = new FedexRate.Address()
             };
             if (_fedexSettings.UseResidentialRates)
             {
@@ -273,7 +273,7 @@ namespace Nop.Plugin.Shipping.Fedex
         {
             request.RequestedShipment.Shipper = new Party
             {
-                Address = new RateServiceWebReference.Address()
+                Address = new FedexRate.Address()
             };
 
             if (getShippingOptionRequest.CountryFrom == null)
@@ -327,20 +327,20 @@ namespace Nop.Plugin.Shipping.Fedex
                 {
                     SequenceNumber = "1", // package sequence number
                     GroupPackageCount = "1",
-                    Weight = new RateServiceWebReference.Weight
+                    Weight = new FedexRate.Weight
                     {
-                        Units = RateServiceWebReference.WeightUnits.LB,
+                        Units = FedexRate.WeightUnits.LB,
                         UnitsSpecified = true,
                         Value = weight,
                         ValueSpecified = true
                     }, // package weight
 
-                    Dimensions = new RateServiceWebReference.Dimensions
+                    Dimensions = new FedexRate.Dimensions
                     {
                         Length = _fedexSettings.PassDimensions ? length.ToString() : "0",
                         Width = _fedexSettings.PassDimensions ? width.ToString() : "0",
                         Height = _fedexSettings.PassDimensions ? height.ToString() : "0",
-                        Units = RateServiceWebReference.LinearUnits.IN,
+                        Units = FedexRate.LinearUnits.IN,
                         UnitsSpecified = true
                     }, // package dimensions
                     InsuredValue = new Money
@@ -391,20 +391,20 @@ namespace Nop.Plugin.Shipping.Fedex
                     {
                         SequenceNumber = (i + 1).ToString(), // package sequence number            
                         GroupPackageCount = "1",
-                        Weight = new RateServiceWebReference.Weight
+                        Weight = new FedexRate.Weight
                         {
-                            Units = RateServiceWebReference.WeightUnits.LB,
+                            Units = FedexRate.WeightUnits.LB,
                             UnitsSpecified = true,
                             Value = weight2,
                             ValueSpecified = true
                         }, // package weight
 
-                        Dimensions = new RateServiceWebReference.Dimensions
+                        Dimensions = new FedexRate.Dimensions
                         {
                             Length = _fedexSettings.PassDimensions ? length2.ToString() : "0",
                             Width = _fedexSettings.PassDimensions ? width2.ToString() : "0",
                             Height = _fedexSettings.PassDimensions ? height2.ToString() : "0",
-                            Units = RateServiceWebReference.LinearUnits.IN,
+                            Units = FedexRate.LinearUnits.IN,
                             UnitsSpecified = true
                         }, // package dimensions
                         InsuredValue = new Money
@@ -460,20 +460,20 @@ namespace Nop.Plugin.Shipping.Fedex
                     {
                         SequenceNumber = (i + 1).ToString(), // package sequence number                     
                         GroupPackageCount = "1",
-                        Weight = new RateServiceWebReference.Weight
+                        Weight = new FedexRate.Weight
                         {
-                            Units = RateServiceWebReference.WeightUnits.LB,
+                            Units = FedexRate.WeightUnits.LB,
                             UnitsSpecified = true,
                             Value = weight,
                             ValueSpecified = true
                         }, // package weight
 
-                        Dimensions = new RateServiceWebReference.Dimensions
+                        Dimensions = new FedexRate.Dimensions
                         {
                             Length = length.ToString(),
                             Height = height.ToString(),
                             Width = width.ToString(),
-                            Units = RateServiceWebReference.LinearUnits.IN,
+                            Units = FedexRate.LinearUnits.IN,
                             UnitsSpecified = true
                         }, // package dimensions
 
@@ -626,20 +626,20 @@ namespace Nop.Plugin.Shipping.Fedex
                 {
                     SequenceNumber = (i + 1).ToString(), // package sequence number          
                     GroupPackageCount = "1",
-                    Weight = new RateServiceWebReference.Weight
+                    Weight = new FedexRate.Weight
                     {
-                        Units = RateServiceWebReference.WeightUnits.LB,
+                        Units = FedexRate.WeightUnits.LB,
                         UnitsSpecified = true,
                         Value = weightPerPackage,
                         ValueSpecified = true
                     }, // package weight
 
-                    Dimensions = new RateServiceWebReference.Dimensions
+                    Dimensions = new FedexRate.Dimensions
                     {
                         Length = length.ToString(),
                         Height = height.ToString(),
                         Width = width.ToString(),
-                        Units = RateServiceWebReference.LinearUnits.IN,
+                        Units = FedexRate.LinearUnits.IN,
                         UnitsSpecified = true
                     }, // package dimensions
                     InsuredValue = new Money
@@ -863,18 +863,15 @@ namespace Nop.Plugin.Shipping.Fedex
             }
 
             var request = CreateRateRequest(getShippingOptionRequest, out Currency requestedShipmentCurrency);
-            var service = new RateService
-            {
-                Url = _fedexSettings.Url
-            }; // Initialize the service
+            var service = new RatePortTypeClient(RatePortTypeClient.EndpointConfiguration.RateServicePort, _fedexSettings.Url);
             try
             {
                 // This is the call to the web service passing in a RateRequest and returning a RateReply
-                var reply = service.getRates(request); // Service call
+                var reply = service.getRatesAsync(request).Result.RateReply; // Service call
 
-                if (reply.HighestSeverity == RateServiceWebReference.NotificationSeverityType.SUCCESS || 
-                    reply.HighestSeverity == RateServiceWebReference.NotificationSeverityType.NOTE || 
-                    reply.HighestSeverity == RateServiceWebReference.NotificationSeverityType.WARNING) // check if the call was successful
+                if (reply.HighestSeverity == FedexRate.NotificationSeverityType.SUCCESS || 
+                    reply.HighestSeverity == FedexRate.NotificationSeverityType.NOTE || 
+                    reply.HighestSeverity == FedexRate.NotificationSeverityType.WARNING) // check if the call was successful
                 {
                     if (reply.RateReplyDetails != null)
                     {
