@@ -1,25 +1,26 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  			<PropertyGroup>
-    				<TargetFramework>net461</TargetFramework>
-    				<Version>4.0.0.0</Version>
-    				<Authors>Nop Solutions, Ltd</Authors>
-    				<Company>Nop Solutions, Ltd</Company>
-    				<Description>The project contains a set of core classes for testing</Description>
-    				<Copyright>Copyright © Nop Solutions, Ltd</Copyright>
-    				<PackageLicenseUrl>http://www.nopcommerce.com/licensev3.aspx</PackageLicenseUrl>
-    				<PackageProjectUrl>http://www.nopcommerce.com/</PackageProjectUrl>
-    				<RepositoryUrl>https://github.com/nopSolutions/nopCommerce</RepositoryUrl>
-    				<RepositoryType>Git</RepositoryType>
-  			</PropertyGroup>
-  			<ItemGroup>
-  			  <PackageReference Include="NUnit" Version="3.10.1" />
-  			  <PackageReference Include="NUnit3TestAdapter" Version="3.10.0" />
-  			  <PackageReference Include="RhinoMocks" Version="3.6.1" />
-  			</ItemGroup>
-  			<ItemGroup>
-  			  <ProjectReference Include="..\..\Libraries\Nop.Core\Nop.Core.csproj" />
-  			</ItemGroup>
-  			<ItemGroup>
-  			  <Service Include="{82a7f48d-3b50-4b1e-b82e-3ada8210c358}" />
-  			</ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <Copyright>Copyright © Nop Solutions, Ltd</Copyright>
+    <Company>Nop Solutions, Ltd</Company>
+    <Authors>Nop Solutions, Ltd</Authors>
+    <Version>4.1.0.0</Version>
+    <Description>The project contains a set of core classes for testing</Description>
+    <PackageLicenseUrl>http://www.nopcommerce.com/licensev3.aspx</PackageLicenseUrl>
+    <PackageProjectUrl>http://www.nopcommerce.com/</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/nopSolutions/nopCommerce</RepositoryUrl>
+    <RepositoryType>Git</RepositoryType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NUnit" Version="3.10.1" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.10.0" />
+    <PackageReference Include="RhinoMocks" Version="3.6.1" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\..\Libraries\Nop.Core\Nop.Core.csproj" />
+  </ItemGroup>
+
 </Project>
