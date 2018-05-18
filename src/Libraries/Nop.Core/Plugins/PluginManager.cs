@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Loader;
 using System.Text;
 using System.Threading;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
@@ -244,11 +245,10 @@ namespace Nop.Core.Plugins
         private static Assembly RegisterPluginDefinition(NopConfig config, ApplicationPartManager applicationPartManager, string plug)
         {
             //we can now register the plugin definition
-            var assemblyName = AssemblyName.GetAssemblyName(plug);
             Assembly pluginAssembly;
             try
             {
-                pluginAssembly = Assembly.Load(assemblyName);
+                pluginAssembly = AssemblyLoadContext.Default.LoadFromAssemblyPath(plug);
             }
             catch (FileLoadException)
             {
