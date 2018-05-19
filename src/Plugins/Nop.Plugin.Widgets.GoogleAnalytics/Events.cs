@@ -138,7 +138,10 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
         /// <param name="eventMessage">The event message</param>
         public void HandleEvent(OrderCancelledEvent eventMessage)
         {
-            ProcessOrderEvent(eventMessage.Order, false);
+            if (eventMessage.Order.PaymentStatus == Core.Domain.Payments.PaymentStatus.Paid)
+            {
+                ProcessOrderEvent(eventMessage.Order, false);
+            }
         }
 
         /// <summary>
