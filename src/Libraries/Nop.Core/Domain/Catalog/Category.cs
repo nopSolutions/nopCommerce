@@ -131,8 +131,8 @@ namespace Nop.Core.Domain.Catalog
         /// </summary>
         public virtual ICollection<DiscountCategoryMapping> DiscountCategoryMappings
         {
-            get { return _discountCategoryMappings ?? (_discountCategoryMappings = new List<DiscountCategoryMapping>()); }
-            set { _discountCategoryMappings = value; }
+            get => _discountCategoryMappings ?? (_discountCategoryMappings = new List<DiscountCategoryMapping>());
+            set => _discountCategoryMappings = value;
         }
     }
 }

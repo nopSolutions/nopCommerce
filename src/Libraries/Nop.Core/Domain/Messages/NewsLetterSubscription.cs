@@ -13,7 +13,7 @@ namespace Nop.Core.Domain.Messages
         public Guid NewsLetterSubscriptionGuid { get; set; }
 
         /// <summary>
-        /// Gets or sets the subcriber email
+        /// Gets or sets the subscriber email
         /// </summary>
         public string Email { get; set; }
 

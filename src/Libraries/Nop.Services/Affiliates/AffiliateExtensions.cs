@@ -24,7 +24,7 @@ namespace Nop.Services.Affiliates
             var firstName = affiliate.Address.FirstName;
             var lastName = affiliate.Address.LastName;
 
-            var fullName = "";
+            var fullName = string.Empty;
             if (!string.IsNullOrWhiteSpace(firstName) && !string.IsNullOrWhiteSpace(lastName))
                 fullName = $"{firstName} {lastName}";
             else
@@ -35,6 +35,7 @@ namespace Nop.Services.Affiliates
                 if (!string.IsNullOrWhiteSpace(lastName))
                     fullName = lastName;
             }
+
             return fullName;
         }
 
@@ -101,6 +102,7 @@ namespace Nop.Services.Affiliates
                 tempName = $"{friendlyUrlName}-{i}";
                 i++;
             }
+
             friendlyUrlName = tempName;
 
             return friendlyUrlName;

@@ -46,7 +46,7 @@ namespace Nop.Core.Data
                 var dataSettings = new DataSettings();
                 using (var reader = new StringReader(fileProvider.ReadAllText(filePath, Encoding.UTF8)))
                 {
-                    var settingsLine = string.Empty;
+                    string settingsLine;
                     while ((settingsLine = reader.ReadLine()) != null)
                     {
                         var separatorIndex = settingsLine.IndexOf(':');

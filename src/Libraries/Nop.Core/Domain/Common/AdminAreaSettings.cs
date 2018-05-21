@@ -28,12 +28,12 @@ namespace Nop.Core.Domain.Common
         public string RichEditorAdditionalSettings { get; set; }
 
         /// <summary>
-        ///A value indicating whether to javascript is supported in rich editor
+        /// A value indicating whether to javascript is supported in rich editor
         /// </summary>
         public bool RichEditorAllowJavaScript { get; set; }
 
         /// <summary>
-        ///A value indicating whether to use rich editor on message templates and campaigns details pages
+        /// A value indicating whether to use rich editor on message templates and campaigns details pages
         /// </summary>
         public bool UseRichEditorInMessageTemplates { get; set; }
 

@@ -1,6 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
-using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Localization;
 
 namespace Nop.Core.Domain.Shipping
@@ -32,8 +30,8 @@ namespace Nop.Core.Domain.Shipping
         /// </summary>
         public virtual ICollection<ShippingMethodCountryMapping> ShippingMethodCountryMappings
         {
-            get { return _shippingMethodCountryMappings ?? (_shippingMethodCountryMappings = new List<ShippingMethodCountryMapping>()); }
-            protected set { _shippingMethodCountryMappings = value; }
+            get => _shippingMethodCountryMappings ?? (_shippingMethodCountryMappings = new List<ShippingMethodCountryMapping>());
+            protected set => _shippingMethodCountryMappings = value;
         }
     }
 }

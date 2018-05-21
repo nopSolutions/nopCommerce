@@ -1,5 +1,4 @@
-﻿
-namespace Nop.Core.Data
+﻿namespace Nop.Core.Data
 {
     /// <summary>
     /// Represents a data provider manager

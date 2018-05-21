@@ -82,7 +82,9 @@ namespace Nop.Core.Infrastructure
                 return;
 
             //we use 'using' to close the file after it's created
-            using (File.Create(path)) { }
+            using (File.Create(path))
+            {
+            }
         }
         
         /// <summary>
@@ -115,7 +117,6 @@ namespace Nop.Core.Infrastructure
                 DeleteDirectoryRecursive(path);
             }
         }
-
 
         /// <summary>
         /// Deletes the specified file
@@ -434,7 +435,7 @@ namespace Nop.Core.Infrastructure
         /// <returns>The physical path. E.g. "c:\inetpub\wwwroot\bin"</returns>
         public virtual string MapPath(string path)
         {
-            path = path.Replace("~/", "").TrimStart('/').Replace('/', '\\');
+            path = path.Replace("~/", string.Empty).TrimStart('/').Replace('/', '\\');
             return Path.Combine(BaseDirectory ?? string.Empty, path);
         }
         

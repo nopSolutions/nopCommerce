@@ -21,6 +21,7 @@ namespace Nop.Core.Domain.Common
         /// Gets or sets a value indicating whether the contacts form should have "Subject"
         /// </summary>
         public bool SubjectFieldOnContactUsForm { get; set; }
+
         /// <summary>
         /// Gets or sets a value indicating whether the contacts form should use system email
         /// </summary>

@@ -8,6 +8,7 @@ namespace Nop.Core.Domain.Media
     public partial class PictureHashItem : IComparable, IComparable<PictureHashItem>
     {
         public int PictureId { get; set; }
+
         public byte[] Hash { get; set; }
 
         public int CompareTo(object obj)

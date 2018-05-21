@@ -16,7 +16,7 @@ namespace Nop.Core.Domain.Media
         public string MimeType { get; set; }
 
         /// <summary>
-        /// Gets or sets the SEO friednly filename of the picture
+        /// Gets or sets the SEO friendly filename of the picture
         /// </summary>
         public string SeoFilename { get; set; }
 

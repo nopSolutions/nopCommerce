@@ -54,17 +54,13 @@ namespace Nop.Core
             if (ReferenceEquals(this, other))
                 return true;
 
-            if (!IsTransient(this) &&
-                !IsTransient(other) &&
-                Equals(Id, other.Id))
-            {
-                var otherType = other.GetUnproxiedType();
-                var thisType = GetUnproxiedType();
-                return thisType.IsAssignableFrom(otherType) ||
-                        otherType.IsAssignableFrom(thisType);
-            }
+            if (IsTransient(this) || IsTransient(other) || !Equals(Id, other.Id)) 
+                return false;
 
-            return false;
+            var otherType = other.GetUnproxiedType();
+            var thisType = GetUnproxiedType();
+
+            return thisType.IsAssignableFrom(otherType) || otherType.IsAssignableFrom(thisType);
         }
 
         /// <summary>
@@ -73,9 +69,7 @@ namespace Nop.Core
         /// <returns></returns>
         public override int GetHashCode()
         {
-            if (Equals(Id, default(int)))
-                return base.GetHashCode();
-            return Id.GetHashCode();
+            return Equals(Id, default(int)) ? base.GetHashCode() : Id.GetHashCode();
         }
 
         /// <summary>

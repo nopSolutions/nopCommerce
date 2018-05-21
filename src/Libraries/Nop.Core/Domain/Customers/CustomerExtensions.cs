@@ -29,7 +29,7 @@ namespace Nop.Core.Domain.Customers
                 throw new ArgumentNullException(nameof(customerRoleSystemName));
 
             var result = customer.CustomerRoles
-                .FirstOrDefault(cr => (!onlyActiveCustomerRoles || cr.Active) && (cr.SystemName == customerRoleSystemName)) != null;
+                .FirstOrDefault(cr => (!onlyActiveCustomerRoles || cr.Active) && cr.SystemName == customerRoleSystemName) != null;
             return result;
         }
 
@@ -150,15 +150,15 @@ namespace Nop.Core.Domain.Customers
         /// <param name="address">Address</param>
         public static void RemoveAddress(this Customer customer, Address address)
         {
-            if (customer.Addresses.Contains(address))
-            {
-                if (customer.BillingAddress == address) customer.BillingAddress = null;
-                if (customer.ShippingAddress == address) customer.ShippingAddress = null;
+            if (!customer.Addresses.Contains(address)) 
+                return;
 
-                //customer.Addresses.Remove(address);
-                customer.CustomerAddressMappings
-                    .Remove(customer.CustomerAddressMappings.FirstOrDefault(mapping => mapping.AddressId == address.Id));
-            }
+            if (customer.BillingAddress == address) customer.BillingAddress = null;
+            if (customer.ShippingAddress == address) customer.ShippingAddress = null;
+
+            //customer.Addresses.Remove(address);
+            customer.CustomerAddressMappings
+                .Remove(customer.CustomerAddressMappings.FirstOrDefault(mapping => mapping.AddressId == address.Id));
         }
 
         #endregion

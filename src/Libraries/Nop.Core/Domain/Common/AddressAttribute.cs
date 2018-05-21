@@ -36,23 +36,17 @@ namespace Nop.Core.Domain.Common
         /// </summary>
         public AttributeControlType AttributeControlType
         {
-            get
-            {
-                return (AttributeControlType)AttributeControlTypeId;
-            }
-            set
-            {
-                AttributeControlTypeId = (int)value;
-            }
+            get => (AttributeControlType)AttributeControlTypeId;
+            set => AttributeControlTypeId = (int)value;
         }
+
         /// <summary>
         /// Gets the address attribute values
         /// </summary>
         public virtual ICollection<AddressAttributeValue> AddressAttributeValues
         {
-            get { return _addressAttributeValues ?? (_addressAttributeValues = new List<AddressAttributeValue>()); }
-            protected set { _addressAttributeValues = value; }
+            get => _addressAttributeValues ?? (_addressAttributeValues = new List<AddressAttributeValue>());
+            protected set => _addressAttributeValues = value;
         }
     }
-
 }

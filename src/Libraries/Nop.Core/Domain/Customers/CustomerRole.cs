@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using Nop.Core.Domain.Security;
 
 namespace Nop.Core.Domain.Customers
@@ -17,7 +16,7 @@ namespace Nop.Core.Domain.Customers
         public string Name { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the customer role is marked as free shippping
+        /// Gets or sets a value indicating whether the customer role is marked as free shipping
         /// </summary>
         public bool FreeShipping { get; set; }
 
@@ -50,6 +49,7 @@ namespace Nop.Core.Domain.Customers
         /// Gets or sets a value indicating whether the customers of this role have other tax display type chosen instead of the default one
         /// </summary>
         public bool OverrideTaxDisplayType { get; set; }
+
         /// <summary>
         /// Gets or sets identifier of the default tax display type (used only with "OverrideTaxDisplayType" enabled)
         /// </summary>
@@ -66,8 +66,8 @@ namespace Nop.Core.Domain.Customers
         /// </summary>
         public virtual ICollection<PermissionRecordCustomerRoleMapping> PermissionRecordCustomerRoleMappings
         {
-            get { return _permissionRecordCustomerRoleMappings ?? (_permissionRecordCustomerRoleMappings = new List<PermissionRecordCustomerRoleMapping>()); }
-            protected set { _permissionRecordCustomerRoleMappings = value; }
+            get => _permissionRecordCustomerRoleMappings ?? (_permissionRecordCustomerRoleMappings = new List<PermissionRecordCustomerRoleMapping>());
+            protected set => _permissionRecordCustomerRoleMappings = value;
         }
     }
 }

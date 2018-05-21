@@ -255,6 +255,7 @@ namespace Nop.Core.Domain.Messages
         /// Represents system name of 'Contact us' message
         /// </summary>
         public const string ContactUsMessage = "Service.ContactUs";
+
         /// <summary>
         /// Represents system name of 'Contact vendor' message
         /// </summary>

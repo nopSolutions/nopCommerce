@@ -21,8 +21,8 @@ namespace Nop.Core.Tests.Infrastructure
             Singleton<double>.Instance = 2.0;
 
             Assert.That(Singleton<int>.AllSingletons, Is.SameAs(Singleton<double>.AllSingletons));
-            Assert.That(Singleton.AllSingletons[typeof(int)], Is.EqualTo(1));
-            Assert.That(Singleton.AllSingletons[typeof(double)], Is.EqualTo(2.0));
+            Assert.That(BaseSingleton.AllSingletons[typeof(int)], Is.EqualTo(1));
+            Assert.That(BaseSingleton.AllSingletons[typeof(double)], Is.EqualTo(2.0));
         }
 
         [Test]

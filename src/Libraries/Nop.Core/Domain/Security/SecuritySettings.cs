@@ -37,6 +37,7 @@ namespace Nop.Core.Domain.Security
         /// Gets or sets a value indicating whether honeypot is enabled on the registration page
         /// </summary>
         public bool HoneypotEnabled { get; set; }
+
         /// <summary>
         /// Gets or sets a honeypot input name
         /// </summary>

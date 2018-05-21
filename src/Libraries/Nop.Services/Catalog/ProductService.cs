@@ -36,6 +36,7 @@ namespace Nop.Services.Catalog
         /// {0} : product ID
         /// </remarks>
         private const string PRODUCTS_BY_ID_KEY = "Nop.product.id-{0}";
+
         /// <summary>
         /// Key pattern to clear cache
         /// </summary>
@@ -109,7 +110,7 @@ namespace Nop.Services.Catalog
             IRepository<ProductPicture> productPictureRepository,
             IRepository<AclRecord> aclRepository,
             IRepository<StoreMapping> storeMappingRepository,
-            IRepository<ProductReview>  productReviewRepository,
+            IRepository<ProductReview> productReviewRepository,
             IRepository<ProductWarehouseInventory> productWarehouseInventoryRepository,
             IRepository<StockQuantityHistory> stockQuantityHistoryRepository,
             IProductAttributeService productAttributeService,
@@ -251,6 +252,7 @@ namespace Nop.Services.Catalog
                 if (product != null)
                     sortedProducts.Add(product);
             }
+
             return sortedProducts;
         }
 
@@ -513,20 +515,20 @@ namespace Nop.Services.Catalog
             }
 
             //validate "categoryIds" parameter
-            if (categoryIds !=null && categoryIds.Contains(0))
+            if (categoryIds != null && categoryIds.Contains(0))
                 categoryIds.Remove(0);
 
             //Access control list. Allowed customer roles
             var allowedCustomerRolesIds = _workContext.CurrentCustomer.GetCustomerRoleIds();
             
             //pass category identifiers as comma-delimited string
-            var commaSeparatedCategoryIds = categoryIds == null ? "" : string.Join(",", categoryIds);
+            var commaSeparatedCategoryIds = categoryIds == null ? string.Empty : string.Join(",", categoryIds);
 
             //pass customer role identifiers as comma-delimited string
             var commaSeparatedAllowedCustomerRoleIds = string.Join(",", allowedCustomerRolesIds);
 
             //pass specification identifiers as comma-delimited string
-            var commaSeparatedSpecIds = "";
+            var commaSeparatedSpecIds = string.Empty;
             if (filteredSpecs != null)
             {
                 ((List<int>)filteredSpecs).Sort();
@@ -560,7 +562,7 @@ namespace Nop.Services.Catalog
             var pFilteredSpecs = _dataProvider.GetStringParameter("FilteredSpecs", commaSeparatedSpecIds);
             var pLanguageId = _dataProvider.GetInt32Parameter("LanguageId", searchLocalizedValue ? languageId : 0);
             var pOrderBy = _dataProvider.GetInt32Parameter("OrderBy", (int)orderBy);
-            var pAllowedCustomerRoleIds = _dataProvider.GetStringParameter("AllowedCustomerRoleIds", !_catalogSettings.IgnoreAcl ? commaSeparatedAllowedCustomerRoleIds : "");
+            var pAllowedCustomerRoleIds = _dataProvider.GetStringParameter("AllowedCustomerRoleIds", !_catalogSettings.IgnoreAcl ? commaSeparatedAllowedCustomerRoleIds : string.Empty);
             var pPageIndex = _dataProvider.GetInt32Parameter("PageIndex", pageIndex);
             var pPageSize = _dataProvider.GetInt32Parameter("PageSize", pageSize);
             var pShowHidden = _dataProvider.GetBooleanParameter("ShowHidden", showHidden);
@@ -608,7 +610,7 @@ namespace Nop.Services.Catalog
             var filterableSpecificationAttributeOptionIdsStr =
                 pFilterableSpecificationAttributeOptionIds.Value != DBNull.Value
                     ? (string)pFilterableSpecificationAttributeOptionIds.Value
-                    : "";
+                    : string.Empty;
 
             if (loadFilterableSpecificationAttributeOptionIds &&
                 !string.IsNullOrWhiteSpace(filterableSpecificationAttributeOptionIdsStr))
@@ -669,6 +671,7 @@ namespace Nop.Services.Catalog
             {
                 query = query.Where(p => p.VendorId == vendorId);
             }
+
             query = query.Where(x => !x.Deleted);
             query = query.OrderBy(x => x.DisplayOrder).ThenBy(x => x.Id);
 
@@ -679,6 +682,7 @@ namespace Nop.Services.Catalog
             {
                 products = products.Where(x => _aclService.Authorize(x)).ToList();
             }
+
             //Store mapping
             if (!showHidden && storeId > 0)
             {
@@ -707,7 +711,7 @@ namespace Nop.Services.Catalog
                 if (pr.IsApproved)
                 {
                     approvedRatingSum += pr.Rating;
-                    approvedTotalReviews ++;
+                    approvedTotalReviews++;
                 }
                 else
                 {
@@ -757,12 +761,7 @@ namespace Nop.Services.Catalog
 
             //whether to load published products only
             if (loadPublishedOnly.HasValue)
-            {
-                if (loadPublishedOnly.Value)
-                    query = query.Where(product => product.Published);
-                else
-                    query = query.Where(product => !product.Published);
-            }
+                query = loadPublishedOnly.Value ? query.Where(product => product.Published) : query.Where(product => !product.Published);
 
             query = query.OrderBy(product => product.MinStockQuantity).ThenBy(product => product.DisplayOrder).ThenBy(product => product.Id);
 
@@ -798,12 +797,7 @@ namespace Nop.Services.Catalog
 
             //whether to load published products only
             if (loadPublishedOnly.HasValue)
-            {
-                if (loadPublishedOnly.Value)
-                    products = products.Where(product => product.Published);
-                else
-                    products = products.Where(product => !product.Published);
-            }
+                products = loadPublishedOnly.Value ? products.Where(product => product.Published) : products.Where(product => !product.Published);
 
             var combinations = products.SelectMany(product => product.ProductAttributeCombinations);
 
@@ -833,6 +827,7 @@ namespace Nop.Services.Catalog
                         p.Sku == sku
                         select p;
             var product = query.FirstOrDefault();
+
             return product;
         }
 
@@ -1010,14 +1005,14 @@ namespace Nop.Services.Catalog
             var attributeValues = _productAttributeParser.ParseProductAttributeValues(attributesXml);
             foreach (var attributeValue in attributeValues)
             {
-                if (attributeValue.AttributeValueType == AttributeValueType.AssociatedToProduct)
+                if (attributeValue.AttributeValueType != AttributeValueType.AssociatedToProduct) 
+                    continue;
+
+                //associated product (bundle)
+                var associatedProduct = GetProductById(attributeValue.AssociatedProductId);
+                if (associatedProduct != null)
                 {
-                    //associated product (bundle)
-                    var associatedProduct = GetProductById(attributeValue.AssociatedProductId);
-                    if (associatedProduct != null)
-                    {
-                        AdjustInventory(associatedProduct, quantityToChange * attributeValue.Quantity, message);
-                    }
+                    AdjustInventory(associatedProduct, quantityToChange * attributeValue.Quantity, message);
                 }
             }
 
@@ -1046,7 +1041,7 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException(nameof(product));
 
             if (quantity >= 0)
-                throw new ArgumentException("Value must be negative.", "quantity");
+                throw new ArgumentException("Value must be negative.", nameof(quantity));
 
             var qty = -quantity;
 
@@ -1057,21 +1052,15 @@ namespace Nop.Services.Catalog
             if (productInventory.Count <= 0)
                 return;
 
-            Action pass = () =>
-            {
-                foreach (var item in productInventory)
-                {
-                    var selectQty = Math.Min(item.StockQuantity - item.ReservedQuantity, qty);
-                    item.ReservedQuantity += selectQty;
-                    qty -= selectQty;
-
-                    if (qty <= 0)
-                        break;
-                }
-            };
-
             // 1st pass: Applying reserved
-            pass();
+            foreach (var item in productInventory)
+            {
+                var selectQty = Math.Min(item.StockQuantity - item.ReservedQuantity, qty);
+                item.ReservedQuantity += selectQty;
+                qty -= selectQty;
+
+                if (qty <= 0) break;
+            }
 
             if (qty > 0)
             {
@@ -1080,7 +1069,7 @@ namespace Nop.Services.Catalog
                 pwi.ReservedQuantity += qty;
             }
 
-            this.UpdateProduct(product);
+            UpdateProduct(product);
         }
 
         /// <summary>
@@ -1094,7 +1083,7 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException(nameof(product));
 
             if (quantity < 0)
-                throw new ArgumentException("Value must be positive.", "quantity");
+                throw new ArgumentException("Value must be positive.", nameof(quantity));
 
             var productInventory = product.ProductWarehouseInventory
                 .OrderByDescending(pwi => pwi.ReservedQuantity)
@@ -1138,7 +1127,7 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException(nameof(product));
 
             if (quantity >= 0)
-                throw new ArgumentException("Value must be negative.", "quantity");
+                throw new ArgumentException("Value must be negative.", nameof(quantity));
 
             //only products with "use multiple warehouses" are handled this way
             if (product.ManageInventoryMethod != ManageInventoryMethod.ManageStock)
@@ -1314,7 +1303,7 @@ namespace Nop.Services.Catalog
         /// <returns>Cross-sell products</returns>
         public virtual IList<CrossSellProduct> GetCrossSellProductsByProductId1(int productId1, bool showHidden = false)
         {
-            return GetCrossSellProductsByProductIds(new[] {productId1}, showHidden);
+            return GetCrossSellProductsByProductIds(new[] { productId1 }, showHidden);
         }
 
         /// <summary>
@@ -1412,20 +1401,20 @@ namespace Nop.Services.Catalog
             {
                 //validate that this product is not added to result yet
                 //validate that this product is not in the cart
-                if (result.Find(p => p.Id == crossSell.ProductId2) == null &&
-                    !cartProductIds.Contains(crossSell.ProductId2))
-                {
-                    var productToAdd = GetProductById(crossSell.ProductId2);
-                    //validate product
-                    if (productToAdd == null || productToAdd.Deleted || !productToAdd.Published)
-                        continue;
+                if (result.Find(p => p.Id == crossSell.ProductId2) != null || cartProductIds.Contains(crossSell.ProductId2)) 
+                    continue;
 
-                    //add a product to result
-                    result.Add(productToAdd);
-                    if (result.Count >= numberOfProducts)
-                        return result;
-                }
+                var productToAdd = GetProductById(crossSell.ProductId2);
+                //validate product
+                if (productToAdd == null || productToAdd.Deleted || !productToAdd.Published)
+                    continue;
+
+                //add a product to result
+                result.Add(productToAdd);
+                if (result.Count >= numberOfProducts)
+                    return result;
             }
+
             return result;
         }
 
@@ -1579,7 +1568,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productsIds">Products IDs</param>
         /// <returns>All picture identifiers grouped by product ID</returns>
-        public IDictionary<int, int[]> GetProductsImagesIds(int [] productsIds)
+        public IDictionary<int, int[]> GetProductsImagesIds(int[] productsIds)
         {
             return _productPictureRepository.Table.Where(p => productsIds.Contains(p.ProductId))
                 .GroupBy(p => p.ProductId).ToDictionary(p => p.Key, p => p.Select(p1 => p1.PictureId).ToArray());
@@ -1686,6 +1675,7 @@ namespace Nop.Services.Catalog
                 if (productReview != null)
                     sortedProductReviews.Add(productReview);
             }
+
             return sortedProductReviews;
         }
 

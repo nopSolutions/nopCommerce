@@ -25,8 +25,8 @@ namespace Nop.Core.Domain.Catalog
         /// </summary>
         public virtual ICollection<SpecificationAttributeOption> SpecificationAttributeOptions
         {
-            get { return _specificationAttributeOptions ?? (_specificationAttributeOptions = new List<SpecificationAttributeOption>()); }
-            protected set { _specificationAttributeOptions = value; }
+            get => _specificationAttributeOptions ?? (_specificationAttributeOptions = new List<SpecificationAttributeOption>());
+            protected set => _specificationAttributeOptions = value;
         }
     }
 }

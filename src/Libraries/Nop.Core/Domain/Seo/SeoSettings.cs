@@ -14,7 +14,7 @@ namespace Nop.Core.Domain.Seo
         public string PageTitleSeparator { get; set; }
 
         /// <summary>
-        /// Page itle SEO adjustment
+        /// Page title SEO adjustment
         /// </summary>
         public PageTitleSeoAdjustment PageTitleSeoAdjustment { get; set; }
 
@@ -39,7 +39,7 @@ namespace Nop.Core.Domain.Seo
         public bool GenerateProductMetaDescription { get; set; }
 
         /// <summary>
-        /// A value indicating whether we should conver non-wetern chars to western ones
+        /// A value indicating whether we should convert non-western chars to western ones
         /// </summary>
         public bool ConvertNonWesternChars { get; set; }
 

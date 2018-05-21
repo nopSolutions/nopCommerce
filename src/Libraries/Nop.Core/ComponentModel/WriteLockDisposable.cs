@@ -16,7 +16,7 @@ namespace Nop.Core.ComponentModel
         /// <summary>
         /// Initializes a new instance of the <see cref="WriteLockDisposable"/> class.
         /// </summary>
-        /// <param name="rwLock">The rw lock.</param>
+        /// <param name="rwLock">The readers–writer lock</param>
         public WriteLockDisposable(ReaderWriterLockSlim rwLock)
         {
             _rwLock = rwLock;

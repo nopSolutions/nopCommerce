@@ -82,7 +82,7 @@ namespace Nop.Core.Data.Extensions
         /// <returns>Parameter</returns>
         public static DbParameter GetInt32Parameter(this IDataProvider dataProvider, string parameterName, int? parameterValue)
         {
-            return dataProvider.GetParameter(DbType.Int32, parameterName, parameterValue.HasValue ? (object) parameterValue.Value : DBNull.Value);
+            return dataProvider.GetParameter(DbType.Int32, parameterName, parameterValue.HasValue ? (object)parameterValue.Value : DBNull.Value);
         }
         
         /// <summary>
@@ -119,7 +119,6 @@ namespace Nop.Core.Data.Extensions
         {
             return dataProvider.GetParameter(DbType.Decimal, parameterName, parameterValue.HasValue ? (object)parameterValue.Value : DBNull.Value);
         }
-
 
         /// <summary>
         /// Get datetime parameter

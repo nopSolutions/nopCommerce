@@ -1,3 +1,4 @@
+using System;
 using System.Globalization;
 using System.Text.RegularExpressions;
 
@@ -10,13 +11,14 @@ namespace Nop.Core.Html
     {
         #region Fields
 
+        private const string LINK = "<a href=\"{0}{1}\" rel=\"nofollow\">{2}</a>";
+        private const int MAX_LENGTH = 50;
+
         /// <summary>
         /// The regular expression used to parse links.
         /// </summary>
-        private static readonly Regex regex = new Regex("((http://|https://|www\\.)([A-Z0-9.\\-]{1,})\\.[0-9A-Z?;~&\\(\\)#,=\\-_\\./\\+]{2,})", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-        private const string link = "<a href=\"{0}{1}\" rel=\"nofollow\">{2}</a>";
-        private const int MAX_LENGTH = 50;
-
+        private static readonly Regex _regex = new Regex("((http://|https://|www\\.)([A-Z0-9.\\-]{1,})\\.[0-9A-Z?;~&\\(\\)#,=\\-_\\./\\+]{2,})", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        
         #endregion
 
         #region Utilities
@@ -29,8 +31,8 @@ namespace Nop.Core.Html
             if (url.Length <= max)
                 return url;
 
-            // Remove the protocal
-            var startIndex = url.IndexOf("://");
+            // Remove the protocol
+            var startIndex = url.IndexOf("://", StringComparison.InvariantCultureIgnoreCase);
             if (startIndex > -1)
                 url = url.Substring(startIndex + 3);
 
@@ -38,8 +40,8 @@ namespace Nop.Core.Html
                 return url;
 
             // Compress folder structure
-            var firstIndex = url.IndexOf("/") + 1;
-            var lastIndex = url.LastIndexOf("/");
+            var firstIndex = url.IndexOf("/", StringComparison.InvariantCultureIgnoreCase) + 1;
+            var lastIndex = url.LastIndexOf("/", StringComparison.InvariantCultureIgnoreCase);
             if (firstIndex < lastIndex)
             {
                 url = url.Remove(firstIndex, lastIndex - firstIndex);
@@ -50,7 +52,7 @@ namespace Nop.Core.Html
                 return url;
 
             // Remove URL parameters
-            var queryIndex = url.IndexOf("?");
+            var queryIndex = url.IndexOf("?", StringComparison.InvariantCultureIgnoreCase);
             if (queryIndex > -1)
                 url = url.Substring(0, queryIndex);
 
@@ -58,7 +60,7 @@ namespace Nop.Core.Html
                 return url;
 
             // Remove URL fragment
-            var fragmentIndex = url.IndexOf("#");
+            var fragmentIndex = url.IndexOf("#", StringComparison.InvariantCultureIgnoreCase);
             if (fragmentIndex > -1)
                 url = url.Substring(0, fragmentIndex);
 
@@ -66,15 +68,16 @@ namespace Nop.Core.Html
                 return url;
 
             // Compress page
-            firstIndex = url.LastIndexOf("/") + 1;
-            lastIndex = url.LastIndexOf(".");
-            if (lastIndex - firstIndex > 10)
-            {
-                var page = url.Substring(firstIndex, lastIndex - firstIndex);
-                var length = url.Length - max + 3;
-                if (page.Length > length)
-                    url = url.Replace(page, "..." + page.Substring(length));
-            }
+            firstIndex = url.LastIndexOf("/", StringComparison.InvariantCultureIgnoreCase) + 1;
+            lastIndex = url.LastIndexOf(".", StringComparison.InvariantCultureIgnoreCase);
+
+            if (lastIndex - firstIndex <= 10) 
+                return url;
+
+            var page = url.Substring(firstIndex, lastIndex - firstIndex);
+            var length = url.Length - max + 3;
+            if (page.Length > length)
+                url = url.Replace(page, "..." + page.Substring(length));
 
             return url;
         }
@@ -94,16 +97,12 @@ namespace Nop.Core.Html
                 return string.Empty;
 
             var info = CultureInfo.InvariantCulture;
-            foreach (Match match in regex.Matches(text))
+            foreach (Match match in _regex.Matches(text))
             {
-                if (!match.Value.Contains("://"))
-                {
-                    text = text.Replace(match.Value, string.Format(info, link, "http://", match.Value, ShortenUrl(match.Value, MAX_LENGTH)));
-                }
-                else
-                {
-                    text = text.Replace(match.Value, string.Format(info, link, string.Empty, match.Value, ShortenUrl(match.Value, MAX_LENGTH)));
-                }
+                text = text.Replace(match.Value,
+                    !match.Value.Contains("://")
+                        ? string.Format(info, LINK, "http://", match.Value, ShortenUrl(match.Value, MAX_LENGTH))
+                        : string.Format(info, LINK, string.Empty, match.Value, ShortenUrl(match.Value, MAX_LENGTH)));
             }
 
             return text;

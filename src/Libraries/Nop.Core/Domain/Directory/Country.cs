@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Stores;
@@ -69,8 +68,8 @@ namespace Nop.Core.Domain.Directory
         /// </summary>
         public virtual ICollection<StateProvince> StateProvinces
         {
-            get { return _stateProvinces ?? (_stateProvinces = new List<StateProvince>()); }
-            protected set { _stateProvinces = value; }
+            get => _stateProvinces ?? (_stateProvinces = new List<StateProvince>());
+            protected set => _stateProvinces = value;
         }
         
         /// <summary>
@@ -78,8 +77,8 @@ namespace Nop.Core.Domain.Directory
         /// </summary>
         public virtual ICollection<ShippingMethodCountryMapping> ShippingMethodCountryMappings
         {
-            get { return _shippingMethodCountryMappings ?? (_shippingMethodCountryMappings = new List<ShippingMethodCountryMapping>()); }
-            protected set { _shippingMethodCountryMappings = value; }
+            get => _shippingMethodCountryMappings ?? (_shippingMethodCountryMappings = new List<ShippingMethodCountryMapping>());
+            protected set => _shippingMethodCountryMappings = value;
         }
     }
 }

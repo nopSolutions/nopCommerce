@@ -12,8 +12,8 @@ namespace Nop.Core.Html
     {
         #region Fields
 
-        private readonly static Regex paragraphStartRegex = new Regex("<p>", RegexOptions.IgnoreCase);
-        private readonly static Regex paragraphEndRegex = new Regex("</p>", RegexOptions.IgnoreCase);
+        private static readonly Regex _paragraphStartRegex = new Regex("<p>", RegexOptions.IgnoreCase);
+        private static readonly Regex _paragraphEndRegex = new Regex("</p>", RegexOptions.IgnoreCase);
         //private static Regex ampRegex = new Regex("&(?!(?:#[0-9]{2,4};|[a-z0-9]+;))", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
         #endregion
@@ -44,11 +44,11 @@ namespace Nop.Core.Html
         private static bool IsValidTag(string tag, string tags)
         {
             var allowedTags = tags.Split(',');
-            if (tag.IndexOf("javascript") >= 0) return false;
-            if (tag.IndexOf("vbscript") >= 0) return false;
-            if (tag.IndexOf("onclick") >= 0) return false;
+            if (tag.IndexOf("javascript", StringComparison.InvariantCultureIgnoreCase) >= 0) return false;
+            if (tag.IndexOf("vbscript", StringComparison.InvariantCultureIgnoreCase) >= 0) return false;
+            if (tag.IndexOf("onclick", StringComparison.InvariantCultureIgnoreCase) >= 0) return false;
 
-            var endchars = new [] { ' ', '>', '/', '\t' };
+            var endchars = new[] { ' ', '>', '/', '\t' };
 
             var pos = tag.IndexOfAny(endchars, 1);
             if (pos > 0) tag = tag.Substring(0, pos);
@@ -91,10 +91,8 @@ namespace Nop.Core.Html
                     text = StripTags(text);
                 }
 
-
                 text = allowHtml ? EnsureOnlyAllowedHtml(text) : WebUtility.HtmlEncode(text);
-
-
+                
                 if (convertPlainTextToHtml)
                 {
                     text = ConvertPlainTextToHtml(text);
@@ -119,6 +117,7 @@ namespace Nop.Core.Html
             {
                 text = $"Text cannot be formatted. Error: {exc.Message}";
             }
+
             return text;
         }
         
@@ -210,20 +209,21 @@ namespace Nop.Core.Html
             if (string.IsNullOrEmpty(text))
                 return string.Empty;
 
-            text = paragraphStartRegex.Replace(text, string.Empty);
-            text = paragraphEndRegex.Replace(text, "\n");
+            text = _paragraphStartRegex.Replace(text, string.Empty);
+            text = _paragraphEndRegex.Replace(text, "\n");
             text = text.Replace("\r\n", "\n").Replace("\r", "\n");
             text = text + "\n\n";
             text = text.Replace("\n\n", "\n");
-            var strArray = text.Split(new [] { '\n' });
+            var strArray = text.Split('\n');
             var builder = new StringBuilder();
             foreach (var str in strArray)
             {
-                if ((str != null) && (str.Trim().Length > 0))
+                if (str != null && str.Trim().Length > 0)
                 {
                     builder.AppendFormat("<p>{0}</p>\n", str);
                 }
             }
+
             return builder.ToString();
         }
 

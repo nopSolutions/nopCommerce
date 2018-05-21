@@ -19,6 +19,7 @@ namespace Nop.Core.Domain.Topics
         /// Gets or sets the value indicating whether this topic should be included in sitemap
         /// </summary>
         public bool IncludeInSitemap { get; set; }
+
         /// <summary>
         /// Gets or sets the value indicating whether this topic should be included in top menu
         /// </summary>

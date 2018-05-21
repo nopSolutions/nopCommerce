@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using Nop.Core.Domain.Catalog;
 
 namespace Nop.Core.Domain.Discounts
 {
@@ -97,14 +95,8 @@ namespace Nop.Core.Domain.Discounts
         /// </summary>
         public DiscountType DiscountType
         {
-            get
-            {
-                return (DiscountType)DiscountTypeId;
-            }
-            set
-            {
-                DiscountTypeId = (int)value;
-            }
+            get => (DiscountType)DiscountTypeId;
+            set => DiscountTypeId = (int)value;
         }
 
         /// <summary>
@@ -112,14 +104,8 @@ namespace Nop.Core.Domain.Discounts
         /// </summary>
         public DiscountLimitationType DiscountLimitation
         {
-            get
-            {
-                return (DiscountLimitationType)DiscountLimitationId;
-            }
-            set
-            {
-                DiscountLimitationId = (int)value;
-            }
+            get => (DiscountLimitationType)DiscountLimitationId;
+            set => DiscountLimitationId = (int)value;
         }
 
         /// <summary>
@@ -127,8 +113,8 @@ namespace Nop.Core.Domain.Discounts
         /// </summary>
         public virtual ICollection<DiscountRequirement> DiscountRequirements
         {
-            get { return _discountRequirements ?? (_discountRequirements = new List<DiscountRequirement>()); }
-            protected set { _discountRequirements = value; }
+            get => _discountRequirements ?? (_discountRequirements = new List<DiscountRequirement>());
+            protected set => _discountRequirements = value;
         }
 
         /// <summary>
@@ -136,8 +122,8 @@ namespace Nop.Core.Domain.Discounts
         /// </summary>
         public virtual ICollection<DiscountCategoryMapping> DiscountCategoryMappings
         {
-            get { return _discountCategoryMappings ?? (_discountCategoryMappings = new List<DiscountCategoryMapping>()); }
-            protected set { _discountCategoryMappings = value; }
+            get => _discountCategoryMappings ?? (_discountCategoryMappings = new List<DiscountCategoryMapping>());
+            protected set => _discountCategoryMappings = value;
         }
 
         /// <summary>
@@ -145,16 +131,17 @@ namespace Nop.Core.Domain.Discounts
         /// </summary>
         public virtual ICollection<DiscountManufacturerMapping> DiscountManufacturerMappings
         {
-            get { return _discountManufacturerMappings ?? (_discountManufacturerMappings = new List<DiscountManufacturerMapping>()); }
-            protected set { _discountManufacturerMappings = value; }
+            get => _discountManufacturerMappings ?? (_discountManufacturerMappings = new List<DiscountManufacturerMapping>());
+            protected set => _discountManufacturerMappings = value;
         }
+
         /// <summary>
         /// Gets or sets the discount-product mappings
         /// </summary>
         public virtual ICollection<DiscountProductMapping> DiscountProductMappings
         {
-            get { return _discountProductMappings ?? (_discountProductMappings = new List<DiscountProductMapping>()); }
-            protected set { _discountProductMappings = value; }
+            get => _discountProductMappings ?? (_discountProductMappings = new List<DiscountProductMapping>());
+            protected set => _discountProductMappings = value;
         }
     }
 }

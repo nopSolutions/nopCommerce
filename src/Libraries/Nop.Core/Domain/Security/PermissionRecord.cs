@@ -29,8 +29,8 @@ namespace Nop.Core.Domain.Security
         /// </summary>
         public virtual ICollection<PermissionRecordCustomerRoleMapping> PermissionRecordCustomerRoleMappings
         {
-            get { return _permissionRecordCustomerRoleMappings ?? (_permissionRecordCustomerRoleMappings = new List<PermissionRecordCustomerRoleMapping>()); }
-            protected set { _permissionRecordCustomerRoleMappings = value; }
+            get => _permissionRecordCustomerRoleMappings ?? (_permissionRecordCustomerRoleMappings = new List<PermissionRecordCustomerRoleMapping>());
+            protected set => _permissionRecordCustomerRoleMappings = value;
         }   
     }
 }

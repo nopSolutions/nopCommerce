@@ -67,8 +67,8 @@ namespace Nop.Core.Domain.Polls
         /// </summary>
         public virtual ICollection<PollAnswer> PollAnswers
         {
-            get { return _pollAnswers ?? (_pollAnswers = new List<PollAnswer>()); }
-            protected set { _pollAnswers = value; }
+            get => _pollAnswers ?? (_pollAnswers = new List<PollAnswer>());
+            protected set => _pollAnswers = value;
         }
         
         /// <summary>

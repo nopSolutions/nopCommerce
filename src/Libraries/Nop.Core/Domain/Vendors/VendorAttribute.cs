@@ -36,8 +36,8 @@ namespace Nop.Core.Domain.Vendors
         /// </summary>
         public AttributeControlType AttributeControlType
         {
-            get { return (AttributeControlType)AttributeControlTypeId; }
-            set { AttributeControlTypeId = (int)value; }
+            get => (AttributeControlType)AttributeControlTypeId;
+            set => AttributeControlTypeId = (int)value;
         }
 
         /// <summary>
@@ -45,8 +45,8 @@ namespace Nop.Core.Domain.Vendors
         /// </summary>
         public virtual ICollection<VendorAttributeValue> VendorAttributeValues
         {
-            get { return _vendorAttributeValues ?? (_vendorAttributeValues = new List<VendorAttributeValue>()); }
-            protected set { _vendorAttributeValues = value; }
+            get => _vendorAttributeValues ?? (_vendorAttributeValues = new List<VendorAttributeValue>());
+            protected set => _vendorAttributeValues = value;
         }
     }
 }

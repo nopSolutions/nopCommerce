@@ -116,11 +116,12 @@ namespace Nop.Core.Infrastructure
             //create and sort instances of mapper configurations
             var instances = mapperConfigurations
                 .Where(mapperConfiguration => PluginManager.FindPlugin(mapperConfiguration)?.Installed ?? true) //ignore not installed plugins
-                .Select(mapperConfiguration => (IMapperProfile) Activator.CreateInstance(mapperConfiguration))
+                .Select(mapperConfiguration => (IMapperProfile)Activator.CreateInstance(mapperConfiguration))
                 .OrderBy(mapperConfiguration => mapperConfiguration.Order);
 
             //create AutoMapper configuration
-            var config = new MapperConfiguration(cfg => {
+            var config = new MapperConfiguration(cfg => 
+            {
                 foreach (var instance in instances)
                 {
                     cfg.AddProfile(instance.GetType());
@@ -293,6 +294,7 @@ namespace Nop.Core.Infrastructure
                     innerException = ex;
                 }
             }
+
             throw new NopException("No constructor was found that had all the dependencies satisfied.", innerException);
         }
 

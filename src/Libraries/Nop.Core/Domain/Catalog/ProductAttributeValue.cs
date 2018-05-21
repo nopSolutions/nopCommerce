@@ -92,14 +92,8 @@ namespace Nop.Core.Domain.Catalog
         /// </summary>
         public AttributeValueType AttributeValueType
         {
-            get
-            {
-                return (AttributeValueType)this.AttributeValueTypeId;
-            }
-            set
-            {
-                this.AttributeValueTypeId = (int)value;
-            }
+            get => (AttributeValueType)AttributeValueTypeId;
+            set => AttributeValueTypeId = (int)value;
         }
     }
 }

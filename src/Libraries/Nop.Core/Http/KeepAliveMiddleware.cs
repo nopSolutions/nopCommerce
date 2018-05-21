@@ -49,6 +49,7 @@ namespace Nop.Core.Http
                 if (webHelper.GetThisPageUrl(false).StartsWith(keepAliveUrl, StringComparison.InvariantCultureIgnoreCase))
                     return;
             }
+
             //or call the next middleware in the request pipeline
             await _next(context);
         }

@@ -152,8 +152,8 @@ namespace Nop.Core.Domain.Customers
         /// </summary>
         public virtual ICollection<ExternalAuthenticationRecord> ExternalAuthenticationRecords
         {
-            get { return _externalAuthenticationRecords ?? (_externalAuthenticationRecords = new List<ExternalAuthenticationRecord>()); }
-            protected set { _externalAuthenticationRecords = value; }
+            get => _externalAuthenticationRecords ?? (_externalAuthenticationRecords = new List<ExternalAuthenticationRecord>());
+            protected set => _externalAuthenticationRecords = value;
         }
 
         /// <summary>
@@ -166,8 +166,8 @@ namespace Nop.Core.Domain.Customers
         /// </summary>
         public virtual ICollection<CustomerCustomerRoleMapping> CustomerCustomerRoleMappings
         {
-            get { return _customerCustomerRoleMappings ?? (_customerCustomerRoleMappings = new List<CustomerCustomerRoleMapping>()); }
-            protected set { _customerCustomerRoleMappings = value; }
+            get => _customerCustomerRoleMappings ?? (_customerCustomerRoleMappings = new List<CustomerCustomerRoleMapping>());
+            protected set => _customerCustomerRoleMappings = value;
         }
 
         /// <summary>
@@ -175,8 +175,8 @@ namespace Nop.Core.Domain.Customers
         /// </summary>
         public virtual ICollection<ShoppingCartItem> ShoppingCartItems
         {
-            get { return _shoppingCartItems ?? (_shoppingCartItems = new List<ShoppingCartItem>()); }
-            protected set { _shoppingCartItems = value; }
+            get => _shoppingCartItems ?? (_shoppingCartItems = new List<ShoppingCartItem>());
+            protected set => _shoppingCartItems = value;
         }
 
         /// <summary>
@@ -184,8 +184,8 @@ namespace Nop.Core.Domain.Customers
         /// </summary>
         public virtual ICollection<ReturnRequest> ReturnRequests
         {
-            get { return _returnRequests ?? (_returnRequests = new List<ReturnRequest>()); }
-            protected set { _returnRequests = value; }
+            get => _returnRequests ?? (_returnRequests = new List<ReturnRequest>());
+            protected set => _returnRequests = value;
         }
 
         /// <summary>
@@ -208,8 +208,8 @@ namespace Nop.Core.Domain.Customers
         /// </summary>
         public virtual ICollection<CustomerAddressMapping> CustomerAddressMappings
         {
-            get { return _customerAddressMappings ?? (_customerAddressMappings = new List<CustomerAddressMapping>()); }
-            protected set { _customerAddressMappings = value; }
+            get => _customerAddressMappings ?? (_customerAddressMappings = new List<CustomerAddressMapping>());
+            protected set => _customerAddressMappings = value;
         }
 
         #endregion

@@ -5,6 +5,5 @@ namespace Nop.Core.Domain.Localization
     /// </summary>
     public interface ILocalizedEntity
     {
-
     }
 }

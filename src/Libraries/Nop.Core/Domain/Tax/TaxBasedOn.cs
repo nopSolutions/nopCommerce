@@ -9,13 +9,15 @@ namespace Nop.Core.Domain.Tax
         /// Billing address
         /// </summary>
         BillingAddress = 1,
+
         /// <summary>
         /// Shipping address
         /// </summary>
         ShippingAddress = 2,
+
         /// <summary>
         /// Default address
         /// </summary>
-        DefaultAddress = 3,
+        DefaultAddress = 3
     }
 }

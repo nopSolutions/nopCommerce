@@ -41,7 +41,7 @@ namespace Nop.Core.Data
         /// </summary>
         /// <returns></returns>
         [JsonIgnore]
-        public bool IsValid => this.DataProvider != DataProviderType.Unknown && !string.IsNullOrEmpty(this.DataConnectionString);
+        public bool IsValid => DataProvider != DataProviderType.Unknown && !string.IsNullOrEmpty(DataConnectionString);
 
         #endregion
     }

@@ -5,6 +5,5 @@ namespace Nop.Core.Domain.Seo
     /// </summary>
     public interface ISlugSupported
     {
-
     }
 }
