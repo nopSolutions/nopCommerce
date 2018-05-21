@@ -4,6 +4,7 @@ using Nop.Core;
 using Nop.Core.Domain.Cms;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Logging;
+using Nop.Core.Domain.Payments;
 using Nop.Plugin.Widgets.GoogleAnalytics.Api;
 using Nop.Services.Catalog;
 using Nop.Services.Cms;
@@ -138,6 +139,10 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
         /// <param name="eventMessage">The event message</param>
         public void HandleEvent(OrderCancelledEvent eventMessage)
         {
+            //process paid orders (because now we notify GA about new orders only after they are paid)
+            if (eventMessage.Order.PaymentStatus != PaymentStatus.Paid)
+                return;
+
             ProcessOrderEvent(eventMessage.Order, false);
         }
 
