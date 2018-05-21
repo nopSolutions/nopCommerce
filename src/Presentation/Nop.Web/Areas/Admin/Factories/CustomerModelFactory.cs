@@ -745,12 +745,6 @@ namespace Nop.Web.Areas.Admin.Factories
                             .Select(store => store.Id).ToList();
                     }
                 }
-
-                //precheck Registered Role as a default role while creating a new customer through admin
-                var registeredRole = _customerService.GetCustomerRoleBySystemName(SystemCustomerRoleNames.Registered);
-                if (registeredRole != null)
-                    model.SelectedCustomerRoleIds.Add(registeredRole.Id);
-
                 //prepare reward points model
                 model.DisplayRewardPointsHistory = _rewardPointsSettings.Enabled;
                 if (model.DisplayRewardPointsHistory)
@@ -766,6 +760,17 @@ namespace Nop.Web.Areas.Admin.Factories
                 PrepareCustomerShoppingCartSearchModel(model.CustomerShoppingCartSearchModel, customer);
                 PrepareCustomerActivityLogSearchModel(model.CustomerActivityLogSearchModel, customer);
                 PrepareCustomerBackInStockSubscriptionSearchModel(model.CustomerBackInStockSubscriptionSearchModel, customer);
+            }
+            else
+            {
+                //whether to fill in some of properties
+                if (!excludeProperties)
+                {
+                    //precheck Registered Role as a default role while creating a new customer through admin
+                    var registeredRole = _customerService.GetCustomerRoleBySystemName(SystemCustomerRoleNames.Registered);
+                    if (registeredRole != null)
+                        model.SelectedCustomerRoleIds.Add(registeredRole.Id);
+                }
             }
 
             model.UsernamesEnabled = _customerSettings.UsernamesEnabled;
