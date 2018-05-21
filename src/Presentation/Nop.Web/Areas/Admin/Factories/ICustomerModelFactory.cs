@@ -127,5 +127,20 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="searchModel">Online customer search model</param>
         /// <returns>Online customer list model</returns>
         OnlineCustomerListModel PrepareOnlineCustomerListModel(OnlineCustomerSearchModel searchModel);
+
+        /// <summary>
+        /// Prepare GDPR request (log) search model
+        /// </summary>
+        /// <param name="searchModel">GDPR request search model</param>
+        /// <returns>GDPR request search model</returns>
+        GdprLogSearchModel PrepareGdprLogSearchModel(GdprLogSearchModel searchModel);
+
+        /// <summary>
+        /// Prepare paged GDPR request list model
+        /// </summary>
+        /// <param name="searchModel">GDPR request search model</param>
+        /// <returns>GDPR request list model</returns>
+        GdprLogListModel PrepareGdprLogListModel(GdprLogSearchModel searchModel);
+
     }
 }

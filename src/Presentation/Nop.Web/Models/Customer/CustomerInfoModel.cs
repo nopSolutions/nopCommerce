@@ -19,6 +19,7 @@ namespace Nop.Web.Models.Customer
             this.AvailableStates = new List<SelectListItem>();
             this.AssociatedExternalAuthRecords = new List<AssociatedExternalAuthModel>();
             this.CustomerAttributes = new List<CustomerAttributeModel>();
+            this.GdprConsents = new List<GdprConsentModel>();
         }
         
         [DataType(DataType.EmailAddress)]
@@ -148,6 +149,8 @@ namespace Nop.Web.Models.Customer
         public bool AllowCustomersToRemoveAssociations { get; set; }
 
         public IList<CustomerAttributeModel> CustomerAttributes { get; set; }
+
+        public IList<GdprConsentModel> GdprConsents { get; set; }
 
         #region Nested classes
 

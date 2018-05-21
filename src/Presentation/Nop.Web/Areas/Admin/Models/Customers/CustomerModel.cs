@@ -228,6 +228,9 @@ namespace Nop.Web.Areas.Admin.Models.Customers
         //re-send the activation message
         public bool AllowReSendingOfActivationMessage { get; set; }
 
+        //GDPR enabled
+        public bool GdprEnabled { get; set; }
+
         [NopResourceDisplayName("Admin.Customers.Customers.AssociatedExternalAuth")]
         public IList<CustomerAssociatedExternalAuthModel> AssociatedExternalAuthRecords { get; set; }
 

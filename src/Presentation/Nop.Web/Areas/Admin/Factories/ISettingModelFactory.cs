@@ -1,4 +1,5 @@
-﻿using Nop.Web.Areas.Admin.Models.Settings;
+﻿using Nop.Core.Domain.Gdpr;
+using Nop.Web.Areas.Admin.Models.Settings;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -85,7 +86,29 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <returns>Customer user settings model</returns>
         CustomerUserSettingsModel PrepareCustomerUserSettingsModel();
-        
+
+        /// <summary>
+        /// Prepare GDPR settings model
+        /// </summary>
+        /// <returns>GDPR settings model</returns>
+        GdprSettingsModel PrepareGdprSettingsModel();
+
+        /// <summary>
+        /// Prepare paged GDPR consent list model
+        /// </summary>
+        /// <param name="searchModel">GDPR search model</param>
+        /// <returns>GDPR consent list model</returns>
+       GdprConsentListModel PrepareGdprConsentListModel(GdprConsentSearchModel searchModel);
+
+        /// <summary>
+        /// Prepare GDPR consent model
+        /// </summary>
+        /// <param name="model">GDPR consent model</param>
+        /// <param name="gdprConsent">GDPR consent</param>
+        /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
+        /// <returns>GDPR consent model</returns>
+        GdprConsentModel PrepareGdprConsentModel(GdprConsentModel model, GdprConsent gdprConsent, bool excludeProperties = false);
+
         /// <summary>
         /// Prepare general and common settings model
         /// </summary>

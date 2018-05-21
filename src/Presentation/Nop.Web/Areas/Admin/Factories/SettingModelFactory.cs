@@ -10,6 +10,7 @@ using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Forums;
+using Nop.Core.Domain.Gdpr;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.News;
@@ -23,6 +24,7 @@ using Nop.Services;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Directory;
+using Nop.Services.Gdpr;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Media;
@@ -51,6 +53,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly ICustomerAttributeModelFactory _customerAttributeModelFactory;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IFulltextService _fulltextService;
+        private readonly IGdprService _gdprService;
         private readonly ILocalizationService _localizationService;
         private readonly IMaintenanceService _maintenanceService;
         private readonly IPictureService _pictureService;
@@ -74,6 +77,7 @@ namespace Nop.Web.Areas.Admin.Factories
             ICustomerAttributeModelFactory customerAttributeModelFactory,
             IDateTimeHelper dateTimeHelper,
             IFulltextService fulltextService,
+            IGdprService gdprService,
             ILocalizationService localizationService,
             IMaintenanceService maintenanceService,
             IPictureService pictureService,
@@ -93,6 +97,7 @@ namespace Nop.Web.Areas.Admin.Factories
             this._customerAttributeModelFactory = customerAttributeModelFactory;
             this._dateTimeHelper = dateTimeHelper;
             this._fulltextService = fulltextService;
+            this._gdprService = gdprService;
             this._localizationService = localizationService;
             this._maintenanceService = maintenanceService;
             this._pictureService = pictureService;
@@ -170,6 +175,22 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="searchModel">Sort option search model</param>
         /// <returns>Sort option search model</returns>
         protected virtual SortOptionSearchModel PrepareSortOptionSearchModel(SortOptionSearchModel searchModel)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+            //prepare page parameters
+            searchModel.SetGridPageSize();
+
+            return searchModel;
+        }
+
+        /// <summary>
+        /// Prepare GDPR consent search model
+        /// </summary>
+        /// <param name="searchModel">GDPR consent search model</param>
+        /// <returns>GDPR consent search model</returns>
+        protected virtual GdprConsentSearchModel PrepareGdprConsentSearchModel(GdprConsentSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -1219,7 +1240,80 @@ namespace Nop.Web.Areas.Admin.Factories
 
             return model;
         }
-        
+
+        /// <summary>
+        /// Prepare GDPR settings model
+        /// </summary>
+        /// <returns>GDPR settings model</returns>
+        public virtual GdprSettingsModel PrepareGdprSettingsModel()
+        {
+            //load settings for a chosen store scope
+            var storeId = _storeContext.ActiveStoreScopeConfiguration;
+            var gdprSettings = _settingService.LoadSetting<GdprSettings>(storeId);
+
+            //fill in model values from the entity
+            var model = gdprSettings.ToModel();
+
+            //fill in additional values (not existing in the entity)
+            model.ActiveStoreScopeConfiguration = storeId;
+
+            if (storeId <= 0)
+                return model;
+
+            //fill in overridden values
+            model.GdprEnabled_OverrideForStore = _settingService.SettingExists(gdprSettings, x => x.GdprEnabled, storeId);
+            model.LogPrivacyPolicyConsent_OverrideForStore = _settingService.SettingExists(gdprSettings, x => x.LogPrivacyPolicyConsent, storeId);
+            model.LogNewsletterConsent_OverrideForStore = _settingService.SettingExists(gdprSettings, x => x.LogNewsletterConsent, storeId);
+
+            //prepare nested search model
+            PrepareGdprConsentSearchModel(model.GdprConsentSearchModel);
+
+            return model;
+        }
+
+        /// <summary>
+        /// Prepare paged GDPR consent list model
+        /// </summary>
+        /// <param name="searchModel">GDPR search model</param>
+        /// <returns>GDPR consent list model</returns>
+        public virtual GdprConsentListModel PrepareGdprConsentListModel(GdprConsentSearchModel searchModel)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+            //get sort options
+            var consentList = _gdprService.GetAllConsents();
+
+            //prepare list model
+            var model = new GdprConsentListModel
+            {
+                Data = consentList.PaginationByRequestModel(searchModel).Select(consent => consent.ToModel()).ToList(),
+                Total = consentList.Count
+            };
+
+            return model;
+        }
+
+        /// <summary>
+        /// Prepare GDPR consent model
+        /// </summary>
+        /// <param name="model">GDPR consent model</param>
+        /// <param name="gdprConsent">GDPR consent</param>
+        /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
+        /// <returns>GDPR consent model</returns>
+        public virtual GdprConsentModel PrepareGdprConsentModel(GdprConsentModel model, GdprConsent gdprConsent, bool excludeProperties = false)
+        {
+            //fill in model values from the entity
+            if (gdprConsent != null)
+                model = model ?? gdprConsent.ToModel();
+
+            //set default values for the new model
+            if (gdprConsent == null)
+                model.DisplayOrder = 1;
+
+            return model;
+        }
+
         /// <summary>
         /// Prepare general and common settings model
         /// </summary>
