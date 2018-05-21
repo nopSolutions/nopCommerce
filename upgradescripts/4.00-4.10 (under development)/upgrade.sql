@@ -2590,3 +2590,19 @@ BEGIN
 	DROP INDEX [IX_PSAM_ProductId] ON [Product_SpecificationAttribute_Mapping]
 END
 GO
+
+--update the FullText_IsSupported procedure
+ALTER PROCEDURE [dbo].[FullText_IsSupported]
+AS
+BEGIN	
+	EXEC('
+	SELECT CASE SERVERPROPERTY(''IsFullTextInstalled'')
+	WHEN 1 THEN 
+		CASE DatabaseProperty (DB_NAME(DB_ID()), ''IsFulltextEnabled'')
+		WHEN 1 THEN 1
+		ELSE 0
+		END
+	ELSE 0
+	END as Value')
+END
+GO
