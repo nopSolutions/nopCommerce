@@ -60,7 +60,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
         private void ProcessOrderEvent(Order order, bool add)
         {
             //ensure the plugin is installed and active
-            var plugin = _widgetService.LoadWidgetBySystemName("Widgets.GoogleAnalytics") as GoogleAnalyticPlugin;
+            var plugin = _widgetService.LoadWidgetBySystemName("Widgets.GoogleAnalytics") as GoogleAnalyticsPlugin;
             if (plugin == null ||
                 !plugin.IsWidgetActive(_widgetSettings) || !plugin.PluginDescriptor.Installed)
                 return;
