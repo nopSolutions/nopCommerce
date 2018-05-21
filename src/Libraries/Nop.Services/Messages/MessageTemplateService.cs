@@ -66,7 +66,7 @@ namespace Nop.Services.Messages
         /// <param name="storeMappingService">Store mapping service</param>
         /// <param name="messageTemplateRepository">Message template repository</param>
         /// <param name="catalogSettings">Catalog settings</param>
-        /// <param name="eventPublisher">Event published</param>
+        /// <param name="eventPublisher">Event publisher</param>
         public MessageTemplateService(ICacheManager cacheManager,
             IRepository<StoreMapping> storeMappingRepository,
             ILanguageService languageService,

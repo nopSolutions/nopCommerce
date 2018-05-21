@@ -55,7 +55,7 @@ namespace Nop.Services.Directory
         /// <param name="storeMappingRepository">Store mapping repository</param>
         /// <param name="storeContext">Store context</param>
         /// <param name="catalogSettings">Catalog settings</param>
-        /// <param name="eventPublisher">Event published</param>
+        /// <param name="eventPublisher">Event publisher</param>
         public CountryService(ICacheManager cacheManager,
             IRepository<Country> countryRepository,
             IRepository<StoreMapping> storeMappingRepository,

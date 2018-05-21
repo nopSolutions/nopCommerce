@@ -63,7 +63,7 @@ namespace Nop.Services.Catalog
         /// <param name="dbContext">Database Context</param>
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="staticCacheManager">Static cache manager</param>
-        /// <param name="eventPublisher">Event published</param>
+        /// <param name="eventPublisher">Event publisher</param>
         /// <param name="productService">Product service</param>
         /// <param name="urlRecordService">Url record service</param>
         public ProductTagService(IRepository<ProductTag> productTagRepository,

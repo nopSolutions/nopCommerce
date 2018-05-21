@@ -68,7 +68,7 @@ namespace Nop.Services.Customers
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="customerAttributeRepository">Customer attribute repository</param>
         /// <param name="customerAttributeValueRepository">Customer attribute value repository</param>
-        /// <param name="eventPublisher">Event published</param>
+        /// <param name="eventPublisher">Event publisher</param>
         public CustomerAttributeService(ICacheManager cacheManager,
             IRepository<CustomerAttribute> customerAttributeRepository,
             IRepository<CustomerAttributeValue> customerAttributeValueRepository,

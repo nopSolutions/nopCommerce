@@ -47,7 +47,7 @@ namespace Nop.Services.Common
         /// </summary>
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="genericAttributeRepository">Generic attribute repository</param>
-        /// <param name="eventPublisher">Event published</param>
+        /// <param name="eventPublisher">Event publisher</param>
         public GenericAttributeService(ICacheManager cacheManager,
             IRepository<GenericAttribute> genericAttributeRepository,
             IEventPublisher eventPublisher)

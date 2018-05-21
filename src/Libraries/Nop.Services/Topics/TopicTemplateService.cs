@@ -25,7 +25,7 @@ namespace Nop.Services.Topics
         /// Ctor
         /// </summary>
         /// <param name="topicTemplateRepository">Topic template repository</param>
-        /// <param name="eventPublisher">Event published</param>
+        /// <param name="eventPublisher">Event publisher</param>
         public TopicTemplateService(IRepository<TopicTemplate> topicTemplateRepository, 
             IEventPublisher eventPublisher)
         {

@@ -30,7 +30,7 @@ namespace Nop.Services.Orders
         /// <param name="returnRequestRepository">Return request repository</param>
         /// <param name="returnRequestActionRepository">Return request action repository</param>
         /// <param name="returnRequestReasonRepository">Return request reason repository</param>
-        /// <param name="eventPublisher">Event published</param>
+        /// <param name="eventPublisher">Event publisher</param>
         public ReturnRequestService(IRepository<ReturnRequest> returnRequestRepository,
             IRepository<ReturnRequestAction> returnRequestActionRepository,
             IRepository<ReturnRequestReason> returnRequestReasonRepository,

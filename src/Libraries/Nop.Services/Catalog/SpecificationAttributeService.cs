@@ -53,7 +53,7 @@ namespace Nop.Services.Catalog
         /// <param name="specificationAttributeRepository">Specification attribute repository</param>
         /// <param name="specificationAttributeOptionRepository">Specification attribute option repository</param>
         /// <param name="productSpecificationAttributeRepository">Product specification attribute repository</param>
-        /// <param name="eventPublisher">Event published</param>
+        /// <param name="eventPublisher">Event publisher</param>
         public SpecificationAttributeService(ICacheManager cacheManager,
             IRepository<SpecificationAttribute> specificationAttributeRepository,
             IRepository<SpecificationAttributeOption> specificationAttributeOptionRepository,

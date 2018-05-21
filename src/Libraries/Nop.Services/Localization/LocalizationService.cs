@@ -90,7 +90,7 @@ namespace Nop.Services.Localization
         /// <param name="dbContext">Database Context</param>
         /// <param name="commonSettings">Common settings</param>
         /// <param name="localizationSettings">Localization settings</param>
-        /// <param name="eventPublisher">Event published</param>
+        /// <param name="eventPublisher">Event publisher</param>
         public LocalizationService(IStaticCacheManager cacheManager,
             ILogger logger,
             IWorkContext workContext,

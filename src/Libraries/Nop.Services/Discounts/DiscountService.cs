@@ -56,7 +56,7 @@ namespace Nop.Services.Discounts
         /// <param name="localizationService">Localization service</param>
         /// <param name="categoryService">Category service</param>
         /// <param name="pluginFinder">Plugin finder</param>
-        /// <param name="eventPublisher">Event published</param>
+        /// <param name="eventPublisher">Event publisher</param>
         public DiscountService(IStaticCacheManager cacheManager,
             IRepository<Discount> discountRepository,
             IRepository<DiscountRequirement> discountRequirementRepository,

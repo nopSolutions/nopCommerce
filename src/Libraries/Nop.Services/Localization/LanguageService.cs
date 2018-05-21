@@ -59,7 +59,7 @@ namespace Nop.Services.Localization
         /// <param name="storeMappingService">Store mapping service</param>
         /// <param name="settingService">Setting service</param>
         /// <param name="localizationSettings">Localization settings</param>
-        /// <param name="eventPublisher">Event published</param>
+        /// <param name="eventPublisher">Event publisher</param>
         public LanguageService(IStaticCacheManager cacheManager,
             IRepository<Language> languageRepository,
             IStoreMappingService storeMappingService,

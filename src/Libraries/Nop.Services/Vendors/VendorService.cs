@@ -28,7 +28,7 @@ namespace Nop.Services.Vendors
         /// </summary>
         /// <param name="vendorRepository">Vendor repository</param>
         /// <param name="vendorNoteRepository">Vendor note repository</param>
-        /// <param name="eventPublisher">Event published</param>
+        /// <param name="eventPublisher">Event publisher</param>
         public VendorService(IRepository<Vendor> vendorRepository,
             IRepository<VendorNote> vendorNoteRepository,
             IEventPublisher eventPublisher)
