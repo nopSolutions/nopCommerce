@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.Linq.Expressions;
 using System.Reflection;
 using Nop.Core;
@@ -520,6 +521,27 @@ namespace Nop.Services.Localization
                 };
                 localizationService.InsertLocaleStringResource(resource);
             }
+        }
+
+        /// <summary>
+        /// Get 2 letter ISO language code
+        /// </summary>
+        /// <param name="language"></param>
+        /// <returns></returns>
+        public static string GetTwoLetterIsoLanguageName(this Language language)
+        {
+            if (language == null)
+                throw new ArgumentNullException(nameof(language));
+
+            if (string.IsNullOrEmpty(language.LanguageCulture))
+                return "en";
+
+            var culture = new CultureInfo(language.LanguageCulture);
+            var code = culture.TwoLetterISOLanguageName;
+            if (String.IsNullOrEmpty(code))
+                return "en";
+
+            return code;
         }
     }
 }
