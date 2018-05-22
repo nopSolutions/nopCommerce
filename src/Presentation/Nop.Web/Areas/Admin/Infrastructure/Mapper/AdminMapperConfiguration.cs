@@ -30,6 +30,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Forums;
+using Nop.Core.Domain.Gdpr;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Logging;
 using Nop.Core.Domain.Media;
@@ -1098,6 +1099,16 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.OnlineCustomerMinutes, mo => mo.Ignore())
                 .ForMember(dest => dest.SuffixDeletedCustomers, mo => mo.Ignore())
                 .ForMember(dest => dest.DeleteGuestTaskOlderThanMinutes, mo => mo.Ignore());
+            CreateMap<GdprSettings, GdprSettingsModel>()
+                .ForMember(dest => dest.GdprConsentSearchModel, mo => mo.Ignore())
+                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore())
+                .ForMember(dest => dest.Form, mo => mo.Ignore());
+            CreateMap<GdprSettingsModel, GdprSettings>();
+            //GDPR consents
+            CreateMap<GdprConsent, GdprConsentModel>()
+                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore())
+                .ForMember(dest => dest.Form, mo => mo.Ignore());
+            CreateMap<GdprConsentModel, GdprConsent>();
             CreateMap<AddressSettings, AddressSettingsModel>()
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore())
                 .ForMember(dest => dest.Form, mo => mo.Ignore());

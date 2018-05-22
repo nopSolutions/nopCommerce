@@ -453,6 +453,27 @@
   <LocaleResource Name="Account.ForumSubscriptions.NoSubscriptions">
     <Value>You are not currently subscribed to any forums</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.Gdpr">
+    <Value>GDPR tools</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Gdpr.Delete">
+    <Value>Right to be Forgotten</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Gdpr.Delete.Button">
+    <Value>Delete account</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Gdpr.Delete.Hint">
+    <Value>You can use the button below to remove your personal and other data from our store. Keep in mind that this process will delete your account, so you will no longer be able to access or use it anymore.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Gdpr.Export">
+    <Value>Export personal Data</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Gdpr.Export.Button">
+    <Value>Export</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Gdpr.Export.Hint">
+    <Value>You can use the button below to download all the data we store and use for a better experience in our store.</Value>
+  </LocaleResource>
   <LocaleResource Name="Account.ImpersonatedAs">
     <Value>Impersonated as {0}</Value>
   </LocaleResource>
@@ -6321,6 +6342,93 @@
   <LocaleResource Name="Admin.Configuration.Settings.Forums.TopicsPageSize.Hint">
     <Value>Set the page size for topics in forums e.g. '10' topics per page.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Gdpr">
+    <Value>GDPR settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.BlockTitle.Common">
+    <Value>Common</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.BlockTitle.Consents">
+    <Value>Consents</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.Consent.Added">
+    <Value>The new consent has been added successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.Consent.AddNew">
+    <Value>Add consent</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.Consent.BackToList">
+    <Value>back to consent list</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.Consent.Deleted">
+    <Value>The consent has been deleted successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.Consent.DisplayDuringRegistration">
+    <Value>Display during registration</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.Consent.DisplayDuringRegistration.Hint">
+    <Value>Check to display this consent on the registration page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.Consent.DisplayOnCustomerInfoPage">
+    <Value>Display on 'customer info' page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.Consent.DisplayOnCustomerInfoPage.Hint">
+    <Value>Check to display this consent on the 'customer info' page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.Consent.DisplayOrder">
+    <Value>Display order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.Consent.DisplayOrder.Hint">
+    <Value>The consent display order. 1 represents the first item in the list.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.Consent.Edit">
+    <Value>Edit consent</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.Consent.IsRequired">
+    <Value>Is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.Consent.IsRequired.Hint">
+    <Value>Check if this consent is required to be ticked.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.Consent.Message">
+    <Value>Message</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.Consent.Message.Hint">
+    <Value>Enter message (question) displayed to customers.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.Consent.Message.Required">
+    <Value>Please provide a message.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.Consent.RequiredMessage">
+    <Value>Required message</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.Consent.RequiredMessage.Hint">
+    <Value>Enter message (error) displayed when this consent is not ticked by a customer.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.Consent.RequiredMessage.Required">
+    <Value>Please provide a required message.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.Consent.Updated">
+    <Value>The GDPR consent has been updated successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.GdprEnabled">
+    <Value>GDPR enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.GdprEnabled.Hint">
+    <Value>Check to enable GDPR (General Data Protection Regulation).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.LogNewsletterConsent">
+    <Value>Log "newsletter" consent</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.LogNewsletterConsent.Hint">
+    <Value>Check to log "newsletter" consent (if this feature is enabled in your store).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.LogPrivacyPolicyConsent">
+    <Value>Log "accept privacy policy" consent</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.LogPrivacyPolicyConsent.Hint">
+    <Value>Check to log "accept privacy policy" consent (if this feature is enabled in your store).</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon">
     <Value>General settings</Value>
   </LocaleResource>
@@ -10101,6 +10209,15 @@
   <LocaleResource Name="Admin.Customers.Customers.CannotBeInVendoRoleWithoutVendorAssociated">
     <Value>A customer in the Vendors role should have a vendor account associated.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Gdpr">
+    <Value>GDPR</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Gdpr.Delete">
+    <Value>Permanent delete</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Gdpr.Export">
+    <Value>Export data</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.OnlyAdminCanChangePassword">
     <Value>You're not allowed to change passwords of administrators. Only administrators can do it.</Value>
   </LocaleResource>
@@ -10625,6 +10742,33 @@
   </LocaleResource>  
   <LocaleResource Name="Admin.Customers.Customers.VendorShouldBeInVendorsRole">
     <Value>Note: if you have a vendor associated with this customer, then also ensure it is in "Vendors" customer role.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.GdprLog">
+    <Value>GDPR requests (log)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.GdprLog.Fields.CreatedOn">
+    <Value>Date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.GdprLog.Fields.CustomerInfo">
+    <Value>Customer info</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.GdprLog.Fields.RequestDetails">
+    <Value>Request details</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.GdprLog.Fields.RequestType">
+    <Value>Request type</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.GdprLog.List.SearchEmail">
+    <Value>Email</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.GdprLog.List.SearchEmail.Hint">
+    <Value>Search by a specific email (exact match).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.GdprLog.List.SearchRequestType">
+    <Value>Request type</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.GdprLog.List.SearchRequestType.Hint">
+    <Value>Search by request type.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Guest">
     <Value>Guest</Value>
@@ -14748,6 +14892,18 @@
   <LocaleResource Name="Enums.Nop.Core.Domain.Forums.ForumTopicType.Sticky">
     <Value>Sticky</Value>
   </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Gdpr.GdprRequestType.ConsentAgree">
+    <Value>Consent (agree)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Gdpr.GdprRequestType.ConsentDisagree">
+    <Value>Consent (disagree)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Gdpr.GdprRequestType.ExportData">
+    <Value>Export data</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Gdpr.GdprRequestType.DeleteCustomer">
+    <Value>Delete customer</Value>
+  </LocaleResource>
   <LocaleResource Name="Enums.Nop.Core.Domain.Logging.LogLevel.Debug">
     <Value>Debug</Value>
   </LocaleResource>
@@ -15281,6 +15437,21 @@
   </LocaleResource>
   <LocaleResource Name="Forum.WatchTopic">
     <Value>Watch Topic</Value>
+  </LocaleResource>
+  <LocaleResource Name="Gdpr.DeleteRequested">
+    <Value>Requested to delete account</Value>
+  </LocaleResource>
+  <LocaleResource Name="Gdpr.DeleteRequested.Success">
+    <Value>We'll process your request as soon as possible</Value>
+  </LocaleResource>
+  <LocaleResource Name="Gdpr.Exported">
+    <Value>Exported personal data</Value>
+  </LocaleResource>
+  <LocaleResource Name="Gdpr.Consent.Newsletter">
+    <Value>Newsletter</Value>
+  </LocaleResource>
+  <LocaleResource Name="Gdpr.Consent.PrivacyPolicy">
+    <Value>Privacy policy</Value>
   </LocaleResource>
   <LocaleResource Name="GiftCardAttribute.For.Physical">
     <Value>For: {0}</Value>

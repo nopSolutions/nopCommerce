@@ -1,4 +1,5 @@
-﻿@using Nop.Core
+﻿@using System.Text.Encodings.Web
+@using Nop.Core
 @model CustomerInfoModel
 @inject Nop.Core.IWebHelper webHelper 
 @{
@@ -437,8 +438,32 @@
                     }
                 </div>
             }
+                @foreach (var consent in Model.GdprConsents)
+                {
+                    if (consent.IsRequired)
+                    {
+                        <script asp-location="Footer">
+                            $(document).ready(function() {
+                                $('#save-info-button').click(function() {
+                                    if ($('#consent@(consent.Id)').is(':checked')) {
+                                        //do some stuff
+                                        return true;
+                                    } else {
+                                        //just show validation errors, don't post
+                                        alert('@Html.Raw(JavaScriptEncoder.Default.Encode(consent.RequiredMessage))');
+                                        return false;
+                                    }
+                                });
+                            });
+                        </script>
+                    }
+                    <div class="accept-consent">
+                        <input id="consent@(consent.Id)" type="checkbox" name="consent@(consent.Id)" checked="@consent.Accepted" />
+                        <label for="consent@(consent.Id)">@consent.Message</label>
+                    </div>
+                }
             <div class="buttons">
-                <input type="submit" value="@T("Common.Save")" name="save-info-button" class="button-1 save-customer-info-button" />
+                <input type="submit" id="save-info-button" value="@T("Common.Save")" name="save-info-button" class="button-1 save-customer-info-button" />
             </div>
         </form>
     </div>

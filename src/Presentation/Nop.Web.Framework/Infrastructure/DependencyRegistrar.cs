@@ -29,6 +29,7 @@ using Nop.Services.Discounts;
 using Nop.Services.Events;
 using Nop.Services.ExportImport;
 using Nop.Services.Forums;
+using Nop.Services.Gdpr;
 using Nop.Services.Helpers;
 using Nop.Services.Installation;
 using Nop.Services.Localization;
@@ -202,6 +203,7 @@ namespace Nop.Web.Framework.Infrastructure
             builder.RegisterType<DefaultLogger>().As<ILogger>().InstancePerLifetimeScope();
             builder.RegisterType<CustomerActivityService>().As<ICustomerActivityService>().InstancePerLifetimeScope();
             builder.RegisterType<ForumService>().As<IForumService>().InstancePerLifetimeScope();
+            builder.RegisterType<GdprService>().As<IGdprService>().InstancePerLifetimeScope();
             builder.RegisterType<PollService>().As<IPollService>().InstancePerLifetimeScope();
             builder.RegisterType<BlogService>().As<IBlogService>().InstancePerLifetimeScope();
             builder.RegisterType<WidgetService>().As<IWidgetService>().InstancePerLifetimeScope();

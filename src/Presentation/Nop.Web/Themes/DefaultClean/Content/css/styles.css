@@ -2845,16 +2845,16 @@ label, label + * {
 #check-availability-button:hover {
 	background-color: #999;
 }
-.accept-privacy-policy {
+.accept-consent {
 	margin: 0 0 20px;
 	text-align: center;
 }
-.accept-privacy-policy > * {
+.accept-consent > * {
 	display: inline-block;
 	line-height: 32px;
 }
-.accept-privacy-policy span,
-.accept-privacy-policy a {
+.accept-consent span,
+.accept-consent a {
 	color: #4ab2f1;
 	cursor: pointer;
 }
@@ -3035,14 +3035,23 @@ label, label + * {
 	margin: 0 0 30px
 }
 
+.gdpr-tools-page .result {
+    margin: 20px 0;
+    font-size: 13px;
+    color: #e4434b;
+}
+.gdpr-tools-page .buttons {
+    margin-top: 20px;
+}
+
 .address-list-page .info,
 .order-list-page .info {
-	margin: 0 0 10px;
-	border-top: 1px solid #e6e6e6;
-	background-color: #f9f9f9;
+    margin: 0 0 10px;
+    border-top: 1px solid #e6e6e6;
+    background-color: #f9f9f9;
     padding: 20px;
-	line-height: 26px;
-	color: #444;
+    line-height: 26px;
+    color: #444;
 }
 .address-list-page .info .name,
 .order-list-page .info .name {
