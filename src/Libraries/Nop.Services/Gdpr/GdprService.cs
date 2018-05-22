@@ -411,6 +411,19 @@ namespace Nop.Services.Gdpr
             //ignore RewardPointsHistory
             //and we do not delete orders
 
+            //remove from Registered role, add to Guest one
+            if (customer.IsRegistered())
+            {
+                var registeredRole = _customerService.GetCustomerRoleBySystemName(SystemCustomerRoleNames.Registered);
+                customer.CustomerCustomerRoleMappings
+                    .Remove(customer.CustomerCustomerRoleMappings.FirstOrDefault(mapping => mapping.CustomerRoleId == registeredRole.Id));
+            }
+            if (!customer.IsGuest())
+            {
+                var guestRole = _customerService.GetCustomerRoleBySystemName(SystemCustomerRoleNames.Guests);
+                customer.CustomerCustomerRoleMappings.Add(new CustomerCustomerRoleMapping { CustomerRole = guestRole });
+            }
+
             var email = customer.Email;
 
             //clear other information
@@ -422,7 +435,7 @@ namespace Nop.Services.Gdpr
             _customerService.UpdateCustomer(customer);
 
             //raise event
-            _eventPublisher.Publish(new CustomerPermanenlyDeleted(customer.Id, email));
+            _eventPublisher.Publish(new CustomerPermanentlyDeleted(customer.Id, email));
         }
 
         #endregion
