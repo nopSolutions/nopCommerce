@@ -50,6 +50,5 @@ namespace Nop.Core.Infrastructure
         /// </summary>
         /// <returns>A list of assemblies</returns>
         IList<Assembly> GetAssemblies();
-
     }
 }

@@ -68,7 +68,7 @@ namespace Nop.Services.Common
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="addressAttributeRepository">Address attribute repository</param>
         /// <param name="addressAttributeValueRepository">Address attribute value repository</param>
-        /// <param name="eventPublisher">Event published</param>
+        /// <param name="eventPublisher">Event publisher</param>
         public AddressAttributeService(ICacheManager cacheManager,
             IRepository<AddressAttribute> addressAttributeRepository,
             IRepository<AddressAttributeValue> addressAttributeValueRepository,

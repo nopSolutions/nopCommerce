@@ -9,14 +9,17 @@ namespace Nop.Core.Domain.Tax
         /// Unknown
         /// </summary>
         Unknown = 0,
+
         /// <summary>
         /// Empty
         /// </summary>
         Empty = 10,
+
         /// <summary>
         /// Valid
         /// </summary>
         Valid = 20,
+
         /// <summary>
         /// Invalid
         /// </summary>

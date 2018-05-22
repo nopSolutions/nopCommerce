@@ -8,11 +8,11 @@ namespace Nop.Core.Domain.Customers
         /// <summary>
         /// SearchEngine
         /// </summary>
-        public static string SearchEngine { get { return "SearchEngine"; } }
+        public static string SearchEngine => "SearchEngine";
 
         /// <summary>
         /// BackgroundTask
         /// </summary>
-        public static string BackgroundTask { get { return "BackgroundTask"; } }
+        public static string BackgroundTask => "BackgroundTask";
     }
 }

@@ -1,30 +1,43 @@
-﻿using Nop.Core.Domain.Forums;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Nop.Core.Domain.Forums;
 
 namespace Nop.Data.Mapping.Forums
 {
     /// <summary>
-    /// Mapping class
+    /// Represents a forum post mapping configuration
     /// </summary>
     public partial class ForumPostMap : NopEntityTypeConfiguration<ForumPost>
     {
+        #region Methods
+
         /// <summary>
-        /// Ctor
+        /// Configures the entity
         /// </summary>
-        public ForumPostMap()
+        /// <param name="builder">The builder to be used to configure the entity</param>
+        public override void Configure(EntityTypeBuilder<ForumPost> builder)
         {
-            this.ToTable("Forums_Post");
-            this.HasKey(fp => fp.Id);
-            this.Property(fp => fp.Text).IsRequired();
-            this.Property(fp => fp.IPAddress).HasMaxLength(100);
+            builder.ToTable("Forums_Post");
+            builder.HasKey(post => post.Id);
 
-            this.HasRequired(fp => fp.ForumTopic)
+            builder.Property(post => post.Text).IsRequired();
+            builder.Property(post => post.IPAddress).HasMaxLength(100);
+
+            builder.HasOne(post => post.ForumTopic)
                 .WithMany()
-                .HasForeignKey(fp => fp.TopicId);
+                .HasForeignKey(post => post.TopicId)
+                .IsRequired();
 
-            this.HasRequired(fp => fp.Customer)
+            builder.HasOne(post => post.Customer)
                .WithMany()
-               .HasForeignKey(fp => fp.CustomerId)
-               .WillCascadeOnDelete(false);
+               .HasForeignKey(post => post.CustomerId)
+               .IsRequired()
+               .OnDelete(DeleteBehavior.Restrict);
+
+            //add custom configuration
+            this.PostConfigure(builder);
         }
+
+        #endregion
     }
 }

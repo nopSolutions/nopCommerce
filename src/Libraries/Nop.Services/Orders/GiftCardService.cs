@@ -29,7 +29,7 @@ namespace Nop.Services.Orders
         /// Ctor
         /// </summary>
         /// <param name="giftCardRepository">Gift card context</param>
-        /// <param name="eventPublisher">Event published</param>
+        /// <param name="eventPublisher">Event publisher</param>
         /// <param name="giftCardUsageHistoryRepository">Gift card usage history repository</param>
         public GiftCardService(IRepository<GiftCard> giftCardRepository, IEventPublisher eventPublisher,
             IRepository<GiftCardUsageHistory> giftCardUsageHistoryRepository)

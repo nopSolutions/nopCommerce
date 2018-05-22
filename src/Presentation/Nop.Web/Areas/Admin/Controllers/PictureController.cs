@@ -1,8 +1,8 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
+using Nop.Core.Infrastructure;
 using Nop.Services.Media;
 using Nop.Web.Framework.Mvc.Filters;
 
@@ -11,10 +11,13 @@ namespace Nop.Web.Areas.Admin.Controllers
     public partial class PictureController : BaseAdminController
     {
         private readonly IPictureService _pictureService;
+        private readonly INopFileProvider _fileProvider;
 
-        public PictureController(IPictureService pictureService)
+        public PictureController(IPictureService pictureService,
+            INopFileProvider fileProvider)
         {
             this._pictureService = pictureService;
+            this._fileProvider = fileProvider;
         }
 
         [HttpPost]
@@ -43,11 +46,11 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (string.IsNullOrEmpty(fileName) && Request.Form.ContainsKey(qqFileNameParameter))
                 fileName = Request.Form[qqFileNameParameter].ToString();
             //remove path (passed in IE)
-            fileName = Path.GetFileName(fileName);
+            fileName = _fileProvider.GetFileName(fileName);
 
             var contentType = httpPostedFile.ContentType;
 
-            var fileExtension = Path.GetExtension(fileName);
+            var fileExtension = _fileProvider.GetFileExtension(fileName);
             if (!string.IsNullOrEmpty(fileExtension))
                 fileExtension = fileExtension.ToLowerInvariant();
 

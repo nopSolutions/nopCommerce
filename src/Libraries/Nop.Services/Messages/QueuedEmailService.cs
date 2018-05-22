@@ -6,6 +6,7 @@ using Nop.Core.Data;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Messages;
 using Nop.Data;
+using Nop.Data.Extensions;
 using Nop.Services.Events;
 
 namespace Nop.Services.Messages
@@ -25,7 +26,7 @@ namespace Nop.Services.Messages
         /// Ctor
         /// </summary>
         /// <param name="queuedEmailRepository">Queued email repository</param>
-        /// <param name="eventPublisher">Event published</param>
+        /// <param name="eventPublisher">Event publisher</param>
         /// <param name="dbContext">DB context</param>
         /// <param name="dataProvider">WeData provider</param>
         /// <param name="commonSettings">Common settings</param>
@@ -198,22 +199,14 @@ namespace Nop.Services.Messages
         /// </summary>
         public virtual void DeleteAllEmails()
         {
-            if (_commonSettings.UseStoredProceduresIfSupported && _dataProvider.StoredProceduredSupported)
-            {
-                //although it's not a stored procedure we use it to ensure that a database supports them
-                //we cannot wait until EF team has it implemented - http://data.uservoice.com/forums/72025-entity-framework-feature-suggestions/suggestions/1015357-batch-cud-support
+            //do all databases support "Truncate command"?
+            var queuedEmailTableName = _dbContext.GetTableName<QueuedEmail>();
+            _dbContext.ExecuteSqlCommand($"TRUNCATE TABLE [{queuedEmailTableName}]");
 
+            //var queuedEmails = _queuedEmailRepository.Table.ToList();
+            //foreach (var qe in queuedEmails)
+            //    _queuedEmailRepository.Delete(qe);
 
-                //do all databases support "Truncate command"?
-                var queuedEmailTableName = _dbContext.GetTableName<QueuedEmail>();
-                _dbContext.ExecuteSqlCommand($"TRUNCATE TABLE [{queuedEmailTableName}]");
-            }
-            else
-            {
-                var queuedEmails = _queuedEmailRepository.Table.ToList();
-                foreach (var qe in queuedEmails)
-                    _queuedEmailRepository.Delete(qe);
-            }
         }
     }
 }

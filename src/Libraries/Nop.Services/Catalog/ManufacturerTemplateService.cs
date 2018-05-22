@@ -25,7 +25,7 @@ namespace Nop.Services.Catalog
         /// Ctor
         /// </summary>
         /// <param name="manufacturerTemplateRepository">Manufacturer template repository</param>
-        /// <param name="eventPublisher">Event published</param>
+        /// <param name="eventPublisher">Event publisher</param>
         public ManufacturerTemplateService(IRepository<ManufacturerTemplate> manufacturerTemplateRepository,
             IEventPublisher eventPublisher)
         {

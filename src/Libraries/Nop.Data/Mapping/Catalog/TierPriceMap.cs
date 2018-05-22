@@ -1,29 +1,41 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Catalog;
 
 namespace Nop.Data.Mapping.Catalog
 {
     /// <summary>
-    /// Mapping class
+    /// Represents a tier price mapping configuration
     /// </summary>
     public partial class TierPriceMap : NopEntityTypeConfiguration<TierPrice>
     {
+        #region Methods
+
         /// <summary>
-        /// Ctor
+        /// Configures the entity
         /// </summary>
-        public TierPriceMap()
+        /// <param name="builder">The builder to be used to configure the entity</param>
+        public override void Configure(EntityTypeBuilder<TierPrice> builder)
         {
-            this.ToTable("TierPrice");
-            this.HasKey(tp => tp.Id);
-            this.Property(tp => tp.Price).HasPrecision(18, 4);
+            builder.ToTable(nameof(TierPrice));
+            builder.HasKey(price => price.Id);
 
-            this.HasRequired(tp => tp.Product)
-                .WithMany(p => p.TierPrices)
-                .HasForeignKey(tp => tp.ProductId);
+            builder.Property(price => price.Price).HasColumnType("decimal(18, 4)");
 
-            this.HasOptional(tp => tp.CustomerRole)
+            builder.HasOne(price => price.Product)
+                .WithMany(product => product.TierPrices)
+                .HasForeignKey(price => price.ProductId)
+                .IsRequired();
+
+            builder.HasOne(price => price.CustomerRole)
                 .WithMany()
-                .HasForeignKey(tp => tp.CustomerRoleId)
-                .WillCascadeOnDelete(true);
+                .HasForeignKey(price => price.CustomerRoleId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            //add custom configuration
+            this.PostConfigure(builder);
         }
+
+        #endregion
     }
 }

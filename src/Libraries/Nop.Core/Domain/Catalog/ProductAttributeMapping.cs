@@ -80,14 +80,8 @@ namespace Nop.Core.Domain.Catalog
         /// </summary>
         public AttributeControlType AttributeControlType
         {
-            get
-            {
-                return (AttributeControlType)AttributeControlTypeId;
-            }
-            set
-            {
-                AttributeControlTypeId = (int)value;
-            }
+            get => (AttributeControlType)AttributeControlTypeId;
+            set => AttributeControlTypeId = (int)value;
         }
 
         /// <summary>
@@ -105,10 +99,8 @@ namespace Nop.Core.Domain.Catalog
         /// </summary>
         public virtual ICollection<ProductAttributeValue> ProductAttributeValues
         {
-            get { return _productAttributeValues ?? (_productAttributeValues = new List<ProductAttributeValue>()); }
-            protected set { _productAttributeValues = value; }
+            get => _productAttributeValues ?? (_productAttributeValues = new List<ProductAttributeValue>());
+            protected set => _productAttributeValues = value;
         }
-
     }
-
 }

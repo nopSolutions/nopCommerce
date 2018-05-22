@@ -965,6 +965,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 model.ExportImportAllowDownloadImages_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.ExportImportAllowDownloadImages, storeId);
                 model.ExportImportSplitProductsFile_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.ExportImportSplitProductsFile, storeId);
                 model.RemoveRequiredProducts_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.RemoveRequiredProducts, storeId);
+                model.ExportImportRelatedEntitiesByName_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.ExportImportRelatedEntitiesByName, storeId);
             }
 
             //prepare nested search model
@@ -1039,6 +1040,7 @@ namespace Nop.Web.Areas.Admin.Factories
             model.Enabled_OverrideForStore = _settingService.SettingExists(rewardPointsSettings, x => x.Enabled, storeId);
             model.ExchangeRate_OverrideForStore = _settingService.SettingExists(rewardPointsSettings, x => x.ExchangeRate, storeId);
             model.MinimumRewardPointsToUse_OverrideForStore = _settingService.SettingExists(rewardPointsSettings, x => x.MinimumRewardPointsToUse, storeId);
+            model.MaximumRewardPointsToUsePerOrder_OverrideForStore = _settingService.SettingExists(rewardPointsSettings, x => x.MaximumRewardPointsToUsePerOrder, storeId);
             model.PointsForRegistration_OverrideForStore = _settingService.SettingExists(rewardPointsSettings, x => x.PointsForRegistration, storeId);
             model.RegistrationPointsValidity_OverrideForStore = _settingService.SettingExists(rewardPointsSettings, x => x.RegistrationPointsValidity, storeId);
             model.PointsForPurchases_OverrideForStore = _settingService.SettingExists(rewardPointsSettings, x => x.PointsForPurchases_Amount, storeId) || _settingService.SettingExists(rewardPointsSettings, x => x.PointsForPurchases_Points, storeId);

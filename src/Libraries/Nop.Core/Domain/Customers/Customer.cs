@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Orders;
 
@@ -11,11 +12,11 @@ namespace Nop.Core.Domain.Customers
     public partial class Customer : BaseEntity
     {
         private ICollection<ExternalAuthenticationRecord> _externalAuthenticationRecords;
-        private ICollection<CustomerRole> _customerRoles;
+        private ICollection<CustomerCustomerRoleMapping> _customerCustomerRoleMappings;
         private ICollection<ShoppingCartItem> _shoppingCartItems;
         private ICollection<ReturnRequest> _returnRequests;
-        private ICollection<Address> _addresses;
-
+        private ICollection<CustomerAddressMapping> _customerAddressMappings;
+        
         /// <summary>
         /// Ctor
         /// </summary>
@@ -134,6 +135,16 @@ namespace Nop.Core.Domain.Customers
         /// </summary>
         public int RegisteredInStoreId { get; set; }
 
+        /// <summary>
+        /// Gets or sets the billing address identifier
+        /// </summary>
+        public int? BillingAddressId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the shipping address identifier
+        /// </summary>
+        public int? ShippingAddressId { get; set; }
+
         #region Navigation properties
 
         /// <summary>
@@ -141,17 +152,22 @@ namespace Nop.Core.Domain.Customers
         /// </summary>
         public virtual ICollection<ExternalAuthenticationRecord> ExternalAuthenticationRecords
         {
-            get { return _externalAuthenticationRecords ?? (_externalAuthenticationRecords = new List<ExternalAuthenticationRecord>()); }
-            protected set { _externalAuthenticationRecords = value; }
+            get => _externalAuthenticationRecords ?? (_externalAuthenticationRecords = new List<ExternalAuthenticationRecord>());
+            protected set => _externalAuthenticationRecords = value;
         }
 
         /// <summary>
         /// Gets or sets the customer roles
         /// </summary>
-        public virtual ICollection<CustomerRole> CustomerRoles
+        public IList<CustomerRole> CustomerRoles => CustomerCustomerRoleMappings.Select(mapping => mapping.CustomerRole).ToList();
+
+        /// <summary>
+        /// Gets or sets customer-customer role mappings
+        /// </summary>
+        public virtual ICollection<CustomerCustomerRoleMapping> CustomerCustomerRoleMappings
         {
-            get { return _customerRoles ?? (_customerRoles = new List<CustomerRole>()); }
-            protected set { _customerRoles = value; }
+            get => _customerCustomerRoleMappings ?? (_customerCustomerRoleMappings = new List<CustomerCustomerRoleMapping>());
+            protected set => _customerCustomerRoleMappings = value;
         }
 
         /// <summary>
@@ -159,8 +175,8 @@ namespace Nop.Core.Domain.Customers
         /// </summary>
         public virtual ICollection<ShoppingCartItem> ShoppingCartItems
         {
-            get { return _shoppingCartItems ?? (_shoppingCartItems = new List<ShoppingCartItem>()); }
-            protected set { _shoppingCartItems = value; }
+            get => _shoppingCartItems ?? (_shoppingCartItems = new List<ShoppingCartItem>());
+            protected set => _shoppingCartItems = value;
         }
 
         /// <summary>
@@ -168,8 +184,8 @@ namespace Nop.Core.Domain.Customers
         /// </summary>
         public virtual ICollection<ReturnRequest> ReturnRequests
         {
-            get { return _returnRequests ?? (_returnRequests = new List<ReturnRequest>()); }
-            protected set { _returnRequests = value; }
+            get => _returnRequests ?? (_returnRequests = new List<ReturnRequest>());
+            protected set => _returnRequests = value;
         }
 
         /// <summary>
@@ -185,10 +201,15 @@ namespace Nop.Core.Domain.Customers
         /// <summary>
         /// Gets or sets customer addresses
         /// </summary>
-        public virtual ICollection<Address> Addresses
+        public IList<Address> Addresses => CustomerAddressMappings.Select(mapping => mapping.Address).ToList();
+
+        /// <summary>
+        /// Gets or sets customer-address mappings
+        /// </summary>
+        public virtual ICollection<CustomerAddressMapping> CustomerAddressMappings
         {
-            get { return _addresses ?? (_addresses = new List<Address>()); }
-            protected set { _addresses = value; }
+            get => _customerAddressMappings ?? (_customerAddressMappings = new List<CustomerAddressMapping>());
+            protected set => _customerAddressMappings = value;
         }
 
         #endregion

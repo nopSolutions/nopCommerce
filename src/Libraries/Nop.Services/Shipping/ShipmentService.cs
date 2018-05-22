@@ -32,7 +32,7 @@ namespace Nop.Services.Shipping
         /// <param name="shipmentRepository">Shipment repository</param>
         /// <param name="siRepository">Shipment item repository</param>
         /// <param name="orderItemRepository">Order item repository</param>
-        /// <param name="eventPublisher">Event published</param>
+        /// <param name="eventPublisher">Event publisher</param>
         public ShipmentService(IRepository<Shipment> shipmentRepository,
             IRepository<ShipmentItem> siRepository,
             IRepository<OrderItem> orderItemRepository,

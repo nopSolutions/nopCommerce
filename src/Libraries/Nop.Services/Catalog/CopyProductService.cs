@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Media;
 using Nop.Services.Localization;
 using Nop.Services.Media;
@@ -91,9 +92,9 @@ namespace Nop.Services.Catalog
         /// <param name="productCopy">New product</param>
         protected virtual void CopyDiscountsMapping(Product product, Product productCopy)
         {
-            foreach (var discount in product.AppliedDiscounts)
+            foreach (var discountMapping in product.DiscountProductMappings)
             {
-                productCopy.AppliedDiscounts.Add(discount);
+                productCopy.DiscountProductMappings.Add(new DiscountProductMapping { Discount = discountMapping.Discount });
                 _productService.UpdateProduct(productCopy);
             }
         }
@@ -759,9 +760,9 @@ namespace Nop.Services.Catalog
             CopyLocalizationData(product, productCopy);
 
             //copy product tags
-            foreach (var productTag in product.ProductTags)
+            foreach (var productProductTagMapping in product.ProductProductTagMappings)
             {
-                productCopy.ProductTags.Add(productTag);
+                productCopy.ProductProductTagMappings.Add(new ProductProductTagMapping { ProductTag = productProductTagMapping.ProductTag });
             }
             _productService.UpdateProduct(productCopy);
 

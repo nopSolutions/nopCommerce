@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -30,6 +29,7 @@ namespace Nop.Core
 
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly HostingConfig _hostingConfig;
+        private readonly INopFileProvider _fileProvider;
 
         #endregion
 
@@ -40,10 +40,13 @@ namespace Nop.Core
         /// </summary>
         /// <param name="hostingConfig">Hosting config</param>
         /// <param name="httpContextAccessor">HTTP context accessor</param>
-        public WebHelper(HostingConfig hostingConfig, IHttpContextAccessor httpContextAccessor)
+        /// <param name="fileProvider">File provider</param>
+        public WebHelper(HostingConfig hostingConfig, IHttpContextAccessor httpContextAccessor,
+            INopFileProvider fileProvider)
         {
             this._hostingConfig = hostingConfig;
             this._httpContextAccessor = httpContextAccessor;
+            this._fileProvider = fileProvider;
         }
 
         #endregion
@@ -56,7 +59,7 @@ namespace Nop.Core
         /// <returns>True if available; otherwise false</returns>
         protected virtual bool IsRequestAvailable()
         {
-            if (_httpContextAccessor == null || _httpContextAccessor.HttpContext == null)
+            if (_httpContextAccessor?.HttpContext == null)
                 return false;
 
             try
@@ -90,7 +93,7 @@ namespace Nop.Core
         {
             try
             {
-                File.SetLastWriteTimeUtc(CommonHelper.MapPath("~/web.config"), DateTime.UtcNow);
+                _fileProvider.SetLastWriteTimeUtc(_fileProvider.MapPath("~/web.config"), DateTime.UtcNow);
                 return true;
             }
             catch
@@ -160,7 +163,7 @@ namespace Nop.Core
                 result = "127.0.0.1";
 
             //"TryParse" doesn't support IPv4 with port number
-            if (IPAddress.TryParse(result ?? string.Empty, out IPAddress ip))
+            if (IPAddress.TryParse(result ?? string.Empty, out var ip))
                 //IP address is valid 
                 result = ip.ToString();
             else if (!string.IsNullOrEmpty(result))
@@ -262,7 +265,7 @@ namespace Nop.Core
             }
 
             //if host is empty (it is possible only when HttpContext is not available), use URL of a store entity configured in admin area
-            if (string.IsNullOrEmpty(storeHost) && DataSettingsHelper.DatabaseIsInstalled())
+            if (string.IsNullOrEmpty(storeHost) && DataSettingsManager.DatabaseIsInstalled)
             {
                 //do not inject IWorkContext via constructor because it'll cause circular references
                 storeLocation = EngineContext.Current.Resolve<IStoreContext>().CurrentStore?.Url
@@ -315,71 +318,78 @@ namespace Nop.Core
             var str2 = string.Empty;
             if (url.Contains("#"))
             {
-                str2 = url.Substring(url.IndexOf("#") + 1);
-                url = url.Substring(0, url.IndexOf("#"));
+                str2 = url.Substring(url.IndexOf("#", StringComparison.InvariantCultureIgnoreCase) + 1);
+                url = url.Substring(0, url.IndexOf("#", StringComparison.InvariantCultureIgnoreCase));
             }
+
             if (url.Contains("?"))
             {
-                str = url.Substring(url.IndexOf("?") + 1);
-                url = url.Substring(0, url.IndexOf("?"));
+                str = url.Substring(url.IndexOf("?", StringComparison.InvariantCultureIgnoreCase) + 1);
+                url = url.Substring(0, url.IndexOf("?", StringComparison.InvariantCultureIgnoreCase));
             }
+
             if (!string.IsNullOrEmpty(queryStringModification))
             {
                 if (!string.IsNullOrEmpty(str))
                 {
                     var dictionary = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
-                    foreach (var str3 in str.Split(new[] { '&' }))
+                    foreach (var str3 in str.Split('&'))
                     {
-                        if (!string.IsNullOrEmpty(str3))
+                        if (string.IsNullOrEmpty(str3)) 
+                            continue;
+
+                        var strArray = str3.Split('=');
+                        if (strArray.Length == 2)
                         {
-                            var strArray = str3.Split(new[] { '=' });
-                            if (strArray.Length == 2)
+                            if (!dictionary.ContainsKey(strArray[0]))
                             {
-                                if (!dictionary.ContainsKey(strArray[0]))
-                                {
-                                    //do not add value if it already exists
-                                    //two the same query parameters? theoretically it's not possible.
-                                    //but MVC has some ugly implementation for checkboxes and we can have two values
-                                    //find more info here: http://www.mindstorminteractive.com/topics/jquery-fix-asp-net-mvc-checkbox-truefalse-value/
-                                    //we do this validation just to ensure that the first one is not overridden
-                                    dictionary[strArray[0]] = strArray[1];
-                                }
-                            }
-                            else
-                            {
-                                dictionary[str3] = null;
+                                //do not add value if it already exists
+                                //two the same query parameters? theoretically it's not possible.
+                                //but MVC has some ugly implementation for checkboxes and we can have two values
+                                //find more info here: http://www.mindstorminteractive.com/topics/jquery-fix-asp-net-mvc-checkbox-truefalse-value/
+                                //we do this validation just to ensure that the first one is not overridden
+                                dictionary[strArray[0]] = strArray[1];
                             }
                         }
-                    }
-                    foreach (var str4 in queryStringModification.Split(new[] { '&' }))
-                    {
-                        if (!string.IsNullOrEmpty(str4))
+                        else
                         {
-                            var strArray2 = str4.Split(new[] { '=' });
-                            if (strArray2.Length == 2)
-                            {
-                                dictionary[strArray2[0]] = strArray2[1];
-                            }
-                            else
-                            {
-                                dictionary[str4] = null;
-                            }
+                            dictionary[str3] = null;
                         }
                     }
+
+                    foreach (var str4 in queryStringModification.Split('&'))
+                    {
+                        if (string.IsNullOrEmpty(str4)) 
+                            continue;
+
+                        var strArray2 = str4.Split('=');
+                        if (strArray2.Length == 2)
+                        {
+                            dictionary[strArray2[0]] = strArray2[1];
+                        }
+                        else
+                        {
+                            dictionary[str4] = null;
+                        }
+                    }
+
                     var builder = new StringBuilder();
+
                     foreach (var str5 in dictionary.Keys)
                     {
                         if (builder.Length > 0)
                         {
                             builder.Append("&");
                         }
+
                         builder.Append(str5);
-                        if (dictionary[str5] != null)
-                        {
-                            builder.Append("=");
-                            builder.Append(dictionary[str5]);
-                        }
+                        if (dictionary[str5] == null) 
+                            continue;
+
+                        builder.Append("=");
+                        builder.Append(dictionary[str5]);
                     }
+
                     str = builder.ToString();
                 }
                 else
@@ -387,11 +397,13 @@ namespace Nop.Core
                     str = queryStringModification;
                 }
             }
+
             if (!string.IsNullOrEmpty(anchor))
             {
                 str2 = anchor;
             }
-            return (url + (string.IsNullOrEmpty(str) ? "" : ("?" + str)) + (string.IsNullOrEmpty(str2) ? "" : ("#" + str2)));
+
+            return url + (string.IsNullOrEmpty(str) ? string.Empty : "?" + str) + (string.IsNullOrEmpty(str2) ? string.Empty : "#" + str2);
         }
 
         /// <summary>
@@ -411,49 +423,54 @@ namespace Nop.Core
             var str = string.Empty;
             if (url.Contains("?"))
             {
-                str = url.Substring(url.IndexOf("?") + 1);
-                url = url.Substring(0, url.IndexOf("?"));
+                str = url.Substring(url.IndexOf("?", StringComparison.InvariantCultureIgnoreCase) + 1);
+                url = url.Substring(0, url.IndexOf("?", StringComparison.InvariantCultureIgnoreCase));
             }
-            if (!string.IsNullOrEmpty(queryString))
-            {
-                if (!string.IsNullOrEmpty(str))
-                {
-                    var dictionary = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
-                    foreach (var str3 in str.Split(new[] { '&' }))
-                    {
-                        if (!string.IsNullOrEmpty(str3))
-                        {
-                            var strArray = str3.Split(new[] { '=' });
-                            if (strArray.Length == 2)
-                            {
-                                dictionary[strArray[0]] = strArray[1];
-                            }
-                            else
-                            {
-                                dictionary[str3] = null;
-                            }
-                        }
-                    }
-                    dictionary.Remove(queryString);
 
-                    var builder = new StringBuilder();
-                    foreach (var str5 in dictionary.Keys)
-                    {
-                        if (builder.Length > 0)
-                        {
-                            builder.Append("&");
-                        }
-                        builder.Append(str5);
-                        if (dictionary[str5] != null)
-                        {
-                            builder.Append("=");
-                            builder.Append(dictionary[str5]);
-                        }
-                    }
-                    str = builder.ToString();
+            if (string.IsNullOrEmpty(queryString)) 
+                return url + (string.IsNullOrEmpty(str) ? string.Empty : "?" + str);
+
+            if (string.IsNullOrEmpty(str)) 
+                return url + (string.IsNullOrEmpty(str) ? string.Empty : "?" + str);
+
+            var dictionary = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
+            foreach (var str3 in str.Split('&'))
+            {
+                if (string.IsNullOrEmpty(str3)) 
+                    continue;
+
+                var strArray = str3.Split('=');
+                if (strArray.Length == 2)
+                {
+                    dictionary[strArray[0]] = strArray[1];
+                }
+                else
+                {
+                    dictionary[str3] = null;
                 }
             }
-            return (url + (string.IsNullOrEmpty(str) ? "" : ("?" + str)));
+
+            dictionary.Remove(queryString);
+
+            var builder = new StringBuilder();
+            foreach (var str5 in dictionary.Keys)
+            {
+                if (builder.Length > 0)
+                {
+                    builder.Append("&");
+                }
+
+                builder.Append(str5);
+                if (dictionary[str5] == null) 
+                    continue;
+
+                builder.Append("=");
+                builder.Append(dictionary[str5]);
+            }
+
+            str = builder.ToString();
+
+            return url + (string.IsNullOrEmpty(str) ? string.Empty : "?" + str);
         }
 
         /// <summary>
@@ -502,7 +519,7 @@ namespace Nop.Core
             {
                 var response = _httpContextAccessor.HttpContext.Response;
                 //ASP.NET 4 style - return response.IsRequestBeingRedirected;
-                int[] redirectionStatusCodes = { StatusCodes.Status301MovedPermanently, StatusCodes.Status302Found};
+                int[] redirectionStatusCodes = { StatusCodes.Status301MovedPermanently, StatusCodes.Status302Found };
                 return redirectionStatusCodes.Contains(response.StatusCode);
             }
         }
@@ -519,10 +536,8 @@ namespace Nop.Core
 
                 return Convert.ToBoolean(_httpContextAccessor.HttpContext.Items["nop.IsPOSTBeingDone"]);
             }
-            set
-            {
-                _httpContextAccessor.HttpContext.Items["nop.IsPOSTBeingDone"] = value;
-            }
+
+            set => _httpContextAccessor.HttpContext.Items["nop.IsPOSTBeingDone"] = value;
         }
 
         /// <summary>

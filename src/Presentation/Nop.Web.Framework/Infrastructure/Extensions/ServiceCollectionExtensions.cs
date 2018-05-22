@@ -1,11 +1,11 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Internal;
 using Microsoft.AspNetCore.Mvc.Razor;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json.Serialization;
@@ -16,6 +16,7 @@ using Nop.Core.Data;
 using Nop.Core.Domain.Security;
 using Nop.Core.Infrastructure;
 using Nop.Core.Plugins;
+using Nop.Data;
 using Nop.Services.Authentication;
 using Nop.Services.Authentication.External;
 using Nop.Services.Logging;
@@ -52,7 +53,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             engine.Initialize(services);
             var serviceProvider = engine.ConfigureServices(services, configuration);
 
-            if (DataSettingsHelper.DatabaseIsInstalled())
+            if (DataSettingsManager.DatabaseIsInstalled)
             {
                 //implement schedule tasks
                 //database is already installed, so start scheduled tasks
@@ -114,7 +115,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 options.Cookie.Name = ".Nop.Antiforgery";
 
                 //whether to allow the use of anti-forgery cookies from SSL protected page on the other store pages which are not
-                options.Cookie.SecurePolicy = DataSettingsHelper.DatabaseIsInstalled() && EngineContext.Current.Resolve<SecuritySettings>().ForceSslForAllPages
+                options.Cookie.SecurePolicy = DataSettingsManager.DatabaseIsInstalled && EngineContext.Current.Resolve<SecuritySettings>().ForceSslForAllPages
                     ? CookieSecurePolicy.SameAsRequest : CookieSecurePolicy.None;
             });
         }
@@ -131,7 +132,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 options.Cookie.HttpOnly = true;
 
                 //whether to allow the use of session values from SSL protected page on the other store pages which are not
-                options.Cookie.SecurePolicy = DataSettingsHelper.DatabaseIsInstalled() && EngineContext.Current.Resolve<SecuritySettings>().ForceSslForAllPages
+                options.Cookie.SecurePolicy = DataSettingsManager.DatabaseIsInstalled && EngineContext.Current.Resolve<SecuritySettings>().ForceSslForAllPages
                     ? CookieSecurePolicy.SameAsRequest : CookieSecurePolicy.None;
             });
         }
@@ -142,7 +143,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         /// <param name="services">Collection of service descriptors</param>
         public static void AddThemes(this IServiceCollection services)
         {
-            if (!DataSettingsHelper.DatabaseIsInstalled())
+            if (!DataSettingsManager.DatabaseIsInstalled)
                 return;
 
             //themes support
@@ -163,17 +164,16 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             if (nopConfig.RedisCachingEnabled && nopConfig.PersistDataProtectionKeysToRedis)
             {
                 //store keys in Redis
-                services.AddDataProtection().PersistKeysToRedis(
-                    () =>
-                    {
-                        var redisConnectionWrapper = EngineContext.Current.Resolve<IRedisConnectionWrapper>();
-                        return redisConnectionWrapper.GetDatabase();
-                    }, RedisConfiguration.DataProtectionKeysName);
+                services.AddDataProtection().PersistKeysToRedis(() =>
+                {
+                    var redisConnectionWrapper = EngineContext.Current.Resolve<IRedisConnectionWrapper>();
+                    return redisConnectionWrapper.GetDatabase();
+                }, RedisConfiguration.DataProtectionKeysName);
             }
             else
             {
-                var dataProtectionKeysPath = CommonHelper.MapPath("~/App_Data/DataProtectionKeys");
-                var dataProtectionKeysFolder = new DirectoryInfo(dataProtectionKeysPath);
+                var dataProtectionKeysPath = CommonHelper.DefaultFileProvider.MapPath("~/App_Data/DataProtectionKeys");
+                var dataProtectionKeysFolder = new System.IO.DirectoryInfo(dataProtectionKeysPath);
 
                 //configure the data protection system to persist keys to the specified directory
                 services.AddDataProtection().PersistKeysToFileSystem(dataProtectionKeysFolder);
@@ -202,7 +202,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 options.AccessDeniedPath = NopCookieAuthenticationDefaults.AccessDeniedPath;
 
                 //whether to allow the use of authentication cookies from SSL protected page on the other store pages which are not
-                options.Cookie.SecurePolicy = DataSettingsHelper.DatabaseIsInstalled() && EngineContext.Current.Resolve<SecuritySettings>().ForceSslForAllPages
+                options.Cookie.SecurePolicy = DataSettingsManager.DatabaseIsInstalled && EngineContext.Current.Resolve<SecuritySettings>().ForceSslForAllPages
                     ? CookieSecurePolicy.SameAsRequest : CookieSecurePolicy.None;
             });
 
@@ -215,10 +215,10 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 options.AccessDeniedPath = NopCookieAuthenticationDefaults.AccessDeniedPath;
 
                 //whether to allow the use of authentication cookies from SSL protected page on the other store pages which are not
-                options.Cookie.SecurePolicy = DataSettingsHelper.DatabaseIsInstalled() && EngineContext.Current.Resolve<SecuritySettings>().ForceSslForAllPages
+                options.Cookie.SecurePolicy = DataSettingsManager.DatabaseIsInstalled && EngineContext.Current.Resolve<SecuritySettings>().ForceSslForAllPages
                     ? CookieSecurePolicy.SameAsRequest : CookieSecurePolicy.None;
             });
-
+            
             //register and configure external authentication plugins now
             var typeFinder = new WebAppTypeFinder();
             var externalAuthConfigurations = typeFinder.FindClassesOfType<IExternalAuthenticationRegistrar>();
@@ -271,6 +271,24 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         {
             //we use custom redirect executor as a workaround to allow using non-ASCII characters in redirect URLs
             services.AddSingleton<RedirectResultExecutor, NopRedirectResultExecutor>();
+        }
+
+        /// <summary>
+        /// Register base object context
+        /// </summary>
+        /// <param name="services">Collection of service descriptors</param>
+        public static void AddNopObjectContext(this IServiceCollection services)
+        {
+            services.AddDbContext<NopObjectContext>(optionsBuilder =>
+            {
+                var dataSettings = DataSettingsManager.LoadSettings();
+                if (!dataSettings?.IsValid ?? true)
+                    return;
+
+                optionsBuilder
+                    .UseLazyLoadingProxies()
+                    .UseSqlServer(dataSettings.DataConnectionString);
+            });
         }
     }
 }

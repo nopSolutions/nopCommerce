@@ -25,6 +25,10 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public int MinimumRewardPointsToUse { get; set; }
         public bool MinimumRewardPointsToUse_OverrideForStore { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.RewardPoints.MaximumRewardPointsToUsePerOrder")]
+        public int MaximumRewardPointsToUsePerOrder { get; set; }
+        public bool MaximumRewardPointsToUsePerOrder_OverrideForStore { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.RewardPoints.PointsForRegistration")]
         public int PointsForRegistration { get; set; }
         public bool PointsForRegistration_OverrideForStore { get; set; }

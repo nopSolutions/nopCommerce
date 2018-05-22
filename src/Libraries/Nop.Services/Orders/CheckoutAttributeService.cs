@@ -75,7 +75,7 @@ namespace Nop.Services.Orders
         /// <param name="checkoutAttributeRepository">Checkout attribute repository</param>
         /// <param name="checkoutAttributeValueRepository">Checkout attribute value repository</param>
         /// <param name="storeMappingService">Store mapping service</param>
-        /// <param name="eventPublisher">Event published</param>
+        /// <param name="eventPublisher">Event publisher</param>
         public CheckoutAttributeService(ICacheManager cacheManager,
             IRepository<CheckoutAttribute> checkoutAttributeRepository,
             IRepository<CheckoutAttributeValue> checkoutAttributeValueRepository,

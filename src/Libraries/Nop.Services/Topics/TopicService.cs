@@ -204,13 +204,7 @@ namespace Nop.Services.Topics
                             select c;
                     }
 
-                    //only distinct topics (group by ID)
-                    query = from t in query
-                        group t by t.Id
-                        into tGroup
-                        orderby tGroup.Key
-                        select tGroup.FirstOrDefault();
-                    query = query.OrderBy(t => t.DisplayOrder).ThenBy(t => t.SystemName);
+                    query = query.Distinct().OrderBy(t => t.DisplayOrder).ThenBy(t => t.SystemName);
                 }
 
                 return query.ToList();                            

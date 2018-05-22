@@ -47,7 +47,7 @@ namespace Nop.Services.Directory
         /// </summary>
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="stateProvinceRepository">State/province repository</param>
-        /// <param name="eventPublisher">Event published</param>
+        /// <param name="eventPublisher">Event publisher</param>
         public StateProvinceService(ICacheManager cacheManager,
             IRepository<StateProvince> stateProvinceRepository,
             IEventPublisher eventPublisher)

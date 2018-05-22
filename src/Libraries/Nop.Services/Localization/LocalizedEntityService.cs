@@ -7,7 +7,7 @@ using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Localization;
-using Nop.Data;
+using Nop.Data.Extensions;
 
 namespace Nop.Services.Localization
 {
@@ -305,7 +305,7 @@ namespace Nop.Services.Localization
             }
 
             //load localized value (check whether it's a cacheable entity. In such cases we load its original entity type)
-            var localeKeyGroup = entity.GetUnproxiedEntityType().Name;
+            var localeKeyGroup = entity.GetType().BaseType.Name;
             var localeKey = propInfo.Name;
 
             var props = GetLocalizedProperties(entity.Id, localeKeyGroup);

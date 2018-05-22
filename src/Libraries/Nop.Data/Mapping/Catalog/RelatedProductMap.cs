@@ -1,19 +1,29 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Catalog;
 
 namespace Nop.Data.Mapping.Catalog
 {
     /// <summary>
-    /// Mapping class
+    /// Represents a related product mapping configuration
     /// </summary>
     public partial class RelatedProductMap : NopEntityTypeConfiguration<RelatedProduct>
     {
+        #region Methods
+
         /// <summary>
-        /// Ctor
+        /// Configures the entity
         /// </summary>
-        public RelatedProductMap()
+        /// <param name="builder">The builder to be used to configure the entity</param>
+        public override void Configure(EntityTypeBuilder<RelatedProduct> builder)
         {
-            this.ToTable("RelatedProduct");
-            this.HasKey(c => c.Id);
+            builder.ToTable(nameof(RelatedProduct));
+            builder.HasKey(product => product.Id);
+
+            //add custom configuration
+            this.PostConfigure(builder);
         }
+
+        #endregion
     }
 }

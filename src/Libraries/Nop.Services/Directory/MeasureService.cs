@@ -68,7 +68,7 @@ namespace Nop.Services.Directory
         /// <param name="measureDimensionRepository">Dimension repository</param>
         /// <param name="measureWeightRepository">Weight repository</param>
         /// <param name="measureSettings">Measure settings</param>
-        /// <param name="eventPublisher">Event published</param>
+        /// <param name="eventPublisher">Event publisher</param>
         public MeasureService(ICacheManager cacheManager,
             IRepository<MeasureDimension> measureDimensionRepository,
             IRepository<MeasureWeight> measureWeightRepository,

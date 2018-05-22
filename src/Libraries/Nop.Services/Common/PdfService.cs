@@ -17,6 +17,7 @@ using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
 using Nop.Core.Html;
+using Nop.Core.Infrastructure;
 using Nop.Services.Catalog;
 using Nop.Services.Configuration;
 using Nop.Services.Directory;
@@ -61,6 +62,7 @@ namespace Nop.Services.Common
         private readonly AddressSettings _addressSettings;
         private readonly IVendorService _vendorService;
         private readonly VendorSettings _vendorSettings;
+        private readonly INopFileProvider _fileProvider;
 
         #endregion
 
@@ -93,6 +95,7 @@ namespace Nop.Services.Common
         /// <param name="addressSettings">Address settings</param>
         /// <param name="vendorService">Vendor service</param>
         /// <param name="vendorSettings">Vendor settings</param>
+        /// <param name="fileProvider">File provider</param>
         public PdfService(ILocalizationService localizationService, 
             ILanguageService languageService,
             IWorkContext workContext,
@@ -116,7 +119,8 @@ namespace Nop.Services.Common
             TaxSettings taxSettings,
             AddressSettings addressSettings,
             IVendorService vendorService,
-            VendorSettings vendorSettings)
+            VendorSettings vendorSettings,
+            INopFileProvider fileProvider)
         {
             this._localizationService = localizationService;
             this._languageService = languageService;
@@ -142,6 +146,7 @@ namespace Nop.Services.Common
             this._addressSettings = addressSettings;
             this._vendorService = vendorService;
             this._vendorSettings = vendorSettings;
+            this._fileProvider = fileProvider;
         }
 
         #endregion
@@ -169,7 +174,7 @@ namespace Nop.Services.Common
             if (fontFileName == null)
                 throw new ArgumentNullException(nameof(fontFileName));
 
-            var fontPath = Path.Combine(CommonHelper.MapPath("~/App_Data/Pdf/"), fontFileName);
+            var fontPath = _fileProvider.Combine(_fileProvider.MapPath("~/App_Data/Pdf/"), fontFileName);
             var baseFont = BaseFont.CreateFont(fontPath, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
             var font = new Font(baseFont, 10, Font.NORMAL);
             return font;
@@ -1178,7 +1183,7 @@ namespace Nop.Services.Common
                 throw new ArgumentNullException(nameof(order));
 
             var fileName = $"order_{order.OrderGuid}_{CommonHelper.GenerateRandomDigitCode(4)}.pdf";
-            var filePath = Path.Combine(CommonHelper.MapPath("~/wwwroot/files/exportimport"), fileName);
+            var filePath = _fileProvider.Combine(_fileProvider.MapPath("~/wwwroot/files/exportimport"), fileName);
             using (var fileStream = new FileStream(filePath, FileMode.Create))
             {
                 var orders = new List<Order> {order};

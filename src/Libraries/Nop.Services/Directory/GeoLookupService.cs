@@ -4,7 +4,7 @@ using System;
 using MaxMind.GeoIP2;
 using MaxMind.GeoIP2.Exceptions;
 using MaxMind.GeoIP2.Responses;
-using Nop.Core;
+using Nop.Core.Infrastructure;
 using Nop.Services.Logging;
 
 namespace Nop.Services.Directory
@@ -17,6 +17,7 @@ namespace Nop.Services.Directory
         #region Fields
 
         private readonly ILogger _logger;
+        private readonly INopFileProvider _fileProvider;
 
         #endregion
 
@@ -26,9 +27,11 @@ namespace Nop.Services.Directory
         /// Ctor
         /// </summary>
         /// <param name="logger">Logger</param>
-        public GeoLookupService(ILogger logger)
+        /// <param name="fileProvider">File provider</param>
+        public GeoLookupService(ILogger logger, INopFileProvider fileProvider)
         {
             this._logger = logger;
+            this._fileProvider = fileProvider;
         }
 
         #endregion
@@ -48,7 +51,7 @@ namespace Nop.Services.Directory
             try
             {
                 //This product includes GeoLite2 data created by MaxMind, available from http://www.maxmind.com
-                var databasePath = CommonHelper.MapPath("~/App_Data/GeoLite2-Country.mmdb");
+                var databasePath = _fileProvider.MapPath("~/App_Data/GeoLite2-Country.mmdb");
                 var reader = new DatabaseReader(databasePath);
                 var omni = reader.Country(ipAddress);
                 return omni;

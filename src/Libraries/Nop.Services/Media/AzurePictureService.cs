@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 using Nop.Core;
@@ -10,6 +9,7 @@ using Nop.Core.Configuration;
 using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Media;
+using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Services.Configuration;
 using Nop.Services.Events;
@@ -64,7 +64,7 @@ namespace Nop.Services.Media
         /// <param name="mediaSettings">Media settings</param>
         /// <param name="config">Config</param>
         /// <param name="dataProvider">Data provider</param>
-        /// <param name="hostingEnvironment">Hosting environment</param>
+        /// <param name="fileProvider">File provider</param>
         public AzurePictureService(IRepository<Picture> pictureRepository,
             IRepository<ProductPicture> productPictureRepository,
             ISettingService settingService,
@@ -76,7 +76,7 @@ namespace Nop.Services.Media
             MediaSettings mediaSettings,
             NopConfig config,
             IDataProvider dataProvider,
-            IHostingEnvironment hostingEnvironment)
+            INopFileProvider fileProvider)
             : base(pictureRepository,
                 productPictureRepository,
                 settingService,
@@ -86,7 +86,7 @@ namespace Nop.Services.Media
                 eventPublisher,
                 mediaSettings,
                 dataProvider,
-                hostingEnvironment)
+                fileProvider)
         {
             this._cacheManager = cacheManager;
             this._mediaSettings = mediaSettings;

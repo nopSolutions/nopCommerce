@@ -36,23 +36,17 @@ namespace Nop.Core.Domain.Customers
         /// </summary>
         public AttributeControlType AttributeControlType
         {
-            get
-            {
-                return (AttributeControlType)AttributeControlTypeId;
-            }
-            set
-            {
-                AttributeControlTypeId = (int)value;
-            }
+            get => (AttributeControlType)AttributeControlTypeId;
+            set => AttributeControlTypeId = (int)value;
         }
+
         /// <summary>
         /// Gets the customer attribute values
         /// </summary>
         public virtual ICollection<CustomerAttributeValue> CustomerAttributeValues
         {
-            get { return _customerAttributeValues ?? (_customerAttributeValues = new List<CustomerAttributeValue>()); }
-            protected set { _customerAttributeValues = value; }
+            get => _customerAttributeValues ?? (_customerAttributeValues = new List<CustomerAttributeValue>());
+            protected set => _customerAttributeValues = value;
         }
     }
-
 }

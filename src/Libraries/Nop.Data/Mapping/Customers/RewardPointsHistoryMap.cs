@@ -1,29 +1,42 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Orders;
 
 namespace Nop.Data.Mapping.Customers
 {
     /// <summary>
-    /// Mapping class
+    /// Represents a reward points history mapping configuration
     /// </summary>
     public partial class RewardPointsHistoryMap : NopEntityTypeConfiguration<RewardPointsHistory>
     {
+        #region Methods
+
         /// <summary>
-        /// Ctor
+        /// Configures the entity
         /// </summary>
-        public RewardPointsHistoryMap()
+        /// <param name="builder">The builder to be used to configure the entity</param>
+        public override void Configure(EntityTypeBuilder<RewardPointsHistory> builder)
         {
-            this.ToTable("RewardPointsHistory");
-            this.HasKey(rph => rph.Id);
+            builder.ToTable(nameof(RewardPointsHistory));
+            builder.HasKey(historyEntry => historyEntry.Id);
 
-            this.Property(rph => rph.UsedAmount).HasPrecision(18, 4);
+            builder.Property(historyEntry => historyEntry.UsedAmount).HasColumnType("decimal(18, 4)");
 
-            this.HasRequired(rph => rph.Customer)
+            builder.HasOne(historyEntry => historyEntry.Customer)
                 .WithMany()
-                .HasForeignKey(rph => rph.CustomerId);
+                .HasForeignKey(historyEntry => historyEntry.CustomerId)
+                .IsRequired();
 
-            this.HasOptional(rph => rph.UsedWithOrder)
-                .WithOptionalDependent(o => o.RedeemedRewardPointsEntry)
-                .WillCascadeOnDelete(false);
+            builder.HasOne(historyEntry => historyEntry.UsedWithOrder)
+                .WithOne(order => order.RedeemedRewardPointsEntry)
+                .HasForeignKey<Order>(order => order.RewardPointsHistoryEntryId)
+                .OnDelete(DeleteBehavior.ClientSetNull);
+
+            //add custom configuration
+            this.PostConfigure(builder);
         }
+
+        #endregion
     }
 }

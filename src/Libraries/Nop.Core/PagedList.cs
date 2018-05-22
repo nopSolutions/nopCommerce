@@ -29,7 +29,7 @@ namespace Nop.Core
 
             this.PageSize = pageSize;
             this.PageIndex = pageIndex;
-            if(getOnlyTotalCount)
+            if (getOnlyTotalCount)
                 return;
             this.AddRange(source.Skip(pageIndex * pageSize).Take(pageSize).ToList());
         }
@@ -42,7 +42,7 @@ namespace Nop.Core
         /// <param name="pageSize">Page size</param>
         public PagedList(IList<T> source, int pageIndex, int pageSize)
         {
-            TotalCount = source.Count();
+            TotalCount = source.Count;
             TotalPages = TotalCount / pageSize;
 
             if (TotalCount % pageSize > 0)
@@ -77,31 +77,30 @@ namespace Nop.Core
         /// Page index
         /// </summary>
         public int PageIndex { get; }
+
         /// <summary>
         /// Page size
         /// </summary>
         public int PageSize { get; }
+
         /// <summary>
         /// Total count
         /// </summary>
         public int TotalCount { get; }
+
         /// <summary>
         /// Total pages
         /// </summary>
         public int TotalPages { get; }
+
         /// <summary>
         /// Has previous page
         /// </summary>
-        public bool HasPreviousPage
-        {
-            get { return (PageIndex > 0); }
-        }
+        public bool HasPreviousPage => PageIndex > 0;
+
         /// <summary>
         /// Has next page
         /// </summary>
-        public bool HasNextPage
-        {
-            get { return (PageIndex + 1 < TotalPages); }
-        }
+        public bool HasNextPage => PageIndex + 1 < TotalPages;
     }
 }

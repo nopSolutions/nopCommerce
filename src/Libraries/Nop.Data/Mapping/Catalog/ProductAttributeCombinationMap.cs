@@ -1,28 +1,39 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Catalog;
 
 namespace Nop.Data.Mapping.Catalog
 {
     /// <summary>
-    /// Mapping class
+    /// Represents a product attribute combination mapping configuration
     /// </summary>
     public partial class ProductAttributeCombinationMap : NopEntityTypeConfiguration<ProductAttributeCombination>
     {
+        #region Methods
+
         /// <summary>
-        /// Ctor
+        /// Configures the entity
         /// </summary>
-        public ProductAttributeCombinationMap()
+        /// <param name="builder">The builder to be used to configure the entity</param>
+        public override void Configure(EntityTypeBuilder<ProductAttributeCombination> builder)
         {
-            this.ToTable("ProductAttributeCombination");
-            this.HasKey(pac => pac.Id);
+            builder.ToTable(nameof(ProductAttributeCombination));
+            builder.HasKey(combination => combination.Id);
 
-            this.Property(pac => pac.Sku).HasMaxLength(400);
-            this.Property(pac => pac.ManufacturerPartNumber).HasMaxLength(400);
-            this.Property(pac => pac.Gtin).HasMaxLength(400);
-            this.Property(pac => pac.OverriddenPrice).HasPrecision(18, 4);
+            builder.Property(combination => combination.Sku).HasMaxLength(400);
+            builder.Property(combination => combination.ManufacturerPartNumber).HasMaxLength(400);
+            builder.Property(combination => combination.Gtin).HasMaxLength(400);
+            builder.Property(combination => combination.OverriddenPrice).HasColumnType("decimal(18, 4)");
 
-            this.HasRequired(pac => pac.Product)
-                .WithMany(p => p.ProductAttributeCombinations)
-                .HasForeignKey(pac => pac.ProductId);
+            builder.HasOne(combination => combination.Product)
+                .WithMany(product => product.ProductAttributeCombinations)
+                .HasForeignKey(combination => combination.ProductId)
+                .IsRequired();
+
+            //add custom configuration
+            this.PostConfigure(builder);
         }
+
+        #endregion
     }
 }

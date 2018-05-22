@@ -78,14 +78,8 @@ namespace Nop.Core.Domain.Orders
         /// </summary>
         public ReturnRequestStatus ReturnRequestStatus
         {
-            get
-            {
-                return (ReturnRequestStatus)this.ReturnRequestStatusId;
-            }
-            set
-            {
-                this.ReturnRequestStatusId = (int)value;
-            }
+            get => (ReturnRequestStatus)ReturnRequestStatusId;
+            set => ReturnRequestStatusId = (int)value;
         }
 
         /// <summary>

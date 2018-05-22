@@ -542,7 +542,7 @@ namespace Nop.Web.Factories
 
             var productTagsCacheKey = string.Format(ModelCacheEventConsumer.PRODUCTTAG_BY_PRODUCT_MODEL_KEY, product.Id, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
             var model = _cacheManager.Get(productTagsCacheKey, () =>
-                product.ProductTags
+                _productTagService.GetAllProductTagsByProductId(product.Id)
                 //filter by store
                 .Where(x => _productTagService.GetProductCount(x.Id, _storeContext.CurrentStore.Id) > 0)
                 .Select(x => new ProductTagModel

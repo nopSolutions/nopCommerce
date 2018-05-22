@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Security;
@@ -13,7 +14,7 @@ namespace Nop.Core.Domain.Catalog
     /// </summary>
     public partial class Manufacturer : BaseEntity, ILocalizedEntity, ISlugSupported, IAclSupported, IStoreMappingSupported, IDiscountSupported
     {
-        private ICollection<Discount> _appliedDiscounts;
+        private ICollection<DiscountManufacturerMapping> _discountManufacturerMappings;
 
         /// <summary>
         /// Gets or sets the name
@@ -108,10 +109,15 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets the collection of applied discounts
         /// </summary>
-        public virtual ICollection<Discount> AppliedDiscounts
+        public IList<Discount> AppliedDiscounts => DiscountManufacturerMappings.Select(mapping => mapping.Discount).ToList();
+
+        /// <summary>
+        /// Gets or sets the discount-manufacturer mappings
+        /// </summary>
+        public virtual ICollection<DiscountManufacturerMapping> DiscountManufacturerMappings
         {
-            get { return _appliedDiscounts ?? (_appliedDiscounts = new List<Discount>()); }
-            set { _appliedDiscounts = value; }
+            get => _discountManufacturerMappings ?? (_discountManufacturerMappings = new List<DiscountManufacturerMapping>());
+            set => _discountManufacturerMappings = value;
         }
     }
 }

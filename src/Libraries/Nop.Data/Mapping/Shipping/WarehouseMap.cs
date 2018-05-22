@@ -1,20 +1,31 @@
-﻿using Nop.Core.Domain.Shipping;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Nop.Core.Domain.Shipping;
 
 namespace Nop.Data.Mapping.Shipping
 {
     /// <summary>
-    /// Mapping class
+    /// Represents a warehouse mapping configuration
     /// </summary>
     public partial class WarehouseMap : NopEntityTypeConfiguration<Warehouse>
     {
+        #region Methods
+
         /// <summary>
-        /// Ctor
+        /// Configures the entity
         /// </summary>
-        public WarehouseMap()
+        /// <param name="builder">The builder to be used to configure the entity</param>
+        public override void Configure(EntityTypeBuilder<Warehouse> builder)
         {
-            this.ToTable("Warehouse");
-            this.HasKey(wh => wh.Id);
-            this.Property(wh => wh.Name).IsRequired().HasMaxLength(400);
+            builder.ToTable(nameof(Warehouse));
+            builder.HasKey(warehouse => warehouse.Id);
+
+            builder.Property(warehouse => warehouse.Name).HasMaxLength(400).IsRequired();
+
+            //add custom configuration
+            this.PostConfigure(builder);
         }
+
+        #endregion
     }
 }

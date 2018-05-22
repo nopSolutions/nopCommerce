@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Nop.Core;
-using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Seo;
 using Nop.Core.Infrastructure;
-using Nop.Data;
+using Nop.Data.Extensions;
 using Nop.Services.Localization;
 
 namespace Nop.Services.Seo
@@ -106,7 +105,7 @@ namespace Nop.Services.Seo
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
 
-            var entityName = entity.GetUnproxiedEntityType().Name;
+            var entityName = entity.GetType().BaseType.Name;
             return GetSeName(entity.Id, entityName, languageId, returnDefaultValue, ensureTwoPublishedLanguages);
         }
 
@@ -164,7 +163,7 @@ namespace Nop.Services.Seo
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
 
-            return ValidateSeName(entity.Id, entity.GetUnproxiedEntityType().Name, seName, name, ensureNotEmpty);
+            return ValidateSeName(entity.Id, entity.GetType().BaseType.Name, seName, name, ensureNotEmpty);
         }
 
         /// <summary>

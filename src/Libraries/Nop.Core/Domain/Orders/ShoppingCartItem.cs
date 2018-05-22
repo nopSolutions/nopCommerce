@@ -69,8 +69,8 @@ namespace Nop.Core.Domain.Orders
         /// </summary>
         public ShoppingCartType ShoppingCartType
         {
-            get { return (ShoppingCartType)ShoppingCartTypeId; }
-            set { ShoppingCartTypeId = (int)value; }
+            get => (ShoppingCartType)ShoppingCartTypeId;
+            set => ShoppingCartTypeId = (int)value;
         }
 
         /// <summary>

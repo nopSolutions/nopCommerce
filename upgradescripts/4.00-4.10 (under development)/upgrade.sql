@@ -950,6 +950,27 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Payment">
     <Value></Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.MaximumRewardPointsToUsePerOrder">
+    <Value>Maximum reward points to use per order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.MaximumRewardPointsToUsePerOrder.Hint">
+    <Value>Customers won''t be able to use more than X reward points per one order. Set to 0 if you do not want to use this setting.</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Checkout.UseRewardPoints">
+    <Value>Use my reward points, {0} reward points ({1}) available for this order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ExportImportRelatedEntitiesByName">
+    <Value>Export/Import related entities using name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ExportImportRelatedEntitiesByName.Hint">
+    <Value>Check if related entities should be exported/imported using name.</Value>
+  </LocaleResource>    
+  <LocaleResource Name="Admin.Catalog.Products.Import.ManufacturersDontExist">
+    <Value>Manufacturers with the following names and/or IDs don''t exist: {0}</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Catalog.Products.Import.CategoriesDontExist">
+    <Value>Categories with the following names and/or IDs don''t exist: {0}</Value>
+  </LocaleResource>  
 </Language>
 '
 
@@ -2525,7 +2546,63 @@ IF EXISTS (
 DROP PROCEDURE [temp_generate_sename]
 GO
 
---del setting
+--delete setting
 DELETE FROM [Setting]
 WHERE [Name] = N'captchasettings.recaptchaversion'
+GO
+
+--new setting 
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'rewardpointssettings.maximumrewardpointstouseperorder')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'rewardpointssettings.maximumrewardpointstouseperorder', N'0', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'catalogsettings.exportimportrelatedentitiesbyname')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'catalogsettings.exportimportrelatedentitiesbyname', N'true', 0)
+END
+GO
+
+--delete setting
+DELETE FROM [Setting]
+WHERE [Name] = N'commonsettings.usestoredproceduresifsupported'
+GO
+
+--drop some indexes
+IF EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_PMM_ProductId' and object_id=object_id(N'[Product_Manufacturer_Mapping]'))
+BEGIN
+	DROP INDEX [IX_PMM_ProductId] ON [Product_Manufacturer_Mapping]
+END
+GO
+
+IF EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_PCM_ProductId' and object_id=object_id(N'[Product_Category_Mapping]'))
+BEGIN
+	DROP INDEX [IX_PCM_ProductId] ON [Product_Category_Mapping]
+END
+GO
+
+IF EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_PSAM_ProductId' and object_id=object_id(N'[Product_SpecificationAttribute_Mapping]'))
+BEGIN
+	DROP INDEX [IX_PSAM_ProductId] ON [Product_SpecificationAttribute_Mapping]
+END
+GO
+
+--update the FullText_IsSupported procedure
+ALTER PROCEDURE [dbo].[FullText_IsSupported]
+AS
+BEGIN	
+	EXEC('
+	SELECT CASE SERVERPROPERTY(''IsFullTextInstalled'')
+	WHEN 1 THEN 
+		CASE DatabaseProperty (DB_NAME(DB_ID()), ''IsFulltextEnabled'')
+		WHEN 1 THEN 1
+		ELSE 0
+		END
+	ELSE 0
+	END as Value')
+END
 GO

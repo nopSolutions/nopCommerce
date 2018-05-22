@@ -9,10 +9,12 @@
         /// Identifier
         /// </summary>
         public int Id { get; set; }
+
         /// <summary>
         /// Parent category identifier
         /// </summary>
         public int ParentCategoryId { get; set; }
+
         /// <summary>
         /// Name
         /// </summary>

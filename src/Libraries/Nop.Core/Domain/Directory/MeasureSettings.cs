@@ -11,6 +11,7 @@ namespace Nop.Core.Domain.Directory
         /// Base dimension identifier
         /// </summary>
         public int BaseDimensionId { get; set; }
+
         /// <summary>
         /// Base weight identifier
         /// </summary>

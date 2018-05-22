@@ -94,14 +94,8 @@ namespace Nop.Core.Domain.Orders
         /// </summary>
         public AttributeControlType AttributeControlType
         {
-            get
-            {
-                return (AttributeControlType)AttributeControlTypeId;
-            }
-            set
-            {
-                AttributeControlTypeId = (int)value;
-            }
+            get => (AttributeControlType)AttributeControlTypeId;
+            set => AttributeControlTypeId = (int)value;
         }
 
         /// <summary>
@@ -109,8 +103,8 @@ namespace Nop.Core.Domain.Orders
         /// </summary>
         public virtual ICollection<CheckoutAttributeValue> CheckoutAttributeValues
         {
-            get { return _checkoutAttributeValues ?? (_checkoutAttributeValues = new List<CheckoutAttributeValue>()); }
-            protected set { _checkoutAttributeValues = value; }
+            get => _checkoutAttributeValues ?? (_checkoutAttributeValues = new List<CheckoutAttributeValue>());
+            protected set => _checkoutAttributeValues = value;
         }
     }
 }

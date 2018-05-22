@@ -70,7 +70,7 @@ namespace Nop.Services.Shipping
             if (shippingMethod == null)
                 throw new ArgumentNullException(nameof(shippingMethod));
 
-            var result = shippingMethod.RestrictedCountries.ToList().Find(c => c.Id == countryId) != null;
+            var result = shippingMethod.ShippingMethodCountryMappings.Any(c => c.CountryId == countryId);
             return result;
         }
     }

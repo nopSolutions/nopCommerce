@@ -1,31 +1,42 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Catalog;
 
 namespace Nop.Data.Mapping.Catalog
 {
     /// <summary>
-    /// Mapping class
+    /// Represents a product attribute value mapping configuration
     /// </summary>
     public partial class ProductAttributeValueMap : NopEntityTypeConfiguration<ProductAttributeValue>
     {
+        #region Methods
+
         /// <summary>
-        /// Ctor
+        /// Configures the entity
         /// </summary>
-        public ProductAttributeValueMap()
+        /// <param name="builder">The builder to be used to configure the entity</param>
+        public override void Configure(EntityTypeBuilder<ProductAttributeValue> builder)
         {
-            this.ToTable("ProductAttributeValue");
-            this.HasKey(pav => pav.Id);
-            this.Property(pav => pav.Name).IsRequired().HasMaxLength(400);
-            this.Property(pav => pav.ColorSquaresRgb).HasMaxLength(100);
+            builder.ToTable(nameof(ProductAttributeValue));
+            builder.HasKey(value => value.Id);
 
-            this.Property(pav => pav.PriceAdjustment).HasPrecision(18, 4);
-            this.Property(pav => pav.WeightAdjustment).HasPrecision(18, 4);
-            this.Property(pav => pav.Cost).HasPrecision(18, 4);
+            builder.Property(value => value.Name).HasMaxLength(400).IsRequired();
+            builder.Property(value => value.ColorSquaresRgb).HasMaxLength(100);
+            builder.Property(value => value.PriceAdjustment).HasColumnType("decimal(18, 4)");
+            builder.Property(value => value.WeightAdjustment).HasColumnType("decimal(18, 4)");
+            builder.Property(value => value.Cost).HasColumnType("decimal(18, 4)");
 
-            this.Ignore(pav => pav.AttributeValueType);
+            builder.HasOne(value => value.ProductAttributeMapping)
+                .WithMany(productAttributeMapping => productAttributeMapping.ProductAttributeValues)
+                .HasForeignKey(value => value.ProductAttributeMappingId)
+                .IsRequired();
 
-            this.HasRequired(pav => pav.ProductAttributeMapping)
-                .WithMany(pam => pam.ProductAttributeValues)
-                .HasForeignKey(pav => pav.ProductAttributeMappingId);
+            builder.Ignore(value => value.AttributeValueType);
+
+            //add custom configuration
+            this.PostConfigure(builder);
         }
+
+        #endregion
     }
 }

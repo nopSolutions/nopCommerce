@@ -33,7 +33,7 @@ namespace Nop.Services.Messages
         /// <param name="queuedEmailService">Queued email service</param>
         /// <param name="customerService">Customer service</param>
         /// <param name="storeContext">Store context</param>
-        /// <param name="eventPublisher">Event published</param>
+        /// <param name="eventPublisher">Event publisher</param>
         public CampaignService(IRepository<Campaign> campaignRepository,
             IEmailSender emailSender, IMessageTokenProvider messageTokenProvider,
             ITokenizer tokenizer, IQueuedEmailService queuedEmailService,

@@ -1,4 +1,7 @@
 ﻿using System.Collections.Generic;
+using Microsoft.AspNetCore.Hosting;
+using Nop.Core;
+using Nop.Core.Infrastructure;
 using Nop.Core.Plugins;
 using Nop.Services.Tests.Directory;
 using Nop.Services.Tests.Discounts;
@@ -6,6 +9,7 @@ using Nop.Services.Tests.Payments;
 using Nop.Services.Tests.Shipping;
 using Nop.Services.Tests.Tax;
 using NUnit.Framework;
+using Rhino.Mocks;
 
 namespace Nop.Services.Tests
 {
@@ -21,6 +25,11 @@ namespace Nop.Services.Tests
 
         private void InitPlugins()
         {
+            var hostingEnvironment = MockRepository.GenerateMock<IHostingEnvironment>();
+            hostingEnvironment.Expect(x => x.ContentRootPath).Return(System.Reflection.Assembly.GetExecutingAssembly().Location);
+            hostingEnvironment.Expect(x => x.WebRootPath).Return(System.IO.Directory.GetCurrentDirectory());
+            CommonHelper.DefaultFileProvider = new NopFileProvider(hostingEnvironment);
+
             PluginManager.ReferencedPlugins = new List<PluginDescriptor>
             {
                 new PluginDescriptor(typeof(FixedRateTestTaxProvider).Assembly)

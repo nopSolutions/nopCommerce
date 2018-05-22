@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Nop.Core.Domain.Customers;
 
 namespace Nop.Core.Domain.Security
 {
@@ -8,7 +7,7 @@ namespace Nop.Core.Domain.Security
     /// </summary>
     public partial class PermissionRecord : BaseEntity
     {
-        private ICollection<CustomerRole> _customerRoles;
+        private ICollection<PermissionRecordCustomerRoleMapping> _permissionRecordCustomerRoleMappings;
 
         /// <summary>
         /// Gets or sets the permission name
@@ -24,14 +23,14 @@ namespace Nop.Core.Domain.Security
         /// Gets or sets the permission category
         /// </summary>
         public string Category { get; set; }
-        
+
         /// <summary>
-        /// Gets or sets discount usage history
+        /// Gets or sets the permission record-customer role mappings
         /// </summary>
-        public virtual ICollection<CustomerRole> CustomerRoles
+        public virtual ICollection<PermissionRecordCustomerRoleMapping> PermissionRecordCustomerRoleMappings
         {
-            get { return _customerRoles ?? (_customerRoles = new List<CustomerRole>()); }
-            protected set { _customerRoles = value; }
+            get => _permissionRecordCustomerRoleMappings ?? (_permissionRecordCustomerRoleMappings = new List<PermissionRecordCustomerRoleMapping>());
+            protected set => _permissionRecordCustomerRoleMappings = value;
         }   
     }
 }

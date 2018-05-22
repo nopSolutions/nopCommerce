@@ -8,26 +8,26 @@ namespace Nop.Core.Domain.Customers
         /// <summary>
         /// Administrators
         /// </summary>
-        public static string Administrators { get { return "Administrators"; } }
+        public static string Administrators => "Administrators";
 
         /// <summary>
         /// ForumModerators
         /// </summary>
-        public static string ForumModerators { get { return "ForumModerators"; } }
+        public static string ForumModerators => "ForumModerators";
 
         /// <summary>
         /// Registered
         /// </summary>
-        public static string Registered { get { return "Registered"; } }
+        public static string Registered => "Registered";
 
         /// <summary>
         /// Guests
         /// </summary>
-        public static string Guests { get { return "Guests"; } }
+        public static string Guests => "Guests";
 
         /// <summary>
         /// Vendors
         /// </summary>
-        public static string Vendors { get { return "Vendors"; } }
+        public static string Vendors => "Vendors";
     }
 }

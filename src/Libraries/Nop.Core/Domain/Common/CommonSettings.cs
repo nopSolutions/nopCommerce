@@ -21,15 +21,11 @@ namespace Nop.Core.Domain.Common
         /// Gets or sets a value indicating whether the contacts form should have "Subject"
         /// </summary>
         public bool SubjectFieldOnContactUsForm { get; set; }
+
         /// <summary>
         /// Gets or sets a value indicating whether the contacts form should use system email
         /// </summary>
         public bool UseSystemEmailForContactUsForm { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether stored procedures are enabled (should be used if possible)
-        /// </summary>
-        public bool UseStoredProceduresIfSupported { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to use stored procedure (if supported) for loading categories (it's much faster in admin area with a large number of categories than the LINQ implementation)

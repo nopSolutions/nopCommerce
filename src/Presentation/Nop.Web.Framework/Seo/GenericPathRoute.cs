@@ -81,7 +81,7 @@ namespace Nop.Web.Framework.Seo
         /// <returns>Task of the routing</returns>
         public override Task RouteAsync(RouteContext context)
         {
-            if (!DataSettingsHelper.DatabaseIsInstalled())
+            if (!DataSettingsManager.DatabaseIsInstalled)
                 return Task.CompletedTask;
 
             //try to get slug from the route data

@@ -108,7 +108,7 @@ namespace Nop.Services.Catalog
         /// <param name="productAttributeCombinationRepository">Product attribute combination repository</param>
         /// <param name="productAttributeValueRepository">Product attribute value repository</param>
         /// <param name="predefinedProductAttributeValueRepository">Predefined product attribute value repository</param>
-        /// <param name="eventPublisher">Event published</param>
+        /// <param name="eventPublisher">Event publisher</param>
         public ProductAttributeService(ICacheManager cacheManager,
             IRepository<ProductAttribute> productAttributeRepository,
             IRepository<ProductAttributeMapping> productAttributeMappingRepository,

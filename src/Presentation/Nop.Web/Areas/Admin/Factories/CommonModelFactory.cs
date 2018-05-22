@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
@@ -15,6 +14,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Infrastructure;
 using Nop.Core.Plugins;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
@@ -62,7 +62,8 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IUrlRecordService _urlRecordService;
         private readonly IWebHelper _webHelper;
         private readonly IWorkContext _workContext;
-        private readonly MeasureSettings _measureSettings;        
+        private readonly MeasureSettings _measureSettings;
+        private readonly INopFileProvider _fileProvider;
 
         #endregion
 
@@ -90,7 +91,8 @@ namespace Nop.Web.Areas.Admin.Factories
             IUrlRecordService urlRecordService,
             IWebHelper webHelper,
             IWorkContext workContext,
-            MeasureSettings measureSettings)
+            MeasureSettings measureSettings,
+            INopFileProvider fileProvider)
         {
             this._catalogSettings = catalogSettings;
             this._currencySettings = currencySettings;
@@ -115,6 +117,7 @@ namespace Nop.Web.Areas.Admin.Factories
             this._webHelper = webHelper;
             this._workContext = workContext;
             this._measureSettings = measureSettings;
+            this._fileProvider = fileProvider;
         }
 
         #endregion
@@ -506,8 +509,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     //https://stackoverflow.com/questions/2050396/getting-the-date-of-a-net-assembly
                     //we use a simple method because the more Jeff Atwood's solution doesn't work anymore 
                     //more info at https://blog.codinghorror.com/determining-build-date-the-hard-way/
-                    loadedAssemblyModel.BuildDate = assembly.IsDynamic ? null :
-                        (DateTime?)TimeZoneInfo.ConvertTimeFromUtc(File.GetLastWriteTimeUtc(assembly.Location), TimeZoneInfo.Local);
+                    loadedAssemblyModel.BuildDate = assembly.IsDynamic ? null : (DateTime?)TimeZoneInfo.ConvertTimeFromUtc(_fileProvider.GetLastWriteTimeUtc(assembly.Location), TimeZoneInfo.Local);
+                        
                 }
                 catch { }
                 model.LoadedAssemblies.Add(loadedAssemblyModel);
@@ -595,12 +598,12 @@ namespace Nop.Web.Areas.Admin.Factories
                     //fill in model values from the entity
                     var backupFileModel = new BackupFileModel
                     {
-                        Name = file.Name
+                        Name = _fileProvider.GetFileName(file)
                     };
 
                     //fill in additional values (not existing in the entity)
-                    backupFileModel.Length = $"{file.Length / 1024f / 1024f:F2} Mb";
-                    backupFileModel.Link = $"{_webHelper.GetStoreLocation(false)}db_backups/{file.Name}";
+                    backupFileModel.Length = $"{_fileProvider.FileLength(file) / 1024f / 1024f:F2} Mb";
+                    backupFileModel.Link = $"{_webHelper.GetStoreLocation(false)}db_backups/{backupFileModel.Name}";
 
                     return backupFileModel;
                 }),

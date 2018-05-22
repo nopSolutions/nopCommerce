@@ -88,7 +88,7 @@ namespace Nop.Services.Catalog
         /// <param name="workContext">Work context</param>
         /// <param name="storeContext">Store context</param>
         /// <param name="catalogSettings">Catalog settings</param>
-        /// <param name="eventPublisher">Event published</param>
+        /// <param name="eventPublisher">Event publisher</param>
         public ManufacturerService(ICacheManager cacheManager,
             IRepository<Manufacturer> manufacturerRepository,
             IRepository<ProductManufacturer> productManufacturerRepository,
@@ -178,13 +178,8 @@ namespace Nop.Services.Catalog
                             where !m.LimitedToStores || storeId == sm.StoreId
                             select m;
                 }
-                //only distinct manufacturers (group by ID)
-                query = from m in query
-                        group m by m.Id
-                            into mGroup
-                            orderby mGroup.Key
-                            select mGroup.FirstOrDefault();
-                query = query.OrderBy(m => m.DisplayOrder).ThenBy(m => m.Id);
+
+                query = query.Distinct().OrderBy(m => m.DisplayOrder).ThenBy(m => m.Id);
             }
 
             return new PagedList<Manufacturer>(query, pageIndex, pageSize);
@@ -313,13 +308,7 @@ namespace Nop.Services.Catalog
                                 select pm;
                     }
 
-                    //only distinct manufacturers (group by ID)
-                    query = from pm in query
-                            group pm by pm.Id
-                            into pmGroup
-                            orderby pmGroup.Key
-                            select pmGroup.FirstOrDefault();
-                    query = query.OrderBy(pm => pm.DisplayOrder).ThenBy(pm => pm.Id);
+                    query = query.Distinct().OrderBy(pm => pm.DisplayOrder).ThenBy(pm => pm.Id);
                 }
 
                 var productManufacturers = new PagedList<ProductManufacturer>(query, pageIndex, pageSize);
@@ -378,13 +367,7 @@ namespace Nop.Services.Catalog
                                 select pm;
                     }
 
-                    //only distinct manufacturers (group by ID)
-                    query = from pm in query
-                            group pm by pm.Id
-                            into mGroup
-                            orderby mGroup.Key
-                            select mGroup.FirstOrDefault();
-                    query = query.OrderBy(pm => pm.DisplayOrder).ThenBy(pm => pm.Id);
+                    query = query.Distinct().OrderBy(pm => pm.DisplayOrder).ThenBy(pm => pm.Id);
                 }
 
                 var productManufacturers = query.ToList();
@@ -462,17 +445,28 @@ namespace Nop.Services.Catalog
         /// <summary>
         /// Returns a list of names of not existing manufacturers
         /// </summary>
-        /// <param name="manufacturerNames">The names of the manufacturers to check</param>
-        /// <returns>List of names not existing manufacturers</returns>
-        public virtual string[] GetNotExistingManufacturers(string[] manufacturerNames)
+        /// <param name="manufacturerIdsNames">The names and/or IDs of the manufacturers to check</param>
+        /// <returns>List of names and/or IDs not existing manufacturers</returns>
+        public virtual string[] GetNotExistingManufacturers(string[] manufacturerIdsNames)
         {
-            if (manufacturerNames == null)
-                throw new ArgumentNullException(nameof(manufacturerNames));
+            if (manufacturerIdsNames == null)
+                throw new ArgumentNullException(nameof(manufacturerIdsNames));
 
             var query = _manufacturerRepository.Table;
-            var queryFilter = manufacturerNames.Distinct().ToArray();
+            var queryFilter = manufacturerIdsNames.Distinct().ToArray();
+            //filtering by name
             var filter = query.Select(m => m.Name).Where(m => queryFilter.Contains(m)).ToList();
-            return queryFilter.Except(filter).ToArray();
+            queryFilter = queryFilter.Except(filter).ToArray();
+
+            //if some names not found
+            if (queryFilter.Any())
+            {
+                //filtering by IDs
+                filter = query.Select(c => c.Id.ToString()).Where(c => queryFilter.Contains(c)).ToList();
+                queryFilter = queryFilter.Except(filter).ToArray();
+            }
+
+            return queryFilter.ToArray();
         }
 
         #endregion

@@ -1,24 +1,36 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Polls;
 
 namespace Nop.Data.Mapping.Polls
 {
     /// <summary>
-    /// Mapping class
+    /// Represents a poll mapping configuration
     /// </summary>
     public partial class PollMap : NopEntityTypeConfiguration<Poll>
     {
+        #region Methods
+
         /// <summary>
-        /// Ctor
+        /// Configures the entity
         /// </summary>
-        public PollMap()
+        /// <param name="builder">The builder to be used to configure the entity</param>
+        public override void Configure(EntityTypeBuilder<Poll> builder)
         {
-            this.ToTable("Poll");
-            this.HasKey(p => p.Id);
-            this.Property(p => p.Name).IsRequired();
-            
-            this.HasRequired(p => p.Language)
+            builder.ToTable(nameof(Poll));
+            builder.HasKey(poll => poll.Id);
+
+            builder.Property(poll => poll.Name).IsRequired();
+
+            builder.HasOne(poll => poll.Language)
                 .WithMany()
-                .HasForeignKey(p => p.LanguageId).WillCascadeOnDelete(true);
+                .HasForeignKey(poll => poll.LanguageId)
+                .IsRequired();
+
+            //add custom configuration
+            this.PostConfigure(builder);
         }
+
+        #endregion
     }
 }

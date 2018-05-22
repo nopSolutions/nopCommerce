@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Nop.Core;
+using Nop.Core.Infrastructure;
 using Nop.Core.Plugins;
 using Nop.Services.Themes;
 
@@ -21,14 +22,17 @@ namespace Nop.Services.Plugins
         #region Fields
 
         protected readonly IThemeProvider _themeProvider;
+        protected readonly INopFileProvider _fileProvider;
 
         #endregion
 
         #region Ctor
 
-        public UploadService(IThemeProvider themeProvider)
+        public UploadService(IThemeProvider themeProvider,
+            INopFileProvider fileProvider)
         {
             this._themeProvider = themeProvider;
+            this._fileProvider = fileProvider;
         }
 
         #endregion
@@ -47,7 +51,7 @@ namespace Nop.Services.Plugins
                 //try to get the entry containing information about the uploaded items 
                 var uploadedItemsFileEntry = archive.Entries
                     .FirstOrDefault(entry => entry.Name.Equals(UploadedItemsFileName, StringComparison.InvariantCultureIgnoreCase)
-                        && string.IsNullOrEmpty(Path.GetDirectoryName(entry.FullName)));
+                        && string.IsNullOrEmpty(_fileProvider.GetDirectoryName(entry.FullName)));
                 if (uploadedItemsFileEntry == null)
                     return null;
 
@@ -66,12 +70,12 @@ namespace Nop.Services.Plugins
         protected virtual IDescriptor UploadSingleItem(string archivePath)
         {
             //get path to the plugins directory
-            var pluginsDirectory = CommonHelper.MapPath(PluginManager.PluginsPath);
+            var pluginsDirectory = _fileProvider.MapPath(PluginManager.PluginsPath);
 
             //get path to the themes directory
             var themesDirectory = string.Empty;
             if (!string.IsNullOrEmpty(_themeProvider.ThemesPath))
-                themesDirectory = CommonHelper.MapPath(_themeProvider.ThemesPath);
+                themesDirectory = _fileProvider.MapPath(_themeProvider.ThemesPath);
 
             IDescriptor descriptor = null;
             var uploadedItemDirectoryName = string.Empty;
@@ -135,13 +139,13 @@ namespace Nop.Services.Plugins
 
             //get path to upload
             var directoryPath = descriptor is PluginDescriptor ? pluginsDirectory : themesDirectory;
-            var pathToUpload = Path.Combine(directoryPath, uploadedItemDirectoryName);
+            var pathToUpload = _fileProvider.Combine(directoryPath, uploadedItemDirectoryName);
 
             //ensure it's a new directory (e.g. some old files are not required when re-uploading a plugin)
             //furthermore, zip extract functionality cannot override existing files
             //but there could deletion issues (related to file locking, etc). In such cases the directory should be deleted manually
-            if (System.IO.Directory.Exists(pathToUpload))
-                CommonHelper.DeleteDirectory(pathToUpload);
+            if (_fileProvider.DirectoryExists(pathToUpload))
+                _fileProvider.DeleteDirectory(pathToUpload);
 
             //unzip archive
             ZipFile.ExtractToDirectory(archivePath, directoryPath);
@@ -158,12 +162,12 @@ namespace Nop.Services.Plugins
         protected virtual IList<IDescriptor> UploadMultipleItems(string archivePath, IList<UploadedItem> uploadedItems)
         {
             //get path to the plugins directory
-            var pluginsDirectory = CommonHelper.MapPath(PluginManager.PluginsPath);
+            var pluginsDirectory = _fileProvider.MapPath(PluginManager.PluginsPath);
 
             //get path to the themes directory
             var themesDirectory = string.Empty;
             if (!string.IsNullOrEmpty(_themeProvider.ThemesPath))
-                themesDirectory = CommonHelper.MapPath(_themeProvider.ThemesPath);
+                themesDirectory = _fileProvider.MapPath(_themeProvider.ThemesPath);
 
             //get descriptors of items contained in the archive
             var descriptors = new List<IDescriptor>();
@@ -217,14 +221,14 @@ namespace Nop.Services.Plugins
                         continue;
                     
                     //get path to upload
-                    var uploadedItemDirectoryName = Path.GetFileName(itemPath.TrimEnd('/'));
-                    var pathToUpload = Path.Combine(item.Type == UploadedItemType.Plugin ? pluginsDirectory : themesDirectory, uploadedItemDirectoryName);
+                    var uploadedItemDirectoryName = _fileProvider.GetFileName(itemPath.TrimEnd('/'));
+                    var pathToUpload = _fileProvider.Combine(item.Type == UploadedItemType.Plugin ? pluginsDirectory : themesDirectory, uploadedItemDirectoryName);
 
                     //ensure it's a new directory (e.g. some old files are not required when re-uploading a plugin or a theme)
                     //furthermore, zip extract functionality cannot override existing files
                     //but there could deletion issues (related to file locking, etc). In such cases the directory should be deleted manually
-                    if (System.IO.Directory.Exists(pathToUpload))
-                        CommonHelper.DeleteDirectory(pathToUpload);
+                    if (_fileProvider.DirectoryExists(pathToUpload))
+                        _fileProvider.DeleteDirectory(pathToUpload);
 
                     //unzip entries into files
                     var entries = archive.Entries.Where(entry => entry.FullName.StartsWith(itemPath, StringComparison.InvariantCultureIgnoreCase));
@@ -235,12 +239,12 @@ namespace Nop.Services.Plugins
                         if (string.IsNullOrEmpty(fileName))
                             continue;
                         
-                        var filePath = Path.Combine(pathToUpload, fileName.Replace("/", "\\"));
-                        var directoryPath = Path.GetDirectoryName(filePath);
+                        var filePath = _fileProvider.Combine(pathToUpload, fileName.Replace("/", "\\"));
+                        var directoryPath = _fileProvider.GetDirectoryName(filePath);
 
                         //whether the file directory is already exists, otherwise create the new one
-                        if (!System.IO.Directory.Exists(directoryPath))
-                            System.IO.Directory.CreateDirectory(directoryPath);
+                        if (!_fileProvider.DirectoryExists(directoryPath))
+                            _fileProvider.CreateDirectory(directoryPath);
 
                         //unzip entry to the file (ignore directory entries)
                         if (!filePath.Equals($"{directoryPath}\\", StringComparison.InvariantCultureIgnoreCase))
@@ -274,15 +278,15 @@ namespace Nop.Services.Plugins
             try
             {
                 //only zip archives are supported
-                if (!Path.GetExtension(archivefile.FileName)?.Equals(".zip", StringComparison.InvariantCultureIgnoreCase) ?? true)
+                if (!_fileProvider.GetFileExtension(archivefile.FileName)?.Equals(".zip", StringComparison.InvariantCultureIgnoreCase) ?? true)
                     throw new Exception("Only zip archives are supported");
 
                 //ensure that temp directory is created
-                var tempDirectory = CommonHelper.MapPath(UploadsTempPath);
-                System.IO.Directory.CreateDirectory(new DirectoryInfo(tempDirectory).FullName);
+                var tempDirectory = _fileProvider.MapPath(UploadsTempPath);
+                _fileProvider.CreateDirectory(tempDirectory);
 
                 //copy original archive to the temp directory
-                zipFilePath = Path.Combine(tempDirectory, archivefile.FileName);
+                zipFilePath = _fileProvider.Combine(tempDirectory, archivefile.FileName);
                 using (var fileStream = new FileStream(zipFilePath, FileMode.Create))
                     archivefile.CopyTo(fileStream);
 
@@ -301,7 +305,7 @@ namespace Nop.Services.Plugins
             {
                 //delete temporary file
                 if (!string.IsNullOrEmpty(zipFilePath))
-                    File.Delete(zipFilePath);
+                    _fileProvider.DeleteFile(zipFilePath);
             }
 
             return descriptors;

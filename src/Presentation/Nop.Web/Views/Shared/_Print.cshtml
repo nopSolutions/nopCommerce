@@ -1,9 +1,12 @@
-﻿@inject IThemeContext themeContext
+﻿@using Nop.Core
+@using Nop.Services.Localization
+@inject IThemeContext themeContext
+@inject IWorkContext workContext;
 @{
     var themeName = themeContext.WorkingThemeName;
 }
 <!DOCTYPE html>
-<html @Html.NopPageCssClasses()>
+<html lang="@workContext.WorkingLanguage.GetTwoLetterIsoLanguageName()" @Html.NopPageCssClasses()>
 <head>
     <title>@Html.NopTitle()</title>
     <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />

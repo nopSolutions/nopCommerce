@@ -5,6 +5,7 @@
 @using Nop.Web.Framework.UI;
 @using Nop.Core;
 @using Nop.Core.Domain.Localization
+@using Nop.Services.Localization
 @{
     var kendoVersion = "2014.1.318";
     var supportRtl = workContext.WorkingLanguage.Rtl && !localizationSettings.IgnoreRtlPropertyForAdminArea;
@@ -57,7 +58,7 @@
     eventPublisher.Publish(new PageRenderingEvent(this.Html));
 }
 <!DOCTYPE html>
-<html@(supportRtl ? Html.Raw(" dir=\"rtl\"") : null)>
+<html lang="@workContext.WorkingLanguage.GetTwoLetterIsoLanguageName()"@(supportRtl ? Html.Raw(" dir=\"rtl\"") : null)>
     <head>
         <title>@adminPageTitle</title>
         <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />

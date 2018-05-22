@@ -91,8 +91,8 @@ namespace Nop.Core.Domain.Vendors
         /// </summary>
         public virtual ICollection<VendorNote> VendorNotes
         {
-            get { return _vendorNotes ?? (_vendorNotes = new List<VendorNote>()); }
-            protected set { _vendorNotes = value; }
+            get => _vendorNotes ?? (_vendorNotes = new List<VendorNote>());
+            protected set => _vendorNotes = value;
         }
     }
 }

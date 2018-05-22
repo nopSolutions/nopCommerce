@@ -4,11 +4,11 @@ using System.Linq;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
+using Nop.Core.Data.Extensions;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Stores;
-using Nop.Core.Extensions;
 using Nop.Data;
 using Nop.Services.Customers;
 using Nop.Services.Events;
@@ -251,8 +251,7 @@ namespace Nop.Services.Catalog
         public virtual IPagedList<Category> GetAllCategories(string categoryName, int storeId = 0, 
             int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false)
         {
-            if (_commonSettings.UseStoredProcedureForLoadingCategories &&
-                _commonSettings.UseStoredProceduresIfSupported && _dataProvider.StoredProceduredSupported)
+            if (_commonSettings.UseStoredProcedureForLoadingCategories)
             {
                 //stored procedures are enabled for loading categories and supported by the database. 
                 //It's much faster with a large number of categories than the LINQ implementation below 
@@ -269,16 +268,16 @@ namespace Nop.Services.Catalog
                 var totalRecordsParameter = _dataProvider.GetOutputInt32Parameter("TotalRecords");
 
                 //invoke stored procedure
-                var categories = _dbContext.ExecuteStoredProcedureList<Category>("CategoryLoadAllPaged",
+                var categories = _dbContext.EntityFromSql<Category>("CategoryLoadAllPaged",
                     showHiddenParameter, nameParameter, storeIdParameter, customerRoleIdsParameter,
-                    pageIndexParameter, pageSizeParameter, totalRecordsParameter);
+                    pageIndexParameter, pageSizeParameter, totalRecordsParameter).ToList();
                 var totalRecords = (totalRecordsParameter.Value != DBNull.Value) ? Convert.ToInt32(totalRecordsParameter.Value) : 0;
 
                 //paging
                 return new PagedList<Category>(categories, pageIndex, pageSize, totalRecords);
             }
 
-            //stored procedures aren't supported. Use LINQ
+            //don't use a stored procedure. Use LINQ
             var query = _categoryRepository.Table;
             if (!showHidden)
                 query = query.Where(c => c.Published);
@@ -310,14 +309,8 @@ namespace Nop.Services.Catalog
                         where !c.LimitedToStores || storeId == sm.StoreId
                         select c;
                 }
-
-                //only distinct categories (group by ID)
-                query = from c in query
-                    group c by c.Id
-                    into cGroup
-                    orderby cGroup.Key
-                    select cGroup.FirstOrDefault();
-                query = query.OrderBy(c => c.ParentCategoryId).ThenBy(c => c.DisplayOrder).ThenBy(c => c.Id);
+                
+                query = query.Distinct().OrderBy(c => c.ParentCategoryId).ThenBy(c => c.DisplayOrder).ThenBy(c => c.Id);
             }
             
             var unsortedCategories = query.ToList();
@@ -373,13 +366,8 @@ namespace Nop.Services.Catalog
                                 where !c.LimitedToStores || currentStoreId == sm.StoreId
                                 select c;
                     }
-                    //only distinct categories (group by ID)
-                    query = from c in query
-                            group c by c.Id
-                            into cGroup
-                            orderby cGroup.Key
-                            select cGroup.FirstOrDefault();
-                    query = query.OrderBy(c => c.DisplayOrder).ThenBy(c => c.Id);
+
+                    query = query.Distinct().OrderBy(c => c.DisplayOrder).ThenBy(c => c.Id);
                 }
 
                 var categories = query.ToList();
@@ -584,13 +572,8 @@ namespace Nop.Services.Catalog
                                 where !c.LimitedToStores || currentStoreId == sm.StoreId
                                 select pc;
                     }
-                    //only distinct categories (group by ID)
-                    query = from c in query
-                            group c by c.Id
-                            into cGroup
-                            orderby cGroup.Key
-                            select cGroup.FirstOrDefault();
-                    query = query.OrderBy(pc => pc.DisplayOrder).ThenBy(pc => pc.Id);
+
+                    query = query.Distinct().OrderBy(pc => pc.DisplayOrder).ThenBy(pc => pc.Id);
                 }
 
                 var productCategories = new PagedList<ProductCategory>(query, pageIndex, pageSize);
@@ -705,18 +688,28 @@ namespace Nop.Services.Catalog
         /// <summary>
         /// Returns a list of names of not existing categories
         /// </summary>
-        /// <param name="categoryNames">The nemes of the categories to check</param>
-        /// <returns>List of names not existing categories</returns>
-        public virtual string[] GetNotExistingCategories(string[] categoryNames)
+        /// <param name="categoryIdsNames">The names and/or IDs of the categories to check</param>
+        /// <returns>List of names and/or IDs not existing categories</returns>
+        public virtual string[] GetNotExistingCategories(string[] categoryIdsNames)
         {
-            if (categoryNames == null)
-                throw new ArgumentNullException(nameof(categoryNames));
+            if (categoryIdsNames == null)
+                throw new ArgumentNullException(nameof(categoryIdsNames));
 
             var query = _categoryRepository.Table;
-            var queryFilter = categoryNames.Distinct().ToArray();
+            var queryFilter = categoryIdsNames.Distinct().ToArray();
+            //filtering by name
             var filter = query.Select(c => c.Name).Where(c => queryFilter.Contains(c)).ToList();
+            queryFilter = queryFilter.Except(filter).ToArray();
 
-            return queryFilter.Except(filter).ToArray();
+            //if some names not found
+            if (queryFilter.Any())
+            {
+                //filtering by IDs
+                filter = query.Select(c => c.Id.ToString()).Where(c => queryFilter.Contains(c)).ToList();
+                queryFilter = queryFilter.Except(filter).ToArray();
+            }
+
+            return queryFilter.ToArray();
         }
 
         /// <summary>

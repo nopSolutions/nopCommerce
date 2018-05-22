@@ -108,7 +108,6 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
             //countries
             CreateMap<CountryModel, Country>()
                 .ForMember(dest => dest.StateProvinces, mo => mo.Ignore())
-                .ForMember(dest => dest.RestrictedShippingMethods, mo => mo.Ignore())
                 .ForMember(dest => dest.LimitedToStores, mo => mo.Ignore());
             CreateMap<Country, CountryModel>()
                 .ForMember(dest => dest.NumberOfStates,
@@ -341,7 +340,6 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.ProductAttributesExist, mo => mo.Ignore())
                 .ForMember(dest => dest.Form, mo => mo.Ignore());
             CreateMap<ProductModel, Product>()
-                .ForMember(dest => dest.ProductTags, mo => mo.Ignore())
                 .ForMember(dest => dest.CreatedOnUtc, mo => mo.Ignore())
                 .ForMember(dest => dest.UpdatedOnUtc, mo => mo.Ignore())
                 .ForMember(dest => dest.ParentGroupedProductId, mo => mo.Ignore())
@@ -439,8 +437,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.Locales, mo => mo.Ignore())
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore())
                 .ForMember(dest => dest.Form, mo => mo.Ignore());
-            CreateMap<ShippingMethodModel, ShippingMethod>()
-                .ForMember(dest => dest.RestrictedCountries, mo => mo.Ignore());
+            CreateMap<ShippingMethodModel, ShippingMethod>();
             //delivery dates
             CreateMap<DeliveryDate, DeliveryDateModel>()
                 .ForMember(dest => dest.Locales, mo => mo.Ignore())
@@ -617,8 +614,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.TaxDisplayTypeValues, mo => mo.Ignore())
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore())
                 .ForMember(dest => dest.Form, mo => mo.Ignore());
-            CreateMap<CustomerRoleModel, CustomerRole>()
-                .ForMember(dest => dest.PermissionRecords, mo => mo.Ignore());
+            CreateMap<CustomerRoleModel, CustomerRole>();
 
             //product attributes
             CreateMap<ProductAttribute, ProductAttributeModel>()
@@ -702,10 +698,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
             CreateMap<DiscountModel, Discount>()
                 .ForMember(dest => dest.DiscountType, mo => mo.Ignore())
                 .ForMember(dest => dest.DiscountLimitation, mo => mo.Ignore())
-                .ForMember(dest => dest.DiscountRequirements, mo => mo.Ignore())
-                .ForMember(dest => dest.AppliedToCategories, mo => mo.Ignore())
-                .ForMember(dest => dest.AppliedToManufacturers, mo => mo.Ignore())
-                .ForMember(dest => dest.AppliedToProducts, mo => mo.Ignore());
+                .ForMember(dest => dest.DiscountRequirements, mo => mo.Ignore());
             //gift cards
             CreateMap<GiftCard, GiftCardModel>()
                 .ForMember(dest => dest.PurchasedWithOrderId, mo => mo.Ignore())
@@ -970,7 +963,8 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.SortOptionSearchModel, mo => mo.Ignore())
                 .ForMember(dest => dest.Form, mo => mo.Ignore())
                 .ForMember(dest => dest.ExportImportSplitProductsFile_OverrideForStore, mo => mo.Ignore())
-                .ForMember(dest => dest.RemoveRequiredProducts_OverrideForStore, mo => mo.Ignore());
+                .ForMember(dest => dest.RemoveRequiredProducts_OverrideForStore, mo => mo.Ignore())
+                .ForMember(dest => dest.ExportImportRelatedEntitiesByName_OverrideForStore, mo => mo.Ignore());
             CreateMap<CatalogSettingsModel, CatalogSettings>()
                 .ForMember(dest => dest.PublishBackProductWhenCancellingOrders, mo => mo.Ignore())
                 .ForMember(dest => dest.DefaultProductRatingValue, mo => mo.Ignore())
@@ -994,6 +988,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.Enabled_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.ExchangeRate_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.MinimumRewardPointsToUse_OverrideForStore, mo => mo.Ignore())
+                .ForMember(dest => dest.MaximumRewardPointsToUsePerOrder_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.PointsForRegistration_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.RegistrationPointsValidity_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.PointsForPurchases_OverrideForStore, mo => mo.Ignore())

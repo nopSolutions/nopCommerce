@@ -12,6 +12,7 @@ using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Vendors;
+using Nop.Core.Infrastructure;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
@@ -70,6 +71,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly IUrlRecordService _urlRecordService;
         private readonly IWorkContext _workContext;
         private readonly VendorSettings _vendorSettings;
+        private readonly INopFileProvider _fileProvider;
 
         #endregion
 
@@ -105,7 +107,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             IStoreService storeService,
             IUrlRecordService urlRecordService,
             IWorkContext workContext,
-            VendorSettings vendorSettings)
+            VendorSettings vendorSettings,
+            INopFileProvider fileProvider)
         {
             this._aclService = aclService;
             this._backInStockSubscriptionService = backInStockSubscriptionService;
@@ -138,6 +141,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             this._urlRecordService = urlRecordService;
             this._workContext = workContext;
             this._vendorSettings = vendorSettings;
+            this._fileProvider = fileProvider;
         }
 
         #endregion
@@ -332,14 +336,17 @@ namespace Nop.Web.Areas.Admin.Controllers
                 if (model.SelectedDiscountIds != null && model.SelectedDiscountIds.Contains(discount.Id))
                 {
                     //new discount
-                    if (product.AppliedDiscounts.Count(d => d.Id == discount.Id) == 0)
-                        product.AppliedDiscounts.Add(discount);
+                    if (product.DiscountProductMappings.Count(mapping => mapping.DiscountId == discount.Id) == 0)
+                        product.DiscountProductMappings.Add(new DiscountProductMapping { Discount = discount });
                 }
                 else
                 {
                     //remove discount
-                    if (product.AppliedDiscounts.Count(d => d.Id == discount.Id) > 0)
-                        product.AppliedDiscounts.Remove(discount);
+                    if (product.DiscountProductMappings.Count(mapping => mapping.DiscountId == discount.Id) > 0)
+                    {
+                        product.DiscountProductMappings
+                            .Remove(product.DiscountProductMappings.FirstOrDefault(mapping => mapping.DiscountId == discount.Id));
+                    }
                 }
             }
 
@@ -464,8 +471,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                                     DownloadUrl = string.Empty,
                                     DownloadBinary = httpPostedFile.GetDownloadBits(),
                                     ContentType = httpPostedFile.ContentType,
-                                    Filename = Path.GetFileNameWithoutExtension(httpPostedFile.FileName),
-                                    Extension = Path.GetExtension(httpPostedFile.FileName),
+                                    Filename = _fileProvider.GetFileNameWithoutExtension(httpPostedFile.FileName),
+                                    Extension = _fileProvider.GetFileExtension(httpPostedFile.FileName),
                                     IsNew = true
                                 };
                                 _downloadService.InsertDownload(download);
@@ -2609,17 +2616,17 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             SuccessNotification(_localizationService.GetResource("Admin.Catalog.Products.ProductAttributes.Attributes.Added"));
 
-            if (continueEditing)
+            if (!continueEditing)
             {
-                //selected tab
-                SaveSelectedTabName();
+                SaveSelectedTabName("tab-product-attributes");
 
-                return RedirectToAction("ProductAttributeMappingEdit", new { id = productAttributeMapping.Id });
+                return RedirectToAction("Edit", new { id = product.Id });
             }
 
-            SaveSelectedTabName("tab-product-attributes");
+            //selected tab
+            SaveSelectedTabName();
 
-            return RedirectToAction("Edit", new { id = product.Id });
+            return RedirectToAction("ProductAttributeMappingEdit", new { id = productAttributeMapping.Id });
         }
 
         public virtual IActionResult ProductAttributeMappingEdit(int id)
@@ -2699,17 +2706,17 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             SuccessNotification(_localizationService.GetResource("Admin.Catalog.Products.ProductAttributes.Attributes.Updated"));
 
-            if (continueEditing)
+            if (!continueEditing)
             {
-                //selected tab
-                SaveSelectedTabName();
+                SaveSelectedTabName("tab-product-attributes");
 
-                return RedirectToAction("ProductAttributeMappingEdit", new { id = productAttributeMapping.Id });
+                return RedirectToAction("Edit", new { id = product.Id });
             }
 
-            SaveSelectedTabName("tab-product-attributes");
+            //selected tab
+            SaveSelectedTabName();
 
-            return RedirectToAction("Edit", new { id = product.Id });
+            return RedirectToAction("ProductAttributeMappingEdit", new { id = productAttributeMapping.Id });
         }
 
         [HttpPost]

@@ -76,83 +76,32 @@ namespace Nop.Core.Domain.Orders
                 //result
                 DateTime? result = null;
 
-                //set another value to change calculation method
-                //bool useLatestPayment = false;
-                //if (useLatestPayment)
-                //{
-                //    //get latest payment
-                //    RecurringPaymentHistory latestPayment = null;
-                //    foreach (var historyRecord in historyCollection)
-                //    {
-                //        if (latestPayment != null)
-                //        {
-                //            if (historyRecord.CreatedOnUtc >= latestPayment.CreatedOnUtc)
-                //            {
-                //                latestPayment = historyRecord;
-                //            }
-                //        }
-                //        else
-                //        {
-                //            latestPayment = historyRecord;
-                //        }
-                //    }
-
-
-                //    //calculate next payment date
-                //    if (latestPayment != null)
-                //    {
-                //        switch (this.CyclePeriod)
-                //        {
-                //            case RecurringProductCyclePeriod.Days:
-                //                result = latestPayment.CreatedOnUtc.AddDays((double)this.CycleLength);
-                //                break;
-                //            case RecurringProductCyclePeriod.Weeks:
-                //                result = latestPayment.CreatedOnUtc.AddDays((double)(7 * this.CycleLength));
-                //                break;
-                //            case RecurringProductCyclePeriod.Months:
-                //                result = latestPayment.CreatedOnUtc.AddMonths(this.CycleLength);
-                //                break;
-                //            case RecurringProductCyclePeriod.Years:
-                //                result = latestPayment.CreatedOnUtc.AddYears(this.CycleLength);
-                //                break;
-                //            default:
-                //                throw new NopException("Not supported cycle period");
-                //        }
-                //    }
-                //    else
-                //    {
-                //        if (this.TotalCycles > 0)
-                //            result = this.StartDateUtc;
-                //    }
-                //}
-                //else
-                //{
-                    if (historyCollection.Any())
+                //calculate next payment date
+                if (historyCollection.Any())
+                {
+                    switch (CyclePeriod)
                     {
-                        switch (CyclePeriod)
-                        {
-                            case RecurringProductCyclePeriod.Days:
-                                result = StartDateUtc.AddDays((double)CycleLength * historyCollection.Count);
-                                break;
-                            case RecurringProductCyclePeriod.Weeks:
-                                result = StartDateUtc.AddDays((double)(7 * CycleLength) * historyCollection.Count);
-                                break;
-                            case RecurringProductCyclePeriod.Months:
-                                result = StartDateUtc.AddMonths(CycleLength * historyCollection.Count);
-                                break;
-                            case RecurringProductCyclePeriod.Years:
-                                result = StartDateUtc.AddYears(CycleLength * historyCollection.Count);
-                                break;
-                            default:
-                                throw new NopException("Not supported cycle period");
-                        }
+                        case RecurringProductCyclePeriod.Days:
+                            result = StartDateUtc.AddDays((double)CycleLength * historyCollection.Count);
+                            break;
+                        case RecurringProductCyclePeriod.Weeks:
+                            result = StartDateUtc.AddDays((double)(7 * CycleLength) * historyCollection.Count);
+                            break;
+                        case RecurringProductCyclePeriod.Months:
+                            result = StartDateUtc.AddMonths(CycleLength * historyCollection.Count);
+                            break;
+                        case RecurringProductCyclePeriod.Years:
+                            result = StartDateUtc.AddYears(CycleLength * historyCollection.Count);
+                            break;
+                        default:
+                            throw new NopException("Not supported cycle period");
                     }
-                    else
-                    {
-                        if (TotalCycles > 0)
-                            result = StartDateUtc;
-                    }
-                //}
+                }
+                else
+                {
+                    if (TotalCycles > 0)
+                        result = StartDateUtc;
+                }
 
                 return result;
             }
@@ -180,14 +129,8 @@ namespace Nop.Core.Domain.Orders
         /// </summary>
         public RecurringProductCyclePeriod CyclePeriod
         {
-            get
-            {
-                return (RecurringProductCyclePeriod)CyclePeriodId;
-            }
-            set
-            {
-                CyclePeriodId = (int)value;
-            }
+            get => (RecurringProductCyclePeriod)CyclePeriodId;
+            set => CyclePeriodId = (int)value;
         }
 
         /// <summary>
@@ -195,8 +138,8 @@ namespace Nop.Core.Domain.Orders
         /// </summary>
         public virtual ICollection<RecurringPaymentHistory> RecurringPaymentHistory
         {
-            get { return _recurringPaymentHistory ?? (_recurringPaymentHistory = new List<RecurringPaymentHistory>()); }
-            protected set { _recurringPaymentHistory = value; }
+            get => _recurringPaymentHistory ?? (_recurringPaymentHistory = new List<RecurringPaymentHistory>());
+            protected set => _recurringPaymentHistory = value;
         }        
 
         /// <summary>

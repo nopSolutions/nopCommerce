@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
@@ -7,6 +6,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Infrastructure;
 using Nop.Services.Customers;
 using Nop.Services.Localization;
 using Nop.Services.Media;
@@ -36,6 +36,7 @@ namespace Nop.Web.Controllers
         private readonly IDownloadService _downloadService;
         private readonly LocalizationSettings _localizationSettings;
         private readonly OrderSettings _orderSettings;
+        private readonly INopFileProvider _fileProvider;
 
         #endregion
 
@@ -53,7 +54,8 @@ namespace Nop.Web.Controllers
             ICustomNumberFormatter customNumberFormatter,
             IDownloadService downloadService,
             LocalizationSettings localizationSettings,
-            OrderSettings orderSettings)
+            OrderSettings orderSettings,
+            INopFileProvider fileProvider)
         {
             this._returnRequestModelFactory = returnRequestModelFactory;
             this._returnRequestService = returnRequestService;
@@ -68,6 +70,7 @@ namespace Nop.Web.Controllers
             this._downloadService = downloadService;
             this._localizationSettings = localizationSettings;
             this._orderSettings = orderSettings;
+            this._fileProvider = fileProvider;
         }
 
         #endregion
@@ -206,11 +209,11 @@ namespace Nop.Web.Controllers
             if (string.IsNullOrEmpty(fileName) && Request.Form.ContainsKey(qqFileNameParameter))
                 fileName = Request.Form[qqFileNameParameter].ToString();
             //remove path (passed in IE)
-            fileName = Path.GetFileName(fileName);
+            fileName = _fileProvider.GetFileName(fileName);
 
             var contentType = httpPostedFile.ContentType;
 
-            var fileExtension = Path.GetExtension(fileName);
+            var fileExtension = _fileProvider.GetFileExtension(fileName);
             if (!string.IsNullOrEmpty(fileExtension))
                 fileExtension = fileExtension.ToLowerInvariant();
 
@@ -238,7 +241,7 @@ namespace Nop.Web.Controllers
                 DownloadBinary = fileBinary,
                 ContentType = contentType,
                 //we store filename without extension for downloads
-                Filename = Path.GetFileNameWithoutExtension(fileName),
+                Filename = _fileProvider.GetFileNameWithoutExtension(fileName),
                 Extension = fileExtension,
                 IsNew = true
             };

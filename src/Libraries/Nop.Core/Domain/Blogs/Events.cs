@@ -17,6 +17,6 @@ namespace Nop.Core.Domain.Blogs
         /// <summary>
         /// Blog post comment
         /// </summary>
-        public BlogComment BlogComment { get; private set; }
+        public BlogComment BlogComment { get; }
     }
 }

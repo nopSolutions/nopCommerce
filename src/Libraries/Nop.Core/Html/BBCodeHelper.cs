@@ -92,6 +92,7 @@ namespace Nop.Core.Html
                 // becomes: <img src="https://www.nopCommerce.com/Content/Images/Image.jpg">
                 text = regexImg.Replace(text, "<img src=\"$1\" class=\"user-posted-image\" alt=\"\">");
             }
+
             return text;
         }
 

@@ -11,39 +11,14 @@ namespace Nop.Core.Html.CodeFormatter
         #region Fields
 
         //private static Regex regexCode1 = new Regex(@"(?<begin>\[code:(?<lang>.*?)(?:;ln=(?<linenumbers>(?:on|off)))?(?:;alt=(?<altlinenumbers>(?:on|off)))?(?:;(?<title>.*?))?\])(?<code>.*?)(?<end>\[/code\])", RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.IgnoreCase | RegexOptions.Singleline);
-        private readonly static Regex regexHtml = new Regex("<[^>]*>", RegexOptions.Compiled);
+        private static readonly Regex _regexHtml = new Regex("<[^>]*>", RegexOptions.Compiled);
 
-        private readonly static Regex regexCode2 =
+        private static readonly Regex _regexCode =
             new Regex(@"\[code\](?<inner>(.*?))\[/code\]", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
         #endregion
 
         #region Utilities
-
-        /// <summary>
-        /// Code evaluator method
-        /// </summary>
-        /// <param name="match">Match</param>
-        /// <returns>Formatted text</returns>
-        private static string CodeEvaluator(Match match)
-        {
-            if (!match.Success)
-                return match.Value;
-
-            var options = new HighlightOptions
-            {
-                Language = match.Groups["lang"].Value,
-                Code = match.Groups["code"].Value,
-                DisplayLineNumbers = match.Groups["linenumbers"].Value == "on",
-                Title = match.Groups["title"].Value,
-                AlternateLineNumbers = match.Groups["altlinenumbers"].Value == "on"
-            };
-
-            var result = match.Value.Replace(match.Groups["begin"].Value, "");
-            result = result.Replace(match.Groups["end"].Value, "");
-            result = Highlight(options, result);
-            return result;
-        }
 
         /// <summary>
         /// Code evaluator method
@@ -79,7 +54,7 @@ namespace Nop.Core.Html.CodeFormatter
             if (string.IsNullOrEmpty(html))
                 return string.Empty;
 
-            return regexHtml.Replace(html, string.Empty);
+            return _regexHtml.Replace(html, string.Empty);
         }
 
         /// <summary>
@@ -171,11 +146,11 @@ namespace Nop.Core.Html.CodeFormatter
             if (string.IsNullOrEmpty(text))
                 return string.Empty;
 
-            if (text.Contains("[/code]"))
-            {
-                text = regexCode2.Replace(text, CodeEvaluatorSimple);
-                text = regexCode2.Replace(text, "$1");
-            }
+            if (!text.Contains("[/code]")) 
+                return text;
+
+            text = _regexCode.Replace(text, CodeEvaluatorSimple);
+            text = _regexCode.Replace(text, "$1");
             return text;
         }
 

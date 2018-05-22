@@ -28,7 +28,7 @@ namespace Nop.Services.Affiliates
         /// </summary>
         /// <param name="affiliateRepository">Affiliate repository</param>
         /// <param name="orderRepository">Order repository</param>
-        /// <param name="eventPublisher">Event published</param>
+        /// <param name="eventPublisher">Event publisher</param>
         public AffiliateService(IRepository<Affiliate> affiliateRepository,
             IRepository<Order> orderRepository,
             IEventPublisher eventPublisher)

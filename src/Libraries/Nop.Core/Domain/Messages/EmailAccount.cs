@@ -52,9 +52,10 @@
         {
             get
             {
-                if (!string.IsNullOrWhiteSpace(this.DisplayName))
-                    return this.Email + " (" + this.DisplayName + ")";
-                return this.Email;
+                if (!string.IsNullOrWhiteSpace(DisplayName))
+                    return Email + " (" + DisplayName + ")";
+
+                return Email;
             }
         }
     }

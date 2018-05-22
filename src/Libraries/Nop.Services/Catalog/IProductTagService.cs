@@ -19,6 +19,13 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <returns>Product tags</returns>
         IList<ProductTag> GetAllProductTags();
+        
+        /// <summary>
+        /// Gets all product tags by product identifier
+        /// </summary>
+        /// <param name="productId">Product identifier</param>
+        /// <returns>Product tags</returns>
+        IList<ProductTag> GetAllProductTagsByProductId(int productId);
 
         /// <summary>
         /// Gets product tag

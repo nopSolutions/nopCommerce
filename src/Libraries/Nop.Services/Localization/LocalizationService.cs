@@ -90,7 +90,7 @@ namespace Nop.Services.Localization
         /// <param name="dbContext">Database Context</param>
         /// <param name="commonSettings">Common settings</param>
         /// <param name="localizationSettings">Localization settings</param>
-        /// <param name="eventPublisher">Event published</param>
+        /// <param name="eventPublisher">Event publisher</param>
         public LocalizationService(IStaticCacheManager cacheManager,
             ILogger logger,
             IWorkContext workContext,
@@ -458,88 +458,43 @@ namespace Nop.Services.Localization
 
             if (string.IsNullOrEmpty(xml))
                 return;
-            if (_commonSettings.UseStoredProceduresIfSupported && _dataProvider.StoredProceduredSupported)
+
+            //SQL 2005 insists that your XML schema incoding be in UTF-16.
+            //Otherwise, you'll get "XML parsing: line 1, character XXX, unable to switch the encoding"
+            //so let's remove XML declaration
+            var inDoc = new XmlDocument();
+            inDoc.LoadXml(xml);
+            var sb = new StringBuilder();
+            using (var xWriter = XmlWriter.Create(sb, new XmlWriterSettings {OmitXmlDeclaration = true}))
             {
-                //SQL 2005 insists that your XML schema incoding be in UTF-16.
-                //Otherwise, you'll get "XML parsing: line 1, character XXX, unable to switch the encoding"
-                //so let's remove XML declaration
-                var inDoc = new XmlDocument();
-                inDoc.LoadXml(xml);
-                var sb = new StringBuilder();
-                using (var xWriter = XmlWriter.Create(sb, new XmlWriterSettings { OmitXmlDeclaration = true }))
-                {
-                    inDoc.Save(xWriter);
-                    xWriter.Close();
-                }
-                var outDoc = new XmlDocument();
-                outDoc.LoadXml(sb.ToString());
-                xml = outDoc.OuterXml;
-
-                //stored procedures are enabled and supported by the database.
-                var pLanguageId = _dataProvider.GetParameter();
-                pLanguageId.ParameterName = "LanguageId";
-                pLanguageId.Value = language.Id;
-                pLanguageId.DbType = DbType.Int32;
-
-                var pXmlPackage = _dataProvider.GetParameter();
-                pXmlPackage.ParameterName = "XmlPackage";
-                pXmlPackage.Value = xml;
-                pXmlPackage.DbType = DbType.Xml;
-
-                var pUpdateExistingResources = _dataProvider.GetParameter();
-                pUpdateExistingResources.ParameterName = "UpdateExistingResources";
-                pUpdateExistingResources.Value = updateExistingResources;
-                pUpdateExistingResources.DbType = DbType.Boolean;
-
-                //long-running query. specify timeout (600 seconds)
-                _dbContext.ExecuteSqlCommand("EXEC [LanguagePackImport] @LanguageId, @XmlPackage, @UpdateExistingResources", 
-                    false, 600, pLanguageId, pXmlPackage, pUpdateExistingResources);
+                inDoc.Save(xWriter);
+                xWriter.Close();
             }
-            else
-            {
-                //stored procedures aren't supported
-                var xmlDoc = new XmlDocument();
-                xmlDoc.LoadXml(xml);
-                var nodes = xmlDoc.SelectNodes(@"//Language/LocaleResource");
 
-                var existingResources = GetAllResources(language.Id);
-                var newResources = new List<LocaleStringResource>();
+            var outDoc = new XmlDocument();
+            outDoc.LoadXml(sb.ToString());
+            xml = outDoc.OuterXml;
 
-                foreach (XmlNode node in nodes)
-                {
-                    var name = node.Attributes["Name"].InnerText.Trim();
-                    var value = "";
-                    var valueNode = node.SelectSingleNode("Value");
-                    if (valueNode != null)
-                        value = valueNode.InnerText;
+            //stored procedures are enabled and supported by the database.
+            var pLanguageId = _dataProvider.GetParameter();
+            pLanguageId.ParameterName = "LanguageId";
+            pLanguageId.Value = language.Id;
+            pLanguageId.DbType = DbType.Int32;
 
-                    if (string.IsNullOrEmpty(name))
-                        continue;
+            var pXmlPackage = _dataProvider.GetParameter();
+            pXmlPackage.ParameterName = "XmlPackage";
+            pXmlPackage.Value = xml;
+            pXmlPackage.DbType = DbType.Xml;
 
-                    //do not use "Insert"/"Update" methods because they clear cache
-                    //let's bulk insert
-                    var resource = existingResources.FirstOrDefault(x => x.ResourceName.Equals(name, StringComparison.InvariantCultureIgnoreCase));
-                    if (resource != null)
-                    {
-                        if (updateExistingResources)
-                        {
-                            resource.ResourceValue = value;
-                        }
-                    }
-                    else
-                    {
-                        newResources.Add(
-                            new LocaleStringResource
-                            {
-                                LanguageId = language.Id,
-                                ResourceName = name,
-                                ResourceValue = value
-                            });
-                    }
-                }
-                InsertLocaleStringResources(newResources);
-                UpdateLocaleStringResources(existingResources);
-            }
+            var pUpdateExistingResources = _dataProvider.GetParameter();
+            pUpdateExistingResources.ParameterName = "UpdateExistingResources";
+            pUpdateExistingResources.Value = updateExistingResources;
+            pUpdateExistingResources.DbType = DbType.Boolean;
+
+            //long-running query. specify timeout (600 seconds)
+            _dbContext.ExecuteSqlCommand("EXEC [LanguagePackImport] @LanguageId, @XmlPackage, @UpdateExistingResources",
+                false, 600, pLanguageId, pXmlPackage, pUpdateExistingResources);
+
 
             //clear cache
             _cacheManager.RemoveByPattern(LOCALSTRINGRESOURCES_PATTERN_KEY);
