@@ -1,5 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -13,18 +16,6 @@ using Nop.Services.Configuration;
 using Nop.Services.Events;
 using Nop.Services.Logging;
 using Nop.Services.Seo;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Formats;
-using SixLabors.ImageSharp.Formats.Bmp;
-using SixLabors.ImageSharp.Formats.Gif;
-using SixLabors.ImageSharp.Formats.Jpeg;
-using SixLabors.ImageSharp.Formats.Png;
-using SixLabors.ImageSharp.Memory;
-using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Processing;
-using SixLabors.ImageSharp.Processing.Transforms;
-using SixLabors.Primitives;
-using static SixLabors.ImageSharp.Configuration;
 
 namespace Nop.Services.Media
 {
@@ -346,49 +337,43 @@ namespace Nop.Services.Media
         }
 
         /// <summary>
-        /// Encode the image into a byte array in accordance with the specified image format
+        /// Returns the first ImageCodecInfo instance with the specified mime type.
         /// </summary>
-        /// <typeparam name="T">Pixel data type</typeparam>
-        /// <param name="image">Image data</param>
-        /// <param name="imageFormat">Image format</param>
-        /// <param name="quality">Quality index that will be used to encode the image</param>
-        /// <returns>Image binary data</returns>
-        protected virtual byte[] EncodeImage<T>(Image<T> image, IImageFormat imageFormat, int? quality = null) where T : struct, IPixel<T>
+        /// <param name="mimeType">Mime type</param>
+        /// <returns>ImageCodecInfo</returns>
+        protected virtual ImageCodecInfo GetImageCodecInfoFromMimeType(string mimeType)
         {
-            using (var stream = new MemoryStream())
+            var info = ImageCodecInfo.GetImageEncoders();
+            foreach (var ici in info)
+                if (ici.MimeType.Equals(mimeType, StringComparison.OrdinalIgnoreCase))
+                    return ici;
+            return null;
+        }
+
+        /// <summary>
+        /// Returns the first ImageCodecInfo instance with the specified extension.
+        /// </summary>
+        /// <param name="fileExt">File extension</param>
+        /// <returns>ImageCodecInfo</returns>
+        protected virtual ImageCodecInfo GetImageCodecInfoFromExtension(string fileExt)
+        {
+            fileExt = fileExt.TrimStart(".".ToCharArray()).ToLower().Trim();
+            switch (fileExt)
             {
-                var imageEncoder = Default.ImageFormatsManager.FindEncoder(imageFormat);
-                switch (imageEncoder)
-                {
-                    case JpegEncoder jpegEncoder:
-                        jpegEncoder.IgnoreMetadata = true;
-                        jpegEncoder.Quality = quality ?? _mediaSettings.DefaultImageQuality;
-                        jpegEncoder.Encode(image, stream);
-                        break;
-
-                    case PngEncoder pngEncoder:
-                        pngEncoder.PngColorType = PngColorType.RgbWithAlpha;
-                        pngEncoder.Encode(image, stream);
-                        break;
-
-                    case BmpEncoder bmpEncoder:
-                        bmpEncoder.BitsPerPixel = BmpBitsPerPixel.Pixel32;
-                        bmpEncoder.Encode(image, stream);
-                        break;
-
-                    case GifEncoder gifEncoder:
-                        gifEncoder.IgnoreMetadata = true;
-                        gifEncoder.Encode(image, stream);
-                        break;
-
-                    default:
-                        imageEncoder.Encode(image, stream);
-                        break;
-                }
-                return stream.ToArray();
+                case "jpg":
+                case "jpeg":
+                    return GetImageCodecInfoFromMimeType("image/jpeg");
+                case "png":
+                    return GetImageCodecInfoFromMimeType("image/png");
+                case "gif":
+                    //use png codec for gif to preserve transparency
+                    //return GetImageCodecInfoFromMimeType("image/gif");
+                    return GetImageCodecInfoFromMimeType("image/png");
+                default:
+                    return GetImageCodecInfoFromMimeType("image/jpeg");
             }
         }
-        
+
         #endregion
 
         #region Getting picture local path/URL methods
@@ -457,15 +442,39 @@ namespace Nop.Services.Media
                 var thumbFilePath = GetThumbLocalPath(thumbFileName);
                 if (!GeneratedThumbExists(thumbFilePath, thumbFileName))
                 {
-                    using (var image = Image.Load(filePath, out var imageFormat))
+                    using (var b = new Bitmap(filePath))
                     {
-                        image.Mutate(imageProcess => imageProcess.Resize(new ResizeOptions
+                        var newSize = CalculateDimensions(b.Size, targetSize);
+
+                        if (newSize.Width < 1)
+                            newSize.Width = 1;
+                        if (newSize.Height < 1)
+                            newSize.Height = 1;
+
+                        using (var newBitMap = new Bitmap(newSize.Width, newSize.Height))
                         {
-                            Mode = ResizeMode.Max,
-                            Size = CalculateDimensions(image.Size(), targetSize)
-                        }));
-                        var pictureBinary = EncodeImage(image, imageFormat);
-                        SaveThumb(thumbFilePath, thumbFileName, imageFormat.DefaultMimeType, pictureBinary);
+                            using (var g = Graphics.FromImage(newBitMap))
+                            {
+                                g.SmoothingMode = SmoothingMode.HighQuality;
+                                g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                                g.CompositingQuality = CompositingQuality.HighQuality;
+                                g.PixelOffsetMode = PixelOffsetMode.HighQuality;
+                                g.DrawImage(b, 0, 0, newSize.Width, newSize.Height);
+                                var ep = new EncoderParameters();
+                                ep.Param[0] = new EncoderParameter(Encoder.Quality, _mediaSettings.DefaultImageQuality);
+                                ImageCodecInfo ici = GetImageCodecInfoFromExtension(fileExtension);
+                                if (ici == null)
+                                    ici = GetImageCodecInfoFromMimeType("image/jpeg");
+
+                                byte[] destBinary;
+                                using (var destStream = new MemoryStream())
+                                {
+                                    newBitMap.Save(destStream, ici, ep);
+                                    destBinary = destStream.ToArray();
+                                }
+                                SaveThumb(thumbFilePath, thumbFileName, "image/jpeg", destBinary);
+                            }
+                        }
                     }
                 }
                 var url = GetThumbUrl(thumbFileName, storeLocation);
@@ -565,19 +574,56 @@ namespace Nop.Services.Media
                     if (!GeneratedThumbExists(thumbFilePath, thumbFileName))
                     {
                         byte[] pictureBinaryResized;
+
+                        //resizing required
                         if (targetSize != 0)
                         {
-                            //resizing required
-                            using (var image = Image.Load(pictureBinary, out var imageFormat))
+                            Bitmap b = null;
+                            using (var stream = new MemoryStream(pictureBinary))
                             {
-                                image.Mutate(imageProcess => imageProcess.Resize(new ResizeOptions
+                                try
                                 {
-                                    Mode = ResizeMode.Max,
-                                    Size = CalculateDimensions(image.Size(), targetSize)
-                                }));
-
-                                pictureBinaryResized = EncodeImage(image, imageFormat);
+                                    //try-catch to ensure that picture binary is really OK. Otherwise, we can get "Parameter is not valid" exception if binary is corrupted for some reasons
+                                    b = new Bitmap(stream);
+                                }
+                                catch (ArgumentException exc)
+                                {
+                                    _logger.Error($"Error generating picture thumb. ID={picture.Id}", exc);
+                                }
                             }
+
+                            if (b == null)
+                            {
+                                //bitmap could not be loaded for some reasons
+                                return url;
+                            }
+
+
+                            var newSize = CalculateDimensions(b.Size, targetSize);
+                            using (var newBitMap = new Bitmap(newSize.Width, newSize.Height))
+                            {
+                                using (var g = Graphics.FromImage(newBitMap))
+                                {
+                                    g.SmoothingMode = SmoothingMode.HighQuality;
+                                    g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                                    g.CompositingQuality = CompositingQuality.HighQuality;
+                                    g.PixelOffsetMode = PixelOffsetMode.HighQuality;
+                                    g.DrawImage(b, 0, 0, newSize.Width, newSize.Height);
+                                    var ep = new EncoderParameters();
+                                    ep.Param[0] = new EncoderParameter(Encoder.Quality, _mediaSettings.DefaultImageQuality);
+                                    ImageCodecInfo ici = GetImageCodecInfoFromExtension(lastPart);
+                                    if (ici == null)
+                                        ici = GetImageCodecInfoFromMimeType("image/jpeg");
+
+
+                                    using (var destStream = new MemoryStream())
+                                    {
+                                        newBitMap.Save(destStream, ici, ep);
+                                        pictureBinaryResized = destStream.ToArray();
+                                    }
+                                }
+                            }
+                            b.Dispose();
                         }
                         else
                         {
@@ -587,7 +633,7 @@ namespace Nop.Services.Media
 
                         SaveThumb(thumbFilePath, thumbFileName, picture.MimeType, pictureBinaryResized);
                     }
-                    
+
                     mutex.ReleaseMutex();
                 }
                 
@@ -822,15 +868,38 @@ namespace Nop.Services.Media
         public virtual byte[] ValidatePicture(byte[] pictureBinary, string mimeType)
         {
             //resize the image in accordance with the maximum size
-            using (var image = Image.Load(pictureBinary, out var imageFormat))
+            using (var stream1 = new MemoryStream(pictureBinary))
             {
-                image.Mutate(imageProcess => imageProcess.Resize(new ResizeOptions
+                using (var b = new Bitmap(stream1))
                 {
-                    Mode = ResizeMode.Max,
-                    Size = new Size(_mediaSettings.MaximumImageSize)
-                }));
+                    var maxSize = _mediaSettings.MaximumImageSize;
+                    if ((b.Height <= maxSize) && (b.Width <= maxSize))
+                        return pictureBinary;
 
-                return EncodeImage(image, imageFormat);
+                    var newSize = CalculateDimensions(b.Size, maxSize);
+                    using (var newBitMap = new Bitmap(newSize.Width, newSize.Height))
+                    {
+                        using (var g = Graphics.FromImage(newBitMap))
+                        {
+                            g.SmoothingMode = SmoothingMode.HighQuality;
+                            g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                            g.CompositingQuality = CompositingQuality.HighQuality;
+                            g.PixelOffsetMode = PixelOffsetMode.HighQuality;
+                            g.DrawImage(b, 0, 0, newSize.Width, newSize.Height);
+
+                            using (var stream2 = new MemoryStream())
+                            {
+                                var ep = new EncoderParameters();
+                                ep.Param[0] = new EncoderParameter(Encoder.Quality, _mediaSettings.DefaultImageQuality);
+                                ImageCodecInfo ici = GetImageCodecInfoFromMimeType(mimeType);
+                                if (ici == null)
+                                    ici = GetImageCodecInfoFromMimeType("image/jpeg");
+                                newBitMap.Save(stream2, ici, ep);
+                                return stream2.GetBuffer();
+                            }
+                        }
+                    }
+                }
             }
         }
 
