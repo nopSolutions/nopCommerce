@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Moq;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
@@ -17,28 +18,27 @@ using Nop.Services.Plugins;
 using Nop.Services.Shipping;
 using Nop.Tests;
 using NUnit.Framework;
-using Rhino.Mocks;
 
 namespace Nop.Services.Tests.Shipping
 {
     [TestFixture]
     public class CalculateDimensionsTests : ServiceTest
     {
-        private IRepository<ShippingMethod> _shippingMethodRepository;
-        private IRepository<Warehouse> _warehouseRepository;
-        private ILogger _logger;
-        private IProductAttributeParser _productAttributeParser;
-        private ICheckoutAttributeParser _checkoutAttributeParser;
         private ShippingSettings _shippingSettings;
-        private IEventPublisher _eventPublisher;
-        private ILocalizationService _localizationService;
-        private IAddressService _addressService;
-        private IGenericAttributeService _genericAttributeService;
-        private IShippingService _shippingService;
-        private ShoppingCartSettings _shoppingCartSettings;
-        private IProductService _productService;
+        private Mock<IRepository<ShippingMethod>> _shippingMethodRepository;
+        private Mock<IRepository<Warehouse>> _warehouseRepository;
+        private NullLogger _logger;
+        private Mock<IProductAttributeParser> _productAttributeParser;
+        private Mock<ICheckoutAttributeParser> _checkoutAttributeParser;
+        private Mock<IProductService> _productService;
+        private Mock<IEventPublisher> _eventPublisher;
+        private Mock<ILocalizationService> _localizationService;
+        private Mock<IAddressService> _addressService;
+        private Mock<IGenericAttributeService> _genericAttributeService;
         private Store _store;
-        private IStoreContext _storeContext;
+        private Mock<IStoreContext> _storeContext;
+        private ShoppingCartSettings _shoppingCartSettings;
+        private ShippingService _shippingService;
 
         [SetUp]
         public new void SetUp()
@@ -50,43 +50,43 @@ namespace Nop.Services.Tests.Shipping
                 ShipSeparatelyOneItemEach = false
             };
 
-            _shippingMethodRepository = MockRepository.GenerateMock<IRepository<ShippingMethod>>();
-            _warehouseRepository = MockRepository.GenerateMock<IRepository<Warehouse>>();
+            _shippingMethodRepository = new Mock<IRepository<ShippingMethod>>();
+            _warehouseRepository = new Mock<IRepository<Warehouse>>();
             _logger = new NullLogger();
-            _productAttributeParser = MockRepository.GenerateMock<IProductAttributeParser>();
-            _checkoutAttributeParser = MockRepository.GenerateMock<ICheckoutAttributeParser>();
+            _productAttributeParser = new Mock<IProductAttributeParser>();
+            _checkoutAttributeParser = new Mock<ICheckoutAttributeParser>();
 
             var cacheManager = new NopNullCache();
 
-            _productService = MockRepository.GenerateMock<IProductService>();
+            _productService = new Mock<IProductService>();
 
-            _eventPublisher = MockRepository.GenerateMock<IEventPublisher>();
-            _eventPublisher.Expect(x => x.Publish(Arg<object>.Is.Anything));
+            _eventPublisher = new Mock<IEventPublisher>();
+            _eventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
 
-            var pluginFinder = new PluginFinder(_eventPublisher);
+            var pluginFinder = new PluginFinder(_eventPublisher.Object);
 
-            _localizationService = MockRepository.GenerateMock<ILocalizationService>();
-            _addressService = MockRepository.GenerateMock<IAddressService>();
-            _genericAttributeService = MockRepository.GenerateMock<IGenericAttributeService>();
+            _localizationService = new Mock<ILocalizationService>();
+            _addressService = new Mock<IAddressService>();
+            _genericAttributeService = new Mock<IGenericAttributeService>();
 
             _store = new Store { Id = 1 };
-            _storeContext = MockRepository.GenerateMock<IStoreContext>();
-            _storeContext.Expect(x => x.CurrentStore).Return(_store);
+            _storeContext = new Mock<IStoreContext>();
+            _storeContext.Setup(x => x.CurrentStore).Returns(_store);
 
             _shoppingCartSettings = new ShoppingCartSettings();
-            _shippingService = new ShippingService(_shippingMethodRepository,
-                _warehouseRepository,
+            _shippingService = new ShippingService(_shippingMethodRepository.Object,
+                _warehouseRepository.Object,
                 _logger,
-                _productService,
-                _productAttributeParser,
-                _checkoutAttributeParser,
-                _genericAttributeService,
-                _localizationService,
-                _addressService,
+                _productService.Object,
+                _productAttributeParser.Object,
+                _checkoutAttributeParser.Object,
+                _genericAttributeService.Object,
+                _localizationService.Object,
+                _addressService.Object,
                 _shippingSettings,
                 pluginFinder,
-                _storeContext,
-                _eventPublisher,
+                _storeContext.Object,
+                _eventPublisher.Object,
                 _shoppingCartSettings,
                 cacheManager);
         }
@@ -105,10 +105,10 @@ namespace Nop.Services.Tests.Shipping
                             Width = 0,
                             Height = 0
                         }
-                    }),
+                    })
             };
 
-            _shippingService.GetDimensions(items, out decimal width, out decimal length, out decimal height);
+            _shippingService.GetDimensions(items, out var width, out var length, out var height);
             length.ShouldEqual(0);
             width.ShouldEqual(0);
             height.ShouldEqual(0);
@@ -124,7 +124,7 @@ namespace Nop.Services.Tests.Shipping
                             Width = 0,
                             Height = 0
                         }
-                    }),
+                    })
             };
 
             _shippingService.GetDimensions(items, out width, out length, out height);
@@ -150,7 +150,7 @@ namespace Nop.Services.Tests.Shipping
                 })
             };
 
-            _shippingService.GetDimensions(items, out decimal width, out decimal length, out decimal height);
+            _shippingService.GetDimensions(items, out var width, out var length, out var height);
             length.ShouldEqual(2);
             width.ShouldEqual(3);
             height.ShouldEqual(4);
@@ -173,7 +173,7 @@ namespace Nop.Services.Tests.Shipping
                 })
             };
 
-            _shippingService.GetDimensions(items, out decimal width, out decimal length, out decimal height);
+            _shippingService.GetDimensions(items, out var width, out var length, out var height);
             length.ShouldEqual(4);
             width.ShouldEqual(4);
             height.ShouldEqual(4);
@@ -196,7 +196,7 @@ namespace Nop.Services.Tests.Shipping
                 })
             };
             
-            _shippingService.GetDimensions(items, out decimal width, out decimal length, out decimal height);
+            _shippingService.GetDimensions(items, out var width, out var length, out var height);
             Math.Round(length, 2).ShouldEqual(2.88);
             Math.Round(width, 2).ShouldEqual(2.88);
             Math.Round(height, 2).ShouldEqual(2.88);
@@ -229,7 +229,7 @@ namespace Nop.Services.Tests.Shipping
                                 })
             };
 
-            _shippingService.GetDimensions(items, out decimal width, out decimal length, out decimal height);
+            _shippingService.GetDimensions(items, out var width, out var length, out var height);
             Math.Round(length, 2).ShouldEqual(3.78);
             Math.Round(width, 2).ShouldEqual(5);    //preserve max width
             Math.Round(height, 2).ShouldEqual(3.78);
@@ -252,7 +252,7 @@ namespace Nop.Services.Tests.Shipping
                                 }
                         }));
 
-            _shippingService.GetDimensions(items, out decimal width, out decimal length, out decimal height);
+            _shippingService.GetDimensions(items, out var width, out var length, out var height);
             Math.Round(length, 2).ShouldEqual(2);
             Math.Round(width, 2).ShouldEqual(2);
             Math.Round(height, 2).ShouldEqual(2);

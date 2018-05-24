@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
+    
     <Copyright>Copyright © Nop Solutions, Ltd</Copyright>
     <Company>Nop Solutions, Ltd</Company>
     <Authors>Nop Solutions, Ltd</Authors>
@@ -11,15 +12,18 @@
     <PackageProjectUrl>http://www.nopcommerce.com/</PackageProjectUrl>
     <RepositoryUrl>https://github.com/nopSolutions/nopCommerce</RepositoryUrl>
     <RepositoryType>Git</RepositoryType>
+
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.6.0" />
+    <PackageReference Include="NUnit" Version="3.10.1" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.10.0" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\Libraries\Nop.Services\Nop.Services.csproj" />
     <ProjectReference Include="..\Nop.Tests\Nop.Tests.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Service Include="{82a7f48d-3b50-4b1e-b82e-3ada8210c358}" />
   </ItemGroup>
 
 </Project>

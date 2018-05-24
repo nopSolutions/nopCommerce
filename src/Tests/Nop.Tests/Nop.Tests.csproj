@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
+    
     <Copyright>Copyright © Nop Solutions, Ltd</Copyright>
     <Company>Nop Solutions, Ltd</Company>
     <Authors>Nop Solutions, Ltd</Authors>
@@ -11,14 +12,16 @@
     <PackageProjectUrl>http://www.nopcommerce.com/</PackageProjectUrl>
     <RepositoryUrl>https://github.com/nopSolutions/nopCommerce</RepositoryUrl>
     <RepositoryType>Git</RepositoryType>
+
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.6.0" />
+    <PackageReference Include="Moq" Version="4.8.2" />
     <PackageReference Include="NUnit" Version="3.10.1" />
     <PackageReference Include="NUnit3TestAdapter" Version="3.10.0" />
-    <PackageReference Include="RhinoMocks" Version="3.6.1" />
   </ItemGroup>
-  
+
   <ItemGroup>
     <ProjectReference Include="..\..\Libraries\Nop.Core\Nop.Core.csproj" />
   </ItemGroup>
