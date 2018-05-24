@@ -340,6 +340,10 @@ namespace Nop.Web.Infrastructure
             routeBuilder.MapLocalizedRoute("CustomerVendorInfo", "customer/vendorinfo",
 				new { controller = "Vendor", action = "Info" });
 
+            //customer GDPR
+            routeBuilder.MapLocalizedRoute("GdprTools", "customer/gdpr",
+                new { controller = "Customer", action = "GdprTools" });
+
             //poll vote AJAX link
             routeBuilder.MapLocalizedRoute("PollVote", "poll/vote",
 				new { controller = "Poll", action = "Vote" });

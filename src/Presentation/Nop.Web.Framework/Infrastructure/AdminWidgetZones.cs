@@ -157,6 +157,12 @@
         public static string ForumSettingsBottom => "admin_forum_settings_bottom";
         public static string ForumSettingsButtons => "admin_forum_settings_buttons";
         public static string ForumSettingsTop => "admin_forum_settings_top";
+        public static string GdprSettingsBottom => "admin_gdpr_settings_bottom";
+        public static string GdprSettingsButtons => "admin_gdpr_settings_buttons";
+        public static string GdprSettingsTop => "admin_gdpr_common_settings_top";
+        public static string GdprConsentDetailsBottom => "admin_gdpr_consent_details_bottom";
+        public static string GdprConsentDetailsButtons => "admin_gdpr_consent_details_buttons";
+        public static string GdprConsentDetailsTop => "admin_gdpr_consent_details_top";
         public static string GeneralCommonSettingsBottom => "admin_general_common_settings_bottom";
         public static string GeneralCommonSettingsButtons => "admin_general_common_settings_buttons";
         public static string GeneralCommonSettingsTop => "admin_general_common_settings_top";

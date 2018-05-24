@@ -13,6 +13,7 @@ using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Configuration;
 using Nop.Core.Data;
+using Nop.Core.Domain;
 using Nop.Core.Domain.Security;
 using Nop.Core.Infrastructure;
 using Nop.Core.Plugins;
@@ -20,11 +21,13 @@ using Nop.Data;
 using Nop.Services.Authentication;
 using Nop.Services.Authentication.External;
 using Nop.Services.Logging;
+using Nop.Services.Security;
 using Nop.Services.Tasks;
 using Nop.Web.Framework.FluentValidation;
 using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Mvc.Routing;
 using Nop.Web.Framework.Themes;
+using StackExchange.Profiling.Storage;
 
 namespace Nop.Web.Framework.Infrastructure.Extensions
 {
@@ -288,6 +291,32 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 optionsBuilder
                     .UseLazyLoadingProxies()
                     .UseSqlServer(dataSettings.DataConnectionString);
+            });
+        }
+
+        /// <summary>
+        /// Add and configure MiniProfiler service
+        /// </summary>
+        /// <param name="services">Collection of service descriptors</param>
+        public static void AddNopMiniProfiler(this IServiceCollection services)
+        {
+            //whether database is already installed
+            if (!DataSettingsManager.DatabaseIsInstalled)
+                return;
+
+            services.AddMiniProfiler(miniProfilerOptions =>
+            {
+                //use memory cache provider for storing each result
+                (miniProfilerOptions.Storage as MemoryCacheStorage).CacheDuration = TimeSpan.FromMinutes(60);
+
+                //whether MiniProfiler should be displayed
+                miniProfilerOptions.ShouldProfile = request => 
+                    EngineContext.Current.Resolve<StoreInformationSettings>().DisplayMiniProfilerInPublicStore;
+                
+                //determine who can access the MiniProfiler results
+                miniProfilerOptions.ResultsAuthorize = request => 
+                    !EngineContext.Current.Resolve<StoreInformationSettings>().DisplayMiniProfilerForAdminOnly ||
+                    EngineContext.Current.Resolve<IPermissionService>().Authorize(StandardPermissionProvider.AccessAdminPanel);
             });
         }
     }

@@ -2869,16 +2869,16 @@ label, label + * {
 #check-availability-button:hover {
 	background-color: #999;
 }
-.accept-privacy-policy {
+.accept-consent {
 	margin: 0 0 20px;
 	text-align: center;
 }
-.accept-privacy-policy > * {
+.accept-consent > * {
 	display: inline-block;
 	line-height: 32px;
 }
-.accept-privacy-policy span,
-.accept-privacy-policy a {
+.accept-consent span,
+.accept-consent a {
 	color: #4ab2f1;
 	cursor: pointer;
 }
@@ -3058,6 +3058,15 @@ label, label + * {
 }
 .account-page .table-wrapper {
 	margin: 0 0 30px
+}
+
+.gdpr-tools-page .result {
+    margin: 20px 0;
+    font-size: 13px;
+    color: #e4434b;
+}
+.gdpr-tools-page .buttons {
+    margin-top: 20px;
 }
 
 .address-list-page .info,

@@ -7,6 +7,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Forums;
+using Nop.Core.Domain.Gdpr;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Security;
@@ -16,6 +17,7 @@ using Nop.Services.Authentication.External;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
+using Nop.Services.Gdpr;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Media;
@@ -46,6 +48,7 @@ namespace Nop.Web.Factories
         private readonly IStoreMappingService _storeMappingService;
         private readonly ICustomerAttributeParser _customerAttributeParser;
         private readonly ICustomerAttributeService _customerAttributeService;
+        private readonly IGdprService _gdprService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly RewardPointsSettings _rewardPointsSettings;
         private readonly CommonSettings _commonSettings;
@@ -62,6 +65,7 @@ namespace Nop.Web.Factories
         private readonly IDownloadService _downloadService;
         private readonly IReturnRequestService _returnRequestService;
 
+        private readonly GdprSettings _gdprSettings;
         private readonly MediaSettings _mediaSettings;
         private readonly CaptchaSettings _captchaSettings;
         private readonly SecuritySettings _securitySettings;
@@ -83,6 +87,7 @@ namespace Nop.Web.Factories
             IStoreMappingService storeMappingService,
             ICustomerAttributeParser customerAttributeParser,
             ICustomerAttributeService customerAttributeService,
+            IGdprService gdprService,
             IGenericAttributeService genericAttributeService,
             RewardPointsSettings rewardPointsSettings,
             CommonSettings commonSettings,
@@ -98,6 +103,7 @@ namespace Nop.Web.Factories
             IExternalAuthenticationService externalAuthenticationService,
             IDownloadService downloadService,
             IReturnRequestService returnRequestService,
+            GdprSettings gdprSettings,
             MediaSettings mediaSettings,
             CaptchaSettings captchaSettings,
             SecuritySettings securitySettings,
@@ -115,6 +121,7 @@ namespace Nop.Web.Factories
             this._storeMappingService = storeMappingService;
             this._customerAttributeParser = customerAttributeParser;
             this._customerAttributeService = customerAttributeService;
+            this._gdprService = gdprService;
             this._genericAttributeService = genericAttributeService;
             this._rewardPointsSettings = rewardPointsSettings;
             this._commonSettings = commonSettings;
@@ -130,6 +137,7 @@ namespace Nop.Web.Factories
             this._externalAuthenticationService = externalAuthenticationService;
             this._downloadService = downloadService;
             this._returnRequestService = returnRequestService;
+            this._gdprSettings = gdprSettings;
             this._mediaSettings = mediaSettings;
             this._captchaSettings = captchaSettings;
             this._securitySettings = securitySettings;
@@ -138,6 +146,24 @@ namespace Nop.Web.Factories
             this._vendorSettings = vendorSettings;
         }
 
+        #endregion
+
+        #region Utilities
+
+        protected virtual GdprConsentModel PrepareGdprConsentModel(GdprConsent consent, bool accepted)
+        {
+            if (consent == null)
+                throw  new ArgumentNullException(nameof(consent));
+
+            return new GdprConsentModel
+            {
+                Id = consent.Id,
+                Message = consent.Message,
+                IsRequired = consent.IsRequired,
+                RequiredMessage = !String.IsNullOrEmpty(consent.RequiredMessage) ? consent.RequiredMessage : $"'{consent.Message}' is required",
+                Accepted = accepted
+            };
+        }
         #endregion
 
         #region Methods
@@ -400,6 +426,17 @@ namespace Nop.Web.Factories
             foreach (var attribute in customAttributes)
                 model.CustomerAttributes.Add(attribute);
 
+            //GDPR
+            if (_gdprSettings.GdprEnabled)
+            {
+                var consents = _gdprService.GetAllConsents().Where(consent => consent.DisplayOnCustomerInfoPage).ToList();
+                foreach (var consent in consents)
+                {
+                    var accepted = _gdprService.IsConsentAccepted(consent.Id, _workContext.CurrentCustomer.Id);
+                    model.GdprConsents.Add(PrepareGdprConsentModel(consent, accepted.HasValue && accepted.Value));
+                }
+            }
+
             return model;
         }
 
@@ -505,6 +542,16 @@ namespace Nop.Web.Factories
             //custom customer attributes
             var customAttributes = PrepareCustomCustomerAttributes(_workContext.CurrentCustomer, overrideCustomCustomerAttributesXml); foreach (var attribute in customAttributes)
                 model.CustomerAttributes.Add(attribute);
+
+            //GDPR
+            if (_gdprSettings.GdprEnabled)
+            {
+                var consents = _gdprService.GetAllConsents().Where(consent => consent.DisplayDuringRegistration).ToList();
+                foreach (var consent in consents)
+                {
+                    model.GdprConsents.Add(PrepareGdprConsentModel(consent, false));
+                }
+            }
 
             return model;
         }
@@ -705,6 +752,16 @@ namespace Nop.Web.Factories
                     ItemClass = "customer-vendor-info"
                 });
             }
+            if (_gdprSettings.GdprEnabled)
+            {
+                model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
+                {
+                    RouteName = "GdprTools",
+                    Title = _localizationService.GetResource("Account.Gdpr"),
+                    Tab = CustomerNavigationEnum.GdprTools,
+                    ItemClass = "customer-gdpr"
+                });
+            }
 
             model.SelectedTab = (CustomerNavigationEnum)selectedTabId;
 
@@ -817,6 +874,16 @@ namespace Nop.Web.Factories
                 _mediaSettings.AvatarPictureSize,
                 false);
 
+            return model;
+        }
+
+        /// <summary>
+        /// Prepare the GDPR tools model
+        /// </summary>
+        /// <returns>GDPR tools model</returns>
+        public virtual GdprToolsModel PrepareGdprToolsModel()
+        {
+            var model = new GdprToolsModel();
             return model;
         }
 

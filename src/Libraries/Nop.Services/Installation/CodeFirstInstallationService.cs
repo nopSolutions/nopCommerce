@@ -15,6 +15,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Forums;
+using Nop.Core.Domain.Gdpr;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Logging;
 using Nop.Core.Domain.Media;
@@ -6032,6 +6033,13 @@ namespace Nop.Services.Installation
                 Dimensions = true,
                 ProductAttributes = true,
                 SpecificationAttributes =true
+            });
+
+            settingService.SaveSetting(new GdprSettings
+            {
+                GdprEnabled = false,
+                LogPrivacyPolicyConsent = true,
+                LogNewsletterConsent = true
             });
 
             settingService.SaveSetting(new CatalogSettings

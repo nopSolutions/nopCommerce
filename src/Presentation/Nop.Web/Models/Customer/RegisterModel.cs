@@ -18,6 +18,7 @@ namespace Nop.Web.Models.Customer
             this.AvailableCountries = new List<SelectListItem>();
             this.AvailableStates = new List<SelectListItem>();
             this.CustomerAttributes = new List<CustomerAttributeModel>();
+            this.GdprConsents = new List<GdprConsentModel>();
         }
         
         [DataType(DataType.EmailAddress)]
@@ -153,5 +154,7 @@ namespace Nop.Web.Models.Customer
         public bool DisplayCaptcha { get; set; }
 
         public IList<CustomerAttributeModel> CustomerAttributes { get; set; }
+
+        public IList<GdprConsentModel> GdprConsents { get; set; }
     }
 }
