@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using Nop.Core;
@@ -53,6 +52,7 @@ namespace Nop.Services.Customers
         #region Fields
 
         private readonly IRepository<Customer> _customerRepository;
+        private readonly IRepository<CustomerCustomerRoleMapping> _customerCustomerRoleMappingRepository;
         private readonly IRepository<CustomerPassword> _customerPasswordRepository;
         private readonly IRepository<CustomerRole> _customerRoleRepository;
         private readonly IRepository<GenericAttribute> _gaRepository;
@@ -98,6 +98,7 @@ namespace Nop.Services.Customers
         /// <param name="eventPublisher">Event publisher</param>
         /// <param name="customerSettings">Customer settings</param>
         /// <param name="commonSettings">Common settings</param>
+        /// <param name="customerCustomerRoleMappingRepository">Customer role mapping repository</param>
         public CustomerService(ICacheManager cacheManager,
             IRepository<Customer> customerRepository,
             IRepository<CustomerPassword> customerPasswordRepository,
@@ -116,7 +117,8 @@ namespace Nop.Services.Customers
             IDbContext dbContext,
             IEventPublisher eventPublisher, 
             CustomerSettings customerSettings,
-            CommonSettings commonSettings)
+            CommonSettings commonSettings,
+            IRepository<CustomerCustomerRoleMapping> customerCustomerRoleMappingRepository)
         {
             this._cacheManager = cacheManager;
             this._customerRepository = customerRepository;
@@ -137,6 +139,7 @@ namespace Nop.Services.Customers
             this._eventPublisher = eventPublisher;
             this._customerSettings = customerSettings;
             this._commonSettings = commonSettings;
+            this._customerCustomerRoleMappingRepository = customerCustomerRoleMappingRepository;
         }
 
         #endregion
@@ -188,8 +191,15 @@ namespace Nop.Services.Customers
             if (vendorId > 0)
                 query = query.Where(c => vendorId == c.VendorId);
             query = query.Where(c => !c.Deleted);
+
             if (customerRoleIds != null && customerRoleIds.Length > 0)
-                query = query.Where(c => c.CustomerCustomerRoleMappings.Select(mapping => mapping.CustomerRoleId).Intersect(customerRoleIds).Any());
+            {
+                query = query.Join(_customerCustomerRoleMappingRepository.Table, x => x.Id, y => y.CustomerId,
+                        (x, y) => new {Customer = x, Mapping = y})
+                    .Where(z => customerRoleIds.Contains(z.Mapping.CustomerRoleId))
+                    .Select(z => z.Customer);
+            }
+
             if (!string.IsNullOrWhiteSpace(email))
                 query = query.Where(c => c.Email.Contains(email));
             if (!string.IsNullOrWhiteSpace(username))
