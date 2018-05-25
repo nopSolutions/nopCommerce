@@ -197,7 +197,8 @@ namespace Nop.Services.Customers
                 query = query.Join(_customerCustomerRoleMappingRepository.Table, x => x.Id, y => y.CustomerId,
                         (x, y) => new {Customer = x, Mapping = y})
                     .Where(z => customerRoleIds.Contains(z.Mapping.CustomerRoleId))
-                    .Select(z => z.Customer);
+                    .Select(z => z.Customer)
+                    .Distinct();
             }
 
             if (!string.IsNullOrWhiteSpace(email))
