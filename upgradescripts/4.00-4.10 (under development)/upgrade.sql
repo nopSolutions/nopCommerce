@@ -2870,3 +2870,22 @@ BEGIN
 	VALUES (N'gdprsettings.lognewsletterconsent', N'true', 0)
 END
 GO
+
+--rename setting
+UPDATE [Setting] SET [Name] = 'captchasettings.recaptchadefaultlanguage' WHERE [Name] = 'captchasettings.recaptchalanguage'
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'captchasettings.recaptchadefaultlanguage')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'captchasettings.recaptchadefaultlanguage', NULL, 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'captchasettings.automaticallychooselanguage')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'captchasettings.automaticallychooselanguage', N'True', 0)
+END
+GO

@@ -12,6 +12,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Domain.Security;
 using Nop.Core.Html;
 using Nop.Core.Infrastructure;
 using Nop.Services.Catalog;
