@@ -81,6 +81,7 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="customerRepository">Customer repository</param>
+        /// <param name="customerCustomerRoleMappingRepository">Customer role mapping repository</param>
         /// <param name="customerPasswordRepository">Customer password repository</param>
         /// <param name="customerRoleRepository">Customer role repository</param>
         /// <param name="gaRepository">Generic attribute repository</param>
@@ -98,9 +99,9 @@ namespace Nop.Services.Customers
         /// <param name="eventPublisher">Event publisher</param>
         /// <param name="customerSettings">Customer settings</param>
         /// <param name="commonSettings">Common settings</param>
-        /// <param name="customerCustomerRoleMappingRepository">Customer role mapping repository</param>
         public CustomerService(ICacheManager cacheManager,
             IRepository<Customer> customerRepository,
+            IRepository<CustomerCustomerRoleMapping> customerCustomerRoleMappingRepository,
             IRepository<CustomerPassword> customerPasswordRepository,
             IRepository<CustomerRole> customerRoleRepository,
             IRepository<GenericAttribute> gaRepository,
@@ -117,11 +118,11 @@ namespace Nop.Services.Customers
             IDbContext dbContext,
             IEventPublisher eventPublisher, 
             CustomerSettings customerSettings,
-            CommonSettings commonSettings,
-            IRepository<CustomerCustomerRoleMapping> customerCustomerRoleMappingRepository)
+            CommonSettings commonSettings)
         {
             this._cacheManager = cacheManager;
             this._customerRepository = customerRepository;
+            this._customerCustomerRoleMappingRepository = customerCustomerRoleMappingRepository;
             this._customerPasswordRepository = customerPasswordRepository;
             this._customerRoleRepository = customerRoleRepository;
             this._gaRepository = gaRepository;
@@ -139,7 +140,6 @@ namespace Nop.Services.Customers
             this._eventPublisher = eventPublisher;
             this._customerSettings = customerSettings;
             this._commonSettings = commonSettings;
-            this._customerCustomerRoleMappingRepository = customerCustomerRoleMappingRepository;
         }
 
         #endregion
