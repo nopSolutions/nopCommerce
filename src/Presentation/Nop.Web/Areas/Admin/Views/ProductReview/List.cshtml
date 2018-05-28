@@ -334,21 +334,23 @@
                                 };
                                 addAntiForgeryToken(postData);
 
-                                $.ajax({
-                                    cache: false,
-                                    type: "POST",
-                                    url: "@(Url.Action("DeleteSelected", "ProductReview"))",
-                                    data: postData,
-                                    complete: function(data) {
-                                        //reload grid
-                                        var grid = $('#productreviews-grid').data('kendoGrid');
-                                        grid.dataSource.read();
-                                    },
-                                    error: function(xhr, ajaxOptions, thrownError) {
-                                        alert(thrownError);
-                                    },
-                                    traditional: true
-                                });
+                                if (confirm('@T("Admin.Common.DeleteConfirmation.Selected")')) {
+                                    $.ajax({
+                                        cache: false,
+                                        type: "POST",
+                                        url: "@(Url.Action("DeleteSelected", "ProductReview"))",
+                                        data: postData,
+                                        complete: function(data) {
+                                            //reload grid
+                                            var grid = $('#productreviews-grid').data('kendoGrid');
+                                            grid.dataSource.read();
+                                        },
+                                        error: function(xhr, ajaxOptions, thrownError) {
+                                            alert(thrownError);
+                                        },
+                                        traditional: true
+                                    });
+                                }
                                 return false;
                             });
 
