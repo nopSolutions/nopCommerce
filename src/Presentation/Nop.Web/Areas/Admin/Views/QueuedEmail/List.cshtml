@@ -258,25 +258,27 @@
                                     };
                                     addAntiForgeryToken(postData);
 
-                                    $.ajax({
-                                        cache: false,
-                                        type: "POST",
-                                        url: "@(Url.Action("DeleteSelected", "QueuedEmail"))",
-                                        data: postData,
-                                        complete: function(data) {
-                                            //reload grid
-                                            var grid = $('#queuedEmails-grid').data('kendoGrid');
-                                            grid.dataSource.page(1); //new search. Set page size to 1
-                                            //grid.dataSource.read(); we already loaded the grid above using "page" function
-                                            //clear selected checkboxes
-                                            $('.checkboxGroups').attr('checked', false).change();
-                                            selectedIds = [];
-                                        },
-                                        error: function(xhr, ajaxOptions, thrownError) {
-                                            alert(thrownError);
-                                        },
-                                        traditional: true
-                                    });
+                                    if (confirm('@T("Admin.Common.DeleteConfirmation.Selected")')) {
+                                        $.ajax({
+                                            cache: false,
+                                            type: "POST",
+                                            url: "@(Url.Action("DeleteSelected", "QueuedEmail"))",
+                                            data: postData,
+                                            complete: function(data) {
+                                                //reload grid
+                                                var grid = $('#queuedEmails-grid').data('kendoGrid');
+                                                grid.dataSource.page(1); //new search. Set page size to 1
+                                                //grid.dataSource.read(); we already loaded the grid above using "page" function
+                                                //clear selected checkboxes
+                                                $('.checkboxGroups').attr('checked', false).change();
+                                                selectedIds = [];
+                                            },
+                                            error: function(xhr, ajaxOptions, thrownError) {
+                                                alert(thrownError);
+                                            },
+                                            traditional: true
+                                        });
+                                    }
                                     return false;
                                 });
 

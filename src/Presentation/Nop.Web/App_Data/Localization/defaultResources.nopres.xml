@@ -4098,6 +4098,9 @@
   <LocaleResource Name="Admin.Common.DeleteConfirmation">
     <Value>Are you sure you want to delete this item?</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Common.DeleteConfirmation.Selected">
+    <Value>Are you sure you want to delete selected items?</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Common.DeleteConfirmationParam">
     <Value>Are you sure you want to delete "{0}"?</Value>
   </LocaleResource>
@@ -14633,7 +14636,7 @@
   </LocaleResource>
   <LocaleResource Name="Enums.Nop.Core.Domain.Catalog.AttributeControlType.ColorSquares">
     <Value>Color squares</Value>
-  </LocaleResource>
+  </LocaleResource>  
   <LocaleResource Name="Enums.Nop.Core.Domain.Catalog.AttributeControlType.Datepicker">
     <Value>Date picker</Value>
   </LocaleResource>
@@ -14642,6 +14645,9 @@
   </LocaleResource>
   <LocaleResource Name="Enums.Nop.Core.Domain.Catalog.AttributeControlType.FileUpload">
     <Value>File upload</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Catalog.AttributeControlType.ImageSquares">
+    <Value>Image squares</Value>
   </LocaleResource>
   <LocaleResource Name="Enums.Nop.Core.Domain.Catalog.AttributeControlType.MultilineTextbox">
     <Value>Multiline textbox</Value>

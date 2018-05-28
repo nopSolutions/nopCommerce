@@ -1154,6 +1154,12 @@ set @resources='
   <LocaleResource Name="Admin.Customers.Customers.Gdpr.Export">
     <Value>Export data</Value>
   </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Catalog.AttributeControlType.ImageSquares">
+    <Value>Image squares</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Common.DeleteConfirmation.Selected">
+    <Value>Are you sure you want to delete selected items?</Value>
+  </LocaleResource>
 </Language>
 '
 
