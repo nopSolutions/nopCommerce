@@ -442,5 +442,10 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets a value indicating whether the related entities need to be exported/imported using name
         /// </summary>
         public bool ExportImportRelatedEntitiesByName { get; set; }
+
+        /// <summary>
+        /// Gets or sets count of displayed years for datepicker
+        /// </summary>
+        public int CountDisplayedYearsDatePicker { get; set; }
     }
 }
