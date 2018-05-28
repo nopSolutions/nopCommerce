@@ -337,58 +337,57 @@
                     </div>
                 </div>
             }
-            <div class="fieldset">
-                <div class="title">
-                    <strong>@T("Account.YourPassword")</strong>
-                </div>
-                <div class="form-fields">
-                    <div class="inputs">
-                        <label asp-for="Password" asp-postfix=":"></label>
-                        <input asp-for="Password" />
-                        <nop-required />
-                        <span asp-validation-for="Password"></span>
+                <div class="fieldset">
+                    <div class="title">
+                        <strong>@T("Account.YourPassword")</strong>
                     </div>
-                    <div class="inputs">
-                        <label asp-for="ConfirmPassword" asp-postfix=":"></label>
-                        <input asp-for="ConfirmPassword" />
-                        <nop-required />
-                        <span asp-validation-for="ConfirmPassword"></span>
-                    </div>
-                    @if (Model.DisplayCaptcha)
-                    {
-                        <div class="captcha-box">
-                            <nop-captcha />
+                    <div class="form-fields">
+                        <div class="inputs">
+                            <label asp-for="Password" asp-postfix=":"></label>
+                            <input asp-for="Password" />
+                            <nop-required />
+                            <span asp-validation-for="Password"></span>
                         </div>
-                    }
-                    @if (Model.HoneypotEnabled)
+                        <div class="inputs">
+                            <label asp-for="ConfirmPassword" asp-postfix=":"></label>
+                            <input asp-for="ConfirmPassword" />
+                            <nop-required />
+                            <span asp-validation-for="ConfirmPassword"></span>
+                        </div>
+                        @if (Model.DisplayCaptcha)
+                        {
+                            <div class="captcha-box">
+                                <nop-captcha />
+                            </div>
+                        }
+                        @if (Model.HoneypotEnabled)
+                        {
+                            @Html.Raw(Html.GenerateHoneypotInput())
+                        }
+                    </div>
+                    @if (Model.AcceptPrivacyPolicyEnabled)
                     {
-                        @Html.Raw(Html.GenerateHoneypotInput())
-                    }
-                </div>
-                @if (Model.AcceptPrivacyPolicyEnabled)
-                {
-                    <script asp-location="Footer">
+                        <script asp-location="Footer">
                         $(document).ready(function() {
                             $('#register-button').click(function() {
-                                if ($('#accept-privacy-policy').is(':checked')) {
+                                if ($('#accept-consent').is(':checked')) {
                                     //do some stuff
                                     return true;
                                 } else {
-                                    //just show validation errors, dont post
-                                    alert(
-                                        '@Html.Raw(JavaScriptEncoder.Default.Encode(T("Account.Fields.AcceptPrivacyPolicy.Required").Text))');
+                                    //just show validation errors, don't post
+                                    alert('@Html.Raw(JavaScriptEncoder.Default.Encode(T("Account.Fields.AcceptPrivacyPolicy.Required").Text))');
                                     return false;
                                 }
                             });
                         });
-                    </script>
-                    <div class="accept-privacy-policy">
-                        <input id="accept-privacy-policy" type="checkbox" name="accept-privacy-policy" />
-                        <label for="accept-privacy-policy">@T("Account.Fields.AcceptPrivacyPolicy")</label>
-                        @if (Model.AcceptPrivacyPolicyPopup)
-                        {
-                            <span class="read" id="read-privacyinfo">@T("Account.Fields.AcceptPrivacyPolicy.Read")</span>
-                            <script asp-location="Footer">
+                        </script>
+                        <div class="accept-consent">
+                            <input id="accept-consent" type="checkbox" name="accept-consent" />
+                            <label for="accept-consent">@T("Account.Fields.AcceptPrivacyPolicy")</label>
+                            @if (Model.AcceptPrivacyPolicyPopup)
+                            {
+                                <span class="read" id="read-privacyinfo">@T("Account.Fields.AcceptPrivacyPolicy.Read")</span>
+                                <script asp-location="Footer">
                                 $(document).ready(function() {
                                     $('#read-privacyinfo').on('click',
                                         function(e) {
@@ -397,15 +396,39 @@
                                                 '@T("Account.Fields.AcceptPrivacyPolicy")');
                                         });
                                 });
-                            </script>
-                        }
-                        else
-                        {
-                            <a class="read" id="read-privacyinfo" href="@Url.RouteUrl("Topic", new {SeName = Html.GetTopicSeName("privacyinfo") })">@T("Account.Fields.AcceptPrivacyPolicy.Read")</a>
-                        }
-                    </div>
-                }
-            </div>
+                                </script>
+                            }
+                            else
+                            {
+                                <a class="read" id="read-privacyinfo" href="@Url.RouteUrl("Topic", new {SeName = Html.GetTopicSeName("privacyinfo") })">@T("Account.Fields.AcceptPrivacyPolicy.Read")</a>
+                            }
+                        </div>
+                    }
+                    @foreach (var consent in Model.GdprConsents)
+                    {
+                         if (consent.IsRequired)
+                         {
+                             <script asp-location="Footer">
+                                 $(document).ready(function() {
+                                     $('#register-button').click(function() {
+                                         if ($('#consent@(consent.Id)').is(':checked')) {
+                                             //do some stuff
+                                             return true;
+                                         } else {
+                                             //just show validation errors, don't post
+                                             alert('@Html.Raw(JavaScriptEncoder.Default.Encode(consent.RequiredMessage))');
+                                             return false;
+                                         }
+                                     });
+                                 });
+                             </script>
+                         }
+                        <div class="accept-consent">
+                            <input id="consent@(consent.Id)" type="checkbox" name="consent@(consent.Id)"/>
+                            <label for="consent@(consent.Id)">@consent.Message</label>
+                        </div>
+                    }
+                </div>
             <div class="buttons">
                 <input type="submit" id="register-button" class="button-1 register-next-step-button" value="@T("Account.Register.Button")" name="register-button" />
             </div>

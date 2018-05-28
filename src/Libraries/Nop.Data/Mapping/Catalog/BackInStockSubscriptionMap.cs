@@ -1,29 +1,39 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Catalog;
 
 namespace Nop.Data.Mapping.Catalog
 {
     /// <summary>
-    /// Mapping class
+    /// Represents a back in stock subscription mapping configuration
     /// </summary>
     public partial class BackInStockSubscriptionMap : NopEntityTypeConfiguration<BackInStockSubscription>
     {
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        public BackInStockSubscriptionMap()
-        {
-            this.ToTable("BackInStockSubscription");
-            this.HasKey(x => x.Id);
+        #region Methods
 
-            this.HasRequired(x => x.Product)
+        /// <summary>
+        /// Configures the entity
+        /// </summary>
+        /// <param name="builder">The builder to be used to configure the entity</param>
+        public override void Configure(EntityTypeBuilder<BackInStockSubscription> builder)
+        {
+            builder.ToTable(nameof(BackInStockSubscription));
+            builder.HasKey(subscription => subscription.Id);
+
+            builder.HasOne(subscription => subscription.Product)
                 .WithMany()
-                .HasForeignKey(x => x.ProductId)
-                .WillCascadeOnDelete(true);
-            
-            this.HasRequired(x => x.Customer)
+                .HasForeignKey(subscription => subscription.ProductId)
+                .IsRequired();
+
+            builder.HasOne(subscription => subscription.Customer)
                 .WithMany()
-                .HasForeignKey(x => x.CustomerId)
-                .WillCascadeOnDelete(true);
+                .HasForeignKey(subscription => subscription.CustomerId)
+                .IsRequired();
+
+            //add custom configuration
+            this.PostConfigure(builder);
         }
+
+        #endregion
     }
 }

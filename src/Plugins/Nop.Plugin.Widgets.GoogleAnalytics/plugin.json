@@ -1,8 +1,8 @@
 ﻿{
   "Group": "Widgets",
-  "FriendlyName": "Google Analytics or Universal Analytics",
+  "FriendlyName": "Google Analytics",
   "SystemName": "Widgets.GoogleAnalytics",
-  "Version": "1.44",
+  "Version": "1.46",
   "SupportedVersions": [ "4.10" ],
   "Author": "nopCommerce team, Nicolas Muniere",
   "DisplayOrder": 1,

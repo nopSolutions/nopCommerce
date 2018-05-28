@@ -25,7 +25,7 @@ namespace Nop.Services.Shipping.Date
         /// <summary>
         /// Ctor
         /// </summary>
-        /// <param name="eventPublisher">Event published</param>
+        /// <param name="eventPublisher">Event publisher</param>
         /// <param name="deliveryDateRepository">Delivery date repository</param>
         /// <param name="productAvailabilityRangeRepository">Product availability range repository</param>
         public DateRangeService(IEventPublisher eventPublisher,

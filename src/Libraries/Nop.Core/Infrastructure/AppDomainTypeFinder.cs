@@ -41,14 +41,14 @@ namespace Nop.Core.Infrastructure
         {
             foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
-                if (Matches(assembly.FullName))
-                {
-                    if (!addedAssemblyNames.Contains(assembly.FullName))
-                    {
-                        assemblies.Add(assembly);
-                        addedAssemblyNames.Add(assembly.FullName);
-                    }
-                }
+                if (!Matches(assembly.FullName)) 
+                    continue;
+
+                if (addedAssemblyNames.Contains(assembly.FullName)) 
+                    continue;
+
+                assemblies.Add(assembly);
+                addedAssemblyNames.Add(assembly.FullName);
             }
         }
 
@@ -62,11 +62,11 @@ namespace Nop.Core.Infrastructure
             foreach (var assemblyName in AssemblyNames)
             {
                 var assembly = Assembly.Load(assemblyName);
-                if (!addedAssemblyNames.Contains(assembly.FullName))
-                {
-                    assemblies.Add(assembly);
-                    addedAssemblyNames.Add(assembly.FullName);
-                }
+                if (addedAssemblyNames.Contains(assembly.FullName)) 
+                    continue;
+
+                assemblies.Add(assembly);
+                addedAssemblyNames.Add(assembly.FullName);
             }
         }
 
@@ -165,6 +165,7 @@ namespace Nop.Core.Infrastructure
                     var isMatch = genericTypeDefinition.IsAssignableFrom(implementedInterface.GetGenericTypeDefinition());
                     return isMatch;
                 }
+
                 return false;
             }
             catch
@@ -209,7 +210,7 @@ namespace Nop.Core.Infrastructure
         /// <returns>Result</returns>
         public IEnumerable<Type> FindClassesOfType<T>(IEnumerable<Assembly> assemblies, bool onlyConcreteClasses = true)
         {
-            return FindClassesOfType(typeof (T), assemblies, onlyConcreteClasses);
+            return FindClassesOfType(typeof(T), assemblies, onlyConcreteClasses);
         }
 
         /// <summary>
@@ -239,27 +240,28 @@ namespace Nop.Core.Infrastructure
                             throw;
                         }
                     }
-                    if (types != null)
+
+                    if (types == null) 
+                        continue;
+
+                    foreach (var t in types)
                     {
-                        foreach (var t in types)
+                        if (!assignTypeFrom.IsAssignableFrom(t) && (!assignTypeFrom.IsGenericTypeDefinition || !DoesTypeImplementOpenGeneric(t, assignTypeFrom))) 
+                            continue;
+
+                        if (t.IsInterface) 
+                            continue;
+
+                        if (onlyConcreteClasses)
                         {
-                            if (assignTypeFrom.IsAssignableFrom(t) || (assignTypeFrom.IsGenericTypeDefinition && DoesTypeImplementOpenGeneric(t, assignTypeFrom)))
+                            if (t.IsClass && !t.IsAbstract)
                             {
-                                if (!t.IsInterface)
-                                {
-                                    if (onlyConcreteClasses)
-                                    {
-                                        if (t.IsClass && !t.IsAbstract)
-                                        {
-                                            result.Add(t);
-                                        }
-                                    }
-                                    else
-                                    {
-                                        result.Add(t);
-                                    }
-                                }
+                                result.Add(t);
                             }
+                        }
+                        else
+                        {
+                            result.Add(t);
                         }
                     }
                 }
@@ -275,6 +277,7 @@ namespace Nop.Core.Infrastructure
 
                 throw fail;
             }
+
             return result;
         }
 
@@ -299,10 +302,7 @@ namespace Nop.Core.Infrastructure
         #region Properties
 
         /// <summary>The app domain to look for types in.</summary>
-        public virtual AppDomain App
-        {
-            get { return AppDomain.CurrentDomain; }
-        }
+        public virtual AppDomain App => AppDomain.CurrentDomain;
 
         /// <summary>Gets or sets whether Nop should iterate assemblies in the app domain when loading Nop types. Loading patterns are applied when loading these assemblies.</summary>
         public bool LoadAppDomainAssemblies { get; set; } = true;
@@ -318,6 +318,5 @@ namespace Nop.Core.Infrastructure
         public string AssemblyRestrictToLoadingPattern { get; set; } = ".*";
 
         #endregion
-
     }
 }

@@ -4,61 +4,70 @@ using System.Linq;
 namespace Nop.Core.Data
 {
     /// <summary>
-    /// Repository
+    /// Represents an entity repository
     /// </summary>
-    public partial interface IRepository<T> where T : BaseEntity
+    /// <typeparam name="TEntity">Entity type</typeparam>
+    public partial interface IRepository<TEntity> where TEntity : BaseEntity
     {
+        #region Methods
+
         /// <summary>
         /// Get entity by identifier
         /// </summary>
         /// <param name="id">Identifier</param>
         /// <returns>Entity</returns>
-        T GetById(object id);
+        TEntity GetById(object id);
 
         /// <summary>
         /// Insert entity
         /// </summary>
         /// <param name="entity">Entity</param>
-        void Insert(T entity);
+        void Insert(TEntity entity);
 
         /// <summary>
         /// Insert entities
         /// </summary>
         /// <param name="entities">Entities</param>
-        void Insert(IEnumerable<T> entities);
+        void Insert(IEnumerable<TEntity> entities);
 
         /// <summary>
         /// Update entity
         /// </summary>
         /// <param name="entity">Entity</param>
-        void Update(T entity);
+        void Update(TEntity entity);
 
         /// <summary>
         /// Update entities
         /// </summary>
         /// <param name="entities">Entities</param>
-        void Update(IEnumerable<T> entities);
+        void Update(IEnumerable<TEntity> entities);
 
         /// <summary>
         /// Delete entity
         /// </summary>
         /// <param name="entity">Entity</param>
-        void Delete(T entity);
+        void Delete(TEntity entity);
 
         /// <summary>
         /// Delete entities
         /// </summary>
         /// <param name="entities">Entities</param>
-        void Delete(IEnumerable<T> entities);
+        void Delete(IEnumerable<TEntity> entities);
+
+        #endregion
+
+        #region Properties
 
         /// <summary>
         /// Gets a table
         /// </summary>
-        IQueryable<T> Table { get; }
+        IQueryable<TEntity> Table { get; }
 
         /// <summary>
         /// Gets a table with "no tracking" enabled (EF feature) Use it only when you load record(s) only for read-only operations
         /// </summary>
-        IQueryable<T> TableNoTracking { get; }
+        IQueryable<TEntity> TableNoTracking { get; }
+
+        #endregion
     }
 }

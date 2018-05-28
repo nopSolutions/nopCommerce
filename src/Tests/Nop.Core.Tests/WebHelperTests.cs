@@ -72,43 +72,56 @@ namespace Nop.Core.Tests
         [Test]
         public void Can_remove_queryString()
         {
+            //empty URL
+            _webHelper.RemoveQueryString(null, null).ShouldEqual(string.Empty);
+            //empty key
+            _webHelper.RemoveQueryString("http://www.example.com/", null).ShouldEqual("http://www.example.com/");
+            //non-existing param with fragment
+            _webHelper.RemoveQueryString("http://www.example.com/#fragment", "param").ShouldEqual("http://www.example.com/#fragment");
             //first param (?)
-            _webHelper.RemoveQueryString("http://www.example.com/?param1=value1&param2=value2", "param1")
-                .ShouldEqual("http://www.example.com/?param2=value2");
+            _webHelper.RemoveQueryString("http://www.example.com/?param1=value1&param2=value1", "param1")
+                .ShouldEqual("http://www.example.com/?param2=value1");
             //second param (&)
-            _webHelper.RemoveQueryString("http://www.example.com/?param1=value1&param2=value2", "param2")
+            _webHelper.RemoveQueryString("http://www.example.com/?param1=value1&param2=value1", "param2")
                 .ShouldEqual("http://www.example.com/?param1=value1");
             //non-existing param
-            _webHelper.RemoveQueryString("http://www.example.com/?param1=value1&param2=value2", "param3")
-                .ShouldEqual("http://www.example.com/?param1=value1&param2=value2");
+            _webHelper.RemoveQueryString("http://www.example.com/?param1=value1&param2=value1", "param3")
+                .ShouldEqual("http://www.example.com/?param1=value1&param2=value1");
+            //with fragment
+            _webHelper.RemoveQueryString("http://www.example.com/?param1=value1&param2=value1#fragment", "param1")
+                .ShouldEqual("http://www.example.com/?param2=value1#fragment");
+            //specific value
+            _webHelper.RemoveQueryString("http://www.example.com/?param1=value1&param1=value2&param2=value1", "param1", "value1")
+                .ShouldEqual("http://www.example.com/?param1=value2&param2=value1");
+            //all values
+            _webHelper.RemoveQueryString("http://www.example.com/?param1=value1&param1=value2&param2=value1", "param1")
+                .ShouldEqual("http://www.example.com/?param2=value1");
         }
 
         [Test]
         public void Can_modify_queryString()
         {
+            //empty URL
+            _webHelper.ModifyQueryString(null, null).ShouldEqual(string.Empty);
+            //empty key
+            _webHelper.ModifyQueryString("http://www.example.com/", null).ShouldEqual("http://www.example.com/");
+            //empty value
+            _webHelper.ModifyQueryString("http://www.example.com/", "param").ShouldEqual("http://www.example.com/?param=");
             //first param (?)
-            _webHelper.ModifyQueryString("http://www.example.com/?param1=value1&param2=value2", "param1=value3", null)
-                .ShouldEqual("http://www.example.com/?param1=value3&param2=value2");
+            _webHelper.ModifyQueryString("http://www.example.com/?param1=value1&param2=value1", "Param1", "value2")
+                .ShouldEqual("http://www.example.com/?param1=value2&param2=value1");
             //second param (&)
-            _webHelper.ModifyQueryString("http://www.example.com/?param1=value1&param2=value2", "param2=value3", null)
-                .ShouldEqual("http://www.example.com/?param1=value1&param2=value3");
+            _webHelper.ModifyQueryString("http://www.example.com/?param1=value1&param2=value1", "param2", "value2")
+                .ShouldEqual("http://www.example.com/?param1=value1&param2=value2");
             //non-existing param
-            _webHelper.ModifyQueryString("http://www.example.com/?param1=value1&param2=value2", "param3=value3", null)
-                .ShouldEqual("http://www.example.com/?param1=value1&param2=value2&param3=value3");
-        }
-
-        [Test]
-        public void Can_modify_queryString_with_anchor()
-        {
-            _webHelper.ModifyQueryString("http://www.example.com/?param1=value1&param2=value2", "param1=value3", "Test")
-                .ShouldEqual("http://www.example.com/?param1=value3&param2=value2#Test");
-        }
-
-        [Test]
-        public void Can_modify_queryString_new_anchor_should_remove_previous_one()
-        {
-            _webHelper.ModifyQueryString("http://www.example.com/?param1=value1&param2=value2#test1", "param1=value3", "Test2")
-                .ShouldEqual("http://www.example.com/?param1=value3&param2=value2#Test2");
+            _webHelper.ModifyQueryString("http://www.example.com/?param1=value1&param2=value1", "param3", "value1")
+                .ShouldEqual("http://www.example.com/?param1=value1&param2=value1&param3=value1");
+            //multiple values
+            _webHelper.ModifyQueryString("http://www.example.com/?param1=value1&param2=value1", "param1", "value1", "value2", "value3")
+                .ShouldEqual("http://www.example.com/?param1=value1,value2,value3&param2=value1");
+            //with fragment
+            _webHelper.ModifyQueryString("http://www.example.com/?param1=value1&param2=value1#fragment", "param1", "value2")
+                .ShouldEqual("http://www.example.com/?param1=value2&param2=value1#fragment");
         }
     }
 

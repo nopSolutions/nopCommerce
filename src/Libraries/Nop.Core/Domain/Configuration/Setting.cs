@@ -10,7 +10,9 @@ namespace Nop.Core.Domain.Configuration
         /// <summary>
         /// Ctor
         /// </summary>
-        public Setting() { }
+        public Setting()
+        {
+        }
 
         /// <summary>
         /// Ctor
@@ -18,7 +20,8 @@ namespace Nop.Core.Domain.Configuration
         /// <param name="name">Name</param>
         /// <param name="value">Value</param>
         /// <param name="storeId">Store identifier</param>
-        public Setting(string name, string value, int storeId = 0) {
+        public Setting(string name, string value, int storeId = 0) 
+        {
             this.Name = name;
             this.Value = value;
             this.StoreId = storeId;

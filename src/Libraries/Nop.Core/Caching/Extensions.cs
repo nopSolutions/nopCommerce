@@ -13,7 +13,7 @@ namespace Nop.Core.Caching
         /// <summary>
         /// Get default cache time in minutes
         /// </summary>
-        private static int DefaultCacheTimeMinutes { get { return 60; } }
+        private static int DefaultCacheTimeMinutes => 60;
 
         /// <summary>
         /// Get a cached item. If it's not in the cache yet, then load and cache it

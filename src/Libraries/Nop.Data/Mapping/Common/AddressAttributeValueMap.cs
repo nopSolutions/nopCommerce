@@ -1,24 +1,37 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Common;
+
 
 namespace Nop.Data.Mapping.Common
 {
     /// <summary>
-    /// Mapping class
+    /// Represents an address attribute value mapping configuration
     /// </summary>
     public partial class AddressAttributeValueMap : NopEntityTypeConfiguration<AddressAttributeValue>
     {
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        public AddressAttributeValueMap()
-        {
-            this.ToTable("AddressAttributeValue");
-            this.HasKey(aav => aav.Id);
-            this.Property(aav => aav.Name).IsRequired().HasMaxLength(400);
+        #region Methods
 
-            this.HasRequired(aav => aav.AddressAttribute)
-                .WithMany(aa => aa.AddressAttributeValues)
-                .HasForeignKey(aav => aav.AddressAttributeId);
+        /// <summary>
+        /// Configures the entity
+        /// </summary>
+        /// <param name="builder">The builder to be used to configure the entity</param>
+        public override void Configure(EntityTypeBuilder<AddressAttributeValue> builder)
+        {
+            builder.ToTable(nameof(AddressAttributeValue));
+            builder.HasKey(value => value.Id);
+
+            builder.Property(value => value.Name).HasMaxLength(400).IsRequired();
+
+            builder.HasOne(value => value.AddressAttribute)
+                .WithMany(attribute => attribute.AddressAttributeValues)
+                .HasForeignKey(value => value.AddressAttributeId)
+                .IsRequired();
+
+            //add custom configuration
+            this.PostConfigure(builder);
         }
+
+        #endregion
     }
 }

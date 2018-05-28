@@ -1,24 +1,36 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Orders;
 
 namespace Nop.Data.Mapping.Orders
 {
     /// <summary>
-    /// Mapping class
+    /// Represents an order note mapping configuration
     /// </summary>
     public partial class OrderNoteMap : NopEntityTypeConfiguration<OrderNote>
     {
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        public OrderNoteMap()
-        {
-            this.ToTable("OrderNote");
-            this.HasKey(on => on.Id);
-            this.Property(on => on.Note).IsRequired();
+        #region Methods
 
-            this.HasRequired(on => on.Order)
-                .WithMany(o => o.OrderNotes)
-                .HasForeignKey(on => on.OrderId);
+        /// <summary>
+        /// Configures the entity
+        /// </summary>
+        /// <param name="builder">The builder to be used to configure the entity</param>
+        public override void Configure(EntityTypeBuilder<OrderNote> builder)
+        {
+            builder.ToTable(nameof(OrderNote));
+            builder.HasKey(note => note.Id);
+
+            builder.Property(note => note.Note).IsRequired();
+
+            builder.HasOne(note => note.Order)
+                .WithMany(order => order.OrderNotes)
+                .HasForeignKey(note => note.OrderId)
+                .IsRequired();
+
+            //add custom configuration
+            this.PostConfigure(builder);
         }
+
+        #endregion
     }
 }

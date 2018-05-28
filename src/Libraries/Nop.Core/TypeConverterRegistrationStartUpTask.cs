@@ -36,9 +36,6 @@ namespace Nop.Core
         /// <summary>
         /// Gets order of this startup task implementation
         /// </summary>
-        public int Order
-        {
-            get { return 1; }
-        }
+        public int Order => 1;
     }
 }

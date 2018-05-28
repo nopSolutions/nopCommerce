@@ -1,31 +1,44 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.News;
 
 namespace Nop.Data.Mapping.News
 {
     /// <summary>
-    /// Mapping class
+    /// Represents a news comment mapping configuration
     /// </summary>
     public partial class NewsCommentMap : NopEntityTypeConfiguration<NewsComment>
     {
+        #region Methods
+
         /// <summary>
-        /// Ctor
+        /// Configures the entity
         /// </summary>
-        public NewsCommentMap()
+        /// <param name="builder">The builder to be used to configure the entity</param>
+        public override void Configure(EntityTypeBuilder<NewsComment> builder)
         {
-            this.ToTable("NewsComment");
-            this.HasKey(comment => comment.Id);
+            builder.ToTable(nameof(NewsComment));
+            builder.HasKey(comment => comment.Id);
 
-            this.HasRequired(comment => comment.NewsItem)
+            builder.HasOne(comment => comment.NewsItem)
                 .WithMany(news => news.NewsComments)
-                .HasForeignKey(comment => comment.NewsItemId);
+                .HasForeignKey(comment => comment.NewsItemId)
+                .IsRequired();
 
-            this.HasRequired(comment => comment.Customer)
+            builder.HasOne(comment => comment.Customer)
                 .WithMany()
-                .HasForeignKey(comment => comment.CustomerId);
+                .HasForeignKey(comment => comment.CustomerId)
+                .IsRequired();
 
-            this.HasRequired(comment => comment.Store)
+            builder.HasOne(comment => comment.Store)
                 .WithMany()
-                .HasForeignKey(comment => comment.StoreId);
+                .HasForeignKey(comment => comment.StoreId)
+                .IsRequired();
+
+            //add custom configuration
+            this.PostConfigure(builder);
         }
+
+        #endregion
     }
 }

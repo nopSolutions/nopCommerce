@@ -1,31 +1,23 @@
 using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
-using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Reflection;
+using Microsoft.EntityFrameworkCore;
 using Nop.Core;
 using Nop.Data.Mapping;
 
 namespace Nop.Data
 {
     /// <summary>
-    /// Object context
+    /// Represents base object context
     /// </summary>
-    public class NopObjectContext : DbContext, IDbContext
+    public partial class NopObjectContext : DbContext, IDbContext
     {
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="nameOrConnectionString">Connecting string</param>
-        public NopObjectContext(string nameOrConnectionString)
-            : base(nameOrConnectionString)
+        public NopObjectContext(DbContextOptions<NopObjectContext> options) : base(options)
         {
-            //((IObjectContextAdapter) this).ObjectContext.ContextOptions.LazyLoadingEnabled = true;
         }
 
         #endregion
@@ -33,50 +25,24 @@ namespace Nop.Data
         #region Utilities
 
         /// <summary>
-        /// On model creating
+        /// Further configuration the model
         /// </summary>
-        /// <param name="modelBuilder">Model builder</param>
-        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        /// <param name="modelBuilder">The builder being used to construct the model for this context</param>
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //dynamically load all configuration
-            //System.Type configType = typeof(LanguageMap);   //any of your configuration classes here
-            //var typesToRegister = Assembly.GetAssembly(configType).GetTypes()
+            //dynamically load all entity and query type configurations
+            var typeConfigurations = Assembly.GetExecutingAssembly().GetTypes().Where(type => 
+                (type.BaseType?.IsGenericType ?? false) 
+                    && (type.BaseType.GetGenericTypeDefinition() == typeof(NopEntityTypeConfiguration<>) 
+                        || type.BaseType.GetGenericTypeDefinition() == typeof(NopQueryTypeConfiguration<>)));
 
-            var typesToRegister = Assembly.GetExecutingAssembly().GetTypes()
-            .Where(type => !string.IsNullOrEmpty(type.Namespace))
-            .Where(type => type.BaseType != null && type.BaseType.IsGenericType &&
-                type.BaseType.GetGenericTypeDefinition() == typeof(NopEntityTypeConfiguration<>));
-            foreach (var type in typesToRegister)
+            foreach (var typeConfiguration in typeConfigurations)
             {
-                dynamic configurationInstance = Activator.CreateInstance(type);
-                modelBuilder.Configurations.Add(configurationInstance);
+                dynamic configuration = Activator.CreateInstance(typeConfiguration);
+                modelBuilder.ApplyConfiguration(configuration);
             }
-            //...or do it manually below. For example,
-            //modelBuilder.Configurations.Add(new LanguageMap());
-
+            
             base.OnModelCreating(modelBuilder);
-        }
-
-        /// <summary>
-        /// Attach an entity to the context or return an already attached entity (if it was already attached)
-        /// </summary>
-        /// <typeparam name="TEntity">TEntity</typeparam>
-        /// <param name="entity">Entity</param>
-        /// <returns>Attached entity</returns>
-        protected virtual TEntity AttachEntityToContext<TEntity>(TEntity entity) where TEntity : BaseEntity, new()
-        {
-            //little hack here until Entity Framework really supports stored procedures
-            //otherwise, navigation properties of loaded entities are not loaded until an entity is attached to the context
-            var alreadyAttached = Set<TEntity>().Local.FirstOrDefault(x => x.Id == entity.Id);
-            if (alreadyAttached == null)
-            {
-                //attach new entity
-                Set<TEntity>().Attach(entity);
-                return entity;
-            }
-
-            //entity is already loaded
-            return alreadyAttached;
         }
 
         #endregion
@@ -84,161 +50,109 @@ namespace Nop.Data
         #region Methods
 
         /// <summary>
-        /// Create database script
-        /// </summary>
-        /// <returns>SQL to generate database</returns>
-        public string CreateDatabaseScript()
-        {
-            return ((IObjectContextAdapter)this).ObjectContext.CreateDatabaseScript();
-        }
-
-        /// <summary>
-        /// Get DbSet
+        /// Creates a DbSet that can be used to query and save instances of entity
         /// </summary>
         /// <typeparam name="TEntity">Entity type</typeparam>
-        /// <returns>DbSet</returns>
-        public new IDbSet<TEntity> Set<TEntity>() where TEntity : BaseEntity
+        /// <returns>A set for the given entity type</returns>
+        public virtual new DbSet<TEntity> Set<TEntity>() where TEntity : BaseEntity
         {
             return base.Set<TEntity>();
         }
+
+        /// <summary>
+        /// Generate a script to create all tables for the current model
+        /// </summary>
+        /// <returns>A SQL script</returns>
+        public virtual string GenerateCreateScript()
+        {
+            return this.Database.GenerateCreateScript();
+        }
+
+        /// <summary>
+        /// Creates a LINQ query for the query type based on a raw SQL query
+        /// </summary>
+        /// <typeparam name="TQuery">Query type</typeparam>
+        /// <param name="sql">The raw SQL query</param>
+        /// <returns>An IQueryable representing the raw SQL query</returns>
+        public virtual IQueryable<TQuery> QueryFromSql<TQuery>(string sql) where TQuery : class
+        {
+            return this.Query<TQuery>().FromSql(sql);
+        }
         
         /// <summary>
-        /// Execute stores procedure and load a list of entities at the end
+        /// Creates a LINQ query for the entity based on a raw SQL query
         /// </summary>
         /// <typeparam name="TEntity">Entity type</typeparam>
-        /// <param name="commandText">Command text</param>
-        /// <param name="parameters">Parameters</param>
-        /// <returns>Entities</returns>
-        public IList<TEntity> ExecuteStoredProcedureList<TEntity>(string commandText, params object[] parameters) where TEntity : BaseEntity, new()
+        /// <param name="sql">The raw SQL query</param>
+        /// <param name="parameters">The values to be assigned to parameters</param>
+        /// <returns>An IQueryable representing the raw SQL query</returns>
+        public virtual IQueryable<TEntity> EntityFromSql<TEntity>(string sql, params object[] parameters) where TEntity : BaseEntity
         {
-            //add parameters to command
-            if (parameters != null && parameters.Length > 0)
+            //add parameters to sql
+            for (var i = 0; i <= (parameters?.Length ?? 0) - 1; i++)
             {
-                for (var i = 0; i <= parameters.Length - 1; i++)
+                if (!(parameters[i] is DbParameter parameter))
+                    continue;
+
+                sql = $"{sql}{(i > 0 ? "," : string.Empty)} @{parameter.ParameterName}";
+
+                //whether parameter is output
+                if (parameter.Direction == ParameterDirection.InputOutput || parameter.Direction == ParameterDirection.Output)
+                    sql = $"{sql} output";
+            }
+            
+            return this.Set<TEntity>().FromSql(sql, parameters);
+        }
+
+        /// <summary>
+        /// Executes the given SQL against the database
+        /// </summary>
+        /// <param name="sql">The SQL to execute</param>
+        /// <param name="doNotEnsureTransaction">true - the transaction creation is not ensured; false - the transaction creation is ensured.</param>
+        /// <param name="timeout">The timeout to use for command. Note that the command timeout is distinct from the connection timeout, which is commonly set on the database connection string</param>
+        /// <param name="parameters">Parameters to use with the SQL</param>
+        /// <returns>The number of rows affected</returns>
+        public virtual int ExecuteSqlCommand(RawSqlString sql, bool doNotEnsureTransaction = false, int? timeout = null, params object[] parameters)
+        {
+            //set specific command timeout
+            var previousTimeout = this.Database.GetCommandTimeout();
+            this.Database.SetCommandTimeout(timeout);
+
+            var result = 0;
+            if (!doNotEnsureTransaction)
+            {
+                //use with transaction
+                using (var transaction = this.Database.BeginTransaction())
                 {
-                    var p = parameters[i] as DbParameter;
-                    if (p == null)
-                        throw new Exception("Not support parameter type");
-
-                    commandText += i == 0 ? " " : ", ";
-
-                    commandText += "@" + p.ParameterName;
-                    if (p.Direction == ParameterDirection.InputOutput || p.Direction == ParameterDirection.Output)
-                    {
-                        //output parameter
-                        commandText += " output";
-                    }
+                    result = this.Database.ExecuteSqlCommand(sql, parameters);
+                    transaction.Commit();
                 }
             }
-
-            var result = Database.SqlQuery<TEntity>(commandText, parameters).ToList();
-
-            //performance hack applied as described here - https://www.nopcommerce.com/boards/t/25483/fix-very-important-speed-improvement.aspx
-            var acd = Configuration.AutoDetectChangesEnabled;
-            try
-            {
-                Configuration.AutoDetectChangesEnabled = false;
-
-                for (var i = 0; i < result.Count; i++)
-                    result[i] = AttachEntityToContext(result[i]);
-            }
-            finally
-            {
-                Configuration.AutoDetectChangesEnabled = acd;
-            }
-
+            else
+                result = this.Database.ExecuteSqlCommand(sql, parameters);
+            
+            //return previous timeout back
+            this.Database.SetCommandTimeout(previousTimeout);
+            
             return result;
         }
 
         /// <summary>
-        /// Creates a raw SQL query that will return elements of the given generic type.  The type can be any type that has properties that match the names of the columns returned from the query, or can be a simple primitive type. The type does not have to be an entity type. The results of this query are never tracked by the context even if the type of object returned is an entity type.
+        /// Detach an entity from the context
         /// </summary>
-        /// <typeparam name="TElement">The type of object returned by the query.</typeparam>
-        /// <param name="sql">The SQL query string.</param>
-        /// <param name="parameters">The parameters to apply to the SQL query string.</param>
-        /// <returns>Result</returns>
-        public IEnumerable<TElement> SqlQuery<TElement>(string sql, params object[] parameters)
-        {
-            return Database.SqlQuery<TElement>(sql, parameters);
-        }
-    
-        /// <summary>
-        /// Executes the given DDL/DML command against the database.
-        /// </summary>
-        /// <param name="sql">The command string</param>
-        /// <param name="doNotEnsureTransaction">false - the transaction creation is not ensured; true - the transaction creation is ensured.</param>
-        /// <param name="timeout">Timeout value, in seconds. A null value indicates that the default value of the underlying provider will be used</param>
-        /// <param name="parameters">The parameters to apply to the command string.</param>
-        /// <returns>The result returned by the database after executing the command.</returns>
-        public int ExecuteSqlCommand(string sql, bool doNotEnsureTransaction = false, int? timeout = null, params object[] parameters)
-        {
-            int? previousTimeout = null;
-            if (timeout.HasValue)
-            {
-                //store previous timeout
-                previousTimeout = ((IObjectContextAdapter) this).ObjectContext.CommandTimeout;
-                ((IObjectContextAdapter) this).ObjectContext.CommandTimeout = timeout;
-            }
-
-            var transactionalBehavior = doNotEnsureTransaction
-                ? TransactionalBehavior.DoNotEnsureTransaction
-                : TransactionalBehavior.EnsureTransaction;
-            var result = Database.ExecuteSqlCommand(transactionalBehavior, sql, parameters);
-
-            if (timeout.HasValue)
-            {
-                //Set previous timeout back
-                ((IObjectContextAdapter) this).ObjectContext.CommandTimeout = previousTimeout;
-            }
-
-            //return result
-            return result;
-        }
-
-        /// <summary>
-        /// Detach an entity
-        /// </summary>
+        /// <typeparam name="TEntity">Entity type</typeparam>
         /// <param name="entity">Entity</param>
-        public void Detach(object entity)
+        public virtual void Detach<TEntity>(TEntity entity) where TEntity : BaseEntity
         {
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
 
-            ((IObjectContextAdapter)this).ObjectContext.Detach(entity);
-        }
-
-        #endregion
-
-        #region Properties
-
-        /// <summary>
-        /// Gets or sets a value indicating whether proxy creation setting is enabled (used in EF)
-        /// </summary>
-        public virtual bool ProxyCreationEnabled
-        {
-            get
-            {
-                return Configuration.ProxyCreationEnabled;
-            }
-            set
-            {
-                Configuration.ProxyCreationEnabled = value;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether auto detect changes setting is enabled (used in EF)
-        /// </summary>
-        public virtual bool AutoDetectChangesEnabled
-        {
-            get
-            {
-                return Configuration.AutoDetectChangesEnabled;
-            }
-            set
-            {
-                Configuration.AutoDetectChangesEnabled = value;
-            }
+            var entityEntry = this.Entry(entity);
+            if (entityEntry == null)
+                return;
+            
+            //set the entity is not being tracked by the context
+            entityEntry.State = EntityState.Detached;
         }
 
         #endregion

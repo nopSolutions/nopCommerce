@@ -1,27 +1,39 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Orders;
 
 namespace Nop.Data.Mapping.Orders
 {
     /// <summary>
-    /// Mapping class
+    /// Represents a return request mapping configuration
     /// </summary>
     public partial class ReturnRequestMap : NopEntityTypeConfiguration<ReturnRequest>
     {
+        #region Methods
+
         /// <summary>
-        /// Ctor
+        /// Configures the entity
         /// </summary>
-        public ReturnRequestMap()
+        /// <param name="builder">The builder to be used to configure the entity</param>
+        public override void Configure(EntityTypeBuilder<ReturnRequest> builder)
         {
-            this.ToTable("ReturnRequest");
-            this.HasKey(rr => rr.Id);
-            this.Property(rr => rr.ReasonForReturn).IsRequired();
-            this.Property(rr => rr.RequestedAction).IsRequired();
+            builder.ToTable(nameof(ReturnRequest));
+            builder.HasKey(returnRequest => returnRequest.Id);
 
-            this.Ignore(rr => rr.ReturnRequestStatus);
+            builder.Property(returnRequest => returnRequest.ReasonForReturn).IsRequired();
+            builder.Property(returnRequest => returnRequest.RequestedAction).IsRequired();
 
-            this.HasRequired(rr => rr.Customer)
-                .WithMany(c => c.ReturnRequests)
-                .HasForeignKey(rr => rr.CustomerId);
+            builder.HasOne(returnRequest => returnRequest.Customer)
+                .WithMany(customer => customer.ReturnRequests)
+                .HasForeignKey(returnRequest => returnRequest.CustomerId)
+                .IsRequired();
+
+            builder.Ignore(returnRequest => returnRequest.ReturnRequestStatus);
+
+            //add custom configuration
+            this.PostConfigure(builder);
         }
+
+        #endregion
     }
 }

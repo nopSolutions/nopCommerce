@@ -1,23 +1,34 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Localization;
 
 namespace Nop.Data.Mapping.Localization
 {
     /// <summary>
-    /// Mapping class
+    /// Represents a language mapping configuration
     /// </summary>
     public partial class LanguageMap : NopEntityTypeConfiguration<Language>
     {
+        #region Methods
+
         /// <summary>
-        /// Ctor
+        /// Configures the entity
         /// </summary>
-        public LanguageMap()
+        /// <param name="builder">The builder to be used to configure the entity</param>
+        public override void Configure(EntityTypeBuilder<Language> builder)
         {
-            this.ToTable("Language");
-            this.HasKey(l => l.Id);
-            this.Property(l => l.Name).IsRequired().HasMaxLength(100);
-            this.Property(l => l.LanguageCulture).IsRequired().HasMaxLength(20);
-            this.Property(l => l.UniqueSeoCode).HasMaxLength(2);
-            this.Property(l => l.FlagImageFileName).HasMaxLength(50);
+            builder.ToTable(nameof(Language));
+            builder.HasKey(language => language.Id);
+
+            builder.Property(language => language.Name).HasMaxLength(100).IsRequired();
+            builder.Property(language => language.LanguageCulture).HasMaxLength(20).IsRequired();
+            builder.Property(language => language.UniqueSeoCode).HasMaxLength(2);
+            builder.Property(language => language.FlagImageFileName).HasMaxLength(50);
+
+            //add custom configuration
+            this.PostConfigure(builder);
         }
+
+        #endregion
     }
 }

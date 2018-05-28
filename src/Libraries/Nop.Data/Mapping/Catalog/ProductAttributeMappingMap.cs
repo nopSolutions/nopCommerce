@@ -1,28 +1,41 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Catalog;
 
 namespace Nop.Data.Mapping.Catalog
 {
     /// <summary>
-    /// Mapping class
+    /// Represents a product product attribute mapping configuration
     /// </summary>
     public partial class ProductAttributeMappingMap : NopEntityTypeConfiguration<ProductAttributeMapping>
     {
+        #region Methods
+
         /// <summary>
-        /// Ctor
+        /// Configures the entity
         /// </summary>
-        public ProductAttributeMappingMap()
+        /// <param name="builder">The builder to be used to configure the entity</param>
+        public override void Configure(EntityTypeBuilder<ProductAttributeMapping> builder)
         {
-            this.ToTable("Product_ProductAttribute_Mapping");
-            this.HasKey(pam => pam.Id);
-            this.Ignore(pam => pam.AttributeControlType);
+            builder.ToTable("Product_ProductAttribute_Mapping");
+            builder.HasKey(productAttributeMapping => productAttributeMapping.Id);
 
-            this.HasRequired(pam => pam.Product)
-                .WithMany(p => p.ProductAttributeMappings)
-                .HasForeignKey(pam => pam.ProductId);
+            builder.HasOne(productAttributeMapping => productAttributeMapping.Product)
+                .WithMany(product => product.ProductAttributeMappings)
+                .HasForeignKey(productAttributeMapping => productAttributeMapping.ProductId)
+                .IsRequired();
 
-            this.HasRequired(pam => pam.ProductAttribute)
+            builder.HasOne(productAttributeMapping => productAttributeMapping.ProductAttribute)
                 .WithMany()
-                .HasForeignKey(pam => pam.ProductAttributeId);
+                .HasForeignKey(productAttributeMapping => productAttributeMapping.ProductAttributeId)
+                .IsRequired();
+
+            builder.Ignore(pam => pam.AttributeControlType);
+
+            //add custom configuration
+            this.PostConfigure(builder);
         }
+
+        #endregion
     }
 }

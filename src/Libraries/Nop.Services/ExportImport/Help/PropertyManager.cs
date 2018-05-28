@@ -45,6 +45,18 @@ namespace Nop.Services.ExportImport.Help
         }
 
         /// <summary>
+        /// Add new property
+        /// </summary>
+        /// <param name="property">Property to add</param>
+        public void AddProperty(PropertyByName<T> property)
+        {
+            if(_properties.ContainsKey(property.PropertyName))
+                return;
+            
+            _properties.Add(property.PropertyName, property);
+        }
+
+        /// <summary>
         /// Export objects to XLSX
         /// </summary>
         /// <typeparam name="T">Type of object</typeparam>
@@ -211,11 +223,20 @@ namespace Nop.Services.ExportImport.Help
                 var cell = worksheet.Cells[row, caption.PropertyOrderPosition + cellOffset];
                 cell.Value = caption;
 
-                cell.Style.Fill.PatternType = ExcelFillStyle.Solid;
-                cell.Style.Fill.BackgroundColor.SetColor(Color.FromArgb(184, 204, 228));
-                cell.Style.Font.Bold = true;
+                SetCaptionStyle(cell);
                 cell.Style.Hidden = false;
             }
+        }
+
+        /// <summary>
+        /// Set caption style to excel cell
+        /// </summary>
+        /// <param name="cell">Excel cell</param>
+        public void SetCaptionStyle(ExcelRange cell)
+        {
+            cell.Style.Fill.PatternType = ExcelFillStyle.Solid;
+            cell.Style.Fill.BackgroundColor.SetColor(Color.FromArgb(184, 204, 228));
+            cell.Style.Font.Bold = true;
         }
 
         /// <summary>

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net461</TargetFramework>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
     <Copyright>Copyright © Nop Solutions, Ltd</Copyright> 
     <Company>Nop Solutions, Ltd</Company> 
     <Authors>Nop Solutions, Ltd</Authors>
@@ -48,7 +48,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="System.Web.Services" />
+    <WCFMetadata Include="Connected Services" />
   </ItemGroup>
   
   <!-- This target execute after "Build" target -->

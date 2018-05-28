@@ -28,7 +28,7 @@ namespace Nop.Core.Domain.Catalog
         public bool ProductTemplate { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether 'Admin comment' feild is shown
+        /// Gets or sets a value indicating whether 'Admin comment' field is shown
         /// </summary>
         public bool AdminComment { get; set; }
 

@@ -18,9 +18,10 @@ namespace Nop.Core
     {
         #region Fields
 
-        private static readonly Regex _emailRegex;
         //we use EmailValidator from FluentValidation. So let's keep them sync - https://github.com/JeremySkinner/FluentValidation/blob/master/src/FluentValidation/Validators/EmailValidator.cs
         private const string _emailExpression = @"^((([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-||_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+([a-z]+|\d|-|\.{0,1}|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])?([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))$";
+
+        private static readonly Regex _emailRegex;
 
         #endregion
 
@@ -94,7 +95,7 @@ namespace Nop.Core
         }
 
         /// <summary>
-        /// Returns an random interger number within a specified rage
+        /// Returns an random integer number within a specified rage
         /// </summary>
         /// <param name="min">Minimum number</param>
         /// <param name="max">Maximum number</param>
@@ -112,25 +113,24 @@ namespace Nop.Core
         /// <param name="str">Input string</param>
         /// <param name="maxLength">Maximum length</param>
         /// <param name="postfix">A string to add to the end if the original string was shorten</param>
-        /// <returns>Input string if its lengh is OK; otherwise, truncated input string</returns>
+        /// <returns>Input string if its length is OK; otherwise, truncated input string</returns>
         public static string EnsureMaximumLength(string str, int maxLength, string postfix = null)
         {
             if (string.IsNullOrEmpty(str))
                 return str;
 
-            if (str.Length > maxLength)
-            {
-                var pLen = postfix == null ? 0 : postfix.Length;
+            if (str.Length <= maxLength) 
+                return str;
 
-                var result = str.Substring(0, maxLength - pLen);
-                if (!string.IsNullOrEmpty(postfix))
-                {
-                    result += postfix;
-                }
-                return result;
+            var pLen = postfix?.Length ?? 0;
+
+            var result = str.Substring(0, maxLength - pLen);
+            if (!string.IsNullOrEmpty(postfix))
+            {
+                result += postfix;
             }
 
-            return str;
+            return result;
         }
 
         /// <summary>
@@ -140,7 +140,7 @@ namespace Nop.Core
         /// <returns>Input string with only numeric values, empty string if input is null/empty</returns>
         public static string EnsureNumericOnly(string str)
         {
-            return string.IsNullOrEmpty(str) ? string.Empty : new string(str.Where(p => char.IsDigit(p)).ToArray());
+            return string.IsNullOrEmpty(str) ? string.Empty : new string(str.Where(char.IsDigit).ToArray());
         }
 
         /// <summary>
@@ -160,11 +160,11 @@ namespace Nop.Core
         /// <returns>Boolean</returns>
         public static bool AreNullOrEmpty(params string[] stringsToValidate)
         {
-            return stringsToValidate.Any(p => string.IsNullOrEmpty(p));
+            return stringsToValidate.Any(string.IsNullOrEmpty);
         }
 
         /// <summary>
-        /// Compare two arrasy
+        /// Compare two arrays
         /// </summary>
         /// <typeparam name="T">Type</typeparam>
         /// <param name="a1">Array 1</param>
@@ -183,16 +183,11 @@ namespace Nop.Core
                 return false;
 
             var comparer = EqualityComparer<T>.Default;
-            for (var i = 0; i < a1.Length; i++)
-            {
-                if (!comparer.Equals(a1[i], a2[i])) return false;
-            }
-            return true;
+            return !a1.Where((t, i) => !comparer.Equals(t, a2[i])).Any();
         }
         
-       
         /// <summary>
-        /// Sets a property on an object to a valuae.
+        /// Sets a property on an object to a value.
         /// </summary>
         /// <param name="instance">The object whose property to set.</param>
         /// <param name="propertyName">The name of the property to set.</param>
@@ -233,24 +228,25 @@ namespace Nop.Core
         /// <returns>The converted value.</returns>
         public static object To(object value, Type destinationType, CultureInfo culture)
         {
-            if (value != null)
-            {
-                var sourceType = value.GetType();
+            if (value == null) 
+                return null;
 
-                var destinationConverter = TypeDescriptor.GetConverter(destinationType);
-                if (destinationConverter != null && destinationConverter.CanConvertFrom(value.GetType()))
-                    return destinationConverter.ConvertFrom(null, culture, value);
+            var sourceType = value.GetType();
 
-                var sourceConverter = TypeDescriptor.GetConverter(sourceType);
-                if (sourceConverter != null && sourceConverter.CanConvertTo(destinationType))
-                    return sourceConverter.ConvertTo(null, culture, value, destinationType);
+            var destinationConverter = TypeDescriptor.GetConverter(destinationType);
+            if (destinationConverter.CanConvertFrom(value.GetType()))
+                return destinationConverter.ConvertFrom(null, culture, value);
 
-                if (destinationType.IsEnum && value is int)
-                    return Enum.ToObject(destinationType, (int)value);
+            var sourceConverter = TypeDescriptor.GetConverter(sourceType);
+            if (sourceConverter.CanConvertTo(destinationType))
+                return sourceConverter.ConvertTo(null, culture, value, destinationType);
 
-                if (!destinationType.IsInstanceOfType(value))
-                    return Convert.ChangeType(value, destinationType, culture);
-            }
+            if (destinationType.IsEnum && value is int)
+                return Enum.ToObject(destinationType, (int)value);
+
+            if (!destinationType.IsInstanceOfType(value))
+                return Convert.ChangeType(value, destinationType, culture);
+
             return value;
         }
 
@@ -318,7 +314,7 @@ namespace Nop.Core
         /// Get private fields property value
         /// </summary>
         /// <param name="target">Target object</param>
-        /// <param name="fieldName">Feild name</param>
+        /// <param name="fieldName">Field name</param>
         /// <returns>Value</returns>
         public static object GetPrivateFieldValue(object target, string fieldName)
         {

@@ -18,6 +18,7 @@
 @using Nop.Services.Common
 @using Nop.Services.Customers
 @using Nop.Services.Helpers
+@using Nop.Services.Localization
 @using Nop.Services.Security;
 
 @{
@@ -91,7 +92,7 @@
     //info: we specify "Admin" area for actions and widgets here for cases when we use this layout in a plugin that is running in a different area than "admin"
 }
 <!DOCTYPE html>
-<html@(supportRtl ? Html.Raw(" dir=\"rtl\"") : null)>
+<html lang="@workContext.WorkingLanguage.GetTwoLetterIsoLanguageName()"@(supportRtl ? Html.Raw(" dir=\"rtl\"") : null)>
     <head>
         <title>@adminPageTitle</title>
         <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />

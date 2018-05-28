@@ -78,7 +78,7 @@ namespace Nop.Services.Shipping
         /// <param name="shippingSettings">Shipping settings</param>
         /// <param name="pluginFinder">Plugin finder</param>
         /// <param name="storeContext">Store context</param>
-        /// <param name="eventPublisher">Event published</param>
+        /// <param name="eventPublisher">Event publisher</param>
         /// <param name="shoppingCartSettings">Shopping cart settings</param>
         /// <param name="cacheManager">Cache manager</param>
         public ShippingService(IRepository<ShippingMethod> shippingMethodRepository,
@@ -241,7 +241,7 @@ namespace Nop.Services.Shipping
             {
                 var query1 = from sm in _shippingMethodRepository.Table
                              where
-                             sm.RestrictedCountries.Select(c => c.Id).Contains(filterByCountryId.Value)
+                             sm.ShippingMethodCountryMappings.Select(mapping => mapping.CountryId).Contains(filterByCountryId.Value)
                              select sm.Id;
 
                 var query2 = from sm in _shippingMethodRepository.Table

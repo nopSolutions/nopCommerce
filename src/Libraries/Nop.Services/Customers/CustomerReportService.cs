@@ -133,9 +133,9 @@ namespace Nop.Services.Customers
                 return 0;
 
             var query = from c in _customerRepository.Table
-                        from cr in c.CustomerRoles
+                        from mapping in c.CustomerCustomerRoleMappings
                         where !c.Deleted &&
-                        cr.Id == registeredCustomerRole.Id &&
+                        mapping.CustomerRoleId == registeredCustomerRole.Id &&
                         c.CreatedOnUtc >= date 
                         //&& c.CreatedOnUtc <= DateTime.UtcNow
                         select c;

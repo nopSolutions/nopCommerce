@@ -1,32 +1,43 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Catalog;
 
 namespace Nop.Data.Mapping.Catalog
 {
     /// <summary>
-    /// Mapping class
+    /// Represents a product specification attribute mapping configuration
     /// </summary>
     public partial class ProductSpecificationAttributeMap : NopEntityTypeConfiguration<ProductSpecificationAttribute>
     {
+        #region Methods
+
         /// <summary>
-        /// Ctor
+        /// Configures the entity
         /// </summary>
-        public ProductSpecificationAttributeMap()
+        /// <param name="builder">The builder to be used to configure the entity</param>
+        public override void Configure(EntityTypeBuilder<ProductSpecificationAttribute> builder)
         {
-            this.ToTable("Product_SpecificationAttribute_Mapping");
-            this.HasKey(psa => psa.Id);
+            builder.ToTable("Product_SpecificationAttribute_Mapping");
+            builder.HasKey(productSpecificationAttribute => productSpecificationAttribute.Id);
 
-            this.Property(psa => psa.CustomValue).HasMaxLength(4000);
+            builder.Property(productSpecificationAttribute => productSpecificationAttribute.CustomValue).HasMaxLength(4000);
 
-            this.Ignore(psa => psa.AttributeType);
-
-            this.HasRequired(psa => psa.SpecificationAttributeOption)
+            builder.HasOne(productSpecificationAttribute => productSpecificationAttribute.SpecificationAttributeOption)
                 .WithMany()
-                .HasForeignKey(psa => psa.SpecificationAttributeOptionId);
+                .HasForeignKey(productSpecificationAttribute => productSpecificationAttribute.SpecificationAttributeOptionId)
+                .IsRequired();
 
+            builder.HasOne(productSpecificationAttribute => productSpecificationAttribute.Product)
+                .WithMany(product => product.ProductSpecificationAttributes)
+                .HasForeignKey(productSpecificationAttribute => productSpecificationAttribute.ProductId)
+                .IsRequired();
 
-            this.HasRequired(psa => psa.Product)
-                .WithMany(p => p.ProductSpecificationAttributes)
-                .HasForeignKey(psa => psa.ProductId);
+            builder.Ignore(productSpecificationAttribute => productSpecificationAttribute.AttributeType);
+
+            //add custom configuration
+            this.PostConfigure(builder);
         }
+
+        #endregion
     }
 }

@@ -5,186 +5,224 @@ namespace Nop.Core.Domain.Customers
     /// </summary>
     public static partial class SystemCustomerAttributeNames
     {
-        //Form fields
         /// <summary>
         /// FirstName
         /// </summary>
-        public static string FirstName { get { return "FirstName"; } }
+        public static string FirstName => "FirstName";
+
         /// <summary>
         /// LastName
         /// </summary>
-        public static string LastName { get { return "LastName"; } }
+        public static string LastName => "LastName";
+
         /// <summary>
         /// Gender
         /// </summary>
-        public static string Gender { get { return "Gender"; } }
+        public static string Gender => "Gender";
+
         /// <summary>
         /// DateOfBirth
         /// </summary>
-        public static string DateOfBirth { get { return "DateOfBirth"; } }
+        public static string DateOfBirth => "DateOfBirth";
+
         /// <summary>
         /// Company
         /// </summary>
-        public static string Company { get { return "Company"; } }
+        public static string Company => "Company";
+
         /// <summary>
         /// StreetAddress
         /// </summary>
-        public static string StreetAddress { get { return "StreetAddress"; } }
+        public static string StreetAddress => "StreetAddress";
+
         /// <summary>
         /// StreetAddress2
         /// </summary>
-        public static string StreetAddress2 { get { return "StreetAddress2"; } }
+        public static string StreetAddress2 => "StreetAddress2";
+
         /// <summary>
         /// ZipPostalCode
         /// </summary>
-        public static string ZipPostalCode { get { return "ZipPostalCode"; } }
+        public static string ZipPostalCode => "ZipPostalCode";
+
         /// <summary>
         /// City
         /// </summary>
-        public static string City { get { return "City"; } }
+        public static string City => "City";
+
         /// <summary>
         /// County
         /// </summary>
-        public static string County { get { return "County"; } }
+        public static string County => "County";
+
         /// <summary>
         /// CountryId
         /// </summary>
-        public static string CountryId { get { return "CountryId"; } }
+        public static string CountryId => "CountryId";
+
         /// <summary>
         /// StateProvinceId
         /// </summary>
-        public static string StateProvinceId { get { return "StateProvinceId"; } }
+        public static string StateProvinceId => "StateProvinceId";
+
         /// <summary>
         /// Phone
         /// </summary>
-        public static string Phone { get { return "Phone"; } }
+        public static string Phone => "Phone";
+
         /// <summary>
         /// Fax
         /// </summary>
-        public static string Fax { get { return "Fax"; } }
+        public static string Fax => "Fax";
+
         /// <summary>
         /// VatNumber
         /// </summary>
-        public static string VatNumber { get { return "VatNumber"; } }
+        public static string VatNumber => "VatNumber";
+
         /// <summary>
         /// VatNumberStatusId
         /// </summary>
-        public static string VatNumberStatusId { get { return "VatNumberStatusId"; } }
+        public static string VatNumberStatusId => "VatNumberStatusId";
+
         /// <summary>
         /// TimeZoneId
         /// </summary>
-        public static string TimeZoneId { get { return "TimeZoneId"; } }
+        public static string TimeZoneId => "TimeZoneId";
+
         /// <summary>
         /// CustomCustomerAttributes
         /// </summary>
-        public static string CustomCustomerAttributes { get { return "CustomCustomerAttributes"; } }
+        public static string CustomCustomerAttributes => "CustomCustomerAttributes";
 
-        //Other attributes
         /// <summary>
         /// DiscountCouponCode
         /// </summary>
-        public static string DiscountCouponCode { get { return "DiscountCouponCode"; } }
+        public static string DiscountCouponCode => "DiscountCouponCode";
+
         /// <summary>
         /// GiftCardCouponCodes
         /// </summary>
-        public static string GiftCardCouponCodes { get { return "GiftCardCouponCodes"; } }
+        public static string GiftCardCouponCodes => "GiftCardCouponCodes";
+
         /// <summary>
         /// AvatarPictureId
         /// </summary>
-        public static string AvatarPictureId { get { return "AvatarPictureId"; } }
+        public static string AvatarPictureId => "AvatarPictureId";
+
         /// <summary>
         /// ForumPostCount
         /// </summary>
-        public static string ForumPostCount { get { return "ForumPostCount"; } }
+        public static string ForumPostCount => "ForumPostCount";
+
         /// <summary>
         /// Signature
         /// </summary>
-        public static string Signature { get { return "Signature"; } }
+        public static string Signature => "Signature";
+
         /// <summary>
         /// PasswordRecoveryToken
         /// </summary>
-        public static string PasswordRecoveryToken { get { return "PasswordRecoveryToken"; } }
+        public static string PasswordRecoveryToken => "PasswordRecoveryToken";
+
         /// <summary>
         /// PasswordRecoveryTokenDateGenerated
         /// </summary>
-        public static string PasswordRecoveryTokenDateGenerated { get { return "PasswordRecoveryTokenDateGenerated"; } }
+        public static string PasswordRecoveryTokenDateGenerated => "PasswordRecoveryTokenDateGenerated";
+
         /// <summary>
         /// AccountActivationToken
         /// </summary>
-        public static string AccountActivationToken { get { return "AccountActivationToken"; } }
+        public static string AccountActivationToken => "AccountActivationToken";
+
         /// <summary>
         /// EmailRevalidationToken
         /// </summary>
-        public static string EmailRevalidationToken { get { return "EmailRevalidationToken"; } }
+        public static string EmailRevalidationToken => "EmailRevalidationToken";
+
         /// <summary>
         /// LastVisitedPage
         /// </summary>
-        public static string LastVisitedPage { get { return "LastVisitedPage"; } }
+        public static string LastVisitedPage => "LastVisitedPage";
+
         /// <summary>
         /// ImpersonatedCustomerId
         /// </summary>
-        public static string ImpersonatedCustomerId { get { return "ImpersonatedCustomerId"; } }
+        public static string ImpersonatedCustomerId => "ImpersonatedCustomerId";
+
         /// <summary>
         /// AdminAreaStoreScopeConfiguration
         /// </summary>
-        public static string AdminAreaStoreScopeConfiguration { get { return "AdminAreaStoreScopeConfiguration"; } }
+        public static string AdminAreaStoreScopeConfiguration => "AdminAreaStoreScopeConfiguration";
 
-        //depends on store
         /// <summary>
         /// CurrencyId
         /// </summary>
-        public static string CurrencyId { get { return "CurrencyId"; } }
+        public static string CurrencyId => "CurrencyId";
+
         /// <summary>
         /// LanguageId
         /// </summary>
-        public static string LanguageId { get { return "LanguageId"; } }
+        public static string LanguageId => "LanguageId";
+
         /// <summary>
         /// LanguageAutomaticallyDetected
         /// </summary>
-        public static string LanguageAutomaticallyDetected { get { return "LanguageAutomaticallyDetected"; } }
+        public static string LanguageAutomaticallyDetected => "LanguageAutomaticallyDetected";
+
         /// <summary>
         /// SelectedPaymentMethod
         /// </summary>
-        public static string SelectedPaymentMethod { get { return "SelectedPaymentMethod"; } }
+        public static string SelectedPaymentMethod => "SelectedPaymentMethod";
+
         /// <summary>
         /// SelectedShippingOption
         /// </summary>
-        public static string SelectedShippingOption { get { return "SelectedShippingOption"; } }
+        public static string SelectedShippingOption => "SelectedShippingOption";
+
         /// <summary>
         /// SelectedPickupPoint
         /// </summary>
-        public static string SelectedPickupPoint { get { return "SelectedPickupPoint"; } }
+        public static string SelectedPickupPoint => "SelectedPickupPoint";
+
         /// <summary>
         /// CheckoutAttributes
         /// </summary>
-        public static string CheckoutAttributes { get { return "CheckoutAttributes"; } }
+        public static string CheckoutAttributes => "CheckoutAttributes";
+
         /// <summary>
         /// OfferedShippingOptions
         /// </summary>
-        public static string OfferedShippingOptions { get { return "OfferedShippingOptions"; } }
+        public static string OfferedShippingOptions => "OfferedShippingOptions";
+
         /// <summary>
         /// LastContinueShoppingPage
         /// </summary>
-        public static string LastContinueShoppingPage { get { return "LastContinueShoppingPage"; } }
+        public static string LastContinueShoppingPage => "LastContinueShoppingPage";
+
         /// <summary>
         /// NotifiedAboutNewPrivateMessages
         /// </summary>
-        public static string NotifiedAboutNewPrivateMessages { get { return "NotifiedAboutNewPrivateMessages"; } }
+        public static string NotifiedAboutNewPrivateMessages => "NotifiedAboutNewPrivateMessages";
+
         /// <summary>
         /// WorkingThemeName
         /// </summary>
-        public static string WorkingThemeName { get { return "WorkingThemeName"; } }
+        public static string WorkingThemeName => "WorkingThemeName";
+
         /// <summary>
         /// TaxDisplayTypeId
         /// </summary>
-        public static string TaxDisplayTypeId { get { return "TaxDisplayTypeId"; } }
+        public static string TaxDisplayTypeId => "TaxDisplayTypeId";
+
         /// <summary>
         /// UseRewardPointsDuringCheckout
         /// </summary>
-        public static string UseRewardPointsDuringCheckout { get { return "UseRewardPointsDuringCheckout"; } }
+        public static string UseRewardPointsDuringCheckout => "UseRewardPointsDuringCheckout";
+
         /// <summary>
         /// EuCookieLawAccepted
         /// </summary>
-        public static string EuCookieLawAccepted { get { return "EuCookieLaw.Accepted"; } }
+        public static string EuCookieLawAccepted => "EuCookieLaw.Accepted";
     }
 }

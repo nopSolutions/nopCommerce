@@ -1,0 +1,150 @@
+﻿@model GdprLogSearchModel
+
+
+@{
+    //page title
+    ViewBag.Title = T("Admin.Customers.GdprLog").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("GDPR log");
+}
+
+<form asp-controller="Customer" asp-action="GdprLogList" method="post">
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("Admin.Customers.GdprLog")
+        </h1>
+        <div class="pull-right">
+            &nbsp;
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="form-horizontal">
+            <div class="panel-group">
+                <div class="panel panel-default panel-search">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="SearchRequestTypeId" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-select asp-for="SearchRequestTypeId" asp-items="Model.AvailableRequestTypes" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="SearchEmail" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-editor asp-for="SearchEmail" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-8 col-md-offset-4">
+                                        <button type="button" id="search-log" class="btn btn-primary btn-search">
+                                            <i class="fa fa-search"></i>
+                                            @T("Admin.Common.Search")
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div id="log-grid"></div>
+
+                        <script>
+                            $(document).ready(function () {
+                                $("#log-grid").kendoGrid({
+                                    dataSource: {
+                                        type: "json",
+                                        transport: {
+                                            read: {
+                                                url: "@Html.Raw(Url.Action("GdprLogList", "Customer"))",
+                                                type: "POST",
+                                                dataType: "json",
+                                                data: function() {
+                                                    var data = {
+                                                        SearchRequestTypeId: $('#SearchRequestTypeId').val(),
+                                                        SearchEmail: $('#SearchEmail').val()
+                                                    };
+                                                    addAntiForgeryToken(data);
+                                                    return data;
+                                                }
+                                            }
+                                        },
+                                        schema: {
+                                            data: "Data",
+                                            total: "Total",
+                                            errors: "Errors"
+                                        },
+                                        error: function (e) {
+                                            display_kendoui_grid_error(e);
+                                            // Cancel the changes
+                                            this.cancelChanges();
+                                        },
+                                        pageSize: @(Model.PageSize),
+                                        serverPaging: true,
+                                        serverFiltering: true,
+                                        serverSorting: true
+                                    },
+                                    pageable: {
+                                        refresh: true,
+                                        pageSizes: [@(Model.AvailablePageSizes)],
+                                        @await Html.PartialAsync("_GridPagerMessages")
+                                    },
+                                    editable: {
+                                        confirmation: "@T("Admin.Common.DeleteConfirmation")",
+                                        mode: "inline"
+                                    },
+                                    scrollable: false,
+                                    columns: [
+                                        {
+                                            field: "CustomerInfo",
+                                            title: "@T("Admin.Customers.GdprLog.Fields.CustomerInfo")"
+                                        }, {
+                                            field: "RequestType",
+                                            title: "@T("Admin.Customers.GdprLog.Fields.RequestType")"
+                                        }, {
+                                            field: "RequestDetails",
+                                            title: "@T("Admin.Customers.GdprLog.Fields.RequestDetails")"
+                                        }, {
+                                            field: "CreatedOn",
+                                            title: "@T("Admin.Customers.GdprLog.Fields.CreatedOn")",
+                                            type: "date",
+                                            format: "{0:G}"
+                                        }
+                                    ]
+                                });
+                            });
+                        </script>
+
+                        <script>
+                            $(document).ready(function () {
+                                //search button
+                                $('#search-log').click(function () {
+                                    //search
+                                    var grid = $('#log-grid').data('kendoGrid');
+                                    grid.dataSource.read();
+                                    return false;
+                                });
+                            });
+                            
+                            $("#@Html.IdFor(model => model.SearchEmail)").keydown(function(event) {
+                                if (event.keyCode == 13) {
+                                    $("#search-log").click();
+                                    return false;
+                                }
+                            });
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

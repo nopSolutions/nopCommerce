@@ -9,6 +9,7 @@ namespace Nop.Core.Domain.Messages
         /// Low
         /// </summary>
         Low = 0,
+
         /// <summary>
         /// High
         /// </summary>

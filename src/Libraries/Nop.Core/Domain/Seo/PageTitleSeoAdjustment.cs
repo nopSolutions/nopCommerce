@@ -9,6 +9,7 @@
         /// Pagename comes after storename
         /// </summary>
         PagenameAfterStorename = 0,
+
         /// <summary>
         /// Storename comes after pagename
         /// </summary>

@@ -31,18 +31,18 @@ namespace Nop.Core.Domain.Orders
                     continue;
 
                 var taxes = line.Split(':');
-                if (taxes.Length == 2)
+                if (taxes.Length != 2) 
+                    continue;
+
+                try
                 {
-                    try
-                    {
-                        var taxRate = decimal.Parse(taxes[0].Trim(), CultureInfo.InvariantCulture);
-                        var taxValue = decimal.Parse(taxes[1].Trim(), CultureInfo.InvariantCulture);
-                        taxRatesDictionary.Add(taxRate, taxValue);
-                    }
-                    catch (Exception exc)
-                    {
-                        Debug.WriteLine(exc.ToString());
-                    }
+                    var taxRate = decimal.Parse(taxes[0].Trim(), CultureInfo.InvariantCulture);
+                    var taxValue = decimal.Parse(taxes[1].Trim(), CultureInfo.InvariantCulture);
+                    taxRatesDictionary.Add(taxRate, taxValue);
+                }
+                catch (Exception exc)
+                {
+                    Debug.WriteLine(exc.ToString());
                 }
             }
 
@@ -52,6 +52,5 @@ namespace Nop.Core.Domain.Orders
 
             return taxRatesDictionary;
         }
-
     }
 }

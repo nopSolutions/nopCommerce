@@ -5,6 +5,7 @@ using Nop.Core.Data;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Messages;
 using Nop.Data;
+using Nop.Data.Extensions;
 using Nop.Services.Customers;
 using Nop.Services.Events;
 
@@ -292,7 +293,7 @@ namespace Nop.Services.Messages
                         NewsletterSubscribers = nls,
                         Customer = c
                     });
-                query = query.Where(x => x.Customer.CustomerRoles.Any(cr => cr.Id == customerRoleId));
+                query = query.Where(x => x.Customer.CustomerCustomerRoleMappings.Any(mapping => mapping.CustomerRoleId == customerRoleId));
                 if (!string.IsNullOrEmpty(email))
                     query = query.Where(x => x.NewsletterSubscribers.Email.Contains(email));
                 if (createdFromUtc.HasValue)

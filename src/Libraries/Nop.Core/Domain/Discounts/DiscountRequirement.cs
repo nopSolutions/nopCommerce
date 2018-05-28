@@ -39,8 +39,8 @@ namespace Nop.Core.Domain.Discounts
         /// </summary>
         public RequirementGroupInteractionType? InteractionType
         {
-            get { return (RequirementGroupInteractionType?)InteractionTypeId; }
-            set { InteractionTypeId = (int?)value; }
+            get => (RequirementGroupInteractionType?)InteractionTypeId;
+            set => InteractionTypeId = (int?)value;
         }
 
         /// <summary>
@@ -53,8 +53,8 @@ namespace Nop.Core.Domain.Discounts
         /// </summary>
         public virtual ICollection<DiscountRequirement> ChildRequirements
         {
-            get { return _childRequirements ?? (_childRequirements = new List<DiscountRequirement>()); }
-            protected set { _childRequirements = value; }
+            get => _childRequirements ?? (_childRequirements = new List<DiscountRequirement>());
+            protected set => _childRequirements = value;
         }
     }
 }

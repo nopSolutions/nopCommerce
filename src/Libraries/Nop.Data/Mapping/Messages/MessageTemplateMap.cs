@@ -1,26 +1,36 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Messages;
 
 namespace Nop.Data.Mapping.Messages
 {
     /// <summary>
-    /// Mapping class
+    /// Represents a message template mapping configuration
     /// </summary>
     public partial class MessageTemplateMap : NopEntityTypeConfiguration<MessageTemplate>
     {
+        #region Methods
+
         /// <summary>
-        /// Ctor
+        /// Configures the entity
         /// </summary>
-        public MessageTemplateMap()
+        /// <param name="builder">The builder to be used to configure the entity</param>
+        public override void Configure(EntityTypeBuilder<MessageTemplate> builder)
         {
-            this.ToTable("MessageTemplate");
-            this.HasKey(mt => mt.Id);
+            builder.ToTable(nameof(MessageTemplate));
+            builder.HasKey(template => template.Id);
 
-            this.Property(mt => mt.Name).IsRequired().HasMaxLength(200);
-            this.Property(mt => mt.BccEmailAddresses).HasMaxLength(200);
-            this.Property(mt => mt.Subject).HasMaxLength(1000);
-            this.Property(mt => mt.EmailAccountId).IsRequired();
+            builder.Property(template => template.Name).HasMaxLength(200).IsRequired();
+            builder.Property(template => template.BccEmailAddresses).HasMaxLength(200);
+            builder.Property(template => template.Subject).HasMaxLength(1000);
+            builder.Property(template => template.EmailAccountId).IsRequired();
 
-            this.Ignore(mt => mt.DelayPeriod);
+            builder.Ignore(template => template.DelayPeriod);
+
+            //add custom configuration
+            this.PostConfigure(builder);
         }
+
+        #endregion
     }
 }

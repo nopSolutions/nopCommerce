@@ -1,13 +1,16 @@
-﻿@using Nop.Core.Domain
+﻿@using Nop.Core
+@using Nop.Core.Domain
 @using StackExchange.Profiling
 @using Nop.Core.Domain.Common
 @using Nop.Core.Domain.Seo
 @using Nop.Services.Events
+@using Nop.Services.Localization
 @using Nop.Services.Security
 @using Nop.Web.Framework.Events
 @inject CommonSettings commonSettings
 @inject IEventPublisher eventPublisher
 @inject IPermissionService permissionService
+@inject IWorkContext workContext
 @inject SeoSettings seoSettings
 @inject StoreInformationSettings storeInformationSettings
 @{
@@ -36,36 +39,36 @@
     eventPublisher.Publish(new PageRenderingEvent(this.Html));
 }
 <!DOCTYPE html>
-<html @(this.ShouldUseRtlTheme() ? Html.Raw(" dir=\"rtl\"") : null) @Html.NopPageCssClasses()>
-    <head>
-        <title>@Html.NopTitle()</title>
-        <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
-        <meta name="description" content="@(Html.NopMetaDescription())" />
-        <meta name="keywords" content="@(Html.NopMetaKeywords())" />
-        <meta name="generator" content="nopCommerce" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        @Html.NopHeadCustom()
-        @*This is used so that themes can inject content into the header*@
-        @await Html.PartialAsync("Head")
-        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.HeadHtmlTag })
-        @Html.NopCssFiles(this.Url, ResourceLocation.Head)
-        @Html.NopScripts(this.Url, ResourceLocation.Head)
-        @Html.NopCanonicalUrls()
-        @await Component.InvokeAsync("NewsRssHeaderLink")
-        @await Component.InvokeAsync("BlogRssHeaderLink")
-        @*Favicon - upload favicon.ico file to the root directory*@
-        @await Component.InvokeAsync("Favicon")
-        @if (displayMiniProfiler)
-        {
-            <mini-profiler />
-        }
-        @Html.NopInlineScripts(this.Url, ResourceLocation.Head)
-        <!--Powered by nopCommerce - https://www.nopCommerce.com-->
-    </head>
-    <body>
-        @RenderBody()
-        @Html.NopCssFiles(this.Url, ResourceLocation.Footer)
-        @Html.NopScripts(this.Url, ResourceLocation.Footer)
-        @Html.NopInlineScripts(this.Url, ResourceLocation.Footer)
-    </body>
+<html lang="@workContext.WorkingLanguage.GetTwoLetterIsoLanguageName()"@(this.ShouldUseRtlTheme() ? Html.Raw(" dir=\"rtl\"") : null) @Html.NopPageCssClasses()>
+<head>
+    <title>@Html.NopTitle()</title>
+    <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+    <meta name="description" content="@(Html.NopMetaDescription())" />
+    <meta name="keywords" content="@(Html.NopMetaKeywords())" />
+    <meta name="generator" content="nopCommerce" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    @Html.NopHeadCustom()
+    @*This is used so that themes can inject content into the header*@
+    @await Html.PartialAsync("Head")
+    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.HeadHtmlTag })
+    @Html.NopCssFiles(this.Url, ResourceLocation.Head)
+    @Html.NopScripts(this.Url, ResourceLocation.Head)
+    @Html.NopCanonicalUrls()
+    @await Component.InvokeAsync("NewsRssHeaderLink")
+    @await Component.InvokeAsync("BlogRssHeaderLink")
+    @*Favicon - upload favicon.ico file to the root directory*@
+    @await Component.InvokeAsync("Favicon")
+    @if (displayMiniProfiler)
+    {
+        <mini-profiler />
+    }
+    @Html.NopInlineScripts(this.Url, ResourceLocation.Head)
+    <!--Powered by nopCommerce - https://www.nopCommerce.com-->
+</head>
+<body>
+    @RenderBody()
+    @Html.NopCssFiles(this.Url, ResourceLocation.Footer)
+    @Html.NopScripts(this.Url, ResourceLocation.Footer)
+    @Html.NopInlineScripts(this.Url, ResourceLocation.Footer)
+</body>
 </html>

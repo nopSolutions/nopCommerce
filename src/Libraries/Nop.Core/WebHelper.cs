@@ -2,10 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Text;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.StaticFiles;
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Primitives;
 using Microsoft.Net.Http.Headers;
 using Nop.Core.Configuration;
@@ -59,7 +60,7 @@ namespace Nop.Core
         /// <returns>True if available; otherwise false</returns>
         protected virtual bool IsRequestAvailable()
         {
-            if (_httpContextAccessor == null || _httpContextAccessor.HttpContext == null)
+            if (_httpContextAccessor?.HttpContext == null)
                 return false;
 
             try
@@ -163,7 +164,7 @@ namespace Nop.Core
                 result = "127.0.0.1";
 
             //"TryParse" doesn't support IPv4 with port number
-            if (IPAddress.TryParse(result ?? string.Empty, out IPAddress ip))
+            if (IPAddress.TryParse(result ?? string.Empty, out var ip))
                 //IP address is valid 
                 result = ip.ToString();
             else if (!string.IsNullOrEmpty(result))
@@ -265,7 +266,7 @@ namespace Nop.Core
             }
 
             //if host is empty (it is possible only when HttpContext is not available), use URL of a store entity configured in admin area
-            if (string.IsNullOrEmpty(storeHost) && DataSettingsHelper.DatabaseIsInstalled())
+            if (string.IsNullOrEmpty(storeHost) && DataSettingsManager.DatabaseIsInstalled)
             {
                 //do not inject IWorkContext via constructor because it'll cause circular references
                 storeLocation = EngineContext.Current.Resolve<IStoreContext>().CurrentStore?.Url
@@ -297,166 +298,72 @@ namespace Nop.Core
         }
 
         /// <summary>
-        /// Modifies query string
+        /// Modify query string of the URL
         /// </summary>
-        /// <param name="url">URL to modify</param>
-        /// <param name="queryStringModification">Query string modification</param>
-        /// <param name="anchor">Anchor</param>
-        /// <returns>New URL</returns>
-        public virtual string ModifyQueryString(string url, string queryStringModification, string anchor)
+        /// <param name="url">Url to modify</param>
+        /// <param name="key">Query parameter key to add</param>
+        /// <param name="values">Query parameter values to add</param>
+        /// <returns>New URL with passed query parameter</returns>
+        public virtual string ModifyQueryString(string url, string key, params string[] values)
         {
-            if (url == null)
-                url = string.Empty;
+            if (string.IsNullOrEmpty(url))
+                return string.Empty;
 
-            if (queryStringModification == null)
-                queryStringModification = string.Empty;
+            if (string.IsNullOrEmpty(key))
+                return url;
 
-            if (anchor == null)
-                anchor = string.Empty;
+            //get current query parameters
+            var uri = new Uri(url);
+            var queryParameters = QueryHelpers.ParseQuery(uri.Query);
 
-            var str = string.Empty;
-            var str2 = string.Empty;
-            if (url.Contains("#"))
-            {
-                str2 = url.Substring(url.IndexOf("#") + 1);
-                url = url.Substring(0, url.IndexOf("#"));
-            }
-            if (url.Contains("?"))
-            {
-                str = url.Substring(url.IndexOf("?") + 1);
-                url = url.Substring(0, url.IndexOf("?"));
-            }
-            if (!string.IsNullOrEmpty(queryStringModification))
-            {
-                if (!string.IsNullOrEmpty(str))
-                {
-                    var dictionary = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
-                    foreach (var str3 in str.Split(new[] { '&' }))
-                    {
-                        if (!string.IsNullOrEmpty(str3))
-                        {
-                            var strArray = str3.Split(new[] { '=' });
-                            if (strArray.Length == 2)
-                            {
-                                if (!dictionary.ContainsKey(strArray[0]))
-                                {
-                                    //do not add value if it already exists
-                                    //two the same query parameters? theoretically it's not possible.
-                                    //but MVC has some ugly implementation for checkboxes and we can have two values
-                                    //find more info here: http://www.mindstorminteractive.com/topics/jquery-fix-asp-net-mvc-checkbox-truefalse-value/
-                                    //we do this validation just to ensure that the first one is not overridden
-                                    dictionary[strArray[0]] = strArray[1];
-                                }
-                            }
-                            else
-                            {
-                                dictionary[str3] = null;
-                            }
-                        }
-                    }
-                    foreach (var str4 in queryStringModification.Split(new[] { '&' }))
-                    {
-                        if (!string.IsNullOrEmpty(str4))
-                        {
-                            var strArray2 = str4.Split(new[] { '=' });
-                            if (strArray2.Length == 2)
-                            {
-                                dictionary[strArray2[0]] = strArray2[1];
-                            }
-                            else
-                            {
-                                dictionary[str4] = null;
-                            }
-                        }
-                    }
-                    var builder = new StringBuilder();
-                    foreach (var str5 in dictionary.Keys)
-                    {
-                        if (builder.Length > 0)
-                        {
-                            builder.Append("&");
-                        }
-                        builder.Append(str5);
-                        if (dictionary[str5] != null)
-                        {
-                            builder.Append("=");
-                            builder.Append(dictionary[str5]);
-                        }
-                    }
-                    str = builder.ToString();
-                }
-                else
-                {
-                    str = queryStringModification;
-                }
-            }
-            if (!string.IsNullOrEmpty(anchor))
-            {
-                str2 = anchor;
-            }
-            return (url + (string.IsNullOrEmpty(str) ? "" : ("?" + str)) + (string.IsNullOrEmpty(str2) ? "" : ("#" + str2)));
+            //and add passed one
+            queryParameters[key] = new StringValues(values);
+            var queryBuilder = new QueryBuilder(queryParameters
+                .ToDictionary(parameter => parameter.Key, parameter => parameter.Value.ToString()));
+
+            //create new URL with passed query parameters
+            url = $"{uri.GetLeftPart(UriPartial.Path)}{queryBuilder.ToQueryString()}{uri.Fragment}";
+
+            return url;
         }
 
         /// <summary>
-        /// Remove query string from the URL
+        /// Remove query parameter from the URL
         /// </summary>
-        /// <param name="url">URL to modify</param>
-        /// <param name="queryString">Query string to remove</param>
-        /// <returns>New URL without passed query string</returns>
-        public virtual string RemoveQueryString(string url, string queryString)
+        /// <param name="url">Url to modify</param>
+        /// <param name="key">Query parameter key to remove</param>
+        /// <param name="value">Query parameter value to remove; pass null to remove all query parameters with the specified key</param>
+        /// <returns>New URL without passed query parameter</returns>
+        public virtual string RemoveQueryString(string url, string key, string value = null)
         {
-            if (url == null)
-                url = string.Empty;
+            if (string.IsNullOrEmpty(url))
+                return string.Empty;
 
-            if (queryString == null)
-                queryString = string.Empty;
+            if (string.IsNullOrEmpty(key))
+                return url;
 
-            var str = string.Empty;
-            if (url.Contains("?"))
+            //get current query parameters
+            var uri = new Uri(url);
+            var queryParameters = QueryHelpers.ParseQuery(uri.Query)
+                .SelectMany(parameter => parameter.Value, (parameter, queryValue) => new KeyValuePair<string, string>(parameter.Key, queryValue))
+                .ToList();
+           
+            if (!string.IsNullOrEmpty(value))
             {
-                str = url.Substring(url.IndexOf("?") + 1);
-                url = url.Substring(0, url.IndexOf("?"));
+                //remove a specific query parameter value if it's passed
+                queryParameters.RemoveAll(parameter => parameter.Key.Equals(key, StringComparison.InvariantCultureIgnoreCase) 
+                    && parameter.Value.Equals(value, StringComparison.InvariantCultureIgnoreCase));
             }
-            if (!string.IsNullOrEmpty(queryString))
+            else
             {
-                if (!string.IsNullOrEmpty(str))
-                {
-                    var dictionary = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
-                    foreach (var str3 in str.Split(new[] { '&' }))
-                    {
-                        if (!string.IsNullOrEmpty(str3))
-                        {
-                            var strArray = str3.Split(new[] { '=' });
-                            if (strArray.Length == 2)
-                            {
-                                dictionary[strArray[0]] = strArray[1];
-                            }
-                            else
-                            {
-                                dictionary[str3] = null;
-                            }
-                        }
-                    }
-                    dictionary.Remove(queryString);
-
-                    var builder = new StringBuilder();
-                    foreach (var str5 in dictionary.Keys)
-                    {
-                        if (builder.Length > 0)
-                        {
-                            builder.Append("&");
-                        }
-                        builder.Append(str5);
-                        if (dictionary[str5] != null)
-                        {
-                            builder.Append("=");
-                            builder.Append(dictionary[str5]);
-                        }
-                    }
-                    str = builder.ToString();
-                }
+                //or remove query parameter by the key
+                queryParameters.RemoveAll(parameter => parameter.Key.Equals(key, StringComparison.InvariantCultureIgnoreCase));
             }
-            return (url + (string.IsNullOrEmpty(str) ? "" : ("?" + str)));
+            
+            //create new URL without passed query parameters
+            url = $"{uri.GetLeftPart(UriPartial.Path)}{new QueryBuilder(queryParameters).ToQueryString()}{uri.Fragment}";
+
+            return url;
         }
 
         /// <summary>
@@ -505,7 +412,7 @@ namespace Nop.Core
             {
                 var response = _httpContextAccessor.HttpContext.Response;
                 //ASP.NET 4 style - return response.IsRequestBeingRedirected;
-                int[] redirectionStatusCodes = { StatusCodes.Status301MovedPermanently, StatusCodes.Status302Found};
+                int[] redirectionStatusCodes = { StatusCodes.Status301MovedPermanently, StatusCodes.Status302Found };
                 return redirectionStatusCodes.Contains(response.StatusCode);
             }
         }
@@ -522,10 +429,8 @@ namespace Nop.Core
 
                 return Convert.ToBoolean(_httpContextAccessor.HttpContext.Items["nop.IsPOSTBeingDone"]);
             }
-            set
-            {
-                _httpContextAccessor.HttpContext.Items["nop.IsPOSTBeingDone"] = value;
-            }
+
+            set => _httpContextAccessor.HttpContext.Items["nop.IsPOSTBeingDone"] = value;
         }
 
         /// <summary>

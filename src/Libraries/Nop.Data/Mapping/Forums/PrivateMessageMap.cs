@@ -1,31 +1,44 @@
-﻿using Nop.Core.Domain.Forums;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Nop.Core.Domain.Forums;
 
 namespace Nop.Data.Mapping.Forums
 {
     /// <summary>
-    /// Mapping class
+    /// Represents a private message mapping configuration
     /// </summary>
     public partial class PrivateMessageMap : NopEntityTypeConfiguration<PrivateMessage>
     {
+        #region Methods
+
         /// <summary>
-        /// Ctor
+        /// Configures the entity
         /// </summary>
-        public PrivateMessageMap()
+        /// <param name="builder">The builder to be used to configure the entity</param>
+        public override void Configure(EntityTypeBuilder<PrivateMessage> builder)
         {
-            this.ToTable("Forums_PrivateMessage");
-            this.HasKey(pm => pm.Id);
-            this.Property(pm => pm.Subject).IsRequired().HasMaxLength(450);
-            this.Property(pm => pm.Text).IsRequired();
+            builder.ToTable("Forums_PrivateMessage");
+            builder.HasKey(message => message.Id);
 
-            this.HasRequired(pm => pm.FromCustomer)
-               .WithMany()
-               .HasForeignKey(pm => pm.FromCustomerId)
-               .WillCascadeOnDelete(false);
+            builder.Property(message => message.Subject).HasMaxLength(450).IsRequired();
+            builder.Property(message => message.Text).IsRequired();
 
-            this.HasRequired(pm => pm.ToCustomer)
+            builder.HasOne(message => message.FromCustomer)
                .WithMany()
-               .HasForeignKey(pm => pm.ToCustomerId)
-               .WillCascadeOnDelete(false);
+               .HasForeignKey(message => message.FromCustomerId)
+               .IsRequired()
+               .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasOne(message => message.ToCustomer)
+               .WithMany()
+               .HasForeignKey(message => message.ToCustomerId)
+               .IsRequired()
+               .OnDelete(DeleteBehavior.Restrict);
+
+            //add custom configuration
+            this.PostConfigure(builder);
         }
+
+        #endregion
     }
 }

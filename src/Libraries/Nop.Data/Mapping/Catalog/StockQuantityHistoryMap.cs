@@ -1,24 +1,34 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Catalog;
 
 namespace Nop.Data.Mapping.Catalog
 {
     /// <summary>
-    /// Mapping class
+    /// Represents a stock quantity history mapping configuration
     /// </summary>
     public partial class StockQuantityHistoryMap : NopEntityTypeConfiguration<StockQuantityHistory>
     {
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        public StockQuantityHistoryMap()
-        {
-            this.ToTable("StockQuantityHistory");
-            this.HasKey(historyEntry => historyEntry.Id);
+        #region Methods
 
-            this.HasRequired(historyEntry => historyEntry.Product)
+        /// <summary>
+        /// Configures the entity
+        /// </summary>
+        /// <param name="builder">The builder to be used to configure the entity</param>
+        public override void Configure(EntityTypeBuilder<StockQuantityHistory> builder)
+        {
+            builder.ToTable(nameof(StockQuantityHistory));
+            builder.HasKey(historyEntry => historyEntry.Id);
+
+            builder.HasOne(historyEntry => historyEntry.Product)
                 .WithMany()
                 .HasForeignKey(historyEntry => historyEntry.ProductId)
-                .WillCascadeOnDelete(true);
+                .IsRequired();
+
+            //add custom configuration
+            this.PostConfigure(builder);
         }
+
+        #endregion
     }
 }

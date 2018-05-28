@@ -743,7 +743,7 @@ BEGIN
 		ELSE 0
 		END
 	ELSE 0
-	END')
+	END as Value')
 END
 GO
 

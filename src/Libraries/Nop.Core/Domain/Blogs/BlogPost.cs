@@ -83,8 +83,8 @@ namespace Nop.Core.Domain.Blogs
         /// </summary>
         public virtual ICollection<BlogComment> BlogComments
         {
-            get { return _blogComments ?? (_blogComments = new List<BlogComment>()); }
-            protected set { _blogComments = value; }
+            get => _blogComments ?? (_blogComments = new List<BlogComment>());
+            protected set => _blogComments = value;
         }
         
         /// <summary>

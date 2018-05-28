@@ -807,17 +807,19 @@ namespace Nop.Web.Areas.Admin.Controllers
                     var restrict = countryIdsToRestrict.Contains(country.Id);
                     if (restrict)
                     {
-                        if (shippingMethod.RestrictedCountries.FirstOrDefault(c => c.Id == country.Id) != null)
+                        if (shippingMethod.ShippingMethodCountryMappings.FirstOrDefault(mapping => mapping.CountryId == country.Id) != null)
                             continue;
 
-                        shippingMethod.RestrictedCountries.Add(country);
+                        shippingMethod.ShippingMethodCountryMappings.Add(new ShippingMethodCountryMapping { Country = country });
                         _shippingService.UpdateShippingMethod(shippingMethod);
                     }
                     else
                     {
-                        if (shippingMethod.RestrictedCountries.FirstOrDefault(c => c.Id == country.Id) == null)
+                        if (shippingMethod.ShippingMethodCountryMappings.FirstOrDefault(mapping => mapping.CountryId == country.Id) == null)
                             continue;
-                        shippingMethod.RestrictedCountries.Remove(country);
+
+                        shippingMethod.ShippingMethodCountryMappings
+                            .Remove(shippingMethod.ShippingMethodCountryMappings.FirstOrDefault(mapping => mapping.CountryId == country.Id));
                         _shippingService.UpdateShippingMethod(shippingMethod);
                     }
                 }

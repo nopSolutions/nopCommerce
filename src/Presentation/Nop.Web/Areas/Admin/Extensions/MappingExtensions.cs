@@ -31,6 +31,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Forums;
+using Nop.Core.Domain.Gdpr;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Logging;
 using Nop.Core.Domain.Media;
@@ -1056,6 +1057,30 @@ namespace Nop.Web.Areas.Admin.Extensions
             return model.MapTo(destination);
         }
 
+        //GDPR settings
+        public static GdprSettingsModel ToModel(this GdprSettings entity)
+        {
+            return entity.MapTo<GdprSettings, GdprSettingsModel>();
+        }
+        public static GdprSettings ToEntity(this GdprSettingsModel model, GdprSettings destination)
+        {
+            return model.MapTo(destination);
+        }
+        //GDPR consents
+        public static GdprConsentModel ToModel(this GdprConsent entity)
+        {
+            return entity.MapTo<GdprConsent, GdprConsentModel>();
+        }
+        public static GdprConsent ToEntity(this GdprConsentModel model)
+        {
+            return model.MapTo<GdprConsentModel, GdprConsent>();
+        }
+        public static GdprConsent ToEntity(this GdprConsentModel model, GdprConsent destination)
+        {
+            return model.MapTo(destination);
+        }
+
+
         //general (captcha) settings
         public static CaptchaSettingsModel ToModel(this CaptchaSettings entity)
         {
@@ -1207,6 +1232,5 @@ namespace Nop.Web.Areas.Admin.Extensions
         }
 
         #endregion
-
     }
 }
