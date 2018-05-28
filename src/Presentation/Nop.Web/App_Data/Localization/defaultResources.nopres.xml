@@ -5625,6 +5625,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowGtin.Hint">
     <Value>Check to show GTIN in public store.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowLinkToAllResultInSearchAutoComplete">
+    <Value>Show a link to all search results in the autocomplete box</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowLinkToAllResultInSearchAutoComplete.Hint">
+    <Value>Determines whether the link to all results should be displayed in the autocomplete search box. Displayed if the number of items found is greater than the displayed quantity in the autocomplete box.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowManufacturerPartNumber">
     <Value>Show manufacturer part number</Value>
   </LocaleResource>
@@ -17030,9 +17036,12 @@
   </LocaleResource>
   <LocaleResource Name="Search.PriceRange.To">
     <Value>to</Value>
-  </LocaleResource>
+  </LocaleResource>  
   <LocaleResource Name="Search.SearchBox.Tooltip">
     <Value>Search store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Search.SearchBox.SearchPageLink">
+    <Value>View all results...</Value>
   </LocaleResource>
   <LocaleResource Name="Search.SearchInDescriptions">
     <Value>Search In product descriptions</Value>

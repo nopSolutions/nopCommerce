@@ -185,6 +185,10 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public bool ShowProductImagesInSearchAutoComplete { get; set; }
         public bool ShowProductImagesInSearchAutoComplete_OverrideForStore { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ShowLinkToAllResultInSearchAutoComplete")]
+        public bool ShowLinkToAllResultInSearchAutoComplete { get; set; }
+        public bool ShowLinkToAllResultInSearchAutoComplete_OverrideForStore { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ProductSearchTermMinimumLength")]
         public int ProductSearchTermMinimumLength { get; set; }
         public bool ProductSearchTermMinimumLength_OverrideForStore { get; set; }
