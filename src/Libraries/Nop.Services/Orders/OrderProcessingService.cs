@@ -1159,13 +1159,12 @@ namespace Nop.Services.Orders
             var customer = order.Customer;
             foreach (var customerRole in customerRoles)
             {
-                if (customer.CustomerRoles.Count(cr => cr.Id == customerRole.Id) == 0)
+                if (customer.CustomerCustomerRoleMappings.Count(mapping => mapping.CustomerRoleId == customerRole.Id) == 0)
                 {
                     //not in the list yet
                     if (add)
                     {
                         //add
-                        //customer.CustomerRoles.Add(customerRole);
                         customer.CustomerCustomerRoleMappings.Add(new CustomerCustomerRoleMapping { CustomerRole = customerRole });
                     }
                 }
@@ -1175,7 +1174,6 @@ namespace Nop.Services.Orders
                     if (!add)
                     {
                         //remove
-                        //customer.CustomerRoles.Remove(customerRole);
                         customer.CustomerCustomerRoleMappings
                             .Remove(customer.CustomerCustomerRoleMappings.FirstOrDefault(mapping => mapping.CustomerRoleId == customerRole.Id));
                     }

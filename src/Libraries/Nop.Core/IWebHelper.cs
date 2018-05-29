@@ -55,21 +55,22 @@ namespace Nop.Core
         bool IsStaticResource();
 
         /// <summary>
-        /// Modifies query string
+        /// Modify query string of the URL
         /// </summary>
-        /// <param name="url">URL to modify</param>
-        /// <param name="queryStringModification">Query string modification</param>
-        /// <param name="anchor">Anchor</param>
-        /// <returns>New URL</returns>
-        string ModifyQueryString(string url, string queryStringModification, string anchor);
+        /// <param name="url">Url to modify</param>
+        /// <param name="key">Query parameter key to add</param>
+        /// <param name="values">Query parameter values to add</param>
+        /// <returns>New URL with passed query parameter</returns>
+        string ModifyQueryString(string url, string key, params string[] values);
 
         /// <summary>
-        /// Remove query string from the URL
+        /// Remove query parameter from the URL
         /// </summary>
-        /// <param name="url">URL to modify</param>
-        /// <param name="queryString">Query string to remove</param>
-        /// <returns>New URL without passed query string</returns>
-        string RemoveQueryString(string url, string queryString);
+        /// <param name="url">Url to modify</param>
+        /// <param name="key">Query parameter key to remove</param>
+        /// <param name="value">Query parameter value to remove; pass null to remove all query parameters with the specified key</param>
+        /// <returns>New URL without passed query parameter</returns>
+        string RemoveQueryString(string url, string key, string value = null);
 
         /// <summary>
         /// Gets query string value by name

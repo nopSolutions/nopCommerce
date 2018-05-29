@@ -157,8 +157,8 @@
                                             }
                                             @if (Model.IsEditable && item.AllowItemEditing)
                                             {
-                                                var editCartItemUrl = Url.RouteUrl("Product", new { SeName = item.ProductSeName });
-                                                editCartItemUrl = webHelper.ModifyQueryString(editCartItemUrl, "updatecartitemid=" + item.Id, null);
+                                                var editCartItemUrl = Url.RouteUrl("Product", new { SeName = item.ProductSeName }, webHelper.CurrentRequestProtocol);
+                                                editCartItemUrl = webHelper.ModifyQueryString(editCartItemUrl, "updatecartitemid", item.Id.ToString());
                                                 <div class="edit-item">
                                                     <a href="@editCartItemUrl">@T("Common.Edit")</a>
                                                 </div>

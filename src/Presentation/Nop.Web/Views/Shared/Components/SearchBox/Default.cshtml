@@ -19,7 +19,9 @@
     @if (Model.AutoCompleteEnabled)
     {
         <script asp-location="Footer">
-            $(document).ready(function() {
+            $(document).ready(function() {                
+                var showLinkToResultSearch;
+                var searchText;
                 $('#small-searchterms').autocomplete({
                         delay: 500,
                         minLength: @(Model.SearchTermMinimumLength.ToString()),
@@ -29,17 +31,26 @@
                             $("#small-searchterms").val(ui.item.label);
                             setLocation(ui.item.producturl);
                             return false;
+                    },
+                    //append link to the end of list
+                    open: function(event, ui) {
+                        //display link to search page
+                        if (showLinkToResultSearch) {
+                            searchText = document.getElementById("small-searchterms").value;
+                            $(".ui-autocomplete").append("<li class=\"ui-menu-item\" role=\"presentation\"><a href=\"/search?q=" + searchText + "\">@T("Search.SearchBox.SearchPageLink")</a></li>");
                         }
-                    })
-                    .data("ui-autocomplete")._renderItem = function(ul, item) {
-                        var t = item.label;
-                        //html encode
-                        t = htmlEncode(t);
-                        return $("<li></li>")
-                            .data("item.autocomplete", item)
-                            .append("<a>@(Model.ShowProductImagesInSearchAutoComplete ? Html.Raw("<img src='\" + item.productpictureurl + \"'>") : null)<span>" + t + "</span></a>")
-                            .appendTo(ul);
-                    };
+                    }
+                })
+                .data("ui-autocomplete")._renderItem = function(ul, item) {
+                    var t = item.label;                    
+                    showLinkToResultSearch = item.showlinktoresultsearch;
+                    //html encode
+                    t = htmlEncode(t);
+                    return $("<li></li>")
+                        .data("item.autocomplete", item)
+                        .append("<a>@(Model.ShowProductImagesInSearchAutoComplete ? Html.Raw("<img src='\" + item.productpictureurl + \"'>") : null)<span>" + t + "</span></a>")
+                        .appendTo(ul);
+                };
             });
         </script>
     }

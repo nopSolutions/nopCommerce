@@ -27,6 +27,7 @@ namespace Nop.Services.Tests.Customers
     public class CustomerRegistrationServiceTests : ServiceTest
     {
         private IRepository<Customer> _customerRepo;
+        private IRepository<CustomerCustomerRoleMapping> _customerCustomerRoleMappingRepo;
         private IRepository<CustomerPassword> _customerPasswordRepo;
         private IRepository<CustomerRole> _customerRoleRepo;
         private IRepository<GenericAttribute> _genericAttributeRepo;
@@ -157,6 +158,7 @@ namespace Nop.Services.Tests.Customers
             _eventPublisher.Expect(x => x.Publish(Arg<object>.Is.Anything));
 
             _storeService = MockRepository.GenerateMock<IStoreService>();
+            _customerCustomerRoleMappingRepo = MockRepository.GenerateMock<IRepository<CustomerCustomerRoleMapping>>();
             _customerRoleRepo = MockRepository.GenerateMock<IRepository<CustomerRole>>();
             _genericAttributeRepo = MockRepository.GenerateMock<IRepository<GenericAttribute>>();
             _orderRepo = MockRepository.GenerateMock<IRepository<Order>>();
@@ -171,7 +173,8 @@ namespace Nop.Services.Tests.Customers
             _workContext = MockRepository.GenerateMock<IWorkContext>();
             _workflowMessageService = MockRepository.GenerateMock<IWorkflowMessageService>();
 
-            _customerService = new CustomerService(new NopNullCache(), _customerRepo, _customerPasswordRepo, _customerRoleRepo,
+            _customerService = new CustomerService(new NopNullCache(), _customerRepo,
+                _customerCustomerRoleMappingRepo,_customerPasswordRepo, _customerRoleRepo,
                 _genericAttributeRepo, _orderRepo, _forumPostRepo, _forumTopicRepo,
                 null, null, null, null, null,
                 _genericAttributeService, null, null, _eventPublisher, _customerSettings, null);
