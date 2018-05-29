@@ -2890,3 +2890,11 @@ BEGIN
     VALUES (N'catalogsettings.showlinktoallresultinsearchautocomplete', N'false', 0)
 END
 GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'catalogsettings.countdisplayedyearsdatepicker')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'catalogsettings.countdisplayedyearsdatepicker', N'1', 0)
+END
+GO
