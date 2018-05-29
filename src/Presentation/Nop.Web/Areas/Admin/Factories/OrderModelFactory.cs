@@ -1993,8 +1993,8 @@ namespace Nop.Web.Areas.Admin.Factories
                 Total = _priceFormatter.FormatPrice(psPending.SumOrders, true, false),
                 ViewLink = urlHelper.Action("List", "Order", new
                 {
-                    orderStatusIds = string.Join(",", orderStatuses),
-                    paymentStatusIds = string.Join(",", paymentStatuses)
+                    orderStatuses = string.Join(",", orderStatuses),
+                    paymentStatuses = string.Join(",", paymentStatuses)
                 })
             });
 
@@ -2008,8 +2008,8 @@ namespace Nop.Web.Areas.Admin.Factories
                 Total = _priceFormatter.FormatPrice(ssPending.SumOrders, true, false),
                 ViewLink = urlHelper.Action("List", "Order", new
                 {
-                    orderStatusIds = string.Join(",", orderStatuses),
-                    shippingStatusIds = string.Join(",", shippingStatuses)
+                    orderStatuses = string.Join(",", orderStatuses),
+                    shippingStatuses = string.Join(",", shippingStatuses)
                 })
             });
 
@@ -2021,7 +2021,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Item = _localizationService.GetResource("Admin.SalesReport.Incomplete.TotalIncompleteOrders"),
                 Count = osPending.CountOrders,
                 Total = _priceFormatter.FormatPrice(osPending.SumOrders, true, false),
-                ViewLink = urlHelper.Action("List", "Order", new { orderStatusIds = string.Join(",", orderStatuses) })
+                ViewLink = urlHelper.Action("List", "Order", new { orderStatuses = string.Join(",", orderStatuses) })
             });
 
             //prepare list model
