@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -6,61 +7,54 @@ using System.Text;
 using System.Text.RegularExpressions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.Storage;
 using Nop.Core;
 
 namespace Nop.Data.Extensions
 {
     /// <summary>
-    /// Represents DB context extensions
+    /// Represents database context extensions
     /// </summary>
     public static class DbContextExtensions
     {
+        #region Fields
+
+        private static string databaseName;
+        private static readonly ConcurrentDictionary<string, string> tableNames = new ConcurrentDictionary<string, string>();
+        private static readonly ConcurrentDictionary<string, IEnumerable<(string, int?)>> columnsMaxLength = new ConcurrentDictionary<string, IEnumerable<(string, int?)>>();
+        private static readonly ConcurrentDictionary<string, IEnumerable<(string, decimal?)>> decimalColumnsMaxValue = new ConcurrentDictionary<string, IEnumerable<(string, decimal?)>>();
+
+        #endregion
+
         #region Utilities
 
-        private static T InnerGetCopy<T>(IDbContext context, T currentCopy, Func<EntityEntry<T>, PropertyValues> func) where T : BaseEntity
+        /// <summary>
+        /// Loads a copy of the entity using the passed function
+        /// </summary>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        /// <param name="context">Database context</param>
+        /// <param name="entity">Entity</param>
+        /// <param name="getValuesFunction">Function to get the values of the tracked entity</param>
+        /// <returns>Copy of the passed entity</returns>
+        private static TEntity LoadEntityCopy<TEntity>(IDbContext context, TEntity entity, Func<EntityEntry<TEntity>, PropertyValues> getValuesFunction)
+            where TEntity : BaseEntity
         {
-            //Get the database context
-            var dbContext = CastOrThrow(context);
+            if (context == null)
+                throw new ArgumentNullException(nameof(context));
 
-            //Get the entity tracking object
-            var entry = GetEntityOrReturnNull(currentCopy, dbContext);
+            //try to get the EF database context
+            if (!(context is DbContext dbContext))
+                throw new InvalidOperationException("Context does not support operation");
 
-            //Try and get the values
-            if (entry == null) 
+            //try to get the entity tracking object
+            var entityEntry = dbContext.ChangeTracker.Entries<TEntity>().FirstOrDefault(entry => entry.Entity == entity);
+            if (entityEntry == null)
                 return null;
 
-            //The output 
-            T output = null;
+            //get a copy of the entity
+            var entityCopy = getValuesFunction(entityEntry)?.ToObject() as TEntity;
 
-            var dbPropertyValues = func(entry);
-            if (dbPropertyValues != null)
-            {
-                output = dbPropertyValues.ToObject() as T;
-            }
-
-            return output;
-        }
-
-        /// <summary>
-        /// Gets the entity or return null.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="currentCopy">The current copy.</param>
-        /// <param name="dbContext">The db context.</param>
-        /// <returns></returns>
-        private static EntityEntry<T> GetEntityOrReturnNull<T>(T currentCopy, DbContext dbContext) where T : BaseEntity
-        {
-            return dbContext.ChangeTracker.Entries<T>().FirstOrDefault(e => e.Entity == currentCopy);
-        }
-
-        private static DbContext CastOrThrow(IDbContext context)
-        {
-            if (!(context is DbContext output))
-            {
-                throw new InvalidOperationException("Context does not support operation.");
-            }
-
-            return output;
+            return entityCopy;
         }
 
         /// <summary>
@@ -103,69 +97,38 @@ namespace Nop.Data.Extensions
             return commands;
         }
 
-#if EF6
-        private static Dictionary<string, ReadOnlyMetadataCollection<Facet>> GetFieldFacets(this IDbContext context,
-            string entityTypeName, string edmTypeName, params string[] columnNames)
-        {
-            //original: http://stackoverflow.com/questions/5081109/entity-framework-4-0-automatically-truncate-trim-string-before-insert
-
-            var entType = Type.GetType(entityTypeName);
-            var adapter = ((IObjectContextAdapter)context).ObjectContext;
-            var metadataWorkspace = adapter.MetadataWorkspace;
-            var q = from meta in metadataWorkspace.GetItems(DataSpace.CSpace).Where(m => m.BuiltInTypeKind == BuiltInTypeKind.EntityType)
-                    from p in (meta as EntityType).Properties.Where(p => columnNames.Contains(p.Name) && p.TypeUsage.EdmType.Name == edmTypeName)
-                    select p;
-
-            var queryResult = q.Where(p =>
-            {
-                var match = p.DeclaringType.Name == entityTypeName;
-                if (!match && entType != null)
-                {
-                    //Is a fully qualified name....
-                    match = entType.Name == p.DeclaringType.Name;
-                }
-
-                return match;
-
-            }).ToDictionary(p => p.Name, p => p.TypeUsage.Facets);
-
-            return queryResult;
-        }
-#endif
-
         #endregion
 
         #region Methods
 
         /// <summary>
-        /// Loads the original copy.
+        /// Loads the original copy of the entity
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="context">The context.</param>
-        /// <param name="currentCopy">The current copy.</param>
-        /// <returns></returns>
-        public static T LoadOriginalCopy<T>(this IDbContext context, T currentCopy) where T : BaseEntity
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        /// <param name="context">Database context</param>
+        /// <param name="entity">Entity</param>
+        /// <returns>Copy of the passed entity</returns>
+        public static TEntity LoadOriginalCopy<TEntity>(this IDbContext context, TEntity entity) where TEntity : BaseEntity
         {
-            return InnerGetCopy(context, currentCopy, e => e.OriginalValues);
+            return LoadEntityCopy(context, entity, entityEntry => entityEntry.OriginalValues);
         }
 
         /// <summary>
-        /// Loads the database copy.
+        /// Loads the database copy of the entity
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="context">The context.</param>
-        /// <param name="currentCopy">The current copy.</param>
-        /// <returns></returns>
-        public static T LoadDatabaseCopy<T>(this IDbContext context, T currentCopy) where T : BaseEntity
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        /// <param name="context">Database context</param>
+        /// <param name="entity">Entity</param>
+        /// <returns>Copy of the passed entity</returns>
+        public static TEntity LoadDatabaseCopy<TEntity>(this IDbContext context, TEntity entity) where TEntity : BaseEntity
         {
-            return InnerGetCopy(context, currentCopy, e => e.GetDatabaseValues());
-
+            return LoadEntityCopy(context, entity, entityEntry => entityEntry.GetDatabaseValues());
         }
 
         /// <summary>
         /// Drop a plugin table
         /// </summary>
-        /// <param name="context">Context</param>
+        /// <param name="context">Database context</param>
         /// <param name="tableName">Table name</param>
         public static void DropPluginTable(this IDbContext context, string tableName)
         {
@@ -184,82 +147,127 @@ namespace Nop.Data.Extensions
         /// <summary>
         /// Get table name of entity
         /// </summary>
-        /// <typeparam name="T">Entity type</typeparam>
-        /// <param name="context">Context</param>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        /// <param name="context">Database context</param>
         /// <returns>Table name</returns>
-        public static string GetTableName<T>(this IDbContext context) where T : BaseEntity
+        public static string GetTableName<TEntity>(this IDbContext context) where TEntity : BaseEntity
         {
-            var mapping = CastOrThrow(context).Model.FindEntityType(typeof(T)).Relational();
+            if (context == null)
+                throw new ArgumentNullException(nameof(context));
+
+            //try to get the EF database context
+            if (!(context is DbContext dbContext))
+                throw new InvalidOperationException("Context does not support operation");
             
-            return mapping.TableName;
+            var entityTypeFullName = typeof(TEntity).FullName;
+            if (!tableNames.ContainsKey(entityTypeFullName))
+            {
+                //get entity type
+                var entityType = dbContext.Model.FindEntityType(typeof(TEntity));
+
+                //get the name of the table to which the entity type is mapped
+                tableNames.TryAdd(entityTypeFullName, entityType.Relational().TableName);
+            }
+
+            tableNames.TryGetValue(entityTypeFullName, out var tableName);
+
+            return tableName;
         }
 
         /// <summary>
-        /// Get column maximum length
+        /// Gets the maximum lengths of data that is allowed for the entity properties
         /// </summary>
-        /// <param name="context">Context</param>
-        /// <param name="entityTypeName">Entity type name</param>
-        /// <param name="columnName">Column name</param>
-        /// <returns>Maximum length. Null if such rule does not exist</returns>
-        public static int? GetColumnMaxLength(this IDbContext context, string entityTypeName, string columnName)
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        /// <param name="context">Database context</param>
+        /// <returns>Collection of name - max length pairs</returns>
+        public static IEnumerable<(string Name, int? MaxLength)> GetColumnsMaxLength<TEntity>(this IDbContext context) where TEntity : BaseEntity
         {
-            var rez = GetColumnsMaxLength(context, entityTypeName, columnName);
-            return rez.ContainsKey(columnName) ? rez[columnName] as int? : null;
+            if (context == null)
+                throw new ArgumentNullException(nameof(context));
+
+            //try to get the EF database context
+            if (!(context is DbContext dbContext))
+                throw new InvalidOperationException("Context does not support operation");
+
+            var entityTypeFullName = typeof(TEntity).FullName;
+            if (!columnsMaxLength.ContainsKey(entityTypeFullName))
+            {
+                //get entity type
+                var entityType = dbContext.Model.FindEntityType(typeof(TEntity));
+
+                //get property name - max length pairs
+                columnsMaxLength.TryAdd(entityTypeFullName, 
+                    entityType.GetProperties().Select(property => (property.Name, property.GetMaxLength())));
+            }
+
+            columnsMaxLength.TryGetValue(entityTypeFullName, out var result);
+
+            return result;
         }
-
-        /// <summary>
-        /// Get columns maximum length
-        /// </summary>
-        /// <param name="context">Context</param>
-        /// <param name="entityTypeName">Entity type name</param>
-        /// <param name="columnNames">Column names</param>
-        /// <returns></returns>
-        public static IDictionary<string, int> GetColumnsMaxLength(this IDbContext context, string entityTypeName, params string[] columnNames)
-        {
-#if EF6
-            var fieldFacets = GetFieldFacets(context, entityTypeName, "String", columnNames);
-
-            var queryResult = fieldFacets
-                .Select(f => new { Name = f.Key, MaxLength = f.Value["MaxLength"].Value })
-                .Where(p => int.TryParse(p.MaxLength.ToString(), out int _))
-                .ToDictionary(p => p.Name, p => Convert.ToInt32(p.MaxLength));
-
-            return queryResult;
-#else
-            //TODO .NET Core doesn't support access to this information, that's why we return empty data
-            return new Dictionary<string, int>();
-#endif
-        }
-
 
         /// <summary>
         /// Get maximum decimal values
         /// </summary>
-        /// <param name="context">Context</param>
-        /// <param name="entityTypeName">Entity type name</param>
-        /// <param name="columnNames">Column names</param>
-        /// <returns></returns>
-        public static IDictionary<string, decimal> GetDecimalMaxValue(this IDbContext context, string entityTypeName, params string[] columnNames)
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        /// <param name="context">Database context</param>
+        /// <returns>Collection of name - max decimal value pairs</returns>
+        public static IEnumerable<(string Name, decimal? MaxValue)> GetDecimalColumnsMaxValue<TEntity>(this IDbContext context)
+            where TEntity : BaseEntity
         {
-#if EF6
-            var fieldFacets = GetFieldFacets(context, entityTypeName, "Decimal", columnNames);
+            if (context == null)
+                throw new ArgumentNullException(nameof(context));
 
-            return fieldFacets.ToDictionary(p => p.Key, p => int.Parse(p.Value["Precision"].Value.ToString()) - int.Parse(p.Value["Scale"].Value.ToString()))
-                .ToDictionary(p => p.Key, p => new decimal(Math.Pow(10, p.Value)));
-#else
-            //TODO .NET Core doesn't support access to this information, that's why we return empty data
-            return new Dictionary<string, decimal>();
-#endif
+            //try to get the EF database context
+            if (!(context is DbContext dbContext))
+                throw new InvalidOperationException("Context does not support operation");
+
+            var entityTypeFullName = typeof(TEntity).FullName;
+            if (!decimalColumnsMaxValue.ContainsKey(entityTypeFullName))
+            {
+                //get entity type
+                var entityType = dbContext.Model.FindEntityType(typeof(TEntity));
+
+                //get entity decimal properties
+                var properties = entityType.GetProperties().Where(property => property.ClrType == typeof(decimal));
+
+                //return property name - max decimal value pairs
+                decimalColumnsMaxValue.TryAdd(entityTypeFullName, properties.Select(property =>
+                {
+                    var mapping = new RelationalTypeMappingInfo(property);
+                    if (!mapping.Precision.HasValue || !mapping.Scale.HasValue)
+                        return (property.Name, null);
+
+                    return (property.Name, new decimal?((decimal) Math.Pow(10, mapping.Precision.Value - mapping.Scale.Value)));
+                }));
+            }
+
+            decimalColumnsMaxValue.TryGetValue(entityTypeFullName, out var result);
+
+            return result;
         }
 
         /// <summary>
         /// Get database name
         /// </summary>
-        /// <param name="context">DB context</param>
+        /// <param name="context">Database context</param>
         /// <returns>Database name</returns>
         public static string DbName(this IDbContext context)
         {
-            var databaseName = CastOrThrow(context).Database.GetDbConnection().Database;
+            if (context == null)
+                throw new ArgumentNullException(nameof(context));
+
+            //try to get the EF database context
+            if (!(context is DbContext dbContext))
+                throw new InvalidOperationException("Context does not support operation");
+
+            if (!string.IsNullOrEmpty(databaseName)) 
+                return databaseName;
+
+            //get database connection
+            var dbConnection = dbContext.Database.GetDbConnection();
+
+            //return the database name
+            databaseName = dbConnection.Database;
 
             return databaseName;
         }
@@ -267,7 +275,7 @@ namespace Nop.Data.Extensions
         /// <summary>
         /// Execute commands from the SQL script against the context database
         /// </summary>
-        /// <param name="context">DB context</param>
+        /// <param name="context">Database context</param>
         /// <param name="sql">SQL script</param>
         public static void ExecuteSqlScript(this IDbContext context, string sql)
         {
@@ -282,7 +290,7 @@ namespace Nop.Data.Extensions
         /// <summary>
         /// Execute commands from a file with SQL script against the context database
         /// </summary>
-        /// <param name="context">DB context</param>
+        /// <param name="context">Database context</param>
         /// <param name="filePath">Path to the file</param>
         public static void ExecuteSqlScriptFromFile(this IDbContext context, string filePath)
         {

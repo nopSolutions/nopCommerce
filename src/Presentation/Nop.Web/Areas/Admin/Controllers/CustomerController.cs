@@ -688,8 +688,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                         if (model.SelectedCustomerRoleIds.Contains(customerRole.Id))
                         {
                             //new role
-                            if (customer.CustomerRoles.Count(cr => cr.Id == customerRole.Id) == 0)
-                                //customer.CustomerRoles.Add(customerRole);
+                            if (customer.CustomerCustomerRoleMappings.Count(mapping => mapping.CustomerRoleId == customerRole.Id) == 0)
                                 customer.CustomerCustomerRoleMappings.Add(new CustomerCustomerRoleMapping { CustomerRole = customerRole });
                         }
                         else
@@ -702,9 +701,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                             }
 
                             //remove role
-                            if (customer.CustomerRoles.Count(cr => cr.Id == customerRole.Id) > 0)
+                            if (customer.CustomerCustomerRoleMappings.Count(mapping => mapping.CustomerRoleId == customerRole.Id) > 0)
                             {
-                                //customer.CustomerRoles.Remove(customerRole);
                                 customer.CustomerCustomerRoleMappings
                                     .Remove(customer.CustomerCustomerRoleMappings.FirstOrDefault(mapping => mapping.CustomerRoleId == customerRole.Id));
                             }

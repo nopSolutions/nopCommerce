@@ -340,22 +340,24 @@
                     selectedIds: selectedIds
                 };
                 addAntiForgeryToken(postData);
-
-                $.ajax({
-                    cache: false,
-                    type: "POST",
-                    url: "@(Url.Action("DeleteSelected", "Product"))",
-                    data: postData,
-                    complete: function(data) {
-                        //reload grid
-                        var grid = $('#products-grid').data('kendoGrid');
-                        grid.dataSource.read();
-                    },
-                    error: function(xhr, ajaxOptions, thrownError) {
-                        alert(thrownError);
-                    },
-                    traditional: true
-                });
+                
+                if (confirm('@T("Admin.Common.DeleteConfirmation.Selected")')) {
+                    $.ajax({
+                        cache: false,
+                        type: "POST",
+                        url: "@(Url.Action("DeleteSelected", "Product"))",
+                        data: postData,
+                        complete: function(data) {
+                            //reload grid
+                            var grid = $('#products-grid').data('kendoGrid');
+                            grid.dataSource.read();
+                        },
+                        error: function(xhr, ajaxOptions, thrownError) {
+                            alert(thrownError);
+                        },
+                        traditional: true
+                    });
+                }
                 return false;
             });
 
@@ -400,6 +402,7 @@
         }
     </script>
 </form>
+@*<nop-delete-confirmation asp-button-id="delete-selected" />*@
 
 @*import products form*@
 <div id="importexcel-window" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="importexcel-window-title">
@@ -448,6 +451,8 @@
 <form asp-controller="Product" asp-action="ExportXmlSelected" method="post" id="export-xml-selected-form">
     <input type="hidden" id="selectedIds" name="selectedIds" value="" />
 </form>
+
+
 
 <script>
     $(document).ready(function () {

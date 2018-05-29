@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using Nop.Core;
@@ -53,6 +52,7 @@ namespace Nop.Services.Customers
         #region Fields
 
         private readonly IRepository<Customer> _customerRepository;
+        private readonly IRepository<CustomerCustomerRoleMapping> _customerCustomerRoleMappingRepository;
         private readonly IRepository<CustomerPassword> _customerPasswordRepository;
         private readonly IRepository<CustomerRole> _customerRoleRepository;
         private readonly IRepository<GenericAttribute> _gaRepository;
@@ -81,6 +81,7 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="customerRepository">Customer repository</param>
+        /// <param name="customerCustomerRoleMappingRepository">Customer role mapping repository</param>
         /// <param name="customerPasswordRepository">Customer password repository</param>
         /// <param name="customerRoleRepository">Customer role repository</param>
         /// <param name="gaRepository">Generic attribute repository</param>
@@ -100,6 +101,7 @@ namespace Nop.Services.Customers
         /// <param name="commonSettings">Common settings</param>
         public CustomerService(ICacheManager cacheManager,
             IRepository<Customer> customerRepository,
+            IRepository<CustomerCustomerRoleMapping> customerCustomerRoleMappingRepository,
             IRepository<CustomerPassword> customerPasswordRepository,
             IRepository<CustomerRole> customerRoleRepository,
             IRepository<GenericAttribute> gaRepository,
@@ -120,6 +122,7 @@ namespace Nop.Services.Customers
         {
             this._cacheManager = cacheManager;
             this._customerRepository = customerRepository;
+            this._customerCustomerRoleMappingRepository = customerCustomerRoleMappingRepository;
             this._customerPasswordRepository = customerPasswordRepository;
             this._customerRoleRepository = customerRoleRepository;
             this._gaRepository = gaRepository;
@@ -188,8 +191,16 @@ namespace Nop.Services.Customers
             if (vendorId > 0)
                 query = query.Where(c => vendorId == c.VendorId);
             query = query.Where(c => !c.Deleted);
+
             if (customerRoleIds != null && customerRoleIds.Length > 0)
-                query = query.Where(c => c.CustomerCustomerRoleMappings.Select(mapping => mapping.CustomerRoleId).Intersect(customerRoleIds).Any());
+            {
+                query = query.Join(_customerCustomerRoleMappingRepository.Table, x => x.Id, y => y.CustomerId,
+                        (x, y) => new {Customer = x, Mapping = y})
+                    .Where(z => customerRoleIds.Contains(z.Mapping.CustomerRoleId))
+                    .Select(z => z.Customer)
+                    .Distinct();
+            }
+
             if (!string.IsNullOrWhiteSpace(email))
                 query = query.Where(c => c.Email.Contains(email));
             if (!string.IsNullOrWhiteSpace(username))

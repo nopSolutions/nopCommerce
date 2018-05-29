@@ -422,13 +422,13 @@ namespace Nop.Web.Framework.UI.Paging
 		    var url = webHelper.GetThisPageUrl(false);
 		    foreach (var routeValue in routeValues)
 		    {
-		        url = webHelper.ModifyQueryString(url, routeValue.Key + "=" + routeValue.Value, null);
+		        url = webHelper.ModifyQueryString(url, routeValue.Key, routeValue.Value?.ToString());
 		    }
             if (renderEmptyParameters && parametersWithEmptyValues.Any())
             {
                 foreach (var key in parametersWithEmptyValues)
                 {
-                    url = webHelper.ModifyQueryString(url, key + "=", null);
+                    url = webHelper.ModifyQueryString(url, key);
                 }
             }
 			return url;

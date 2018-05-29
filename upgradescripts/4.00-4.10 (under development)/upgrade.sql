@@ -1154,6 +1154,21 @@ set @resources='
   <LocaleResource Name="Admin.Customers.Customers.Gdpr.Export">
     <Value>Export data</Value>
   </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Catalog.AttributeControlType.ImageSquares">
+    <Value>Image squares</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Common.DeleteConfirmation.Selected">
+    <Value>Are you sure you want to delete selected items?</Value>
+  </LocaleResource>
+  <LocaleResource Name="Search.SearchBox.SearchPageLink">
+    <Value>View all results...</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowLinkToAllResultInSearchAutoComplete">
+    <Value>Show a link to all search results in the autocomplete box</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowLinkToAllResultInSearchAutoComplete.Hint">
+    <Value>Determines whether the link to all results should be displayed in the autocomplete search box. Displayed if the number of items found is greater than the displayed quantity in the autocomplete box.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -2865,5 +2880,21 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'gdprsettings.lognewslett
 BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId])
 	VALUES (N'gdprsettings.lognewsletterconsent', N'true', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'catalogsettings.showlinktoallresultinsearchautocomplete')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'catalogsettings.showlinktoallresultinsearchautocomplete', N'false', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'catalogsettings.countdisplayedyearsdatepicker')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'catalogsettings.countdisplayedyearsdatepicker', N'1', 0)
 END
 GO
