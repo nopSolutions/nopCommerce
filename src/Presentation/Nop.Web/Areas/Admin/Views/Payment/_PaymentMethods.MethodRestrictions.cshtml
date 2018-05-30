@@ -8,7 +8,7 @@
 }
 
 <div class="panel-group">
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.PaymentMethodListTop, additionalData = Model })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.PaymentMethodRestrictionsTop, additionalData = Model })
     <div class="panel panel-default">
         <div class="panel-body">
             <p>@T("Admin.Configuration.Payment.MethodRestrictions.Description")</p>
@@ -75,5 +75,5 @@
             }
         </div>
     </div>
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.PaymentMethodListBottom, additionalData = Model })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.PaymentMethodRestrictionsBottom, additionalData = Model })
 </div>

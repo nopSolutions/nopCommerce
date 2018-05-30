@@ -14,7 +14,7 @@
     var registerUrl = Url.RouteUrl("Register", null, webHelper.CurrentRequestProtocol);
     if (!string.IsNullOrEmpty(this.Context.Request.Query["returnUrl"]))
     {
-        registerUrl = webHelper.ModifyQueryString(registerUrl, "returnurl", WebUtility.UrlEncode(this.Context.Request.Query["returnUrl"]));
+        registerUrl = webHelper.ModifyQueryString(registerUrl, "returnurl", this.Context.Request.Query["returnUrl"]);
     }
 }
 <div class="page login-page">
