@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
     <Copyright>Copyright © Nop Solutions, Ltd</Copyright>
     <Company>Nop Solutions, Ltd</Company>
     <Authors>Nop Solutions, Ltd</Authors>
@@ -14,7 +14,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="BundlerMinifier.Core" Version="2.7.385" />
+    <PackageReference Include="BundlerMinifier.Core" Version="2.8.391" />
     <PackageReference Include="FluentValidation.AspNetCore" Version="7.5.2" />
   </ItemGroup>
 
