@@ -14,6 +14,13 @@ ul, ol {
 .margin-t-5 {
     margin-top: 5px;
 }
+.margin-b-5 {
+    margin-bottom: 5px;
+}
+.v-center {
+    display: flex;
+    align-items: center;
+}
 .please-wait {
     background: url('images/ajax_loader_small.gif') no-repeat;
     padding-left: 20px;

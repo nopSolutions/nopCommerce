@@ -16,7 +16,7 @@
                 @foreach (var lang in Model.AvailableLanguages)
                 {
                     <li>
-                        <a href="@webHelper.ModifyQueryString(Url.RouteUrl("ChangeLanguage", new {langid = lang.Id}, webHelper.CurrentRequestProtocol), "returnurl", WebUtility.UrlEncode(rawUrl))" title="@lang.Name">
+                        <a href="@webHelper.ModifyQueryString(Url.RouteUrl("ChangeLanguage", new {langid = lang.Id}, webHelper.CurrentRequestProtocol), "returnurl", rawUrl)" title="@lang.Name">
                             <img title='@lang.Name' alt='@lang.Name' @(lang.Id == Model.CurrentLanguageId ? " class=selected" : null)
                                  src="@Url.Content("~/images/flags/" + @lang.FlagImageFileName) "/>
                         </a>
@@ -29,7 +29,7 @@
             var languages = Model.AvailableLanguages.Select(lang => new SelectListItem
             {
                 Text = lang.Name,
-                Value = webHelper.ModifyQueryString(Url.RouteUrl("ChangeLanguage", new { langid = lang.Id }, webHelper.CurrentRequestProtocol), "returnurl", WebUtility.UrlEncode(rawUrl)),
+                Value = webHelper.ModifyQueryString(Url.RouteUrl("ChangeLanguage", new { langid = lang.Id }, webHelper.CurrentRequestProtocol), "returnurl", rawUrl),
                 Selected = lang.Id.Equals(Model.CurrentLanguageId)
             });
 

@@ -8,10 +8,22 @@
 }
 
 <div class="panel-group">
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.PaymentMethodListTop, additionalData = Model })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.PaymentMethodRestrictionsTop, additionalData = Model })
     <div class="panel panel-default">
         <div class="panel-body">
-            <p>@T("Admin.Configuration.Payment.MethodRestrictions.Description")</p>
+            <div class="row v-center margin-b-5">
+                <div class="col-sm-10 col-xs-9">
+                    @T("Admin.Configuration.Payment.MethodRestrictions.Description")
+                </div>
+                <div class="col-sm-2 col-xs-3">
+                    <button type="submit" name="save" class="btn bg-blue pull-right">
+                        <i class="fa fa-floppy-o"></i>
+                        @T("Admin.Common.Save")
+                    </button>
+                    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.PaymentsListButtons })
+                </div>
+            </div>
+
             @if (Model.PaymentMethodRestriction.AvailablePaymentMethods.Count == 0)
             {
                 <text>No payment methods installed</text>
@@ -23,17 +35,17 @@
             else
             {
                 <script>
-                            $(document).ready(function () {
-                                @foreach (var pm in Model.PaymentMethodRestriction.AvailablePaymentMethods)
-                                {
-                                    var systemNameWithoutDot = pm.SystemName.Replace(".", "");
-                                    <text>
-                                        $('#selectall-@(systemNameWithoutDot)').click(function () {
-                                            $('.restrict_@(systemNameWithoutDot)').attr('checked', $(this).is(':checked')).change();
-                                        });
-                                    </text>
-                                }
-                            });
+                    $(document).ready(function () {
+                        @foreach (var pm in Model.PaymentMethodRestriction.AvailablePaymentMethods)
+                        {
+                            var systemNameWithoutDot = pm.SystemName.Replace(".", "");
+                            <text>
+                                $('#selectall-@(systemNameWithoutDot)').click(function () {
+                                    $('.restrict_@(systemNameWithoutDot)').attr('checked', $(this).is(':checked')).change();
+                                });
+                            </text>
+                        }
+                    });
                 </script>
                 <table class="table table-hover table-bordered">
                     <tbody>
@@ -75,5 +87,5 @@
             }
         </div>
     </div>
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.PaymentMethodListBottom, additionalData = Model })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.PaymentMethodRestrictionsBottom, additionalData = Model })
 </div>
