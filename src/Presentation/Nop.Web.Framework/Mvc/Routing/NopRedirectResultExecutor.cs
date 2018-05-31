@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Net;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Internal;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Extensions.Logging;
 using Nop.Core.Domain.Security;
@@ -37,7 +38,8 @@ namespace Nop.Web.Framework.Mvc.Routing
         /// </summary>
         /// <param name="context">Action context</param>
         /// <param name="result">Redirect result</param>
-        public override void Execute(ActionContext context, RedirectResult result)
+        /// <returns>Task that represents the asynchronous operation</returns>
+        public override Task ExecuteAsync(ActionContext context, RedirectResult result)
         {
             if (result == null)
                 throw new ArgumentNullException(nameof(result));
@@ -49,7 +51,7 @@ namespace Nop.Web.Framework.Mvc.Routing
                 result.Url = Uri.EscapeUriString(WebUtility.UrlDecode(result.Url));
             }
 
-            base.Execute(context, result);
+            return base.ExecuteAsync(context, result);
         }
 
         #endregion
