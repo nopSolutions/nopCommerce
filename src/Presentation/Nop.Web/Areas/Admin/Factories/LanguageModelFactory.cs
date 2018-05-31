@@ -99,7 +99,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new LanguageListModel
             {
                 //fill in model values from the entity
-                Data = languages.PaginationByRequestModel(searchModel).Select(language => language.ToModel()),
+                Data = languages.PaginationByRequestModel(searchModel).Select(language => language.ToModel(new LanguageModel())),
                 Total = languages.Count
             };
 
@@ -118,7 +118,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (language != null)
             {
                 //fill in model values from the entity
-                model = model ?? language.ToModel();
+                model = model ?? language.ToModel(model);
 
                 //prepare nested search model
                 PrepareLocaleResourceSearchModel(model.LocaleResourceSearchModel, language);

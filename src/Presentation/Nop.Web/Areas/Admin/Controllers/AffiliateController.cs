@@ -102,7 +102,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 var friendlyUrlName = affiliate.ValidateFriendlyUrlName(model.FriendlyUrlName);
                 affiliate.FriendlyUrlName = friendlyUrlName;
 
-                affiliate.Address = model.Address.ToEntity();
+                affiliate.Address = model.Address.ToEntity(affiliate.Address);
                 affiliate.Address.CreatedOnUtc = DateTime.UtcNow;
 
                 //some validation

@@ -104,7 +104,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = vendorAttributes.PaginationByRequestModel(searchModel).Select(attribute =>
                 {
                     //fill in model values from the entity
-                    var attributeModel = attribute.ToModel();
+                    var attributeModel = attribute.ToModel(new VendorAttributeModel());
 
                     //fill in additional values (not existing in the entity)
                     attributeModel.AttributeControlTypeName = attribute.AttributeControlType.GetLocalizedEnum(_localizationService, _workContext);
@@ -132,7 +132,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (vendorAttribute != null)
             {
                 //fill in model values from the entity
-                model = model ?? vendorAttribute.ToModel();
+                model = model ?? vendorAttribute.ToModel(model);
 
                 //prepare nested search model
                 PrepareVendorAttributeValueSearchModel(model.VendorAttributeValueSearchModel, vendorAttribute);

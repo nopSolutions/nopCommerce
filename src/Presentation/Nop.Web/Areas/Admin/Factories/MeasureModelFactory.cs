@@ -105,7 +105,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = dimensions.PaginationByRequestModel(searchModel).Select(dimension =>
                 {
                     //fill in model values from the entity
-                    var dimensionModel = dimension.ToModel();
+                    var dimensionModel = dimension.ToModel(new MeasureDimensionModel());
 
                     //fill in additional values (not existing in the entity)
                     dimensionModel.IsPrimaryDimension = dimension.Id == _measureSettings.BaseDimensionId;
@@ -137,7 +137,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = weights.PaginationByRequestModel(searchModel).Select(weight =>
                 {
                     //fill in model values from the entity
-                    var weightModel = weight.ToModel();
+                    var weightModel = weight.ToModel(new MeasureWeightModel());
 
                     //fill in additional values (not existing in the entity)
                     weightModel.IsPrimaryWeight = weight.Id == _measureSettings.BaseWeightId;

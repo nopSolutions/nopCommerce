@@ -127,7 +127,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                var productAttribute = model.ToEntity();
+                var productAttribute = model.ToEntity(new ProductAttribute());
                 _productAttributeService.InsertProductAttribute(productAttribute);
                 UpdateLocales(productAttribute, model);
 

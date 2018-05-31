@@ -44,7 +44,7 @@ namespace Nop.Web.Areas.Admin.Factories
         {
             //prepare available activity log types
             var availableActivityTypes = _customerActivityService.GetAllActivityTypes();
-            var models = availableActivityTypes.Select(activityType => activityType.ToModel()).ToList();
+            var models = availableActivityTypes.Select(activityType => activityType.ToModel(new ActivityLogTypeModel())).ToList();
 
             return models;
         }
@@ -97,7 +97,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = activityLog.Select(logItem =>
                 {
                     //fill in model values from the entity
-                    var logItemModel = logItem.ToModel();
+                    var logItemModel = logItem.ToModel(new ActivityLogModel());
 
                     //convert dates to the user time
                     logItemModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(logItem.CreatedOnUtc, DateTimeKind.Utc);

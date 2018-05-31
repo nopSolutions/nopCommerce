@@ -28,6 +28,7 @@ using Nop.Services.Seo;
 using Nop.Services.Stores;
 using Nop.Web.Areas.Admin.Extensions;
 using Nop.Web.Areas.Admin.Models.Common;
+using Nop.Web.Areas.Admin.Models.Localization;
 using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Security;
 
@@ -712,9 +713,10 @@ namespace Nop.Web.Areas.Admin.Factories
         {
             var model = new LanguageSelectorModel
             {
-                CurrentLanguage = _workContext.WorkingLanguage.ToModel(),
+                CurrentLanguage = _workContext.WorkingLanguage.ToModel(new LanguageModel()),
                 AvailableLanguages = _languageService
-                    .GetAllLanguages(storeId: _storeContext.CurrentStore.Id).Select(language => language.ToModel()).ToList()
+                    .GetAllLanguages(storeId: _storeContext.CurrentStore.Id)
+                    .Select(language => language.ToModel(new LanguageModel())).ToList()
             };
 
             return model;

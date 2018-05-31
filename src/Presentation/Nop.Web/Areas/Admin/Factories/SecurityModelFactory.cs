@@ -6,6 +6,7 @@ using Nop.Services.Customers;
 using Nop.Services.Localization;
 using Nop.Services.Security;
 using Nop.Web.Areas.Admin.Extensions;
+using Nop.Web.Areas.Admin.Models.Customers;
 using Nop.Web.Areas.Admin.Models.Security;
 
 namespace Nop.Web.Areas.Admin.Factories
@@ -52,7 +53,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(model));
 
             var customerRoles = _customerService.GetAllCustomerRoles(true);
-            model.AvailableCustomerRoles = customerRoles.Select(role => role.ToModel()).ToList();
+            model.AvailableCustomerRoles = customerRoles.Select(role => role.ToModel(new CustomerRoleModel())).ToList();
 
             foreach (var permissionRecord in _permissionService.GetAllPermissionRecords())
             {

@@ -72,7 +72,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new CategoryTemplateListModel
             {
                 //fill in model values from the entity
-                Data = categoryTemplates.PaginationByRequestModel(searchModel).Select(template => template.ToModel()),
+                Data = categoryTemplates.PaginationByRequestModel(searchModel).Select(template => template.ToModel(new CategoryTemplateModel())),
                 Total = categoryTemplates.Count
             };
 
@@ -112,7 +112,8 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new ManufacturerTemplateListModel
             {
                 //fill in model values from the entity
-                Data = manufacturerTemplates.PaginationByRequestModel(searchModel).Select(template => template.ToModel()),
+                Data = manufacturerTemplates.PaginationByRequestModel(searchModel)
+                    .Select(template => template.ToModel(new ManufacturerTemplateModel())),
                 Total = manufacturerTemplates.Count
             };
 
@@ -152,7 +153,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new ProductTemplateListModel
             {
                 //fill in model values from the entity
-                Data = productTemplates.PaginationByRequestModel(searchModel).Select(template => template.ToModel()),
+                Data = productTemplates.PaginationByRequestModel(searchModel).Select(template => template.ToModel(new ProductTemplateModel())),
                 Total = productTemplates.Count
             };
 
@@ -192,7 +193,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new TopicTemplateListModel
             {
                 //fill in model values from the entity
-                Data = topicTemplates.PaginationByRequestModel(searchModel).Select(template => template.ToModel()),
+                Data = topicTemplates.PaginationByRequestModel(searchModel).Select(template => template.ToModel(new TopicTemplateModel())),
                 Total = topicTemplates.Count
             };
 

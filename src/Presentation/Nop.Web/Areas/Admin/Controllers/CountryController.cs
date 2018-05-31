@@ -171,7 +171,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                var country = model.ToEntity();
+                var country = model.ToEntity(new Country());
                 _countryService.InsertCountry(country);
 
                 //activity log
@@ -382,7 +382,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                var sp = model.ToEntity();
+                var sp = model.ToEntity(new StateProvince());
 
                 _stateProvinceService.InsertStateProvince(sp);
 

@@ -109,7 +109,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                var store = model.ToEntity();
+                var store = model.ToEntity(new Store());
 
                 //ensure we have "/" at the end
                 if (!store.Url.EndsWith("/"))

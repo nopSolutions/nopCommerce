@@ -71,7 +71,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = taxProviders.PaginationByRequestModel(searchModel).Select(provider =>
                 {
                     //fill in model values from the entity
-                    var taxProviderModel = provider.ToModel();
+                    var taxProviderModel = provider.ToPluginModel(new TaxProviderModel());
 
                     //fill in additional values (not existing in the entity)
                     taxProviderModel.ConfigurationUrl = provider.GetConfigurationPageUrl();
@@ -119,7 +119,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new TaxCategoryListModel
             {
                 //fill in model values from the entity
-                Data = taxCategories.PaginationByRequestModel(searchModel).Select(taxCategory => taxCategory.ToModel()),
+                Data = taxCategories.PaginationByRequestModel(searchModel).Select(taxCategory => taxCategory.ToModel(new TaxCategoryModel())),
                 Total = taxCategories.Count
             };
 

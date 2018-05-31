@@ -103,7 +103,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = addressAttributes.PaginationByRequestModel(searchModel).Select(attribute =>
                 {
                     //fill in model values from the entity
-                    var attributeModel = attribute.ToModel();
+                    var attributeModel = attribute.ToModel(new AddressAttributeModel());
 
                     //fill in additional values (not existing in the entity)
                     attributeModel.AttributeControlTypeName = attribute.AttributeControlType.GetLocalizedEnum(_localizationService, _workContext);
@@ -131,7 +131,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (addressAttribute != null)
             {
                 //fill in model values from the entity
-                model = model ?? addressAttribute.ToModel();
+                model = model ?? addressAttribute.ToModel(model);
 
                 //prepare nested search model
                 PrepareAddressAttributeValueSearchModel(model.AddressAttributeValueSearchModel, addressAttribute);

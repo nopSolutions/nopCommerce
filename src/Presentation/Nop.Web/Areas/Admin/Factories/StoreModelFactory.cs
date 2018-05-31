@@ -74,7 +74,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new StoreListModel
             {
                 //fill in model values from the entity
-                Data = stores.PaginationByRequestModel(searchModel).Select(store => store.ToModel()),
+                Data = stores.PaginationByRequestModel(searchModel).Select(store => store.ToModel(new StoreModel())),
                 Total = stores.Count
             };
 
@@ -95,7 +95,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (store != null)
             {
                 //fill in model values from the entity
-                model = model ?? store.ToModel();
+                model = model ?? store.ToModel(model);
 
                 //define localized model configuration action
                 localizedModelConfiguration = (locale, languageId) =>

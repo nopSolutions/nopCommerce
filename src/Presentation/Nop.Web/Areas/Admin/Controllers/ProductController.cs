@@ -833,7 +833,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     model.ShowOnHomePage = false;
 
                 //product
-                var product = model.ToEntity();
+                var product = model.ToEntity(new Product());
                 product.CreatedOnUtc = DateTime.UtcNow;
                 product.UpdatedOnUtc = DateTime.UtcNow;
                 _productService.InsertProduct(product);
@@ -3379,7 +3379,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
 
             var productEditorSettings = _settingService.LoadSetting<ProductEditorSettings>();
-            productEditorSettings = model.ProductEditorSettingsModel.ToEntity(productEditorSettings);
+            productEditorSettings = model.ProductEditorSettingsModel.ToSettings(productEditorSettings);
             _settingService.SaveSetting(productEditorSettings);
 
             //product list

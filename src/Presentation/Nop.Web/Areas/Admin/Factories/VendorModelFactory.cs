@@ -283,7 +283,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new VendorListModel
             {
                 //fill in model values from the entity
-                Data = vendors.Select(vendor => vendor.ToModel()),
+                Data = vendors.Select(vendor => vendor.ToModel(new VendorModel())),
                 Total = vendors.TotalCount
             };
 
@@ -304,7 +304,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (vendor != null)
             {
                 //fill in model values from the entity
-                model = model ?? vendor.ToModel();
+                model = model ?? vendor.ToModel(model);
 
                 //define localized model configuration action
                 localizedModelConfiguration = (locale, languageId) =>
@@ -343,7 +343,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare address model
             var address = _addressService.GetAddressById(vendor?.AddressId ?? 0);
             if (!excludeProperties && address != null)
-                model.Address = address.ToModel();
+                model.Address = address.ToModel(model.Address);
             PrepareAddressModel(model.Address, address);
 
             return model;

@@ -232,7 +232,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                var checkoutAttribute = model.ToEntity();
+                var checkoutAttribute = model.ToEntity(new CheckoutAttribute());
                 _checkoutAttributeService.InsertCheckoutAttribute(checkoutAttribute);
 
                 //locales

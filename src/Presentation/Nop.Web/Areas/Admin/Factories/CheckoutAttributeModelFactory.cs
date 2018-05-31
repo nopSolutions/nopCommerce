@@ -172,7 +172,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = checkoutAttributes.PaginationByRequestModel(searchModel).Select(attribute =>
                 {
                     //fill in model values from the entity
-                    var attributeModel = attribute.ToModel();
+                    var attributeModel = attribute.ToModel(new CheckoutAttributeModel());
 
                     //fill in additional values (not existing in the entity)
                     attributeModel.AttributeControlTypeName = attribute.AttributeControlType.GetLocalizedEnum(_localizationService, _workContext);
@@ -200,7 +200,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (checkoutAttribute != null)
             {
                 //fill in model values from the entity
-                model = model ?? checkoutAttribute.ToModel();
+                model = model ?? checkoutAttribute.ToModel(model);
 
                 //prepare nested search model
                 PrepareCheckoutAttributeValueSearchModel(model.CheckoutAttributeValueSearchModel, checkoutAttribute);

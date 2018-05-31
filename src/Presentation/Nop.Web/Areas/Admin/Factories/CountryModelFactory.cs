@@ -100,7 +100,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new CountryListModel
             {
                 //fill in model values from the entity
-                Data = countries.PaginationByRequestModel(searchModel).Select(country => country.ToModel()),
+                Data = countries.PaginationByRequestModel(searchModel).Select(country => country.ToModel(new CountryModel())),
                 Total = countries.Count
             };
 
@@ -121,7 +121,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (country != null)
             {
                 //fill in model values from the entity
-                model = model ?? country.ToModel();
+                model = model ?? country.ToModel(model);
 
                 //prepare nested search model
                 PrepareStateProvinceSearchModel(model.StateProvinceSearchModel, country);
@@ -172,7 +172,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new StateProvinceListModel
             {
                 //fill in model values from the entity
-                Data = states.PaginationByRequestModel(searchModel).Select(state => state.ToModel()),
+                Data = states.PaginationByRequestModel(searchModel).Select(state => state.ToModel(new StateProvinceModel())),
                 Total = states.Count
             };
 
@@ -195,7 +195,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (state != null)
             {
                 //fill in model values from the entity
-                model = model ?? state.ToModel();
+                model = model ?? state.ToModel(model);
 
                 //define localized model configuration action
                 localizedModelConfiguration = (locale, languageId) =>

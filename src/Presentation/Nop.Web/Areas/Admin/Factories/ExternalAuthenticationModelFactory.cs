@@ -70,7 +70,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = externalAuthenticationMethods.PaginationByRequestModel(searchModel).Select(method =>
                 {
                     //fill in model values from the entity
-                    var externalAuthenticationMethodModel = method.ToModel();
+                    var externalAuthenticationMethodModel = method.ToPluginModel(new ExternalAuthenticationMethodModel());
 
                     //fill in additional values (not existing in the entity)
                     externalAuthenticationMethodModel.IsActive = method.IsMethodActive(_externalAuthenticationSettings);

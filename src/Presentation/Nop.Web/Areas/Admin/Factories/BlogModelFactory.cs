@@ -94,7 +94,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = blogPosts.Select(blogPost =>
                 {
                     //fill in model values from the entity
-                    var blogPostModel = blogPost.ToModel();
+                    var blogPostModel = blogPost.ToModel(new BlogPostModel());
 
                     //little performance optimization: ensure that "Body" is not returned
                     blogPostModel.Body = string.Empty;
@@ -131,7 +131,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //fill in model values from the entity
             if (blogPost != null)
             {
-                model = model ?? blogPost.ToModel();
+                model = model ?? blogPost.ToModel(model);
                 model.StartDate = blogPost.StartDateUtc;
                 model.EndDate = blogPost.EndDateUtc;
             }

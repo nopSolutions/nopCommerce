@@ -129,7 +129,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = categories.Select(category =>
                 {
                     //fill in model values from the entity
-                    var categoryModel = category.ToModel();
+                    var categoryModel = category.ToModel(new CategoryModel());
 
                     //fill in additional values (not existing in the entity)
                     categoryModel.Breadcrumb = category.GetFormattedBreadCrumb(_categoryService);
@@ -156,7 +156,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (category != null)
             {
                 //fill in model values from the entity
-                model = model ?? category.ToModel();
+                model = model ?? category.ToModel(model);
 
                 //prepare nested search model
                 PrepareCategoryProductSearchModel(model.CategoryProductSearchModel, category);
@@ -300,7 +300,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new AddProductToCategoryListModel
             {
                 //fill in model values from the entity
-                Data = products.Select(product => product.ToModel()),
+                Data = products.Select(product => product.ToModel(new ProductModel())),
                 Total = products.TotalCount
             };
 

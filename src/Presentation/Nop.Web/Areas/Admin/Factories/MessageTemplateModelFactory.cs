@@ -92,7 +92,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = messageTemplates.PaginationByRequestModel(searchModel).Select(messageTemplate =>
                 {
                     //fill in model values from the entity
-                    var messageTemplateModel = messageTemplate.ToModel();
+                    var messageTemplateModel = messageTemplate.ToModel(new MessageTemplateModel());
 
                     //fill in additional values (not existing in the entity)
                     var storeNames = stores.Select(store => store.Name);
@@ -128,7 +128,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (messageTemplate != null)
             {
                 //fill in model values from the entity
-                model = model ?? messageTemplate.ToModel();
+                model = model ?? messageTemplate.ToModel(model);
 
                 //define localized model configuration action
                 localizedModelConfiguration = (locale, languageId) =>

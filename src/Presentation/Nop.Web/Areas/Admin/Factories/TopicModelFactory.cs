@@ -106,7 +106,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = topics.PaginationByRequestModel(searchModel).Select(topic =>
                 {
                     //fill in model values from the entity
-                    var topicModel = topic.ToModel();
+                    var topicModel = topic.ToModel(new TopicModel());
 
                     //little performance optimization: ensure that "Body" is not returned
                     topicModel.Body = string.Empty;
@@ -133,7 +133,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (topic != null)
             {
                 //fill in model values from the entity
-                model = model ?? topic.ToModel();
+                model = model ?? topic.ToModel(model);
 
                 model.Url = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext)
                     .RouteUrl("Topic", new { SeName = topic.GetSeName() }, _webHelper.CurrentRequestProtocol);

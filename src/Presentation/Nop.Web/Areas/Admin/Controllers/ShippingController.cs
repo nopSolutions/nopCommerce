@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
+using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Plugins;
 using Nop.Services.Common;
@@ -277,7 +278,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                var sm = model.ToEntity();
+                var sm = model.ToEntity(new ShippingMethod());
                 _shippingService.InsertShippingMethod(sm);
 
                 //locales
@@ -409,7 +410,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                var deliveryDate = model.ToEntity();
+                var deliveryDate = model.ToEntity(new DeliveryDate());
                 _dateRangeService.InsertDeliveryDate(deliveryDate);
 
                 //locales
@@ -527,7 +528,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                var productAvailabilityRange = model.ToEntity();
+                var productAvailabilityRange = model.ToEntity(new ProductAvailabilityRange());
                 _dateRangeService.InsertProductAvailabilityRange(productAvailabilityRange);
 
                 //locales
@@ -656,7 +657,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                var address = model.Address.ToEntity();
+                var address = model.Address.ToEntity(new Address());
                 address.CreatedOnUtc = DateTime.UtcNow;
                 _addressService.InsertAddress(address);
 

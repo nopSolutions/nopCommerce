@@ -199,7 +199,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     Id = affiliate.Id,
                     Active = affiliate.Active,
-                    Address = affiliate.Address.ToModel()
+                    Address = affiliate.Address.ToModel(new AddressModel())
                 }),
                 Total = affiliates.TotalCount
             };
@@ -233,7 +233,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     model.AdminComment = affiliate.AdminComment;
                     model.FriendlyUrlName = affiliate.FriendlyUrlName;
                     model.Active = affiliate.Active;
-                    model.Address = affiliate.Address.ToModel();
+                    model.Address = affiliate.Address.ToModel(model.Address);
                 }
             }
 

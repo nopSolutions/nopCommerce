@@ -237,7 +237,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                var manufacturer = model.ToEntity();
+                var manufacturer = model.ToEntity(new Manufacturer());
                 manufacturer.CreatedOnUtc = DateTime.UtcNow;
                 manufacturer.UpdatedOnUtc = DateTime.UtcNow;
                 _manufacturerService.InsertManufacturer(manufacturer);

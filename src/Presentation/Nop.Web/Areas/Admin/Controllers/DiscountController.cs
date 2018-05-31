@@ -135,7 +135,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                var discount = model.ToEntity();
+                var discount = model.ToEntity(new Discount());
                 _discountService.InsertDiscount(discount);
 
                 //activity log

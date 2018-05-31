@@ -33,6 +33,7 @@ using Nop.Services.Themes;
 using Nop.Web.Areas.Admin.Extensions;
 using Nop.Web.Areas.Admin.Models.Common;
 using Nop.Web.Areas.Admin.Models.Settings;
+using Nop.Web.Areas.Admin.Models.Stores;
 using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Security.Captcha;
 
@@ -212,7 +213,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var addressSettings = _settingService.LoadSetting<AddressSettings>(storeId);
 
             //fill in model values from the entity
-            var model = addressSettings.ToModel();
+            var model = addressSettings.ToSettingsModel(new AddressSettingsModel());
 
             return model;
         }
@@ -228,7 +229,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var customerSettings = _settingService.LoadSetting<CustomerSettings>(storeId);
 
             //fill in model values from the entity
-            var model = customerSettings.ToModel();
+            var model = customerSettings.ToSettingsModel(new CustomerSettingsModel());
 
             return model;
         }
@@ -431,7 +432,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var captchaSettings = _settingService.LoadSetting<CaptchaSettings>(storeId);
 
             //fill in model values from the entity
-            var model = captchaSettings.ToModel();
+            var model = captchaSettings.ToSettingsModel(new CaptchaSettingsModel());
 
             return model;
         }
@@ -647,7 +648,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var blogSettings = _settingService.LoadSetting<BlogSettings>(storeId);
 
             //fill in model values from the entity
-            var model = blogSettings.ToModel();
+            var model = blogSettings.ToSettingsModel(new BlogSettingsModel());
 
             //fill in additional values (not existing in the entity)
             model.ActiveStoreScopeConfiguration = storeId;
@@ -678,7 +679,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var vendorSettings = _settingService.LoadSetting<VendorSettings>(storeId);
 
             //fill in model values from the entity
-            var model = vendorSettings.ToModel();
+            var model = vendorSettings.ToSettingsModel(new VendorSettingsModel());
 
             //fill in additional values (not existing in the entity)
             model.ActiveStoreScopeConfiguration = storeId;
@@ -716,7 +717,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var forumSettings = _settingService.LoadSetting<ForumSettings>(storeId);
 
             //fill in model values from the entity
-            var model = forumSettings.ToModel();
+            var model = forumSettings.ToSettingsModel(new ForumSettingsModel());
 
             //fill in additional values (not existing in the entity)
             model.ActiveStoreScopeConfiguration = storeId;
@@ -764,7 +765,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var newsSettings = _settingService.LoadSetting<NewsSettings>(storeId);
 
             //fill in model values from the entity
-            var model = newsSettings.ToModel();
+            var model = newsSettings.ToSettingsModel(new NewsSettingsModel());
 
             //fill in additional values (not existing in the entity)
             model.ActiveStoreScopeConfiguration = storeId;
@@ -796,7 +797,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var shippingSettings = _settingService.LoadSetting<ShippingSettings>(storeId);
 
             //fill in model values from the entity
-            var model = shippingSettings.ToModel();
+            var model = shippingSettings.ToSettingsModel(new ShippingSettingsModel());
 
             //fill in additional values (not existing in the entity)
             model.ActiveStoreScopeConfiguration = storeId;
@@ -826,7 +827,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare shipping origin address
             var originAddress = _addressService.GetAddressById(shippingSettings.ShippingOriginAddressId);
             if (originAddress != null)
-                model.ShippingOriginAddress = originAddress.ToModel();
+                model.ShippingOriginAddress = originAddress.ToModel(model.ShippingOriginAddress);
             PrepareAddressModel(model.ShippingOriginAddress, originAddress);
 
             return model;
@@ -843,7 +844,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var taxSettings = _settingService.LoadSetting<TaxSettings>(storeId);
 
             //fill in model values from the entity
-            var model = taxSettings.ToModel();
+            var model = taxSettings.ToSettingsModel(new TaxSettingsModel());
             model.TaxBasedOnValues = taxSettings.TaxBasedOn.ToSelectList();
             model.TaxDisplayTypeValues = taxSettings.TaxDisplayType.ToSelectList();
 
@@ -888,7 +889,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare default tax address
             var defaultAddress = _addressService.GetAddressById(taxSettings.DefaultTaxAddressId);
             if (defaultAddress != null)
-                model.DefaultTaxAddress = defaultAddress.ToModel();
+                model.DefaultTaxAddress = defaultAddress.ToModel(model.DefaultTaxAddress);
             PrepareAddressModel(model.DefaultTaxAddress, defaultAddress);
 
             return model;
@@ -905,7 +906,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var catalogSettings = _settingService.LoadSetting<CatalogSettings>(storeId);
 
             //fill in model values from the entity
-            var model = catalogSettings.ToModel();
+            var model = catalogSettings.ToSettingsModel(new CatalogSettingsModel());
 
             //fill in additional values (not existing in the entity)
             model.ActiveStoreScopeConfiguration = storeId;
@@ -1049,7 +1050,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var rewardPointsSettings = _settingService.LoadSetting<RewardPointsSettings>(storeId);
 
             //fill in model values from the entity
-            var model = rewardPointsSettings.ToModel();
+            var model = rewardPointsSettings.ToSettingsModel(new RewardPointsSettingsModel());
 
             //fill in additional values (not existing in the entity)
             model.ActiveStoreScopeConfiguration = storeId;
@@ -1088,7 +1089,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var orderSettings = _settingService.LoadSetting<OrderSettings>(storeId);
 
             //fill in model values from the entity
-            var model = orderSettings.ToModel();
+            var model = orderSettings.ToSettingsModel(new OrderSettingsModel());
 
             //fill in additional values (not existing in the entity)
             model.ActiveStoreScopeConfiguration = storeId;
@@ -1142,7 +1143,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var shoppingCartSettings = _settingService.LoadSetting<ShoppingCartSettings>(storeId);
 
             //fill in model values from the entity
-            var model = shoppingCartSettings.ToModel();
+            var model = shoppingCartSettings.ToSettingsModel(new ShoppingCartSettingsModel());
 
             //fill in additional values (not existing in the entity)
             model.ActiveStoreScopeConfiguration = storeId;
@@ -1184,7 +1185,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var mediaSettings = _settingService.LoadSetting<MediaSettings>(storeId);
 
             //fill in model values from the entity
-            var model = mediaSettings.ToModel();
+            var model = mediaSettings.ToSettingsModel(new MediaSettingsModel());
 
             //fill in additional values (not existing in the entity)
             model.ActiveStoreScopeConfiguration = storeId;
@@ -1254,7 +1255,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var gdprSettings = _settingService.LoadSetting<GdprSettings>(storeId);
 
             //fill in model values from the entity
-            var model = gdprSettings.ToModel();
+            var model = gdprSettings.ToSettingsModel(new GdprSettingsModel());
 
             //fill in additional values (not existing in the entity)
             model.ActiveStoreScopeConfiguration = storeId;
@@ -1289,7 +1290,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare list model
             var model = new GdprConsentListModel
             {
-                Data = consentList.PaginationByRequestModel(searchModel).Select(consent => consent.ToModel()).ToList(),
+                Data = consentList.PaginationByRequestModel(searchModel).Select(consent => consent.ToModel(new GdprConsentModel())).ToList(),
                 Total = consentList.Count
             };
 
@@ -1307,7 +1308,7 @@ namespace Nop.Web.Areas.Admin.Factories
         {
             //fill in model values from the entity
             if (gdprConsent != null)
-                model = model ?? gdprConsent.ToModel();
+                model = model ?? gdprConsent.ToModel(model);
 
             //set default values for the new model
             if (gdprConsent == null)
@@ -1371,7 +1372,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var productEditorSettings = _settingService.LoadSetting<ProductEditorSettings>(storeId);
 
             //fill in model values from the entity
-            var model = productEditorSettings.ToModel();
+            var model = productEditorSettings.ToSettingsModel(new ProductEditorSettingsModel());
 
             return model;
         }
@@ -1464,7 +1465,7 @@ namespace Nop.Web.Areas.Admin.Factories
         {
             var model = new StoreScopeConfigurationModel
             {
-                Stores = _storeService.GetAllStores().Select(store => store.ToModel()).ToList(),
+                Stores = _storeService.GetAllStores().Select(store => store.ToModel(new StoreModel())).ToList(),
                 StoreId = _storeContext.ActiveStoreScopeConfiguration
             };
 

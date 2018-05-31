@@ -7,6 +7,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Web.Areas.Admin.Extensions;
+using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Web.Areas.Admin.Models.Customers;
 using Nop.Web.Framework.Extensions;
 
@@ -78,7 +79,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = customerRoles.PaginationByRequestModel(searchModel).Select(role =>
                 {
                     //fill in model values from the entity
-                    var customerRoleModel = role.ToModel();
+                    var customerRoleModel = role.ToModel(new CustomerRoleModel());
 
                     //fill in additional values (not existing in the entity)
                     customerRoleModel.PurchasedWithProductName = _productService.GetProductById(role.PurchasedWithProductId)?.Name;
@@ -103,7 +104,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (customerRole != null)
             {
                 //fill in model values from the entity
-                model = model ?? customerRole.ToModel();
+                model = model ?? customerRole.ToModel(model);
                 model.PurchasedWithProductName = _productService.GetProductById(customerRole.PurchasedWithProductId)?.Name;
             }
 
@@ -179,7 +180,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new CustomerRoleProductListModel
             {
                 //fill in model values from the entity
-                Data = products.Select(product => product.ToModel()),
+                Data = products.Select(product => product.ToModel(new ProductModel())),
                 Total = products.TotalCount
             };
 

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Vendors;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -252,7 +253,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                var vendor = model.ToEntity();
+                var vendor = model.ToEntity(new Vendor());
                 _vendorService.InsertVendor(vendor);
 
                 //activity log
@@ -264,7 +265,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _urlRecordService.SaveSlug(vendor, model.SeName, 0);
 
                 //address
-                var address = model.Address.ToEntity();
+                var address = model.Address.ToEntity(new Address());
                 address.CreatedOnUtc = DateTime.UtcNow;
 
                 //some validation
@@ -356,7 +357,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 var address = _addressService.GetAddressById(vendor.AddressId);
                 if (address == null)
                 {
-                    address = model.Address.ToEntity();
+                    address = model.Address.ToEntity(address);
                     address.CreatedOnUtc = DateTime.UtcNow;
 
                     //some validation

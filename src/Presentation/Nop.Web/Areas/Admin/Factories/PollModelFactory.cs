@@ -111,7 +111,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = polls.Select(poll =>
                 {
                     //fill in model values from the entity
-                    var pollModel = poll.ToModel();
+                    var pollModel = poll.ToModel(new PollModel());
 
                     //convert dates to the user time
                     if (poll.StartDateUtc.HasValue)
@@ -142,7 +142,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (poll != null)
             {
                 //fill in model values from the entity
-                model = model ?? poll.ToModel();
+                model = model ?? poll.ToModel(model);
 
                 model.StartDate = poll.StartDateUtc;
                 model.EndDate = poll.EndDateUtc;

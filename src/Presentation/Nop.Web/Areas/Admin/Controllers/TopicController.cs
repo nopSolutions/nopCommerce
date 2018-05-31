@@ -205,7 +205,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 if (!model.IsPasswordProtected)
                     model.Password = null;
 
-                var topic = model.ToEntity();
+                var topic = model.ToEntity(new Topic());
                 _topicService.InsertTopic(topic);
 
                 //search engine name

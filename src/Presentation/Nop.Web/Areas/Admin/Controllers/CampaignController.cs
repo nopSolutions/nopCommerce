@@ -124,7 +124,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                var campaign = model.ToEntity();
+                var campaign = model.ToEntity(new Campaign());
 
                 campaign.CreatedOnUtc = DateTime.UtcNow;
                 campaign.DontSendBeforeDateUtc = model.DontSendBeforeDate.HasValue ?

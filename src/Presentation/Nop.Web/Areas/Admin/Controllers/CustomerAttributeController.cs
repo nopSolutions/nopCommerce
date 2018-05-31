@@ -121,7 +121,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                var customerAttribute = model.ToEntity();
+                var customerAttribute = model.ToEntity(new CustomerAttribute());
                 _customerAttributeService.InsertCustomerAttribute(customerAttribute);
 
                 //activity log

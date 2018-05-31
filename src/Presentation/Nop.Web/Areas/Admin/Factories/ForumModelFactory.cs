@@ -92,7 +92,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = forumGroups.PaginationByRequestModel(searchModel).Select(forumGroup =>
                 {
                     //fill in model values from the entity
-                    var forumGroupModel = forumGroup.ToModel();
+                    var forumGroupModel = forumGroup.ToModel(new ForumGroupModel());
 
                     //convert dates to the user time
                     forumGroupModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(forumGroup.CreatedOnUtc, DateTimeKind.Utc);
@@ -116,7 +116,7 @@ namespace Nop.Web.Areas.Admin.Factories
         {
             //fill in model values from the entity
             if (forumGroup != null)
-                model = model ?? forumGroup.ToModel();
+                model = model ?? forumGroup.ToModel(model);
 
             //set default values for the new model
             if (forumGroup == null)
@@ -148,7 +148,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = forums.PaginationByRequestModel(searchModel).Select(forum =>
                 {
                     //fill in model values from the entity
-                    var forumModel = forum.ToModel();
+                    var forumModel = forum.ToModel(new ForumModel());
 
                     //convert dates to the user time
                     forumModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(forum.CreatedOnUtc, DateTimeKind.Utc);
@@ -172,7 +172,7 @@ namespace Nop.Web.Areas.Admin.Factories
         {
             //fill in model values from the entity
             if (forum != null)
-                model = model ?? forum.ToModel();
+                model = model ?? forum.ToModel(model);
 
             //set default values for the new model
             if (forum == null)
@@ -181,8 +181,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare available forum groups
             foreach (var forumGroup in _forumService.GetAllForumGroups())
             {
-                var forumGroupModel = forumGroup.ToModel();
-                model.ForumGroups.Add(forumGroupModel);
+                model.ForumGroups.Add(forumGroup.ToModel(new ForumGroupModel()));
             }
 
             return model;

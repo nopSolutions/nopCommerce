@@ -209,7 +209,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                var currency = model.ToEntity();
+                var currency = model.ToEntity(new Currency());
                 currency.CreatedOnUtc = DateTime.UtcNow;
                 currency.UpdatedOnUtc = DateTime.UtcNow;
                 _currencyService.InsertCurrency(currency);

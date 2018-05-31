@@ -120,7 +120,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                var giftCard = model.ToEntity();
+                var giftCard = model.ToEntity(new GiftCard());
                 giftCard.CreatedOnUtc = DateTime.UtcNow;
                 _giftCardService.InsertGiftCard(giftCard);
 
@@ -220,7 +220,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (giftCard == null)
                 return RedirectToAction("List");
 
-            model = giftCard.ToModel();
+            model = giftCard.ToModel(model);
             model.PurchasedWithOrderId = giftCard.PurchasedWithOrderItem != null ? (int?)giftCard.PurchasedWithOrderItem.OrderId : null;
             model.RemainingAmountStr = _priceFormatter.FormatPrice(giftCard.GetGiftCardRemainingAmount(), true, false);
             model.AmountStr = _priceFormatter.FormatPrice(giftCard.Amount, true, false);
