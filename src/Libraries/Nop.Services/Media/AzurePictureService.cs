@@ -13,7 +13,6 @@ using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Services.Configuration;
 using Nop.Services.Events;
-using Nop.Services.Logging;
 
 namespace Nop.Services.Media
 {
@@ -57,7 +56,6 @@ namespace Nop.Services.Media
         /// <param name="productPictureRepository">Product picture repository</param>
         /// <param name="settingService">Setting service</param>
         /// <param name="webHelper">Web helper</param>
-        /// <param name="logger">Logger</param>
         /// <param name="dbContext">Database context</param>
         /// <param name="eventPublisher">Event publisher</param>
         /// <param name="cacheManager">Cache manager</param>
@@ -65,28 +63,29 @@ namespace Nop.Services.Media
         /// <param name="config">Config</param>
         /// <param name="dataProvider">Data provider</param>
         /// <param name="fileProvider">File provider</param>
+        /// <param name="pictureBinaryRepository">PictureBinary repository</param>
         public AzurePictureService(IRepository<Picture> pictureRepository,
             IRepository<ProductPicture> productPictureRepository,
             ISettingService settingService,
             IWebHelper webHelper,
-            ILogger logger,
             IDbContext dbContext,
             IEventPublisher eventPublisher,
             IStaticCacheManager cacheManager,
             MediaSettings mediaSettings,
             NopConfig config,
             IDataProvider dataProvider,
-            INopFileProvider fileProvider)
+            INopFileProvider fileProvider,
+            IRepository<PictureBinary> pictureBinaryRepository)
             : base(pictureRepository,
                 productPictureRepository,
                 settingService,
                 webHelper,
-                logger,
                 dbContext,
                 eventPublisher,
                 mediaSettings,
                 dataProvider,
-                fileProvider)
+                fileProvider,
+                pictureBinaryRepository)
         {
             this._cacheManager = cacheManager;
             this._mediaSettings = mediaSettings;

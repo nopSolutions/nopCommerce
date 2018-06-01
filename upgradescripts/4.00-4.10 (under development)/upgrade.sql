@@ -2917,3 +2917,36 @@ BEGIN
 	VALUES (N'captchasettings.automaticallychooselanguage', N'True', 0)
 END
 GO
+
+ --new table
+IF NOT EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[PictureBinary]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
+BEGIN
+
+EXEC('CREATE TABLE [dbo].[PictureBinary]
+    (
+		[Id] int IDENTITY(1,1) NOT NULL,
+		[PictureId] int NOT NULL,
+		[BinaryData] [varbinary](max) NULL,		
+		PRIMARY KEY CLUSTERED 
+		(
+			[Id] ASC
+		) WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON)
+	)
+
+   --copy existing data
+	INSERT INTO [dbo].[PictureBinary](PictureId, BinaryData)
+	SELECT [Id], [PictureBinary] FROM [dbo].[Picture]
+
+	ALTER TABLE dbo.Picture	DROP COLUMN [PictureBinary]')	
+
+END
+GO
+
+IF EXISTS (SELECT *  FROM sys.foreign_keys  WHERE object_id = OBJECT_ID(N'FK_PictureBinary_Picture_PictureId') AND parent_object_id = OBJECT_ID(N'PictureBinary'))
+	ALTER TABLE [PictureBinary] DROP CONSTRAINT [FK_PictureBinary_Picture_PictureId]
+GO
+
+ALTER TABLE [dbo].[PictureBinary] WITH CHECK ADD CONSTRAINT [FK_PictureBinary_Picture_PictureId] FOREIGN KEY(PictureId)
+REFERENCES [dbo].[Picture] ([Id])
+ON DELETE CASCADE
+GO
