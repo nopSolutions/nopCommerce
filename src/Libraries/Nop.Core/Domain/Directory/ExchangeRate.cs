@@ -37,7 +37,7 @@ namespace Nop.Core.Domain.Directory
         /// <returns></returns>
         public override string ToString()
         {
-            return $"{this.CurrencyCode} {this.Rate}";
+            return $"{CurrencyCode} {Rate}";
         }
     }
 }

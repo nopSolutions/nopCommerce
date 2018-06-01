@@ -1,21 +1,32 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Tasks;
 
 namespace Nop.Data.Mapping.Tasks
 {
     /// <summary>
-    /// Mapping class
+    /// Represents a schedule task mapping configuration
     /// </summary>
     public partial class ScheduleTaskMap : NopEntityTypeConfiguration<ScheduleTask>
     {
+        #region Methods
+
         /// <summary>
-        /// Ctor
+        /// Configures the entity
         /// </summary>
-        public ScheduleTaskMap()
+        /// <param name="builder">The builder to be used to configure the entity</param>
+        public override void Configure(EntityTypeBuilder<ScheduleTask> builder)
         {
-            this.ToTable("ScheduleTask");
-            this.HasKey(t => t.Id);
-            this.Property(t => t.Name).IsRequired();
-            this.Property(t => t.Type).IsRequired();
+            builder.ToTable(nameof(ScheduleTask));
+            builder.HasKey(task => task.Id);
+
+            builder.Property(task => task.Name).IsRequired();
+            builder.Property(task => task.Type).IsRequired();
+
+            //add custom configuration
+            this.PostConfigure(builder);
         }
+
+        #endregion
     }
 }

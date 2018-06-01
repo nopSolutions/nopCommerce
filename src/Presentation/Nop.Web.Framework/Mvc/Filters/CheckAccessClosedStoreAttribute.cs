@@ -103,7 +103,7 @@ namespace Nop.Web.Framework.Mvc.Filters
                 if (actionFilter?.IgnoreFilter ?? _ignoreFilter)
                     return;
 
-                if (!DataSettingsHelper.DatabaseIsInstalled())
+                if (!DataSettingsManager.DatabaseIsInstalled)
                     return;
 
                 //store isn't closed

@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.Linq.Expressions;
 using System.Reflection;
 using Nop.Core;
@@ -7,7 +8,7 @@ using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Security;
 using Nop.Core.Infrastructure;
 using Nop.Core.Plugins;
-using Nop.Data;
+using Nop.Data.Extensions;
 using Nop.Services.Configuration;
 
 namespace Nop.Services.Localization
@@ -84,7 +85,7 @@ namespace Nop.Services.Localization
             var result = default(TPropType);
             var resultStr = string.Empty;
 
-            var localeKeyGroup = entity.GetUnproxiedEntityType().Name;
+            var localeKeyGroup = entity.GetType().BaseType.Name;
             var localeKey = propInfo.Name;
 
             if (languageId > 0)
@@ -520,6 +521,27 @@ namespace Nop.Services.Localization
                 };
                 localizationService.InsertLocaleStringResource(resource);
             }
+        }
+
+        /// <summary>
+        /// Get 2 letter ISO language code
+        /// </summary>
+        /// <param name="language"></param>
+        /// <returns></returns>
+        public static string GetTwoLetterIsoLanguageName(this Language language)
+        {
+            if (language == null)
+                throw new ArgumentNullException(nameof(language));
+
+            if (string.IsNullOrEmpty(language.LanguageCulture))
+                return "en";
+
+            var culture = new CultureInfo(language.LanguageCulture);
+            var code = culture.TwoLetterISOLanguageName;
+            if (String.IsNullOrEmpty(code))
+                return "en";
+
+            return code;
         }
     }
 }

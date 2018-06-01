@@ -55,7 +55,7 @@ namespace Nop.Services.Directory
         /// <param name="storeMappingRepository">Store mapping repository</param>
         /// <param name="storeContext">Store context</param>
         /// <param name="catalogSettings">Catalog settings</param>
-        /// <param name="eventPublisher">Event published</param>
+        /// <param name="eventPublisher">Event publisher</param>
         public CountryService(ICacheManager cacheManager,
             IRepository<Country> countryRepository,
             IRepository<StoreMapping> storeMappingRepository,
@@ -118,14 +118,8 @@ namespace Nop.Services.Directory
                             from sc in c_sc.DefaultIfEmpty()
                             where !c.LimitedToStores || currentStoreId == sc.StoreId
                             select c;
-
-                    //only distinct entities (group by ID)
-                    query = from c in query
-                            group c by c.Id
-                                into cGroup
-                                orderby cGroup.Key
-                                select cGroup.FirstOrDefault();
-                    query = query.OrderBy(c => c.DisplayOrder).ThenBy(c => c.Name);
+                    
+                    query = query.Distinct().OrderBy(c => c.DisplayOrder).ThenBy(c => c.Name);
                 }
 
                 var countries = query.ToList();

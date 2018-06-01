@@ -23,7 +23,7 @@ namespace Nop.Core
         {
             if (str == null)
                 return null;
-            str = Regex.Replace(str, @"[^\u0009\u000A\u000D\u0020-\uD7FF\uE000-\uFFFD]", "", RegexOptions.Compiled);
+            str = Regex.Replace(str, @"[^\u0009\u000A\u000D\u0020-\uD7FF\uE000-\uFFFD]", string.Empty, RegexOptions.Compiled);
             return XmlEncodeAsIs(str);
         }
 
@@ -53,7 +53,7 @@ namespace Nop.Core
         {
             if (str == null)
                 return null;
-            str = Regex.Replace(str, @"[^\u0009\u000A\u000D\u0020-\uD7FF\uE000-\uFFFD]", "", RegexOptions.Compiled);
+            str = Regex.Replace(str, @"[^\u0009\u000A\u000D\u0020-\uD7FF\uE000-\uFFFD]", string.Empty, RegexOptions.Compiled);
             return XmlEncodeAttributeAsIs(str);
         }
 

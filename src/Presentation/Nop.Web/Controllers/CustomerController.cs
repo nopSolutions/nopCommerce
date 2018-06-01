@@ -10,9 +10,11 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Forums;
+using Nop.Core.Domain.Gdpr;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Messages;
+using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Tax;
 using Nop.Services.Authentication;
 using Nop.Services.Authentication.External;
@@ -20,6 +22,8 @@ using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Events;
+using Nop.Services.ExportImport;
+using Nop.Services.Gdpr;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
@@ -54,6 +58,8 @@ namespace Nop.Web.Controllers
         private readonly ICustomerService _customerService;
         private readonly ICustomerAttributeParser _customerAttributeParser;
         private readonly ICustomerAttributeService _customerAttributeService;
+        private readonly IExportManager _exportManager;
+        private readonly IGdprService _gdprService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ICustomerRegistrationService _customerRegistrationService;
         private readonly ITaxService _taxService;
@@ -77,6 +83,7 @@ namespace Nop.Web.Controllers
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly LocalizationSettings _localizationSettings;
         private readonly CaptchaSettings _captchaSettings;
+        private readonly GdprSettings _gdprSettings;
         private readonly StoreInformationSettings _storeInformationSettings;
 
         #endregion
@@ -94,6 +101,8 @@ namespace Nop.Web.Controllers
             ICustomerService customerService,
             ICustomerAttributeParser customerAttributeParser,
             ICustomerAttributeService customerAttributeService,
+            IExportManager exportManager,
+            IGdprService gdprService,
             IGenericAttributeService genericAttributeService,
             ICustomerRegistrationService customerRegistrationService,
             ITaxService taxService,
@@ -116,6 +125,7 @@ namespace Nop.Web.Controllers
             IWorkflowMessageService workflowMessageService,
             LocalizationSettings localizationSettings,
             CaptchaSettings captchaSettings,
+            GdprSettings gdprSettings,
             StoreInformationSettings storeInformationSettings)
         {
             this._addressModelFactory = addressModelFactory;
@@ -129,6 +139,8 @@ namespace Nop.Web.Controllers
             this._customerService = customerService;
             this._customerAttributeParser = customerAttributeParser;
             this._customerAttributeService = customerAttributeService;
+            this._exportManager = exportManager;
+            this._gdprService = gdprService;
             this._genericAttributeService = genericAttributeService;
             this._customerRegistrationService = customerRegistrationService;
             this._taxService = taxService;
@@ -151,6 +163,7 @@ namespace Nop.Web.Controllers
             this._workflowMessageService = workflowMessageService;
             this._localizationSettings = localizationSettings;
             this._captchaSettings = captchaSettings;
+            this._gdprSettings = gdprSettings;
             this._storeInformationSettings = storeInformationSettings;
         }
 
@@ -188,8 +201,7 @@ namespace Nop.Web.Controllers
                             var cblAttributes = form[controlId];
                             if (!StringValues.IsNullOrEmpty(cblAttributes))
                             {
-                                foreach (var item in cblAttributes.ToString().Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                                )
+                                foreach (var item in cblAttributes.ToString().Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                                 {
                                     var selectedAttributeId = int.Parse(item);
                                     if (selectedAttributeId > 0)
@@ -237,7 +249,7 @@ namespace Nop.Web.Controllers
 
             return attributesXml;
         }
-
+        
         #endregion
 
         #region Methods
@@ -657,6 +669,12 @@ namespace Nop.Web.Controllers
                             {
                                 newsletter.Active = true;
                                 _newsLetterSubscriptionService.UpdateNewsLetterSubscription(newsletter);
+
+                                //GDPR
+                                if (_gdprSettings.GdprEnabled && _gdprSettings.LogNewsletterConsent)
+                                {
+                                    _gdprService.InsertLog(customer, 0, GdprRequestType.ConsentAgree, _localizationService.GetResource("Gdpr.Consent.Newsletter"));
+                                }
                             }
                             //else
                             //{
@@ -676,6 +694,43 @@ namespace Nop.Web.Controllers
                                     StoreId = _storeContext.CurrentStore.Id,
                                     CreatedOnUtc = DateTime.UtcNow
                                 });
+
+                                //GDPR
+                                if (_gdprSettings.GdprEnabled && _gdprSettings.LogNewsletterConsent)
+                                {
+                                    _gdprService.InsertLog(customer, 0, GdprRequestType.ConsentAgree, _localizationService.GetResource("Gdpr.Consent.Newsletter"));
+                                }
+                            }
+                        }
+                    }
+
+                    if (_customerSettings.AcceptPrivacyPolicyEnabled)
+                    {
+                        //privacy policy is required
+                        //GDPR
+                        if (_gdprSettings.GdprEnabled && _gdprSettings.LogPrivacyPolicyConsent)
+                        {
+                            _gdprService.InsertLog(customer, 0, GdprRequestType.ConsentAgree, _localizationService.GetResource("Gdpr.Consent.PrivacyPolicy"));
+                        }
+                    }
+
+                    //GDPR
+                    if (_gdprSettings.GdprEnabled)
+                    {
+                        var consents = _gdprService.GetAllConsents().Where(consent => consent.DisplayDuringRegistration).ToList();
+                        foreach (var consent in consents)
+                        {
+                            var controlId = $"consent{consent.Id}";
+                            var cbConsent = model.Form[controlId];
+                            if (!StringValues.IsNullOrEmpty(cbConsent) && cbConsent.ToString().Equals("on"))
+                            {
+                                //agree
+                                _gdprService.InsertLog(customer, consent.Id, GdprRequestType.ConsentAgree, consent.Message);
+                            }
+                            else
+                            {
+                                //disagree
+                                _gdprService.InsertLog(customer, consent.Id, GdprRequestType.ConsentDisagree, consent.Message);
                             }
                         }
                     }
@@ -717,7 +772,8 @@ namespace Nop.Web.Controllers
                         if (defaultAddress.StateProvinceId == 0)
                             defaultAddress.StateProvinceId = null;
                         //set default address
-                        customer.Addresses.Add(defaultAddress);
+                        //customer.Addresses.Add(defaultAddress);
+                        customer.CustomerAddressMappings.Add(new CustomerAddressMapping { Address = defaultAddress });
                         customer.BillingAddress = defaultAddress;
                         customer.ShippingAddress = defaultAddress;
                         _customerService.UpdateCustomer(customer);
@@ -753,9 +809,9 @@ namespace Nop.Web.Controllers
                                 //send customer welcome message
                                 _workflowMessageService.SendCustomerWelcomeMessage(customer, _workContext.WorkingLanguage.Id);
 
-                                var redirectUrl = Url.RouteUrl("RegisterResult", new { resultId = (int)UserRegistrationType.Standard });
+                                var redirectUrl = Url.RouteUrl("RegisterResult", new { resultId = (int)UserRegistrationType.Standard }, _webHelper.CurrentRequestProtocol);
                                 if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
-                                    redirectUrl = _webHelper.ModifyQueryString(redirectUrl, "returnurl=" + WebUtility.UrlEncode(returnUrl), null);
+                                    redirectUrl = _webHelper.ModifyQueryString(redirectUrl, "returnurl", returnUrl);
                                 return Redirect(redirectUrl);
                             }
                         default:
@@ -990,17 +1046,31 @@ namespace Nop.Web.Controllers
                     if (_customerSettings.NewsletterEnabled)
                     {
                         //save newsletter value
-                        var newsletter =
-                            _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreId(customer.Email, _storeContext.CurrentStore.Id);
+                        var newsletter = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreId(customer.Email, _storeContext.CurrentStore.Id);
                         if (newsletter != null)
                         {
                             if (model.Newsletter)
                             {
+                                var wasActive = newsletter.Active;
                                 newsletter.Active = true;
                                 _newsLetterSubscriptionService.UpdateNewsLetterSubscription(newsletter);
+
+                                //GDPR
+                                if (!wasActive && _gdprSettings.GdprEnabled && _gdprSettings.LogNewsletterConsent)
+                                {
+                                    _gdprService.InsertLog(customer, 0, GdprRequestType.ConsentAgree, _localizationService.GetResource("Gdpr.Consent.Newsletter"));
+                                }
                             }
                             else
+                            {
                                 _newsLetterSubscriptionService.DeleteNewsLetterSubscription(newsletter);
+
+                                //GDPR
+                                if (_gdprSettings.GdprEnabled && _gdprSettings.LogNewsletterConsent)
+                                {
+                                    _gdprService.InsertLog(customer, 0, GdprRequestType.ConsentDisagree, _localizationService.GetResource("Gdpr.Consent.Newsletter"));
+                                }
+                            }
                         }
                         else
                         {
@@ -1014,6 +1084,12 @@ namespace Nop.Web.Controllers
                                     StoreId = _storeContext.CurrentStore.Id,
                                     CreatedOnUtc = DateTime.UtcNow
                                 });
+
+                                //GDPR
+                                if (_gdprSettings.GdprEnabled && _gdprSettings.LogNewsletterConsent)
+                                {
+                                    _gdprService.InsertLog(customer, 0, GdprRequestType.ConsentAgree, _localizationService.GetResource("Gdpr.Consent.Newsletter"));
+                                }
                             }
                         }
                     }
@@ -1024,6 +1100,34 @@ namespace Nop.Web.Controllers
                     //save customer attributes
                     _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer,
                         SystemCustomerAttributeNames.CustomCustomerAttributes, customerAttributesXml);
+
+                    //GDPR
+                    if (_gdprSettings.GdprEnabled)
+                    {
+                        var consents = _gdprService.GetAllConsents().Where(consent => consent.DisplayOnCustomerInfoPage).ToList();
+                        foreach (var consent in consents)
+                        {
+                            var previousConsentValue = _gdprService.IsConsentAccepted(consent.Id, _workContext.CurrentCustomer.Id);
+                            var controlId = $"consent{consent.Id}";
+                            var cbConsent = model.Form[controlId];
+                            if (!StringValues.IsNullOrEmpty(cbConsent) && cbConsent.ToString().Equals("on"))
+                            {
+                                //agree
+                                if (!previousConsentValue.HasValue || !previousConsentValue.Value)
+                                {
+                                    _gdprService.InsertLog(customer, consent.Id, GdprRequestType.ConsentAgree, consent.Message);
+                                }
+                            }
+                            else
+                            {
+                                //disagree
+                                if (!previousConsentValue.HasValue || previousConsentValue.Value)
+                                {
+                                    _gdprService.InsertLog(customer, consent.Id, GdprRequestType.ConsentDisagree, consent.Message);
+                                }
+                            }
+                        }
+                    }
 
                     return RedirectToRoute("CustomerInfo");
                 }
@@ -1202,7 +1306,8 @@ namespace Nop.Web.Controllers
                     address.CountryId = null;
                 if (address.StateProvinceId == 0)
                     address.StateProvinceId = null;
-                customer.Addresses.Add(address);
+                //customer.Addresses.Add(address);
+                customer.CustomerAddressMappings.Add(new CustomerAddressMapping { Address = address });
                 _customerService.UpdateCustomer(customer);
 
                 return RedirectToRoute("CustomerAddresses");
@@ -1453,6 +1558,62 @@ namespace Nop.Web.Controllers
             _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.AvatarPictureId, 0);
 
             return RedirectToRoute("CustomerAvatar");
+        }
+
+        #endregion
+
+        #region GDPR tools
+
+        [HttpsRequirement(SslRequirement.Yes)]
+        public virtual IActionResult GdprTools()
+        {
+            if (!_workContext.CurrentCustomer.IsRegistered())
+                return Challenge();
+
+            if (!_gdprSettings.GdprEnabled)
+                return RedirectToRoute("CustomerInfo");
+
+            var model = _customerModelFactory.PrepareGdprToolsModel();
+            return View(model);
+        }
+
+        [HttpPost, ActionName("GdprTools")]
+        [PublicAntiForgery]
+        [FormValueRequired("export-data")]
+        public virtual IActionResult GdprToolsExport()
+        {
+            if (!_workContext.CurrentCustomer.IsRegistered())
+                return Challenge();
+
+            if (!_gdprSettings.GdprEnabled)
+                return RedirectToRoute("CustomerInfo");
+
+            //log
+            _gdprService.InsertLog(_workContext.CurrentCustomer, 0, GdprRequestType.ExportData, _localizationService.GetResource("Gdpr.Exported"));
+            
+            //export
+            var bytes = _exportManager.ExportCustomerGdprInfoToXlsx(_workContext.CurrentCustomer, _storeContext.CurrentStore.Id);
+            
+            return File(bytes, MimeTypes.TextXlsx, "customerdata.xlsx");
+        }
+
+        [HttpPost, ActionName("GdprTools")]
+        [PublicAntiForgery]
+        [FormValueRequired("delete-account")]
+        public virtual IActionResult GdprToolsDelete()
+        {
+            if (!_workContext.CurrentCustomer.IsRegistered())
+                return Challenge();
+
+            if (!_gdprSettings.GdprEnabled)
+                return RedirectToRoute("CustomerInfo");
+
+            //log
+            _gdprService.InsertLog(_workContext.CurrentCustomer, 0, GdprRequestType.DeleteCustomer, _localizationService.GetResource("Gdpr.DeleteRequested"));
+
+            var model = _customerModelFactory.PrepareGdprToolsModel();
+            model.Result = _localizationService.GetResource("Gdpr.DeleteRequested.Success");
+            return View(model);
         }
 
         #endregion

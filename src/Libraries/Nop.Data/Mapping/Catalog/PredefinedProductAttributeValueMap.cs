@@ -1,28 +1,39 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Catalog;
 
 namespace Nop.Data.Mapping.Catalog
 {
     /// <summary>
-    /// Mapping class
+    /// Represents a predefined product attribute value mapping configuration
     /// </summary>
     public partial class PredefinedProductAttributeValueMap : NopEntityTypeConfiguration<PredefinedProductAttributeValue>
     {
+        #region Methods
+
         /// <summary>
-        /// Ctor
+        /// Configures the entity
         /// </summary>
-        public PredefinedProductAttributeValueMap()
+        /// <param name="builder">The builder to be used to configure the entity</param>
+        public override void Configure(EntityTypeBuilder<PredefinedProductAttributeValue> builder)
         {
-            this.ToTable("PredefinedProductAttributeValue");
-            this.HasKey(pav => pav.Id);
-            this.Property(pav => pav.Name).IsRequired().HasMaxLength(400);
+            builder.ToTable(nameof(PredefinedProductAttributeValue));
+            builder.HasKey(value => value.Id);
 
-            this.Property(pav => pav.PriceAdjustment).HasPrecision(18, 4);
-            this.Property(pav => pav.WeightAdjustment).HasPrecision(18, 4);
-            this.Property(pav => pav.Cost).HasPrecision(18, 4);
+            builder.Property(value => value.Name).HasMaxLength(400).IsRequired();
+            builder.Property(value => value.PriceAdjustment).HasColumnType("decimal(18, 4)");
+            builder.Property(value => value.WeightAdjustment).HasColumnType("decimal(18, 4)");
+            builder.Property(value => value.Cost).HasColumnType("decimal(18, 4)");
 
-            this.HasRequired(pav => pav.ProductAttribute)
+            builder.HasOne(value => value.ProductAttribute)
                 .WithMany()
-                .HasForeignKey(pav => pav.ProductAttributeId);
+                .HasForeignKey(value => value.ProductAttributeId)
+                .IsRequired();
+
+            //add custom configuration
+            this.PostConfigure(builder);
         }
+
+        #endregion
     }
 }

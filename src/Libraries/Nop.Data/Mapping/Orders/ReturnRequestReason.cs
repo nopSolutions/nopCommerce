@@ -1,20 +1,31 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Orders;
 
 namespace Nop.Data.Mapping.Orders
 {
     /// <summary>
-    /// Mapping class
+    /// Represents a return request reason mapping configuration
     /// </summary>
     public partial class ReturnRequestReasonMap : NopEntityTypeConfiguration<ReturnRequestReason>
     {
+        #region Methods
+
         /// <summary>
-        /// Ctor
+        /// Configures the entity
         /// </summary>
-        public ReturnRequestReasonMap()
+        /// <param name="builder">The builder to be used to configure the entity</param>
+        public override void Configure(EntityTypeBuilder<ReturnRequestReason> builder)
         {
-            this.ToTable("ReturnRequestReason");
-            this.HasKey(rrr => rrr.Id);
-            this.Property(rrr => rrr.Name).IsRequired().HasMaxLength(400);
+            builder.ToTable(nameof(ReturnRequestReason));
+            builder.HasKey(reason => reason.Id);
+
+            builder.Property(reason => reason.Name).HasMaxLength(400).IsRequired();
+
+            //add custom configuration
+            this.PostConfigure(builder);
         }
+
+        #endregion
     }
 }

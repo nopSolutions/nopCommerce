@@ -1,42 +1,48 @@
 ﻿using System.Collections.Generic;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace Nop.Core.Data
 {
     /// <summary>
-    /// Data settings (connection string information)
+    /// Represents the data settings
     /// </summary>
     public partial class DataSettings
     {
-        /// <summary>
-        /// Ctor
-        /// </summary>
+        #region Ctor
+
         public DataSettings()
         {
-            RawDataSettings=new Dictionary<string, string>();
+            RawDataSettings = new Dictionary<string, string>();
         }
 
-        /// <summary>
-        /// Data provider
-        /// </summary>
-        public string DataProvider { get; set; }
+        #endregion
+
+        #region Properties
 
         /// <summary>
-        /// Connection string
+        /// Gets or sets a data provider
+        /// </summary>
+        [JsonConverter(typeof(StringEnumConverter))]
+        public DataProviderType DataProvider { get; set; }
+
+        /// <summary>
+        /// Gets or sets a connection string
         /// </summary>
         public string DataConnectionString { get; set; }
 
         /// <summary>
-        /// Raw settings file
+        /// Gets or sets a raw settings
         /// </summary>
         public IDictionary<string, string> RawDataSettings { get; }
 
         /// <summary>
-        /// A value indicating whether entered information is valid
+        /// Gets or sets a value indicating whether the information is entered
         /// </summary>
         /// <returns></returns>
-        public bool IsValid()
-        {
-            return !string.IsNullOrEmpty(this.DataProvider) && !string.IsNullOrEmpty(this.DataConnectionString);
-        }
+        [JsonIgnore]
+        public bool IsValid => DataProvider != DataProviderType.Unknown && !string.IsNullOrEmpty(DataConnectionString);
+
+        #endregion
     }
 }

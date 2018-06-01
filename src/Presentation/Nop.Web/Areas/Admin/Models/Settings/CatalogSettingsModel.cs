@@ -185,6 +185,10 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public bool ShowProductImagesInSearchAutoComplete { get; set; }
         public bool ShowProductImagesInSearchAutoComplete_OverrideForStore { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ShowLinkToAllResultInSearchAutoComplete")]
+        public bool ShowLinkToAllResultInSearchAutoComplete { get; set; }
+        public bool ShowLinkToAllResultInSearchAutoComplete_OverrideForStore { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ProductSearchTermMinimumLength")]
         public int ProductSearchTermMinimumLength { get; set; }
         public bool ProductSearchTermMinimumLength_OverrideForStore { get; set; }
@@ -276,6 +280,10 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.RemoveRequiredProducts")]
         public bool RemoveRequiredProducts { get; set; }
         public bool RemoveRequiredProducts_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ExportImportRelatedEntitiesByName")]
+        public bool ExportImportRelatedEntitiesByName { get; set; }
+        public bool ExportImportRelatedEntitiesByName_OverrideForStore { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.IgnoreDiscounts")]
         public bool IgnoreDiscounts { get; set; }

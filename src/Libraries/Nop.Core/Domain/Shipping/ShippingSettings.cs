@@ -100,7 +100,7 @@ namespace Nop.Core.Domain.Shipping
         public int ShippingOriginAddressId { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether we should return valid options if there are any (no matter of the errors returned by other shipping rate compuation methods).
+        /// Gets or sets a value indicating whether we should return valid options if there are any (no matter of the errors returned by other shipping rate computation methods).
         /// </summary>
         public bool ReturnValidOptionsIfThereAreAny { get; set; }
 

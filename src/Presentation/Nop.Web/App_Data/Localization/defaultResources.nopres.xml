@@ -453,6 +453,27 @@
   <LocaleResource Name="Account.ForumSubscriptions.NoSubscriptions">
     <Value>You are not currently subscribed to any forums</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.Gdpr">
+    <Value>GDPR tools</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Gdpr.Delete">
+    <Value>Right to be Forgotten</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Gdpr.Delete.Button">
+    <Value>Delete account</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Gdpr.Delete.Hint">
+    <Value>You can use the button below to remove your personal and other data from our store. Keep in mind that this process will delete your account, so you will no longer be able to access or use it anymore.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Gdpr.Export">
+    <Value>Export personal Data</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Gdpr.Export.Button">
+    <Value>Export</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Gdpr.Export.Hint">
+    <Value>You can use the button below to download all the data we store and use for a better experience in our store.</Value>
+  </LocaleResource>
   <LocaleResource Name="Account.ImpersonatedAs">
     <Value>Impersonated as {0}</Value>
   </LocaleResource>
@@ -2173,7 +2194,7 @@
     <Value>Categories have been imported successfully.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.Import.CategoriesArentImported">
-    <Value>Categories with the following names aren''t imported - {0}</Value>
+    <Value>Categories with the following names aren't imported - {0}</Value>
   </LocaleResource>    
   <LocaleResource Name="Admin.Catalog.Categories.Info">
     <Value>Category info</Value>
@@ -3301,16 +3322,16 @@
     <Value>Products have been imported successfully.</Value>
   </LocaleResource>  
   <LocaleResource Name="Admin.Catalog.Products.Import.CategoriesDontExist">
-    <Value>Categories with the following names don''t exist: {0}</Value>
+    <Value>Categories with the following names and/or IDs don't exist: {0}</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Import.CategoriesWithSameNameNotSupported">
     <Value>Categories with the same name are not supported in the same category level. Check your category list in "Catalog -> Categories" page</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Import.ManufacturersDontExist">
-    <Value>Manufacturers with the following names don''t exist: {0}</Value>
+    <Value>Manufacturers with the following names and/or IDs don't exist: {0}</Value>
   </LocaleResource>  
   <LocaleResource Name="Admin.Catalog.Products.Import.ProductAttributesDontExist">
-    <Value>Product attributes with the following IDs don''t exist: {0}</Value>
+    <Value>Product attributes with the following IDs don't exist: {0}</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Info">
     <Value>Product info</Value>
@@ -4076,6 +4097,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Common.DeleteConfirmation">
     <Value>Are you sure you want to delete this item?</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Common.DeleteConfirmation.Selected">
+    <Value>Are you sure you want to delete selected items?</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Common.DeleteConfirmationParam">
     <Value>Are you sure you want to delete "{0}"?</Value>
@@ -5095,13 +5119,13 @@
     <Value>The archive should contain only one root plugin or theme directory (already compiled for plugin). For example, Payments.PayPalDirect.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Plugins.Upload.Hint2">
-    <Value>Or it should have the ''{0}'' file with the archive structure (in case if the archive has many plugins and themes).</Value>
+    <Value>Or it should have the '{0}' file with the archive structure (in case if the archive has many plugins and themes).</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Plugins.Upload.Hint3">
     <Value>Please note that if the plugin or theme directory already exists, it will be overwritten.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Plugins.Upload.Hint4">
-    <Value>You can also manually upload a plugin or theme using FTP if this method doesn''t work for you.</Value>
+    <Value>You can also manually upload a plugin or theme using FTP if this method doesn't work for you.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Plugins.Upload.Progress">
     <Value>Uploading plugins and themes...</Value>
@@ -5373,6 +5397,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ExportImportProductCategoryBreadcrumb.Hint">
     <Value>Check if products should be exported/imported with a full category name including names of all its parents.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ExportImportRelatedEntitiesByName">
+    <Value>Export/Import related entities using name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ExportImportRelatedEntitiesByName.Hint">
+    <Value>Check if related entities should be exported/imported using name.</Value>
+  </LocaleResource>    
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ExportImportSplitProductsFile">
     <Value>Export/Import products. Allow splitting file</Value>
   </LocaleResource>
@@ -5594,6 +5624,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowGtin.Hint">
     <Value>Check to show GTIN in public store.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowLinkToAllResultInSearchAutoComplete">
+    <Value>Show a link to all search results in the autocomplete box</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowLinkToAllResultInSearchAutoComplete.Hint">
+    <Value>Determines whether the link to all results should be displayed in the autocomplete search box. Displayed if the number of items found is greater than the displayed quantity in the autocomplete box.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowManufacturerPartNumber">
     <Value>Show manufacturer part number</Value>
@@ -6314,6 +6350,93 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Forums.TopicsPageSize.Hint">
     <Value>Set the page size for topics in forums e.g. '10' topics per page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Gdpr">
+    <Value>GDPR settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.BlockTitle.Common">
+    <Value>Common</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.BlockTitle.Consents">
+    <Value>Consents</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.Consent.Added">
+    <Value>The new consent has been added successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.Consent.AddNew">
+    <Value>Add consent</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.Consent.BackToList">
+    <Value>back to consent list</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.Consent.Deleted">
+    <Value>The consent has been deleted successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.Consent.DisplayDuringRegistration">
+    <Value>Display during registration</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.Consent.DisplayDuringRegistration.Hint">
+    <Value>Check to display this consent on the registration page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.Consent.DisplayOnCustomerInfoPage">
+    <Value>Display on 'customer info' page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.Consent.DisplayOnCustomerInfoPage.Hint">
+    <Value>Check to display this consent on the 'customer info' page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.Consent.DisplayOrder">
+    <Value>Display order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.Consent.DisplayOrder.Hint">
+    <Value>The consent display order. 1 represents the first item in the list.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.Consent.Edit">
+    <Value>Edit consent</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.Consent.IsRequired">
+    <Value>Is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.Consent.IsRequired.Hint">
+    <Value>Check if this consent is required to be ticked.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.Consent.Message">
+    <Value>Message</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.Consent.Message.Hint">
+    <Value>Enter message (question) displayed to customers.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.Consent.Message.Required">
+    <Value>Please provide a message.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.Consent.RequiredMessage">
+    <Value>Required message</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.Consent.RequiredMessage.Hint">
+    <Value>Enter message (error) displayed when this consent is not ticked by a customer.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.Consent.RequiredMessage.Required">
+    <Value>Please provide a required message.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.Consent.Updated">
+    <Value>The GDPR consent has been updated successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.GdprEnabled">
+    <Value>GDPR enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.GdprEnabled.Hint">
+    <Value>Check to enable GDPR (General Data Protection Regulation).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.LogNewsletterConsent">
+    <Value>Log "newsletter" consent</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.LogNewsletterConsent.Hint">
+    <Value>Check to log "newsletter" consent (if this feature is enabled in your store).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.LogPrivacyPolicyConsent">
+    <Value>Log "accept privacy policy" consent</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.LogPrivacyPolicyConsent.Hint">
+    <Value>Check to log "accept privacy policy" consent (if this feature is enabled in your store).</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon">
     <Value>General settings</Value>
@@ -9079,7 +9202,7 @@
 	  <Value>This message template is used to notify a customer that the certain order was canceled. The order can ba canceled by a customer on the account page or by store owner in Customers - Customers in Orders tab or in Sales - Orders.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.OrderCompleted.CustomerNotification">
-	  <Value>This message template is used to notify a customer that the certain order was completed. The order gets the order status Complete when it''s paid and delivered, or it can be changed manually to Complete in Sales - Orders.</Value>
+	  <Value>This message template is used to notify a customer that the certain order was completed. The order gets the order status Complete when it's paid and delivered, or it can be changed manually to Complete in Sales - Orders.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.OrderPaid.AffiliateNotification">
     <Value>This message template is used to notify an affiliate that the certain order was paid. The order gets the status Paid when the amount was charged.</Value>
@@ -9130,7 +9253,7 @@
 	  <Value>This message template is used to notify a store owner that the certain recurring payment is canceled. Payment can be canceled by a customer in the account page or by a store owner in Sales - Recurring payments in History tab by clicking "Cancel recurring payment" button.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.RecurringPaymentFailed.CustomerNotification">
-	  <Value>This message template is used to notify a customer that the certain recurring payment is failed. For example, the amount can''t be charged from the provided credit card.</Value>
+	  <Value>This message template is used to notify a customer that the certain recurring payment is failed. For example, the amount can't be charged from the provided credit card.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.ReturnRequestStatusChanged.CustomerNotification">
 	  <Value>This message template is used to notify a customer that the request status to the certain order is changed. You can set up this option in Sales - Return requests by clicking "Notify customer about status change" button.</Value>
@@ -9154,7 +9277,7 @@
 	  <Value><![CDATA[This message template is used to notify a store owner that new user has applied for vendor account. You can allow customers to apply for vendor account in Configuration - Setting - Vendor settings by ticking the checkbox <strong>Allow customers to apply for vendor account</strong>.]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.VendorInformationChange.StoreOwnerNotification">
-	  <Value><![CDATA[This message template is used to notify a store owner that the vendor changed some vendor''s details. You can allow vendors to change info about themselves in Configuration - Setting - Vendor settings by ticking the checkbox <strong>Allow vendors to edit info</strong>.]]></Value>
+	  <Value><![CDATA[This message template is used to notify a store owner that the vendor changed some vendor's details. You can allow vendors to change info about themselves in Configuration - Setting - Vendor settings by ticking the checkbox <strong>Allow vendors to edit info</strong>.]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.Wishlist.EmailAFriend">
 	  <Value>This message template is used when a customer wants to share some product from the wishlist with a friend by sending an email. You can set up this option by ticking the checkbox <strong>Allow customers to email their wishlists</strong> in Configuration - Settings - Shopping cart settings.</Value>
@@ -10095,6 +10218,15 @@
   <LocaleResource Name="Admin.Customers.Customers.CannotBeInVendoRoleWithoutVendorAssociated">
     <Value>A customer in the Vendors role should have a vendor account associated.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Gdpr">
+    <Value>GDPR</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Gdpr.Delete">
+    <Value>Permanent delete</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Gdpr.Export">
+    <Value>Export data</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.OnlyAdminCanChangePassword">
     <Value>You're not allowed to change passwords of administrators. Only administrators can do it.</Value>
   </LocaleResource>
@@ -10619,6 +10751,33 @@
   </LocaleResource>  
   <LocaleResource Name="Admin.Customers.Customers.VendorShouldBeInVendorsRole">
     <Value>Note: if you have a vendor associated with this customer, then also ensure it is in "Vendors" customer role.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.GdprLog">
+    <Value>GDPR requests (log)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.GdprLog.Fields.CreatedOn">
+    <Value>Date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.GdprLog.Fields.CustomerInfo">
+    <Value>Customer info</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.GdprLog.Fields.RequestDetails">
+    <Value>Request details</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.GdprLog.Fields.RequestType">
+    <Value>Request type</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.GdprLog.List.SearchEmail">
+    <Value>Email</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.GdprLog.List.SearchEmail.Hint">
+    <Value>Search by a specific email (exact match).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.GdprLog.List.SearchRequestType">
+    <Value>Request type</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.GdprLog.List.SearchRequestType.Hint">
+    <Value>Search by request type.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Guest">
     <Value>Guest</Value>
@@ -14489,7 +14648,7 @@
   </LocaleResource>
   <LocaleResource Name="Enums.Nop.Core.Domain.Catalog.AttributeControlType.ColorSquares">
     <Value>Color squares</Value>
-  </LocaleResource>
+  </LocaleResource>  
   <LocaleResource Name="Enums.Nop.Core.Domain.Catalog.AttributeControlType.Datepicker">
     <Value>Date picker</Value>
   </LocaleResource>
@@ -14498,6 +14657,9 @@
   </LocaleResource>
   <LocaleResource Name="Enums.Nop.Core.Domain.Catalog.AttributeControlType.FileUpload">
     <Value>File upload</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Catalog.AttributeControlType.ImageSquares">
+    <Value>Image squares</Value>
   </LocaleResource>
   <LocaleResource Name="Enums.Nop.Core.Domain.Catalog.AttributeControlType.MultilineTextbox">
     <Value>Multiline textbox</Value>
@@ -14747,6 +14909,18 @@
   </LocaleResource>
   <LocaleResource Name="Enums.Nop.Core.Domain.Forums.ForumTopicType.Sticky">
     <Value>Sticky</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Gdpr.GdprRequestType.ConsentAgree">
+    <Value>Consent (agree)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Gdpr.GdprRequestType.ConsentDisagree">
+    <Value>Consent (disagree)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Gdpr.GdprRequestType.ExportData">
+    <Value>Export data</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Gdpr.GdprRequestType.DeleteCustomer">
+    <Value>Delete customer</Value>
   </LocaleResource>
   <LocaleResource Name="Enums.Nop.Core.Domain.Logging.LogLevel.Debug">
     <Value>Debug</Value>
@@ -15281,6 +15455,21 @@
   </LocaleResource>
   <LocaleResource Name="Forum.WatchTopic">
     <Value>Watch Topic</Value>
+  </LocaleResource>
+  <LocaleResource Name="Gdpr.DeleteRequested">
+    <Value>Requested to delete account</Value>
+  </LocaleResource>
+  <LocaleResource Name="Gdpr.DeleteRequested.Success">
+    <Value>We'll process your request as soon as possible</Value>
+  </LocaleResource>
+  <LocaleResource Name="Gdpr.Exported">
+    <Value>Exported personal data</Value>
+  </LocaleResource>
+  <LocaleResource Name="Gdpr.Consent.Newsletter">
+    <Value>Newsletter</Value>
+  </LocaleResource>
+  <LocaleResource Name="Gdpr.Consent.PrivacyPolicy">
+    <Value>Privacy policy</Value>
   </LocaleResource>
   <LocaleResource Name="GiftCardAttribute.For.Physical">
     <Value>For: {0}</Value>
@@ -16859,6 +17048,9 @@
   </LocaleResource>
   <LocaleResource Name="Search.SearchBox.Tooltip">
     <Value>Search store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Search.SearchBox.SearchPageLink">
+    <Value>View all results...</Value>
   </LocaleResource>
   <LocaleResource Name="Search.SearchInDescriptions">
     <Value>Search In product descriptions</Value>

@@ -9,6 +9,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
+using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
@@ -23,9 +24,13 @@ using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.ExportImport;
 using Nop.Services.ExportImport.Help;
+using Nop.Services.Forums;
+using Nop.Services.Gdpr;
+using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Media;
 using Nop.Services.Messages;
+using Nop.Services.Orders;
 using Nop.Services.Seo;
 using Nop.Services.Shipping.Date;
 using Nop.Services.Stores;
@@ -52,6 +57,7 @@ namespace Nop.Services.Tests.ExportImport
         private IDateRangeService _dateRangeService;
         private IStoreService _storeService;
         private IProductAttributeService _productAttributeService;
+        private IProductTagService _productTagService;
         private ITaxCategoryService _taxCategoryService;
         private IMeasureService _measureService;
         private CatalogSettings _catalogSettings;
@@ -63,6 +69,17 @@ namespace Nop.Services.Tests.ExportImport
         private INewsLetterSubscriptionService _newsLetterSubscriptionService;
         private ProductEditorSettings _productEditorSettings;
         private ICustomerAttributeFormatter _customerAttributeFormatter;
+        private IOrderService _orderService;
+        private ICountryService _countryService;
+        private IStateProvinceService _stateProvinceService;
+        private IPriceFormatter _priceFormatter;
+        private ForumSettings _forumSettings;
+        private IForumService _forumService;
+        private IGdprService _gdprService;
+        private CustomerSettings _customerSettings;
+        private IDateTimeHelper _dateTimeHelper;
+        private AddressSettings _addressSettings;
+        private ICurrencyService _currencyService;
 
         [SetUp]
         public new void SetUp()
@@ -77,6 +94,7 @@ namespace Nop.Services.Tests.ExportImport
             _genericAttributeService = MockRepository.GenerateMock<IGenericAttributeService>();
             _storeService = MockRepository.GenerateMock<IStoreService>();
             _productAttributeService = MockRepository.GenerateMock<IProductAttributeService>();
+            _productTagService = MockRepository.GenerateMock<IProductTagService>();
             _taxCategoryService = MockRepository.GenerateMock<ITaxCategoryService>();
             _measureService = MockRepository.GenerateMock<IMeasureService>();
             _catalogSettings = new CatalogSettings();
@@ -88,6 +106,18 @@ namespace Nop.Services.Tests.ExportImport
             _newsLetterSubscriptionService = MockRepository.GenerateMock<INewsLetterSubscriptionService>();
             _productEditorSettings = new ProductEditorSettings();
             _customerAttributeFormatter = MockRepository.GenerateMock<ICustomerAttributeFormatter>();
+
+            _orderService = MockRepository.GenerateMock<IOrderService>();
+            _countryService = MockRepository.GenerateMock<ICountryService>();
+            _stateProvinceService = MockRepository.GenerateMock<IStateProvinceService>();
+            _priceFormatter = MockRepository.GenerateMock<IPriceFormatter>();
+            _forumSettings = new ForumSettings();
+            _forumService = MockRepository.GenerateMock<IForumService>();
+            _gdprService = MockRepository.GenerateMock<IGdprService>();
+            _customerSettings = MockRepository.GenerateMock<CustomerSettings>();
+            _dateTimeHelper = MockRepository.GenerateMock<IDateTimeHelper>();
+            _addressSettings = new AddressSettings();
+            _currencyService = MockRepository.GenerateMock<ICurrencyService>();
 
             var httpContextAccessor = MockRepository.GenerateMock<IHttpContextAccessor>();
             var nopEngine = MockRepository.GenerateMock<NopEngine>();
@@ -132,7 +162,7 @@ namespace Nop.Services.Tests.ExportImport
             serviceProvider.Expect(x => x.GetRequiredService(typeof(IHttpContextAccessor))).Return(httpContextAccessor);
 
             EngineContext.Replace(nopEngine);
-            _exportManager = new ExportManager(_categoryService, _manufacturerService, _customerService, _productAttributeService, _pictureService, _newsLetterSubscriptionService, _storeService, _workContext, _productEditorSettings, _vendorService, _productTemplateService, _dateRangeService, _taxCategoryService, _measureService, _catalogSettings, _genericAttributeService, _customerAttributeFormatter, _orderSettings, _specificationAttributeService);
+            _exportManager = new ExportManager(_categoryService, _manufacturerService, _customerService, _productAttributeService, _productTagService, _pictureService, _newsLetterSubscriptionService, _storeService, _workContext, _productEditorSettings, _vendorService, _productTemplateService, _dateRangeService, _taxCategoryService, _measureService, _catalogSettings, _genericAttributeService, _customerAttributeFormatter, _orderSettings, _specificationAttributeService,_orderService, _countryService, _stateProvinceService, _priceFormatter, _forumSettings, _forumService, _gdprService, _customerSettings, _localizationService, _dateTimeHelper, _addressSettings, _currencyService);
         }
 
         [OneTimeTearDown]
@@ -192,7 +222,7 @@ namespace Nop.Services.Tests.ExportImport
             //the columns
             var properties = ImportManager.GetPropertiesByExcelCells<T>(worksheet);
 
-            return new PropertyManager<T>(properties);
+            return new PropertyManager<T>(properties, _catalogSettings);
         }
 
         protected ExcelWorksheet GetWorksheets(byte[] excelData)
@@ -298,7 +328,7 @@ namespace Nop.Services.Tests.ExportImport
         #region Test export to excel
 
         [Test]
-        public void can_export_orders_xlsx()
+        public void Can_export_orders_xlsx()
         {
             var orderGuid = Guid.NewGuid();
             var billingAddress = GetTestBillingAddress();
@@ -435,7 +465,7 @@ namespace Nop.Services.Tests.ExportImport
         }
 
         [Test]
-        public void can_export_manufacturers_xlsx()
+        public void Can_export_manufacturers_xlsx()
         {
             var manufacturers = new List<Manufacturer>
             {
@@ -475,7 +505,7 @@ namespace Nop.Services.Tests.ExportImport
         }
 
         [Test]
-        public void can_export_customers_to_xlsx()
+        public void Can_export_customers_to_xlsx()
         {
             var customers = new List<Customer>
             {
@@ -510,7 +540,7 @@ namespace Nop.Services.Tests.ExportImport
         }
 
         [Test]
-        public void can_export_categories_to_xlsx()
+        public void Can_export_categories_to_xlsx()
         {
             var categories = new List<Category>
             {
@@ -552,7 +582,7 @@ namespace Nop.Services.Tests.ExportImport
         }
 
         [Test]
-        public void can_export_products_to_xlsx()
+        public void Can_export_products_to_xlsx()
         {
             var replacePairse = new Dictionary<string, string>
             {

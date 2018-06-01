@@ -25,7 +25,7 @@ namespace Nop.Services.Catalog
         /// Ctor
         /// </summary>
         /// <param name="categoryTemplateRepository">Category template repository</param>
-        /// <param name="eventPublisher">Event published</param>
+        /// <param name="eventPublisher">Event publisher</param>
         public CategoryTemplateService(IRepository<CategoryTemplate> categoryTemplateRepository, 
             IEventPublisher eventPublisher)
         {

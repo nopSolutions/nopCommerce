@@ -209,6 +209,11 @@ namespace Nop.Core.Domain.Catalog
         public bool ShowProductImagesInSearchAutoComplete { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether to show link to all result in the auto complete search
+        /// </summary>
+        public bool ShowLinkToAllResultInSearchAutoComplete { get; set; }
+
+        /// <summary>
         /// Gets or sets a minimum search term length
         /// </summary>
         public int ProductSearchTermMinimumLength { get; set; }
@@ -437,5 +442,15 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets a value indicating whether to remove required products from the cart if the main one is removed
         /// </summary>
         public bool RemoveRequiredProducts { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the related entities need to be exported/imported using name
+        /// </summary>
+        public bool ExportImportRelatedEntitiesByName { get; set; }
+
+        /// <summary>
+        /// Gets or sets count of displayed years for datepicker
+        /// </summary>
+        public int CountDisplayedYearsDatePicker { get; set; }
     }
 }

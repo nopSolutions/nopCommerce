@@ -1,27 +1,37 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Stores;
 
 namespace Nop.Data.Mapping.Stores
 {
     /// <summary>
-    /// Mapping class
+    /// Represents a store mapping configuration
     /// </summary>
     public partial class StoreMap : NopEntityTypeConfiguration<Store>
     {
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        public StoreMap()
-        {
-            this.ToTable("Store");
-            this.HasKey(s => s.Id);
-            this.Property(s => s.Name).IsRequired().HasMaxLength(400);
-            this.Property(s => s.Url).IsRequired().HasMaxLength(400);
-            this.Property(s => s.Hosts).HasMaxLength(1000);
+        #region Methods
 
-            this.Property(s => s.CompanyName).HasMaxLength(1000);
-            this.Property(s => s.CompanyAddress).HasMaxLength(1000);
-            this.Property(s => s.CompanyPhoneNumber).HasMaxLength(1000);
-            this.Property(s => s.CompanyVat).HasMaxLength(1000);
+        /// <summary>
+        /// Configures the entity
+        /// </summary>
+        /// <param name="builder">The builder to be used to configure the entity</param>
+        public override void Configure(EntityTypeBuilder<Store> builder)
+        {
+            builder.ToTable(nameof(Store));
+            builder.HasKey(store => store.Id);
+
+            builder.Property(store => store.Name).HasMaxLength(400).IsRequired();
+            builder.Property(store => store.Url).HasMaxLength(400).IsRequired();
+            builder.Property(store => store.Hosts).HasMaxLength(1000);
+            builder.Property(store => store.CompanyName).HasMaxLength(1000);
+            builder.Property(store => store.CompanyAddress).HasMaxLength(1000);
+            builder.Property(store => store.CompanyPhoneNumber).HasMaxLength(1000);
+            builder.Property(store => store.CompanyVat).HasMaxLength(1000);
+
+            //add custom configuration
+            this.PostConfigure(builder);
         }
+
+        #endregion
     }
 }

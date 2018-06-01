@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Loader;
 using System.Text;
 using System.Threading;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
@@ -32,10 +33,10 @@ namespace Nop.Core.Plugins
         #region Fields
 
         private static readonly ReaderWriterLockSlim Locker = new ReaderWriterLockSlim();
-        private static string _shadowCopyFolder;
         private static readonly List<string> _baseAppLibraries;
-        private static string _reserveShadowCopyFolder;
         private static readonly INopFileProvider _fileProvider;
+        private static string _shadowCopyFolder;
+        private static string _reserveShadowCopyFolder;
 
         #endregion
 
@@ -47,15 +48,15 @@ namespace Nop.Core.Plugins
             _fileProvider = CommonHelper.DefaultFileProvider;
 
             //get all libraries from /bin/{version}/ directory
-            _baseAppLibraries =_fileProvider.GetFiles(AppDomain.CurrentDomain.BaseDirectory, "*.dll").Select(fi => _fileProvider.GetFileName(fi)).ToList();
+            _baseAppLibraries = _fileProvider.GetFiles(AppDomain.CurrentDomain.BaseDirectory, "*.dll").Select(fi => _fileProvider.GetFileName(fi)).ToList();
 
             //get all libraries from base site directory
-            if(!AppDomain.CurrentDomain.BaseDirectory.Equals(Environment.CurrentDirectory, StringComparison.InvariantCultureIgnoreCase))
+            if (!AppDomain.CurrentDomain.BaseDirectory.Equals(Environment.CurrentDirectory, StringComparison.InvariantCultureIgnoreCase))
                 _baseAppLibraries.AddRange(_fileProvider.GetFiles(Environment.CurrentDirectory, "*.dll").Select(fi => _fileProvider.GetFileName(fi)));
 
             //get all libraries from refs directory
             var refsPathName = _fileProvider.Combine(Environment.CurrentDirectory, RefsPathName);
-            if(_fileProvider.DirectoryExists(refsPathName))
+            if (_fileProvider.DirectoryExists(refsPathName))
                 _baseAppLibraries.AddRange(_fileProvider.GetFiles(refsPathName, "*.dll").Select(fi => _fileProvider.GetFileName(fi)));
         }
 
@@ -190,6 +191,7 @@ namespace Nop.Core.Plugins
             {
                 Debug.WriteLine("Cannot validate whether an assembly is already loaded. " + exc);
             }
+
             return false;
         }
 
@@ -201,7 +203,7 @@ namespace Nop.Core.Plugins
         /// <param name="config">Config</param>
         /// <param name="shadowCopyPath">Shadow copy path</param>
         /// <returns>Assembly</returns>
-        private static Assembly PerformFileDeploy(string plug, ApplicationPartManager applicationPartManager, NopConfig config, string shadowCopyPath="")
+        private static Assembly PerformFileDeploy(string plug, ApplicationPartManager applicationPartManager, NopConfig config, string shadowCopyPath = "")
         {
             var parent = string.IsNullOrEmpty(plug) ? string.Empty : _fileProvider.GetParentDirectory(plug);
 
@@ -243,11 +245,10 @@ namespace Nop.Core.Plugins
         private static Assembly RegisterPluginDefinition(NopConfig config, ApplicationPartManager applicationPartManager, string plug)
         {
             //we can now register the plugin definition
-            var assemblyName = AssemblyName.GetAssemblyName(plug);
             Assembly pluginAssembly;
             try
             {
-                pluginAssembly = Assembly.Load(assemblyName);
+                pluginAssembly = AssemblyLoadContext.Default.LoadFromAssemblyPath(plug);
             }
             catch (FileLoadException)
             {
@@ -376,8 +377,8 @@ namespace Nop.Core.Plugins
             {
                 // TODO: Add verbose exception handling / raising here since this is happening on app startup and could
                 // prevent app from starting altogether
-                var pluginFolder =  _fileProvider.MapPath(PluginsPath);
-                _shadowCopyFolder =  _fileProvider.MapPath(ShadowCopyPath);
+                var pluginFolder = _fileProvider.MapPath(PluginsPath);
+                _shadowCopyFolder = _fileProvider.MapPath(ShadowCopyPath);
                 _reserveShadowCopyFolder = _fileProvider.Combine(_fileProvider.MapPath(ShadowCopyPath), $"{RESERVE_SHADOW_COPY_FOLDER_NAME}{DateTime.Now.ToFileTimeUtc()}");
                 
                 var referencedPlugins = new List<PluginDescriptor>();
@@ -399,7 +400,7 @@ namespace Nop.Core.Plugins
                         //clear out shadow copied plugins
                         foreach (var f in binFiles)
                         {
-                            if(_fileProvider.GetFileName(f).Equals("placeholder.txt", StringComparison.InvariantCultureIgnoreCase))
+                            if (_fileProvider.GetFileName(f).Equals("placeholder.txt", StringComparison.InvariantCultureIgnoreCase))
                                 continue;
 
                             Debug.WriteLine("Deleting " + f);
@@ -560,7 +561,7 @@ namespace Nop.Core.Plugins
                 installedPluginSystemNames.Add(systemName);
 
             //save installed plugin names to the file
-            SaveInstalledPluginNames(installedPluginSystemNames,filePath);
+            SaveInstalledPluginNames(installedPluginSystemNames, filePath);
         }
 
         /// <summary>
@@ -586,7 +587,7 @@ namespace Nop.Core.Plugins
                 installedPluginSystemNames.Remove(systemName);
 
             //save installed plugin names to the file
-            SaveInstalledPluginNames(installedPluginSystemNames,filePath);
+            SaveInstalledPluginNames(installedPluginSystemNames, filePath);
         }
 
         /// <summary>
@@ -685,7 +686,7 @@ namespace Nop.Core.Plugins
 
             var directoryName = _fileProvider.GetDirectoryName(pluginDescriptor.OriginalAssemblyFile);
 
-            if ( _fileProvider.DirectoryExists(directoryName))
+            if (_fileProvider.DirectoryExists(directoryName))
                 _fileProvider.DeleteDirectory(directoryName);
 
             return true;

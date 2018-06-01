@@ -1,20 +1,31 @@
-﻿using Nop.Core.Domain.Forums;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Nop.Core.Domain.Forums;
 
 namespace Nop.Data.Mapping.Forums
 {
     /// <summary>
-    /// Mapping class
+    /// Represents a forum group mapping configuration
     /// </summary>
     public partial class ForumGroupMap : NopEntityTypeConfiguration<ForumGroup>
     {
+        #region Methods
+
         /// <summary>
-        /// Ctor
+        /// Configures the entity
         /// </summary>
-        public ForumGroupMap()
+        /// <param name="builder">The builder to be used to configure the entity</param>
+        public override void Configure(EntityTypeBuilder<ForumGroup> builder)
         {
-            this.ToTable("Forums_Group");
-            this.HasKey(fg => fg.Id);
-            this.Property(fg => fg.Name).IsRequired().HasMaxLength(200);
+            builder.ToTable("Forums_Group");
+            builder.HasKey(forumGroup => forumGroup.Id);
+
+            builder.Property(forumGroup => forumGroup.Name).HasMaxLength(200).IsRequired();
+
+            //add custom configuration
+            this.PostConfigure(builder);
         }
+
+        #endregion
     }
 }

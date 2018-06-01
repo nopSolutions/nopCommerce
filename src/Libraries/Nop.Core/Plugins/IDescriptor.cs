@@ -1,5 +1,4 @@
-﻿
-namespace Nop.Core.Plugins
+﻿namespace Nop.Core.Plugins
 {
     /// <summary>
     /// Represents descriptor of the application extension (plugin or theme)

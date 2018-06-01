@@ -9,7 +9,7 @@ namespace Nop.Core.Domain.Catalog
     /// </summary>
     public partial class ProductTag : BaseEntity, ILocalizedEntity, ISlugSupported
     {
-        private ICollection<Product> _products;
+        private ICollection<ProductProductTagMapping> _productProductTagMappings;
 
         /// <summary>
         /// Gets or sets the name
@@ -17,12 +17,12 @@ namespace Nop.Core.Domain.Catalog
         public string Name { get; set; }
 
         /// <summary>
-        /// Gets or sets the products
+        /// Gets or sets product-product tag mappings
         /// </summary>
-        public virtual ICollection<Product> Products
+        public virtual ICollection<ProductProductTagMapping> ProductProductTagMappings
         {
-            get => _products ?? (_products = new List<Product>());
-            protected set => _products = value;
+            get => _productProductTagMappings ?? (_productProductTagMappings = new List<ProductProductTagMapping>());
+            protected set => _productProductTagMappings = value;
         }
     }
 }

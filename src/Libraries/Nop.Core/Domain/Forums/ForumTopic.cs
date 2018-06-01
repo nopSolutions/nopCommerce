@@ -68,14 +68,8 @@ namespace Nop.Core.Domain.Forums
         /// </summary>
         public ForumTopicType ForumTopicType
         {
-            get
-            {
-                return (ForumTopicType)TopicTypeId;
-            }
-            set
-            {
-                TopicTypeId = (int)value;
-            }
+            get => (ForumTopicType)TopicTypeId;
+            set => TopicTypeId = (int)value;
         }
 
         /// <summary>

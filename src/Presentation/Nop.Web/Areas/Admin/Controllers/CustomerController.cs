@@ -10,12 +10,14 @@ using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Forums;
+using Nop.Core.Domain.Gdpr;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Tax;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.ExportImport;
 using Nop.Services.Forums;
+using Nop.Services.Gdpr;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
@@ -42,6 +44,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly DateTimeSettings _dateTimeSettings;
         private readonly EmailAccountSettings _emailAccountSettings;
         private readonly ForumSettings _forumSettings;
+        private readonly GdprSettings _gdprSettings;
         private readonly IAddressAttributeParser _addressAttributeParser;
         private readonly IAddressAttributeService _addressAttributeService;
         private readonly IAddressService _addressService;
@@ -55,6 +58,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly IEmailAccountService _emailAccountService;
         private readonly IExportManager _exportManager;
         private readonly IForumService _forumService;
+        private readonly IGdprService _gdprService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ILocalizationService _localizationService;
         private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
@@ -76,6 +80,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             DateTimeSettings dateTimeSettings,
             EmailAccountSettings emailAccountSettings,
             ForumSettings forumSettings,
+            GdprSettings gdprSettings,
             IAddressAttributeParser addressAttributeParser,
             IAddressAttributeService addressAttributeService,
             IAddressService addressService,
@@ -89,6 +94,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             IEmailAccountService emailAccountService,
             IExportManager exportManager,
             IForumService forumService,
+            IGdprService gdprService,
             IGenericAttributeService genericAttributeService,
             ILocalizationService localizationService,
             INewsLetterSubscriptionService newsLetterSubscriptionService,
@@ -106,6 +112,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             this._dateTimeSettings = dateTimeSettings;
             this._emailAccountSettings = emailAccountSettings;
             this._forumSettings = forumSettings;
+            this._gdprSettings = gdprSettings;
             this._addressAttributeParser = addressAttributeParser;
             this._addressAttributeService = addressAttributeService;
             this._addressService = addressService;
@@ -119,6 +126,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             this._emailAccountService = emailAccountService;
             this._exportManager = exportManager;
             this._forumService = forumService;
+            this._gdprService = gdprService;
             this._genericAttributeService = genericAttributeService;
             this._localizationService = localizationService;
             this._newsLetterSubscriptionService = newsLetterSubscriptionService;
@@ -435,7 +443,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     if (customerRole.SystemName == SystemCustomerRoleNames.Administrators && !_workContext.CurrentCustomer.IsAdmin())
                         continue;
 
-                    customer.CustomerRoles.Add(customerRole);
+                    customer.CustomerCustomerRoleMappings.Add(new CustomerCustomerRoleMapping { CustomerRole = customerRole });
                 }
 
                 _customerService.UpdateCustomer(customer);
@@ -456,7 +464,9 @@ namespace Nop.Web.Areas.Admin.Controllers
                     var vendorRole = customer
                         .CustomerRoles
                         .FirstOrDefault(x => x.SystemName == SystemCustomerRoleNames.Vendors);
-                    customer.CustomerRoles.Remove(vendorRole);
+                    //customer.CustomerRoles.Remove(vendorRole);
+                    customer.CustomerCustomerRoleMappings
+                        .Remove(customer.CustomerCustomerRoleMappings.FirstOrDefault(mapping => mapping.CustomerRoleId == vendorRole.Id));
                     _customerService.UpdateCustomer(customer);
                     ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.CannotBeInVendoRoleWithoutVendorAssociated"));
                 }
@@ -678,8 +688,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                         if (model.SelectedCustomerRoleIds.Contains(customerRole.Id))
                         {
                             //new role
-                            if (customer.CustomerRoles.Count(cr => cr.Id == customerRole.Id) == 0)
-                                customer.CustomerRoles.Add(customerRole);
+                            if (customer.CustomerCustomerRoleMappings.Count(mapping => mapping.CustomerRoleId == customerRole.Id) == 0)
+                                customer.CustomerCustomerRoleMappings.Add(new CustomerCustomerRoleMapping { CustomerRole = customerRole });
                         }
                         else
                         {
@@ -691,8 +701,11 @@ namespace Nop.Web.Areas.Admin.Controllers
                             }
 
                             //remove role
-                            if (customer.CustomerRoles.Count(cr => cr.Id == customerRole.Id) > 0)
-                                customer.CustomerRoles.Remove(customerRole);
+                            if (customer.CustomerCustomerRoleMappings.Count(mapping => mapping.CustomerRoleId == customerRole.Id) > 0)
+                            {
+                                customer.CustomerCustomerRoleMappings
+                                    .Remove(customer.CustomerCustomerRoleMappings.FirstOrDefault(mapping => mapping.CustomerRoleId == customerRole.Id));
+                            }
                         }
                     }
 
@@ -714,7 +727,9 @@ namespace Nop.Web.Areas.Admin.Controllers
                         var vendorRole = customer
                             .CustomerRoles
                             .FirstOrDefault(x => x.SystemName == SystemCustomerRoleNames.Vendors);
-                        customer.CustomerRoles.Remove(vendorRole);
+                        //customer.CustomerRoles.Remove(vendorRole);
+                        customer.CustomerCustomerRoleMappings
+                            .Remove(customer.CustomerCustomerRoleMappings.FirstOrDefault(mapping => mapping.CustomerRoleId == vendorRole.Id));
                         _customerService.UpdateCustomer(customer);
                         ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.CannotBeInVendoRoleWithoutVendorAssociated"));
                     }
@@ -1206,7 +1221,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                     address.CountryId = null;
                 if (address.StateProvinceId == 0)
                     address.StateProvinceId = null;
-                customer.Addresses.Add(address);
+                //customer.Addresses.Add(address);
+                customer.CustomerAddressMappings.Add(new CustomerAddressMapping { Address = address });
                 _customerService.UpdateCustomer(customer);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Customers.Customers.Addresses.Added"));
@@ -1499,6 +1515,107 @@ namespace Nop.Web.Areas.Admin.Controllers
             return Json(model);
         }
 
+        #endregion
+
+        #region GDPR
+
+        public virtual IActionResult GdprLog()
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+                return AccessDeniedView();
+
+            //prepare model
+            var model = _customerModelFactory.PrepareGdprLogSearchModel(new GdprLogSearchModel());
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public virtual IActionResult GdprLogList(GdprLogSearchModel searchModel)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+                return AccessDeniedKendoGridJson();
+
+            //prepare model
+            var model = _customerModelFactory.PrepareGdprLogListModel(searchModel);
+
+            return Json(model);
+        }
+
+        [HttpPost]
+        public virtual IActionResult GdprDelete(int id)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+                return AccessDeniedView();
+
+            //try to get a customer with the specified id
+            var customer = _customerService.GetCustomerById(id);
+            if (customer == null)
+                return RedirectToAction("List");
+
+            if (!_gdprSettings.GdprEnabled)
+                return RedirectToAction("List");
+
+            try
+            {
+                //prevent attempts to delete the user, if it is the last active administrator
+                if (customer.IsAdmin() && !SecondAdminAccountExists(customer))
+                {
+                    ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.AdminAccountShouldExists.DeleteAdministrator"));
+                    return RedirectToAction("Edit", new { id = customer.Id });
+                }
+
+                //ensure that the current customer cannot delete "Administrators" if he's not an admin himself
+                if (customer.IsAdmin() && !_workContext.CurrentCustomer.IsAdmin())
+                {
+                    ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.OnlyAdminCanDeleteAdmin"));
+                    return RedirectToAction("Edit", new { id = customer.Id });
+                }
+
+                //delete
+                _gdprService.PermanentDeleteCustomer(customer);
+
+                //activity log
+                _customerActivityService.InsertActivity("DeleteCustomer",
+                    string.Format(_localizationService.GetResource("ActivityLog.DeleteCustomer"), customer.Id), customer);
+
+                SuccessNotification(_localizationService.GetResource("Admin.Customers.Customers.Deleted"));
+
+                return RedirectToAction("List");
+            }
+            catch (Exception exc)
+            {
+                ErrorNotification(exc.Message);
+                return RedirectToAction("Edit", new { id = customer.Id });
+            }
+        }
+
+        public virtual IActionResult GdprExport(int id)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+                return AccessDeniedView();
+
+            //try to get a customer with the specified id
+            var customer = _customerService.GetCustomerById(id);
+            if (customer == null)
+                return RedirectToAction("List");
+
+            try
+            {
+                //log
+                //_gdprService.InsertLog(customer, 0, GdprRequestType.ExportData, _localizationService.GetResource("Gdpr.Exported"));
+                //export
+                //export
+                var bytes = _exportManager.ExportCustomerGdprInfoToXlsx(_workContext.CurrentCustomer, _storeContext.CurrentStore.Id);
+            
+                return File(bytes, MimeTypes.TextXlsx, $"customerdata-{customer.Id}.xlsx");
+            }
+            catch (Exception exc)
+            {
+                ErrorNotification(exc);
+                return RedirectToAction("Edit", new { id = customer.Id });
+            }
+        }
         #endregion
 
         #region Export / Import

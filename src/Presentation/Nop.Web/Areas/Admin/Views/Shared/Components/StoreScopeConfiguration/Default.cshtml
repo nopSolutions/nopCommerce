@@ -10,13 +10,13 @@
     var stores = Model.Stores.Select(store => new SelectListItem
     {
         Text = store.Name,
-        Value = webHelper.ModifyQueryString(Url.Action("ChangeStoreScopeConfiguration", "Setting", new { storeid = store.Id }), "returnurl=" + WebUtility.UrlEncode(rawUrl), null),
+        Value = webHelper.ModifyQueryString(Url.Action("ChangeStoreScopeConfiguration", "Setting", new { storeid = store.Id }, webHelper.CurrentRequestProtocol), "returnurl", rawUrl),
         Selected = store.Id.Equals(Model.StoreId)
     }).ToList();
     stores.Insert(0, new SelectListItem
     {
         Text = T("Admin.Configuration.Settings.StoreScope.AllStores").Text,
-        Value = webHelper.ModifyQueryString(Url.Action("ChangeStoreScopeConfiguration", "Setting", new { storeid = 0 }), "returnurl=" + WebUtility.UrlEncode(rawUrl), null),
+        Value = webHelper.ModifyQueryString(Url.Action("ChangeStoreScopeConfiguration", "Setting", new { storeid = 0 }, webHelper.CurrentRequestProtocol), "returnurl", rawUrl),
         Selected = 0.Equals(Model.StoreId)
     });
 }

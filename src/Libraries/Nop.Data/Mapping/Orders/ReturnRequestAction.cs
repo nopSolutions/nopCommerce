@@ -1,20 +1,31 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Orders;
 
 namespace Nop.Data.Mapping.Orders
 {
     /// <summary>
-    /// Mapping class
+    /// Represents a return request action mapping configuration
     /// </summary>
     public partial class ReturnRequestActionMap : NopEntityTypeConfiguration<ReturnRequestAction>
     {
+        #region Methods
+
         /// <summary>
-        /// Ctor
+        /// Configures the entity
         /// </summary>
-        public ReturnRequestActionMap()
+        /// <param name="builder">The builder to be used to configure the entity</param>
+        public override void Configure(EntityTypeBuilder<ReturnRequestAction> builder)
         {
-            this.ToTable("ReturnRequestAction");
-            this.HasKey(rra => rra.Id);
-            this.Property(rra => rra.Name).IsRequired().HasMaxLength(400);
+            builder.ToTable(nameof(ReturnRequestAction));
+            builder.HasKey(action => action.Id);
+
+            builder.Property(action => action.Name).HasMaxLength(400).IsRequired();
+
+            //add custom configuration
+            this.PostConfigure(builder);
         }
+
+        #endregion
     }
 }

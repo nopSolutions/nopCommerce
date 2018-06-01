@@ -1,5 +1,4 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
@@ -7,16 +6,12 @@ using Microsoft.AspNetCore.Http;
 using Nop.Core;
 using Nop.Core.Configuration;
 using Nop.Core.Data;
-using Nop.Core.Domain;
 using Nop.Core.Http;
 using Nop.Core.Infrastructure;
 using Nop.Services.Authentication;
 using Nop.Services.Logging;
-using Nop.Services.Security;
-using System.Threading.Tasks;
 using Nop.Web.Framework.Globalization;
 using Nop.Web.Framework.Mvc.Routing;
-using StackExchange.Profiling.Storage;
 
 namespace Nop.Web.Framework.Infrastructure.Extensions
 {
@@ -66,7 +61,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                     try
                     {
                         //check whether database is installed
-                        if (DataSettingsHelper.DatabaseIsInstalled())
+                        if (DataSettingsManager.DatabaseIsInstalled)
                         {
                             //get current customer
                             var currentCustomer = EngineContext.Current.Resolve<IWorkContext>().CurrentCustomer;
@@ -176,7 +171,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         public static void UseNopAuthentication(this IApplicationBuilder application)
         {
             //check whether database is installed
-            if (!DataSettingsHelper.DatabaseIsInstalled())
+            if (!DataSettingsManager.DatabaseIsInstalled)
                 return;
 
             application.UseMiddleware<AuthenticationMiddleware>();
@@ -189,7 +184,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         public static void UseCulture(this IApplicationBuilder application)
         {
             //check whether database is installed
-            if (!DataSettingsHelper.DatabaseIsInstalled())
+            if (!DataSettingsManager.DatabaseIsInstalled)
                 return;
 
             application.UseMiddleware<CultureMiddleware>();
@@ -206,32 +201,6 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 //register all routes
                 EngineContext.Current.Resolve<IRoutePublisher>().RegisterRoutes(routeBuilder);
             });
-        }
-
-        /// <summary>
-        /// Create and configure MiniProfiler service
-        /// </summary>
-        /// <param name="application">Builder for configuring an application's request pipeline</param>
-        public static void UseMiniProfiler(this IApplicationBuilder application)
-        {
-            //whether database is already installed
-            if (!DataSettingsHelper.DatabaseIsInstalled())
-                return;
-
-            //whether MiniProfiler should be displayed
-            if (EngineContext.Current.Resolve<StoreInformationSettings>().DisplayMiniProfilerInPublicStore)
-            {
-                application.UseMiniProfiler(miniProfilerOptions =>
-                {
-                    //use memory cache provider for storing each result
-                    miniProfilerOptions.Storage = new MemoryCacheStorage(TimeSpan.FromMinutes(60));
-
-                    //determine who can access the MiniProfiler results
-                    miniProfilerOptions.ResultsAuthorize = request =>
-                        !EngineContext.Current.Resolve<StoreInformationSettings>().DisplayMiniProfilerForAdminOnly ||
-                        EngineContext.Current.Resolve<IPermissionService>().Authorize(StandardPermissionProvider.AccessAdminPanel);
-                });
-            }
         }
     }
 }

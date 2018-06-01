@@ -8,6 +8,7 @@ using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Logging;
 using Nop.Data;
+using Nop.Data.Extensions;
 
 namespace Nop.Services.Logging
 {
@@ -236,7 +237,7 @@ namespace Nop.Services.Logging
             {
                 ActivityLogTypeId = activityLogType.Id,
                 EntityId = entity?.Id,
-                EntityName = entity?.GetUnproxiedEntityType().Name,
+                EntityName = entity?.GetType().BaseType.Name,
                 CustomerId = customer.Id,
                 Comment = CommonHelper.EnsureMaximumLength(comment ?? string.Empty, 4000),
                 CreatedOnUtc = DateTime.UtcNow,
@@ -325,22 +326,13 @@ namespace Nop.Services.Logging
         /// </summary>
         public virtual void ClearAllActivities()
         {
-            if (_commonSettings.UseStoredProceduresIfSupported && _dataProvider.StoredProceduredSupported)
-            {
-                //although it's not a stored procedure we use it to ensure that a database supports them
-                //we cannot wait until EF team has it implemented - http://data.uservoice.com/forums/72025-entity-framework-feature-suggestions/suggestions/1015357-batch-cud-support
+            //do all databases support "Truncate command"?
+            var activityLogTableName = _dbContext.GetTableName<ActivityLog>();
+            _dbContext.ExecuteSqlCommand($"TRUNCATE TABLE [{activityLogTableName}]");
 
-
-                //do all databases support "Truncate command"?
-                var activityLogTableName = _dbContext.GetTableName<ActivityLog>();
-                _dbContext.ExecuteSqlCommand($"TRUNCATE TABLE [{activityLogTableName}]");
-            }
-            else
-            {
-                var activityLog = _activityLogRepository.Table.ToList();
-                foreach (var activityLogItem in activityLog)
-                    _activityLogRepository.Delete(activityLogItem);
-            }
+            //var activityLog = _activityLogRepository.Table.ToList();
+            //foreach (var activityLogItem in activityLog)
+            //    _activityLogRepository.Delete(activityLogItem);
         }
 
         #endregion

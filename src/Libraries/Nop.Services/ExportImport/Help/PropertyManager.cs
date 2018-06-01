@@ -1,7 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Nop.Core.Domain.Catalog;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
 
@@ -17,21 +19,79 @@ namespace Nop.Services.ExportImport.Help
         /// All properties
         /// </summary>
         private readonly Dictionary<string, PropertyByName<T>> _properties;
-        
+
+        /// <summary>
+        /// Catalog settings
+        /// </summary>
+        private readonly CatalogSettings _catalogSettings;
+
         /// <summary>
         /// Ctor
         /// </summary>
         /// <param name="properties">All access properties</param>
-        public PropertyManager(IEnumerable<PropertyByName<T>> properties)
+        /// <param name="catalogSettings">Catalog settings</param>
+        public PropertyManager(IEnumerable<PropertyByName<T>> properties, CatalogSettings catalogSettings)
         {
             _properties = new Dictionary<string, PropertyByName<T>>();
+            _catalogSettings = catalogSettings;
 
             var poz = 1;
-            foreach (var propertyByName in properties)
+            foreach (var propertyByName in properties.Where(p => !p.Ignore))
             {
                 propertyByName.PropertyOrderPosition = poz;
                 poz++;
                 _properties.Add(propertyByName.PropertyName, propertyByName);
+            }
+        }
+
+        /// <summary>
+        /// Add new property
+        /// </summary>
+        /// <param name="property">Property to add</param>
+        public void AddProperty(PropertyByName<T> property)
+        {
+            if(_properties.ContainsKey(property.PropertyName))
+                return;
+            
+            _properties.Add(property.PropertyName, property);
+        }
+
+        /// <summary>
+        /// Export objects to XLSX
+        /// </summary>
+        /// <typeparam name="T">Type of object</typeparam>
+        /// <param name="itemsToExport">The objects to export</param>
+        /// <returns></returns>
+        public virtual byte[] ExportToXlsx(IEnumerable<T> itemsToExport)
+        {
+            using (var stream = new MemoryStream())
+            {
+                // ok, we can run the real code of the sample now
+                using (var xlPackage = new ExcelPackage(stream))
+                {
+                    // uncomment this line if you want the XML written out to the outputDir
+                    //xlPackage.DebugMode = true; 
+
+                    // get handles to the worksheets
+                    var worksheet = xlPackage.Workbook.Worksheets.Add(typeof(T).Name);
+                    var fWorksheet = xlPackage.Workbook.Worksheets.Add("DataForFilters");
+                    fWorksheet.Hidden = eWorkSheetHidden.VeryHidden;
+
+                    //create Headers and format them 
+                    WriteCaption(worksheet);
+
+                    var row = 2;
+                    foreach (var items in itemsToExport)
+                    {
+                        CurrentObject = items;
+                        WriteToXlsx(worksheet, row++, fWorksheet: fWorksheet);
+                    }
+
+                    xlPackage.Save();
+                }
+
+                CurrentObject = default(T);
+                return stream.ToArray();
             }
         }
 
@@ -82,10 +142,9 @@ namespace Nop.Services.ExportImport.Help
         /// </summary>
         /// <param name="worksheet">Data worksheet</param>
         /// <param name="row">Row index</param>
-        /// <param name="exportImportUseDropdownlistsForAssociatedEntities">Indicating whether need create dropdown list for export</param>
         /// <param name="cellOffset">Cell offset</param>
         /// <param name="fWorksheet">Filters worksheet</param>
-        public void WriteToXlsx(ExcelWorksheet worksheet, int row, bool exportImportUseDropdownlistsForAssociatedEntities, int cellOffset = 0, ExcelWorksheet fWorksheet=null)
+        public virtual void WriteToXlsx(ExcelWorksheet worksheet, int row, int cellOffset = 0, ExcelWorksheet fWorksheet=null)
         {
             if (CurrentObject == null)
                 return;
@@ -93,7 +152,7 @@ namespace Nop.Services.ExportImport.Help
             foreach (var prop in _properties.Values)
             {
                 var cell = worksheet.Cells[row, prop.PropertyOrderPosition + cellOffset];
-                if (prop.IsDropDownCell)
+                if (prop.IsDropDownCell && _catalogSettings.ExportImportRelatedEntitiesByName)
                 {
                     var dropDownElements = prop.GetDropDownElements();
                     if (!dropDownElements.Any())
@@ -104,7 +163,7 @@ namespace Nop.Services.ExportImport.Help
 
                     cell.Value = prop.GetItemText(prop.GetProperty(CurrentObject));
 
-                    if(!exportImportUseDropdownlistsForAssociatedEntities)
+                    if(!UseDropdownLists)
                         continue;
 
                     var validator = cell.DataValidation.AddListDataValidation();
@@ -140,9 +199,9 @@ namespace Nop.Services.ExportImport.Help
         /// <param name="worksheet">worksheet</param>
         /// <param name="row">Row index</param>
         /// /// <param name="cellOffset">Cell offset</param>
-        public void ReadFromXlsx(ExcelWorksheet worksheet, int row, int cellOffset = 0)
+        public virtual void ReadFromXlsx(ExcelWorksheet worksheet, int row, int cellOffset = 0)
         {
-            if (worksheet == null || worksheet.Cells == null)
+            if (worksheet?.Cells == null)
                 return;
 
             foreach (var prop in _properties.Values)
@@ -155,17 +214,29 @@ namespace Nop.Services.ExportImport.Help
         /// Write caption (first row) to XLSX worksheet
         /// </summary>
         /// <param name="worksheet">worksheet</param>
-        /// <param name="setStyle">Detection of cell style</param>
         /// <param name="row">Row num</param>
         /// <param name="cellOffset">Cell offset</param>
-        public void WriteCaption(ExcelWorksheet worksheet, Action<ExcelStyle> setStyle, int row = 1, int cellOffset = 0)
+        public virtual void WriteCaption(ExcelWorksheet worksheet, int row = 1, int cellOffset = 0)
         {
             foreach (var caption in _properties.Values)
             {
                 var cell = worksheet.Cells[row, caption.PropertyOrderPosition + cellOffset];
                 cell.Value = caption;
-                setStyle(cell.Style);
+
+                SetCaptionStyle(cell);
+                cell.Style.Hidden = false;
             }
+        }
+
+        /// <summary>
+        /// Set caption style to excel cell
+        /// </summary>
+        /// <param name="cell">Excel cell</param>
+        public void SetCaptionStyle(ExcelRange cell)
+        {
+            cell.Style.Fill.PatternType = ExcelFillStyle.Solid;
+            cell.Style.Fill.BackgroundColor.SetColor(Color.FromArgb(184, 204, 228));
+            cell.Style.Font.Bold = true;
         }
 
         /// <summary>
@@ -212,6 +283,14 @@ namespace Nop.Services.ExportImport.Help
         public bool IsCaption
         {
             get { return _properties.Values.All(p => p.IsCaption); }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether need create dropdown list for export
+        /// </summary>
+        public bool UseDropdownLists
+        {
+            get { return _catalogSettings.ExportImportUseDropdownlistsForAssociatedEntities && _catalogSettings.ExportImportRelatedEntitiesByName; }
         }
     }
 }

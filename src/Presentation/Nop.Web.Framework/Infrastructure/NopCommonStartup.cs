@@ -1,6 +1,4 @@
 ﻿using System.Linq;
-using ImageResizer.Configuration;
-using ImageResizer.Plugins.PrettyGifs;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.StaticFiles;
@@ -53,9 +51,6 @@ namespace Nop.Web.Framework.Infrastructure
 
             //add theme support
             services.AddThemes();
-            
-            //add gif resizing support
-            new PrettyGifs().Install(Config.Current);
         }
 
         /// <summary>
@@ -111,7 +106,7 @@ namespace Nop.Web.Framework.Infrastructure
                 }
             };
             //whether database is installed
-            if (DataSettingsHelper.DatabaseIsInstalled())
+            if (DataSettingsManager.DatabaseIsInstalled)
             {
                 var securitySettings = EngineContext.Current.Resolve<SecuritySettings>();
                 if (!string.IsNullOrEmpty(securitySettings.PluginStaticFileExtensionsBlacklist))

@@ -1,26 +1,36 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Security;
 
 namespace Nop.Data.Mapping.Security
 {
     /// <summary>
-    /// Mapping class
+    /// Represents an ACL record mapping configuration
     /// </summary>
     public partial class AclRecordMap : NopEntityTypeConfiguration<AclRecord>
     {
+        #region Methods
+
         /// <summary>
-        /// Ctor
+        /// Configures the entity
         /// </summary>
-        public AclRecordMap()
+        /// <param name="builder">The builder to be used to configure the entity</param>
+        public override void Configure(EntityTypeBuilder<AclRecord> builder)
         {
-            this.ToTable("AclRecord");
-            this.HasKey(ar => ar.Id);
+            builder.ToTable(nameof(AclRecord));
+            builder.HasKey(record => record.Id);
 
-            this.Property(ar => ar.EntityName).IsRequired().HasMaxLength(400);
+            builder.Property(record => record.EntityName).HasMaxLength(400).IsRequired();
 
-            this.HasRequired(ar => ar.CustomerRole)
+            builder.HasOne(record => record.CustomerRole)
                 .WithMany()
-                .HasForeignKey(ar => ar.CustomerRoleId)
-                .WillCascadeOnDelete(true);
+                .HasForeignKey(record => record.CustomerRoleId)
+                .IsRequired();
+
+            //add custom configuration
+            this.PostConfigure(builder);
         }
+
+        #endregion
     }
 }

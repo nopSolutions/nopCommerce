@@ -1,14 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Xml;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
+using Nop.Core.Domain.Forums;
+using Nop.Core.Domain.Gdpr;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
@@ -19,15 +21,19 @@ using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.ExportImport.Help;
+using Nop.Services.Forums;
+using Nop.Services.Gdpr;
+using Nop.Services.Helpers;
+using Nop.Services.Localization;
 using Nop.Services.Media;
 using Nop.Services.Messages;
+using Nop.Services.Orders;
 using Nop.Services.Seo;
 using Nop.Services.Shipping.Date;
 using Nop.Services.Stores;
 using Nop.Services.Tax;
 using Nop.Services.Vendors;
 using OfficeOpenXml;
-using OfficeOpenXml.Style;
 
 namespace Nop.Services.ExportImport
 {
@@ -42,6 +48,7 @@ namespace Nop.Services.ExportImport
         private readonly IManufacturerService _manufacturerService;
         private readonly ICustomerService _customerService;
         private readonly IProductAttributeService _productAttributeService;
+        private readonly IProductTagService _productTagService;
         private readonly IPictureService _pictureService;
         private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
         private readonly IStoreService _storeService;
@@ -57,6 +64,18 @@ namespace Nop.Services.ExportImport
         private readonly ICustomerAttributeFormatter _customerAttributeFormatter;
         private readonly OrderSettings _orderSettings;
         private readonly ISpecificationAttributeService _specificationAttributeService;
+        private readonly IOrderService _orderService;
+        protected readonly ICountryService _countryService;
+        protected readonly IStateProvinceService _stateProvinceService;
+        protected readonly IPriceFormatter _priceFormatter;
+        protected readonly ForumSettings _forumSettings;
+        protected readonly IForumService _forumService;
+        protected readonly IGdprService _gdprService;
+        protected readonly CustomerSettings _customerSettings;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IDateTimeHelper _dateTimeHelper;
+        protected readonly AddressSettings _addressSettings;
+        protected readonly ICurrencyService _currencyService;
 
         #endregion
 
@@ -66,6 +85,7 @@ namespace Nop.Services.ExportImport
             IManufacturerService manufacturerService,
             ICustomerService customerService,
             IProductAttributeService productAttributeService,
+            IProductTagService productTagService,
             IPictureService pictureService,
             INewsLetterSubscriptionService newsLetterSubscriptionService,
             IStoreService storeService,
@@ -80,12 +100,25 @@ namespace Nop.Services.ExportImport
             IGenericAttributeService genericAttributeService,
             ICustomerAttributeFormatter customerAttributeFormatter,
             OrderSettings orderSettings,
-            ISpecificationAttributeService specificationAttributeService)
+            ISpecificationAttributeService specificationAttributeService,
+            IOrderService orderService,
+            ICountryService countryService,
+            IStateProvinceService stateProvinceService,
+            IPriceFormatter priceFormatter,
+            ForumSettings forumSettings,
+            IForumService forumService,
+            IGdprService gdprService,
+            CustomerSettings customerSettings,
+            ILocalizationService localizationService,
+            IDateTimeHelper dateTimeHelper,
+            AddressSettings addressSettings,
+            ICurrencyService currencyService)
         {
             this._categoryService = categoryService;
             this._manufacturerService = manufacturerService;
             this._customerService = customerService;
             this._productAttributeService = productAttributeService;
+            this._productTagService = productTagService;
             this._pictureService = pictureService;
             this._newsLetterSubscriptionService = newsLetterSubscriptionService;
             this._storeService = storeService;
@@ -101,6 +134,18 @@ namespace Nop.Services.ExportImport
             this._customerAttributeFormatter = customerAttributeFormatter;
             this._orderSettings = orderSettings;
             this._specificationAttributeService = specificationAttributeService;
+            this._orderService = orderService;
+            this._countryService = countryService;
+            this._stateProvinceService = stateProvinceService;
+            this._priceFormatter = priceFormatter;
+            this._forumSettings = forumSettings;
+            this._forumService = forumService;
+            this._gdprService = gdprService;
+            this._customerSettings = customerSettings;
+            this._localizationService = localizationService;
+            this._dateTimeHelper = dateTimeHelper;
+            this._addressSettings = addressSettings;
+            this._currencyService = currencyService;
         }
 
         #endregion
@@ -165,14 +210,7 @@ namespace Nop.Services.ExportImport
                 xmlWriter.WriteEndElement();
             }
         }
-
-        protected virtual void SetCaptionStyle(ExcelStyle style)
-        {
-            style.Fill.PatternType = ExcelFillStyle.Solid;
-            style.Fill.BackgroundColor.SetColor(Color.FromArgb(184, 204, 228));
-            style.Font.Bold = true;
-        }
-
+        
         /// <summary>
         /// Returns the path to the image file by ID
         /// </summary>
@@ -194,7 +232,17 @@ namespace Nop.Services.ExportImport
             string categoryNames = null;
             foreach (var pc in _categoryService.GetProductCategoriesByProductId(product.Id, true))
             {
-                categoryNames += _catalogSettings.ExportImportProductCategoryBreadcrumb ? pc.Category.GetFormattedBreadCrumb(_categoryService) : pc.Category.Name;
+                if (_catalogSettings.ExportImportRelatedEntitiesByName)
+                {
+                    categoryNames += _catalogSettings.ExportImportProductCategoryBreadcrumb
+                        ? pc.Category.GetFormattedBreadCrumb(_categoryService)
+                        : pc.Category.Name;
+                }
+                else
+                {
+                    categoryNames += pc.Category.Id.ToString();
+                }
+
                 categoryNames += ";";
             }
 
@@ -211,7 +259,10 @@ namespace Nop.Services.ExportImport
             string manufacturerNames = null;
             foreach (var pm in _manufacturerService.GetProductManufacturersByProductId(product.Id, true))
             {
-                manufacturerNames += pm.Manufacturer.Name;
+                manufacturerNames += _catalogSettings.ExportImportRelatedEntitiesByName
+                    ? pm.Manufacturer.Name
+                    : pm.Manufacturer.Id.ToString();
+
                 manufacturerNames += ";";
             }
 
@@ -227,9 +278,13 @@ namespace Nop.Services.ExportImport
         {
             string productTagNames = null;
 
-            foreach (var productTag in product.ProductTags)
+            var productTags = _productTagService.GetAllProductTagsByProductId(product.Id);
+            foreach (var productTag in productTags)
             {
-                productTagNames += productTag.Name;
+                productTagNames += _catalogSettings.ExportImportRelatedEntitiesByName
+                    ? productTag.Name
+                    : productTag.Id.ToString();
+
                 productTagNames += ";";
             }
 
@@ -267,47 +322,7 @@ namespace Nop.Services.ExportImport
 
             return new[] { picture1, picture2, picture3 };
         }
-
-        /// <summary>
-        /// Export objects to XLSX
-        /// </summary>
-        /// <typeparam name="T">Type of object</typeparam>
-        /// <param name="properties">Class access to the object through its properties</param>
-        /// <param name="itemsToExport">The objects to export</param>
-        /// <returns></returns>
-        protected virtual byte[] ExportToXlsx<T>(PropertyByName<T>[] properties, IEnumerable<T> itemsToExport)
-        {
-            using (var stream = new MemoryStream())
-            {
-                // ok, we can run the real code of the sample now
-                using (var xlPackage = new ExcelPackage(stream))
-                {
-                    // uncomment this line if you want the XML written out to the outputDir
-                    //xlPackage.DebugMode = true; 
-
-                    // get handles to the worksheets
-                    var worksheet = xlPackage.Workbook.Worksheets.Add(typeof(T).Name);
-                    var fWorksheet = xlPackage.Workbook.Worksheets.Add("DataForFilters");
-                    fWorksheet.Hidden = eWorkSheetHidden.VeryHidden;
-
-                    //create Headers and format them 
-                    var manager = new PropertyManager<T>(properties.Where(p => !p.Ignore));
-                    manager.WriteCaption(worksheet, SetCaptionStyle);
-
-                    var row = 2;
-                    foreach (var items in itemsToExport)
-                    {
-                        manager.CurrentObject = items;
-                        manager.WriteToXlsx(worksheet, row++, _catalogSettings.ExportImportUseDropdownlistsForAssociatedEntities, fWorksheet: fWorksheet);
-                    }
-
-                    xlPackage.Save();
-                }
-
-                return stream.ToArray();
-            }
-        }
-
+        
         protected virtual bool IgnoreExportPoductProperty(Func<ProductEditorSettings, bool> func)
         {
             var productAdvancedMode = true;
@@ -379,7 +394,7 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<ExportProductAttribute>("PictureId", p => p.PictureId)
             };
 
-            return new PropertyManager<ExportProductAttribute>(attributeProperties);
+            return new PropertyManager<ExportProductAttribute>(attributeProperties, _catalogSettings);
         }
 
         private PropertyManager<ExportSpecificationAttribute> GetSpecificationAttributeManager()
@@ -401,7 +416,7 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<ExportSpecificationAttribute>("DisplayOrder", p => p.DisplayOrder)
             };
 
-            return new PropertyManager<ExportSpecificationAttribute>(attributeProperties);
+            return new PropertyManager<ExportSpecificationAttribute>(attributeProperties, _catalogSettings);
         }
         
         private byte[] ExportProductsToXlsxWithAttributes(PropertyByName<Product>[] properties, IEnumerable<Product> itemsToExport)
@@ -427,14 +442,14 @@ namespace Nop.Services.ExportImport
                     fsaWorksheet.Hidden = eWorkSheetHidden.VeryHidden;
 
                     //create Headers and format them 
-                    var manager = new PropertyManager<Product>(properties.Where(p => !p.Ignore));
-                    manager.WriteCaption(worksheet, SetCaptionStyle);
+                    var manager = new PropertyManager<Product>(properties, _catalogSettings);
+                    manager.WriteCaption(worksheet);
 
                     var row = 2;
                     foreach (var item in itemsToExport)
                     {
                         manager.CurrentObject = item;
-                        manager.WriteToXlsx(worksheet, row++, _catalogSettings.ExportImportUseDropdownlistsForAssociatedEntities, fWorksheet: fpWorksheet);
+                        manager.WriteToXlsx(worksheet, row++, fWorksheet: fpWorksheet);
 
                         if (_catalogSettings.ExportImportProductAttributes)
                         {
@@ -495,7 +510,7 @@ namespace Nop.Services.ExportImport
             if (!attributes.Any())
                 return row;
 
-            attributeManager.WriteCaption(worksheet, SetCaptionStyle, row, ExportProductAttribute.ProducAttributeCellOffset);
+            attributeManager.WriteCaption(worksheet, row, ExportProductAttribute.ProducAttributeCellOffset);
             worksheet.Row(row).OutlineLevel = 1;
             worksheet.Row(row).Collapsed = true;
 
@@ -503,7 +518,7 @@ namespace Nop.Services.ExportImport
             {
                 row++;
                 attributeManager.CurrentObject = exportProducAttribute;
-                attributeManager.WriteToXlsx(worksheet, row, _catalogSettings.ExportImportUseDropdownlistsForAssociatedEntities, ExportProductAttribute.ProducAttributeCellOffset, faWorksheet);
+                attributeManager.WriteToXlsx(worksheet, row, ExportProductAttribute.ProducAttributeCellOffset, faWorksheet);
                 worksheet.Row(row).OutlineLevel = 1;
                 worksheet.Row(row).Collapsed = true;
             }
@@ -528,7 +543,7 @@ namespace Nop.Services.ExportImport
             if (!attributes.Any())
                 return row;
 
-            attributeManager.WriteCaption(worksheet, SetCaptionStyle, row, ExportProductAttribute.ProducAttributeCellOffset);
+            attributeManager.WriteCaption(worksheet, row, ExportProductAttribute.ProducAttributeCellOffset);
             worksheet.Row(row).OutlineLevel = 1;
             worksheet.Row(row).Collapsed = true;
 
@@ -536,7 +551,7 @@ namespace Nop.Services.ExportImport
             {
                 row++;
                 attributeManager.CurrentObject = exportProducAttribute;
-                attributeManager.WriteToXlsx(worksheet, row, _catalogSettings.ExportImportUseDropdownlistsForAssociatedEntities, ExportProductAttribute.ProducAttributeCellOffset, faWorksheet);
+                attributeManager.WriteToXlsx(worksheet, row, ExportProductAttribute.ProducAttributeCellOffset, faWorksheet);
                 worksheet.Row(row).OutlineLevel = 1;
                 worksheet.Row(row).Collapsed = true;
             }
@@ -559,7 +574,7 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<OrderItem>("TotalInclTax", oi => oi.PriceInclTax)
             };
 
-            var orderItemsManager = new PropertyManager<OrderItem>(orderItemProperties);
+            var orderItemsManager = new PropertyManager<OrderItem>(orderItemProperties, _catalogSettings);
 
             using (var stream = new MemoryStream())
             {
@@ -575,14 +590,14 @@ namespace Nop.Services.ExportImport
                     fpWorksheet.Hidden = eWorkSheetHidden.VeryHidden;
 
                     //create Headers and format them 
-                    var manager = new PropertyManager<Order>(properties.Where(p => !p.Ignore));
-                    manager.WriteCaption(worksheet, SetCaptionStyle);
+                    var manager = new PropertyManager<Order>(properties, _catalogSettings);
+                    manager.WriteCaption(worksheet);
 
                     var row = 2;
                     foreach (var order in itemsToExport)
                     {
                         manager.CurrentObject = order;
-                        manager.WriteToXlsx(worksheet, row++, _catalogSettings.ExportImportUseDropdownlistsForAssociatedEntities);
+                        manager.WriteToXlsx(worksheet, row++);
                         
                         //products
                         var orederItems = order.OrderItems.ToList();
@@ -594,7 +609,7 @@ namespace Nop.Services.ExportImport
                         if (!orederItems.Any())
                             continue;
 
-                        orderItemsManager.WriteCaption(worksheet, SetCaptionStyle, row, 2);
+                        orderItemsManager.WriteCaption(worksheet, row, 2);
                         worksheet.Row(row).OutlineLevel = 1;
                         worksheet.Row(row).Collapsed = true;
 
@@ -602,7 +617,7 @@ namespace Nop.Services.ExportImport
                         {
                             row++;
                             orderItemsManager.CurrentObject = orederItem;
-                            orderItemsManager.WriteToXlsx(worksheet, row, _catalogSettings.ExportImportUseDropdownlistsForAssociatedEntities, 2, fpWorksheet);
+                            orderItemsManager.WriteToXlsx(worksheet, row, 2, fpWorksheet);
                             worksheet.Row(row).OutlineLevel = 1;
                             worksheet.Row(row).Collapsed = true;
                         }
@@ -700,8 +715,8 @@ namespace Nop.Services.ExportImport
         /// <param name="manufacturers">Manufactures</param>
         public virtual byte[] ExportManufacturersToXlsx(IEnumerable<Manufacturer> manufacturers)
         {
-            //property array
-            var properties = new[]
+            //property manager 
+            var manager = new PropertyManager<Manufacturer>(new[]
             {
                 new PropertyByName<Manufacturer>("Id", p => p.Id),
                 new PropertyByName<Manufacturer>("Name", p => p.Name),
@@ -718,9 +733,9 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Manufacturer>("PriceRanges", p => p.PriceRanges, IgnoreExportManufacturerProperty()),
                 new PropertyByName<Manufacturer>("Published", p => p.Published, IgnoreExportManufacturerProperty()),
                 new PropertyByName<Manufacturer>("DisplayOrder", p => p.DisplayOrder)
-            };
+            }, _catalogSettings);
 
-            return ExportToXlsx(properties, manufacturers);
+            return manager.ExportToXlsx(manufacturers);
         }
 
         /// <summary>
@@ -755,8 +770,8 @@ namespace Nop.Services.ExportImport
                 parentCatagories = _categoryService.GetCategoriesByIds(categories.Select(c => c.ParentCategoryId).Where(id => id != 0).ToArray());
             }
 
-            //property array
-            var properties = new[]
+            //property manager 
+            var manager = new PropertyManager<Category>(new[]
             {
                 new PropertyByName<Category>("Id", p => p.Id),
                 new PropertyByName<Category>("Name", p => p.Name),
@@ -777,8 +792,9 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Category>("IncludeInTopMenu", p => p.IncludeInTopMenu, IgnoreExportCategoryProperty()),
                 new PropertyByName<Category>("Published", p => p.Published, IgnoreExportCategoryProperty()),
                 new PropertyByName<Category>("DisplayOrder", p => p.DisplayOrder)
-            };
-            return ExportToXlsx(properties, categories);
+            }, _catalogSettings);
+
+            return manager.ExportToXlsx(categories);
         }
 
         /// <summary>
@@ -1079,7 +1095,7 @@ namespace Nop.Services.ExportImport
                 if (!IgnoreExportPoductProperty(p => p.ProductTags))
                 {
                     xmlWriter.WriteStartElement("ProductTags");
-                    var productTags = product.ProductTags;
+                    var productTags = _productTagService.GetAllProductTagsByProductId(product.Id);
                     foreach (var productTag in productTags)
                     {
                         xmlWriter.WriteStartElement("ProductTag");
@@ -1277,7 +1293,7 @@ namespace Nop.Services.ExportImport
                     return ExportProductsToXlsxWithAttributes(properties, productList);
             }
 
-            return ExportToXlsx(properties, productList);
+            return new PropertyManager<Product>(properties, _catalogSettings).ExportToXlsx(productList);
         }
 
         /// <summary>
@@ -1482,7 +1498,9 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Order>("ShippingFaxNumber", p => p.ShippingAddress?.FaxNumber ?? string.Empty)
             };
 
-            return _orderSettings.ExportWithProducts ? ExportOrderToXlsxWithProducts(properties, orders) : ExportToXlsx(properties, orders);
+            return _orderSettings.ExportWithProducts
+                ? ExportOrderToXlsxWithProducts(properties, orders)
+                : new PropertyManager<Order>(properties, _catalogSettings).ExportToXlsx(orders);
         }
 
         /// <summary>
@@ -1491,8 +1509,8 @@ namespace Nop.Services.ExportImport
         /// <param name="customers">Customers</param>
         public virtual byte[] ExportCustomersToXlsx(IList<Customer> customers)
         {
-            //property array
-            var properties = new[]
+            //property manager 
+            var manager = new PropertyManager<Customer>(new[]
             {
                 new PropertyByName<Customer>("CustomerId", p => p.Id),
                 new PropertyByName<Customer>("CustomerGuid", p => p.CustomerGuid),
@@ -1531,9 +1549,9 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Customer>("ForumPostCount", p => p.GetAttribute<int>(SystemCustomerAttributeNames.ForumPostCount)),
                 new PropertyByName<Customer>("Signature", p => p.GetAttribute<string>(SystemCustomerAttributeNames.Signature)),
                 new PropertyByName<Customer>("CustomCustomerAttributes",  GetCustomCustomerAttributes)
-            };
+            }, _catalogSettings);
 
-            return ExportToXlsx(properties, customers);
+            return manager.ExportToXlsx(customers);
         }
 
         /// <summary>
@@ -1673,6 +1691,253 @@ namespace Nop.Services.ExportImport
             }
 
             return sb.ToString();
+        }
+        
+        /// <summary>
+        /// Export customer info (GDPR request) to XLSX 
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="storeId">Store identifier</param>
+        /// <returns>Customer GDPR info</returns>
+        public virtual byte[] ExportCustomerGdprInfoToXlsx(Customer customer, int storeId)
+        {
+            if (customer == null)
+                throw new ArgumentNullException(nameof(customer));
+
+            //customer info and customer attributes
+            var customerManager = new PropertyManager<Customer>(new[]
+            {
+                new PropertyByName<Customer>("Email", p => p.Email, _customerSettings.UsernamesEnabled),
+                new PropertyByName<Customer>("Username", p => p.Username, !_customerSettings.UsernamesEnabled), 
+                //attributes
+                new PropertyByName<Customer>("First name", p => p.GetAttribute<string>(SystemCustomerAttributeNames.FirstName)),
+                new PropertyByName<Customer>("Last name", p => p.GetAttribute<string>(SystemCustomerAttributeNames.LastName)),
+                new PropertyByName<Customer>("Gender", p => p.GetAttribute<string>(SystemCustomerAttributeNames.Gender), !_customerSettings.GenderEnabled),
+                new PropertyByName<Customer>("Date of birth", p => p.GetAttribute<string>(SystemCustomerAttributeNames.DateOfBirth), !_customerSettings.DateOfBirthEnabled),
+                new PropertyByName<Customer>("Company", p => p.GetAttribute<string>(SystemCustomerAttributeNames.Company), !_customerSettings.CompanyEnabled),
+                new PropertyByName<Customer>("Street address", p => p.GetAttribute<string>(SystemCustomerAttributeNames.StreetAddress), !_customerSettings.StreetAddressEnabled),
+                new PropertyByName<Customer>("Street address 2", p => p.GetAttribute<string>(SystemCustomerAttributeNames.StreetAddress2), !_customerSettings.StreetAddress2Enabled),
+                new PropertyByName<Customer>("Zip / postal code", p => p.GetAttribute<string>(SystemCustomerAttributeNames.ZipPostalCode), !_customerSettings.ZipPostalCodeEnabled),
+                new PropertyByName<Customer>("City", p => p.GetAttribute<string>(SystemCustomerAttributeNames.City), !_customerSettings.CityEnabled),
+                new PropertyByName<Customer>("County", p => p.GetAttribute<string>(SystemCustomerAttributeNames.County), !_customerSettings.CountyEnabled),
+                new PropertyByName<Customer>("Country", p => _countryService.GetCountryById(p.GetAttribute<int>(SystemCustomerAttributeNames.CountryId))?.Name ?? string.Empty, !_customerSettings.CountryEnabled),
+                new PropertyByName<Customer>("State province", p => _stateProvinceService.GetStateProvinceById(p.GetAttribute<int>(SystemCustomerAttributeNames.StateProvinceId))?.Name ?? string.Empty, !(_customerSettings.StateProvinceEnabled && _customerSettings.CountryEnabled)),
+                new PropertyByName<Customer>("Phone", p => p.GetAttribute<string>(SystemCustomerAttributeNames.Phone), !_customerSettings.PhoneEnabled),
+                new PropertyByName<Customer>("Fax", p => p.GetAttribute<string>(SystemCustomerAttributeNames.Fax), !_customerSettings.FaxEnabled),
+                new PropertyByName<Customer>("Customer attributes",  GetCustomCustomerAttributes)
+            }, _catalogSettings);
+
+            //customer orders
+            var orderManager = new PropertyManager<Order>(new[]
+            {
+                new PropertyByName<Order>("Order Number", p => p.CustomOrderNumber),
+                new PropertyByName<Order>("Order status", p => p.OrderStatus.GetLocalizedEnum(_localizationService, _workContext)),
+                new PropertyByName<Order>("Order total", p => _priceFormatter.FormatPrice(_currencyService.ConvertCurrency(p.OrderTotal, p.CurrencyRate), true, p.CustomerCurrencyCode, false, _workContext.WorkingLanguage)),
+                new PropertyByName<Order>("Shipping method", p => p.ShippingMethod),
+                new PropertyByName<Order>("Created on", p => _dateTimeHelper.ConvertToUserTime(p.CreatedOnUtc, DateTimeKind.Utc).ToString("D")),
+                new PropertyByName<Order>("Billing first name", p => p.BillingAddress?.FirstName ?? string.Empty),
+                new PropertyByName<Order>("Billing last name", p => p.BillingAddress?.LastName ?? string.Empty),
+                new PropertyByName<Order>("Billing email", p => p.BillingAddress?.Email ?? string.Empty),
+                new PropertyByName<Order>("Billing company", p => p.BillingAddress?.Company ?? string.Empty, !_addressSettings.CompanyEnabled),
+                new PropertyByName<Order>("Billing country", p => p.BillingAddress?.Country?.GetLocalized(c => c.Name) ?? string.Empty, !_addressSettings.CountryEnabled),
+                new PropertyByName<Order>("Billing state province",
+                    p => p.BillingAddress?.StateProvince?.GetLocalized(sp => sp.Name) ?? string.Empty, !_addressSettings.StateProvinceEnabled),
+                new PropertyByName<Order>("Billing county", p => p.BillingAddress?.County ?? string.Empty, !_addressSettings.CountyEnabled),
+                new PropertyByName<Order>("Billing city", p => p.BillingAddress?.City ?? string.Empty, !_addressSettings.CityEnabled),
+                new PropertyByName<Order>("Billing address 1", p => p.BillingAddress?.Address1 ?? string.Empty, !_addressSettings.StreetAddressEnabled),
+                new PropertyByName<Order>("Billing address 2", p => p.BillingAddress?.Address2 ?? string.Empty, !_addressSettings.StreetAddress2Enabled),
+                new PropertyByName<Order>("Billing zip postal code", p => p.BillingAddress?.ZipPostalCode ?? string.Empty, !_addressSettings.ZipPostalCodeEnabled),
+                new PropertyByName<Order>("Billing phone number", p => p.BillingAddress?.PhoneNumber ?? string.Empty, !_addressSettings.PhoneEnabled),
+                new PropertyByName<Order>("Billing fax number", p => p.BillingAddress?.FaxNumber ?? string.Empty, !_addressSettings.FaxEnabled),
+                new PropertyByName<Order>("Shipping first name", p => p.ShippingAddress?.FirstName ?? string.Empty),
+                new PropertyByName<Order>("Shipping last name", p => p.ShippingAddress?.LastName ?? string.Empty),
+                new PropertyByName<Order>("Shipping email", p => p.ShippingAddress?.Email ?? string.Empty),
+                new PropertyByName<Order>("Shipping company", p => p.ShippingAddress?.Company ?? string.Empty, !_addressSettings.CompanyEnabled),
+                new PropertyByName<Order>("Shipping country", p => p.ShippingAddress?.Country?.GetLocalized(c => c.Name) ?? string.Empty, !_addressSettings.CountryEnabled),
+                new PropertyByName<Order>("Shipping state province", p => p.ShippingAddress?.StateProvince?.GetLocalized(sp=>sp.Name) ?? string.Empty, !_addressSettings.StateProvinceEnabled),
+                new PropertyByName<Order>("Shipping county", p => p.ShippingAddress?.County ?? string.Empty, !_addressSettings.CountyEnabled),
+                new PropertyByName<Order>("Shipping city", p => p.ShippingAddress?.City ?? string.Empty, !_addressSettings.CityEnabled),
+                new PropertyByName<Order>("Shipping address 1", p => p.ShippingAddress?.Address1 ?? string.Empty, !_addressSettings.StreetAddressEnabled),
+                new PropertyByName<Order>("Shipping address 2", p => p.ShippingAddress?.Address2 ?? string.Empty, !_addressSettings.StreetAddress2Enabled),
+                new PropertyByName<Order>("Shipping zip postal code",
+                    p => p.ShippingAddress?.ZipPostalCode ?? string.Empty, !_addressSettings.ZipPostalCodeEnabled),
+                new PropertyByName<Order>("Shipping phone number", p => p.ShippingAddress?.PhoneNumber ?? string.Empty, !_addressSettings.PhoneEnabled),
+                new PropertyByName<Order>("Shipping fax number", p => p.ShippingAddress?.FaxNumber ?? string.Empty, !_addressSettings.FaxEnabled)
+            }, _catalogSettings);
+
+            var orderItemsManager = new PropertyManager<OrderItem>(new[]
+            {
+                new PropertyByName<OrderItem>("SKU", oi => oi.Product.Sku),
+                new PropertyByName<OrderItem>("Name", oi => oi.Product.GetLocalized(p => p.Name)),
+                new PropertyByName<OrderItem>("Price", oi => _priceFormatter.FormatPrice(_currencyService.ConvertCurrency(oi.Order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax ? oi.UnitPriceInclTax : oi.UnitPriceExclTax, oi.Order.CurrencyRate), true, oi.Order.CustomerCurrencyCode, false, _workContext.WorkingLanguage)),
+                new PropertyByName<OrderItem>("Quantity", oi => oi.Quantity),
+                new PropertyByName<OrderItem>("Total", oi => _priceFormatter.FormatPrice(oi.Order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax ? oi.PriceInclTax : oi.PriceExclTax))
+
+            }, _catalogSettings);
+
+            var orders = _orderService.SearchOrders(customerId: customer.Id);
+
+            //customer addresses
+            var addressManager = new PropertyManager<Address>(new[]
+            {
+                new PropertyByName<Address>("First name", p => p.FirstName),
+                new PropertyByName<Address>("Last name", p => p.LastName),
+                new PropertyByName<Address>("Email", p => p.Email),
+                new PropertyByName<Address>("Company", p => p.Company, !_addressSettings.CompanyEnabled),
+                new PropertyByName<Address>("Country", p => p.Country?.GetLocalized(c => c.Name) ?? string.Empty, !_addressSettings.CountryEnabled),
+                new PropertyByName<Address>("State province", p => p.StateProvince?.GetLocalized(sp => sp.Name) ?? string.Empty, !_addressSettings.StateProvinceEnabled),
+                new PropertyByName<Address>("County", p => p.County, !_addressSettings.CountyEnabled),
+                new PropertyByName<Address>("City", p => p.City, !_addressSettings.CityEnabled),
+                new PropertyByName<Address>("Address 1", p => p.Address1, !_addressSettings.StreetAddressEnabled),
+                new PropertyByName<Address>("Address 2", p => p.Address2, !_addressSettings.StreetAddress2Enabled),
+                new PropertyByName<Address>("Zip / postal code", p => p.ZipPostalCode, !_addressSettings.ZipPostalCodeEnabled),
+                new PropertyByName<Address>("Phone number", p => p.PhoneNumber, !_addressSettings.PhoneEnabled),
+                new PropertyByName<Address>("Fax number", p => p.FaxNumber, !_addressSettings.FaxEnabled),
+                new PropertyByName<Address>("Custom attributes", p => _customerAttributeFormatter.FormatAttributes(p.CustomAttributes, ";"))
+            }, _catalogSettings);
+
+            //customer private messages
+            var privateMessageManager = new PropertyManager<PrivateMessage>(new []
+            {
+                new PropertyByName<PrivateMessage>("From", pm => _customerSettings.UsernamesEnabled ? pm.FromCustomer.Username : pm.FromCustomer.Email),
+                new PropertyByName<PrivateMessage>("To", pm => _customerSettings.UsernamesEnabled ? pm.ToCustomer.Username : pm.ToCustomer.Email),
+                new PropertyByName<PrivateMessage>("Subject", pm => pm.Subject),
+                new PropertyByName<PrivateMessage>("Text", pm => pm.Text),
+                new PropertyByName<PrivateMessage>("Created on", pm => _dateTimeHelper.ConvertToUserTime(pm.CreatedOnUtc, DateTimeKind.Utc).ToString("D"))
+            }, _catalogSettings);
+
+            List<PrivateMessage> pmList = null;
+            if (_forumSettings.AllowPrivateMessages)
+            {
+                pmList = _forumService.GetAllPrivateMessages(storeId, customer.Id, 0, null, null, null, null).ToList();
+                pmList.AddRange(_forumService.GetAllPrivateMessages(storeId, 0, customer.Id, null, null, null, null).ToList());
+            }
+
+            //customer GDPR logs
+            var gdprLogManager = new PropertyManager<GdprLog>(new []
+            {
+                new PropertyByName<GdprLog>("Request type", log=>log.RequestType.GetLocalizedEnum(_localizationService, _workContext)), 
+                new PropertyByName<GdprLog>("Request details", log=>log.RequestDetails), 
+                new PropertyByName<GdprLog>("Created on", log=>_dateTimeHelper.ConvertToUserTime(log.CreatedOnUtc, DateTimeKind.Utc).ToString("D"))
+            }, _catalogSettings);
+
+            var gdprLog = _gdprService.GetAllLog(customer.Id);
+
+            using (var stream = new MemoryStream())
+            {
+                // ok, we can run the real code of the sample now
+                using (var xlPackage = new ExcelPackage(stream))
+                {
+                    // uncomment this line if you want the XML written out to the outputDir
+                    //xlPackage.DebugMode = true; 
+
+                    // get handles to the worksheets
+                    var customerInfoWorksheet = xlPackage.Workbook.Worksheets.Add("Customer info");
+                    var fWorksheet = xlPackage.Workbook.Worksheets.Add("DataForFilters");
+                    fWorksheet.Hidden = eWorkSheetHidden.VeryHidden;
+
+                    //customer info and customer attributes
+                    var customerInfoRow = 2;
+                    customerManager.CurrentObject = customer;
+                    customerManager.WriteCaption(customerInfoWorksheet);
+                    customerManager.WriteToXlsx(customerInfoWorksheet, customerInfoRow);
+
+                    //customer addresses
+                    if (customer.Addresses.Any())
+                    {
+                        customerInfoRow += 2;
+
+                        var cell = customerInfoWorksheet.Cells[customerInfoRow, 1];
+                        cell.Value = "Address List";
+                        customerInfoRow += 1;
+                        addressManager.SetCaptionStyle(cell);
+                        addressManager.WriteCaption(customerInfoWorksheet, customerInfoRow);
+
+                        foreach (var customerAddress in customer.Addresses)
+                        {
+                            customerInfoRow += 1;
+                            addressManager.CurrentObject = customerAddress;
+                            addressManager.WriteToXlsx(customerInfoWorksheet, customerInfoRow);
+                        }
+                    }
+
+                    //customer orders
+                    if (orders.Any())
+                    {
+                        var ordersWorksheet = xlPackage.Workbook.Worksheets.Add("Orders");
+
+                        orderManager.WriteCaption(ordersWorksheet);
+
+                        var orderRow = 1;
+
+                        foreach (var order in orders)
+                        {
+                            orderRow += 1;
+                            orderManager.CurrentObject = order;
+                            orderManager.WriteToXlsx(ordersWorksheet, orderRow);
+
+                            //products
+                            var orederItems = order.OrderItems.ToList();
+
+                            if (!orederItems.Any())
+                                continue;
+
+                            orderRow += 1;
+
+                            orderItemsManager.WriteCaption(ordersWorksheet, orderRow, 2);
+                            ordersWorksheet.Row(orderRow).OutlineLevel = 1;
+                            ordersWorksheet.Row(orderRow).Collapsed = true;
+
+                            foreach (var orederItem in orederItems)
+                            {
+                                orderRow++;
+                                orderItemsManager.CurrentObject = orederItem;
+                                orderItemsManager.WriteToXlsx(ordersWorksheet, orderRow, 2, fWorksheet);
+                                ordersWorksheet.Row(orderRow).OutlineLevel = 1;
+                                ordersWorksheet.Row(orderRow).Collapsed = true;
+                            }
+                        }
+                    }
+
+                    //customer private messages
+                    if (pmList?.Any() ?? false)
+                    {
+                        var privateMessageWorksheet = xlPackage.Workbook.Worksheets.Add("Private messages");
+                        privateMessageManager.WriteCaption(privateMessageWorksheet);
+
+                        var privateMessageRow = 1;
+
+                        foreach (var privateMessage in pmList)
+                        {
+                            privateMessageRow += 1;
+
+                            privateMessageManager.CurrentObject = privateMessage;
+                            privateMessageManager.WriteToXlsx(privateMessageWorksheet, privateMessageRow);
+                        }
+                    }
+
+                    //customer GDPR logs
+                    if (gdprLog.Any())
+                    {
+                        var gdprLogWorksheet = xlPackage.Workbook.Worksheets.Add("GDPR requests (log)");
+                        gdprLogManager.WriteCaption(gdprLogWorksheet);
+
+                        var gdprLogRow = 1;
+
+                        foreach (var log in gdprLog)
+                        {
+                            gdprLogRow += 1;
+
+                            gdprLogManager.CurrentObject = log;
+                            gdprLogManager.WriteToXlsx(gdprLogWorksheet, gdprLogRow);
+                        }
+                    }
+
+                    xlPackage.Save();
+                }
+
+                return stream.ToArray();
+            }
         }
 
         #endregion

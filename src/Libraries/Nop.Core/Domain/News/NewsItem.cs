@@ -83,8 +83,8 @@ namespace Nop.Core.Domain.News
         /// </summary>
         public virtual ICollection<NewsComment> NewsComments
         {
-            get { return _newsComments ?? (_newsComments = new List<NewsComment>()); }
-            protected set { _newsComments = value; }
+            get => _newsComments ?? (_newsComments = new List<NewsComment>());
+            protected set => _newsComments = value;
         }
         
         /// <summary>

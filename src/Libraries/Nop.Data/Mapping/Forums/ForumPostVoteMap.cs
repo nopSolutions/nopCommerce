@@ -1,24 +1,34 @@
-﻿using Nop.Core.Domain.Forums;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Nop.Core.Domain.Forums;
 
 namespace Nop.Data.Mapping.Forums
 {
     /// <summary>
-    /// Mapping class
+    /// Represents a forum post vote mapping configuration
     /// </summary>
     public partial class ForumPostVoteMap : NopEntityTypeConfiguration<ForumPostVote>
     {
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        public ForumPostVoteMap()
-        {
-            this.ToTable("Forums_PostVote");
-            this.HasKey(fpv => fpv.Id);
+        #region Methods
 
-            this.HasRequired(fpv => fpv.ForumPost)
+        /// <summary>
+        /// Configures the entity
+        /// </summary>
+        /// <param name="builder">The builder to be used to configure the entity</param>
+        public override void Configure(EntityTypeBuilder<ForumPostVote> builder)
+        {
+            builder.ToTable("Forums_PostVote");
+            builder.HasKey(postVote => postVote.Id);
+
+            builder.HasOne(postVote => postVote.ForumPost)
                 .WithMany()
-                .HasForeignKey(fpv => fpv.ForumPostId)
-                .WillCascadeOnDelete(true);
+                .HasForeignKey(postVote => postVote.ForumPostId)
+                .IsRequired();
+
+            //add custom configuration
+            this.PostConfigure(builder);
         }
+
+        #endregion
     }
 }

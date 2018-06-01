@@ -30,6 +30,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Forums;
+using Nop.Core.Domain.Gdpr;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Logging;
 using Nop.Core.Domain.Media;
@@ -37,6 +38,7 @@ using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Polls;
+using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Stores;
 using Nop.Core.Domain.Tax;
@@ -51,7 +53,6 @@ using Nop.Services.Seo;
 using Nop.Services.Shipping;
 using Nop.Services.Shipping.Pickup;
 using Nop.Services.Tax;
-using Nop.Web.Framework.Security.Captcha;
 
 namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
 {
@@ -108,7 +109,6 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
             //countries
             CreateMap<CountryModel, Country>()
                 .ForMember(dest => dest.StateProvinces, mo => mo.Ignore())
-                .ForMember(dest => dest.RestrictedShippingMethods, mo => mo.Ignore())
                 .ForMember(dest => dest.LimitedToStores, mo => mo.Ignore());
             CreateMap<Country, CountryModel>()
                 .ForMember(dest => dest.NumberOfStates,
@@ -341,7 +341,6 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.ProductAttributesExist, mo => mo.Ignore())
                 .ForMember(dest => dest.Form, mo => mo.Ignore());
             CreateMap<ProductModel, Product>()
-                .ForMember(dest => dest.ProductTags, mo => mo.Ignore())
                 .ForMember(dest => dest.CreatedOnUtc, mo => mo.Ignore())
                 .ForMember(dest => dest.UpdatedOnUtc, mo => mo.Ignore())
                 .ForMember(dest => dest.ParentGroupedProductId, mo => mo.Ignore())
@@ -439,8 +438,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.Locales, mo => mo.Ignore())
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore())
                 .ForMember(dest => dest.Form, mo => mo.Ignore());
-            CreateMap<ShippingMethodModel, ShippingMethod>()
-                .ForMember(dest => dest.RestrictedCountries, mo => mo.Ignore());
+            CreateMap<ShippingMethodModel, ShippingMethod>();
             //delivery dates
             CreateMap<DeliveryDate, DeliveryDateModel>()
                 .ForMember(dest => dest.Locales, mo => mo.Ignore())
@@ -617,8 +615,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.TaxDisplayTypeValues, mo => mo.Ignore())
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore())
                 .ForMember(dest => dest.Form, mo => mo.Ignore());
-            CreateMap<CustomerRoleModel, CustomerRole>()
-                .ForMember(dest => dest.PermissionRecords, mo => mo.Ignore());
+            CreateMap<CustomerRoleModel, CustomerRole>();
 
             //product attributes
             CreateMap<ProductAttribute, ProductAttributeModel>()
@@ -702,10 +699,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
             CreateMap<DiscountModel, Discount>()
                 .ForMember(dest => dest.DiscountType, mo => mo.Ignore())
                 .ForMember(dest => dest.DiscountLimitation, mo => mo.Ignore())
-                .ForMember(dest => dest.DiscountRequirements, mo => mo.Ignore())
-                .ForMember(dest => dest.AppliedToCategories, mo => mo.Ignore())
-                .ForMember(dest => dest.AppliedToManufacturers, mo => mo.Ignore())
-                .ForMember(dest => dest.AppliedToProducts, mo => mo.Ignore());
+                .ForMember(dest => dest.DiscountRequirements, mo => mo.Ignore());
             //gift cards
             CreateMap<GiftCard, GiftCardModel>()
                 .ForMember(dest => dest.PurchasedWithOrderId, mo => mo.Ignore())
@@ -750,7 +744,8 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.Form, mo => mo.Ignore());
             CreateMap<CaptchaSettingsModel, CaptchaSettings>()
                 .ForMember(dest => dest.ReCaptchaTheme, mo => mo.Ignore())
-                .ForMember(dest => dest.ReCaptchaLanguage, mo => mo.Ignore());
+                .ForMember(dest => dest.ReCaptchaDefaultLanguage, mo => mo.Ignore())
+                .ForMember(dest => dest.AutomaticallyChooseLanguage, mo => mo.Ignore());
             CreateMap<TaxSettings, TaxSettingsModel>()
                 .ForMember(dest => dest.DefaultTaxAddress, mo => mo.Ignore())
                 .ForMember(dest => dest.TaxDisplayTypeValues, mo => mo.Ignore())
@@ -941,6 +936,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.ProductSearchAutoCompleteNumberOfProducts_OverrideForStore,
                     mo => mo.Ignore())
                 .ForMember(dest => dest.ShowProductImagesInSearchAutoComplete_OverrideForStore, mo => mo.Ignore())
+                .ForMember(dest => dest.ShowLinkToAllResultInSearchAutoComplete_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.ProductSearchTermMinimumLength_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.ProductsAlsoPurchasedEnabled_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.ProductsAlsoPurchasedNumber_OverrideForStore, mo => mo.Ignore())
@@ -970,7 +966,8 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.SortOptionSearchModel, mo => mo.Ignore())
                 .ForMember(dest => dest.Form, mo => mo.Ignore())
                 .ForMember(dest => dest.ExportImportSplitProductsFile_OverrideForStore, mo => mo.Ignore())
-                .ForMember(dest => dest.RemoveRequiredProducts_OverrideForStore, mo => mo.Ignore());
+                .ForMember(dest => dest.RemoveRequiredProducts_OverrideForStore, mo => mo.Ignore())
+                .ForMember(dest => dest.ExportImportRelatedEntitiesByName_OverrideForStore, mo => mo.Ignore());
             CreateMap<CatalogSettingsModel, CatalogSettings>()
                 .ForMember(dest => dest.PublishBackProductWhenCancellingOrders, mo => mo.Ignore())
                 .ForMember(dest => dest.DefaultProductRatingValue, mo => mo.Ignore())
@@ -987,7 +984,8 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.ProductSortingEnumDisabled, mo => mo.Ignore())
                 .ForMember(dest => dest.ProductSortingEnumDisplayOrder, mo => mo.Ignore())
                 .ForMember(dest => dest.ExportImportUseDropdownlistsForAssociatedEntities, mo => mo.Ignore())
-                .ForMember(dest => dest.ExportImportProductsCountInOneFile, mo => mo.Ignore());
+                .ForMember(dest => dest.ExportImportProductsCountInOneFile, mo => mo.Ignore())
+                .ForMember(dest => dest.CountDisplayedYearsDatePicker, mo => mo.Ignore());
             CreateMap<RewardPointsSettings, RewardPointsSettingsModel>()
                 .ForMember(dest => dest.PrimaryStoreCurrencyCode, mo => mo.Ignore())
                 .ForMember(dest => dest.ActiveStoreScopeConfiguration, mo => mo.Ignore())
@@ -1104,6 +1102,16 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.OnlineCustomerMinutes, mo => mo.Ignore())
                 .ForMember(dest => dest.SuffixDeletedCustomers, mo => mo.Ignore())
                 .ForMember(dest => dest.DeleteGuestTaskOlderThanMinutes, mo => mo.Ignore());
+            CreateMap<GdprSettings, GdprSettingsModel>()
+                .ForMember(dest => dest.GdprConsentSearchModel, mo => mo.Ignore())
+                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore())
+                .ForMember(dest => dest.Form, mo => mo.Ignore());
+            CreateMap<GdprSettingsModel, GdprSettings>();
+            //GDPR consents
+            CreateMap<GdprConsent, GdprConsentModel>()
+                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore())
+                .ForMember(dest => dest.Form, mo => mo.Ignore());
+            CreateMap<GdprConsentModel, GdprConsent>();
             CreateMap<AddressSettings, AddressSettingsModel>()
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore())
                 .ForMember(dest => dest.Form, mo => mo.Ignore());

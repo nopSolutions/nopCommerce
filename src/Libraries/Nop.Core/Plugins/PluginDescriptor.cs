@@ -61,14 +61,17 @@ namespace Nop.Core.Plugins
             {
                 //try resolve
             }
+
             if (instance == null)
             {
                 //not resolved
                 instance = EngineContext.Current.ResolveUnregistered(PluginType);
             }
+
             var typedInstance = instance as T;
             if (typedInstance != null)
                 typedInstance.PluginDescriptor = this;
+
             return typedInstance;
         }
 
@@ -208,6 +211,5 @@ namespace Nop.Core.Plugins
         public virtual Assembly ReferencedAssembly { get; internal set; }
 
         #endregion
-
     }
 }

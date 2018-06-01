@@ -43,7 +43,7 @@ namespace Nop.Core.Domain.Tax
         public bool DisplayTaxRates { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether prices incude tax
+        /// Gets or sets a value indicating whether prices include tax
         /// </summary>
         public bool PricesIncludeTax { get; set; }
 
@@ -63,7 +63,7 @@ namespace Nop.Core.Domain.Tax
         public bool HideTaxInOrderSummary { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether we should always exclude tax from order subtotal (no matter of selected tax dispay type)
+        /// Gets or sets a value indicating whether we should always exclude tax from order subtotal (no matter of selected tax display type)
         /// </summary>
         public bool ForceTaxExclusionFromOrderSubtotal { get; set; }
 
@@ -78,7 +78,7 @@ namespace Nop.Core.Domain.Tax
         public bool ShippingIsTaxable { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether shipping price incudes tax
+        /// Gets or sets a value indicating whether shipping price includes tax
         /// </summary>
         public bool ShippingPriceIncludesTax { get; set; }
 
@@ -93,7 +93,7 @@ namespace Nop.Core.Domain.Tax
         public bool PaymentMethodAdditionalFeeIsTaxable { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether payment method additional fee incudes tax
+        /// Gets or sets a value indicating whether payment method additional fee includes tax
         /// </summary>
         public bool PaymentMethodAdditionalFeeIncludesTax { get; set; }
 
@@ -103,7 +103,7 @@ namespace Nop.Core.Domain.Tax
         public int PaymentMethodAdditionalFeeTaxClassId { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether EU VAT (Eupore Union Value Added Tax) is enabled
+        /// Gets or sets a value indicating whether EU VAT (Europe Union Value Added Tax) is enabled
         /// </summary>
         public bool EuVatEnabled { get; set; }
 

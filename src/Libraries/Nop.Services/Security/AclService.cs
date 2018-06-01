@@ -7,7 +7,7 @@ using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Security;
-using Nop.Data;
+using Nop.Data.Extensions;
 using Nop.Services.Events;
 
 namespace Nop.Services.Security
@@ -114,7 +114,7 @@ namespace Nop.Services.Security
                 throw new ArgumentNullException(nameof(entity));
 
             var entityId = entity.Id;
-            var entityName = entity.GetUnproxiedEntityType().Name;
+            var entityName = entity.GetType().BaseType.Name;
 
             var query = from ur in _aclRecordRepository.Table
                         where ur.EntityId == entityId &&
@@ -158,7 +158,7 @@ namespace Nop.Services.Security
                 throw new ArgumentOutOfRangeException("customerRoleId");
 
             var entityId = entity.Id;
-            var entityName = entity.GetUnproxiedEntityType().Name;
+            var entityName = entity.GetType().BaseType.Name;
 
             var aclRecord = new AclRecord
             {
@@ -200,7 +200,7 @@ namespace Nop.Services.Security
                 throw new ArgumentNullException(nameof(entity));
 
             var entityId = entity.Id;
-            var entityName = entity.GetUnproxiedEntityType().Name;
+            var entityName = entity.GetType().BaseType.Name;
 
             var key = string.Format(ACLRECORD_BY_ENTITYID_NAME_KEY, entityId, entityName);
             return _cacheManager.Get(key, () =>

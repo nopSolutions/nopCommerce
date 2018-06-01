@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Discounts;
+using Nop.Core.Domain.Gdpr;
 using Nop.Core.Domain.Logging;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
@@ -840,6 +841,27 @@ namespace Nop.Web.Areas.Admin.Factories
             PrepareDefaultItem(items, withSpecialDefaultItem, defaultItemText);
         }
 
+        /// <summary>
+        /// Prepare available GDPR request types
+        /// </summary>
+        /// <param name="items">Request type items</param>
+        /// <param name="withSpecialDefaultItem">Whether to insert the first special item for the default value</param>
+        /// <param name="defaultItemText">Default item text; pass null to use default value of the default item text</param>
+        public virtual void PrepareGdprRequestTypes(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
+        {
+            if (items == null)
+                throw new ArgumentNullException(nameof(items));
+
+            //prepare available request types
+            var gdprRequestTypeItems = GdprRequestType.ConsentAgree.ToSelectList(false);
+            foreach (var gdprRequestTypeItem in gdprRequestTypeItems)
+            {
+                items.Add(gdprRequestTypeItem);
+            }
+
+            //insert special item for the default value
+            PrepareDefaultItem(items, withSpecialDefaultItem, defaultItemText);
+        }
         #endregion
     }
 }

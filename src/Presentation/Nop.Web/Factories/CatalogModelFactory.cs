@@ -175,7 +175,7 @@ namespace Nop.Web.Factories
                 pagingFilteringModel.AvailableSortOptions.Add(new SelectListItem
                 {
                     Text = ((ProductSortingEnum)option.Id).GetLocalizedEnum(_localizationService, _workContext),
-                    Value = _webHelper.ModifyQueryString(currentPageUrl, $"orderby={option.Id}", null),
+                    Value = _webHelper.ModifyQueryString(currentPageUrl, "orderby", option.Id.ToString()),
                     Selected = option.Id == command.OrderBy
                 });
             }
@@ -207,14 +207,14 @@ namespace Nop.Web.Factories
                 pagingFilteringModel.AvailableViewModes.Add(new SelectListItem
                 {
                     Text = _localizationService.GetResource("Catalog.ViewMode.Grid"),
-                    Value = _webHelper.ModifyQueryString(currentPageUrl, "viewmode=grid", null),
+                    Value = _webHelper.ModifyQueryString(currentPageUrl, "viewmode", "grid"),
                     Selected = viewMode == "grid"
                 });
                 //list
                 pagingFilteringModel.AvailableViewModes.Add(new SelectListItem
                 {
                     Text = _localizationService.GetResource("Catalog.ViewMode.List"),
-                    Value = _webHelper.ModifyQueryString(currentPageUrl, "viewmode=list", null),
+                    Value = _webHelper.ModifyQueryString(currentPageUrl, "viewmode", "list"),
                     Selected = viewMode == "list"
                 });
             }
@@ -261,8 +261,7 @@ namespace Nop.Web.Factories
                     }
 
                     var currentPageUrl = _webHelper.GetThisPageUrl(true);
-                    var sortUrl = _webHelper.ModifyQueryString(currentPageUrl, "pagesize={0}", null);
-                    sortUrl = _webHelper.RemoveQueryString(sortUrl, "pagenumber");
+                    var sortUrl = _webHelper.RemoveQueryString(currentPageUrl, "pagenumber");
 
                     foreach (var pageSize in pageSizes)
                     {
@@ -278,7 +277,7 @@ namespace Nop.Web.Factories
                         pagingFilteringModel.PageSizeOptions.Add(new SelectListItem
                         {
                             Text = pageSize,
-                            Value = string.Format(sortUrl, pageSize),
+                            Value = _webHelper.ModifyQueryString(sortUrl, "pagesize", pageSize),
                             Selected = pageSize.Equals(command.PageSize.ToString(), StringComparison.InvariantCultureIgnoreCase)
                         });
                     }

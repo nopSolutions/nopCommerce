@@ -15,6 +15,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Forums;
+using Nop.Core.Domain.Gdpr;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Logging;
 using Nop.Core.Domain.Media;
@@ -4144,13 +4145,17 @@ namespace Nop.Services.Installation
                 ZipPostalCode = "10021",
                 CreatedOnUtc = DateTime.UtcNow,
             };
-            adminUser.Addresses.Add(defaultAdminUserAddress);
+            //adminUser.Addresses.Add(defaultAdminUserAddress);
+            adminUser.CustomerAddressMappings.Add(new CustomerAddressMapping { Address = defaultAdminUserAddress });
             adminUser.BillingAddress = defaultAdminUserAddress;
             adminUser.ShippingAddress = defaultAdminUserAddress;
 
-            adminUser.CustomerRoles.Add(crAdministrators);
-            adminUser.CustomerRoles.Add(crForumModerators);
-            adminUser.CustomerRoles.Add(crRegistered);
+            //adminUser.CustomerRoles.Add(crAdministrators);
+            //adminUser.CustomerRoles.Add(crForumModerators);
+            //adminUser.CustomerRoles.Add(crRegistered);
+            adminUser.CustomerCustomerRoleMappings.Add(new CustomerCustomerRoleMapping { CustomerRole = crAdministrators });
+            adminUser.CustomerCustomerRoleMappings.Add(new CustomerCustomerRoleMapping { CustomerRole = crForumModerators });
+            adminUser.CustomerCustomerRoleMappings.Add(new CustomerCustomerRoleMapping { CustomerRole = crRegistered });
 
             _customerRepository.Insert(adminUser);
             //set default customer name
@@ -4190,11 +4195,13 @@ namespace Nop.Services.Installation
                 ZipPostalCode = "90077",
                 CreatedOnUtc = DateTime.UtcNow,
             };
-            secondUser.Addresses.Add(defaultSecondUserAddress);
+            //secondUser.Addresses.Add(defaultSecondUserAddress);
+            secondUser.CustomerAddressMappings.Add(new CustomerAddressMapping { Address = defaultSecondUserAddress });
             secondUser.BillingAddress = defaultSecondUserAddress;
             secondUser.ShippingAddress = defaultSecondUserAddress;
 
-            secondUser.CustomerRoles.Add(crRegistered);
+            //secondUser.CustomerRoles.Add(crRegistered);
+            secondUser.CustomerCustomerRoleMappings.Add(new CustomerCustomerRoleMapping { CustomerRole = crRegistered });
 
             _customerRepository.Insert(secondUser);
             //set default customer name
@@ -4238,11 +4245,13 @@ namespace Nop.Services.Installation
                 ZipPostalCode = "NW1 6XE",
                 CreatedOnUtc = DateTime.UtcNow,
             };
-            thirdUser.Addresses.Add(defaultThirdUserAddress);
+            //thirdUser.Addresses.Add(defaultThirdUserAddress);
+            thirdUser.CustomerAddressMappings.Add(new CustomerAddressMapping { Address = defaultThirdUserAddress });
             thirdUser.BillingAddress = defaultThirdUserAddress;
             thirdUser.ShippingAddress = defaultThirdUserAddress;
 
-            thirdUser.CustomerRoles.Add(crRegistered);
+            //thirdUser.CustomerRoles.Add(crRegistered);
+            thirdUser.CustomerCustomerRoleMappings.Add(new CustomerCustomerRoleMapping { CustomerRole = crRegistered });
 
             _customerRepository.Insert(thirdUser);
             //set default customer name
@@ -4286,11 +4295,13 @@ namespace Nop.Services.Installation
                 ZipPostalCode = "KY16 9AX",
                 CreatedOnUtc = DateTime.UtcNow,
             };
-            fourthUser.Addresses.Add(defaultFourthUserAddress);
+            //fourthUser.Addresses.Add(defaultFourthUserAddress);
+            fourthUser.CustomerAddressMappings.Add(new CustomerAddressMapping { Address = defaultFourthUserAddress });
             fourthUser.BillingAddress = defaultFourthUserAddress;
             fourthUser.ShippingAddress = defaultFourthUserAddress;
 
-            fourthUser.CustomerRoles.Add(crRegistered);
+            //fourthUser.CustomerRoles.Add(crRegistered);
+            fourthUser.CustomerCustomerRoleMappings.Add(new CustomerCustomerRoleMapping { CustomerRole = crRegistered });
 
             _customerRepository.Insert(fourthUser);
             //set default customer name
@@ -4335,11 +4346,13 @@ namespace Nop.Services.Installation
                 ZipPostalCode = "99901",
                 CreatedOnUtc = DateTime.UtcNow,
             };
-            fifthUser.Addresses.Add(defaultFifthUserAddress);
+            //fifthUser.Addresses.Add(defaultFifthUserAddress);
+            fifthUser.CustomerAddressMappings.Add(new CustomerAddressMapping { Address = defaultFifthUserAddress });
             fifthUser.BillingAddress = defaultFifthUserAddress;
             fifthUser.ShippingAddress = defaultFifthUserAddress;
 
-            fifthUser.CustomerRoles.Add(crRegistered);
+            //fifthUser.CustomerRoles.Add(crRegistered);
+            fifthUser.CustomerCustomerRoleMappings.Add(new CustomerCustomerRoleMapping { CustomerRole = crRegistered });
 
             _customerRepository.Insert(fifthUser);
             //set default customer name
@@ -4384,11 +4397,13 @@ namespace Nop.Services.Installation
                 ZipPostalCode = "S7K 1J9",
                 CreatedOnUtc = DateTime.UtcNow,
             };
-            sixthUser.Addresses.Add(defaultSixthUserAddress);
+            //sixthUser.Addresses.Add(defaultSixthUserAddress);
+            sixthUser.CustomerAddressMappings.Add(new CustomerAddressMapping { Address = defaultSixthUserAddress });
             sixthUser.BillingAddress = defaultSixthUserAddress;
             sixthUser.ShippingAddress = defaultSixthUserAddress;
 
-            sixthUser.CustomerRoles.Add(crRegistered);
+            //sixthUser.CustomerRoles.Add(crRegistered);
+            sixthUser.CustomerCustomerRoleMappings.Add(new CustomerCustomerRoleMapping { CustomerRole = crRegistered });
 
             _customerRepository.Insert(sixthUser);
             //set default customer name
@@ -4418,7 +4433,8 @@ namespace Nop.Services.Installation
                 LastActivityDateUtc = DateTime.UtcNow,
                 RegisteredInStoreId = storeId
             };
-            searchEngineUser.CustomerRoles.Add(crGuests);
+            //searchEngineUser.CustomerRoles.Add(crGuests);
+            searchEngineUser.CustomerCustomerRoleMappings.Add(new CustomerCustomerRoleMapping { CustomerRole = crGuests });
             _customerRepository.Insert(searchEngineUser);
 
 
@@ -4435,7 +4451,8 @@ namespace Nop.Services.Installation
                 LastActivityDateUtc = DateTime.UtcNow,
                 RegisteredInStoreId = storeId
             };
-            backgroundTaskUser.CustomerRoles.Add(crGuests);
+            //backgroundTaskUser.CustomerRoles.Add(crGuests);
+            backgroundTaskUser.CustomerCustomerRoleMappings.Add(new CustomerCustomerRoleMapping { CustomerRole = crGuests });
             _customerRepository.Insert(backgroundTaskUser);
         }
 
@@ -5905,7 +5922,6 @@ namespace Nop.Services.Installation
             settingService.SaveSetting(new CommonSettings
             {
                 UseSystemEmailForContactUsForm = true,
-                UseStoredProceduresIfSupported = true,
                 UseStoredProcedureForLoadingCategories = true,
                 SitemapEnabled = true,
                 SitemapPageSize = 200,
@@ -6019,6 +6035,13 @@ namespace Nop.Services.Installation
                 SpecificationAttributes =true
             });
 
+            settingService.SaveSetting(new GdprSettings
+            {
+                GdprEnabled = false,
+                LogPrivacyPolicyConsent = true,
+                LogNewsletterConsent = true
+            });
+
             settingService.SaveSetting(new CatalogSettings
             {
                 AllowViewUnpublishedProductPage = true,
@@ -6054,6 +6077,7 @@ namespace Nop.Services.Installation
                 CompareProductsNumber = 4,
                 ProductSearchAutoCompleteEnabled = true,
                 ProductSearchAutoCompleteNumberOfProducts = 10,
+                ShowLinkToAllResultInSearchAutoComplete = false,
                 ProductSearchTermMinimumLength = 3,
                 ShowProductImagesInSearchAutoComplete = false,
                 ShowBestsellersOnHomepage = false,
@@ -6097,7 +6121,9 @@ namespace Nop.Services.Installation
                 ExportImportProductSpecificationAttributes = true,
                 ExportImportUseDropdownlistsForAssociatedEntities = true,
                 ExportImportProductsCountInOneFile = 500,
-                ExportImportSplitProductsFile = false
+                ExportImportSplitProductsFile = false,
+                ExportImportRelatedEntitiesByName = true,
+                CountDisplayedYearsDatePicker = 1
             });
 
             settingService.SaveSetting(new LocalizationSettings
@@ -6530,6 +6556,12 @@ namespace Nop.Services.Installation
                 DisplayShoppingCartFooterItem = true,
                 DisplayWishlistFooterItem = true,
                 DisplayApplyVendorAccountFooterItem = true
+            });
+
+            settingService.SaveSetting(new CaptchaSettings
+            {
+                ReCaptchaDefaultLanguage = "",
+                AutomaticallyChooseLanguage = true
             });
         }
 
@@ -12169,7 +12201,8 @@ namespace Nop.Services.Installation
                     Name = tag,
                 };
             }
-            product.ProductTags.Add(productTag);
+            //product.ProductTags.Add(productTag);
+            product.ProductProductTagMappings.Add(new ProductProductTagMapping { ProductTag = productTag });
             _productRepository.Update(product);
 
             //search engine name

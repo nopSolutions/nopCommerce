@@ -48,7 +48,7 @@ namespace Nop.Services.Stores
         /// </summary>
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="storeRepository">Store repository</param>
-        /// <param name="eventPublisher">Event published</param>
+        /// <param name="eventPublisher">Event publisher</param>
         public StoreService(IStaticCacheManager cacheManager,
             IRepository<Store> storeRepository,
             IEventPublisher eventPublisher)

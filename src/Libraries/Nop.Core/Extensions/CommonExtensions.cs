@@ -22,7 +22,7 @@ namespace Nop.Core.Extensions
         /// Get element value
         /// </summary>
         /// <param name="node">XML node</param>
-        /// <param name="elName">Eelement name</param>
+        /// <param name="elName">Element name</param>
         /// <returns>Value (text)</returns>
         public static string ElText(this XmlNode node, string elName)
         {

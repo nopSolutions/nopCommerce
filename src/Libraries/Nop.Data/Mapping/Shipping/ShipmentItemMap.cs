@@ -1,23 +1,34 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Shipping;
 
 namespace Nop.Data.Mapping.Shipping
 {
     /// <summary>
-    /// Mapping class
+    /// Represents a shipment item mapping configuration
     /// </summary>
     public partial class ShipmentItemMap : NopEntityTypeConfiguration<ShipmentItem>
     {
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        public ShipmentItemMap()
-        {
-            this.ToTable("ShipmentItem");
-            this.HasKey(si => si.Id);
+        #region Methods
 
-            this.HasRequired(si => si.Shipment)
-                .WithMany(s => s.ShipmentItems)
-                .HasForeignKey(si => si.ShipmentId);
+        /// <summary>
+        /// Configures the entity
+        /// </summary>
+        /// <param name="builder">The builder to be used to configure the entity</param>
+        public override void Configure(EntityTypeBuilder<ShipmentItem> builder)
+        {
+            builder.ToTable(nameof(ShipmentItem));
+            builder.HasKey(item => item.Id);
+
+            builder.HasOne(item => item.Shipment)
+                .WithMany(shipment => shipment.ShipmentItems)
+                .HasForeignKey(item => item.ShipmentId)
+                .IsRequired();
+
+            //add custom configuration
+            this.PostConfigure(builder);
         }
+
+        #endregion
     }
 }

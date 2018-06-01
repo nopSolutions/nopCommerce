@@ -11,7 +11,7 @@
             var languages = Model.AvailableLanguages.Select(lang => new SelectListItem
             {
                 Text = lang.Name,
-                Value = webHelper.ModifyQueryString(Url.Action("SetLanguage", "Common", new {langid = lang.Id, area = AreaNames.Admin }), "returnurl=" + WebUtility.UrlEncode(webHelper.GetRawUrl(httpContextAccessor.HttpContext.Request)), null),
+                Value = webHelper.ModifyQueryString(Url.Action("SetLanguage", "Common", new {langid = lang.Id, area = AreaNames.Admin }, webHelper.CurrentRequestProtocol), "returnurl", webHelper.GetRawUrl(httpContextAccessor.HttpContext.Request)),
                 Selected = lang.Id.Equals(Model.CurrentLanguage.Id)
             });
 

@@ -5,12 +5,12 @@ using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Media;
+using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Vendors;
 using Nop.Services.Common;
 using Nop.Services.Localization;
 using Nop.Services.Media;
 using Nop.Services.Vendors;
-using Nop.Web.Framework.Security.Captcha;
 using Nop.Web.Models.Vendors;
 
 namespace Nop.Web.Factories

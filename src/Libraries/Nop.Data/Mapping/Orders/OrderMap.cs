@@ -1,59 +1,69 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Orders;
 
 namespace Nop.Data.Mapping.Orders
 {
     /// <summary>
-    /// Mapping class
+    /// Represents an order mapping configuration
     /// </summary>
     public partial class OrderMap : NopEntityTypeConfiguration<Order>
     {
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        public OrderMap()
-        {
-            this.ToTable("Order");
-            this.HasKey(o => o.Id);
-            this.Property(o => o.CurrencyRate).HasPrecision(18, 8);
-            this.Property(o => o.OrderSubtotalInclTax).HasPrecision(18, 4);
-            this.Property(o => o.OrderSubtotalExclTax).HasPrecision(18, 4);
-            this.Property(o => o.OrderSubTotalDiscountInclTax).HasPrecision(18, 4);
-            this.Property(o => o.OrderSubTotalDiscountExclTax).HasPrecision(18, 4);
-            this.Property(o => o.OrderShippingInclTax).HasPrecision(18, 4);
-            this.Property(o => o.OrderShippingExclTax).HasPrecision(18, 4);
-            this.Property(o => o.PaymentMethodAdditionalFeeInclTax).HasPrecision(18, 4);
-            this.Property(o => o.PaymentMethodAdditionalFeeExclTax).HasPrecision(18, 4);
-            this.Property(o => o.OrderTax).HasPrecision(18, 4);
-            this.Property(o => o.OrderDiscount).HasPrecision(18, 4);
-            this.Property(o => o.OrderTotal).HasPrecision(18, 4);
-            this.Property(o => o.RefundedAmount).HasPrecision(18, 4);
-            this.Property(o => o.CustomOrderNumber).IsRequired();
+        #region Methods
 
-            this.Ignore(o => o.OrderStatus);
-            this.Ignore(o => o.PaymentStatus);
-            this.Ignore(o => o.ShippingStatus);
-            this.Ignore(o => o.CustomerTaxDisplayType);
-            this.Ignore(o => o.TaxRatesDictionary);
-            
-            this.HasRequired(o => o.Customer)
+        /// <summary>
+        /// Configures the entity
+        /// </summary>
+        /// <param name="builder">The builder to be used to configure the entity</param>
+        public override void Configure(EntityTypeBuilder<Order> builder)
+        {
+            builder.ToTable(nameof(Order));
+            builder.HasKey(order => order.Id);
+
+            builder.Property(order => order.CurrencyRate).HasColumnType("decimal(18, 8)");
+            builder.Property(order => order.OrderSubtotalInclTax).HasColumnType("decimal(18, 4)");
+            builder.Property(order => order.OrderSubtotalExclTax).HasColumnType("decimal(18, 4)");
+            builder.Property(order => order.OrderSubTotalDiscountInclTax).HasColumnType("decimal(18, 4)");
+            builder.Property(order => order.OrderSubTotalDiscountExclTax).HasColumnType("decimal(18, 4)");
+            builder.Property(order => order.OrderShippingInclTax).HasColumnType("decimal(18, 4)");
+            builder.Property(order => order.OrderShippingExclTax).HasColumnType("decimal(18, 4)");
+            builder.Property(order => order.PaymentMethodAdditionalFeeInclTax).HasColumnType("decimal(18, 4)");
+            builder.Property(order => order.PaymentMethodAdditionalFeeExclTax).HasColumnType("decimal(18, 4)");
+            builder.Property(order => order.OrderTax).HasColumnType("decimal(18, 4)");
+            builder.Property(order => order.OrderDiscount).HasColumnType("decimal(18, 4)");
+            builder.Property(order => order.OrderTotal).HasColumnType("decimal(18, 4)");
+            builder.Property(order => order.RefundedAmount).HasColumnType("decimal(18, 4)");
+            builder.Property(order => order.CustomOrderNumber).IsRequired();
+
+            builder.HasOne(order => order.Customer)
                 .WithMany()
-                .HasForeignKey(o => o.CustomerId);
-            
-            //code below is commented because it causes some issues on big databases - https://www.nopcommerce.com/boards/t/11126/bug-version-20-command-confirm-takes-several-minutes-using-big-databases.aspx
-            //this.HasRequired(o => o.BillingAddress).WithOptional().Map(x => x.MapKey("BillingAddressId")).WillCascadeOnDelete(false);
-            //this.HasOptional(o => o.ShippingAddress).WithOptionalDependent().Map(x => x.MapKey("ShippingAddressId")).WillCascadeOnDelete(false);
-            this.HasRequired(o => o.BillingAddress)
+                .HasForeignKey(order => order.CustomerId)
+                .IsRequired();
+
+            builder.HasOne(order => order.BillingAddress)
                 .WithMany()
-                .HasForeignKey(o => o.BillingAddressId)
-                .WillCascadeOnDelete(false);
-            this.HasOptional(o => o.ShippingAddress)
+                .HasForeignKey(order => order.BillingAddressId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasOne(order => order.ShippingAddress)
                 .WithMany()
-                .HasForeignKey(o => o.ShippingAddressId)
-                .WillCascadeOnDelete(false);
-            this.HasOptional(o => o.PickupAddress)
+                .HasForeignKey(order => order.ShippingAddressId);
+
+            builder.HasOne(order => order.PickupAddress)
                 .WithMany()
-                .HasForeignKey(o => o.PickupAddressId)
-                .WillCascadeOnDelete(false);
+                .HasForeignKey(order => order.PickupAddressId);
+
+            builder.Ignore(order => order.OrderStatus);
+            builder.Ignore(order => order.PaymentStatus);
+            builder.Ignore(order => order.ShippingStatus);
+            builder.Ignore(order => order.CustomerTaxDisplayType);
+            builder.Ignore(order => order.TaxRatesDictionary);
+
+            //add custom configuration
+            this.PostConfigure(builder);
         }
+
+        #endregion
     }
 }

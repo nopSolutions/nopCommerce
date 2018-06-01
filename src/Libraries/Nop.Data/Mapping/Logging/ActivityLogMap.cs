@@ -1,30 +1,43 @@
-﻿using Nop.Core.Domain.Logging;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Nop.Core.Domain.Logging;
 
 namespace Nop.Data.Mapping.Logging
 {
     /// <summary>
-    /// Mapping class
+    /// Represents an activity log mapping configuration
     /// </summary>
     public partial class ActivityLogMap : NopEntityTypeConfiguration<ActivityLog>
     {
+        #region Methods
+
         /// <summary>
-        /// Ctor
+        /// Configures the entity
         /// </summary>
-        public ActivityLogMap()
+        /// <param name="builder">The builder to be used to configure the entity</param>
+        public override void Configure(EntityTypeBuilder<ActivityLog> builder)
         {
-            this.ToTable("ActivityLog");
-            this.HasKey(logItem => logItem.Id);
-            this.Property(logItem => logItem.Comment).IsRequired();
-            this.Property(logItem => logItem.IpAddress).HasMaxLength(200);
-            this.Property(logItem => logItem.EntityName).HasMaxLength(400);
+            builder.ToTable(nameof(ActivityLog));
+            builder.HasKey(logItem => logItem.Id);
 
-            this.HasRequired(logItem => logItem.ActivityLogType)
-                .WithMany()
-                .HasForeignKey(logItem => logItem.ActivityLogTypeId);
+            builder.Property(logItem => logItem.Comment).IsRequired();
+            builder.Property(logItem => logItem.IpAddress).HasMaxLength(200);
+            builder.Property(logItem => logItem.EntityName).HasMaxLength(400);
 
-            this.HasRequired(logItem => logItem.Customer)
+            builder.HasOne(logItem => logItem.ActivityLogType)
                 .WithMany()
-                .HasForeignKey(logItem => logItem.CustomerId);
+                .HasForeignKey(logItem => logItem.ActivityLogTypeId)
+                .IsRequired();
+
+            builder.HasOne(logItem => logItem.Customer)
+                .WithMany()
+                .HasForeignKey(logItem => logItem.CustomerId)
+                .IsRequired();
+
+            //add custom configuration
+            this.PostConfigure(builder);
         }
+
+        #endregion
     }
 }

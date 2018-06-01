@@ -1,37 +1,48 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Orders;
 
 namespace Nop.Data.Mapping.Orders
 {
     /// <summary>
-    /// Mapping class
+    /// Represents an order item mapping configuration
     /// </summary>
     public partial class OrderItemMap : NopEntityTypeConfiguration<OrderItem>
     {
+        #region Methods
+
         /// <summary>
-        /// Ctor
+        /// Configures the entity
         /// </summary>
-        public OrderItemMap()
+        /// <param name="builder">The builder to be used to configure the entity</param>
+        public override void Configure(EntityTypeBuilder<OrderItem> builder)
         {
-            this.ToTable("OrderItem");
-            this.HasKey(orderItem => orderItem.Id);
+            builder.ToTable(nameof(OrderItem));
+            builder.HasKey(orderItem => orderItem.Id);
 
-            this.Property(orderItem => orderItem.UnitPriceInclTax).HasPrecision(18, 4);
-            this.Property(orderItem => orderItem.UnitPriceExclTax).HasPrecision(18, 4);
-            this.Property(orderItem => orderItem.PriceInclTax).HasPrecision(18, 4);
-            this.Property(orderItem => orderItem.PriceExclTax).HasPrecision(18, 4);
-            this.Property(orderItem => orderItem.DiscountAmountInclTax).HasPrecision(18, 4);
-            this.Property(orderItem => orderItem.DiscountAmountExclTax).HasPrecision(18, 4);
-            this.Property(orderItem => orderItem.OriginalProductCost).HasPrecision(18, 4);
-            this.Property(orderItem => orderItem.ItemWeight).HasPrecision(18, 4);
+            builder.Property(orderItem => orderItem.UnitPriceInclTax).HasColumnType("decimal(18, 4)");
+            builder.Property(orderItem => orderItem.UnitPriceExclTax).HasColumnType("decimal(18, 4)");
+            builder.Property(orderItem => orderItem.PriceInclTax).HasColumnType("decimal(18, 4)");
+            builder.Property(orderItem => orderItem.PriceExclTax).HasColumnType("decimal(18, 4)");
+            builder.Property(orderItem => orderItem.DiscountAmountInclTax).HasColumnType("decimal(18, 4)");
+            builder.Property(orderItem => orderItem.DiscountAmountExclTax).HasColumnType("decimal(18, 4)");
+            builder.Property(orderItem => orderItem.OriginalProductCost).HasColumnType("decimal(18, 4)");
+            builder.Property(orderItem => orderItem.ItemWeight).HasColumnType("decimal(18, 4)");
 
+            builder.HasOne(orderItem => orderItem.Order)
+                .WithMany(order => order.OrderItems)
+                .HasForeignKey(orderItem => orderItem.OrderId)
+                .IsRequired();
 
-            this.HasRequired(orderItem => orderItem.Order)
-                .WithMany(o => o.OrderItems)
-                .HasForeignKey(orderItem => orderItem.OrderId);
-
-            this.HasRequired(orderItem => orderItem.Product)
+            builder.HasOne(orderItem => orderItem.Product)
                 .WithMany()
-                .HasForeignKey(orderItem => orderItem.ProductId);
+                .HasForeignKey(orderItem => orderItem.ProductId)
+                .IsRequired();
+
+            //add custom configuration
+            this.PostConfigure(builder);
         }
+
+        #endregion
     }
 }

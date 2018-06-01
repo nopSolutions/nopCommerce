@@ -9,9 +9,10 @@ namespace Nop.Core.Domain.Orders
         /// Shopping cart
         /// </summary>
         ShoppingCart = 1,
+
         /// <summary>
         /// Wishlist
         /// </summary>
-        Wishlist = 2,
+        Wishlist = 2
     }
 }

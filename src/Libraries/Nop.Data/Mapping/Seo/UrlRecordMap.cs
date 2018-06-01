@@ -1,22 +1,32 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Seo;
 
 namespace Nop.Data.Mapping.Seo
 {
     /// <summary>
-    /// Mapping class
+    /// Represents an URL record mapping configuration
     /// </summary>
     public partial class UrlRecordMap : NopEntityTypeConfiguration<UrlRecord>
     {
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        public UrlRecordMap()
-        {
-            this.ToTable("UrlRecord");
-            this.HasKey(lp => lp.Id);
+        #region Methods
 
-            this.Property(lp => lp.EntityName).IsRequired().HasMaxLength(400);
-            this.Property(lp => lp.Slug).IsRequired().HasMaxLength(400);
+        /// <summary>
+        /// Configures the entity
+        /// </summary>
+        /// <param name="builder">The builder to be used to configure the entity</param>
+        public override void Configure(EntityTypeBuilder<UrlRecord> builder)
+        {
+            builder.ToTable(nameof(UrlRecord));
+            builder.HasKey(record => record.Id);
+
+            builder.Property(record => record.EntityName).HasMaxLength(400).IsRequired();
+            builder.Property(record => record.Slug).IsRequired().HasMaxLength(400);
+
+            //add custom configuration
+            this.PostConfigure(builder);
         }
+
+        #endregion
     }
 }
