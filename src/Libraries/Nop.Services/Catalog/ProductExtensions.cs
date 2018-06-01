@@ -230,7 +230,7 @@ namespace Nop.Services.Catalog
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
-            var result = product.ProductProductTagMappings.Any(pt => pt.ProductId == productTagId);
+            var result = product.ProductProductTagMappings.Any(pt => pt.ProductTagId == productTagId);
             return result;
         }
 
