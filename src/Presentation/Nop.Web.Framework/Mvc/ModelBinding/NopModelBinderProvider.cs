@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.Extensions.Logging;
+using Nop.Core.Infrastructure;
 using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Framework.Mvc.ModelBinding
@@ -31,8 +33,8 @@ namespace Nop.Web.Framework.Mvc.ModelBinding
                 //create binders for all model properties
                 var propertyBinders = context.Metadata.Properties
                     .ToDictionary(modelProperty => modelProperty, modelProperty => context.CreateBinder(modelProperty));
-
-                return new NopModelBinder(propertyBinders);
+                
+                return new NopModelBinder(propertyBinders, EngineContext.Current.Resolve<ILoggerFactory>());
             }
 
             //or return null to further search for a suitable binder

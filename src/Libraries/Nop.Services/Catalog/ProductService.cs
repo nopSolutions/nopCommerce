@@ -1570,8 +1570,9 @@ namespace Nop.Services.Catalog
         /// <returns>All picture identifiers grouped by product ID</returns>
         public IDictionary<int, int[]> GetProductsImagesIds(int[] productsIds)
         {
-            return _productPictureRepository.Table.Where(p => productsIds.Contains(p.ProductId))
-                .GroupBy(p => p.ProductId).ToDictionary(p => p.Key, p => p.Select(p1 => p1.PictureId).ToArray());
+            var productPictures = _productPictureRepository.Table.Where(p => productsIds.Contains(p.ProductId)).ToList();
+
+            return productPictures.GroupBy(p => p.ProductId).ToDictionary(p => p.Key, p => p.Select(p1 => p1.PictureId).ToArray());
         }
 
         #endregion

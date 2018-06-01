@@ -468,7 +468,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(model));
 
             model.NopVersion = NopVersion.CurrentVersion;
-            model.ServerTimeZone = TimeZone.CurrentTimeZone.StandardName;
+            model.ServerTimeZone = TimeZoneInfo.Local.StandardName;
             model.ServerLocalTime = DateTime.Now;
             model.UtcTime = DateTime.UtcNow;
             model.CurrentUserTime = _dateTimeHelper.ConvertToUserTime(DateTime.Now);

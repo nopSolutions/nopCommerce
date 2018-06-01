@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
+using Microsoft.Extensions.Logging;
 using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Framework.Mvc.ModelBinding
@@ -19,7 +20,8 @@ namespace Nop.Web.Framework.Mvc.ModelBinding
         /// Ctor
         /// </summary>
         /// <param name="propertyBinders">Property binders</param>
-        public NopModelBinder(IDictionary<ModelMetadata, IModelBinder> propertyBinders) : base(propertyBinders)
+        public NopModelBinder(IDictionary<ModelMetadata, IModelBinder> propertyBinders, ILoggerFactory loggerFactory)
+            : base(propertyBinders, loggerFactory)
         {
         }
 

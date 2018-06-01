@@ -45,6 +45,30 @@ namespace Nop.Data
             base.OnModelCreating(modelBuilder);
         }
 
+        /// <summary>
+        /// Modify the input SQL query by adding passed parameters
+        /// </summary>
+        /// <param name="sql">The raw SQL query</param>
+        /// <param name="parameters">The values to be assigned to parameters</param>
+        /// <returns>Modified raw SQL query</returns>
+        protected virtual string CreateSqlWithParameters(string sql, params object[] parameters)
+        {
+            //add parameters to sql
+            for (var i = 0; i <= (parameters?.Length ?? 0) - 1; i++)
+            {
+                if (!(parameters[i] is DbParameter parameter))
+                    continue;
+
+                sql = $"{sql}{(i > 0 ? "," : string.Empty)} @{parameter.ParameterName}";
+
+                //whether parameter is output
+                if (parameter.Direction == ParameterDirection.InputOutput || parameter.Direction == ParameterDirection.Output)
+                    sql = $"{sql} output";
+            }
+
+            return sql;
+        }
+
         #endregion
 
         #region Methods
@@ -88,20 +112,7 @@ namespace Nop.Data
         /// <returns>An IQueryable representing the raw SQL query</returns>
         public virtual IQueryable<TEntity> EntityFromSql<TEntity>(string sql, params object[] parameters) where TEntity : BaseEntity
         {
-            //add parameters to sql
-            for (var i = 0; i <= (parameters?.Length ?? 0) - 1; i++)
-            {
-                if (!(parameters[i] is DbParameter parameter))
-                    continue;
-
-                sql = $"{sql}{(i > 0 ? "," : string.Empty)} @{parameter.ParameterName}";
-
-                //whether parameter is output
-                if (parameter.Direction == ParameterDirection.InputOutput || parameter.Direction == ParameterDirection.Output)
-                    sql = $"{sql} output";
-            }
-            
-            return this.Set<TEntity>().FromSql(sql, parameters);
+            return this.Set<TEntity>().FromSql(CreateSqlWithParameters(sql, parameters), parameters);
         }
 
         /// <summary>

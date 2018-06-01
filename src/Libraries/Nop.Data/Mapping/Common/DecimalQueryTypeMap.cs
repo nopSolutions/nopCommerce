@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Common;
 
@@ -16,6 +17,8 @@ namespace Nop.Data.Mapping.Common
         /// <param name="builder">The builder to be used to configure the query type</param>
         public override void Configure(QueryTypeBuilder<DecimalQueryType> builder)
         {
+            builder.Property(decimalValue => decimalValue.Value).HasColumnType("decimal(18, 4)");
+
             //add custom configuration
             this.PostConfigure(builder);
         }
