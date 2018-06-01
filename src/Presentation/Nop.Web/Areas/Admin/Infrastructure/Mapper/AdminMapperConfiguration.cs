@@ -38,6 +38,7 @@ using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Polls;
+using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Stores;
 using Nop.Core.Domain.Tax;
@@ -52,7 +53,6 @@ using Nop.Services.Seo;
 using Nop.Services.Shipping;
 using Nop.Services.Shipping.Pickup;
 using Nop.Services.Tax;
-using Nop.Web.Framework.Security.Captcha;
 
 namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
 {
@@ -744,7 +744,8 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.Form, mo => mo.Ignore());
             CreateMap<CaptchaSettingsModel, CaptchaSettings>()
                 .ForMember(dest => dest.ReCaptchaTheme, mo => mo.Ignore())
-                .ForMember(dest => dest.ReCaptchaLanguage, mo => mo.Ignore());
+                .ForMember(dest => dest.ReCaptchaDefaultLanguage, mo => mo.Ignore())
+                .ForMember(dest => dest.AutomaticallyChooseLanguage, mo => mo.Ignore());
             CreateMap<TaxSettings, TaxSettingsModel>()
                 .ForMember(dest => dest.DefaultTaxAddress, mo => mo.Ignore())
                 .ForMember(dest => dest.TaxDisplayTypeValues, mo => mo.Ignore())
