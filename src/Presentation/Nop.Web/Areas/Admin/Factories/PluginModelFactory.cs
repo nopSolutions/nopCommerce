@@ -17,7 +17,7 @@ using Nop.Services.Plugins;
 using Nop.Services.Shipping;
 using Nop.Services.Shipping.Pickup;
 using Nop.Services.Tax;
-using Nop.Web.Areas.Admin.Extensions;
+using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Plugins;
 using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Factories;

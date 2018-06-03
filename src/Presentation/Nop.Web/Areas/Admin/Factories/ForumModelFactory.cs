@@ -3,7 +3,7 @@ using System.Linq;
 using Nop.Core.Domain.Forums;
 using Nop.Services.Forums;
 using Nop.Services.Helpers;
-using Nop.Web.Areas.Admin.Extensions;
+using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Forums;
 using Nop.Web.Framework.Extensions;
 

@@ -3,7 +3,7 @@ using System.Linq;
 using Nop.Core.Domain.Directory;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
-using Nop.Web.Areas.Admin.Extensions;
+using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Directory;
 using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Factories;

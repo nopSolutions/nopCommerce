@@ -2,7 +2,7 @@
 using System.Linq;
 using Nop.Core.Domain.Customers;
 using Nop.Services.Authentication.External;
-using Nop.Web.Areas.Admin.Extensions;
+using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.ExternalAuthentication;
 using Nop.Web.Framework.Extensions;
 

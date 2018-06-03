@@ -31,8 +31,8 @@ using Nop.Services.Media;
 using Nop.Services.Orders;
 using Nop.Services.Security;
 using Nop.Services.Stores;
-using Nop.Web.Areas.Admin.Extensions;
 using Nop.Web.Areas.Admin.Factories;
+using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Settings;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
@@ -40,7 +40,6 @@ using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Localization;
 using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.Filters;
-using Nop.Web.Framework.Security.Captcha;
 
 namespace Nop.Web.Areas.Admin.Controllers
 {

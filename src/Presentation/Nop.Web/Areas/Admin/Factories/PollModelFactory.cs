@@ -4,7 +4,7 @@ using Nop.Core.Domain.Polls;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Polls;
-using Nop.Web.Areas.Admin.Extensions;
+using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Polls;
 using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Factories;

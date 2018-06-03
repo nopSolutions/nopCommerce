@@ -7,7 +7,7 @@ using Nop.Core.Plugins;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Services.Payments;
-using Nop.Web.Areas.Admin.Extensions;
+using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Directory;
 using Nop.Web.Areas.Admin.Models.Payments;
 using Nop.Web.Framework.Extensions;

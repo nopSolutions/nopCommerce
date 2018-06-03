@@ -6,7 +6,7 @@ using Nop.Core.Plugins;
 using Nop.Web.Areas.Admin.Models.Plugins;
 using Nop.Web.Framework.Models;
 
-namespace Nop.Web.Areas.Admin.Extensions
+namespace Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions
 {
     /// <summary>
     /// Represents the extensions to map entity to model and vise versa

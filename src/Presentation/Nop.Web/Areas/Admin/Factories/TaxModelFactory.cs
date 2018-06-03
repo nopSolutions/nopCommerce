@@ -2,7 +2,7 @@
 using System.Linq;
 using Nop.Core.Domain.Tax;
 using Nop.Services.Tax;
-using Nop.Web.Areas.Admin.Extensions;
+using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Tax;
 using Nop.Web.Framework.Extensions;
 

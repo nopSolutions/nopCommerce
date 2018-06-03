@@ -4,7 +4,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Routing;
 using Nop.Core.Domain.Cms;
 using Nop.Services.Cms;
-using Nop.Web.Areas.Admin.Extensions;
+using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Cms;
 using Nop.Web.Framework.Extensions;
 

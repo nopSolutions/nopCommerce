@@ -30,7 +30,7 @@ using Nop.Services.Localization;
 using Nop.Services.Media;
 using Nop.Services.Stores;
 using Nop.Services.Themes;
-using Nop.Web.Areas.Admin.Extensions;
+using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Common;
 using Nop.Web.Areas.Admin.Models.Settings;
 using Nop.Web.Areas.Admin.Models.Stores;

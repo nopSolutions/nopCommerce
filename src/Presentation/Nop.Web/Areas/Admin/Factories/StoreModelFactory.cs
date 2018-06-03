@@ -3,7 +3,7 @@ using System.Linq;
 using Nop.Core.Domain.Stores;
 using Nop.Services.Localization;
 using Nop.Services.Stores;
-using Nop.Web.Areas.Admin.Extensions;
+using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Stores;
 using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Factories;

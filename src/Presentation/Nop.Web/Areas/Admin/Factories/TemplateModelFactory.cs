@@ -2,7 +2,7 @@
 using System.Linq;
 using Nop.Services.Catalog;
 using Nop.Services.Topics;
-using Nop.Web.Areas.Admin.Extensions;
+using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Templates;
 using Nop.Web.Framework.Extensions;
 

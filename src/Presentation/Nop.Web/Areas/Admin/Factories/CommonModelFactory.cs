@@ -26,7 +26,7 @@ using Nop.Services.Orders;
 using Nop.Services.Payments;
 using Nop.Services.Seo;
 using Nop.Services.Stores;
-using Nop.Web.Areas.Admin.Extensions;
+using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Common;
 using Nop.Web.Areas.Admin.Models.Localization;
 using Nop.Web.Framework.Extensions;

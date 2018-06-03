@@ -29,7 +29,7 @@ using Nop.Services.Messages;
 using Nop.Services.Orders;
 using Nop.Services.Stores;
 using Nop.Services.Tax;
-using Nop.Web.Areas.Admin.Extensions;
+using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Common;
 using Nop.Web.Areas.Admin.Models.Customers;
 using Nop.Web.Areas.Admin.Models.ShoppingCart;

@@ -4,7 +4,7 @@ using Nop.Core;
 using Nop.Core.Domain.Vendors;
 using Nop.Services.Localization;
 using Nop.Services.Vendors;
-using Nop.Web.Areas.Admin.Extensions;
+using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Vendors;
 using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Factories;

@@ -2,7 +2,7 @@
 using System.Linq;
 using Nop.Core.Domain.Messages;
 using Nop.Services.Messages;
-using Nop.Web.Areas.Admin.Extensions;
+using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Messages;
 using Nop.Web.Framework.Extensions;
 

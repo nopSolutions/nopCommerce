@@ -8,7 +8,7 @@ using Nop.Services.Blogs;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Stores;
-using Nop.Web.Areas.Admin.Extensions;
+using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Blogs;
 using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Factories;

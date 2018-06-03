@@ -2,7 +2,7 @@
 using System.Linq;
 using Nop.Core.Domain.Localization;
 using Nop.Services.Localization;
-using Nop.Web.Areas.Admin.Extensions;
+using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Localization;
 using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Factories;

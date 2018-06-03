@@ -5,7 +5,7 @@ using Nop.Core;
 using Nop.Services.Customers;
 using Nop.Services.Localization;
 using Nop.Services.Security;
-using Nop.Web.Areas.Admin.Extensions;
+using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Customers;
 using Nop.Web.Areas.Admin.Models.Security;
 
