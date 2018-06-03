@@ -17,7 +17,7 @@ namespace Nop.Web.Components
         {
             var model = _commonModelFactory.PrepareCurrencySelectorModel();
             if (model.AvailableCurrencies.Count == 1)
-                Content("");
+                return Content("");
 
             return View(model);
         }
