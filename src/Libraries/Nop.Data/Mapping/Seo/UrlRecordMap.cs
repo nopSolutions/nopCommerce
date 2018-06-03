@@ -23,8 +23,7 @@ namespace Nop.Data.Mapping.Seo
             builder.Property(record => record.EntityName).HasMaxLength(400).IsRequired();
             builder.Property(record => record.Slug).IsRequired().HasMaxLength(400);
 
-            //add custom configuration
-            this.PostConfigure(builder);
+            base.Configure(builder);
         }
 
         #endregion

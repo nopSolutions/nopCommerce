@@ -30,8 +30,7 @@ namespace Nop.Data.Mapping.Catalog
                 .HasForeignKey(subscription => subscription.CustomerId)
                 .IsRequired();
 
-            //add custom configuration
-            this.PostConfigure(builder);
+            base.Configure(builder);
         }
 
         #endregion

@@ -34,8 +34,7 @@ namespace Nop.Data.Mapping.Discounts
             builder.Ignore(discount => discount.DiscountType);
             builder.Ignore(discount => discount.DiscountLimitation);
 
-            //add custom configuration
-            this.PostConfigure(builder);
+            base.Configure(builder);
         }
 
         #endregion

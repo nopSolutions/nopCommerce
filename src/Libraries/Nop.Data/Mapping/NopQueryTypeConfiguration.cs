@@ -7,7 +7,7 @@ namespace Nop.Data.Mapping
     /// Represents base query type mapping configuration
     /// </summary>
     /// <typeparam name="TQuery">Query type type</typeparam>
-    public abstract class NopQueryTypeConfiguration<TQuery> : IQueryTypeConfiguration<TQuery> where TQuery : class
+    public partial class NopQueryTypeConfiguration<TQuery> : IMappingConfiguration, IQueryTypeConfiguration<TQuery> where TQuery : class
     {
         #region Utilities
 
@@ -27,7 +27,20 @@ namespace Nop.Data.Mapping
         /// Configures the query type
         /// </summary>
         /// <param name="builder">The builder to be used to configure the query type</param>
-        public abstract void Configure(QueryTypeBuilder<TQuery> builder);
+        public virtual void Configure(QueryTypeBuilder<TQuery> builder)
+        {
+            //add custom configuration
+            this.PostConfigure(builder);
+        }
+
+        /// <summary>
+        /// Apply this mapping configuration
+        /// </summary>
+        /// <param name="modelBuilder">The builder being used to construct the model for the database context</param>
+        public virtual void ApplyConfiguration(ModelBuilder modelBuilder)
+        {
+            modelBuilder.ApplyConfiguration(this);
+        }
 
         #endregion
     }

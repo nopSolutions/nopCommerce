@@ -33,8 +33,7 @@ namespace Nop.Data.Mapping.Catalog
 
             builder.Ignore(value => value.AttributeValueType);
 
-            //add custom configuration
-            this.PostConfigure(builder);
+            base.Configure(builder);
         }
 
         #endregion

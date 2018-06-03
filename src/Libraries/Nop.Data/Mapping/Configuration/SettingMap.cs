@@ -23,8 +23,7 @@ namespace Nop.Data.Mapping.Configuration
             builder.Property(setting => setting.Name).HasMaxLength(200).IsRequired();
             builder.Property(setting => setting.Value).HasMaxLength(2000).IsRequired();
 
-            //add custom configuration
-            this.PostConfigure(builder);
+            base.Configure(builder);
         }
 
         #endregion

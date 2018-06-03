@@ -37,8 +37,7 @@ namespace Nop.Data.Mapping.Messages
 
             builder.Ignore(email => email.Priority);
 
-            //add custom configuration
-            this.PostConfigure(builder);
+            base.Configure(builder);
         }
 
         #endregion

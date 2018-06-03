@@ -38,8 +38,8 @@ namespace Nop.Data
 
             foreach (var typeConfiguration in typeConfigurations)
             {
-                dynamic configuration = Activator.CreateInstance(typeConfiguration);
-                modelBuilder.ApplyConfiguration(configuration);
+                var configuration = (IMappingConfiguration)Activator.CreateInstance(typeConfiguration);
+                configuration.ApplyConfiguration(modelBuilder);
             }
             
             base.OnModelCreating(modelBuilder);

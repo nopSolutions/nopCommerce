@@ -32,8 +32,7 @@ namespace Nop.Data.Mapping.Catalog
                 .HasForeignKey(price => price.CustomerRoleId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            //add custom configuration
-            this.PostConfigure(builder);
+            base.Configure(builder);
         }
 
         #endregion

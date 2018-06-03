@@ -26,8 +26,7 @@ namespace Nop.Data.Mapping.Discounts
 
             builder.Ignore(requirement => requirement.InteractionType);
 
-            //add custom configuration
-            this.PostConfigure(builder);
+            base.Configure(builder);
         }
 
         #endregion

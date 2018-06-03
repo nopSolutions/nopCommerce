@@ -35,8 +35,7 @@ namespace Nop.Data.Mapping.Forums
 
             builder.Ignore(topic => topic.ForumTopicType);
 
-            //add custom configuration
-            this.PostConfigure(builder);
+            base.Configure(builder);
         }
 
         #endregion

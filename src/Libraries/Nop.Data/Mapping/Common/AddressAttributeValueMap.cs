@@ -28,8 +28,7 @@ namespace Nop.Data.Mapping.Common
                 .HasForeignKey(value => value.AddressAttributeId)
                 .IsRequired();
 
-            //add custom configuration
-            this.PostConfigure(builder);
+            base.Configure(builder);
         }
 
         #endregion

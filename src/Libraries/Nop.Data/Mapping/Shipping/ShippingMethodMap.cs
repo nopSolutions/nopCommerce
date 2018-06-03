@@ -21,9 +21,8 @@ namespace Nop.Data.Mapping.Shipping
             builder.HasKey(method => method.Id);
 
             builder.Property(method => method.Name).HasMaxLength(400).IsRequired();
-            
-            //add custom configuration
-            this.PostConfigure(builder);
+
+            base.Configure(builder);
         }
 
         #endregion

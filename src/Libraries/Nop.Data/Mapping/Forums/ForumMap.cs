@@ -27,8 +27,7 @@ namespace Nop.Data.Mapping.Forums
                 .HasForeignKey(forum => forum.ForumGroupId)
                 .IsRequired();
 
-            //add custom configuration
-            this.PostConfigure(builder);
+            base.Configure(builder);
         }
 
         #endregion

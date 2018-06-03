@@ -30,8 +30,7 @@ namespace Nop.Data.Mapping.Logging
                 .HasForeignKey(logItem => logItem.CustomerId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            //add custom configuration
-            this.PostConfigure(builder);
+            base.Configure(builder);
         }
 
         #endregion

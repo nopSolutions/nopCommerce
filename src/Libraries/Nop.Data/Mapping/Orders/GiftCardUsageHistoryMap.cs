@@ -32,8 +32,7 @@ namespace Nop.Data.Mapping.Orders
                 .HasForeignKey(historyEntry => historyEntry.UsedWithOrderId)
                 .IsRequired();
 
-            //add custom configuration
-            this.PostConfigure(builder);
+            base.Configure(builder);
         }
 
         #endregion

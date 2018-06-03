@@ -22,8 +22,7 @@ namespace Nop.Data.Mapping.Catalog
 
             builder.Property(attribute => attribute.Name).IsRequired();
 
-            //add custom configuration
-            this.PostConfigure(builder);
+            base.Configure(builder);
         }
 
         #endregion

@@ -8,7 +8,7 @@ namespace Nop.Data.Mapping
     /// Represents base entity mapping configuration
     /// </summary>
     /// <typeparam name="TEntity">Entity type</typeparam>
-    public abstract class NopEntityTypeConfiguration<TEntity> : IEntityTypeConfiguration<TEntity> where TEntity : BaseEntity
+    public partial class NopEntityTypeConfiguration<TEntity> : IMappingConfiguration, IEntityTypeConfiguration<TEntity> where TEntity : BaseEntity
     {
         #region Utilities
 
@@ -28,7 +28,20 @@ namespace Nop.Data.Mapping
         /// Configures the entity
         /// </summary>
         /// <param name="builder">The builder to be used to configure the entity</param>
-        public abstract void Configure(EntityTypeBuilder<TEntity> builder);
+        public virtual void Configure(EntityTypeBuilder<TEntity> builder)
+        {
+            //add custom configuration
+            this.PostConfigure(builder);
+        }
+
+        /// <summary>
+        /// Apply this mapping configuration
+        /// </summary>
+        /// <param name="modelBuilder">The builder being used to construct the model for the database context</param>
+        public virtual void ApplyConfiguration(ModelBuilder modelBuilder)
+        {
+            modelBuilder.ApplyConfiguration(this);
+        }
 
         #endregion
     }

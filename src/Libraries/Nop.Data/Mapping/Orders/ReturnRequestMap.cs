@@ -30,8 +30,7 @@ namespace Nop.Data.Mapping.Orders
 
             builder.Ignore(returnRequest => returnRequest.ReturnRequestStatus);
 
-            //add custom configuration
-            this.PostConfigure(builder);
+            base.Configure(builder);
         }
 
         #endregion

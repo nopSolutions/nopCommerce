@@ -34,8 +34,7 @@ namespace Nop.Data.Mapping.Logging
                 .HasForeignKey(logItem => logItem.CustomerId)
                 .IsRequired();
 
-            //add custom configuration
-            this.PostConfigure(builder);
+            base.Configure(builder);
         }
 
         #endregion

@@ -28,8 +28,7 @@ namespace Nop.Data.Mapping.Common
                 .WithMany()
                 .HasForeignKey(address => address.StateProvinceId);
 
-            //add custom configuration
-            this.PostConfigure(builder);
+            base.Configure(builder);
         }
 
         #endregion

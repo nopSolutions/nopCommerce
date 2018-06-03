@@ -30,8 +30,7 @@ namespace Nop.Data.Mapping.Orders
                 .HasForeignKey(value => value.CheckoutAttributeId)
                 .IsRequired();
 
-            //add custom configuration
-            this.PostConfigure(builder);
+            base.Configure(builder);
         }
 
         #endregion

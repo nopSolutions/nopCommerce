@@ -27,8 +27,7 @@ namespace Nop.Data.Mapping.Stores
                 .HasForeignKey(storeMapping => storeMapping.StoreId)
                 .IsRequired();
 
-            //add custom configuration
-            this.PostConfigure(builder);
+            base.Configure(builder);
         }
 
         #endregion

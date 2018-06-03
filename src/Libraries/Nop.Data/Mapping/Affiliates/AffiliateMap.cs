@@ -26,8 +26,7 @@ namespace Nop.Data.Mapping.Affiliates
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
 
-            //add custom configuration
-            this.PostConfigure(builder);
+            base.Configure(builder);
         }
 
         #endregion

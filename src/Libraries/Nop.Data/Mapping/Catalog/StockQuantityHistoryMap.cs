@@ -25,8 +25,7 @@ namespace Nop.Data.Mapping.Catalog
                 .HasForeignKey(historyEntry => historyEntry.ProductId)
                 .IsRequired();
 
-            //add custom configuration
-            this.PostConfigure(builder);
+            base.Configure(builder);
         }
 
         #endregion

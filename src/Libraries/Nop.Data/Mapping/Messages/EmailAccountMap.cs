@@ -28,8 +28,7 @@ namespace Nop.Data.Mapping.Messages
 
             builder.Ignore(emailAccount => emailAccount.FriendlyName);
 
-            //add custom configuration
-            this.PostConfigure(builder);
+            base.Configure(builder);
         }
 
         #endregion

@@ -27,8 +27,7 @@ namespace Nop.Data.Mapping.Vendors
                 .HasForeignKey(note => note.VendorId)
                 .IsRequired();
 
-            //add custom configuration
-            this.PostConfigure(builder);
+            base.Configure(builder);
         }
 
         #endregion

@@ -26,8 +26,7 @@ namespace Nop.Data.Mapping.Media
                 .WithOne(picture => picture.PictureBinary)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            //add custom configuration
-            this.PostConfigure(builder);
+            base.Configure(builder);
         }
 
         #endregion

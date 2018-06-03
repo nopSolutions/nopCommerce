@@ -52,8 +52,7 @@ namespace Nop.Data.Mapping.Catalog
             builder.Ignore(product => product.RentalPricePeriod);
             builder.Ignore(product => product.AppliedDiscounts);
 
-            //add custom configuration
-            this.PostConfigure(builder);
+            base.Configure(builder);
         }
 
         #endregion

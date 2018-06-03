@@ -28,8 +28,7 @@ namespace Nop.Data.Mapping.Catalog
             
             builder.Ignore(category => category.AppliedDiscounts);
 
-            //add custom configuration
-            this.PostConfigure(builder);
+            base.Configure(builder);
         }
 
         #endregion

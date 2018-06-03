@@ -27,8 +27,7 @@ namespace Nop.Data.Mapping.Messages
 
             builder.Ignore(template => template.DelayPeriod);
 
-            //add custom configuration
-            this.PostConfigure(builder);
+            base.Configure(builder);
         }
 
         #endregion

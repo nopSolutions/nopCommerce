@@ -20,8 +20,7 @@ namespace Nop.Data.Mapping.Topics
             builder.ToTable(nameof(Topic));
             builder.HasKey(topic => topic.Id);
 
-            //add custom configuration
-            this.PostConfigure(builder);
+            base.Configure(builder);
         }
 
         #endregion
