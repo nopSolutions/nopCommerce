@@ -25,6 +25,7 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
+        private readonly IAddressAttributeModelFactory _addressAttributeModelFactory;
         private readonly IAddressAttributeParser _addressAttributeParser;
         private readonly IAddressAttributeService _addressAttributeService;
         private readonly IAddressService _addressService;
@@ -42,7 +43,8 @@ namespace Nop.Web.Areas.Admin.Factories
 
         #region Ctor
 
-        public VendorModelFactory(IAddressAttributeParser addressAttributeParser,
+        public VendorModelFactory(IAddressAttributeModelFactory addressAttributeModelFactory,
+            IAddressAttributeParser addressAttributeParser,
             IAddressAttributeService addressAttributeService,
             IAddressService addressService,
             IBaseAdminModelFactory baseAdminModelFactory,
@@ -55,6 +57,7 @@ namespace Nop.Web.Areas.Admin.Factories
             IVendorService vendorService,
             VendorSettings vendorSettings)
         {
+            this._addressAttributeModelFactory = addressAttributeModelFactory;
             this._addressAttributeParser = addressAttributeParser;
             this._addressAttributeService = addressAttributeService;
             this._addressService = addressService;
@@ -219,7 +222,7 @@ namespace Nop.Web.Areas.Admin.Factories
             _baseAdminModelFactory.PrepareStatesAndProvinces(model.AvailableStates, model.CountryId);
 
             //prepare custom address attributes
-            model.PrepareCustomAddressAttributes(address, _addressAttributeService, _addressAttributeParser);
+            _addressAttributeModelFactory.PrepareCustomAddressAttributes(model.CustomAddressAttributes, address);
         }
 
         /// <summary>
