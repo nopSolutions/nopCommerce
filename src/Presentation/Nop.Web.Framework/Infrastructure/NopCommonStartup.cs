@@ -11,7 +11,6 @@ using Nop.Core.Configuration;
 using Nop.Core.Data;
 using Nop.Core.Domain.Security;
 using Nop.Core.Infrastructure;
-using Nop.Web.Framework.Compression;
 using Nop.Web.Framework.Infrastructure.Extensions;
 
 namespace Nop.Web.Framework.Infrastructure
@@ -67,8 +66,6 @@ namespace Nop.Web.Framework.Infrastructure
             {
                 //gzip by default
                 application.UseResponseCompression();
-                //workaround with "vary" header
-                application.UseMiddleware<ResponseCompressionVaryWorkaroundMiddleware>();
             }
 
             //static files
