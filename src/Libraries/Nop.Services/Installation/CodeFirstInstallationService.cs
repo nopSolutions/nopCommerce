@@ -6072,7 +6072,7 @@ namespace Nop.Services.Installation
                 RecentlyViewedProductsNumber = 3,
                 RecentlyViewedProductsEnabled = true,
                 NewProductsNumber = 6,
-                NewProductsEnabled = true,
+                NewProductsEnabled = true,                
                 CompareProductsEnabled = true,
                 CompareProductsNumber = 4,
                 ProductSearchAutoCompleteEnabled = true,
@@ -6191,6 +6191,7 @@ namespace Nop.Services.Installation
                 SuffixDeletedCustomers = false,
                 EnteringEmailTwice = false,
                 RequireRegistrationForDownloadableProducts = false,
+                AllowCustomersToCheckGiftCardBalance = false,
                 DeleteGuestTaskOlderThanMinutes = 1440
             });
 

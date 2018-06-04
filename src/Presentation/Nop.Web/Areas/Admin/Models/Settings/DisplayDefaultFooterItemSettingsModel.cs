@@ -44,7 +44,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
 
         [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.DisplayDefaultFooterItemSettingsModel.DisplayNewProductsFooterItem")]
         public bool DisplayNewProductsFooterItem { get; set; }
-        public bool DisplayNewProductsFooterItem_OverrideForStore { get; set; }
+        public bool DisplayNewProductsFooterItem_OverrideForStore { get; set; }       
 
         [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.DisplayDefaultFooterItemSettingsModel.DisplayCustomerInfoFooterItem")]
         public bool DisplayCustomerInfoFooterItem { get; set; }

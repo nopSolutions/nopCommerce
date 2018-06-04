@@ -763,6 +763,17 @@ namespace Nop.Web.Factories
                 });
             }
 
+            if (_captchaSettings.Enabled && _customerSettings.AllowCustomersToCheckGiftCardBalance)
+            {
+                model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
+                {
+                    RouteName = "CheckGiftCardBalance",
+                    Title = _localizationService.GetResource("CheckGiftCardBalance"),
+                    Tab = CustomerNavigationEnum.CheckGiftCardBalance,
+                    ItemClass = "customer-check-gift-card-balance"
+                });
+            }
+
             model.SelectedTab = (CustomerNavigationEnum)selectedTabId;
 
             return model;
@@ -884,6 +895,16 @@ namespace Nop.Web.Factories
         public virtual GdprToolsModel PrepareGdprToolsModel()
         {
             var model = new GdprToolsModel();
+            return model;
+        }
+
+        /// <summary>
+        /// Prepare the check gift card balance madel
+        /// </summary>
+        /// <returns>Check gift card balance madel</returns>
+        public virtual CheckGiftCardBalanceModel PrepareCheckGiftCardBalanceModel()
+        {
+            var model = new CheckGiftCardBalanceModel();
             return model;
         }
 

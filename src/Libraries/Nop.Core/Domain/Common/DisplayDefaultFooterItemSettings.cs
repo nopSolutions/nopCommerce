@@ -50,7 +50,7 @@ namespace Nop.Core.Domain.Common
         /// <summary>
         /// Gets or sets a value indicating whether to display "new products" footer item
         /// </summary>
-        public bool DisplayNewProductsFooterItem { get; set; }
+        public bool DisplayNewProductsFooterItem { get; set; }        
 
         /// <summary>
         /// Gets or sets a value indicating whether to display "customer info" footer item

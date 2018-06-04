@@ -60,6 +60,10 @@
                 {
                     <li><a href="@Url.RouteUrl("Topic", new {SeName = topic.SeName})">@topic.Name</a></li>
                 }
+                @if (Model.AllowCustomersToCheckGiftCardBalance)
+                {
+                    <li><a href="@Url.RouteUrl("CheckGiftCardBalance")">@T("CheckGiftCardBalance")</a></li>
+                }
             </ul>
         </div>
         <div class="footer-block my-account">

@@ -1169,6 +1169,27 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowLinkToAllResultInSearchAutoComplete.Hint">
     <Value>Determines whether the link to all results should be displayed in the autocomplete search box. Displayed if the number of items found is greater than the displayed quantity in the autocomplete box.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AllowCustomersToCheckGiftCardBalance">
+    <Value>Allow customers to check gift card balance</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AllowCustomersToCheckGiftCardBalance.Hint">
+    <Value>Check to allow customers to check gift card balance. If checked, then CAPTCHA setting must be enabled in the admin area. This feature is potentially not safe and CAPTCHA is needed to prevent and complicate bruteforce.</Value>
+  </LocaleResource>
+  <LocaleResource Name="PageTitle.CheckGiftCardBalance">
+    <Value>Check gift card balance</Value>
+  </LocaleResource>
+  <LocaleResource Name="CheckGiftCardBalance">
+    <Value>Check gift card balance</Value>
+  </LocaleResource>
+  <LocaleResource Name="CheckGiftCard.GiftCardCouponCode.Button">
+    <Value>Check gift card</Value>
+  </LocaleResource>
+  <LocaleResource Name="CheckGiftCardBalance.GiftCardCouponCode.Invalid">
+    <Value>Coupon code is not valid.</Value>
+  </LocaleResource>
+  <LocaleResource Name="CheckGiftCardBalance.GiftCardCouponCode.Empty">
+    <Value>Coupon code is empty.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -2896,5 +2917,13 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'catalogsettings.countdis
 BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId])
 	VALUES (N'catalogsettings.countdisplayedyearsdatepicker', N'1', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'customersettings.allowcustomerstocheckgiftcardbalance')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'customersettings.allowcustomerstocheckgiftcardbalance', N'false', 0)
 END
 GO
