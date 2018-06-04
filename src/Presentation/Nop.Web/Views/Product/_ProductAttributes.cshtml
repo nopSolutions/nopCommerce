@@ -422,6 +422,11 @@
                         if (data.price) {
                             $('.price-value-@productId').text(data.price);
                         }
+                        if (data.basepricepangv) {
+                            $('#base-price-pangv-@productId').text(data.basepricepangv);
+                        }else {
+                            $('#base-price-pangv-@productId').hide();
+                        }
                         if (data.sku) {
                             $('#sku-@productId').text(data.sku).parent(".sku").show();
                         } else {

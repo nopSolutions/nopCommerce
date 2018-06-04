@@ -285,10 +285,8 @@ namespace Nop.Web.Factories
                     var oldPriceBase = _taxService.GetProductPrice(product, product.OldPrice, out decimal taxRate);
                     var finalPriceBase = _taxService.GetProductPrice(product, minPossiblePrice, out taxRate);
 
-                    var oldPrice =
-                        _currencyService.ConvertFromPrimaryStoreCurrency(oldPriceBase, _workContext.WorkingCurrency);
-                    var finalPrice =
-                        _currencyService.ConvertFromPrimaryStoreCurrency(finalPriceBase, _workContext.WorkingCurrency);
+                    var oldPrice = _currencyService.ConvertFromPrimaryStoreCurrency(oldPriceBase, _workContext.WorkingCurrency);
+                    var finalPrice = _currencyService.ConvertFromPrimaryStoreCurrency(finalPriceBase, _workContext.WorkingCurrency);
 
                     //do we have tier prices configured?
                     var tierPrices = new List<TierPrice>();
@@ -340,7 +338,7 @@ namespace Nop.Web.Factories
                     priceModel.DisplayTaxShippingInfo = _catalogSettings.DisplayTaxShippingInfoProductBoxes && product.IsShipEnabled && !product.IsFreeShipping;
 
                     //PAngV baseprice (used in Germany)
-                    priceModel.BasePricePAngV = product.FormatBasePrice(finalPrice, _localizationService, _measureService, _currencyService, _workContext, _priceFormatter);
+                    priceModel.BasePricePAngV = product.FormatBasePrice(finalPriceBase, _localizationService, _measureService, _currencyService, _workContext, _priceFormatter);
                 }
             }
             else
@@ -424,7 +422,7 @@ namespace Nop.Web.Factories
                     priceModel.PriceValue = finalPrice;
 
                     //PAngV baseprice (used in Germany)
-                    priceModel.BasePricePAngV = product.FormatBasePrice(finalPrice,
+                    priceModel.BasePricePAngV = product.FormatBasePrice(finalPriceBase,
                         _localizationService, _measureService, _currencyService, _workContext,
                         _priceFormatter);
                 }
