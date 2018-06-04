@@ -8,18 +8,5 @@ namespace Nop.Data.Mapping.Common
     /// </summary>
     public partial class IntQueryTypeMap : NopQueryTypeConfiguration<IntQueryType>
     {
-        #region Methods
-
-        /// <summary>
-        /// Configures the query type
-        /// </summary>
-        /// <param name="builder">The builder to be used to configure the query type</param>
-        public override void Configure(QueryTypeBuilder<IntQueryType> builder)
-        {
-            //add custom configuration
-            this.PostConfigure(builder);
-        }
-
-        #endregion
     }
 }

@@ -22,8 +22,7 @@ namespace Nop.Data.Mapping.Forums
 
             builder.Property(forumGroup => forumGroup.Name).HasMaxLength(200).IsRequired();
 
-            //add custom configuration
-            this.PostConfigure(builder);
+            base.Configure(builder);
         }
 
         #endregion

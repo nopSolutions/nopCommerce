@@ -25,8 +25,7 @@ namespace Nop.Data.Mapping.Orders
                 .HasForeignKey(historyEntry => historyEntry.RecurringPaymentId)
                 .IsRequired();
 
-            //add custom configuration
-            this.PostConfigure(builder);
+            base.Configure(builder);
         }
 
         #endregion

@@ -22,8 +22,7 @@ namespace Nop.Data.Mapping.Gdpr
 
             builder.Ignore(gdpr => gdpr.RequestType);
 
-            //add custom configuration
-            this.PostConfigure(builder);
+            base.Configure(builder);
         }
 
         #endregion

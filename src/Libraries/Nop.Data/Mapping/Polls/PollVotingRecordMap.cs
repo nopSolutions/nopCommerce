@@ -30,8 +30,7 @@ namespace Nop.Data.Mapping.Polls
                 .HasForeignKey(record => record.CustomerId)
                 .IsRequired();
 
-            //add custom configuration
-            this.PostConfigure(builder);
+            base.Configure(builder);
         }
 
         #endregion

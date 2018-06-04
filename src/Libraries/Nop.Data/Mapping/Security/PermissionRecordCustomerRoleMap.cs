@@ -35,8 +35,7 @@ namespace Nop.Data.Mapping.Security
 
             builder.Ignore(mapping => mapping.Id);
 
-            //add custom configuration
-            this.PostConfigure(builder);
+            base.Configure(builder);
         }
 
         #endregion

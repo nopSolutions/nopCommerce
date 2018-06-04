@@ -19,9 +19,8 @@ namespace Nop.Data.Mapping.Media
         {
             builder.ToTable(nameof(Download));
             builder.HasKey(download => download.Id);
-            
-            //add custom configuration
-            this.PostConfigure(builder);
+
+            base.Configure(builder);
         }
 
         #endregion

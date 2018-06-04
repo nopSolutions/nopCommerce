@@ -27,8 +27,7 @@ namespace Nop.Data.Mapping.Security
                 .HasForeignKey(record => record.CustomerRoleId)
                 .IsRequired();
 
-            //add custom configuration
-            this.PostConfigure(builder);
+            base.Configure(builder);
         }
 
         #endregion

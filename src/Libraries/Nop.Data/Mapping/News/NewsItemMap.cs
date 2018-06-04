@@ -31,8 +31,7 @@ namespace Nop.Data.Mapping.News
                 .HasForeignKey(newsItem => newsItem.LanguageId)
                 .IsRequired();
 
-            //add custom configuration
-            this.PostConfigure(builder);
+            base.Configure(builder);
         }
 
         #endregion

@@ -39,8 +39,7 @@ namespace Nop.Data.Mapping.Orders
                 .HasForeignKey(orderItem => orderItem.ProductId)
                 .IsRequired();
 
-            //add custom configuration
-            this.PostConfigure(builder);
+            base.Configure(builder);
         }
 
         #endregion

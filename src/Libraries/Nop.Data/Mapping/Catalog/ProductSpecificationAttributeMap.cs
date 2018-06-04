@@ -34,8 +34,7 @@ namespace Nop.Data.Mapping.Catalog
 
             builder.Ignore(productSpecificationAttribute => productSpecificationAttribute.AttributeType);
 
-            //add custom configuration
-            this.PostConfigure(builder);
+            base.Configure(builder);
         }
 
         #endregion

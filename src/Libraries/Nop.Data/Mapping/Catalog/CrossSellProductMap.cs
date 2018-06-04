@@ -20,8 +20,7 @@ namespace Nop.Data.Mapping.Catalog
             builder.ToTable(nameof(CrossSellProduct));
             builder.HasKey(product => product.Id);
 
-            //add custom configuration
-            this.PostConfigure(builder);
+            base.Configure(builder);
         }
 
         #endregion

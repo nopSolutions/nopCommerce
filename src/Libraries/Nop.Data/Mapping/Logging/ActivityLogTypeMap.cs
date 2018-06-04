@@ -23,8 +23,7 @@ namespace Nop.Data.Mapping.Logging
             builder.Property(logType => logType.SystemKeyword).HasMaxLength(100).IsRequired();
             builder.Property(logType => logType.Name).HasMaxLength(200).IsRequired();
 
-            //add custom configuration
-            this.PostConfigure(builder);
+            base.Configure(builder);
         }
 
         #endregion

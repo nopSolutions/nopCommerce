@@ -35,8 +35,7 @@ namespace Nop.Data.Mapping.Forums
                .IsRequired()
                .OnDelete(DeleteBehavior.Restrict);
 
-            //add custom configuration
-            this.PostConfigure(builder);
+            base.Configure(builder);
         }
 
         #endregion

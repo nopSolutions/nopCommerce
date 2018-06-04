@@ -25,8 +25,7 @@ namespace Nop.Data.Mapping.Forums
                 .HasForeignKey(postVote => postVote.ForumPostId)
                 .IsRequired();
 
-            //add custom configuration
-            this.PostConfigure(builder);
+            base.Configure(builder);
         }
 
         #endregion

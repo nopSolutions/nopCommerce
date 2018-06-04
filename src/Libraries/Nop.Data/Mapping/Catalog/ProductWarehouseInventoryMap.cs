@@ -30,8 +30,7 @@ namespace Nop.Data.Mapping.Catalog
                 .HasForeignKey(productWarehouseInventory => productWarehouseInventory.WarehouseId)
                 .IsRequired();
 
-            //add custom configuration
-            this.PostConfigure(builder);
+            base.Configure(builder);
         }
 
         #endregion

@@ -24,8 +24,7 @@ namespace Nop.Data.Mapping.Common
             builder.Property(attribute => attribute.Key).HasMaxLength(400).IsRequired();
             builder.Property(attribute => attribute.Value).IsRequired();
 
-            //add custom configuration
-            this.PostConfigure(builder);
+            base.Configure(builder);
         }
 
         #endregion

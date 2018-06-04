@@ -35,8 +35,7 @@ namespace Nop.Data.Mapping.Blogs
                 .HasForeignKey(comment => comment.StoreId)
                 .IsRequired();
 
-            //add custom configuration
-            this.PostConfigure(builder);
+            base.Configure(builder);
         }
 
         #endregion

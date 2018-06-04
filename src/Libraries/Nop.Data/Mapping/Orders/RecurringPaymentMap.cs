@@ -30,8 +30,7 @@ namespace Nop.Data.Mapping.Orders
             builder.Ignore(recurringPayment => recurringPayment.CyclesRemaining);
             builder.Ignore(recurringPayment => recurringPayment.CyclePeriod);
 
-            //add custom configuration
-            this.PostConfigure(builder);
+            base.Configure(builder);
         }
 
         #endregion

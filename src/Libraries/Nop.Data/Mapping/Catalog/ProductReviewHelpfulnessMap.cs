@@ -25,8 +25,7 @@ namespace Nop.Data.Mapping.Catalog
                 .HasForeignKey(productReviewHelpfulness => productReviewHelpfulness.ProductReviewId)
                 .IsRequired();
 
-            //add custom configuration
-            this.PostConfigure(builder);
+            base.Configure(builder);
         }
 
         #endregion

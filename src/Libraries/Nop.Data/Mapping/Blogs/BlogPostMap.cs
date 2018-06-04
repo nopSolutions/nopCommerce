@@ -30,8 +30,7 @@ namespace Nop.Data.Mapping.Blogs
                 .HasForeignKey(blogPost => blogPost.LanguageId)
                 .IsRequired();
 
-            //add custom configuration
-            this.PostConfigure(builder);
+            base.Configure(builder);
         }
 
         #endregion

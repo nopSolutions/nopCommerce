@@ -25,8 +25,7 @@ namespace Nop.Data.Mapping.Shipping
                 .HasForeignKey(item => item.ShipmentId)
                 .IsRequired();
 
-            //add custom configuration
-            this.PostConfigure(builder);
+            base.Configure(builder);
         }
 
         #endregion

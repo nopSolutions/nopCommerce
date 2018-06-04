@@ -19,8 +19,7 @@ namespace Nop.Data.Mapping.Common
         {
             builder.Property(decimalValue => decimalValue.Value).HasColumnType("decimal(18, 4)");
 
-            //add custom configuration
-            this.PostConfigure(builder);
+            base.Configure(builder);
         }
 
         #endregion

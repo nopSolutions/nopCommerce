@@ -29,8 +29,7 @@ namespace Nop.Data.Mapping.Localization
                 .HasForeignKey(property => property.LanguageId)
                 .IsRequired();
 
-            //add custom configuration
-            this.PostConfigure(builder);
+            base.Configure(builder);
         }
 
         #endregion

@@ -27,8 +27,7 @@ namespace Nop.Data.Mapping.Polls
                 .HasForeignKey(poll => poll.LanguageId)
                 .IsRequired();
 
-            //add custom configuration
-            this.PostConfigure(builder);
+            base.Configure(builder);
         }
 
         #endregion

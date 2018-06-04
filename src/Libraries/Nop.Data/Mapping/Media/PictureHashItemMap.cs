@@ -8,18 +8,5 @@ namespace Nop.Data.Mapping.Media
     /// </summary>
     public partial class PictureHashItemMap : NopQueryTypeConfiguration<PictureHashItem>
     {
-        #region Methods
-
-        /// <summary>
-        /// Configures the query type
-        /// </summary>
-        /// <param name="builder">The builder to be used to configure the query type</param>
-        public override void Configure(QueryTypeBuilder<PictureHashItem> builder)
-        {
-            //add custom configuration
-            this.PostConfigure(builder);
-        }
-
-        #endregion
     }
 }
