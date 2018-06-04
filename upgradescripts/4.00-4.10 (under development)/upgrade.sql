@@ -1169,6 +1169,15 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowLinkToAllResultInSearchAutoComplete.Hint">
     <Value>Determines whether the link to all results should be displayed in the autocomplete search box. Displayed if the number of items found is greater than the displayed quantity in the autocomplete box.</Value>
   </LocaleResource>
+  <LocaleResource Name="ShoppingCart.PreOrderAvailability">
+    <Value>pre-order availability</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.DisplayDatePreOrderAvailability">
+    <Value>Display the date for a pre-order availability</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.DisplayDatePreOrderAvailability.Hint">
+    <Value>Check to display the date for pre-order availability.</Value>
+  </LocaleResource>   
 </Language>
 '
 
@@ -2949,4 +2958,12 @@ GO
 ALTER TABLE [dbo].[PictureBinary] WITH CHECK ADD CONSTRAINT [FK_PictureBinary_Picture_PictureId] FOREIGN KEY(PictureId)
 REFERENCES [dbo].[Picture] ([Id])
 ON DELETE CASCADE
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'catalogsettings.displaydatepreorderavailability')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'catalogsettings.displaydatepreorderavailability', N'False', 0)
+END
 GO

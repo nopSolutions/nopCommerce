@@ -5318,7 +5318,13 @@
   </LocaleResource>    
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.DefaultViewMode.Hint">
     <Value>Choose the default view mode for catalog pages.</Value>
-  </LocaleResource>    
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.DisplayDatePreOrderAvailability">
+    <Value>Display the date for a pre-order availability</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.DisplayDatePreOrderAvailability.Hint">
+    <Value>Check to display the date for pre-order availability.</Value>
+  </LocaleResource>  
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.DisplayDiscontinuedMessageForUnpublishedProducts">
     <Value>Discontinued message for unpublished products</Value>
   </LocaleResource>
@@ -17243,6 +17249,9 @@
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.PreOrder">
     <Value>Pre-order</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.PreOrderAvailability">
+    <Value>pre-order availability</Value>
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.Product(s)">
     <Value>Product(s)</Value>

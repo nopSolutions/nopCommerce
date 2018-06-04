@@ -452,5 +452,10 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets count of displayed years for datepicker
         /// </summary>
         public int CountDisplayedYearsDatePicker { get; set; }
+
+        /// <summary>
+        /// Get or set a value indicating whether it's necessary to show the date for pre-order availability in a public store
+        /// </summary>
+        public bool DisplayDatePreOrderAvailability { get; set; }
     }
 }

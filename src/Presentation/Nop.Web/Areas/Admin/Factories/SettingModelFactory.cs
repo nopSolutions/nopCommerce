@@ -988,6 +988,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 model.ExportImportSplitProductsFile_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.ExportImportSplitProductsFile, storeId);
                 model.RemoveRequiredProducts_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.RemoveRequiredProducts, storeId);
                 model.ExportImportRelatedEntitiesByName_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.ExportImportRelatedEntitiesByName, storeId);
+                model.DisplayDatePreOrderAvailability_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.DisplayDatePreOrderAvailability, storeId);
             }
 
             //prepare nested search model
