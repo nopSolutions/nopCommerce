@@ -248,7 +248,7 @@ namespace Nop.Core.Plugins
             Assembly pluginAssembly;
             try
             {
-                pluginAssembly = AssemblyLoadContext.Default.LoadFromAssemblyPath(plug);
+                pluginAssembly = Assembly.LoadFrom(plug);
             }
             catch (FileLoadException)
             {
