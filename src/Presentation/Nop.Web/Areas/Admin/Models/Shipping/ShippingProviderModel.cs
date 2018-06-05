@@ -6,7 +6,7 @@ namespace Nop.Web.Areas.Admin.Models.Shipping
     /// <summary>
     /// Represents a shipping provider model
     /// </summary>
-    public partial class ShippingProviderModel : BaseNopModel
+    public partial class ShippingProviderModel : BaseNopModel, IPluginModel
     {
         #region Properties
 
