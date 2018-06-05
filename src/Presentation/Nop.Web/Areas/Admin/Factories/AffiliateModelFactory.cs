@@ -195,11 +195,12 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new AffiliateListModel
             {
                 //fill in model values from the entity
-                Data = affiliates.Select(affiliate => new AffiliateModel
+                Data = affiliates.Select(affiliate =>
                 {
-                    Id = affiliate.Id,
-                    Active = affiliate.Active,
-                    Address = affiliate.Address.ToModel(new AddressModel())
+                    var affiliateModel = affiliate.ToModel(new AffiliateModel());
+                    affiliateModel.Address = affiliate.Address.ToModel(new AddressModel());
+
+                    return affiliateModel;
                 }),
                 Total = affiliates.TotalCount
             };
@@ -219,8 +220,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //fill in model values from the entity
             if (affiliate != null)
             {
-                model = model ?? new AffiliateModel();
-                model.Id = affiliate.Id;
+                model = model ?? affiliate.ToModel(model);
                 model.Url = affiliate.GenerateUrl(_webHelper);
 
                 //prepare nested search models

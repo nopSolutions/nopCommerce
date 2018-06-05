@@ -217,15 +217,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = comments.PaginationByRequestModel(searchModel).Select(blogComment =>
                 {
                     //fill in model values from the entity
-                    var commentModel = new BlogCommentModel
-                    {
-                        Id = blogComment.Id,
-                        BlogPostId = blogComment.BlogPostId,
-                        BlogPostTitle = blogComment.BlogPost.Title,
-                        CustomerId = blogComment.CustomerId,
-                        IsApproved = blogComment.IsApproved,
-                        StoreId = blogComment.StoreId
-                    };
+                    var commentModel = blogComment.ToModel(new BlogCommentModel());
 
                     //fill in additional values (not existing in the entity)
                     commentModel.CustomerInfo = blogComment.Customer.IsRegistered()

@@ -273,13 +273,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                var value = new VendorAttributeValue
-                {
-                    VendorAttributeId = model.VendorAttributeId,
-                    Name = model.Name,
-                    IsPreSelected = model.IsPreSelected,
-                    DisplayOrder = model.DisplayOrder
-                };
+                var value = model.ToEntity(new VendorAttributeValue());
 
                 _vendorAttributeService.InsertVendorAttributeValue(value);
 
@@ -341,9 +335,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                vendorAttributeValue.Name = model.Name;
-                vendorAttributeValue.IsPreSelected = model.IsPreSelected;
-                vendorAttributeValue.DisplayOrder = model.DisplayOrder;
+                vendorAttributeValue = model.ToEntity(vendorAttributeValue);
                 _vendorAttributeService.UpdateVendorAttributeValue(vendorAttributeValue);
 
                 //activity log

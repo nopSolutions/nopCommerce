@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Nop.Core.Domain.Affiliates;
 using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
@@ -15,8 +16,10 @@ using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Polls;
 using Nop.Core.Domain.Security;
+using Nop.Core.Domain.Seo;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Stores;
+using Nop.Core.Domain.Tasks;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Topics;
 using Nop.Core.Domain.Vendors;
@@ -29,6 +32,7 @@ using Nop.Services.Seo;
 using Nop.Services.Shipping;
 using Nop.Services.Shipping.Pickup;
 using Nop.Services.Tax;
+using Nop.Web.Areas.Admin.Models.Affiliates;
 using Nop.Web.Areas.Admin.Models.Blogs;
 using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Web.Areas.Admin.Models.Cms;
@@ -49,6 +53,7 @@ using Nop.Web.Areas.Admin.Models.Polls;
 using Nop.Web.Areas.Admin.Models.Settings;
 using Nop.Web.Areas.Admin.Models.Shipping;
 using Nop.Web.Areas.Admin.Models.Stores;
+using Nop.Web.Areas.Admin.Models.Tasks;
 using Nop.Web.Areas.Admin.Models.Tax;
 using Nop.Web.Areas.Admin.Models.Templates;
 using Nop.Web.Areas.Admin.Models.Topics;
@@ -73,7 +78,6 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
             CreateCatalogMaps();
             CreateCmsMaps();
             CreateCommonMaps();
-            CreateConfigurationMaps();
             CreateCustomersMaps();
             CreateDirectoryMaps();
             CreateDiscountsMaps();
@@ -165,6 +169,12 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
         /// </summary>
         protected virtual void CreateAffiliatesMaps()
         {
+            CreateMap<Affiliate, AffiliateModel>()
+                .ForMember(model => model.AffiliatedCustomerSearchModel, options => options.Ignore())
+                .ForMember(model => model.AffiliatedOrderSearchModel, options => options.Ignore())
+                .ForMember(model => model.Url, options => options.Ignore());
+            CreateMap<AffiliateModel, Affiliate>()
+                .ForMember(entity => entity.Deleted, options => options.Ignore());
         }
 
         /// <summary>
@@ -180,6 +190,17 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
         /// </summary>
         protected virtual void CreateBlogsMaps()
         {
+            CreateMap<BlogComment, BlogCommentModel>()
+                .ForMember(model => model.Comment, options => options.Ignore())
+                .ForMember(model => model.CreatedOn, options => options.Ignore())
+                .ForMember(model => model.CustomerInfo, options => options.Ignore());
+            CreateMap<BlogCommentModel, BlogComment>()
+                .ForMember(entity => entity.BlogPost, options => options.Ignore())
+                .ForMember(entity => entity.CommentText, options => options.Ignore())
+                .ForMember(entity => entity.CreatedOnUtc, options => options.Ignore())
+                .ForMember(entity => entity.Customer, options => options.Ignore())
+                .ForMember(entity => entity.Store, options => options.Ignore());
+
             CreateMap<BlogPost, BlogPostModel>()
                 .ForMember(model => model.ApprovedComments, options => options.Ignore())
                 .ForMember(model => model.AvailableLanguages, options => options.Ignore())
@@ -491,18 +512,15 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(entity => entity.AddressAttributeValues, options => options.Ignore())
                 .ForMember(entity => entity.AttributeControlType, options => options.Ignore());
 
+            CreateMap<AddressAttributeValue, AddressAttributeValueModel>();
+            CreateMap<AddressAttributeValueModel, AddressAttributeValue>()
+                .ForMember(entity => entity.AddressAttribute, options => options.Ignore());
+
             CreateMap<AddressSettings, AddressSettingsModel>();
             CreateMap<AddressSettingsModel, AddressSettings>()
                 .ForMember(settings => settings.PreselectCountryIfOnlyOne, options => options.Ignore());
         }
-
-        /// <summary>
-        /// Create configuration maps 
-        /// </summary>
-        protected virtual void CreateConfigurationMaps()
-        {
-        }
-
+        
         /// <summary>
         /// Create customers maps 
         /// </summary>
@@ -514,6 +532,10 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
             CreateMap<CustomerAttributeModel, CustomerAttribute>()
                 .ForMember(entity => entity.AttributeControlType, options => options.Ignore())
                 .ForMember(entity => entity.CustomerAttributeValues, options => options.Ignore());
+
+            CreateMap<CustomerAttributeValue, CustomerAttributeValueModel>();
+            CreateMap<CustomerAttributeValueModel, CustomerAttributeValue>()
+                .ForMember(entity => entity.CustomerAttribute, options => options.Ignore());
 
             CreateMap<CustomerRole, CustomerRoleModel>()
                 .ForMember(model => model.PurchasedWithProductName, options => options.Ignore())
@@ -713,7 +735,13 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.ActivityLogTypeName, options => options.MapFrom(entity => entity.ActivityLogType.Name))
                 .ForMember(model => model.CreatedOn, options => options.Ignore())
                 .ForMember(model => model.CustomerEmail, options => options.MapFrom(entity => entity.Customer.Email));
-            CreateMap<ActivityLogModel, ActivityLog>();
+            CreateMap<ActivityLogModel, ActivityLog>()
+                .ForMember(entity => entity.ActivityLogType, options => options.Ignore())
+                .ForMember(entity => entity.ActivityLogTypeId, options => options.Ignore())
+                .ForMember(entity => entity.CreatedOnUtc, options => options.Ignore())
+                .ForMember(entity => entity.Customer, options => options.Ignore())
+                .ForMember(entity => entity.EntityId, options => options.Ignore())
+                .ForMember(entity => entity.EntityName, options => options.Ignore());
 
             CreateMap<ActivityLogType, ActivityLogTypeModel>();
             CreateMap<ActivityLogTypeModel, ActivityLogType>()
@@ -867,6 +895,13 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(entity => entity.CheckoutAttributeValues, options => options.Ignore())
                 .ForMember(entity => entity.ConditionAttributeXml, options => options.Ignore());
 
+            CreateMap<CheckoutAttributeValue, CheckoutAttributeValueModel>()
+                .ForMember(model => model.BaseWeightIn, options => options.Ignore())
+                .ForMember(model => model.DisplayColorSquaresRgb, options => options.Ignore())
+                .ForMember(model => model.PrimaryStoreCurrencyCode, options => options.Ignore());
+            CreateMap<CheckoutAttributeValueModel, CheckoutAttributeValue>()
+                .ForMember(entity => entity.CheckoutAttribute, options => options.Ignore());
+
             CreateMap<GiftCard, GiftCardModel>()
                 .ForMember(model => model.AmountStr, options => options.Ignore())
                 .ForMember(model => model.CreatedOn, options => options.Ignore())
@@ -1015,6 +1050,13 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
         /// </summary>
         protected virtual void CreateSeoMaps()
         {
+            CreateMap<UrlRecord, UrlRecordModel>()
+                .ForMember(model => model.DetailsUrl, options => options.Ignore())
+                .ForMember(model => model.Language, options => options.Ignore())
+                .ForMember(model => model.Name, options => options.Ignore());
+            CreateMap<UrlRecordModel, UrlRecord>()
+                .ForMember(entity => entity.LanguageId, options => options.Ignore())
+                .ForMember(entity => entity.Slug, options => options.Ignore());
         }
 
         /// <summary>
@@ -1079,6 +1121,9 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
         /// </summary>
         protected virtual void CreateTasksMaps()
         {
+            CreateMap<ScheduleTask, ScheduleTaskModel>();
+            CreateMap<ScheduleTaskModel, ScheduleTask>()
+                .ForMember(entity => entity.Type, options => options.Ignore());
         }
 
         /// <summary>
@@ -1165,6 +1210,10 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
             CreateMap<VendorAttributeModel, VendorAttribute>()
                 .ForMember(entity => entity.AttributeControlType, options => options.Ignore())
                 .ForMember(entity => entity.VendorAttributeValues, options => options.Ignore());
+
+            CreateMap<VendorAttributeValue, VendorAttributeValueModel>();
+            CreateMap<VendorAttributeValueModel, VendorAttributeValue>()
+                .ForMember(entity => entity.VendorAttribute, options => options.Ignore());
 
             CreateMap<VendorSettings, VendorSettingsModel>()
                 .ForMember(model => model.ActiveStoreScopeConfiguration, options => options.Ignore())

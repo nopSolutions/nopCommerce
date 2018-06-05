@@ -173,14 +173,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new VendorAttributeValueListModel
             {
                 //fill in model values from the entity
-                Data = vendorAttributeValues.PaginationByRequestModel(searchModel).Select(value => new VendorAttributeValueModel
-                {
-                    Id = value.Id,
-                    VendorAttributeId = value.VendorAttributeId,
-                    Name = value.Name,
-                    IsPreSelected = value.IsPreSelected,
-                    DisplayOrder = value.DisplayOrder
-                }),
+                Data = vendorAttributeValues.PaginationByRequestModel(searchModel).Select(value => value.ToModel(new VendorAttributeValueModel())),
                 Total = vendorAttributeValues.Count
             };
 
@@ -206,12 +199,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (vendorAttributeValue != null)
             {
                 //fill in model values from the entity
-                model = model ?? new VendorAttributeValueModel
-                {
-                    Name = vendorAttributeValue.Name,
-                    IsPreSelected = vendorAttributeValue.IsPreSelected,
-                    DisplayOrder = vendorAttributeValue.DisplayOrder
-                };
+                model = model ?? vendorAttributeValue.ToModel(model);
 
                 //define localized model configuration action
                 localizedModelConfiguration = (locale, languageId) =>

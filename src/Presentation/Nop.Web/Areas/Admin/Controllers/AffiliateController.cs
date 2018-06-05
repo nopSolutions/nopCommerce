@@ -92,11 +92,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                var affiliate = new Affiliate
-                {
-                    Active = model.Active,
-                    AdminComment = model.AdminComment
-                };
+                var affiliate = model.ToEntity(new Affiliate());
 
                 //validate friendly URL name
                 var friendlyUrlName = affiliate.ValidateFriendlyUrlName(model.FriendlyUrlName);
@@ -158,8 +154,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                affiliate.Active = model.Active;
-                affiliate.AdminComment = model.AdminComment;
+                affiliate = model.ToEntity(affiliate);
 
                 //validate friendly URL name
                 var friendlyUrlName = affiliate.ValidateFriendlyUrlName(model.FriendlyUrlName);

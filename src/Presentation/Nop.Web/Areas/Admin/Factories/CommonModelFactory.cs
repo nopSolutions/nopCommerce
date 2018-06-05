@@ -653,14 +653,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = urlRecords.Select(urlRecord =>
                 {
                     //fill in model values from the entity
-                    var urlRecordModel = new UrlRecordModel
-                    {
-                        Id = urlRecord.Id,
-                        Name = urlRecord.Slug,
-                        EntityId = urlRecord.EntityId,
-                        EntityName = urlRecord.EntityName,
-                        IsActive = urlRecord.IsActive
-                    };
+                    var urlRecordModel = urlRecord.ToModel(new UrlRecordModel());
 
                     //fill in additional values (not existing in the entity)
                     urlRecordModel.Language = urlRecord.LanguageId == 0

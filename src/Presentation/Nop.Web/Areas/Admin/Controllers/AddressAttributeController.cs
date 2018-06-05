@@ -286,14 +286,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                var addressAttributeValue = new AddressAttributeValue
-                {
-                    AddressAttributeId = model.AddressAttributeId,
-                    Name = model.Name,
-                    IsPreSelected = model.IsPreSelected,
-                    DisplayOrder = model.DisplayOrder
-                };
-
+                var addressAttributeValue = model.ToEntity(new AddressAttributeValue());
                 _addressAttributeService.InsertAddressAttributeValue(addressAttributeValue);
 
                 //activity log
@@ -354,9 +347,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                addressAttributeValue.Name = model.Name;
-                addressAttributeValue.IsPreSelected = model.IsPreSelected;
-                addressAttributeValue.DisplayOrder = model.DisplayOrder;
+                addressAttributeValue = model.ToEntity(addressAttributeValue);
                 _addressAttributeService.UpdateAddressAttributeValue(addressAttributeValue);
 
                 UpdateValueLocales(addressAttributeValue, model);

@@ -257,18 +257,16 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare list model
             var model = new CheckoutAttributeValueListModel
             {
-                //fill in model values from the entity
-                Data = checkoutAttributeValues.PaginationByRequestModel(searchModel).Select(value => new CheckoutAttributeValueModel
+                Data = checkoutAttributeValues.PaginationByRequestModel(searchModel).Select(value =>
                 {
-                    Id = value.Id,
-                    CheckoutAttributeId = value.CheckoutAttributeId,
-                    Name = value.CheckoutAttribute.AttributeControlType != AttributeControlType.ColorSquares
-                        ? value.Name : $"{value.Name} - {value.ColorSquaresRgb}",
-                    ColorSquaresRgb = value.ColorSquaresRgb,
-                    PriceAdjustment = value.PriceAdjustment,
-                    WeightAdjustment = value.WeightAdjustment,
-                    IsPreSelected = value.IsPreSelected,
-                    DisplayOrder = value.DisplayOrder
+                    //fill in model values from the entity
+                    var checkoutAttributeValueModel = value.ToModel(new CheckoutAttributeValueModel());
+
+                    //fill in additional values (not existing in the entity)
+                    checkoutAttributeValueModel.Name = value.CheckoutAttribute.AttributeControlType != AttributeControlType.ColorSquares
+                        ? value.Name : $"{value.Name} - {value.ColorSquaresRgb}";
+
+                    return checkoutAttributeValueModel;
                 }),
                 Total = checkoutAttributeValues.Count
             };
@@ -295,15 +293,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (checkoutAttributeValue != null)
             {
                 //fill in model values from the entity
-                model = model ?? new CheckoutAttributeValueModel
-                {
-                    Name = checkoutAttributeValue.Name,
-                    ColorSquaresRgb = checkoutAttributeValue.ColorSquaresRgb,
-                    PriceAdjustment = checkoutAttributeValue.PriceAdjustment,
-                    WeightAdjustment = checkoutAttributeValue.WeightAdjustment,
-                    IsPreSelected = checkoutAttributeValue.IsPreSelected,
-                    DisplayOrder = checkoutAttributeValue.DisplayOrder
-                };
+                model = model ?? checkoutAttributeValue.ToModel(model);
 
                 //define localized model configuration action
                 localizedModelConfiguration = (locale, languageId) =>

@@ -177,14 +177,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new AddressAttributeValueListModel
             {
                 //fill in model values from the entity
-                Data = addressAttributeValues.PaginationByRequestModel(searchModel).Select(value => new AddressAttributeValueModel
-                {
-                    Id = value.Id,
-                    AddressAttributeId = value.AddressAttributeId,
-                    Name = value.Name,
-                    IsPreSelected = value.IsPreSelected,
-                    DisplayOrder = value.DisplayOrder
-                }),
+                Data = addressAttributeValues.PaginationByRequestModel(searchModel).Select(value => value.ToModel(new AddressAttributeValueModel())),
                 Total = addressAttributeValues.Count
             };
 
@@ -210,12 +203,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (addressAttributeValue != null)
             {
                 //fill in model values from the entity
-                model = model ?? new AddressAttributeValueModel
-                {
-                    Name = addressAttributeValue.Name,
-                    IsPreSelected = addressAttributeValue.IsPreSelected,
-                    DisplayOrder = addressAttributeValue.DisplayOrder
-                };
+                model = model ?? addressAttributeValue.ToModel(model);
 
                 //define localized model configuration action
                 localizedModelConfiguration = (locale, languageId) =>

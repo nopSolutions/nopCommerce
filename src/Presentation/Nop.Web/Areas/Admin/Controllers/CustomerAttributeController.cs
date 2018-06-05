@@ -271,14 +271,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                var cav = new CustomerAttributeValue
-                {
-                    CustomerAttributeId = model.CustomerAttributeId,
-                    Name = model.Name,
-                    IsPreSelected = model.IsPreSelected,
-                    DisplayOrder = model.DisplayOrder
-                };
-
+                var cav = model.ToEntity(new CustomerAttributeValue());
                 _customerAttributeService.InsertCustomerAttributeValue(cav);
 
                 //activity log
@@ -338,9 +331,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                customerAttributeValue.Name = model.Name;
-                customerAttributeValue.IsPreSelected = model.IsPreSelected;
-                customerAttributeValue.DisplayOrder = model.DisplayOrder;
+                customerAttributeValue = model.ToEntity(customerAttributeValue);
                 _customerAttributeService.UpdateCustomerAttributeValue(customerAttributeValue);
 
                 //activity log

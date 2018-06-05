@@ -416,16 +416,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                var checkoutAttributeValue = new CheckoutAttributeValue
-                {
-                    CheckoutAttributeId = model.CheckoutAttributeId,
-                    Name = model.Name,
-                    ColorSquaresRgb = model.ColorSquaresRgb,
-                    PriceAdjustment = model.PriceAdjustment,
-                    WeightAdjustment = model.WeightAdjustment,
-                    IsPreSelected = model.IsPreSelected,
-                    DisplayOrder = model.DisplayOrder
-                };
+                var checkoutAttributeValue = model.ToEntity(new CheckoutAttributeValue());
                 _checkoutAttributeService.InsertCheckoutAttributeValue(checkoutAttributeValue);
 
                 UpdateValueLocales(checkoutAttributeValue, model);
@@ -501,12 +492,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                checkoutAttributeValue.Name = model.Name;
-                checkoutAttributeValue.ColorSquaresRgb = model.ColorSquaresRgb;
-                checkoutAttributeValue.PriceAdjustment = model.PriceAdjustment;
-                checkoutAttributeValue.WeightAdjustment = model.WeightAdjustment;
-                checkoutAttributeValue.IsPreSelected = model.IsPreSelected;
-                checkoutAttributeValue.DisplayOrder = model.DisplayOrder;
+                checkoutAttributeValue = model.ToEntity(checkoutAttributeValue);
                 _checkoutAttributeService.UpdateCheckoutAttributeValue(checkoutAttributeValue);
 
                 UpdateValueLocales(checkoutAttributeValue, model);

@@ -173,14 +173,8 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new CustomerAttributeValueListModel
             {
                 //fill in model values from the entity
-                Data = customerAttributeValues.PaginationByRequestModel(searchModel).Select(value => new CustomerAttributeValueModel
-                {
-                    Id = value.Id,
-                    CustomerAttributeId = value.CustomerAttributeId,
-                    Name = value.Name,
-                    IsPreSelected = value.IsPreSelected,
-                    DisplayOrder = value.DisplayOrder
-                }),
+                Data = customerAttributeValues.PaginationByRequestModel(searchModel)
+                    .Select(value => value.ToModel(new CustomerAttributeValueModel())),
                 Total = customerAttributeValues.Count
             };
 
@@ -206,12 +200,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (customerAttributeValue != null)
             {
                 //fill in model values from the entity
-                model = model ?? new CustomerAttributeValueModel
-                {
-                    Name = customerAttributeValue.Name,
-                    IsPreSelected = customerAttributeValue.IsPreSelected,
-                    DisplayOrder = customerAttributeValue.DisplayOrder
-                };
+                model = model ?? customerAttributeValue.ToModel(model);
 
                 //define localized model configuration action
                 localizedModelConfiguration = (locale, languageId) =>
