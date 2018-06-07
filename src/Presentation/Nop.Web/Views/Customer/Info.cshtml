@@ -21,7 +21,7 @@
 {
     <script asp-location="Footer">
         $(document).ready(function () {
-            $("#@Html.IdFor(model => model.CountryId)").change(function () {
+            $("#@Html.IdFor(model => model.CountryId)").on('change', function () {
                 var selectedItem = $(this).val();
                 var ddlStates = $("#@Html.IdFor(model => model.StateProvinceId)");
                 var statesProgress = $("#states-loading-progress");
@@ -442,9 +442,9 @@
                 {
                     if (consent.IsRequired)
                     {
-                        <script asp-location="Footer">
+                <script asp-location="Footer">
                             $(document).ready(function() {
-                                $('#save-info-button').click(function() {
+                                $('#save-info-button').on('click', function() {
                                     if ($('#consent@(consent.Id)').is(':checked')) {
                                         //do some stuff
                                         return true;
@@ -455,7 +455,7 @@
                                     }
                                 });
                             });
-                        </script>
+                </script>
                     }
                     <div class="accept-consent">
                         <input id="consent@(consent.Id)" type="checkbox" name="consent@(consent.Id)" checked="@consent.Accepted" />

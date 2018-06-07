@@ -16,13 +16,13 @@
 @{
     Html.AppendScriptParts(ResourceLocation.Footer, "~/js/public.ajaxcart.js");
     Html.AppendScriptParts(ResourceLocation.Footer, "~/js/public.common.js");
-    Html.AppendScriptParts(ResourceLocation.Footer, "~/lib/jquery-migrate-1.2.1.min.js");
-    Html.AppendScriptParts(ResourceLocation.Footer, "~/lib/jquery-ui-1.10.3.custom.min.js");
-    Html.AppendScriptParts(ResourceLocation.Footer, "~/lib/jquery.validate.unobtrusive.min.js");
-    Html.AppendScriptParts(ResourceLocation.Footer, "~/lib/jquery.validate.min.js");
+    Html.AppendScriptParts(ResourceLocation.Footer, "~/lib/jquery-migrate/jquery-migrate-3.0.1.js");
+    Html.AppendScriptParts(ResourceLocation.Footer, "~/lib/jquery-ui/jquery-ui-1.12.1.custom/jquery-ui.min.js");
+    Html.AppendScriptParts(ResourceLocation.Footer, "~/lib/jquery-validate/jquery.validate.unobtrusive-v3.2.10/jquery.validate.unobtrusive.min.js");
+    Html.AppendScriptParts(ResourceLocation.Footer, "~/lib/jquery-validate/jquery.validate-v1.17.0/jquery.validate.min.js");
     //jQuery is the only js file in the head. if we decide to move it to the footer, then ensure that all inline scripts (with jQuery usage) with are also moved to the footer
     //the issue that it's not possible in some cases (e.g. "Edit address", when Ajax request is made on one-page checkout)
-    Html.AppendScriptParts(ResourceLocation.Head, "~/lib/jquery-1.10.2.min.js");
+    Html.AppendScriptParts(ResourceLocation.Head, "~/lib/jquery/jquery-3.3.1.min.js");
     //X-UA-Compatible tag
     if (commonSettings.RenderXuaCompatible)
     {
@@ -39,7 +39,7 @@
     eventPublisher.Publish(new PageRenderingEvent(this.Html));
 }
 <!DOCTYPE html>
-<html lang="@workContext.WorkingLanguage.GetTwoLetterIsoLanguageName()"@(this.ShouldUseRtlTheme() ? Html.Raw(" dir=\"rtl\"") : null) @Html.NopPageCssClasses()>
+<html lang="@workContext.WorkingLanguage.GetTwoLetterIsoLanguageName()" @(this.ShouldUseRtlTheme() ? Html.Raw(" dir=\"rtl\"") : null) @Html.NopPageCssClasses()>
 <head>
     <title>@Html.NopTitle()</title>
     <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />

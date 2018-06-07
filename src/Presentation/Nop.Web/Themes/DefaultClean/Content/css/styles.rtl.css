@@ -4911,6 +4911,9 @@ label, label + * {
 	font: normal 14px Arial, Helvetica, sans-serif;
 	color: #777;
 }
+.ui-widget.ui-widget-content.ui-tabs {
+    border: none;
+}
 .ui-tabs-nav {
 	margin: 0 0 30px;
 	border-bottom: 1px solid #ddd;

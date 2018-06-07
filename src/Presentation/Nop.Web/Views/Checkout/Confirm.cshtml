@@ -19,7 +19,7 @@
             <form asp-route="CheckoutConfirm" method="post" id="confirm-order-form">
                 <script asp-location="Footer">
                     $(document).ready(function () {
-                        $('.confirm-order-next-step-button').click(function () {
+                        $('.confirm-order-next-step-button').on('click', function () {
                             //terms of service
                             var termOfServiceOk = true;
                             if ($('#termsofservice').length > 0) {
@@ -33,7 +33,7 @@
                             }
                             if (termOfServiceOk) {
                                 //$('#confirm-order-form').submit();
-                                //$('.confirm-order-next-step-button').attr('disabled', 'disabled');
+                                //$('.confirm-order-next-step-button').prop('disabled', true);
                                 return true;
                             } else {
                                 return false;
@@ -82,9 +82,9 @@
                             function () {
                                 var button = $(this).find('input[type="submit"][name="nextstep"]');
                                 setTimeout(function () {
-                                    button.attr('disabled', 'disabled');
+                                    button.prop('disabled', true);
                                 },
-                                    0);
+                                0);
                             });
                     </script>
                 }

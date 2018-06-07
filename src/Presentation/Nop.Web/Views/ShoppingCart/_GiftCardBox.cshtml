@@ -20,9 +20,9 @@
     </div>
     <script asp-location="Footer">
         $(document).ready(function () {
-            $('#giftcardcouponcode').keydown(function (event) {
+            $('#giftcardcouponcode').on('keydown', function (event) {
                 if (event.keyCode == 13) {
-                    $('#applygiftcardcouponcode').click();
+                    $('#applygiftcardcouponcode').trigger("click");
                     return false;
                 }
             });

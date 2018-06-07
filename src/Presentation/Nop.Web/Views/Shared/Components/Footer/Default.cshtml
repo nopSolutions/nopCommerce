@@ -132,7 +132,7 @@
 </div>
 <script asp-location="Footer">
     $(document).ready(function () {
-        $('.footer-block .title').click(function () {
+        $('.footer-block .title').on('click', function () {
             var e = window, a = 'inner';
             if (!('innerWidth' in window)) {
                 a = 'client';
@@ -147,7 +147,7 @@
 </script>
 <script asp-location="Footer">
     $(document).ready(function () {
-        $('.block .title').click(function () {
+        $('.block .title').on('click', function () {
             var e = window, a = 'inner';
             if (!('innerWidth' in window)) {
                 a = 'client';

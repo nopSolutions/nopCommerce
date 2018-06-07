@@ -14,20 +14,20 @@
     if (supportRtl)
     {
         Html.AppendCssFileParts("~/css/admin/styles.rtl.css");
-        Html.AppendCssFileParts("~/lib/adminLTE/AdminLTE-2.3.0.rtl.css");
+        Html.AppendCssFileParts("~/lib/adminLTE/css/AdminLTE.rtl.css");
         Html.AppendCssFileParts("~/lib/bootstrap/css/bootstrap.rtl.css");
     }
     else
     {
         Html.AppendCssFileParts("~/css/admin/styles.css");
-        Html.AppendCssFileParts("~/lib/adminLTE/AdminLTE-2.3.0.min.css");
+        Html.AppendCssFileParts("~/lib/adminLTE/css/AdminLTE.min.css");
         Html.AppendCssFileParts("~/lib/bootstrap/css/bootstrap.min.css");
     }
     Html.AppendCssFileParts($"~/lib/kendo/{kendoVersion}/kendo.rtl.min.css");
     Html.AppendCssFileParts($"~/lib/kendo/{kendoVersion}/kendo.default.min.css");
     Html.AppendCssFileParts($"~/lib/kendo/{kendoVersion}/kendo.common.min.css");
-    Html.AppendCssFileParts("~/lib/jquery-ui-themes/smoothness/jquery-ui-1.10.3.custom.min.css");
-    Html.AppendCssFileParts("~/lib/fontAwesome/css/font-awesome-4.6.3.min.css");
+    Html.AppendCssFileParts("~/lib/jquery-ui/jquery-ui-1.10.3/jquery-ui-themes/smoothness/jquery-ui-1.10.3.custom.min.css");
+    Html.AppendCssFileParts("~/lib/fontAwesome/css/font-awesome.min.css");
     Html.AppendCssFileParts("~/lib/bootstrap-touchspin/jquery.bootstrap-touchspin.min.css");
     <!-- AdminLTE Skins (choose a skin from the css/skins) -->
     Html.AppendCssFileParts("~/lib/adminLTE/skins/_all-skins.min.css");
@@ -35,14 +35,14 @@
     //scripts
     Html.AppendScriptParts($"~/lib/kendo/{kendoVersion}/kendo.web.min.js");
     Html.AppendScriptParts("~/js/admin.common.js");
-    Html.AppendScriptParts("~/lib/jquery-migrate-1.2.1.min.js");
-    Html.AppendScriptParts("~/lib/jquery-ui-1.10.3.custom.min.js");
-    Html.AppendScriptParts("~/lib/jquery.validate.unobtrusive.min.js");
-    Html.AppendScriptParts("~/lib/jquery.validate.min.js");
-    Html.AppendScriptParts("~/lib/adminLTE/app.min.js");
+    Html.AppendScriptParts("~/lib/jquery-migrate/jquery-migrate-1.2.1.min.js");
+    Html.AppendScriptParts("~/lib/jquery-ui/jquery-ui-1.10.3/jquery-ui-1.10.3.custom.min.js");
+    Html.AppendScriptParts("~/lib/jquery-validate/jquery.validate.unobtrusive.min.js");
+    Html.AppendScriptParts("~/lib/jquery-validate/jquery.validate.min.js");
+    Html.AppendScriptParts("~/lib/adminLTE/js/adminlte.min.js");
     Html.AppendScriptParts("~/lib/bootstrap/bootstrap.min.js");
     Html.AppendScriptParts("~/lib/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js");
-    Html.AppendScriptParts("~/lib/jquery-1.10.2.min.js");
+    Html.AppendScriptParts("~/lib/jquery/jquery-1.10.2.min.js");
 
     //page title
     string adminPageTitle = !string.IsNullOrWhiteSpace(ViewBag.Title) ? ViewBag.Title + " / " : "";
@@ -62,6 +62,8 @@
     <head>
         <title>@adminPageTitle</title>
         <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+        @*Google Font*@
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
         @Html.NopHeadCustom()
         @Html.NopCssFiles(this.Url, ResourceLocation.Head, false)
         @Html.NopScripts(this.Url, ResourceLocation.Head, false)
@@ -75,5 +77,11 @@
         </div>
         @Html.NopCssFiles(this.Url, ResourceLocation.Footer)
         @Html.NopScripts(this.Url, ResourceLocation.Footer)
+        <script>
+            $(document).ready(function () {
+                //enable tooltips
+                $('[data-toggle="tooltip"]').tooltip()
+            });
+        </script>
     </body>
-    </html>
+</html>

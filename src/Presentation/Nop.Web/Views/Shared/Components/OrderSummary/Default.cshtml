@@ -293,7 +293,7 @@
                             {
                                 <script asp-location="Footer">
                                     $(document).ready(function () {
-                                        $('#checkout').click(function () {
+                                        $('#checkout').on('click', function () {
                                             //terms of service
                                             var termOfServiceOk = true;
                                             if ($('#termsofservice').length > 0) {

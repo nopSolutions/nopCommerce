@@ -157,8 +157,8 @@
                                 }
 
                                 //register CSS and JS
-                                Html.AddCssFileParts(ResourceLocation.Footer, "~/lib/fineuploader/fineuploader-4.2.2.min.css");
-                                Html.AddScriptParts(ResourceLocation.Footer, "~/lib/fineuploader/jquery.fineuploader-4.2.2.min.js");
+                                Html.AddCssFileParts(ResourceLocation.Footer, "~/lib/fineuploader/fine-uploader.min.css");
+                                Html.AddScriptParts(ResourceLocation.Footer, "~/lib/fineuploader/jquery.fine-uploader.min.js");
 
                                 //ex. ['jpg', 'jpeg', 'png', 'gif'] or []
                                 var allowedFileExtensions = string.Join(", ", attribute.AllowedFileExtensions.Select(x => "'" + x.Trim() + "'").ToList());
@@ -227,7 +227,7 @@
                                             }
                                         });
 
-                                        $("#@(controlId + "remove")").click(function(e) {
+                                        $("#@(controlId + "remove")").on('click', function(e) {
                                             $("#@(controlId + "downloadurl")").html("");
                                             $("#@(controlId)").val('');
                                             $(this).hide();
@@ -281,7 +281,7 @@
                                 }
                                 <script asp-location="Footer">
                                     $(document).ready(function() {
-                                        $('.attributes #color-squares-@(attribute.Id)').delegate('input', 'click', function(event) {
+                                        $('.attributes #color-squares-@(attribute.Id)').on('click', 'input', function(event) {
                                             $('.attributes #color-squares-@(attribute.Id)').find('li').removeClass('selected-value');
                                             $(this).closest('li').addClass('selected-value');
                                         });
@@ -322,7 +322,7 @@
                                 }
                                 <script asp-location="Footer">
                                     $(document).ready(function() {
-                                        $('.attributes #image-squares-@(attribute.Id)').delegate('input', 'click', function(event) {
+                                        $('.attributes #image-squares-@(attribute.Id)').on('click', 'input', function(event) {
                                             $('.attributes #image-squares-@(attribute.Id)').find('li').removeClass('selected-value');
                                             $(this).closest('li').addClass('selected-value');
                                         });
@@ -377,7 +377,7 @@
             {
                 case AttributeControlType.DropdownList:
                     {
-                        attributeChangeScriptsBuilder.AppendFormat("$('#{0}').change(function(){{{1}();}});\n", controlId, attributeChangeHandlerFuncName);
+                        attributeChangeScriptsBuilder.AppendFormat("$('#{0}').on('change', function(){{{1}();}});\n", controlId, attributeChangeHandlerFuncName);
                     }
                     break;
                 case AttributeControlType.RadioList:
@@ -386,7 +386,7 @@
                     {
                         foreach (var attributeValue in attribute.Values)
                         {
-                            attributeChangeScriptsBuilder.AppendFormat("$('#{0}_{1}').click(function(){{{2}();}});\n", controlId, attributeValue.Id, attributeChangeHandlerFuncName);
+                            attributeChangeScriptsBuilder.AppendFormat("$('#{0}_{1}').on('click', function(){{{2}();}});\n", controlId, attributeValue.Id, attributeChangeHandlerFuncName);
                         }
                     }
                     break;
@@ -395,7 +395,7 @@
                     {
                         foreach (var attributeValue in attribute.Values)
                         {
-                            attributeChangeScriptsBuilder.AppendFormat("$('#{0}_{1}').click(function(){{{2}();}});\n", controlId, attributeValue.Id, attributeChangeHandlerFuncName);
+                            attributeChangeScriptsBuilder.AppendFormat("$('#{0}_{1}').on('click', function(){{{2}();}});\n", controlId, attributeValue.Id, attributeChangeHandlerFuncName);
                         }
                     }
                     break;
@@ -466,7 +466,7 @@
                         if (data.message) {
                             alert(data.message);
                         }
-                        $.event.trigger({ type: "product_attributes_changed", changedData: data });
+                        $(document).trigger({ type: "product_attributes_changed", changedData: data });
                     }
                 });
             }

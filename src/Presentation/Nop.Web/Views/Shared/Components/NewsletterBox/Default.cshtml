@@ -58,7 +58,7 @@
         }
 
         $(document).ready(function () {
-            $('#newsletter-subscribe-button').click(function () {
+            $('#newsletter-subscribe-button').on('click', function () {
                 @if (Model.AllowToUnsubscribe)
                 {
                     <text>if ($('#newsletter_subscribe').is(':checked')) {
@@ -72,9 +72,9 @@
                     <text>newsletter_subscribe('true');</text>
                 }
             });
-            $("#newsletter-email").keydown(function (event) {
+            $("#newsletter-email").on("keydown", function (event) {
                 if (event.keyCode == 13) {
-                    $("#newsletter-subscribe-button").click();
+                    $("#newsletter-subscribe-button").trigger("click");
                     return false;
                 }
             });

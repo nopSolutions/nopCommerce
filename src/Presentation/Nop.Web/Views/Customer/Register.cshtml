@@ -12,7 +12,7 @@
 {
     <script asp-location="Footer">
         $(document).ready(function () {
-            $("#@Html.IdFor(model => model.CountryId)").change(function () {
+            $("#@Html.IdFor(model => model.CountryId)").on('change', function () {
                 var selectedItem = $(this).val();
                 var ddlStates = $("#@Html.IdFor(model => model.StateProvinceId)");
                 var statesProgress = $("#states-loading-progress");
@@ -367,9 +367,9 @@
                     </div>
                     @if (Model.AcceptPrivacyPolicyEnabled)
                     {
-                        <script asp-location="Footer">
+                    <script asp-location="Footer">
                         $(document).ready(function() {
-                            $('#register-button').click(function() {
+                            $('#register-button').on('click', function() {
                                 if ($('#accept-consent').is(':checked')) {
                                     //do some stuff
                                     return true;
@@ -380,7 +380,7 @@
                                 }
                             });
                         });
-                        </script>
+                    </script>
                         <div class="accept-consent">
                             <input id="accept-consent" type="checkbox" name="accept-consent" />
                             <label for="accept-consent">@T("Account.Fields.AcceptPrivacyPolicy")</label>
@@ -410,7 +410,7 @@
                          {
                              <script asp-location="Footer">
                                  $(document).ready(function() {
-                                     $('#register-button').click(function() {
+                                     $('#register-button').on('click', function() {
                                          if ($('#consent@(consent.Id)').is(':checked')) {
                                              //do some stuff
                                              return true;

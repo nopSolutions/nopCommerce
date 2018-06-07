@@ -100,7 +100,7 @@
                 <script asp-location="Footer">
                     $(document).ready(function () {
                         var post = '#post-vote-' + @Model.Id;
-                        $(post + ' span.vote').click(function () {
+                        $(post + ' span.vote').on('click', function () {
                             var postData = {
                                 postId: @Model.Id,
                                 IsUp: $(this).hasClass('up')

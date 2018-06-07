@@ -1,16 +1,16 @@
 ﻿<script asp-location="Footer">
     $(document).ready(function () {
         $('#check-availability-button').before('<span id="username-availabilty"></span>');
-        $('#Username').bind({
+        $('#Username').on({
             keydown: function () {
                 $('#username-availabilty').text('');
             }
         });
-        $('#check-availability-button').click(function () {
+        $('#check-availability-button').on('click', function () {
             $('#username-availabilty').text('');
             if ($("#Username").val().length > 0) {
                 $('#availability-check-progress').show();
-                $('#check-availability-button').attr('disabled', 'disabled');
+                $('#check-availability-button').prop('disabled', true);
 
                 var postData = {
                     Username: $('#Username').val()
@@ -24,13 +24,13 @@
                     data: postData,
                     dataType: 'json',
                     success: function (data) {
-                        $('#check-availability-button').removeAttr('disabled');
+                        $('#check-availability-button').prop('disabled', false);
                         $('#availability-check-progress').hide();
                         $('#username-availabilty').removeAttr('class').attr('class', ((data.Available) ? 'username-available-status' : 'username-not-available-status'));
                         $('#username-availabilty').text(data.Text);
                     },
                     failure: function () {
-                        $('#check-availability-button').removeAttr('disabled');
+                        $('#check-availability-button').prop('disabled', false);
                         $('#availability-check-progress').hide();
                     }
                 });
