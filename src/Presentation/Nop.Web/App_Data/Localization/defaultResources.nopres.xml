@@ -3315,6 +3315,12 @@
   <LocaleResource Name="Admin.Catalog.Products.Fields.Width.Hint">
     <Value>The product width.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.Author">
+    <Value>Author</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.Author.Hint">
+    <Value>Product author.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.GiftCard">
     <Value>Gift card</Value>
   </LocaleResource>
@@ -16796,6 +16802,9 @@
   </LocaleResource>
   <LocaleResource Name="Products.Wishlist.AddToWishlist.Update">
     <Value>Update</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.Author">
+    <Value>Author</Value>
   </LocaleResource>
   <LocaleResource Name="Profile.Country">
     <Value>Country</Value>

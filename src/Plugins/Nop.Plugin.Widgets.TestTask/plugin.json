@@ -1,0 +1,11 @@
+﻿{
+  "Group": "Widgets",
+  "FriendlyName": "Test task plugin",
+  "SystemName": "Widgets.TestTask",
+  "Version": "1.00",
+  "SupportedVersions": [ "4.10" ],
+  "Author": "Justin Dong",
+  "DisplayOrder": 1,
+  "FileName": "Nop.Plugin.Widgets.TestTask.dll",
+  "Description": "This plugin is a test task."
+}
