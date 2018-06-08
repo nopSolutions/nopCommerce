@@ -6022,6 +6022,7 @@ namespace Nop.Services.Installation
                 GridPageSizes = "10, 15, 20, 50, 100",
                 RichEditorAdditionalSettings = null,
                 RichEditorAllowJavaScript = false,
+                RichEditorAllowStyleTag = false,
                 UseRichEditorInMessageTemplates = false,
                 UseIsoDateFormatInJsonResult = true,
                 UseNestedSetting = true
