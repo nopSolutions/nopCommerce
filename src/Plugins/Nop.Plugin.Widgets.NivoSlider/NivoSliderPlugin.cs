@@ -91,7 +91,8 @@ namespace Nop.Plugin.Widgets.NivoSlider
             this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.NivoSlider.Text.Hint", "Enter comment for picture. Leave empty if you don't want to display any text.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.NivoSlider.Link", "URL");
             this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.NivoSlider.Link.Hint", "Enter URL. Leave empty if you don't want this picture to be clickable.");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.NivoSlider.AltText", "Image Alt Text");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.NivoSlider.AltText", "Image alternate text");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.NivoSlider.AltText.Hint", "Enter alternate text that will be added to image.");
 
             base.Install();
         }
@@ -116,6 +117,8 @@ namespace Nop.Plugin.Widgets.NivoSlider
             this.DeletePluginLocaleResource("Plugins.Widgets.NivoSlider.Text.Hint");
             this.DeletePluginLocaleResource("Plugins.Widgets.NivoSlider.Link");
             this.DeletePluginLocaleResource("Plugins.Widgets.NivoSlider.Link.Hint");
+            this.DeletePluginLocaleResource("Plugins.Widgets.NivoSlider.AltText");
+            this.DeletePluginLocaleResource("Plugins.Widgets.NivoSlider.AltText.Hint");
 
             base.Uninstall();
         }

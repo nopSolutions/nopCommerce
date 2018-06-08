@@ -14179,13 +14179,13 @@
     <Value>Sort by</Value>
   </LocaleResource>
   <LocaleResource Name="Catalog.OrderBy.Label">
-    <Value>Select Product Sort Order</Value>
+    <Value>Select Product sort order</Value>
   </LocaleResource>
   <LocaleResource Name="Catalog.PageSize">
     <Value>Display</Value>
   </LocaleResource>
   <LocaleResource Name="Catalog.PageSize.Label">
-    <Value>Select Products per Page</Value>
+    <Value>Select products per page</Value>
   </LocaleResource>
   <LocaleResource Name="Catalog.PageSize.PerPage">
     <Value>per page</Value>
@@ -14609,6 +14609,9 @@
   </LocaleResource>
   <LocaleResource Name="Currencies">
     <Value>Currencies</Value>
+  </LocaleResource>
+  <LocaleResource Name="Currency.Selector.Label">
+    <Value>Currency selector</Value>
   </LocaleResource>
   <LocaleResource Name="Customer.Guest">
     <Value>Guest</Value>
@@ -17043,7 +17046,7 @@
   <LocaleResource Name="Search.PriceRange.To">
     <Value>to</Value>
   </LocaleResource>
-  <LocaleResource Name="Search.SearchBox.TextLabel">
+  <LocaleResource Name="Search.SearchBox.Text.Label">
     <Value>Search store</Value>
   </LocaleResource>
   <LocaleResource Name="Search.SearchBox.Tooltip">
@@ -17200,7 +17203,7 @@
     <Value>You cannot use gift cards with auto-ship (recurring) items.</Value>
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.GiftCardCouponCode.Label">
-    <Value>Enter Gift Card Code</Value>
+    <Value>Enter gift card code</Value>
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.GiftCardCouponCode.Tooltip">
     <Value>Enter gift card code</Value>
@@ -17297,9 +17300,6 @@
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.Remove">
     <Value>Remove</Value>
-  </LocaleResource>
-  <LocaleResource Name="ShoppingCart.Remove.Label">
-    <Value>Remove item from cart</Value>
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.Rent">
     <Value>Rent</Value>

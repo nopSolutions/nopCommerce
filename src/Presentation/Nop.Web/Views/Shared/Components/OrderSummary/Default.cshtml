@@ -96,8 +96,8 @@
                                         }
                                         else
                                         {
-                                            <label class="td-title">@T("ShoppingCart.Remove"):</label>
-                                            <input type="checkbox" name="removefromcart" value="@(item.Id)" aria-label="@T("ShoppingCart.Remove.Label")"/>
+                                            <label class="td-title" for="removefromcart">@T("ShoppingCart.Remove"):</label>
+                                            <input type="checkbox" name="removefromcart" id="removefromcart" value="@(item.Id)"/>
                                         }
                                     </td>
                                 }

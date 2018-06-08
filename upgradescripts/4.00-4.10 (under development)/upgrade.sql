@@ -1169,6 +1169,33 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowLinkToAllResultInSearchAutoComplete.Hint">
     <Value>Determines whether the link to all results should be displayed in the autocomplete search box. Displayed if the number of items found is greater than the displayed quantity in the autocomplete box.</Value>
   </LocaleResource>
+  <LocaleResource Name="Catalog.OrderBy.Label">
+    <Value>Select Product Sort Order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Catalog.PageSize.Label">
+    <Value>Select Products per Page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Search.SearchBox.TextLabel">
+    <Value>Search store</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.AddToCart.CustomerEnteredPriceLabel">
+    <Value>Enter item price</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.AddToCart.QuantityLabel">
+    <Value>Enter item quantity</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.DiscountCouponCode.Label">
+    <Value>Enter discount coupon code</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.GiftCardCouponCode.Label">
+    <Value>Enter Gift Card Code</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Quantity.Label">
+    <Value>Quantity</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Remove.Label">
+    <Value>Remove item from cart</Value>
+  </LocaleResource>
 </Language>
 '
 
