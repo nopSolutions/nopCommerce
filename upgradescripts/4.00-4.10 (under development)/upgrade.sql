@@ -1170,10 +1170,10 @@ set @resources='
     <Value>Determines whether the link to all results should be displayed in the autocomplete search box. Displayed if the number of items found is greater than the displayed quantity in the autocomplete box.</Value>
   </LocaleResource>
   <LocaleResource Name="Catalog.OrderBy.Label">
-    <Value>Select Product Sort Order</Value>
+    <Value>Select Product sort order</Value>
   </LocaleResource>
   <LocaleResource Name="Catalog.PageSize.Label">
-    <Value>Select Products per Page</Value>
+    <Value>Select Products per page</Value>
   </LocaleResource>
   <LocaleResource Name="Search.SearchBox.TextLabel">
     <Value>Search store</Value>
@@ -1188,7 +1188,7 @@ set @resources='
     <Value>Enter discount coupon code</Value>
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.GiftCardCouponCode.Label">
-    <Value>Enter Gift Card Code</Value>
+    <Value>Enter Gift card code</Value>
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.Quantity.Label">
     <Value>Quantity</Value>
