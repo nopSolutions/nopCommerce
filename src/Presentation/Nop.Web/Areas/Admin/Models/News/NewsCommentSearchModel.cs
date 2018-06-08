@@ -23,6 +23,10 @@ namespace Nop.Web.Areas.Admin.Models.News
 
         #region Properties
 
+        [NopResourceDisplayName("Admin.ContentManagement.News.Comments.List.NewsItemId")]
+        [UIHint("Int32Nullable")]
+        public int? NewsItemId { get; set; }
+
         [NopResourceDisplayName("Admin.ContentManagement.News.Comments.List.CreatedOnFrom")]
         [UIHint("DateNullable")]
         public DateTime? CreatedOnFrom { get; set; }

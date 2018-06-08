@@ -2186,34 +2186,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         #endregion
-
-        #region Low stock reports
-
-        public virtual IActionResult LowStockReport()
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
-            //prepare model
-            var model = _productModelFactory.PrepareLowStockProductSearchModel(new LowStockProductSearchModel());
-
-            return View(model);
-        }
-
-        [HttpPost]
-        public virtual IActionResult LowStockReportList(LowStockProductSearchModel searchModel)
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedKendoGridJson();
-
-            //prepare model
-            var model = _productModelFactory.PrepareLowStockProductListModel(searchModel);
-
-            return Json(model);
-        }
-
-        #endregion
-
+        
         #region Bulk editing
 
         public virtual IActionResult BulkEdit()

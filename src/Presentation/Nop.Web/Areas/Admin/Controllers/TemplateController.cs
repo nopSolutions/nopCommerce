@@ -45,18 +45,20 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #endregion
 
-        #region Category templates
+        #region Methods
 
-        public virtual IActionResult CategoryTemplates()
+        public virtual IActionResult List()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
 
             //prepare model
-            var model = _templateModelFactory.PrepareCategoryTemplateSearchModel(new CategoryTemplateSearchModel());
+            var model = _templateModelFactory.PrepareTemplatesModel(new TemplatesModel());
 
             return View(model);
         }
+
+        #region Category templates        
 
         [HttpPost]
         public virtual IActionResult CategoryTemplates(CategoryTemplateSearchModel searchModel)
@@ -122,18 +124,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #endregion
 
-        #region Manufacturer templates
-
-        public virtual IActionResult ManufacturerTemplates()
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
-                return AccessDeniedView();
-
-            //prepare model
-            var model = _templateModelFactory.PrepareManufacturerTemplateSearchModel(new ManufacturerTemplateSearchModel());
-
-            return View(model);
-        }
+        #region Manufacturer templates        
 
         [HttpPost]
         public virtual IActionResult ManufacturerTemplates(ManufacturerTemplateSearchModel searchModel)
@@ -200,18 +191,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         #endregion
 
         #region Product templates
-
-        public virtual IActionResult ProductTemplates()
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
-                return AccessDeniedView();
-
-            //prepare model
-            var model = _templateModelFactory.PrepareProductTemplateSearchModel(new ProductTemplateSearchModel());
-
-            return View(model);
-        }
-
+                
         [HttpPost]
         public virtual IActionResult ProductTemplates(ProductTemplateSearchModel searchModel)
         {
@@ -277,18 +257,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         #endregion
 
         #region Topic templates
-
-        public virtual IActionResult TopicTemplates()
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
-                return AccessDeniedView();
-
-            //prepare model
-            var model = _templateModelFactory.PrepareTopicTemplateSearchModel(new TopicTemplateSearchModel());
-
-            return View(model);
-        }
-
+        
         [HttpPost]
         public virtual IActionResult TopicTemplates(TopicTemplateSearchModel searchModel)
         {
@@ -350,6 +319,8 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             return new NullJsonResult();
         }
+
+        #endregion
 
         #endregion
     }

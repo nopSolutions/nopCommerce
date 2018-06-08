@@ -1322,54 +1322,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #endregion
 
-        #region Reports
-
-        public virtual IActionResult Reports()
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedView();
-
-            //prepare model
-            var model = _customerModelFactory.PrepareCustomerReportsSearchModel(new CustomerReportsSearchModel());
-
-            return View(model);
-        }
-
-        [HttpPost]
-        public virtual IActionResult ReportBestCustomersByOrderTotalList(BestCustomersReportSearchModel searchModel)
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedKendoGridJson();
-
-            //prepare model
-            var model = _customerModelFactory.PrepareBestCustomersReportListModel(searchModel);
-
-            return Json(model);
-        }
-
-        [HttpPost]
-        public virtual IActionResult ReportBestCustomersByNumberOfOrdersList(BestCustomersReportSearchModel searchModel)
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedKendoGridJson();
-
-            //prepare model
-            var model = _customerModelFactory.PrepareBestCustomersReportListModel(searchModel);
-
-            return Json(model);
-        }
-
-        [HttpPost]
-        public virtual IActionResult ReportRegisteredCustomersList(RegisteredCustomersReportSearchModel searchModel)
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedKendoGridJson();
-
-            //prepare model
-            var model = _customerModelFactory.PrepareRegisteredCustomersReportListModel(searchModel);
-
-            return Json(model);
-        }
+        #region Customer
 
         public virtual IActionResult LoadCustomerStatistics(string period)
         {

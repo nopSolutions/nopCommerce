@@ -347,6 +347,23 @@ namespace Nop.Web.Areas.Admin.Factories
             return model;
         }
 
+        /// <summary>
+        /// Prepare plugins configuration model
+        /// </summary>
+        /// <param name="pluginsConfigurationModel">Plugins configuration model</param>
+        /// <returns>Plugins configuration model</returns>
+        public virtual PluginsConfigurationModel PreparePluginsConfigurationModel(PluginsConfigurationModel pluginsConfigurationModel)
+        {
+            if (pluginsConfigurationModel == null)
+                throw new ArgumentNullException(nameof(pluginsConfigurationModel));
+
+            //prepare nested search models
+            PreparePluginSearchModel(pluginsConfigurationModel.PluginsLocal);
+            PrepareOfficialFeedPluginSearchModel(pluginsConfigurationModel.AllPluginsAndThemes);
+
+            return pluginsConfigurationModel;
+        }
+
         #endregion
     }
 }

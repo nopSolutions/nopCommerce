@@ -9,6 +9,13 @@ namespace Nop.Web.Areas.Admin.Factories
     public partial interface IActivityLogModelFactory
     {
         /// <summary>
+        /// Prepare activity log container model
+        /// </summary>
+        /// <param name="activityLogContainerModel">Activity log container model</param>
+        /// <returns>Activity log container model</returns>
+        ActivityLogContainerModel PrepareActivityLogContainerModel(ActivityLogContainerModel activityLogContainerModel);
+
+        /// <summary>
         /// Prepare activity log type models
         /// </summary>
         /// <returns>List of activity log type models</returns>

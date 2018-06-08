@@ -39,6 +39,17 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Methods
 
+        public virtual  IActionResult List()
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActivityLog))
+                return AccessDeniedView();
+
+            //prepare model
+            var model = _activityLogModelFactory.PrepareActivityLogContainerModel(new ActivityLogContainerModel());
+
+            return View(model);
+        }
+
         public virtual IActionResult ListTypes()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageActivityLog))
@@ -50,7 +61,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             return View(model);
         }
 
-        [HttpPost]
+        [HttpPost, ActionName("ListTypes")]
         public virtual IActionResult SaveTypes(IFormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageActivityLog))
@@ -75,7 +86,10 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             SuccessNotification(_localizationService.GetResource("Admin.Configuration.ActivityLog.ActivityLogType.Updated"));
 
-            return RedirectToAction("ListTypes");
+            //selected tab
+            SaveSelectedTabName();
+
+            return RedirectToAction("List");
         }
 
         public virtual IActionResult ListLogs()
@@ -129,7 +143,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //activity log
             _customerActivityService.InsertActivity("DeleteActivityLog", _localizationService.GetResource("ActivityLog.DeleteActivityLog"));
 
-            return RedirectToAction("ListLogs");
+            return RedirectToAction("List");
         }
 
         #endregion
