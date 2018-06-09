@@ -149,29 +149,6 @@ namespace Nop.Web.Framework.Extensions
             return tabName;
         }
 
-        #region Form fields
-
-        /// <summary>
-        /// Generate hint control
-        /// </summary>
-        /// <param name="helper">HTML helper</param>
-        /// <param name="value">TexHint text</param>
-        /// <returns>Result</returns>
-        public static IHtmlContent Hint(this IHtmlHelper helper, string value)
-        {
-            //create tag builder
-            var builder = new TagBuilder("div");
-            builder.MergeAttribute("title", value);
-            builder.MergeAttribute("class", "ico-help");
-            var icon = new StringBuilder();
-            icon.Append("<i class='fa fa-question-circle'></i>");
-            builder.InnerHtml.AppendHtml(icon.ToString());
-            //render tag
-            return new HtmlString(builder.ToHtmlString());
-        }
-
-        #endregion
-
         #endregion
 
         #region Common extensions
