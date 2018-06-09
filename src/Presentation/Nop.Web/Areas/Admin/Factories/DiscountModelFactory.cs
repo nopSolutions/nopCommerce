@@ -223,7 +223,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = discounts.PaginationByRequestModel(searchModel).Select(discount =>
                 {
                     //fill in model values from the entity
-                    var discountModel = discount.ToModel(new DiscountModel());
+                    var discountModel = discount.ToModel<DiscountModel>();
 
                     //fill in additional values (not existing in the entity)
                     discountModel.DiscountTypeName = discount.DiscountType.GetLocalizedEnum(_localizationService, _workContext);
@@ -251,7 +251,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (discount != null)
             {
                 //fill in model values from the entity
-                model = model ?? discount.ToModel(model);
+                model = model ?? discount.ToModel<DiscountModel>();
 
                 //prepare available discount requirement rules
                 var discountRules = _discountService.LoadAllDiscountRequirementRules();
@@ -500,7 +500,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new AddProductToDiscountListModel
             {
                 //fill in model values from the entity
-                Data = products.Select(product => product.ToModel(new ProductModel())),
+                Data = products.Select(product => product.ToModel<ProductModel>()),
                 Total = products.TotalCount
             };
 
@@ -578,7 +578,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = categories.Select(category =>
                 {
                     //fill in model values from the entity
-                    var categoryModel = category.ToModel(new CategoryModel());
+                    var categoryModel = category.ToModel<CategoryModel>();
 
                     //fill in additional values (not existing in the entity)
                     categoryModel.Breadcrumb = category.GetFormattedBreadCrumb(_categoryService);
@@ -661,7 +661,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new AddManufacturerToDiscountListModel
             {
                 //fill in model values from the entity
-                Data = manufacturers.Select(manufacturer => manufacturer.ToModel(new ManufacturerModel())),
+                Data = manufacturers.Select(manufacturer => manufacturer.ToModel<ManufacturerModel>()),
                 Total = manufacturers.TotalCount
             };
 

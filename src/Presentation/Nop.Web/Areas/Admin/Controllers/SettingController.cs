@@ -1039,7 +1039,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                var gdprConsent = model.ToEntity(new GdprConsent());
+                var gdprConsent = model.ToEntity<GdprConsent>();
                 _gdprService.InsertConsent(gdprConsent);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Settings.Gdpr.Consent.Added"));

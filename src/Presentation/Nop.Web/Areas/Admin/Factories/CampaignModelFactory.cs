@@ -81,7 +81,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = campaigns.PaginationByRequestModel(searchModel).Select(campaign =>
                 {
                     //fill in model values from the entity
-                    var campaignModel = campaign.ToModel(new CampaignModel());
+                    var campaignModel = campaign.ToModel<CampaignModel>();
 
                     //convert dates to the user time
                     campaignModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(campaign.CreatedOnUtc, DateTimeKind.Utc);
@@ -111,7 +111,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //fill in model values from the entity
             if (campaign != null)
             {
-                model = model ?? campaign.ToModel(model);
+                model = model ?? campaign.ToModel<CampaignModel>();
                 if (campaign.DontSendBeforeDateUtc.HasValue)
                     model.DontSendBeforeDate = _dateTimeHelper.ConvertToUserTime(campaign.DontSendBeforeDateUtc.Value, DateTimeKind.Utc);
             }

@@ -172,7 +172,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = checkoutAttributes.PaginationByRequestModel(searchModel).Select(attribute =>
                 {
                     //fill in model values from the entity
-                    var attributeModel = attribute.ToModel(new CheckoutAttributeModel());
+                    var attributeModel = attribute.ToModel<CheckoutAttributeModel>();
 
                     //fill in additional values (not existing in the entity)
                     attributeModel.AttributeControlTypeName = attribute.AttributeControlType.GetLocalizedEnum(_localizationService, _workContext);
@@ -200,7 +200,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (checkoutAttribute != null)
             {
                 //fill in model values from the entity
-                model = model ?? checkoutAttribute.ToModel(model);
+                model = model ?? checkoutAttribute.ToModel<CheckoutAttributeModel>();
 
                 //prepare nested search model
                 PrepareCheckoutAttributeValueSearchModel(model.CheckoutAttributeValueSearchModel, checkoutAttribute);
@@ -260,7 +260,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = checkoutAttributeValues.PaginationByRequestModel(searchModel).Select(value =>
                 {
                     //fill in model values from the entity
-                    var checkoutAttributeValueModel = value.ToModel(new CheckoutAttributeValueModel());
+                    var checkoutAttributeValueModel = value.ToModel<CheckoutAttributeValueModel>();
 
                     //fill in additional values (not existing in the entity)
                     checkoutAttributeValueModel.Name = value.CheckoutAttribute.AttributeControlType != AttributeControlType.ColorSquares
@@ -293,7 +293,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (checkoutAttributeValue != null)
             {
                 //fill in model values from the entity
-                model = model ?? checkoutAttributeValue.ToModel(model);
+                model = model ?? checkoutAttributeValue.ToModel<CheckoutAttributeValueModel>();
 
                 //define localized model configuration action
                 localizedModelConfiguration = (locale, languageId) =>

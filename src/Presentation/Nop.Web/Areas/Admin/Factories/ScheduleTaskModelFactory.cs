@@ -68,7 +68,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = scheduleTasks.PaginationByRequestModel(searchModel).Select(scheduleTask =>
                 {
                     //fill in model values from the entity
-                    var scheduleTaskModel = scheduleTask.ToModel(new ScheduleTaskModel());
+                    var scheduleTaskModel = scheduleTask.ToModel<ScheduleTaskModel>();
 
                     //convert dates to the user time
                     if (scheduleTask.LastStartUtc.HasValue)

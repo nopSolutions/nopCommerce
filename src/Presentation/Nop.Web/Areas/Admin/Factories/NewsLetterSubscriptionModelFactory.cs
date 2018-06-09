@@ -115,7 +115,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = newsletterSubscriptions.Select(subscription =>
                 {
                     //fill in model values from the entity
-                    var subscriptionModel = subscription.ToModel(new NewsletterSubscriptionModel());
+                    var subscriptionModel = subscription.ToModel<NewsletterSubscriptionModel>();
 
                     //convert dates to the user time
                     subscriptionModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(subscription.CreatedOnUtc, DateTimeKind.Utc);

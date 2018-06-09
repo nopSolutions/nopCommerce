@@ -232,7 +232,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new ReturnRequestReasonListModel
             {
                 //fill in model values from the entity
-                Data = reasons.PaginationByRequestModel(searchModel).Select(reason => reason.ToModel(new ReturnRequestReasonModel())),
+                Data = reasons.PaginationByRequestModel(searchModel).Select(reason => reason.ToModel<ReturnRequestReasonModel>()),
                 Total = reasons.Count
             };
 
@@ -254,7 +254,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (returnRequestReason != null)
             {
                 //fill in model values from the entity
-                model = model ?? returnRequestReason.ToModel(model);
+                model = model ?? returnRequestReason.ToModel<ReturnRequestReasonModel>();
                 
                 //define localized model configuration action
                 localizedModelConfiguration = (locale, languageId) =>
@@ -303,7 +303,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new ReturnRequestActionListModel
             {
                 //fill in model values from the entity
-                Data = actions.PaginationByRequestModel(searchModel).Select(action => action.ToModel(new ReturnRequestActionModel())),
+                Data = actions.PaginationByRequestModel(searchModel).Select(action => action.ToModel<ReturnRequestActionModel>()),
                 Total = actions.Count
             };
 
@@ -325,7 +325,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (returnRequestAction != null)
             {
                 //fill in model values from the entity
-                model = model ?? returnRequestAction.ToModel(model);
+                model = model ?? returnRequestAction.ToModel<ReturnRequestActionModel>();
 
                 //define localized model configuration action
                 localizedModelConfiguration = (locale, languageId) =>

@@ -121,7 +121,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                var specificationAttribute = model.ToEntity(new SpecificationAttribute());
+                var specificationAttribute = model.ToEntity<SpecificationAttribute>();
                 _specificationAttributeService.InsertSpecificationAttribute(specificationAttribute);
                 UpdateAttributeLocales(specificationAttribute, model);
 
@@ -276,7 +276,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                var sao = model.ToEntity(new SpecificationAttributeOption());
+                var sao = model.ToEntity<SpecificationAttributeOption>();
 
                 //clear "Color" values if it's disabled
                 if (!model.EnableColorSquaresRgb)

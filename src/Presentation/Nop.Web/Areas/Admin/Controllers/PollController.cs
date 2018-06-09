@@ -122,7 +122,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                var poll = model.ToEntity(new Poll());
+                var poll = model.ToEntity<Poll>();
                 poll.StartDateUtc = model.StartDate;
                 poll.EndDateUtc = model.EndDate;
                 _pollService.InsertPoll(poll);

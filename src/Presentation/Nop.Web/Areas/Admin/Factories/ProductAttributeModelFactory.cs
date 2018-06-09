@@ -122,7 +122,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new ProductAttributeListModel
             {
                 //fill in model values from the entity
-                Data = productAttributes.Select(attribute => attribute.ToModel(new ProductAttributeModel())),
+                Data = productAttributes.Select(attribute => attribute.ToModel<ProductAttributeModel>()),
                 Total = productAttributes.TotalCount
             };
 
@@ -144,7 +144,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (productAttribute != null)
             {
                 //fill in model values from the entity
-                model = model ?? productAttribute.ToModel(model);
+                model = model ?? productAttribute.ToModel<ProductAttributeModel>();
 
                 //prepare nested search models
                 PreparePredefinedProductAttributeValueSearchModel(model.PredefinedProductAttributeValueSearchModel, productAttribute);

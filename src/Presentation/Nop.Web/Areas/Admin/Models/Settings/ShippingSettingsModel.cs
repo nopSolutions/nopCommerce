@@ -7,7 +7,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
     /// <summary>
     /// Represents a shipping settings model
     /// </summary>
-    public partial class ShippingSettingsModel : BaseNopModel
+    public partial class ShippingSettingsModel : BaseNopModel, ISettingsModel
     {
         #region Ctor
 

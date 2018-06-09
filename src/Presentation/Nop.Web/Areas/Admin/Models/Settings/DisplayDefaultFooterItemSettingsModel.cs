@@ -6,9 +6,11 @@ namespace Nop.Web.Areas.Admin.Models.Settings
     /// <summary>
     /// Represents a display default footer item settings model
     /// </summary>
-    public partial class DisplayDefaultFooterItemSettingsModel : BaseNopModel
+    public partial class DisplayDefaultFooterItemSettingsModel : BaseNopModel, ISettingsModel
     {
         #region Properties
+
+        public int ActiveStoreScopeConfiguration { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.DisplayDefaultFooterItemSettingsModel.DisplaySitemapFooterItem")]
         public bool DisplaySitemapFooterItem { get; set; }

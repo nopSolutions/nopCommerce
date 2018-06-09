@@ -111,6 +111,10 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                     map.ForMember(nameof(BaseNopModel.CustomProperties), options => options.Ignore());
                 }
 
+                //exclude ActiveStoreScopeConfiguration from mapping ISettingsModel
+                if (typeof(ISettingsModel).IsAssignableFrom(mapConfiguration.DestinationType))
+                    map.ForMember(nameof(ISettingsModel.ActiveStoreScopeConfiguration), options => options.Ignore());
+
                 //exclude Locales from mapping ILocalizedModel
                 if (typeof(ILocalizedModel).IsAssignableFrom(mapConfiguration.DestinationType))
                     map.ForMember(nameof(ILocalizedModel<ILocalizedModel>.Locales), options => options.Ignore());
@@ -170,10 +174,12 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
         protected virtual void CreateAffiliatesMaps()
         {
             CreateMap<Affiliate, AffiliateModel>()
+                .ForMember(model => model.Address, options => options.Ignore())
                 .ForMember(model => model.AffiliatedCustomerSearchModel, options => options.Ignore())
                 .ForMember(model => model.AffiliatedOrderSearchModel, options => options.Ignore())
                 .ForMember(model => model.Url, options => options.Ignore());
             CreateMap<AffiliateModel, Affiliate>()
+                .ForMember(entity => entity.Address, options => options.Ignore())
                 .ForMember(entity => entity.Deleted, options => options.Ignore());
         }
 
@@ -217,7 +223,6 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(entity => entity.StartDateUtc, options => options.Ignore());
 
             CreateMap<BlogSettings, BlogSettingsModel>()
-                .ForMember(model => model.ActiveStoreScopeConfiguration, options => options.Ignore())
                 .ForMember(model => model.AllowNotRegisteredUsersToLeaveComments_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.BlogCommentsMustBeApproved_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.Enabled_OverrideForStore, options => options.Ignore())
@@ -234,7 +239,6 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
         protected virtual void CreateCatalogMaps()
         {
             CreateMap<CatalogSettings, CatalogSettingsModel>()
-                .ForMember(model => model.ActiveStoreScopeConfiguration, options => options.Ignore())
                 .ForMember(model => model.AllowAnonymousUsersToEmailAFriend_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.AllowAnonymousUsersToReviewProduct_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.AllowProductSorting_OverrideForStore, options => options.Ignore())
@@ -555,7 +559,6 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
             CreateMap<RewardPointsSettings, RewardPointsSettingsModel>()
                 .ForMember(model => model.ActivatePointsImmediately, options => options.Ignore())
                 .ForMember(model => model.ActivationDelay_OverrideForStore, options => options.Ignore())
-                .ForMember(model => model.ActiveStoreScopeConfiguration, options => options.Ignore())
                 .ForMember(model => model.DisplayHowMuchWillBeEarned_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.Enabled_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.ExchangeRate_OverrideForStore, options => options.Ignore())
@@ -663,7 +666,6 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.ActiveDiscussionsFeedCount_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.ActiveDiscussionsFeedEnabled_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.ActiveDiscussionsPageSize_OverrideForStore, options => options.Ignore())
-                .ForMember(model => model.ActiveStoreScopeConfiguration, options => options.Ignore())
                 .ForMember(model => model.AllowCustomersToDeletePosts_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.AllowCustomersToEditPosts_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.AllowCustomersToManageSubscriptions_OverrideForStore, options => options.Ignore())
@@ -704,7 +706,6 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
         protected virtual void CreateGdprMaps()
         {
             CreateMap<GdprSettings, GdprSettingsModel>()
-                .ForMember(model => model.ActiveStoreScopeConfiguration, options => options.Ignore())
                 .ForMember(model => model.GdprConsentSearchModel, options => options.Ignore())
                 .ForMember(model => model.GdprEnabled_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.LogNewsletterConsent_OverrideForStore, options => options.Ignore())
@@ -762,7 +763,6 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
         protected virtual void CreateMediaMaps()
         {
             CreateMap<MediaSettings, MediaSettingsModel>()
-                .ForMember(model => model.ActiveStoreScopeConfiguration, options => options.Ignore())
                 .ForMember(model => model.AssociatedProductPictureSize_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.AvatarPictureSize_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.CartThumbPictureSize_OverrideForStore, options => options.Ignore())
@@ -867,7 +867,6 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(entity => entity.StartDateUtc, options => options.Ignore());
 
             CreateMap<NewsSettings, NewsSettingsModel>()
-                .ForMember(model => model.ActiveStoreScopeConfiguration, options => options.Ignore())
                 .ForMember(model => model.AllowNotRegisteredUsersToLeaveComments_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.Enabled_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.MainPageNewsCount_OverrideForStore, options => options.Ignore())
@@ -919,7 +918,6 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(entity => entity.PurchasedWithOrderItemId, options => options.Ignore());
 
             CreateMap<OrderSettings, OrderSettingsModel>()
-                .ForMember(model => model.ActiveStoreScopeConfiguration, options => options.Ignore())
                 .ForMember(model => model.AllowAdminsToBuyCallForPriceProducts_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.AnonymousCheckoutAllowed_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.AttachPdfInvoiceToOrderCompletedEmail_OverrideForStore, options => options.Ignore())
@@ -960,7 +958,6 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
             CreateMap<ReturnRequestReasonModel, ReturnRequestReason>();
 
             CreateMap<ShoppingCartSettings, ShoppingCartSettingsModel>()
-                .ForMember(model => model.ActiveStoreScopeConfiguration, options => options.Ignore())
                 .ForMember(model => model.AllowAnonymousUsersToEmailWishlist_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.AllowCartItemEditing_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.AllowOutOfStockItemsToBeAddedToWishlist_OverrideForStore, options => options.Ignore())
@@ -1079,7 +1076,6 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
             CreateMap<IShippingRateComputationMethod, ShippingProviderModel>();
 
             CreateMap<ShippingSettings, ShippingSettingsModel>()
-                .ForMember(model => model.ActiveStoreScopeConfiguration, options => options.Ignore())
                 .ForMember(model => model.AllowPickUpInStore_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.BypassShippingMethodSelectionIfOnlyOne_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.ConsiderAssociatedProductsDimensions_OverrideForStore, options => options.Ignore())
@@ -1138,7 +1134,6 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.IsPrimaryTaxProvider, options => options.Ignore());
 
             CreateMap<TaxSettings, TaxSettingsModel>()
-                .ForMember(model => model.ActiveStoreScopeConfiguration, options => options.Ignore())
                 .ForMember(model => model.AllowCustomersToSelectTaxDisplayType_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.DefaultTaxAddress, options => options.Ignore())
                 .ForMember(model => model.DefaultTaxAddress_OverrideForStore, options => options.Ignore())
@@ -1216,7 +1211,6 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(entity => entity.VendorAttribute, options => options.Ignore());
 
             CreateMap<VendorSettings, VendorSettingsModel>()
-                .ForMember(model => model.ActiveStoreScopeConfiguration, options => options.Ignore())
                 .ForMember(model => model.AllowCustomersToApplyForVendorAccount_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.AllowCustomersToContactVendors_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.AllowSearchByVendor_OverrideForStore, options => options.Ignore())

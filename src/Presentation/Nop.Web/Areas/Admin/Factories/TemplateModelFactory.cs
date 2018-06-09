@@ -72,7 +72,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new CategoryTemplateListModel
             {
                 //fill in model values from the entity
-                Data = categoryTemplates.PaginationByRequestModel(searchModel).Select(template => template.ToModel(new CategoryTemplateModel())),
+                Data = categoryTemplates.PaginationByRequestModel(searchModel).Select(template => template.ToModel<CategoryTemplateModel>()),
                 Total = categoryTemplates.Count
             };
 
@@ -113,7 +113,7 @@ namespace Nop.Web.Areas.Admin.Factories
             {
                 //fill in model values from the entity
                 Data = manufacturerTemplates.PaginationByRequestModel(searchModel)
-                    .Select(template => template.ToModel(new ManufacturerTemplateModel())),
+                    .Select(template => template.ToModel<ManufacturerTemplateModel>()),
                 Total = manufacturerTemplates.Count
             };
 
@@ -153,7 +153,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new ProductTemplateListModel
             {
                 //fill in model values from the entity
-                Data = productTemplates.PaginationByRequestModel(searchModel).Select(template => template.ToModel(new ProductTemplateModel())),
+                Data = productTemplates.PaginationByRequestModel(searchModel).Select(template => template.ToModel<ProductTemplateModel>()),
                 Total = productTemplates.Count
             };
 
@@ -193,7 +193,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new TopicTemplateListModel
             {
                 //fill in model values from the entity
-                Data = topicTemplates.PaginationByRequestModel(searchModel).Select(template => template.ToModel(new TopicTemplateModel())),
+                Data = topicTemplates.PaginationByRequestModel(searchModel).Select(template => template.ToModel<TopicTemplateModel>()),
                 Total = topicTemplates.Count
             };
 

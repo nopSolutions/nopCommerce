@@ -125,7 +125,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new ManufacturerListModel
             {
                 //fill in model values from the entity
-                Data = manufacturers.Select(manufacturer => manufacturer.ToModel(new ManufacturerModel())),
+                Data = manufacturers.Select(manufacturer => manufacturer.ToModel<ManufacturerModel>()),
                 Total = manufacturers.TotalCount
             };
 
@@ -147,7 +147,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (manufacturer != null)
             {
                 //fill in model values from the entity
-                model = model ?? manufacturer.ToModel(model);
+                model = model ?? manufacturer.ToModel<ManufacturerModel>();
 
                 //prepare nested search model
                 PrepareManufacturerProductSearchModel(model.ManufacturerProductSearchModel, manufacturer);
@@ -287,7 +287,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new AddProductToManufacturerListModel
             {
                 //fill in model values from the entity
-                Data = products.Select(product => product.ToModel(new ProductModel())),
+                Data = products.Select(product => product.ToModel<ProductModel>()),
                 Total = products.TotalCount
             };
 

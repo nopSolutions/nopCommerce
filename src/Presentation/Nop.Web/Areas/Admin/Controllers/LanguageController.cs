@@ -141,7 +141,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                var language = model.ToEntity(new Language());
+                var language = model.ToEntity<Language>();
                 _languageService.InsertLanguage(language);
 
                 //activity log

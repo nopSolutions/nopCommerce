@@ -151,7 +151,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = currencies.PaginationByRequestModel(searchModel).Select(currency =>
                 {
                     //fill in model values from the entity
-                    var currencyModel = currency.ToModel(new CurrencyModel());
+                    var currencyModel = currency.ToModel<CurrencyModel>();
 
                     //fill in additional values (not existing in the entity)
                     currencyModel.IsPrimaryExchangeRateCurrency = currency.Id == _currencySettings.PrimaryExchangeRateCurrencyId;
@@ -179,7 +179,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (currency != null)
             {
                 //fill in model values from the entity
-                model = model ?? currency.ToModel(model);
+                model = model ?? currency.ToModel<CurrencyModel>();
 
                 //convert dates to the user time
                 model.CreatedOn = _dateTimeHelper.ConvertToUserTime(currency.CreatedOnUtc, DateTimeKind.Utc);

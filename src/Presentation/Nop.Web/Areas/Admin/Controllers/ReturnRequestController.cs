@@ -261,7 +261,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                var returnRequestReason = model.ToEntity(new ReturnRequestReason());
+                var returnRequestReason = model.ToEntity<ReturnRequestReason>();
                 _returnRequestService.InsertReturnRequestReason(returnRequestReason);
 
                 //locales
@@ -398,7 +398,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                var returnRequestAction = model.ToEntity(new ReturnRequestAction());
+                var returnRequestAction = model.ToEntity<ReturnRequestAction>();
                 _returnRequestService.InsertReturnRequestAction(returnRequestAction);
 
                 //locales

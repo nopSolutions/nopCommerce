@@ -136,7 +136,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                var blogPost = model.ToEntity(new BlogPost());
+                var blogPost = model.ToEntity<BlogPost>();
                 blogPost.StartDateUtc = model.StartDate;
                 blogPost.EndDateUtc = model.EndDate;
                 blogPost.CreatedOnUtc = DateTime.UtcNow;

@@ -99,7 +99,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                var customerRole = model.ToEntity(new CustomerRole());
+                var customerRole = model.ToEntity<CustomerRole>();
                 _customerService.InsertCustomerRole(customerRole);
 
                 //activity log

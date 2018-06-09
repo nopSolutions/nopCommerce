@@ -232,7 +232,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                var checkoutAttribute = model.ToEntity(new CheckoutAttribute());
+                var checkoutAttribute = model.ToEntity<CheckoutAttribute>();
                 _checkoutAttributeService.InsertCheckoutAttribute(checkoutAttribute);
 
                 //locales
@@ -416,7 +416,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                var checkoutAttributeValue = model.ToEntity(new CheckoutAttributeValue());
+                var checkoutAttributeValue = model.ToEntity<CheckoutAttributeValue>();
                 _checkoutAttributeService.InsertCheckoutAttributeValue(checkoutAttributeValue);
 
                 UpdateValueLocales(checkoutAttributeValue, model);

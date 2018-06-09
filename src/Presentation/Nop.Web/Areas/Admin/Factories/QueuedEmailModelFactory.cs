@@ -93,7 +93,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = queuedEmails.Select(queuedEmail =>
                 {
                     //fill in model values from the entity
-                    var queuedEmailModel = queuedEmail.ToModel(new QueuedEmailModel());
+                    var queuedEmailModel = queuedEmail.ToModel<QueuedEmailModel>();
 
                     //little performance optimization: ensure that "Body" is not returned
                     queuedEmailModel.Body = string.Empty;
@@ -133,7 +133,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 return model;
 
             //fill in model values from the entity
-            model = model ?? queuedEmail.ToModel(model);
+            model = model ?? queuedEmail.ToModel<QueuedEmailModel>();
 
             model.PriorityName = queuedEmail.Priority.GetLocalizedEnum(_localizationService, _workContext);
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(queuedEmail.CreatedOnUtc, DateTimeKind.Utc);

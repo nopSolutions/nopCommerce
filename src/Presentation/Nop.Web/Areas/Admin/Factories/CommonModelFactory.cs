@@ -653,7 +653,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = urlRecords.Select(urlRecord =>
                 {
                     //fill in model values from the entity
-                    var urlRecordModel = urlRecord.ToModel(new UrlRecordModel());
+                    var urlRecordModel = urlRecord.ToModel<UrlRecordModel>();
 
                     //fill in additional values (not existing in the entity)
                     urlRecordModel.Language = urlRecord.LanguageId == 0
@@ -706,10 +706,10 @@ namespace Nop.Web.Areas.Admin.Factories
         {
             var model = new LanguageSelectorModel
             {
-                CurrentLanguage = _workContext.WorkingLanguage.ToModel(new LanguageModel()),
+                CurrentLanguage = _workContext.WorkingLanguage.ToModel<LanguageModel>(),
                 AvailableLanguages = _languageService
                     .GetAllLanguages(storeId: _storeContext.CurrentStore.Id)
-                    .Select(language => language.ToModel(new LanguageModel())).ToList()
+                    .Select(language => language.ToModel<LanguageModel>()).ToList()
             };
 
             return model;

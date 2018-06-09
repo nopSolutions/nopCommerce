@@ -1158,7 +1158,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new AddProductToOrderListModel
             {
                 //fill in model values from the entity
-                Data = products.Select(product => product.ToModel(new ProductModel())),
+                Data = products.Select(product => product.ToModel<ProductModel>()),
                 Total = products.TotalCount
             };
 

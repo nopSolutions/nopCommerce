@@ -103,7 +103,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = paymentMethods.PaginationByRequestModel(searchModel).Select(method =>
                 {
                     //fill in model values from the entity
-                    var paymentMethodModel = method.ToPluginModel(new PaymentMethodModel());
+                    var paymentMethodModel = method.ToPluginModel<PaymentMethodModel>();
 
                     //fill in additional values (not existing in the entity)
                     paymentMethodModel.IsActive = method.IsPaymentMethodActive(_paymentSettings);
@@ -130,11 +130,11 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(model));
 
             var countries = _countryService.GetAllCountries(showHidden: true);
-            model.AvailableCountries = countries.Select(country => country.ToModel(new CountryModel())).ToList();
+            model.AvailableCountries = countries.Select(country => country.ToModel<CountryModel>()).ToList();
 
             foreach (var method in _paymentService.LoadAllPaymentMethods())
             {
-                model.AvailablePaymentMethods.Add(method.ToPluginModel(new PaymentMethodModel()));
+                model.AvailablePaymentMethods.Add(method.ToPluginModel<PaymentMethodModel>());
 
                 var restrictedCountries = _paymentService.GetRestictedCountryIds(method);
                 foreach (var country in countries)

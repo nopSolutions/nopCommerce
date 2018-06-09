@@ -79,7 +79,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = customerRoles.PaginationByRequestModel(searchModel).Select(role =>
                 {
                     //fill in model values from the entity
-                    var customerRoleModel = role.ToModel(new CustomerRoleModel());
+                    var customerRoleModel = role.ToModel<CustomerRoleModel>();
 
                     //fill in additional values (not existing in the entity)
                     customerRoleModel.PurchasedWithProductName = _productService.GetProductById(role.PurchasedWithProductId)?.Name;
@@ -104,7 +104,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (customerRole != null)
             {
                 //fill in model values from the entity
-                model = model ?? customerRole.ToModel(model);
+                model = model ?? customerRole.ToModel<CustomerRoleModel>();
                 model.PurchasedWithProductName = _productService.GetProductById(customerRole.PurchasedWithProductId)?.Name;
             }
 
@@ -180,7 +180,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new CustomerRoleProductListModel
             {
                 //fill in model values from the entity
-                Data = products.Select(product => product.ToModel(new ProductModel())),
+                Data = products.Select(product => product.ToModel<ProductModel>()),
                 Total = products.TotalCount
             };
 

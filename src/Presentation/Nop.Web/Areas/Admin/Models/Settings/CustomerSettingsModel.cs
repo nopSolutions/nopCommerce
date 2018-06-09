@@ -7,9 +7,11 @@ namespace Nop.Web.Areas.Admin.Models.Settings
     /// <summary>
     /// Represents a customer settings model
     /// </summary>
-    public partial class CustomerSettingsModel : BaseNopModel
+    public partial class CustomerSettingsModel : BaseNopModel, ISettingsModel
     {
         #region Properties
+
+        public int ActiveStoreScopeConfiguration { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.UsernamesEnabled")]
         public bool UsernamesEnabled { get; set; }

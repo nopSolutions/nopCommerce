@@ -6,9 +6,11 @@ namespace Nop.Web.Areas.Admin.Models.Settings
     /// <summary>
     /// Represents an address settings model
     /// </summary>
-    public partial class AddressSettingsModel : BaseNopModel
+    public partial class AddressSettingsModel : BaseNopModel, ISettingsModel
     {
         #region Properties
+
+        public int ActiveStoreScopeConfiguration { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.AddressFormFields.CompanyEnabled")]
         public bool CompanyEnabled { get; set; }

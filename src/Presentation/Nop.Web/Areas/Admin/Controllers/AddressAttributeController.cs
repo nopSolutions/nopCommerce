@@ -126,7 +126,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                var addressAttribute = model.ToEntity(new AddressAttribute());
+                var addressAttribute = model.ToEntity<AddressAttribute>();
                 _addressAttributeService.InsertAddressAttribute(addressAttribute);
 
                 //activity log
@@ -286,7 +286,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                var addressAttributeValue = model.ToEntity(new AddressAttributeValue());
+                var addressAttributeValue = model.ToEntity<AddressAttributeValue>();
                 _addressAttributeService.InsertAddressAttributeValue(addressAttributeValue);
 
                 //activity log

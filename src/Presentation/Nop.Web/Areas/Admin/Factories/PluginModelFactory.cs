@@ -183,7 +183,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = plugins.PaginationByRequestModel(searchModel).Select(pluginDescriptor =>
                 {
                     //fill in model values from the entity
-                    var pluginModel = pluginDescriptor.ToPluginModel(new PluginModel());
+                    var pluginModel = pluginDescriptor.ToPluginModel<PluginModel>();
 
                     //fill in additional values (not existing in the entity)
                     pluginModel.LogoUrl = pluginDescriptor.GetLogoUrl(_webHelper);

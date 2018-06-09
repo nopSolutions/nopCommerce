@@ -6,9 +6,11 @@ namespace Nop.Web.Areas.Admin.Models.Settings
     /// <summary>
     /// Represents a localization settings model
     /// </summary>
-    public partial class LocalizationSettingsModel : BaseNopModel
+    public partial class LocalizationSettingsModel : BaseNopModel, ISettingsModel
     {
         #region Properties
+
+        public int ActiveStoreScopeConfiguration { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.UseImagesForLanguageSelection")]
         public bool UseImagesForLanguageSelection { get; set; }

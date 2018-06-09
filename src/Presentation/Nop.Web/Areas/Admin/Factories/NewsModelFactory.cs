@@ -95,7 +95,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = newsItems.Select(newsItem =>
                 {
                     //fill in model values from the entity
-                    var newsItemModel = newsItem.ToModel(new NewsItemModel());
+                    var newsItemModel = newsItem.ToModel<NewsItemModel>();
 
                     //little performance optimization: ensure that "Full" is not returned
                     newsItemModel.Full = string.Empty;
@@ -132,7 +132,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //fill in model values from the entity
             if (newsItem != null)
             {
-                model = model ?? newsItem.ToModel(model);
+                model = model ?? newsItem.ToModel<NewsItemModel>();
 
                 model.StartDate = newsItem.StartDateUtc;
                 model.EndDate = newsItem.EndDateUtc;

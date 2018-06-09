@@ -108,7 +108,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                var forumGroup = model.ToEntity(new ForumGroup());
+                var forumGroup = model.ToEntity<ForumGroup>();
                 forumGroup.CreatedOnUtc = DateTime.UtcNow;
                 forumGroup.UpdatedOnUtc = DateTime.UtcNow;
                 _forumService.InsertForumGroup(forumGroup);
@@ -144,7 +144,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                var forum = model.ToEntity(new Forum());
+                var forum = model.ToEntity<Forum>();
                 forum.CreatedOnUtc = DateTime.UtcNow;
                 forum.UpdatedOnUtc = DateTime.UtcNow;
                 _forumService.InsertForum(forum);

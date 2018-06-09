@@ -53,7 +53,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(model));
 
             var customerRoles = _customerService.GetAllCustomerRoles(true);
-            model.AvailableCustomerRoles = customerRoles.Select(role => role.ToModel(new CustomerRoleModel())).ToList();
+            model.AvailableCustomerRoles = customerRoles.Select(role => role.ToModel<CustomerRoleModel>()).ToList();
 
             foreach (var permissionRecord in _permissionService.GetAllPermissionRecords())
             {

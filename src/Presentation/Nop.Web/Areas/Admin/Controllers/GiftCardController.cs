@@ -120,7 +120,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                var giftCard = model.ToEntity(new GiftCard());
+                var giftCard = model.ToEntity<GiftCard>();
                 giftCard.CreatedOnUtc = DateTime.UtcNow;
                 _giftCardService.InsertGiftCard(giftCard);
 

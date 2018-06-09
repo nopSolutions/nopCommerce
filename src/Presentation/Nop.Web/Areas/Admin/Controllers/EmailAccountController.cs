@@ -115,7 +115,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                var emailAccount = model.ToEntity(new EmailAccount());
+                var emailAccount = model.ToEntity<EmailAccount>();
 
                 //set password manually
                 emailAccount.Password = model.Password;

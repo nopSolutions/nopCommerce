@@ -108,7 +108,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = addressAttributes.PaginationByRequestModel(searchModel).Select(attribute =>
                 {
                     //fill in model values from the entity
-                    var attributeModel = attribute.ToModel(new AddressAttributeModel());
+                    var attributeModel = attribute.ToModel<AddressAttributeModel>();
 
                     //fill in additional values (not existing in the entity)
                     attributeModel.AttributeControlTypeName = attribute.AttributeControlType.GetLocalizedEnum(_localizationService, _workContext);
@@ -136,7 +136,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (addressAttribute != null)
             {
                 //fill in model values from the entity
-                model = model ?? addressAttribute.ToModel(model);
+                model = model ?? addressAttribute.ToModel<AddressAttributeModel>();
 
                 //prepare nested search model
                 PrepareAddressAttributeValueSearchModel(model.AddressAttributeValueSearchModel, addressAttribute);
@@ -177,7 +177,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new AddressAttributeValueListModel
             {
                 //fill in model values from the entity
-                Data = addressAttributeValues.PaginationByRequestModel(searchModel).Select(value => value.ToModel(new AddressAttributeValueModel())),
+                Data = addressAttributeValues.PaginationByRequestModel(searchModel).Select(value => value.ToModel<AddressAttributeValueModel>()),
                 Total = addressAttributeValues.Count
             };
 
@@ -203,7 +203,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (addressAttributeValue != null)
             {
                 //fill in model values from the entity
-                model = model ?? addressAttributeValue.ToModel(model);
+                model = model ?? addressAttributeValue.ToModel<AddressAttributeValueModel>();
 
                 //define localized model configuration action
                 localizedModelConfiguration = (locale, languageId) =>
@@ -230,10 +230,7 @@ namespace Nop.Web.Areas.Admin.Factories
         {
             if (models == null)
                 throw new ArgumentNullException(nameof(models));
-
-            if (address == null)
-                throw new ArgumentNullException(nameof(address));
-
+            
             var attributes = _addressAttributeService.GetAllAddressAttributes();
             foreach (var attribute in attributes)
             {

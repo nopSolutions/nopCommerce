@@ -104,7 +104,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = vendorAttributes.PaginationByRequestModel(searchModel).Select(attribute =>
                 {
                     //fill in model values from the entity
-                    var attributeModel = attribute.ToModel(new VendorAttributeModel());
+                    var attributeModel = attribute.ToModel<VendorAttributeModel>();
 
                     //fill in additional values (not existing in the entity)
                     attributeModel.AttributeControlTypeName = attribute.AttributeControlType.GetLocalizedEnum(_localizationService, _workContext);
@@ -132,7 +132,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (vendorAttribute != null)
             {
                 //fill in model values from the entity
-                model = model ?? vendorAttribute.ToModel(model);
+                model = model ?? vendorAttribute.ToModel<VendorAttributeModel>();
 
                 //prepare nested search model
                 PrepareVendorAttributeValueSearchModel(model.VendorAttributeValueSearchModel, vendorAttribute);
@@ -173,7 +173,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new VendorAttributeValueListModel
             {
                 //fill in model values from the entity
-                Data = vendorAttributeValues.PaginationByRequestModel(searchModel).Select(value => value.ToModel(new VendorAttributeValueModel())),
+                Data = vendorAttributeValues.PaginationByRequestModel(searchModel).Select(value => value.ToModel<VendorAttributeValueModel>()),
                 Total = vendorAttributeValues.Count
             };
 
@@ -199,7 +199,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (vendorAttributeValue != null)
             {
                 //fill in model values from the entity
-                model = model ?? vendorAttributeValue.ToModel(model);
+                model = model ?? vendorAttributeValue.ToModel<VendorAttributeValueModel>();
 
                 //define localized model configuration action
                 localizedModelConfiguration = (locale, languageId) =>

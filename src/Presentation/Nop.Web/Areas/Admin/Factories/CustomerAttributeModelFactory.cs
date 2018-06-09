@@ -104,7 +104,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = customerAttributes.PaginationByRequestModel(searchModel).Select(attribute =>
                 {
                     //fill in model values from the entity
-                    var attributeModel = attribute.ToModel(new CustomerAttributeModel());
+                    var attributeModel = attribute.ToModel<CustomerAttributeModel>();
 
                     //fill in additional values (not existing in the entity)
                     attributeModel.AttributeControlTypeName = attribute.AttributeControlType.GetLocalizedEnum(_localizationService, _workContext);
@@ -132,7 +132,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (customerAttribute != null)
             {
                 //fill in model values from the entity
-                model = model ?? customerAttribute.ToModel(model);
+                model = model ?? customerAttribute.ToModel<CustomerAttributeModel>();
 
                 //prepare nested search model
                 PrepareCustomerAttributeValueSearchModel(model.CustomerAttributeValueSearchModel, customerAttribute);
@@ -174,7 +174,7 @@ namespace Nop.Web.Areas.Admin.Factories
             {
                 //fill in model values from the entity
                 Data = customerAttributeValues.PaginationByRequestModel(searchModel)
-                    .Select(value => value.ToModel(new CustomerAttributeValueModel())),
+                    .Select(value => value.ToModel<CustomerAttributeValueModel>()),
                 Total = customerAttributeValues.Count
             };
 
@@ -200,7 +200,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (customerAttributeValue != null)
             {
                 //fill in model values from the entity
-                model = model ?? customerAttributeValue.ToModel(model);
+                model = model ?? customerAttributeValue.ToModel<CustomerAttributeValueModel>();
 
                 //define localized model configuration action
                 localizedModelConfiguration = (locale, languageId) =>

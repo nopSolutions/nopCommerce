@@ -913,7 +913,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = addresses.PaginationByRequestModel(searchModel).Select(address =>
                 {
                     //fill in model values from the entity        
-                    var addressModel = address.ToModel(new AddressModel());
+                    var addressModel = address.ToModel<AddressModel>();
 
                     //fill in additional values (not existing in the entity)
                     PrepareModelAddressHtml(addressModel, address);

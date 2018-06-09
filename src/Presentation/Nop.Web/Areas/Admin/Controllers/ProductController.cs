@@ -833,7 +833,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     model.ShowOnHomePage = false;
 
                 //product
-                var product = model.ToEntity(new Product());
+                var product = model.ToEntity<Product>();
                 product.CreatedOnUtc = DateTime.UtcNow;
                 product.UpdatedOnUtc = DateTime.UtcNow;
                 _productService.InsertProduct(product);

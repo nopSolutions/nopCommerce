@@ -278,7 +278,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                var sm = model.ToEntity(new ShippingMethod());
+                var sm = model.ToEntity<ShippingMethod>();
                 _shippingService.InsertShippingMethod(sm);
 
                 //locales
@@ -410,7 +410,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                var deliveryDate = model.ToEntity(new DeliveryDate());
+                var deliveryDate = model.ToEntity<DeliveryDate>();
                 _dateRangeService.InsertDeliveryDate(deliveryDate);
 
                 //locales
@@ -528,7 +528,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                var productAvailabilityRange = model.ToEntity(new ProductAvailabilityRange());
+                var productAvailabilityRange = model.ToEntity<ProductAvailabilityRange>();
                 _dateRangeService.InsertProductAvailabilityRange(productAvailabilityRange);
 
                 //locales
@@ -657,7 +657,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                var address = model.Address.ToEntity(new Address());
+                var address = model.Address.ToEntity<Address>();
                 address.CreatedOnUtc = DateTime.UtcNow;
                 _addressService.InsertAddress(address);
 

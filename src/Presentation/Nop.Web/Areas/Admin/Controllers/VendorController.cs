@@ -253,7 +253,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                var vendor = model.ToEntity(new Vendor());
+                var vendor = model.ToEntity<Vendor>();
                 _vendorService.InsertVendor(vendor);
 
                 //activity log
@@ -265,7 +265,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _urlRecordService.SaveSlug(vendor, model.SeName, 0);
 
                 //address
-                var address = model.Address.ToEntity(new Address());
+                var address = model.Address.ToEntity<Address>();
                 address.CreatedOnUtc = DateTime.UtcNow;
 
                 //some validation
@@ -357,7 +357,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 var address = _addressService.GetAddressById(vendor.AddressId);
                 if (address == null)
                 {
-                    address = model.Address.ToEntity(address);
+                    address = model.Address.ToEntity<Address>();
                     address.CreatedOnUtc = DateTime.UtcNow;
 
                     //some validation

@@ -286,7 +286,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new VendorListModel
             {
                 //fill in model values from the entity
-                Data = vendors.Select(vendor => vendor.ToModel(new VendorModel())),
+                Data = vendors.Select(vendor => vendor.ToModel<VendorModel>()),
                 Total = vendors.TotalCount
             };
 
@@ -307,7 +307,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (vendor != null)
             {
                 //fill in model values from the entity
-                model = model ?? vendor.ToModel(model);
+                model = model ?? vendor.ToModel<VendorModel>();
 
                 //define localized model configuration action
                 localizedModelConfiguration = (locale, languageId) =>

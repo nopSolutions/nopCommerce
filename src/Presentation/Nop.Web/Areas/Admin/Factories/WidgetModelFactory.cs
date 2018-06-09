@@ -70,7 +70,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = widgets.PaginationByRequestModel(searchModel).Select(widget =>
                 {
                     //fill in model values from the entity
-                    var widgetMethodModel = widget.ToPluginModel(new WidgetModel());
+                    var widgetMethodModel = widget.ToPluginModel<WidgetModel>();
 
                     //fill in additional values (not existing in the entity)
                     widgetMethodModel.IsActive = widget.IsWidgetActive(_widgetSettings);

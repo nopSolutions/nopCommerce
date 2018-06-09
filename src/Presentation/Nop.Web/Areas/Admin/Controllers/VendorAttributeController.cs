@@ -118,7 +118,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                var vendorAttribute = model.ToEntity(new VendorAttribute());
+                var vendorAttribute = model.ToEntity<VendorAttribute>();
                 _vendorAttributeService.InsertVendorAttribute(vendorAttribute);
 
                 //activity log
@@ -273,7 +273,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                var value = model.ToEntity(new VendorAttributeValue());
+                var value = model.ToEntity<VendorAttributeValue>();
 
                 _vendorAttributeService.InsertVendorAttributeValue(value);
 
