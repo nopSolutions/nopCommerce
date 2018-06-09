@@ -45,5 +45,10 @@ namespace Nop.Services.Common
         /// <param name="backupFileName">The name of the backup file</param>
         /// <returns>The path to the backup file</returns>
         string GetBackupPath(string backupFileName);
+
+        /// <summary>
+        /// Re-indexing database tables
+        /// </summary>
+        void ReIndexingTables();
     }
 }
