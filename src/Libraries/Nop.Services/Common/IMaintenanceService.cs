@@ -47,8 +47,8 @@ namespace Nop.Services.Common
         string GetBackupPath(string backupFileName);
 
         /// <summary>
-        /// Re-indexing database tables
+        /// Re-index database tables
         /// </summary>
-        void ReIndexingTables();
+        void ReIndexTables();
     }
 }

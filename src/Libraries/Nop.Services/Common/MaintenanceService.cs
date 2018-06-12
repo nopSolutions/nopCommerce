@@ -189,9 +189,9 @@ namespace Nop.Services.Common
         }
 
         /// <summary>
-        /// Re-indexing database tables
+        /// Re-index database tables
         /// </summary>
-        public virtual void ReIndexingTables()
+        public virtual void ReIndexTables()
         {
             var commandText = $@"
                 DECLARE @TableName sysname 

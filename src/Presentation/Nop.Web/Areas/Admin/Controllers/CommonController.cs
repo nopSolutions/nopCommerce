@@ -224,14 +224,14 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         [HttpPost, ActionName("Maintenance")]
         [FormValueRequired("re-index")]
-        public virtual IActionResult ReIndexingTables(MaintenanceModel model)
+        public virtual IActionResult ReIndexTables(MaintenanceModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
 
             try
             {
-                _maintenanceService.ReIndexingTables();
+                _maintenanceService.ReIndexTables();
                 SuccessNotification(_localizationService.GetResource("Admin.System.Maintenance.ReIndexTables.Complete"));
             }
             catch (Exception exc)
