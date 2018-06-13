@@ -652,14 +652,14 @@ namespace Nop.Web.Framework.UI
 
             // Try the content root
             var file = Path.Combine(contentRoot, url);
-            if (File.Exists(file))
+            if (_fileProvider.FileExists(file))
             {
                 return versionEquals + File.GetLastWriteTime(file).Ticks;
-            }
+            }         
 
             // Try the web root
             file = Path.Combine(webRoot, url);
-            if (File.Exists(file))
+            if (_fileProvider.FileExists(file))
             {
                 return versionEquals + File.GetLastWriteTime(file).Ticks;
             }
