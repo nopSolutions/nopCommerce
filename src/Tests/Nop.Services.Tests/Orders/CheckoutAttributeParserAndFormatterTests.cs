@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Moq;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
@@ -16,28 +17,27 @@ using Nop.Services.Stores;
 using Nop.Services.Tax;
 using Nop.Tests;
 using NUnit.Framework;
-using Rhino.Mocks;
 
 namespace Nop.Services.Tests.Orders
 {
     [TestFixture]
     public class CheckoutAttributeParserAndFormatterTests : ServiceTest
     {
-        private IRepository<CheckoutAttribute> _checkoutAttributeRepo;
-        private IRepository<CheckoutAttributeValue> _checkoutAttributeValueRepo;
-        private IEventPublisher _eventPublisher;
-        private IStoreMappingService _storeMappingService;
+        private Mock<IRepository<CheckoutAttribute>> _checkoutAttributeRepo;
+        private Mock<IRepository<CheckoutAttributeValue>> _checkoutAttributeValueRepo;
+        private Mock<IEventPublisher> _eventPublisher;
+        private Mock<IStoreMappingService> _storeMappingService;
         private ICheckoutAttributeService _checkoutAttributeService;
         private ICheckoutAttributeParser _checkoutAttributeParser;
-        private IWorkContext _workContext;
-        private ICurrencyService _currencyService;
-        private ITaxService _taxService;
-        private IPriceFormatter _priceFormatter;
-        private IDownloadService _downloadService;
-        private IWebHelper _webHelper;
+        private Mock<IWorkContext> _workContext;
+        private Mock<ICurrencyService> _currencyService;
+        private Mock<ITaxService> _taxService;
+        private Mock<IPriceFormatter> _priceFormatter;
+        private Mock<IDownloadService> _downloadService;
+        private Mock<IWebHelper> _webHelper;
         private ICheckoutAttributeFormatter _checkoutAttributeFormatter;
-        private IProductAttributeParser _productAttributeParser;
-        private IProductService _productService;
+        private Mock<IProductAttributeParser> _productAttributeParser;
+        private Mock<IProductService> _productService;
 
         private CheckoutAttribute ca1, ca2, ca3;
         private CheckoutAttributeValue cav1_1, cav1_2, cav2_1, cav2_2;
@@ -55,7 +55,7 @@ namespace Nop.Services.Tests.Orders
                 TextPrompt = "Select color:",
                 IsRequired = true,
                 AttributeControlType = AttributeControlType.DropdownList,
-                DisplayOrder = 1,
+                DisplayOrder = 1
             };
             cav1_1 = new CheckoutAttributeValue
             {
@@ -63,7 +63,7 @@ namespace Nop.Services.Tests.Orders
                 Name = "Green",
                 DisplayOrder = 1,
                 CheckoutAttribute = ca1,
-                CheckoutAttributeId = ca1.Id,
+                CheckoutAttributeId = ca1.Id
             };
             cav1_2 = new CheckoutAttributeValue
             {
@@ -71,7 +71,7 @@ namespace Nop.Services.Tests.Orders
                 Name = "Red",
                 DisplayOrder = 2,
                 CheckoutAttribute = ca1,
-                CheckoutAttributeId = ca1.Id,
+                CheckoutAttributeId = ca1.Id
             };
             ca1.CheckoutAttributeValues.Add(cav1_1);
             ca1.CheckoutAttributeValues.Add(cav1_2);
@@ -84,7 +84,7 @@ namespace Nop.Services.Tests.Orders
                 TextPrompt = "Select custom option:",
                 IsRequired = true,
                 AttributeControlType = AttributeControlType.Checkboxes,
-                DisplayOrder = 2,
+                DisplayOrder = 2
             };
             cav2_1 = new CheckoutAttributeValue
             {
@@ -92,7 +92,7 @@ namespace Nop.Services.Tests.Orders
                 Name = "Option 1",
                 DisplayOrder = 1,
                 CheckoutAttribute = ca2,
-                CheckoutAttributeId = ca2.Id,
+                CheckoutAttributeId = ca2.Id
             };
             cav2_2 = new CheckoutAttributeValue
             {
@@ -100,7 +100,7 @@ namespace Nop.Services.Tests.Orders
                 Name = "Option 2",
                 DisplayOrder = 2,
                 CheckoutAttribute = ca2,
-                CheckoutAttributeId = ca2.Id,
+                CheckoutAttributeId = ca2.Id
             };
             ca2.CheckoutAttributeValues.Add(cav2_1);
             ca2.CheckoutAttributeValues.Add(cav2_2);
@@ -113,61 +113,59 @@ namespace Nop.Services.Tests.Orders
                 TextPrompt = "Enter custom text:",
                 IsRequired = true,
                 AttributeControlType = AttributeControlType.MultilineTextbox,
-                DisplayOrder = 3,
+                DisplayOrder = 3
             };
 
 
             #endregion
             
-            _checkoutAttributeRepo = MockRepository.GenerateMock<IRepository<CheckoutAttribute>>();
-            _checkoutAttributeRepo.Expect(x => x.Table).Return(new List<CheckoutAttribute> { ca1, ca2, ca3 }.AsQueryable());
-            _checkoutAttributeRepo.Expect(x => x.GetById(ca1.Id)).Return(ca1);
-            _checkoutAttributeRepo.Expect(x => x.GetById(ca2.Id)).Return(ca2);
-            _checkoutAttributeRepo.Expect(x => x.GetById(ca3.Id)).Return(ca3);
+            _checkoutAttributeRepo = new Mock<IRepository<CheckoutAttribute>>();
+            _checkoutAttributeRepo.Setup(x => x.Table).Returns(new List<CheckoutAttribute> { ca1, ca2, ca3 }.AsQueryable());
+            _checkoutAttributeRepo.Setup(x => x.GetById(ca1.Id)).Returns(ca1);
+            _checkoutAttributeRepo.Setup(x => x.GetById(ca2.Id)).Returns(ca2);
+            _checkoutAttributeRepo.Setup(x => x.GetById(ca3.Id)).Returns(ca3);
 
-            _checkoutAttributeValueRepo = MockRepository.GenerateMock<IRepository<CheckoutAttributeValue>>();
-            _checkoutAttributeValueRepo.Expect(x => x.Table).Return(new List<CheckoutAttributeValue> { cav1_1, cav1_2, cav2_1, cav2_2 }.AsQueryable());
-            _checkoutAttributeValueRepo.Expect(x => x.GetById(cav1_1.Id)).Return(cav1_1);
-            _checkoutAttributeValueRepo.Expect(x => x.GetById(cav1_2.Id)).Return(cav1_2);
-            _checkoutAttributeValueRepo.Expect(x => x.GetById(cav2_1.Id)).Return(cav2_1);
-            _checkoutAttributeValueRepo.Expect(x => x.GetById(cav2_2.Id)).Return(cav2_2);
+            _checkoutAttributeValueRepo = new Mock<IRepository<CheckoutAttributeValue>>();
+            _checkoutAttributeValueRepo.Setup(x => x.Table).Returns(new List<CheckoutAttributeValue> { cav1_1, cav1_2, cav2_1, cav2_2 }.AsQueryable());
+            _checkoutAttributeValueRepo.Setup(x => x.GetById(cav1_1.Id)).Returns(cav1_1);
+            _checkoutAttributeValueRepo.Setup(x => x.GetById(cav1_2.Id)).Returns(cav1_2);
+            _checkoutAttributeValueRepo.Setup(x => x.GetById(cav2_1.Id)).Returns(cav2_1);
+            _checkoutAttributeValueRepo.Setup(x => x.GetById(cav2_2.Id)).Returns(cav2_2);
 
             var cacheManager = new NopNullCache();
 
-            _storeMappingService = MockRepository.GenerateMock<IStoreMappingService>();
+            _storeMappingService = new Mock<IStoreMappingService>();
 
-            _eventPublisher = MockRepository.GenerateMock<IEventPublisher>();
-            _eventPublisher.Expect(x => x.Publish(Arg<object>.Is.Anything));
+            _eventPublisher = new Mock<IEventPublisher>();
+            _eventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
 
             _checkoutAttributeService = new CheckoutAttributeService(cacheManager,
-                _checkoutAttributeRepo,
-                _checkoutAttributeValueRepo,
-                _storeMappingService,
-                _eventPublisher);
+                _checkoutAttributeRepo.Object,
+                _checkoutAttributeValueRepo.Object,
+                _storeMappingService.Object,
+                _eventPublisher.Object);
 
-            _productService = MockRepository.GenerateMock<IProductService>();
-            _productAttributeParser = MockRepository.GenerateMock<IProductAttributeParser>();
-            _checkoutAttributeParser = new CheckoutAttributeParser(_checkoutAttributeService, _productAttributeParser, _productService);
-
-
+            _productService = new Mock<IProductService>();
+            _productAttributeParser = new Mock<IProductAttributeParser>();
+            _checkoutAttributeParser = new CheckoutAttributeParser(_checkoutAttributeService, _productAttributeParser.Object, _productService.Object);
 
             var workingLanguage = new Language();
-            _workContext = MockRepository.GenerateMock<IWorkContext>();
-            _workContext.Expect(x => x.WorkingLanguage).Return(workingLanguage);
-            _currencyService = MockRepository.GenerateMock<ICurrencyService>();
-            _taxService = MockRepository.GenerateMock<ITaxService>();
-            _priceFormatter = MockRepository.GenerateMock<IPriceFormatter>();
-            _downloadService = MockRepository.GenerateMock<IDownloadService>();
-            _webHelper = MockRepository.GenerateMock<IWebHelper>();
+            _workContext = new Mock<IWorkContext>();
+            _workContext.Setup(x => x.WorkingLanguage).Returns(workingLanguage);
+            _currencyService = new Mock<ICurrencyService>();
+            _taxService = new Mock<ITaxService>();
+            _priceFormatter = new Mock<IPriceFormatter>();
+            _downloadService = new Mock<IDownloadService>();
+            _webHelper = new Mock<IWebHelper>();
 
-            _checkoutAttributeFormatter = new CheckoutAttributeFormatter(_workContext,
+            _checkoutAttributeFormatter = new CheckoutAttributeFormatter(_workContext.Object,
                 _checkoutAttributeService,
                 _checkoutAttributeParser,
-                _currencyService,
-                _taxService,
-                _priceFormatter,
-                _downloadService,
-                _webHelper);
+                _currencyService.Object,
+                _taxService.Object,
+                _priceFormatter.Object,
+                _downloadService.Object,
+                _webHelper.Object);
         }
         
         [Test]

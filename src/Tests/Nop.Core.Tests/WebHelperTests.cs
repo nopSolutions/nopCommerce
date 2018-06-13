@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Net.Http.Headers;
+using Moq;
 using Nop.Core.Configuration;
 using Nop.Core.Infrastructure;
 using Nop.Tests;
 using NUnit.Framework;
-using Rhino.Mocks;
 
 namespace Nop.Core.Tests
 {
@@ -12,7 +12,7 @@ namespace Nop.Core.Tests
     public class WebHelperTests
     {
         private DefaultHttpContext _httpContext;
-        private INopFileProvider _fileProvider;
+        private Mock<INopFileProvider> _fileProvider;
         private IWebHelper _webHelper;
 
         [SetUp]
@@ -25,9 +25,9 @@ namespace Nop.Core.Tests
             _httpContext.Request.QueryString = queryString;
             _httpContext.Request.Headers.Add(HeaderNames.Host, "www.Example.com");
 
-            _fileProvider = MockRepository.GenerateMock<INopFileProvider>();
+            _fileProvider = new Mock<INopFileProvider>();
 
-            _webHelper = new WebHelper(new HostingConfig(), new FakeHttpContextAccessor(_httpContext), _fileProvider);
+            _webHelper = new WebHelper(new HostingConfig(), new FakeHttpContextAccessor(_httpContext), _fileProvider.Object);
         }
 
         [Test]
