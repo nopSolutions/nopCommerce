@@ -654,14 +654,14 @@ namespace Nop.Web.Framework.UI
             var file = Path.Combine(contentRoot, url);
             if (_fileProvider.FileExists(file))
             {
-                return versionEquals + File.GetLastWriteTime(file).Ticks;
+                return versionEquals + _fileProvider.GetLastWriteTime(file).Ticks;
             }         
 
             // Try the web root
             file = Path.Combine(webRoot, url);
             if (_fileProvider.FileExists(file))
             {
-                return versionEquals + File.GetLastWriteTime(file).Ticks;
+                return versionEquals + _fileProvider.GetLastWriteTime(file).Ticks;
             }
 
             // If all else fails, return a random number string
