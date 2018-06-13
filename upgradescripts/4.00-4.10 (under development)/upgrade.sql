@@ -1184,6 +1184,12 @@ set @resources='
   <LocaleResource Name="Admin.System.Maintenance.ReIndexTables.ReIndexNow">
     <Value>Re-index</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.Warnings.PluginNotEnabled">
+    <Value>You could uninstall and remove the plugin(s) which you don''t use, this might increase performance</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.System.Warnings.Errors">
+    <Value>The store has some error(s) or warning(s). Please find more information on the Warnings page.</Value>
+  </LocaleResource>
 </Language>
 '
 
