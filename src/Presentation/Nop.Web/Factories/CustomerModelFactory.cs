@@ -210,7 +210,7 @@ namespace Nop.Web.Factories
                 //set already selected attributes
                 var selectedAttributesXml = !string.IsNullOrEmpty(overrideAttributesXml) ?
                     overrideAttributesXml : 
-                    customer.GetAttribute<string>(SystemCustomerAttributeNames.CustomCustomerAttributes, _genericAttributeService);
+                    customer.GetAttribute<string>(NopCustomerDefaults.CustomCustomerAttributes, _genericAttributeService);
                 switch (attribute.AttributeControlType)
                 {
                     case AttributeControlType.DropdownList:
@@ -287,33 +287,33 @@ namespace Nop.Web.Factories
 
             if (!excludeProperties)
             {
-                model.VatNumber = customer.GetAttribute<string>(SystemCustomerAttributeNames.VatNumber);
-                model.FirstName = customer.GetAttribute<string>(SystemCustomerAttributeNames.FirstName);
-                model.LastName = customer.GetAttribute<string>(SystemCustomerAttributeNames.LastName);
-                model.Gender = customer.GetAttribute<string>(SystemCustomerAttributeNames.Gender);
-                var dateOfBirth = customer.GetAttribute<DateTime?>(SystemCustomerAttributeNames.DateOfBirth);
+                model.VatNumber = customer.GetAttribute<string>(NopCustomerDefaults.VatNumberAttribute);
+                model.FirstName = customer.GetAttribute<string>(NopCustomerDefaults.FirstNameAttribute);
+                model.LastName = customer.GetAttribute<string>(NopCustomerDefaults.LastNameAttribute);
+                model.Gender = customer.GetAttribute<string>(NopCustomerDefaults.GenderAttribute);
+                var dateOfBirth = customer.GetAttribute<DateTime?>(NopCustomerDefaults.DateOfBirthAttribute);
                 if (dateOfBirth.HasValue)
                 {
                     model.DateOfBirthDay = dateOfBirth.Value.Day;
                     model.DateOfBirthMonth = dateOfBirth.Value.Month;
                     model.DateOfBirthYear = dateOfBirth.Value.Year;
                 }
-                model.Company = customer.GetAttribute<string>(SystemCustomerAttributeNames.Company);
-                model.StreetAddress = customer.GetAttribute<string>(SystemCustomerAttributeNames.StreetAddress);
-                model.StreetAddress2 = customer.GetAttribute<string>(SystemCustomerAttributeNames.StreetAddress2);
-                model.ZipPostalCode = customer.GetAttribute<string>(SystemCustomerAttributeNames.ZipPostalCode);
-                model.City = customer.GetAttribute<string>(SystemCustomerAttributeNames.City);
-                model.County = customer.GetAttribute<string>(SystemCustomerAttributeNames.County);
-                model.CountryId = customer.GetAttribute<int>(SystemCustomerAttributeNames.CountryId);
-                model.StateProvinceId = customer.GetAttribute<int>(SystemCustomerAttributeNames.StateProvinceId);
-                model.Phone = customer.GetAttribute<string>(SystemCustomerAttributeNames.Phone);
-                model.Fax = customer.GetAttribute<string>(SystemCustomerAttributeNames.Fax);
+                model.Company = customer.GetAttribute<string>(NopCustomerDefaults.CompanyAttribute);
+                model.StreetAddress = customer.GetAttribute<string>(NopCustomerDefaults.StreetAddressAttribute);
+                model.StreetAddress2 = customer.GetAttribute<string>(NopCustomerDefaults.StreetAddress2Attribute);
+                model.ZipPostalCode = customer.GetAttribute<string>(NopCustomerDefaults.ZipPostalCodeAttribute);
+                model.City = customer.GetAttribute<string>(NopCustomerDefaults.CityAttribute);
+                model.County = customer.GetAttribute<string>(NopCustomerDefaults.CountyAttribute);
+                model.CountryId = customer.GetAttribute<int>(NopCustomerDefaults.CountryIdAttribute);
+                model.StateProvinceId = customer.GetAttribute<int>(NopCustomerDefaults.StateProvinceIdAttribute);
+                model.Phone = customer.GetAttribute<string>(NopCustomerDefaults.PhoneAttribute);
+                model.Fax = customer.GetAttribute<string>(NopCustomerDefaults.FaxAttribute);
 
                 //newsletter
                 var newsletter = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreId(customer.Email, _storeContext.CurrentStore.Id);
                 model.Newsletter = newsletter != null && newsletter.Active;
 
-                model.Signature = customer.GetAttribute<string>(SystemCustomerAttributeNames.Signature);
+                model.Signature = customer.GetAttribute<string>(NopCustomerDefaults.SignatureAttribute);
 
                 model.Email = customer.Email;
                 model.Username = customer.Username;
@@ -369,7 +369,7 @@ namespace Nop.Web.Factories
             }
 
             model.DisplayVatNumber = _taxSettings.EuVatEnabled;
-            model.VatNumberStatusNote = ((VatNumberStatus)customer.GetAttribute<int>(SystemCustomerAttributeNames.VatNumberStatusId))
+            model.VatNumberStatusNote = ((VatNumberStatus)customer.GetAttribute<int>(NopCustomerDefaults.VatNumberStatusIdAttribute))
                 .GetLocalizedEnum(_localizationService, _workContext);
             model.GenderEnabled = _customerSettings.GenderEnabled;
             model.DateOfBirthEnabled = _customerSettings.DateOfBirthEnabled;
@@ -880,7 +880,7 @@ namespace Nop.Web.Factories
                 throw new ArgumentNullException(nameof(model));
 
             model.AvatarUrl = _pictureService.GetPictureUrl(
-                _workContext.CurrentCustomer.GetAttribute<int>(SystemCustomerAttributeNames.AvatarPictureId),
+                _workContext.CurrentCustomer.GetAttribute<int>(NopCustomerDefaults.AvatarPictureIdAttribute),
                 _mediaSettings.AvatarPictureSize,
                 false);
 

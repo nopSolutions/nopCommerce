@@ -70,7 +70,7 @@ namespace Nop.Services.Plugins
         protected virtual IDescriptor UploadSingleItem(string archivePath)
         {
             //get path to the plugins directory
-            var pluginsDirectory = _fileProvider.MapPath(PluginManager.PluginsPath);
+            var pluginsDirectory = _fileProvider.MapPath(NopPluginDefaults.Path);
 
             //get path to the themes directory
             var themesDirectory = string.Empty;
@@ -98,7 +98,7 @@ namespace Nop.Services.Plugins
                 {
                     //whether it's a plugin descriptor
                     var isPluginDescriptor = entry.FullName
-                        .Equals($"{uploadedItemDirectoryName}/{PluginManager.PluginDescriptionFileName}", StringComparison.InvariantCultureIgnoreCase);
+                        .Equals($"{uploadedItemDirectoryName}/{NopPluginDefaults.DescriptionFileName}", StringComparison.InvariantCultureIgnoreCase);
 
                     //or whether it's a theme descriptor
                     var isThemeDescriptor = entry.FullName
@@ -162,7 +162,7 @@ namespace Nop.Services.Plugins
         protected virtual IList<IDescriptor> UploadMultipleItems(string archivePath, IList<UploadedItem> uploadedItems)
         {
             //get path to the plugins directory
-            var pluginsDirectory = _fileProvider.MapPath(PluginManager.PluginsPath);
+            var pluginsDirectory = _fileProvider.MapPath(NopPluginDefaults.Path);
 
             //get path to the themes directory
             var themesDirectory = string.Empty;
@@ -188,7 +188,7 @@ namespace Nop.Services.Plugins
                     //get path to the descriptor entry in the archive
                     var descriptorPath = string.Empty;
                     if (item.Type == UploadedItemType.Plugin)
-                        descriptorPath = $"{itemPath}{PluginManager.PluginDescriptionFileName}";
+                        descriptorPath = $"{itemPath}{NopPluginDefaults.DescriptionFileName}";
 
                     if (item.Type == UploadedItemType.Theme && !string.IsNullOrEmpty(_themeProvider.ThemeDescriptionFileName))
                         descriptorPath = $"{itemPath}{_themeProvider.ThemeDescriptionFileName}";

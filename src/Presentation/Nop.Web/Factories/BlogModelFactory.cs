@@ -90,7 +90,7 @@ namespace Nop.Web.Factories
             if (_customerSettings.AllowCustomersToUploadAvatars)
             {
                 model.CustomerAvatarUrl = _pictureService.GetPictureUrl(
-                    blogComment.Customer.GetAttribute<int>(SystemCustomerAttributeNames.AvatarPictureId),
+                    blogComment.Customer.GetAttribute<int>(NopCustomerDefaults.AvatarPictureIdAttribute),
                     _mediaSettings.AvatarPictureSize,
                     _customerSettings.DefaultAvatarEnabled,
                     defaultPictureType: PictureType.Avatar);

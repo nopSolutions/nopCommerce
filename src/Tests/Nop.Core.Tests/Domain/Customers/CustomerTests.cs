@@ -45,13 +45,13 @@ namespace Nop.Core.Tests.Domain.Customers
             {
                 Active = true,
                 Name = "Registered",
-                SystemName = SystemCustomerRoleNames.Registered
+                SystemName = NopCustomerDefaults.RegisteredRoleName
             });
             customer.CustomerRoles.Add(new CustomerRole
             {
                 Active = true,
                 Name = "Guests",
-                SystemName = SystemCustomerRoleNames.Guests
+                SystemName = NopCustomerDefaults.GuestsRoleName
             });
 
             customer.IsAdmin().ShouldBeFalse();
@@ -61,7 +61,7 @@ namespace Nop.Core.Tests.Domain.Customers
                 {
                     Active = true,
                     Name = "Administrators",
-                    SystemName = SystemCustomerRoleNames.Administrators
+                    SystemName = NopCustomerDefaults.AdministratorsRoleName
                 });
             customer.IsAdmin().ShouldBeTrue();
         }
@@ -74,13 +74,13 @@ namespace Nop.Core.Tests.Domain.Customers
             {
                 Active = true,
                 Name = "Registered",
-                SystemName = SystemCustomerRoleNames.Registered
+                SystemName = NopCustomerDefaults.RegisteredRoleName
             });
             customer.CustomerRoles.Add(new CustomerRole
             {
                 Active = true,
                 Name = "Guests",
-                SystemName = SystemCustomerRoleNames.Guests
+                SystemName = NopCustomerDefaults.GuestsRoleName
             });
 
             customer.IsForumModerator().ShouldBeFalse();
@@ -90,7 +90,7 @@ namespace Nop.Core.Tests.Domain.Customers
                 {
                     Active = true,
                     Name = "ForumModerators",
-                    SystemName = SystemCustomerRoleNames.ForumModerators
+                    SystemName = NopCustomerDefaults.ForumModeratorsRoleName
                 });
             customer.IsForumModerator().ShouldBeTrue();
         }
@@ -103,14 +103,14 @@ namespace Nop.Core.Tests.Domain.Customers
             {
                 Active = true,
                 Name = "Registered",
-                SystemName = SystemCustomerRoleNames.Registered
+                SystemName = NopCustomerDefaults.RegisteredRoleName
             });
 
             customer.CustomerRoles.Add(new CustomerRole
             {
                 Active = true,
                 Name = "Administrators",
-                SystemName = SystemCustomerRoleNames.Administrators
+                SystemName = NopCustomerDefaults.AdministratorsRoleName
             });
 
             customer.IsGuest().ShouldBeFalse();
@@ -120,7 +120,7 @@ namespace Nop.Core.Tests.Domain.Customers
                 {
                     Active = true,
                     Name = "Guests",
-                    SystemName = SystemCustomerRoleNames.Guests
+                    SystemName = NopCustomerDefaults.GuestsRoleName
 
                 }
                 );
@@ -134,14 +134,14 @@ namespace Nop.Core.Tests.Domain.Customers
             {
                 Active = true,
                 Name = "Administrators",
-                SystemName = SystemCustomerRoleNames.Administrators
+                SystemName = NopCustomerDefaults.AdministratorsRoleName
             });
 
             customer.CustomerRoles.Add(new CustomerRole
             {
                 Active = true,
                 Name = "Guests",
-                SystemName = SystemCustomerRoleNames.Guests
+                SystemName = NopCustomerDefaults.GuestsRoleName
             });
 
             customer.IsRegistered().ShouldBeFalse();
@@ -151,7 +151,7 @@ namespace Nop.Core.Tests.Domain.Customers
                 {
                     Active = true,
                     Name = "Registered",
-                    SystemName = SystemCustomerRoleNames.Registered
+                    SystemName = NopCustomerDefaults.RegisteredRoleName
                 });
             customer.IsRegistered().ShouldBeTrue();
         }

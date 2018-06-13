@@ -258,7 +258,7 @@ namespace Nop.Services.Forums
                         select fp.Id;
             var numPosts = query.Count();
 
-            _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.ForumPostCount, numPosts);
+            _genericAttributeService.SaveAttribute(customer, NopCustomerDefaults.ForumPostCountAttribute, numPosts);
         }
 
         private bool IsForumModerator(Customer customer)
@@ -1018,7 +1018,7 @@ namespace Nop.Services.Forums
             }
 
             //UI notification
-            _genericAttributeService.SaveAttribute(customerTo, SystemCustomerAttributeNames.NotifiedAboutNewPrivateMessages, false, privateMessage.StoreId);
+            _genericAttributeService.SaveAttribute(customerTo, NopCustomerDefaults.NotifiedAboutNewPrivateMessagesAttribute, false, privateMessage.StoreId);
 
             //Email notification
             if (_forumSettings.NotifyAboutPrivateMessages)

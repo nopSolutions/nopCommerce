@@ -81,7 +81,7 @@ namespace Nop.Services.Tests.Helpers
                                     {
                                         StoreId = 0,
                                         EntityId = customer.Id,
-                                        Key = SystemCustomerAttributeNames.TimeZoneId,
+                                        Key = NopCustomerDefaults.TimeZoneIdAttribute,
                                         KeyGroup = "Customer",
                                         Value = "Russian Standard Time" //(GMT+03:00) Moscow, St. Petersburg, Volgograd
                                     }
@@ -110,7 +110,7 @@ namespace Nop.Services.Tests.Helpers
                                     {
                                         StoreId = 0,
                                         EntityId = customer.Id,
-                                        Key = SystemCustomerAttributeNames.TimeZoneId,
+                                        Key = NopCustomerDefaults.TimeZoneIdAttribute,
                                         KeyGroup = "Customer",
                                         Value = "Russian Standard Time" //(GMT+03:00) Moscow, St. Petersburg, Volgograd
                                     }

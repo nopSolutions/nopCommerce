@@ -23,13 +23,6 @@ namespace Nop.Core.Plugins
     /// </summary>
     public class PluginManager
     {
-        #region Constants
-
-        private const string RESERVE_SHADOW_COPY_FOLDER_NAME = "reserve_bin_";
-        private const string RESERVE_SHADOW_COPY_FOLDER_NAME_PATTERN = "reserve_bin_*";
-
-        #endregion
-
         #region Fields
 
         private static readonly ReaderWriterLockSlim Locker = new ReaderWriterLockSlim();
@@ -55,7 +48,7 @@ namespace Nop.Core.Plugins
                 _baseAppLibraries.AddRange(_fileProvider.GetFiles(Environment.CurrentDirectory, "*.dll").Select(fi => _fileProvider.GetFileName(fi)));
 
             //get all libraries from refs directory
-            var refsPathName = _fileProvider.Combine(Environment.CurrentDirectory, RefsPathName);
+            var refsPathName = _fileProvider.Combine(Environment.CurrentDirectory, NopPluginDefaults.RefsPathName);
             if (_fileProvider.DirectoryExists(refsPathName))
                 _baseAppLibraries.AddRange(_fileProvider.GetFiles(refsPathName, "*.dll").Select(fi => _fileProvider.GetFileName(fi)));
         }
@@ -78,7 +71,7 @@ namespace Nop.Core.Plugins
             var result = new List<KeyValuePair<string, PluginDescriptor>>();
 
             //add display order and path to list
-            foreach (var descriptionFile in _fileProvider.GetFiles(pluginFolder, PluginDescriptionFileName, false))
+            foreach (var descriptionFile in _fileProvider.GetFiles(pluginFolder, NopPluginDefaults.DescriptionFileName, false))
             {
                 if (!IsPackagePluginFolder(_fileProvider.GetDirectoryName(descriptionFile)))
                     continue;
@@ -107,7 +100,7 @@ namespace Nop.Core.Plugins
             if (!_fileProvider.FileExists(filePath))
             {
                 //if not, try to parse the file that was used in previous nopCommerce versions
-                filePath = _fileProvider.MapPath(ObsoleteInstalledPluginsFilePath);
+                filePath = _fileProvider.MapPath(NopPluginDefaults.ObsoleteInstalledPluginsFilePath);
                 if (!_fileProvider.FileExists(filePath))
                     return new List<string>();
 
@@ -124,7 +117,7 @@ namespace Nop.Core.Plugins
                 }
 
                 //save system names of installed plugins to the new file
-                SaveInstalledPluginNames(pluginSystemNames, _fileProvider.MapPath(InstalledPluginsFilePath));
+                SaveInstalledPluginNames(pluginSystemNames, _fileProvider.MapPath(NopPluginDefaults.InstalledPluginsFilePath));
 
                 //and delete the old one
                 _fileProvider.DeleteFile(filePath);
@@ -350,7 +343,7 @@ namespace Nop.Core.Plugins
             if (string.IsNullOrEmpty(parent))
                 return false;
 
-            if (!_fileProvider.GetDirectoryNameOnly(parent).Equals(PluginsPathName, StringComparison.InvariantCultureIgnoreCase))
+            if (!_fileProvider.GetDirectoryNameOnly(parent).Equals(NopPluginDefaults.PathName, StringComparison.InvariantCultureIgnoreCase))
                 return false;
 
             return true;
@@ -377,22 +370,22 @@ namespace Nop.Core.Plugins
             {
                 // TODO: Add verbose exception handling / raising here since this is happening on app startup and could
                 // prevent app from starting altogether
-                var pluginFolder = _fileProvider.MapPath(PluginsPath);
-                _shadowCopyFolder = _fileProvider.MapPath(ShadowCopyPath);
-                _reserveShadowCopyFolder = _fileProvider.Combine(_fileProvider.MapPath(ShadowCopyPath), $"{RESERVE_SHADOW_COPY_FOLDER_NAME}{DateTime.Now.ToFileTimeUtc()}");
-                
+                var pluginFolder = _fileProvider.MapPath(NopPluginDefaults.Path);
+                _shadowCopyFolder = _fileProvider.MapPath(NopPluginDefaults.ShadowCopyPath);
+                _reserveShadowCopyFolder = _fileProvider.Combine(_fileProvider.MapPath(NopPluginDefaults.ShadowCopyPath), $"{NopPluginDefaults.ReserveShadowCopyPathName}{DateTime.Now.ToFileTimeUtc()}");
+
                 var referencedPlugins = new List<PluginDescriptor>();
                 var incompatiblePlugins = new List<string>();
 
                 try
                 {
-                    var installedPluginSystemNames = GetInstalledPluginNames(_fileProvider.MapPath(InstalledPluginsFilePath));
+                    var installedPluginSystemNames = GetInstalledPluginNames(_fileProvider.MapPath(NopPluginDefaults.InstalledPluginsFilePath));
 
                     Debug.WriteLine("Creating shadow copy folder and querying for DLLs");
                     //ensure folders are created
                     _fileProvider.CreateDirectory(pluginFolder);
                     _fileProvider.CreateDirectory(_shadowCopyFolder);
-                    
+
                     //get list of all files in bin
                     var binFiles = _fileProvider.GetFiles(_shadowCopyFolder, "*", false);
                     if (config.ClearPluginShadowDirectoryOnStartup)
@@ -420,7 +413,7 @@ namespace Nop.Core.Plugins
                         }
 
                         //delete all reserve folders
-                        foreach (var directory in _fileProvider.GetDirectories(_shadowCopyFolder, RESERVE_SHADOW_COPY_FOLDER_NAME_PATTERN))
+                        foreach (var directory in _fileProvider.GetDirectories(_shadowCopyFolder, NopPluginDefaults.ReserveShadowCopyPathNamePattern))
                         {
                             try
                             {
@@ -432,7 +425,7 @@ namespace Nop.Core.Plugins
                             }
                         }
                     }
-                   
+
                     //load description files
                     foreach (var dfd in GetDescriptionFilesAndDescriptors(pluginFolder))
                     {
@@ -472,7 +465,7 @@ namespace Nop.Core.Plugins
                             //other plugin description info
                             var mainPluginFile = pluginFiles
                                 .FirstOrDefault(x => _fileProvider.GetFileName(x).Equals(pluginDescriptor.AssemblyFileName, StringComparison.InvariantCultureIgnoreCase));
-                            
+
                             //plugin have wrong directory
                             if (mainPluginFile == null)
                             {
@@ -489,8 +482,8 @@ namespace Nop.Core.Plugins
                             foreach (var plugin in pluginFiles
                                 .Where(x => !_fileProvider.GetFileName(x).Equals(_fileProvider.GetFileName(mainPluginFile), StringComparison.InvariantCultureIgnoreCase))
                                 .Where(x => !IsAlreadyLoaded(x)))
-                                    PerformFileDeploy(plugin, applicationPartManager, config);
-                            
+                                PerformFileDeploy(plugin, applicationPartManager, config);
+
                             //init plugin type (only one plugin per assembly is allowed)
                             foreach (var t in pluginDescriptor.ReferencedAssembly.GetTypes())
                                 if (typeof(IPlugin).IsAssignableFrom(t))
@@ -547,7 +540,7 @@ namespace Nop.Core.Plugins
             if (string.IsNullOrEmpty(systemName))
                 throw new ArgumentNullException(nameof(systemName));
 
-            var filePath = _fileProvider.MapPath(InstalledPluginsFilePath);
+            var filePath = _fileProvider.MapPath(NopPluginDefaults.InstalledPluginsFilePath);
 
             //create file if not exists
             _fileProvider.CreateFile(filePath);
@@ -573,7 +566,7 @@ namespace Nop.Core.Plugins
             if (string.IsNullOrEmpty(systemName))
                 throw new ArgumentNullException(nameof(systemName));
 
-            var filePath = _fileProvider.MapPath(InstalledPluginsFilePath);
+            var filePath = _fileProvider.MapPath(NopPluginDefaults.InstalledPluginsFilePath);
 
             //create file if not exists
             _fileProvider.CreateFile(filePath);
@@ -595,7 +588,7 @@ namespace Nop.Core.Plugins
         /// </summary>
         public static void MarkAllPluginsAsUninstalled()
         {
-            var filePath = _fileProvider.MapPath(InstalledPluginsFilePath);
+            var filePath = _fileProvider.MapPath(NopPluginDefaults.InstalledPluginsFilePath);
             if (_fileProvider.FileExists(filePath))
                 _fileProvider.DeleteFile(filePath);
         }
@@ -660,7 +653,7 @@ namespace Nop.Core.Plugins
             if (pluginDescriptor.OriginalAssemblyFile == null)
                 throw new Exception($"Cannot load original assembly path for {pluginDescriptor.SystemName} plugin.");
 
-            var filePath = _fileProvider.Combine(_fileProvider.GetDirectoryName(pluginDescriptor.OriginalAssemblyFile), PluginDescriptionFileName);
+            var filePath = _fileProvider.Combine(_fileProvider.GetDirectoryName(pluginDescriptor.OriginalAssemblyFile), NopPluginDefaults.DescriptionFileName);
             if (!_fileProvider.FileExists(filePath))
                 throw new Exception($"Description file for {pluginDescriptor.SystemName} plugin does not exist. {filePath}");
 
@@ -695,41 +688,6 @@ namespace Nop.Core.Plugins
         #endregion
 
         #region Properties
-
-        /// <summary>
-        /// Gets the path to file that contained (in previous versions) installed plugin system names
-        /// </summary>
-        public static string ObsoleteInstalledPluginsFilePath => "~/App_Data/InstalledPlugins.txt";
-
-        /// <summary>
-        /// Gets the path to file that contains installed plugin system names
-        /// </summary>
-        public static string InstalledPluginsFilePath => "~/App_Data/installedPlugins.json";
-
-        /// <summary>
-        /// Gets the path to plugins folder
-        /// </summary>
-        public static string PluginsPath => "~/Plugins";
-
-        /// <summary>
-        /// Gets the plugins folder name
-        /// </summary>
-        public static string PluginsPathName => "Plugins";
-
-        /// <summary>
-        /// Gets the path to plugins shadow copies folder
-        /// </summary>
-        public static string ShadowCopyPath => "~/Plugins/bin";
-
-        /// <summary>
-        /// Gets the path to plugins refs folder
-        /// </summary>
-        public static string RefsPathName => "refs";
-
-        /// <summary>
-        /// Gets the name of the plugin description file
-        /// </summary>
-        public static string PluginDescriptionFileName => "plugin.json";
 
         /// <summary>
         /// Returns a collection of all referenced plugin assemblies that have been shadow copied

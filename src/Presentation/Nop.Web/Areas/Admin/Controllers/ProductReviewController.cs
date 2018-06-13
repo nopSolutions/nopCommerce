@@ -142,7 +142,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 if (productReview.IsApproved && !string.IsNullOrEmpty(productReview.ReplyText)
                     && _catalogSettings.NotifyCustomerAboutProductReviewReply && !productReview.CustomerNotifiedOfReply)
                 {
-                    var customerLanguageId = productReview.Customer.GetAttribute<int>(SystemCustomerAttributeNames.LanguageId, productReview.StoreId);
+                    var customerLanguageId = productReview.Customer.GetAttribute<int>(NopCustomerDefaults.LanguageIdAttribute, productReview.StoreId);
                     var queuedEmailIds = _workflowMessageService.SendProductReviewReplyCustomerNotificationMessage(productReview, customerLanguageId);
                     if (queuedEmailIds.Any())
                         productReview.CustomerNotifiedOfReply = true;

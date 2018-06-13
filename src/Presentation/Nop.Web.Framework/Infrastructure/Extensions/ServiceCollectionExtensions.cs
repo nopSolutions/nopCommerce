@@ -171,7 +171,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 {
                     var redisConnectionWrapper = EngineContext.Current.Resolve<IRedisConnectionWrapper>();
                     return redisConnectionWrapper.GetDatabase();
-                }, RedisConfiguration.DataProtectionKeysName);
+                }, NopCachingDefaults.RedisDataProtectionKey);
             }
             else
             {

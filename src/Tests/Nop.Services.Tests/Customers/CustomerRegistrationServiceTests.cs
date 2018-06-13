@@ -244,7 +244,7 @@ namespace Nop.Services.Tests.Customers
             {
                 Active = true,
                 IsSystemRole = true,
-                SystemName = SystemCustomerRoleNames.Registered
+                SystemName = NopCustomerDefaults.RegisteredRoleName
             });
         }
 

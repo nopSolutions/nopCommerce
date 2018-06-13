@@ -4056,35 +4056,35 @@ namespace Nop.Services.Installation
                 Name = "Administrators",
                 Active = true,
                 IsSystemRole = true,
-                SystemName = SystemCustomerRoleNames.Administrators,
+                SystemName = NopCustomerDefaults.AdministratorsRoleName,
             };
             var crForumModerators = new CustomerRole
             {
                 Name = "Forum Moderators",
                 Active = true,
                 IsSystemRole = true,
-                SystemName = SystemCustomerRoleNames.ForumModerators,
+                SystemName = NopCustomerDefaults.ForumModeratorsRoleName,
             };
             var crRegistered = new CustomerRole
             {
                 Name = "Registered",
                 Active = true,
                 IsSystemRole = true,
-                SystemName = SystemCustomerRoleNames.Registered,
+                SystemName = NopCustomerDefaults.RegisteredRoleName,
             };
             var crGuests = new CustomerRole
             {
                 Name = "Guests",
                 Active = true,
                 IsSystemRole = true,
-                SystemName = SystemCustomerRoleNames.Guests,
+                SystemName = NopCustomerDefaults.GuestsRoleName,
             };
             var crVendors = new CustomerRole
             {
                 Name = "Vendors",
                 Active = true,
                 IsSystemRole = true,
-                SystemName = SystemCustomerRoleNames.Vendors,
+                SystemName = NopCustomerDefaults.VendorsRoleName,
             };
             var customerRoles = new List<CustomerRole>
             {
@@ -4146,8 +4146,8 @@ namespace Nop.Services.Installation
 
             _customerRepository.Insert(adminUser);
             //set default customer name
-            _genericAttributeService.SaveAttribute(adminUser, SystemCustomerAttributeNames.FirstName, "John");
-            _genericAttributeService.SaveAttribute(adminUser, SystemCustomerAttributeNames.LastName, "Smith");
+            _genericAttributeService.SaveAttribute(adminUser, NopCustomerDefaults.FirstNameAttribute, "John");
+            _genericAttributeService.SaveAttribute(adminUser, NopCustomerDefaults.LastNameAttribute, "Smith");
 
             //set hashed admin password
             var customerRegistrationService = EngineContext.Current.Resolve<ICustomerRegistrationService>();
@@ -4192,8 +4192,8 @@ namespace Nop.Services.Installation
 
             _customerRepository.Insert(secondUser);
             //set default customer name
-            _genericAttributeService.SaveAttribute(secondUser, SystemCustomerAttributeNames.FirstName, defaultSecondUserAddress.FirstName);
-            _genericAttributeService.SaveAttribute(secondUser, SystemCustomerAttributeNames.LastName, defaultSecondUserAddress.LastName);
+            _genericAttributeService.SaveAttribute(secondUser, NopCustomerDefaults.FirstNameAttribute, defaultSecondUserAddress.FirstName);
+            _genericAttributeService.SaveAttribute(secondUser, NopCustomerDefaults.LastNameAttribute, defaultSecondUserAddress.LastName);
 
             //set customer password
             _customerPasswordRepository.Insert(new CustomerPassword
@@ -4242,8 +4242,8 @@ namespace Nop.Services.Installation
 
             _customerRepository.Insert(thirdUser);
             //set default customer name
-            _genericAttributeService.SaveAttribute(thirdUser, SystemCustomerAttributeNames.FirstName, defaultThirdUserAddress.FirstName);
-            _genericAttributeService.SaveAttribute(thirdUser, SystemCustomerAttributeNames.LastName, defaultThirdUserAddress.LastName);
+            _genericAttributeService.SaveAttribute(thirdUser, NopCustomerDefaults.FirstNameAttribute, defaultThirdUserAddress.FirstName);
+            _genericAttributeService.SaveAttribute(thirdUser, NopCustomerDefaults.LastNameAttribute, defaultThirdUserAddress.LastName);
 
             //set customer password
             _customerPasswordRepository.Insert(new CustomerPassword
@@ -4292,8 +4292,8 @@ namespace Nop.Services.Installation
 
             _customerRepository.Insert(fourthUser);
             //set default customer name
-            _genericAttributeService.SaveAttribute(fourthUser, SystemCustomerAttributeNames.FirstName, defaultFourthUserAddress.FirstName);
-            _genericAttributeService.SaveAttribute(fourthUser, SystemCustomerAttributeNames.LastName, defaultFourthUserAddress.LastName);
+            _genericAttributeService.SaveAttribute(fourthUser, NopCustomerDefaults.FirstNameAttribute, defaultFourthUserAddress.FirstName);
+            _genericAttributeService.SaveAttribute(fourthUser, NopCustomerDefaults.LastNameAttribute, defaultFourthUserAddress.LastName);
 
             //set customer password
             _customerPasswordRepository.Insert(new CustomerPassword
@@ -4343,8 +4343,8 @@ namespace Nop.Services.Installation
 
             _customerRepository.Insert(fifthUser);
             //set default customer name
-            _genericAttributeService.SaveAttribute(fifthUser, SystemCustomerAttributeNames.FirstName, defaultFifthUserAddress.FirstName);
-            _genericAttributeService.SaveAttribute(fifthUser, SystemCustomerAttributeNames.LastName, defaultFifthUserAddress.LastName);
+            _genericAttributeService.SaveAttribute(fifthUser, NopCustomerDefaults.FirstNameAttribute, defaultFifthUserAddress.FirstName);
+            _genericAttributeService.SaveAttribute(fifthUser, NopCustomerDefaults.LastNameAttribute, defaultFifthUserAddress.LastName);
 
             //set customer password
             _customerPasswordRepository.Insert(new CustomerPassword
@@ -4394,8 +4394,8 @@ namespace Nop.Services.Installation
 
             _customerRepository.Insert(sixthUser);
             //set default customer name
-            _genericAttributeService.SaveAttribute(sixthUser, SystemCustomerAttributeNames.FirstName, defaultSixthUserAddress.FirstName);
-            _genericAttributeService.SaveAttribute(sixthUser, SystemCustomerAttributeNames.LastName, defaultSixthUserAddress.LastName);
+            _genericAttributeService.SaveAttribute(sixthUser, NopCustomerDefaults.FirstNameAttribute, defaultSixthUserAddress.FirstName);
+            _genericAttributeService.SaveAttribute(sixthUser, NopCustomerDefaults.LastNameAttribute, defaultSixthUserAddress.LastName);
 
             //set customer password
             _customerPasswordRepository.Insert(new CustomerPassword
@@ -4415,7 +4415,7 @@ namespace Nop.Services.Installation
                 AdminComment = "Built-in system guest record used for requests from search engines.",
                 Active = true,
                 IsSystemAccount = true,
-                SystemName = SystemCustomerNames.SearchEngine,
+                SystemName = NopCustomerDefaults.SearchEngineCustomerName,
                 CreatedOnUtc = DateTime.UtcNow,
                 LastActivityDateUtc = DateTime.UtcNow,
                 RegisteredInStoreId = storeId
@@ -4433,7 +4433,7 @@ namespace Nop.Services.Installation
                 AdminComment = "Built-in system record used for background tasks.",
                 Active = true,
                 IsSystemAccount = true,
-                SystemName = SystemCustomerNames.BackgroundTask,
+                SystemName = NopCustomerDefaults.BackgroundTaskCustomerName,
                 CreatedOnUtc = DateTime.UtcNow,
                 LastActivityDateUtc = DateTime.UtcNow,
                 RegisteredInStoreId = storeId

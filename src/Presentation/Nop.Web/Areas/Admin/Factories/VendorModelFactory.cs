@@ -141,7 +141,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 //set already selected attributes
                 if (vendor != null)
                 {
-                    var selectedVendorAttributes = vendor.GetAttribute<string>(VendorAttributeNames.VendorAttributes, _genericAttributeService);
+                    var selectedVendorAttributes = vendor.GetAttribute<string>(NopVendorDefaults.VendorAttributes, _genericAttributeService);
                     switch (attribute.AttributeControlType)
                     {
                         case AttributeControlType.DropdownList:

@@ -933,7 +933,7 @@ namespace Nop.Services.Tests.Orders
                                     {
                                         StoreId = _store.Id,
                                         EntityId = customer.Id,
-                                        Key = SystemCustomerAttributeNames.SelectedPaymentMethod,
+                                        Key = NopCustomerDefaults.SelectedPaymentMethodAttribute,
                                         KeyGroup = "Customer",
                                         Value = "test1"
                                     }
@@ -1031,7 +1031,7 @@ namespace Nop.Services.Tests.Orders
                                     {
                                         StoreId = _store.Id,
                                         EntityId = customer.Id,
-                                        Key = SystemCustomerAttributeNames.SelectedPaymentMethod,
+                                        Key = NopCustomerDefaults.SelectedPaymentMethodAttribute,
                                         KeyGroup = "Customer",
                                         Value = "test1"
                                     }
@@ -1101,7 +1101,7 @@ namespace Nop.Services.Tests.Orders
                                     {
                                         StoreId = _store.Id,
                                         EntityId = customer.Id,
-                                        Key = SystemCustomerAttributeNames.SelectedPaymentMethod,
+                                        Key = NopCustomerDefaults.SelectedPaymentMethodAttribute,
                                         KeyGroup = "Customer",
                                         Value = "test1"
                                     }
@@ -1280,7 +1280,7 @@ namespace Nop.Services.Tests.Orders
                                     {
                                         StoreId = _store.Id,
                                         EntityId = customer.Id,
-                                        Key = SystemCustomerAttributeNames.SelectedPaymentMethod,
+                                        Key = NopCustomerDefaults.SelectedPaymentMethodAttribute,
                                         KeyGroup = "Customer",
                                         Value = "test1"
                                     }

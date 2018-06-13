@@ -278,7 +278,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _vendorService.UpdateVendor(vendor);
 
                 //vendor attributes
-                _genericAttributeService.SaveAttribute(vendor, VendorAttributeNames.VendorAttributes, vendorAttributesXml);
+                _genericAttributeService.SaveAttribute(vendor, NopVendorDefaults.VendorAttributes, vendorAttributesXml);
 
                 //locales
                 UpdateLocales(vendor, model);
@@ -343,7 +343,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _vendorService.UpdateVendor(vendor);
 
                 //vendor attributes
-                _genericAttributeService.SaveAttribute(vendor, VendorAttributeNames.VendorAttributes, vendorAttributesXml);
+                _genericAttributeService.SaveAttribute(vendor, NopVendorDefaults.VendorAttributes, vendorAttributesXml);
 
                 //activity log
                 _customerActivityService.InsertActivity("EditVendor",

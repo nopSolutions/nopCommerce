@@ -638,7 +638,7 @@ namespace Nop.Services.ExportImport
 
         private string GetCustomCustomerAttributes(Customer customer)
         {
-            var selectedCustomerAttributes = customer.GetAttribute<string>(SystemCustomerAttributeNames.CustomCustomerAttributes, _genericAttributeService);
+            var selectedCustomerAttributes = customer.GetAttribute<string>(NopCustomerDefaults.CustomCustomerAttributes, _genericAttributeService);
             return _customerAttributeFormatter.FormatAttributes(selectedCustomerAttributes, ";");
         }
 
@@ -1533,25 +1533,25 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Customer>("IsForumModerator", p => p.IsForumModerator()),
                 new PropertyByName<Customer>("CreatedOnUtc", p => p.CreatedOnUtc),
                 //attributes
-                new PropertyByName<Customer>("FirstName", p => p.GetAttribute<string>(SystemCustomerAttributeNames.FirstName)),
-                new PropertyByName<Customer>("LastName", p => p.GetAttribute<string>(SystemCustomerAttributeNames.LastName)),
-                new PropertyByName<Customer>("Gender", p => p.GetAttribute<string>(SystemCustomerAttributeNames.Gender)),
-                new PropertyByName<Customer>("Company", p => p.GetAttribute<string>(SystemCustomerAttributeNames.Company)),
-                new PropertyByName<Customer>("StreetAddress", p => p.GetAttribute<string>(SystemCustomerAttributeNames.StreetAddress)),
-                new PropertyByName<Customer>("StreetAddress2", p => p.GetAttribute<string>(SystemCustomerAttributeNames.StreetAddress2)),
-                new PropertyByName<Customer>("ZipPostalCode", p => p.GetAttribute<string>(SystemCustomerAttributeNames.ZipPostalCode)),
-                new PropertyByName<Customer>("City", p => p.GetAttribute<string>(SystemCustomerAttributeNames.City)),
-                new PropertyByName<Customer>("County", p => p.GetAttribute<string>(SystemCustomerAttributeNames.County)),
-                new PropertyByName<Customer>("CountryId", p => p.GetAttribute<int>(SystemCustomerAttributeNames.CountryId)),
-                new PropertyByName<Customer>("StateProvinceId", p => p.GetAttribute<int>(SystemCustomerAttributeNames.StateProvinceId)),
-                new PropertyByName<Customer>("Phone", p => p.GetAttribute<string>(SystemCustomerAttributeNames.Phone)),
-                new PropertyByName<Customer>("Fax", p => p.GetAttribute<string>(SystemCustomerAttributeNames.Fax)),
-                new PropertyByName<Customer>("VatNumber", p => p.GetAttribute<string>(SystemCustomerAttributeNames.VatNumber)),
-                new PropertyByName<Customer>("VatNumberStatusId", p => p.GetAttribute<int>(SystemCustomerAttributeNames.VatNumberStatusId)),
-                new PropertyByName<Customer>("TimeZoneId", p => p.GetAttribute<string>(SystemCustomerAttributeNames.TimeZoneId)),
-                new PropertyByName<Customer>("AvatarPictureId", p => p.GetAttribute<int>(SystemCustomerAttributeNames.AvatarPictureId)),
-                new PropertyByName<Customer>("ForumPostCount", p => p.GetAttribute<int>(SystemCustomerAttributeNames.ForumPostCount)),
-                new PropertyByName<Customer>("Signature", p => p.GetAttribute<string>(SystemCustomerAttributeNames.Signature)),
+                new PropertyByName<Customer>("FirstName", p => p.GetAttribute<string>(NopCustomerDefaults.FirstNameAttribute)),
+                new PropertyByName<Customer>("LastName", p => p.GetAttribute<string>(NopCustomerDefaults.LastNameAttribute)),
+                new PropertyByName<Customer>("Gender", p => p.GetAttribute<string>(NopCustomerDefaults.GenderAttribute)),
+                new PropertyByName<Customer>("Company", p => p.GetAttribute<string>(NopCustomerDefaults.CompanyAttribute)),
+                new PropertyByName<Customer>("StreetAddress", p => p.GetAttribute<string>(NopCustomerDefaults.StreetAddressAttribute)),
+                new PropertyByName<Customer>("StreetAddress2", p => p.GetAttribute<string>(NopCustomerDefaults.StreetAddress2Attribute)),
+                new PropertyByName<Customer>("ZipPostalCode", p => p.GetAttribute<string>(NopCustomerDefaults.ZipPostalCodeAttribute)),
+                new PropertyByName<Customer>("City", p => p.GetAttribute<string>(NopCustomerDefaults.CityAttribute)),
+                new PropertyByName<Customer>("County", p => p.GetAttribute<string>(NopCustomerDefaults.CountyAttribute)),
+                new PropertyByName<Customer>("CountryId", p => p.GetAttribute<int>(NopCustomerDefaults.CountryIdAttribute)),
+                new PropertyByName<Customer>("StateProvinceId", p => p.GetAttribute<int>(NopCustomerDefaults.StateProvinceIdAttribute)),
+                new PropertyByName<Customer>("Phone", p => p.GetAttribute<string>(NopCustomerDefaults.PhoneAttribute)),
+                new PropertyByName<Customer>("Fax", p => p.GetAttribute<string>(NopCustomerDefaults.FaxAttribute)),
+                new PropertyByName<Customer>("VatNumber", p => p.GetAttribute<string>(NopCustomerDefaults.VatNumberAttribute)),
+                new PropertyByName<Customer>("VatNumberStatusId", p => p.GetAttribute<int>(NopCustomerDefaults.VatNumberStatusIdAttribute)),
+                new PropertyByName<Customer>("TimeZoneId", p => p.GetAttribute<string>(NopCustomerDefaults.TimeZoneIdAttribute)),
+                new PropertyByName<Customer>("AvatarPictureId", p => p.GetAttribute<int>(NopCustomerDefaults.AvatarPictureIdAttribute)),
+                new PropertyByName<Customer>("ForumPostCount", p => p.GetAttribute<int>(NopCustomerDefaults.ForumPostCountAttribute)),
+                new PropertyByName<Customer>("Signature", p => p.GetAttribute<string>(NopCustomerDefaults.SignatureAttribute)),
                 new PropertyByName<Customer>("CustomCustomerAttributes",  GetCustomCustomerAttributes)
             }, _catalogSettings);
 
@@ -1596,23 +1596,23 @@ namespace Nop.Services.ExportImport
                 xmlWriter.WriteElementString("IsForumModerator", null, customer.IsForumModerator().ToString());
                 xmlWriter.WriteElementString("CreatedOnUtc", null, customer.CreatedOnUtc.ToString());
 
-                xmlWriter.WriteElementString("FirstName", null, customer.GetAttribute<string>(SystemCustomerAttributeNames.FirstName));
-                xmlWriter.WriteElementString("LastName", null, customer.GetAttribute<string>(SystemCustomerAttributeNames.LastName));
-                xmlWriter.WriteElementString("Gender", null, customer.GetAttribute<string>(SystemCustomerAttributeNames.Gender));
-                xmlWriter.WriteElementString("Company", null, customer.GetAttribute<string>(SystemCustomerAttributeNames.Company));
+                xmlWriter.WriteElementString("FirstName", null, customer.GetAttribute<string>(NopCustomerDefaults.FirstNameAttribute));
+                xmlWriter.WriteElementString("LastName", null, customer.GetAttribute<string>(NopCustomerDefaults.LastNameAttribute));
+                xmlWriter.WriteElementString("Gender", null, customer.GetAttribute<string>(NopCustomerDefaults.GenderAttribute));
+                xmlWriter.WriteElementString("Company", null, customer.GetAttribute<string>(NopCustomerDefaults.CompanyAttribute));
 
-                xmlWriter.WriteElementString("CountryId", null, customer.GetAttribute<int>(SystemCustomerAttributeNames.CountryId).ToString());
-                xmlWriter.WriteElementString("StreetAddress", null, customer.GetAttribute<string>(SystemCustomerAttributeNames.StreetAddress));
-                xmlWriter.WriteElementString("StreetAddress2", null, customer.GetAttribute<string>(SystemCustomerAttributeNames.StreetAddress2));
-                xmlWriter.WriteElementString("ZipPostalCode", null, customer.GetAttribute<string>(SystemCustomerAttributeNames.ZipPostalCode));
-                xmlWriter.WriteElementString("City", null, customer.GetAttribute<string>(SystemCustomerAttributeNames.City));
-                xmlWriter.WriteElementString("County", null, customer.GetAttribute<string>(SystemCustomerAttributeNames.County));
-                xmlWriter.WriteElementString("StateProvinceId", null, customer.GetAttribute<int>(SystemCustomerAttributeNames.StateProvinceId).ToString());
-                xmlWriter.WriteElementString("Phone", null, customer.GetAttribute<string>(SystemCustomerAttributeNames.Phone));
-                xmlWriter.WriteElementString("Fax", null, customer.GetAttribute<string>(SystemCustomerAttributeNames.Fax));
-                xmlWriter.WriteElementString("VatNumber", null, customer.GetAttribute<string>(SystemCustomerAttributeNames.VatNumber));
-                xmlWriter.WriteElementString("VatNumberStatusId", null, customer.GetAttribute<int>(SystemCustomerAttributeNames.VatNumberStatusId).ToString());
-                xmlWriter.WriteElementString("TimeZoneId", null, customer.GetAttribute<string>(SystemCustomerAttributeNames.TimeZoneId));
+                xmlWriter.WriteElementString("CountryId", null, customer.GetAttribute<int>(NopCustomerDefaults.CountryIdAttribute).ToString());
+                xmlWriter.WriteElementString("StreetAddress", null, customer.GetAttribute<string>(NopCustomerDefaults.StreetAddressAttribute));
+                xmlWriter.WriteElementString("StreetAddress2", null, customer.GetAttribute<string>(NopCustomerDefaults.StreetAddress2Attribute));
+                xmlWriter.WriteElementString("ZipPostalCode", null, customer.GetAttribute<string>(NopCustomerDefaults.ZipPostalCodeAttribute));
+                xmlWriter.WriteElementString("City", null, customer.GetAttribute<string>(NopCustomerDefaults.CityAttribute));
+                xmlWriter.WriteElementString("County", null, customer.GetAttribute<string>(NopCustomerDefaults.CountyAttribute));
+                xmlWriter.WriteElementString("StateProvinceId", null, customer.GetAttribute<int>(NopCustomerDefaults.StateProvinceIdAttribute).ToString());
+                xmlWriter.WriteElementString("Phone", null, customer.GetAttribute<string>(NopCustomerDefaults.PhoneAttribute));
+                xmlWriter.WriteElementString("Fax", null, customer.GetAttribute<string>(NopCustomerDefaults.FaxAttribute));
+                xmlWriter.WriteElementString("VatNumber", null, customer.GetAttribute<string>(NopCustomerDefaults.VatNumberAttribute));
+                xmlWriter.WriteElementString("VatNumberStatusId", null, customer.GetAttribute<int>(NopCustomerDefaults.VatNumberStatusIdAttribute).ToString());
+                xmlWriter.WriteElementString("TimeZoneId", null, customer.GetAttribute<string>(NopCustomerDefaults.TimeZoneIdAttribute));
 
                 foreach (var store in _storeService.GetAllStores())
                 {
@@ -1621,11 +1621,11 @@ namespace Nop.Services.ExportImport
                     xmlWriter.WriteElementString($"Newsletter-in-store-{store.Id}", null, subscribedToNewsletters.ToString());
                 }
 
-                xmlWriter.WriteElementString("AvatarPictureId", null, customer.GetAttribute<int>(SystemCustomerAttributeNames.AvatarPictureId).ToString());
-                xmlWriter.WriteElementString("ForumPostCount", null, customer.GetAttribute<int>(SystemCustomerAttributeNames.ForumPostCount).ToString());
-                xmlWriter.WriteElementString("Signature", null, customer.GetAttribute<string>(SystemCustomerAttributeNames.Signature));
+                xmlWriter.WriteElementString("AvatarPictureId", null, customer.GetAttribute<int>(NopCustomerDefaults.AvatarPictureIdAttribute).ToString());
+                xmlWriter.WriteElementString("ForumPostCount", null, customer.GetAttribute<int>(NopCustomerDefaults.ForumPostCountAttribute).ToString());
+                xmlWriter.WriteElementString("Signature", null, customer.GetAttribute<string>(NopCustomerDefaults.SignatureAttribute));
 
-                var selectedCustomerAttributesString = customer.GetAttribute<string>(SystemCustomerAttributeNames.CustomCustomerAttributes, _genericAttributeService);
+                var selectedCustomerAttributesString = customer.GetAttribute<string>(NopCustomerDefaults.CustomCustomerAttributes, _genericAttributeService);
 
                 if (!string.IsNullOrEmpty(selectedCustomerAttributesString))
                 {
@@ -1714,20 +1714,20 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Customer>("Email", p => p.Email, _customerSettings.UsernamesEnabled),
                 new PropertyByName<Customer>("Username", p => p.Username, !_customerSettings.UsernamesEnabled), 
                 //attributes
-                new PropertyByName<Customer>("First name", p => p.GetAttribute<string>(SystemCustomerAttributeNames.FirstName)),
-                new PropertyByName<Customer>("Last name", p => p.GetAttribute<string>(SystemCustomerAttributeNames.LastName)),
-                new PropertyByName<Customer>("Gender", p => p.GetAttribute<string>(SystemCustomerAttributeNames.Gender), !_customerSettings.GenderEnabled),
-                new PropertyByName<Customer>("Date of birth", p => p.GetAttribute<string>(SystemCustomerAttributeNames.DateOfBirth), !_customerSettings.DateOfBirthEnabled),
-                new PropertyByName<Customer>("Company", p => p.GetAttribute<string>(SystemCustomerAttributeNames.Company), !_customerSettings.CompanyEnabled),
-                new PropertyByName<Customer>("Street address", p => p.GetAttribute<string>(SystemCustomerAttributeNames.StreetAddress), !_customerSettings.StreetAddressEnabled),
-                new PropertyByName<Customer>("Street address 2", p => p.GetAttribute<string>(SystemCustomerAttributeNames.StreetAddress2), !_customerSettings.StreetAddress2Enabled),
-                new PropertyByName<Customer>("Zip / postal code", p => p.GetAttribute<string>(SystemCustomerAttributeNames.ZipPostalCode), !_customerSettings.ZipPostalCodeEnabled),
-                new PropertyByName<Customer>("City", p => p.GetAttribute<string>(SystemCustomerAttributeNames.City), !_customerSettings.CityEnabled),
-                new PropertyByName<Customer>("County", p => p.GetAttribute<string>(SystemCustomerAttributeNames.County), !_customerSettings.CountyEnabled),
-                new PropertyByName<Customer>("Country", p => _countryService.GetCountryById(p.GetAttribute<int>(SystemCustomerAttributeNames.CountryId))?.Name ?? string.Empty, !_customerSettings.CountryEnabled),
-                new PropertyByName<Customer>("State province", p => _stateProvinceService.GetStateProvinceById(p.GetAttribute<int>(SystemCustomerAttributeNames.StateProvinceId))?.Name ?? string.Empty, !(_customerSettings.StateProvinceEnabled && _customerSettings.CountryEnabled)),
-                new PropertyByName<Customer>("Phone", p => p.GetAttribute<string>(SystemCustomerAttributeNames.Phone), !_customerSettings.PhoneEnabled),
-                new PropertyByName<Customer>("Fax", p => p.GetAttribute<string>(SystemCustomerAttributeNames.Fax), !_customerSettings.FaxEnabled),
+                new PropertyByName<Customer>("First name", p => p.GetAttribute<string>(NopCustomerDefaults.FirstNameAttribute)),
+                new PropertyByName<Customer>("Last name", p => p.GetAttribute<string>(NopCustomerDefaults.LastNameAttribute)),
+                new PropertyByName<Customer>("Gender", p => p.GetAttribute<string>(NopCustomerDefaults.GenderAttribute), !_customerSettings.GenderEnabled),
+                new PropertyByName<Customer>("Date of birth", p => p.GetAttribute<string>(NopCustomerDefaults.DateOfBirthAttribute), !_customerSettings.DateOfBirthEnabled),
+                new PropertyByName<Customer>("Company", p => p.GetAttribute<string>(NopCustomerDefaults.CompanyAttribute), !_customerSettings.CompanyEnabled),
+                new PropertyByName<Customer>("Street address", p => p.GetAttribute<string>(NopCustomerDefaults.StreetAddressAttribute), !_customerSettings.StreetAddressEnabled),
+                new PropertyByName<Customer>("Street address 2", p => p.GetAttribute<string>(NopCustomerDefaults.StreetAddress2Attribute), !_customerSettings.StreetAddress2Enabled),
+                new PropertyByName<Customer>("Zip / postal code", p => p.GetAttribute<string>(NopCustomerDefaults.ZipPostalCodeAttribute), !_customerSettings.ZipPostalCodeEnabled),
+                new PropertyByName<Customer>("City", p => p.GetAttribute<string>(NopCustomerDefaults.CityAttribute), !_customerSettings.CityEnabled),
+                new PropertyByName<Customer>("County", p => p.GetAttribute<string>(NopCustomerDefaults.CountyAttribute), !_customerSettings.CountyEnabled),
+                new PropertyByName<Customer>("Country", p => _countryService.GetCountryById(p.GetAttribute<int>(NopCustomerDefaults.CountryIdAttribute))?.Name ?? string.Empty, !_customerSettings.CountryEnabled),
+                new PropertyByName<Customer>("State province", p => _stateProvinceService.GetStateProvinceById(p.GetAttribute<int>(NopCustomerDefaults.StateProvinceIdAttribute))?.Name ?? string.Empty, !(_customerSettings.StateProvinceEnabled && _customerSettings.CountryEnabled)),
+                new PropertyByName<Customer>("Phone", p => p.GetAttribute<string>(NopCustomerDefaults.PhoneAttribute), !_customerSettings.PhoneEnabled),
+                new PropertyByName<Customer>("Fax", p => p.GetAttribute<string>(NopCustomerDefaults.FaxAttribute), !_customerSettings.FaxEnabled),
                 new PropertyByName<Customer>("Customer attributes",  GetCustomCustomerAttributes)
             }, _catalogSettings);
 

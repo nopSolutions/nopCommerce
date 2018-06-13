@@ -119,7 +119,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (store != null || storeid == 0)
             {
                 _genericAttributeService
-                    .SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.AdminAreaStoreScopeConfiguration, storeid);
+                    .SaveAttribute(_workContext.CurrentCustomer, NopCustomerDefaults.AdminAreaStoreScopeConfigurationAttribute, storeid);
             }
 
             //home page

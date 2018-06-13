@@ -114,7 +114,7 @@ namespace Nop.Web.Controllers
 
             //'Continue shopping' URL
             _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, 
-                SystemCustomerAttributeNames.LastContinueShoppingPage, 
+                NopCustomerDefaults.LastContinueShoppingPageAttribute, 
                 _webHelper.GetThisPageUrl(false),
                 _storeContext.CurrentStore.Id);
 
@@ -159,7 +159,7 @@ namespace Nop.Web.Controllers
 
             //'Continue shopping' URL
             _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, 
-                SystemCustomerAttributeNames.LastContinueShoppingPage, 
+                NopCustomerDefaults.LastContinueShoppingPageAttribute, 
                 _webHelper.GetThisPageUrl(false),
                 _storeContext.CurrentStore.Id);
             
@@ -199,7 +199,7 @@ namespace Nop.Web.Controllers
 
             //'Continue shopping' URL
             _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer,
-                SystemCustomerAttributeNames.LastContinueShoppingPage,
+                NopCustomerDefaults.LastContinueShoppingPageAttribute,
                 _webHelper.GetThisPageUrl(false),
                 _storeContext.CurrentStore.Id);
             
@@ -255,7 +255,7 @@ namespace Nop.Web.Controllers
         {
             //'Continue shopping' URL
             _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer,
-                SystemCustomerAttributeNames.LastContinueShoppingPage,
+                NopCustomerDefaults.LastContinueShoppingPageAttribute,
                 _webHelper.GetThisPageUrl(false),
                 _storeContext.CurrentStore.Id);
 

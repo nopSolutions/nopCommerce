@@ -1138,18 +1138,18 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("Customer.Email", customer.Email));
             tokens.Add(new Token("Customer.Username", customer.Username));
             tokens.Add(new Token("Customer.FullName", customer.GetFullName()));
-            tokens.Add(new Token("Customer.FirstName", customer.GetAttribute<string>(SystemCustomerAttributeNames.FirstName)));
-            tokens.Add(new Token("Customer.LastName", customer.GetAttribute<string>(SystemCustomerAttributeNames.LastName)));
-            tokens.Add(new Token("Customer.VatNumber", customer.GetAttribute<string>(SystemCustomerAttributeNames.VatNumber)));
-            tokens.Add(new Token("Customer.VatNumberStatus", ((VatNumberStatus)customer.GetAttribute<int>(SystemCustomerAttributeNames.VatNumberStatusId)).ToString()));
+            tokens.Add(new Token("Customer.FirstName", customer.GetAttribute<string>(NopCustomerDefaults.FirstNameAttribute)));
+            tokens.Add(new Token("Customer.LastName", customer.GetAttribute<string>(NopCustomerDefaults.LastNameAttribute)));
+            tokens.Add(new Token("Customer.VatNumber", customer.GetAttribute<string>(NopCustomerDefaults.VatNumberAttribute)));
+            tokens.Add(new Token("Customer.VatNumberStatus", ((VatNumberStatus)customer.GetAttribute<int>(NopCustomerDefaults.VatNumberStatusIdAttribute)).ToString()));
 
-            var customAttributesXml = customer.GetAttribute<string>(SystemCustomerAttributeNames.CustomCustomerAttributes);
+            var customAttributesXml = customer.GetAttribute<string>(NopCustomerDefaults.CustomCustomerAttributes);
             tokens.Add(new Token("Customer.CustomAttributes", _customerAttributeFormatter.FormatAttributes(customAttributesXml), true));
             
             //note: we do not use SEO friendly URLS for these links because we can get errors caused by having .(dot) in the URL (from the email address)
-            var passwordRecoveryUrl = RouteUrl(routeName: "PasswordRecoveryConfirm", routeValues: new { token = customer.GetAttribute<string>(SystemCustomerAttributeNames.PasswordRecoveryToken), email = customer.Email });
-            var accountActivationUrl = RouteUrl(routeName: "AccountActivation", routeValues: new { token = customer.GetAttribute<string>(SystemCustomerAttributeNames.AccountActivationToken), email = customer.Email });
-            var emailRevalidationUrl = RouteUrl(routeName: "EmailRevalidation", routeValues: new { token = customer.GetAttribute<string>(SystemCustomerAttributeNames.EmailRevalidationToken), email = customer.Email });
+            var passwordRecoveryUrl = RouteUrl(routeName: "PasswordRecoveryConfirm", routeValues: new { token = customer.GetAttribute<string>(NopCustomerDefaults.PasswordRecoveryTokenAttribute), email = customer.Email });
+            var accountActivationUrl = RouteUrl(routeName: "AccountActivation", routeValues: new { token = customer.GetAttribute<string>(NopCustomerDefaults.AccountActivationTokenAttribute), email = customer.Email });
+            var emailRevalidationUrl = RouteUrl(routeName: "EmailRevalidation", routeValues: new { token = customer.GetAttribute<string>(NopCustomerDefaults.EmailRevalidationTokenAttribute), email = customer.Email });
             var wishlistUrl = RouteUrl(routeName: "Wishlist", routeValues: new { customerGuid = customer.CustomerGuid });
             tokens.Add(new Token("Customer.PasswordRecoveryURL", passwordRecoveryUrl, true));
             tokens.Add(new Token("Customer.AccountActivationURL", accountActivationUrl, true));
@@ -1170,7 +1170,7 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("Vendor.Name", vendor.Name));
             tokens.Add(new Token("Vendor.Email", vendor.Email));
 
-            var vendorAttributesXml = vendor.GetAttribute<string>(VendorAttributeNames.VendorAttributes);
+            var vendorAttributesXml = vendor.GetAttribute<string>(NopVendorDefaults.VendorAttributes);
             tokens.Add(new Token("Vendor.VendorAttributes", _vendorAttributeFormatter.FormatAttributes(vendorAttributesXml), true));
 
             //event notification
