@@ -541,6 +541,16 @@
                                 </div>
                             </div>
                         </nop-nested-setting>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="DisplayDatePreOrderAvailability_OverrideForStore" asp-input="DisplayDatePreOrderAvailability" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="DisplayDatePreOrderAvailability" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="DisplayDatePreOrderAvailability" />
+                                <span asp-validation-for="DisplayDatePreOrderAvailability"></span>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="panel panel-default advanced-setting">

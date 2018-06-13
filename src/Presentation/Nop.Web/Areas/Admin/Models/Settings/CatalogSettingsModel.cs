@@ -300,6 +300,10 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.CacheProductPrices")]
         public bool CacheProductPrices { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.DisplayDatePreOrderAvailability")]
+        public bool DisplayDatePreOrderAvailability { get; set; }
+        public bool DisplayDatePreOrderAvailability_OverrideForStore { get; set; }
+
         public SortOptionSearchModel SortOptionSearchModel { get; set; }
 
         #endregion
