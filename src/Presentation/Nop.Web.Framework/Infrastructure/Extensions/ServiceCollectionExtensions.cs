@@ -317,7 +317,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 miniProfilerOptions.ResultsAuthorize = request => 
                     !EngineContext.Current.Resolve<StoreInformationSettings>().DisplayMiniProfilerForAdminOnly ||
                     EngineContext.Current.Resolve<IPermissionService>().Authorize(StandardPermissionProvider.AccessAdminPanel);
-            });
+            }).AddEntityFramework();
         }
     }
 }
