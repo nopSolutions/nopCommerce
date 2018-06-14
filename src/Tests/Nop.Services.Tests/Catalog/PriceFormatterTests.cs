@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using Nop.Core;
 using Nop.Core.Caching;
@@ -93,11 +91,8 @@ namespace Nop.Services.Tests.Catalog
                 _taxSettings, _currencySettings);
 
             var nopEngine = new Mock<NopEngine>();
-            var serviceProvider = new Mock<IServiceProvider>();
-            var httpContextAccessor = new Mock<IHttpContextAccessor>();
-            serviceProvider.Setup(x => x.GetRequiredService(typeof(IHttpContextAccessor))).Returns(httpContextAccessor);
-            serviceProvider.Setup(x => x.GetRequiredService(typeof(IWorkContext))).Returns(_workContext);
-            nopEngine.Setup(x => x.ServiceProvider).Returns(serviceProvider.Object);
+           
+            nopEngine.Setup(x => x.ServiceProvider).Returns(new TestServiceProvider());
             EngineContext.Replace(nopEngine.Object);
         }
 

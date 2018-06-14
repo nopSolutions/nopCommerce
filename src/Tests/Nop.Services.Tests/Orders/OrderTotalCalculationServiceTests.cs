@@ -71,19 +71,33 @@ namespace Nop.Services.Tests.Orders
         public new void SetUp()
         {
             _workContext = new Mock<IWorkContext>();
-
-            _store = new Store { Id = 1 };
-            _storeContext = new Mock<IStoreContext>();
-            _storeContext.Setup(x => x.CurrentStore).Returns(_store);
-
             _productService = new Mock<IProductService>();
-
-            var cacheManager = new NopNullCache();
-
+            _storeContext = new Mock<IStoreContext>();
             _discountService = new Mock<IDiscountService>();
             _categoryService = new Mock<ICategoryService>();
             _manufacturerService = new Mock<IManufacturerService>();
             _productAttributeParser = new Mock<IProductAttributeParser>();
+            _localizationService = new Mock<ILocalizationService>();
+            _webHelper = new Mock<IWebHelper>();
+            _shippingMethodRepository = new Mock<IRepository<ShippingMethod>>();
+            _warehouseRepository = new Mock<IRepository<Warehouse>>();
+            _eventPublisher = new Mock<IEventPublisher>();
+            _paymentService = new Mock<IPaymentService>();
+            _checkoutAttributeParser = new Mock<ICheckoutAttributeParser>();
+            _giftCardService = new Mock<IGiftCardService>();
+            _genericAttributeService = new Mock<IGenericAttributeService>();
+            _eventPublisher = new Mock<IEventPublisher>();
+            _geoLookupService = new Mock<IGeoLookupService>();
+            _countryService = new Mock<ICountryService>();
+            _stateProvinceService = new Mock<IStateProvinceService>();
+            _rewardPointService = new Mock<IRewardPointService>();
+            _addressService = new Mock<IAddressService>();
+
+            _store = new Store { Id = 1 };
+            
+            _storeContext.Setup(x => x.CurrentStore).Returns(_store);
+
+            var cacheManager = new NopNullCache();
 
             _shoppingCartSettings = new ShoppingCartSettings();
             _catalogSettings = new CatalogSettings();
@@ -93,14 +107,10 @@ namespace Nop.Services.Tests.Orders
                 _manufacturerService.Object, _productAttributeParser.Object,
                 _productService.Object, cacheManager, 
                 _shoppingCartSettings, _catalogSettings);
-
-            _eventPublisher = new Mock<IEventPublisher>();
+            
             _eventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
 
             var pluginFinder = new PluginFinder(_eventPublisher.Object);
-
-            _localizationService = new Mock<ILocalizationService>();
-            _webHelper = new Mock<IWebHelper>();
 
             //shipping
             _shippingSettings = new ShippingSettings
@@ -108,8 +118,7 @@ namespace Nop.Services.Tests.Orders
                 ActiveShippingRateComputationMethodSystemNames = new List<string>()
             };
             _shippingSettings.ActiveShippingRateComputationMethodSystemNames.Add("FixedRateTestShippingRateComputationMethod");
-            _shippingMethodRepository = new Mock<IRepository<ShippingMethod>>();
-            _warehouseRepository = new Mock<IRepository<Warehouse>>();
+            
             _logger = new NullLogger();
             _shippingService = new ShippingService(_shippingMethodRepository.Object,
                 _warehouseRepository.Object,
@@ -126,19 +135,9 @@ namespace Nop.Services.Tests.Orders
                 _eventPublisher.Object, 
                 _shoppingCartSettings,
                 cacheManager);
-            
 
-            _paymentService = new Mock<IPaymentService>();
-            _checkoutAttributeParser = new Mock<ICheckoutAttributeParser>();
-            _giftCardService = new Mock<IGiftCardService>();
-            _genericAttributeService = new Mock<IGenericAttributeService>();
-
-            _eventPublisher = new Mock<IEventPublisher>();
             _eventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
-
-            _geoLookupService = new Mock<IGeoLookupService>();
-            _countryService = new Mock<ICountryService>();
-            _stateProvinceService = new Mock<IStateProvinceService>();
+            
             _customerSettings = new CustomerSettings();
             _addressSettings = new AddressSettings();
 
@@ -149,12 +148,11 @@ namespace Nop.Services.Tests.Orders
                 PaymentMethodAdditionalFeeIsTaxable = true,
                 DefaultTaxAddressId = 10
             };
-            _addressService = new Mock<IAddressService>();
+            
             _addressService.Setup(x => x.GetAddressById(_taxSettings.DefaultTaxAddressId)).Returns(new Address { Id = _taxSettings.DefaultTaxAddressId });
             _taxService = new TaxService(_addressService.Object, _workContext.Object, _storeContext.Object, _taxSettings,
                 pluginFinder, _geoLookupService.Object, _countryService.Object, _stateProvinceService.Object, _logger, _webHelper.Object,
                 _customerSettings, _shippingSettings, _addressSettings);
-            _rewardPointService = new Mock<IRewardPointService>();
 
             _rewardPointsSettings = new RewardPointsSettings();
 

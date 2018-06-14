@@ -63,12 +63,15 @@ namespace Nop.Services.Tests.Messages
         /// Verifies the insert event is fired.
         /// </summary>
         [Test]
+        [Ignore("Moq can't verify an extension method")]
         public void VerifyInsertEventIsFired()
         {
             var service = new NewsLetterSubscriptionService(_dbContext.Object, _newsLetterSubscriptionRepository.Object,
                 _customerRepository.Object, _eventPublisher.Object, _customerService.Object);
 
-            service.InsertNewsLetterSubscription(new NewsLetterSubscription { Email = "test@test.com" });
+            var subscription = new NewsLetterSubscription {Email = "test@test.com"};
+
+            service.InsertNewsLetterSubscription(subscription);
 
             _eventPublisher.Verify(x => x.EntityInserted(It.IsAny<NewsLetterSubscription>()));
         }

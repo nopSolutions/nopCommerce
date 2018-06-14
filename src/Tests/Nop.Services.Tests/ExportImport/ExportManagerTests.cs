@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
@@ -20,7 +18,6 @@ using Nop.Core.Domain.Vendors;
 using Nop.Core.Infrastructure;
 using Nop.Services.Authentication;
 using Nop.Services.Catalog;
-using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.ExportImport;
@@ -28,11 +25,9 @@ using Nop.Services.ExportImport.Help;
 using Nop.Services.Forums;
 using Nop.Services.Gdpr;
 using Nop.Services.Helpers;
-using Nop.Services.Localization;
 using Nop.Services.Media;
 using Nop.Services.Messages;
 using Nop.Services.Orders;
-using Nop.Services.Seo;
 using Nop.Services.Shipping.Date;
 using Nop.Services.Stores;
 using Nop.Services.Tax;
@@ -48,10 +43,7 @@ namespace Nop.Services.Tests.ExportImport
     {
         private Mock<IPictureService> _pictureService;
         private IExportManager _exportManager;
-        private Mock<IGenericAttributeService> _genericAttributeService;
         private Mock<IAuthenticationService> _authenticationService;
-        private Mock<ILocalizationService> _localizationService;
-        private Mock<IWorkContext> _workContext;
         private Mock<IVendorService> _vendorService;
         private Mock<IProductTemplateService> _productTemplateService;
         private Mock<IDateRangeService> _dateRangeService;
@@ -86,12 +78,9 @@ namespace Nop.Services.Tests.ExportImport
         {
             _pictureService = new Mock<IPictureService>();
             _authenticationService = new Mock<IAuthenticationService>();
-            _localizationService = new Mock<ILocalizationService>();
-            _workContext = new Mock<IWorkContext>();
             _vendorService = new Mock<IVendorService>();
             _productTemplateService = new Mock<IProductTemplateService>();
             _dateRangeService = new Mock<IDateRangeService>();
-            _genericAttributeService = new Mock<IGenericAttributeService>();
             _storeService = new Mock<IStoreService>();
             _productAttributeService = new Mock<IProductAttributeService>();
             _productTagService = new Mock<IProductTagService>();
@@ -119,28 +108,14 @@ namespace Nop.Services.Tests.ExportImport
             _addressSettings = new AddressSettings();
             _currencyService = new Mock<ICurrencyService>();
 
-            var httpContextAccessor = new Mock<IHttpContextAccessor>();
             var nopEngine = new Mock<NopEngine>();
-            var serviceProvider = new Mock<IServiceProvider>();
-            var urlRecordService = new Mock<IUrlRecordService>();
+            
             var picture = new Picture
             {
                 Id = 1,
                 SeoFilename = "picture"
             };
             
-            _genericAttributeService.Setup(p => p.GetAttributesForEntity(1, "Customer"))
-                .Returns(new List<GenericAttribute>
-                {
-                    new GenericAttribute
-                    {
-                        EntityId = 1,
-                        Key = "manufacturer-advanced-mode",
-                        KeyGroup = "Customer",
-                        StoreId = 0,
-                        Value = "true"
-                    }
-                });
             _authenticationService.Setup(p => p.GetAuthenticatedCustomer()).Returns(GetTestCustomer());
             _pictureService.Setup(p => p.GetPictureById(1)).Returns(picture);
             _pictureService.Setup(p => p.GetThumbLocalPath(picture, 0, true)).Returns(@"c:\temp\picture.png");
@@ -154,15 +129,11 @@ namespace Nop.Services.Tests.ExportImport
             _categoryService.Setup(c => c.GetProductCategoriesByProductId(1, true)).Returns(new List<ProductCategory>());
             _manufacturerService.Setup(m => m.GetProductManufacturersByProductId(1, true)).Returns(new List<ProductManufacturer>());
 
-            nopEngine.Setup(x => x.ServiceProvider).Returns(serviceProvider.Object);
-            serviceProvider.Setup(x => x.GetRequiredService(typeof(IGenericAttributeService))).Returns(_genericAttributeService);
-            serviceProvider.Setup(x => x.GetRequiredService(typeof(IUrlRecordService))).Returns(urlRecordService);
-            serviceProvider.Setup(x => x.GetRequiredService(typeof(ILocalizationService))).Returns(_localizationService);
-            serviceProvider.Setup(x => x.GetRequiredService(typeof(IWorkContext))).Returns(_workContext);
-            serviceProvider.Setup(x => x.GetRequiredService(typeof(IHttpContextAccessor))).Returns(httpContextAccessor);
+            var serviceProvider = new TestServiceProvider();
+            nopEngine.Setup(x => x.ServiceProvider).Returns(serviceProvider);
 
             EngineContext.Replace(nopEngine.Object);
-            _exportManager = new ExportManager(_categoryService.Object, _manufacturerService.Object, _customerService.Object, _productAttributeService.Object, _productTagService.Object, _pictureService.Object, _newsLetterSubscriptionService.Object, _storeService.Object, _workContext.Object, _productEditorSettings, _vendorService.Object, _productTemplateService.Object, _dateRangeService.Object, _taxCategoryService.Object, _measureService.Object, _catalogSettings, _genericAttributeService.Object, _customerAttributeFormatter.Object, _orderSettings, _specificationAttributeService.Object,_orderService.Object, _countryService.Object, _stateProvinceService.Object, _priceFormatter.Object, _forumSettings, _forumService.Object, _gdprService.Object, _customerSettings, _localizationService.Object, _dateTimeHelper.Object, _addressSettings, _currencyService.Object);
+            _exportManager = new ExportManager(_categoryService.Object, _manufacturerService.Object, _customerService.Object, _productAttributeService.Object, _productTagService.Object, _pictureService.Object, _newsLetterSubscriptionService.Object, _storeService.Object, serviceProvider.WorkContext.Object, _productEditorSettings, _vendorService.Object, _productTemplateService.Object, _dateRangeService.Object, _taxCategoryService.Object, _measureService.Object, _catalogSettings, serviceProvider.GenericAttributeService.Object, _customerAttributeFormatter.Object, _orderSettings, _specificationAttributeService.Object,_orderService.Object, _countryService.Object, _stateProvinceService.Object, _priceFormatter.Object, _forumSettings, _forumService.Object, _gdprService.Object, _customerSettings, serviceProvider.LocalizationService.Object, _dateTimeHelper.Object, _addressSettings, _currencyService.Object);
         }
 
         [OneTimeTearDown]
@@ -496,7 +467,7 @@ namespace Nop.Services.Tests.ExportImport
 
             var manufacturer = manufacturers.First();
 
-            var ignore = new List<string> { "Picture", "PictureId", "SubjectToAcl", "LimitedToStores", "Deleted", "CreatedOnUtc", "UpdatedOnUtc", "AppliedDiscounts" };
+            var ignore = new List<string> { "Picture", "PictureId", "SubjectToAcl", "LimitedToStores", "Deleted", "CreatedOnUtc", "UpdatedOnUtc", "AppliedDiscounts", "DiscountManufacturerMappings" };
 
             AreAllObjectPropertiesPresent(manufacturer, manager, ignore.ToArray());
             PropertiesShouldEqual(manufacturer, manager, new Dictionary<string, string>());
@@ -533,7 +504,8 @@ namespace Nop.Services.Tests.ExportImport
                 "ReturnRequests", "BillingAddress", "ShippingAddress", "Addresses", "AdminComment",
                 "EmailToRevalidate", "HasShoppingCartItems", "RequireReLogin", "FailedLoginAttempts",
                 "CannotLoginUntilDateUtc", "Deleted", "IsSystemAccount", "SystemName", "LastIpAddress",
-                "LastLoginDateUtc", "LastActivityDateUtc", "RegisteredInStoreId" };
+                "LastLoginDateUtc", "LastActivityDateUtc", "RegisteredInStoreId", "BillingAddressId", "ShippingAddressId", 
+                "CustomerCustomerRoleMappings", "CustomerAddressMappings" };
 
             AreAllObjectPropertiesPresent(customer, manager, ignore.ToArray());
             PropertiesShouldEqual(customer, manager, new Dictionary<string, string>());
@@ -573,7 +545,7 @@ namespace Nop.Services.Tests.ExportImport
             manager.ReadFromXlsx(worksheet, 2);
             var category = categories.First();
 
-            var ignore = new List<string> { "CreatedOnUtc", "Picture", "PictureId", "AppliedDiscounts", "UpdatedOnUtc", "SubjectToAcl", "LimitedToStores", "Deleted" };
+            var ignore = new List<string> { "CreatedOnUtc", "Picture", "PictureId", "AppliedDiscounts", "UpdatedOnUtc", "SubjectToAcl", "LimitedToStores", "Deleted", "DiscountCategoryMappings" };
 
             AreAllObjectPropertiesPresent(category, manager, ignore.ToArray());
             PropertiesShouldEqual(category, manager, new Dictionary<string, string>());
@@ -707,7 +679,8 @@ namespace Nop.Services.Tests.ExportImport
                 "AppliedDiscounts", "ProductWarehouseInventory", "ApprovedRatingSum", "NotApprovedRatingSum",
                 "ApprovedTotalReviews", "NotApprovedTotalReviews", "SubjectToAcl", "LimitedToStores", "Deleted",
                 "DownloadExpirationDays", "HasTierPrices", "HasDiscountsApplied", "AvailableStartDateTimeUtc",
-                "AvailableEndDateTimeUtc", "DisplayOrder", "CreatedOnUtc", "UpdatedOnUtc" };
+                "AvailableEndDateTimeUtc", "DisplayOrder", "CreatedOnUtc", "UpdatedOnUtc", "ProductProductTagMappings",
+                "DiscountProductMappings" };
 
             ignore.AddRange(replacePairse.Values);
 

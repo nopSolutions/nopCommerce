@@ -18,7 +18,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Install
         {
             //set up localziation service used by almost all validators
             _ilService = new Mock<IInstallationLocalizationService>();
-            _ilService.Setup(l => l.GetResource("")).Returns("Invalid");//.IgnoreArguments();
+            _ilService.Setup(l => l.GetResource(It.IsAny<string>())).Returns("Invalid");
 
             _validator = new InstallValidator(_ilService.Object);
         }

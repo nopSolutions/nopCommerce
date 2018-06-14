@@ -1,19 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
-using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Stores;
 using Nop.Core.Infrastructure;
 using Nop.Services.Catalog;
-using Nop.Services.Directory;
 using Nop.Services.Discounts;
 using Nop.Tests;
 using NUnit.Framework;
@@ -24,7 +20,6 @@ namespace Nop.Services.Tests.Catalog
     [TestFixture]
     public class PriceCalculationServiceTests : ServiceTest
     {
-        private Mock<IWorkContext> _workContext;
         private Mock<IStoreContext> _storeContext;
         private Mock<IDiscountService> _discountService;
         private Mock<ICategoryService> _categoryService;
@@ -41,9 +36,7 @@ namespace Nop.Services.Tests.Catalog
         [SetUp]
         public new void SetUp()
         {
-            _workContext = new Mock<IWorkContext>();
-            _workContext.Setup(w => w.WorkingCurrency).Returns(new Currency { RoundingType = RoundingType.Rounding001 });
-
+            var serviceProvider = new TestServiceProvider();
             _store = new Store { Id = 1 };
             _storeContext = new Mock<IStoreContext>();
             _storeContext.Setup(x => x.CurrentStore).Returns(_store);
@@ -60,7 +53,7 @@ namespace Nop.Services.Tests.Catalog
 
             _cacheManager = new NopNullCache();
 
-            _priceCalcService = new PriceCalculationService(_workContext.Object,
+            _priceCalcService = new PriceCalculationService(serviceProvider.WorkContext.Object,
                 _storeContext.Object, 
                 _discountService.Object,
                 _categoryService.Object,
@@ -72,17 +65,8 @@ namespace Nop.Services.Tests.Catalog
                 _catalogSettings);
 
             var nopEngine = new Mock<NopEngine>();
-            var serviceProvider = new Mock<IServiceProvider>();
-            var httpContextAccessor = new Mock<IHttpContextAccessor>();
-            serviceProvider.Setup(x => x.GetRequiredService(typeof(IHttpContextAccessor))).Returns(httpContextAccessor);
-            serviceProvider.Setup(x => x.GetRequiredService(typeof(IWorkContext))).Returns(_workContext);
 
-            serviceProvider.Setup(x => x.GetRequiredService(typeof(CurrencySettings))).Returns(new CurrencySettings{PrimaryStoreCurrencyId = 1});
-            var currencyService = new Mock<ICurrencyService>();
-            currencyService.Setup(x => x.GetCurrencyById(1, true)).Returns(new Currency {Id = 1, RoundingTypeId = 0});
-            serviceProvider.Setup(x => x.GetRequiredService(typeof(ICurrencyService))).Returns(currencyService);
-
-            nopEngine.Setup(x => x.ServiceProvider).Returns(serviceProvider.Object);
+            nopEngine.Setup(x => x.ServiceProvider).Returns(serviceProvider);
             EngineContext.Replace(nopEngine.Object);
         }
 
@@ -168,7 +152,7 @@ namespace Nop.Services.Tests.Catalog
         [Test]
         public void Can_get_final_product_price_with_tier_prices_by_customerRole()
         {
-            var product = new Product
+            var product = new TestProduct
             {
                 Id = 1,
                 Name = "Product name 1",
@@ -255,7 +239,7 @@ namespace Nop.Services.Tests.Catalog
         [Test]
         public void Can_get_final_product_price_with_discount()
         {
-            var product = new Product
+            var product = new TestProduct
             {
                 Id = 1,
                 Name = "Product name 1",
@@ -277,7 +261,7 @@ namespace Nop.Services.Tests.Catalog
                 DiscountLimitation = DiscountLimitationType.Unlimited
             };
             //discount1.AppliedToProducts.Add(product);
-            product.AppliedDiscounts.Add(discount1);
+            product.AddAppliedDiscounts(discount1);
             //set HasDiscountsApplied property
             product.HasDiscountsApplied = true;
             _discountService.Setup(ds => ds.ValidateDiscount(discount1, customer)).Returns(new DiscountValidationResult {IsValid = true});
@@ -413,6 +397,25 @@ namespace Nop.Services.Tests.Catalog
             _discountService.Setup(ds => ds.GetAllDiscountsForCaching(DiscountType.AssignedToManufacturers, null, null, false)).Returns(new List<DiscountForCaching>());
 
             return shoppingCartItem;
+        }
+
+        class TestProduct:Product
+        {
+            public TestProduct()
+            {
+                _discountProductMappings = new List<DiscountProductMapping>();
+            }
+
+            public void AddAppliedDiscounts(Discount discount)
+            {
+                _discountProductMappings.Add(new DiscountProductMapping
+                {
+                    Discount = discount,
+                    DiscountId = discount.Id,
+                    Id=1,
+                    Product = this
+                });
+            }
         }
     }
 }

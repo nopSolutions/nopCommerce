@@ -279,6 +279,10 @@ namespace Nop.Services.ExportImport
             string productTagNames = null;
 
             var productTags = _productTagService.GetAllProductTagsByProductId(product.Id);
+
+            if (!productTags?.Any() ?? true)
+                return null;
+
             foreach (var productTag in productTags)
             {
                 productTagNames += _catalogSettings.ExportImportRelatedEntitiesByName

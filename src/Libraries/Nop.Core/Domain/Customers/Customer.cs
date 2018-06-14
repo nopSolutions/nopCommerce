@@ -15,9 +15,9 @@ namespace Nop.Core.Domain.Customers
         private ICollection<CustomerCustomerRoleMapping> _customerCustomerRoleMappings;
         private ICollection<ShoppingCartItem> _shoppingCartItems;
         private ICollection<ReturnRequest> _returnRequests;
-        private ICollection<CustomerAddressMapping> _customerAddressMappings;
+        protected ICollection<CustomerAddressMapping> _customerAddressMappings;
         private IList<CustomerRole> _customerRoles;
-
+		
         /// <summary>
         /// Ctor
         /// </summary>
