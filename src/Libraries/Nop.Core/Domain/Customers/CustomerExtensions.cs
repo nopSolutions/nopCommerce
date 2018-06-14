@@ -132,11 +132,11 @@ namespace Nop.Core.Domain.Customers
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
 
-            var roleWithOVerriddenTaxType = customer.CustomerRoles.FirstOrDefault(cr => cr.Active && cr.OverrideTaxDisplayType);
-            if (roleWithOVerriddenTaxType == null)
+            var roleWithOverriddenTaxType = customer.CustomerRoles.FirstOrDefault(cr => cr.Active && cr.OverrideTaxDisplayType);
+            if (roleWithOverriddenTaxType == null)
                 return null;
 
-            return (TaxDisplayType)roleWithOVerriddenTaxType.DefaultTaxDisplayTypeId;
+            return (TaxDisplayType)roleWithOverriddenTaxType.DefaultTaxDisplayTypeId;
         }
 
         #endregion
