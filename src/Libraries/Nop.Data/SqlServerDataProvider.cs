@@ -41,10 +41,10 @@ namespace Nop.Data
             context.ExecuteSqlScript(context.GenerateCreateScript());
 
             //create indexes
-            context.ExecuteSqlScriptFromFile(fileProvider.MapPath(this.SqlServerIndexesFilePath));
+            context.ExecuteSqlScriptFromFile(fileProvider.MapPath(NopDataDefaults.SqlServerIndexesFilePath));
 
             //create stored procedures 
-            context.ExecuteSqlScriptFromFile(fileProvider.MapPath(this.SqlServerStoredProceduresFilePath));
+            context.ExecuteSqlScriptFromFile(fileProvider.MapPath(NopDataDefaults.SqlServerStoredProceduresFilePath));
         }
 
         /// <summary>
@@ -69,16 +69,6 @@ namespace Nop.Data
         /// Gets a maximum length of the data for HASHBYTES functions, returns 0 if HASHBYTES function is not supported
         /// </summary>
         public virtual int SupportedLengthOfBinaryHash => 8000; //for SQL Server 2008 and above HASHBYTES function has a limit of 8000 characters.
-
-        /// <summary>
-        /// Gets a path to the file that contains script to create SQL Server indexes
-        /// </summary>
-        protected virtual string SqlServerIndexesFilePath => "~/App_Data/Install/SqlServer.Indexes.sql";
-
-        /// <summary>
-        /// Gets a path to the file that contains script to create SQL Server stored procedures
-        /// </summary>
-        protected virtual string SqlServerStoredProceduresFilePath => "~/App_Data/Install/SqlServer.StoredProcedures.sql";
 
         #endregion
     }

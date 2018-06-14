@@ -17,7 +17,7 @@ namespace Nop.Data.Mapping.Forums
         /// <param name="builder">The builder to be used to configure the entity</param>
         public override void Configure(EntityTypeBuilder<Forum> builder)
         {
-            builder.ToTable("Forums_Forum");
+            builder.ToTable(NopMappingDefaults.ForumTable);
             builder.HasKey(forum => forum.Id);
 
             builder.Property(forum => forum.Name).HasMaxLength(200).IsRequired();

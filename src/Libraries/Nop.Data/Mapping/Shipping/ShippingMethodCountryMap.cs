@@ -17,7 +17,7 @@ namespace Nop.Data.Mapping.Shipping
         /// <param name="builder">The builder to be used to configure the entity</param>
         public override void Configure(EntityTypeBuilder<ShippingMethodCountryMapping> builder)
         {
-            builder.ToTable("ShippingMethodRestrictions");
+            builder.ToTable(NopMappingDefaults.ShippingMethodRestrictionsTable);
             builder.HasKey(mapping => new { mapping.ShippingMethodId, mapping.CountryId});
 
             builder.Property(mapping => mapping.ShippingMethodId).HasColumnName("ShippingMethod_Id");

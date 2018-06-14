@@ -17,7 +17,7 @@ namespace Nop.Data.Mapping.Forums
         /// <param name="builder">The builder to be used to configure the entity</param>
         public override void Configure(EntityTypeBuilder<ForumPost> builder)
         {
-            builder.ToTable("Forums_Post");
+            builder.ToTable(NopMappingDefaults.ForumsPostTable);
             builder.HasKey(post => post.Id);
 
             builder.Property(post => post.Text).IsRequired();
