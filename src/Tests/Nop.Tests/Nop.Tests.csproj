@@ -18,6 +18,7 @@
     <PackageReference Include="Moq" Version="4.8.2" />
     <PackageReference Include="NUnit" Version="3.10.1" />
     <PackageReference Include="NUnit3TestAdapter" Version="3.10.0" />
+    <PackageReference Include="RhinoMocks" Version="3.6.1" />
   </ItemGroup>
 
   <ItemGroup>
