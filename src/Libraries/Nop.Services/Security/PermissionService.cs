@@ -115,17 +115,17 @@ namespace Nop.Services.Security
         /// Authorize permission
         /// </summary>
         /// <param name="permissionRecordSystemName">Permission record system name</param>
-        /// <param name="customerRole">Customer role</param>
+        /// <param name="customerRoleId">Customer role identifier</param>
         /// <returns>true - authorized; otherwise, false</returns>
-        protected virtual bool Authorize(string permissionRecordSystemName, CustomerRole customerRole)
+        protected virtual bool Authorize(string permissionRecordSystemName, int customerRoleId)
         {
             if (string.IsNullOrEmpty(permissionRecordSystemName))
                 return false;
             
-            var key = string.Format(PERMISSIONS_ALLOWED_KEY, customerRole.Id, permissionRecordSystemName);
+            var key = string.Format(PERMISSIONS_ALLOWED_KEY, customerRoleId, permissionRecordSystemName);
             return _staticCacheManager.Get(key, () =>
             {
-                var permissions = GetPermissionRecordsByCustomerRoleId(customerRole.Id);
+                var permissions = GetPermissionRecordsByCustomerRoleId(customerRoleId);
                 foreach (var permission1 in permissions)
                     if (permission1.SystemName.Equals(permissionRecordSystemName, StringComparison.InvariantCultureIgnoreCase))
                         return true;
@@ -368,7 +368,7 @@ namespace Nop.Services.Security
 
             var customerRoles = customer.CustomerRoles.Where(cr => cr.Active);
             foreach (var role in customerRoles)
-                if (Authorize(permissionRecordSystemName, role))
+                if (Authorize(permissionRecordSystemName, role.Id))
                     //yes, we have such permission
                     return true;
             
