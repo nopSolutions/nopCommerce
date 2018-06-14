@@ -5,6 +5,7 @@ using Nop.Core;
 using Nop.Core.Data;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Gdpr;
+using Nop.Data.Extensions;
 using Nop.Services.Authentication.External;
 using Nop.Services.Blogs;
 using Nop.Services.Catalog;
@@ -397,7 +398,7 @@ namespace Nop.Services.Gdpr
             }
 
             //generic attributes
-            var keyGroup = customer.GetType().BaseType.Name;
+            var keyGroup = customer.GetUnproxiedEntityType().Name;
             var genericAttributes = _genericAttributeService.GetAttributesForEntity(customer.Id, keyGroup);
             _genericAttributeService.DeleteAttributes(genericAttributes);
 

@@ -305,7 +305,7 @@ namespace Nop.Services.Localization
             }
 
             //load localized value (check whether it's a cacheable entity. In such cases we load its original entity type)
-            var localeKeyGroup = entity.GetType().BaseType.Name;
+            var localeKeyGroup = entity.GetUnproxiedEntityType().Name;
             var localeKey = propInfo.Name;
 
             var props = GetLocalizedProperties(entity.Id, localeKeyGroup);

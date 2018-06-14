@@ -85,7 +85,7 @@ namespace Nop.Services.Localization
             var result = default(TPropType);
             var resultStr = string.Empty;
 
-            var localeKeyGroup = entity.GetType().BaseType.Name;
+            var localeKeyGroup = entity.GetUnproxiedEntityType().Name;
             var localeKey = propInfo.Name;
 
             if (languageId > 0)

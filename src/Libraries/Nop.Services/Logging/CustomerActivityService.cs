@@ -237,7 +237,7 @@ namespace Nop.Services.Logging
             {
                 ActivityLogTypeId = activityLogType.Id,
                 EntityId = entity?.Id,
-                EntityName = entity?.GetType().BaseType.Name,
+                EntityName = entity?.GetUnproxiedEntityType().Name,
                 CustomerId = customer.Id,
                 Comment = CommonHelper.EnsureMaximumLength(comment ?? string.Empty, 4000),
                 CreatedOnUtc = DateTime.UtcNow,

@@ -105,7 +105,7 @@ namespace Nop.Services.Seo
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
 
-            var entityName = entity.GetType().BaseType.Name;
+            var entityName = entity.GetUnproxiedEntityType().Name;
             return GetSeName(entity.Id, entityName, languageId, returnDefaultValue, ensureTwoPublishedLanguages);
         }
 
@@ -163,7 +163,7 @@ namespace Nop.Services.Seo
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
 
-            return ValidateSeName(entity.Id, entity.GetType().BaseType.Name, seName, name, ensureNotEmpty);
+            return ValidateSeName(entity.Id, entity.GetUnproxiedEntityType().Name, seName, name, ensureNotEmpty);
         }
 
         /// <summary>
