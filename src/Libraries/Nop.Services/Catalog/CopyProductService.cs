@@ -115,7 +115,8 @@ namespace Nop.Services.Catalog
             var associatedProducts = _productService.GetAssociatedProducts(product.Id, showHidden: true);
             foreach (var associatedProduct in associatedProducts)
             {
-                var associatedProductCopy = CopyProduct(associatedProduct, $"Copy of {associatedProduct.Name}",
+                var associatedProductCopy = CopyProduct(associatedProduct, 
+                    string.Format(NopCatalogDefaults.ProductCopyNameTemplate, associatedProduct.Name),
                     isPublished, copyImages, false);
                 associatedProductCopy.ParentGroupedProductId = productCopy.Id;
                 _productService.UpdateProduct(productCopy);

@@ -25,22 +25,6 @@ namespace Nop.Services.Shipping
     /// </summary>
     public partial class ShippingService : IShippingService
     {
-        #region Constants
-
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : warehouse ID
-        /// </remarks>
-        private const string WAREHOUSES_BY_ID_KEY = "Nop.warehouse.id-{0}";
-        /// <summary>
-        /// Key pattern to clear cache
-        /// </summary>
-        private const string WAREHOUSES_PATTERN_KEY = "Nop.warehouse.";
-
-        #endregion
-
         #region Fields
 
         private readonly IRepository<ShippingMethod> _shippingMethodRepository;
@@ -308,7 +292,7 @@ namespace Nop.Services.Shipping
             _warehouseRepository.Delete(warehouse);
 
             //clear cache
-            _cacheManager.RemoveByPattern(WAREHOUSES_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopShippingDefaults.WarehousesPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityDeleted(warehouse);
@@ -324,7 +308,7 @@ namespace Nop.Services.Shipping
             if (warehouseId == 0)
                 return null;
 
-            var key = string.Format(WAREHOUSES_BY_ID_KEY, warehouseId);
+            var key = string.Format(NopShippingDefaults.WarehousesByIdCacheKey, warehouseId);
             return _cacheManager.Get(key, () => _warehouseRepository.GetById(warehouseId));
         }
 
@@ -353,7 +337,7 @@ namespace Nop.Services.Shipping
             _warehouseRepository.Insert(warehouse);
 
             //clear cache
-            _cacheManager.RemoveByPattern(WAREHOUSES_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopShippingDefaults.WarehousesPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(warehouse);
@@ -371,7 +355,7 @@ namespace Nop.Services.Shipping
             _warehouseRepository.Update(warehouse);
 
             //clear cache
-            _cacheManager.RemoveByPattern(WAREHOUSES_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopShippingDefaults.WarehousesPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(warehouse);

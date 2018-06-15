@@ -15,31 +15,6 @@ namespace Nop.Services.Catalog
     /// </summary>
     public partial class ProductTagService : IProductTagService
     {
-        #region Constants
-
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : store ID
-        /// </remarks>
-        private const string PRODUCTTAG_COUNT_KEY = "Nop.producttag.count-{0}";
-
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : product ID
-        /// </remarks>
-        private const string PRODUCTTAG_ALLBYPRODUCTID_KEY = "Nop.producttag.allbyproductid-{0}";
-
-        /// <summary>
-        /// Key pattern to clear cache
-        /// </summary>
-        private const string PRODUCTTAG_PATTERN_KEY = "Nop.producttag.";
-
-        #endregion
-
         #region Fields
 
         private readonly IRepository<ProductTag> _productTagRepository;
@@ -96,7 +71,7 @@ namespace Nop.Services.Catalog
         /// <returns>Dictionary of "product tag ID : product count"</returns>
         private Dictionary<int, int> GetProductCount(int storeId)
         {
-            var key = string.Format(PRODUCTTAG_COUNT_KEY, storeId);
+            var key = string.Format(NopCatalogDefaults.ProductTagCountCacheKey, storeId);
             return _staticCacheManager.Get(key, () =>
             {
                 return _dbContext.QueryFromSql<ProductTagWithCount>($"Exec ProductTagCountLoadAll {storeId}")
@@ -121,8 +96,8 @@ namespace Nop.Services.Catalog
             _productTagRepository.Delete(productTag);
 
             //cache
-            _cacheManager.RemoveByPattern(PRODUCTTAG_PATTERN_KEY);
-            _staticCacheManager.RemoveByPattern(PRODUCTTAG_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductTagPatternCacheKey);
+            _staticCacheManager.RemoveByPattern(NopCatalogDefaults.ProductTagPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityDeleted(productTag);
@@ -146,7 +121,7 @@ namespace Nop.Services.Catalog
         /// <returns>Product tags</returns>
         public virtual IList<ProductTag> GetAllProductTagsByProductId(int productId)
         {
-            var key = string.Format(PRODUCTTAG_ALLBYPRODUCTID_KEY, productId);
+            var key = string.Format(NopCatalogDefaults.ProductTagAllByProductIdCacheKey, productId);
             return _cacheManager.Get(key, () =>
             {
                 var query = from pt in _productTagRepository.Table
@@ -200,8 +175,8 @@ namespace Nop.Services.Catalog
             _productTagRepository.Insert(productTag);
 
             //cache
-            _cacheManager.RemoveByPattern(PRODUCTTAG_PATTERN_KEY);
-            _staticCacheManager.RemoveByPattern(PRODUCTTAG_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductTagPatternCacheKey);
+            _staticCacheManager.RemoveByPattern(NopCatalogDefaults.ProductTagPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(productTag);
@@ -222,8 +197,8 @@ namespace Nop.Services.Catalog
             _urlRecordService.SaveSlug(productTag, seName, 0);
 
             //cache
-            _cacheManager.RemoveByPattern(PRODUCTTAG_PATTERN_KEY);
-            _staticCacheManager.RemoveByPattern(PRODUCTTAG_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductTagPatternCacheKey);
+            _staticCacheManager.RemoveByPattern(NopCatalogDefaults.ProductTagPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(productTag);

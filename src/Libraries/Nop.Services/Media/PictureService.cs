@@ -31,13 +31,6 @@ namespace Nop.Services.Media
     /// </summary>
     public partial class PictureService : IPictureService
     {
-        #region Const
-
-        private const int MULTIPLE_THUMB_DIRECTORIES_LENGTH = 3;
-        private const string THUMBS_PATH = @"images\thumbs";
-
-        #endregion
-
         #region Fields
 
         private readonly IRepository<Picture> _pictureRepository;
@@ -227,7 +220,7 @@ namespace Nop.Services.Media
         protected virtual void DeletePictureThumbs(Picture picture)
         {
             var filter = $"{picture.Id:0000000}*.*";
-            var currentFiles = _fileProvider.GetFiles(_fileProvider.GetAbsolutePath(THUMBS_PATH), filter, false);
+            var currentFiles = _fileProvider.GetFiles(_fileProvider.GetAbsolutePath(NopMediaDefaults.ImageThumbsPath), filter, false);
             foreach (var currentFileName in currentFiles)
             {
                 var thumbFilePath = GetThumbLocalPath(currentFileName);
@@ -242,16 +235,16 @@ namespace Nop.Services.Media
         /// <returns>Local picture thumb path</returns>
         protected virtual string GetThumbLocalPath(string thumbFileName)
         {
-            var thumbsDirectoryPath = _fileProvider.GetAbsolutePath(THUMBS_PATH);
+            var thumbsDirectoryPath = _fileProvider.GetAbsolutePath(NopMediaDefaults.ImageThumbsPath);
 
             if (_mediaSettings.MultipleThumbDirectories)
             {
                 //get the first two letters of the file name
                 var fileNameWithoutExtension = _fileProvider.GetFileNameWithoutExtension(thumbFileName);
-                if (fileNameWithoutExtension != null && fileNameWithoutExtension.Length > MULTIPLE_THUMB_DIRECTORIES_LENGTH)
+                if (fileNameWithoutExtension != null && fileNameWithoutExtension.Length > NopMediaDefaults.MultipleThumbDirectoriesLength)
                 {
-                    var subDirectoryName = fileNameWithoutExtension.Substring(0, MULTIPLE_THUMB_DIRECTORIES_LENGTH);
-                    thumbsDirectoryPath = _fileProvider.GetAbsolutePath(THUMBS_PATH, subDirectoryName);
+                    var subDirectoryName = fileNameWithoutExtension.Substring(0, NopMediaDefaults.MultipleThumbDirectoriesLength);
+                    thumbsDirectoryPath = _fileProvider.GetAbsolutePath(NopMediaDefaults.ImageThumbsPath, subDirectoryName);
                     _fileProvider.CreateDirectory(thumbsDirectoryPath);
                 }
             }
@@ -277,9 +270,9 @@ namespace Nop.Services.Media
             {
                 //get the first two letters of the file name
                 var fileNameWithoutExtension = _fileProvider.GetFileNameWithoutExtension(thumbFileName);
-                if (fileNameWithoutExtension != null && fileNameWithoutExtension.Length > MULTIPLE_THUMB_DIRECTORIES_LENGTH)
+                if (fileNameWithoutExtension != null && fileNameWithoutExtension.Length > NopMediaDefaults.MultipleThumbDirectoriesLength)
                 {
-                    var subDirectoryName = fileNameWithoutExtension.Substring(0, MULTIPLE_THUMB_DIRECTORIES_LENGTH);
+                    var subDirectoryName = fileNameWithoutExtension.Substring(0, NopMediaDefaults.MultipleThumbDirectoriesLength);
                     url = url + subDirectoryName + "/";
                 }
             }
@@ -337,7 +330,7 @@ namespace Nop.Services.Media
         protected virtual void SaveThumb(string thumbFilePath, string thumbFileName, string mimeType, byte[] binary)
         {
             //ensure \thumb directory exists
-            var thumbsDirectoryPath = _fileProvider.GetAbsolutePath(THUMBS_PATH);
+            var thumbsDirectoryPath = _fileProvider.GetAbsolutePath(NopMediaDefaults.ImageThumbsPath);
             _fileProvider.CreateDirectory(thumbsDirectoryPath);
 
             //save
@@ -458,11 +451,11 @@ namespace Nop.Services.Media
             switch (defaultPictureType)
             {
                 case PictureType.Avatar:
-                    defaultImageFileName = _settingService.GetSettingByKey("Media.Customer.DefaultAvatarImageName", "default-avatar.jpg");
+                    defaultImageFileName = _settingService.GetSettingByKey("Media.Customer.DefaultAvatarImageName", NopMediaDefaults.DefaultAvatarFileName);
                     break;
                 case PictureType.Entity:
                 default:
-                    defaultImageFileName = _settingService.GetSettingByKey("Media.DefaultImageName", "default-image.png");
+                    defaultImageFileName = _settingService.GetSettingByKey("Media.DefaultImageName", NopMediaDefaults.DefaultImageFileName);
                     break;
             }
             var filePath = GetPictureLocalPath(defaultImageFileName);

@@ -63,7 +63,7 @@ namespace Nop.Services.Seo
             var seName = GetSeName(forumTopic.Subject);
 
             // Trim SE name to avoid URLs that are too long
-            var maxLength = 100;
+            var maxLength = NopSeoDefaults.ForumTopicLength;
             if (seName.Length > maxLength)
             {
                 seName = seName.Substring(0, maxLength);
@@ -185,10 +185,7 @@ namespace Nop.Services.Seo
             seName = GetSeName(seName);
 
             //max length
-            //For long URLs we can get the following error:
-            //"the specified path, file name, or both are too long. The fully qualified file name must be less than 260 characters, and the directory name must be less than 248 characters"
-            //that's why we limit it to 200 here (consider a store URL + probably added {0}-{1} below)
-            seName = CommonHelper.EnsureMaximumLength(seName, 200);
+            seName = CommonHelper.EnsureMaximumLength(seName, NopSeoDefaults.SearchEngineNameLength);
 
             if (string.IsNullOrWhiteSpace(seName))
             {

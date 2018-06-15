@@ -56,7 +56,7 @@ namespace Nop.Services.Common
         /// <returns></returns>
         protected virtual string GetBackupDirectoryPath(bool ensureFolderCreated = true)
         {
-            var path = _fileProvider.GetAbsolutePath("db_backups\\");
+            var path = _fileProvider.GetAbsolutePath(NopCommonDefaults.DbBackupsPath);
             if (ensureFolderCreated)
                 _fileProvider.CreateDirectory(path);
             return path;
@@ -67,9 +67,8 @@ namespace Nop.Services.Common
         /// </summary>
         protected virtual void CheckBackupSupported()
         {
-            if(_dataProvider.BackupSupported) return;
-
-            throw new DataException("This database does not support backup");
+            if(!_dataProvider.BackupSupported)
+                throw new DataException("This database does not support backup");
         }
 
         #endregion
@@ -118,7 +117,7 @@ namespace Nop.Services.Common
                 throw new NopException("Backup directory not exists");
             }
 
-            return _fileProvider.GetFiles(path, "*.bak")
+            return _fileProvider.GetFiles(path, $"*.{NopCommonDefaults.DbBackupFileExtension}")
                 .OrderByDescending(p => _fileProvider.GetLastWriteTime(p)).ToList();
         }
 
@@ -128,7 +127,7 @@ namespace Nop.Services.Common
         public virtual void BackupDatabase()
         {
             CheckBackupSupported();
-            var fileName = $"{GetBackupDirectoryPath()}database_{DateTime.Now:yyyy-MM-dd-HH-mm-ss}_{CommonHelper.GenerateRandomDigitCode(10)}.bak";
+            var fileName = $"{GetBackupDirectoryPath()}database_{DateTime.Now:yyyy-MM-dd-HH-mm-ss}_{CommonHelper.GenerateRandomDigitCode(10)}.{NopCommonDefaults.DbBackupFileExtension}";
 
             var commandText = $"BACKUP DATABASE [{_dbContext.DbName()}] TO DISK = '{fileName}' WITH FORMAT";
 

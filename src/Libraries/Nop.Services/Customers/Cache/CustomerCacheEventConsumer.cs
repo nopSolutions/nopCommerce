@@ -9,18 +9,6 @@ namespace Nop.Services.Customers.Cache
     /// </summary>
     public partial class CustomerCacheEventConsumer : IConsumer<CustomerPasswordChangedEvent>
     {
-        #region Constants
-
-        /// <summary>
-        /// Key for current customer password lifetime
-        /// </summary>
-        /// <remarks>
-        /// {0} : customer identifier
-        /// </remarks>
-        public const string CUSTOMER_PASSWORD_LIFETIME = "Nop.customers.passwordlifetime-{0}";
-
-        #endregion
-
         #region Fields
 
         private readonly IStaticCacheManager _cacheManager;
@@ -45,7 +33,7 @@ namespace Nop.Services.Customers.Cache
         //password changed
         public void HandleEvent(CustomerPasswordChangedEvent eventMessage)
         {
-            _cacheManager.Remove(string.Format(CUSTOMER_PASSWORD_LIFETIME, eventMessage.Password.CustomerId));
+            _cacheManager.Remove(string.Format(NopCustomerServiceDefaults.CustomerPasswordLifetimeCacheKey, eventMessage.Password.CustomerId));
         }
 
         #endregion

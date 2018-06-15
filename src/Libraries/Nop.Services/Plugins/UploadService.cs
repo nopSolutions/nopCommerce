@@ -50,7 +50,7 @@ namespace Nop.Services.Plugins
             {
                 //try to get the entry containing information about the uploaded items 
                 var uploadedItemsFileEntry = archive.Entries
-                    .FirstOrDefault(entry => entry.Name.Equals(UploadedItemsFileName, StringComparison.InvariantCultureIgnoreCase)
+                    .FirstOrDefault(entry => entry.Name.Equals(NopPluginDefaults.UploadedItemsFileName, StringComparison.InvariantCultureIgnoreCase)
                         && string.IsNullOrEmpty(_fileProvider.GetDirectoryName(entry.FullName)));
                 if (uploadedItemsFileEntry == null)
                     return null;
@@ -74,8 +74,8 @@ namespace Nop.Services.Plugins
 
             //get path to the themes directory
             var themesDirectory = string.Empty;
-            if (!string.IsNullOrEmpty(_themeProvider.ThemesPath))
-                themesDirectory = _fileProvider.MapPath(_themeProvider.ThemesPath);
+            if (!string.IsNullOrEmpty(NopPluginDefaults.ThemesPath))
+                themesDirectory = _fileProvider.MapPath(NopPluginDefaults.ThemesPath);
 
             IDescriptor descriptor = null;
             var uploadedItemDirectoryName = string.Empty;
@@ -87,7 +87,7 @@ namespace Nop.Services.Plugins
                 {
                     throw new Exception($"The archive should contain only one root plugin or theme directory. " +
                         $"For example, Payments.PayPalDirect or DefaultClean. " +
-                        $"To upload multiple items, the archive should have the '{UploadedItemsFileName}' file in the root");
+                        $"To upload multiple items, the archive should have the '{NopPluginDefaults.UploadedItemsFileName}' file in the root");
                 }
 
                 //get directory name (remove the ending /)
@@ -102,7 +102,7 @@ namespace Nop.Services.Plugins
 
                     //or whether it's a theme descriptor
                     var isThemeDescriptor = entry.FullName
-                        .Equals($"{uploadedItemDirectoryName}/{_themeProvider.ThemeDescriptionFileName}", StringComparison.InvariantCultureIgnoreCase);
+                        .Equals($"{uploadedItemDirectoryName}/{NopPluginDefaults.ThemeDescriptionFileName}", StringComparison.InvariantCultureIgnoreCase);
 
                     if (!isPluginDescriptor && !isThemeDescriptor)
                         continue;
@@ -166,8 +166,8 @@ namespace Nop.Services.Plugins
 
             //get path to the themes directory
             var themesDirectory = string.Empty;
-            if (!string.IsNullOrEmpty(_themeProvider.ThemesPath))
-                themesDirectory = _fileProvider.MapPath(_themeProvider.ThemesPath);
+            if (!string.IsNullOrEmpty(NopPluginDefaults.ThemesPath))
+                themesDirectory = _fileProvider.MapPath(NopPluginDefaults.ThemesPath);
 
             //get descriptors of items contained in the archive
             var descriptors = new List<IDescriptor>();
@@ -190,8 +190,8 @@ namespace Nop.Services.Plugins
                     if (item.Type == UploadedItemType.Plugin)
                         descriptorPath = $"{itemPath}{NopPluginDefaults.DescriptionFileName}";
 
-                    if (item.Type == UploadedItemType.Theme && !string.IsNullOrEmpty(_themeProvider.ThemeDescriptionFileName))
-                        descriptorPath = $"{itemPath}{_themeProvider.ThemeDescriptionFileName}";
+                    if (item.Type == UploadedItemType.Theme && !string.IsNullOrEmpty(NopPluginDefaults.ThemeDescriptionFileName))
+                        descriptorPath = $"{itemPath}{NopPluginDefaults.ThemeDescriptionFileName}";
 
                     //try to get the descriptor entry
                     var descriptorEntry = archive.Entries.FirstOrDefault(entry => entry.FullName.Equals(descriptorPath, StringComparison.InvariantCultureIgnoreCase));
@@ -282,7 +282,7 @@ namespace Nop.Services.Plugins
                     throw new Exception("Only zip archives are supported");
 
                 //ensure that temp directory is created
-                var tempDirectory = _fileProvider.MapPath(UploadsTempPath);
+                var tempDirectory = _fileProvider.MapPath(NopPluginDefaults.UploadsTempPath);
                 _fileProvider.CreateDirectory(tempDirectory);
 
                 //copy original archive to the temp directory
@@ -312,21 +312,7 @@ namespace Nop.Services.Plugins
         }
 
         #endregion
-
-        #region Properties
-
-        /// <summary>
-        /// Gets the path to temp directory with uploads
-        /// </summary>
-        public string UploadsTempPath => "~/App_Data/TempUploads";
-
-        /// <summary>
-        /// Gets the name of the file containing information about the uploaded items
-        /// </summary>
-        public string UploadedItemsFileName => "uploadedItems.json";
-
-        #endregion
-
+        
         #region Nested classes
 
         /// <summary>

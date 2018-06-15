@@ -235,7 +235,7 @@ namespace Nop.Services.Installation
 
         protected virtual string GetSamplesPath()
         {
-            return _fileProvider.GetAbsolutePath("images\\samples\\");
+            return _fileProvider.GetAbsolutePath(NopInstallationDefaults.SampleImagesPath);
         }
 
         protected virtual void InstallStores()
@@ -387,7 +387,9 @@ namespace Nop.Services.Installation
             var language = _languageRepository.Table.Single(l => l.Name == "English");
 
             //save resources
-            foreach (var filePath in _fileProvider.EnumerateFiles(_fileProvider.MapPath("~/App_Data/Localization/"), "*.nopres.xml"))
+            var directoryPath = _fileProvider.MapPath(NopInstallationDefaults.LocalizationResourcesPath);
+            var pattern = $"*.{NopInstallationDefaults.LocalizationResourcesFileExtension}";
+            foreach (var filePath in _fileProvider.EnumerateFiles(directoryPath, pattern))
             {
                 var localesXml = _fileProvider.ReadAllText(filePath, Encoding.UTF8);
                 var localizationService = EngineContext.Current.Resolve<ILocalizationService>();

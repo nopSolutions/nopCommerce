@@ -3,48 +3,53 @@
 namespace Nop.Services.Authentication
 {
     /// <summary>
-    /// Default values related to cookie-based authentication handler
+    /// Represents default values related to authentication services
     /// </summary>
-    public static class NopCookieAuthenticationDefaults
+    public static partial class NopAuthenticationDefaults
     {
         /// <summary>
         /// The default value used for authentication scheme
         /// </summary>
-        public const string AuthenticationScheme = "Authentication";
+        public static string AuthenticationScheme => "Authentication";
 
         /// <summary>
         /// The default value used for external authentication scheme
         /// </summary>
-        public const string ExternalAuthenticationScheme = "ExternalAuthentication";
+        public static string ExternalAuthenticationScheme => "ExternalAuthentication";
 
         /// <summary>
         /// The prefix used to provide a default cookie name
         /// </summary>
-        public static readonly string CookiePrefix = ".Nop.";
+        public static string CookiePrefix => ".Nop.";
 
         /// <summary>
         /// The issuer that should be used for any claims that are created
         /// </summary>
-        public static readonly string ClaimsIssuer = "nopCommerce";
+        public static string ClaimsIssuer => "nopCommerce";
 
         /// <summary>
         /// The default value for the login path
         /// </summary>
-        public static readonly PathString LoginPath = new PathString("/login");
+        public static PathString LoginPath => new PathString("/login");
 
         /// <summary>
         /// The default value used for the logout path
         /// </summary>
-        public static readonly PathString LogoutPath = new PathString("/logout");
+        public static PathString LogoutPath => new PathString("/logout");
 
         /// <summary>
         /// The default value for the access denied path
         /// </summary>
-        public static readonly PathString AccessDeniedPath = new PathString("/page-not-found");
+        public static PathString AccessDeniedPath => new PathString("/page-not-found");
 
         /// <summary>
         /// The default value of the return URL parameter
         /// </summary>
-        public static readonly string ReturnUrlParameter = "";
+        public static string ReturnUrlParameter => string.Empty;
+
+        /// <summary>
+        /// Gets a key to store external authentication errors to session
+        /// </summary>
+        public static string ExternalAuthenticationErrorsSessionKey => "nop.externalauth.errors";
     }
 }

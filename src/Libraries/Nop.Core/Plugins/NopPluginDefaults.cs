@@ -55,5 +55,25 @@ namespace Nop.Core.Plugins
         /// Gets the name pattern of reserve folder for plugins shadow copies
         /// </summary>
         public static string ReserveShadowCopyPathNamePattern => "reserve_bin_*";
+
+        /// <summary>
+        /// Gets the path to temp directory with uploads
+        /// </summary>
+        public static string UploadsTempPath => "~/App_Data/TempUploads";
+
+        /// <summary>
+        /// Gets the name of the file containing information about the uploaded items
+        /// </summary>
+        public static string UploadedItemsFileName => "uploadedItems.json";
+
+        /// <summary>
+        /// Gets the path to themes folder
+        /// </summary>
+        public static string ThemesPath => "~/Themes";
+
+        /// <summary>
+        /// Gets the name of the theme description file
+        /// </summary>
+        public static string ThemeDescriptionFileName => "theme.json";
     }
 }

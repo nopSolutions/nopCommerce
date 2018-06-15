@@ -2,7 +2,7 @@
 namespace Nop.Core.Domain.Vendors
 {
     /// <summary>
-    /// Represents default values related to vendors
+    /// Represents default values related to vendors data
     /// </summary>
     public static partial class NopVendorDefaults
     {

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Newtonsoft.Json;
 using Nop.Core.Infrastructure;
+using Nop.Core.Plugins;
 
 namespace Nop.Services.Themes
 {
@@ -54,7 +55,8 @@ namespace Nop.Services.Themes
             //load all theme descriptors
             _themeDescriptors = new List<ThemeDescriptor>();
 
-            foreach (var descriptionFile in _fileProvider.GetFiles(_fileProvider.MapPath(ThemesPath), ThemeDescriptionFileName, false))
+            var themeDirectoryPath = _fileProvider.MapPath(NopPluginDefaults.ThemesPath);
+            foreach (var descriptionFile in _fileProvider.GetFiles(themeDirectoryPath, NopPluginDefaults.ThemeDescriptionFileName, false))
             {
                 var text = _fileProvider.ReadAllText(descriptionFile, Encoding.UTF8);
                 if (string.IsNullOrEmpty(text))
@@ -98,20 +100,6 @@ namespace Nop.Services.Themes
 
             return GetThemes().Any(descriptor => descriptor.SystemName.Equals(systemName, StringComparison.InvariantCultureIgnoreCase));
         }
-
-        #endregion
-
-        #region Properties
-
-        /// <summary>
-        /// Gets the path to themes folder
-        /// </summary>
-        public string ThemesPath => "~/Themes";
-
-        /// <summary>
-        /// Gets the name of the theme description file
-        /// </summary>
-        public string ThemeDescriptionFileName => "theme.json";
 
         #endregion
     }

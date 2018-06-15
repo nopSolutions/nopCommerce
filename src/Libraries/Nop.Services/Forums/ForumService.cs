@@ -18,30 +18,6 @@ namespace Nop.Services.Forums
     /// </summary>
     public partial class ForumService : IForumService
     {
-        #region Constants
-
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        private const string FORUMGROUP_ALL_KEY = "Nop.forumgroup.all";
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : forum group ID
-        /// </remarks>
-        private const string FORUM_ALLBYFORUMGROUPID_KEY = "Nop.forum.allbyforumgroupid-{0}";
-        /// <summary>
-        /// Key pattern to clear cache
-        /// </summary>
-        private const string FORUMGROUP_PATTERN_KEY = "Nop.forumgroup.";
-        /// <summary>
-        /// Key pattern to clear cache
-        /// </summary>
-        private const string FORUM_PATTERN_KEY = "Nop.forum.";
-
-        #endregion
-
         #region Fields
 
         private readonly IRepository<ForumGroup> _forumGroupRepository;
@@ -287,8 +263,8 @@ namespace Nop.Services.Forums
 
             _forumGroupRepository.Delete(forumGroup);
 
-            _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopForumDefaults.ForumGroupPatternCacheKey);
+            _cacheManager.RemoveByPattern(NopForumDefaults.ForumPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityDeleted(forumGroup);
@@ -315,8 +291,7 @@ namespace Nop.Services.Forums
         /// <returns>Forum groups</returns>
         public virtual IList<ForumGroup> GetAllForumGroups()
         {
-            var key = string.Format(FORUMGROUP_ALL_KEY);
-            return _cacheManager.Get(key, () =>
+            return _cacheManager.Get(NopForumDefaults.ForumGroupAllCacheKey, () =>
             {
                 var query = from fg in _forumGroupRepository.Table
                             orderby fg.DisplayOrder, fg.Id
@@ -339,8 +314,8 @@ namespace Nop.Services.Forums
             _forumGroupRepository.Insert(forumGroup);
 
             //cache
-            _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopForumDefaults.ForumGroupPatternCacheKey);
+            _cacheManager.RemoveByPattern(NopForumDefaults.ForumPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(forumGroup);
@@ -360,8 +335,8 @@ namespace Nop.Services.Forums
             _forumGroupRepository.Update(forumGroup);
 
             //cache
-            _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopForumDefaults.ForumGroupPatternCacheKey);
+            _cacheManager.RemoveByPattern(NopForumDefaults.ForumPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(forumGroup);
@@ -406,8 +381,8 @@ namespace Nop.Services.Forums
             //delete forum
             _forumRepository.Delete(forum);
 
-            _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopForumDefaults.ForumGroupPatternCacheKey);
+            _cacheManager.RemoveByPattern(NopForumDefaults.ForumPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityDeleted(forum);
@@ -433,7 +408,7 @@ namespace Nop.Services.Forums
         /// <returns>Forums</returns>
         public virtual IList<Forum> GetAllForumsByGroupId(int forumGroupId)
         {
-            var key = string.Format(FORUM_ALLBYFORUMGROUPID_KEY, forumGroupId);
+            var key = string.Format(NopForumDefaults.ForumAllByForumGroupIdCacheKey, forumGroupId);
             return _cacheManager.Get(key, () =>
             {
                 var query = from f in _forumRepository.Table
@@ -458,8 +433,8 @@ namespace Nop.Services.Forums
 
             _forumRepository.Insert(forum);
 
-            _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopForumDefaults.ForumGroupPatternCacheKey);
+            _cacheManager.RemoveByPattern(NopForumDefaults.ForumPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(forum);
@@ -478,8 +453,8 @@ namespace Nop.Services.Forums
 
             _forumRepository.Update(forum);
             
-            _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopForumDefaults.ForumGroupPatternCacheKey);
+            _cacheManager.RemoveByPattern(NopForumDefaults.ForumPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(forum);
@@ -518,8 +493,8 @@ namespace Nop.Services.Forums
             UpdateForumStats(forumId);
             UpdateCustomerStats(customerId);
 
-            _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopForumDefaults.ForumGroupPatternCacheKey);
+            _cacheManager.RemoveByPattern(NopForumDefaults.ForumPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityDeleted(forumTopic);
@@ -646,8 +621,8 @@ namespace Nop.Services.Forums
             UpdateForumStats(forumTopic.ForumId);
 
             //cache            
-            _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopForumDefaults.ForumGroupPatternCacheKey);
+            _cacheManager.RemoveByPattern(NopForumDefaults.ForumPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(forumTopic);
@@ -688,8 +663,8 @@ namespace Nop.Services.Forums
 
             _forumTopicRepository.Update(forumTopic);
 
-            _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopForumDefaults.ForumGroupPatternCacheKey);
+            _cacheManager.RemoveByPattern(NopForumDefaults.ForumPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(forumTopic);
@@ -771,8 +746,8 @@ namespace Nop.Services.Forums
             UpdateCustomerStats(customerId);
 
             //clear cache            
-            _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopForumDefaults.ForumGroupPatternCacheKey);
+            _cacheManager.RemoveByPattern(NopForumDefaults.ForumPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityDeleted(forumPost);
@@ -868,8 +843,8 @@ namespace Nop.Services.Forums
             UpdateCustomerStats(customerId);
 
             //clear cache            
-            _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopForumDefaults.ForumGroupPatternCacheKey);
+            _cacheManager.RemoveByPattern(NopForumDefaults.ForumPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(forumPost);
@@ -916,8 +891,8 @@ namespace Nop.Services.Forums
 
             _forumPostRepository.Update(forumPost);
 
-            _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopForumDefaults.ForumGroupPatternCacheKey);
+            _cacheManager.RemoveByPattern(NopForumDefaults.ForumPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(forumPost);

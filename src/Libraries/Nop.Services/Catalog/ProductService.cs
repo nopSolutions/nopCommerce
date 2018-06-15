@@ -27,23 +27,6 @@ namespace Nop.Services.Catalog
     /// </summary>
     public partial class ProductService : IProductService
     {
-        #region Constants
-
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : product ID
-        /// </remarks>
-        private const string PRODUCTS_BY_ID_KEY = "Nop.product.id-{0}";
-
-        /// <summary>
-        /// Key pattern to clear cache
-        /// </summary>
-        private const string PRODUCTS_PATTERN_KEY = "Nop.product.";
-
-        #endregion
-
         #region Fields
 
         private readonly IRepository<Product> _productRepository;
@@ -226,7 +209,7 @@ namespace Nop.Services.Catalog
             if (productId == 0)
                 return null;
             
-            var key = string.Format(PRODUCTS_BY_ID_KEY, productId);
+            var key = string.Format(NopCatalogDefaults.ProductsByIdCacheKey, productId);
             return _cacheManager.Get(key, () => _productRepository.GetById(productId));
         }
 
@@ -269,7 +252,7 @@ namespace Nop.Services.Catalog
             _productRepository.Insert(product);
 
             //clear cache
-            _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductsPatternCacheKey);
             
             //event notification
             _eventPublisher.EntityInserted(product);
@@ -288,7 +271,7 @@ namespace Nop.Services.Catalog
             _productRepository.Update(product);
 
             //cache
-            _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductsPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(product);
@@ -307,7 +290,7 @@ namespace Nop.Services.Catalog
             _productRepository.Update(products);
 
             //cache
-            _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductsPatternCacheKey);
 
             //event notification
             foreach (var product in products)
@@ -1433,7 +1416,7 @@ namespace Nop.Services.Catalog
 
             _tierPriceRepository.Delete(tierPrice);
 
-            _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductsPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityDeleted(tierPrice);
@@ -1463,7 +1446,7 @@ namespace Nop.Services.Catalog
 
             _tierPriceRepository.Insert(tierPrice);
 
-            _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductsPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(tierPrice);
@@ -1480,7 +1463,7 @@ namespace Nop.Services.Catalog
 
             _tierPriceRepository.Update(tierPrice);
 
-            _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductsPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(tierPrice);
@@ -1691,7 +1674,7 @@ namespace Nop.Services.Catalog
 
             _productReviewRepository.Delete(productReview);
 
-            _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductsPatternCacheKey);
             //event notification
             _eventPublisher.EntityDeleted(productReview);
         }
@@ -1707,7 +1690,7 @@ namespace Nop.Services.Catalog
 
             _productReviewRepository.Delete(productReviews);
 
-            _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductsPatternCacheKey);
             //event notification
             foreach (var productReview in productReviews)
             {
@@ -1730,7 +1713,7 @@ namespace Nop.Services.Catalog
 
             _productWarehouseInventoryRepository.Delete(pwi);
 
-            _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductsPatternCacheKey);
         }
 
         #endregion

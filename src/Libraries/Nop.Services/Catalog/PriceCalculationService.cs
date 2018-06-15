@@ -157,7 +157,7 @@ namespace Nop.Services.Catalog
                 if (discountCategoryIds.Any())
                 {
                     //load identifier of categories of this product
-                    var cacheKey = string.Format(PriceCacheEventConsumer.PRODUCT_CATEGORY_IDS_MODEL_KEY,
+                    var cacheKey = string.Format(NopCatalogDefaults.ProductCategoryIdsModelCacheKey,
                         product.Id,
                         string.Join(",", customer.GetCustomerRoleIds()),
                         _storeContext.CurrentStore.Id);
@@ -204,7 +204,7 @@ namespace Nop.Services.Catalog
                 if (discountManufacturerIds.Any())
                 {
                     //load identifier of manufacturers of this product
-                    var cacheKey = string.Format(PriceCacheEventConsumer.PRODUCT_MANUFACTURER_IDS_MODEL_KEY,
+                    var cacheKey = string.Format(NopCatalogDefaults.ProductManufacturerIdsModelCacheKey,
                         product.Id,
                         string.Join(",", customer.GetCustomerRoleIds()),
                         _storeContext.CurrentStore.Id);
@@ -403,7 +403,7 @@ namespace Nop.Services.Catalog
             discountAmount = decimal.Zero;
             appliedDiscounts = new List<DiscountForCaching>();
 
-            var cacheKey = string.Format(PriceCacheEventConsumer.PRODUCT_PRICE_MODEL_KEY,
+            var cacheKey = string.Format(NopCatalogDefaults.ProductPriceModelCacheKey,
                 product.Id,
                 overriddenProductPrice.HasValue ? overriddenProductPrice.Value.ToString(CultureInfo.InvariantCulture) : null,
                 additionalCharge.ToString(CultureInfo.InvariantCulture),

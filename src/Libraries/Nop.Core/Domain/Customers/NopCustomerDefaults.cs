@@ -2,7 +2,7 @@
 namespace Nop.Core.Domain.Customers
 {
     /// <summary>
-    /// Represents default values related to customers
+    /// Represents default values related to customers data
     /// </summary>
     public static partial class NopCustomerDefaults
     {

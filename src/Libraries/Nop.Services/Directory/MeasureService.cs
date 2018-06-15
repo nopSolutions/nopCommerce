@@ -14,41 +14,6 @@ namespace Nop.Services.Directory
     /// </summary>
     public partial class MeasureService : IMeasureService
     {
-        #region Constants
-
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        private const string MEASUREDIMENSIONS_ALL_KEY = "Nop.measuredimension.all";
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : dimension ID
-        /// </remarks>
-        private const string MEASUREDIMENSIONS_BY_ID_KEY = "Nop.measuredimension.id-{0}";
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        private const string MEASUREWEIGHTS_ALL_KEY = "Nop.measureweight.all";
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : weight ID
-        /// </remarks>
-        private const string MEASUREWEIGHTS_BY_ID_KEY = "Nop.measureweight.id-{0}";
-        /// <summary>
-        /// Key pattern to clear cache
-        /// </summary>
-        private const string MEASUREDIMENSIONS_PATTERN_KEY = "Nop.measuredimension.";
-        /// <summary>
-        /// Key pattern to clear cache
-        /// </summary>
-        private const string MEASUREWEIGHTS_PATTERN_KEY = "Nop.measureweight.";
-
-        #endregion
-
         #region Fields
 
         private readonly IRepository<MeasureDimension> _measureDimensionRepository;
@@ -99,7 +64,7 @@ namespace Nop.Services.Directory
 
             _measureDimensionRepository.Delete(measureDimension);
 
-            _cacheManager.RemoveByPattern(MEASUREDIMENSIONS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopDirectoryDefaults.MeasureDimensionsPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityDeleted(measureDimension);
@@ -115,7 +80,7 @@ namespace Nop.Services.Directory
             if (measureDimensionId == 0)
                 return null;
 
-            var key = string.Format(MEASUREDIMENSIONS_BY_ID_KEY, measureDimensionId);
+            var key = string.Format(NopDirectoryDefaults.MeasureDimensionsByIdCacheKey, measureDimensionId);
             return _cacheManager.Get(key, () => _measureDimensionRepository.GetById(measureDimensionId));
         }
 
@@ -142,8 +107,7 @@ namespace Nop.Services.Directory
         /// <returns>Measure dimensions</returns>
         public virtual IList<MeasureDimension> GetAllMeasureDimensions()
         {
-            var key = MEASUREDIMENSIONS_ALL_KEY;
-            return _cacheManager.Get(key, () =>
+            return _cacheManager.Get(NopDirectoryDefaults.MeasureDimensionsAllCacheKey, () =>
             {
                 var query = from md in _measureDimensionRepository.Table
                     orderby md.DisplayOrder, md.Id
@@ -165,7 +129,7 @@ namespace Nop.Services.Directory
 
             _measureDimensionRepository.Insert(measure);
 
-            _cacheManager.RemoveByPattern(MEASUREDIMENSIONS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopDirectoryDefaults.MeasureDimensionsPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(measure);
@@ -182,7 +146,7 @@ namespace Nop.Services.Directory
 
             _measureDimensionRepository.Update(measure);
 
-            _cacheManager.RemoveByPattern(MEASUREDIMENSIONS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopDirectoryDefaults.MeasureDimensionsPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(measure);
@@ -279,7 +243,7 @@ namespace Nop.Services.Directory
 
             _measureWeightRepository.Delete(measureWeight);
 
-            _cacheManager.RemoveByPattern(MEASUREWEIGHTS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopDirectoryDefaults.MeasureWeightsPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityDeleted(measureWeight);
@@ -295,7 +259,7 @@ namespace Nop.Services.Directory
             if (measureWeightId == 0)
                 return null;
 
-            var key = string.Format(MEASUREWEIGHTS_BY_ID_KEY, measureWeightId);
+            var key = string.Format(NopDirectoryDefaults.MeasureWeightsByIdCacheKey, measureWeightId);
             return _cacheManager.Get(key, () => _measureWeightRepository.GetById(measureWeightId));
         }
 
@@ -322,8 +286,7 @@ namespace Nop.Services.Directory
         /// <returns>Measure weights</returns>
         public virtual IList<MeasureWeight> GetAllMeasureWeights()
         {
-            var key = MEASUREWEIGHTS_ALL_KEY;
-            return _cacheManager.Get(key, () =>
+            return _cacheManager.Get(NopDirectoryDefaults.MeasureWeightsAllCacheKey, () =>
             {
                 var query = from mw in _measureWeightRepository.Table
                     orderby mw.DisplayOrder, mw.Id
@@ -344,7 +307,7 @@ namespace Nop.Services.Directory
 
             _measureWeightRepository.Insert(measure);
 
-            _cacheManager.RemoveByPattern(MEASUREWEIGHTS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopDirectoryDefaults.MeasureWeightsPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(measure);
@@ -361,7 +324,7 @@ namespace Nop.Services.Directory
 
             _measureWeightRepository.Update(measure);
 
-            _cacheManager.RemoveByPattern(MEASUREWEIGHTS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopDirectoryDefaults.MeasureWeightsPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(measure);

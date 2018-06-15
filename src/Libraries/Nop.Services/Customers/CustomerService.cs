@@ -26,29 +26,6 @@ namespace Nop.Services.Customers
     /// </summary>
     public partial class CustomerService : ICustomerService
     {
-        #region Constants
-
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : show hidden records?
-        /// </remarks>
-        private const string CUSTOMERROLES_ALL_KEY = "Nop.customerrole.all-{0}";
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : system name
-        /// </remarks>
-        private const string CUSTOMERROLES_BY_SYSTEMNAME_KEY = "Nop.customerrole.systemname-{0}";
-        /// <summary>
-        /// Key pattern to clear cache
-        /// </summary>
-        private const string CUSTOMERROLES_PATTERN_KEY = "Nop.customerrole.";
-
-        #endregion
-
         #region Fields
 
         private readonly IRepository<Customer> _customerRepository;
@@ -635,7 +612,7 @@ namespace Nop.Services.Customers
 
             _customerRoleRepository.Delete(customerRole);
 
-            _cacheManager.RemoveByPattern(CUSTOMERROLES_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopCustomerServiceDefaults.CustomerRolesPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityDeleted(customerRole);
@@ -664,7 +641,7 @@ namespace Nop.Services.Customers
             if (string.IsNullOrWhiteSpace(systemName))
                 return null;
 
-            var key = string.Format(CUSTOMERROLES_BY_SYSTEMNAME_KEY, systemName);
+            var key = string.Format(NopCustomerServiceDefaults.CustomerRolesBySystemNameCacheKey, systemName);
             return _cacheManager.Get(key, () =>
             {
                 var query = from cr in _customerRoleRepository.Table
@@ -683,7 +660,7 @@ namespace Nop.Services.Customers
         /// <returns>Customer roles</returns>
         public virtual IList<CustomerRole> GetAllCustomerRoles(bool showHidden = false)
         {
-            var key = string.Format(CUSTOMERROLES_ALL_KEY, showHidden);
+            var key = string.Format(NopCustomerServiceDefaults.CustomerRolesAllCacheKey, showHidden);
             return _cacheManager.Get(key, () =>
             {
                 var query = from cr in _customerRoleRepository.Table
@@ -706,7 +683,7 @@ namespace Nop.Services.Customers
 
             _customerRoleRepository.Insert(customerRole);
 
-            _cacheManager.RemoveByPattern(CUSTOMERROLES_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopCustomerServiceDefaults.CustomerRolesPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(customerRole);
@@ -723,7 +700,7 @@ namespace Nop.Services.Customers
 
             _customerRoleRepository.Update(customerRole);
 
-            _cacheManager.RemoveByPattern(CUSTOMERROLES_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopCustomerServiceDefaults.CustomerRolesPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(customerRole);

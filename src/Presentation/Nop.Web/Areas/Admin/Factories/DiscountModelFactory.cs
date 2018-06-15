@@ -294,7 +294,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (model.RequiresCouponCode && !string.IsNullOrEmpty(model.CouponCode))
             {
                 model.DiscountUrl = QueryHelpers.AddQueryString(_webHelper.GetStoreLocation().TrimEnd('/'),
-                    NopServicesDefaults.DiscountCouponQueryParameter, model.CouponCode);
+                    NopDiscountDefaults.DiscountCouponQueryParameter, model.CouponCode);
             }
 
             //set default values for the new model

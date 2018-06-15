@@ -192,17 +192,17 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             //set default authentication schemes
             var authenticationBuilder = services.AddAuthentication(options =>
             {
-                options.DefaultScheme = NopCookieAuthenticationDefaults.AuthenticationScheme;
-                options.DefaultSignInScheme = NopCookieAuthenticationDefaults.ExternalAuthenticationScheme;
+                options.DefaultScheme = NopAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultSignInScheme = NopAuthenticationDefaults.ExternalAuthenticationScheme;
             });
 
             //add main cookie authentication
-            authenticationBuilder.AddCookie(NopCookieAuthenticationDefaults.AuthenticationScheme, options =>
+            authenticationBuilder.AddCookie(NopAuthenticationDefaults.AuthenticationScheme, options =>
             {
-                options.Cookie.Name = NopCookieAuthenticationDefaults.CookiePrefix + NopCookieAuthenticationDefaults.AuthenticationScheme;
+                options.Cookie.Name = NopAuthenticationDefaults.CookiePrefix + NopAuthenticationDefaults.AuthenticationScheme;
                 options.Cookie.HttpOnly = true;
-                options.LoginPath = NopCookieAuthenticationDefaults.LoginPath;
-                options.AccessDeniedPath = NopCookieAuthenticationDefaults.AccessDeniedPath;
+                options.LoginPath = NopAuthenticationDefaults.LoginPath;
+                options.AccessDeniedPath = NopAuthenticationDefaults.AccessDeniedPath;
 
                 //whether to allow the use of authentication cookies from SSL protected page on the other store pages which are not
                 options.Cookie.SecurePolicy = DataSettingsManager.DatabaseIsInstalled && EngineContext.Current.Resolve<SecuritySettings>().ForceSslForAllPages
@@ -210,12 +210,12 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             });
 
             //add external authentication
-            authenticationBuilder.AddCookie(NopCookieAuthenticationDefaults.ExternalAuthenticationScheme, options =>
+            authenticationBuilder.AddCookie(NopAuthenticationDefaults.ExternalAuthenticationScheme, options =>
             {
-                options.Cookie.Name = NopCookieAuthenticationDefaults.CookiePrefix + NopCookieAuthenticationDefaults.ExternalAuthenticationScheme;
+                options.Cookie.Name = NopAuthenticationDefaults.CookiePrefix + NopAuthenticationDefaults.ExternalAuthenticationScheme;
                 options.Cookie.HttpOnly = true;
-                options.LoginPath = NopCookieAuthenticationDefaults.LoginPath;
-                options.AccessDeniedPath = NopCookieAuthenticationDefaults.AccessDeniedPath;
+                options.LoginPath = NopAuthenticationDefaults.LoginPath;
+                options.AccessDeniedPath = NopAuthenticationDefaults.AccessDeniedPath;
 
                 //whether to allow the use of authentication cookies from SSL protected page on the other store pages which are not
                 options.Cookie.SecurePolicy = DataSettingsManager.DatabaseIsInstalled && EngineContext.Current.Resolve<SecuritySettings>().ForceSslForAllPages
