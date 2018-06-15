@@ -18,7 +18,7 @@
     <PackageReference Include="iTextSharp.LGPLv2.Core" Version="1.4.3" />
     <PackageReference Include="MaxMind.GeoIP2" Version="3.0.0" />
     <PackageReference Include="SixLabors.ImageSharp" Version="1.0.0-beta0004" />
-    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.0.8.9" />
+    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.0.8.11" />
     <PackageReference Include="System.ServiceModel.Http" Version="4.5.0" />
     <PackageReference Include="WindowsAzure.Storage" Version="9.2.0" />
   </ItemGroup>
