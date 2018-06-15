@@ -16,6 +16,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="2.1.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.1.0" />
+    <PackageReference Include="MiniProfiler.EntityFrameworkCore" Version="4.0.119" />
   </ItemGroup>
 
   <ItemGroup>
