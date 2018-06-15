@@ -10,7 +10,7 @@ using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Seo;
 using Nop.Services.Vendors;
-using Nop.Web.Areas.Admin.Extensions;
+using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Common;
 using Nop.Web.Areas.Admin.Models.Vendors;
 using Nop.Web.Framework.Extensions;
@@ -25,6 +25,7 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
+        private readonly IAddressAttributeModelFactory _addressAttributeModelFactory;
         private readonly IAddressAttributeParser _addressAttributeParser;
         private readonly IAddressAttributeService _addressAttributeService;
         private readonly IAddressService _addressService;
@@ -42,7 +43,8 @@ namespace Nop.Web.Areas.Admin.Factories
 
         #region Ctor
 
-        public VendorModelFactory(IAddressAttributeParser addressAttributeParser,
+        public VendorModelFactory(IAddressAttributeModelFactory addressAttributeModelFactory,
+            IAddressAttributeParser addressAttributeParser,
             IAddressAttributeService addressAttributeService,
             IAddressService addressService,
             IBaseAdminModelFactory baseAdminModelFactory,
@@ -55,6 +57,7 @@ namespace Nop.Web.Areas.Admin.Factories
             IVendorService vendorService,
             VendorSettings vendorSettings)
         {
+            this._addressAttributeModelFactory = addressAttributeModelFactory;
             this._addressAttributeParser = addressAttributeParser;
             this._addressAttributeService = addressAttributeService;
             this._addressService = addressService;
@@ -219,7 +222,7 @@ namespace Nop.Web.Areas.Admin.Factories
             _baseAdminModelFactory.PrepareStatesAndProvinces(model.AvailableStates, model.CountryId);
 
             //prepare custom address attributes
-            model.PrepareCustomAddressAttributes(address, _addressAttributeService, _addressAttributeParser);
+            _addressAttributeModelFactory.PrepareCustomAddressAttributes(model.CustomAddressAttributes, address);
         }
 
         /// <summary>
@@ -283,7 +286,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new VendorListModel
             {
                 //fill in model values from the entity
-                Data = vendors.Select(vendor => vendor.ToModel()),
+                Data = vendors.Select(vendor => vendor.ToModel<VendorModel>()),
                 Total = vendors.TotalCount
             };
 
@@ -304,7 +307,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (vendor != null)
             {
                 //fill in model values from the entity
-                model = model ?? vendor.ToModel();
+                model = model ?? vendor.ToModel<VendorModel>();
 
                 //define localized model configuration action
                 localizedModelConfiguration = (locale, languageId) =>
@@ -343,7 +346,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare address model
             var address = _addressService.GetAddressById(vendor?.AddressId ?? 0);
             if (!excludeProperties && address != null)
-                model.Address = address.ToModel();
+                model.Address = address.ToModel(model.Address);
             PrepareAddressModel(model.Address, address);
 
             return model;

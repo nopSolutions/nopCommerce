@@ -111,12 +111,12 @@ namespace Nop.Core.Infrastructure
         protected virtual void AddAutoMapper(IServiceCollection services, ITypeFinder typeFinder)
         {
             //find mapper configurations provided by other assemblies
-            var mapperConfigurations = typeFinder.FindClassesOfType<IMapperProfile>();
+            var mapperConfigurations = typeFinder.FindClassesOfType<IOrderedMapperProfile>();
 
             //create and sort instances of mapper configurations
             var instances = mapperConfigurations
                 .Where(mapperConfiguration => PluginManager.FindPlugin(mapperConfiguration)?.Installed ?? true) //ignore not installed plugins
-                .Select(mapperConfiguration => (IMapperProfile)Activator.CreateInstance(mapperConfiguration))
+                .Select(mapperConfiguration => (IOrderedMapperProfile)Activator.CreateInstance(mapperConfiguration))
                 .OrderBy(mapperConfiguration => mapperConfiguration.Order);
 
             //create AutoMapper configuration

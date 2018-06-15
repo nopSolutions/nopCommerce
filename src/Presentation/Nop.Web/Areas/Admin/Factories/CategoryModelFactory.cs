@@ -7,7 +7,7 @@ using Nop.Services.Catalog;
 using Nop.Services.Discounts;
 using Nop.Services.Localization;
 using Nop.Services.Seo;
-using Nop.Web.Areas.Admin.Extensions;
+using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Web.Framework.Factories;
 
@@ -129,7 +129,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = categories.Select(category =>
                 {
                     //fill in model values from the entity
-                    var categoryModel = category.ToModel();
+                    var categoryModel = category.ToModel<CategoryModel>();
 
                     //fill in additional values (not existing in the entity)
                     categoryModel.Breadcrumb = category.GetFormattedBreadCrumb(_categoryService);
@@ -156,7 +156,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (category != null)
             {
                 //fill in model values from the entity
-                model = model ?? category.ToModel();
+                model = model ?? category.ToModel<CategoryModel>();
 
                 //prepare nested search model
                 PrepareCategoryProductSearchModel(model.CategoryProductSearchModel, category);
@@ -300,7 +300,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new AddProductToCategoryListModel
             {
                 //fill in model values from the entity
-                Data = products.Select(product => product.ToModel()),
+                Data = products.Select(product => product.ToModel<ProductModel>()),
                 Total = products.TotalCount
             };
 

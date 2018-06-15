@@ -29,7 +29,7 @@ using Nop.Services.Messages;
 using Nop.Services.Orders;
 using Nop.Services.Stores;
 using Nop.Services.Tax;
-using Nop.Web.Areas.Admin.Extensions;
+using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Common;
 using Nop.Web.Areas.Admin.Models.Customers;
 using Nop.Web.Areas.Admin.Models.ShoppingCart;
@@ -51,6 +51,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly GdprSettings _gdprSettings;
         private readonly IAclSupportedModelFactory _aclSupportedModelFactory;
         private readonly IAddressAttributeFormatter _addressAttributeFormatter;
+        private readonly IAddressAttributeModelFactory _addressAttributeModelFactory;
         private readonly IAddressAttributeParser _addressAttributeParser;
         private readonly IAddressAttributeService _addressAttributeService;
         private readonly IAffiliateService _affiliateService;
@@ -92,6 +93,7 @@ namespace Nop.Web.Areas.Admin.Factories
             GdprSettings gdprSettings,
             IAclSupportedModelFactory aclSupportedModelFactory,
             IAddressAttributeFormatter addressAttributeFormatter,
+            IAddressAttributeModelFactory addressAttributeModelFactory,
             IAddressAttributeParser addressAttributeParser,
             IAddressAttributeService addressAttributeService,
             IAffiliateService affiliateService,
@@ -129,6 +131,7 @@ namespace Nop.Web.Areas.Admin.Factories
             this._gdprSettings = gdprSettings;
             this._aclSupportedModelFactory = aclSupportedModelFactory;
             this._addressAttributeFormatter = addressAttributeFormatter;
+            this._addressAttributeModelFactory = addressAttributeModelFactory;
             this._addressAttributeParser = addressAttributeParser;
             this._addressAttributeService = addressAttributeService;
             this._affiliateService = affiliateService;
@@ -351,7 +354,7 @@ namespace Nop.Web.Areas.Admin.Factories
             _baseAdminModelFactory.PrepareStatesAndProvinces(model.AvailableStates, model.CountryId);
 
             //prepare custom address attributes
-            model.PrepareCustomAddressAttributes(address, _addressAttributeService, _addressAttributeParser);
+            _addressAttributeModelFactory.PrepareCustomAddressAttributes(model.CustomAddressAttributes, address);
         }
 
         /// <summary>
@@ -910,7 +913,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = addresses.PaginationByRequestModel(searchModel).Select(address =>
                 {
                     //fill in model values from the entity        
-                    var addressModel = address.ToModel();
+                    var addressModel = address.ToModel<AddressModel>();
 
                     //fill in additional values (not existing in the entity)
                     PrepareModelAddressHtml(addressModel, address);
@@ -944,7 +947,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
                 //whether to fill in some of properties
                 if (!excludeProperties)
-                    model.Address = address.ToModel();
+                    model.Address = address.ToModel(model.Address);
             }
 
             model.CustomerId = customer.Id;

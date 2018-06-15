@@ -8,7 +8,7 @@ using Nop.Services.Directory;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Orders;
-using Nop.Web.Areas.Admin.Extensions;
+using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Orders;
 using Nop.Web.Framework.Extensions;
 
@@ -136,7 +136,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = giftCards.Select(giftCard =>
                 {
                     //fill in model values from the entity
-                    var giftCardModel = giftCard.ToModel();
+                    var giftCardModel = giftCard.ToModel<GiftCardModel>();
 
                     //convert dates to the user time
                     giftCardModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(giftCard.CreatedOnUtc, DateTimeKind.Utc);
@@ -165,7 +165,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (giftCard != null)
             {
                 //fill in model values from the entity
-                model = model ?? giftCard.ToModel();
+                model = model ?? giftCard.ToModel<GiftCardModel>();
 
                 model.PurchasedWithOrderId = giftCard.PurchasedWithOrderItem?.OrderId;
                 model.RemainingAmountStr = _priceFormatter.FormatPrice(giftCard.GetGiftCardRemainingAmount(), true, false);

@@ -10,7 +10,7 @@ using Nop.Services.Customers;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Orders;
-using Nop.Web.Areas.Admin.Extensions;
+using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Affiliates;
 using Nop.Web.Areas.Admin.Models.Common;
 
@@ -195,11 +195,12 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new AffiliateListModel
             {
                 //fill in model values from the entity
-                Data = affiliates.Select(affiliate => new AffiliateModel
+                Data = affiliates.Select(affiliate =>
                 {
-                    Id = affiliate.Id,
-                    Active = affiliate.Active,
-                    Address = affiliate.Address.ToModel()
+                    var affiliateModel = affiliate.ToModel<AffiliateModel>();
+                    affiliateModel.Address = affiliate.Address.ToModel<AddressModel>();
+
+                    return affiliateModel;
                 }),
                 Total = affiliates.TotalCount
             };
@@ -219,8 +220,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //fill in model values from the entity
             if (affiliate != null)
             {
-                model = model ?? new AffiliateModel();
-                model.Id = affiliate.Id;
+                model = model ?? affiliate.ToModel<AffiliateModel>();
                 model.Url = affiliate.GenerateUrl(_webHelper);
 
                 //prepare nested search models
@@ -233,7 +233,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     model.AdminComment = affiliate.AdminComment;
                     model.FriendlyUrlName = affiliate.FriendlyUrlName;
                     model.Active = affiliate.Active;
-                    model.Address = affiliate.Address.ToModel();
+                    model.Address = affiliate.Address.ToModel(model.Address);
                 }
             }
 

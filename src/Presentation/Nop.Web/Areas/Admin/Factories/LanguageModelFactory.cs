@@ -2,7 +2,7 @@
 using System.Linq;
 using Nop.Core.Domain.Localization;
 using Nop.Services.Localization;
-using Nop.Web.Areas.Admin.Extensions;
+using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Localization;
 using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Factories;
@@ -99,7 +99,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new LanguageListModel
             {
                 //fill in model values from the entity
-                Data = languages.PaginationByRequestModel(searchModel).Select(language => language.ToModel()),
+                Data = languages.PaginationByRequestModel(searchModel).Select(language => language.ToModel<LanguageModel>()),
                 Total = languages.Count
             };
 
@@ -118,7 +118,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (language != null)
             {
                 //fill in model values from the entity
-                model = model ?? language.ToModel();
+                model = model ?? language.ToModel<LanguageModel>();
 
                 //prepare nested search model
                 PrepareLocaleResourceSearchModel(model.LocaleResourceSearchModel, language);

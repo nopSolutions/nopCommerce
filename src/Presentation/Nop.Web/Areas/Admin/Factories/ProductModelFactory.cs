@@ -24,7 +24,7 @@ using Nop.Services.Orders;
 using Nop.Services.Seo;
 using Nop.Services.Shipping;
 using Nop.Services.Stores;
-using Nop.Web.Areas.Admin.Extensions;
+using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Infrastructure.Cache;
 using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Web.Areas.Admin.Models.Orders;
@@ -738,7 +738,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = products.Select(product =>
                 {
                     //fill in model values from the entity
-                    var productModel = product.ToModel();
+                    var productModel = product.ToModel<ProductModel>();
 
                     //little performance optimization: ensure that "FullDescription" is not returned
                     productModel.FullDescription = string.Empty;
@@ -772,7 +772,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (product != null)
             {
                 //fill in model values from the entity
-                model = model ?? product.ToModel();
+                model = model ?? product.ToModel<ProductModel>();
 
                 var parentGroupedProduct = _productService.GetProductById(product.ParentGroupedProductId);
                 if (parentGroupedProduct != null)
@@ -996,7 +996,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new AddRequiredProductListModel
             {
                 //fill in model values from the entity
-                Data = products.Select(product => product.ToModel()),
+                Data = products.Select(product => product.ToModel<ProductModel>()),
                 Total = products.TotalCount
             };
 
@@ -1105,7 +1105,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new AddRelatedProductListModel
             {
                 //fill in model values from the entity
-                Data = products.Select(product => product.ToModel()),
+                Data = products.Select(product => product.ToModel<ProductModel>()),
                 Total = products.TotalCount
             };
 
@@ -1213,7 +1213,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new AddCrossSellProductListModel
             {
                 //fill in model values from the entity
-                Data = products.Select(product => product.ToModel()),
+                Data = products.Select(product => product.ToModel<ProductModel>()),
                 Total = products.TotalCount
             };
 
@@ -1318,7 +1318,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = products.Select(product =>
                 {
                     //fill in model values from the entity
-                    var productModel = product.ToModel();
+                    var productModel = product.ToModel<ProductModel>();
 
                     //fill in additional values (not existing in the entity)
                     var parentGroupedProduct = _productService.GetProductById(product.ParentGroupedProductId);
@@ -2239,7 +2239,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new AssociateProductToAttributeValueListModel
             {
                 //fill in model values from the entity
-                Data = products.Select(product => product.ToModel()),
+                Data = products.Select(product => product.ToModel<ProductModel>()),
                 Total = products.TotalCount
             };
 

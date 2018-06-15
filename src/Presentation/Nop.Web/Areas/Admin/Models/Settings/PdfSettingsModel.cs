@@ -7,9 +7,11 @@ namespace Nop.Web.Areas.Admin.Models.Settings
     /// <summary>
     /// Represents a PDF settings model
     /// </summary>
-    public partial class PdfSettingsModel : BaseNopModel
+    public partial class PdfSettingsModel : BaseNopModel, ISettingsModel
     {
         #region Properties
+
+        public int ActiveStoreScopeConfiguration { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.PdfLetterPageSizeEnabled")]
         public bool LetterPageSizeEnabled { get; set; }

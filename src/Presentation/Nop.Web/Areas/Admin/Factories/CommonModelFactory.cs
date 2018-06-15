@@ -26,8 +26,9 @@ using Nop.Services.Orders;
 using Nop.Services.Payments;
 using Nop.Services.Seo;
 using Nop.Services.Stores;
-using Nop.Web.Areas.Admin.Extensions;
+using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Common;
+using Nop.Web.Areas.Admin.Models.Localization;
 using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Security;
 
@@ -652,14 +653,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = urlRecords.Select(urlRecord =>
                 {
                     //fill in model values from the entity
-                    var urlRecordModel = new UrlRecordModel
-                    {
-                        Id = urlRecord.Id,
-                        Name = urlRecord.Slug,
-                        EntityId = urlRecord.EntityId,
-                        EntityName = urlRecord.EntityName,
-                        IsActive = urlRecord.IsActive
-                    };
+                    var urlRecordModel = urlRecord.ToModel<UrlRecordModel>();
 
                     //fill in additional values (not existing in the entity)
                     urlRecordModel.Language = urlRecord.LanguageId == 0
@@ -712,9 +706,10 @@ namespace Nop.Web.Areas.Admin.Factories
         {
             var model = new LanguageSelectorModel
             {
-                CurrentLanguage = _workContext.WorkingLanguage.ToModel(),
+                CurrentLanguage = _workContext.WorkingLanguage.ToModel<LanguageModel>(),
                 AvailableLanguages = _languageService
-                    .GetAllLanguages(storeId: _storeContext.CurrentStore.Id).Select(language => language.ToModel()).ToList()
+                    .GetAllLanguages(storeId: _storeContext.CurrentStore.Id)
+                    .Select(language => language.ToModel<LanguageModel>()).ToList()
             };
 
             return model;

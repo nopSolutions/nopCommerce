@@ -16,8 +16,8 @@ using Nop.Services.Media;
 using Nop.Services.Security;
 using Nop.Services.Seo;
 using Nop.Services.Stores;
-using Nop.Web.Areas.Admin.Extensions;
 using Nop.Web.Areas.Admin.Factories;
+using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc;
@@ -237,7 +237,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                var manufacturer = model.ToEntity();
+                var manufacturer = model.ToEntity<Manufacturer>();
                 manufacturer.CreatedOnUtc = DateTime.UtcNow;
                 manufacturer.UpdatedOnUtc = DateTime.UtcNow;
                 _manufacturerService.InsertManufacturer(manufacturer);

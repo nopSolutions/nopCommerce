@@ -31,7 +31,8 @@ using Nop.Services.Shipping.Tracking;
 using Nop.Services.Stores;
 using Nop.Services.Tax;
 using Nop.Services.Vendors;
-using Nop.Web.Areas.Admin.Extensions;
+using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
+using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Web.Areas.Admin.Models.Common;
 using Nop.Web.Areas.Admin.Models.Orders;
 using Nop.Web.Framework.Extensions;
@@ -49,6 +50,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly CurrencySettings _currencySettings;
         private readonly IActionContextAccessor _actionContextAccessor;
         private readonly IAddressAttributeFormatter _addressAttributeFormatter;
+        private readonly IAddressAttributeModelFactory _addressAttributeModelFactory;
         private readonly IAddressAttributeParser _addressAttributeParser;
         private readonly IAddressAttributeService _addressAttributeService;
         private readonly IAffiliateService _affiliateService;
@@ -93,6 +95,7 @@ namespace Nop.Web.Areas.Admin.Factories
             CurrencySettings currencySettings,
             IActionContextAccessor actionContextAccessor,
             IAddressAttributeFormatter addressAttributeFormatter,
+            IAddressAttributeModelFactory addressAttributeModelFactory,
             IAddressAttributeParser addressAttributeParser,
             IAddressAttributeService addressAttributeService,
             IAffiliateService affiliateService,
@@ -133,6 +136,7 @@ namespace Nop.Web.Areas.Admin.Factories
             this._currencySettings = currencySettings;
             this._actionContextAccessor = actionContextAccessor;
             this._addressAttributeFormatter = addressAttributeFormatter;
+            this._addressAttributeModelFactory = addressAttributeModelFactory;
             this._addressAttributeParser = addressAttributeParser;
             this._addressAttributeService = addressAttributeService;
             this._affiliateService = affiliateService;
@@ -481,7 +485,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(order));
 
             //prepare billing address
-            model.BillingAddress = order.BillingAddress.ToModel();
+            model.BillingAddress = order.BillingAddress.ToModel(model.BillingAddress);
             PrepareAddressModel(model.BillingAddress, order.BillingAddress);
 
             if (order.AllowStoringCreditCardNumber)
@@ -562,7 +566,7 @@ namespace Nop.Web.Areas.Admin.Factories
             model.PickUpInStore = order.PickUpInStore;
             if (!order.PickUpInStore)
             {
-                model.ShippingAddress = order.ShippingAddress.ToModel();
+                model.ShippingAddress = order.ShippingAddress.ToModel(model.ShippingAddress);
                 PrepareAddressModel(model.ShippingAddress, order.ShippingAddress);
                 model.ShippingAddressGoogleMapsUrl = $"https://maps.google.com/maps?f=q&hl=en&ie=UTF8&oe=UTF8&geocode=&q={WebUtility.UrlEncode(order.ShippingAddress.Address1 + " " + order.ShippingAddress.ZipPostalCode + " " + order.ShippingAddress.City + " " + (order.ShippingAddress.Country != null ? order.ShippingAddress.Country.Name : ""))}";
             }
@@ -571,7 +575,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 if (order.PickupAddress == null)
                     return;
 
-                model.PickupAddress = order.PickupAddress.ToModel();
+                model.PickupAddress = order.PickupAddress.ToModel(model.PickupAddress);
                 model.PickupAddressGoogleMapsUrl = $"https://maps.google.com/maps?f=q&hl=en&ie=UTF8&oe=UTF8&geocode=&q={WebUtility.UrlEncode($"{order.PickupAddress.Address1} {order.PickupAddress.ZipPostalCode} {order.PickupAddress.City} {(order.PickupAddress.Country != null ? order.PickupAddress.Country.Name : string.Empty)}")}";
             }
         }
@@ -1154,7 +1158,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new AddProductToOrderListModel
             {
                 //fill in model values from the entity
-                Data = products.Select(product => product.ToModel()),
+                Data = products.Select(product => product.ToModel<ProductModel>()),
                 Total = products.TotalCount
             };
 
@@ -1229,7 +1233,7 @@ namespace Nop.Web.Areas.Admin.Factories
             model.OrderId = order.Id;
 
             //prepare address model
-            model.Address = address.ToModel();
+            model.Address = address.ToModel(model.Address);
             PrepareAddressModel(model.Address, address);
 
             //prepare available countries
@@ -1239,7 +1243,7 @@ namespace Nop.Web.Areas.Admin.Factories
             _baseAdminModelFactory.PrepareStatesAndProvinces(model.Address.AvailableStates, model.Address.CountryId);
 
             //prepare custom address attributes
-            model.Address.PrepareCustomAddressAttributes(address, _addressAttributeService, _addressAttributeParser);
+            _addressAttributeModelFactory.PrepareCustomAddressAttributes(model.Address.CustomAddressAttributes, address);
 
             return model;
         }

@@ -5,8 +5,8 @@ using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Security;
 using Nop.Services.Vendors;
-using Nop.Web.Areas.Admin.Extensions;
 using Nop.Web.Areas.Admin.Factories;
+using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Vendors;
 using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.Filters;
@@ -118,7 +118,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                var vendorAttribute = model.ToEntity();
+                var vendorAttribute = model.ToEntity<VendorAttribute>();
                 _vendorAttributeService.InsertVendorAttribute(vendorAttribute);
 
                 //activity log
@@ -273,13 +273,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                var value = new VendorAttributeValue
-                {
-                    VendorAttributeId = model.VendorAttributeId,
-                    Name = model.Name,
-                    IsPreSelected = model.IsPreSelected,
-                    DisplayOrder = model.DisplayOrder
-                };
+                var value = model.ToEntity<VendorAttributeValue>();
 
                 _vendorAttributeService.InsertVendorAttributeValue(value);
 
@@ -341,9 +335,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                vendorAttributeValue.Name = model.Name;
-                vendorAttributeValue.IsPreSelected = model.IsPreSelected;
-                vendorAttributeValue.DisplayOrder = model.DisplayOrder;
+                vendorAttributeValue = model.ToEntity(vendorAttributeValue);
                 _vendorAttributeService.UpdateVendorAttributeValue(vendorAttributeValue);
 
                 //activity log

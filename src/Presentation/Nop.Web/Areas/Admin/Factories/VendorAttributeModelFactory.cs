@@ -4,7 +4,7 @@ using Nop.Core;
 using Nop.Core.Domain.Vendors;
 using Nop.Services.Localization;
 using Nop.Services.Vendors;
-using Nop.Web.Areas.Admin.Extensions;
+using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Vendors;
 using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Factories;
@@ -104,7 +104,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = vendorAttributes.PaginationByRequestModel(searchModel).Select(attribute =>
                 {
                     //fill in model values from the entity
-                    var attributeModel = attribute.ToModel();
+                    var attributeModel = attribute.ToModel<VendorAttributeModel>();
 
                     //fill in additional values (not existing in the entity)
                     attributeModel.AttributeControlTypeName = attribute.AttributeControlType.GetLocalizedEnum(_localizationService, _workContext);
@@ -132,7 +132,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (vendorAttribute != null)
             {
                 //fill in model values from the entity
-                model = model ?? vendorAttribute.ToModel();
+                model = model ?? vendorAttribute.ToModel<VendorAttributeModel>();
 
                 //prepare nested search model
                 PrepareVendorAttributeValueSearchModel(model.VendorAttributeValueSearchModel, vendorAttribute);
@@ -173,14 +173,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new VendorAttributeValueListModel
             {
                 //fill in model values from the entity
-                Data = vendorAttributeValues.PaginationByRequestModel(searchModel).Select(value => new VendorAttributeValueModel
-                {
-                    Id = value.Id,
-                    VendorAttributeId = value.VendorAttributeId,
-                    Name = value.Name,
-                    IsPreSelected = value.IsPreSelected,
-                    DisplayOrder = value.DisplayOrder
-                }),
+                Data = vendorAttributeValues.PaginationByRequestModel(searchModel).Select(value => value.ToModel<VendorAttributeValueModel>()),
                 Total = vendorAttributeValues.Count
             };
 
@@ -206,12 +199,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (vendorAttributeValue != null)
             {
                 //fill in model values from the entity
-                model = model ?? new VendorAttributeValueModel
-                {
-                    Name = vendorAttributeValue.Name,
-                    IsPreSelected = vendorAttributeValue.IsPreSelected,
-                    DisplayOrder = vendorAttributeValue.DisplayOrder
-                };
+                model = model ?? vendorAttributeValue.ToModel<VendorAttributeValueModel>();
 
                 //define localized model configuration action
                 localizedModelConfiguration = (locale, languageId) =>

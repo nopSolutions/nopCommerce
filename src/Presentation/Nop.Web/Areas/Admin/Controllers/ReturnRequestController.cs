@@ -8,8 +8,8 @@ using Nop.Services.Logging;
 using Nop.Services.Messages;
 using Nop.Services.Orders;
 using Nop.Services.Security;
-using Nop.Web.Areas.Admin.Extensions;
 using Nop.Web.Areas.Admin.Factories;
+using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Orders;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc.Filters;
@@ -261,7 +261,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                var returnRequestReason = model.ToEntity();
+                var returnRequestReason = model.ToEntity<ReturnRequestReason>();
                 _returnRequestService.InsertReturnRequestReason(returnRequestReason);
 
                 //locales
@@ -398,7 +398,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                var returnRequestAction = model.ToEntity();
+                var returnRequestAction = model.ToEntity<ReturnRequestAction>();
                 _returnRequestService.InsertReturnRequestAction(returnRequestAction);
 
                 //locales

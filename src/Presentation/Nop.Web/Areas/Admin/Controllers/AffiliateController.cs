@@ -1,12 +1,13 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Domain.Affiliates;
+using Nop.Core.Domain.Common;
 using Nop.Services.Affiliates;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Security;
-using Nop.Web.Areas.Admin.Extensions;
 using Nop.Web.Areas.Admin.Factories;
+using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Affiliates;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc.Filters;
@@ -92,17 +93,13 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                var affiliate = new Affiliate
-                {
-                    Active = model.Active,
-                    AdminComment = model.AdminComment
-                };
+                var affiliate = model.ToEntity<Affiliate>();
 
                 //validate friendly URL name
                 var friendlyUrlName = affiliate.ValidateFriendlyUrlName(model.FriendlyUrlName);
                 affiliate.FriendlyUrlName = friendlyUrlName;
-
-                affiliate.Address = model.Address.ToEntity();
+                
+                affiliate.Address = model.Address.ToEntity<Address>();
                 affiliate.Address.CreatedOnUtc = DateTime.UtcNow;
 
                 //some validation
@@ -155,16 +152,15 @@ namespace Nop.Web.Areas.Admin.Controllers
             var affiliate = _affiliateService.GetAffiliateById(model.Id);
             if (affiliate == null || affiliate.Deleted)
                 return RedirectToAction("List");
-
+            
             if (ModelState.IsValid)
             {
-                affiliate.Active = model.Active;
-                affiliate.AdminComment = model.AdminComment;
+                affiliate = model.ToEntity(affiliate);
 
                 //validate friendly URL name
                 var friendlyUrlName = affiliate.ValidateFriendlyUrlName(model.FriendlyUrlName);
                 affiliate.FriendlyUrlName = friendlyUrlName;
-
+                
                 affiliate.Address = model.Address.ToEntity(affiliate.Address);
 
                 //some validation

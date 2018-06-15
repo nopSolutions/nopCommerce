@@ -11,7 +11,7 @@ namespace Nop.Web.Areas.Admin.Models.Plugins
     /// Represents a plugin model
     /// </summary>
     [Validator(typeof(PluginValidator))]
-    public partial class PluginModel : BaseNopModel, IAclSupportedModel, ILocalizedModel<PluginLocalizedModel>, IStoreMappingSupportedModel
+    public partial class PluginModel : BaseNopModel, IAclSupportedModel, ILocalizedModel<PluginLocalizedModel>, IPluginModel, IStoreMappingSupportedModel
     {
         #region Ctor
 
@@ -76,6 +76,8 @@ namespace Nop.Web.Areas.Admin.Models.Plugins
         public IList<int> SelectedStoreIds { get; set; }
 
         public IList<SelectListItem> AvailableStores { get; set; }
+
+        public bool IsActive { get; set; }
 
         #endregion
     }

@@ -10,8 +10,8 @@ using Nop.Services.Logging;
 using Nop.Services.Orders;
 using Nop.Services.Security;
 using Nop.Services.Stores;
-using Nop.Web.Areas.Admin.Extensions;
 using Nop.Web.Areas.Admin.Factories;
+using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Orders;
 using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.Filters;
@@ -232,7 +232,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                var checkoutAttribute = model.ToEntity();
+                var checkoutAttribute = model.ToEntity<CheckoutAttribute>();
                 _checkoutAttributeService.InsertCheckoutAttribute(checkoutAttribute);
 
                 //locales
@@ -416,16 +416,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                var checkoutAttributeValue = new CheckoutAttributeValue
-                {
-                    CheckoutAttributeId = model.CheckoutAttributeId,
-                    Name = model.Name,
-                    ColorSquaresRgb = model.ColorSquaresRgb,
-                    PriceAdjustment = model.PriceAdjustment,
-                    WeightAdjustment = model.WeightAdjustment,
-                    IsPreSelected = model.IsPreSelected,
-                    DisplayOrder = model.DisplayOrder
-                };
+                var checkoutAttributeValue = model.ToEntity<CheckoutAttributeValue>();
                 _checkoutAttributeService.InsertCheckoutAttributeValue(checkoutAttributeValue);
 
                 UpdateValueLocales(checkoutAttributeValue, model);
@@ -501,12 +492,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                checkoutAttributeValue.Name = model.Name;
-                checkoutAttributeValue.ColorSquaresRgb = model.ColorSquaresRgb;
-                checkoutAttributeValue.PriceAdjustment = model.PriceAdjustment;
-                checkoutAttributeValue.WeightAdjustment = model.WeightAdjustment;
-                checkoutAttributeValue.IsPreSelected = model.IsPreSelected;
-                checkoutAttributeValue.DisplayOrder = model.DisplayOrder;
+                checkoutAttributeValue = model.ToEntity(checkoutAttributeValue);
                 _checkoutAttributeService.UpdateCheckoutAttributeValue(checkoutAttributeValue);
 
                 UpdateValueLocales(checkoutAttributeValue, model);

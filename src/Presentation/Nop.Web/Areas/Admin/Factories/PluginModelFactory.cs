@@ -17,7 +17,7 @@ using Nop.Services.Plugins;
 using Nop.Services.Shipping;
 using Nop.Services.Shipping.Pickup;
 using Nop.Services.Tax;
-using Nop.Web.Areas.Admin.Extensions;
+using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Plugins;
 using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Factories;
@@ -183,7 +183,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = plugins.PaginationByRequestModel(searchModel).Select(pluginDescriptor =>
                 {
                     //fill in model values from the entity
-                    var pluginModel = pluginDescriptor.ToModel();
+                    var pluginModel = pluginDescriptor.ToPluginModel<PluginModel>();
 
                     //fill in additional values (not existing in the entity)
                     pluginModel.LogoUrl = pluginDescriptor.GetLogoUrl(_webHelper);
@@ -212,7 +212,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (pluginDescriptor != null)
             {
                 //fill in model values from the entity
-                model = model ?? pluginDescriptor.ToModel();
+                model = model ?? pluginDescriptor.ToPluginModel(model);
 
                 model.LogoUrl = pluginDescriptor.GetLogoUrl(_webHelper);
                 model.SelectedStoreIds = pluginDescriptor.LimitedToStores;

@@ -3,7 +3,7 @@
     /// <summary>
     /// Mapper profile registrar interface
     /// </summary>
-    public interface IMapperProfile
+    public interface IOrderedMapperProfile
     {
         /// <summary>
         /// Gets order of this configuration implementation

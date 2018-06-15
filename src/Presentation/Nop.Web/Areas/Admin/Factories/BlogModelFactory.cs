@@ -8,7 +8,7 @@ using Nop.Services.Blogs;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Stores;
-using Nop.Web.Areas.Admin.Extensions;
+using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Blogs;
 using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Factories;
@@ -94,7 +94,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = blogPosts.Select(blogPost =>
                 {
                     //fill in model values from the entity
-                    var blogPostModel = blogPost.ToModel();
+                    var blogPostModel = blogPost.ToModel<BlogPostModel>();
 
                     //little performance optimization: ensure that "Body" is not returned
                     blogPostModel.Body = string.Empty;
@@ -131,7 +131,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //fill in model values from the entity
             if (blogPost != null)
             {
-                model = model ?? blogPost.ToModel();
+                model = model ?? blogPost.ToModel<BlogPostModel>();
                 model.StartDate = blogPost.StartDateUtc;
                 model.EndDate = blogPost.EndDateUtc;
             }
@@ -217,15 +217,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = comments.PaginationByRequestModel(searchModel).Select(blogComment =>
                 {
                     //fill in model values from the entity
-                    var commentModel = new BlogCommentModel
-                    {
-                        Id = blogComment.Id,
-                        BlogPostId = blogComment.BlogPostId,
-                        BlogPostTitle = blogComment.BlogPost.Title,
-                        CustomerId = blogComment.CustomerId,
-                        IsApproved = blogComment.IsApproved,
-                        StoreId = blogComment.StoreId
-                    };
+                    var commentModel = blogComment.ToModel<BlogCommentModel>();
 
                     //fill in additional values (not existing in the entity)
                     commentModel.CustomerInfo = blogComment.Customer.IsRegistered()
