@@ -2241,8 +2241,12 @@ BEGIN
 	IF @CategoryIdsCount > 0
 	BEGIN
 		SET @sql = @sql + '
-		AND pcm.CategoryId IN (SELECT CategoryId FROM #FilteredCategoryIds)'
+		AND pcm.CategoryId IN ('
 		
+		SET @sql = @sql + + CAST(@CategoryIds AS nvarchar(max))
+
+		SET @sql = @sql + ')'
+
 		IF @FeaturedProducts IS NOT NULL
 		BEGIN
 			SET @sql = @sql + '
