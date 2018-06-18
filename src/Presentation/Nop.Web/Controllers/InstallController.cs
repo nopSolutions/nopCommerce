@@ -336,20 +336,6 @@ namespace Nop.Web.Controllers
                                 throw new Exception(_locService.GetResource("DatabaseNotExists"));
                         }
                     }
-                    else
-                    {
-                        //SQL CE
-                        var databaseFileName = "Nop.Db.sdf";
-                        var databasePath = @"|DataDirectory|\" + databaseFileName;
-                        connectionString = "Data Source=" + databasePath + ";Persist Security Info=False";
-
-                        //drop database if exists
-                        var databaseFullPath = _fileProvider.MapPath("~/App_Data/") + databaseFileName;
-                        if (_fileProvider.FileExists(databaseFullPath))
-                        {
-                            _fileProvider.DeleteFile(databaseFullPath);
-                        }
-                    }
 
                     //save settings
                     DataSettingsManager.SaveSettings(new DataSettings
