@@ -25,6 +25,7 @@ namespace Nop.Data.Mapping.Vendors
             builder.HasOne(value => value.VendorAttribute)
                 .WithMany(attribute => attribute.VendorAttributeValues)
                 .HasForeignKey(value => value.VendorAttributeId)
+                .HasConstraintName("VendorAttributeValue_VendorAttribute")
                 .IsRequired();
 
             base.Configure(builder);
