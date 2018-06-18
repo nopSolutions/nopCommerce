@@ -292,7 +292,7 @@ namespace Nop.Web.Controllers
             {
                 try
                 {
-                    string connectionString;
+                    var connectionString = string.Empty;
                     if (model.DataProvider == DataProviderType.SqlServer)
                     {
                         //SQL Server
