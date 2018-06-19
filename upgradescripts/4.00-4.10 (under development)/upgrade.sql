@@ -1214,6 +1214,9 @@ set @resources='
   <LocaleResource Name="CheckGiftCardBalance.GiftCardCouponCode.Empty">
     <Value>Coupon code is empty.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.Maintenance.BackupDatabase.Description">
+    <Value>Database backup functionality works only when your nopCommerce application is deployed on the same server as the database. Otherwise you will have to take care of the backup yourself (contact your system administrator).</Value>
+  </LocaleResource>
 </Language>
 '
 
