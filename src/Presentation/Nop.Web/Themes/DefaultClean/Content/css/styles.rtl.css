@@ -3245,6 +3245,18 @@ label, label + * {
     margin-top: 15px;
 }
 
+.check-gift-card-balance-page .page-title {
+    margin: 0 0 -1px;
+}
+
+.check-gift-card-balance-page .result,
+.check-gift-card-balance-page .message-error {
+    margin: 20px 0;
+}
+
+.check-gift-card-balance-page .fieldset {
+    margin: 0 0 30px;
+}
 
 /********** SHOPPING CART **********/
 

@@ -55,6 +55,9 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.RequireRegistrationForDownloadableProducts")]
         public bool RequireRegistrationForDownloadableProducts { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.AllowCustomersToCheckGiftCardBalance")]
+        public bool AllowCustomersToCheckGiftCardBalance { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.HideDownloadableProductsTab")]
         public bool HideDownloadableProductsTab { get; set; }
 
@@ -180,7 +183,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public bool FaxRequired { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.AcceptPrivacyPolicyEnabled")]
-        public bool AcceptPrivacyPolicyEnabled { get; set; }
+        public bool AcceptPrivacyPolicyEnabled { get; set; }        
 
         #endregion
     }
