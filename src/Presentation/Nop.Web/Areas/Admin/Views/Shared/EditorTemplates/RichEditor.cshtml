@@ -1,4 +1,4 @@
-﻿@model String
+﻿@model string
 @inject IPermissionService permissionService
 @inject AdminAreaSettings adminAreaSettings
 @using Nop.Web.Areas.Admin.Helpers
@@ -27,6 +27,24 @@
     //allow HTML body? Full page? - http://www.tinymce.com/wiki.php/Plugin:fullpage
     //false by default
     var enableFullPage = Convert.ToBoolean(ViewData["nop.RichEditor.EnableFullPage"] ?? false);
+
+    var extended_valid_elements = new List<string>();
+    var valid_children = new List<string>();
+    
+    if(allowJavaScript)
+    {
+        extended_valid_elements.Add("script[charset|defer|language|src|type]");
+        valid_children.Add("+body[script]");
+    }
+
+    if (adminAreaSettings.RichEditorAllowStyleTag)
+    {
+        extended_valid_elements.Add("style[dir<ltr?rtl|lang|media|title|type]");
+        extended_valid_elements.Add("link[dir<ltr?rtl|href|hreflang|lang|media|rel|rev|title|target|type]");
+
+        valid_children.Add("+body[style]");
+        valid_children.Add("+body[link]");
+    }
 }
 
 <script>
@@ -79,12 +97,6 @@
             toolbar: "ltr rtl | insertfile undo redo | styleselect | fontselect | fontsizeselect | bold italic | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image@(allowJbimages ? " jbimages" : null)",
             //"relative_urls" required by jbimages plugin to be set to "false"
             relative_urls: false,
-            @if (allowJavaScript)
-            {
-                <text>
-                    valid_elements: "*[*]",
-                </text>
-            }
             @if (allowRoxyFileman)
             {
                 <text>
@@ -104,7 +116,31 @@
             convert_urls: false,
             //ensure that special chars are not encoded. For example, ä, ö and ü should NOT become "&auml;", "&ouml;" and "&uuml;"
             //Otherwise, database searches become impossible when words contain a character of this kind
-            entity_encoding: "raw"
+            entity_encoding: "raw",
+            @if (allowJavaScript)
+            {
+                <text>
+                    allow_script_urls: true,
+                </text>
+            }
+            else
+            {
+                <text>
+                    invalid_elements: "script",
+                </text>
+            }
+            @if (extended_valid_elements.Any())
+            {
+                <text>
+                    extended_valid_elements: "@Html.Raw(string.Join(',', extended_valid_elements))",
+                </text>
+            }
+            @if (valid_children.Any())
+            {
+                <text>
+                    valid_children: "@Html.Raw(string.Join(',', valid_children))"
+                </text>
+            }
         };
 
         function getAdditionalEditorSettings@(random)(settings) {
