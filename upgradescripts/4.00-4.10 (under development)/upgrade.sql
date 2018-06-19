@@ -1170,31 +1170,22 @@ set @resources='
     <Value>Determines whether the link to all results should be displayed in the autocomplete search box. Displayed if the number of items found is greater than the displayed quantity in the autocomplete box.</Value>
   </LocaleResource>
   <LocaleResource Name="Catalog.OrderBy.Label">
-    <Value>Select Product sort order</Value>
+    <Value>Select product sort order</Value>
   </LocaleResource>
   <LocaleResource Name="Catalog.PageSize.Label">
-    <Value>Select Products per page</Value>
+    <Value>Select number of products per page</Value>
   </LocaleResource>
-  <LocaleResource Name="Search.SearchBox.TextLabel">
+  <LocaleResource Name="Currency.Selector.Label">
+    <Value>Currency selector</Value>
+  </LocaleResource>
+  <LocaleResource Name="Search.SearchBox.Text.Label">
     <Value>Search store</Value>
-  </LocaleResource>
-  <LocaleResource Name="ShoppingCart.AddToCart.CustomerEnteredPriceLabel">
-    <Value>Enter item price</Value>
-  </LocaleResource>
-  <LocaleResource Name="ShoppingCart.AddToCart.QuantityLabel">
-    <Value>Enter item quantity</Value>
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.DiscountCouponCode.Label">
     <Value>Enter discount coupon code</Value>
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.GiftCardCouponCode.Label">
-    <Value>Enter Gift card code</Value>
-  </LocaleResource>
-  <LocaleResource Name="ShoppingCart.Quantity.Label">
-    <Value>Quantity</Value>
-  </LocaleResource>
-  <LocaleResource Name="ShoppingCart.Remove.Label">
-    <Value>Remove item from cart</Value>
+    <Value>Enter gift card code</Value>
   </LocaleResource>
 </Language>
 '

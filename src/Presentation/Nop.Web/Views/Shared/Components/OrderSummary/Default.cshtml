@@ -96,8 +96,8 @@
                                         }
                                         else
                                         {
-                                            <label class="td-title" for="removefromcart">@T("ShoppingCart.Remove"):</label>
-                                            <input type="checkbox" name="removefromcart" id="removefromcart" value="@(item.Id)"/>
+                                            <label class="td-title" for="removefromcart@(item.Id)">@T("ShoppingCart.Remove"):</label>
+                                            <input type="checkbox" name="removefromcart" id="removefromcart@(item.Id)" value="@(item.Id)"/>
                                         }
                                     </td>
                                 }
@@ -166,12 +166,12 @@
                                     <span class="product-unit-price">@item.UnitPrice</span>
                                 </td>
                                 <td class="quantity">
-                                    <label class="td-title">@T("ShoppingCart.Quantity"):</label>
+                                    <label class="td-title" for="itemquantity@(item.Id)">@T("ShoppingCart.Quantity"):</label>
                                     @if (Model.IsEditable)
                                     {
                                         if (item.AllowedQuantities.Count > 0)
                                         {
-                                            <select name="itemquantity@(item.Id)" class="qty-dropdown" aria-label="@T("ShoppingCart.Quantity.Label")">
+                                            <select name="itemquantity@(item.Id)" id="itemquantity@(item.Id)" class="qty-dropdown">
                                                 @foreach (var qty in item.AllowedQuantities)
                                                 {
                                                     <option selected="@qty.Selected" value="@qty.Value">@qty.Value</option>
@@ -180,9 +180,8 @@
                                         }
                                         else
                                         {
-                                            <input name="itemquantity@(item.Id)" type="text" value="@(item.Quantity)" class="qty-input" aria-label="@T("ShoppingCart.Quantity.Label")"/>
+                                            <input name="itemquantity@(item.Id)" id="itemquantity@(item.Id)" type="text" value="@(item.Quantity)" class="qty-input"/>
                                         }
-
                                     }
                                     else
                                     {

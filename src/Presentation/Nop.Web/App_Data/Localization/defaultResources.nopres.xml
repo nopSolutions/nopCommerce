@@ -14179,13 +14179,13 @@
     <Value>Sort by</Value>
   </LocaleResource>
   <LocaleResource Name="Catalog.OrderBy.Label">
-    <Value>Select Product sort order</Value>
+    <Value>Select product sort order</Value>
   </LocaleResource>
   <LocaleResource Name="Catalog.PageSize">
     <Value>Display</Value>
   </LocaleResource>
   <LocaleResource Name="Catalog.PageSize.Label">
-    <Value>Select products per page</Value>
+    <Value>Select number of products per page</Value>
   </LocaleResource>
   <LocaleResource Name="Catalog.PageSize.PerPage">
     <Value>per page</Value>
@@ -17073,12 +17073,6 @@
   <LocaleResource Name="ShoppingCart.AddToCart">
     <Value>Add to cart</Value>
   </LocaleResource>
-  <LocaleResource Name="ShoppingCart.AddToCart.CustomerEnteredPriceLabel">
-    <Value>Enter item price</Value>
-  </LocaleResource>
-  <LocaleResource Name="ShoppingCart.AddToCart.QuantityLabel">
-    <Value>Enter item quantity</Value>
-  </LocaleResource>
   <LocaleResource Name="ShoppingCart.AddToCart.Update">
     <Value>Update</Value>
   </LocaleResource>
@@ -17285,9 +17279,6 @@
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.QuantityShouldPositive">
     <Value>Quantity should be positive</Value>
-  </LocaleResource>
-  <LocaleResource Name="ShoppingCart.Quantity.Label">
-    <Value>Quantity</Value>
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.RecipientEmailError">
     <Value>Enter valid recipient email</Value>

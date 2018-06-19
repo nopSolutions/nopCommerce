@@ -1,5 +1,4 @@
-﻿@using Nop.Core
-@using Nop.Core.Domain
+﻿@using Nop.Core.Domain
 @using StackExchange.Profiling
 @using Nop.Core.Domain.Common
 @using Nop.Core.Domain.Seo
@@ -14,7 +13,6 @@
 @inject IWorkContext workContext
 @inject SeoSettings seoSettings
 @inject StoreInformationSettings storeInformationSettings
-@inject IWorkContext workContext
 @{
     Html.AppendScriptParts(ResourceLocation.Footer, "~/js/public.ajaxcart.js");
     Html.AppendScriptParts(ResourceLocation.Footer, "~/js/public.common.js");
