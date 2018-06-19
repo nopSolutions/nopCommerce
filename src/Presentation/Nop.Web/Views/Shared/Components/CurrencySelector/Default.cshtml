@@ -14,7 +14,7 @@
                 Value = webHelper.ModifyQueryString(Url.RouteUrl("ChangeCurrency", new { customercurrency = x.Id }, webHelper.CurrentRequestProtocol), "returnurl", webHelper.GetRawUrl(httpContextAccessor.HttpContext.Request)),
                 Selected = x.Id.Equals(Model.CurrentCurrencyId)
             });
-            <select id="customerCurrency" name="customerCurrency" asp-items="@currencies" onchange="setLocation(this.value);"></select>
+            <select id="customerCurrency" name="customerCurrency" asp-items="@currencies" onchange="setLocation(this.value);" aria-label="@T("Currency.Selector.Label")"></select>
         }
     </div>
 }

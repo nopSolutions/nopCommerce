@@ -96,8 +96,8 @@
                                         }
                                         else
                                         {
-                                            <label class="td-title">@T("ShoppingCart.Remove"):</label>
-                                            <input type="checkbox" name="removefromcart" value="@(item.Id)" />
+                                            <label class="td-title" for="removefromcart">@T("ShoppingCart.Remove"):</label>
+                                            <input type="checkbox" name="removefromcart" id="removefromcart" value="@(item.Id)"/>
                                         }
                                     </td>
                                 }
@@ -171,7 +171,7 @@
                                     {
                                         if (item.AllowedQuantities.Count > 0)
                                         {
-                                            <select name="itemquantity@(item.Id)" class="qty-dropdown">
+                                            <select name="itemquantity@(item.Id)" class="qty-dropdown" aria-label="@T("ShoppingCart.Quantity.Label")">
                                                 @foreach (var qty in item.AllowedQuantities)
                                                 {
                                                     <option selected="@qty.Selected" value="@qty.Value">@qty.Value</option>
@@ -180,7 +180,7 @@
                                         }
                                         else
                                         {
-                                            <input name="itemquantity@(item.Id)" type="text" value="@(item.Quantity)" class="qty-input" />
+                                            <input name="itemquantity@(item.Id)" type="text" value="@(item.Quantity)" class="qty-input" aria-label="@T("ShoppingCart.Quantity.Label")"/>
                                         }
 
                                     }

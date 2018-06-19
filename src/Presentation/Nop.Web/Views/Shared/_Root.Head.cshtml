@@ -7,12 +7,14 @@
 @using Nop.Services.Localization
 @using Nop.Services.Security
 @using Nop.Web.Framework.Events
+@using Nop.Core
 @inject CommonSettings commonSettings
 @inject IEventPublisher eventPublisher
 @inject IPermissionService permissionService
 @inject IWorkContext workContext
 @inject SeoSettings seoSettings
 @inject StoreInformationSettings storeInformationSettings
+@inject IWorkContext workContext
 @{
     Html.AppendScriptParts(ResourceLocation.Footer, "~/js/public.ajaxcart.js");
     Html.AppendScriptParts(ResourceLocation.Footer, "~/js/public.common.js");
