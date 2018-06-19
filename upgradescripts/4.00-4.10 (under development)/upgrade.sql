@@ -1217,6 +1217,24 @@ set @resources='
   <LocaleResource Name="Admin.System.Maintenance.BackupDatabase.Description">
     <Value>Database backup functionality works only when your nopCommerce application is deployed on the same server as the database. Otherwise you will have to take care of the backup yourself (contact your system administrator).</Value>
   </LocaleResource>
+  <LocaleResource Name="Catalog.OrderBy.Label">
+    <Value>Select product sort order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Catalog.PageSize.Label">
+    <Value>Select number of products per page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Currency.Selector.Label">
+    <Value>Currency selector</Value>
+  </LocaleResource>
+  <LocaleResource Name="Search.SearchBox.Text.Label">
+    <Value>Search store</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.DiscountCouponCode.Label">
+    <Value>Enter discount coupon code</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.GiftCardCouponCode.Label">
+    <Value>Enter gift card code</Value>
+  </LocaleResource>
 </Language>
 '
 

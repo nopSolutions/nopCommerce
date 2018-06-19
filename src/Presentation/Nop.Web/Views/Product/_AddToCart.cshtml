@@ -13,7 +13,7 @@
                 <div class="price-input">
                     <label asp-for="CustomerEnteredPrice" asp-postfix=":" class="enter-price-label"></label>
                     @*round price*@
-                    <input asp-for="CustomerEnteredPrice" value="@Convert.ToInt32(Math.Ceiling(Model.CustomerEnteredPrice))" class="enter-price-input"/>
+                    <input asp-for="CustomerEnteredPrice" value="@Convert.ToInt32(Math.Ceiling(Model.CustomerEnteredPrice))" class="enter-price-input" />
                 </div>
                 <div class="price-range">
                     @Model.CustomerEnteredPriceRange
