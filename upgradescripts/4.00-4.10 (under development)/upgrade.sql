@@ -2986,3 +2986,11 @@ BEGIN
 	VALUES (N'catalogsettings.displaydatepreorderavailability', N'False', 0)
 END
 GO
+	
+--new setting	
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'adminareasettings.richeditorallowstyletag')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'adminareasettings.richeditorallowstyletag', N'False', 0)
+END
+GO
