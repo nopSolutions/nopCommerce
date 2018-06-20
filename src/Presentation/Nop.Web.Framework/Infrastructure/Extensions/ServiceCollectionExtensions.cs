@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Razor;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json.Serialization;
@@ -284,13 +283,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         {
             services.AddDbContext<NopObjectContext>(optionsBuilder =>
             {
-                var dataSettings = DataSettingsManager.LoadSettings();
-                if (!dataSettings?.IsValid ?? true)
-                    return;
-
-                optionsBuilder
-                    .UseLazyLoadingProxies()
-                    .UseSqlServer(dataSettings.DataConnectionString);
+                optionsBuilder.UseSqlServerWithLazyLoading(services);
             });
         }
 

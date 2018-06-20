@@ -1,10 +1,9 @@
 ﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Nop.Core.Data;
 using Nop.Core.Infrastructure;
 using Nop.Plugin.Tax.FixedOrByCountryStateZip.Data;
+using Nop.Web.Framework.Infrastructure.Extensions;
 
 namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Infrastructure
 {
@@ -23,9 +22,7 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Infrastructure
             //add object context
             services.AddDbContext<CountryStateZipObjectContext>(optionsBuilder =>
             {
-                var dataSettings = DataSettingsManager.LoadSettings();
-                if (dataSettings?.IsValid ?? false)
-                    optionsBuilder.UseLazyLoadingProxies().UseSqlServer(dataSettings.DataConnectionString);
+                optionsBuilder.UseSqlServerWithLazyLoading(services);
             });
         }
 

@@ -99,5 +99,10 @@ namespace Nop.Core.Configuration
         /// Gets or sets a value indicating whether to copy plugins library to the /Plugins/bin directory on application startup
         /// </summary>
         public bool UsePluginsShadowCopy { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to use backwards compatibility with SQL Server 2008 and SQL Server 2008R2
+        /// </summary>
+        public bool UseRowNumberForPaging { get; set; }
     }
 }
