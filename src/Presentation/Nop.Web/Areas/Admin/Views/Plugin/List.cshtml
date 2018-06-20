@@ -1,7 +1,7 @@
 ﻿@model PluginSearchModel
 
 @using System.Text.Encodings.Web
-@inject Nop.Services.Plugins.IUploadService uploadService
+@using Nop.Core.Plugins
 
 @{
     //page title
@@ -291,7 +291,7 @@
                                 @T("Admin.Configuration.Plugins.Upload.Hint1")
                             </li>
                             <li>
-                                @string.Format(T("Admin.Configuration.Plugins.Upload.Hint2").Text, uploadService.UploadedItemsFileName)
+                                @string.Format(T("Admin.Configuration.Plugins.Upload.Hint2").Text, NopPluginDefaults.UploadedItemsFileName)
                             </li>
                             <li>
                                 <em>@T("Admin.Configuration.Plugins.Upload.Hint3")</em>
