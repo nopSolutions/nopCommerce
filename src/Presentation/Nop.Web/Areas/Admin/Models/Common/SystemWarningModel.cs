@@ -13,6 +13,7 @@ namespace Nop.Web.Areas.Admin.Models.Common
     {
         Pass,
         Warning,
-        Fail
+        Fail,
+        Recommendation
     }
 }

@@ -13822,7 +13822,7 @@
     <Value>The '{0}' account is not granted with Modify permission on folder '{1}'. Please configure these permissions.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.Warnings.Errors">
-    <Value>The store has some error(s). Please find more information on the Warnings page.</Value>
+    <Value>The store has some error(s) or warning(s). Please find more information on the Warnings page.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.Warnings.ExchangeCurrency.NotSet">
     <Value>Primary exchange rate currency is not set</Value>
@@ -13856,6 +13856,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.System.Warnings.Performance.IgnoreAcl.Notification">
     <Value>In order to use this functionality you have to disable the following setting: Catalog settings > Ignore ACL rules.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Warnings.PluginNotEnabled">
+    <Value>You could uninstall and remove the plugin(s) which you don't use, this might increase performance</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.Warnings.PluginNotLoaded">
     <Value>'{0}' plugin is not compatible or cannot be loaded.</Value>
