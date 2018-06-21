@@ -50,7 +50,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
             {
                 var warnings = _commonModelFactory.PrepareSystemWarningModels();
-                if (warnings.Any(warning => warning.Level == SystemWarningLevel.Fail || warning.Level == SystemWarningLevel.Warning))
+                if (warnings.Any(warning => warning.Level == SystemWarningLevel.Fail ||
+                                            warning.Level == SystemWarningLevel.CopyrightRemovalKey ||
+                                            warning.Level == SystemWarningLevel.Warning))
                     WarningNotification(_localizationService.GetResource("Admin.System.Warnings.Errors"), false);
             }
 

@@ -6013,6 +6013,7 @@ namespace Nop.Services.Installation
                 RichEditorAllowJavaScript = false,
                 RichEditorAllowStyleTag = false,
                 UseRichEditorInMessageTemplates = false,
+                CheckCopyrightRemovalKey = true,
                 UseIsoDateFormatInJsonResult = true,
                 UseNestedSetting = true
             });

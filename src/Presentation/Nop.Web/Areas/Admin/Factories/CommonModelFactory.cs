@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net.Http;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
 using Microsoft.AspNetCore.Http;
@@ -9,9 +10,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Net.Http.Headers;
+using Newtonsoft.Json;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Cms;
+using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
@@ -49,8 +52,22 @@ namespace Nop.Web.Areas.Admin.Factories
     /// </summary>
     public partial class CommonModelFactory : ICommonModelFactory
     {
+        #region Constants
+
+        /// <summary>
+        /// nopCommerce warning URL
+        /// </summary>
+        /// <remarks>
+        /// {0} : store URL
+        /// {1} : whether the store based is on the localhost
+        /// </remarks>
+        private const string NOPCOMMERCE_WARNING_URL = "https://www.nopcommerce.com/SiteWarnings.aspx?local={0}&url={1}";
+
+        #endregion
+
         #region Fields
 
+        private readonly AdminAreaSettings _adminAreaSettings;
         private readonly CatalogSettings _catalogSettings;
         private readonly CurrencySettings _currencySettings;
         private readonly IActionContextAccessor _actionContextAccessor;
@@ -87,7 +104,8 @@ namespace Nop.Web.Areas.Admin.Factories
 
         #region Ctor
 
-        public CommonModelFactory(CatalogSettings catalogSettings,
+        public CommonModelFactory(AdminAreaSettings adminAreaSettings,
+            CatalogSettings catalogSettings,
             CurrencySettings currencySettings,
             IActionContextAccessor actionContextAccessor,
             ICurrencyService currencyService,
@@ -118,6 +136,7 @@ namespace Nop.Web.Areas.Admin.Factories
             TaxSettings taxSettings,
             WidgetSettings widgetSettings)
         {
+            this._adminAreaSettings = adminAreaSettings;
             this._catalogSettings = catalogSettings;
             this._currencySettings = currencySettings;
             this._actionContextAccessor = actionContextAccessor;
@@ -142,7 +161,6 @@ namespace Nop.Web.Areas.Admin.Factories
             this._urlRecordService = urlRecordService;
             this._webHelper = webHelper;
             this._workContext = workContext;
-
             this._externalAuthenticationSettings = externalAuthenticationSettings;
             this._measureSettings = measureSettings;
             this._paymentSettings = paymentSettings;
@@ -184,6 +202,47 @@ namespace Nop.Web.Areas.Admin.Factories
                 Text = string.Format(_localizationService.GetResource("Admin.System.Warnings.URL.NoMatch"),
                     currentStoreUrl, _webHelper.GetStoreLocation(false))
             });
+        }
+
+        /// <summary>
+        /// Prepare copyright removal key warning model
+        /// </summary>
+        /// <param name="models">List of system warning models</param>
+        protected virtual void PrepareRemovalKeyWarningModel(IList<SystemWarningModel> models)
+        {
+            if (models == null)
+                throw new ArgumentNullException(nameof(models));
+
+            if (!_adminAreaSettings.CheckCopyrightRemovalKey)
+                return;
+
+            var currentStoreUrl = _storeContext.CurrentStore.Url;
+            var local = _webHelper.IsLocalRequest(_httpContextAccessor.HttpContext.Request);
+
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    //specify request timeout
+                    client.Timeout = TimeSpan.FromMilliseconds(2000);
+
+                    var url = string.Format(NOPCOMMERCE_WARNING_URL, local, currentStoreUrl);
+                    var warning = client.GetStringAsync(url).Result;
+
+                    if (!String.IsNullOrEmpty(warning))
+                        models.Add(new SystemWarningModel
+                        {
+                            Level = SystemWarningLevel.CopyrightRemovalKey,
+                            Text = warning,
+                            //this text could contain links. so don't encode it
+                            DontEncode = true
+                        });
+                }
+            }
+            catch
+            {
+                //ignore exceptions
+            }
         }
 
         /// <summary>
@@ -623,6 +682,9 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //store URL
             PrepareStoreUrlWarningModel(models);
+
+            //removal key
+            PrepareRemovalKeyWarningModel(models);
 
             //primary exchange rate currency
             PrepareExchangeRateCurrencyWarningModel(models);

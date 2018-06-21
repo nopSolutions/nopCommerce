@@ -48,6 +48,11 @@ namespace Nop.Core.Domain.Common
         public bool HideAdvertisementsOnAdminArea { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether we should display a recommendation about copyright removal key
+        /// </summary>
+        public bool CheckCopyrightRemovalKey { get; set; }
+
+        /// <summary>
         /// Gets or sets title of last news (admin area)
         /// </summary>
         public string LastNewsTitleAdminArea { get; set; }
