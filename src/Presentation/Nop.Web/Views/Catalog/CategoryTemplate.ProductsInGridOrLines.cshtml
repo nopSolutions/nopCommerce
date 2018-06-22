@@ -29,25 +29,33 @@
     @if (Model.DisplayCategoryBreadcrumb)
     {
         <div class="breadcrumb">
-            <ul>
+            <ul itemscope itemtype="http://schema.org/BreadcrumbList">
                 <li>
                     <a href="@Url.RouteUrl("HomePage")" title="@T("Categories.Breadcrumb.Top")">@T("Categories.Breadcrumb.Top")</a>
                     <span class="delimiter">@breadcrumbDelimiter</span>
                 </li>
+                @{ int position = 1; }
                 @foreach (var cat in Model.CategoryBreadcrumb)
                 {
                     var isLastCategory = cat.Id == Model.Id;
-                    <li>
+                    <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
                         @if (isLastCategory)
                         {
-                            <strong class="current-item">@cat.Name</strong>
+                            <strong class="current-item" itemprop="name">@cat.Name</strong>
+                            <span itemprop="item" itemscope itemtype="http://schema.org/Thing">
+                                <link itemprop="url" href="@Url.RouteUrl("Category", new {SeName = cat.SeName})" />
+                            </span>
                         }
                         else
                         {
-                            <a href="@Url.RouteUrl("Category", new { SeName = cat.SeName })" title="@cat.Name">@cat.Name</a>
+                            <a href="@Url.RouteUrl("Category", new { SeName = cat.SeName })" title="@cat.Name" itemprop="item">
+                                <span itemprop="name">@cat.Name</span>
+                            </a>
                             <span class="delimiter">@breadcrumbDelimiter</span>
                         }
+                        <meta itemprop="position" content="@position" />
                     </li>
+                    position++;
                 }
             </ul>
         </div>
