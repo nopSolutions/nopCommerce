@@ -10,9 +10,15 @@ namespace Nop.Core.Caching
     /// <summary>
     /// Represents a memory cache manager 
     /// </summary>
-    public partial class MemoryCacheManager : IStaticCacheManager
+    public partial class MemoryCacheManager : ILocker, IStaticCacheManager
     {
         #region Fields
+
+        /// <summary>
+        /// All keys of cache
+        /// </summary>
+        /// <remarks>Dictionary value indicating whether a key still exists in cache</remarks> 
+        protected static readonly ConcurrentDictionary<string, bool> _allKeys;
 
         private readonly IMemoryCache _cache;
 
@@ -21,21 +27,22 @@ namespace Nop.Core.Caching
         /// </summary>
         protected CancellationTokenSource _cancellationTokenSource;
 
-        /// <summary>
-        /// All keys of cache
-        /// </summary>
-        /// <remarks>Dictionary value indicating whether a key still exists in cache</remarks> 
-        protected static readonly ConcurrentDictionary<string, bool> _allKeys;
-
         #endregion
 
         #region Ctor
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
         static MemoryCacheManager()
         {
             _allKeys = new ConcurrentDictionary<string, bool>();
         }
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="cache">Cache</param>
         public MemoryCacheManager(IMemoryCache cache)
         {
             _cache = cache;
@@ -47,11 +54,10 @@ namespace Nop.Core.Caching
         #region Utilities
 
         /// <summary>
-        /// Create entry options to item of memory cache 
+        /// Create entry options to item of memory cache
         /// </summary>
-        /// <param name="cacheTime">Cache time in minutes</param>
-        /// <returns></returns>
-        protected MemoryCacheEntryOptions GetMemoryCacheEntryOptions(int cacheTime)
+        /// <param name="cacheTime">Cache time</param>
+        protected MemoryCacheEntryOptions GetMemoryCacheEntryOptions(TimeSpan cacheTime)
         {
             var options = new MemoryCacheEntryOptions()
                 // add cancellation token for clear cache
@@ -60,7 +66,7 @@ namespace Nop.Core.Caching
                 .RegisterPostEvictionCallback(PostEviction);
 
             //set cache time
-            options.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(cacheTime);
+            options.AbsoluteExpirationRelativeToNow = cacheTime;
 
             return options;
         }
@@ -94,9 +100,9 @@ namespace Nop.Core.Caching
         protected void TryRemoveKey(string key)
         {
             //try to remove key from dictionary
-            if (!_allKeys.TryRemove(key, out bool _))
+            if (!_allKeys.TryRemove(key, out _))
                 //if not possible to remove key from dictionary, then try to mark key as not existing in cache
-                _allKeys.TryUpdate(key, false, false);
+                _allKeys.TryUpdate(key, false, true);
         }
 
         /// <summary>
@@ -155,7 +161,7 @@ namespace Nop.Core.Caching
         {
             if (data != null)
             {
-                _cache.Set(AddKey(key), data, GetMemoryCacheEntryOptions(cacheTime));
+                _cache.Set(AddKey(key), data, GetMemoryCacheEntryOptions(TimeSpan.FromMinutes(cacheTime)));
             }
         }
 
@@ -167,6 +173,35 @@ namespace Nop.Core.Caching
         public virtual bool IsSet(string key)
         {
             return _cache.TryGetValue(key, out object _);
+        }
+
+        /// <summary>
+        /// Perform some action with exclusive in-memory lock
+        /// </summary>
+        /// <param name="key">The key we are locking on</param>
+        /// <param name="expirationTime">The time after which the lock will automatically be expired</param>
+        /// <param name="action">Action to be performed with locking</param>
+        /// <returns>True if lock was acquired and action was performed; otherwise false</returns>
+        public bool PerformActionWithLock(string key, TimeSpan expirationTime, Action action)
+        {
+            //ensure that lock is acquired
+            if (!_allKeys.TryAdd(key, true))
+                return false;
+
+            try
+            {
+                _cache.Set(key, key, GetMemoryCacheEntryOptions(expirationTime));
+
+                //perform action
+                action();
+
+                return true;
+            }
+            finally
+            {
+                //release lock even if action fails
+                Remove(key);
+            }
         }
 
         /// <summary>

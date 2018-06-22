@@ -12,6 +12,9 @@ using Nop.Core.Domain.Vendors;
 
 namespace Nop.Services.Messages
 {
+    /// <summary>
+    /// Message token provider
+    /// </summary>
     public partial interface IMessageTokenProvider
     {
         /// <summary>

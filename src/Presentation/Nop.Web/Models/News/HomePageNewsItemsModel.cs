@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Nop.Web.Framework.Mvc.Models;
+using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Models.News
 {
@@ -17,7 +17,7 @@ namespace Nop.Web.Models.News
         public object Clone()
         {
             //we use a shallow copy (deep clone is not required here)
-            return this.MemberwiseClone();
+            return MemberwiseClone();
         }
     }
 }

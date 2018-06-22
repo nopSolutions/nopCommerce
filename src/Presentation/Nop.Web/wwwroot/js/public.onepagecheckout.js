@@ -123,6 +123,7 @@ var Billing = {
         } else {
             $('#billing-new-address-form').hide();
         }
+        $.event.trigger({ type: "onepagecheckout_billing_address_new" });
     },
 
     resetSelectedAddress: function () {
@@ -130,6 +131,7 @@ var Billing = {
         if (selectElement) {
             selectElement.val('');
         }
+        $.event.trigger({ type: "onepagecheckout_billing_address_reset" }); 
     },
 
     save: function () {
@@ -199,6 +201,7 @@ var Shipping = {
         } else {
             $('#shipping-new-address-form').hide();
         }
+        $.event.trigger({ type: "onepagecheckout_shipping_address_new" });
     },
 
     togglePickUpInStore: function (pickupInStoreInput) {
@@ -217,13 +220,14 @@ var Shipping = {
         if (selectElement) {
             selectElement.val('');
         }
+        $.event.trigger({ type: "onepagecheckout_shipping_address_reset" });
     },
 
     save: function () {
         if (Checkout.loadWaiting != false) return;
 
         Checkout.setLoadWaiting('shipping');
-        
+
         $.ajax({
             cache: false,
             url: this.saveUrl,
@@ -265,7 +269,7 @@ var ShippingMethod = {
         this.saveUrl = saveUrl;
     },
 
-    validate: function() {
+    validate: function () {
         var methods = document.getElementsByName('shippingoption');
         if (methods.length==0) {
             alert('Your order cannot be completed at this time as there is no shipping methods available for it. Please make necessary changes in your shipping address.');

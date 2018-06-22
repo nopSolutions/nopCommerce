@@ -15,29 +15,6 @@ namespace Nop.Services.Localization
     /// </summary>
     public partial class LanguageService : ILanguageService
     {
-        #region Constants
-
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : language ID
-        /// </remarks>
-        private const string LANGUAGES_BY_ID_KEY = "Nop.language.id-{0}";
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : show hidden records?
-        /// </remarks>
-        private const string LANGUAGES_ALL_KEY = "Nop.language.all-{0}";
-        /// <summary>
-        /// Key pattern to clear cache
-        /// </summary>
-        private const string LANGUAGES_PATTERN_KEY = "Nop.language.";
-
-        #endregion
-
         #region Fields
 
         private readonly IRepository<Language> _languageRepository;
@@ -59,7 +36,7 @@ namespace Nop.Services.Localization
         /// <param name="storeMappingService">Store mapping service</param>
         /// <param name="settingService">Setting service</param>
         /// <param name="localizationSettings">Localization settings</param>
-        /// <param name="eventPublisher">Event published</param>
+        /// <param name="eventPublisher">Event publisher</param>
         public LanguageService(IStaticCacheManager cacheManager,
             IRepository<Language> languageRepository,
             IStoreMappingService storeMappingService,
@@ -108,7 +85,7 @@ namespace Nop.Services.Localization
             _languageRepository.Delete(language);
 
             //cache
-            _cacheManager.RemoveByPattern(LANGUAGES_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopLocalizationDefaults.LanguagesPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityDeleted(language);
@@ -136,7 +113,7 @@ namespace Nop.Services.Localization
             if (loadCacheableCopy)
             {
                 //cacheable copy
-                string key = string.Format(LANGUAGES_ALL_KEY, showHidden);
+                var key = string.Format(NopLocalizationDefaults.LanguagesAllCacheKey, showHidden);
                 languages = _cacheManager.Get(key, () =>
                 {
                     var result = new List<Language>();
@@ -179,7 +156,7 @@ namespace Nop.Services.Localization
             if (loadCacheableCopy)
             {
                 //cacheable copy
-                string key = string.Format(LANGUAGES_BY_ID_KEY, languageId);
+                var key = string.Format(NopLocalizationDefaults.LanguagesByIdCacheKey, languageId);
                 return _cacheManager.Get(key, () =>
                 {
                     var language = loadLanguageFunc();
@@ -188,10 +165,8 @@ namespace Nop.Services.Localization
                     return new LanguageForCaching(language);
                 });
             }
-            else
-            {
-                return loadLanguageFunc();
-            }
+
+            return loadLanguageFunc();
         }
 
         /// <summary>
@@ -209,7 +184,7 @@ namespace Nop.Services.Localization
             _languageRepository.Insert(language);
 
             //cache
-            _cacheManager.RemoveByPattern(LANGUAGES_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopLocalizationDefaults.LanguagesPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(language);
@@ -231,7 +206,7 @@ namespace Nop.Services.Localization
             _languageRepository.Update(language);
 
             //cache
-            _cacheManager.RemoveByPattern(LANGUAGES_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopLocalizationDefaults.LanguagesPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(language);

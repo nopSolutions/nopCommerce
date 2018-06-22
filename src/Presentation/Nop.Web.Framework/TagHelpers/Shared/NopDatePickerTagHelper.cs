@@ -7,9 +7,13 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using Nop.Core.Infrastructure;
 using Nop.Services.Localization;
+using Nop.Web.Framework.Extensions;
 
 namespace Nop.Web.Framework.TagHelpers.Shared
 {
+    /// <summary>
+    /// nop-date-picker tag helper
+    /// </summary>
     [HtmlTargetElement("nop-date-picker", 
         Attributes = DayNameAttributeName + "," + MonthNameAttributeName + "," + YearNameAttributeName, 
         TagStructure = TagStructure.WithoutEndTag)]
@@ -103,12 +107,22 @@ namespace Nop.Web.Framework.TagHelpers.Shared
         [ViewContext]
         public ViewContext ViewContext { get; set; }
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="generator">HTML generator</param>
+        /// <param name="htmlHelper">HTML helper</param>
         public NopDatePickerTagHelper(IHtmlGenerator generator, IHtmlHelper htmlHelper)
         {
             Generator = generator;
             _htmlHelper = htmlHelper;
         }
 
+        /// <summary>
+        /// Process
+        /// </summary>
+        /// <param name="context">Context</param>
+        /// <param name="output">Output</param>
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
             if (context == null)
@@ -183,12 +197,12 @@ namespace Nop.Web.Framework.TagHelpers.Shared
             }
 
             days.AppendFormat("<option value='{0}'>{1}</option>", "0", dayLocale);
-            for (int i = 1; i <= 31; i++)
+            for (var i = 1; i <= 31; i++)
                 days.AppendFormat("<option value='{0}'{1}>{0}</option>", i,
                     (SelectedDay.HasValue && SelectedDay.Value == i) ? " selected=\"selected\"" : null);
 
             months.AppendFormat("<option value='{0}'>{1}</option>", "0", monthLocale);
-            for (int i = 1; i <= 12; i++)
+            for (var i = 1; i <= 12; i++)
             {
                 months.AppendFormat("<option value='{0}'{1}>{2}</option>",
                     i,
@@ -222,9 +236,9 @@ namespace Nop.Web.Framework.TagHelpers.Shared
             
             if (bool.TryParse(WrapTags, out bool wrapTags) && wrapTags)
             {
-                var wrapDaysList = "<span class=\"days-list select-wrapper\">" + daysList + "</span>";
-                var wrapMonthsList = "<span class=\"months-list select-wrapper\">" + monthsList + "</span>";
-                var wrapYearsList = "<span class=\"years-list select-wrapper\">" + yearsList + "</span>";
+                var wrapDaysList = "<span class=\"days-list select-wrapper\">" + daysList.RenderHtmlContent() + "</span>";
+                var wrapMonthsList = "<span class=\"months-list select-wrapper\">" + monthsList.RenderHtmlContent() + "</span>";
+                var wrapYearsList = "<span class=\"years-list select-wrapper\">" + yearsList.RenderHtmlContent() + "</span>";
 
                 output.Content.AppendHtml(wrapDaysList);
                 output.Content.AppendHtml(wrapMonthsList);

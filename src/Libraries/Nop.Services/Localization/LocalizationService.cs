@@ -21,48 +21,6 @@ namespace Nop.Services.Localization
     /// </summary>
     public partial class LocalizationService : ILocalizationService
     {
-        #region Constants
-
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : language ID
-        /// </remarks>
-        private const string LOCALSTRINGRESOURCES_ALL_PUBLIC_KEY = "Nop.lsr.all.public-{0}";
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : language ID
-        /// </remarks>
-        private const string LOCALSTRINGRESOURCES_ALL_KEY = "Nop.lsr.all-{0}";
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : language ID
-        /// </remarks>
-        private const string LOCALSTRINGRESOURCES_ALL_ADMIN_KEY = "Nop.lsr.all.admin-{0}";
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : language ID
-        /// {1} : resource key
-        /// </remarks>
-        private const string LOCALSTRINGRESOURCES_BY_RESOURCENAME_KEY = "Nop.lsr.{0}-{1}";
-        /// <summary>
-        /// Key pattern to clear cache
-        /// </summary>
-        private const string LOCALSTRINGRESOURCES_PATTERN_KEY = "Nop.lsr.";
-        /// <summary>
-        /// Key pattern to split resource by group
-        /// </summary>
-        private const string ADMIN_LOCALSTRINGRESOURCES_PATTERN = "Admin.";
-
-        #endregion
-
         #region Fields
 
         private readonly IRepository<LocaleStringResource> _lsrRepository;
@@ -90,7 +48,7 @@ namespace Nop.Services.Localization
         /// <param name="dbContext">Database Context</param>
         /// <param name="commonSettings">Common settings</param>
         /// <param name="localizationSettings">Localization settings</param>
-        /// <param name="eventPublisher">Event published</param>
+        /// <param name="eventPublisher">Event publisher</param>
         public LocalizationService(IStaticCacheManager cacheManager,
             ILogger logger,
             IWorkContext workContext,
@@ -116,6 +74,10 @@ namespace Nop.Services.Localization
 
         #region Utilities
 
+        /// <summary>
+        /// Insert resources
+        /// </summary>
+        /// <param name="resources">Resources</param>
         protected virtual void InsertLocaleStringResources(IList<LocaleStringResource> resources)
         {
             if (resources == null)
@@ -125,7 +87,7 @@ namespace Nop.Services.Localization
             _lsrRepository.Insert(resources);
 
             //cache
-            _cacheManager.RemoveByPattern(LOCALSTRINGRESOURCES_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopLocalizationDefaults.LocaleStringResourcesPatternCacheKey);
 
             //event notification
             foreach (var resource in resources)
@@ -134,6 +96,10 @@ namespace Nop.Services.Localization
             }
         }
 
+        /// <summary>
+        /// Update resources
+        /// </summary>
+        /// <param name="resources">Resources</param>
         protected virtual void UpdateLocaleStringResources(IList<LocaleStringResource> resources)
         {
             if (resources == null)
@@ -143,7 +109,7 @@ namespace Nop.Services.Localization
             _lsrRepository.Update(resources);
 
             //cache
-            _cacheManager.RemoveByPattern(LOCALSTRINGRESOURCES_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopLocalizationDefaults.LocaleStringResourcesPatternCacheKey);
 
             //event notification
             foreach (var resource in resources)
@@ -181,7 +147,7 @@ namespace Nop.Services.Localization
             _lsrRepository.Delete(localeStringResource);
 
             //cache
-            _cacheManager.RemoveByPattern(LOCALSTRINGRESOURCES_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopLocalizationDefaults.LocaleStringResourcesPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityDeleted(localeStringResource);
@@ -261,7 +227,7 @@ namespace Nop.Services.Localization
             _lsrRepository.Insert(localeStringResource);
 
             //cache
-            _cacheManager.RemoveByPattern(LOCALSTRINGRESOURCES_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopLocalizationDefaults.LocaleStringResourcesPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(localeStringResource);
@@ -279,7 +245,7 @@ namespace Nop.Services.Localization
             _lsrRepository.Update(localeStringResource);
 
             //cache
-            _cacheManager.RemoveByPattern(LOCALSTRINGRESOURCES_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopLocalizationDefaults.LocaleStringResourcesPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(localeStringResource);
@@ -293,7 +259,7 @@ namespace Nop.Services.Localization
         /// <returns>Locale string resources</returns>
         public virtual Dictionary<string, KeyValuePair<int,string>> GetAllResourceValues(int languageId, bool? loadPublicLocales)
         {
-            var key = string.Format(LOCALSTRINGRESOURCES_ALL_KEY, languageId);
+            var key = string.Format(NopLocalizationDefaults.LocaleStringResourcesAllCacheKey, languageId);
 
             //get all locale string resources by language identifier
             if (!loadPublicLocales.HasValue || _cacheManager.IsSet(key))
@@ -311,14 +277,14 @@ namespace Nop.Services.Localization
                 });
 
                 //remove separated resource 
-                _cacheManager.Remove(string.Format(LOCALSTRINGRESOURCES_ALL_PUBLIC_KEY, languageId));
-                _cacheManager.Remove(string.Format(LOCALSTRINGRESOURCES_ALL_ADMIN_KEY, languageId));
+                _cacheManager.Remove(string.Format(NopLocalizationDefaults.LocaleStringResourcesAllPublicCacheKey, languageId));
+                _cacheManager.Remove(string.Format(NopLocalizationDefaults.LocaleStringResourcesAllAdminCacheKey, languageId));
 
                 return rez;
             }
 
             //performance optimization of the site startup
-            key = string.Format(loadPublicLocales.Value ? LOCALSTRINGRESOURCES_ALL_PUBLIC_KEY : LOCALSTRINGRESOURCES_ALL_ADMIN_KEY, languageId);
+            key = string.Format(loadPublicLocales.Value ? NopLocalizationDefaults.LocaleStringResourcesAllPublicCacheKey : NopLocalizationDefaults.LocaleStringResourcesAllAdminCacheKey, languageId);
 
             return _cacheManager.Get(key, () =>
             {
@@ -328,7 +294,7 @@ namespace Nop.Services.Localization
                             orderby l.ResourceName
                             where l.LanguageId == languageId
                             select l;
-                query = loadPublicLocales.Value ? query.Where(r =>  !r.ResourceName.StartsWith(ADMIN_LOCALSTRINGRESOURCES_PATTERN)) : query.Where(r => r.ResourceName.StartsWith(ADMIN_LOCALSTRINGRESOURCES_PATTERN));
+                query = loadPublicLocales.Value ? query.Where(r =>  !r.ResourceName.StartsWith(NopLocalizationDefaults.AdminLocaleStringResourcesPrefix)) : query.Where(r => r.ResourceName.StartsWith(NopLocalizationDefaults.AdminLocaleStringResourcesPrefix));
                 return ResourceValuesToDictionary(query);
             });
         }
@@ -358,14 +324,14 @@ namespace Nop.Services.Localization
         public virtual string GetResource(string resourceKey, int languageId,
             bool logIfNotFound = true, string defaultValue = "", bool returnEmptyIfNotFound = false)
         {
-            string result = string.Empty;
+            var result = string.Empty;
             if (resourceKey == null)
                 resourceKey = string.Empty;
             resourceKey = resourceKey.Trim().ToLowerInvariant();
             if (_localizationSettings.LoadAllLocaleRecordsOnStartup)
             {
                 //load all records (we know they are cached)
-                var resources = GetAllResourceValues(languageId, !resourceKey.StartsWith(ADMIN_LOCALSTRINGRESOURCES_PATTERN, StringComparison.InvariantCultureIgnoreCase));
+                var resources = GetAllResourceValues(languageId, !resourceKey.StartsWith(NopLocalizationDefaults.AdminLocaleStringResourcesPrefix, StringComparison.InvariantCultureIgnoreCase));
                 if (resources.ContainsKey(resourceKey))
                 {
                     result = resources[resourceKey].Value;
@@ -374,8 +340,8 @@ namespace Nop.Services.Localization
             else
             {
                 //gradual loading
-                string key = string.Format(LOCALSTRINGRESOURCES_BY_RESOURCENAME_KEY, languageId, resourceKey);
-                string lsr = _cacheManager.Get(key, () =>
+                var key = string.Format(NopLocalizationDefaults.LocaleStringResourcesByResourceNameCacheKey, languageId, resourceKey);
+                var lsr = _cacheManager.Get(key, () =>
                 {
                     var query = from l in _lsrRepository.Table
                                 where l.ResourceName == resourceKey
@@ -387,12 +353,12 @@ namespace Nop.Services.Localization
                 if (lsr != null) 
                     result = lsr;
             }
-            if (String.IsNullOrEmpty(result))
+            if (string.IsNullOrEmpty(result))
             {
                 if (logIfNotFound)
                     _logger.Warning($"Resource string ({resourceKey}) is not found. Language ID = {languageId}");
                 
-                if (!String.IsNullOrEmpty(defaultValue))
+                if (!string.IsNullOrEmpty(defaultValue))
                 {
                     result = defaultValue;
                 }
@@ -422,7 +388,6 @@ namespace Nop.Services.Localization
             xmlWriter.WriteAttributeString("Name", language.Name);
             xmlWriter.WriteAttributeString("SupportedVersion", NopVersion.CurrentVersion);
 
-
             var resources = GetAllResources(language.Id);
             foreach (var resource in resources)
             {
@@ -449,93 +414,48 @@ namespace Nop.Services.Localization
             if (language == null)
                 throw new ArgumentNullException(nameof(language));
 
-            if (String.IsNullOrEmpty(xml))
+            if (string.IsNullOrEmpty(xml))
                 return;
-            if (_commonSettings.UseStoredProceduresIfSupported && _dataProvider.StoredProceduredSupported)
+
+            //SQL 2005 insists that your XML schema incoding be in UTF-16.
+            //Otherwise, you'll get "XML parsing: line 1, character XXX, unable to switch the encoding"
+            //so let's remove XML declaration
+            var inDoc = new XmlDocument();
+            inDoc.LoadXml(xml);
+            var sb = new StringBuilder();
+            using (var xWriter = XmlWriter.Create(sb, new XmlWriterSettings {OmitXmlDeclaration = true}))
             {
-                //SQL 2005 insists that your XML schema incoding be in UTF-16.
-                //Otherwise, you'll get "XML parsing: line 1, character XXX, unable to switch the encoding"
-                //so let's remove XML declaration
-                var inDoc = new XmlDocument();
-                inDoc.LoadXml(xml);
-                var sb = new StringBuilder();
-                using (var xWriter = XmlWriter.Create(sb, new XmlWriterSettings { OmitXmlDeclaration = true }))
-                {
-                    inDoc.Save(xWriter);
-                    xWriter.Close();
-                }
-                var outDoc = new XmlDocument();
-                outDoc.LoadXml(sb.ToString());
-                xml = outDoc.OuterXml;
-
-                //stored procedures are enabled and supported by the database.
-                var pLanguageId = _dataProvider.GetParameter();
-                pLanguageId.ParameterName = "LanguageId";
-                pLanguageId.Value = language.Id;
-                pLanguageId.DbType = DbType.Int32;
-
-                var pXmlPackage = _dataProvider.GetParameter();
-                pXmlPackage.ParameterName = "XmlPackage";
-                pXmlPackage.Value = xml;
-                pXmlPackage.DbType = DbType.Xml;
-
-                var pUpdateExistingResources = _dataProvider.GetParameter();
-                pUpdateExistingResources.ParameterName = "UpdateExistingResources";
-                pUpdateExistingResources.Value = updateExistingResources;
-                pUpdateExistingResources.DbType = DbType.Boolean;
-
-                //long-running query. specify timeout (600 seconds)
-                _dbContext.ExecuteSqlCommand("EXEC [LanguagePackImport] @LanguageId, @XmlPackage, @UpdateExistingResources", 
-                    false, 600, pLanguageId, pXmlPackage, pUpdateExistingResources);
+                inDoc.Save(xWriter);
+                xWriter.Close();
             }
-            else
-            {
-                //stored procedures aren't supported
-                var xmlDoc = new XmlDocument();
-                xmlDoc.LoadXml(xml);
-                var nodes = xmlDoc.SelectNodes(@"//Language/LocaleResource");
 
-                var existingResources = GetAllResources(language.Id);
-                var newResources = new List<LocaleStringResource>();
+            var outDoc = new XmlDocument();
+            outDoc.LoadXml(sb.ToString());
+            xml = outDoc.OuterXml;
 
-                foreach (XmlNode node in nodes)
-                {
-                    string name = node.Attributes["Name"].InnerText.Trim();
-                    string value = "";
-                    var valueNode = node.SelectSingleNode("Value");
-                    if (valueNode != null)
-                        value = valueNode.InnerText;
+            //stored procedures are enabled and supported by the database.
+            var pLanguageId = _dataProvider.GetParameter();
+            pLanguageId.ParameterName = "LanguageId";
+            pLanguageId.Value = language.Id;
+            pLanguageId.DbType = DbType.Int32;
 
-                    if (String.IsNullOrEmpty(name))
-                        continue;
+            var pXmlPackage = _dataProvider.GetParameter();
+            pXmlPackage.ParameterName = "XmlPackage";
+            pXmlPackage.Value = xml;
+            pXmlPackage.DbType = DbType.Xml;
 
-                    //do not use "Insert"/"Update" methods because they clear cache
-                    //let's bulk insert
-                    var resource = existingResources.FirstOrDefault(x => x.ResourceName.Equals(name, StringComparison.InvariantCultureIgnoreCase));
-                    if (resource != null)
-                    {
-                        if (updateExistingResources)
-                        {
-                            resource.ResourceValue = value;
-                        }
-                    }
-                    else
-                    {
-                        newResources.Add(
-                            new LocaleStringResource
-                            {
-                                LanguageId = language.Id,
-                                ResourceName = name,
-                                ResourceValue = value
-                            });
-                    }
-                }
-                InsertLocaleStringResources(newResources);
-                UpdateLocaleStringResources(existingResources);
-            }
+            var pUpdateExistingResources = _dataProvider.GetParameter();
+            pUpdateExistingResources.ParameterName = "UpdateExistingResources";
+            pUpdateExistingResources.Value = updateExistingResources;
+            pUpdateExistingResources.DbType = DbType.Boolean;
+
+            //long-running query. specify timeout (600 seconds)
+            _dbContext.ExecuteSqlCommand("EXEC [LanguagePackImport] @LanguageId, @XmlPackage, @UpdateExistingResources",
+                false, 600, pLanguageId, pXmlPackage, pUpdateExistingResources);
+
 
             //clear cache
-            _cacheManager.RemoveByPattern(LOCALSTRINGRESOURCES_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopLocalizationDefaults.LocaleStringResourcesPatternCacheKey);
         }
 
         #endregion

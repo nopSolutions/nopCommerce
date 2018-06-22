@@ -34,10 +34,7 @@ namespace Nop.Core.Caching
         /// </summary>
         protected virtual IDictionary<object, object> GetItems()
         {
-            if (_httpContextAccessor.HttpContext != null && _httpContextAccessor.HttpContext != null)
-                return _httpContextAccessor.HttpContext.Items;
-
-            return null;
+            return _httpContextAccessor.HttpContext?.Items;
         }
 
         #endregion
@@ -83,10 +80,8 @@ namespace Nop.Core.Caching
         public virtual bool IsSet(string key)
         {
             var items = GetItems();
-            if (items == null)
-                return false;
 
-            return (items[key] != null);
+            return items?[key] != null;
         }
 
         /// <summary>
@@ -96,10 +91,8 @@ namespace Nop.Core.Caching
         public virtual void Remove(string key)
         {
             var items = GetItems();
-            if (items == null)
-                return;
 
-            items.Remove(key);
+            items?.Remove(key);
         }
 
         /// <summary>
@@ -121,10 +114,8 @@ namespace Nop.Core.Caching
         public virtual void Clear()
         {
             var items = GetItems();
-            if (items == null)
-                return;
 
-            items.Clear();
+            items?.Clear();
         }
 
         /// <summary>

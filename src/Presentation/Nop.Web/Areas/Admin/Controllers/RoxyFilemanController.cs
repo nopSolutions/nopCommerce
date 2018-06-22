@@ -6,12 +6,16 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
 using System.IO.Compression;
+using System.Net;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
+using Newtonsoft.Json;
 using Nop.Core;
+using Nop.Core.Infrastructure;
 using Nop.Services.Security;
 using Nop.Web.Framework.Mvc.Filters;
 
@@ -45,27 +49,137 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Fields
 
-        private Dictionary<string, string> _settings;
-        private Dictionary<string, string> _languageResources;
-
         private readonly IHostingEnvironment _hostingEnvironment;
         private readonly IPermissionService _permissionService;
+        private readonly IWorkContext _workContext;
+        private readonly INopFileProvider _fileProvider;
+
+        private Dictionary<string, string> _settings;
+        private Dictionary<string, string> _languageResources;
 
         #endregion
 
         #region Ctor
 
         public RoxyFilemanController(IHostingEnvironment hostingEnvironment,
-            IPermissionService permissionService)
+            IPermissionService permissionService,
+            IWorkContext workContext,
+            INopFileProvider fileProvider)
         {
             this._hostingEnvironment = hostingEnvironment;
             this._permissionService = permissionService;
+            this._workContext = workContext;
+            this._fileProvider = fileProvider;
         }
 
         #endregion
 
         #region Methods
 
+        /// <summary>
+        /// Create configuration file for RoxyFileman
+        /// </summary>
+        public virtual void CreateConfiguration()
+        {
+            var filePath = GetFullPath(CONFIGURATION_FILE);
+
+            //create file if not exists
+            _fileProvider.CreateFile(filePath);
+
+            //try to read existing configuration
+            var existingText = _fileProvider.ReadAllText(filePath, Encoding.UTF8);
+            var existingConfiguration = JsonConvert.DeserializeAnonymousType(existingText, new
+            {
+                FILES_ROOT = string.Empty,
+                SESSION_PATH_KEY = string.Empty,
+                THUMBS_VIEW_WIDTH = string.Empty,
+                THUMBS_VIEW_HEIGHT = string.Empty,
+                PREVIEW_THUMB_WIDTH = string.Empty,
+                PREVIEW_THUMB_HEIGHT = string.Empty,
+                MAX_IMAGE_WIDTH = string.Empty,
+                MAX_IMAGE_HEIGHT = string.Empty,
+                DEFAULTVIEW = string.Empty,
+                FORBIDDEN_UPLOADS = string.Empty,
+                ALLOWED_UPLOADS = string.Empty,
+                FILEPERMISSIONS = string.Empty,
+                DIRPERMISSIONS = string.Empty,
+                LANG = string.Empty,
+                DATEFORMAT = string.Empty,
+                OPEN_LAST_DIR = string.Empty,
+                INTEGRATION = string.Empty,
+                RETURN_URL_PREFIX = string.Empty,
+                DIRLIST = string.Empty,
+                CREATEDIR = string.Empty,
+                DELETEDIR = string.Empty,
+                MOVEDIR = string.Empty,
+                COPYDIR = string.Empty,
+                RENAMEDIR = string.Empty,
+                FILESLIST = string.Empty,
+                UPLOAD = string.Empty,
+                DOWNLOAD = string.Empty,
+                DOWNLOADDIR = string.Empty,
+                DELETEFILE = string.Empty,
+                MOVEFILE = string.Empty,
+                COPYFILE = string.Empty,
+                RENAMEFILE = string.Empty,
+                GENERATETHUMB = string.Empty
+            });
+
+            //check whether the path base has changed, otherwise there is no need to overwrite the configuration file
+            var currentPathBase = this.HttpContext.Request.PathBase.ToString();
+            if (existingConfiguration?.RETURN_URL_PREFIX?.Equals(currentPathBase) ?? false)
+                return;
+
+            //create configuration
+            var configuration = new
+            {
+                FILES_ROOT = existingConfiguration?.FILES_ROOT ?? "/images/uploaded",
+                SESSION_PATH_KEY = existingConfiguration?.SESSION_PATH_KEY ?? string.Empty,
+                THUMBS_VIEW_WIDTH = existingConfiguration?.THUMBS_VIEW_WIDTH ?? "140",
+                THUMBS_VIEW_HEIGHT = existingConfiguration?.THUMBS_VIEW_HEIGHT ?? "120",
+                PREVIEW_THUMB_WIDTH = existingConfiguration?.PREVIEW_THUMB_WIDTH ?? "300",
+                PREVIEW_THUMB_HEIGHT = existingConfiguration?.PREVIEW_THUMB_HEIGHT ?? "200",
+                MAX_IMAGE_WIDTH = existingConfiguration?.MAX_IMAGE_WIDTH ?? "1000",
+                MAX_IMAGE_HEIGHT = existingConfiguration?.MAX_IMAGE_HEIGHT ?? "1000",
+                DEFAULTVIEW = existingConfiguration?.DEFAULTVIEW ?? "list",
+                FORBIDDEN_UPLOADS = existingConfiguration?.FORBIDDEN_UPLOADS ?? "zip js jsp jsb mhtml mht xhtml xht php phtml " +
+                    "php3 php4 php5 phps shtml jhtml pl sh py cgi exe application gadget hta cpl msc jar vb jse ws wsf wsc wsh " +
+                    "ps1 ps2 psc1 psc2 msh msh1 msh2 inf reg scf msp scr dll msi vbs bat com pif cmd vxd cpl htpasswd htaccess",
+                ALLOWED_UPLOADS = existingConfiguration?.ALLOWED_UPLOADS ?? string.Empty,
+                FILEPERMISSIONS = existingConfiguration?.FILEPERMISSIONS ?? "0644",
+                DIRPERMISSIONS = existingConfiguration?.DIRPERMISSIONS ?? "0755",
+                LANG = existingConfiguration?.LANG ?? _workContext.WorkingLanguage.UniqueSeoCode,
+                DATEFORMAT = existingConfiguration?.DATEFORMAT ?? "dd/MM/yyyy HH:mm",
+                OPEN_LAST_DIR = existingConfiguration?.OPEN_LAST_DIR ?? "yes",
+
+                //no need user to configure
+                INTEGRATION = "tinymce4",
+                RETURN_URL_PREFIX = currentPathBase,
+                DIRLIST = $"{this.HttpContext.Request.PathBase}/Admin/RoxyFileman/ProcessRequest?a=DIRLIST",
+                CREATEDIR = $"{this.HttpContext.Request.PathBase}/Admin/RoxyFileman/ProcessRequest?a=CREATEDIR",
+                DELETEDIR = $"{this.HttpContext.Request.PathBase}/Admin/RoxyFileman/ProcessRequest?a=DELETEDIR",
+                MOVEDIR = $"{this.HttpContext.Request.PathBase}/Admin/RoxyFileman/ProcessRequest?a=MOVEDIR",
+                COPYDIR = $"{this.HttpContext.Request.PathBase}/Admin/RoxyFileman/ProcessRequest?a=COPYDIR",
+                RENAMEDIR = $"{this.HttpContext.Request.PathBase}/Admin/RoxyFileman/ProcessRequest?a=RENAMEDIR",
+                FILESLIST = $"{this.HttpContext.Request.PathBase}/Admin/RoxyFileman/ProcessRequest?a=FILESLIST",
+                UPLOAD = $"{this.HttpContext.Request.PathBase}/Admin/RoxyFileman/ProcessRequest?a=UPLOAD",
+                DOWNLOAD = $"{this.HttpContext.Request.PathBase}/Admin/RoxyFileman/ProcessRequest?a=DOWNLOAD",
+                DOWNLOADDIR = $"{this.HttpContext.Request.PathBase}/Admin/RoxyFileman/ProcessRequest?a=DOWNLOADDIR",
+                DELETEFILE = $"{this.HttpContext.Request.PathBase}/Admin/RoxyFileman/ProcessRequest?a=DELETEFILE",
+                MOVEFILE = $"{this.HttpContext.Request.PathBase}/Admin/RoxyFileman/ProcessRequest?a=MOVEFILE",
+                COPYFILE = $"{this.HttpContext.Request.PathBase}/Admin/RoxyFileman/ProcessRequest?a=COPYFILE",
+                RENAMEFILE = $"{this.HttpContext.Request.PathBase}/Admin/RoxyFileman/ProcessRequest?a=RENAMEFILE",
+                GENERATETHUMB = $"{this.HttpContext.Request.PathBase}/Admin/RoxyFileman/ProcessRequest?a=GENERATETHUMB"
+            };
+
+            //save the file
+            var text = JsonConvert.SerializeObject(configuration, Formatting.Indented);
+            _fileProvider.WriteAllText(filePath, text, Encoding.UTF8);
+        }
+
+        /// <summary>
+        /// Process request
+        /// </summary>
         public virtual void ProcessRequest()
         {
             //async requests are disabled in the js code, so use .Wait() method here
@@ -74,7 +188,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #endregion
 
-        #region Utitlies
+        #region Utilities
 
         /// <summary>
         /// Process the incoming request
@@ -88,70 +202,69 @@ namespace Nop.Web.Areas.Admin.Controllers
                 if (!_permissionService.Authorize(StandardPermissionProvider.HtmlEditorManagePictures))
                     throw new Exception("You don't have required permission");
 
-                if (!StringValues.IsNullOrEmpty(this.HttpContext.Request.Query["a"]))
-                    action = this.HttpContext.Request.Query["a"];
+                if (!StringValues.IsNullOrEmpty(HttpContext.Request.Query["a"]))
+                    action = HttpContext.Request.Query["a"];
 
                 switch (action.ToUpper())
                 {
                     case "DIRLIST":
-                        await GetDirectoriesAsync(this.HttpContext.Request.Query["type"]);
+                        await GetDirectoriesAsync(HttpContext.Request.Query["type"]);
                         break;
                     case "FILESLIST":
-                        await GetFilesAsync(this.HttpContext.Request.Query["d"], this.HttpContext.Request.Query["type"]);
+                        await GetFilesAsync(HttpContext.Request.Query["d"], HttpContext.Request.Query["type"]);
                         break;
                     case "COPYDIR":
-                        await CopyDirectoryAsync(this.HttpContext.Request.Query["d"], this.HttpContext.Request.Query["n"]);
+                        await CopyDirectoryAsync(HttpContext.Request.Query["d"], HttpContext.Request.Query["n"]);
                         break;
                     case "COPYFILE":
-                        await CopyFileAsync(this.HttpContext.Request.Query["f"], this.HttpContext.Request.Query["n"]);
+                        await CopyFileAsync(HttpContext.Request.Query["f"], HttpContext.Request.Query["n"]);
                         break;
                     case "CREATEDIR":
-                        await CreateDirectoryAsync(this.HttpContext.Request.Query["d"], this.HttpContext.Request.Query["n"]);
+                        await CreateDirectoryAsync(HttpContext.Request.Query["d"], HttpContext.Request.Query["n"]);
                         break;
                     case "DELETEDIR":
-                        await DeleteDirectoryAsync(this.HttpContext.Request.Query["d"]);
+                        await DeleteDirectoryAsync(HttpContext.Request.Query["d"]);
                         break;
                     case "DELETEFILE":
-                        await DeleteFileAsync(this.HttpContext.Request.Query["f"]);
+                        await DeleteFileAsync(HttpContext.Request.Query["f"]);
                         break;
                     case "DOWNLOAD":
-                        await DownloadFileAsync(this.HttpContext.Request.Query["f"]);
+                        await DownloadFileAsync(HttpContext.Request.Query["f"]);
                         break;
                     case "DOWNLOADDIR":
-                        await DownloadDirectoryAsync(this.HttpContext.Request.Query["d"]);
+                        await DownloadDirectoryAsync(HttpContext.Request.Query["d"]);
                         break;
                     case "MOVEDIR":
-                        await MoveDirectoryAsync(this.HttpContext.Request.Query["d"], this.HttpContext.Request.Query["n"]);
+                        await MoveDirectoryAsync(HttpContext.Request.Query["d"], HttpContext.Request.Query["n"]);
                         break;
                     case "MOVEFILE":
-                        await MoveFileAsync(this.HttpContext.Request.Query["f"], this.HttpContext.Request.Query["n"]);
+                        await MoveFileAsync(HttpContext.Request.Query["f"], HttpContext.Request.Query["n"]);
                         break;
                     case "RENAMEDIR":
-                        await RenameDirectoryAsync(this.HttpContext.Request.Query["d"], this.HttpContext.Request.Query["n"]);
+                        await RenameDirectoryAsync(HttpContext.Request.Query["d"], HttpContext.Request.Query["n"]);
                         break;
                     case "RENAMEFILE":
-                        await RenameFileAsync(this.HttpContext.Request.Query["f"], this.HttpContext.Request.Query["n"]);
+                        await RenameFileAsync(HttpContext.Request.Query["f"], HttpContext.Request.Query["n"]);
                         break;
                     case "GENERATETHUMB":
-                        int.TryParse(this.HttpContext.Request.Query["width"].ToString().Replace("px", ""), out int w);
-                        int.TryParse(this.HttpContext.Request.Query["height"].ToString().Replace("px", ""), out int h);
-                        CreateThumbnail(this.HttpContext.Request.Query["f"], w, h);
+                        int.TryParse(HttpContext.Request.Query["width"].ToString().Replace("px", string.Empty), out var w);
+                        int.TryParse(HttpContext.Request.Query["height"].ToString().Replace("px", string.Empty), out var h);
+                        CreateThumbnail(HttpContext.Request.Query["f"], w, h);
                         break;
                     case "UPLOAD":
-                        await UploadFilesAsync(this.HttpContext.Request.Form["d"]);
+                        await UploadFilesAsync(HttpContext.Request.Form["d"]);
                         break;
                     default:
-                        await this.HttpContext.Response.WriteAsync(GetErrorResponse("This action is not implemented."));
+                        await HttpContext.Response.WriteAsync(GetErrorResponse("This action is not implemented."));
                         break;
                 }
-
             }
             catch (Exception ex)
             {
                 if (action == "UPLOAD" && !IsAjaxRequest())
-                    await this.HttpContext.Response.WriteAsync($"<script>parent.fileUploaded({GetErrorResponse(GetLanguageResource("E_UploadNoFiles"))});</script>");
+                    await HttpContext.Response.WriteAsync($"<script>parent.fileUploaded({GetErrorResponse(GetLanguageResource("E_UploadNoFiles"))});</script>");
                 else
-                    await this.HttpContext.Response.WriteAsync(GetErrorResponse(ex.Message));
+                    await HttpContext.Response.WriteAsync(GetErrorResponse(ex.Message));
             }
         }
 
@@ -165,7 +278,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             var sessionPathKey = GetSetting("SESSION_PATH_KEY");
             if (!string.IsNullOrEmpty(sessionPathKey))
-                filesRoot = this.HttpContext.Session.GetString(sessionPathKey);
+                filesRoot = HttpContext.Session.GetString(sessionPathKey);
 
             if (string.IsNullOrEmpty(filesRoot))
                 filesRoot = DEFAULT_ROOT_DIRECTORY;
@@ -215,7 +328,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (_settings == null)
                 _settings = ParseJson(GetFullPath(CONFIGURATION_FILE));
 
-            if (_settings.TryGetValue(key, out string value))
+            if (_settings.TryGetValue(key, out var value))
                 return value;
 
             return null;
@@ -231,7 +344,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (_languageResources == null)
                 _languageResources = ParseJson(GetLanguageFile());
 
-            if (_languageResources.TryGetValue(key, out string value))
+            if (_languageResources.TryGetValue(key, out var value))
                 return value;
 
             return key;
@@ -246,7 +359,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             var languageCode = GetSetting("LANG");
             var languageFile = $"{LANGUAGE_DIRECTORY}/{languageCode}.json";
 
-            if (!System.IO.File.Exists(GetFullPath(languageFile)))
+            if (!_fileProvider.FileExists(GetFullPath(languageFile)))
                 languageFile = $"{LANGUAGE_DIRECTORY}/en.json";
 
             return GetFullPath(languageFile);
@@ -263,10 +376,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             var json = string.Empty;
             try
             {
-                json = System.IO.File.ReadAllText(file, System.Text.Encoding.UTF8)?.Trim();
+                json = _fileProvider.ReadAllText(file, Encoding.UTF8)?.Trim();
             }
-            catch { }
-            
+            catch
+            {
+                //ignore any exception
+            }
+
             if (string.IsNullOrEmpty(json))
                 return result;
 
@@ -285,7 +401,10 @@ namespace Nop.Web.Areas.Admin.Controllers
                     if (!string.IsNullOrEmpty(tmp[0]) && !result.ContainsKey(tmp[0]))
                         result.Add(tmp[0], tmp[1]);
                 }
-                catch { }
+                catch
+                {
+                    //ignore any exception
+                }
             }
 
             return result;
@@ -318,7 +437,8 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual bool CanHandleFile(string path)
         {
             var result = false;
-            var fileExtension = new FileInfo(path).Extension.Replace(".", "").ToLower();
+
+            var fileExtension = _fileProvider.GetFileExtension(path).Replace(".", string.Empty).ToLower();
 
             var forbiddenUploads = GetSetting("FORBIDDEN_UPLOADS").Trim().ToLower();
             if (!string.IsNullOrEmpty(forbiddenUploads))
@@ -328,11 +448,11 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             var allowedUploads = GetSetting("ALLOWED_UPLOADS").Trim().ToLower();
-            if (!string.IsNullOrEmpty(allowedUploads))
-            {
-                var allowedFileExtensions = new ArrayList(Regex.Split(allowedUploads, "\\s+"));
-                result = allowedFileExtensions.Contains(fileExtension);
-            }
+            if (string.IsNullOrEmpty(allowedUploads))
+                return result;
+
+            var allowedFileExtensions = new ArrayList(Regex.Split(allowedUploads, "\\s+"));
+            result = allowedFileExtensions.Contains(fileExtension);
 
             return result;
         }
@@ -376,23 +496,24 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual async Task GetDirectoriesAsync(string type)
         {
             var rootDirectoryPath = GetFullPath(GetVirtualPath(null));
-            var rootDirectory = new DirectoryInfo(rootDirectoryPath);
-            if (!rootDirectory.Exists)
+            
+            if (!_fileProvider.DirectoryExists(rootDirectoryPath))
                 throw new Exception("Invalid files root directory. Check your configuration.");
 
-            var allDirectories = GetDirectories(rootDirectory.FullName);
-            allDirectories.Insert(0, rootDirectory.FullName);
+            var allDirectories = GetDirectories(rootDirectoryPath);
+            allDirectories.Insert(0, rootDirectoryPath);
 
             var localPath = GetFullPath(null);
-            await this.HttpContext.Response.WriteAsync("[");
+            await HttpContext.Response.WriteAsync("[");
             for (var i = 0; i < allDirectories.Count; i++)
             {
                 var directoryPath = (string)allDirectories[i];
-                await this.HttpContext.Response.WriteAsync($"{{\"p\":\"/{directoryPath.Replace(localPath, string.Empty).Replace("\\", "/").TrimStart('/')}\",\"f\":\"{GetFiles(directoryPath, type).Count}\",\"d\":\"{Directory.GetDirectories(directoryPath).Length}\"}}");
+                await HttpContext.Response.WriteAsync($"{{\"p\":\"/{directoryPath.Replace(localPath, string.Empty).Replace("\\", "/").TrimStart('/')}\",\"f\":\"{GetFiles(directoryPath, type).Count}\",\"d\":\"{_fileProvider.GetDirectories(directoryPath).Length}\"}}");
                 if (i < allDirectories.Count - 1)
-                    await this.HttpContext.Response.WriteAsync(",");
+                    await HttpContext.Response.WriteAsync(",");
             }
-            await this.HttpContext.Response.WriteAsync("]");
+
+            await HttpContext.Response.WriteAsync("]");
         }
 
         /// <summary>
@@ -404,7 +525,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         {
             var directories = new ArrayList();
 
-            var directoryNames = Directory.GetDirectories(parentDirectoryPath);
+            var directoryNames = _fileProvider.GetDirectories(parentDirectoryPath);
             foreach (var directory in directoryNames)
             {
                 directories.Add(directory);
@@ -425,36 +546,32 @@ namespace Nop.Web.Areas.Admin.Controllers
             directoryPath = GetVirtualPath(directoryPath);
             var files = GetFiles(GetFullPath(directoryPath), type);
 
-            await this.HttpContext.Response.WriteAsync("[");
+            await HttpContext.Response.WriteAsync("[");
             for (var i = 0; i < files.Count; i++)
             {
                 var width = 0;
                 var height = 0;
-                var file = new FileInfo(files[i]);
-                if (GetFileType(file.Extension) == "image")
+                var physicalPath = files[i];
+
+                if (GetFileType(_fileProvider.GetFileExtension(files[i])) == "image")
                 {
-                    try
+                    using (var stream = new FileStream(physicalPath, FileMode.Open))
                     {
-                        using (var stream = new FileStream(file.FullName, FileMode.Open))
+                        using (var image = Image.FromStream(stream))
                         {
-                            using (var image = Image.FromStream(stream))
-                            {
-                                width = image.Width;
-                                height = image.Height;
-                            }
+                            width = image.Width;
+                            height = image.Height;
                         }
                     }
-                    catch (Exception ex)
-                    {
-                        throw ex;
-                    }
                 }
-                await this.HttpContext.Response.WriteAsync($"{{\"p\":\"{directoryPath.TrimEnd('/')}/{file.Name}\",\"t\":\"{Math.Ceiling(GetTimestamp(file.LastWriteTime))}\",\"s\":\"{file.Length}\",\"w\":\"{width}\",\"h\":\"{height}\"}}");
+
+                await HttpContext.Response.WriteAsync($"{{\"p\":\"{directoryPath.TrimEnd('/')}/{_fileProvider.GetFileName(physicalPath)}\",\"t\":\"{Math.Ceiling(GetTimestamp(_fileProvider.GetLastWriteTime(physicalPath)))}\",\"s\":\"{_fileProvider.FileLength(physicalPath)}\",\"w\":\"{width}\",\"h\":\"{height}\"}}");
 
                 if (i < files.Count - 1)
-                    await this.HttpContext.Response.WriteAsync(",");
+                    await HttpContext.Response.WriteAsync(",");
             }
-            await this.HttpContext.Response.WriteAsync("]");
+
+            await HttpContext.Response.WriteAsync("]");
         }
 
         /// <summary>
@@ -469,9 +586,9 @@ namespace Nop.Web.Areas.Admin.Controllers
                 type = string.Empty;
 
             var files = new List<string>();
-            foreach (var fileName in Directory.GetFiles(directoryPath))
+            foreach (var fileName in _fileProvider.GetFiles(directoryPath))
             {
-                if (string.IsNullOrEmpty(type) || GetFileType(new FileInfo(fileName).Extension) == type)
+                if (string.IsNullOrEmpty(type) || GetFileType(_fileProvider.GetFileExtension(fileName)) == type)
                     files.Add(fileName);
             }
 
@@ -497,18 +614,18 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual async Task CopyDirectoryAsync(string sourcePath, string destinationPath)
         {
             var directoryPath = GetFullPath(GetVirtualPath(sourcePath));
-            var directory = new DirectoryInfo(directoryPath);
-            if (!directory.Exists)
+           
+            if (!_fileProvider.DirectoryExists(directoryPath))
                 throw new Exception(GetLanguageResource("E_CopyDirInvalidPath"));
 
-            var newDirectoryPath = GetFullPath(GetVirtualPath($"{destinationPath.TrimEnd('/')}/{directory.Name}"));
-            var newDirectory = new DirectoryInfo(newDirectoryPath);
-            if (newDirectory.Exists)
+            var newDirectoryPath = GetFullPath(GetVirtualPath($"{destinationPath.TrimEnd('/')}/{_fileProvider.GetDirectoryName(directoryPath)}"));
+            
+            if (_fileProvider.DirectoryExists(newDirectoryPath))
                 throw new Exception(GetLanguageResource("E_DirAlreadyExists"));
 
-            CopyDirectory(directory.FullName, newDirectory.FullName);
+            CopyDirectory(directoryPath, newDirectoryPath);
 
-            await this.HttpContext.Response.WriteAsync(GetSuccessResponse());
+            await HttpContext.Response.WriteAsync(GetSuccessResponse());
         }
 
         /// <summary>
@@ -518,22 +635,22 @@ namespace Nop.Web.Areas.Admin.Controllers
         /// <param name="destinationPath">Path to the destination directory</param>
         protected virtual void CopyDirectory(string sourcePath, string destinationPath)
         {
-            var existingFiles = Directory.GetFiles(sourcePath);
-            var existingDirectories = Directory.GetDirectories(sourcePath);
-
-            if (!Directory.Exists(destinationPath))
-                Directory.CreateDirectory(destinationPath);
+            var existingFiles = _fileProvider.GetFiles(sourcePath);
+            var existingDirectories = _fileProvider.GetDirectories(sourcePath);
+            
+            if (!_fileProvider.DirectoryExists(destinationPath))
+                _fileProvider.CreateDirectory(destinationPath);
 
             foreach (var file in existingFiles)
             {
-                var filePath = Path.Combine(destinationPath, new FileInfo(file).Name);
-                if (!System.IO.File.Exists(filePath))
-                    System.IO.File.Copy(file, filePath);
+                var filePath = _fileProvider.Combine(destinationPath, _fileProvider.GetFileName(file));
+                if (!_fileProvider.FileExists(filePath))
+                    _fileProvider.FileCopy(file, filePath);
             }
 
             foreach (var directory in existingDirectories)
             {
-                var directoryPath = Path.Combine(destinationPath, new DirectoryInfo(directory).Name);
+                var directoryPath = _fileProvider.Combine(destinationPath, _fileProvider.GetDirectoryName(directory));
                 CopyDirectory(directory, directoryPath);
             }
         }
@@ -547,16 +664,16 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual async Task CopyFileAsync(string sourcePath, string destinationPath)
         {
             var filePath = GetFullPath(GetVirtualPath(sourcePath));
-            var file = new FileInfo(filePath);
-            if (!file.Exists)
+            
+            if (!_fileProvider.FileExists(filePath))
                 throw new Exception(GetLanguageResource("E_CopyFileInvalisPath"));
 
             destinationPath = GetFullPath(GetVirtualPath(destinationPath));
-            var newFileName = GetUniqueFileName(destinationPath, file.Name);
+            var newFileName = GetUniqueFileName(destinationPath, _fileProvider.GetFileName(filePath));
             try
             {
-                System.IO.File.Copy(file.FullName, Path.Combine(destinationPath, newFileName));
-                await this.HttpContext.Response.WriteAsync(GetSuccessResponse());
+                _fileProvider.FileCopy(filePath, _fileProvider.Combine(destinationPath, newFileName));
+                await HttpContext.Response.WriteAsync(GetSuccessResponse());
             }
             catch
             {
@@ -574,10 +691,10 @@ namespace Nop.Web.Areas.Admin.Controllers
         {
             var uniqueFileName = fileName;
 
-            int i = 0;
-            while (System.IO.File.Exists(Path.Combine(directoryPath, uniqueFileName)))
+            var i = 0;
+            while (_fileProvider.FileExists(_fileProvider.Combine(directoryPath, uniqueFileName)))
             {
-                uniqueFileName = $"{Path.GetFileNameWithoutExtension(fileName)}-Copy-{++i}{Path.GetExtension(fileName)}";
+                uniqueFileName = $"{_fileProvider.GetFileNameWithoutExtension(fileName)}-Copy-{++i}{_fileProvider.GetFileExtension(fileName)}";
             }
 
             return uniqueFileName;
@@ -592,16 +709,15 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual async Task CreateDirectoryAsync(string parentDirectoryPath, string name)
         {
             parentDirectoryPath = GetFullPath(GetVirtualPath(parentDirectoryPath));
-            if (!Directory.Exists(parentDirectoryPath))
+            if (!_fileProvider.DirectoryExists(parentDirectoryPath))
                 throw new Exception(GetLanguageResource("E_CreateDirInvalidPath"));
 
             try
             {
-                var path = Path.Combine(parentDirectoryPath, name);
-                if (!Directory.Exists(path))
-                    Directory.CreateDirectory(path);
+                var path = _fileProvider.Combine(parentDirectoryPath, name);
+                _fileProvider.CreateDirectory(path);
 
-                await this.HttpContext.Response.WriteAsync(GetSuccessResponse());
+                await HttpContext.Response.WriteAsync(GetSuccessResponse());
             }
             catch
             {
@@ -621,16 +737,16 @@ namespace Nop.Web.Areas.Admin.Controllers
                 throw new Exception(GetLanguageResource("E_CannotDeleteRoot"));
 
             path = GetFullPath(path);
-            if (!Directory.Exists(path))
+            if (!_fileProvider.DirectoryExists(path))
                 throw new Exception(GetLanguageResource("E_DeleteDirInvalidPath"));
 
-            if (Directory.GetDirectories(path).Length > 0 || Directory.GetFiles(path).Length > 0)
+            if (_fileProvider.GetDirectories(path).Length > 0 || _fileProvider.GetFiles(path).Length > 0)
                 throw new Exception(GetLanguageResource("E_DeleteNonEmpty"));
 
             try
             {
-                Directory.Delete(path);
-                await this.HttpContext.Response.WriteAsync(GetSuccessResponse());
+                _fileProvider.DeleteDirectory(path);
+                await HttpContext.Response.WriteAsync(GetSuccessResponse());
             }
             catch
             {
@@ -646,13 +762,13 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual async Task DeleteFileAsync(string path)
         {
             path = GetFullPath(GetVirtualPath(path));
-            if (!System.IO.File.Exists(path))
+            if (!_fileProvider.FileExists(path))
                 throw new Exception(GetLanguageResource("E_DeleteFileInvalidPath"));
 
             try
             {
-                System.IO.File.Delete(path);
-                await this.HttpContext.Response.WriteAsync(GetSuccessResponse());
+                _fileProvider.DeleteFile(path);
+                await HttpContext.Response.WriteAsync(GetSuccessResponse());
             }
             catch
             {
@@ -669,26 +785,26 @@ namespace Nop.Web.Areas.Admin.Controllers
         {
             path = GetVirtualPath(path).TrimEnd('/');
             var fullPath = GetFullPath(path);
-            if (!Directory.Exists(fullPath))
+            if (!_fileProvider.DirectoryExists(fullPath))
                 throw new Exception(GetLanguageResource("E_CreateArchive"));
 
-            var zipName = new FileInfo(fullPath).Name + ".zip";
+            var zipName = _fileProvider.GetFileName(fullPath) + ".zip";
             var zipPath = $"/{zipName}";
             if (path != GetRootDirectory())
                 zipPath = GetVirtualPath(zipPath);
             zipPath = GetFullPath(zipPath);
 
-            if (System.IO.File.Exists(zipPath))
-                System.IO.File.Delete(zipPath);
+            if (_fileProvider.FileExists(zipPath))
+                _fileProvider.DeleteFile(zipPath);
 
             ZipFile.CreateFromDirectory(fullPath, zipPath, CompressionLevel.Fastest, true);
 
-            this.HttpContext.Response.Clear();
-            this.HttpContext.Response.Headers.Add("Content-Disposition", $"attachment; filename=\"{zipName}\"");
-            this.HttpContext.Response.ContentType = MimeTypes.ApplicationForceDownload;
-            await this.HttpContext.Response.SendFileAsync(zipPath);
+            HttpContext.Response.Clear();
+            HttpContext.Response.Headers.Add("Content-Disposition", $"attachment; filename=\"{WebUtility.UrlEncode(zipName)}\"");
+            HttpContext.Response.ContentType = MimeTypes.ApplicationForceDownload;
+            await HttpContext.Response.SendFileAsync(zipPath);
 
-            System.IO.File.Delete(zipPath);
+            _fileProvider.DeleteFile(zipPath);
         }
 
         /// <summary>
@@ -699,13 +815,12 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual async Task DownloadFileAsync(string path)
         {
             var filePath = GetFullPath(GetVirtualPath(path));
-            var file = new FileInfo(filePath);
-            if (file.Exists)
+            if (_fileProvider.FileExists(filePath))
             {
-                this.HttpContext.Response.Clear();
-                this.HttpContext.Response.Headers.Add("Content-Disposition", $"attachment; filename=\"{file.Name}\"");
-                this.HttpContext.Response.ContentType = MimeTypes.ApplicationForceDownload;
-                await this.HttpContext.Response.SendFileAsync(file.FullName);
+                HttpContext.Response.Clear();
+                HttpContext.Response.Headers.Add("Content-Disposition", $"attachment; filename=\"{WebUtility.UrlEncode(_fileProvider.GetFileName(filePath))}\"");
+                HttpContext.Response.ContentType = MimeTypes.ApplicationForceDownload;
+                await HttpContext.Response.SendFileAsync(filePath);
             }
         }
 
@@ -718,22 +833,22 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual async Task MoveDirectoryAsync(string sourcePath, string destinationPath)
         {
             var fullSourcePath = GetFullPath(GetVirtualPath(sourcePath));
-            var sourceDirectory = new DirectoryInfo(fullSourcePath);
-            destinationPath = GetFullPath(GetVirtualPath(Path.Combine(destinationPath, sourceDirectory.Name)));
-            var destinationDirectory = new DirectoryInfo(destinationPath);
-            if (destinationDirectory.FullName.IndexOf(sourceDirectory.FullName) == 0)
+           
+            destinationPath = GetFullPath(GetVirtualPath(_fileProvider.Combine(destinationPath, _fileProvider.GetDirectoryName(fullSourcePath))));
+            
+            if (destinationPath.IndexOf(fullSourcePath, StringComparison.InvariantCulture) == 0)
                 throw new Exception(GetLanguageResource("E_CannotMoveDirToChild"));
 
-            if (!sourceDirectory.Exists)
+            if (!_fileProvider.DirectoryExists(fullSourcePath))
                 throw new Exception(GetLanguageResource("E_MoveDirInvalisPath"));
 
-            if (destinationDirectory.Exists)
+            if (_fileProvider.DirectoryExists(destinationPath))
                 throw new Exception(GetLanguageResource("E_DirAlreadyExists"));
 
             try
             {
-                sourceDirectory.MoveTo(destinationDirectory.FullName);
-                await this.HttpContext.Response.WriteAsync(GetSuccessResponse());
+                _fileProvider.DirectoryMove(fullSourcePath, destinationPath);
+                await HttpContext.Response.WriteAsync(GetSuccessResponse());
             }
             catch
             {
@@ -750,22 +865,22 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual async Task MoveFileAsync(string sourcePath, string destinationPath)
         {
             var fullSourcePath = GetFullPath(GetVirtualPath(sourcePath));
-            var sourceFile = new FileInfo(fullSourcePath);
-            if (!sourceFile.Exists)
+           
+            if (!_fileProvider.FileExists(fullSourcePath))
                 throw new Exception(GetLanguageResource("E_MoveFileInvalisPath"));
 
             destinationPath = GetFullPath(GetVirtualPath(destinationPath));
-            var destinationFile = new FileInfo(destinationPath);
-            if (destinationFile.Exists)
+            
+            if (_fileProvider.FileExists(destinationPath))
                 throw new Exception(GetLanguageResource("E_MoveFileAlreadyExists"));
 
-            if (!CanHandleFile(destinationFile.Name))
+            if (!CanHandleFile(_fileProvider.GetFileName(destinationPath)))
                 throw new Exception(GetLanguageResource("E_FileExtensionForbidden"));
 
             try
             {
-                sourceFile.MoveTo(destinationFile.FullName);
-                await this.HttpContext.Response.WriteAsync(GetSuccessResponse());
+                _fileProvider.FileMove(fullSourcePath, destinationPath);
+                await HttpContext.Response.WriteAsync(GetSuccessResponse());
             }
             catch
             {
@@ -782,21 +897,22 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual async Task RenameDirectoryAsync(string sourcePath, string newName)
         {
             var fullSourcePath = GetFullPath(GetVirtualPath(sourcePath));
-            var sourceDirectory = new DirectoryInfo(fullSourcePath);
-            var destinationDirectory = new DirectoryInfo(Path.Combine(sourceDirectory.Parent.FullName, newName));
+
+            var destinationDirectory = _fileProvider.Combine(_fileProvider.GetParentDirectory(fullSourcePath), newName);
+
             if (GetVirtualPath(sourcePath) == GetRootDirectory())
                 throw new Exception(GetLanguageResource("E_CannotRenameRoot"));
 
-            if (!sourceDirectory.Exists)
+            if (!_fileProvider.DirectoryExists(fullSourcePath))
                 throw new Exception(GetLanguageResource("E_RenameDirInvalidPath"));
 
-            if (destinationDirectory.Exists)
+            if (_fileProvider.DirectoryExists(destinationDirectory))
                 throw new Exception(GetLanguageResource("E_DirAlreadyExists"));
 
             try
             {
-                sourceDirectory.MoveTo(destinationDirectory.FullName);
-                await this.HttpContext.Response.WriteAsync(GetSuccessResponse());
+                _fileProvider.DirectoryMove(fullSourcePath, destinationDirectory);
+                await HttpContext.Response.WriteAsync(GetSuccessResponse());
             }
             catch
             {
@@ -813,8 +929,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual async Task RenameFileAsync(string sourcePath, string newName)
         {
             var fullSourcePath = GetFullPath(GetVirtualPath(sourcePath));
-            var sourceFile = new FileInfo(fullSourcePath);
-            if (!sourceFile.Exists)
+            if (!_fileProvider.FileExists(fullSourcePath))
                 throw new Exception(GetLanguageResource("E_RenameFileInvalidPath"));
 
             if (!CanHandleFile(newName))
@@ -822,10 +937,10 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             try
             {
-                var destinationPath = Path.Combine(sourceFile.Directory.FullName, newName);
-                var destinationFile = new FileInfo(destinationPath);
-                sourceFile.MoveTo(destinationFile.FullName);
-                await this.HttpContext.Response.WriteAsync(GetSuccessResponse());
+                var destinationPath = _fileProvider.Combine(_fileProvider.GetDirectoryName(fullSourcePath), newName);
+                _fileProvider.FileMove(fullSourcePath, destinationPath);
+
+                await HttpContext.Response.WriteAsync(GetSuccessResponse());
             }
             catch
             {
@@ -844,37 +959,35 @@ namespace Nop.Web.Areas.Admin.Controllers
             path = GetFullPath(GetVirtualPath(path));
             using (var stream = new FileStream(path, FileMode.Open, FileAccess.Read))
             {
-                using (var image = new Bitmap(Bitmap.FromStream(stream)))
+                using (var image = new Bitmap(Image.FromStream(stream)))
                 {
-                    var cropWidth = image.Width;
-                    var cropHeight = image.Height;
                     var cropX = 0;
                     var cropY = 0;
 
-                    var imgRatio = (double)image.Width / (double)image.Height;
+                    var imgRatio = image.Width / (double)image.Height;
 
                     if (height == 0)
-                        height = Convert.ToInt32(Math.Floor((double)width / imgRatio));
+                        height = Convert.ToInt32(Math.Floor(width / imgRatio));
 
                     if (width > image.Width)
                         width = image.Width;
                     if (height > image.Height)
                         height = image.Height;
 
-                    var cropRatio = (double)width / (double)height;
-                    cropWidth = Convert.ToInt32(Math.Floor((double)image.Height * cropRatio));
-                    cropHeight = Convert.ToInt32(Math.Floor((double)cropWidth / cropRatio));
+                    var cropRatio = width / (double)height;
+                    var cropWidth = Convert.ToInt32(Math.Floor(image.Height * cropRatio));
+                    var cropHeight = Convert.ToInt32(Math.Floor(cropWidth / cropRatio));
 
                     if (cropWidth > image.Width)
                     {
                         cropWidth = image.Width;
-                        cropHeight = Convert.ToInt32(Math.Floor((double)cropWidth / cropRatio));
+                        cropHeight = Convert.ToInt32(Math.Floor(cropWidth / cropRatio));
                     }
 
                     if (cropHeight > image.Height)
                     {
                         cropHeight = image.Height;
-                        cropWidth = Convert.ToInt32(Math.Floor((double)cropHeight * cropRatio));
+                        cropWidth = Convert.ToInt32(Math.Floor(cropHeight * cropRatio));
                     }
 
                     if (cropWidth < image.Width)
@@ -884,9 +997,9 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                     using (var cropImg = image.Clone(new Rectangle(cropX, cropY, cropWidth, cropHeight), PixelFormat.DontCare))
                     {
-                        this.HttpContext.Response.Headers.Add("Content-Type", MimeTypes.ImagePng);
-                        cropImg.GetThumbnailImage(width, height, () => { return false; }, IntPtr.Zero).Save(this.HttpContext.Response.Body, ImageFormat.Png);
-                        this.HttpContext.Response.Body.Close();
+                        HttpContext.Response.Headers.Add("Content-Type", MimeTypes.ImagePng);
+                        cropImg.GetThumbnailImage(width, height, () => false, IntPtr.Zero).Save(HttpContext.Response.Body, ImageFormat.Png);
+                        HttpContext.Response.Body.Close();
                     }
                 }
             }
@@ -899,7 +1012,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         /// <returns>Image format</returns>
         protected virtual ImageFormat GetImageFormat(string path)
         {
-            var fileExtension = new FileInfo(path).Extension.ToLower();
+            var fileExtension = _fileProvider.GetFileExtension(path).ToLower();
             switch (fileExtension)
             {
                 case ".png":
@@ -924,16 +1037,16 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 using (var image = Image.FromStream(stream))
                 {
-                    var ratio = (float)image.Width / (float)image.Height;
+                    var ratio = image.Width / (float)image.Height;
                     if ((image.Width <= width && image.Height <= height) || (width == 0 && height == 0))
                         return;
 
                     var newWidth = width;
-                    int newHeight = Convert.ToInt16(Math.Floor((float)newWidth / ratio));
+                    int newHeight = Convert.ToInt16(Math.Floor(newWidth / ratio));
                     if ((height > 0 && newHeight > height) || (width == 0))
                     {
                         newHeight = height;
-                        newWidth = Convert.ToInt16(Math.Floor((float)newHeight * ratio));
+                        newWidth = Convert.ToInt16(Math.Floor(newHeight * ratio));
                     }
 
                     using (var newImage = new Bitmap(newWidth, newHeight))
@@ -956,9 +1069,9 @@ namespace Nop.Web.Areas.Admin.Controllers
         /// <returns>True or false</returns>
         protected virtual bool IsAjaxRequest()
         {
-            return this.HttpContext.Request.Form != null &&
-                !StringValues.IsNullOrEmpty(this.HttpContext.Request.Form["method"]) &&
-                this.HttpContext.Request.Form["method"] == "ajax";
+            return HttpContext.Request.Form != null &&
+                !StringValues.IsNullOrEmpty(HttpContext.Request.Form["method"]) &&
+                HttpContext.Request.Form["method"] == "ajax";
         }
 
         /// <summary>
@@ -973,24 +1086,24 @@ namespace Nop.Web.Areas.Admin.Controllers
             try
             {
                 directoryPath = GetFullPath(GetVirtualPath(directoryPath));
-                for (var i = 0; i < this.HttpContext.Request.Form.Files.Count; i++)
+                foreach (var formFile in HttpContext.Request.Form.Files)
                 {
-                    var fileName = this.HttpContext.Request.Form.Files[i].FileName;
+                    var fileName = formFile.FileName;
                     if (CanHandleFile(fileName))
                     {
-                        var file = new FileInfo(fileName);
-                        var uniqueFileName = GetUniqueFileName(directoryPath, file.Name);
-                        var destinationFile = Path.Combine(directoryPath, uniqueFileName);
+                        var uniqueFileName = GetUniqueFileName(directoryPath, _fileProvider.GetFileName(fileName));
+                        var destinationFile = _fileProvider.Combine(directoryPath, uniqueFileName);
                         using (var stream = new FileStream(destinationFile, FileMode.OpenOrCreate))
                         {
-                            this.HttpContext.Request.Form.Files[i].CopyTo(stream);
+                            formFile.CopyTo(stream);
                         }
-                        if (GetFileType(new FileInfo(uniqueFileName).Extension) == "image")
-                        {
-                            int.TryParse(GetSetting("MAX_IMAGE_WIDTH"), out int w);
-                            int.TryParse(GetSetting("MAX_IMAGE_HEIGHT"), out int h);
-                            ImageResize(destinationFile, destinationFile, w, h);
-                        }
+
+                        if (GetFileType(new FileInfo(uniqueFileName).Extension) != "image")
+                            continue;
+
+                        int.TryParse(GetSetting("MAX_IMAGE_WIDTH"), out var w);
+                        int.TryParse(GetSetting("MAX_IMAGE_HEIGHT"), out var h);
+                        ImageResize(destinationFile, destinationFile, w, h);
                     }
                     else
                     {
@@ -1003,15 +1116,16 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 result = GetErrorResponse(ex.Message);
             }
+
             if (IsAjaxRequest())
             {
                 if (hasErrors)
                     result = GetErrorResponse(GetLanguageResource("E_UploadNotAll"));
 
-                await this.HttpContext.Response.WriteAsync(result);
+                await HttpContext.Response.WriteAsync(result);
             }
             else
-                await this.HttpContext.Response.WriteAsync($"<script>parent.fileUploaded({result});</script>");
+                await HttpContext.Response.WriteAsync($"<script>parent.fileUploaded({result});</script>");
         }
 
         #endregion

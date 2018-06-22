@@ -1,4 +1,4 @@
-﻿@model VendorSettingsModel
+@model VendorSettingsModel
 
 @{
     //page title
@@ -17,7 +17,7 @@
                 <i class="fa fa-floppy-o"></i>
                 @T("Admin.Common.Save")
             </button>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_vendor_settings_buttons" })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.VendorSettingsButtons })
         </div>
     </div>
 
@@ -28,13 +28,13 @@
             <div asp-validation-summary="All"></div>
 
             <div class="panel-group">
-                @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_vendor_settings_top" })
+                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.VendorSettingsTop })
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         @T("Admin.Configuration.Settings.Vendor.BlockTitle.Common")
                     </div>
                     <div class="panel-body">
-                        <script type="text/javascript">
+                        <script>
                             $(document).ready(function () {
                                 $("#@Html.IdFor(model => model.AllowVendorsToEditInfo)").click(toggleAllowVendorsToEditInfo);
                                 $("#@Html.IdFor(model => model.AllowCustomersToApplyForVendorAccount)").click(toggleAllowCustomersToApplyForVendorAccount);
@@ -162,6 +162,16 @@
                         </div>
                         <div class="form-group advanced-setting">
                             <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="ShowVendorOnOrderDetailsPage_OverrideForStore" asp-input="ShowVendorOnOrderDetailsPage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="ShowVendorOnOrderDetailsPage" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="ShowVendorOnOrderDetailsPage" />
+                                <span asp-validation-for="ShowVendorOnOrderDetailsPage"></span>
+                            </div>
+                        </div>
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
                                 <nop-override-store-checkbox asp-for="VendorsBlockItemsToDisplay_OverrideForStore" asp-input="VendorsBlockItemsToDisplay" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
                                 <nop-label asp-for="VendorsBlockItemsToDisplay" />
                             </div>
@@ -172,7 +182,9 @@
                         </div>
                     </div>
                 </div>
-                @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_vendor_settings_bottom" })
+                @*render vendor attributes*@
+                @await Html.PartialAsync("../VendorAttribute/ListBlock.cshtml", Model.VendorAttributeSearchModel)
+                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.VendorSettingsBottom })
             </div>
         </div>
     </div>

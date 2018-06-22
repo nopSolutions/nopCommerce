@@ -2791,16 +2791,15 @@ label, label + * {
 	color: #4ab2f1;
 }
 
-.apply-vendor-page .accept-terms-of-service {
-    margin: 0 0 20px;
+.apply-vendor-page .terms-of-service {
     text-align: center;
 }
-.apply-vendor-page .accept-terms-of-service > * {
+.apply-vendor-page .terms-of-service > * {
     display: inline-block;
     line-height: 32px;
 }
-.apply-vendor-page .accept-terms-of-service span,
-.apply-vendor-page .accept-terms-of-service a {
+.apply-vendor-page .terms-of-service span,
+.apply-vendor-page .terms-of-service a {
     color: #4ab2f1;
     cursor: pointer;
 }
@@ -2831,6 +2830,9 @@ label, label + * {
 .date-of-birth select + select {
 	margin: 0 0 0 10px;
 }
+.date-of-birth .select-wrapper + .select-wrapper {
+	margin: 0 0 0 10px;
+}
 #check-availability-button {
 	margin: 10px 0 0;
 	border: none;
@@ -2843,16 +2845,16 @@ label, label + * {
 #check-availability-button:hover {
 	background-color: #999;
 }
-.accept-privacy-policy {
+.accept-consent {
 	margin: 0 0 20px;
 	text-align: center;
 }
-.accept-privacy-policy > * {
+.accept-consent > * {
 	display: inline-block;
 	line-height: 32px;
 }
-.accept-privacy-policy span,
-.accept-privacy-policy a {
+.accept-consent span,
+.accept-consent a {
 	color: #4ab2f1;
 	cursor: pointer;
 }
@@ -3033,14 +3035,23 @@ label, label + * {
 	margin: 0 0 30px
 }
 
+.gdpr-tools-page .result {
+    margin: 20px 0;
+    font-size: 13px;
+    color: #e4434b;
+}
+.gdpr-tools-page .buttons {
+    margin-top: 20px;
+}
+
 .address-list-page .info,
 .order-list-page .info {
-	margin: 0 0 10px;
-	border-top: 1px solid #e6e6e6;
-	background-color: #f9f9f9;
+    margin: 0 0 10px;
+    border-top: 1px solid #e6e6e6;
+    background-color: #f9f9f9;
     padding: 20px;
-	line-height: 26px;
-	color: #444;
+    line-height: 26px;
+    color: #444;
 }
 .address-list-page .info .name,
 .order-list-page .info .name {
@@ -3154,7 +3165,7 @@ label, label + * {
 }
 
 .avatar-page .page-title {
-	margin: 0;
+    margin: 0;
 }
 .avatar-page .page-body {
 	margin: 0 0 30px;
@@ -3207,6 +3218,19 @@ label, label + * {
 .vendorinfo-page .vendor-picture * {
     display: block;
     margin-top: 15px;
+}
+
+.check-gift-card-balance-page .page-title {
+    margin: 0 0 -1px;
+}
+
+.check-gift-card-balance-page .result,
+.check-gift-card-balance-page .message-error {
+    margin: 20px 0;
+}
+
+.check-gift-card-balance-page .fieldset {
+    margin: 0 0 30px;
 }
 
 
@@ -3415,6 +3439,14 @@ label, label + * {
 
 .cart-footer .checkout-buttons {
 	padding: 0 10px;
+}
+.cart-footer .checkout-disabled {
+    font-size: 20px;
+    text-align: center;
+    background: #ffa500;
+    border: 1px solid #c3891e;
+    color: #fff;
+    padding: 15px 50px;
 }
 .cart-footer .checkout-button {
 	display: inline-block;
@@ -4064,10 +4096,10 @@ label, label + * {
     padding: 30px 15px;
 	text-align: center;
 }
-.sitemap-page ul {
+.sitemap-page .entity ul {
 	font-size: 0;
 }
-.sitemap-page li {
+.sitemap-page .entity li {
 	display: inline-block;
 	position: relative;
 	margin: 0 8px;
@@ -4075,7 +4107,7 @@ label, label + * {
 	line-height: 50px;
 	font-size: 14px; /*reset zeroing*/
 }
-.sitemap-page li:before {
+.sitemap-page .entity li:before {
 	content: "";
 	position: absolute;
 	top: 23px;
@@ -4084,13 +4116,13 @@ label, label + * {
 	height: 5px;
 	background-color: #ddd;
 }
-.sitemap-page a {
+.sitemap-page .entity a {
 	color: #444;
 }
-.sitemap-page a:hover {
+.sitemap-page .entity a:hover {
 	color: #4ab2f1;
 }
-.sitemap-page a:empty {
+.sitemap-page .entity a:empty {
 	display: none;
 }
 

@@ -1,18 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using FluentValidation.Attributes;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Web.Areas.Admin.Validators.Directory;
-using Nop.Web.Framework.Localization;
+using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Mvc.ModelBinding;
-using Nop.Web.Framework.Mvc.Models;
 
 namespace Nop.Web.Areas.Admin.Models.Directory
 {
+    /// <summary>
+    /// Represents a currency model
+    /// </summary>
     [Validator(typeof(CurrencyValidator))]
-    public partial class CurrencyModel : BaseNopEntityModel, ILocalizedModel<CurrencyLocalizedModel>
+    public partial class CurrencyModel : BaseNopEntityModel, ILocalizedModel<CurrencyLocalizedModel>, IStoreMappingSupportedModel
     {
+        #region Ctor
+
         public CurrencyModel()
         {
             Locales = new List<CurrencyLocalizedModel>();
@@ -20,6 +23,11 @@ namespace Nop.Web.Areas.Admin.Models.Directory
             SelectedStoreIds = new List<int>();
             AvailableStores = new List<SelectListItem>();
         }
+
+        #endregion
+
+        #region Properties
+
         [NopResourceDisplayName("Admin.Configuration.Currencies.Fields.Name")]
         public string Name { get; set; }
 
@@ -59,9 +67,11 @@ namespace Nop.Web.Areas.Admin.Models.Directory
 
         [NopResourceDisplayName("Admin.Configuration.Currencies.Fields.RoundingType")]
         public int RoundingTypeId { get; set; }
+
+        #endregion
     }
 
-    public partial class CurrencyLocalizedModel : ILocalizedModelLocal
+    public partial class CurrencyLocalizedModel : ILocalizedLocaleModel
     {
         public int LanguageId { get; set; }
 

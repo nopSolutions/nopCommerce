@@ -1,59 +1,52 @@
 ﻿using System;
 using System.IO;
+using System.Text;
 using Newtonsoft.Json;
 using Nop.Core.Infrastructure;
 
 namespace Nop.Core.Data
 {
     /// <summary>
-    /// Manager of data settings (connection string)
+    /// Represents the data settings manager
     /// </summary>
     public partial class DataSettingsManager
     {
-        #region Const
+        #region Fields
 
-        private const string ObsoleteDataSettingsFilePath = "~/App_Data/Settings.txt";
-        private const string DataSettingsFilePath_ = "~/App_Data/dataSettings.json";
-
-        #endregion
-
-        #region Properties
-
-        /// <summary>
-        /// Gets the path to file that contains data settings
-        /// </summary>
-        public static string DataSettingsFilePath => DataSettingsFilePath_;
+        private static bool? _databaseIsInstalled;
 
         #endregion
 
         #region Methods
 
         /// <summary>
-        /// Load settings
+        /// Load data settings
         /// </summary>
-        /// <param name="filePath">File path; pass null to use default settings file path</param>
-        /// <param name="reloadSettings">Indicates whether to reload data, if they already loaded</param>
+        /// <param name="filePath">File path; pass null to use the default settings file</param>
+        /// <param name="reloadSettings">Whether to reload data, if they already loaded</param>
+        /// <param name="fileProvider">File provider</param>
         /// <returns>Data settings</returns>
-        public virtual DataSettings LoadSettings(string filePath = null, bool reloadSettings = false)
+        public static DataSettings LoadSettings(string filePath = null, bool reloadSettings = false, INopFileProvider fileProvider = null)
         {
             if (!reloadSettings && Singleton<DataSettings>.Instance != null)
                 return Singleton<DataSettings>.Instance;
 
-            filePath = filePath ?? CommonHelper.MapPath(DataSettingsFilePath);
+            fileProvider = fileProvider ?? CommonHelper.DefaultFileProvider;
+            filePath = filePath ?? fileProvider.MapPath(NopDataSettingsDefaults.FilePath);
 
             //check whether file exists
-            if (!File.Exists(filePath))
+            if (!fileProvider.FileExists(filePath))
             {
                 //if not, try to parse the file that was used in previous nopCommerce versions
-                filePath = CommonHelper.MapPath(ObsoleteDataSettingsFilePath);
-                if (!File.Exists(filePath))
+                filePath = fileProvider.MapPath(NopDataSettingsDefaults.ObsoleteFilePath);
+                if (!fileProvider.FileExists(filePath))
                     return new DataSettings();
 
                 //get data settings from the old txt file
                 var dataSettings = new DataSettings();
-                using (var reader = new StringReader(File.ReadAllText(filePath)))
+                using (var reader = new StringReader(fileProvider.ReadAllText(filePath, Encoding.UTF8)))
                 {
-                    var settingsLine = string.Empty;
+                    string settingsLine;
                     while ((settingsLine = reader.ReadLine()) != null)
                     {
                         var separatorIndex = settingsLine.IndexOf(':');
@@ -66,7 +59,7 @@ namespace Nop.Core.Data
                         switch (key)
                         {
                             case "DataProvider":
-                                dataSettings.DataProvider = value;
+                                dataSettings.DataProvider = Enum.TryParse(value, true, out DataProviderType providerType) ? providerType : DataProviderType.Unknown;
                                 continue;
                             case "DataConnectionString":
                                 dataSettings.DataConnectionString = value;
@@ -79,44 +72,69 @@ namespace Nop.Core.Data
                 }
 
                 //save data settings to the new file
-                SaveSettings(dataSettings);
+                SaveSettings(dataSettings, fileProvider);
 
                 //and delete the old one
-                File.Delete(filePath);
+                fileProvider.DeleteFile(filePath);
 
                 Singleton<DataSettings>.Instance = dataSettings;
                 return Singleton<DataSettings>.Instance;
             }
 
-            var text = File.ReadAllText(filePath);
+            var text = fileProvider.ReadAllText(filePath, Encoding.UTF8);
             if (string.IsNullOrEmpty(text))
                 return new DataSettings();
 
             //get data settings from the JSON file
             Singleton<DataSettings>.Instance = JsonConvert.DeserializeObject<DataSettings>(text);
+
             return Singleton<DataSettings>.Instance;
         }
 
         /// <summary>
-        /// Save settings to a file
+        /// Save data settings to the file
         /// </summary>
         /// <param name="settings">Data settings</param>
-        public virtual void SaveSettings(DataSettings settings)
+        /// <param name="fileProvider">File provider</param>
+        public static void SaveSettings(DataSettings settings, INopFileProvider fileProvider = null)
         {
             Singleton<DataSettings>.Instance = settings ?? throw new ArgumentNullException(nameof(settings));
 
-            var filePath = CommonHelper.MapPath(DataSettingsFilePath);
+            fileProvider = fileProvider ?? CommonHelper.DefaultFileProvider;
+            var filePath = fileProvider.MapPath(NopDataSettingsDefaults.FilePath);
 
             //create file if not exists
-            if (!File.Exists(filePath))
-            {
-                //we use 'using' to close the file after it's created
-                using (File.Create(filePath)) { }
-            }
+            fileProvider.CreateFile(filePath);
 
             //save data settings to the file
             var text = JsonConvert.SerializeObject(Singleton<DataSettings>.Instance, Formatting.Indented);
-            File.WriteAllText(filePath, text);
+            fileProvider.WriteAllText(filePath, text, Encoding.UTF8);
+        }
+
+        /// <summary>
+        /// Reset "database is installed" cached information
+        /// </summary>
+        public static void ResetCache()
+        {
+            _databaseIsInstalled = null;
+        }
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// Gets a value indicating whether database is already installed
+        /// </summary>
+        public static bool DatabaseIsInstalled
+        {
+            get
+            {
+                if (!_databaseIsInstalled.HasValue)
+                    _databaseIsInstalled = !string.IsNullOrEmpty(LoadSettings(reloadSettings: true)?.DataConnectionString);
+
+                return _databaseIsInstalled.Value;
+            }
         }
 
         #endregion

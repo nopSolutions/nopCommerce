@@ -69,14 +69,8 @@ namespace Nop.Core.Domain.Directory
         /// </summary>
         public RoundingType RoundingType
         {
-            get
-            {
-                return (RoundingType)RoundingTypeId;
-            }
-            set
-            {
-                RoundingTypeId = (int)value;
-            }
+            get => (RoundingType)RoundingTypeId;
+            set => RoundingTypeId = (int)value;
         }
     }
 }

@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Nop.Core;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
 
@@ -28,13 +30,16 @@ namespace Nop.Services.Discounts
         /// <summary>
         /// Gets all discounts
         /// </summary>
-        /// <param name="discountType">Discount type; null to load all discount</param>
-        /// <param name="couponCode">Coupon code to find (exact match)</param>
-        /// <param name="discountName">Discount name</param>
-        /// <param name="showHidden">A value indicating whether to show hidden records</param>
+        /// <param name="discountType">Discount type; pass null to load all records</param>
+        /// <param name="couponCode">Coupon code to find (exact match); pass null or empty to load all records</param>
+        /// <param name="discountName">Discount name; pass null or empty to load all records</param>
+        /// <param name="showHidden">A value indicating whether to show expired and not started discounts</param>
+        /// <param name="startDateUtc">Discount start date; pass null to load all records</param>
+        /// <param name="endDateUtc">Discount end date; pass null to load all records</param>
         /// <returns>Discounts</returns>
-        IList<Discount> GetAllDiscounts(DiscountType? discountType = null,
-            string couponCode = "", string discountName = "", bool showHidden = false);
+        IList<Discount> GetAllDiscounts(DiscountType? discountType = null, 
+            string couponCode = null, string discountName = null, bool showHidden = false, 
+            DateTime ? startDateUtc = null, DateTime? endDateUtc = null);
 
         /// <summary>
         /// Inserts a discount
@@ -48,6 +53,39 @@ namespace Nop.Services.Discounts
         /// <param name="discount">Discount</param>
         void UpdateDiscount(Discount discount);
 
+        /// <summary>
+        /// Get categories for which a discount is applied
+        /// </summary>
+        /// <param name="discountId">Discount identifier; pass null to load all records</param>
+        /// <param name="showHidden">A value indicating whether to load deleted categories</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
+        /// <returns>List of categories</returns>
+        IPagedList<Category> GetCategoriesWithAppliedDiscount(int? discountId = null,
+            bool showHidden = false, int pageIndex = 0, int pageSize = int.MaxValue);
+
+        /// <summary>
+        /// Get manufacturers for which a discount is applied
+        /// </summary>
+        /// <param name="discountId">Discount identifier; pass null to load all records</param>
+        /// <param name="showHidden">A value indicating whether to load deleted manufacturers</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
+        /// <returns>List of manufacturers</returns>
+        IPagedList<Manufacturer> GetManufacturersWithAppliedDiscount(int? discountId = null,
+            bool showHidden = false, int pageIndex = 0, int pageSize = int.MaxValue);
+
+        /// <summary>
+        /// Get products to which a discount is applied
+        /// </summary>
+        /// <param name="discountId">Discount identifier; pass null to load all records</param>
+        /// <param name="showHidden">A value indicating whether to load deleted products</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
+        /// <returns>List of products</returns>
+        IPagedList<Product> GetProductsWithAppliedDiscount(int? discountId = null, 
+            bool showHidden = false, int pageIndex = 0, int pageSize = int.MaxValue);
+
         #endregion
 
         #region Discounts (caching)
@@ -55,13 +93,13 @@ namespace Nop.Services.Discounts
         /// <summary>
         /// Gets all discounts (cachable models)
         /// </summary>
-        /// <param name="discountType">Discount type; null to load all discount</param>
-        /// <param name="couponCode">Coupon code to find (exact match)</param>
-        /// <param name="discountName">Discount name</param>
-        /// <param name="showHidden">A value indicating whether to show hidden records</param>
+        /// <param name="discountType">Discount type; pass null to load all records</param>
+        /// <param name="couponCode">Coupon code to find (exact match); pass null or empty to load all records</param>
+        /// <param name="discountName">Discount name; pass null or empty to load all records</param>
+        /// <param name="showHidden">A value indicating whether to show expired and not started discounts</param>
         /// <returns>Discounts</returns>
         IList<DiscountForCaching> GetAllDiscountsForCaching(DiscountType? discountType = null,
-            string couponCode = "", string discountName = "", bool showHidden = false);
+            string couponCode = null, string discountName = null, bool showHidden = false);
         
         /// <summary>
         /// Get category identifiers to which a discount is applied
@@ -80,7 +118,6 @@ namespace Nop.Services.Discounts
         IList<int> GetAppliedManufacturerIds(DiscountForCaching discount, Customer customer);
 
         #endregion
-
 
         #region Discount requirements
 

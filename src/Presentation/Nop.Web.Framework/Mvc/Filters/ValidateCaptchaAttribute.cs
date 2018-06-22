@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Primitives;
 using Nop.Core.Data;
+using Nop.Core.Domain.Security;
 using Nop.Web.Framework.Security.Captcha;
 
 namespace Nop.Web.Framework.Mvc.Filters
@@ -76,7 +77,7 @@ namespace Nop.Web.Framework.Mvc.Filters
                 if ((!StringValues.IsNullOrEmpty(captchaChallengeValue) && !StringValues.IsNullOrEmpty(captchaResponseValue)) || !StringValues.IsNullOrEmpty(gCaptchaResponseValue))
                 {
                     //create CAPTCHA validator
-                    var captchaValidtor = new GReCaptchaValidator(_captchaSettings.ReCaptchaVersion)
+                    var captchaValidtor = new GReCaptchaValidator()
                     {
                         SecretKey = _captchaSettings.ReCaptchaPrivateKey,
                         RemoteIp = context.HttpContext.Connection.RemoteIpAddress?.ToString(),
@@ -105,7 +106,7 @@ namespace Nop.Web.Framework.Mvc.Filters
                 if (context == null)
                     throw new ArgumentNullException(nameof(context));
 
-                if (!DataSettingsHelper.DatabaseIsInstalled())
+                if (!DataSettingsManager.DatabaseIsInstalled)
                     return;
 
                 //whether CAPTCHA is enabled

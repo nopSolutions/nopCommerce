@@ -6,7 +6,6 @@ using Nop.Core;
 using Nop.Core.Data;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
-using Nop.Core.Plugins;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Events;
@@ -14,6 +13,7 @@ using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Messages;
 using Nop.Services.Orders;
+using Nop.Services.Plugins;
 
 namespace Nop.Services.Authentication.External
 {
@@ -45,6 +45,25 @@ namespace Nop.Services.Authentication.External
 
         #region Ctor
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="customerSettings">Customer settings</param>
+        /// <param name="externalAuthenticationSettings">External authentication settings</param>
+        /// <param name="authenticationService">Authentication service</param>
+        /// <param name="customerActivityService">Customer activity service</param>
+        /// <param name="customerRegistrationService">Customer registration service</param>
+        /// <param name="customerService">Customer service</param>
+        /// <param name="eventPublisher">Event publisher</param>
+        /// <param name="genericAttributeService">Generic attribute service</param>
+        /// <param name="localizationService">Localization service</param>
+        /// <param name="pluginFinder">Plugin finder</param>
+        /// <param name="externalAuthenticationRecordRepository">External authentication record repository</param>
+        /// <param name="shoppingCartService">Shopping cart service</param>
+        /// <param name="storeContext">Store context</param>
+        /// <param name="workContext">Work context</param>
+        /// <param name="workflowMessageService">Workflow message service</param>
+        /// <param name="localizationSettings">Localization settings</param>
         public ExternalAuthenticationService(CustomerSettings customerSettings,
             ExternalAuthenticationSettings externalAuthenticationSettings,
             IAuthenticationService authenticationService,
@@ -141,7 +160,8 @@ namespace Nop.Services.Authentication.External
             //check whether the specified email has been already registered
             if (_customerService.GetCustomerByEmail(parameters.Email) != null)
             {
-                var alreadyExistsError = string.Format(_localizationService.GetResource("Account.AssociatedExternalAuth.EmailAlreadyExists"), parameters.ExternalDisplayIdentifier);
+                var alreadyExistsError = string.Format(_localizationService.GetResource("Account.AssociatedExternalAuth.EmailAlreadyExists"),
+                    !string.IsNullOrEmpty(parameters.ExternalDisplayIdentifier) ? parameters.ExternalDisplayIdentifier : parameters.ExternalIdentifier);
                 return ErrorAuthentication(new[] { alreadyExistsError }, returnUrl);
             }
 
@@ -188,7 +208,7 @@ namespace Nop.Services.Authentication.External
             if (_customerSettings.UserRegistrationType == UserRegistrationType.EmailValidation)
             {
                 //email validation message
-                _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.AccountActivationToken, Guid.NewGuid().ToString());
+                _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, NopCustomerDefaults.AccountActivationTokenAttribute, Guid.NewGuid().ToString());
                 _workflowMessageService.SendCustomerEmailValidationMessage(_workContext.CurrentCustomer, _workContext.WorkingLanguage.Id);
 
                 return new RedirectToRouteResult("RegisterResult", new { resultId = (int)UserRegistrationType.EmailValidation });
@@ -219,7 +239,8 @@ namespace Nop.Services.Authentication.External
             _eventPublisher.Publish(new CustomerLoggedinEvent(user));
 
             //activity log
-            _customerActivityService.InsertActivity("PublicStore.Login", _localizationService.GetResource("ActivityLog.PublicStore.Login"), user);
+            _customerActivityService.InsertActivity(user, "PublicStore.Login", 
+                _localizationService.GetResource("ActivityLog.PublicStore.Login"), user);
 
             return SuccessfulAuthentication(returnUrl);
         }

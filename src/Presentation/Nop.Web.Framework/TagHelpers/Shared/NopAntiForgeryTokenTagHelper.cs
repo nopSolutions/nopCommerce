@@ -5,6 +5,9 @@ using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace Nop.Web.Framework.TagHelpers.Shared
 {
+    /// <summary>
+    /// nop-antiforgery-token tag helper
+    /// </summary>
     [HtmlTargetElement("nop-antiforgery-token", TagStructure = TagStructure.WithoutEndTag)]
     public class NopAntiForgeryTokenTagHelper : TagHelper
     {
@@ -20,11 +23,20 @@ namespace Nop.Web.Framework.TagHelpers.Shared
         /// </summary>
         protected IHtmlGenerator Generator { get; }
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="generator">HTML generator</param>
         public NopAntiForgeryTokenTagHelper(IHtmlGenerator generator)
         {
             Generator = generator;
         }
 
+        /// <summary>
+        /// Process
+        /// </summary>
+        /// <param name="context">Context</param>
+        /// <param name="output">Output</param>
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
             if (context == null)

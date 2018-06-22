@@ -6,7 +6,7 @@ using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Stores;
-using Nop.Data;
+using Nop.Data.Extensions;
 using Nop.Services.Events;
 
 namespace Nop.Services.Stores
@@ -16,23 +16,6 @@ namespace Nop.Services.Stores
     /// </summary>
     public partial class StoreMappingService : IStoreMappingService
     {
-        #region Constants
-
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : entity ID
-        /// {1} : entity name
-        /// </remarks>
-        private const string STOREMAPPING_BY_ENTITYID_NAME_KEY = "Nop.storemapping.entityid-name-{0}-{1}";
-        /// <summary>
-        /// Key pattern to clear cache
-        /// </summary>
-        private const string STOREMAPPING_PATTERN_KEY = "Nop.storemapping.";
-
-        #endregion
-
         #region Fields
 
         private readonly IRepository<StoreMapping> _storeMappingRepository;
@@ -82,7 +65,7 @@ namespace Nop.Services.Stores
             _storeMappingRepository.Delete(storeMapping);
 
             //cache
-            _cacheManager.RemoveByPattern(STOREMAPPING_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopStoreDefaults.StoreMappingPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityDeleted(storeMapping);
@@ -112,8 +95,8 @@ namespace Nop.Services.Stores
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
 
-            int entityId = entity.Id;
-            string entityName = entity.GetUnproxiedEntityType().Name;
+            var entityId = entity.Id;
+            var entityName = entity.GetUnproxiedEntityType().Name;
 
             var query = from sm in _storeMappingRepository.Table
                         where sm.EntityId == entityId &&
@@ -122,8 +105,7 @@ namespace Nop.Services.Stores
             var storeMappings = query.ToList();
             return storeMappings;
         }
-
-
+        
         /// <summary>
         /// Inserts a store mapping record
         /// </summary>
@@ -136,7 +118,7 @@ namespace Nop.Services.Stores
             _storeMappingRepository.Insert(storeMapping);
 
             //cache
-            _cacheManager.RemoveByPattern(STOREMAPPING_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopStoreDefaults.StoreMappingPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(storeMapping);
@@ -156,8 +138,8 @@ namespace Nop.Services.Stores
             if (storeId == 0)
                 throw new ArgumentOutOfRangeException("storeId");
 
-            int entityId = entity.Id;
-            string entityName = entity.GetUnproxiedEntityType().Name;
+            var entityId = entity.Id;
+            var entityName = entity.GetUnproxiedEntityType().Name;
 
             var storeMapping = new StoreMapping
             {
@@ -180,10 +162,10 @@ namespace Nop.Services.Stores
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
 
-            int entityId = entity.Id;
-            string entityName = entity.GetUnproxiedEntityType().Name;
+            var entityId = entity.Id;
+            var entityName = entity.GetUnproxiedEntityType().Name;
 
-            string key = string.Format(STOREMAPPING_BY_ENTITYID_NAME_KEY, entityId, entityName);
+            var key = string.Format(NopStoreDefaults.StoreMappingByEntityIdNameCacheKey, entityId, entityName);
             return _cacheManager.Get(key, () =>
             {
                 var query = from sm in _storeMappingRepository.Table

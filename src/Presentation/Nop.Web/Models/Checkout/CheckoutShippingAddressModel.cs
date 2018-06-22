@@ -1,13 +1,9 @@
 ﻿using System.Collections.Generic;
-using FluentValidation.Attributes;
-using Microsoft.AspNetCore.Http;
-using Nop.Web.Framework.Mvc.Models;
+using Nop.Web.Framework.Models;
 using Nop.Web.Models.Common;
-using Nop.Web.Validators.Checkout;
 
 namespace Nop.Web.Models.Checkout
 {
-    [Validator(typeof(CheckoutShippingAddressValidator))]
     public partial class CheckoutShippingAddressModel : BaseNopModel
     {
         public CheckoutShippingAddressModel()
@@ -17,10 +13,7 @@ namespace Nop.Web.Models.Checkout
             ShippingNewAddress = new AddressModel();
             PickupPoints = new List<CheckoutPickupPointModel>();
         }
-
-        //MVC is suppressing further validation if the IFormCollection is passed to a controller method. That's why we add to the model
-        public IFormCollection Form { get; set; }
-
+        
         public IList<string> Warnings { get; set; }
 
         public IList<AddressModel> ExistingAddresses { get; set; }

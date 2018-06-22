@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
+using Moq;
+using Nop.Core;
 using Nop.Core.Configuration;
+using Nop.Core.Infrastructure;
 using Nop.Core.Plugins;
 using Nop.Services.Events;
 using NUnit.Framework;
-using Rhino.Mocks;
 
 namespace Nop.Web.MVC.Tests.Events
 {
@@ -17,11 +20,16 @@ namespace Nop.Web.MVC.Tests.Events
         [OneTimeSetUp]
         public void SetUp()
         {
+            var hostingEnvironment = new Mock<IHostingEnvironment>();
+            hostingEnvironment.Setup(x => x.ContentRootPath).Returns(System.Reflection.Assembly.GetExecutingAssembly().Location);
+            hostingEnvironment.Setup(x => x.WebRootPath).Returns(System.IO.Directory.GetCurrentDirectory());
+            CommonHelper.DefaultFileProvider = new NopFileProvider(hostingEnvironment.Object);
             PluginManager.Initialize(new ApplicationPartManager(), new NopConfig());
-            var subscriptionService = MockRepository.GenerateMock<ISubscriptionService>();
+
+            var subscriptionService = new Mock<ISubscriptionService>();
             var consumers = new List<IConsumer<DateTime>> {new DateTimeConsumer()};
-            subscriptionService.Expect(c => c.GetSubscriptions<DateTime>()).Return(consumers);
-            _eventPublisher = new EventPublisher(subscriptionService);
+            subscriptionService.Setup(c => c.GetSubscriptions<DateTime>()).Returns(consumers);
+            _eventPublisher = new EventPublisher(subscriptionService.Object);
         }
 
         [Test]

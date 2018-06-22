@@ -9,6 +9,9 @@ namespace Nop.Services.Authentication.External
     [Serializable]
     public partial class ExternalAuthenticationParameters
     {
+        /// <summary>
+        /// Ctor
+        /// </summary>
         public ExternalAuthenticationParameters()
         {
             Claims = new List<ExternalAuthenticationClaim>();
@@ -51,6 +54,11 @@ namespace Nop.Services.Authentication.External
     [Serializable]
     public class ExternalAuthenticationClaim
     {
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="type">Type</param>
+        /// <param name="value">Value</param>
         public ExternalAuthenticationClaim(string type, string value)
         {
             this.Type = type;

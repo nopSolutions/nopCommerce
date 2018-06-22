@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using Nop.Core;
+using Nop.Core.Http;
 using Nop.Services.Tasks;
 
 namespace Nop.Services.Common
@@ -9,23 +10,39 @@ namespace Nop.Services.Common
     /// </summary>
     public partial class KeepAliveTask : IScheduleTask
     {
-        private readonly IStoreContext _storeContext;
+        #region Fields
 
-        public KeepAliveTask(IStoreContext storeContext)
+        private readonly IWebHelper _webHelper;
+
+        #endregion
+
+        #region Ctor
+
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="webHelper">Web helper</param>
+        public KeepAliveTask(IWebHelper webHelper)
         {
-            this._storeContext = storeContext;
+            this._webHelper = webHelper;
         }
+
+        #endregion
+
+        #region Methods
 
         /// <summary>
         /// Executes a task
         /// </summary>
         public void Execute()
         {
-            string url = _storeContext.CurrentStore.Url + "keepalive/index";
+            var keepAliveUrl = $"{_webHelper.GetStoreLocation()}{NopHttpDefaults.KeepAlivePath}";
             using (var wc = new WebClient())
             {
-                wc.DownloadString(url);
+                wc.DownloadString(keepAliveUrl);
             }
         }
+
+        #endregion
     }
 }

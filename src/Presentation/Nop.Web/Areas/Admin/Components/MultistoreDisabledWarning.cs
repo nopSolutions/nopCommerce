@@ -27,18 +27,18 @@ namespace Nop.Web.Areas.Admin.Components
             //action displaying notification (warning) to a store owner that "limit per store" feature is ignored
 
             //default setting
-            bool enabled = _catalogSettings.IgnoreStoreLimitations;
+            var enabled = _catalogSettings.IgnoreStoreLimitations;
             if (!enabled)
             {
                 //overridden settings
                 var stores = _storeService.GetAllStores();
                 foreach (var store in stores)
                 {
-                    if (!enabled)
-                    {
-                        var catalogSettings = _settingService.LoadSetting<CatalogSettings>(store.Id);
-                        enabled = catalogSettings.IgnoreStoreLimitations;
-                    }
+                    var catalogSettings = _settingService.LoadSetting<CatalogSettings>(store.Id);
+                    enabled = catalogSettings.IgnoreStoreLimitations;
+
+                    if (enabled)
+                        break;
                 }
             }
 

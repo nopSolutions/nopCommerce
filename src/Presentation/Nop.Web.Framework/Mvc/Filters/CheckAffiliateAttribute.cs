@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using Nop.Core;
 using Nop.Core.Data;
 using Nop.Core.Domain.Affiliates;
+using Nop.Core.Domain.Customers;
 using Nop.Services.Affiliates;
 using Nop.Services.Customers;
 
@@ -75,6 +76,10 @@ namespace Nop.Web.Framework.Mvc.Filters
                 if (affiliate.Id == _workContext.CurrentCustomer.AffiliateId)
                     return;
 
+                //ignore search engines
+                if (_workContext.CurrentCustomer.IsSearchEngineAccount())
+                    return;
+
                 //update affiliate identifier
                 _workContext.CurrentCustomer.AffiliateId = affiliate.Id;
                 _customerService.UpdateCustomer(_workContext.CurrentCustomer);
@@ -98,7 +103,7 @@ namespace Nop.Web.Framework.Mvc.Filters
                 if (request?.Query == null || !request.Query.Any())
                     return;
 
-                if (!DataSettingsHelper.DatabaseIsInstalled())
+                if (!DataSettingsManager.DatabaseIsInstalled)
                     return;
 
                 //try to find by ID

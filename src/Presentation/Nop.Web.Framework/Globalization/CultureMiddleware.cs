@@ -20,6 +20,10 @@ namespace Nop.Web.Framework.Globalization
 
         #region Ctor
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="next">Next</param>
         public CultureMiddleware(RequestDelegate next)
         {
             _next = next;
@@ -36,7 +40,10 @@ namespace Nop.Web.Framework.Globalization
         /// <param name="workContext">Work context</param>
         protected void SetWorkingCulture(IWebHelper webHelper, IWorkContext workContext)
         {
-            if (!DataSettingsHelper.DatabaseIsInstalled())
+            if (!DataSettingsManager.DatabaseIsInstalled)
+                return;
+
+            if (webHelper.IsStaticResource())
                 return;
 
             var adminAreaUrl = $"{webHelper.GetStoreLocation()}admin";

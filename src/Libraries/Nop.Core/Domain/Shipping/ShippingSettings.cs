@@ -3,8 +3,14 @@ using Nop.Core.Configuration;
 
 namespace Nop.Core.Domain.Shipping
 {
+    /// <summary>
+    /// Shipping settings
+    /// </summary>
     public class ShippingSettings : ISettings
     {
+        /// <summary>
+        /// Ctor
+        /// </summary>
         public ShippingSettings()
         {
             ActiveShippingRateComputationMethodSystemNames = new List<string>();
@@ -94,7 +100,7 @@ namespace Nop.Core.Domain.Shipping
         public int ShippingOriginAddressId { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether we should return valid options if there are any (no matter of the errors returned by other shipping rate compuation methods).
+        /// Gets or sets a value indicating whether we should return valid options if there are any (no matter of the errors returned by other shipping rate computation methods).
         /// </summary>
         public bool ReturnValidOptionsIfThereAreAny { get; set; }
 
@@ -112,5 +118,10 @@ namespace Nop.Core.Domain.Shipping
         /// Gets or sets a value indicating whether to consider associated products dimensions and weight on shipping, false if main product includes them
         /// </summary>
         public bool ConsiderAssociatedProductsDimensions { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to send all the items of a product marked as "Ship Separately" separately; if false, all the items of a such product will be shipped in a single box, but separately from the other order items
+        /// </summary>
+        public bool ShipSeparatelyOneItemEach { get; set; }
     }
 }

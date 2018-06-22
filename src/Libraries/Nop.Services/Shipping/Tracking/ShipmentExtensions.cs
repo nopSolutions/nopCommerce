@@ -2,6 +2,9 @@
 
 namespace Nop.Services.Shipping.Tracking
 {
+    /// <summary>
+    /// Shipment extensions
+    /// </summary>
     public static class ShipmentExtensions
     {
         /// <summary>

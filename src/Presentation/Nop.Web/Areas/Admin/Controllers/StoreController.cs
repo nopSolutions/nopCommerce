@@ -1,17 +1,16 @@
 ﻿using System;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Nop.Web.Areas.Admin.Extensions;
-using Nop.Web.Areas.Admin.Models.Stores;
 using Nop.Core.Domain.Stores;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Security;
 using Nop.Services.Stores;
+using Nop.Web.Areas.Admin.Factories;
+using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
+using Nop.Web.Areas.Admin.Models.Stores;
 using Nop.Web.Framework.Controllers;
-using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Web.Areas.Admin.Controllers
@@ -20,59 +19,38 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
-        private readonly IStoreService _storeService;
-        private readonly ISettingService _settingService;
-        private readonly ILanguageService _languageService;
+        private readonly ICustomerActivityService _customerActivityService;
         private readonly ILocalizationService _localizationService;
         private readonly ILocalizedEntityService _localizedEntityService;
         private readonly IPermissionService _permissionService;
-        private readonly ICustomerActivityService _customerActivityService;
+        private readonly ISettingService _settingService;
+        private readonly IStoreModelFactory _storeModelFactory;
+        private readonly IStoreService _storeService;
 
         #endregion
 
-        #region Constructors
+        #region Ctor
 
-        public StoreController(IStoreService storeService,
-            ISettingService settingService,
-            ILanguageService languageService,
+        public StoreController(ICustomerActivityService customerActivityService,
             ILocalizationService localizationService,
             ILocalizedEntityService localizedEntityService,
             IPermissionService permissionService,
-            ICustomerActivityService customerActivityService)
+            ISettingService settingService,
+            IStoreModelFactory storeModelFactory,
+            IStoreService storeService)
         {
-            this._storeService = storeService;
-            this._settingService = settingService;
-            this._languageService = languageService;
+            this._customerActivityService = customerActivityService;
             this._localizationService = localizationService;
             this._localizedEntityService = localizedEntityService;
             this._permissionService = permissionService;
-            this._customerActivityService = customerActivityService;
+            this._settingService = settingService;
+            this._storeModelFactory = storeModelFactory;
+            this._storeService = storeService;
         }
 
         #endregion
 
         #region Utilities
-
-        protected virtual void PrepareLanguagesModel(StoreModel model)
-        {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
-            
-            model.AvailableLanguages.Add(new SelectListItem
-            {
-                Text = "---",
-                Value = "0"
-            });
-            var languages = _languageService.GetAllLanguages(true);
-            foreach (var language in languages)
-            {
-                model.AvailableLanguages.Add(new SelectListItem
-                {
-                    Text = language.Name,
-                    Value = language.Id.ToString()
-                });
-            }
-        }
 
         protected virtual void UpdateAttributeLocales(Store store, StoreModel model)
         {
@@ -94,26 +72,22 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageStores))
                 return AccessDeniedView();
 
-            return View();
+            //prepare model
+            var model = _storeModelFactory.PrepareStoreSearchModel(new StoreSearchModel());
+
+            return View(model);
         }
 
         [HttpPost]
-        public virtual IActionResult List(DataSourceRequest command)
+        public virtual IActionResult List(StoreSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageStores))
                 return AccessDeniedKendoGridJson();
 
-            var storeModels = _storeService.GetAllStores(false)
-                .Select(x => x.ToModel())
-                .ToList();
+            //prepare model
+            var model = _storeModelFactory.PrepareStoreListModel(searchModel);
 
-            var gridModel = new DataSourceResult
-            {
-                Data = storeModels,
-                Total = storeModels.Count()
-            };
-
-            return Json(gridModel);
+            return Json(model);
         }
 
         public virtual IActionResult Create()
@@ -121,11 +95,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageStores))
                 return AccessDeniedView();
 
-            var model = new StoreModel();
-            //languages
-            PrepareLanguagesModel(model);
-            //locales
-            AddLocales(_languageService, model.Locales);
+            //prepare model
+            var model = _storeModelFactory.PrepareStoreModel(new StoreModel(), null);
+
             return View(model);
         }
 
@@ -134,29 +106,33 @@ namespace Nop.Web.Areas.Admin.Controllers
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageStores))
                 return AccessDeniedView();
-            
+
             if (ModelState.IsValid)
             {
-                var store = model.ToEntity();
+                var store = model.ToEntity<Store>();
+
                 //ensure we have "/" at the end
                 if (!store.Url.EndsWith("/"))
                     store.Url += "/";
+
                 _storeService.InsertStore(store);
 
                 //activity log
-                _customerActivityService.InsertActivity("AddNewStore", _localizationService.GetResource("ActivityLog.AddNewStore"), store.Id);
+                _customerActivityService.InsertActivity("AddNewStore",
+                    string.Format(_localizationService.GetResource("ActivityLog.AddNewStore"), store.Id), store);
 
                 //locales
                 UpdateAttributeLocales(store, model);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Stores.Added"));
+
                 return continueEditing ? RedirectToAction("Edit", new { id = store.Id }) : RedirectToAction("List");
             }
 
-            //If we got this far, something failed, redisplay form
+            //prepare model
+            model = _storeModelFactory.PrepareStoreModel(model, null, true);
 
-            //languages
-            PrepareLanguagesModel(model);
+            //if we got this far, something failed, redisplay form
             return View(model);
         }
 
@@ -165,19 +141,14 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageStores))
                 return AccessDeniedView();
 
+            //try to get a store with the specified id
             var store = _storeService.GetStoreById(id, false);
             if (store == null)
-                //No store found with the specified id
                 return RedirectToAction("List");
 
-            var model = store.ToModel();
-            //languages
-            PrepareLanguagesModel(model);
-            //locales
-            AddLocales(_languageService, model.Locales, (locale, languageId) =>
-            {
-                locale.Name = store.GetLocalized(x => x.Name, languageId, false, false);
-            });
+            //prepare model
+            var model = _storeModelFactory.PrepareStoreModel(null, store);
+
             return View(model);
         }
 
@@ -188,33 +159,37 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageStores))
                 return AccessDeniedView();
 
+            //try to get a store with the specified id
             var store = _storeService.GetStoreById(model.Id, false);
             if (store == null)
-                //No store found with the specified id
                 return RedirectToAction("List");
-            
+
             if (ModelState.IsValid)
             {
                 store = model.ToEntity(store);
+
                 //ensure we have "/" at the end
                 if (!store.Url.EndsWith("/"))
                     store.Url += "/";
+
                 _storeService.UpdateStore(store);
 
                 //activity log
-                _customerActivityService.InsertActivity("EditStore", _localizationService.GetResource("ActivityLog.EditStore"), store.Id);
+                _customerActivityService.InsertActivity("EditStore",
+                    string.Format(_localizationService.GetResource("ActivityLog.EditStore"), store.Id), store);
 
                 //locales
                 UpdateAttributeLocales(store, model);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Stores.Updated"));
+
                 return continueEditing ? RedirectToAction("Edit", new { id = store.Id }) : RedirectToAction("List");
             }
 
-            //If we got this far, something failed, redisplay form
+            //prepare model
+            model = _storeModelFactory.PrepareStoreModel(model, store, true);
 
-            //languages
-            PrepareLanguagesModel(model);
+            //if we got this far, something failed, redisplay form
             return View(model);
         }
 
@@ -224,9 +199,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageStores))
                 return AccessDeniedView();
 
+            //try to get a store with the specified id
             var store = _storeService.GetStoreById(id, false);
             if (store == null)
-                //No store found with the specified id
                 return RedirectToAction("List");
 
             try
@@ -234,14 +209,16 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _storeService.DeleteStore(store);
 
                 //activity log
-                _customerActivityService.InsertActivity("DeleteStore", _localizationService.GetResource("ActivityLog.DeleteStore"), store.Id);
+                _customerActivityService.InsertActivity("DeleteStore",
+                    string.Format(_localizationService.GetResource("ActivityLog.DeleteStore"), store.Id), store);
 
                 //when we delete a store we should also ensure that all "per store" settings will also be deleted
                 var settingsToDelete = _settingService
                     .GetAllSettings()
                     .Where(s => s.StoreId == id)
                     .ToList();
-                    _settingService.DeleteSettings(settingsToDelete);
+                _settingService.DeleteSettings(settingsToDelete);
+
                 //when we had two stores and now have only one store, we also should delete all "per store" settings
                 var allStores = _storeService.GetAllStores(false);
                 if (allStores.Count == 1)
@@ -250,17 +227,17 @@ namespace Nop.Web.Areas.Admin.Controllers
                         .GetAllSettings()
                         .Where(s => s.StoreId == allStores[0].Id)
                         .ToList();
-                        _settingService.DeleteSettings(settingsToDelete);
+                    _settingService.DeleteSettings(settingsToDelete);
                 }
 
-
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Stores.Deleted"));
+
                 return RedirectToAction("List");
             }
             catch (Exception exc)
             {
                 ErrorNotification(exc);
-                return RedirectToAction("Edit", new {id = store.Id});
+                return RedirectToAction("Edit", new { id = store.Id });
             }
         }
 

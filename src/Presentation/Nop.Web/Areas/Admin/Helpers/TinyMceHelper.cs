@@ -1,5 +1,4 @@
-﻿using System.IO;
-using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Hosting;
 using Nop.Core;
 using Nop.Core.Infrastructure;
 
@@ -22,32 +21,26 @@ namespace Nop.Web.Areas.Admin.Helpers
 
             var workContext = EngineContext.Current.Resolve<IWorkContext>();
             var hostingEnvironment = EngineContext.Current.Resolve<IHostingEnvironment>();
+            var fileProvider = EngineContext.Current.Resolve<INopFileProvider>();
 
             var languageCulture = workContext.WorkingLanguage.LanguageCulture;
 
             var langFile = $"{languageCulture}.js";
-            var path = Path.Combine(hostingEnvironment.WebRootPath, "lib\\tinymce\\langs");
-            var fileExists = File.Exists($"{path}{langFile}");
+            var directoryPath = fileProvider.Combine(hostingEnvironment.WebRootPath, @"lib\tinymce\langs");
+            var fileExists = fileProvider.FileExists($"{directoryPath}\\{langFile}");
 
             if (!fileExists)
             {
                 languageCulture = languageCulture.Replace('-', '_');
                 langFile = $"{languageCulture}.js";
-                fileExists = File.Exists($"{path}{langFile}");
-            }
-
-            if (!fileExists)
-            {
-                languageCulture = languageCulture.Replace('-', '_');
-                langFile = $"{languageCulture}.js";
-                fileExists = File.Exists($"{path}{langFile}");
+                fileExists = fileProvider.FileExists($"{directoryPath}\\{langFile}");
             }
 
             if (!fileExists)
             {
                 languageCulture = languageCulture.Split('_', '-')[0];
                 langFile = $"{languageCulture}.js";
-                fileExists = File.Exists($"{path}{langFile}");
+                fileExists = fileProvider.FileExists($"{directoryPath}\\{langFile}");
             }
 
             return fileExists ? languageCulture : string.Empty;

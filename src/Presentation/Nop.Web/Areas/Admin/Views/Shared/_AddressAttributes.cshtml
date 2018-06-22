@@ -2,8 +2,8 @@
 @using Nop.Core.Domain.Catalog;
 @foreach (var attribute in Model)
 {
-    string controlId = $"address_attribute_{attribute.Id}";
-    string textPrompt = attribute.Name;
+    var controlId = $"address_attribute_{attribute.Id}";
+    var textPrompt = attribute.Name;
     <div class="form-group">
         <div class="col-md-3">
             <div class="label-wrapper">

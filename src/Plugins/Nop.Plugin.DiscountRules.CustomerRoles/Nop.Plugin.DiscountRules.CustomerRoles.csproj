@@ -1,12 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net461</TargetFramework> 
+    <TargetFramework>netcoreapp2.1</TargetFramework>
     <Copyright>Copyright © Nop Solutions, Ltd</Copyright> 
     <Company>Nop Solutions, Ltd</Company> 
-    <Authors>Nop Solutions, Ltd</Authors> 
-    <Version>1.23</Version> 
-    <Description>This plugin allows you to configure discounts for certain customer groups (roles)</Description> 
+    <Authors>Nop Solutions, Ltd</Authors>
     <PackageLicenseUrl></PackageLicenseUrl> 
     <PackageProjectUrl>http://www.nopcommerce.com/</PackageProjectUrl> 
     <RepositoryUrl>https://github.com/nopSolutions/nopCommerce</RepositoryUrl> 

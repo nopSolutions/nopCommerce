@@ -10,6 +10,9 @@ namespace Nop.Services.Payments
     [Serializable]
     public partial class ProcessPaymentRequest
     {
+        /// <summary>
+        /// Ctor
+        /// </summary>
         public ProcessPaymentRequest()
         {
             this.CustomValues = new Dictionary<string, object>();

@@ -1,7 +1,7 @@
-﻿@model VendorModel
+@model VendorModel
 
 <div class="panel-group">
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_vendor_details_info_top", additionalData = Model.Id })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.VendorDetailsInfoTop, additionalData = Model })
     <div class="panel panel-default">
         <div class="panel-body">
             @(Html.LocalizedEditor<VendorModel, VendorLocalizedModel>("vendor-info-localized",
@@ -66,7 +66,7 @@
                     <div class="col-md-9">
                         @if (Model.AssociatedCustomers.Count > 0)
                         {
-                            for (int i = 0; i < Model.AssociatedCustomers.Count; i++)
+                            for (var i = 0; i < Model.AssociatedCustomers.Count; i++)
                             {
                                 <a asp-action="Edit" asp-controller="Customer" asp-route-id="@Model.AssociatedCustomers[i].Id">
                                     @Model.AssociatedCustomers[i].Email
@@ -151,6 +151,10 @@
             </div>
         </div>
     </div>
+    @if (Model.VendorAttributes.Count > 0)
+    {
+        @await Html.PartialAsync("_VendorAttributes", Model.VendorAttributes)
+    }
     <div class="panel panel-default advanced-setting">
         <div class="panel-heading">
             @T("Admin.Vendors.Address")
@@ -159,10 +163,10 @@
             <nop-editor asp-for="Address" asp-template="Address" />
         </div>
     </div>
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_vendor_details_info_bottom", additionalData = Model.Id })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.VendorDetailsInfoBottom, additionalData = Model })
 </div>
 
-<script type="text/javascript">
+<script>
     $(document).ready(function() {
         $("#@Html.IdFor(model => model.AllowCustomersToSelectPageSize)").click(togglePageSize);
         togglePageSize();

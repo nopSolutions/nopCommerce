@@ -12,32 +12,11 @@ using Nop.Services.Stores;
 
 namespace Nop.Services.Messages
 {
+    /// <summary>
+    /// Message template service
+    /// </summary>
     public partial class MessageTemplateService: IMessageTemplateService
     {
-        #region Constants
-
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : store ID
-        /// </remarks>
-        private const string MESSAGETEMPLATES_ALL_KEY = "Nop.messagetemplate.all-{0}";
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : template name
-        /// {1} : store ID
-        /// </remarks>
-        private const string MESSAGETEMPLATES_BY_NAME_KEY = "Nop.messagetemplate.name-{0}-{1}";
-        /// <summary>
-        /// Key pattern to clear cache
-        /// </summary>
-        private const string MESSAGETEMPLATES_PATTERN_KEY = "Nop.messagetemplate.";
-
-        #endregion
-
         #region Fields
 
         private readonly IRepository<MessageTemplate> _messageTemplateRepository;
@@ -63,7 +42,7 @@ namespace Nop.Services.Messages
         /// <param name="storeMappingService">Store mapping service</param>
         /// <param name="messageTemplateRepository">Message template repository</param>
         /// <param name="catalogSettings">Catalog settings</param>
-        /// <param name="eventPublisher">Event published</param>
+        /// <param name="eventPublisher">Event publisher</param>
         public MessageTemplateService(ICacheManager cacheManager,
             IRepository<StoreMapping> storeMappingRepository,
             ILanguageService languageService,
@@ -98,7 +77,7 @@ namespace Nop.Services.Messages
 
             _messageTemplateRepository.Delete(messageTemplate);
 
-            _cacheManager.RemoveByPattern(MESSAGETEMPLATES_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopMessageDefaults.MessageTemplatesPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityDeleted(messageTemplate);
@@ -115,7 +94,7 @@ namespace Nop.Services.Messages
 
             _messageTemplateRepository.Insert(messageTemplate);
 
-            _cacheManager.RemoveByPattern(MESSAGETEMPLATES_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopMessageDefaults.MessageTemplatesPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(messageTemplate);
@@ -132,7 +111,7 @@ namespace Nop.Services.Messages
 
             _messageTemplateRepository.Update(messageTemplate);
 
-            _cacheManager.RemoveByPattern(MESSAGETEMPLATES_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopMessageDefaults.MessageTemplatesPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(messageTemplate);
@@ -152,35 +131,30 @@ namespace Nop.Services.Messages
         }
 
         /// <summary>
-        /// Gets a message template
+        /// Gets message templates by the name
         /// </summary>
         /// <param name="messageTemplateName">Message template name</param>
-        /// <param name="storeId">Store identifier</param>
-        /// <returns>Message template</returns>
-        public virtual MessageTemplate GetMessageTemplateByName(string messageTemplateName, int storeId)
+        /// <param name="storeId">Store identifier; pass null to load all records</param>
+        /// <returns>List of message templates</returns>
+        public virtual IList<MessageTemplate> GetMessageTemplatesByName(string messageTemplateName, int? storeId = null)
         {
             if (string.IsNullOrWhiteSpace(messageTemplateName))
-                throw new ArgumentException("messageTemplateName");
+                throw new ArgumentException(nameof(messageTemplateName));
 
-            string key = string.Format(MESSAGETEMPLATES_BY_NAME_KEY, messageTemplateName, storeId);
+            var key = string.Format(NopMessageDefaults.MessageTemplatesByNameCacheKey, messageTemplateName, storeId ?? 0);
             return _cacheManager.Get(key, () =>
             {
-                var query = _messageTemplateRepository.Table;
-                query = query.Where(t => t.Name == messageTemplateName);
-                query = query.OrderBy(t => t.Id);
-                var templates = query.ToList();
+                //get message templates with the passed name
+                var templates = _messageTemplateRepository.Table
+                    .Where(messageTemplate => messageTemplate.Name.Equals(messageTemplateName))
+                    .OrderBy(messageTemplate => messageTemplate.Id).ToList();
 
-                //store mapping
-                if (storeId > 0)
-                {
-                    templates = templates
-                        .Where(t => _storeMappingService.Authorize(t, storeId))
-                        .ToList();
-                }
+                //filter by the store
+                if (storeId.HasValue && storeId.Value > 0)
+                    templates = templates.Where(messageTemplate => _storeMappingService.Authorize(messageTemplate, storeId.Value)).ToList();
 
-                return templates.FirstOrDefault();
+                return templates;
             });
-
         }
 
         /// <summary>
@@ -190,7 +164,7 @@ namespace Nop.Services.Messages
         /// <returns>Message template list</returns>
         public virtual IList<MessageTemplate> GetAllMessageTemplates(int storeId)
         {
-            string key = string.Format(MESSAGETEMPLATES_ALL_KEY, storeId);
+            var key = string.Format(NopMessageDefaults.MessageTemplatesAllCacheKey, storeId);
             return _cacheManager.Get(key, () =>
             {
                 var query = _messageTemplateRepository.Table;
@@ -201,18 +175,12 @@ namespace Nop.Services.Messages
                 {
                     query = from t in query
                             join sm in _storeMappingRepository.Table
-                            on new { c1 = t.Id, c2 = "MessageTemplate" } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into t_sm
-                            from sm in t_sm.DefaultIfEmpty()
+                            on new { c1 = t.Id, c2 = "MessageTemplate" } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into tSm
+                            from sm in tSm.DefaultIfEmpty()
                             where !t.LimitedToStores || storeId == sm.StoreId
                             select t;
-
-                    //only distinct items (group by ID)
-                    query = from t in query
-                            group t by t.Id
-                            into tGroup
-                            orderby tGroup.Key
-                            select tGroup.FirstOrDefault();
-                    query = query.OrderBy(t => t.Name);
+                    
+                    query = query.Distinct().OrderBy(t => t.Name);
                 }
 
                 return query.ToList();
@@ -251,15 +219,15 @@ namespace Nop.Services.Messages
             foreach (var lang in languages)
             {
                 var bccEmailAddresses = messageTemplate.GetLocalized(x => x.BccEmailAddresses, lang.Id, false, false);
-                if (!String.IsNullOrEmpty(bccEmailAddresses))
+                if (!string.IsNullOrEmpty(bccEmailAddresses))
                     _localizedEntityService.SaveLocalizedValue(mtCopy, x => x.BccEmailAddresses, bccEmailAddresses, lang.Id);
 
                 var subject = messageTemplate.GetLocalized(x => x.Subject, lang.Id, false, false);
-                if (!String.IsNullOrEmpty(subject))
+                if (!string.IsNullOrEmpty(subject))
                     _localizedEntityService.SaveLocalizedValue(mtCopy, x => x.Subject, subject, lang.Id);
 
                 var body = messageTemplate.GetLocalized(x => x.Body, lang.Id, false, false);
-                if (!String.IsNullOrEmpty(body))
+                if (!string.IsNullOrEmpty(body))
                     _localizedEntityService.SaveLocalizedValue(mtCopy, x => x.Body, body, lang.Id);
 
                 var emailAccountId = messageTemplate.GetLocalized(x => x.EmailAccountId, lang.Id, false, false);

@@ -48,6 +48,11 @@ namespace Nop.Core.Domain.Catalog
         public string ReplyText { get; set; }
 
         /// <summary>
+        /// Gets or sets the value indicating whether the customer is already notified of the reply to review
+        /// </summary>
+        public bool CustomerNotifiedOfReply { get; set; }
+
+        /// <summary>
         /// Review rating
         /// </summary>
         public int Rating { get; set; }
@@ -87,8 +92,8 @@ namespace Nop.Core.Domain.Catalog
         /// </summary>
         public virtual ICollection<ProductReviewHelpfulness> ProductReviewHelpfulnessEntries
         {
-            get { return _productReviewHelpfulnessEntries ?? (_productReviewHelpfulnessEntries = new List<ProductReviewHelpfulness>()); }
-            protected set { _productReviewHelpfulnessEntries = value; }
+            get => _productReviewHelpfulnessEntries ?? (_productReviewHelpfulnessEntries = new List<ProductReviewHelpfulness>());
+            protected set => _productReviewHelpfulnessEntries = value;
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿@using System.Text.Encodings.Web
+
 @model ApplyVendorModel
 @{
     Layout = "_ColumnsOne";
@@ -14,7 +15,7 @@
     </div>
     <div class="page-body">
         @await Component.InvokeAsync("TopicBlock", new { systemName = "ApplyVendor" })
-        @await Component.InvokeAsync("Widget", new { widgetZone = "applyvendor_top" })
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ApplyVendorTop })
         @if (Model.DisableFormInput)
         {
             <div class="result">
@@ -47,6 +48,7 @@
                             <label>@T("Vendors.ApplyAccount.Picture"):</label>
                             <input name="uploadedFile" type="file"/>
                         </div>
+                        @await Html.PartialAsync("_VendorAttributes", Model.VendorAttributes)
                         @if (Model.DisplayCaptcha)
                         {
                             <div class="captcha-box">
@@ -55,10 +57,10 @@
                         }
                         @if (Model.TermsOfServiceEnabled)
                         {
-                            <script type="text/javascript">
+                            <script asp-location="Footer">
                                 $(document).ready(function() {
                                     $('#apply-vendor').click(function() {
-                                        if ($('#accept-terms-of-service').is(':checked')) {
+                                        if ($('#termsofservice').is(':checked')) {
                                             //do some stuff
                                             return true;
                                         } else {
@@ -69,13 +71,13 @@
                                     });
                                 });
                             </script>
-                            <div class="accept-terms-of-service">
-                                <input id="accept-terms-of-service" type="checkbox" name="accept-terms-of-service" />
-                                <label for="accept-terms-of-service">@T("Vendors.ApplyAccount.AcceptTermsOfService")</label>
+                            <div class="terms-of-service">
+                                <input id="termsofservice" type="checkbox" name="termsofservice" />
+                                <label for="termsofservice">@T("Vendors.ApplyAccount.AcceptTermsOfService")</label>
                                 @if (Model.TermsOfServicePopup)
                                 {
                                     <span class="read" id="read-acceptterms">@T("Vendors.ApplyAccount.AcceptTermsOfService.Read")</span>
-                                    <script>
+                                    <script asp-location="Footer">
                                         $(document).ready(function() {
                                             $('#read-acceptterms').on('click',
                                                 function (e) {
@@ -99,6 +101,6 @@
                 </div>
             </form>
         }
-        @await Component.InvokeAsync("Widget", new { widgetZone = "applyvendor_bottom" })
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ApplyVendorBottom })
     </div>
 </div>

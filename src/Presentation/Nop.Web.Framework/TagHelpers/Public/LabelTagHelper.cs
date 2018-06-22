@@ -4,6 +4,9 @@ using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace Nop.Web.Framework.TagHelpers.Public
 {
+    /// <summary>
+    /// label tag helper
+    /// </summary>
     [HtmlTargetElement("label", Attributes = ForAttributeName)]
     public class LabelTagHelper : Microsoft.AspNetCore.Mvc.TagHelpers.LabelTagHelper
     {
@@ -16,10 +19,20 @@ namespace Nop.Web.Framework.TagHelpers.Public
         [HtmlAttributeName(PostfixAttributeName)]
         public string Postfix { get; set; }
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="generator">HTML generator</param>
         public LabelTagHelper(IHtmlGenerator generator) : base(generator)
         {
         }
 
+        /// <summary>
+        /// Process
+        /// </summary>
+        /// <param name="context">Context</param>
+        /// <param name="output">Output</param>
+        /// <returns>Task</returns>
         public override Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
             output.Content.Append(Postfix);

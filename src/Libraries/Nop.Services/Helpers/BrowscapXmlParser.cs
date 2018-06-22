@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
+using Nop.Core.Infrastructure;
 
 namespace Nop.Services.Helpers
 {
@@ -14,10 +15,18 @@ namespace Nop.Services.Helpers
     public class BrowscapXmlHelper
     {
         private readonly List<string> _crawlerUserAgentsRegexp;
-       
-        public BrowscapXmlHelper(string userAgentStringsPath, string crawlerOnlyUserAgentStringsPath)
+        private readonly INopFileProvider _fileProvider;
+
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="userAgentStringsPath">User agent file path</param>
+        /// <param name="crawlerOnlyUserAgentStringsPath">User agent with crawlers only file path</param>
+        /// <param name="fileProvider">File provider</param>
+        public BrowscapXmlHelper(string userAgentStringsPath, string crawlerOnlyUserAgentStringsPath, INopFileProvider fileProvider)
         {
-            _crawlerUserAgentsRegexp = new List<string>();
+            this._crawlerUserAgentsRegexp = new List<string>();
+            this._fileProvider = fileProvider;
 
             Initialize(userAgentStringsPath, crawlerOnlyUserAgentStringsPath);
         }
@@ -25,8 +34,9 @@ namespace Nop.Services.Helpers
         private void Initialize(string userAgentStringsPath, string crawlerOnlyUserAgentStringsPath)
         {
             List<XElement> crawlerItems = null;
+            var needSaveCrawlerOnly = false;
 
-            if (!string.IsNullOrEmpty(crawlerOnlyUserAgentStringsPath) && File.Exists(crawlerOnlyUserAgentStringsPath))
+            if (!string.IsNullOrEmpty(crawlerOnlyUserAgentStringsPath) && _fileProvider.FileExists(crawlerOnlyUserAgentStringsPath))
             {
                 //try to load crawler list from crawlers only file
                 using (var sr = new StreamReader(crawlerOnlyUserAgentStringsPath))
@@ -35,28 +45,29 @@ namespace Nop.Services.Helpers
                 }
             }
 
-            if (crawlerItems == null)
+            if (crawlerItems == null || !crawlerItems.Any())
             {
                 //try to load crawler list from full user agents file
                 using (var sr = new StreamReader(userAgentStringsPath))
                 {
-                    crawlerItems = XDocument.Load(sr).Root?.Elements("browscapitem")
+                    crawlerItems = XDocument.Load(sr).Root?.Element("browsercapitems")?.Elements("browscapitem")
                         //only crawlers
                         .Where(IsBrowscapItemIsCrawler).ToList();
+                    needSaveCrawlerOnly = true;
                 }
             }
 
-            if (crawlerItems == null)
+            if (crawlerItems == null || !crawlerItems.Any())
                 throw new Exception("Incorrect file format");
 
             _crawlerUserAgentsRegexp.AddRange(crawlerItems
                 //get only user agent names
                 .Select(e => e.Attribute("name"))
-                .Where(e => e != null && !string.IsNullOrEmpty(e.Value))
+                .Where(e => !string.IsNullOrEmpty(e?.Value))
                 .Select(e => e.Value)
                 .Select(ToRegexp));
 
-            if (string.IsNullOrEmpty(crawlerOnlyUserAgentStringsPath) || File.Exists(crawlerOnlyUserAgentStringsPath))
+            if ((string.IsNullOrEmpty(crawlerOnlyUserAgentStringsPath) || _fileProvider.FileExists(crawlerOnlyUserAgentStringsPath)) && !needSaveCrawlerOnly)
                 return;
 
             //try to write crawlers file

@@ -9,17 +9,6 @@ namespace Nop.Core.Caching
     /// </summary>
     public interface IRedisConnectionWrapper : IDisposable
     {
-        #region Properties
-
-        /// <summary>
-        /// Get the key used to store the protection key list (used with the PersistDataProtectionKeysToRedis option enabled)
-        /// </summary>
-        string DataProtectionKeysName { get; }
-
-        #endregion
-
-        #region Methods
-
         /// <summary>
         /// Obtain an interactive connection to a database inside Redis
         /// </summary>
@@ -43,18 +32,7 @@ namespace Nop.Core.Caching
         /// <summary>
         /// Delete all the keys of the database
         /// </summary>
-        /// <param name="db">Database number; pass null to use the default value<</param>
+        /// <param name="db">Database number; pass null to use the default value</param>
         void FlushDatabase(int? db = null);
-
-        /// <summary>
-        /// Perform some action with Redis distributed lock
-        /// </summary>
-        /// <param name="resource">The thing we are locking on</param>
-        /// <param name="expirationTime">The time after which the lock will automatically be expired by Redis</param>
-        /// <param name="action">Action to be performed with locking</param>
-        /// <returns>True if lock was acquired and action was performed; otherwise false</returns>
-        bool PerformActionWithLock(string resource, TimeSpan expirationTime, Action action);
-
-        #endregion
     }
 }

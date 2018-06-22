@@ -19,6 +19,11 @@ namespace Nop.Services.Authentication
 
         #region Ctor
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="next">Next</param>
+        /// <param name="schemes">Schemes</param>
         public AuthenticationMiddleware(RequestDelegate next, IAuthenticationSchemeProvider schemes)
         {
             _next = next ?? throw new ArgumentNullException(nameof(next));
@@ -29,6 +34,9 @@ namespace Nop.Services.Authentication
 
         #region Properties
 
+        /// <summary>
+        /// 
+        /// </summary>
         public IAuthenticationSchemeProvider Schemes { get; set; }
 
         #endregion

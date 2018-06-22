@@ -1,4 +1,4 @@
-﻿@model CustomerAttributeValueModel
+@model CustomerAttributeValueModel
 
 @{
     Layout = "_AdminPopupLayout";
@@ -20,7 +20,7 @@
                 <i class="fa fa-floppy-o"></i>
                 @T("Admin.Common.Save")
             </button>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_customer_attribute_value_details_buttons" })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CustomerAttributeValueDetailsButtons })
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdateValue", Model)

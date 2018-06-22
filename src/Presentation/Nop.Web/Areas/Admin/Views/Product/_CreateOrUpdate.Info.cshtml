@@ -1,4 +1,5 @@
 ﻿@model ProductModel
+
 @inject IStoreService storeService
 @inject IProductTagService productTagService
 
@@ -18,7 +19,7 @@
     Html.AppendScriptParts("~/lib/tagEditor/jquery.caret.min.js");
 }
 
-<script type="text/javascript">
+<script>
     $(document).ready(function() {
         @if (!Model.IsLoggedInAsVendor)
         {
@@ -383,7 +384,7 @@
         var productTags = productTagService.GetAllProductTags();
         var productTagsSb = new StringBuilder();
         productTagsSb.Append("var initialProductTags = [");
-        for (int i = 0; i < productTags.Count; i++)
+        for (var i = 0; i < productTags.Count; i++)
         {
             var tag = productTags[i];
             productTagsSb.Append("'");
@@ -456,12 +457,21 @@
             $('#required-product-names').text('');
         }
     }
+
+    $(document).ready(function () {
+        if ('@Model.Sku') {
+            warningValidation('@Url.Action("SkuReservedWarning")', '@Html.NameFor(model => model.Sku)', { productId: @Model.Id, sku: '@Model.Sku' });
+        }
+        $('#@Html.IdFor(model => model.Sku)').on('input propertychange paste', function () {
+            warningValidation('@Url.Action("SkuReservedWarning")', '@Html.NameFor(model => model.Sku)', { productId: @Model.Id, sku: $(this).val() });
+        });
+    });
 </script>
 
 <div class="raw clearfix">
     <div class="@(Model.ProductEditorSettingsModel.OneColumnProductPage ? "col-md-12" : "col-md-7")">
         <div class="panel-group">            
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_product_details_info_column_left_top", additionalData = Model.Id })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductDetailsInfoColumnLeftTop, additionalData = Model })
             <div class="panel panel-default">
                 <div class="panel-heading">
                     @T("Admin.Catalog.Products.CommonInfo")
@@ -1183,10 +1193,16 @@
                                         type: "json",
                                         transport: {
                                             read: {
-                                                url: "@Html.Raw(Url.Action("TierPriceList", "Product", new {productId = Model.Id}))",
+                                                url: "@Html.Raw(Url.Action("TierPriceList", "Product"))",
                                                 type: "POST",
                                                 dataType: "json",
-                                                data: addAntiForgeryToken
+                                                data: function additionalData() {
+                                                    var data = {
+                                                        ProductId: '@(Model.Id)'
+                                                    };
+                                                    addAntiForgeryToken(data);
+                                                    return data;
+                                                }
                                             },
                                             destroy: {
                                                 url: "@Html.Raw(Url.Action("TierPriceDelete", "Product"))",
@@ -1219,15 +1235,14 @@
                                             // Cancel the changes
                                             this.cancelChanges();
                                         },
+                                        pageSize: @(Model.TierPriceSearchModel.PageSize),
                                         serverPaging: true,
                                         serverFiltering: true,
                                         serverSorting: true
                                     },
                                     pageable: {
                                         refresh: true,
-                                        numeric: false,
-                                        previousNext: false,
-                                        info: false,
+                                        pageSizes: [@(Model.TierPriceSearchModel.AvailablePageSizes)],
                                         @await Html.PartialAsync("_GridPagerMessages")
                                     },
                                     editable: {
@@ -1282,7 +1297,7 @@
                             @T("Admin.Catalog.Products.TierPrices.AddNew")
                         </button>
                         <input type="submit" id="btnRefreshTierPrices" style="display: none" />
-                        <script type="text/javascript">
+                        <script>
                             $(document).ready(function() {
                                 $('#btnRefreshTierPrices').click(function() {
                                     $("#tierprices-grid").data('kendoGrid').dataSource.read();
@@ -1300,7 +1315,7 @@
                     </div>
                 }
             </div>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_product_details_info_column_left_bottom", additionalData = Model.Id })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductDetailsInfoColumnLeftBottom, additionalData = Model })
         </div>
     </div>
     <div class="@(Model.ProductEditorSettingsModel.OneColumnProductPage ? "col-md-12" : "col-md-5")">
@@ -1309,7 +1324,7 @@
                 var leftColumnClass = Model.ProductEditorSettingsModel.OneColumnProductPage ? "col-md-3" : "col-md-4";
                 var rightColumnClass = Model.ProductEditorSettingsModel.OneColumnProductPage ? "col-md-9" : "col-md-8";
             }
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_product_details_info_column_right_top", additionalData = Model.Id })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductDetailsInfoColumnRightTop, additionalData = Model })
             <div class="panel panel-default margin-bottom" id="group-associated-products">
                 <div class="panel-heading">
                     @T("Admin.Catalog.Products.AssociatedProducts")
@@ -1335,10 +1350,16 @@
                                         type: "json",
                                         transport: {
                                             read: {
-                                                url: "@Html.Raw(Url.Action("AssociatedProductList", "Product", new {productId = Model.Id}))",
+                                                url: "@Html.Raw(Url.Action("AssociatedProductList", "Product"))",
                                                 type: "POST",
                                                 dataType: "json",
-                                                data: addAntiForgeryToken
+                                                data: function additionalData() {
+                                                    var data = {
+                                                        ProductId: '@(Model.Id)'
+                                                    };
+                                                    addAntiForgeryToken(data);
+                                                    return data;
+                                                }
                                             },
                                             update: {
                                                 url: "@Html.Raw(Url.Action("AssociatedProductUpdate", "Product"))",
@@ -1376,15 +1397,14 @@
                                             // Cancel the changes
                                             this.cancelChanges();
                                         },
+                                        pageSize: @(Model.AssociatedProductSearchModel.PageSize),
                                         serverPaging: true,
                                         serverFiltering: true,
                                         serverSorting: true
                                     },
                                     pageable: {
                                         refresh: true,
-                                        numeric: false,
-                                        previousNext: false,
-                                        info: false,
+                                        pageSizes: [@(Model.AssociatedProductSearchModel.AvailablePageSizes)],
                                         @await Html.PartialAsync("_GridPagerMessages")
                                     },
                                     editable: {
@@ -1430,7 +1450,7 @@
                             @T("Admin.Catalog.Products.AssociatedProducts.AddNew")
                         </button>
                         <input type="submit" id="btnRefreshAssociatedProducts" style="display: none" />
-                        <script type="text/javascript">
+                        <script>
                             $(document).ready(function() {
                                 $('#btnRefreshAssociatedProducts').click(function() {
                                     //refresh grid
@@ -1528,7 +1548,7 @@
                                                 </td>
                                                 <td style="width: 10%;">
                                                     <input type="checkbox" id="warehouse_used_@(item.WarehouseId)" name="warehouse_used_@(item.WarehouseId)" value="@item.WarehouseId" checked="@item.WarehouseUsed" />
-                                                    <script type="text/javascript">
+                                                    <script>
                                                         $(document).ready(function() {
                                                             $("#warehouse_used_@(item.WarehouseId)").change(toggleWarehouseUsed_@(item.WarehouseId));
                                                             toggleWarehouseUsed_@(item.WarehouseId)();
@@ -1949,7 +1969,7 @@
                                     <nop-editor asp-for="RequiredProductIds" />
                                     <span class="input-group-btn">
                                         <input type="submit" id="btnRefreshRequiredProducts" style="display: none" />
-                                        <script type="text/javascript">
+                                        <script>
                                             $(document).ready(function () {
                                                 $('#btnRefreshRequiredProducts').click(function () {
                                                     //refresh product list
@@ -2000,10 +2020,16 @@
                                         type: "json",
                                         transport: {
                                             read: {
-                                                url: "@Html.Raw(Url.Action("RelatedProductList", "Product", new {productId = Model.Id}))",
+                                                url: "@Html.Raw(Url.Action("RelatedProductList", "Product"))",
                                                 type: "POST",
                                                 dataType: "json",
-                                                data: addAntiForgeryToken
+                                                data: function additionalData() {
+                                                    var data = {
+                                                        ProductId: '@(Model.Id)'
+                                                    };
+                                                    addAntiForgeryToken(data);
+                                                    return data;
+                                                }
                                             },
                                             update: {
                                                 url: "@Html.Raw(Url.Action("RelatedProductUpdate", "Product"))",
@@ -2041,15 +2067,14 @@
                                             // Cancel the changes
                                             this.cancelChanges();
                                         },
+                                        pageSize: @(Model.RelatedProductSearchModel.PageSize),
                                         serverPaging: true,
                                         serverFiltering: true,
                                         serverSorting: true
                                     },
                                     pageable: {
                                         refresh: true,
-                                        numeric: false,
-                                        previousNext: false,
-                                        info: false,
+                                        pageSizes: [@(Model.RelatedProductSearchModel.AvailablePageSizes)],
                                         @await Html.PartialAsync("_GridPagerMessages")
                                     },
                                     editable: {
@@ -2095,7 +2120,7 @@
                             @T("Admin.Catalog.Products.RelatedProducts.AddNew")
                         </button>
                         <input type="submit" id="btnRefreshRelatedProducts" style="display: none" />
-                        <script type="text/javascript">
+                        <script>
                             $(document).ready(function() {
                                 $('#btnRefreshRelatedProducts').click(function() {
                                     //refresh grid
@@ -2135,10 +2160,16 @@
                                         type: "json",
                                         transport: {
                                             read: {
-                                                url: "@Html.Raw(Url.Action("CrossSellProductList", "Product", new {productId = Model.Id}))",
+                                                url: "@Html.Raw(Url.Action("CrossSellProductList", "Product"))",
                                                 type: "POST",
                                                 dataType: "json",
-                                                data: addAntiForgeryToken
+                                                data: function additionalData() {
+                                                    var data = {
+                                                        ProductId: '@(Model.Id)'
+                                                    };
+                                                    addAntiForgeryToken(data);
+                                                    return data;
+                                                }
                                             },
                                             destroy: {
                                                 url: "@Html.Raw(Url.Action("CrossSellProductDelete", "Product"))",
@@ -2164,15 +2195,14 @@
                                             // Cancel the changes
                                             this.cancelChanges();
                                         },
+                                        pageSize: @(Model.CrossSellProductSearchModel.PageSize),
                                         serverPaging: true,
                                         serverFiltering: true,
                                         serverSorting: true
                                     },
                                     pageable: {
                                         refresh: true,
-                                        numeric: false,
-                                        previousNext: false,
-                                        info: false,
+                                        pageSizes: [@(Model.CrossSellProductSearchModel.AvailablePageSizes)],
                                         @await Html.PartialAsync("_GridPagerMessages")
                                     },
                                     editable: {
@@ -2200,7 +2230,7 @@
                             @T("Admin.Catalog.Products.CrossSells.AddNew")
                         </button>
                         <input type="submit" id="btnRefreshCrossSellProducts" style="display: none" />
-                        <script type="text/javascript">
+                        <script>
                             $(document).ready(function() {
                                 $('#btnRefreshCrossSellProducts').click(function() {
                                     //refresh grid
@@ -2221,7 +2251,7 @@
                     </div>
                 }
             </div>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_product_details_info_column_right_bottom", additionalData = Model.Id })        
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductDetailsInfoColumnRightBottom, additionalData = Model })        
         </div>
     </div>
 </div>

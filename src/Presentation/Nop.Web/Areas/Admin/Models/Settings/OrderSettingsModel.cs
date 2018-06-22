@@ -1,12 +1,27 @@
 ﻿using Nop.Web.Framework.Mvc.ModelBinding;
-using Nop.Web.Framework.Mvc.Models;
+using Nop.Web.Framework.Models;
+using Nop.Web.Areas.Admin.Models.Orders;
 
 namespace Nop.Web.Areas.Admin.Models.Settings
 {
-    public partial class OrderSettingsModel : BaseNopModel
+    /// <summary>
+    /// Represents an order settings model
+    /// </summary>
+    public partial class OrderSettingsModel : BaseNopModel, ISettingsModel
     {
-        public int ActiveStoreScopeConfiguration { get; set; }
+        #region Ctor
 
+        public OrderSettingsModel()
+        {
+            this.ReturnRequestReasonSearchModel = new ReturnRequestReasonSearchModel();
+            this.ReturnRequestActionSearchModel = new ReturnRequestActionSearchModel();
+        }
+
+        #endregion
+
+        #region Properties
+
+        public int ActiveStoreScopeConfiguration { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.Order.IsReOrderAllowed")]
         public bool IsReOrderAllowed { get; set; }
@@ -31,6 +46,10 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.Order.AnonymousCheckoutAllowed")]
         public bool AnonymousCheckoutAllowed { get; set; }
         public bool AnonymousCheckoutAllowed_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Order.CheckoutDisabled")]
+        public bool CheckoutDisabled { get; set; }
+        public bool CheckoutDisabled_OverrideForStore { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.Order.TermsOfServiceOnShoppingCartPage")]
         public bool TermsOfServiceOnShoppingCartPage { get; set; }
@@ -86,8 +105,10 @@ namespace Nop.Web.Areas.Admin.Models.Settings
 
         [NopResourceDisplayName("Admin.Configuration.Settings.Order.ActivateGiftCardsAfterCompletingOrder")]
         public bool ActivateGiftCardsAfterCompletingOrder { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.Order.DeactivateGiftCardsAfterCancellingOrder")]
         public bool DeactivateGiftCardsAfterCancellingOrder { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.Order.DeactivateGiftCardsAfterDeletingOrder")]
         public bool DeactivateGiftCardsAfterDeletingOrder { get; set; }
 
@@ -110,5 +131,15 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.Order.AllowAdminsToBuyCallForPriceProducts")]
         public bool AllowAdminsToBuyCallForPriceProducts { get; set; }
         public bool AllowAdminsToBuyCallForPriceProducts_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Order.DeleteGiftCardUsageHistory")]
+        public bool DeleteGiftCardUsageHistory { get; set; }
+        public bool DeleteGiftCardUsageHistory_OverrideForStore { get; set; }
+
+        public ReturnRequestReasonSearchModel ReturnRequestReasonSearchModel { get; set; }
+
+        public ReturnRequestActionSearchModel ReturnRequestActionSearchModel { get; set; }
+
+        #endregion
     }
 }

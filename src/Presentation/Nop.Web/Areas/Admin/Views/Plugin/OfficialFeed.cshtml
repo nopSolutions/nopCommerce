@@ -1,13 +1,10 @@
-﻿@model OfficialFeedListModel
+﻿@model OfficialFeedPluginSearchModel
 
 @{
     //page title
     ViewBag.Title = T("Admin.Configuration.Plugins.OfficialFeed").Text;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("All plugins and themes catalog");
-
-    //currently we support only 15 page size for this page
-    var defaultGridPageSize = 15;
 }
 
 <nop-antiforgery-token />
@@ -24,7 +21,9 @@
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-md-6">
-                            @T("Admin.Configuration.Plugins.OfficialFeed.Instructions")
+                            <p>
+                                @T("Admin.Configuration.Plugins.OfficialFeed.Instructions")
+                            </p>
                             <div class="form-group">
                                 <div class="col-md-4">
                                     <nop-label asp-for="SearchName" />
@@ -84,7 +83,16 @@
                                             url: "@Html.Raw(Url.Action("OfficialFeedSelect", "Plugin"))",
                                             type: "POST",
                                             dataType: "json",
-                                            data: additionalData
+                                            data: function() {
+                                                var data = {
+                                                    SearchName: $('#@Html.IdFor(model => model.SearchName)').val(),
+                                                    SearchVersionId: $('#SearchVersionId').val(),
+                                                    SearchCategoryId: $('#SearchCategoryId').val(),
+                                                    SearchPriceId: $('#SearchPriceId').val()
+                                                };
+                                                addAntiForgeryToken(data);
+                                                return data;
+                                            }
                                         }
                                     },
                                     schema: {
@@ -97,13 +105,14 @@
                                         // Cancel the changes
                                         this.cancelChanges();
                                     },
-                                    pageSize: @(defaultGridPageSize),
+                                    pageSize: @(Model.PageSize),
                                     serverPaging: true,
                                     serverFiltering: true,
                                     serverSorting: true
                                 },
                                 pageable: {
                                     refresh: true,
+                                    pageSizes: [@(Model.AvailablePageSizes)],
                                     @await Html.PartialAsync("_GridPagerMessages")
                                 },
                                 editable: {
@@ -152,7 +161,7 @@
 
                 <div>
                     <input type="submit" id="btnRefresh" style="display: none" />
-                    <script type="text/javascript">
+                    <script>
                         $(document).ready(function () {
                             $('#btnRefresh').click(function () {
                                 //refresh grid
@@ -165,7 +174,7 @@
                             });
                         });
                     </script>
-                    <script type="text/javascript">
+                    <script>
                         $(document).ready(function () {
                             //search button
                             $('#search-plugins').click(function () {
@@ -184,18 +193,6 @@
                                 return false;
                             }
                         });
-
-                        function additionalData() {
-                            var data = {
-                                SearchName: $('#@Html.IdFor(model => model.SearchName)').val(),
-                                SearchVersionId: $('#SearchVersionId').val(),
-                                SearchCategoryId: $('#SearchCategoryId').val(),
-                                SearchPriceId: $('#SearchPriceId').val()
-                            };
-                            addAntiForgeryToken(data);
-                            return data;
-                        }
-
                     </script>
                 </div>
             </div>

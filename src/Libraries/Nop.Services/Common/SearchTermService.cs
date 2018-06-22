@@ -21,6 +21,11 @@ namespace Nop.Services.Common
 
         #region Ctor
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="searchTermRepository">Search term repository</param>
+        /// <param name="eventPublisher">Event publisher</param>
         public SearchTermService(IRepository<SearchTerm> searchTermRepository,
             IEventPublisher eventPublisher)
         {
@@ -68,7 +73,7 @@ namespace Nop.Services.Common
         /// <returns>Search term</returns>
         public virtual SearchTerm GetSearchTermByKeyword(string keyword, int storeId)
         {
-            if (String.IsNullOrEmpty(keyword))
+            if (string.IsNullOrEmpty(keyword))
                 return null;
 
             var query = from st in _searchTermRepository.Table

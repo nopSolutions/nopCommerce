@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
@@ -7,6 +8,9 @@ using Nop.Web.Framework.Extensions;
 
 namespace Nop.Web.Framework.TagHelpers.Admin
 {
+    /// <summary>
+    /// nop-tabs tag helper
+    /// </summary>
     [HtmlTargetElement("nop-tabs", Attributes = IdAttributeName)]
     public class NopTabsTagHelper : TagHelper
     {
@@ -35,12 +39,22 @@ namespace Nop.Web.Framework.TagHelpers.Admin
         [ViewContext]
         public ViewContext ViewContext { get; set; }
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="htmlHelper">HTML helper</param>
         public NopTabsTagHelper(IHtmlHelper htmlHelper)
         {
             _htmlHelper = htmlHelper;
         }
 
-        public override void Process(TagHelperContext context, TagHelperOutput output)
+        /// <summary>
+        /// Process
+        /// </summary>
+        /// <param name="context">Context</param>
+        /// <param name="output">Output</param>
+        /// <returns>Result</returns>
+        public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
             if (context == null)
             {
@@ -52,20 +66,39 @@ namespace Nop.Web.Framework.TagHelpers.Admin
                 throw new ArgumentNullException(nameof(output));
             }
 
+            //contextualize IHtmlHelper
+            var viewContextAware = _htmlHelper as IViewContextAware;
+            viewContextAware?.Contextualize(ViewContext);
+
+            //create context item
+            var tabContext = new List<NopTabContextItem>();
+            context.Items.Add(typeof(NopTabsTagHelper), tabContext);
+
             //save tab name which should be selected
             if (!string.IsNullOrEmpty(TabNameToSelect))
                 context.Items.Add("tabNameToSelect", TabNameToSelect);
 
-            var tabsClass = "nav-tabs-custom";
-            //merge classes
-            var classValue = output.Attributes.ContainsName("class")
-                ? $"{output.Attributes["class"].Value} {tabsClass}"
-                : tabsClass;
-            output.Attributes.SetAttribute("class", classValue);
+            //execute child tag helpers
+            await output.GetChildContentAsync();
 
-            //contextualize IHtmlHelper
-            var viewContextAware = _htmlHelper as IViewContextAware;
-            viewContextAware?.Contextualize(ViewContext);
+            //tabs title
+            var tabsTitle = new TagBuilder("ul");
+            tabsTitle.AddCssClass("nav");
+            tabsTitle.AddCssClass("nav-tabs");
+
+            //tabs content
+            var tabsContent = new TagBuilder("div");
+            tabsContent.AddCssClass("tab-content");
+
+            foreach (var tabItem in tabContext)
+            {
+                tabsTitle.InnerHtml.AppendHtml(tabItem.Title);
+                tabsContent.InnerHtml.AppendHtml(tabItem.Content);
+            }
+
+            //append data
+            output.Content.AppendHtml(tabsTitle.RenderHtmlContent());
+            output.Content.AppendHtml(tabsContent.RenderHtmlContent());
 
             bool.TryParse(RenderSelectedTabInput, out bool renderSelectedTabInput);
             if (string.IsNullOrEmpty(RenderSelectedTabInput) || renderSelectedTabInput)
@@ -87,52 +120,34 @@ namespace Nop.Web.Framework.TagHelpers.Admin
                 }
             }
 
-            //tag details
             output.TagName = "div";
-            output.TagMode = TagMode.StartTagAndEndTag;
-        }
-    }
 
-    [HtmlTargetElement("nop-tab-header", ParentTag = "nop-tabs")]
-    public class NopTabHeaderHelper : TagHelper
-    {
-        public override void Process(TagHelperContext context, TagHelperOutput output)
-        {
-            if (context == null)
-            {
-                throw new ArgumentNullException(nameof(context));
-            }
-
-            if (output == null)
-            {
-                throw new ArgumentNullException(nameof(output));
-            }
-
-            var tabsClass = "nav nav-tabs";
+            var itemClass = "nav-tabs-custom";
             //merge classes
             var classValue = output.Attributes.ContainsName("class")
-                ? $"{output.Attributes["class"].Value} {tabsClass}"
-                : tabsClass;
+                ? $"{output.Attributes["class"].Value} {itemClass}"
+                : itemClass;
             output.Attributes.SetAttribute("class", classValue);
-
-            output.TagName = "ul";
-            output.TagMode = TagMode.StartTagAndEndTag;
         }
     }
 
-    [HtmlTargetElement("nop-tab-header-item", ParentTag = "nop-tab-header", Attributes = NameAttributeName)]
-    public class NopTabHeaderItemTagHelper : TagHelper
+    /// <summary>
+    /// "nop-tab tag helper
+    /// </summary>
+    [HtmlTargetElement("nop-tab", ParentTag = "nop-tabs", Attributes = NameAttributeName)]
+    public class NopTabTagHelper : TagHelper
     {
         private const string NameAttributeName = "asp-name";
+        private const string TitleAttributeName = "asp-title";
         private const string DefaultAttributeName = "asp-default";
 
         private readonly IHtmlHelper _htmlHelper;
 
         /// <summary>
-        /// Name of the tab
+        /// Title of the tab
         /// </summary>
-        [HtmlAttributeName(NameAttributeName)]
-        public string Name { set; get; }
+        [HtmlAttributeName(TitleAttributeName)]
+        public string Title { set; get; }
 
         /// <summary>
         /// Indicates whether the tab is default
@@ -141,17 +156,32 @@ namespace Nop.Web.Framework.TagHelpers.Admin
         public string IsDefault { set; get; }
 
         /// <summary>
+        /// Name of the tab
+        /// </summary>
+        [HtmlAttributeName(NameAttributeName)]
+        public string Name { set; get; }
+
+        /// <summary>
         /// ViewContext
         /// </summary>
         [HtmlAttributeNotBound]
         [ViewContext]
         public ViewContext ViewContext { get; set; }
 
-        public NopTabHeaderItemTagHelper(IHtmlHelper htmlHelper)
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="htmlHelper">HTML helper</param>
+        public NopTabTagHelper(IHtmlHelper htmlHelper)
         {
             _htmlHelper = htmlHelper;
         }
 
+        /// <summary>
+        /// Process
+        /// </summary>
+        /// <param name="context">Context</param>
+        /// <param name="output">Output</param>
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
             if (context == null)
@@ -181,16 +211,8 @@ namespace Nop.Web.Framework.TagHelpers.Admin
             if (string.IsNullOrEmpty(tabNameToSelect) && isDefaultTab)
                 tabNameToSelect = Name;
 
-            var itemClass = string.Empty;
-            if (tabNameToSelect == Name)
-                itemClass = "active";
-
-            //merge classes
-            var classValue = output.Attributes.ContainsName("class")
-                ? $"{output.Attributes["class"].Value} {itemClass}"
-                : itemClass;
-            output.Attributes.SetAttribute("class", classValue);
-
+            //tab title
+            var tabTitle = new TagBuilder("li");
             var a = new TagBuilder("a")
             {
                 Attributes =
@@ -200,117 +222,59 @@ namespace Nop.Web.Framework.TagHelpers.Admin
                     new KeyValuePair<string, string>("data-toggle", "tab"),
                 }
             };
+            a.InnerHtml.AppendHtml(Title);
 
-            var content = output.GetChildContentAsync().Result;
-            a.InnerHtml.AppendHtml(content.GetContent());
-
-            output.TagName = "li";
-            output.TagMode = TagMode.StartTagAndEndTag;
-
-            output.Content.SetHtmlContent(a);
-        }
-    }
-
-    [HtmlTargetElement("nop-tab-content", ParentTag = "nop-tabs")]
-    public class NopTabContentHelper : TagHelper
-    {
-        public override void Process(TagHelperContext context, TagHelperOutput output)
-        {
-            if (context == null)
-            {
-                throw new ArgumentNullException(nameof(context));
-            }
-
-            if (output == null)
-            {
-                throw new ArgumentNullException(nameof(output));
-            }
-
-            var tabsClass = "tab-content";
             //merge classes
-            var classValue = output.Attributes.ContainsName("class")
-                ? $"{output.Attributes["class"].Value} {tabsClass}"
-                : tabsClass;
-            output.Attributes.SetAttribute("class", classValue);
+            if (context.AllAttributes.ContainsName("class"))
+                tabTitle.Attributes.Add("class", context.AllAttributes["class"].Value.ToString());
+            tabTitle.InnerHtml.AppendHtml(a.RenderHtmlContent());
 
-            output.TagName = "div";
-            output.TagMode = TagMode.StartTagAndEndTag;
-        }
-    }
+            //tab content
+            var tabContent = new TagBuilder("div");
+            tabContent.AddCssClass("tab-pane");
+            tabContent.Attributes.Add("id", Name);
+            tabContent.InnerHtml.AppendHtml(output.GetChildContentAsync().Result.GetContent());
 
-    [HtmlTargetElement("nop-tab-content-item", ParentTag = "nop-tab-content", Attributes = NameAttributeName)]
-    public class NopTabContentItemTagHelper : TagHelper
-    {
-        private const string NameAttributeName = "asp-name";
-        private const string DefaultAttributeName = "asp-default";
-
-        private readonly IHtmlHelper _htmlHelper;
-
-        /// <summary>
-        /// Name of the tab
-        /// </summary>
-        [HtmlAttributeName(NameAttributeName)]
-        public string Name { set; get; }
-
-        /// <summary>
-        /// Indicates whether the tab is default
-        /// </summary>
-        [HtmlAttributeName(DefaultAttributeName)]
-        public string IsDefault { set; get; }
-
-        /// <summary>
-        /// ViewContext
-        /// </summary>
-        [HtmlAttributeNotBound]
-        [ViewContext]
-        public ViewContext ViewContext { get; set; }
-
-        public NopTabContentItemTagHelper(IHtmlHelper htmlHelper)
-        {
-            _htmlHelper = htmlHelper;
-        }
-
-        public override void Process(TagHelperContext context, TagHelperOutput output)
-        {
-            if (context == null)
-            {
-                throw new ArgumentNullException(nameof(context));
-            }
-
-            if (output == null)
-            {
-                throw new ArgumentNullException(nameof(output));
-            }
-
-            //contextualize IHtmlHelper
-            var viewContextAware = _htmlHelper as IViewContextAware;
-            viewContextAware?.Contextualize(ViewContext);
-
-            bool.TryParse(IsDefault, out bool isDefaultTab);
-
-            //get name of the tab should be selected
-            var tabNameToSelect = context.Items.ContainsKey("tabNameToSelect")
-                ? context.Items["tabNameToSelect"].ToString()
-                : "";
-
-            if (string.IsNullOrEmpty(tabNameToSelect))
-                tabNameToSelect = _htmlHelper.GetSelectedTabName();
-
-            if (string.IsNullOrEmpty(tabNameToSelect) && isDefaultTab)
-                tabNameToSelect = Name;
-
-            var itemClass = "tab-pane";
+            //active class
+            var itemClass = string.Empty;
             if (tabNameToSelect == Name)
-                itemClass += " active";
+            {
+                tabTitle.AddCssClass("active");
+                tabContent.AddCssClass("active");
+            }
 
-            //merge classes
-            var classValue = output.Attributes.ContainsName("class")
-                ? $"{output.Attributes["class"].Value} {itemClass}"
-                : itemClass;
-            output.Attributes.SetAttribute("class", classValue);
+            //add to context
+            var tabContext = (List<NopTabContextItem>)context.Items[typeof(NopTabsTagHelper)];
+            tabContext.Add(new NopTabContextItem()
+            {
+                Title = tabTitle.RenderHtmlContent(),
+                Content = tabContent.RenderHtmlContent(),
+                IsDefault = isDefaultTab
+            });
 
-            output.TagName = "div";
-            output.Attributes.SetAttribute("id", Name);
+            //generate nothing
+            output.SuppressOutput();
         }
+    }
+
+    /// <summary>
+    /// Tab context item
+    /// </summary>
+    public class NopTabContextItem
+    {
+        /// <summary>
+        /// Title
+        /// </summary>
+        public string Title { set; get; }
+
+        /// <summary>
+        /// Content
+        /// </summary>
+        public string Content { set; get; }
+
+        /// <summary>
+        /// Is default tab
+        /// </summary>
+        public bool IsDefault { set; get; }
     }
 }

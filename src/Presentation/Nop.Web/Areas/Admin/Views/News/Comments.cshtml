@@ -1,10 +1,6 @@
-﻿@model NewsCommentListModel
-@inject AdminAreaSettings adminAreaSettings
+@model NewsCommentSearchModel
 
 @{
-    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
-    var gridPageSizes = adminAreaSettings.GridPageSizes;
-
     int? filterByNewsItemId = ViewBag.FilterByNewsItemId;
 
     //page title
@@ -31,7 +27,7 @@
             <i class="fa fa-trash-o"></i>
             @T("Admin.ContentManagement.News.Comments.DeleteSelected")
         </button>
-        @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_news_comment_list_buttons" })
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.NewsCommentListButtons })
     </div>
 </div>
 
@@ -101,7 +97,16 @@
                                             url: "@Url.Action("Comments", "News", new { filterByNewsItemId = filterByNewsItemId.HasValue ? filterByNewsItemId : null })",
                                             type: "POST",
                                             dataType: "json",
-                                            data: additionalData
+                                            data: function() {
+                                                var data = {
+                                                    CreatedOnFrom: $('#@Html.IdFor(model => model.CreatedOnFrom)').val(),
+                                                    CreatedOnTo: $('#@Html.IdFor(model => model.CreatedOnTo)').val(),
+                                                    SearchText: $('#@Html.IdFor(model => model.SearchText)').val(),
+                                                    SearchApprovedId: $('#SearchApprovedId').val()
+                                                };
+                                                addAntiForgeryToken(data);
+                                                return data;
+                                            }
                                         },
                                         update: {
                                             url: "@Html.Raw(Url.Action("CommentUpdate", "News"))",
@@ -146,14 +151,14 @@
                                         // Cancel the changes
                                         this.cancelChanges();
                                     },
-                                    pageSize: @(defaultGridPageSize),
+                                    pageSize: @(Model.PageSize),
                                     serverPaging: true,
                                     serverFiltering: true,
                                     serverSorting: true
                                 },
                                 pageable: {
                                     refresh: true,
-                                    pageSizes: [@(gridPageSizes)],
+                                    pageSizes: [@(Model.AvailablePageSizes)],
                                     @await Html.PartialAsync("_GridPagerMessages")
                                 },
                                 editable: {
@@ -226,7 +231,7 @@
                         });
                     </script>
 
-                    <script type="text/javascript">
+                    <script>
                         var selectedIds = [];
 
                         $(document).ready(function() {
@@ -252,21 +257,23 @@
                                 };
                                 addAntiForgeryToken(postData);
 
-                                $.ajax({
-                                    cache: false,
-                                    type: "POST",
-                                    url: "@(Url.Action("DeleteSelectedComments", "News"))",
-                                    data: postData,
-                                    complete: function(data) {
-                                        //reload grid
-                                        var grid = $('#comments-grid').data('kendoGrid');
-                                        grid.dataSource.read();
-                                    },
-                                    error: function(xhr, ajaxOptions, thrownError) {
-                                        alert(thrownError);
-                                    },
-                                    traditional: true
-                                });
+                                if (confirm('@T("Admin.Common.DeleteConfirmation.Selected")')) {
+                                    $.ajax({
+                                        cache: false,
+                                        type: "POST",
+                                        url: "@(Url.Action("DeleteSelectedComments", "News"))",
+                                        data: postData,
+                                        complete: function(data) {
+                                            //reload grid
+                                            var grid = $('#comments-grid').data('kendoGrid');
+                                            grid.dataSource.read();
+                                        },
+                                        error: function(xhr, ajaxOptions, thrownError) {
+                                            alert(thrownError);
+                                        },
+                                        traditional: true
+                                    });
+                                }
                                 return false;
                             });
                             
@@ -333,20 +340,17 @@
                             //wire up checkboxes.
                             $('#comments-grid').on('change', 'input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]', function(e) {
                                 var $check = $(this);
+                                var checked = jQuery.inArray($check.val(), selectedIds);
                                 if ($check.is(":checked") == true) {
-                                    var checked = jQuery.inArray($check.val(), selectedIds);
                                     if (checked == -1) {
                                         //add id to selectedIds.
                                         selectedIds.push($check.val());
                                     }
-                                } else {
-                                    var checked = jQuery.inArray($check.val(), selectedIds);
-                                    if (checked > -1) {
-                                        //remove id from selectedIds.
-                                        selectedIds = $.grep(selectedIds, function(item, index) {
-                                            return item != $check.val();
-                                        });
-                                    }
+                                } else if (checked > -1) {
+                                    //remove id from selectedIds.
+                                    selectedIds = $.grep(selectedIds, function (item, index) {
+                                        return item != $check.val();
+                                    });
                                 }
                                 updateMasterCheckbox();
                             });
@@ -367,17 +371,6 @@
                             var numChkBoxes = $('#comments-grid input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]').length;
                             var numChkBoxesChecked = $('#comments-grid input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]:checked').length;
                             $('#mastercheckbox').attr('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
-                        }
-
-                        function additionalData() {
-                            var data = {
-                                CreatedOnFrom: $('#@Html.IdFor(model => model.CreatedOnFrom)').val(),
-                                CreatedOnTo: $('#@Html.IdFor(model => model.CreatedOnTo)').val(),
-                                SearchText: $('#@Html.IdFor(model => model.SearchText)').val(),
-                                SearchApprovedId: $('#SearchApprovedId').val()
-                            };
-                            addAntiForgeryToken(data);
-                            return data;
                         }
                     </script>
                 </div>

@@ -17,13 +17,18 @@ namespace Nop.Core.Caching
 
         private readonly ICacheManager _perRequestCacheManager;
         private readonly IRedisConnectionWrapper _connectionWrapper;
-
         private readonly IDatabase _db;
 
         #endregion
 
         #region Ctor
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="perRequestCacheManager">Cache manager</param>
+        /// <param name="connectionWrapper">ConnectionW wrapper</param>
+        /// <param name="config">Config</param>
         public RedisCacheManager(ICacheManager perRequestCacheManager,
             IRedisConnectionWrapper connectionWrapper, 
             NopConfig config)
@@ -117,7 +122,7 @@ namespace Nop.Core.Caching
         protected virtual async Task RemoveAsync(string key)
         {
             //we should always persist the data protection key list
-            if (key.Equals(_connectionWrapper.DataProtectionKeysName, StringComparison.OrdinalIgnoreCase))
+            if (key.Equals(NopCachingDefaults.RedisDataProtectionKey, StringComparison.OrdinalIgnoreCase))
                 return;
 
             //remove item from caches
@@ -139,7 +144,7 @@ namespace Nop.Core.Caching
                 var keys = server.Keys(database: _db.Database, pattern: $"*{pattern}*");
 
                 //we should always persist the data protection key list
-                keys = keys.Where(key => !key.ToString().Equals(_connectionWrapper.DataProtectionKeysName, StringComparison.OrdinalIgnoreCase));
+                keys = keys.Where(key => !key.ToString().Equals(NopCachingDefaults.RedisDataProtectionKey, StringComparison.OrdinalIgnoreCase));
 
                 await _db.KeyDeleteAsync(keys.ToArray());
             }
@@ -163,7 +168,7 @@ namespace Nop.Core.Caching
                 var keys = server.Keys(database: _db.Database);
 
                 //we should always persist the data protection key list
-                keys = keys.Where(key => !key.ToString().Equals(_connectionWrapper.DataProtectionKeysName, StringComparison.OrdinalIgnoreCase));
+                keys = keys.Where(key => !key.ToString().Equals(NopCachingDefaults.RedisDataProtectionKey, StringComparison.OrdinalIgnoreCase));
 
                 await _db.KeyDeleteAsync(keys.ToArray());
             }

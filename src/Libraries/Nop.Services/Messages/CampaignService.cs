@@ -9,6 +9,9 @@ using Nop.Services.Events;
 
 namespace Nop.Services.Messages
 {
+    /// <summary>
+    /// Campaign service
+    /// </summary>
     public partial class CampaignService : ICampaignService
     {
         private readonly IRepository<Campaign> _campaignRepository;
@@ -30,7 +33,7 @@ namespace Nop.Services.Messages
         /// <param name="queuedEmailService">Queued email service</param>
         /// <param name="customerService">Customer service</param>
         /// <param name="storeContext">Store context</param>
-        /// <param name="eventPublisher">Event published</param>
+        /// <param name="eventPublisher">Event publisher</param>
         public CampaignService(IRepository<Campaign> campaignRepository,
             IEmailSender emailSender, IMessageTokenProvider messageTokenProvider,
             ITokenizer tokenizer, IQueuedEmailService queuedEmailService,
@@ -144,7 +147,7 @@ namespace Nop.Services.Messages
             if (emailAccount == null)
                 throw new ArgumentNullException(nameof(emailAccount));
 
-            int totalEmailsSent = 0;
+            var totalEmailsSent = 0;
 
             foreach (var subscription in subscriptions)
             {
@@ -159,8 +162,8 @@ namespace Nop.Services.Messages
                 if (customer != null)
                     _messageTokenProvider.AddCustomerTokens(tokens, customer);
 
-                string subject = _tokenizer.Replace(campaign.Subject, tokens, false);
-                string body = _tokenizer.Replace(campaign.Body, tokens, true);
+                var subject = _tokenizer.Replace(campaign.Subject, tokens, false);
+                var body = _tokenizer.Replace(campaign.Body, tokens, true);
 
                 var email = new QueuedEmail
                 {
@@ -200,8 +203,8 @@ namespace Nop.Services.Messages
             if (customer != null)
                 _messageTokenProvider.AddCustomerTokens(tokens, customer);
             
-            string subject = _tokenizer.Replace(campaign.Subject, tokens, false);
-            string body = _tokenizer.Replace(campaign.Body, tokens, true);
+            var subject = _tokenizer.Replace(campaign.Subject, tokens, false);
+            var body = _tokenizer.Replace(campaign.Body, tokens, true);
 
             _emailSender.SendEmail(emailAccount, subject, body, emailAccount.Email, emailAccount.DisplayName, email, null);
         }

@@ -51,7 +51,7 @@ namespace Nop.Plugin.Shipping.UPS.Domain
         public static string GetServiceId(string service)
         {
             var serviceId = "";
-            if (String.IsNullOrEmpty(service))
+            if (string.IsNullOrEmpty(service))
                 return serviceId;
 
             if (_services.ContainsKey(service))

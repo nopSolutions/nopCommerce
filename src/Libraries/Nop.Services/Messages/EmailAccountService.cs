@@ -8,6 +8,9 @@ using Nop.Services.Events;
 
 namespace Nop.Services.Messages
 {
+    /// <summary>
+    /// Email account service
+    /// </summary>
     public partial class EmailAccountService : IEmailAccountService
     {
         private readonly IRepository<EmailAccount> _emailAccountRepository;
@@ -17,7 +20,7 @@ namespace Nop.Services.Messages
         /// Ctor
         /// </summary>
         /// <param name="emailAccountRepository">Email account repository</param>
-        /// <param name="eventPublisher">Event published</param>
+        /// <param name="eventPublisher">Event publisher</param>
         public EmailAccountService(IRepository<EmailAccount> emailAccountRepository,
             IEventPublisher eventPublisher)
         {

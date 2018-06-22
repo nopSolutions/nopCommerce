@@ -18,6 +18,7 @@ namespace Nop.Services.Orders
         #region Fields
         
         private readonly IRepository<GiftCard> _giftCardRepository;
+        private readonly IRepository<GiftCardUsageHistory> _giftCardUsageHistoryRepository;
         private readonly IEventPublisher _eventPublisher;
 
         #endregion
@@ -28,11 +29,14 @@ namespace Nop.Services.Orders
         /// Ctor
         /// </summary>
         /// <param name="giftCardRepository">Gift card context</param>
-        /// <param name="eventPublisher">Event published</param>
-        public GiftCardService(IRepository<GiftCard> giftCardRepository, IEventPublisher eventPublisher)
+        /// <param name="eventPublisher">Event publisher</param>
+        /// <param name="giftCardUsageHistoryRepository">Gift card usage history repository</param>
+        public GiftCardService(IRepository<GiftCard> giftCardRepository, IEventPublisher eventPublisher,
+            IRepository<GiftCardUsageHistory> giftCardUsageHistoryRepository)
         {
             _giftCardRepository = giftCardRepository;
             _eventPublisher = eventPublisher;
+            _giftCardUsageHistoryRepository = giftCardUsageHistoryRepository;
         }
 
         #endregion
@@ -97,9 +101,9 @@ namespace Nop.Services.Orders
                 query = query.Where(gc => createdToUtc.Value >= gc.CreatedOnUtc);
             if (isGiftCardActivated.HasValue)
                 query = query.Where(gc => gc.IsGiftCardActivated == isGiftCardActivated.Value);
-            if (!String.IsNullOrEmpty(giftCardCouponCode))
+            if (!string.IsNullOrEmpty(giftCardCouponCode))
                 query = query.Where(gc => gc.GiftCardCouponCode == giftCardCouponCode);
-            if (!String.IsNullOrWhiteSpace(recipientName))
+            if (!string.IsNullOrWhiteSpace(recipientName))
                 query = query.Where(c => c.RecipientName.Contains(recipientName));
             query = query.OrderByDescending(gc => gc.CreatedOnUtc);
 
@@ -166,7 +170,7 @@ namespace Nop.Services.Orders
             if (customer == null)
                 return result;
 
-            string[] couponCodes = customer.ParseAppliedGiftCardCouponCodes();
+            var couponCodes = customer.ParseAppliedGiftCardCouponCodes();
             foreach (var couponCode in couponCodes)
             {
                 var giftCards = GetAllGiftCards(isGiftCardActivated: true, giftCardCouponCode: couponCode);
@@ -186,11 +190,27 @@ namespace Nop.Services.Orders
         /// <returns>Result</returns>
         public virtual string GenerateGiftCardCode()
         {
-            int length = 13;
-            string result = Guid.NewGuid().ToString();
+            var length = 13;
+            var result = Guid.NewGuid().ToString();
             if (result.Length > length)
                 result = result.Substring(0, length);
             return result;
+        }
+        
+        /// <summary>
+        /// Delete gift card usage history
+        /// </summary>
+        /// <param name="order">Order</param>
+        public virtual void DeleteGiftCardUsageHistory(Order order)
+        {
+            var giftCardUsageHistory = order.GiftCardUsageHistory.ToList();
+            var giftCards = giftCardUsageHistory.Select(gcuh => gcuh.GiftCard).ToList();
+            _giftCardUsageHistoryRepository.Delete(giftCardUsageHistory);
+
+            foreach (var giftCard in giftCards)
+            {
+                UpdateGiftCard(giftCard);
+            }
         }
 
         #endregion

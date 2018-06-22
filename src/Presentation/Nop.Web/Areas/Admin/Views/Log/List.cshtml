@@ -1,9 +1,6 @@
-﻿@model LogListModel
-@inject AdminAreaSettings adminAreaSettings
-@{
-    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
-    var gridPageSizes = adminAreaSettings.GridPageSizes;
+@model LogSearchModel
 
+@{
     //page title
     ViewBag.Title = T("Admin.System.Log").Text;
     //active menu item (system name)
@@ -26,7 +23,7 @@
                 @T("Admin.System.Log.ClearLog")
             </button>
             <nop-action-confirmation asp-button-id="clearall" />
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_log_list_buttons" })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.LogListButtons })
         </div>
     </div>
 
@@ -96,7 +93,16 @@
                                                 url: "@Html.Raw(Url.Action("LogList", "Log"))",
                                                 type: "POST",
                                                 dataType: "json",
-                                                data: additionalData
+                                                data: function() {
+                                                    var data = {
+                                                        CreatedOnFrom: $('#@Html.IdFor(model => model.CreatedOnFrom)').val(),
+                                                        CreatedOnTo: $('#@Html.IdFor(model => model.CreatedOnTo)').val(),
+                                                        Message: $('#@Html.IdFor(model => model.Message)').val(),
+                                                        LogLevelId: $('#@Html.IdFor(model => model.LogLevelId)').val()
+                                                    };
+                                                    addAntiForgeryToken(data);
+                                                    return data;
+                                                }
                                             }
                                         },
                                         schema: {
@@ -109,14 +115,14 @@
                                             // Cancel the changes
                                             this.cancelChanges();
                                         },
-                                        pageSize: @(defaultGridPageSize),
+                                        pageSize: @(Model.PageSize),
                                         serverPaging: true,
                                         serverFiltering: true,
                                         serverSorting: true
                                     },
                                     pageable: {
                                         refresh: true,
-                                        pageSizes: [@(gridPageSizes)],
+                                        pageSizes: [@(Model.AvailablePageSizes)],
                                         @await Html.PartialAsync("_GridPagerMessages")
                                     },
                                     scrollable: false,
@@ -135,7 +141,8 @@
                                         width: 100
                                     }, {
                                         field: "ShortMessage",
-                                        title: "@T("Admin.System.Log.Fields.ShortMessage")"
+                                        title: "@T("Admin.System.Log.Fields.ShortMessage")",
+                                        encoded: false
                                     }, {
                                         field: "CreatedOn",
                                         title: "@T("Admin.System.Log.Fields.CreatedOn")",
@@ -155,7 +162,7 @@
                             });
                         </script>
 
-                        <script type="text/javascript">
+                        <script>
                             var selectedIds = [];
 
                             $(document).ready(function() {
@@ -187,25 +194,27 @@
                                     };
                                     addAntiForgeryToken(postData);
 
-                                    $.ajax({
-                                        cache: false,
-                                        type: "POST",
-                                        url: "@(Url.Action("DeleteSelected", "Log"))",
-                                        data: postData,
-                                        complete: function(data) {
-                                            //reload grid
-                                            var grid = $('#log-grid').data('kendoGrid');
-                                            grid.dataSource.page(1); //new search. Set page size to 1
-                                            //grid.dataSource.read(); we already loaded the grid above using "page" function
-                                            //clear selected checkboxes
-                                            $('.checkboxGroups').attr('checked', false).change();
-                                            selectedIds = [];
-                                        },
-                                        error: function(xhr, ajaxOptions, thrownError) {
-                                            alert(thrownError);
-                                        },
-                                        traditional: true
-                                    });
+                                    if (confirm('@T("Admin.Common.DeleteConfirmation.Selected")')) {
+                                        $.ajax({
+                                            cache: false,
+                                            type: "POST",
+                                            url: "@(Url.Action("DeleteSelected", "Log"))",
+                                            data: postData,
+                                            complete: function(data) {
+                                                //reload grid
+                                                var grid = $('#log-grid').data('kendoGrid');
+                                                grid.dataSource.page(1); //new search. Set page size to 1
+                                                //grid.dataSource.read(); we already loaded the grid above using "page" function
+                                                //clear selected checkboxes
+                                                $('.checkboxGroups').attr('checked', false).change();
+                                                selectedIds = [];
+                                            },
+                                            error: function(xhr, ajaxOptions, thrownError) {
+                                                alert(thrownError);
+                                            },
+                                            traditional: true
+                                        });
+                                    }
                                     return false;
                                 });
 
@@ -216,35 +225,21 @@
                                 //wire up checkboxes.
                                 $('#log-grid').on('change', 'input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]', function(e) {
                                     var $check = $(this);
+                                    var checked = jQuery.inArray($check.val(), selectedIds);
                                     if ($check.is(":checked") == true) {
-                                        var checked = jQuery.inArray($check.val(), selectedIds);
                                         if (checked == -1) {
                                             //add id to selectedIds.
                                             selectedIds.push($check.val());
                                         }
-                                    } else {
-                                        var checked = jQuery.inArray($check.val(), selectedIds);
-                                        if (checked > -1) {
-                                            //remove id from selectedIds.
-                                            selectedIds = $.grep(selectedIds, function(item, index) {
-                                                return item != $check.val();
-                                            });
-                                        }
+                                    } else if (checked > -1) {
+                                        //remove id from selectedIds.
+                                        selectedIds = $.grep(selectedIds, function (item, index) {
+                                            return item != $check.val();
+                                        });
                                     }
                                     updateMasterCheckbox();
                                 });
                             });
-
-                            function additionalData() {
-                                var data = {
-                                    CreatedOnFrom: $('#@Html.IdFor(model => model.CreatedOnFrom)').val(),
-                                    CreatedOnTo: $('#@Html.IdFor(model => model.CreatedOnTo)').val(),
-                                    Message: $('#@Html.IdFor(model => model.Message)').val(),
-                                    LogLevelId: $('#@Html.IdFor(model => model.LogLevelId)').val()
-                                };
-                                addAntiForgeryToken(data);
-                                return data;
-                            }
 
                             function onDataBound(e) {
                                 $('#log-grid input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]').each(function() {

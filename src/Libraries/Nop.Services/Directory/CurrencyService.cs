@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
@@ -7,8 +6,8 @@ using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
-using Nop.Core.Plugins;
 using Nop.Services.Events;
+using Nop.Services.Plugins;
 using Nop.Services.Stores;
 
 namespace Nop.Services.Directory
@@ -18,29 +17,6 @@ namespace Nop.Services.Directory
     /// </summary>
     public partial class CurrencyService : ICurrencyService
     {
-        #region Constants
-
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : currency ID
-        /// </remarks>
-        private const string CURRENCIES_BY_ID_KEY = "Nop.currency.id-{0}";
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : show hidden records?
-        /// </remarks>
-        private const string CURRENCIES_ALL_KEY = "Nop.currency.all-{0}";
-        /// <summary>
-        /// Key pattern to clear cache
-        /// </summary>
-        private const string CURRENCIES_PATTERN_KEY = "Nop.currency.";
-
-        #endregion
-
         #region Fields
 
         private readonly IRepository<Currency> _currencyRepository;
@@ -62,7 +38,7 @@ namespace Nop.Services.Directory
         /// <param name="storeMappingService">Store mapping service</param>
         /// <param name="currencySettings">Currency settings</param>
         /// <param name="pluginFinder">Plugin finder</param>
-        /// <param name="eventPublisher">Event published</param>
+        /// <param name="eventPublisher">Event publisher</param>
         public CurrencyService(IStaticCacheManager cacheManager,
             IRepository<Currency> currencyRepository,
             IStoreMappingService storeMappingService,
@@ -113,7 +89,7 @@ namespace Nop.Services.Directory
 
             _currencyRepository.Delete(currency);
 
-            _cacheManager.RemoveByPattern(CURRENCIES_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopDirectoryDefaults.CurrenciesPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityDeleted(currency);
@@ -138,7 +114,7 @@ namespace Nop.Services.Directory
             if (loadCacheableCopy)
             {
                 //cacheable copy
-                string key = string.Format(CURRENCIES_BY_ID_KEY, currencyId);
+                var key = string.Format(NopDirectoryDefaults.CurrenciesByIdCacheKey, currencyId);
                 return _cacheManager.Get(key, () =>
                 {
                     var currency = loadCurrencyFunc();
@@ -147,10 +123,7 @@ namespace Nop.Services.Directory
                     return new CurrencyForCaching(currency);
                 });
             }
-            else
-            {
-                return loadCurrencyFunc();
-            }
+            return loadCurrencyFunc();
         }
 
         /// <summary>
@@ -161,7 +134,7 @@ namespace Nop.Services.Directory
         /// <returns>Currency</returns>
         public virtual Currency GetCurrencyByCode(string currencyCode, bool loadCacheableCopy = true)
         {
-            if (String.IsNullOrEmpty(currencyCode))
+            if (string.IsNullOrEmpty(currencyCode))
                 return null;
             return GetAllCurrencies(true, loadCacheableCopy: loadCacheableCopy)
                 .FirstOrDefault(c => c.CurrencyCode.ToLower() == currencyCode.ToLower());
@@ -189,7 +162,7 @@ namespace Nop.Services.Directory
             if (loadCacheableCopy)
             {
                 //cacheable copy
-                string key = string.Format(CURRENCIES_ALL_KEY, showHidden);
+                var key = string.Format(NopDirectoryDefaults.CurrenciesAllCacheKey, showHidden);
                 currencies = _cacheManager.Get(key, () =>
                 {
                     var result = new List<Currency>();
@@ -227,7 +200,7 @@ namespace Nop.Services.Directory
 
             _currencyRepository.Insert(currency);
 
-            _cacheManager.RemoveByPattern(CURRENCIES_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopDirectoryDefaults.CurrenciesPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(currency);
@@ -247,7 +220,7 @@ namespace Nop.Services.Directory
 
             _currencyRepository.Update(currency);
 
-            _cacheManager.RemoveByPattern(CURRENCIES_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopDirectoryDefaults.CurrenciesPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(currency);
@@ -285,7 +258,7 @@ namespace Nop.Services.Directory
             if (targetCurrencyCode == null)
                 throw new ArgumentNullException(nameof(targetCurrencyCode));
 
-            decimal result = amount;
+            var result = amount;
             if (sourceCurrencyCode.Id == targetCurrencyCode.Id)
                 return result;
             if (result != decimal.Zero && sourceCurrencyCode.Id != targetCurrencyCode.Id)
@@ -311,10 +284,10 @@ namespace Nop.Services.Directory
             if (primaryExchangeRateCurrency == null)
                 throw new Exception("Primary exchange rate currency cannot be loaded");
 
-            decimal result = amount; 
+            var result = amount; 
             if (result != decimal.Zero && sourceCurrencyCode.Id != primaryExchangeRateCurrency.Id)
             {
-                decimal exchangeRate = sourceCurrencyCode.Rate;
+                var exchangeRate = sourceCurrencyCode.Rate;
                 if (exchangeRate == decimal.Zero)
                     throw new NopException($"Exchange rate not found for currency [{sourceCurrencyCode.Name}]");
                 result = result / exchangeRate;
@@ -337,10 +310,10 @@ namespace Nop.Services.Directory
             if (primaryExchangeRateCurrency == null)
                 throw new Exception("Primary exchange rate currency cannot be loaded");
 
-            decimal result = amount;
+            var result = amount;
             if (result != decimal.Zero && targetCurrencyCode.Id != primaryExchangeRateCurrency.Id)
             {
-                decimal exchangeRate = targetCurrencyCode.Rate;
+                var exchangeRate = targetCurrencyCode.Rate;
                 if (exchangeRate == decimal.Zero)
                     throw new NopException($"Exchange rate not found for currency [{targetCurrencyCode.Name}]");
                 result = result * exchangeRate;

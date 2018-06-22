@@ -1,46 +1,51 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
-using Nop.Web.Areas.Admin.Models.Customers;
-using Nop.Web.Areas.Admin.Models.Security;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Security;
 using Nop.Services.Customers;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Security;
+using Nop.Web.Areas.Admin.Factories;
+using Nop.Web.Areas.Admin.Models.Security;
 
 namespace Nop.Web.Areas.Admin.Controllers
 {
     public partial class SecurityController : BaseAdminController
-	{
-		#region Fields
+    {
+        #region Fields
 
-        private readonly ILogger _logger;
-        private readonly IWorkContext _workContext;
-        private readonly IPermissionService _permissionService;
         private readonly ICustomerService _customerService;
         private readonly ILocalizationService _localizationService;
+        private readonly ILogger _logger;
+        private readonly IPermissionService _permissionService;
+        private readonly ISecurityModelFactory _securityModelFactory;
+        private readonly IWorkContext _workContext;
 
-		#endregion
+        #endregion
 
-		#region Constructors
+        #region Ctor
 
-        public SecurityController(ILogger logger, IWorkContext workContext,
+        public SecurityController(ICustomerService customerService,
+            ILocalizationService localizationService,
+            ILogger logger,
             IPermissionService permissionService,
-            ICustomerService customerService, ILocalizationService localizationService)
-		{
-            this._logger = logger;
-            this._workContext = workContext;
-            this._permissionService = permissionService;
+            ISecurityModelFactory securityModelFactory,
+            IWorkContext workContext)
+        {
             this._customerService = customerService;
             this._localizationService = localizationService;
-		}
+            this._logger = logger;
+            this._permissionService = permissionService;
+            this._securityModelFactory = securityModelFactory;
+            this._workContext = workContext;
+        }
 
-		#endregion 
+        #endregion
 
         #region Methods
 
@@ -55,7 +60,6 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             _logger.Information($"Access denied to user #{currentCustomer.Email} '{currentCustomer.Email}' on {pageUrl}");
 
-
             return View();
         }
 
@@ -64,41 +68,14 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAcl))
                 return AccessDeniedView();
 
-            var model = new PermissionMappingModel();
-
-            var permissionRecords = _permissionService.GetAllPermissionRecords();
-            var customerRoles = _customerService.GetAllCustomerRoles(true);
-            foreach (var pr in permissionRecords)
-            {
-                model.AvailablePermissions.Add(new PermissionRecordModel
-                {
-                    //Name = pr.Name,
-                    Name = pr.GetLocalizedPermissionName(_localizationService, _workContext),
-                    SystemName = pr.SystemName
-                });
-            }
-            foreach (var cr in customerRoles)
-            {
-                model.AvailableCustomerRoles.Add(new CustomerRoleModel
-                {
-                    Id = cr.Id,
-                    Name = cr.Name
-                });
-            }
-            foreach (var pr in permissionRecords)
-                foreach (var cr in customerRoles)
-                {
-                    bool allowed = pr.CustomerRoles.Count(x => x.Id == cr.Id) > 0;
-                    if (!model.Allowed.ContainsKey(pr.SystemName))
-                        model.Allowed[pr.SystemName] = new Dictionary<int, bool>();
-                    model.Allowed[pr.SystemName][cr.Id] = allowed;
-                }
+            //prepare model
+            var model = _securityModelFactory.PreparePermissionMappingModel(new PermissionMappingModel());
 
             return View(model);
         }
 
         [HttpPost, ActionName("Permissions")]
-        public virtual IActionResult PermissionsSave(IFormCollection form)
+        public virtual IActionResult PermissionsSave(PermissionMappingModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAcl))
                 return AccessDeniedView();
@@ -106,38 +83,38 @@ namespace Nop.Web.Areas.Admin.Controllers
             var permissionRecords = _permissionService.GetAllPermissionRecords();
             var customerRoles = _customerService.GetAllCustomerRoles(true);
 
-
             foreach (var cr in customerRoles)
             {
-                string formKey = "allow_" + cr.Id;
-                var permissionRecordSystemNamesToRestrict = !StringValues.IsNullOrEmpty(form[formKey])
-                    ? form[formKey].ToString().Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries).ToList()
+                var formKey = "allow_" + cr.Id;
+                var permissionRecordSystemNamesToRestrict = !StringValues.IsNullOrEmpty(model.Form[formKey])
+                    ? model.Form[formKey].ToString().Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList()
                     : new List<string>();
 
                 foreach (var pr in permissionRecords)
                 {
-
-                    bool allow = permissionRecordSystemNamesToRestrict.Contains(pr.SystemName);
+                    var allow = permissionRecordSystemNamesToRestrict.Contains(pr.SystemName);
                     if (allow)
                     {
-                        if (pr.CustomerRoles.FirstOrDefault(x => x.Id == cr.Id) == null)
-                        {
-                            pr.CustomerRoles.Add(cr);
-                            _permissionService.UpdatePermissionRecord(pr);
-                        }
+                        if (pr.PermissionRecordCustomerRoleMappings.FirstOrDefault(x => x.CustomerRoleId == cr.Id) != null)
+                            continue;
+
+                        pr.PermissionRecordCustomerRoleMappings.Add(new PermissionRecordCustomerRoleMapping { CustomerRole = cr });
+                        _permissionService.UpdatePermissionRecord(pr);
                     }
                     else
                     {
-                        if (pr.CustomerRoles.FirstOrDefault(x => x.Id == cr.Id) != null)
-                        {
-                            pr.CustomerRoles.Remove(cr);
-                            _permissionService.UpdatePermissionRecord(pr);
-                        }
+                        if (pr.PermissionRecordCustomerRoleMappings.FirstOrDefault(x => x.CustomerRoleId == cr.Id) == null)
+                            continue;
+
+                        pr.PermissionRecordCustomerRoleMappings
+                            .Remove(pr.PermissionRecordCustomerRoleMappings.FirstOrDefault(mapping => mapping.CustomerRoleId == cr.Id));
+                        _permissionService.UpdatePermissionRecord(pr);
                     }
                 }
             }
 
             SuccessNotification(_localizationService.GetResource("Admin.Configuration.ACL.Updated"));
+
             return RedirectToAction("Permissions");
         }
 

@@ -1,6 +1,4 @@
-﻿
-using System;
-using System.Linq;
+﻿using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
@@ -48,7 +46,7 @@ namespace Nop.Web.Controllers
 
         #endregion
 
-        #region Constructors
+        #region Ctor
 
         public CatalogController(ICatalogModelFactory catalogModelFactory,
             IProductModelFactory productModelFactory,
@@ -116,7 +114,7 @@ namespace Nop.Web.Controllers
 
             //'Continue shopping' URL
             _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, 
-                SystemCustomerAttributeNames.LastContinueShoppingPage, 
+                NopCustomerDefaults.LastContinueShoppingPageAttribute, 
                 _webHelper.GetThisPageUrl(false),
                 _storeContext.CurrentStore.Id);
 
@@ -125,7 +123,8 @@ namespace Nop.Web.Controllers
                 DisplayEditLink(Url.Action("Edit", "Category", new { id = category.Id, area = AreaNames.Admin }));
 
             //activity log
-            _customerActivityService.InsertActivity("PublicStore.ViewCategory", _localizationService.GetResource("ActivityLog.PublicStore.ViewCategory"), category.Name);
+            _customerActivityService.InsertActivity("PublicStore.ViewCategory",
+                string.Format(_localizationService.GetResource("ActivityLog.PublicStore.ViewCategory"), category.Name), category);
 
             //model
             var model = _catalogModelFactory.PrepareCategoryModel(category, command);
@@ -160,7 +159,7 @@ namespace Nop.Web.Controllers
 
             //'Continue shopping' URL
             _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, 
-                SystemCustomerAttributeNames.LastContinueShoppingPage, 
+                NopCustomerDefaults.LastContinueShoppingPageAttribute, 
                 _webHelper.GetThisPageUrl(false),
                 _storeContext.CurrentStore.Id);
             
@@ -169,7 +168,8 @@ namespace Nop.Web.Controllers
                 DisplayEditLink(Url.Action("Edit", "Manufacturer", new { id = manufacturer.Id, area = AreaNames.Admin }));
 
             //activity log
-            _customerActivityService.InsertActivity("PublicStore.ViewManufacturer", _localizationService.GetResource("ActivityLog.PublicStore.ViewManufacturer"), manufacturer.Name);
+            _customerActivityService.InsertActivity("PublicStore.ViewManufacturer",
+                string.Format(_localizationService.GetResource("ActivityLog.PublicStore.ViewManufacturer"), manufacturer.Name), manufacturer);
 
             //model
             var model = _catalogModelFactory.PrepareManufacturerModel(manufacturer, command);
@@ -199,7 +199,7 @@ namespace Nop.Web.Controllers
 
             //'Continue shopping' URL
             _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer,
-                SystemCustomerAttributeNames.LastContinueShoppingPage,
+                NopCustomerDefaults.LastContinueShoppingPageAttribute,
                 _webHelper.GetThisPageUrl(false),
                 _storeContext.CurrentStore.Id);
             
@@ -223,7 +223,6 @@ namespace Nop.Web.Controllers
             var model = _catalogModelFactory.PrepareVendorAllModels();
             return View(model);
         }
-
 
         #endregion
 
@@ -256,7 +255,7 @@ namespace Nop.Web.Controllers
         {
             //'Continue shopping' URL
             _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer,
-                SystemCustomerAttributeNames.LastContinueShoppingPage,
+                NopCustomerDefaults.LastContinueShoppingPageAttribute,
                 _webHelper.GetThisPageUrl(false),
                 _storeContext.CurrentStore.Id);
 
@@ -269,12 +268,12 @@ namespace Nop.Web.Controllers
 
         public virtual IActionResult SearchTermAutoComplete(string term)
         {
-            if (String.IsNullOrWhiteSpace(term) || term.Length < _catalogSettings.ProductSearchTermMinimumLength)
+            if (string.IsNullOrWhiteSpace(term) || term.Length < _catalogSettings.ProductSearchTermMinimumLength)
                 return Content("");
 
             //products
             var productNumber = _catalogSettings.ProductSearchAutoCompleteNumberOfProducts > 0 ?
-                _catalogSettings.ProductSearchAutoCompleteNumberOfProducts : 10;
+                _catalogSettings.ProductSearchAutoCompleteNumberOfProducts : 10;            
 
             var products = _productService.SearchProducts(
                 storeId: _storeContext.CurrentStore.Id,
@@ -283,15 +282,18 @@ namespace Nop.Web.Controllers
                 visibleIndividuallyOnly: true,
                 pageSize: productNumber);
 
+            var showLinkToResultSearch = _catalogSettings.ShowLinkToAllResultInSearchAutoComplete && (products.TotalCount > productNumber);
+
             var models =  _productModelFactory.PrepareProductOverviewModels(products, false, _catalogSettings.ShowProductImagesInSearchAutoComplete, _mediaSettings.AutoCompleteSearchThumbPictureSize).ToList();
             var result = (from p in models
-                          select new
-                          {
-                              label = p.Name,
-                              producturl = Url.RouteUrl("Product", new { SeName = p.SeName }),
-                              productpictureurl = p.DefaultPictureModel.ImageUrl
-                          })
-                          .ToList();
+                    select new
+                    {
+                        label = p.Name,
+                        producturl = Url.RouteUrl("Product", new {SeName = p.SeName}),
+                        productpictureurl = p.DefaultPictureModel.ImageUrl,
+                        showlinktoresultsearch = showLinkToResultSearch
+                    })
+                .ToList();
             return Json(result);
         }
         

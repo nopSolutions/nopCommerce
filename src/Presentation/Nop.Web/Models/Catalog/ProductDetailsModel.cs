@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Orders;
 using Nop.Web.Framework.Mvc.ModelBinding;
-using Nop.Web.Framework.Mvc.Models;
+using Nop.Web.Framework.Models;
 using Nop.Web.Models.Media;
 
 namespace Nop.Web.Models.Catalog
@@ -65,7 +65,6 @@ namespace Nop.Web.Models.Catalog
         public bool IsFreeShipping { get; set; }
         public bool FreeShippingNotificationEnabled { get; set; }
         public string DeliveryDate { get; set; }
-
 
         public bool IsRental { get; set; }
         public DateTime? RentalStartDate { get; set; }
@@ -142,7 +141,7 @@ namespace Nop.Web.Models.Catalog
             public bool CustomerEntersPrice { get; set; }
             [NopResourceDisplayName("Products.EnterProductPrice")]
             public decimal CustomerEnteredPrice { get; set; }
-            public String CustomerEnteredPriceRange { get; set; }
+            public string CustomerEnteredPriceRange { get; set; }
 
             public bool DisableBuyButton { get; set; }
             public bool DisableWishlistButton { get; set; }
@@ -153,6 +152,7 @@ namespace Nop.Web.Models.Catalog
             //pre-order
             public bool AvailableForPreOrder { get; set; }
             public DateTime? PreOrderAvailabilityStartDateTimeUtc { get; set; }
+            public string PreOrderAvailabilityStartDateTimeUserTime { get; set; }
 
             //updating existing shopping cart or wishlist item?
             public int UpdatedShoppingCartItemId { get; set; }
@@ -199,21 +199,20 @@ namespace Nop.Web.Models.Catalog
             public bool IsGiftCard { get; set; }
 
             [NopResourceDisplayName("Products.GiftCard.RecipientName")]
-
             public string RecipientName { get; set; }
-            [NopResourceDisplayName("Products.GiftCard.RecipientEmail")]
 
+            [NopResourceDisplayName("Products.GiftCard.RecipientEmail")]
             [DataType(DataType.EmailAddress)]
             public string RecipientEmail { get; set; }
+
             [NopResourceDisplayName("Products.GiftCard.SenderName")]
-
             public string SenderName { get; set; }
-            [NopResourceDisplayName("Products.GiftCard.SenderEmail")]
 
+            [NopResourceDisplayName("Products.GiftCard.SenderEmail")]
             [DataType(DataType.EmailAddress)]
             public string SenderEmail { get; set; }
-            [NopResourceDisplayName("Products.GiftCard.Message")]
 
+            [NopResourceDisplayName("Products.GiftCard.Message")]
             public string Message { get; set; }
 
             public GiftCardType GiftCardType { get; set; }
@@ -276,7 +275,6 @@ namespace Nop.Web.Models.Catalog
             public AttributeControlType AttributeControlType { get; set; }
 
             public IList<ProductAttributeValueModel> Values { get; set; }
-
         }
 
         public partial class ProductAttributeValueModel : BaseNopEntityModel
@@ -294,6 +292,8 @@ namespace Nop.Web.Models.Catalog
             public PictureModel ImageSquaresPictureModel { get; set; }
 
             public string PriceAdjustment { get; set; }
+            
+            public bool PriceAdjustmentUsePercentage { get; set; }
 
             public decimal PriceAdjustmentValue { get; set; }
 
@@ -307,6 +307,6 @@ namespace Nop.Web.Models.Catalog
             public int Quantity { get; set; }
         }
 
-#endregion
+        #endregion
     }
 }

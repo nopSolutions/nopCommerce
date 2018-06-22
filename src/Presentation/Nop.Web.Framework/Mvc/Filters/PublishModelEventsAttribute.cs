@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Nop.Services.Events;
 using Nop.Web.Framework.Events;
-using Nop.Web.Framework.Mvc.Models;
+using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Framework.Mvc.Filters
 {
@@ -128,11 +129,21 @@ namespace Nop.Web.Framework.Mvc.Filters
                     return;
 
                 //model prepared event
-                if (context.Controller is Controller controller && controller.ViewData.Model is BaseNopModel model)
+                if (context.Controller is Controller controller)
                 {
-                    //we publish the ModelPrepared event for all models as the BaseNopModel, 
-                    //so you need to implement IConsumer<ModelPrepared<BaseNopModel>> interface to handle this event
-                    _eventPublisher.ModelPrepared(model);
+                    if (controller.ViewData.Model is BaseNopModel model)
+                    {
+                        //we publish the ModelPrepared event for all models as the BaseNopModel, 
+                        //so you need to implement IConsumer<ModelPrepared<BaseNopModel>> interface to handle this event
+                        _eventPublisher.ModelPrepared(model);
+                    }
+
+                    if (controller.ViewData.Model is IEnumerable<BaseNopModel> modelCollection)
+                    {
+                        //we publish the ModelPrepared event for collection as the IEnumerable<BaseNopModel>, 
+                        //so you need to implement IConsumer<ModelPrepared<IEnumerable<BaseNopModel>>> interface to handle this event
+                        _eventPublisher.ModelPrepared(modelCollection);
+                    }
                 }
             }
 

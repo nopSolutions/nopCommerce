@@ -1,10 +1,6 @@
-﻿@model QueuedEmailListModel
-@inject AdminAreaSettings adminAreaSettings
+@model QueuedEmailSearchModel
 
 @{
-    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
-    var gridPageSizes = adminAreaSettings.GridPageSizes;
-
     //page title
     ViewBag.Title = T("Admin.System.QueuedEmails").Text;
     //active menu item (system name)
@@ -26,7 +22,7 @@
                 @T("Admin.System.QueuedEmails.DeleteAll")
             </button>
             <nop-action-confirmation asp-button-id="delete-all" />
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_queued_email_list_buttons" })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.QueuedEmailListButtons })
         </div>
     </div>
 
@@ -127,7 +123,18 @@
                                                 url: "@Html.Raw(Url.Action("QueuedEmailList", "QueuedEmail"))",
                                                 type: "POST",
                                                 dataType: "json",
-                                                data: additionalData
+                                                data: function() {
+                                                    var data = {
+                                                        SearchStartDate: $('#@Html.IdFor(model => model.SearchStartDate)').val(),
+                                                        SearchEndDate: $('#@Html.IdFor(model => model.SearchEndDate)').val(),
+                                                        SearchFromEmail: $('#@Html.IdFor(model => model.SearchFromEmail)').val(),
+                                                        SearchToEmail: $('#@Html.IdFor(model => model.SearchToEmail)').val(),
+                                                        SearchLoadNotSent: $('#@Html.IdFor(model => model.SearchLoadNotSent)').is(':checked'),
+                                                        SearchMaxSentTries: $('#@Html.IdFor(model => model.SearchMaxSentTries)').val()
+                                                    };
+                                                    addAntiForgeryToken(data);
+                                                    return data;
+                                                }
                                             }
                                         },
                                         schema: {
@@ -140,14 +147,14 @@
                                             // Cancel the changes
                                             this.cancelChanges();
                                         },
-                                        pageSize: @(defaultGridPageSize),
+                                        pageSize: @(Model.PageSize),
                                         serverPaging: true,
                                         serverFiltering: true,
                                         serverSorting: true
                                     },
                                     pageable: {
                                         refresh: true,
-                                        pageSizes: [@(gridPageSizes)],
+                                        pageSizes: [@(Model.AvailablePageSizes)],
                                         @await Html.PartialAsync("_GridPagerMessages")
                                     },
                                     scrollable: false,
@@ -210,7 +217,7 @@
                             });
                         </script>
 
-                        <script type="text/javascript">
+                        <script>
                             var selectedIds = [];
 
                             $(document).ready(function() {
@@ -251,25 +258,27 @@
                                     };
                                     addAntiForgeryToken(postData);
 
-                                    $.ajax({
-                                        cache: false,
-                                        type: "POST",
-                                        url: "@(Url.Action("DeleteSelected", "QueuedEmail"))",
-                                        data: postData,
-                                        complete: function(data) {
-                                            //reload grid
-                                            var grid = $('#queuedEmails-grid').data('kendoGrid');
-                                            grid.dataSource.page(1); //new search. Set page size to 1
-                                            //grid.dataSource.read(); we already loaded the grid above using "page" function
-                                            //clear selected checkboxes
-                                            $('.checkboxGroups').attr('checked', false).change();
-                                            selectedIds = [];
-                                        },
-                                        error: function(xhr, ajaxOptions, thrownError) {
-                                            alert(thrownError);
-                                        },
-                                        traditional: true
-                                    });
+                                    if (confirm('@T("Admin.Common.DeleteConfirmation.Selected")')) {
+                                        $.ajax({
+                                            cache: false,
+                                            type: "POST",
+                                            url: "@(Url.Action("DeleteSelected", "QueuedEmail"))",
+                                            data: postData,
+                                            complete: function(data) {
+                                                //reload grid
+                                                var grid = $('#queuedEmails-grid').data('kendoGrid');
+                                                grid.dataSource.page(1); //new search. Set page size to 1
+                                                //grid.dataSource.read(); we already loaded the grid above using "page" function
+                                                //clear selected checkboxes
+                                                $('.checkboxGroups').attr('checked', false).change();
+                                                selectedIds = [];
+                                            },
+                                            error: function(xhr, ajaxOptions, thrownError) {
+                                                alert(thrownError);
+                                            },
+                                            traditional: true
+                                        });
+                                    }
                                     return false;
                                 });
 
@@ -280,37 +289,21 @@
                                 //wire up checkboxes.
                                 $('#queuedEmails-grid').on('change', 'input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]', function(e) {
                                     var $check = $(this);
+                                    var checked = jQuery.inArray($check.val(), selectedIds);
                                     if ($check.is(":checked") == true) {
-                                        var checked = jQuery.inArray($check.val(), selectedIds);
                                         if (checked == -1) {
                                             //add id to selectedIds.
                                             selectedIds.push($check.val());
                                         }
-                                    } else {
-                                        var checked = jQuery.inArray($check.val(), selectedIds);
-                                        if (checked > -1) {
-                                            //remove id from selectedIds.
-                                            selectedIds = $.grep(selectedIds, function(item, index) {
-                                                return item != $check.val();
-                                            });
-                                        }
+                                    } else if (checked > -1) {
+                                        //remove id from selectedIds.
+                                        selectedIds = $.grep(selectedIds, function (item, index) {
+                                            return item != $check.val();
+                                        });
                                     }
                                     updateMasterCheckbox();
                                 });
                             });
-
-                            function additionalData() {
-                                var data = {
-                                    SearchStartDate: $('#@Html.IdFor(model => model.SearchStartDate)').val(),
-                                    SearchEndDate: $('#@Html.IdFor(model => model.SearchEndDate)').val(),
-                                    SearchFromEmail: $('#@Html.IdFor(model => model.SearchFromEmail)').val(),
-                                    SearchToEmail: $('#@Html.IdFor(model => model.SearchToEmail)').val(),
-                                    SearchLoadNotSent: $('#@Html.IdFor(model => model.SearchLoadNotSent)').is(':checked'),
-                                    SearchMaxSentTries: $('#@Html.IdFor(model => model.SearchMaxSentTries)').val()
-                                };
-                                addAntiForgeryToken(data);
-                                return data;
-                            }
 
                             function onDataBound(e) {
 

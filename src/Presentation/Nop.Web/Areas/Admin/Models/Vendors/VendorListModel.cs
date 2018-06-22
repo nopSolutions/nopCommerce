@@ -1,11 +1,11 @@
-﻿using Nop.Web.Framework.Mvc.ModelBinding;
-using Nop.Web.Framework.Mvc.Models;
+﻿using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Areas.Admin.Models.Vendors
 {
-    public partial class VendorListModel : BaseNopModel
+    /// <summary>
+    /// Represents a vendor list model
+    /// </summary>
+    public partial class VendorListModel : BasePagedListModel<VendorModel>
     {
-        [NopResourceDisplayName("Admin.Vendors.List.SearchName")]
-        public string SearchName { get; set; }
     }
 }

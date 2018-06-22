@@ -12,146 +12,107 @@ namespace Nop.Services.Discounts.Cache
     /// </summary>
     public partial class DiscountEventConsumer :
         //discounts
-        IConsumer<EntityInserted<Discount>>,
-        IConsumer<EntityUpdated<Discount>>,
-        IConsumer<EntityDeleted<Discount>>,
+        IConsumer<EntityInsertedEvent<Discount>>,
+        IConsumer<EntityUpdatedEvent<Discount>>,
+        IConsumer<EntityDeletedEvent<Discount>>,
         //discount requirements
-        IConsumer<EntityInserted<DiscountRequirement>>,
-        IConsumer<EntityUpdated<DiscountRequirement>>,
-        IConsumer<EntityDeleted<DiscountRequirement>>,
+        IConsumer<EntityInsertedEvent<DiscountRequirement>>,
+        IConsumer<EntityUpdatedEvent<DiscountRequirement>>,
+        IConsumer<EntityDeletedEvent<DiscountRequirement>>,
         //settings
-        IConsumer<EntityUpdated<Setting>>,
+        IConsumer<EntityUpdatedEvent<Setting>>,
         //categories
-        IConsumer<EntityInserted<Category>>,
-        IConsumer<EntityUpdated<Category>>,
-        IConsumer<EntityDeleted<Category>>,
+        IConsumer<EntityInsertedEvent<Category>>,
+        IConsumer<EntityUpdatedEvent<Category>>,
+        IConsumer<EntityDeletedEvent<Category>>,
         //manufacturers
-        IConsumer<EntityInserted<Manufacturer>>,
-        IConsumer<EntityUpdated<Manufacturer>>,
-        IConsumer<EntityDeleted<Manufacturer>>
+        IConsumer<EntityInsertedEvent<Manufacturer>>,
+        IConsumer<EntityUpdatedEvent<Manufacturer>>,
+        IConsumer<EntityDeletedEvent<Manufacturer>>
     {
-        /// <summary>
-        /// Key for discount requirement of a certain discount
-        /// </summary>
-        /// <remarks>
-        /// {0} : discount id
-        /// </remarks>
-        public const string DISCOUNT_REQUIREMENT_MODEL_KEY = "Nop.discounts.requirements-{0}";
-        public const string DISCOUNT_REQUIREMENT_PATTERN_KEY = "Nop.discounts.requirements";
-
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : show hidden records?
-        /// {1} : coupon code
-        /// {2} : discount name
-        /// </remarks>
-        public const string DISCOUNT_ALL_KEY = "Nop.discounts.all-{0}-{1}-{2}";
-        public const string DISCOUNT_ALL_PATTERN_KEY = "Nop.discounts.all";
-
-        /// <summary>
-        /// Key for category IDs of a discount
-        /// </summary>
-        /// <remarks>
-        /// {0} : discount id
-        /// {1} : roles of the current user
-        /// {2} : current store ID
-        /// </remarks>
-        public const string DISCOUNT_CATEGORY_IDS_MODEL_KEY = "Nop.discounts.categoryids-{0}-{1}-{2}";
-        public const string DISCOUNT_CATEGORY_IDS_PATTERN_KEY = "Nop.discounts.categoryids";
-
-        /// <summary>
-        /// Key for manufacturer IDs of a discount
-        /// </summary>
-        /// <remarks>
-        /// {0} : discount id
-        /// {1} : roles of the current user
-        /// {2} : current store ID
-        /// </remarks>
-        public const string DISCOUNT_MANUFACTURER_IDS_MODEL_KEY = "Nop.discounts.manufacturerids-{0}-{1}-{2}";
-        public const string DISCOUNT_MANUFACTURER_IDS_PATTERN_KEY = "Nop.discounts.manufacturerids";
-
         private readonly IStaticCacheManager _cacheManager;
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="cacheManager">Cache manager</param>
         public DiscountEventConsumer(IStaticCacheManager cacheManager)
         {
             this._cacheManager = cacheManager;
         }
 
         //discounts
-        public void HandleEvent(EntityInserted<Discount> eventMessage)
+        public void HandleEvent(EntityInsertedEvent<Discount> eventMessage)
         {
-            _cacheManager.RemoveByPattern(DISCOUNT_ALL_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(DISCOUNT_REQUIREMENT_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(DISCOUNT_CATEGORY_IDS_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(DISCOUNT_MANUFACTURER_IDS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopDiscountDefaults.DiscountAllPatternCacheKey);
+            _cacheManager.RemoveByPattern(NopDiscountDefaults.DiscountRequirementPatternCacheKey);
+            _cacheManager.RemoveByPattern(NopDiscountDefaults.DiscountCategoryIdsPatternCacheKey);
+            _cacheManager.RemoveByPattern(NopDiscountDefaults.DiscountManufacturerIdsPatternCacheKey);
         }
-        public void HandleEvent(EntityUpdated<Discount> eventMessage)
+        public void HandleEvent(EntityUpdatedEvent<Discount> eventMessage)
         {
-            _cacheManager.RemoveByPattern(DISCOUNT_ALL_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(DISCOUNT_REQUIREMENT_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(DISCOUNT_CATEGORY_IDS_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(DISCOUNT_MANUFACTURER_IDS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopDiscountDefaults.DiscountAllPatternCacheKey);
+            _cacheManager.RemoveByPattern(NopDiscountDefaults.DiscountRequirementPatternCacheKey);
+            _cacheManager.RemoveByPattern(NopDiscountDefaults.DiscountCategoryIdsPatternCacheKey);
+            _cacheManager.RemoveByPattern(NopDiscountDefaults.DiscountManufacturerIdsPatternCacheKey);
         }
-        public void HandleEvent(EntityDeleted<Discount> eventMessage)
+        public void HandleEvent(EntityDeletedEvent<Discount> eventMessage)
         {
-            _cacheManager.RemoveByPattern(DISCOUNT_ALL_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(DISCOUNT_REQUIREMENT_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(DISCOUNT_CATEGORY_IDS_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(DISCOUNT_MANUFACTURER_IDS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopDiscountDefaults.DiscountAllPatternCacheKey);
+            _cacheManager.RemoveByPattern(NopDiscountDefaults.DiscountRequirementPatternCacheKey);
+            _cacheManager.RemoveByPattern(NopDiscountDefaults.DiscountCategoryIdsPatternCacheKey);
+            _cacheManager.RemoveByPattern(NopDiscountDefaults.DiscountManufacturerIdsPatternCacheKey);
         }
 
         //discount requirements
-        public void HandleEvent(EntityInserted<DiscountRequirement> eventMessage)
+        public void HandleEvent(EntityInsertedEvent<DiscountRequirement> eventMessage)
         {
-            _cacheManager.RemoveByPattern(DISCOUNT_REQUIREMENT_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopDiscountDefaults.DiscountRequirementPatternCacheKey);
         }
-        public void HandleEvent(EntityUpdated<DiscountRequirement> eventMessage)
+        public void HandleEvent(EntityUpdatedEvent<DiscountRequirement> eventMessage)
         {
-            _cacheManager.RemoveByPattern(DISCOUNT_REQUIREMENT_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopDiscountDefaults.DiscountRequirementPatternCacheKey);
         }
-        public void HandleEvent(EntityDeleted<DiscountRequirement> eventMessage)
+        public void HandleEvent(EntityDeletedEvent<DiscountRequirement> eventMessage)
         {
-            _cacheManager.RemoveByPattern(DISCOUNT_REQUIREMENT_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopDiscountDefaults.DiscountRequirementPatternCacheKey);
         }
 
 
         //settings
-        public void HandleEvent(EntityUpdated<Setting> eventMessage)
+        public void HandleEvent(EntityUpdatedEvent<Setting> eventMessage)
         {
-            _cacheManager.RemoveByPattern(DISCOUNT_CATEGORY_IDS_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(DISCOUNT_MANUFACTURER_IDS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopDiscountDefaults.DiscountCategoryIdsPatternCacheKey);
+            _cacheManager.RemoveByPattern(NopDiscountDefaults.DiscountManufacturerIdsPatternCacheKey);
         }
 
         //categories
-        public void HandleEvent(EntityInserted<Category> eventMessage)
+        public void HandleEvent(EntityInsertedEvent<Category> eventMessage)
         {
-            _cacheManager.RemoveByPattern(DISCOUNT_CATEGORY_IDS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopDiscountDefaults.DiscountCategoryIdsPatternCacheKey);
         }
-        public void HandleEvent(EntityUpdated<Category> eventMessage)
+        public void HandleEvent(EntityUpdatedEvent<Category> eventMessage)
         {
-            _cacheManager.RemoveByPattern(DISCOUNT_CATEGORY_IDS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopDiscountDefaults.DiscountCategoryIdsPatternCacheKey);
         }
-        public void HandleEvent(EntityDeleted<Category> eventMessage)
+        public void HandleEvent(EntityDeletedEvent<Category> eventMessage)
         {
-            _cacheManager.RemoveByPattern(DISCOUNT_CATEGORY_IDS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopDiscountDefaults.DiscountCategoryIdsPatternCacheKey);
         }
 
 
         //manufacturers
-        public void HandleEvent(EntityInserted<Manufacturer> eventMessage)
+        public void HandleEvent(EntityInsertedEvent<Manufacturer> eventMessage)
         {
-            _cacheManager.RemoveByPattern(DISCOUNT_MANUFACTURER_IDS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopDiscountDefaults.DiscountManufacturerIdsPatternCacheKey);
         }
-        public void HandleEvent(EntityUpdated<Manufacturer> eventMessage)
+        public void HandleEvent(EntityUpdatedEvent<Manufacturer> eventMessage)
         {
-            _cacheManager.RemoveByPattern(DISCOUNT_MANUFACTURER_IDS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopDiscountDefaults.DiscountManufacturerIdsPatternCacheKey);
         }
-        public void HandleEvent(EntityDeleted<Manufacturer> eventMessage)
+        public void HandleEvent(EntityDeletedEvent<Manufacturer> eventMessage)
         {
-            _cacheManager.RemoveByPattern(DISCOUNT_MANUFACTURER_IDS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopDiscountDefaults.DiscountManufacturerIdsPatternCacheKey);
         }
-
     }
 }

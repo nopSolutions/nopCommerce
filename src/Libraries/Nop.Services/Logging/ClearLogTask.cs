@@ -9,6 +9,10 @@ namespace Nop.Services.Logging
     {
         private readonly ILogger _logger;
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="logger">Logger</param>
         public ClearLogTask(ILogger logger)
         {
             this._logger = logger;

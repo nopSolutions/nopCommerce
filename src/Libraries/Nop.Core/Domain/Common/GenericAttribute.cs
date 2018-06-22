@@ -29,6 +29,5 @@ namespace Nop.Core.Domain.Common
         /// Gets or sets the store identifier
         /// </summary>
         public int StoreId { get; set; }
-        
     }
 }

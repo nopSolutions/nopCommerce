@@ -1,13 +1,14 @@
 using System;
 using System.Collections.Generic;
 using Nop.Core.Domain.Localization;
+using Nop.Core.Domain.Stores;
 
 namespace Nop.Core.Domain.Polls
 {
     /// <summary>
     /// Represents a poll
     /// </summary>
-    public partial class Poll : BaseEntity
+    public partial class Poll : BaseEntity, IStoreMappingSupported
     {
         private ICollection<PollAnswer> _pollAnswers;
 
@@ -47,6 +48,11 @@ namespace Nop.Core.Domain.Polls
         public int DisplayOrder { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether the entity is limited/restricted to certain stores
+        /// </summary>
+        public bool LimitedToStores { get; set; }
+
+        /// <summary>
         /// Gets or sets the poll start date and time
         /// </summary>
         public DateTime? StartDateUtc { get; set; }
@@ -61,8 +67,8 @@ namespace Nop.Core.Domain.Polls
         /// </summary>
         public virtual ICollection<PollAnswer> PollAnswers
         {
-            get { return _pollAnswers ?? (_pollAnswers = new List<PollAnswer>()); }
-            protected set { _pollAnswers = value; }
+            get => _pollAnswers ?? (_pollAnswers = new List<PollAnswer>());
+            protected set => _pollAnswers = value;
         }
         
         /// <summary>

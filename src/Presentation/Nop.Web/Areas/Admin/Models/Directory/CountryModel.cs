@@ -1,24 +1,32 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using FluentValidation.Attributes;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Web.Areas.Admin.Validators.Directory;
-using Nop.Web.Framework.Localization;
+using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Mvc.ModelBinding;
-using Nop.Web.Framework.Mvc.Models;
 
 namespace Nop.Web.Areas.Admin.Models.Directory
 {
+    /// <summary>
+    /// Represents a country model
+    /// </summary>
     [Validator(typeof(CountryValidator))]
-    public partial class CountryModel : BaseNopEntityModel, ILocalizedModel<CountryLocalizedModel>
+    public partial class CountryModel : BaseNopEntityModel, ILocalizedModel<CountryLocalizedModel>, IStoreMappingSupportedModel
     {
+        #region Ctor
+
         public CountryModel()
         {
             Locales = new List<CountryLocalizedModel>();
-
             SelectedStoreIds = new List<int>();
             AvailableStores = new List<SelectListItem>();
+            StateProvinceSearchModel = new StateProvinceSearchModel();
         }
+
+        #endregion
+
+        #region Properties
+
         [NopResourceDisplayName("Admin.Configuration.Countries.Fields.Name")]
         public string Name { get; set; }
 
@@ -46,22 +54,22 @@ namespace Nop.Web.Areas.Admin.Models.Directory
         [NopResourceDisplayName("Admin.Configuration.Countries.Fields.DisplayOrder")]
         public int DisplayOrder { get; set; }
 
-
-
-
         [NopResourceDisplayName("Admin.Configuration.Countries.Fields.NumberOfStates")]
         public int NumberOfStates { get; set; }
 
         public IList<CountryLocalizedModel> Locales { get; set; }
 
-
         //store mapping
         [NopResourceDisplayName("Admin.Configuration.Countries.Fields.LimitedToStores")]
         public IList<int> SelectedStoreIds { get; set; }
         public IList<SelectListItem> AvailableStores { get; set; }
+
+        public StateProvinceSearchModel StateProvinceSearchModel { get; set; }
+
+        #endregion
     }
 
-    public partial class CountryLocalizedModel : ILocalizedModelLocal
+    public partial class CountryLocalizedModel : ILocalizedLocaleModel
     {
         public int LanguageId { get; set; }
 

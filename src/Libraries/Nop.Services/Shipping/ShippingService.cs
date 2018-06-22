@@ -9,13 +9,13 @@ using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
-using Nop.Core.Plugins;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Events;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Orders;
+using Nop.Services.Plugins;
 using Nop.Services.Shipping.Pickup;
 
 namespace Nop.Services.Shipping
@@ -25,22 +25,6 @@ namespace Nop.Services.Shipping
     /// </summary>
     public partial class ShippingService : IShippingService
     {
-        #region Constants
-
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : warehouse ID
-        /// </remarks>
-        private const string WAREHOUSES_BY_ID_KEY = "Nop.warehouse.id-{0}";
-        /// <summary>
-        /// Key pattern to clear cache
-        /// </summary>
-        private const string WAREHOUSES_PATTERN_KEY = "Nop.warehouse.";
-
-        #endregion
-
         #region Fields
 
         private readonly IRepository<ShippingMethod> _shippingMethodRepository;
@@ -78,7 +62,7 @@ namespace Nop.Services.Shipping
         /// <param name="shippingSettings">Shipping settings</param>
         /// <param name="pluginFinder">Plugin finder</param>
         /// <param name="storeContext">Store context</param>
-        /// <param name="eventPublisher">Event published</param>
+        /// <param name="eventPublisher">Event publisher</param>
         /// <param name="shoppingCartSettings">Shopping cart settings</param>
         /// <param name="cacheManager">Cache manager</param>
         public ShippingService(IRepository<ShippingMethod> shippingMethodRepository,
@@ -241,7 +225,7 @@ namespace Nop.Services.Shipping
             {
                 var query1 = from sm in _shippingMethodRepository.Table
                              where
-                             sm.RestrictedCountries.Select(c => c.Id).Contains(filterByCountryId.Value)
+                             sm.ShippingMethodCountryMappings.Select(mapping => mapping.CountryId).Contains(filterByCountryId.Value)
                              select sm.Id;
 
                 var query2 = from sm in _shippingMethodRepository.Table
@@ -308,7 +292,7 @@ namespace Nop.Services.Shipping
             _warehouseRepository.Delete(warehouse);
 
             //clear cache
-            _cacheManager.RemoveByPattern(WAREHOUSES_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopShippingDefaults.WarehousesPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityDeleted(warehouse);
@@ -324,7 +308,7 @@ namespace Nop.Services.Shipping
             if (warehouseId == 0)
                 return null;
 
-            string key = string.Format(WAREHOUSES_BY_ID_KEY, warehouseId);
+            var key = string.Format(NopShippingDefaults.WarehousesByIdCacheKey, warehouseId);
             return _cacheManager.Get(key, () => _warehouseRepository.GetById(warehouseId));
         }
 
@@ -353,7 +337,7 @@ namespace Nop.Services.Shipping
             _warehouseRepository.Insert(warehouse);
 
             //clear cache
-            _cacheManager.RemoveByPattern(WAREHOUSES_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopShippingDefaults.WarehousesPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(warehouse);
@@ -371,7 +355,7 @@ namespace Nop.Services.Shipping
             _warehouseRepository.Update(warehouse);
 
             //clear cache
-            _cacheManager.RemoveByPattern(WAREHOUSES_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopShippingDefaults.WarehousesPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(warehouse);
@@ -500,7 +484,7 @@ namespace Nop.Services.Shipping
             //checkout attributes
             if (request.Customer != null && includeCheckoutAttributes)
             {
-                var checkoutAttributesXml = request.Customer.GetAttribute<string>(SystemCustomerAttributeNames.CheckoutAttributes, _genericAttributeService, _storeContext.CurrentStore.Id);
+                var checkoutAttributesXml = request.Customer.GetAttribute<string>(NopCustomerDefaults.CheckoutAttributes, _genericAttributeService, _storeContext.CurrentStore.Id);
                 if (!string.IsNullOrEmpty(checkoutAttributesXml))
                 {
                     var attributeValues = _checkoutAttributeParser.ParseCheckoutAttributeValues(checkoutAttributesXml);
@@ -533,7 +517,7 @@ namespace Nop.Services.Shipping
                 return;
 
             //attributes
-            if (String.IsNullOrEmpty(shoppingCartItem.AttributesXml))
+            if (string.IsNullOrEmpty(shoppingCartItem.AttributesXml))
                 return;
 
             //bundled products (associated attributes)
@@ -756,7 +740,7 @@ namespace Nop.Services.Shipping
                         warehouse = GetWarehouseById(product.WarehouseId);
                     }
                 }
-                int warehouseId = warehouse != null ? warehouse.Id : 0;
+                var warehouseId = warehouse != null ? warehouse.Id : 0;
 
                 if (requests.ContainsKey(warehouseId) && !product.ShipSeparately)
                 {
@@ -766,11 +750,11 @@ namespace Nop.Services.Shipping
                 else
                 {
                     //create a new request
-                    var request = new GetShippingOptionRequest();
-                    //store
-                    request.StoreId = storeId;
-                    //add item
-                    request.Items.Add(new GetShippingOptionRequest.PackageItem(sci));
+                    var request = new GetShippingOptionRequest
+                    {
+                        //store
+                        StoreId = storeId
+                    };
                     //customer
                     request.Customer = cart.GetCustomer();
                     //ship to
@@ -793,18 +777,37 @@ namespace Nop.Services.Shipping
                         request.CountryFrom = originAddress.Country;
                         request.StateProvinceFrom = originAddress.StateProvince;
                         request.ZipPostalCodeFrom = originAddress.ZipPostalCode;
+                        request.CountyFrom = originAddress.County;
                         request.CityFrom = originAddress.City;
                         request.AddressFrom = originAddress.Address1;
                     }
 
+                    //whether this product should be shipped separately from other ones
                     if (product.ShipSeparately)
                     {
-                        //ship separately
-                        separateRequests.Add(request);
+                        //whether product items should be shipped separately
+                        if (_shippingSettings.ShipSeparatelyOneItemEach)
+                        {
+                            //add item with overridden quantity 1
+                            request.Items.Add(new GetShippingOptionRequest.PackageItem(sci, 1));
+
+                            //create separate requests for all product quantity
+                            for (int i = 0; i < sci.Quantity; i++)
+                            {
+                                separateRequests.Add(request);
+                            }
+                        }
+                        else
+                        {
+                            //all of product items should be shipped in a single box, so create the single separate request 
+                            request.Items.Add(new GetShippingOptionRequest.PackageItem(sci));
+                            separateRequests.Add(request);
+                        }
                     }
                     else
                     {
                         //usual request
+                        request.Items.Add(new GetShippingOptionRequest.PackageItem(sci));
                         requests.Add(warehouseId, request);
                     }
                 }
@@ -846,7 +849,7 @@ namespace Nop.Services.Shipping
 
             var shippingRateComputationMethods = LoadActiveShippingRateComputationMethods(customer, storeId);
             //filter by system name
-            if (!String.IsNullOrWhiteSpace(allowedShippingRateComputationMethodSystemName))
+            if (!string.IsNullOrWhiteSpace(allowedShippingRateComputationMethodSystemName))
             {
                 shippingRateComputationMethods = shippingRateComputationMethods
                     .Where(srcm => allowedShippingRateComputationMethodSystemName.Equals(srcm.PluginDescriptor.SystemName, StringComparison.InvariantCultureIgnoreCase))
@@ -895,7 +898,7 @@ namespace Nop.Services.Shipping
                     else
                     {
                         //errors
-                        foreach (string error in getShippingOptionResponse.Errors)
+                        foreach (var error in getShippingOptionResponse.Errors)
                         {
                             result.AddError(error);
                             _logger.Warning($"Shipping ({srcm.PluginDescriptor.FriendlyName}). {error}");
@@ -912,7 +915,7 @@ namespace Nop.Services.Shipping
                     foreach (var so in srcmShippingOptions)
                     {
                         //set system name if not set yet
-                        if (String.IsNullOrEmpty(so.ShippingRateComputationMethodSystemName))
+                        if (string.IsNullOrEmpty(so.ShippingRateComputationMethodSystemName))
                             so.ShippingRateComputationMethodSystemName = srcm.PluginDescriptor.SystemName;
                         if (_shoppingCartSettings.RoundPricesDuringCalculation)
                             so.Rate = RoundingHelper.RoundPrice(so.Rate);
@@ -965,7 +968,7 @@ namespace Nop.Services.Shipping
                     allPickupPoints.AddRange(pickPointsResponse.PickupPoints);
                 else
                 {
-                    foreach (string error in pickPointsResponse.Errors)
+                    foreach (var error in pickPointsResponse.Errors)
                     {
                         result.AddError(error);
                         _logger.Warning($"PickupPoints ({provider.PluginDescriptor.FriendlyName}). {error}");

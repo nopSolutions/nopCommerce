@@ -74,7 +74,7 @@ namespace Nop.Web.Framework.Mvc.Filters
                 if (!context.HttpContext.Request.Method.Equals(WebRequestMethods.Http.Get, StringComparison.InvariantCultureIgnoreCase))
                     return;
 
-                if (!DataSettingsHelper.DatabaseIsInstalled())
+                if (!DataSettingsManager.DatabaseIsInstalled)
                     return;
 
                 //check whether we store last visited page URL
@@ -87,11 +87,11 @@ namespace Nop.Web.Framework.Mvc.Filters
                     return;
                 
                 //get previous last page
-                var previousPageUrl = _workContext.CurrentCustomer.GetAttribute<string>(SystemCustomerAttributeNames.LastVisitedPage);
+                var previousPageUrl = _workContext.CurrentCustomer.GetAttribute<string>(NopCustomerDefaults.LastVisitedPageAttribute);
 
                 //save new one if don't match
                 if (!pageUrl.Equals(previousPageUrl, StringComparison.InvariantCultureIgnoreCase))
-                    _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.LastVisitedPage, pageUrl);
+                    _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, NopCustomerDefaults.LastVisitedPageAttribute, pageUrl);
                 
             }
 

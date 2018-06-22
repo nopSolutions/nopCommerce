@@ -1,4 +1,6 @@
-﻿@{
+@model MeasureSearchModel
+
+@{
     //page title
     ViewBag.Title = T("Admin.Configuration.Shipping.Measures").Text;
     //active menu item (system name)
@@ -12,7 +14,7 @@
     </h1>
     <div class="pull-right">
         &nbsp;
-        @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_measure_list_buttons" })
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.MeasureListButtons })
     </div>
 </div>
 
@@ -25,7 +27,7 @@
                         @T("Admin.Configuration.Shipping.Measures.Dimensions")
                     </div>
                     <div class="panel-body">
-                        @await Html.PartialAsync("Dimensions")
+                        @await Html.PartialAsync("Dimensions", Model)
                     </div>
                 </div>
                 <div class="panel panel-default">
@@ -33,7 +35,7 @@
                         @T("Admin.Configuration.Shipping.Measures.Weights")
                     </div>
                     <div class="panel-body">
-                        @await Html.PartialAsync("Weights")
+                        @await Html.PartialAsync("Weights", Model)
                     </div>
                 </div>
             </div>

@@ -6,6 +6,9 @@ using Nop.Core;
 
 namespace Nop.Web.Framework.TagHelpers.Public
 {
+    /// <summary>
+    /// nop-bb-code-editor tag helper
+    /// </summary>
     [HtmlTargetElement("nop-bb-code-editor", Attributes = ForAttributeName, TagStructure = TagStructure.WithoutEndTag)]
     public class NopBBCodeEditorTagHelper : TagHelper
     {
@@ -19,11 +22,20 @@ namespace Nop.Web.Framework.TagHelpers.Public
         [HtmlAttributeName(ForAttributeName)]
         public ModelExpression For { get; set; }
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="webHelper">Web helper</param>
         public NopBBCodeEditorTagHelper(IWebHelper webHelper)
         {
             _webHelper = webHelper;
         }
 
+        /// <summary>
+        /// Process
+        /// </summary>
+        /// <param name="context">Context</param>
+        /// <param name="output">Output</param>
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
             if (context == null)

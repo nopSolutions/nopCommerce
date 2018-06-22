@@ -59,6 +59,22 @@ namespace Nop.Web.Framework
 
         #region Ctor
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="httpContextAccessor">HTTP context accessor</param>
+        /// <param name="currencySettings">Currency settings</param>
+        /// <param name="authenticationService">Authentication service</param>
+        /// <param name="currencyService">Currency service</param>
+        /// <param name="customerService">Customer service</param>
+        /// <param name="genericAttributeService">Generic attribute service</param>
+        /// <param name="languageService">Language service</param>
+        /// <param name="storeContext">Store context</param>
+        /// <param name="storeMappingService">Store mapping service</param>
+        /// <param name="userAgentHelper">User gent helper</param>
+        /// <param name="vendorService">Vendor service</param>
+        /// <param name="localizationSettings">Localization settings</param>
+        /// <param name="taxSettings">Tax settings</param>
         public WebWorkContext(IHttpContextAccessor httpContextAccessor, 
             CurrencySettings currencySettings,
             IAuthenticationService authenticationService,
@@ -195,17 +211,17 @@ namespace Nop.Web.Framework
 
                 //check whether request is made by a background (schedule) task
                 if (_httpContextAccessor.HttpContext == null ||
-                    _httpContextAccessor.HttpContext.Request.Path.Equals(new PathString($"/{TaskManager.ScheduleTaskPatch}"), StringComparison.InvariantCultureIgnoreCase))
+                    _httpContextAccessor.HttpContext.Request.Path.Equals(new PathString($"/{NopTaskDefaults.ScheduleTaskPath}"), StringComparison.InvariantCultureIgnoreCase))
                 {
                     //in this case return built-in customer record for background task
-                    customer = _customerService.GetCustomerBySystemName(SystemCustomerNames.BackgroundTask);
+                    customer = _customerService.GetCustomerBySystemName(NopCustomerDefaults.BackgroundTaskCustomerName);
                 }
 
                 if (customer == null || customer.Deleted || !customer.Active || customer.RequireReLogin)
                 {
                     //check whether request is made by a search engine, in this case return built-in customer record for search engines
                     if (_userAgentHelper.IsSearchEngine())
-                        customer = _customerService.GetCustomerBySystemName(SystemCustomerNames.SearchEngine);
+                        customer = _customerService.GetCustomerBySystemName(NopCustomerDefaults.SearchEngineCustomerName);
                 }
 
                 if (customer == null || customer.Deleted || !customer.Active || customer.RequireReLogin)
@@ -217,7 +233,7 @@ namespace Nop.Web.Framework
                 if (customer != null && !customer.Deleted && customer.Active && !customer.RequireReLogin)
                 {
                     //get impersonate user if required
-                    var impersonatedCustomerId = customer.GetAttribute<int?>(SystemCustomerAttributeNames.ImpersonatedCustomerId);
+                    var impersonatedCustomerId = customer.GetAttribute<int?>(NopCustomerDefaults.ImpersonatedCustomerIdAttribute);
                     if (impersonatedCustomerId.HasValue && impersonatedCustomerId.Value > 0)
                     {
                         var impersonatedCustomer = _customerService.GetCustomerById(impersonatedCustomerId.Value);
@@ -327,7 +343,7 @@ namespace Nop.Web.Framework
                 if (detectedLanguage == null && _localizationSettings.AutomaticallyDetectLanguage)
                 {
                     //whether language already detected by this way
-                    var alreadyDetected = this.CurrentCustomer.GetAttribute<bool>(SystemCustomerAttributeNames.LanguageAutomaticallyDetected,
+                    var alreadyDetected = this.CurrentCustomer.GetAttribute<bool>(NopCustomerDefaults.LanguageAutomaticallyDetectedAttribute,
                         _genericAttributeService, _storeContext.CurrentStore.Id);
 
                     //if not, try to get language from the request
@@ -338,7 +354,7 @@ namespace Nop.Web.Framework
                         {
                             //language already detected
                             _genericAttributeService.SaveAttribute(this.CurrentCustomer, 
-                                SystemCustomerAttributeNames.LanguageAutomaticallyDetected, true, _storeContext.CurrentStore.Id);
+                                NopCustomerDefaults.LanguageAutomaticallyDetectedAttribute, true, _storeContext.CurrentStore.Id);
                         }
                     }
                 }
@@ -347,19 +363,19 @@ namespace Nop.Web.Framework
                 if (detectedLanguage != null)
                 {
                     //get current saved language identifier
-                    var currentLanguageId = this.CurrentCustomer.GetAttribute<int>(SystemCustomerAttributeNames.LanguageId,
+                    var currentLanguageId = this.CurrentCustomer.GetAttribute<int>(NopCustomerDefaults.LanguageIdAttribute,
                         _genericAttributeService, _storeContext.CurrentStore.Id);
 
                     //save the detected language identifier if it differs from the current one
                     if (detectedLanguage.Id != currentLanguageId)
                     {
                         _genericAttributeService.SaveAttribute(this.CurrentCustomer, 
-                            SystemCustomerAttributeNames.LanguageId, detectedLanguage.Id, _storeContext.CurrentStore.Id);
+                            NopCustomerDefaults.LanguageIdAttribute, detectedLanguage.Id, _storeContext.CurrentStore.Id);
                     }
                 }
                 
                 //get current customer language identifier
-                var customerLanguageId = this.CurrentCustomer.GetAttribute<int>(SystemCustomerAttributeNames.LanguageId,
+                var customerLanguageId = this.CurrentCustomer.GetAttribute<int>(NopCustomerDefaults.LanguageIdAttribute,
                     _genericAttributeService, _storeContext.CurrentStore.Id);
 
                 var allStoreLanguages = _languageService.GetAllLanguages(storeId: _storeContext.CurrentStore.Id);
@@ -392,7 +408,7 @@ namespace Nop.Web.Framework
 
                 //and save it
                 _genericAttributeService.SaveAttribute(this.CurrentCustomer,
-                    SystemCustomerAttributeNames.LanguageId, languageId, _storeContext.CurrentStore.Id);
+                    NopCustomerDefaults.LanguageIdAttribute, languageId, _storeContext.CurrentStore.Id);
 
                 //then reset the cached value
                 _cachedLanguage = null;
@@ -422,7 +438,7 @@ namespace Nop.Web.Framework
                 }
 
                 //find a currency previously selected by a customer
-                var customerCurrencyId = this.CurrentCustomer.GetAttribute<int>(SystemCustomerAttributeNames.CurrencyId,
+                var customerCurrencyId = this.CurrentCustomer.GetAttribute<int>(NopCustomerDefaults.CurrencyIdAttribute,
                     _genericAttributeService, _storeContext.CurrentStore.Id);
 
                 var allStoreCurrencies = _currencyService.GetAllCurrencies(storeId: _storeContext.CurrentStore.Id);
@@ -455,7 +471,7 @@ namespace Nop.Web.Framework
 
                 //and save it
                 _genericAttributeService.SaveAttribute(this.CurrentCustomer, 
-                    SystemCustomerAttributeNames.CurrencyId, currencyId, _storeContext.CurrentStore.Id);
+                    NopCustomerDefaults.CurrencyIdAttribute, currencyId, _storeContext.CurrentStore.Id);
 
                 //then reset the cached value
                 _cachedCurrency = null;
@@ -473,13 +489,13 @@ namespace Nop.Web.Framework
                 if (_cachedTaxDisplayType.HasValue)
                     return _cachedTaxDisplayType.Value;
 
-                TaxDisplayType taxDisplayType = TaxDisplayType.IncludingTax;
+                var taxDisplayType = TaxDisplayType.IncludingTax;
 
                 //whether customers are allowed to select tax display type
                 if (_taxSettings.AllowCustomersToSelectTaxDisplayType && this.CurrentCustomer != null)
                 {
                     //try to get previously saved tax display type
-                    var taxDisplayTypeId = this.CurrentCustomer.GetAttribute<int?>(SystemCustomerAttributeNames.TaxDisplayTypeId, 
+                    var taxDisplayTypeId = this.CurrentCustomer.GetAttribute<int?>(NopCustomerDefaults.TaxDisplayTypeIdAttribute, 
                         _genericAttributeService, _storeContext.CurrentStore.Id);
                     if (taxDisplayTypeId.HasValue)
                     {
@@ -524,7 +540,7 @@ namespace Nop.Web.Framework
 
                 //save passed value
                 _genericAttributeService.SaveAttribute(this.CurrentCustomer, 
-                    SystemCustomerAttributeNames.TaxDisplayTypeId, (int)value, _storeContext.CurrentStore.Id);
+                    NopCustomerDefaults.TaxDisplayTypeIdAttribute, (int)value, _storeContext.CurrentStore.Id);
 
                 //then reset the cached value
                 _cachedTaxDisplayType = null;

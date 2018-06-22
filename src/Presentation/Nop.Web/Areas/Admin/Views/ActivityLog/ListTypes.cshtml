@@ -17,7 +17,7 @@
                 <i class="fa fa-floppy-o"></i>
                 @T("Admin.Common.Save")
             </button>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_activity_types_list_buttons" })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ActivityTypesListButtons })
         </div>
     </div>
 
@@ -31,7 +31,7 @@
                         <script>
                             //local datasource
                             var activityLogTypes = [
-                                @for (int i = 0; i < Model.Count; i++)
+                                @for (var i = 0; i < Model.Count; i++)
                                 {
                                     var alt = Model[i];
                                     <text>
@@ -93,7 +93,7 @@
                             });
 
                         </script>
-                        <script type="text/javascript">
+                        <script>
                             $(document).ready(function() {
                                 updateMasterCheckbox();
 

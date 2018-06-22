@@ -13,6 +13,7 @@ using Nop.Core.Data;
 using Nop.Core.Infrastructure;
 using Nop.Core.Plugins;
 using Nop.Services.Installation;
+using Nop.Services.Plugins;
 using Nop.Services.Security;
 using Nop.Web.Framework.Security;
 using Nop.Web.Infrastructure.Installation;
@@ -26,15 +27,19 @@ namespace Nop.Web.Controllers
 
         private readonly IInstallationLocalizationService _locService;
         private readonly NopConfig _config;
-        
+        private readonly INopFileProvider _fileProvider;
+
         #endregion
-        
+
         #region Ctor
 
-        public InstallController(IInstallationLocalizationService locService, NopConfig config)
+        public InstallController(IInstallationLocalizationService locService, 
+            NopConfig config,
+            INopFileProvider fileProvider)
         {
             this._locService = locService;
             this._config = config;
+            this._fileProvider = fileProvider;
         }
         
         #endregion
@@ -92,8 +97,8 @@ namespace Nop.Web.Controllers
                 //now create connection string to 'master' dabatase. It always exists.
                 builder.InitialCatalog = "master";
                 var masterCatalogConnectionString = builder.ToString();
-                string query = $"CREATE DATABASE [{databaseName}]";
-                if (!String.IsNullOrWhiteSpace(collation))
+                var query = $"CREATE DATABASE [{databaseName}]";
+                if (!string.IsNullOrWhiteSpace(collation))
                     query = $"{query} COLLATE {collation}";
                 using (var conn = new SqlConnection(masterCatalogConnectionString))
                 {
@@ -145,10 +150,12 @@ namespace Nop.Web.Controllers
             string serverName, string databaseName,
             string userName, string password, int timeout = 0)
         {
-            var builder = new SqlConnectionStringBuilder();
-            builder.IntegratedSecurity = trustedConnection;
-            builder.DataSource = serverName;
-            builder.InitialCatalog = databaseName;
+            var builder = new SqlConnectionStringBuilder
+            {
+                IntegratedSecurity = trustedConnection,
+                DataSource = serverName,
+                InitialCatalog = databaseName
+            };
             if (!trustedConnection)
             {
                 builder.UserID = userName;
@@ -172,7 +179,7 @@ namespace Nop.Web.Controllers
 
         public virtual IActionResult Index()
         {
-            if (DataSettingsHelper.DatabaseIsInstalled())
+            if (DataSettingsManager.DatabaseIsInstalled)
                 return RedirectToRoute("HomePage");
 
             var model = new InstallModel
@@ -180,9 +187,8 @@ namespace Nop.Web.Controllers
                 AdminEmail = "admin@yourStore.com",
                 InstallSampleData = false,
                 DatabaseConnectionString = "",
-                DataProvider = "sqlserver",
+                DataProvider = DataProviderType.SqlServer,
                 //fast installation service does not support SQL compact
-                DisableSqlCompact = _config.UseFastInstallationService,
                 DisableSampleDataOption = _config.DisableSampleDataDuringInstallation,
                 SqlAuthenticationType = "sqlauthentication",
                 SqlConnectionInfo = "sqlconnectioninfo_values",
@@ -206,7 +212,7 @@ namespace Nop.Web.Controllers
         [HttpPost]
         public virtual IActionResult Index(InstallModel model)
         {
-            if (DataSettingsHelper.DatabaseIsInstalled())
+            if (DataSettingsManager.DatabaseIsInstalled)
                 return RedirectToRoute("HomePage");
 
             if (model.DatabaseConnectionString != null)
@@ -223,11 +229,10 @@ namespace Nop.Web.Controllers
                 });
             }
 
-            model.DisableSqlCompact = _config.UseFastInstallationService;
             model.DisableSampleDataOption = _config.DisableSampleDataDuringInstallation;
 
             //SQL Server
-            if (model.DataProvider.Equals("sqlserver", StringComparison.InvariantCultureIgnoreCase))
+            if (model.DataProvider == DataProviderType.SqlServer)
             {
                 if (model.SqlConnectionInfo.Equals("sqlconnectioninfo_raw", StringComparison.InvariantCultureIgnoreCase))
                 {
@@ -265,7 +270,6 @@ namespace Nop.Web.Controllers
                 }
             }
 
-
             //Consider granting access rights to the resource to the ASP.NET request identity. 
             //ASP.NET has a base process identity 
             //(typically {MACHINE}\ASPNET on IIS 5 or Network Service on IIS 6 and IIS 7, 
@@ -275,22 +279,21 @@ namespace Nop.Web.Controllers
             var webHelper = EngineContext.Current.Resolve<IWebHelper>();
             //validate permissions
             var dirsToCheck = FilePermissionHelper.GetDirectoriesWrite();
-            foreach (string dir in dirsToCheck)
+            foreach (var dir in dirsToCheck)
                 if (!FilePermissionHelper.CheckPermissions(dir, false, true, true, false))
                     ModelState.AddModelError("", string.Format(_locService.GetResource("ConfigureDirectoryPermissions"), WindowsIdentity.GetCurrent().Name, dir));
 
             var filesToCheck = FilePermissionHelper.GetFilesWrite();
-            foreach (string file in filesToCheck)
+            foreach (var file in filesToCheck)
                 if (!FilePermissionHelper.CheckPermissions(file, false, true, true, true))
                     ModelState.AddModelError("", string.Format(_locService.GetResource("ConfigureFilePermissions"), WindowsIdentity.GetCurrent().Name, file));
 
             if (ModelState.IsValid)
             {
-                var settingsManager = new DataSettingsManager();
                 try
                 {
-                    string connectionString;
-                    if (model.DataProvider.Equals("sqlserver", StringComparison.InvariantCultureIgnoreCase))
+                    var connectionString = string.Empty;
+                    if (model.DataProvider == DataProviderType.SqlServer)
                     {
                         //SQL Server
 
@@ -322,7 +325,7 @@ namespace Nop.Web.Controllers
                                 //create database
                                 var collation = model.UseCustomCollation ? model.Collation : "";
                                 var errorCreatingDatabase = CreateDatabase(connectionString, collation);
-                                if (!String.IsNullOrEmpty(errorCreatingDatabase))
+                                if (!string.IsNullOrEmpty(errorCreatingDatabase))
                                     throw new Exception(errorCreatingDatabase);
                             }
                         }
@@ -333,41 +336,23 @@ namespace Nop.Web.Controllers
                                 throw new Exception(_locService.GetResource("DatabaseNotExists"));
                         }
                     }
-                    else
-                    {
-                        //SQL CE
-                        string databaseFileName = "Nop.Db.sdf";
-                        string databasePath = @"|DataDirectory|\" + databaseFileName;
-                        connectionString = "Data Source=" + databasePath + ";Persist Security Info=False";
-
-                        //drop database if exists
-                        string databaseFullPath = CommonHelper.MapPath("~/App_Data/") + databaseFileName;
-                        if (System.IO.File.Exists(databaseFullPath))
-                        {
-                            System.IO.File.Delete(databaseFullPath);
-                        }
-                    }
 
                     //save settings
-                    var dataProvider = model.DataProvider;
-                    var settings = new DataSettings
+                    DataSettingsManager.SaveSettings(new DataSettings
                     {
-                        DataProvider = dataProvider,
+                        DataProvider = model.DataProvider,
                         DataConnectionString = connectionString
-                    };
-                    settingsManager.SaveSettings(settings);
+                    }, _fileProvider);
 
-                    //init data provider
-                    var dataProviderInstance = EngineContext.Current.Resolve<BaseDataProviderManager>().LoadDataProvider();
-                    dataProviderInstance.InitDatabase();
-
+                    //initialize database
+                    EngineContext.Current.Resolve<IDataProvider>().InitializeDatabase();
 
                     //now resolve installation service
                     var installationService = EngineContext.Current.Resolve<IInstallationService>();
                     installationService.InstallData(model.AdminEmail, model.AdminPassword, model.InstallSampleData);
 
                     //reset cache
-                    DataSettingsHelper.ResetCache();
+                    DataSettingsManager.ResetCache();
 
                     //install plugins
                     PluginManager.MarkAllPluginsAsUninstalled();
@@ -377,7 +362,7 @@ namespace Nop.Web.Controllers
                         .OrderBy(x => x.PluginDescriptor.Group)
                         .ThenBy(x => x.PluginDescriptor.DisplayOrder)
                         .ToList();
-                    var pluginsIgnoredDuringInstallation = String.IsNullOrEmpty(_config.PluginsIgnoredDuringInstallation) ?
+                    var pluginsIgnoredDuringInstallation = string.IsNullOrEmpty(_config.PluginsIgnoredDuringInstallation) ?
                         new List<string>() :
                         _config.PluginsIgnoredDuringInstallation
                         .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
@@ -393,8 +378,7 @@ namespace Nop.Web.Controllers
 
                     //register default permissions
                     //var permissionProviders = EngineContext.Current.Resolve<ITypeFinder>().FindClassesOfType<IPermissionProvider>();
-                    var permissionProviders = new List<Type>();
-                    permissionProviders.Add(typeof(StandardPermissionProvider));
+                    var permissionProviders = new List<Type> { typeof(StandardPermissionProvider) };
                     foreach (var providerType in permissionProviders)
                     {
                         var provider = (IPermissionProvider)Activator.CreateInstance(providerType);
@@ -410,17 +394,13 @@ namespace Nop.Web.Controllers
                 catch (Exception exception)
                 {
                     //reset cache
-                    DataSettingsHelper.ResetCache();
+                    DataSettingsManager.ResetCache();
                     
                     var cacheManager = EngineContext.Current.Resolve<IStaticCacheManager>();
                     cacheManager.Clear();
 
                     //clear provider settings if something got wrong
-                    settingsManager.SaveSettings(new DataSettings
-                    {
-                        DataProvider = null,
-                        DataConnectionString = null
-                    });
+                    DataSettingsManager.SaveSettings(new DataSettings(), _fileProvider);
 
                     ModelState.AddModelError("", string.Format(_locService.GetResource("SetupFailed"), exception.Message));
                 }
@@ -430,7 +410,7 @@ namespace Nop.Web.Controllers
 
         public virtual IActionResult ChangeLanguage(string language)
         {
-            if (DataSettingsHelper.DatabaseIsInstalled())
+            if (DataSettingsManager.DatabaseIsInstalled)
                 return RedirectToRoute("HomePage");
 
             _locService.SaveCurrentLanguage(language);
@@ -442,7 +422,7 @@ namespace Nop.Web.Controllers
         [HttpPost]
         public virtual IActionResult RestartInstall()
         {
-            if (DataSettingsHelper.DatabaseIsInstalled())
+            if (DataSettingsManager.DatabaseIsInstalled)
                 return RedirectToRoute("HomePage");
 
             //restart application

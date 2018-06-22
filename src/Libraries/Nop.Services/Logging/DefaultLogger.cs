@@ -7,6 +7,7 @@ using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Logging;
 using Nop.Data;
+using Nop.Data.Extensions;
 
 namespace Nop.Services.Logging
 {
@@ -62,7 +63,7 @@ namespace Nop.Services.Logging
             if (!_commonSettings.IgnoreLogWordlist.Any())
                 return false;
 
-            if (String.IsNullOrWhiteSpace(message))
+            if (string.IsNullOrWhiteSpace(message))
                 return false;
 
             return _commonSettings
@@ -119,22 +120,13 @@ namespace Nop.Services.Logging
         /// </summary>
         public virtual void ClearLog()
         {
-            if (_commonSettings.UseStoredProceduresIfSupported && _dataProvider.StoredProceduredSupported)
-            {
-                //although it's not a stored procedure we use it to ensure that a database supports them
-                //we cannot wait until EF team has it implemented - http://data.uservoice.com/forums/72025-entity-framework-feature-suggestions/suggestions/1015357-batch-cud-support
+            //do all databases support "Truncate command"?
+            var logTableName = _dbContext.GetTableName<Log>();
+            _dbContext.ExecuteSqlCommand($"TRUNCATE TABLE [{logTableName}]");
 
-
-                //do all databases support "Truncate command"?
-                string logTableName = _dbContext.GetTableName<Log>();
-                _dbContext.ExecuteSqlCommand($"TRUNCATE TABLE [{logTableName}]");
-            }
-            else
-            {
-                var log = _logRepository.Table.ToList();
-                foreach (var logItem in log)
-                    _logRepository.Delete(logItem);
-            }
+            //var log = _logRepository.Table.ToList();
+            //foreach (var logItem in log)
+            //    _logRepository.Delete(logItem);
         }
 
         /// <summary>
@@ -161,7 +153,7 @@ namespace Nop.Services.Logging
                 var logLevelId = (int)logLevel.Value;
                 query = query.Where(l => logLevelId == l.LogLevelId);
             }
-             if (!String.IsNullOrEmpty(message))
+             if (!string.IsNullOrEmpty(message))
                 query = query.Where(l => l.ShortMessage.Contains(message) || l.FullMessage.Contains(message));
             query = query.OrderByDescending(l => l.CreatedOnUtc);
 
@@ -198,7 +190,7 @@ namespace Nop.Services.Logging
             var logItems = query.ToList();
             //sort by passed identifiers
             var sortedLogItems = new List<Log>();
-            foreach (int id in logIds)
+            foreach (var id in logIds)
             {
                 var log = logItems.Find(x => x.Id == id);
                 if (log != null)

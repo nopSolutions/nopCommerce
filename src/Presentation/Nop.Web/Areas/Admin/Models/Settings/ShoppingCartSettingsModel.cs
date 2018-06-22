@@ -1,13 +1,16 @@
 ﻿using Nop.Web.Framework.Mvc.ModelBinding;
-using Nop.Web.Framework.Mvc.Models;
+using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Areas.Admin.Models.Settings
 {
-    public partial class ShoppingCartSettingsModel : BaseNopModel
+    /// <summary>
+    /// Represents a shopping cart settings model
+    /// </summary>
+    public partial class ShoppingCartSettingsModel : BaseNopModel, ISettingsModel
     {
+        #region Properties
+
         public int ActiveStoreScopeConfiguration { get; set; }
-
-
 
         [NopResourceDisplayName("Admin.Configuration.Settings.ShoppingCart.DisplayCartAfterAddingProduct")]
         public bool DisplayCartAfterAddingProduct { get; set; }
@@ -80,5 +83,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.ShoppingCart.AllowCartItemEditing")]
         public bool AllowCartItemEditing { get; set; }
         public bool AllowCartItemEditing_OverrideForStore { get; set; }
+
+        #endregion
     }
 }

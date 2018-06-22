@@ -1,0 +1,126 @@
+﻿@model VendorAttributeModel
+
+<div class="panel-group">
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_vendor_attribute_details_values_top", additionalData = Model })
+    <div class="panel panel-default">
+        @if (Model.Id > 0)
+        {
+            /*TODO display the following warning if values are not supported by selected attribute control type - 'Values are not required for this attribute control type' */
+            
+            <div class="panel-body">
+                <div id="vendorattributevalues-grid"></div>
+
+                <script>
+                    $(document).ready(function () {
+                        $("#vendorattributevalues-grid").kendoGrid({
+                            dataSource: {
+                                type: "json",
+                                transport: {
+                                    read: {
+                                        url: "@Html.Raw(Url.Action("ValueList", "VendorAttribute"))",
+                                        type: "POST",
+                                        dataType: "json",
+                                        data: function() {
+                                            var data = {
+                                                VendorAttributeId: '@(Model.Id)'
+                                            };
+                                            addAntiForgeryToken(data);
+                                            return data;
+                                        }
+                                    },
+                                    destroy: {
+                                        url: "@Html.Raw(Url.Action("ValueDelete", "VendorAttribute"))",
+                                        type: "POST",
+                                        dataType: "json",
+                                        data: addAntiForgeryToken
+                                    }
+                                },
+                                schema: {
+                                    data: "Data",
+                                    total: "Total",
+                                    errors: "Errors",
+                                    model: {
+                                        id: "Id"
+                                    }
+                                },
+                                error: function (e) {
+                                    display_kendoui_grid_error(e);
+                                    // Cancel the changes
+                                    this.cancelChanges();
+                                },
+                                pageSize: @(Model.VendorAttributeValueSearchModel.PageSize),
+                                serverPaging: true,
+                                serverFiltering: true,
+                                serverSorting: true
+                            },
+                            pageable: {
+                                refresh: true,
+                                pageSizes: [@(Model.VendorAttributeValueSearchModel.AvailablePageSizes)],
+                                @await Html.PartialAsync("_GridPagerMessages")
+                            },
+                            editable: {
+                                confirmation: "@T("Admin.Common.DeleteConfirmation")",
+                                mode: "inline"
+                            },
+                            scrollable: false,
+                            columns: [{
+                                field: "Name",
+                                title: "@T("Admin.Vendors.VendorAttributes.Values.Fields.Name")"
+                            }, {
+                                field: "IsPreSelected",
+                                title: "@T("Admin.Vendors.VendorAttributes.Values.Fields.IsPreSelected")",
+                                width: 100,
+                                headerAttributes: { style: "text-align:center" },
+                                attributes: { style: "text-align:center" },
+                                template: '# if(IsPreSelected) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
+                            }, {
+                                field: "DisplayOrder",
+                                title: "@T("Admin.Vendors.VendorAttributes.Values.Fields.DisplayOrder")",
+                                width: 100
+                            }, {
+                                field: "Id",
+                                title: "@T("Admin.Common.Edit")",
+                                width: 100,
+                                headerAttributes: { style: "text-align:center" },
+                                attributes: { style: "text-align:center" },
+                                template: "<button onclick=\"javascript:OpenWindow('@Url.Content("~/Admin/VendorAttribute/ValueEditPopup/")#=Id#?btnId=btnRefresh&formId=vendorattribute-form', 800, 400, true); return false;\" class='btn btn-default'><i class=\"fa fa-pencil\"></i>@T("Admin.Common.Edit")</button>"
+                            }, {
+                                command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
+                                title: "@T("Admin.Common.Delete")",
+                                width: 100,
+                                headerAttributes: { style: "text-align:center" },
+                                attributes: { style: "text-align:center" }
+                            }]
+                        });
+                    });
+                </script>
+            </div>
+            <div class="panel-footer">
+                <button type="submit" id="btnAddNewValue" onclick="javascript:OpenWindow('@(Url.Action("ValueCreatePopup", "VendorAttribute", new { vendorAttributeId = Model.Id, btnId = "btnRefresh", formId = "vendorattribute-form" }))', 800, 400, true); return false;" class="btn btn-primary">
+                    @T("Admin.Vendors.VendorAttributes.Values.AddNew")
+                </button>
+                <input type="submit" id="btnRefresh" style="display: none" />
+                <script>
+                    $(document).ready(function () {
+                        $('#btnRefresh').click(function () {
+                            //refresh grid
+                            var grid = $("#vendorattributevalues-grid").data('kendoGrid');
+                            grid.dataSource.read();
+
+                            //return false to don't reload a page
+                            return false;
+                        });
+                    });
+                </script>
+            </div>
+        }
+        else
+        {
+            <div class="panel-body">
+                @T("Admin.Vendors.VendorAttributes.Values.SaveBeforeEdit")
+            </div>
+        }
+    </div>
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_vendor_attribute_details_values_bottom", additionalData = Model })
+</div>
+

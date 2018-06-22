@@ -8,6 +8,9 @@ namespace Nop.Services.Shipping.Pickup
     /// </summary>
     public partial class GetPickupPointsResponse
     {
+        /// <summary>
+        /// Ctor
+        /// </summary>
         public GetPickupPointsResponse()
         {
             Errors = new List<string>();

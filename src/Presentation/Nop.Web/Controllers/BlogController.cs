@@ -5,6 +5,7 @@ using Nop.Core;
 using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
+using Nop.Core.Domain.Security;
 using Nop.Services.Blogs;
 using Nop.Services.Events;
 using Nop.Services.Localization;
@@ -48,7 +49,7 @@ namespace Nop.Web.Controllers
         
         #endregion
         
-        #region Constructors
+        #region Ctor
 
         public BlogController(IBlogService blogService,
             IWorkContext workContext,
@@ -94,6 +95,7 @@ namespace Nop.Web.Controllers
             var model = _blogModelFactory.PrepareBlogPostListModel(command);
             return View("List", model);
         }
+
         public virtual IActionResult BlogByTag(BlogPagingFilteringModel command)
         {
             if (!_blogSettings.Enabled)
@@ -102,6 +104,7 @@ namespace Nop.Web.Controllers
             var model = _blogModelFactory.PrepareBlogPostListModel(command);
             return View("List", model);
         }
+
         public virtual IActionResult BlogByMonth(BlogPagingFilteringModel command)
         {
             if (!_blogSettings.Enabled)
@@ -126,7 +129,7 @@ namespace Nop.Web.Controllers
             var blogPosts = _blogService.GetAllBlogPosts(_storeContext.CurrentStore.Id, languageId);
             foreach (var blogPost in blogPosts)
             {
-                string blogPostUrl = Url.RouteUrl("BlogPost", new { SeName = blogPost.GetSeName(blogPost.LanguageId, ensureTwoPublishedLanguages: false) }, _webHelper.IsCurrentConnectionSecured() ? "https" : "http");
+                var blogPostUrl = Url.RouteUrl("BlogPost", new { SeName = blogPost.GetSeName(blogPost.LanguageId, ensureTwoPublishedLanguages: false) }, _webHelper.CurrentRequestProtocol);
                 items.Add(new RssItem(blogPost.Title, blogPost.Body, new Uri(blogPostUrl),
                     $"urn:store:{_storeContext.CurrentStore.Id}:blog:post:{blogPost.Id}", blogPost.CreatedOnUtc));
             }
@@ -140,9 +143,12 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("HomePage");
 
             var blogPost = _blogService.GetBlogPostById(blogPostId);
-            if (blogPost == null ||
-                (blogPost.StartDateUtc.HasValue && blogPost.StartDateUtc.Value >= DateTime.UtcNow) ||
-                (blogPost.EndDateUtc.HasValue && blogPost.EndDateUtc.Value <= DateTime.UtcNow))
+            if (blogPost == null)
+                return RedirectToRoute("HomePage");
+            
+            var hasAdminAccess = _permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && _permissionService.Authorize(StandardPermissionProvider.ManageBlog);
+            //access to Blog preview
+            if (!blogPost.IsAvailable() && !hasAdminAccess)
                 return RedirectToRoute("HomePage");
 
             //Store mapping
@@ -150,7 +156,7 @@ namespace Nop.Web.Controllers
                 return InvokeHttp404();
             
             //display "edit" (manage) link
-            if (_permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && _permissionService.Authorize(StandardPermissionProvider.ManageBlog))
+            if (hasAdminAccess)
                 DisplayEditLink(Url.Action("Edit", "Blog", new { id = blogPost.Id, area = AreaNames.Admin }));
 
             var model = new BlogPostModel();
@@ -202,7 +208,8 @@ namespace Nop.Web.Controllers
                     _workflowMessageService.SendBlogCommentNotificationMessage(comment, _localizationSettings.DefaultAdminLanguageId);
 
                 //activity log
-                _customerActivityService.InsertActivity("PublicStore.AddBlogComment", _localizationService.GetResource("ActivityLog.PublicStore.AddBlogComment"));
+                _customerActivityService.InsertActivity("PublicStore.AddBlogComment",
+                    _localizationService.GetResource("ActivityLog.PublicStore.AddBlogComment"), comment);
 
                 //raise event
                 if (comment.IsApproved)

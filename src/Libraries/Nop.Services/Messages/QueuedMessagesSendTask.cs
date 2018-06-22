@@ -13,6 +13,12 @@ namespace Nop.Services.Messages
         private readonly IEmailSender _emailSender;
         private readonly ILogger _logger;
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="queuedEmailService">Queued email service</param>
+        /// <param name="emailSender">Email sender</param>
+        /// <param name="logger">Logger</param>
         public QueuedMessagesSendTask(IQueuedEmailService queuedEmailService,
             IEmailSender emailSender, 
             ILogger logger)
@@ -32,10 +38,10 @@ namespace Nop.Services.Messages
                 true, true, maxTries, false, 0, 500);
             foreach (var queuedEmail in queuedEmails)
             {
-                var bcc = String.IsNullOrWhiteSpace(queuedEmail.Bcc) 
+                var bcc = string.IsNullOrWhiteSpace(queuedEmail.Bcc) 
                             ? null 
                             : queuedEmail.Bcc.Split(new [] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-                var cc = String.IsNullOrWhiteSpace(queuedEmail.CC) 
+                var cc = string.IsNullOrWhiteSpace(queuedEmail.CC) 
                             ? null 
                             : queuedEmail.CC.Split(new [] { ';' }, StringSplitOptions.RemoveEmptyEntries);
 

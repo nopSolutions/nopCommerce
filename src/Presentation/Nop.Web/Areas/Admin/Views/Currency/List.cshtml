@@ -1,13 +1,12 @@
-﻿@using System.Text.Encodings.Web
-@{
-    List<Nop.Core.Domain.Directory.ExchangeRate> rates = ViewBag.Rates;
-    bool autoUpdateEnabled = ViewBag.AutoUpdateEnabled ?? false;
+﻿@model CurrencySearchModel
 
+@{
     //page title
     ViewBag.Title = T("Admin.Configuration.Currencies").Text;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Currencies");
 }
+@using System.Text.Encodings.Web
 
 <form asp-controller="Currency" asp-action="List" method="post">
     <div class="content-header clearfix">
@@ -27,7 +26,7 @@
                 <i class="fa fa-plus-square"></i>
                 @T("Admin.Common.AddNew")
             </a>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_currency_list_buttons" })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CurrencyListButtons })
         </div>
     </div>
 
@@ -38,26 +37,20 @@
                     <div class="panel-body">
                         <div class="form-group">
                             <div class="col-md-3">
-                                <div class="label-wrapper">
-                                    <label class="control-label">
-                                        @T("Admin.Configuration.Currencies.Fields.ExchangeRateProvider")
-                                    </label>
-                                </div>
+                                <nop-label asp-for="ExchangeRateProviderModel.ExchangeRateProvider"/>
                             </div>
                             <div class="col-md-9">
-                                <nop-select asp-for-name="exchangeRateProvider" asp-items="@(ViewBag.ExchangeRateProviders as IEnumerable<SelectListItem>)" />
+                                <nop-select asp-for-name="ExchangeRateProviderModel.ExchangeRateProvider" asp-items="Model.ExchangeRateProviderModel.ExchangeRateProviders" />
+                                <span asp-validation-for="ExchangeRateProviderModel.ExchangeRateProvider"></span>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="col-md-3">
-                                <div class="label-wrapper">
-                                    <label class="control-label">
-                                        @T("Admin.Configuration.Currencies.Fields.CurrencyRateAutoUpdateEnabled")
-                                    </label>
-                                </div>
+                                <nop-label asp-for="ExchangeRateProviderModel.AutoUpdateEnabled"/>
                             </div>
                             <div class="col-md-9">
-                                <input type="checkbox" name="autoUpdateEnabled" id="autoUpdateEnabled" @if(autoUpdateEnabled) {<text>checked="checked"</text>}/>
+                                <nop-editor asp-for="ExchangeRateProviderModel.AutoUpdateEnabled"/>
+                                <span asp-validation-for="ExchangeRateProviderModel.AutoUpdateEnabled"></span>
                             </div>
                         </div>
                     </div>
@@ -88,15 +81,14 @@
                                             // Cancel the changes
                                             this.cancelChanges();
                                         },
+                                        pageSize: @(Model.PageSize),
                                         serverPaging: true,
                                         serverFiltering: true,
                                         serverSorting: true
                                     },
                                     pageable: {
                                         refresh: true,
-                                        numeric: false,
-                                        previousNext: false,
-                                        info: false,
+                                        pageSizes: [@(Model.AvailablePageSizes)],
                                         @await Html.PartialAsync("_GridPagerMessages")
                                     },
                                     editable: {
@@ -211,7 +203,7 @@
                         </script>
                     </div>
                 </div>
-                @if (rates != null)
+                @if (Model.ExchangeRateProviderModel.ExchangeRates?.Any() ?? false)
                 {
                     <div class="panel panel-default">
                         <div class="panel-heading">
@@ -246,6 +238,9 @@
                                             info: false,
                                             @await Html.PartialAsync("_GridPagerMessages")
                                         },
+                                        toolbar: [{
+                                            template: '<a onclick="applyCurrencyRate()" class="btn bg-olive">@T("Admin.Configuration.Currencies.ApplyRate.All")</a>'
+                                        }],
                                         scrollable: false,
                                         columns: [
                                             {
@@ -267,14 +262,13 @@
 
                                 function applyCurrencyRate(rate, currencyCode) {
                                     var postData = {
-                                        rate: rate,
-                                        currencyCode: currencyCode
+                                        rateModels: (rate && currencyCode) ? [ { CurrencyCode: currencyCode, Rate: rate} ] : rates
                                     };
                                     addAntiForgeryToken(postData);
                                     $.ajax({
                                         cache: false,
                                         type: "POST",
-                                        url: "@(Url.Action("ApplyRate"))",
+                                        url: '@(Url.Action("ApplyRates"))',
                                         data: postData,
                                         success: function (data) {
                                             var grid = $("#currencies-grid").data('kendoGrid');
@@ -284,20 +278,20 @@
                                             alert('Failed to update currency');
                                         }
                                     });
-                                };
+                                }
 
                                 //local datasource
                                 var rates = [
-                                    @for (int i = 0; i < rates.Count; i++)
+                                    @for (var i = 0; i < Model.ExchangeRateProviderModel.ExchangeRates.Count; i++)
                                     {
-                                        var rate = rates[i];
+                                        var rate = Model.ExchangeRateProviderModel.ExchangeRates[i];
                                         <text>
                                             {
                                                 CurrencyCode: "@(Html.Raw(JavaScriptEncoder.Default.Encode(rate.CurrencyCode)))",
                                                 Rate: "@(Html.Raw(JavaScriptEncoder.Default.Encode(rate.Rate.ToString())))"
                                             }
                                         </text>
-                                        if (i != rates.Count - 1)
+                                        if (i != Model.ExchangeRateProviderModel.ExchangeRates.Count - 1)
                                         {
                                             <text>,</text>
                                         }

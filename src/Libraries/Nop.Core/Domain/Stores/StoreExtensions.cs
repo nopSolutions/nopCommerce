@@ -4,6 +4,9 @@ using System.Linq;
 
 namespace Nop.Core.Domain.Stores
 {
+    /// <summary>
+    /// Store extensions
+    /// </summary>
     public static class StoreExtensions
     {
         /// <summary>
@@ -17,16 +20,17 @@ namespace Nop.Core.Domain.Stores
                 throw new ArgumentNullException(nameof(store));
 
             var parsedValues = new List<string>();
-            if (!String.IsNullOrEmpty(store.Hosts))
+            if (string.IsNullOrEmpty(store.Hosts)) 
+                return parsedValues.ToArray();
+
+            var hosts = store.Hosts.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+            foreach (var host in hosts)
             {
-                string[] hosts = store.Hosts.Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-                foreach (string host in hosts)
-                {
-                    var tmp = host.Trim();
-                    if (!String.IsNullOrEmpty(tmp))
-                        parsedValues.Add(tmp);
-                }
+                var tmp = host.Trim();
+                if (!string.IsNullOrEmpty(tmp))
+                    parsedValues.Add(tmp);
             }
+
             return parsedValues.ToArray();
         }
 
@@ -41,11 +45,12 @@ namespace Nop.Core.Domain.Stores
             if (store == null)
                 throw new ArgumentNullException(nameof(store));
 
-            if (String.IsNullOrEmpty(host))
+            if (string.IsNullOrEmpty(host))
                 return false;
 
             var contains = store.ParseHostValues()
-                                .FirstOrDefault(x => x.Equals(host, StringComparison.InvariantCultureIgnoreCase)) != null;
+                .FirstOrDefault(x => x.Equals(host, StringComparison.InvariantCultureIgnoreCase)) != null;
+
             return contains;
         }
     }

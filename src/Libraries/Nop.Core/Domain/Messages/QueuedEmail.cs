@@ -107,21 +107,13 @@ namespace Nop.Core.Domain.Messages
         /// </summary>
         public virtual EmailAccount EmailAccount { get; set; }
 
-
         /// <summary>
         /// Gets or sets the priority
         /// </summary>
         public QueuedEmailPriority Priority
         {
-            get
-            {
-                return (QueuedEmailPriority)this.PriorityId;
-            }
-            set
-            {
-                this.PriorityId = (int)value;
-            }
+            get => (QueuedEmailPriority)this.PriorityId;
+            set => this.PriorityId = (int)value;
         }
-
     }
 }

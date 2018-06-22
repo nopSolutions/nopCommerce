@@ -10,6 +10,10 @@ namespace Nop.Services.Caching
     {
         private readonly IStaticCacheManager _staticCacheManager;
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="staticCacheManager">Cache manager</param>
         public ClearCacheTask(IStaticCacheManager staticCacheManager)
         {
             this._staticCacheManager = staticCacheManager;

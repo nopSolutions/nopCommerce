@@ -1,5 +1,7 @@
-﻿@using System.Text.Encodings.Web
-@model PluginListModel
+﻿@model PluginSearchModel
+
+@using System.Text.Encodings.Web
+@using Nop.Core.Plugins
 
 @{
     //page title
@@ -15,7 +17,7 @@
         </h1>
         <div class="pull-right">
             <button type="submit" name="plugin-reload-grid" class="btn bg-blue">@T("Admin.Configuration.Plugins.ReloadList")</button>
-            <script type="text/javascript">
+            <script>
                 $(document).ready(function() {
                     $("button[name='plugin-reload-grid']").on("click", function (e) {
                         showThrobber('@Html.Raw(JavaScriptEncoder.Default.Encode(T("Admin.Configuration.Plugins.ReloadList.Progress").Text))');
@@ -26,13 +28,13 @@
                 <i class="fa fa-upload"></i>
                 @T("Admin.Configuration.Plugins.Upload")
             </button>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_plugin_list_buttons" })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.PluginListButtons })
         </div>
     </div>
 
     <div class="content">
         <div class="form-horizontal">
-            <script type="text/javascript">
+            <script>
                 $(document).ready(function () {
                     //install a plugin
                     $("#plugins-grid").on("click", ".install-plugin-link", function (e) {
@@ -71,8 +73,9 @@
                                         <li>@T("Admin.Configuration.Plugins.Description.Step4")</li>
                                     </ol>
                                 </p>
-                                @T("Admin.Configuration.Plugins.Description.DownloadMorePlugins")
-
+                                <p>
+                                    @T("Admin.Configuration.Plugins.Description.DownloadMorePlugins")
+                                </p>
                                 <div class="form-group">
                                     <div class="col-md-4">
                                         <nop-label asp-for="SearchLoadModeId" />
@@ -116,7 +119,14 @@
                                                 url: "@Html.Raw(Url.Action("ListSelect", "Plugin"))",
                                                 type: "POST",
                                                 dataType: "json",
-                                                data: additionalData
+                                                data: function() {
+                                                    var data = {
+                                                        SearchLoadModeId: $('#SearchLoadModeId').val(),
+                                                        SearchGroup: $('#SearchGroup').val()
+                                                    };
+                                                    addAntiForgeryToken(data);
+                                                    return data;
+                                                }
                                             }
                                         },
                                         schema: {
@@ -129,15 +139,14 @@
                                             // Cancel the changes
                                             this.cancelChanges();
                                         },
+                                        pageSize: @(Model.PageSize),
                                         serverPaging: true,
                                         serverFiltering: true,
                                         serverSorting: true
                                     },
                                     pageable: {
                                         refresh: true,
-                                        numeric: false,
-                                        previousNext: false,
-                                        info: false,
+                                        pageSizes: [@(Model.AvailablePageSizes)],
                                         @await Html.PartialAsync("_GridPagerMessages")
                                     },
                                     editable: {
@@ -206,7 +215,7 @@
                                         </div>
                                         <div class="modal-footer">
                                             <span class="btn btn-default" data-dismiss="modal">@T("Admin.Common.NoCancel")</span>
-                                            <button type="submit" class="btn btn-primary pull-right">@T("Delete")</button>
+                                            <button type="submit" class="btn bg-red pull-right">@T("Admin.Common.Delete")</button>
                                         </div>
                                     </div>                                    
                             </div>
@@ -233,7 +242,7 @@
 
                     <div>
                         <input type="submit" id="btnRefresh" style="display: none" />
-                        <script type="text/javascript">
+                        <script>
                             $(document).ready(function () {
                                 $('#btnRefresh').click(function () {
                                     //refresh grid
@@ -246,7 +255,7 @@
                             });
                         </script>
 
-                        <script type="text/javascript">
+                        <script>
                             $(document).ready(function () {
                                 //search button
                                 $('#search-plugins').click(function () {
@@ -257,15 +266,6 @@
                                     return false;
                                 });
                             });
-
-                            function additionalData() {
-                                var data = {
-                                    SearchLoadModeId: $('#SearchLoadModeId').val(),
-                                    SearchGroup: $('#SearchGroup').val()
-                                };
-                                addAntiForgeryToken(data);
-                                return data;
-                            }
                         </script>
                     </div>
                 </div>
@@ -283,18 +283,21 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title" id="uploadplugin-window-title">@T("Admin.Configuration.Plugins.Upload")</h4>
             </div>
-            <form asp-controller="Plugin" asp-action="UploadPlugin" method="post" enctype="multipart/form-data">
+            <form asp-controller="Plugin" asp-action="UploadPluginsAndThemes" method="post" enctype="multipart/form-data">
                 <div class="form-horizontal">
                     <div class="modal-body">
                         <ul class="common-list">
                             <li>
-                                <em>@T("Admin.Configuration.Plugins.Upload.Hint1")</em>
+                                @T("Admin.Configuration.Plugins.Upload.Hint1")
                             </li>
                             <li>
-                                <em>@T("Admin.Configuration.Plugins.Upload.Hint2")</em>
+                                @string.Format(T("Admin.Configuration.Plugins.Upload.Hint2").Text, NopPluginDefaults.UploadedItemsFileName)
                             </li>
                             <li>
                                 <em>@T("Admin.Configuration.Plugins.Upload.Hint3")</em>
+                            </li>
+                            <li>
+                                <em>@T("Admin.Configuration.Plugins.Upload.Hint4")</em>
                             </li>
                         </ul>
                         <div class="form-group">

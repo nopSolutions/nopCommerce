@@ -2,12 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Text.RegularExpressions;
+using Nop.Core.Infrastructure;
 
 namespace Nop.Core
 {
@@ -18,9 +18,10 @@ namespace Nop.Core
     {
         #region Fields
 
-        private static readonly Regex _emailRegex;
         //we use EmailValidator from FluentValidation. So let's keep them sync - https://github.com/JeremySkinner/FluentValidation/blob/master/src/FluentValidation/Validators/EmailValidator.cs
         private const string _emailExpression = @"^((([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-||_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+([a-z]+|\d|-|\.{0,1}|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])?([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))$";
+
+        private static readonly Regex _emailRegex;
 
         #endregion
 
@@ -42,7 +43,7 @@ namespace Nop.Core
         /// <returns></returns>
         public static string EnsureSubscriberEmailOrThrow(string email)
         {
-            string output = EnsureNotNull(email);
+            var output = EnsureNotNull(email);
             output = output.Trim();
             output = EnsureMaximumLength(output, 255);
 
@@ -61,7 +62,7 @@ namespace Nop.Core
         /// <returns>true if the string is a valid e-mail address and false if it's not</returns>
         public static bool IsValidEmail(string email)
         {
-            if (String.IsNullOrEmpty(email))
+            if (string.IsNullOrEmpty(email))
                 return false;
 
             email = email.Trim();
@@ -87,19 +88,19 @@ namespace Nop.Core
         public static string GenerateRandomDigitCode(int length)
         {
             var random = new Random();
-            string str = String.Empty;
-            for (int i = 0; i < length; i++)
-                str = String.Concat(str, random.Next(10).ToString());
+            var str = string.Empty;
+            for (var i = 0; i < length; i++)
+                str = string.Concat(str, random.Next(10).ToString());
             return str;
         }
 
         /// <summary>
-        /// Returns an random interger number within a specified rage
+        /// Returns an random integer number within a specified rage
         /// </summary>
         /// <param name="min">Minimum number</param>
         /// <param name="max">Maximum number</param>
         /// <returns>Result</returns>
-        public static int GenerateRandomInteger(int min = 0, int max = Int32.MaxValue)
+        public static int GenerateRandomInteger(int min = 0, int max = int.MaxValue)
         {
             var randomNumberBuffer = new byte[10];
             new RNGCryptoServiceProvider().GetBytes(randomNumberBuffer);
@@ -112,25 +113,24 @@ namespace Nop.Core
         /// <param name="str">Input string</param>
         /// <param name="maxLength">Maximum length</param>
         /// <param name="postfix">A string to add to the end if the original string was shorten</param>
-        /// <returns>Input string if its lengh is OK; otherwise, truncated input string</returns>
+        /// <returns>Input string if its length is OK; otherwise, truncated input string</returns>
         public static string EnsureMaximumLength(string str, int maxLength, string postfix = null)
         {
-            if (String.IsNullOrEmpty(str))
+            if (string.IsNullOrEmpty(str))
                 return str;
 
-            if (str.Length > maxLength)
-            {
-                var pLen = postfix == null ? 0 : postfix.Length;
+            if (str.Length <= maxLength) 
+                return str;
 
-                var result = str.Substring(0, maxLength - pLen);
-                if (!String.IsNullOrEmpty(postfix))
-                {
-                    result += postfix;
-                }
-                return result;
+            var pLen = postfix?.Length ?? 0;
+
+            var result = str.Substring(0, maxLength - pLen);
+            if (!string.IsNullOrEmpty(postfix))
+            {
+                result += postfix;
             }
 
-            return str;
+            return result;
         }
 
         /// <summary>
@@ -140,7 +140,7 @@ namespace Nop.Core
         /// <returns>Input string with only numeric values, empty string if input is null/empty</returns>
         public static string EnsureNumericOnly(string str)
         {
-            return String.IsNullOrEmpty(str) ? String.Empty : new string(str.Where(p => Char.IsDigit(p)).ToArray());
+            return string.IsNullOrEmpty(str) ? string.Empty : new string(str.Where(char.IsDigit).ToArray());
         }
 
         /// <summary>
@@ -150,7 +150,7 @@ namespace Nop.Core
         /// <returns>Result</returns>
         public static string EnsureNotNull(string str)
         {
-            return str ?? String.Empty;
+            return str ?? string.Empty;
         }
 
         /// <summary>
@@ -160,11 +160,11 @@ namespace Nop.Core
         /// <returns>Boolean</returns>
         public static bool AreNullOrEmpty(params string[] stringsToValidate)
         {
-            return stringsToValidate.Any(p => String.IsNullOrEmpty(p));
+            return stringsToValidate.Any(string.IsNullOrEmpty);
         }
 
         /// <summary>
-        /// Compare two arrasy
+        /// Compare two arrays
         /// </summary>
         /// <typeparam name="T">Type</typeparam>
         /// <param name="a1">Array 1</param>
@@ -183,16 +183,11 @@ namespace Nop.Core
                 return false;
 
             var comparer = EqualityComparer<T>.Default;
-            for (int i = 0; i < a1.Length; i++)
-            {
-                if (!comparer.Equals(a1[i], a2[i])) return false;
-            }
-            return true;
+            return !a1.Where((t, i) => !comparer.Equals(t, a2[i])).Any();
         }
         
-       
         /// <summary>
-        /// Sets a property on an object to a valuae.
+        /// Sets a property on an object to a value.
         /// </summary>
         /// <param name="instance">The object whose property to set.</param>
         /// <param name="propertyName">The name of the property to set.</param>
@@ -202,8 +197,8 @@ namespace Nop.Core
             if (instance == null) throw new ArgumentNullException(nameof(instance));
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
 
-            Type instanceType = instance.GetType();
-            PropertyInfo pi = instanceType.GetProperty(propertyName);
+            var instanceType = instance.GetType();
+            var pi = instanceType.GetProperty(propertyName);
             if (pi == null)
                 throw new NopException("No property '{0}' found on the instance of type '{1}'.", propertyName, instanceType);
             if (!pi.CanWrite)
@@ -233,24 +228,25 @@ namespace Nop.Core
         /// <returns>The converted value.</returns>
         public static object To(object value, Type destinationType, CultureInfo culture)
         {
-            if (value != null)
-            {
-                var sourceType = value.GetType();
+            if (value == null) 
+                return null;
 
-                var destinationConverter = TypeDescriptor.GetConverter(destinationType);
-                if (destinationConverter != null && destinationConverter.CanConvertFrom(value.GetType()))
-                    return destinationConverter.ConvertFrom(null, culture, value);
+            var sourceType = value.GetType();
 
-                var sourceConverter = TypeDescriptor.GetConverter(sourceType);
-                if (sourceConverter != null && sourceConverter.CanConvertTo(destinationType))
-                    return sourceConverter.ConvertTo(null, culture, value, destinationType);
+            var destinationConverter = TypeDescriptor.GetConverter(destinationType);
+            if (destinationConverter.CanConvertFrom(value.GetType()))
+                return destinationConverter.ConvertFrom(null, culture, value);
 
-                if (destinationType.IsEnum && value is int)
-                    return Enum.ToObject(destinationType, (int)value);
+            var sourceConverter = TypeDescriptor.GetConverter(sourceType);
+            if (sourceConverter.CanConvertTo(destinationType))
+                return sourceConverter.ConvertTo(null, culture, value, destinationType);
 
-                if (!destinationType.IsInstanceOfType(value))
-                    return Convert.ChangeType(value, destinationType, culture);
-            }
+            if (destinationType.IsEnum && value is int)
+                return Enum.ToObject(destinationType, (int)value);
+
+            if (!destinationType.IsInstanceOfType(value))
+                return Convert.ChangeType(value, destinationType, culture);
+
             return value;
         }
 
@@ -273,8 +269,8 @@ namespace Nop.Core
         /// <returns>Converted string</returns>
         public static string ConvertEnum(string str)
         {
-            if (String.IsNullOrEmpty(str)) return String.Empty;
-            string result = String.Empty;
+            if (string.IsNullOrEmpty(str)) return string.Empty;
+            var result = string.Empty;
             foreach (var c in str)
                 if (c.ToString() != c.ToString().ToLower())
                     result += " " + c.ToString();
@@ -308,28 +304,17 @@ namespace Nop.Core
         {
             //source: http://stackoverflow.com/questions/9/how-do-i-calculate-someones-age-in-c
             //this assumes you are looking for the western idea of age and not using East Asian reckoning.
-            int age = endDate.Year - startDate.Year;
+            var age = endDate.Year - startDate.Year;
             if (startDate > endDate.AddYears(-age))
                 age--;
             return age;
         }
 
         /// <summary>
-        /// Maps a virtual path to a physical disk path.
-        /// </summary>
-        /// <param name="path">The path to map. E.g. "~/bin"</param>
-        /// <returns>The physical path. E.g. "c:\inetpub\wwwroot\bin"</returns>
-        public static string MapPath(string path)
-        {
-            path = path.Replace("~/", "").TrimStart('/').Replace('/', '\\');
-            return Path.Combine(BaseDirectory??String.Empty, path);
-        }
-
-        /// <summary>
         /// Get private fields property value
         /// </summary>
         /// <param name="target">Target object</param>
-        /// <param name="fieldName">Feild name</param>
+        /// <param name="fieldName">Field name</param>
         /// <returns>Value</returns>
         public static object GetPrivateFieldValue(object target, string fieldName)
         {
@@ -338,12 +323,12 @@ namespace Nop.Core
                 throw new ArgumentNullException("target", "The assignment target cannot be null.");
             }
 
-            if (String.IsNullOrEmpty(fieldName))
+            if (string.IsNullOrEmpty(fieldName))
             {
                 throw new ArgumentException("fieldName", "The field name cannot be null or empty.");
             }
 
-            Type t = target.GetType();
+            var t = target.GetType();
             FieldInfo fi = null;
 
             while (t != null)
@@ -363,45 +348,15 @@ namespace Nop.Core
             return fi.GetValue(target);
         }
 
-        /// <summary>
-        ///  Depth-first recursive delete, with handling for descendant directories open in Windows Explorer.
-        /// </summary>
-        /// <param name="path">Directory path</param>
-        public static void DeleteDirectory(string path)
-        {
-            if (String.IsNullOrEmpty(path))
-                throw new ArgumentNullException(path);
-
-            //find more info about directory deletion
-            //and why we use this approach at https://stackoverflow.com/questions/329355/cannot-delete-directory-with-directory-deletepath-true
-
-            foreach (string directory in Directory.GetDirectories(path))
-            {
-                DeleteDirectory(directory);
-            }
-
-            try
-            {
-                Directory.Delete(path, true);
-            }
-            catch (IOException)
-            {
-                Directory.Delete(path, true);
-            }
-            catch (UnauthorizedAccessException)
-            {
-                Directory.Delete(path, true);
-            }
-        }
         #endregion
 
         #region Properties
 
         /// <summary>
-        /// Gets or sets application base path
+        /// Gets or sets the default file provider
         /// </summary>
-        internal static string BaseDirectory { get; set; }
-        
+        public static INopFileProvider DefaultFileProvider { get; set; }
+
         #endregion
     }
 }

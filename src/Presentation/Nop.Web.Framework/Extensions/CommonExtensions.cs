@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core.Infrastructure;
 using Nop.Services.Helpers;
 using Nop.Web.Framework.Kendoui;
+using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Framework.Extensions
 {
@@ -13,11 +14,30 @@ namespace Nop.Web.Framework.Extensions
     /// </summary>
     public static class CommonExtensions
     {
+        /// <summary>
+        /// In-memory paging of entities (models)
+        /// </summary>
+        /// <typeparam name="T">Type</typeparam>
+        /// <param name="current">Entities (models)</param>
+        /// <param name="command">Command (paging details)</param>
+        /// <returns>Paged entities (models)</returns>
         public static IEnumerable<T> PagedForCommand<T>(this IEnumerable<T> current, DataSourceRequest command)
         {
             return current.Skip((command.Page - 1) * command.PageSize).Take(command.PageSize);
         }
-        
+
+        /// <summary>
+        /// In-memory paging of objects
+        /// </summary>
+        /// <typeparam name="T">Type of objects</typeparam>
+        /// <param name="collection">Object collection</param>
+        /// <param name="requestModel">Paging request model</param>
+        /// <returns>Paged collection of objects</returns>
+        public static IEnumerable<T> PaginationByRequestModel<T>(this IEnumerable<T> collection, IPagingRequestModel requestModel)
+        {
+            return collection.Skip((requestModel.Page - 1) * requestModel.PageSize).Take(requestModel.PageSize);
+        }
+
         /// <summary>
         /// Returns a value indicating whether real selection is not possible
         /// </summary>
@@ -62,10 +82,10 @@ namespace Nop.Web.Framework.Extensions
         public static string RelativeFormat(this DateTime source,
             bool convertToUserTime, string defaultFormat)
         {
-            string result = "";
+            var result = "";
 
             var ts = new TimeSpan(DateTime.UtcNow.Ticks - source.Ticks);
-            double delta = ts.TotalSeconds;
+            var delta = ts.TotalSeconds;
 
             if (delta > 0)
             {
@@ -87,7 +107,7 @@ namespace Nop.Web.Framework.Extensions
                 }
                 else if (delta < 86400) // 24 (hours) * 60 (minutes) * 60 (seconds)
                 {
-                    int hours = ts.Hours;
+                    var hours = ts.Hours;
                     if (hours == 1)
                         hours = 2;
                     result = hours + " hours ago";
@@ -102,24 +122,24 @@ namespace Nop.Web.Framework.Extensions
                 }
                 else if (delta < 31104000) // 12 (months) * 30 (days) * 24 (hours) * 60 (minutes) * 60 (seconds)
                 {
-                    int months = Convert.ToInt32(Math.Floor((double)ts.Days / 30));
+                    var months = Convert.ToInt32(Math.Floor((double)ts.Days / 30));
                     result = months <= 1 ? "one month ago" : months + " months ago";
                 }
                 else
                 {
-                    int years = Convert.ToInt32(Math.Floor((double)ts.Days / 365));
+                    var years = Convert.ToInt32(Math.Floor((double)ts.Days / 365));
                     result = years <= 1 ? "one year ago" : years + " years ago";
                 }
             }
             else
             {
-                DateTime tmp1 = source;
+                var tmp1 = source;
                 if (convertToUserTime)
                 {
                     tmp1 = EngineContext.Current.Resolve<IDateTimeHelper>().ConvertToUserTime(tmp1, DateTimeKind.Utc);
                 }
                 //default formatting
-                if (!String.IsNullOrEmpty(defaultFormat))
+                if (!string.IsNullOrEmpty(defaultFormat))
                 {
                     result = tmp1.ToString(defaultFormat);
                 }

@@ -20,5 +20,4 @@ namespace Nop.Core.Domain.Catalog
         /// </summary>
         public int DisplayOrder { get; set; }
     }
-
 }

@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.IO;
 using Nop.Core;
 
 namespace Nop.Services.Common
@@ -27,7 +26,7 @@ namespace Nop.Services.Common
         /// Gets all backup files
         /// </summary>
         /// <returns>Backup file collection</returns>
-        IList<FileInfo> GetAllBackupFiles();
+        IList<string> GetAllBackupFiles();
 
         /// <summary>
         /// Creates a backup of the database
@@ -46,5 +45,10 @@ namespace Nop.Services.Common
         /// <param name="backupFileName">The name of the backup file</param>
         /// <returns>The path to the backup file</returns>
         string GetBackupPath(string backupFileName);
+
+        /// <summary>
+        /// Re-index database tables
+        /// </summary>
+        void ReIndexTables();
     }
 }

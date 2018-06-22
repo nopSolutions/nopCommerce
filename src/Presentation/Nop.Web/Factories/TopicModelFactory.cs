@@ -31,7 +31,7 @@ namespace Nop.Web.Factories
 
         #endregion
 
-        #region Constructors
+        #region Ctor
 
         public TopicModelFactory(ITopicService topicService,
             IWorkContext workContext,
@@ -76,7 +76,8 @@ namespace Nop.Web.Factories
                 MetaDescription = topic.GetLocalized(x => x.MetaDescription),
                 MetaTitle = topic.GetLocalized(x => x.MetaTitle),
                 SeName = topic.GetSeName(),
-                TopicTemplateId = topic.TopicTemplateId
+                TopicTemplateId = topic.TopicTemplateId,
+                Published = topic.Published
             };
             return model;
         }
@@ -100,16 +101,9 @@ namespace Nop.Web.Factories
             var cachedModel = _cacheManager.Get(cacheKey, () =>
             {
                 var topic = _topicService.GetTopicById(topicId);
-                if (topic == null)
-                    return null;
-                if (!topic.Published)
-                    return null;
-                //Store mapping
-                if (!_storeMappingService.Authorize(topic))
-                    return null;
                 //ACL (access control list)
-                if (!_aclService.Authorize(topic))
-                    return null;
+                if (topic == null || !_aclService.Authorize(topic))
+                    return null;                
                 return PrepareTopicModel(topic);
             });
 
@@ -133,11 +127,6 @@ namespace Nop.Web.Factories
                 //load by store
                 var topic = _topicService.GetTopicBySystemName(systemName, _storeContext.CurrentStore.Id);
                 if (topic == null)
-                    return null;
-                if (!topic.Published)
-                    return null;
-                //ACL (access control list)
-                if (!_aclService.Authorize(topic))
                     return null;
                 return PrepareTopicModel(topic);
             });

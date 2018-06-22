@@ -1,0 +1,76 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <Copyright>Copyright © Nop Solutions, Ltd</Copyright> 
+    <Company>Nop Solutions, Ltd</Company> 
+    <Authors>Nop Solutions, Ltd</Authors>
+    <PackageLicenseUrl></PackageLicenseUrl> 
+    <PackageProjectUrl>http://www.nopcommerce.com/</PackageProjectUrl> 
+    <RepositoryUrl>https://github.com/nopSolutions/nopCommerce</RepositoryUrl> 
+    <RepositoryType>Git</RepositoryType>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <None Remove="logo.jpg" />
+    <None Remove="plugin.json" />
+    <None Remove="Views\AddRateByWeightByTotalPopup.cshtml" />
+    <None Remove="Views\Configure.cshtml" />
+    <None Remove="Views\EditRateByWeightByTotalPopup.cshtml" />
+    <None Remove="Views\_ByWeightByTotal.cshtml" />
+    <None Remove="Views\_CreateOrUpdateRateByWeightByTotal.cshtml" />
+    <None Remove="Views\_FixedRate.cshtml" />
+    <None Remove="Views\_ViewImports.cshtml" />
+  </ItemGroup>
+  
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>..\..\Presentation\Nop.Web\Plugins\Shipping.FixedByWeightByTotal</OutputPath>
+    <OutDir>$(OutputPath)</OutDir>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>..\..\Presentation\Nop.Web\Plugins\Shipping.FixedByWeightByTotal</OutputPath>
+    <OutDir>$(OutputPath)</OutDir>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="logo.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="plugin.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\AddRateByWeightByTotalPopup.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Configure.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\EditRateByWeightByTotalPopup.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\_ByWeightByTotal.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\_CreateOrUpdateRateByWeightByTotal.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\_FixedRate.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\_ViewImports.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Presentation\Nop.Web.Framework\Nop.Web.Framework.csproj" />
+  </ItemGroup>
+  
+  <!-- This target execute after "Build" target -->
+  <Target Name="NopTarget" AfterTargets="Build">
+    <!-- Delete unnecessary libraries from plugins path -->
+    <MSBuild Projects="$(MSBuildProjectDirectory)\..\..\Build\ClearPluginAssemblies.proj" Properties="PluginPath=$(MSBuildProjectDirectory)\$(OutDir)" Targets="NopClear" />
+  </Target>
+
+</Project>

@@ -61,7 +61,7 @@ namespace Nop.Plugin.Pickup.PickupInStore.Services
         /// <returns>Pickup points</returns>
         public virtual IPagedList<StorePickupPoint> GetAllStorePickupPoints(int storeId = 0, int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            string key = string.Format(PICKUP_POINT_ALL_KEY, pageIndex, pageSize, storeId);
+            var key = string.Format(PICKUP_POINT_ALL_KEY, pageIndex, pageSize, storeId);
             return _cacheManager.Get(key, () =>
             {
                 var query = _storePickupPointRepository.Table;

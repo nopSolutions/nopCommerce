@@ -18,6 +18,10 @@ namespace Nop.Web.Framework.Infrastructure
         /// <param name="configuration">Configuration root of the application</param>
         public void ConfigureServices(IServiceCollection services, IConfigurationRoot configuration)
         {
+            //add data protection
+            services.AddNopDataProtection();
+
+            //add authentication
             services.AddNopAuthentication();
         }
 

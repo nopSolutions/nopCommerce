@@ -1,11 +1,12 @@
-﻿@using Nop.Core
+﻿@model PopularSearchTermSearchModel
+
+@using Nop.Core
 @using Nop.Services.Common
 @inject IWorkContext workContext
 @{
     const string panelId = "popular-search-terms-box";
     const string hidePanelAttributeName = "HidePopularSearchTermsReport";
     var hidePanel = workContext.CurrentCustomer.GetAttribute<bool>(hidePanelAttributeName);
-    var gridPageSize = 5;
 }
 
 <div class="box box-info @if(hidePanel){<text>collapsed-box</text>}" id="@panelId">
@@ -58,7 +59,7 @@
                             // Cancel the changes
                             this.cancelChanges();
                         },
-                        pageSize: @(gridPageSize),
+                        pageSize: @(Model.PageSize),
                         serverPaging: true,
                         serverFiltering: true,
                         serverSorting: true

@@ -1,0 +1,200 @@
+﻿@model Nop.Plugin.Payments.Square.Models.PaymentInfoModel
+@{
+    Layout = "";
+    Html.AddScriptParts(ResourceLocation.Footer, SquarePaymentDefaults.PaymentFormScriptPath, excludeFromBundle: true);
+}
+@inject SquarePaymentSettings squarePaymentSettings
+@inject Nop.Core.Domain.Orders.OrderSettings orderSettings
+
+<style type="text/css">
+    .square-input {
+        height: 36px;
+        border: 1px solid #ddd;
+        padding: 8px;
+        vertical-align: middle;
+        color: #777;
+    }
+
+    select.square-input {
+        width: 100%;
+    }
+
+    .square-input--focus {
+        border-color: #ccc;
+        color: #444;
+    }
+
+    .square-input--error {
+        outline: #e4434b;
+    }
+</style>
+
+<script>
+    $(document).ready(function () {
+        $('#@Html.IdFor(model => model.StoredCardId)').change(toggleStoredCard);
+        toggleStoredCard();
+
+        var submitForm = false;
+        var stepBack = false;
+        var onePageCheckout = @orderSettings.OnePageCheckoutEnabled.ToString().ToLower();
+        $('.payment-info-next-step-button').attr('onclick', null);
+        $('.payment-info-next-step-button').prop('disabled', true);
+        $('.payment-info-next-step-button').css("opacity", .3);
+        
+        var paymentForm = new SqPaymentForm({
+            applicationId: '@squarePaymentSettings.ApplicationId',
+            inputClass: 'square-input',
+            inputStyles: [{
+                fontSize: '15px'
+            }
+            ],
+            cardNumber: {
+                elementId: 'square-card-number',
+                placeholder: '•••• •••• •••• ••••'
+            },
+            expirationDate: {
+                elementId: 'square-expiration-date',
+                placeholder: 'MM/YY'
+            },
+            cvv: {
+                elementId: 'square-cvv',
+                placeholder: 'CVV'
+            },
+            postalCode: {
+                elementId: 'square-postal-code'
+            },
+            callbacks: {
+                cardNonceResponseReceived: function (errors, nonce, cardData) {
+                    if (errors) {
+                        errors.forEach(function (error) {
+                            var currentErrorvalue = $('#@Html.IdFor(model => model.Errors)').val();
+                            $('#@Html.IdFor(model => model.Errors)').val(currentErrorvalue + '|' + error.message);
+                        });
+                        paymentForm.destroy();
+                        paymentForm = null;
+                    }
+                    else {
+                        $('#@Html.IdFor(model => model.CardNonce)').val(nonce);
+                    }
+
+                    submitForm = true;
+                    $('input.payment-info-next-step-button').click();
+                },
+
+                unsupportedBrowserDetected: function () {
+                    console.log('Browser is not supported');
+                },
+
+                paymentFormLoaded: function () {
+                    if (paymentForm) {
+                        if (stepBack) {
+                            paymentForm.destroy();
+                            paymentForm = null;
+                        }
+                        else {
+                            paymentForm.setPostalCode('@Model.PostalCode');
+                        }
+                    }
+                    $('.payment-info-next-step-button').prop('disabled', false);
+                    $('.payment-info-next-step-button').css("opacity", 1);
+                }
+            }
+        });
+        if (paymentForm) {
+            paymentForm.build();
+        }
+
+        $('input.payment-info-next-step-button').on('click', function (data) {
+            var selectedStoredCardId = $('#@Html.IdFor(model => model.StoredCardId)').val()
+            if (!submitForm && (!selectedStoredCardId || selectedStoredCardId == '0')) {
+                if (paymentForm) {
+                    paymentForm.requestCardNonce();
+                }
+                return false;
+            }
+            else if (onePageCheckout) {
+                submitForm = false;
+                PaymentInfo.save();
+            }
+        });
+
+        $(document).on('accordion_section_opened', function (data) {
+            if (data && (data.currentSectionId == 'opc-billing' || data.currentSectionId == 'opc-shipping' || data.currentSectionId == 'opc-shipping_method' || data.currentSectionId == 'opc-payment_method')) {
+                stepBack = true;
+            }
+        });
+    });
+
+    function toggleStoredCard() {
+        var selectedStoredCardId = $('#@Html.IdFor(model => model.StoredCardId)').val();
+        if (!selectedStoredCardId || selectedStoredCardId == '0') {
+            $('#square-card-details').show();
+        } else {
+            $('#square-card-details').hide();
+        }
+    }
+</script>
+
+<input type="hidden" asp-for="CardNonce">
+<input type="hidden" asp-for="Errors">
+
+@if (!Model.IsGuest && Model.StoredCards.Any())
+{
+    <table width="100%" cellspacing="2" cellpadding="1" border="0">
+        <tr>
+            <td>
+                <label asp-for="StoredCardId">@T("Plugins.Payments.Square.Fields.StoredCard"):</label>
+            </td>
+            <td>
+                <select asp-for="StoredCardId" asp-items="Model.StoredCards" class="square-input"></select>
+            </td>
+        </tr>
+    </table>
+}
+
+<table width="100%" cellspacing="2" cellpadding="1" border="0" id="square-card-details">
+    <tr>
+        <td>
+            <label>@T("Payment.CardNumber"):</label>
+        </td>
+        <td>
+            <div id="square-card-number" style="width:165px;"></div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <label>@T("Payment.ExpirationDate"):</label>
+        </td>
+        <td>
+            <div id="square-expiration-date"></div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <label>@T("Payment.CardCode"):</label>
+        </td>
+        <td>
+            <div id="square-cvv" style="width:60px;"></div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <label asp-for="PostalCode">@T("Plugins.Payments.Square.Fields.PostalCode"):</label>
+        </td>
+        <td>
+            <div id="square-postal-code"></div>
+        </td>
+    </tr>
+    @if (!Model.IsGuest)
+    {
+        <tr>
+            <td>
+                <label asp-for="SaveCard">@T("Plugins.Payments.Square.Fields.SaveCard"):</label>
+            </td>
+            <td>
+                <input type="checkbox" asp-for="SaveCard" />
+                <span asp-validation-for="SaveCard"></span>
+            </td>
+        </tr>
+    }
+</table>

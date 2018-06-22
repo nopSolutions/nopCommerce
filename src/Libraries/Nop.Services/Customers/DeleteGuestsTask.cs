@@ -12,7 +12,13 @@ namespace Nop.Services.Customers
         private readonly ICustomerService _customerService;
         private readonly CustomerSettings _customerSettings;
 
-        public DeleteGuestsTask(ICustomerService customerService, CustomerSettings customerSettings)
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="customerService">Customer service</param>
+        /// <param name="customerSettings">Customer settings</param>
+        public DeleteGuestsTask(ICustomerService customerService,
+            CustomerSettings customerSettings)
         {
             this._customerService = customerService;
             this._customerSettings = customerSettings;

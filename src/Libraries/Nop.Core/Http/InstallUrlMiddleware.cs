@@ -18,6 +18,10 @@ namespace Nop.Core.Http
 
         #region Ctor
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="next">Next</param>
         public InstallUrlMiddleware(RequestDelegate next)
         {
             _next = next;
@@ -33,12 +37,12 @@ namespace Nop.Core.Http
         /// <param name="context">HTTP context</param>
         /// <param name="webHelper">Web helper</param>
         /// <returns>Task</returns>
-        public async Task Invoke(Microsoft.AspNetCore.Http.HttpContext context, IWebHelper webHelper)
+        public async Task Invoke(HttpContext context, IWebHelper webHelper)
         {
             //whether database is installed
-            if (!DataSettingsHelper.DatabaseIsInstalled())
+            if (!DataSettingsManager.DatabaseIsInstalled)
             {
-                var installUrl = $"{webHelper.GetStoreLocation()}install";
+                var installUrl = $"{webHelper.GetStoreLocation()}{NopHttpDefaults.InstallPath}";
                 if (!webHelper.GetThisPageUrl(false).StartsWith(installUrl, StringComparison.InvariantCultureIgnoreCase))
                 {
                     //redirect

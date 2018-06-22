@@ -19,6 +19,10 @@ namespace Nop.Services.Tasks
 
         #region Ctor
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="taskRepository">Task repository</param>
         public ScheduleTaskService(IRepository<ScheduleTask> taskRepository)
         {
             this._taskRepository = taskRepository;
@@ -60,7 +64,7 @@ namespace Nop.Services.Tasks
         /// <returns>Task</returns>
         public virtual ScheduleTask GetTaskByType(string type)
         {
-            if (String.IsNullOrWhiteSpace(type))
+            if (string.IsNullOrWhiteSpace(type))
                 return null;
 
             var query = _taskRepository.Table;

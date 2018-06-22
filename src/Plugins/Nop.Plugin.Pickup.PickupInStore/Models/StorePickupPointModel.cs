@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Web.Framework.Mvc.ModelBinding;
-using Nop.Web.Framework.Mvc.Models;
+using Nop.Web.Framework.Models;
 
 namespace Nop.Plugin.Pickup.PickupInStore.Models
 {
@@ -51,6 +51,9 @@ namespace Nop.Plugin.Pickup.PickupInStore.Models
         [NopResourceDisplayName("Admin.Address.Fields.StateProvince")]
         public int? StateProvinceId { get; set; }
         public IList<SelectListItem> AvailableStates { get; set; }
+
+        [NopResourceDisplayName("Admin.Address.Fields.County")]
+        public string County { get; set; }
 
         [NopResourceDisplayName("Admin.Address.Fields.City")]
         public string City { get; set; }

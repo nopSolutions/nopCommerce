@@ -12,7 +12,13 @@ namespace Nop.Services.Directory
         private readonly ICurrencyService _currencyService;
         private readonly CurrencySettings _currencySettings;
 
-        public UpdateExchangeRateTask(ICurrencyService currencyService, CurrencySettings currencySettings)
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="currencyService">Currency service</param>
+        /// <param name="currencySettings">Currency settings</param>
+        public UpdateExchangeRateTask(ICurrencyService currencyService,
+            CurrencySettings currencySettings)
         {
             this._currencyService = currencyService;
             this._currencySettings = currencySettings;

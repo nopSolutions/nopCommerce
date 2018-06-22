@@ -33,7 +33,7 @@ namespace Nop.Services.Tax
         {
             get 
             { 
-                return !this.Errors.Any(); 
+                return !Errors.Any(); 
             }
         }
 
@@ -43,7 +43,7 @@ namespace Nop.Services.Tax
         /// <param name="error">Error</param>
         public void AddError(string error)
         {
-            this.Errors.Add(error);
+            Errors.Add(error);
         }
     }
 }

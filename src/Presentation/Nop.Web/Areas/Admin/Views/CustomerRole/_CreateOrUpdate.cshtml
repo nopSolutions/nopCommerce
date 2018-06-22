@@ -1,9 +1,9 @@
-﻿@model CustomerRoleModel
+@model CustomerRoleModel
 
 <div asp-validation-summary="ModelOnly"></div>
 <input asp-for="Id" type="hidden" />
 
-<script type="text/javascript">
+<script>
     $(document).ready(function() {
         $("#@Html.IdFor(model => model.OverrideTaxDisplayType)").click(toggleTaxDisplayType);
         toggleTaxDisplayType();
@@ -31,7 +31,7 @@
 <div class="content">
     <div class="form-horizontal">
         <div class="panel-group">
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_customer_role_details_top", additionalData = Model.Id })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CustomerRoleDetailsTop, additionalData = Model })
             <div class="panel panel-default">
                 <div class="panel-body">
                     <div class="form-group">
@@ -113,7 +113,7 @@
                             <nop-label asp-for="IsSystemRole"/>
                         </div>
                         <div class="col-md-9">
-                            <div class="form-text-row">@Model.IsSystemRole.ToString()</div>
+                            <div class="form-text-row">@T(Model.IsSystemRole ? "Admin.Common.Yes" : "Admin.Common.No")</div>
                             <input type="hidden" asp-for="IsSystemRole"/>
                             <span asp-validation-for="IsSystemRole"></span>
                         </div>
@@ -134,7 +134,7 @@
                             </button>
                             <input type="submit" id="btnRefreshPurchasedWithProduct" style="display: none" />
                             
-                            <script type="text/javascript">
+                            <script>
                                 $(document).ready(function () {
                                     $('#purchased-with-product-name-remove').click(function () {
                                         $('#purchased-with-product-name').text('');
@@ -156,7 +156,7 @@
                     </div>
                 </div>
             </div>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_customer_role_details_bottom", additionalData = Model.Id })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CustomerRoleDetailsBottom, additionalData = Model })
         </div>
     </div>
 </div>

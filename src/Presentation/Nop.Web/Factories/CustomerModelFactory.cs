@@ -7,6 +7,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Forums;
+using Nop.Core.Domain.Gdpr;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Security;
@@ -16,6 +17,7 @@ using Nop.Services.Authentication.External;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
+using Nop.Services.Gdpr;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Media;
@@ -23,7 +25,6 @@ using Nop.Services.Messages;
 using Nop.Services.Orders;
 using Nop.Services.Seo;
 using Nop.Services.Stores;
-using Nop.Web.Framework.Security.Captcha;
 using Nop.Web.Models.Common;
 using Nop.Web.Models.Customer;
 
@@ -46,6 +47,7 @@ namespace Nop.Web.Factories
         private readonly IStoreMappingService _storeMappingService;
         private readonly ICustomerAttributeParser _customerAttributeParser;
         private readonly ICustomerAttributeService _customerAttributeService;
+        private readonly IGdprService _gdprService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly RewardPointsSettings _rewardPointsSettings;
         private readonly CommonSettings _commonSettings;
@@ -62,6 +64,7 @@ namespace Nop.Web.Factories
         private readonly IDownloadService _downloadService;
         private readonly IReturnRequestService _returnRequestService;
 
+        private readonly GdprSettings _gdprSettings;
         private readonly MediaSettings _mediaSettings;
         private readonly CaptchaSettings _captchaSettings;
         private readonly SecuritySettings _securitySettings;
@@ -83,6 +86,7 @@ namespace Nop.Web.Factories
             IStoreMappingService storeMappingService,
             ICustomerAttributeParser customerAttributeParser,
             ICustomerAttributeService customerAttributeService,
+            IGdprService gdprService,
             IGenericAttributeService genericAttributeService,
             RewardPointsSettings rewardPointsSettings,
             CommonSettings commonSettings,
@@ -98,6 +102,7 @@ namespace Nop.Web.Factories
             IExternalAuthenticationService externalAuthenticationService,
             IDownloadService downloadService,
             IReturnRequestService returnRequestService,
+            GdprSettings gdprSettings,
             MediaSettings mediaSettings,
             CaptchaSettings captchaSettings,
             SecuritySettings securitySettings,
@@ -115,6 +120,7 @@ namespace Nop.Web.Factories
             this._storeMappingService = storeMappingService;
             this._customerAttributeParser = customerAttributeParser;
             this._customerAttributeService = customerAttributeService;
+            this._gdprService = gdprService;
             this._genericAttributeService = genericAttributeService;
             this._rewardPointsSettings = rewardPointsSettings;
             this._commonSettings = commonSettings;
@@ -130,6 +136,7 @@ namespace Nop.Web.Factories
             this._externalAuthenticationService = externalAuthenticationService;
             this._downloadService = downloadService;
             this._returnRequestService = returnRequestService;
+            this._gdprSettings = gdprSettings;
             this._mediaSettings = mediaSettings;
             this._captchaSettings = captchaSettings;
             this._securitySettings = securitySettings;
@@ -138,6 +145,24 @@ namespace Nop.Web.Factories
             this._vendorSettings = vendorSettings;
         }
 
+        #endregion
+
+        #region Utilities
+
+        protected virtual GdprConsentModel PrepareGdprConsentModel(GdprConsent consent, bool accepted)
+        {
+            if (consent == null)
+                throw  new ArgumentNullException(nameof(consent));
+
+            return new GdprConsentModel
+            {
+                Id = consent.Id,
+                Message = consent.Message,
+                IsRequired = consent.IsRequired,
+                RequiredMessage = !String.IsNullOrEmpty(consent.RequiredMessage) ? consent.RequiredMessage : $"'{consent.Message}' is required",
+                Accepted = accepted
+            };
+        }
         #endregion
 
         #region Methods
@@ -183,16 +208,16 @@ namespace Nop.Web.Factories
                 }
 
                 //set already selected attributes
-                var selectedAttributesXml = !String.IsNullOrEmpty(overrideAttributesXml) ?
+                var selectedAttributesXml = !string.IsNullOrEmpty(overrideAttributesXml) ?
                     overrideAttributesXml : 
-                    customer.GetAttribute<string>(SystemCustomerAttributeNames.CustomCustomerAttributes, _genericAttributeService);
+                    customer.GetAttribute<string>(NopCustomerDefaults.CustomCustomerAttributes, _genericAttributeService);
                 switch (attribute.AttributeControlType)
                 {
                     case AttributeControlType.DropdownList:
                     case AttributeControlType.RadioList:
                     case AttributeControlType.Checkboxes:
                         {
-                            if (!String.IsNullOrEmpty(selectedAttributesXml))
+                            if (!string.IsNullOrEmpty(selectedAttributesXml))
                             {
                                 //clear default selection
                                 foreach (var item in attributeModel.Values)
@@ -216,7 +241,7 @@ namespace Nop.Web.Factories
                     case AttributeControlType.TextBox:
                     case AttributeControlType.MultilineTextbox:
                         {
-                            if (!String.IsNullOrEmpty(selectedAttributesXml))
+                            if (!string.IsNullOrEmpty(selectedAttributesXml))
                             {
                                 var enteredText = _customerAttributeParser.ParseValues(selectedAttributesXml, attribute.Id);
                                 if (enteredText.Any())
@@ -235,7 +260,6 @@ namespace Nop.Web.Factories
 
                 result.Add(attributeModel);
             }
-
 
             return result;
         }
@@ -263,32 +287,33 @@ namespace Nop.Web.Factories
 
             if (!excludeProperties)
             {
-                model.VatNumber = customer.GetAttribute<string>(SystemCustomerAttributeNames.VatNumber);
-                model.FirstName = customer.GetAttribute<string>(SystemCustomerAttributeNames.FirstName);
-                model.LastName = customer.GetAttribute<string>(SystemCustomerAttributeNames.LastName);
-                model.Gender = customer.GetAttribute<string>(SystemCustomerAttributeNames.Gender);
-                var dateOfBirth = customer.GetAttribute<DateTime?>(SystemCustomerAttributeNames.DateOfBirth);
+                model.VatNumber = customer.GetAttribute<string>(NopCustomerDefaults.VatNumberAttribute);
+                model.FirstName = customer.GetAttribute<string>(NopCustomerDefaults.FirstNameAttribute);
+                model.LastName = customer.GetAttribute<string>(NopCustomerDefaults.LastNameAttribute);
+                model.Gender = customer.GetAttribute<string>(NopCustomerDefaults.GenderAttribute);
+                var dateOfBirth = customer.GetAttribute<DateTime?>(NopCustomerDefaults.DateOfBirthAttribute);
                 if (dateOfBirth.HasValue)
                 {
                     model.DateOfBirthDay = dateOfBirth.Value.Day;
                     model.DateOfBirthMonth = dateOfBirth.Value.Month;
                     model.DateOfBirthYear = dateOfBirth.Value.Year;
                 }
-                model.Company = customer.GetAttribute<string>(SystemCustomerAttributeNames.Company);
-                model.StreetAddress = customer.GetAttribute<string>(SystemCustomerAttributeNames.StreetAddress);
-                model.StreetAddress2 = customer.GetAttribute<string>(SystemCustomerAttributeNames.StreetAddress2);
-                model.ZipPostalCode = customer.GetAttribute<string>(SystemCustomerAttributeNames.ZipPostalCode);
-                model.City = customer.GetAttribute<string>(SystemCustomerAttributeNames.City);
-                model.CountryId = customer.GetAttribute<int>(SystemCustomerAttributeNames.CountryId);
-                model.StateProvinceId = customer.GetAttribute<int>(SystemCustomerAttributeNames.StateProvinceId);
-                model.Phone = customer.GetAttribute<string>(SystemCustomerAttributeNames.Phone);
-                model.Fax = customer.GetAttribute<string>(SystemCustomerAttributeNames.Fax);
+                model.Company = customer.GetAttribute<string>(NopCustomerDefaults.CompanyAttribute);
+                model.StreetAddress = customer.GetAttribute<string>(NopCustomerDefaults.StreetAddressAttribute);
+                model.StreetAddress2 = customer.GetAttribute<string>(NopCustomerDefaults.StreetAddress2Attribute);
+                model.ZipPostalCode = customer.GetAttribute<string>(NopCustomerDefaults.ZipPostalCodeAttribute);
+                model.City = customer.GetAttribute<string>(NopCustomerDefaults.CityAttribute);
+                model.County = customer.GetAttribute<string>(NopCustomerDefaults.CountyAttribute);
+                model.CountryId = customer.GetAttribute<int>(NopCustomerDefaults.CountryIdAttribute);
+                model.StateProvinceId = customer.GetAttribute<int>(NopCustomerDefaults.StateProvinceIdAttribute);
+                model.Phone = customer.GetAttribute<string>(NopCustomerDefaults.PhoneAttribute);
+                model.Fax = customer.GetAttribute<string>(NopCustomerDefaults.FaxAttribute);
 
                 //newsletter
                 var newsletter = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreId(customer.Email, _storeContext.CurrentStore.Id);
                 model.Newsletter = newsletter != null && newsletter.Active;
 
-                model.Signature = customer.GetAttribute<string>(SystemCustomerAttributeNames.Signature);
+                model.Signature = customer.GetAttribute<string>(NopCustomerDefaults.SignatureAttribute);
 
                 model.Email = customer.Email;
                 model.Username = customer.Username;
@@ -331,7 +356,7 @@ namespace Nop.Web.Factories
                     }
                     else
                     {
-                        bool anyCountrySelected = model.AvailableCountries.Any(x => x.Selected);
+                        var anyCountrySelected = model.AvailableCountries.Any(x => x.Selected);
 
                         model.AvailableStates.Add(new SelectListItem
                         {
@@ -344,7 +369,7 @@ namespace Nop.Web.Factories
             }
 
             model.DisplayVatNumber = _taxSettings.EuVatEnabled;
-            model.VatNumberStatusNote = ((VatNumberStatus)customer.GetAttribute<int>(SystemCustomerAttributeNames.VatNumberStatusId))
+            model.VatNumberStatusNote = ((VatNumberStatus)customer.GetAttribute<int>(NopCustomerDefaults.VatNumberStatusIdAttribute))
                 .GetLocalizedEnum(_localizationService, _workContext);
             model.GenderEnabled = _customerSettings.GenderEnabled;
             model.DateOfBirthEnabled = _customerSettings.DateOfBirthEnabled;
@@ -359,6 +384,8 @@ namespace Nop.Web.Factories
             model.ZipPostalCodeRequired = _customerSettings.ZipPostalCodeRequired;
             model.CityEnabled = _customerSettings.CityEnabled;
             model.CityRequired = _customerSettings.CityRequired;
+            model.CountyEnabled = _customerSettings.CountyEnabled;
+            model.CountyRequired = _customerSettings.CountyRequired;
             model.CountryEnabled = _customerSettings.CountryEnabled;
             model.CountryRequired = _customerSettings.CountryRequired;
             model.StateProvinceEnabled = _customerSettings.StateProvinceEnabled;
@@ -377,17 +404,18 @@ namespace Nop.Web.Factories
             model.AllowCustomersToRemoveAssociations = _externalAuthenticationSettings.AllowCustomersToRemoveAssociations;
             model.NumberOfExternalAuthenticationProviders = _externalAuthenticationService
                 .LoadActiveExternalAuthenticationMethods(_workContext.CurrentCustomer, _storeContext.CurrentStore.Id).Count;
-            foreach (var ear in customer.ExternalAuthenticationRecords)
+            foreach (var record in customer.ExternalAuthenticationRecords)
             {
-                var authMethod = _externalAuthenticationService.LoadExternalAuthenticationMethodBySystemName(ear.ProviderSystemName);
+                var authMethod = _externalAuthenticationService.LoadExternalAuthenticationMethodBySystemName(record.ProviderSystemName);
                 if (authMethod == null || !authMethod.IsMethodActive(_externalAuthenticationSettings))
                     continue;
 
                 model.AssociatedExternalAuthRecords.Add(new CustomerInfoModel.AssociatedExternalAuthModel
                 {
-                    Id = ear.Id,
-                    Email = ear.Email,
-                    ExternalIdentifier = ear.ExternalDisplayIdentifier,
+                    Id = record.Id,
+                    Email = record.Email,
+                    ExternalIdentifier = !string.IsNullOrEmpty(record.ExternalDisplayIdentifier)
+                        ? record.ExternalDisplayIdentifier : record.ExternalIdentifier,
                     AuthMethodName = authMethod.GetLocalizedFriendlyName(_localizationService, _workContext.WorkingLanguage.Id)
                 });
             }
@@ -396,6 +424,17 @@ namespace Nop.Web.Factories
             var customAttributes = PrepareCustomCustomerAttributes(customer, overrideCustomCustomerAttributesXml);
             foreach (var attribute in customAttributes)
                 model.CustomerAttributes.Add(attribute);
+
+            //GDPR
+            if (_gdprSettings.GdprEnabled)
+            {
+                var consents = _gdprService.GetAllConsents().Where(consent => consent.DisplayOnCustomerInfoPage).ToList();
+                foreach (var consent in consents)
+                {
+                    var accepted = _gdprService.IsConsentAccepted(consent.Id, _workContext.CurrentCustomer.Id);
+                    model.GdprConsents.Add(PrepareGdprConsentModel(consent, accepted.HasValue && accepted.Value));
+                }
+            }
 
             return model;
         }
@@ -433,6 +472,8 @@ namespace Nop.Web.Factories
             model.ZipPostalCodeRequired = _customerSettings.ZipPostalCodeRequired;
             model.CityEnabled = _customerSettings.CityEnabled;
             model.CityRequired = _customerSettings.CityRequired;
+            model.CountyEnabled = _customerSettings.CountyEnabled;
+            model.CountyRequired = _customerSettings.CountyRequired;
             model.CountryEnabled = _customerSettings.CountryEnabled;
             model.CountryRequired = _customerSettings.CountryRequired;
             model.StateProvinceEnabled = _customerSettings.StateProvinceEnabled;
@@ -485,7 +526,7 @@ namespace Nop.Web.Factories
                     }
                     else
                     {
-                        bool anyCountrySelected = model.AvailableCountries.Any(x => x.Selected);
+                        var anyCountrySelected = model.AvailableCountries.Any(x => x.Selected);
 
                         model.AvailableStates.Add(new SelectListItem
                         {
@@ -501,6 +542,16 @@ namespace Nop.Web.Factories
             var customAttributes = PrepareCustomCustomerAttributes(_workContext.CurrentCustomer, overrideCustomCustomerAttributesXml); foreach (var attribute in customAttributes)
                 model.CustomerAttributes.Add(attribute);
 
+            //GDPR
+            if (_gdprSettings.GdprEnabled)
+            {
+                var consents = _gdprService.GetAllConsents().Where(consent => consent.DisplayDuringRegistration).ToList();
+                foreach (var consent in consents)
+                {
+                    model.GdprConsents.Add(PrepareGdprConsentModel(consent, false));
+                }
+            }
+
             return model;
         }
 
@@ -511,10 +562,12 @@ namespace Nop.Web.Factories
         /// <returns>Login model</returns>
         public virtual LoginModel PrepareLoginModel(bool? checkoutAsGuest)
         {
-            var model = new LoginModel();
-            model.UsernamesEnabled = _customerSettings.UsernamesEnabled;
-            model.CheckoutAsGuest = checkoutAsGuest.GetValueOrDefault();
-            model.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnLoginPage;
+            var model = new LoginModel
+            {
+                UsernamesEnabled = _customerSettings.UsernamesEnabled,
+                CheckoutAsGuest = checkoutAsGuest.GetValueOrDefault(),
+                DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnLoginPage
+            };
             return model;
         }
 
@@ -698,6 +751,27 @@ namespace Nop.Web.Factories
                     ItemClass = "customer-vendor-info"
                 });
             }
+            if (_gdprSettings.GdprEnabled)
+            {
+                model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
+                {
+                    RouteName = "GdprTools",
+                    Title = _localizationService.GetResource("Account.Gdpr"),
+                    Tab = CustomerNavigationEnum.GdprTools,
+                    ItemClass = "customer-gdpr"
+                });
+            }
+
+            if (_captchaSettings.Enabled && _customerSettings.AllowCustomersToCheckGiftCardBalance)
+            {
+                model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
+                {
+                    RouteName = "CheckGiftCardBalance",
+                    Title = _localizationService.GetResource("CheckGiftCardBalance"),
+                    Tab = CustomerNavigationEnum.CheckGiftCardBalance,
+                    ItemClass = "customer-check-gift-card-balance"
+                });
+            }
 
             model.SelectedTab = (CustomerNavigationEnum)selectedTabId;
 
@@ -776,9 +850,11 @@ namespace Nop.Web.Factories
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
-            var model = new UserAgreementModel();
-            model.UserAgreementText = product.UserAgreementText;
-            model.OrderItemGuid = orderItem.OrderItemGuid;
+            var model = new UserAgreementModel
+            {
+                UserAgreementText = product.UserAgreementText,
+                OrderItemGuid = orderItem.OrderItemGuid
+            };
 
             return model;
         }
@@ -804,10 +880,30 @@ namespace Nop.Web.Factories
                 throw new ArgumentNullException(nameof(model));
 
             model.AvatarUrl = _pictureService.GetPictureUrl(
-                _workContext.CurrentCustomer.GetAttribute<int>(SystemCustomerAttributeNames.AvatarPictureId),
+                _workContext.CurrentCustomer.GetAttribute<int>(NopCustomerDefaults.AvatarPictureIdAttribute),
                 _mediaSettings.AvatarPictureSize,
                 false);
 
+            return model;
+        }
+
+        /// <summary>
+        /// Prepare the GDPR tools model
+        /// </summary>
+        /// <returns>GDPR tools model</returns>
+        public virtual GdprToolsModel PrepareGdprToolsModel()
+        {
+            var model = new GdprToolsModel();
+            return model;
+        }
+
+        /// <summary>
+        /// Prepare the check gift card balance madel
+        /// </summary>
+        /// <returns>Check gift card balance madel</returns>
+        public virtual CheckGiftCardBalanceModel PrepareCheckGiftCardBalanceModel()
+        {
+            var model = new CheckGiftCardBalanceModel();
             return model;
         }
 

@@ -18,19 +18,6 @@ namespace Nop.Services.Configuration
     /// </summary>
     public partial class SettingService : ISettingService
     {
-        #region Constants
-
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        private const string SETTINGS_ALL_KEY = "Nop.setting.all";
-        /// <summary>
-        /// Key pattern to clear cache
-        /// </summary>
-        private const string SETTINGS_PATTERN_KEY = "Nop.setting.";
-
-        #endregion
-
         #region Fields
 
         private readonly IRepository<Setting> _settingRepository;
@@ -60,6 +47,9 @@ namespace Nop.Services.Configuration
 
         #region Nested classes
 
+        /// <summary>
+        /// Setting (for caching)
+        /// </summary>
         [Serializable]
         public class SettingForCaching
         {
@@ -80,8 +70,7 @@ namespace Nop.Services.Configuration
         protected virtual IDictionary<string, IList<SettingForCaching>> GetAllSettingsCached()
         {
             //cache
-            string key = string.Format(SETTINGS_ALL_KEY);
-            return _cacheManager.Get(key, () =>
+            return _cacheManager.Get(NopConfigurationDefaults.SettingsAllCacheKey, () =>
             {
                 //we use no tracking here for performance optimization
                 //anyway records are loaded only for read-only operations
@@ -119,6 +108,44 @@ namespace Nop.Services.Configuration
             });
         }
 
+        /// <summary>
+        /// Set setting value
+        /// </summary>
+        /// <param name="type">Type</param>
+        /// <param name="key">Key</param>
+        /// <param name="value">Value</param>
+        /// <param name="storeId">Store identifier</param>
+        /// <param name="clearCache">A value indicating whether to clear cache after setting update</param>
+        protected virtual void SetSetting(Type type, string key, object value, int storeId = 0, bool clearCache = true)
+        {
+            if (key == null)
+                throw new ArgumentNullException(nameof(key));
+            key = key.Trim().ToLowerInvariant();
+            var valueStr = TypeDescriptor.GetConverter(type).ConvertToInvariantString(value);
+
+            var allSettings = GetAllSettingsCached();
+            var settingForCaching = allSettings.ContainsKey(key) ?
+                allSettings[key].FirstOrDefault(x => x.StoreId == storeId) : null;
+            if (settingForCaching != null)
+            {
+                //update
+                var setting = GetSettingById(settingForCaching.Id);
+                setting.Value = valueStr;
+                UpdateSetting(setting, clearCache);
+            }
+            else
+            {
+                //insert
+                var setting = new Setting
+                {
+                    Name = key,
+                    Value = valueStr,
+                    StoreId = storeId
+                };
+                InsertSetting(setting, clearCache);
+            }
+        }
+
         #endregion
 
         #region Methods
@@ -137,7 +164,7 @@ namespace Nop.Services.Configuration
 
             //cache
             if (clearCache)
-                _cacheManager.RemoveByPattern(SETTINGS_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(NopConfigurationDefaults.SettingsPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(setting);
@@ -157,7 +184,7 @@ namespace Nop.Services.Configuration
 
             //cache
             if (clearCache)
-                _cacheManager.RemoveByPattern(SETTINGS_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(NopConfigurationDefaults.SettingsPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(setting);
@@ -175,7 +202,7 @@ namespace Nop.Services.Configuration
             _settingRepository.Delete(setting);
 
             //cache
-            _cacheManager.RemoveByPattern(SETTINGS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopConfigurationDefaults.SettingsPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityDeleted(setting);
@@ -193,7 +220,7 @@ namespace Nop.Services.Configuration
             _settingRepository.Delete(settings);
 
             //cache
-            _cacheManager.RemoveByPattern(SETTINGS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopConfigurationDefaults.SettingsPatternCacheKey);
 
             //event notification
             foreach (var setting in settings)
@@ -224,7 +251,7 @@ namespace Nop.Services.Configuration
         /// <returns>Setting</returns>
         public virtual Setting GetSetting(string key, int storeId = 0, bool loadSharedValueIfNotFound = false)
         {
-            if (String.IsNullOrEmpty(key))
+            if (string.IsNullOrEmpty(key))
                 return null;
 
             var settings = GetAllSettingsCached();
@@ -257,7 +284,7 @@ namespace Nop.Services.Configuration
         public virtual T GetSettingByKey<T>(string key, T defaultValue = default(T), 
             int storeId = 0, bool loadSharedValueIfNotFound = false)
         {
-            if (String.IsNullOrEmpty(key))
+            if (string.IsNullOrEmpty(key))
                 return defaultValue;
 
             var settings = GetAllSettingsCached();
@@ -288,32 +315,7 @@ namespace Nop.Services.Configuration
         /// <param name="clearCache">A value indicating whether to clear cache after setting update</param>
         public virtual void SetSetting<T>(string key, T value, int storeId = 0, bool clearCache = true)
         {
-            if (key == null)
-                throw new ArgumentNullException(nameof(key));
-            key = key.Trim().ToLowerInvariant();
-            string valueStr = TypeDescriptor.GetConverter(typeof(T)).ConvertToInvariantString(value);
-
-            var allSettings = GetAllSettingsCached();
-            var settingForCaching = allSettings.ContainsKey(key) ? 
-                allSettings[key].FirstOrDefault(x => x.StoreId == storeId) : null;
-            if (settingForCaching != null)
-            {
-                //update
-                var setting = GetSettingById(settingForCaching.Id);
-                setting.Value = valueStr;
-                UpdateSetting(setting, clearCache);
-            }
-            else
-            {
-                //insert
-                var setting = new Setting
-                {
-                    Name = key,
-                    Value = valueStr,
-                    StoreId = storeId
-                };
-                InsertSetting(setting, clearCache);
-            }
+            SetSetting(typeof(T), key, value, storeId, clearCache);
         }
 
         /// <summary>
@@ -342,7 +344,7 @@ namespace Nop.Services.Configuration
             Expression<Func<T, TPropType>> keySelector, int storeId = 0) 
             where T : ISettings, new()
         {
-            string key = settings.GetSettingKey(keySelector);
+            var key = settings.GetSettingKey(keySelector);
 
             var setting = GetSettingByKey<string>(key, storeId: storeId);
             return setting != null;
@@ -384,7 +386,7 @@ namespace Nop.Services.Configuration
                 if (!TypeDescriptor.GetConverter(prop.PropertyType).IsValid(setting))
                     continue;
 
-                object value = TypeDescriptor.GetConverter(prop.PropertyType).ConvertFromInvariantString(setting);
+                var value = TypeDescriptor.GetConverter(prop.PropertyType).ConvertFromInvariantString(setting);
 
                 //set property
                 prop.SetValue(settings, value, null);
@@ -412,12 +414,11 @@ namespace Nop.Services.Configuration
 
                 if (!TypeDescriptor.GetConverter(prop.PropertyType).CanConvertFrom(typeof(string)))
                     continue;
-
-                string key = typeof(T).Name + "." + prop.Name;
-                //Duck typing is not supported in C#. That's why we're using dynamic type
-                dynamic value = prop.GetValue(settings, null);
+                
+                var key = typeof(T).Name + "." + prop.Name;
+                var value = prop.GetValue(settings, null);
                 if (value != null)
-                    SetSetting(key, value, storeId, false);
+                    SetSetting(prop.PropertyType, key, value, storeId, false);
                 else
                     SetSetting(key, "", storeId, false);
             }
@@ -455,9 +456,8 @@ namespace Nop.Services.Configuration
                        keySelector));
             }
 
-            string key = settings.GetSettingKey(keySelector);
-            //Duck typing is not supported in C#. That's why we're using dynamic type
-            dynamic value = propInfo.GetValue(settings, null);
+            var key = settings.GetSettingKey(keySelector);
+            var value = (TPropType)propInfo.GetValue(settings, null);
             if (value != null)
                 SetSetting(key, value, storeId, clearCache);
             else
@@ -494,7 +494,7 @@ namespace Nop.Services.Configuration
             var allSettings = GetAllSettings();
             foreach (var prop in typeof(T).GetProperties())
             {
-                string key = typeof(T).Name + "." + prop.Name;
+                var key = typeof(T).Name + "." + prop.Name;
                 settingsToDelete.AddRange(allSettings.Where(x => x.Name.Equals(key, StringComparison.InvariantCultureIgnoreCase)));
             }
 
@@ -512,7 +512,7 @@ namespace Nop.Services.Configuration
         public virtual void DeleteSetting<T, TPropType>(T settings,
             Expression<Func<T, TPropType>> keySelector, int storeId = 0) where T : ISettings, new()
         {
-            string key = settings.GetSettingKey(keySelector);
+            var key = settings.GetSettingKey(keySelector);
             key = key.Trim().ToLowerInvariant();
 
             var allSettings = GetAllSettingsCached();
@@ -531,7 +531,7 @@ namespace Nop.Services.Configuration
         /// </summary>
         public virtual void ClearCache()
         {
-            _cacheManager.RemoveByPattern(SETTINGS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopConfigurationDefaults.SettingsPatternCacheKey);
         }
 
         #endregion

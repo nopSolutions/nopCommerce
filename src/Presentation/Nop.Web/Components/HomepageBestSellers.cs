@@ -55,7 +55,6 @@ namespace Nop.Web.Components
                         pageSize: _catalogSettings.NumberOfBestsellersOnHomepage)
                     .ToList());
 
-
             //load products
             var products = _productService.GetProductsByIds(report.Select(x => x.ProductId).ToArray());
             //ACL and store mapping

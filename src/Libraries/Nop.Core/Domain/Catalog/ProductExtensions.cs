@@ -19,16 +19,16 @@ namespace Nop.Core.Domain.Catalog
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
-            if (String.IsNullOrEmpty(product.RequiredProductIds))
+            if (string.IsNullOrEmpty(product.RequiredProductIds))
                 return new int[0];
 
             var ids = new List<int>();
 
             foreach (var idStr in product.RequiredProductIds
-                .Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
                 .Select(x => x.Trim()))
             {
-                if (int.TryParse(idStr, out int id))
+                if (int.TryParse(idStr, out var id))
                     ids.Add(id);
             }
 

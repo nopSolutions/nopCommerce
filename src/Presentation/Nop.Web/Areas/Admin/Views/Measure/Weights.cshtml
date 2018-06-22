@@ -1,4 +1,6 @@
-﻿<div id="measureweight-grid"></div>
+﻿@model MeasureSearchModel
+
+<div id="measureweight-grid"></div>
 
 <script>
     $(document).ready(function() {
@@ -57,15 +59,14 @@
                     // Cancel the changes
                     this.cancelChanges();
                 },
+                pageSize: @(Model.MeasureWeightSearchModel.PageSize),
                 serverPaging: true,
                 serverFiltering: true,
                 serverSorting: true
             },
             pageable: {
                 refresh: true,
-                numeric: false,
-                previousNext: false,
-                info: false,
+                pageSizes: [@(Model.MeasureWeightSearchModel.AvailablePageSizes)],
                 @await Html.PartialAsync("_GridPagerMessages")
             },
             toolbar: [{ name: "create", text: "@T("Admin.Common.AddNewRecord")" }],

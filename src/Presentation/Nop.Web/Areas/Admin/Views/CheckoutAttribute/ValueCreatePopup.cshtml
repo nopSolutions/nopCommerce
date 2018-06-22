@@ -1,4 +1,4 @@
-﻿@model CheckoutAttributeValueModel
+@model CheckoutAttributeValueModel
 
 @{
     Layout = "_AdminPopupLayout";
@@ -20,7 +20,7 @@
                 <i class="fa fa-floppy-o"></i>
                 @T("Admin.Common.Save")
             </button>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_checkout_attribute_value_details_buttons" })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CheckoutAttributeValueDetailsButtons })
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdateValue", Model)

@@ -30,7 +30,6 @@ namespace Nop.Core.Domain.Directory
         /// When was this exchange rate updated from the data source (the data XML feed)
         /// </summary>
         public DateTime UpdatedOn { get; set; }
-
         
         /// <summary>
         /// Format the rate into a string with the currency code, e.g. "USD 0.72543"
@@ -38,8 +37,7 @@ namespace Nop.Core.Domain.Directory
         /// <returns></returns>
         public override string ToString()
         {
-            return $"{this.CurrencyCode} {this.Rate}";
+            return $"{CurrencyCode} {Rate}";
         }
     }
-
 }

@@ -7,7 +7,7 @@ using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Security;
-using Nop.Data;
+using Nop.Data.Extensions;
 using Nop.Services.Events;
 
 namespace Nop.Services.Security
@@ -17,23 +17,6 @@ namespace Nop.Services.Security
     /// </summary>
     public partial class AclService : IAclService
     {
-        #region Constants
-        
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : entity ID
-        /// {1} : entity name
-        /// </remarks>
-        private const string ACLRECORD_BY_ENTITYID_NAME_KEY = "Nop.aclrecord.entityid-name-{0}-{1}";
-        /// <summary>
-        /// Key pattern to clear cache
-        /// </summary>
-        private const string ACLRECORD_PATTERN_KEY = "Nop.aclrecord.";
-
-        #endregion
-
         #region Fields
 
         private readonly IRepository<AclRecord> _aclRecordRepository;
@@ -83,7 +66,7 @@ namespace Nop.Services.Security
             _aclRecordRepository.Delete(aclRecord);
 
             //cache
-            _cacheManager.RemoveByPattern(ACLRECORD_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopSecurityDefaults.AclRecordPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityDeleted(aclRecord);
@@ -113,8 +96,8 @@ namespace Nop.Services.Security
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
 
-            int entityId = entity.Id;
-            string entityName = entity.GetUnproxiedEntityType().Name;
+            var entityId = entity.Id;
+            var entityName = entity.GetUnproxiedEntityType().Name;
 
             var query = from ur in _aclRecordRepository.Table
                         where ur.EntityId == entityId &&
@@ -137,7 +120,7 @@ namespace Nop.Services.Security
             _aclRecordRepository.Insert(aclRecord);
 
             //cache
-            _cacheManager.RemoveByPattern(ACLRECORD_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopSecurityDefaults.AclRecordPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(aclRecord);
@@ -157,8 +140,8 @@ namespace Nop.Services.Security
             if (customerRoleId == 0)
                 throw new ArgumentOutOfRangeException("customerRoleId");
 
-            int entityId = entity.Id;
-            string entityName = entity.GetUnproxiedEntityType().Name;
+            var entityId = entity.Id;
+            var entityName = entity.GetUnproxiedEntityType().Name;
 
             var aclRecord = new AclRecord
             {
@@ -182,7 +165,7 @@ namespace Nop.Services.Security
             _aclRecordRepository.Update(aclRecord);
 
             //cache
-            _cacheManager.RemoveByPattern(ACLRECORD_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopSecurityDefaults.AclRecordPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(aclRecord);
@@ -199,10 +182,10 @@ namespace Nop.Services.Security
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
 
-            int entityId = entity.Id;
-            string entityName = entity.GetUnproxiedEntityType().Name;
+            var entityId = entity.Id;
+            var entityName = entity.GetUnproxiedEntityType().Name;
 
-            string key = string.Format(ACLRECORD_BY_ENTITYID_NAME_KEY, entityId, entityName);
+            var key = string.Format(NopSecurityDefaults.AclRecordByEntityIdNameCacheKey, entityId, entityName);
             return _cacheManager.Get(key, () =>
             {
                 var query = from ur in _aclRecordRepository.Table
@@ -254,6 +237,7 @@ namespace Nop.Services.Security
             //no permission found
             return false;
         }
+
         #endregion
     }
 }

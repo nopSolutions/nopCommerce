@@ -7,6 +7,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Domain.Security;
 using Nop.Services.Catalog;
 using Nop.Services.Events;
 using Nop.Services.Localization;
@@ -54,7 +55,7 @@ namespace Nop.Web.Controllers
 
         #endregion
 
-        #region Constructors
+        #region Ctor
 
         public ProductController(IProductModelFactory productModelFactory,
             IProductService productService,
@@ -168,7 +169,8 @@ namespace Nop.Web.Controllers
             }
 
             //activity log
-            _customerActivityService.InsertActivity("PublicStore.ViewProduct", _localizationService.GetResource("ActivityLog.PublicStore.ViewProduct"), product.Name);
+            _customerActivityService.InsertActivity("PublicStore.ViewProduct",
+                string.Format(_localizationService.GetResource("ActivityLog.PublicStore.ViewProduct"), product.Name), product);
 
             //model
             var model = _productModelFactory.PrepareProductDetailsModel(product, updatecartitem, false);
@@ -240,9 +242,9 @@ namespace Nop.Web.Controllers
                 pageSize: _catalogSettings.NewProductsNumber);
             foreach (var product in products)
             {
-                string productUrl = Url.RouteUrl("Product", new { SeName = product.GetSeName() }, _webHelper.IsCurrentConnectionSecured() ? "https" : "http");
-                string productName = product.GetLocalized(x => x.Name);
-                string productDescription = product.GetLocalized(x => x.ShortDescription);
+                var productUrl = Url.RouteUrl("Product", new { SeName = product.GetSeName() }, _webHelper.CurrentRequestProtocol);
+                var productName = product.GetLocalized(x => x.Name);
+                var productDescription = product.GetLocalized(x => x.ShortDescription);
                 var item = new RssItem(productName, productDescription, new Uri(productUrl), $"urn:store:{_storeContext.CurrentStore.Id}:newProducts:product:{product.Id}", product.CreatedOnUtc);
                 items.Add(item);
                 //uncomment below if you want to add RSS enclosure for pictures
@@ -324,10 +326,10 @@ namespace Nop.Web.Controllers
             if (ModelState.IsValid)
             {
                 //save review
-                int rating = model.AddProductReview.Rating;
+                var rating = model.AddProductReview.Rating;
                 if (rating < 1 || rating > 5)
                     rating = _catalogSettings.DefaultProductRatingValue;
-                bool isApproved = !_catalogSettings.ProductReviewsMustBeApproved;
+                var isApproved = !_catalogSettings.ProductReviewsMustBeApproved;
 
                 var productReview = new ProductReview
                 {
@@ -353,7 +355,8 @@ namespace Nop.Web.Controllers
                     _workflowMessageService.SendProductReviewNotificationMessage(productReview, _localizationSettings.DefaultAdminLanguageId);
 
                 //activity log
-                _customerActivityService.InsertActivity("PublicStore.AddProductReview", _localizationService.GetResource("ActivityLog.PublicStore.AddProductReview"), product.Name);
+                _customerActivityService.InsertActivity("PublicStore.AddProductReview",
+                    string.Format(_localizationService.GetResource("ActivityLog.PublicStore.AddProductReview"), product.Name), product);
 
                 //raise event
                 if (productReview.IsApproved)
@@ -536,7 +539,8 @@ namespace Nop.Web.Controllers
             _compareProductsService.AddProductToCompareList(productId);
 
             //activity log
-            _customerActivityService.InsertActivity("PublicStore.AddToCompareList", _localizationService.GetResource("ActivityLog.PublicStore.AddToCompareList"), product.Name);
+            _customerActivityService.InsertActivity("PublicStore.AddToCompareList",
+                string.Format(_localizationService.GetResource("ActivityLog.PublicStore.AddToCompareList"), product.Name), product);
 
             return Json(new
             {

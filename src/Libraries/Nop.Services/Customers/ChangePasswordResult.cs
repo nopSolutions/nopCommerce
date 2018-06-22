@@ -13,7 +13,7 @@ namespace Nop.Services.Customers
         /// </summary>
         public ChangePasswordResult() 
         {
-            this.Errors = new List<string>();
+            Errors = new List<string>();
         }
 
         /// <summary>
@@ -21,7 +21,7 @@ namespace Nop.Services.Customers
         /// </summary>
         public bool Success
         {
-            get { return (!this.Errors.Any()); }
+            get { return (!Errors.Any()); }
         }
 
         /// <summary>

@@ -19,8 +19,6 @@ namespace Nop.Services.Customers
     {
         #region Fields
 
-        private const int SALT_KEY_SIZE = 5;
-
         private readonly ICustomerService _customerService;
         private readonly IEncryptionService _encryptionService;
         private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
@@ -200,7 +198,7 @@ namespace Nop.Services.Customers
                 result.AddError("Current customer is already registered");
                 return result;
             }
-            if (String.IsNullOrEmpty(request.Email))
+            if (string.IsNullOrEmpty(request.Email))
             {
                 result.AddError(_localizationService.GetResource("Account.Register.Errors.EmailIsNotProvided"));
                 return result;
@@ -210,14 +208,14 @@ namespace Nop.Services.Customers
                 result.AddError(_localizationService.GetResource("Common.WrongEmail"));
                 return result;
             }
-            if (String.IsNullOrWhiteSpace(request.Password))
+            if (string.IsNullOrWhiteSpace(request.Password))
             {
                 result.AddError(_localizationService.GetResource("Account.Register.Errors.PasswordIsNotProvided"));
                 return result;
             }
             if (_customerSettings.UsernamesEnabled)
             {
-                if (String.IsNullOrEmpty(request.Username))
+                if (string.IsNullOrEmpty(request.Username))
                 {
                     result.AddError(_localizationService.GetResource("Account.Register.Errors.UsernameIsNotProvided"));
                     return result;
@@ -259,7 +257,7 @@ namespace Nop.Services.Customers
                     break;
                 case PasswordFormat.Hashed:
                     {
-                        var saltKey = _encryptionService.CreateSaltKey(SALT_KEY_SIZE);
+                        var saltKey = _encryptionService.CreateSaltKey(NopCustomerServiceDefaults.PasswordSaltKeySize);
                         customerPassword.PasswordSalt = saltKey;
                         customerPassword.Password = _encryptionService.CreatePasswordHash(request.Password, saltKey, _customerSettings.HashedPasswordFormat);
                     }
@@ -270,29 +268,30 @@ namespace Nop.Services.Customers
             request.Customer.Active = request.IsApproved;
             
             //add to 'Registered' role
-            var registeredRole = _customerService.GetCustomerRoleBySystemName(SystemCustomerRoleNames.Registered);
+            var registeredRole = _customerService.GetCustomerRoleBySystemName(NopCustomerDefaults.RegisteredRoleName);
             if (registeredRole == null)
                 throw new NopException("'Registered' role could not be loaded");
-            request.Customer.CustomerRoles.Add(registeredRole);
+            //request.Customer.CustomerRoles.Add(registeredRole);
+            request.Customer.CustomerCustomerRoleMappings.Add(new CustomerCustomerRoleMapping { CustomerRole = registeredRole });
             //remove from 'Guests' role
-            var guestRole = request.Customer.CustomerRoles.FirstOrDefault(cr => cr.SystemName == SystemCustomerRoleNames.Guests);
+            var guestRole = request.Customer.CustomerRoles.FirstOrDefault(cr => cr.SystemName == NopCustomerDefaults.GuestsRoleName);
             if (guestRole != null)
-                request.Customer.CustomerRoles.Remove(guestRole);
-            
-            //Add reward points for customer registration (if enabled)
-            if (_rewardPointsSettings.Enabled &&
-                _rewardPointsSettings.PointsForRegistration > 0)
             {
-                _rewardPointService.AddRewardPointsHistoryEntry(request.Customer, 
-                    _rewardPointsSettings.PointsForRegistration,
-                    request.StoreId,
-                    _localizationService.GetResource("RewardPoints.Message.EarnedForRegistration"));
+                //request.Customer.CustomerRoles.Remove(guestRole);
+                request.Customer.CustomerCustomerRoleMappings
+                    .Remove(request.Customer.CustomerCustomerRoleMappings.FirstOrDefault(mapping => mapping.CustomerRoleId == guestRole.Id));
+            }
+
+            //add reward points for customer registration (if enabled)
+            if (_rewardPointsSettings.Enabled && _rewardPointsSettings.PointsForRegistration > 0)
+            {
+                var endDate = _rewardPointsSettings.RegistrationPointsValidity > 0 
+                    ? (DateTime?)DateTime.UtcNow.AddDays(_rewardPointsSettings.RegistrationPointsValidity.Value) : null;
+                _rewardPointService.AddRewardPointsHistoryEntry(request.Customer, _rewardPointsSettings.PointsForRegistration,
+                    request.StoreId, _localizationService.GetResource("RewardPoints.Message.EarnedForRegistration"), endDate: endDate);
             }
 
             _customerService.UpdateCustomer(request.Customer);
-
-            //publish event
-            _eventPublisher.Publish(new CustomerPasswordChangedEvent(customerPassword));
 
             return result;
         }
@@ -308,12 +307,12 @@ namespace Nop.Services.Customers
                 throw new ArgumentNullException(nameof(request));
 
             var result = new ChangePasswordResult();
-            if (String.IsNullOrWhiteSpace(request.Email))
+            if (string.IsNullOrWhiteSpace(request.Email))
             {
                 result.AddError(_localizationService.GetResource("Account.ChangePassword.Errors.EmailIsNotProvided"));
                 return result;
             }
-            if (String.IsNullOrWhiteSpace(request.NewPassword))
+            if (string.IsNullOrWhiteSpace(request.NewPassword))
             {
                 result.AddError(_localizationService.GetResource("Account.ChangePassword.Errors.PasswordIsNotProvided"));
                 return result;
@@ -367,7 +366,7 @@ namespace Nop.Services.Customers
                     break;
                 case PasswordFormat.Hashed:
                     {
-                        var saltKey = _encryptionService.CreateSaltKey(SALT_KEY_SIZE);
+                        var saltKey = _encryptionService.CreateSaltKey(NopCustomerServiceDefaults.PasswordSaltKeySize);
                         customerPassword.PasswordSalt = saltKey;
                         customerPassword.Password = _encryptionService.CreatePasswordHash(request.NewPassword, saltKey, _customerSettings.HashedPasswordFormat);
                     }
@@ -396,7 +395,7 @@ namespace Nop.Services.Customers
                 throw new NopException("Email cannot be null");
 
             newEmail = newEmail.Trim();
-            string oldEmail = customer.Email;
+            var oldEmail = customer.Email;
 
             if (!CommonHelper.IsValidEmail(newEmail))
                 throw new NopException(_localizationService.GetResource("Account.EmailUsernameErrors.NewEmailIsNotValid"));
@@ -415,7 +414,7 @@ namespace Nop.Services.Customers
                 _customerService.UpdateCustomer(customer);
 
                 //email re-validation message
-                _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.EmailRevalidationToken, Guid.NewGuid().ToString());
+                _genericAttributeService.SaveAttribute(customer, NopCustomerDefaults.EmailRevalidationTokenAttribute, Guid.NewGuid().ToString());
                 _workflowMessageService.SendCustomerEmailRevalidationMessage(customer, _workContext.WorkingLanguage.Id);
             }
             else
@@ -424,7 +423,7 @@ namespace Nop.Services.Customers
                 _customerService.UpdateCustomer(customer);
 
                 //update newsletter subscription (if required)
-                if (!String.IsNullOrEmpty(oldEmail) && !oldEmail.Equals(newEmail, StringComparison.InvariantCultureIgnoreCase))
+                if (!string.IsNullOrEmpty(oldEmail) && !oldEmail.Equals(newEmail, StringComparison.InvariantCultureIgnoreCase))
                 {
                     foreach (var store in _storeService.GetAllStores())
                     {
@@ -454,7 +453,7 @@ namespace Nop.Services.Customers
 
             newUsername = newUsername.Trim();
 
-            if (newUsername.Length > 100)
+            if (newUsername.Length > NopCustomerServiceDefaults.CustomerUsernameLength)
                 throw new NopException(_localizationService.GetResource("Account.EmailUsernameErrors.UsernameTooLong"));
 
             var user2 = _customerService.GetCustomerByUsername(newUsername);

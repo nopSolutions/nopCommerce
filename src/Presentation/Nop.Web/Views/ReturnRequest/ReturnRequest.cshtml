@@ -12,7 +12,7 @@
         <h1>@Html.Raw(string.Format(T("ReturnRequests.Title").Text, Url.RouteUrl("OrderDetails", new { orderId = Model.OrderId }), Model.CustomOrderNumber))</h1>
     </div>
     <div class="page-body">
-        @if (!String.IsNullOrEmpty(Model.Result))
+        @if (!string.IsNullOrEmpty(Model.Result))
         {
             <div class="result">
                 @Model.Result
@@ -51,7 +51,7 @@
                                     <tr>
                                         <td class="product">
                                             <a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })">@item.ProductName</a>
-                                            @if (!String.IsNullOrEmpty(item.AttributeInfo))
+                                            @if (!string.IsNullOrEmpty(item.AttributeInfo))
                                             {
                                                 <div class="attributes">
                                                     @Html.Raw(item.AttributeInfo)
@@ -63,7 +63,7 @@
                                         </td>
                                         <td class="quantity">
                                             <select name="quantity@(item.Id)">
-                                                @for (int i = 0; i <= item.Quantity; i++)
+                                                @for (var i = 0; i <= item.Quantity; i++)
                                                 {
                                                     <option value="@(i)">@(i)</option>
                                                 }
@@ -107,7 +107,7 @@
                         {
                             //register CSS and JS
                             Html.AddCssFileParts("~/lib/fineuploader/fineuploader-4.2.2.min.css");
-                            Html.AddScriptParts("~/lib/fineuploader/jquery.fineuploader-4.2.2.min.js");
+                            Html.AddScriptParts(ResourceLocation.Footer, "~/lib/fineuploader/jquery.fineuploader-4.2.2.min.js");
                             var allowedFileExtensionsList = new List<string>();
                             //allowedFileExtensionsList.Add("jpg");
                             //allowedFileExtensionsList.Add("jpeg");
@@ -122,7 +122,7 @@
                                 @*fine uploader container*@
                                 <div id="@(controlId)uploader" class="uploadedfileinput"></div>
                                 @*fine uploader template (keep it synchronized to \Content\fineuploader\templates\default.html)*@
-                                <script type="text/template" id="@(controlId)-qq-template">
+                                <script type="text/template" asp-location="Footer" id="@(controlId)-qq-template">
                                     <div class="qq-uploader-selector qq-uploader">
                                         <div class="qq-upload-drop-area-selector qq-upload-drop-area" qq-hide-dropzone>
                                             <span>@T("Common.FileUploader.DropFiles")</span>
@@ -152,7 +152,7 @@
                                         </ul>
                                     </div>
                                 </script>
-                                <script type="text/javascript">
+                                <script asp-location="Footer">
                                     $(document).ready(function() {
                                         $("#@(controlId)uploader").fineUploader({
                                             request: {

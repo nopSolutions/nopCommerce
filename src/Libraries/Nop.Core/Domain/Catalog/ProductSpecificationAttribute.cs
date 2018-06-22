@@ -55,14 +55,8 @@ namespace Nop.Core.Domain.Catalog
         /// </summary>
         public SpecificationAttributeType AttributeType
         {
-            get
-            {
-                return (SpecificationAttributeType)this.AttributeTypeId;
-            }
-            set
-            {
-                this.AttributeTypeId = (int)value;
-            }
+            get => (SpecificationAttributeType)AttributeTypeId;
+            set => AttributeTypeId = (int)value;
         }
     }
 }

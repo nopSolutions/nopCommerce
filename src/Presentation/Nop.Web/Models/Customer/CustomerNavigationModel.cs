@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Nop.Web.Framework.Mvc.Models;
+using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Models.Customer
 {
@@ -36,6 +36,8 @@ namespace Nop.Web.Models.Customer
         Avatar = 80,
         ForumSubscriptions = 90,
         ProductReviews = 100,
-        VendorInfo = 110
+        VendorInfo = 110,
+        GdprTools = 120,
+        CheckGiftCardBalance = 130
     }
 }

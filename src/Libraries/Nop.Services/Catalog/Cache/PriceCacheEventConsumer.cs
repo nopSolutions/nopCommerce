@@ -12,190 +12,157 @@ namespace Nop.Services.Catalog.Cache
     /// </summary>
     public partial class PriceCacheEventConsumer: 
         //settings
-        IConsumer<EntityUpdated<Setting>>,
+        IConsumer<EntityUpdatedEvent<Setting>>,
         //categories
-        IConsumer<EntityInserted<Category>>,
-        IConsumer<EntityUpdated<Category>>,
-        IConsumer<EntityDeleted<Category>>,
+        IConsumer<EntityInsertedEvent<Category>>,
+        IConsumer<EntityUpdatedEvent<Category>>,
+        IConsumer<EntityDeletedEvent<Category>>,
         //manufacturers
-        IConsumer<EntityInserted<Manufacturer>>,
-        IConsumer<EntityUpdated<Manufacturer>>,
-        IConsumer<EntityDeleted<Manufacturer>>,
+        IConsumer<EntityInsertedEvent<Manufacturer>>,
+        IConsumer<EntityUpdatedEvent<Manufacturer>>,
+        IConsumer<EntityDeletedEvent<Manufacturer>>,
         //product categories
-        IConsumer<EntityInserted<ProductCategory>>,
-        IConsumer<EntityUpdated<ProductCategory>>,
-        IConsumer<EntityDeleted<ProductCategory>>,
+        IConsumer<EntityInsertedEvent<ProductCategory>>,
+        IConsumer<EntityUpdatedEvent<ProductCategory>>,
+        IConsumer<EntityDeletedEvent<ProductCategory>>,
         //product manufacturers
-        IConsumer<EntityInserted<ProductManufacturer>>,
-        IConsumer<EntityUpdated<ProductManufacturer>>,
-        IConsumer<EntityDeleted<ProductManufacturer>>,
+        IConsumer<EntityInsertedEvent<ProductManufacturer>>,
+        IConsumer<EntityUpdatedEvent<ProductManufacturer>>,
+        IConsumer<EntityDeletedEvent<ProductManufacturer>>,
         //products
-        IConsumer<EntityInserted<Product>>,
-        IConsumer<EntityUpdated<Product>>,
-        IConsumer<EntityDeleted<Product>>,
+        IConsumer<EntityInsertedEvent<Product>>,
+        IConsumer<EntityUpdatedEvent<Product>>,
+        IConsumer<EntityDeletedEvent<Product>>,
         //tier prices
-        IConsumer<EntityInserted<TierPrice>>,
-        IConsumer<EntityUpdated<TierPrice>>,
-        IConsumer<EntityDeleted<TierPrice>>,
+        IConsumer<EntityInsertedEvent<TierPrice>>,
+        IConsumer<EntityUpdatedEvent<TierPrice>>,
+        IConsumer<EntityDeletedEvent<TierPrice>>,
         //orders
-        IConsumer<EntityInserted<Order>>,
-        IConsumer<EntityUpdated<Order>>,
-        IConsumer<EntityDeleted<Order>>
+        IConsumer<EntityInsertedEvent<Order>>,
+        IConsumer<EntityUpdatedEvent<Order>>,
+        IConsumer<EntityDeletedEvent<Order>>
     {
-        /// <summary>
-        /// Key for product prices
-        /// </summary>
-        /// <remarks>
-        /// {0} : product id
-        /// {1} : overridden product price
-        /// {2} : additional charge
-        /// {3} : include discounts (true, false)
-        /// {4} : quantity
-        /// {5} : roles of the current user
-        /// {6} : current store ID
-        /// </remarks>
-        public const string PRODUCT_PRICE_MODEL_KEY = "Nop.totals.productprice-{0}-{1}-{2}-{3}-{4}-{5}-{6}";
-        public const string PRODUCT_PRICE_PATTERN_KEY = "Nop.totals.productprice";
-
-        /// <summary>
-        /// Key for category IDs of a product
-        /// </summary>
-        /// <remarks>
-        /// {0} : product id
-        /// {1} : roles of the current user
-        /// {2} : current store ID
-        /// </remarks>
-        public const string PRODUCT_CATEGORY_IDS_MODEL_KEY = "Nop.totals.product.categoryids-{0}-{1}-{2}";
-        public const string PRODUCT_CATEGORY_IDS_PATTERN_KEY = "Nop.totals.product.categoryids";
-
-        /// <summary>
-        /// Key for manufacturer IDs of a product
-        /// </summary>
-        /// <remarks>
-        /// {0} : product id
-        /// {1} : roles of the current user
-        /// {2} : current store ID
-        /// </remarks>
-        public const string PRODUCT_MANUFACTURER_IDS_MODEL_KEY = "Nop.totals.product.manufacturerids-{0}-{1}-{2}";
-        public const string PRODUCT_MANUFACTURER_IDS_PATTERN_KEY = "Nop.totals.product.manufacturerids";
-
         private readonly IStaticCacheManager _cacheManager;
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="cacheManager">Cache manager</param>
         public PriceCacheEventConsumer(IStaticCacheManager cacheManager)
         {
             this._cacheManager = cacheManager;
         }
 
         //settings
-        public void HandleEvent(EntityUpdated<Setting> eventMessage)
+        public void HandleEvent(EntityUpdatedEvent<Setting> eventMessage)
         {
-            _cacheManager.RemoveByPattern(PRODUCT_PRICE_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(PRODUCT_CATEGORY_IDS_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(PRODUCT_MANUFACTURER_IDS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductPricePatternCacheKey);
+            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductCategoryIdsPatternCacheKey);
+            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductManufacturerIdsPatternCacheKey);
         }
 
         //categories
-        public void HandleEvent(EntityInserted<Category> eventMessage)
+        public void HandleEvent(EntityInsertedEvent<Category> eventMessage)
         {
-            _cacheManager.RemoveByPattern(PRODUCT_CATEGORY_IDS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductCategoryIdsPatternCacheKey);
         }
-        public void HandleEvent(EntityUpdated<Category> eventMessage)
+        public void HandleEvent(EntityUpdatedEvent<Category> eventMessage)
         {
-            _cacheManager.RemoveByPattern(PRODUCT_CATEGORY_IDS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductCategoryIdsPatternCacheKey);
         }
-        public void HandleEvent(EntityDeleted<Category> eventMessage)
+        public void HandleEvent(EntityDeletedEvent<Category> eventMessage)
         {
-            _cacheManager.RemoveByPattern(PRODUCT_CATEGORY_IDS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductCategoryIdsPatternCacheKey);
         }
 
         //manufacturers
-        public void HandleEvent(EntityInserted<Manufacturer> eventMessage)
+        public void HandleEvent(EntityInsertedEvent<Manufacturer> eventMessage)
         {
-            _cacheManager.RemoveByPattern(PRODUCT_MANUFACTURER_IDS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductManufacturerIdsPatternCacheKey);
         }
-        public void HandleEvent(EntityUpdated<Manufacturer> eventMessage)
+        public void HandleEvent(EntityUpdatedEvent<Manufacturer> eventMessage)
         {
-            _cacheManager.RemoveByPattern(PRODUCT_MANUFACTURER_IDS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductManufacturerIdsPatternCacheKey);
         }
-        public void HandleEvent(EntityDeleted<Manufacturer> eventMessage)
+        public void HandleEvent(EntityDeletedEvent<Manufacturer> eventMessage)
         {
-            _cacheManager.RemoveByPattern(PRODUCT_MANUFACTURER_IDS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductManufacturerIdsPatternCacheKey);
         }
 
         //product categories
-        public void HandleEvent(EntityInserted<ProductCategory> eventMessage)
+        public void HandleEvent(EntityInsertedEvent<ProductCategory> eventMessage)
         {
-            _cacheManager.RemoveByPattern(PRODUCT_PRICE_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(PRODUCT_CATEGORY_IDS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductPricePatternCacheKey);
+            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductCategoryIdsPatternCacheKey);
         }
-        public void HandleEvent(EntityUpdated<ProductCategory> eventMessage)
+        public void HandleEvent(EntityUpdatedEvent<ProductCategory> eventMessage)
         {
-            _cacheManager.RemoveByPattern(PRODUCT_PRICE_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(PRODUCT_CATEGORY_IDS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductPricePatternCacheKey);
+            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductCategoryIdsPatternCacheKey);
         }
-        public void HandleEvent(EntityDeleted<ProductCategory> eventMessage)
+        public void HandleEvent(EntityDeletedEvent<ProductCategory> eventMessage)
         {
-            _cacheManager.RemoveByPattern(PRODUCT_PRICE_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(PRODUCT_CATEGORY_IDS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductPricePatternCacheKey);
+            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductCategoryIdsPatternCacheKey);
         }
 
         //product manufacturers
-        public void HandleEvent(EntityInserted<ProductManufacturer> eventMessage)
+        public void HandleEvent(EntityInsertedEvent<ProductManufacturer> eventMessage)
         {
-            _cacheManager.RemoveByPattern(PRODUCT_PRICE_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(PRODUCT_MANUFACTURER_IDS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductPricePatternCacheKey);
+            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductManufacturerIdsPatternCacheKey);
         }
-        public void HandleEvent(EntityUpdated<ProductManufacturer> eventMessage)
+        public void HandleEvent(EntityUpdatedEvent<ProductManufacturer> eventMessage)
         {
-            _cacheManager.RemoveByPattern(PRODUCT_PRICE_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(PRODUCT_MANUFACTURER_IDS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductPricePatternCacheKey);
+            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductManufacturerIdsPatternCacheKey);
         }
-        public void HandleEvent(EntityDeleted<ProductManufacturer> eventMessage)
+        public void HandleEvent(EntityDeletedEvent<ProductManufacturer> eventMessage)
         {
-            _cacheManager.RemoveByPattern(PRODUCT_PRICE_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(PRODUCT_MANUFACTURER_IDS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductPricePatternCacheKey);
+            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductManufacturerIdsPatternCacheKey);
         }
 
         //products
-        public void HandleEvent(EntityInserted<Product> eventMessage)
+        public void HandleEvent(EntityInsertedEvent<Product> eventMessage)
         {
-            _cacheManager.RemoveByPattern(PRODUCT_PRICE_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductPricePatternCacheKey);
         }
-        public void HandleEvent(EntityUpdated<Product> eventMessage)
+        public void HandleEvent(EntityUpdatedEvent<Product> eventMessage)
         {
-            _cacheManager.RemoveByPattern(PRODUCT_PRICE_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductPricePatternCacheKey);
         }
-        public void HandleEvent(EntityDeleted<Product> eventMessage)
+        public void HandleEvent(EntityDeletedEvent<Product> eventMessage)
         {
-            _cacheManager.RemoveByPattern(PRODUCT_PRICE_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductPricePatternCacheKey);
         }
 
         //tier prices
-        public void HandleEvent(EntityInserted<TierPrice> eventMessage)
+        public void HandleEvent(EntityInsertedEvent<TierPrice> eventMessage)
         {
-            _cacheManager.RemoveByPattern(PRODUCT_PRICE_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductPricePatternCacheKey);
         }
-        public void HandleEvent(EntityUpdated<TierPrice> eventMessage)
+        public void HandleEvent(EntityUpdatedEvent<TierPrice> eventMessage)
         {
-            _cacheManager.RemoveByPattern(PRODUCT_PRICE_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductPricePatternCacheKey);
         }
-        public void HandleEvent(EntityDeleted<TierPrice> eventMessage)
+        public void HandleEvent(EntityDeletedEvent<TierPrice> eventMessage)
         {
-            _cacheManager.RemoveByPattern(PRODUCT_PRICE_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductPricePatternCacheKey);
         }
 
         //orders
-        public void HandleEvent(EntityInserted<Order> eventMessage)
+        public void HandleEvent(EntityInsertedEvent<Order> eventMessage)
         {
-            _cacheManager.RemoveByPattern(PRODUCT_PRICE_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductPricePatternCacheKey);
         }
-        public void HandleEvent(EntityUpdated<Order> eventMessage)
+        public void HandleEvent(EntityUpdatedEvent<Order> eventMessage)
         {
-            _cacheManager.RemoveByPattern(PRODUCT_PRICE_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductPricePatternCacheKey);
         }
-        public void HandleEvent(EntityDeleted<Order> eventMessage)
+        public void HandleEvent(EntityDeletedEvent<Order> eventMessage)
         {
-            _cacheManager.RemoveByPattern(PRODUCT_PRICE_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductPricePatternCacheKey);
         }
     }
 }

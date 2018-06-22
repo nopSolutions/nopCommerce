@@ -1,4 +1,3 @@
-using System;
 using System.Net;
 using System.Text.RegularExpressions;
 
@@ -12,9 +11,9 @@ namespace Nop.Core.Html.CodeFormatter
         #region Fields
 
         //private static Regex regexCode1 = new Regex(@"(?<begin>\[code:(?<lang>.*?)(?:;ln=(?<linenumbers>(?:on|off)))?(?:;alt=(?<altlinenumbers>(?:on|off)))?(?:;(?<title>.*?))?\])(?<code>.*?)(?<end>\[/code\])", RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.IgnoreCase | RegexOptions.Singleline);
-        private readonly static Regex regexHtml = new Regex("<[^>]*>", RegexOptions.Compiled);
+        private static readonly Regex _regexHtml = new Regex("<[^>]*>", RegexOptions.Compiled);
 
-        private readonly static Regex regexCode2 =
+        private static readonly Regex _regexCode =
             new Regex(@"\[code\](?<inner>(.*?))\[/code\]", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
         #endregion
@@ -26,48 +25,23 @@ namespace Nop.Core.Html.CodeFormatter
         /// </summary>
         /// <param name="match">Match</param>
         /// <returns>Formatted text</returns>
-        private static string CodeEvaluator(Match match)
-        {
-            if (!match.Success)
-                return match.Value;
-
-            var options = new HighlightOptions();
-
-            options.Language = match.Groups["lang"].Value;
-            options.Code = match.Groups["code"].Value;
-            options.DisplayLineNumbers = match.Groups["linenumbers"].Value == "on";
-            options.Title = match.Groups["title"].Value;
-            options.AlternateLineNumbers = match.Groups["altlinenumbers"].Value == "on";
-
-            string result = match.Value.Replace(match.Groups["begin"].Value, "");
-            result = result.Replace(match.Groups["end"].Value, "");
-            result = Highlight(options, result);
-            return result;
-
-        }
-
-        /// <summary>
-        /// Code evaluator method
-        /// </summary>
-        /// <param name="match">Match</param>
-        /// <returns>Formatted text</returns>
         private static string CodeEvaluatorSimple(Match match)
         {
             if (!match.Success)
                 return match.Value;
 
-            var options = new HighlightOptions();
+            var options = new HighlightOptions
+            {
+                Language = "c#",
+                Code = match.Groups["inner"].Value,
+                DisplayLineNumbers = false,
+                Title = string.Empty,
+                AlternateLineNumbers = false
+            };
 
-            options.Language = "c#";
-            options.Code = match.Groups["inner"].Value;
-            options.DisplayLineNumbers = false;
-            options.Title = string.Empty;
-            options.AlternateLineNumbers = false;
-
-            string result = match.Value;
+            var result = match.Value;
             result = Highlight(options, result);
             return result;
-
         }
 
         /// <summary>
@@ -80,7 +54,7 @@ namespace Nop.Core.Html.CodeFormatter
             if (string.IsNullOrEmpty(html))
                 return string.Empty;
 
-            return regexHtml.Replace(html, string.Empty);
+            return _regexHtml.Replace(html, string.Empty);
         }
 
         /// <summary>
@@ -94,50 +68,64 @@ namespace Nop.Core.Html.CodeFormatter
             switch (options.Language)
             {
                 case "c#":
-                    var csf = new CSharpFormat();
-                    csf.LineNumbers = options.DisplayLineNumbers;
-                    csf.Alternate = options.AlternateLineNumbers;
+                    var csf = new CSharpFormat
+                    {
+                        LineNumbers = options.DisplayLineNumbers,
+                        Alternate = options.AlternateLineNumbers
+                    };
                     return WebUtility.HtmlDecode(csf.FormatCode(text));
 
                 case "vb":
-                    var vbf = new VisualBasicFormat();
-                    vbf.LineNumbers = options.DisplayLineNumbers;
-                    vbf.Alternate = options.AlternateLineNumbers;
+                    var vbf = new VisualBasicFormat
+                    {
+                        LineNumbers = options.DisplayLineNumbers,
+                        Alternate = options.AlternateLineNumbers
+                    };
                     return vbf.FormatCode(text);
 
                 case "js":
-                    var jsf = new JavaScriptFormat();
-                    jsf.LineNumbers = options.DisplayLineNumbers;
-                    jsf.Alternate = options.AlternateLineNumbers;
+                    var jsf = new JavaScriptFormat
+                    {
+                        LineNumbers = options.DisplayLineNumbers,
+                        Alternate = options.AlternateLineNumbers
+                    };
                     return WebUtility.HtmlDecode(jsf.FormatCode(text));
 
                 case "html":
-                    var htmlf = new HtmlFormat();
-                    htmlf.LineNumbers = options.DisplayLineNumbers;
-                    htmlf.Alternate = options.AlternateLineNumbers;
+                    var htmlf = new HtmlFormat
+                    {
+                        LineNumbers = options.DisplayLineNumbers,
+                        Alternate = options.AlternateLineNumbers
+                    };
                     text = StripHtml(text).Trim();
-                    string code = htmlf.FormatCode(WebUtility.HtmlDecode(text)).Trim();
+                    var code = htmlf.FormatCode(WebUtility.HtmlDecode(text)).Trim();
                     return code.Replace("\r\n", "<br />").Replace("\n", "<br />");
 
                 case "xml":
-                    var xmlf = new HtmlFormat();
-                    xmlf.LineNumbers = options.DisplayLineNumbers;
-                    xmlf.Alternate = options.AlternateLineNumbers;
+                    var xmlf = new HtmlFormat
+                    {
+                        LineNumbers = options.DisplayLineNumbers,
+                        Alternate = options.AlternateLineNumbers
+                    };
                     text = text.Replace("<br />", "\r\n");
                     text = StripHtml(text).Trim();
-                    string xml = xmlf.FormatCode(WebUtility.HtmlDecode(text)).Trim();
+                    var xml = xmlf.FormatCode(WebUtility.HtmlDecode(text)).Trim();
                     return xml.Replace("\r\n", "<br />").Replace("\n", "<br />");
 
                 case "tsql":
-                    var tsqlf = new TsqlFormat();
-                    tsqlf.LineNumbers = options.DisplayLineNumbers;
-                    tsqlf.Alternate = options.AlternateLineNumbers;
+                    var tsqlf = new TsqlFormat
+                    {
+                        LineNumbers = options.DisplayLineNumbers,
+                        Alternate = options.AlternateLineNumbers
+                    };
                     return WebUtility.HtmlDecode(tsqlf.FormatCode(text));
 
                 case "msh":
-                    var mshf = new MshFormat();
-                    mshf.LineNumbers = options.DisplayLineNumbers;
-                    mshf.Alternate = options.AlternateLineNumbers;
+                    var mshf = new MshFormat
+                    {
+                        LineNumbers = options.DisplayLineNumbers,
+                        Alternate = options.AlternateLineNumbers
+                    };
                     return WebUtility.HtmlDecode(mshf.FormatCode(text));
             }
 
@@ -155,14 +143,14 @@ namespace Nop.Core.Html.CodeFormatter
         /// <returns>Formatted text</returns>
         public static string FormatTextSimple(string text)
         {
-            if (String.IsNullOrEmpty(text))
+            if (string.IsNullOrEmpty(text))
                 return string.Empty;
 
-            if (text.Contains("[/code]"))
-            {
-                text = regexCode2.Replace(text, new MatchEvaluator(CodeEvaluatorSimple));
-                text = regexCode2.Replace(text, "$1");
-            }
+            if (!text.Contains("[/code]")) 
+                return text;
+
+            text = _regexCode.Replace(text, CodeEvaluatorSimple);
+            text = _regexCode.Replace(text, "$1");
             return text;
         }
 

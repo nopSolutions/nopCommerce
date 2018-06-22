@@ -2,6 +2,9 @@
 
 namespace Nop.Core.Domain.Orders
 {
+    /// <summary>
+    /// Order settings
+    /// </summary>
     public class OrderSettings : ISettings
     {
         /// <summary>
@@ -13,11 +16,13 @@ namespace Nop.Core.Domain.Orders
         /// Gets or sets a minimum order subtotal amount
         /// </summary>
         public decimal MinOrderSubtotalAmount { get; set; }
+
         /// <summary>
         /// Gets or sets a value indicating whether 'Minimum order subtotal amount' option
         /// should be evaluated over 'X' value including tax or not
         /// </summary>
         public bool MinOrderSubtotalAmountIncludingTax { get; set; }
+
         /// <summary>
         /// Gets or sets a minimum order total amount
         /// </summary>
@@ -34,9 +39,15 @@ namespace Nop.Core.Domain.Orders
         public bool AnonymousCheckoutAllowed { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether checkout is disabled
+        /// </summary>
+        public bool CheckoutDisabled { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether 'Terms of service' enabled on the shopping cart page
         /// </summary>
         public bool TermsOfServiceOnShoppingCartPage { get; set; }
+
         /// <summary>
         /// Gets or sets a value indicating whether 'Terms of service' enabled on the order confirmation page
         /// </summary>
@@ -51,10 +62,12 @@ namespace Nop.Core.Domain.Orders
         /// Gets or sets a value indicating whether order totals should be displayed on 'Payment info' tab of 'One-page checkout' page
         /// </summary>
         public bool OnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab { get; set; }
+
         /// <summary>
         /// Gets or sets a value indicating whether "Billing address" step should be skipped
         /// </summary>
         public bool DisableBillingAddressCheckoutStep { get; set; }
+
         /// <summary>
         /// Gets or sets a value indicating whether "Order completed" page should be skipped
         /// </summary>
@@ -64,14 +77,17 @@ namespace Nop.Core.Domain.Orders
         /// Gets or sets a value indicating we should attach PDF invoice to "Order placed" email
         /// </summary>
         public bool AttachPdfInvoiceToOrderPlacedEmail { get; set; }
+
         /// <summary>
         /// Gets or sets a value indicating we should attach PDF invoice to "Order paid" email
         /// </summary>
         public bool AttachPdfInvoiceToOrderPaidEmail { get; set; }
+
         /// <summary>
         /// Gets or sets a value indicating we should attach PDF invoice to "Order completed" email
         /// </summary>
         public bool AttachPdfInvoiceToOrderCompletedEmail { get; set; }
+
         /// <summary>
         /// Gets or sets a value indicating we PDF invoices should be generated in customer language. Otherwise, use the current one
         /// </summary>
@@ -81,18 +97,22 @@ namespace Nop.Core.Domain.Orders
         /// Gets or sets a value indicating whether "Return requests" are allowed
         /// </summary>
         public bool ReturnRequestsEnabled { get; set; }
+
         /// <summary>
         /// Gets or sets a value indicating whether customers are allowed to upload files
         /// </summary>
         public bool ReturnRequestsAllowFiles { get; set; }
+
         /// <summary>
         /// Gets or sets maximum file size for upload file (return request). Set 0 to allow any file size
         /// </summary>
         public int ReturnRequestsFileMaximumSize { get; set; }
+
         /// <summary>
         /// Gets or sets a value "Return requests" number mask
         /// </summary>
         public string ReturnRequestNumberMask { get; set; }
+
         /// <summary>
         /// Gets or sets a number of days that the Return Request Link will be available for customers after order placing.
         /// </summary>
@@ -102,10 +122,12 @@ namespace Nop.Core.Domain.Orders
         /// Gets or sets a value indicating whether to activate related gift cards after completing the order
         /// </summary>
         public bool ActivateGiftCardsAfterCompletingOrder { get; set; }
+
         /// <summary>
         /// Gets or sets a value indicating whether to deactivate related gift cards after cancelling the order
         /// </summary>
         public bool DeactivateGiftCardsAfterCancellingOrder { get; set; }
+
         /// <summary>
         /// Gets or sets a value indicating whether to deactivate related gift cards after deleting the order
         /// </summary>
@@ -135,5 +157,10 @@ namespace Nop.Core.Domain.Orders
         /// Gets or sets a value indicating whether administrators (in impersonation mode) are allowed to buy products marked as "Call for price"
         /// </summary>
         public bool AllowAdminsToBuyCallForPriceProducts { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the gift card usage history have to delete when an order is cancelled
+        /// </summary>
+        public bool DeleteGiftCardUsageHistory { get; set; }
     }
 }

@@ -22,9 +22,8 @@
             <div class="description">
                 @T("Account.ForumSubscriptions.Description")
             </div>
-            <script type="text/javascript">
+            <script asp-location="Footer">
                 $(document).ready(function () {
-
                     $('#selectall').click(function () {
                         $('.subscription-list .rowcheckbox').attr('checked', $(this).is(':checked')).change();
                     });
@@ -36,7 +35,6 @@
                     });
                 });
             </script>
-
             <form asp-route="CustomerForumSubscriptions" method="post">
                 <div class="subscription-list">
                     <div class="table-wrapper">
@@ -56,7 +54,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            @for (int i = 0; i < Model.ForumSubscriptions.Count; i++)
+                            @for (var i = 0; i < Model.ForumSubscriptions.Count; i++)
                             {
                                 var item = Model.ForumSubscriptions[i];
                                 <tr @(i % 2 == 0 ? Html.Raw(" class=\"odd\"") : Html.Raw(" class=\"even\""))>
@@ -81,7 +79,7 @@
                     @{
                         var pager = Html.Pager(Model.PagerModel);
                     }
-                    @if (!String.IsNullOrEmpty(pager.ToHtmlString()))
+                    @if (!string.IsNullOrEmpty(pager.ToHtmlString()))
                     {
                         <div class="pager">
                             @pager

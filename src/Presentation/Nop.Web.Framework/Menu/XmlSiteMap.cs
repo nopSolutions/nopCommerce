@@ -3,28 +3,43 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Xml;
 using Microsoft.AspNetCore.Routing;
-using Nop.Core;
 using Nop.Core.Infrastructure;
 using Nop.Services.Localization;
 using Nop.Services.Security;
 
 namespace Nop.Web.Framework.Menu
 {
+    /// <summary>
+    /// XML sitemap
+    /// </summary>
     public class XmlSiteMap
     {
+        /// <summary>
+        /// Ctor
+        /// </summary>
         public XmlSiteMap()
         {
             RootNode = new SiteMapNode();
         }
 
+        /// <summary>
+        /// Root node
+        /// </summary>
         public SiteMapNode RootNode { get; set; }
 
+        /// <summary>
+        /// Load sitemap
+        /// </summary>
+        /// <param name="physicalPath">Filepath to load a sitemap</param>
         public virtual void LoadFrom(string physicalPath)
         {
-            string filePath = CommonHelper.MapPath(physicalPath);
-            string content = File.ReadAllText(filePath);
+            var fileProvider = EngineContext.Current.Resolve<INopFileProvider>();
+
+            var filePath = fileProvider.MapPath(physicalPath);
+            var content = fileProvider.ReadAllText(filePath, Encoding.UTF8);
 
             if (!string.IsNullOrEmpty(content))
             {
@@ -44,7 +59,7 @@ namespace Nop.Web.Framework.Menu
 
                         if ((doc.DocumentElement != null) && doc.HasChildNodes)
                         {
-                            XmlNode xmlRootNode = doc.DocumentElement.FirstChild;
+                            var xmlRootNode = doc.DocumentElement.FirstChild;
                             Iterate(RootNode, xmlRootNode);
                         }
                     }
@@ -79,9 +94,9 @@ namespace Nop.Web.Framework.Menu
             siteMapNode.Title = localizationService.GetResource(nopResource);
 
             //routes, url
-            string controllerName = GetStringValueFromAttribute(xmlNode, "controller");
-            string actionName = GetStringValueFromAttribute(xmlNode, "action");
-            string url = GetStringValueFromAttribute(xmlNode, "url");
+            var controllerName = GetStringValueFromAttribute(xmlNode, "controller");
+            var actionName = GetStringValueFromAttribute(xmlNode, "action");
+            var url = GetStringValueFromAttribute(xmlNode, "url");
             if (!string.IsNullOrEmpty(controllerName) && !string.IsNullOrEmpty(actionName))
             {
                 siteMapNode.ControllerName = controllerName;
@@ -125,7 +140,7 @@ namespace Nop.Web.Framework.Menu
 
             if (node.Attributes != null && node.Attributes.Count > 0)
             {
-                XmlAttribute attribute = node.Attributes[attributeName];
+                var attribute = node.Attributes[attributeName];
 
                 if (attribute != null)
                 {

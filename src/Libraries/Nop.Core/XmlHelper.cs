@@ -23,7 +23,7 @@ namespace Nop.Core
         {
             if (str == null)
                 return null;
-            str = Regex.Replace(str, @"[^\u0009\u000A\u000D\u0020-\uD7FF\uE000-\uFFFD]", "", RegexOptions.Compiled);
+            str = Regex.Replace(str, @"[^\u0009\u000A\u000D\u0020-\uD7FF\uE000-\uFFFD]", string.Empty, RegexOptions.Compiled);
             return XmlEncodeAsIs(str);
         }
 
@@ -53,7 +53,7 @@ namespace Nop.Core
         {
             if (str == null)
                 return null;
-            str = Regex.Replace(str, @"[^\u0009\u000A\u000D\u0020-\uD7FF\uE000-\uFFFD]", "", RegexOptions.Compiled);
+            str = Regex.Replace(str, @"[^\u0009\u000A\u000D\u0020-\uD7FF\uE000-\uFFFD]", string.Empty, RegexOptions.Compiled);
             return XmlEncodeAttributeAsIs(str);
         }
 
@@ -104,7 +104,7 @@ namespace Nop.Core
             var xmlS = new XmlSerializer(typeof(DateTime));
             using (var sr = new StringReader(dateTime))
             {
-                object test = xmlS.Deserialize(sr);
+                var test = xmlS.Deserialize(sr);
                 return (DateTime)test;
             }
         }

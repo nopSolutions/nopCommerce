@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using FluentValidation;
-using FluentValidation.Results;
 using Nop.Web.Areas.Admin.Models.Customers;
 using Nop.Core.Domain.Customers;
 using Nop.Data;
@@ -96,6 +95,14 @@ namespace Nop.Web.Areas.Admin.Validators.Customers
                     //only for registered users
                     .When(x => IsRegisteredCustomerRoleChecked(x, customerService));
             }
+            if (customerSettings.CountyRequired && customerSettings.CountyEnabled)
+            {
+                RuleFor(x => x.County)
+                    .NotEmpty()
+                    .WithMessage(localizationService.GetResource("Admin.Customers.Customers.Fields.County.Required"))
+                    //only for registered users
+                    .When(x => IsRegisteredCustomerRoleChecked(x, customerService));
+            }
             if (customerSettings.PhoneRequired && customerSettings.PhoneEnabled)
             {
                 RuleFor(x => x.Phone)
@@ -124,7 +131,7 @@ namespace Nop.Web.Areas.Admin.Validators.Customers
                 if (model.SelectedCustomerRoleIds.Contains(customerRole.Id))
                     newCustomerRoles.Add(customerRole);
 
-            bool isInRegisteredRole = newCustomerRoles.FirstOrDefault(cr => cr.SystemName == SystemCustomerRoleNames.Registered) != null;
+            var isInRegisteredRole = newCustomerRoles.FirstOrDefault(cr => cr.SystemName == NopCustomerDefaults.RegisteredRoleName) != null;
             return isInRegisteredRole;
         }
     }

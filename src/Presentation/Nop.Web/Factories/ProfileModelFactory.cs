@@ -71,8 +71,8 @@ namespace Nop.Web.Factories
             if (customer == null)
                 throw  new ArgumentNullException(nameof(customer));
 
-            bool pagingPosts = false;
-            int postsPage = 0;
+            var pagingPosts = false;
+            var postsPage = 0;
 
             if (page.HasValue)
             {
@@ -109,20 +109,20 @@ namespace Nop.Web.Factories
             if (_customerSettings.AllowCustomersToUploadAvatars)
             {
                 avatarUrl =_pictureService.GetPictureUrl(
-                 customer.GetAttribute<int>(SystemCustomerAttributeNames.AvatarPictureId),
+                 customer.GetAttribute<int>(NopCustomerDefaults.AvatarPictureIdAttribute),
                  _mediaSettings.AvatarPictureSize,
                  _customerSettings.DefaultAvatarEnabled,
                  defaultPictureType: PictureType.Avatar);
             }
 
             //location
-            bool locationEnabled = false;
-            string location = string.Empty;
+            var locationEnabled = false;
+            var location = string.Empty;
             if (_customerSettings.ShowCustomersLocation)
             {
                 locationEnabled = true;
 
-                var countryId = customer.GetAttribute<int>(SystemCustomerAttributeNames.CountryId);
+                var countryId = customer.GetAttribute<int>(NopCustomerDefaults.CountryIdAttribute);
                 var country = _countryService.GetCountryById(countryId);
                 if (country != null)
                 {
@@ -135,20 +135,20 @@ namespace Nop.Web.Factories
             }
 
             //private message
-            bool pmEnabled = _forumSettings.AllowPrivateMessages && !customer.IsGuest();
+            var pmEnabled = _forumSettings.AllowPrivateMessages && !customer.IsGuest();
 
             //total forum posts
-            bool totalPostsEnabled = false;
-            int totalPosts = 0;
+            var totalPostsEnabled = false;
+            var totalPosts = 0;
             if (_forumSettings.ForumsEnabled && _forumSettings.ShowCustomersPostCount)
             {
                 totalPostsEnabled = true;
-                totalPosts = customer.GetAttribute<int>(SystemCustomerAttributeNames.ForumPostCount);
+                totalPosts = customer.GetAttribute<int>(NopCustomerDefaults.ForumPostCountAttribute);
             }
 
             //registration date
-            bool joinDateEnabled = false;
-            string joinDate = string.Empty;
+            var joinDateEnabled = false;
+            var joinDate = string.Empty;
 
             if (_customerSettings.ShowCustomersJoinDate)
             {
@@ -157,11 +157,11 @@ namespace Nop.Web.Factories
             }
 
             //birth date
-            bool dateOfBirthEnabled = false;
-            string dateOfBirth = string.Empty;
+            var dateOfBirthEnabled = false;
+            var dateOfBirth = string.Empty;
             if (_customerSettings.DateOfBirthEnabled)
             {
-                var dob = customer.GetAttribute<DateTime?>(SystemCustomerAttributeNames.DateOfBirth);
+                var dob = customer.GetAttribute<DateTime?>(NopCustomerDefaults.DateOfBirthAttribute);
                 if (dob.HasValue)
                 {
                     dateOfBirthEnabled = true;

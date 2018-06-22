@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Nop.Core.Domain.Vendors;
+﻿using Nop.Core.Domain.Vendors;
 using Nop.Web.Models.Common;
 
 namespace Nop.Web.Factories
@@ -78,8 +77,9 @@ namespace Nop.Web.Factories
         /// <summary>
         /// Prepare the sitemap model
         /// </summary>
+        /// <param name="pageModel">Sitemap page model</param>
         /// <returns>Sitemap model</returns>
-        SitemapModel PrepareSitemapModel();
+        SitemapModel PrepareSitemapModel(SitemapPageModel pageModel);
 
         /// <summary>
         /// Get the sitemap in XML format

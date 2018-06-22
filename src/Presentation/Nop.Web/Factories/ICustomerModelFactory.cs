@@ -106,5 +106,17 @@ namespace Nop.Web.Factories
         /// <param name="model">Customer avatar model</param>
         /// <returns>Customer avatar model</returns>
         CustomerAvatarModel PrepareCustomerAvatarModel(CustomerAvatarModel model);
+
+        /// <summary>
+        /// Prepare the GDPR tools model
+        /// </summary>
+        /// <returns>GDPR tools model</returns>
+        GdprToolsModel PrepareGdprToolsModel();
+
+        /// <summary>
+        /// Prepare the check gift card balance model
+        /// </summary>
+        /// <returns>check gift card balance model</returns>
+        CheckGiftCardBalanceModel PrepareCheckGiftCardBalanceModel();
     }
 }

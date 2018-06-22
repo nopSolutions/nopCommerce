@@ -19,8 +19,10 @@ namespace Nop.Services.Tests.Payments
         /// <returns>Process payment result</returns>
         public ProcessPaymentResult ProcessPayment(ProcessPaymentRequest processPaymentRequest)
         {
-            var result = new ProcessPaymentResult();
-            result.NewPaymentStatus = PaymentStatus.Paid;
+            var result = new ProcessPaymentResult
+            {
+                NewPaymentStatus = PaymentStatus.Paid
+            };
             return result;
         }
 
@@ -151,12 +153,12 @@ namespace Nop.Services.Tests.Payments
         }
 
         /// <summary>
-        /// Gets a view component for displaying plugin in public store ("payment info" checkout step)
+        /// Gets a name of a view component for displaying plugin in public store ("payment info" checkout step)
         /// </summary>
-        /// <param name="viewComponentName">View component name</param>
-        public void GetPublicViewComponent(out string viewComponentName)
+        /// <returns>View component name</returns>
+        public string GetPublicViewComponentName()
         {
-            viewComponentName = null;
+            return null;
         }
 
 

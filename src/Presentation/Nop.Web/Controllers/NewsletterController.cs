@@ -18,7 +18,6 @@ namespace Nop.Web.Controllers
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly IStoreContext _storeContext;
 
-
         public NewsletterController(INewsletterModelFactory newsletterModelFactory,
             ILocalizationService localizationService,
             IWorkContext workContext,
@@ -40,7 +39,7 @@ namespace Nop.Web.Controllers
         public virtual IActionResult SubscribeNewsletter(string email, bool subscribe)
         {
             string result;
-            bool success = false;
+            var success = false;
 
             if (!CommonHelper.IsValidEmail(email))
             {

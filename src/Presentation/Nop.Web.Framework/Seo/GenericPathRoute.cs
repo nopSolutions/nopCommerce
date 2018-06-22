@@ -27,6 +27,16 @@ namespace Nop.Web.Framework.Seo
 
         #region Ctor
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="target">Target</param>
+        /// <param name="routeName">Route name</param>
+        /// <param name="routeTemplate">Route remplate</param>
+        /// <param name="defaults">Defaults</param>
+        /// <param name="constraints">Constraints</param>
+        /// <param name="dataTokens">Data tokens</param>
+        /// <param name="inlineConstraintResolver">Inline constraint resolver</param>
         public GenericPathRoute(IRouter target, string routeName, string routeTemplate, RouteValueDictionary defaults, 
             IDictionary<string, object> constraints, RouteValueDictionary dataTokens, IInlineConstraintResolver inlineConstraintResolver)
             : base(target, routeName, routeTemplate, defaults, constraints, dataTokens, inlineConstraintResolver)
@@ -71,7 +81,7 @@ namespace Nop.Web.Framework.Seo
         /// <returns>Task of the routing</returns>
         public override Task RouteAsync(RouteContext context)
         {
-            if (!DataSettingsHelper.DatabaseIsInstalled())
+            if (!DataSettingsManager.DatabaseIsInstalled)
                 return Task.CompletedTask;
 
             //try to get slug from the route data
@@ -141,6 +151,12 @@ namespace Nop.Web.Framework.Seo
                     currentRouteData.Values["productid"] = urlRecord.EntityId;
                     currentRouteData.Values["SeName"] = urlRecord.Slug;
                     break;
+                case "producttag":
+                    currentRouteData.Values["controller"] = "Catalog";
+                    currentRouteData.Values["action"] = "ProductsByTag";
+                    currentRouteData.Values["productTagId"] = urlRecord.EntityId;
+                    currentRouteData.Values["SeName"] = urlRecord.Slug;
+                    break;
                 case "category":
                     currentRouteData.Values["controller"] = "Catalog";
                     currentRouteData.Values["action"] = "Category";
@@ -179,7 +195,8 @@ namespace Nop.Web.Framework.Seo
                     break;
                 default:
                     //no record found, thus generate an event this way developers could insert their own types
-                    EngineContext.Current.Resolve<IEventPublisher>().Publish(new CustomUrlRecordEntityNameRequested(currentRouteData, urlRecord));
+                    EngineContext.Current.Resolve<IEventPublisher>()
+                        ?.Publish(new CustomUrlRecordEntityNameRequestedEvent(currentRouteData, urlRecord));
                     break;
             }
             context.RouteData = currentRouteData;

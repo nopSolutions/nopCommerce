@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
@@ -7,6 +6,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Infrastructure;
 using Nop.Services.Customers;
 using Nop.Services.Localization;
 using Nop.Services.Media;
@@ -36,10 +36,11 @@ namespace Nop.Web.Controllers
         private readonly IDownloadService _downloadService;
         private readonly LocalizationSettings _localizationSettings;
         private readonly OrderSettings _orderSettings;
+        private readonly INopFileProvider _fileProvider;
 
         #endregion
 
-        #region Constructors
+        #region Ctor
 
         public ReturnRequestController(IReturnRequestModelFactory returnRequestModelFactory,
             IReturnRequestService returnRequestService,
@@ -53,7 +54,8 @@ namespace Nop.Web.Controllers
             ICustomNumberFormatter customNumberFormatter,
             IDownloadService downloadService,
             LocalizationSettings localizationSettings,
-            OrderSettings orderSettings)
+            OrderSettings orderSettings,
+            INopFileProvider fileProvider)
         {
             this._returnRequestModelFactory = returnRequestModelFactory;
             this._returnRequestService = returnRequestService;
@@ -68,6 +70,7 @@ namespace Nop.Web.Controllers
             this._downloadService = downloadService;
             this._localizationSettings = localizationSettings;
             this._orderSettings = orderSettings;
+            this._fileProvider = fileProvider;
         }
 
         #endregion
@@ -110,7 +113,7 @@ namespace Nop.Web.Controllers
             if (!_orderProcessingService.IsReturnRequestAllowed(order))
                 return RedirectToRoute("HomePage");
 
-            int count = 0;
+            var count = 0;
 
             var downloadId = 0;
             if (_orderSettings.ReturnRequestsAllowFiles)
@@ -125,8 +128,8 @@ namespace Nop.Web.Controllers
             var orderItems = order.OrderItems.Where(oi => !oi.Product.NotReturnable);
             foreach (var orderItem in orderItems)
             {
-                int quantity = 0; //parse quantity
-                foreach (string formKey in form.Keys)
+                var quantity = 0; //parse quantity
+                foreach (var formKey in form.Keys)
                     if (formKey.Equals($"quantity{orderItem.Id}", StringComparison.InvariantCultureIgnoreCase))
                     {
                         int.TryParse(form[formKey], out quantity);
@@ -203,18 +206,18 @@ namespace Nop.Web.Controllers
 
             var qqFileNameParameter = "qqfilename";
             var fileName = httpPostedFile.FileName;
-            if (String.IsNullOrEmpty(fileName) && Request.Form.ContainsKey(qqFileNameParameter))
+            if (string.IsNullOrEmpty(fileName) && Request.Form.ContainsKey(qqFileNameParameter))
                 fileName = Request.Form[qqFileNameParameter].ToString();
             //remove path (passed in IE)
-            fileName = Path.GetFileName(fileName);
+            fileName = _fileProvider.GetFileName(fileName);
 
             var contentType = httpPostedFile.ContentType;
 
-            var fileExtension = Path.GetExtension(fileName);
-            if (!String.IsNullOrEmpty(fileExtension))
+            var fileExtension = _fileProvider.GetFileExtension(fileName);
+            if (!string.IsNullOrEmpty(fileExtension))
                 fileExtension = fileExtension.ToLowerInvariant();
 
-            int validationFileMaximumSize = _orderSettings.ReturnRequestsFileMaximumSize;
+            var validationFileMaximumSize = _orderSettings.ReturnRequestsFileMaximumSize;
             if (validationFileMaximumSize > 0)
             {
                 //compare in bytes
@@ -238,7 +241,7 @@ namespace Nop.Web.Controllers
                 DownloadBinary = fileBinary,
                 ContentType = contentType,
                 //we store filename without extension for downloads
-                Filename = Path.GetFileNameWithoutExtension(fileName),
+                Filename = _fileProvider.GetFileNameWithoutExtension(fileName),
                 Extension = fileExtension,
                 IsNew = true
             };

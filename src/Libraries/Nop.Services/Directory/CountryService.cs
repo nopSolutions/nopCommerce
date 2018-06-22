@@ -17,23 +17,6 @@ namespace Nop.Services.Directory
     /// </summary>
     public partial class CountryService : ICountryService
     {
-        #region Constants
-
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : language ID
-        /// {1} : show hidden records?
-        /// </remarks>
-        private const string COUNTRIES_ALL_KEY = "Nop.country.all-{0}-{1}";
-        /// <summary>
-        /// Key pattern to clear cache
-        /// </summary>
-        private const string COUNTRIES_PATTERN_KEY = "Nop.country.";
-
-        #endregion
-        
         #region Fields
 
         private readonly IRepository<Country> _countryRepository;
@@ -55,7 +38,7 @@ namespace Nop.Services.Directory
         /// <param name="storeMappingRepository">Store mapping repository</param>
         /// <param name="storeContext">Store context</param>
         /// <param name="catalogSettings">Catalog settings</param>
-        /// <param name="eventPublisher">Event published</param>
+        /// <param name="eventPublisher">Event publisher</param>
         public CountryService(ICacheManager cacheManager,
             IRepository<Country> countryRepository,
             IRepository<StoreMapping> storeMappingRepository,
@@ -86,7 +69,7 @@ namespace Nop.Services.Directory
 
             _countryRepository.Delete(country);
 
-            _cacheManager.RemoveByPattern(COUNTRIES_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopDirectoryDefaults.CountriesPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityDeleted(country);
@@ -100,7 +83,7 @@ namespace Nop.Services.Directory
         /// <returns>Countries</returns>
         public virtual IList<Country> GetAllCountries(int languageId = 0, bool showHidden = false)
         {
-            string key = string.Format(COUNTRIES_ALL_KEY, languageId, showHidden);
+            var key = string.Format(NopDirectoryDefaults.CountriesAllCacheKey, languageId, showHidden);
             return _cacheManager.Get(key, () =>
             {
                 var query = _countryRepository.Table;
@@ -118,14 +101,8 @@ namespace Nop.Services.Directory
                             from sc in c_sc.DefaultIfEmpty()
                             where !c.LimitedToStores || currentStoreId == sc.StoreId
                             select c;
-
-                    //only distinct entities (group by ID)
-                    query = from c in query
-                            group c by c.Id
-                                into cGroup
-                                orderby cGroup.Key
-                                select cGroup.FirstOrDefault();
-                    query = query.OrderBy(c => c.DisplayOrder).ThenBy(c => c.Name);
+                    
+                    query = query.Distinct().OrderBy(c => c.DisplayOrder).ThenBy(c => c.Name);
                 }
 
                 var countries = query.ToList();
@@ -193,7 +170,7 @@ namespace Nop.Services.Directory
             var countries = query.ToList();
             //sort by passed identifiers
             var sortedCountries = new List<Country>();
-            foreach (int id in countryIds)
+            foreach (var id in countryIds)
             {
                 var country = countries.Find(x => x.Id == id);
                 if (country != null)
@@ -209,7 +186,7 @@ namespace Nop.Services.Directory
         /// <returns>Country</returns>
         public virtual Country GetCountryByTwoLetterIsoCode(string twoLetterIsoCode)
         {
-            if (String.IsNullOrEmpty(twoLetterIsoCode))
+            if (string.IsNullOrEmpty(twoLetterIsoCode))
                 return null;
 
             var query = from c in _countryRepository.Table
@@ -226,7 +203,7 @@ namespace Nop.Services.Directory
         /// <returns>Country</returns>
         public virtual Country GetCountryByThreeLetterIsoCode(string threeLetterIsoCode)
         {
-            if (String.IsNullOrEmpty(threeLetterIsoCode))
+            if (string.IsNullOrEmpty(threeLetterIsoCode))
                 return null;
 
             var query = from c in _countryRepository.Table
@@ -247,7 +224,7 @@ namespace Nop.Services.Directory
 
             _countryRepository.Insert(country);
 
-            _cacheManager.RemoveByPattern(COUNTRIES_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopDirectoryDefaults.CountriesPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(country);
@@ -264,7 +241,7 @@ namespace Nop.Services.Directory
 
             _countryRepository.Update(country);
 
-            _cacheManager.RemoveByPattern(COUNTRIES_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopDirectoryDefaults.CountriesPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(country);

@@ -17,11 +17,11 @@
     }
     var isActive = Model.ContainsSystemName(Html.GetActiveMenuItemSystemName());
 }
-@if (!String.IsNullOrEmpty(url))
+@if (!string.IsNullOrEmpty(url))
 {
     <li @(isActive ? Html.Raw("class=\"active current-active-item\"") : null)>
         <a href="@url" class="menu-item-link" @(Model.OpenUrlInNewTab ? Html.Raw(" target=\"_blank\"") : null)>
-            @if (!String.IsNullOrEmpty(Model.IconClass))
+            @if (!string.IsNullOrEmpty(Model.IconClass))
             {
                 <text>
                 <i class="fa @Url.Content(Model.IconClass)"></i>
@@ -35,7 +35,7 @@ else
 {
     <li class="treeview @(isActive ? Html.Raw("active current-active-item") : null)">
         <a href="#">
-            @if (!String.IsNullOrEmpty(Model.IconClass))
+            @if (!string.IsNullOrEmpty(Model.IconClass))
             {
                 <text>
                 <i class="fa @Url.Content(Model.IconClass)"></i>

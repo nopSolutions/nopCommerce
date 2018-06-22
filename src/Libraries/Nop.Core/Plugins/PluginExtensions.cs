@@ -1,13 +1,15 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
+using Nop.Core.Infrastructure;
 
 namespace Nop.Core.Plugins
 {
+    /// <summary>
+    /// Plugin extensions
+    /// </summary>
     public static class PluginExtensions
     {
-
         private static readonly List<string> SupportedLogoImageExtensions = new List<string>
         {
             "jpg",
@@ -15,6 +17,12 @@ namespace Nop.Core.Plugins
             "gif"
         };
 
+        /// <summary>
+        /// Get logo URL
+        /// </summary>
+        /// <param name="pluginDescriptor">Plugin descriptor</param>
+        /// <param name="webHelper">Web helper</param>
+        /// <returns>Logo URL</returns>
         public static string GetLogoUrl(this PluginDescriptor pluginDescriptor, IWebHelper webHelper)
         {
             if (pluginDescriptor == null)
@@ -23,20 +31,23 @@ namespace Nop.Core.Plugins
             if (webHelper == null)
                 throw new ArgumentNullException(nameof(webHelper));
 
-            if (pluginDescriptor.OriginalAssemblyFile == null || pluginDescriptor.OriginalAssemblyFile.Directory == null)
+            var fileProvider = EngineContext.Current.Resolve<INopFileProvider>();
+
+            var pluginDirectory = fileProvider.GetDirectoryName(pluginDescriptor.OriginalAssemblyFile);
+
+            if (string.IsNullOrEmpty(pluginDirectory))
             {
                 return null;
             }
 
-            var pluginDirectory = pluginDescriptor.OriginalAssemblyFile.Directory;
+            var logoExtension = SupportedLogoImageExtensions
+                .FirstOrDefault(ext => fileProvider.FileExists(fileProvider.Combine(pluginDirectory, $"{NopPluginDefaults.LogoFileName}.{ext}")));
 
-           var logoExtension = SupportedLogoImageExtensions.FirstOrDefault(ext => File.Exists(Path.Combine(pluginDirectory.FullName, "logo." + ext)));
+            if (string.IsNullOrWhiteSpace(logoExtension))
+                return null; //No logo file was found with any of the supported extensions.
 
-            if (string.IsNullOrWhiteSpace(logoExtension)) return null; //No logo file was found with any of the supported extensions.
-
-            string logoUrl = $"{webHelper.GetStoreLocation()}plugins/{pluginDirectory.Name}/logo.{logoExtension}";
+            var logoUrl = $"{webHelper.GetStoreLocation()}plugins/{fileProvider.GetDirectoryNameOnly(pluginDirectory)}/{NopPluginDefaults.LogoFileName}.{logoExtension}";
             return logoUrl;
         }
-
     }
 }

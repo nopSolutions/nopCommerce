@@ -5,6 +5,7 @@ using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.News;
+using Nop.Core.Domain.Security;
 using Nop.Services.Events;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
@@ -40,8 +41,7 @@ namespace Nop.Web.Controllers
         private readonly ICustomerActivityService _customerActivityService;
         private readonly IStoreMappingService _storeMappingService;
         private readonly IPermissionService _permissionService;
-        private readonly IEventPublisher _eventPublisher;
-
+        private readonly IEventPublisher _eventPublisher;        
         private readonly NewsSettings _newsSettings;
         private readonly LocalizationSettings _localizationSettings;
         private readonly CaptchaSettings _captchaSettings;
@@ -60,7 +60,7 @@ namespace Nop.Web.Controllers
             ICustomerActivityService customerActivityService,
             IStoreMappingService storeMappingService,
             IPermissionService permissionService,
-            IEventPublisher eventPublisher,
+            IEventPublisher eventPublisher,            
             NewsSettings newsSettings,
             LocalizationSettings localizationSettings, 
             CaptchaSettings captchaSettings)
@@ -76,7 +76,6 @@ namespace Nop.Web.Controllers
             this._storeMappingService = storeMappingService;
             this._permissionService = permissionService;
             this._eventPublisher = eventPublisher;
-
             this._newsSettings = newsSettings;
             this._localizationSettings = localizationSettings;
             this._captchaSettings = captchaSettings;
@@ -95,7 +94,6 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-
         public virtual IActionResult ListRss(int languageId)
         {
             var feed = new RssFeed(
@@ -111,33 +109,32 @@ namespace Nop.Web.Controllers
             var newsItems = _newsService.GetAllNews(languageId, _storeContext.CurrentStore.Id);
             foreach (var n in newsItems)
             {
-                string newsUrl = Url.RouteUrl("NewsItem", new { SeName = n.GetSeName(n.LanguageId, ensureTwoPublishedLanguages: false) }, _webHelper.IsCurrentConnectionSecured() ? "https" : "http");
+                var newsUrl = Url.RouteUrl("NewsItem", new { SeName = n.GetSeName(n.LanguageId, ensureTwoPublishedLanguages: false) }, _webHelper.CurrentRequestProtocol);
                 items.Add(new RssItem(n.Title, n.Short, new Uri(newsUrl), $"urn:store:{_storeContext.CurrentStore.Id}:news:blog:{n.Id}", n.CreatedOnUtc));
             }
             feed.Items = items;
             return new RssActionResult(feed, _webHelper.GetThisPageUrl(false));
         }
-
-
+        
         public virtual IActionResult NewsItem(int newsItemId)
         {
             if (!_newsSettings.Enabled)
                 return RedirectToRoute("HomePage");
 
             var newsItem = _newsService.GetNewsById(newsItemId);
-            if (newsItem == null ||
-                !newsItem.Published ||
-                (newsItem.StartDateUtc.HasValue && newsItem.StartDateUtc.Value >= DateTime.UtcNow) ||
-                (newsItem.EndDateUtc.HasValue && newsItem.EndDateUtc.Value <= DateTime.UtcNow) ||
-                //Store mapping
-                !_storeMappingService.Authorize(newsItem))
+            if (newsItem == null)
                 return RedirectToRoute("HomePage");
+            
+            var hasAdminAccess = _permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && _permissionService.Authorize(StandardPermissionProvider.ManageNews);
+            //access to News preview
+            if ((!newsItem.Published || !newsItem.IsAvailable()) && !hasAdminAccess)            
+                return RedirectToRoute("HomePage");                        
 
             var model = new NewsItemModel();
             model = _newsModelFactory.PrepareNewsItemModel(model, newsItem, true);
 
             //display "edit" (manage) link
-            if (_permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && _permissionService.Authorize(StandardPermissionProvider.ManageNews))
+            if (hasAdminAccess)
                 DisplayEditLink(Url.Action("Edit", "News", new { id = newsItem.Id, area = AreaNames.Admin }));
 
             return View(model);
@@ -187,7 +184,8 @@ namespace Nop.Web.Controllers
                     _workflowMessageService.SendNewsCommentNotificationMessage(comment, _localizationSettings.DefaultAdminLanguageId);
 
                 //activity log
-                _customerActivityService.InsertActivity("PublicStore.AddNewsComment", _localizationService.GetResource("ActivityLog.PublicStore.AddNewsComment"));
+                _customerActivityService.InsertActivity("PublicStore.AddNewsComment",
+                    _localizationService.GetResource("ActivityLog.PublicStore.AddNewsComment"), comment);
 
                 //raise event
                 if (comment.IsApproved)
@@ -201,7 +199,6 @@ namespace Nop.Web.Controllers
 
                 return RedirectToRoute("NewsItem", new { SeName = newsItem.GetSeName(newsItem.LanguageId, ensureTwoPublishedLanguages: false) });
             }
-
 
             //If we got this far, something failed, redisplay form
             model = _newsModelFactory.PrepareNewsItemModel(model, newsItem, true);

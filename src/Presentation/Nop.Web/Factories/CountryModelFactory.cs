@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
 using Nop.Core.Caching;
-using Nop.Core.Domain.Directory;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Web.Infrastructure.Cache;
@@ -26,7 +25,7 @@ namespace Nop.Web.Factories
 
 	    #endregion
 
-		#region Constructors
+		#region Ctor
 
         public CountryModelFactory(ICountryService countryService, 
             IStateProvinceService stateProvinceService, 
@@ -53,10 +52,10 @@ namespace Nop.Web.Factories
         /// <returns>List of identifiers and names of states and provinces</returns>
         public virtual IList<StateProvinceModel> GetStatesByCountryId(string countryId, bool addSelectStateItem)
         {
-            if (String.IsNullOrEmpty(countryId))
+            if (string.IsNullOrEmpty(countryId))
                 throw new ArgumentNullException(nameof(countryId));
 
-            string cacheKey = string.Format(ModelCacheEventConsumer.STATEPROVINCES_BY_COUNTRY_MODEL_KEY, countryId, addSelectStateItem, _workContext.WorkingLanguage.Id);
+            var cacheKey = string.Format(ModelCacheEventConsumer.STATEPROVINCES_BY_COUNTRY_MODEL_KEY, countryId, addSelectStateItem, _workContext.WorkingLanguage.Id);
             var cachedModel = _cacheManager.Get(cacheKey, () =>
             {
                 var country = _countryService.GetCountryById(Convert.ToInt32(countryId));
@@ -68,7 +67,6 @@ namespace Nop.Web.Factories
                         id = state.Id,
                         name = state.GetLocalized(x => x.Name)
                     });
-
 
                 if (country == null)
                 {

@@ -32,26 +32,33 @@ namespace Nop.Plugin.Widgets.NivoSlider.Components
         {
             var nivoSliderSettings = _settingService.LoadSetting<NivoSliderSettings>(_storeContext.CurrentStore.Id);
 
-            var model = new PublicInfoModel();
-            model.Picture1Url = GetPictureUrl(nivoSliderSettings.Picture1Id);
-            model.Text1 = nivoSliderSettings.Text1;
-            model.Link1 = nivoSliderSettings.Link1;
+            var model = new PublicInfoModel
+            {
+                Picture1Url = GetPictureUrl(nivoSliderSettings.Picture1Id),
+                Text1 = nivoSliderSettings.Text1,
+                Link1 = nivoSliderSettings.Link1,
+                AltText1 = nivoSliderSettings.AltText1,
 
-            model.Picture2Url = GetPictureUrl(nivoSliderSettings.Picture2Id);
-            model.Text2 = nivoSliderSettings.Text2;
-            model.Link2 = nivoSliderSettings.Link2;
+                Picture2Url = GetPictureUrl(nivoSliderSettings.Picture2Id),
+                Text2 = nivoSliderSettings.Text2,
+                Link2 = nivoSliderSettings.Link2,
+                AltText2 = nivoSliderSettings.AltText2,
 
-            model.Picture3Url = GetPictureUrl(nivoSliderSettings.Picture3Id);
-            model.Text3 = nivoSliderSettings.Text3;
-            model.Link3 = nivoSliderSettings.Link3;
+                Picture3Url = GetPictureUrl(nivoSliderSettings.Picture3Id),
+                Text3 = nivoSliderSettings.Text3,
+                Link3 = nivoSliderSettings.Link3,
+                AltText3 = nivoSliderSettings.AltText3,
 
-            model.Picture4Url = GetPictureUrl(nivoSliderSettings.Picture4Id);
-            model.Text4 = nivoSliderSettings.Text4;
-            model.Link4 = nivoSliderSettings.Link4;
+                Picture4Url = GetPictureUrl(nivoSliderSettings.Picture4Id),
+                Text4 = nivoSliderSettings.Text4,
+                Link4 = nivoSliderSettings.Link4,
+                AltText4 = nivoSliderSettings.AltText4,
 
-            model.Picture5Url = GetPictureUrl(nivoSliderSettings.Picture5Id);
-            model.Text5 = nivoSliderSettings.Text5;
-            model.Link5 = nivoSliderSettings.Link5;
+                Picture5Url = GetPictureUrl(nivoSliderSettings.Picture5Id),
+                Text5 = nivoSliderSettings.Text5,
+                Link5 = nivoSliderSettings.Link5,
+                AltText5 = nivoSliderSettings.AltText5
+            };
 
             if (string.IsNullOrEmpty(model.Picture1Url) && string.IsNullOrEmpty(model.Picture2Url) &&
                 string.IsNullOrEmpty(model.Picture3Url) && string.IsNullOrEmpty(model.Picture4Url) &&

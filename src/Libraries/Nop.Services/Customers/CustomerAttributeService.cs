@@ -13,43 +13,6 @@ namespace Nop.Services.Customers
     /// </summary>
     public partial class CustomerAttributeService : ICustomerAttributeService
     {
-        #region Constants
-
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        private const string CUSTOMERATTRIBUTES_ALL_KEY = "Nop.customerattribute.all";
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : customer attribute ID
-        /// </remarks>
-        private const string CUSTOMERATTRIBUTES_BY_ID_KEY = "Nop.customerattribute.id-{0}";
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : customer attribute ID
-        /// </remarks>
-        private const string CUSTOMERATTRIBUTEVALUES_ALL_KEY = "Nop.customerattributevalue.all-{0}";
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : customer attribute value ID
-        /// </remarks>
-        private const string CUSTOMERATTRIBUTEVALUES_BY_ID_KEY = "Nop.customerattributevalue.id-{0}";
-        /// <summary>
-        /// Key pattern to clear cache
-        /// </summary>
-        private const string CUSTOMERATTRIBUTES_PATTERN_KEY = "Nop.customerattribute.";
-        /// <summary>
-        /// Key pattern to clear cache
-        /// </summary>
-        private const string CUSTOMERATTRIBUTEVALUES_PATTERN_KEY = "Nop.customerattributevalue.";
-        #endregion
-        
         #region Fields
 
         private readonly IRepository<CustomerAttribute> _customerAttributeRepository;
@@ -67,7 +30,7 @@ namespace Nop.Services.Customers
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="customerAttributeRepository">Customer attribute repository</param>
         /// <param name="customerAttributeValueRepository">Customer attribute value repository</param>
-        /// <param name="eventPublisher">Event published</param>
+        /// <param name="eventPublisher">Event publisher</param>
         public CustomerAttributeService(ICacheManager cacheManager,
             IRepository<CustomerAttribute> customerAttributeRepository,
             IRepository<CustomerAttributeValue> customerAttributeValueRepository,
@@ -94,8 +57,8 @@ namespace Nop.Services.Customers
 
             _customerAttributeRepository.Delete(customerAttribute);
 
-            _cacheManager.RemoveByPattern(CUSTOMERATTRIBUTES_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(CUSTOMERATTRIBUTEVALUES_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopCustomerServiceDefaults.CustomerAttributesPatternCacheKey);
+            _cacheManager.RemoveByPattern(NopCustomerServiceDefaults.CustomerAttributeValuesPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityDeleted(customerAttribute);
@@ -107,8 +70,7 @@ namespace Nop.Services.Customers
         /// <returns>Customer attributes</returns>
         public virtual IList<CustomerAttribute> GetAllCustomerAttributes()
         {
-            string key = CUSTOMERATTRIBUTES_ALL_KEY;
-            return _cacheManager.Get(key, () =>
+            return _cacheManager.Get(NopCustomerServiceDefaults.CustomerAttributesAllCacheKey, () =>
             {
                 var query = from ca in _customerAttributeRepository.Table
                             orderby ca.DisplayOrder, ca.Id
@@ -127,7 +89,7 @@ namespace Nop.Services.Customers
             if (customerAttributeId == 0)
                 return null;
 
-            string key = string.Format(CUSTOMERATTRIBUTES_BY_ID_KEY, customerAttributeId);
+            var key = string.Format(NopCustomerServiceDefaults.CustomerAttributesByIdCacheKey, customerAttributeId);
             return _cacheManager.Get(key, () => _customerAttributeRepository.GetById(customerAttributeId));
         }
 
@@ -142,8 +104,8 @@ namespace Nop.Services.Customers
 
             _customerAttributeRepository.Insert(customerAttribute);
 
-            _cacheManager.RemoveByPattern(CUSTOMERATTRIBUTES_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(CUSTOMERATTRIBUTEVALUES_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopCustomerServiceDefaults.CustomerAttributesPatternCacheKey);
+            _cacheManager.RemoveByPattern(NopCustomerServiceDefaults.CustomerAttributeValuesPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(customerAttribute);
@@ -160,8 +122,8 @@ namespace Nop.Services.Customers
 
             _customerAttributeRepository.Update(customerAttribute);
 
-            _cacheManager.RemoveByPattern(CUSTOMERATTRIBUTES_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(CUSTOMERATTRIBUTEVALUES_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopCustomerServiceDefaults.CustomerAttributesPatternCacheKey);
+            _cacheManager.RemoveByPattern(NopCustomerServiceDefaults.CustomerAttributeValuesPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(customerAttribute);
@@ -178,8 +140,8 @@ namespace Nop.Services.Customers
 
             _customerAttributeValueRepository.Delete(customerAttributeValue);
 
-            _cacheManager.RemoveByPattern(CUSTOMERATTRIBUTES_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(CUSTOMERATTRIBUTEVALUES_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopCustomerServiceDefaults.CustomerAttributesPatternCacheKey);
+            _cacheManager.RemoveByPattern(NopCustomerServiceDefaults.CustomerAttributeValuesPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityDeleted(customerAttributeValue);
@@ -192,7 +154,7 @@ namespace Nop.Services.Customers
         /// <returns>Customer attribute values</returns>
         public virtual IList<CustomerAttributeValue> GetCustomerAttributeValues(int customerAttributeId)
         {
-            string key = string.Format(CUSTOMERATTRIBUTEVALUES_ALL_KEY, customerAttributeId);
+            var key = string.Format(NopCustomerServiceDefaults.CustomerAttributeValuesAllCacheKey, customerAttributeId);
             return _cacheManager.Get(key, () =>
             {
                 var query = from cav in _customerAttributeValueRepository.Table
@@ -214,7 +176,7 @@ namespace Nop.Services.Customers
             if (customerAttributeValueId == 0)
                 return null;
 
-            string key = string.Format(CUSTOMERATTRIBUTEVALUES_BY_ID_KEY, customerAttributeValueId);
+            var key = string.Format(NopCustomerServiceDefaults.CustomerAttributeValuesByIdCacheKey, customerAttributeValueId);
             return _cacheManager.Get(key, () => _customerAttributeValueRepository.GetById(customerAttributeValueId));
         }
 
@@ -229,8 +191,8 @@ namespace Nop.Services.Customers
 
             _customerAttributeValueRepository.Insert(customerAttributeValue);
 
-            _cacheManager.RemoveByPattern(CUSTOMERATTRIBUTES_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(CUSTOMERATTRIBUTEVALUES_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopCustomerServiceDefaults.CustomerAttributesPatternCacheKey);
+            _cacheManager.RemoveByPattern(NopCustomerServiceDefaults.CustomerAttributeValuesPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(customerAttributeValue);
@@ -247,8 +209,8 @@ namespace Nop.Services.Customers
 
             _customerAttributeValueRepository.Update(customerAttributeValue);
 
-            _cacheManager.RemoveByPattern(CUSTOMERATTRIBUTES_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(CUSTOMERATTRIBUTEVALUES_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopCustomerServiceDefaults.CustomerAttributesPatternCacheKey);
+            _cacheManager.RemoveByPattern(NopCustomerServiceDefaults.CustomerAttributeValuesPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(customerAttributeValue);

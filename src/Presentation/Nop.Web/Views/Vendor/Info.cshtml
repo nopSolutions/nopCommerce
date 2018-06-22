@@ -42,7 +42,7 @@
                     <div class="inputs">
                         <label asp-for="PictureUrl" asp-postfix=":"></label>
                         <input name="uploadedFile" type="file" />
-                        @if (!String.IsNullOrEmpty(Model.PictureUrl))
+                        @if (!string.IsNullOrEmpty(Model.PictureUrl))
                         {
                             <div class="vendor-picture">
                                 <img src="@(Model.PictureUrl)" alt="picture" />
@@ -52,6 +52,14 @@
                     </div>
                 </div>
             </div>
+        @if (Model.VendorAttributes.Count > 0)
+        {
+            <div class="fieldset">
+                <div class="form-fields">
+                    @await Html.PartialAsync("_VendorAttributes", Model.VendorAttributes)
+                </div>
+            </div>
+        }
             <div class="buttons">
                 <input type="submit" value="@T("Common.Save")" name="save-info-button" class="button-1 save-vendorinfo-button" />
             </div>

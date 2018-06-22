@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Nop.Core.Domain.Cms;
 using Nop.Core.Domain.Customers;
-using Nop.Core.Plugins;
+using Nop.Services.Plugins;
 
 namespace Nop.Services.Cms
 {
@@ -58,7 +58,7 @@ namespace Nop.Services.Cms
         /// <returns>Widgets</returns>
         public virtual IList<IWidgetPlugin> LoadActiveWidgetsByWidgetZone(string  widgetZone, Customer customer = null, int storeId = 0)
         {
-            if (String.IsNullOrWhiteSpace(widgetZone))
+            if (string.IsNullOrWhiteSpace(widgetZone))
                 return new List<IWidgetPlugin>();
 
             return LoadActiveWidgets(customer, storeId)

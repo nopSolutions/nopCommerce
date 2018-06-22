@@ -28,7 +28,7 @@ namespace Nop.Services.Affiliates
         /// </summary>
         /// <param name="affiliateRepository">Affiliate repository</param>
         /// <param name="orderRepository">Order repository</param>
-        /// <param name="eventPublisher">Event published</param>
+        /// <param name="eventPublisher">Event publisher</param>
         public AffiliateService(IRepository<Affiliate> affiliateRepository,
             IRepository<Order> orderRepository,
             IEventPublisher eventPublisher)
@@ -62,7 +62,7 @@ namespace Nop.Services.Affiliates
         /// <returns>Affiliate</returns>
         public virtual Affiliate GetAffiliateByFriendlyUrlName(string friendlyUrlName)
         {
-            if (String.IsNullOrWhiteSpace(friendlyUrlName))
+            if (string.IsNullOrWhiteSpace(friendlyUrlName))
                 return null;
 
             var query = from a in _affiliateRepository.Table
@@ -110,11 +110,11 @@ namespace Nop.Services.Affiliates
             bool showHidden = false)
         {
             var query = _affiliateRepository.Table;
-            if (!String.IsNullOrWhiteSpace(friendlyUrlName))
+            if (!string.IsNullOrWhiteSpace(friendlyUrlName))
                 query = query.Where(a => a.FriendlyUrlName.Contains(friendlyUrlName));
-            if (!String.IsNullOrWhiteSpace(firstName))
+            if (!string.IsNullOrWhiteSpace(firstName))
                 query = query.Where(a => a.Address.FirstName.Contains(firstName));
-            if (!String.IsNullOrWhiteSpace(lastName))
+            if (!string.IsNullOrWhiteSpace(lastName))
                 query = query.Where(a => a.Address.LastName.Contains(lastName));
             if (!showHidden)
                 query = query.Where(a => a.Active);

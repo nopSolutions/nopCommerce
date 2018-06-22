@@ -4,7 +4,7 @@ using System;
 using MaxMind.GeoIP2;
 using MaxMind.GeoIP2.Exceptions;
 using MaxMind.GeoIP2.Responses;
-using Nop.Core;
+using Nop.Core.Infrastructure;
 using Nop.Services.Logging;
 
 namespace Nop.Services.Directory
@@ -17,29 +17,41 @@ namespace Nop.Services.Directory
         #region Fields
 
         private readonly ILogger _logger;
+        private readonly INopFileProvider _fileProvider;
 
         #endregion
 
         #region Ctor
 
-        public GeoLookupService(ILogger logger)
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="logger">Logger</param>
+        /// <param name="fileProvider">File provider</param>
+        public GeoLookupService(ILogger logger, INopFileProvider fileProvider)
         {
             this._logger = logger;
+            this._fileProvider = fileProvider;
         }
 
         #endregion
 
         #region Utilities
 
+        /// <summary>
+        /// Get information
+        /// </summary>
+        /// <param name="ipAddress">IP address</param>
+        /// <returns>Information</returns>
         protected virtual CountryResponse GetInformation(string ipAddress)
         {
-            if (String.IsNullOrEmpty(ipAddress))
+            if (string.IsNullOrEmpty(ipAddress))
                 return null;
 
             try
             {
                 //This product includes GeoLite2 data created by MaxMind, available from http://www.maxmind.com
-                var databasePath = CommonHelper.MapPath("~/App_Data/GeoLite2-Country.mmdb");
+                var databasePath = _fileProvider.MapPath("~/App_Data/GeoLite2-Country.mmdb");
                 var reader = new DatabaseReader(databasePath);
                 var omni = reader.Country(ipAddress);
                 return omni;
@@ -74,6 +86,7 @@ namespace Nop.Services.Directory
         #endregion
 
         #region Methods
+
         /// <summary>
         /// Get country name
         /// </summary>
@@ -82,7 +95,7 @@ namespace Nop.Services.Directory
         public virtual string LookupCountryIsoCode(string ipAddress)
         {
             var response = GetInformation(ipAddress);
-            if (response != null && response.Country != null)
+            if (response?.Country != null)
                 return response.Country.IsoCode;
 
             return "";
@@ -96,7 +109,7 @@ namespace Nop.Services.Directory
         public virtual string LookupCountryName(string ipAddress)
         {
             var response = GetInformation(ipAddress);
-            if (response != null && response.Country != null)
+            if (response?.Country != null)
                 return response.Country.Name;
 
             return "";

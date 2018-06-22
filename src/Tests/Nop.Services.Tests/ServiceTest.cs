@@ -1,4 +1,8 @@
 ﻿using System.Collections.Generic;
+using Microsoft.AspNetCore.Hosting;
+using Moq;
+using Nop.Core;
+using Nop.Core.Infrastructure;
 using Nop.Core.Plugins;
 using Nop.Services.Tests.Directory;
 using Nop.Services.Tests.Discounts;
@@ -21,6 +25,11 @@ namespace Nop.Services.Tests
 
         private void InitPlugins()
         {
+            var hostingEnvironment = new Mock<IHostingEnvironment>();
+            hostingEnvironment.Setup(x => x.ContentRootPath).Returns(System.Reflection.Assembly.GetExecutingAssembly().Location);
+            hostingEnvironment.Setup(x => x.WebRootPath).Returns(System.IO.Directory.GetCurrentDirectory());
+            CommonHelper.DefaultFileProvider = new NopFileProvider(hostingEnvironment.Object);
+
             PluginManager.ReferencedPlugins = new List<PluginDescriptor>
             {
                 new PluginDescriptor(typeof(FixedRateTestTaxProvider).Assembly)
@@ -28,35 +37,35 @@ namespace Nop.Services.Tests
                     PluginType = typeof(FixedRateTestTaxProvider),
                     SystemName = "FixedTaxRateTest",
                     FriendlyName = "Fixed tax test rate provider",
-                    Installed = true,
+                    Installed = true
                 },
                 new PluginDescriptor(typeof(FixedRateTestShippingRateComputationMethod).Assembly)
                 {
                     PluginType = typeof(FixedRateTestShippingRateComputationMethod),
                     SystemName = "FixedRateTestShippingRateComputationMethod",
                     FriendlyName = "Fixed rate test shipping computation method",
-                    Installed = true,
+                    Installed = true
                 },
                 new PluginDescriptor(typeof(TestPaymentMethod).Assembly)
                 {
                     PluginType = typeof(TestPaymentMethod),
                     SystemName = "Payments.TestMethod",
                     FriendlyName = "Test payment method",
-                    Installed = true,
+                    Installed = true
                 },
                 new PluginDescriptor(typeof(TestDiscountRequirementRule).Assembly)
                 {
                     PluginType = typeof(TestDiscountRequirementRule),
                     SystemName = "TestDiscountRequirementRule",
                     FriendlyName = "Test discount requirement rule",
-                    Installed = true,
+                    Installed = true
                 },
                 new PluginDescriptor(typeof(TestExchangeRateProvider).Assembly)
                 {
                     PluginType = typeof(TestExchangeRateProvider),
                     SystemName = "CurrencyExchange.TestProvider",
                     FriendlyName = "Test exchange rate provider",
-                    Installed = true,
+                    Installed = true
                 }
             };
         }

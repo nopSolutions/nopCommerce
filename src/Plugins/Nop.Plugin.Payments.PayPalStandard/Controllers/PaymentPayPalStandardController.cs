@@ -16,7 +16,6 @@ using Nop.Services.Logging;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
 using Nop.Services.Security;
-using Nop.Services.Stores;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc.Filters;
@@ -28,7 +27,6 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
         #region Fields
 
         private readonly IWorkContext _workContext;
-        private readonly IStoreService _storeService;
         private readonly ISettingService _settingService;
         private readonly IPaymentService _paymentService;
         private readonly IOrderService _orderService;
@@ -48,7 +46,6 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
         #region Ctor
 
         public PaymentPayPalStandardController(IWorkContext workContext,
-            IStoreService storeService, 
             ISettingService settingService, 
             IPaymentService paymentService, 
             IOrderService orderService, 
@@ -64,7 +61,6 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
             ShoppingCartSettings shoppingCartSettings)
         {
             this._workContext = workContext;
-            this._storeService = storeService;
             this._settingService = settingService;
             this._paymentService = paymentService;
             this._orderService = orderService;
@@ -92,7 +88,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                 return AccessDeniedView();
 
             //load settings for a chosen store scope
-            var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var storeScope = _storeContext.ActiveStoreScopeConfiguration;
             var payPalStandardPaymentSettings = _settingService.LoadSetting<PayPalStandardPaymentSettings>(storeScope);
 
             var model = new ConfigurationModel
@@ -131,7 +127,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                 return Configure();
 
             //load settings for a chosen store scope
-            var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var storeScope = _storeContext.ActiveStoreScopeConfiguration;
             var payPalStandardPaymentSettings = _settingService.LoadSetting<PayPalStandardPaymentSettings>(storeScope);
 
             //save settings
@@ -187,16 +183,16 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
             if (processor.GetPdtDetails(tx, out Dictionary<string, string> values, out string response))
             {
                 values.TryGetValue("custom", out string orderNumber);
-                Guid orderNumberGuid = Guid.Empty;
+                var orderNumberGuid = Guid.Empty;
                 try
                 {
                     orderNumberGuid = new Guid(orderNumber);
                 }
                 catch { }
-                Order order = _orderService.GetOrderByGuid(orderNumberGuid);
+                var order = _orderService.GetOrderByGuid(orderNumberGuid);
                 if (order != null)
                 {
-                    decimal mc_gross = decimal.Zero;
+                    var mc_gross = decimal.Zero;
                     try
                     {
                         mc_gross = decimal.Parse(values["mc_gross"], new CultureInfo("en-US"));
@@ -247,7 +243,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                     var orderTotalSentToPayPal = order.GetAttribute<decimal?>(PayPalHelper.OrderTotalSentToPayPal);
                     if (orderTotalSentToPayPal.HasValue && mc_gross != orderTotalSentToPayPal.Value)
                     {
-                        string errorStr =
+                        var errorStr =
                             $"PayPal PDT. Returned order total {mc_gross} doesn't equal order total {order.OrderTotal}. Order# {order.Id}.";
                         //log
                         _logger.Error(errorStr);
@@ -283,15 +279,15 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
             }
             else
             {
-                string orderNumber = string.Empty;
+                var orderNumber = string.Empty;
                 values.TryGetValue("custom", out orderNumber);
-                Guid orderNumberGuid = Guid.Empty;
+                var orderNumberGuid = Guid.Empty;
                 try
                 {
                     orderNumberGuid = new Guid(orderNumber);
                 }
                 catch { }
-                Order order = _orderService.GetOrderByGuid(orderNumberGuid);
+                var order = _orderService.GetOrderByGuid(orderNumberGuid);
                 if (order != null)
                 {
                     //order note
@@ -310,12 +306,12 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
         public IActionResult IPNHandler()
         {
             byte[] parameters;
-            using (MemoryStream stream = new MemoryStream())
+            using (var stream = new MemoryStream())
             {
                 this.Request.Body.CopyTo(stream);
                 parameters = stream.ToArray();
             }
-            string strRequest = Encoding.ASCII.GetString(parameters);
+            var strRequest = Encoding.ASCII.GetString(parameters);
 
             var processor = _paymentService.LoadPaymentMethodBySystemName("Payments.PayPalStandard") as PayPalStandardPaymentProcessor;
             if (processor == null ||
@@ -325,7 +321,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
             if (processor.VerifyIpn(strRequest, out Dictionary<string, string> values))
             {
                 #region values
-                decimal mc_gross = decimal.Zero;
+                var mc_gross = decimal.Zero;
                 try
                 {
                     mc_gross = decimal.Parse(values["mc_gross"], new CultureInfo("en-US"));
@@ -349,7 +345,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
 
                 var sb = new StringBuilder();
                 sb.AppendLine("PayPal IPN:");
-                foreach (KeyValuePair<string, string> kvp in values)
+                foreach (var kvp in values)
                 {
                     sb.AppendLine(kvp.Key + ": " + kvp.Value);
                 }
@@ -365,7 +361,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                     #region Recurring payment
                     case "recurring_payment":
                         {
-                            Guid orderNumberGuid = Guid.Empty;
+                            var orderNumberGuid = Guid.Empty;
                             try
                             {
                                 orderNumberGuid = new Guid(rp_invoice_id);
@@ -401,8 +397,10 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                                                 else
                                                 {
                                                     //next payments
-                                                    var processPaymentResult = new ProcessPaymentResult();
-                                                    processPaymentResult.NewPaymentStatus = newPaymentStatus;
+                                                    var processPaymentResult = new ProcessPaymentResult
+                                                    {
+                                                        NewPaymentStatus = newPaymentStatus
+                                                    };
                                                     if (newPaymentStatus == PaymentStatus.Authorized)
                                                         processPaymentResult.AuthorizationTransactionId = txn_id;
                                                     else
@@ -451,7 +449,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                         #region Standard payment
                         {
                             values.TryGetValue("custom", out string orderNumber);
-                            Guid orderNumberGuid = Guid.Empty;
+                            var orderNumberGuid = Guid.Empty;
                             try
                             {
                                 orderNumberGuid = new Guid(orderNumber);
@@ -493,7 +491,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                                             else
                                             {
                                                 //not valid
-                                                string errorStr =
+                                                var errorStr =
                                                     $"PayPal IPN. Returned order total {mc_gross} doesn't equal order total {order.OrderTotal}. Order# {order.Id}.";
                                                 //log
                                                 _logger.Error(errorStr);
@@ -525,7 +523,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                                             else
                                             {
                                                 //not valid
-                                                string errorStr =
+                                                var errorStr =
                                                     $"PayPal IPN. Returned order total {mc_gross} doesn't equal order total {order.OrderTotal}. Order# {order.Id}.";
                                                 //log
                                                 _logger.Error(errorStr);

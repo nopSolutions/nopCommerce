@@ -9,6 +9,7 @@
         /// Simple text box
         /// </summary>
         SimpleTextBox = 10,
+
         /// <summary>
         /// BB code editor
         /// </summary>

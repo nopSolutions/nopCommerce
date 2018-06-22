@@ -1,8 +1,10 @@
-﻿
-using Nop.Core.Configuration;
+﻿using Nop.Core.Configuration;
 
 namespace Nop.Core.Domain.Catalog
 {
+    /// <summary>
+    /// Product editor settings
+    /// </summary>
     public class ProductEditorSettings : ISettings
     {
         /// <summary>
@@ -26,7 +28,7 @@ namespace Nop.Core.Domain.Catalog
         public bool ProductTemplate { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether 'Admin comment' feild is shown
+        /// Gets or sets a value indicating whether 'Admin comment' field is shown
         /// </summary>
         public bool AdminComment { get; set; }
 
@@ -259,7 +261,6 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets a value indicating whether 'Dimension' fields (height, length, width) are shown
         /// </summary>
         public bool Dimensions { get; set; }
-
 
         /// <summary>
         /// Gets or sets a value indicating whether 'Available start date' field is shown

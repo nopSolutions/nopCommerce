@@ -27,6 +27,17 @@ namespace Nop.Services.Orders
         private readonly IDownloadService _downloadService;
         private readonly IWebHelper _webHelper;
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="workContext">Work context</param>
+        /// <param name="checkoutAttributeService">Checkout attribute service</param>
+        /// <param name="checkoutAttributeParser">Checkout attribute parser</param>
+        /// <param name="currencyService">Currency service</param>
+        /// <param name="taxService">Tax service</param>
+        /// <param name="priceFormatter">Price formatter</param>
+        /// <param name="downloadService">Download service</param>
+        /// <param name="webHelper">Web helper</param>
         public CheckoutAttributeFormatter(IWorkContext workContext,
             ICheckoutAttributeService checkoutAttributeService,
             ICheckoutAttributeParser checkoutAttributeParser,
@@ -77,14 +88,14 @@ namespace Nop.Services.Orders
             var result = new StringBuilder();
 
             var attributes = _checkoutAttributeParser.ParseCheckoutAttributes(attributesXml);
-            for (int i = 0; i < attributes.Count; i++)
+            for (var i = 0; i < attributes.Count; i++)
             {
                 var attribute = attributes[i];
                 var valuesStr = _checkoutAttributeParser.ParseValues(attributesXml, attribute.Id);
-                for (int j = 0; j < valuesStr.Count; j++)
+                for (var j = 0; j < valuesStr.Count; j++)
                 {
-                    string valueStr = valuesStr[j];
-                    string formattedAttribute = "";
+                    var valueStr = valuesStr[j];
+                    var formattedAttribute = "";
                     if (!attribute.ShouldHaveValues())
                     {
                         //no values
@@ -148,11 +159,11 @@ namespace Nop.Services.Orders
                                 formattedAttribute = $"{attribute.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id)}: {attributeValue.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id)}";
                                 if (renderPrices)
                                 {
-                                    decimal priceAdjustmentBase = _taxService.GetCheckoutAttributePrice(attributeValue, customer);
-                                    decimal priceAdjustment = _currencyService.ConvertFromPrimaryStoreCurrency(priceAdjustmentBase, _workContext.WorkingCurrency);
+                                    var priceAdjustmentBase = _taxService.GetCheckoutAttributePrice(attributeValue, customer);
+                                    var priceAdjustment = _currencyService.ConvertFromPrimaryStoreCurrency(priceAdjustmentBase, _workContext.WorkingCurrency);
                                     if (priceAdjustmentBase > 0)
                                     {
-                                        string priceAdjustmentStr = _priceFormatter.FormatPrice(priceAdjustment);
+                                        var priceAdjustmentStr = _priceFormatter.FormatPrice(priceAdjustment);
                                         formattedAttribute += $" [+{priceAdjustmentStr}]";
                                     }
                                 }
@@ -163,7 +174,7 @@ namespace Nop.Services.Orders
                         }
                     }
 
-                    if (!String.IsNullOrEmpty(formattedAttribute))
+                    if (!string.IsNullOrEmpty(formattedAttribute))
                     {
                         if (i != 0 || j != 0)
                             result.Append(separator);

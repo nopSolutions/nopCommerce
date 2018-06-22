@@ -17,47 +17,6 @@ namespace Nop.Services.Catalog
     /// </summary>
     public partial class ManufacturerService : IManufacturerService
     {
-        #region Constants
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : manufacturer ID
-        /// </remarks>
-        private const string MANUFACTURERS_BY_ID_KEY = "Nop.manufacturer.id-{0}";
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : show hidden records?
-        /// {1} : manufacturer ID
-        /// {2} : page index
-        /// {3} : page size
-        /// {4} : current customer ID
-        /// {5} : store ID
-        /// </remarks>
-        private const string PRODUCTMANUFACTURERS_ALLBYMANUFACTURERID_KEY = "Nop.productmanufacturer.allbymanufacturerid-{0}-{1}-{2}-{3}-{4}-{5}";
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : show hidden records?
-        /// {1} : product ID
-        /// {2} : current customer ID
-        /// {3} : store ID
-        /// </remarks>
-        private const string PRODUCTMANUFACTURERS_ALLBYPRODUCTID_KEY = "Nop.productmanufacturer.allbyproductid-{0}-{1}-{2}-{3}";
-        /// <summary>
-        /// Key pattern to clear cache
-        /// </summary>
-        private const string MANUFACTURERS_PATTERN_KEY = "Nop.manufacturer.";
-        /// <summary>
-        /// Key pattern to clear cache
-        /// </summary>
-        private const string PRODUCTMANUFACTURERS_PATTERN_KEY = "Nop.productmanufacturer.";
-
-        #endregion
-
         #region Fields
 
         private readonly IRepository<Manufacturer> _manufacturerRepository;
@@ -87,7 +46,7 @@ namespace Nop.Services.Catalog
         /// <param name="workContext">Work context</param>
         /// <param name="storeContext">Store context</param>
         /// <param name="catalogSettings">Catalog settings</param>
-        /// <param name="eventPublisher">Event published</param>
+        /// <param name="eventPublisher">Event publisher</param>
         public ManufacturerService(ICacheManager cacheManager,
             IRepository<Manufacturer> manufacturerRepository,
             IRepository<ProductManufacturer> productManufacturerRepository,
@@ -110,6 +69,7 @@ namespace Nop.Services.Catalog
             this._catalogSettings = catalogSettings;
             this._eventPublisher = eventPublisher;
         }
+
         #endregion
 
         #region Methods
@@ -148,7 +108,7 @@ namespace Nop.Services.Catalog
             var query = _manufacturerRepository.Table;
             if (!showHidden)
                 query = query.Where(m => m.Published);
-            if (!String.IsNullOrWhiteSpace(manufacturerName))
+            if (!string.IsNullOrWhiteSpace(manufacturerName))
                 query = query.Where(m => m.Name.Contains(manufacturerName));
             query = query.Where(m => !m.Deleted);
             query = query.OrderBy(m => m.DisplayOrder).ThenBy(m => m.Id);
@@ -176,13 +136,8 @@ namespace Nop.Services.Catalog
                             where !m.LimitedToStores || storeId == sm.StoreId
                             select m;
                 }
-                //only distinct manufacturers (group by ID)
-                query = from m in query
-                        group m by m.Id
-                            into mGroup
-                            orderby mGroup.Key
-                            select mGroup.FirstOrDefault();
-                query = query.OrderBy(m => m.DisplayOrder).ThenBy(m => m.Id);
+
+                query = query.Distinct().OrderBy(m => m.DisplayOrder).ThenBy(m => m.Id);
             }
 
             return new PagedList<Manufacturer>(query, pageIndex, pageSize);
@@ -198,7 +153,7 @@ namespace Nop.Services.Catalog
             if (manufacturerId == 0)
                 return null;
             
-            string key = string.Format(MANUFACTURERS_BY_ID_KEY, manufacturerId);
+            var key = string.Format(NopCatalogDefaults.ManufacturersByIdCacheKey, manufacturerId);
             return _cacheManager.Get(key, () => _manufacturerRepository.GetById(manufacturerId));
         }
 
@@ -214,8 +169,8 @@ namespace Nop.Services.Catalog
             _manufacturerRepository.Insert(manufacturer);
 
             //cache
-            _cacheManager.RemoveByPattern(MANUFACTURERS_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(PRODUCTMANUFACTURERS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopCatalogDefaults.ManufacturersPatternCacheKey);
+            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductManufacturersPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(manufacturer);
@@ -233,13 +188,12 @@ namespace Nop.Services.Catalog
             _manufacturerRepository.Update(manufacturer);
 
             //cache
-            _cacheManager.RemoveByPattern(MANUFACTURERS_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(PRODUCTMANUFACTURERS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopCatalogDefaults.ManufacturersPatternCacheKey);
+            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductManufacturersPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(manufacturer);
         }
-        
 
         /// <summary>
         /// Deletes a product manufacturer mapping
@@ -253,8 +207,8 @@ namespace Nop.Services.Catalog
             _productManufacturerRepository.Delete(productManufacturer);
 
             //cache
-            _cacheManager.RemoveByPattern(MANUFACTURERS_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(PRODUCTMANUFACTURERS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopCatalogDefaults.ManufacturersPatternCacheKey);
+            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductManufacturersPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityDeleted(productManufacturer);
@@ -274,7 +228,7 @@ namespace Nop.Services.Catalog
             if (manufacturerId == 0)
                 return new PagedList<ProductManufacturer>(new List<ProductManufacturer>(), pageIndex, pageSize);
 
-            string key = string.Format(PRODUCTMANUFACTURERS_ALLBYMANUFACTURERID_KEY, showHidden, manufacturerId, pageIndex, pageSize, _workContext.CurrentCustomer.Id, _storeContext.CurrentStore.Id);
+            var key = string.Format(NopCatalogDefaults.ProductManufacturersAllByManufacturerIdCacheKey, showHidden, manufacturerId, pageIndex, pageSize, _workContext.CurrentCustomer.Id, _storeContext.CurrentStore.Id);
             return _cacheManager.Get(key, () =>
             {
                 var query = from pm in _productManufacturerRepository.Table
@@ -312,13 +266,7 @@ namespace Nop.Services.Catalog
                                 select pm;
                     }
 
-                    //only distinct manufacturers (group by ID)
-                    query = from pm in query
-                            group pm by pm.Id
-                            into pmGroup
-                            orderby pmGroup.Key
-                            select pmGroup.FirstOrDefault();
-                    query = query.OrderBy(pm => pm.DisplayOrder).ThenBy(pm => pm.Id);
+                    query = query.Distinct().OrderBy(pm => pm.DisplayOrder).ThenBy(pm => pm.Id);
                 }
 
                 var productManufacturers = new PagedList<ProductManufacturer>(query, pageIndex, pageSize);
@@ -337,7 +285,7 @@ namespace Nop.Services.Catalog
             if (productId == 0)
                 return new List<ProductManufacturer>();
 
-            string key = string.Format(PRODUCTMANUFACTURERS_ALLBYPRODUCTID_KEY, showHidden, productId, _workContext.CurrentCustomer.Id, _storeContext.CurrentStore.Id);
+            var key = string.Format(NopCatalogDefaults.ProductManufacturersAllByProductIdCacheKey, showHidden, productId, _workContext.CurrentCustomer.Id, _storeContext.CurrentStore.Id);
             return _cacheManager.Get(key, () =>
             {
                 var query = from pm in _productManufacturerRepository.Table
@@ -377,13 +325,7 @@ namespace Nop.Services.Catalog
                                 select pm;
                     }
 
-                    //only distinct manufacturers (group by ID)
-                    query = from pm in query
-                            group pm by pm.Id
-                            into mGroup
-                            orderby mGroup.Key
-                            select mGroup.FirstOrDefault();
-                    query = query.OrderBy(pm => pm.DisplayOrder).ThenBy(pm => pm.Id);
+                    query = query.Distinct().OrderBy(pm => pm.DisplayOrder).ThenBy(pm => pm.Id);
                 }
 
                 var productManufacturers = query.ToList();
@@ -416,8 +358,8 @@ namespace Nop.Services.Catalog
             _productManufacturerRepository.Insert(productManufacturer);
 
             //cache
-            _cacheManager.RemoveByPattern(MANUFACTURERS_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(PRODUCTMANUFACTURERS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopCatalogDefaults.ManufacturersPatternCacheKey);
+            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductManufacturersPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(productManufacturer);
@@ -435,8 +377,8 @@ namespace Nop.Services.Catalog
             _productManufacturerRepository.Update(productManufacturer);
 
             //cache
-            _cacheManager.RemoveByPattern(MANUFACTURERS_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(PRODUCTMANUFACTURERS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopCatalogDefaults.ManufacturersPatternCacheKey);
+            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductManufacturersPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(productManufacturer);
@@ -458,21 +400,31 @@ namespace Nop.Services.Catalog
                 .ToDictionary(items => items.Key, items => items.Select(a => a.ManufacturerId).ToArray());
         }
 
-
         /// <summary>
         /// Returns a list of names of not existing manufacturers
         /// </summary>
-        /// <param name="manufacturerNames">The names of the manufacturers to check</param>
-        /// <returns>List of names not existing manufacturers</returns>
-        public virtual string[] GetNotExistingManufacturers(string[] manufacturerNames)
+        /// <param name="manufacturerIdsNames">The names and/or IDs of the manufacturers to check</param>
+        /// <returns>List of names and/or IDs not existing manufacturers</returns>
+        public virtual string[] GetNotExistingManufacturers(string[] manufacturerIdsNames)
         {
-            if (manufacturerNames == null)
-                throw new ArgumentNullException(nameof(manufacturerNames));
+            if (manufacturerIdsNames == null)
+                throw new ArgumentNullException(nameof(manufacturerIdsNames));
 
             var query = _manufacturerRepository.Table;
-            var queryFilter = manufacturerNames.Distinct().ToArray();
+            var queryFilter = manufacturerIdsNames.Distinct().ToArray();
+            //filtering by name
             var filter = query.Select(m => m.Name).Where(m => queryFilter.Contains(m)).ToList();
-            return queryFilter.Except(filter).ToArray();
+            queryFilter = queryFilter.Except(filter).ToArray();
+
+            //if some names not found
+            if (queryFilter.Any())
+            {
+                //filtering by IDs
+                filter = query.Select(c => c.Id.ToString()).Where(c => queryFilter.Contains(c)).ToList();
+                queryFilter = queryFilter.Except(filter).ToArray();
+            }
+
+            return queryFilter.ToArray();
         }
 
         #endregion

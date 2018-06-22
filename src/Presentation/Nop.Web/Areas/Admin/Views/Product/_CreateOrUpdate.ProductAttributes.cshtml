@@ -1,23 +1,17 @@
-﻿@model ProductModel
+@model ProductModel
 
 <div class="panel-group">
     <p>
         @T("Admin.Catalog.Products.ProductAttributes.Hint")
     </p>
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_product_details_product_attributes_top", additionalData = Model.Id })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductDetailsProductAttributesTop, additionalData = Model })
     @if (Model.Id > 0)
     {
         if (Model.ProductAttributesExist)
         {
             <nop-tabs id="productattribute-edit" asp-tab-name-to-select="tab-attributes" asp-render-selected-tab-input="false">
-                <nop-tab-header>
-                    <nop-tab-header-item asp-name="tab-attributes" asp-default="true">@T("Admin.Catalog.Products.ProductAttributes.Attributes")</nop-tab-header-item>
-                    <nop-tab-header-item asp-name="tab-attribute-combinations">@T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations")</nop-tab-header-item>
-                </nop-tab-header>
-                <nop-tab-content>
-                    <nop-tab-content-item asp-name="tab-attributes" asp-default="true">@await Html.PartialAsync("_CreateOrUpdate.ProductAttributes.Info", Model)</nop-tab-content-item>
-                    <nop-tab-content-item asp-name="tab-attribute-combinations">@await Html.PartialAsync("_CreateOrUpdate.ProductAttributes.Combinations", Model)</nop-tab-content-item>
-                </nop-tab-content>
+                <nop-tab asp-name="tab-attributes" asp-title="@T("Admin.Catalog.Products.ProductAttributes.Attributes")" asp-default="true">@await Html.PartialAsync("_CreateOrUpdate.ProductAttributes.Info", Model)</nop-tab>
+                <nop-tab asp-name="tab-attribute-combinations" asp-title="@T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations")">@await Html.PartialAsync("_CreateOrUpdate.ProductAttributes.Combinations", Model)</nop-tab>
             </nop-tabs>
         }
         else
@@ -37,5 +31,5 @@
             </div>
         </div>
     }
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_product_details_product_attributes_bottom", additionalData = Model.Id })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductDetailsProductAttributesBottom, additionalData = Model })
 </div>

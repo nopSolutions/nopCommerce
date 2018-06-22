@@ -21,7 +21,7 @@ namespace Nop.Services.Payments
         /// </summary>
         public bool Success
         {
-            get { return (!this.Errors.Any()); }
+            get { return (!Errors.Any()); }
         }
 
         /// <summary>
@@ -30,7 +30,7 @@ namespace Nop.Services.Payments
         /// <param name="error">Error</param>
         public void AddError(string error) 
         {
-            this.Errors.Add(error);
+            Errors.Add(error);
         }
 
         /// <summary>

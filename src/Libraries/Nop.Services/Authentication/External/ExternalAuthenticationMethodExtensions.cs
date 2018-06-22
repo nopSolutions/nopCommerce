@@ -25,7 +25,7 @@ namespace Nop.Services.Authentication.External
             if (settings.ActiveAuthenticationMethodSystemNames == null)
                 return false;
 
-            foreach (string activeMethodSystemName in settings.ActiveAuthenticationMethodSystemNames)
+            foreach (var activeMethodSystemName in settings.ActiveAuthenticationMethodSystemNames)
                 if (method.PluginDescriptor.SystemName.Equals(activeMethodSystemName, StringComparison.InvariantCultureIgnoreCase))
                     return true;
 

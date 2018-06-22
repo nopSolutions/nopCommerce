@@ -1,10 +1,6 @@
-﻿@model BlogPostListModel
+@model BlogPostSearchModel
 
-@inject AdminAreaSettings adminAreaSettings
 @{
-    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
-    var gridPageSizes = adminAreaSettings.GridPageSizes;
-
     //page title
     ViewBag.Title = T("Admin.ContentManagement.Blog.BlogPosts").Text;
     //active menu item (system name)
@@ -21,7 +17,7 @@
             <i class="fa fa-plus-square"></i>
             @T("Admin.Common.AddNew")
         </a>
-        @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_blog_list_buttons" })
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.BlogListButtons })
     </div>
 </div>
 
@@ -69,7 +65,13 @@
                                             url: "@Html.Raw(Url.Action("List", "Blog"))",
                                             type: "POST",
                                             dataType: "json",
-                                            data: additionalData
+                                            data: function () {
+                                                var data = {
+                                                    SearchStoreId: $('#SearchStoreId').val()
+                                                };
+                                                addAntiForgeryToken(data);
+                                                return data;
+                                            }
                                         }
                                     },
                                     schema: {
@@ -82,14 +84,14 @@
                                         // Cancel the changes
                                         this.cancelChanges();
                                     },
-                                    pageSize: @(defaultGridPageSize),
+                                    pageSize: @(Model.PageSize),
                                     serverPaging: true,
                                     serverFiltering: true,
                                     serverSorting: true
                                 },
                                 pageable: {
                                     refresh: true,
-                                    pageSizes: [@(gridPageSizes)],
+                                    pageSizes: [@(Model.AvailablePageSizes)],
                                     @await Html.PartialAsync("_GridPagerMessages")
                                 },
                                 editable: {
@@ -140,7 +142,7 @@
                         });
                     </script>
 
-                    <script type="text/javascript">
+                    <script>
                         $(document).ready(function() {
                             //search button
                             $('#search-blogpost').click(function() {
@@ -151,14 +153,6 @@
                                 return false;
                             });
                         });
-
-                        function additionalData() {
-                            var data = {
-                                SearchStoreId: $('#SearchStoreId').val()
-                            };
-                            addAntiForgeryToken(data);
-                            return data;
-                        }
                     </script>
                 </div>
             </div>

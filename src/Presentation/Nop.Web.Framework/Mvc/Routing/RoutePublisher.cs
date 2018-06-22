@@ -13,12 +13,19 @@ namespace Nop.Web.Framework.Mvc.Routing
     {
         #region Fields
 
+        /// <summary>
+        /// Type finder
+        /// </summary>
         protected readonly ITypeFinder typeFinder;
 
         #endregion
 
         #region Ctor
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="typeFinder">Type finder</param>
         public RoutePublisher(ITypeFinder typeFinder)
         {
             this.typeFinder = typeFinder;

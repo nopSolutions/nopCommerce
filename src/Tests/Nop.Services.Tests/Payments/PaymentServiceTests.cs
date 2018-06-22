@@ -1,13 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Moq;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
-using Nop.Core.Plugins;
 using Nop.Services.Configuration;
+using Nop.Services.Events;
 using Nop.Services.Payments;
+using Nop.Services.Plugins;
 using Nop.Tests;
 using NUnit.Framework;
-using Rhino.Mocks;
+
 
 namespace Nop.Services.Tests.Payments
 {
@@ -16,22 +18,28 @@ namespace Nop.Services.Tests.Payments
     {
         private PaymentSettings _paymentSettings;
         private ShoppingCartSettings _shoppingCartSettings;
-        private ISettingService _settingService;
+        private Mock<IEventPublisher> _eventPublisher;
+        private Mock<ISettingService> _settingService;
         private IPaymentService _paymentService;
         
         [SetUp]
         public new void SetUp()
         {
-            _paymentSettings = new PaymentSettings();
-            _paymentSettings.ActivePaymentMethodSystemNames = new List<string>();
+            _paymentSettings = new PaymentSettings
+            {
+                ActivePaymentMethodSystemNames = new List<string>()
+            };
             _paymentSettings.ActivePaymentMethodSystemNames.Add("Payments.TestMethod");
 
-            var pluginFinder = new PluginFinder();
+            _eventPublisher = new Mock<IEventPublisher>();
+            _eventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
+
+            var pluginFinder = new PluginFinder(_eventPublisher.Object);
 
             _shoppingCartSettings = new ShoppingCartSettings();
-            _settingService = MockRepository.GenerateMock<ISettingService>();
+            _settingService = new Mock<ISettingService>();
 
-            _paymentService = new PaymentService(_paymentSettings, pluginFinder, _settingService, _shoppingCartSettings);
+            _paymentService = new PaymentService(_paymentSettings, pluginFinder, _settingService.Object, _shoppingCartSettings);
         }
 
         [Test]
@@ -39,7 +47,7 @@ namespace Nop.Services.Tests.Payments
         {
             var srcm = _paymentService.LoadAllPaymentMethods();
             srcm.ShouldNotBeNull();
-            (srcm.Any()).ShouldBeTrue();
+            srcm.Any().ShouldBeTrue();
         }
 
         [Test]
@@ -54,7 +62,7 @@ namespace Nop.Services.Tests.Payments
         {
             var srcm = _paymentService.LoadActivePaymentMethods();
             srcm.ShouldNotBeNull();
-            (srcm.Any()).ShouldBeTrue();
+            srcm.Any().ShouldBeTrue();
         }
 
         [Test]

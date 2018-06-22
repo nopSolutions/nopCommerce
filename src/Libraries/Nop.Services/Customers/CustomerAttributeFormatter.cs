@@ -1,4 +1,3 @@
-using System;
 using System.Net;
 using System.Text;
 using Nop.Core;
@@ -23,6 +22,12 @@ namespace Nop.Services.Customers
 
         #region Ctor
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="customerAttributeParser">Customer attribute parser</param>
+        /// <param name="customerAttributeService">Customer attribute service</param>
+        /// <param name="workContext">Work context</param>
         public CustomerAttributeFormatter(ICustomerAttributeParser customerAttributeParser,
             ICustomerAttributeService customerAttributeService,
             IWorkContext workContext)
@@ -48,14 +53,14 @@ namespace Nop.Services.Customers
             var result = new StringBuilder();
 
             var attributes = _customerAttributeParser.ParseCustomerAttributes(attributesXml);
-            for (int i = 0; i < attributes.Count; i++)
+            for (var i = 0; i < attributes.Count; i++)
             {
                 var attribute = attributes[i];
                 var valuesStr = _customerAttributeParser.ParseValues(attributesXml, attribute.Id);
-                for (int j = 0; j < valuesStr.Count; j++)
+                for (var j = 0; j < valuesStr.Count; j++)
                 {
-                    string valueStr = valuesStr[j];
-                    string formattedAttribute = "";
+                    var valueStr = valuesStr[j];
+                    var formattedAttribute = "";
                     if (!attribute.ShouldHaveValues())
                     {
                         //no values
@@ -98,7 +103,7 @@ namespace Nop.Services.Customers
                         }
                     }
 
-                    if (!String.IsNullOrEmpty(formattedAttribute))
+                    if (!string.IsNullOrEmpty(formattedAttribute))
                     {
                         if (i != 0 || j != 0)
                             result.Append(separator);
@@ -110,6 +115,6 @@ namespace Nop.Services.Customers
             return result.ToString();
         }
 
-#endregion
+        #endregion
     }
 }

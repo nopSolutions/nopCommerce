@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
@@ -7,6 +8,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
+using Nop.Core.Domain.Vendors;
 using Nop.Services.Catalog;
 using Nop.Services.Directory;
 using Nop.Services.Helpers;
@@ -17,6 +19,7 @@ using Nop.Services.Payments;
 using Nop.Services.Seo;
 using Nop.Services.Shipping;
 using Nop.Services.Shipping.Tracking;
+using Nop.Services.Vendors;
 using Nop.Web.Models.Common;
 using Nop.Web.Models.Order;
 
@@ -53,10 +56,12 @@ namespace Nop.Web.Factories
         private readonly AddressSettings _addressSettings;
         private readonly RewardPointsSettings _rewardPointsSettings;
         private readonly PdfSettings _pdfSettings;
+        private readonly IVendorService _vendorService;
+        private readonly VendorSettings _vendorSettings;
 
         #endregion
 
-		#region Constructors
+		#region Ctor
 
         public OrderModelFactory(IAddressModelFactory addressModelFactory, 
             IOrderService orderService,
@@ -80,7 +85,9 @@ namespace Nop.Web.Factories
             ShippingSettings shippingSettings, 
             AddressSettings addressSettings,
             RewardPointsSettings rewardPointsSettings,
-            PdfSettings pdfSettings)
+            PdfSettings pdfSettings,
+            IVendorService vendorService,
+            VendorSettings vendorSettings)
         {
             this._addressModelFactory = addressModelFactory;
             this._orderService = orderService;
@@ -106,6 +113,8 @@ namespace Nop.Web.Factories
             this._addressSettings = addressSettings;
             this._rewardPointsSettings = rewardPointsSettings;
             this._pdfSettings = pdfSettings;
+            this._vendorService = vendorService;
+            this._vendorSettings = vendorSettings;
         }
 
         #endregion
@@ -173,18 +182,19 @@ namespace Nop.Web.Factories
         {
             if (order == null)
                 throw new ArgumentNullException(nameof(order));
-            var model = new OrderDetailsModel();
+            var model = new OrderDetailsModel
+            {
+                Id = order.Id,
+                CreatedOn = _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, DateTimeKind.Utc),
+                OrderStatus = order.OrderStatus.GetLocalizedEnum(_localizationService, _workContext),
+                IsReOrderAllowed = _orderSettings.IsReOrderAllowed,
+                IsReturnRequestAllowed = _orderProcessingService.IsReturnRequestAllowed(order),
+                PdfInvoiceDisabled = _pdfSettings.DisablePdfInvoicesForPendingOrders && order.OrderStatus == OrderStatus.Pending,
+                CustomOrderNumber = order.CustomOrderNumber,
 
-            model.Id = order.Id;
-            model.CreatedOn = _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, DateTimeKind.Utc);
-            model.OrderStatus = order.OrderStatus.GetLocalizedEnum(_localizationService, _workContext);
-            model.IsReOrderAllowed = _orderSettings.IsReOrderAllowed;
-            model.IsReturnRequestAllowed = _orderProcessingService.IsReturnRequestAllowed(order);
-            model.PdfInvoiceDisabled = _pdfSettings.DisablePdfInvoicesForPendingOrders && order.OrderStatus == OrderStatus.Pending;
-            model.CustomOrderNumber = order.CustomOrderNumber;
-
-            //shipping info
-            model.ShippingStatus = order.ShippingStatus.GetLocalizedEnum(_localizationService, _workContext);
+                //shipping info
+                ShippingStatus = order.ShippingStatus.GetLocalizedEnum(_localizationService, _workContext)
+            };
             if (order.ShippingStatus != ShippingStatus.ShippingNotRequired)
             {
                 model.IsShippable = true;
@@ -202,11 +212,11 @@ namespace Nop.Web.Factories
                         {
                             Address1 = order.PickupAddress.Address1,
                             City = order.PickupAddress.City,
+                            County = order.PickupAddress.County,
                             CountryName = order.PickupAddress.Country != null ? order.PickupAddress.Country.Name : string.Empty,
                             ZipPostalCode = order.PickupAddress.ZipPostalCode
                         };
                 model.ShippingMethod = order.ShippingMethod;
-   
 
                 //shipments (only already shipped)
                 var shipments = order.Shipments.Where(x => x.ShippedDateUtc.HasValue).OrderBy(x => x.CreatedOnUtc).ToList();
@@ -224,7 +234,6 @@ namespace Nop.Web.Factories
                     model.Shipments.Add(shipmentModel);
                 }
             }
-
 
             //billing info
             _addressModelFactory.PrepareAddressModel(model.BillingAddress,
@@ -295,8 +304,8 @@ namespace Nop.Web.Factories
             }
 
             //tax
-            bool displayTax = true;
-            bool displayTaxRates = true;
+            var displayTax = true;
+            var displayTaxRates = true;
             if (_taxSettings.HideTaxInOrderSummary && order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax)
             {
                 displayTax = false;
@@ -339,7 +348,6 @@ namespace Nop.Web.Factories
             if (orderDiscountInCustomerCurrency > decimal.Zero)
                 model.OrderTotalDiscount = _priceFormatter.FormatPrice(-orderDiscountInCustomerCurrency, true, order.CustomerCurrencyCode, false, _workContext.WorkingLanguage);
 
-
             //gift cards
             foreach (var gcuh in order.GiftCardUsageHistory)
             {
@@ -379,10 +387,14 @@ namespace Nop.Web.Factories
                 });
             }
 
-
             //purchased products
             model.ShowSku = _catalogSettings.ShowSkuOnProductDetailsPage;
+            model.ShowVendorName = _vendorSettings.ShowVendorOnOrderDetailsPage;
+
             var orderItems = order.OrderItems;
+
+            var vendors = _vendorSettings.ShowVendorOnOrderDetailsPage ? _vendorService.GetVendorsByIds(orderItems.Select(item => item.Product.VendorId).ToArray()) : new List<Vendor>();
+            
             foreach (var orderItem in orderItems)
             {
                 var orderItemModel = new OrderDetailsModel.OrderItemModel
@@ -390,6 +402,7 @@ namespace Nop.Web.Factories
                     Id = orderItem.Id,
                     OrderItemGuid = orderItem.OrderItemGuid,
                     Sku = orderItem.Product.FormatSku(orderItem.AttributesXml, _productAttributeParser),
+                    VendorName = vendors.FirstOrDefault(v => v.Id == orderItem.Product.VendorId)?.Name ?? string.Empty,
                     ProductId = orderItem.Product.Id,
                     ProductName = orderItem.Product.GetLocalized(x => x.Name),
                     ProductSeName = orderItem.Product.GetSeName(),
@@ -449,16 +462,17 @@ namespace Nop.Web.Factories
             var order = shipment.Order;
             if (order == null)
                 throw new Exception("order cannot be loaded");
-            var model = new ShipmentDetailsModel();
-            
-            model.Id = shipment.Id;
+            var model = new ShipmentDetailsModel
+            {
+                Id = shipment.Id
+            };
             if (shipment.ShippedDateUtc.HasValue)
                 model.ShippedDate = _dateTimeHelper.ConvertToUserTime(shipment.ShippedDateUtc.Value, DateTimeKind.Utc);
             if (shipment.DeliveryDateUtc.HasValue)
                 model.DeliveryDate = _dateTimeHelper.ConvertToUserTime(shipment.DeliveryDateUtc.Value, DateTimeKind.Utc);
             
             //tracking number and shipment information
-            if (!String.IsNullOrEmpty(shipment.TrackingNumber))
+            if (!string.IsNullOrEmpty(shipment.TrackingNumber))
             {
                 model.TrackingNumber = shipment.TrackingNumber;
                 var shipmentTracker = shipment.GetShipmentTracker(_shippingService, _shippingSettings);
@@ -528,29 +542,34 @@ namespace Nop.Web.Factories
         /// <returns>Customer reward points model</returns>
         public virtual CustomerRewardPointsModel PrepareCustomerRewardPoints(int? page)
         {
+            //get reward points history
             var customer = _workContext.CurrentCustomer;
+            var store = _storeContext.CurrentStore;
             var pageSize = _rewardPointsSettings.PageSize;
-            var model = new CustomerRewardPointsModel();
-            var list = _rewardPointService.GetRewardPointsHistory(customer.Id, showNotActivated: true, pageIndex: --page ?? 0, pageSize: pageSize);
+            var rewardPoints = _rewardPointService.GetRewardPointsHistory(customer.Id, store.Id, true, pageIndex: --page ?? 0, pageSize: pageSize);
 
-            model.RewardPoints = list.Select(rph =>
+            //prepare model
+            var model = new CustomerRewardPointsModel();
+            model.RewardPoints = rewardPoints.Select(historyEntry =>
             {
-                var activatingDate = _dateTimeHelper.ConvertToUserTime(rph.CreatedOnUtc, DateTimeKind.Utc);
+                var activatingDate = _dateTimeHelper.ConvertToUserTime(historyEntry.CreatedOnUtc, DateTimeKind.Utc);
                 return new CustomerRewardPointsModel.RewardPointsHistoryModel
                 {
-                    Points = rph.Points,
-                    PointsBalance = rph.PointsBalance.HasValue ? rph.PointsBalance.ToString()
+                    Points = historyEntry.Points,
+                    PointsBalance = historyEntry.PointsBalance.HasValue ? historyEntry.PointsBalance.ToString()
                         : string.Format(_localizationService.GetResource("RewardPoints.ActivatedLater"), activatingDate),
-                    Message = rph.Message,
-                    CreatedOn = activatingDate
+                    Message = historyEntry.Message,
+                    CreatedOn = activatingDate,
+                    EndDate = !historyEntry.EndDateUtc.HasValue ? null :
+                        (DateTime?)_dateTimeHelper.ConvertToUserTime(historyEntry.EndDateUtc.Value, DateTimeKind.Utc)
                 };
             }).ToList();
 
             model.PagerModel = new PagerModel
             {
-                PageSize = list.PageSize,
-                TotalRecords = list.TotalCount,
-                PageIndex = list.PageIndex,
+                PageSize = rewardPoints.PageSize,
+                TotalRecords = rewardPoints.TotalCount,
+                PageIndex = rewardPoints.PageIndex,
                 ShowTotalSummary = true,
                 RouteActionName = "CustomerRewardPointsPaged",
                 UseRouteLinks = true,
@@ -558,17 +577,19 @@ namespace Nop.Web.Factories
             };
 
             //current amount/balance
-            int rewardPointsBalance = _rewardPointService.GetRewardPointsBalance(customer.Id, _storeContext.CurrentStore.Id);
-            decimal rewardPointsAmountBase = _orderTotalCalculationService.ConvertRewardPointsToAmount(rewardPointsBalance);
-            decimal rewardPointsAmount = _currencyService.ConvertFromPrimaryStoreCurrency(rewardPointsAmountBase, _workContext.WorkingCurrency);
+            var rewardPointsBalance = _rewardPointService.GetRewardPointsBalance(customer.Id, _storeContext.CurrentStore.Id);
+            var rewardPointsAmountBase = _orderTotalCalculationService.ConvertRewardPointsToAmount(rewardPointsBalance);
+            var rewardPointsAmount = _currencyService.ConvertFromPrimaryStoreCurrency(rewardPointsAmountBase, _workContext.WorkingCurrency);
             model.RewardPointsBalance = rewardPointsBalance;
             model.RewardPointsAmount = _priceFormatter.FormatPrice(rewardPointsAmount, true, false);
+
             //minimum amount/balance
-            int minimumRewardPointsBalance = _rewardPointsSettings.MinimumRewardPointsToUse;
-            decimal minimumRewardPointsAmountBase = _orderTotalCalculationService.ConvertRewardPointsToAmount(minimumRewardPointsBalance);
-            decimal minimumRewardPointsAmount = _currencyService.ConvertFromPrimaryStoreCurrency(minimumRewardPointsAmountBase, _workContext.WorkingCurrency);
+            var minimumRewardPointsBalance = _rewardPointsSettings.MinimumRewardPointsToUse;
+            var minimumRewardPointsAmountBase = _orderTotalCalculationService.ConvertRewardPointsToAmount(minimumRewardPointsBalance);
+            var minimumRewardPointsAmount = _currencyService.ConvertFromPrimaryStoreCurrency(minimumRewardPointsAmountBase, _workContext.WorkingCurrency);
             model.MinimumRewardPointsBalance = minimumRewardPointsBalance;
             model.MinimumRewardPointsAmount = _priceFormatter.FormatPrice(minimumRewardPointsAmount, true, false);
+
             return model;
         }
 

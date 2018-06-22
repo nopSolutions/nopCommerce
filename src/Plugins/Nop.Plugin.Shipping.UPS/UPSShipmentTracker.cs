@@ -6,11 +6,10 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text;
-using Nop.Plugin.Shipping.UPS.track;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Shipping.Tracking;
+using UpsTracking;
 
 namespace Nop.Plugin.Shipping.UPS
 {
@@ -48,7 +47,7 @@ namespace Nop.Plugin.Shipping.UPS
         /// <returns>URL of a tracking page.</returns>
         public virtual string GetUrl(string trackingNumber)
         {
-            string url = "http://wwwapps.ups.com/WebTracking/track?trackNums={0}&track.x=Track";
+            var url = "http://wwwapps.ups.com/WebTracking/track?trackNums={0}&track.x=Track";
             url = string.Format(url, trackingNumber);
             return url;
         }
@@ -68,24 +67,27 @@ namespace Nop.Plugin.Shipping.UPS
             {
                 //use try-catch to ensure exception won't be thrown is web service is not available
 
-                var track = new TrackService();
+                var track = new TrackPortTypeClient();
                 var tr = new TrackRequest();
                 var upss = new UPSSecurity();
-                var upssSvcAccessToken = new UPSSecurityServiceAccessToken();
-                upssSvcAccessToken.AccessLicenseNumber = _upsSettings.AccessKey;
+                var upssSvcAccessToken = new UPSSecurityServiceAccessToken
+                {
+                    AccessLicenseNumber = _upsSettings.AccessKey
+                };
                 upss.ServiceAccessToken = upssSvcAccessToken;
-                var upssUsrNameToken = new UPSSecurityUsernameToken();
-                upssUsrNameToken.Username = _upsSettings.Username;
-                upssUsrNameToken.Password = _upsSettings.Password;
+                var upssUsrNameToken = new UPSSecurityUsernameToken
+                {
+                    Username = _upsSettings.Username,
+                    Password = _upsSettings.Password
+                };
                 upss.UsernameToken = upssUsrNameToken;
-                track.UPSSecurityValue = upss;
                 var request = new RequestType();
                 string[] requestOption = { "15" };
                 request.RequestOption = requestOption;
                 tr.Request = request;
                 tr.InquiryNumber = trackingNumber;
                 System.Net.ServicePointManager.ServerCertificateValidationCallback += delegate { return true; };
-                var trackResponse = track.ProcessTrack(tr);
+                var trackResponse = track.ProcessTrackAsync(upss, tr).Result.TrackResponse;
                 result.AddRange(trackResponse.Shipment.SelectMany(c => c.Package[0].Activity.Select(ToStatusEvent)).ToList());
             }
             catch (Exception exc)
@@ -128,7 +130,7 @@ namespace Nop.Plugin.Shipping.UPS
                     ev.EventName = _localizationService.GetResource("Plugins.Shipping.UPS.Tracker.Delivered");
                     break;
             }
-            string dateString = string.Concat(activity.Date, " ", activity.Time);
+            var dateString = string.Concat(activity.Date, " ", activity.Time);
             ev.Date = DateTime.ParseExact(dateString, "yyyyMMdd HHmmss", CultureInfo.InvariantCulture);
             ev.CountryCode = activity.ActivityLocation.Address.CountryCode;
             ev.Location = activity.ActivityLocation.Address.City;

@@ -5,9 +5,9 @@ using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
-using Nop.Core.Plugins;
 using Nop.Services.Catalog;
 using Nop.Services.Configuration;
+using Nop.Services.Plugins;
 
 namespace Nop.Services.Payments
 {
@@ -163,7 +163,7 @@ namespace Nop.Services.Payments
             }
 
             //We should strip out any white space or dash in the CC number entered.
-            if (!String.IsNullOrWhiteSpace(processPaymentRequest.CreditCardNumber))
+            if (!string.IsNullOrWhiteSpace(processPaymentRequest.CreditCardNumber))
             {
                 processPaymentRequest.CreditCardNumber = processPaymentRequest.CreditCardNumber.Replace(" ", "");
                 processPaymentRequest.CreditCardNumber = processPaymentRequest.CreditCardNumber.Replace("-", "");
@@ -230,14 +230,14 @@ namespace Nop.Services.Payments
         /// <returns>Additional handling fee</returns>
         public virtual decimal GetAdditionalHandlingFee(IList<ShoppingCartItem> cart, string paymentMethodSystemName)
         {
-            if (String.IsNullOrEmpty(paymentMethodSystemName))
+            if (string.IsNullOrEmpty(paymentMethodSystemName))
                 return decimal.Zero;
 
             var paymentMethod = LoadPaymentMethodBySystemName(paymentMethodSystemName);
             if (paymentMethod == null)
                 return decimal.Zero;
 
-            decimal result = paymentMethod.GetAdditionalHandlingFee(cart);
+            var result = paymentMethod.GetAdditionalHandlingFee(cart);
             if (result < decimal.Zero)
                 result = decimal.Zero;
             if (_shoppingCartSettings.RoundPricesDuringCalculation)
@@ -396,15 +396,15 @@ namespace Nop.Services.Payments
         /// <returns>Masked credit card number</returns>
         public virtual string GetMaskedCreditCardNumber(string creditCardNumber)
         {
-            if (String.IsNullOrEmpty(creditCardNumber))
+            if (string.IsNullOrEmpty(creditCardNumber))
                 return string.Empty;
 
             if (creditCardNumber.Length <= 4)
                 return creditCardNumber;
 
-            string last4 = creditCardNumber.Substring(creditCardNumber.Length - 4, 4);
-            string maskedChars = string.Empty;
-            for (int i = 0; i < creditCardNumber.Length - 4; i++)
+            var last4 = creditCardNumber.Substring(creditCardNumber.Length - 4, 4);
+            var maskedChars = string.Empty;
+            for (var i = 0; i < creditCardNumber.Length - 4; i++)
             {
                 maskedChars += "*";
             }

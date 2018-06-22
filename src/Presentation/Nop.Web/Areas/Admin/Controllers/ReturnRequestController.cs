@@ -1,23 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Nop.Web.Areas.Admin.Models.Orders;
-using Nop.Core;
-using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
-using Nop.Services;
 using Nop.Services.Customers;
-using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
-using Nop.Services.Media;
 using Nop.Services.Messages;
 using Nop.Services.Orders;
 using Nop.Services.Security;
+using Nop.Web.Areas.Admin.Factories;
+using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
+using Nop.Web.Areas.Admin.Models.Orders;
 using Nop.Web.Framework.Controllers;
-using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Web.Areas.Admin.Controllers
@@ -26,84 +20,64 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
-        private readonly IReturnRequestService _returnRequestService;
-        private readonly IOrderService _orderService;
-        private readonly IDateTimeHelper _dateTimeHelper;
+        private readonly ICustomerActivityService _customerActivityService;
         private readonly ICustomerService _customerService;
         private readonly ILocalizationService _localizationService;
-        private readonly IWorkContext _workContext;
-        private readonly IWorkflowMessageService _workflowMessageService;
-        private readonly ICustomerActivityService _customerActivityService;
+        private readonly ILocalizedEntityService _localizedEntityService;
+        private readonly IOrderService _orderService;
         private readonly IPermissionService _permissionService;
-        private readonly IDownloadService _downloadService;
+        private readonly IReturnRequestModelFactory _returnRequestModelFactory;
+        private readonly IReturnRequestService _returnRequestService;
+        private readonly IWorkflowMessageService _workflowMessageService;
 
         #endregion Fields
 
-        #region Constructors
+        #region Ctor
 
-        public ReturnRequestController(IReturnRequestService returnRequestService,
-            IOrderService orderService,
+        public ReturnRequestController(ICustomerActivityService customerActivityService,
             ICustomerService customerService,
-            IDateTimeHelper dateTimeHelper,
             ILocalizationService localizationService,
-            IWorkContext workContext,
-            IWorkflowMessageService workflowMessageService,
-            ICustomerActivityService customerActivityService, 
+            ILocalizedEntityService localizedEntityService,
+            IOrderService orderService,
             IPermissionService permissionService,
-            IDownloadService downloadService)
+            IReturnRequestModelFactory returnRequestModelFactory,
+            IReturnRequestService returnRequestService,
+            IWorkflowMessageService workflowMessageService)
         {
-            this._returnRequestService = returnRequestService;
-            this._orderService = orderService;
-            this._customerService = customerService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._localizationService = localizationService;
-            this._workContext = workContext;
-            this._workflowMessageService = workflowMessageService;
             this._customerActivityService = customerActivityService;
+            this._customerService = customerService;
+            this._localizationService = localizationService;
+            this._localizedEntityService = localizedEntityService;
+            this._orderService = orderService;
             this._permissionService = permissionService;
-            this._downloadService = downloadService;
+            this._returnRequestModelFactory = returnRequestModelFactory;
+            this._returnRequestService = returnRequestService;
+            this._workflowMessageService = workflowMessageService;
         }
 
         #endregion
 
         #region Utilities
 
-        protected virtual void PrepareReturnRequestModel(ReturnRequestModel model,
-            ReturnRequest returnRequest, bool excludeProperties)
+        protected virtual void UpdateLocales(ReturnRequestReason rrr, ReturnRequestReasonModel model)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
-
-            if (returnRequest == null)
-                throw new ArgumentNullException(nameof(returnRequest));
-
-            var orderItem = _orderService.GetOrderItemById(returnRequest.OrderItemId);
-            if (orderItem != null)
+            foreach (var localized in model.Locales)
             {
-                model.ProductId = orderItem.ProductId;
-                model.ProductName = orderItem.Product.Name;
-                model.OrderId = orderItem.OrderId;
-                model.AttributeInfo = orderItem.AttributeDescription;
-                model.CustomOrderNumber = orderItem.Order.CustomOrderNumber;
+                _localizedEntityService.SaveLocalizedValue(rrr,
+                    x => x.Name,
+                    localized.Name,
+                    localized.LanguageId);
             }
-            model.Id = returnRequest.Id;
-            model.CustomNumber = returnRequest.CustomNumber;
-            model.CustomerId = returnRequest.CustomerId;
-            var customer = returnRequest.Customer;
-            model.CustomerInfo = customer.IsRegistered() ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
-            model.Quantity = returnRequest.Quantity;
-            model.ReturnRequestStatusStr = returnRequest.ReturnRequestStatus.GetLocalizedEnum(_localizationService, _workContext);
+        }
 
-            var download = _downloadService.GetDownloadById(returnRequest.UploadedFileId);
-            model.UploadedFileGuid = download != null ? download.DownloadGuid : Guid.Empty;
-            model.CreatedOn = _dateTimeHelper.ConvertToUserTime(returnRequest.CreatedOnUtc, DateTimeKind.Utc);
-            if (!excludeProperties)
+        protected virtual void UpdateLocales(ReturnRequestAction rra, ReturnRequestActionModel model)
+        {
+            foreach (var localized in model.Locales)
             {
-                model.ReasonForReturn = returnRequest.ReasonForReturn;
-                model.RequestedAction = returnRequest.RequestedAction;
-                model.CustomerComments = returnRequest.CustomerComments;
-                model.StaffNotes = returnRequest.StaffNotes;
-                model.ReturnRequestStatusId = returnRequest.ReturnRequestStatusId;
+                _localizedEntityService.SaveLocalizedValue(rra,
+                    x => x.Name,
+                    localized.Name,
+                    localized.LanguageId);
             }
         }
 
@@ -111,7 +85,6 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Methods
 
-        //list
         public virtual IActionResult Index()
         {
             return RedirectToAction("List");
@@ -122,66 +95,37 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageReturnRequests))
                 return AccessDeniedView();
 
-            var model = new ReturnRequestListModel
-            {
-                ReturnRequestStatusList = ReturnRequestStatus.Cancelled.ToSelectList(false).ToList(),
-                ReturnRequestStatusId = -1
-            };
-
-            model.ReturnRequestStatusList.Insert(0, new SelectListItem
-            {
-                Value = "-1",
-                Text = _localizationService.GetResource("Admin.ReturnRequests.SearchReturnRequestStatus.All"),
-                Selected = true
-            });
+            //prepare model
+            var model = _returnRequestModelFactory.PrepareReturnRequestSearchModel(new ReturnRequestSearchModel());
 
             return View(model);
         }
 
         [HttpPost]
-        public virtual IActionResult List(DataSourceRequest command, ReturnRequestListModel model)
+        public virtual IActionResult List(ReturnRequestSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageReturnRequests))
                 return AccessDeniedKendoGridJson();
 
-            var rrs = model.ReturnRequestStatusId == -1 ? null : (ReturnRequestStatus?) model.ReturnRequestStatusId;
-            
-            var startDateValue = model.StartDate == null ? null
-                            : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
+            //prepare model
+            var model = _returnRequestModelFactory.PrepareReturnRequestListModel(searchModel);
 
-            var endDateValue = model.EndDate == null ? null
-                            : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
-
-            var returnRequests = _returnRequestService.SearchReturnRequests(0, 0, 0, model.CustomNumber, rrs, startDateValue, endDateValue, command.Page - 1, command.PageSize);
-            var returnRequestModels = new List<ReturnRequestModel>();
-            foreach (var rr in returnRequests)
-            {
-                var m = new ReturnRequestModel();
-                PrepareReturnRequestModel(m, rr, false);
-                returnRequestModels.Add(m);
-            }
-            var gridModel = new DataSourceResult
-            {
-                Data = returnRequestModels,
-                Total = returnRequests.TotalCount,
-            };
-
-            return Json(gridModel);
+            return Json(model);
         }
 
-        //edit
         public virtual IActionResult Edit(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageReturnRequests))
                 return AccessDeniedView();
 
+            //try to get a return request with the specified id
             var returnRequest = _returnRequestService.GetReturnRequestById(id);
             if (returnRequest == null)
-                //No return request found with the specified id
                 return RedirectToAction("List");
-            
-            var model = new ReturnRequestModel();
-            PrepareReturnRequestModel(model, returnRequest, false);
+
+            //prepare model
+            var model = _returnRequestModelFactory.PrepareReturnRequestModel(null, returnRequest);
+
             return View(model);
         }
 
@@ -192,9 +136,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageReturnRequests))
                 return AccessDeniedView();
 
+            //try to get a return request with the specified id
             var returnRequest = _returnRequestService.GetReturnRequestById(model.Id);
             if (returnRequest == null)
-                //No return request found with the specified id
                 return RedirectToAction("List");
 
             if (ModelState.IsValid)
@@ -209,15 +153,18 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _customerService.UpdateCustomer(returnRequest.Customer);
 
                 //activity log
-                _customerActivityService.InsertActivity("EditReturnRequest", _localizationService.GetResource("ActivityLog.EditReturnRequest"), returnRequest.Id);
+                _customerActivityService.InsertActivity("EditReturnRequest",
+                    string.Format(_localizationService.GetResource("ActivityLog.EditReturnRequest"), returnRequest.Id), returnRequest);
 
                 SuccessNotification(_localizationService.GetResource("Admin.ReturnRequests.Updated"));
-                return continueEditing ? RedirectToAction("Edit", new { id = returnRequest.Id}) : RedirectToAction("List");
+
+                return continueEditing ? RedirectToAction("Edit", new { id = returnRequest.Id }) : RedirectToAction("List");
             }
 
+            //prepare model
+            model = _returnRequestModelFactory.PrepareReturnRequestModel(model, returnRequest, true);
 
-            //If we got this far, something failed, redisplay form
-            PrepareReturnRequestModel(model, returnRequest, true);
+            //if we got this far, something failed, redisplay form
             return View(model);
         }
 
@@ -228,9 +175,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageReturnRequests))
                 return AccessDeniedView();
 
+            //try to get a return request with the specified id
             var returnRequest = _returnRequestService.GetReturnRequestById(model.Id);
             if (returnRequest == null)
-                //No return request found with the specified id
                 return RedirectToAction("List");
 
             var orderItem = _orderService.GetOrderItemById(returnRequest.OrderItemId);
@@ -239,11 +186,12 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ErrorNotification(_localizationService.GetResource("Admin.ReturnRequests.OrderItemDeleted"));
                 return RedirectToAction("Edit", new { id = returnRequest.Id });
             }
-            
-            int queuedEmailId = _workflowMessageService.SendReturnRequestStatusChangedCustomerNotification(returnRequest, orderItem, orderItem.Order.CustomerLanguageId);
-            if (queuedEmailId > 0)
+
+            var queuedEmailIds = _workflowMessageService.SendReturnRequestStatusChangedCustomerNotification(returnRequest, orderItem, orderItem.Order.CustomerLanguageId);
+            if (queuedEmailIds.Any())
                 SuccessNotification(_localizationService.GetResource("Admin.ReturnRequests.Notified"));
-            return RedirectToAction("Edit",  new {id = returnRequest.Id});
+
+            return RedirectToAction("Edit", new { id = returnRequest.Id });
         }
 
         [HttpPost]
@@ -252,19 +200,295 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageReturnRequests))
                 return AccessDeniedView();
 
+            //try to get a return request with the specified id
             var returnRequest = _returnRequestService.GetReturnRequestById(id);
             if (returnRequest == null)
-                //No return request found with the specified id
                 return RedirectToAction("List");
 
             _returnRequestService.DeleteReturnRequest(returnRequest);
 
             //activity log
-            _customerActivityService.InsertActivity("DeleteReturnRequest", _localizationService.GetResource("ActivityLog.DeleteReturnRequest"), returnRequest.Id);
+            _customerActivityService.InsertActivity("DeleteReturnRequest",
+                string.Format(_localizationService.GetResource("ActivityLog.DeleteReturnRequest"), returnRequest.Id), returnRequest);
 
             SuccessNotification(_localizationService.GetResource("Admin.ReturnRequests.Deleted"));
+
             return RedirectToAction("List");
         }
+
+        #region Return request reasons
+
+        public virtual IActionResult ReturnRequestReasonList()
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+                return AccessDeniedView();
+
+            //select "return request" tab
+            SaveSelectedTabName("tab-returnrequest");
+
+            //we just redirect a user to the order settings page
+            return RedirectToAction("Order", "Setting");
+        }
+
+        [HttpPost]
+        public virtual IActionResult ReturnRequestReasonList(ReturnRequestReasonSearchModel searchModel)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+                return AccessDeniedKendoGridJson();
+
+            //prepare model
+            var model = _returnRequestModelFactory.PrepareReturnRequestReasonListModel(searchModel);
+
+            return Json(model);
+        }
+
+        public virtual IActionResult ReturnRequestReasonCreate()
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+                return AccessDeniedView();
+
+            //prepare model
+            var model = _returnRequestModelFactory.PrepareReturnRequestReasonModel(new ReturnRequestReasonModel(), null);
+            
+            return View(model);
+        }
+
+        [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+        public virtual IActionResult ReturnRequestReasonCreate(ReturnRequestReasonModel model, bool continueEditing)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+                return AccessDeniedView();
+
+            if (ModelState.IsValid)
+            {
+                var returnRequestReason = model.ToEntity<ReturnRequestReason>();
+                _returnRequestService.InsertReturnRequestReason(returnRequestReason);
+
+                //locales
+                UpdateLocales(returnRequestReason, model);
+
+                SuccessNotification(_localizationService.GetResource("Admin.Configuration.Settings.Order.ReturnRequestReasons.Added"));
+
+                return continueEditing 
+                    ? RedirectToAction("ReturnRequestReasonEdit", new { id = returnRequestReason.Id })
+                    : RedirectToAction("ReturnRequestReasonList");
+            }
+
+            //prepare model
+            model = _returnRequestModelFactory.PrepareReturnRequestReasonModel(model, null, true);
+
+            //if we got this far, something failed, redisplay form
+            return View(model);
+        }
+
+        public virtual IActionResult ReturnRequestReasonEdit(int id)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+                return AccessDeniedView();
+
+            //try to get a return request reason with the specified id
+            var returnRequestReason = _returnRequestService.GetReturnRequestReasonById(id);
+            if (returnRequestReason == null)
+                return RedirectToAction("ReturnRequestReasonList");
+
+            //prepare model
+            var model = _returnRequestModelFactory.PrepareReturnRequestReasonModel(null, returnRequestReason);
+            
+            return View(model);
+        }
+
+        [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+        public virtual IActionResult ReturnRequestReasonEdit(ReturnRequestReasonModel model, bool continueEditing)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+                return AccessDeniedView();
+
+            //try to get a return request reason with the specified id
+            var returnRequestReason = _returnRequestService.GetReturnRequestReasonById(model.Id);
+            if (returnRequestReason == null)
+                return RedirectToAction("ReturnRequestReasonList");
+
+            if (ModelState.IsValid)
+            {
+                returnRequestReason = model.ToEntity(returnRequestReason);
+                _returnRequestService.UpdateReturnRequestReason(returnRequestReason);
+
+                //locales
+                UpdateLocales(returnRequestReason, model);
+
+                SuccessNotification(_localizationService.GetResource("Admin.Configuration.Settings.Order.ReturnRequestReasons.Updated"));
+
+                if (!continueEditing)
+                    return RedirectToAction("ReturnRequestReasonList");
+
+                //selected tab
+                SaveSelectedTabName();
+
+                return RedirectToAction("ReturnRequestReasonEdit", new { id = returnRequestReason.Id });
+            }
+
+            //prepare model
+            model = _returnRequestModelFactory.PrepareReturnRequestReasonModel(model, returnRequestReason, true);
+
+            //if we got this far, something failed, redisplay form
+            return View(model);
+        }
+
+        [HttpPost]
+        public virtual IActionResult ReturnRequestReasonDelete(int id)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+                return AccessDeniedView();
+
+            //try to get a return request reason with the specified id
+            var returnRequestReason = _returnRequestService.GetReturnRequestReasonById(id) 
+                ?? throw new ArgumentException("No return request reason found with the specified id", nameof(id));
+
+            _returnRequestService.DeleteReturnRequestReason(returnRequestReason);
+
+            SuccessNotification(_localizationService.GetResource("Admin.Configuration.Settings.Order.ReturnRequestReasons.Deleted"));
+
+            return RedirectToAction("ReturnRequestReasonList");
+        }
+
+        #endregion
+
+        #region Return request actions
+
+        public virtual IActionResult ReturnRequestActionList()
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+                return AccessDeniedView();
+
+            //select "return request" tab
+            SaveSelectedTabName("tab-returnrequest");
+
+            //we just redirect a user to the order settings page
+            return RedirectToAction("Order", "Setting");
+        }
+
+        [HttpPost]
+        public virtual IActionResult ReturnRequestActionList(ReturnRequestActionSearchModel searchModel)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+                return AccessDeniedKendoGridJson();
+
+            //prepare model
+            var model = _returnRequestModelFactory.PrepareReturnRequestActionListModel(searchModel);
+
+            return Json(model);
+        }
+
+        public virtual IActionResult ReturnRequestActionCreate()
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+                return AccessDeniedView();
+
+            //prepare model
+            var model = _returnRequestModelFactory.PrepareReturnRequestActionModel(new ReturnRequestActionModel(), null);
+
+            return View(model);
+        }
+
+        [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+        public virtual IActionResult ReturnRequestActionCreate(ReturnRequestActionModel model, bool continueEditing)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+                return AccessDeniedView();
+
+            if (ModelState.IsValid)
+            {
+                var returnRequestAction = model.ToEntity<ReturnRequestAction>();
+                _returnRequestService.InsertReturnRequestAction(returnRequestAction);
+
+                //locales
+                UpdateLocales(returnRequestAction, model);
+
+                SuccessNotification(_localizationService.GetResource("Admin.Configuration.Settings.Order.ReturnRequestActions.Added"));
+
+                return continueEditing 
+                    ? RedirectToAction("ReturnRequestActionEdit", new { id = returnRequestAction.Id }) 
+                    : RedirectToAction("ReturnRequestActionList");
+            }
+
+            //prepare model
+            model = _returnRequestModelFactory.PrepareReturnRequestActionModel(model, null, true);
+
+            //if we got this far, something failed, redisplay form
+            return View(model);
+        }
+
+        public virtual IActionResult ReturnRequestActionEdit(int id)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+                return AccessDeniedView();
+
+            //try to get a return request action with the specified id
+            var returnRequestAction = _returnRequestService.GetReturnRequestActionById(id);
+            if (returnRequestAction == null)
+                return RedirectToAction("ReturnRequestActionList");
+
+            //prepare model
+            var model = _returnRequestModelFactory.PrepareReturnRequestActionModel(null, returnRequestAction);
+
+            return View(model);
+        }
+
+        [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+        public virtual IActionResult ReturnRequestActionEdit(ReturnRequestActionModel model, bool continueEditing)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+                return AccessDeniedView();
+
+            //try to get a return request action with the specified id
+            var returnRequestAction = _returnRequestService.GetReturnRequestActionById(model.Id);
+            if (returnRequestAction == null)
+                return RedirectToAction("ReturnRequestActionList");
+
+            if (ModelState.IsValid)
+            {
+                returnRequestAction = model.ToEntity(returnRequestAction);
+                _returnRequestService.UpdateReturnRequestAction(returnRequestAction);
+
+                //locales
+                UpdateLocales(returnRequestAction, model);
+
+                SuccessNotification(_localizationService.GetResource("Admin.Configuration.Settings.Order.ReturnRequestActions.Updated"));
+
+                if (!continueEditing)
+                    return RedirectToAction("ReturnRequestActionList");
+
+                //selected tab
+                SaveSelectedTabName();
+
+                return RedirectToAction("ReturnRequestActionEdit", new { id = returnRequestAction.Id });
+            }
+
+            //prepare model
+            model = _returnRequestModelFactory.PrepareReturnRequestActionModel(model, returnRequestAction, true);
+
+            //if we got this far, something failed, redisplay form
+            return View(model);
+        }
+
+        [HttpPost]
+        public virtual IActionResult ReturnRequestActionDelete(int id)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+                return AccessDeniedView();
+
+            //try to get a return request action with the specified id
+            var returnRequestAction = _returnRequestService.GetReturnRequestActionById(id)
+                ?? throw new ArgumentException("No return request action found with the specified id", nameof(id));
+
+            _returnRequestService.DeleteReturnRequestAction(returnRequestAction);
+
+            SuccessNotification(_localizationService.GetResource("Admin.Configuration.Settings.Order.ReturnRequestActions.Deleted"));
+
+            return RedirectToAction("ReturnRequestActionList");
+        }
+
+        #endregion
 
         #endregion
     }
