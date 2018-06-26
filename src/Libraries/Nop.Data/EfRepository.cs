@@ -119,7 +119,10 @@ namespace Nop.Data
 
             try
             {
-                Entities.Update(entity);
+                if (!Entities.Local.Any(x => x.Id.Equals(entity.Id)))
+                {
+                    Entities.Update(entity);
+                }
                 _context.SaveChanges();
             }
             catch (DbUpdateException exception)
@@ -140,7 +143,12 @@ namespace Nop.Data
 
             try
             {
-                Entities.UpdateRange(entities);
+                entities = entities.Where(x => !Entities.Local.Any(l => l.Id.Equals(x.Id)));
+                var enumerable = entities as T[] ?? entities.ToArray();
+                if (enumerable.Any())
+                {
+                    Entities.UpdateRange(enumerable);
+                }
                 _context.SaveChanges();
             }
             catch (DbUpdateException exception)
