@@ -1877,6 +1877,21 @@ set @resources='
   <LocaleResource Name="Admin.ContentManagement.News.Comments.List.NewsItemId.Hint">
     <Value>Search by news item ID.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.ActivityLog">
+    <Value>Activity log</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.ActivityLog.ActivityLog">
+    <Value>Activity log</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.ActivityLog.ActivityLog.Fields.ActivityLogType">
+    <Value>Activity log Type</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.ActivityLog.ActivityLog.Fields.ActivityLogType.Hint">
+    <Value>The activity log Type.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.ActivityLog.ActivityLog.Fields.ActivityLogTypeColumn">
+    <Value>Activity log type</Value>
+  </LocaleResource>
 </Language>
 '
 

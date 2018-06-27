@@ -4231,19 +4231,19 @@
     <Value>The ACL has been updated successfully.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.ActivityLog">
-    <Value>Activity Log</Value>
+    <Value>Activity log</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.ActivityLog.ActivityLog">
-    <Value>Activity Log</Value>
+    <Value>Activity log</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.ActivityLog.ActivityLog.Fields.ActivityLogType">
-    <Value>Activity Log Type</Value>
+    <Value>Activity log Type</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.ActivityLog.ActivityLog.Fields.ActivityLogType.Hint">
-    <Value>The Activity Log Type.</Value>
+    <Value>The activity log Type.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.ActivityLog.ActivityLog.Fields.ActivityLogTypeColumn">
-    <Value>Activity Log Type</Value>
+    <Value>Activity log type</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.ActivityLog.ActivityLog.Fields.Comment">
     <Value>Message</Value>
