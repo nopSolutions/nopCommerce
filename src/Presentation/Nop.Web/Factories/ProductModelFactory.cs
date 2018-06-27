@@ -1421,7 +1421,7 @@ namespace Nop.Web.Factories
                     Description = reviewType.GetLocalized(entity => entity.Description),
                     VisibleToAllCustomers = reviewType.VisibleToAllCustomers,
                     DisplayOrder = reviewType.DisplayOrder,
-                    IsRequired = reviewType.IsRequired,
+                    IsRequired = reviewType.IsRequired,                    
                 });
             }            
 
@@ -1458,7 +1458,7 @@ namespace Nop.Web.Factories
                         Name = q.ReviewType.GetLocalized(x => x.Name),
                         VisibleToAllCustomers = q.ReviewType.VisibleToAllCustomers || _workContext.CurrentCustomer.Id == pr.CustomerId,
                     });
-                }               
+                }
 
                 model.Items.Add(productReviewModel);
             }
@@ -1479,36 +1479,27 @@ namespace Nop.Web.Factories
                 model.AddAdditionalProductReviewList.Add(reviewTypeMappingModel);
             }
 
-            model.AddProductReview.CanCurrentCustomerLeaveReview = _catalogSettings.AllowAnonymousUsersToReviewProduct || !_workContext.CurrentCustomer.IsGuest();
-            model.AddProductReview.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnProductReviewPage;
-
-            return model;
-        }
-
-        /// <summary>
-        /// Calculate average review rating
-        /// </summary>
-        /// <param name="model">Product reviews model</param>
-        /// <returns>Product reviews model</returns>
-        public virtual ProductReviewsModel CalcAverageReviewRating(ProductReviewsModel model)
-        {
-            foreach (var rt in model.AddAdditionalProductReviewList)
+            //Average rating
+            foreach (var rtm in model.ReviewTypeList)
             {
-                //Average rating
                 var totalRating = 0;
                 var totalCount = 0;
                 foreach (var item in model.Items)
                 {
-                    foreach (var q in item.AdditionalProductReviewList.Where(w => w.ReviewTypeId == rt.ReviewTypeId))
+                    foreach (var q in item.AdditionalProductReviewList.Where(w => w.ReviewTypeId == rtm.Id))
                     {
                         totalRating += q.Rating;
                         totalCount = ++totalCount;
                     }
                 }
 
-                model.AverageRating.Add(rt.ReviewTypeId, value: (double)totalRating / (totalCount > 0 ? totalCount : 1));
-            }
-                return model;
+                rtm.AverageRating = (double)totalRating / (totalCount > 0 ? totalCount : 1);
+            }          
+
+            model.AddProductReview.CanCurrentCustomerLeaveReview = _catalogSettings.AllowAnonymousUsersToReviewProduct || !_workContext.CurrentCustomer.IsGuest();
+            model.AddProductReview.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnProductReviewPage;
+
+            return model;
         }
 
         /// <summary>

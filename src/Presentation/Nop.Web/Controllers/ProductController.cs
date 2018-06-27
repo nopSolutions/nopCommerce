@@ -383,7 +383,6 @@ namespace Nop.Web.Controllers
                     _eventPublisher.Publish(new ProductReviewApprovedEvent(productReview));
 
                 model = _productModelFactory.PrepareProductReviewsModel(model, product);
-                model = _productModelFactory.CalcAverageReviewRating(model);
                 model.AddProductReview.Title = null;
                 model.AddProductReview.ReviewText = null;
 
