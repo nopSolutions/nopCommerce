@@ -1,12 +1,5 @@
 @model PaymentMethodsModel
 
-@{    
-    //page title
-    ViewBag.Title = T("Admin.Configuration.Payment.Methods").Text;
-    //active menu item (system name)
-    Html.SetActiveMenuItemSystemName("PaymentMethods");
-}
-
 <nop-antiforgery-token />
 <div class="panel-group">
     @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.PaymentMethodListTop, additionalData = Model })

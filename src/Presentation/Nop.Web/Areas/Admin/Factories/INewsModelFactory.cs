@@ -9,6 +9,14 @@ namespace Nop.Web.Areas.Admin.Factories
     public partial interface INewsModelFactory
     {
         /// <summary>
+        /// Prepare news content model
+        /// </summary>
+        /// <param name="newsContentModel">News content model</param>
+        /// <param name="filterByNewsItemId">Filter by news item ID</param>
+        /// <returns>News content model</returns>
+        NewsContentModel PrepareNewsContentModel(NewsContentModel newsContentModel, int? filterByNewsItemId);
+        
+        /// <summary>
         /// Prepare news item search model
         /// </summary>
         /// <param name="searchModel">News item search model</param>
@@ -43,8 +51,8 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare paged news comment list model
         /// </summary>
         /// <param name="searchModel">News comment search model</param>
-        /// <param name="newsItem">News item; pass null to prepare comment models for all news items</param>
+        /// <param name="newsItemId">News item ID; pass null to prepare comment models for all news items</param>
         /// <returns>News comment list model</returns>
-        NewsCommentListModel PrepareNewsCommentListModel(NewsCommentSearchModel searchModel, NewsItem newsItem);
+        NewsCommentListModel PrepareNewsCommentListModel(NewsCommentSearchModel searchModel, int? newsItemId);
     }
 }

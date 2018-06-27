@@ -56,6 +56,24 @@ namespace Nop.Web.Areas.Admin.Factories
         #region Methods
 
         /// <summary>
+        /// Prepare blog content model
+        /// </summary>
+        /// <param name="blogContentModel">Blog content model</param>
+        /// <returns>Blog content model</returns>
+        public virtual BlogContentModel PrepareBlogContentModel(BlogContentModel blogContentModel, int? filterByBlogPostId)
+        {
+            if (blogContentModel == null)
+                throw new ArgumentNullException(nameof(blogContentModel));
+
+            //prepare nested search models
+            PrepareBlogPostSearchModel(blogContentModel.BlogPosts);
+            var blogPost = _blogService.GetBlogPostById(filterByBlogPostId ?? 0);
+            PrepareBlogCommentSearchModel(blogContentModel.BlogComments, blogPost);
+
+            return blogContentModel;
+        }
+
+        /// <summary>
         /// Prepare blog post search model
         /// </summary>
         /// <param name="searchModel">Blog post search model</param>
@@ -177,6 +195,8 @@ namespace Nop.Web.Areas.Admin.Factories
                 Value = "2"
             });
 
+            searchModel.BlogPostId = blogPost?.Id;
+
             //prepare page parameters
             searchModel.SetGridPageSize();
 
@@ -187,9 +207,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare paged blog comment list model
         /// </summary>
         /// <param name="searchModel">Blog comment search model</param>
-        /// <param name="blogPost">Blog post; pass null to prepare comment models for all blog posts</param>
+        /// <param name="blogPostId">Blog post ID</param>
         /// <returns>Blog comment list model</returns>
-        public virtual BlogCommentListModel PrepareBlogCommentListModel(BlogCommentSearchModel searchModel, BlogPost blogPost)
+        public virtual BlogCommentListModel PrepareBlogCommentListModel(BlogCommentSearchModel searchModel, int? blogPostId)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -202,7 +222,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var isApprovedOnly = searchModel.SearchApprovedId == 0 ? null : searchModel.SearchApprovedId == 1 ? true : (bool?)false;
 
             //get comments
-            var comments = _blogService.GetAllComments(blogPostId: blogPost?.Id,
+            var comments = _blogService.GetAllComments(blogPostId: blogPostId,
                 approved: isApprovedOnly,
                 fromUtc: createdOnFromValue,
                 toUtc: createdOnToValue,

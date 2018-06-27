@@ -37,6 +37,23 @@ namespace Nop.Web.Areas.Admin.Factories
         #region Methods
 
         /// <summary>
+        /// Prepare tax configuration model
+        /// </summary>
+        /// <param name="taxConfigurationModel">Tax configuration model</param>
+        /// <returns>Tax configuration model</returns>
+        public virtual TaxConfigurationModel PrepareTaxConfigurationModel(TaxConfigurationModel taxConfigurationModel)
+        {
+            if (taxConfigurationModel == null)
+                throw new ArgumentNullException(nameof(taxConfigurationModel));
+
+            //prepare nested search models
+            PrepareTaxProviderSearchModel(taxConfigurationModel.TaxProviders);
+            PrepareTaxCategorySearchModel(taxConfigurationModel.TaxCategories);
+
+            return taxConfigurationModel;
+        }
+
+        /// <summary>
         /// Prepare tax provider search model
         /// </summary>
         /// <param name="searchModel">Tax provider search model</param>

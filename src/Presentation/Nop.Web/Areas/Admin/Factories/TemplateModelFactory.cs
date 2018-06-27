@@ -40,6 +40,25 @@ namespace Nop.Web.Areas.Admin.Factories
         #region Methods
 
         /// <summary>
+        /// Prepare templates model
+        /// </summary>
+        /// <param name="model">Templates model</param>
+        /// <returns>Templates model</returns>
+        public virtual TemplatesModel PrepareTemplatesModel(TemplatesModel model)
+        {
+            if (model == null)
+                throw new ArgumentNullException(nameof(model));
+
+            //prepare nested search models
+            PrepareCategoryTemplateSearchModel(model.TemplatesCategory);
+            PrepareManufacturerTemplateSearchModel(model.TemplatesManufacturer);
+            PrepareProductTemplateSearchModel(model.TemplatesProduct);
+            PrepareTopicTemplateSearchModel(model.TemplatesTopic);
+
+            return model;
+        }
+
+        /// <summary>
         /// Prepare category template search model
         /// </summary>
         /// <param name="searchModel">Category template search model</param>

@@ -1,0 +1,41 @@
+﻿@model TemplatesModel
+
+@inject IEventPublisher eventPublisher
+
+@{
+    //page title
+    ViewBag.Title = T("Admin.System.Templates").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Templates");
+}
+
+<nop-antiforgery-token />
+
+<form asp-controller="Templates" asp-action="List" method="post">
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("Admin.System.Templates")
+        </h1>
+    </div>
+
+    <div class="content">
+        <div class="form-horizontal">
+            <nop-tabs id="templates-tabs">
+                <nop-tab asp-name="tab-templates-category" asp-title="@T("Admin.System.Templates.Category")" asp-default="true">@await Html.PartialAsync("_List.Category", Model.TemplatesCategory)</nop-tab>
+                <nop-tab asp-name="tab-templates-manufacturer" asp-title="@T("Admin.System.Templates.Manufacturer")">@await Html.PartialAsync("_List.Manufacturer", Model.TemplatesManufacturer)</nop-tab>
+                <nop-tab asp-name="tab-templates-product" asp-title="@T("Admin.System.Templates.Product")">@await Html.PartialAsync("_List.Product", Model.TemplatesProduct)</nop-tab>
+                <nop-tab asp-name="tab-templates-topic" asp-title="@T("Admin.System.Templates.Topic")">@await Html.PartialAsync("_List.Topic", Model.TemplatesTopic)</nop-tab>
+            </nop-tabs>
+        </div>
+    </div>
+
+    @{
+        //custom tabs
+        var eventMessage = new AdminTabStripCreated(this.Html, "templates-tabs");
+        eventPublisher.Publish(eventMessage);
+        foreach (var eventBlock in eventMessage.BlocksToRender)
+        {
+            @eventBlock
+        }
+    }
+</form>

@@ -1,5 +1,5 @@
 ﻿using Nop.Web.Areas.Admin.Models.Common;
-using Nop.Web.Areas.Admin.Models.Orders;
+using Nop.Web.Areas.Admin.Models.Reports;
 using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Areas.Admin.Models.Home

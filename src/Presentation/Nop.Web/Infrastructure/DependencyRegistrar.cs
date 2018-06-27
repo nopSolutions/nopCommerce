@@ -65,6 +65,7 @@ namespace Nop.Web.Infrastructure
             builder.RegisterType<ProductModelFactory>().As<IProductModelFactory>().InstancePerLifetimeScope();
             builder.RegisterType<ProductAttributeModelFactory>().As<IProductAttributeModelFactory>().InstancePerLifetimeScope();
             builder.RegisterType<ProductReviewModelFactory>().As<IProductReviewModelFactory>().InstancePerLifetimeScope();
+            builder.RegisterType<ReportModelFactory>().As<IReportModelFactory>().InstancePerLifetimeScope();
             builder.RegisterType<QueuedEmailModelFactory>().As<IQueuedEmailModelFactory>().InstancePerLifetimeScope();
             builder.RegisterType<RecurringPaymentModelFactory>().As<IRecurringPaymentModelFactory>().InstancePerLifetimeScope();
             builder.RegisterType<ReturnRequestModelFactory>().As<IReturnRequestModelFactory>().InstancePerLifetimeScope();
