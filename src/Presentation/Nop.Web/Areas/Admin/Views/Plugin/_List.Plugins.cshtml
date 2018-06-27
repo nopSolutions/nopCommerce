@@ -1,7 +1,7 @@
 ﻿@model PluginSearchModel
 
 @using System.Text.Encodings.Web
-@inject Nop.Services.Plugins.IUploadService uploadService
+@using Nop.Core.Plugins
 
 <form asp-controller="Plugin" asp-action="List" method="post" id="plugins-form-local">
     <div class="content-header clearfix">
@@ -199,15 +199,15 @@
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
                                     <h4 class="modal-title" id="plugindelete-confirmation-title">@T("Admin.Common.AreYouSure")</h4>
                                 </div>
-                                    <div class="form-horizontal">
-                                        <div class="modal-body">
-                                            @T("Admin.Common.DeleteConfirmation")
-                                        </div>
-                                        <div class="modal-footer">
-                                            <span class="btn btn-default" data-dismiss="modal">@T("Admin.Common.NoCancel")</span>
-                                            <button type="submit" class="btn bg-red pull-right">@T("Admin.Common.Delete")</button>
-                                        </div>
-                                    </div>                                    
+                                <div class="form-horizontal">
+                                    <div class="modal-body">
+                                        @T("Admin.Common.DeleteConfirmation")
+                                    </div>
+                                    <div class="modal-footer">
+                                        <span class="btn btn-default" data-dismiss="modal">@T("Admin.Common.NoCancel")</span>
+                                        <button type="submit" class="btn bg-red pull-right">@T("Admin.Common.Delete")</button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <script>
@@ -228,7 +228,7 @@
                                     });
                             }
                         </script>
-                    </div> 
+                    </div>
 
                     <div>
                         <input type="submit" id="btnRefreshList" style="display: none" />
@@ -281,7 +281,7 @@
                                 @T("Admin.Configuration.Plugins.Upload.Hint1")
                             </li>
                             <li>
-                                @string.Format(T("Admin.Configuration.Plugins.Upload.Hint2").Text, uploadService.UploadedItemsFileName)
+                                @string.Format(T("Admin.Configuration.Plugins.Upload.Hint2").Text, NopPluginDefaults.UploadedItemsFileName)
                             </li>
                             <li>
                                 <em>@T("Admin.Configuration.Plugins.Upload.Hint3")</em>
