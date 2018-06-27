@@ -11191,6 +11191,12 @@ namespace Nop.Services.Installation
                 },
                 new ActivityLogType
                 {
+                    SystemKeyword = "AddNewReviewType",
+                    Enabled = true,
+                    Name = "Add a new review type"
+                },
+                new ActivityLogType
+                {
                     SystemKeyword = "AddNewVendor",
                     Enabled = true,
                     Name = "Add a new vendor"
@@ -11404,6 +11410,12 @@ namespace Nop.Services.Installation
                     SystemKeyword = "DeleteReturnRequest",
                     Enabled = true,
                     Name = "Delete a return request"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "DeleteReviewType",
+                    Enabled = true,
+                    Name = "Delete a review type"
                 },
                 new ActivityLogType
                 {
@@ -11650,6 +11662,12 @@ namespace Nop.Services.Installation
                     SystemKeyword = "EditReturnRequest",
                     Enabled = true,
                     Name = "Edit a return request"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "EditReviewType",
+                    Enabled = true,
+                    Name = "Edit a review type"
                 },
                 new ActivityLogType
                 {

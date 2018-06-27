@@ -1241,6 +1241,87 @@ set @resources='
   <LocaleResource Name="Admin.System.Warnings.Errors">
     <Value>The store has some error(s) or warning(s). Please find more information on the Warnings page.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Settings.ReviewType">
+    <Value>Review types</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Settings.ReviewType.Added">
+    <Value>The new review type has been added successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Settings.ReviewType.AddNew">
+    <Value>Add a new review type</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Settings.ReviewType.BackToList">
+    <Value>back to catalog settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Settings.ReviewType.Deleted">
+    <Value>The review type has been deleted successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Settings.ReviewType.Description">
+    <Value>You can configure a list of review types if you think that a basic review is not enough.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Settings.ReviewType.EditDetails">
+    <Value>Edit review type details</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Settings.ReviewType.Fields.Description">
+    <Value>Description</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Settings.ReviewType.Fields.Description.Hint">
+    <Value>The description of the review type.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Settings.ReviewType.Fields.Description.Required">
+    <Value>Please provide a description.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Settings.ReviewType.Fields.DisplayOrder">
+    <Value>Display order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Settings.ReviewType.Fields.DisplayOrder.Hint">
+    <Value>The review type display order. 1 represents the first item on the list.</Value>
+  </LocaleResource> 
+  <LocaleResource Name="Admin.Settings.ReviewType.Fields.IsRequired">
+    <Value>Required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Settings.ReviewType.Fields.IsRequired.Hint">
+    <Value>When an attribute is required, the customer must choose an appropriate the rating value before they can continue.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Settings.ReviewType.Fields.Name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Settings.ReviewType.Fields.Name.Hint">
+    <Value>The name of the review type.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Settings.ReviewType.Fields.Name.Required">
+    <Value>Please provide a name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Settings.ReviewType.Fields.VisibleToAllCustomers">
+    <Value>Visible to all customers</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Settings.ReviewType.Fields.VisibleToAllCustomers.Hint">
+    <Value>Sets visibility of the review type for all customers.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Settings.ReviewType.Updated">
+    <Value>The review type has been updated successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.AddNewReviewType">
+    <Value>Added a new review type (ID = {0})</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.EditReviewType">
+    <Value>Edited a review type (ID = {0})</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.DeleteReviewType">
+   <Value>Deleted a review type (ID = {0})</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.AdditionalProductReviews.Fields.Description">
+    <Value>Description</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.AdditionalProductReviews.Fields.Name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.AdditionalProductReviews.Fields.Rating">
+    <Value>Rating</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.AdditionalProductReviews.Fields.VisibleToAllCustomers">
+    <Value>Visible to all customers</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -1600,6 +1681,30 @@ IF NOT EXISTS (SELECT 1 FROM [ActivityLogType] WHERE [SystemKeyword] = N'DeleteV
 BEGIN
 	INSERT [ActivityLogType] ([SystemKeyword], [Name], [Enabled])
 	VALUES (N'DeleteVendorAttributeValue', N'Delete a vendor attribute value', N'true')
+END
+GO
+
+--new activity type
+IF NOT EXISTS (SELECT 1 FROM [ActivityLogType] WHERE [SystemKeyword] = N'AddNewReviewType')
+BEGIN
+	INSERT [ActivityLogType] ([SystemKeyword], [Name], [Enabled])
+	VALUES (N'AddNewReviewType', N'Add a new review type', N'true')
+END
+GO
+
+--new activity type
+IF NOT EXISTS (SELECT 1 FROM [ActivityLogType] WHERE [SystemKeyword] = N'DeleteReviewType')
+BEGIN
+	INSERT [ActivityLogType] ([SystemKeyword], [Name], [Enabled])
+	VALUES (N'DeleteReviewType', N'Delete a review type', N'true')
+END
+GO
+
+--new activity type
+IF NOT EXISTS (SELECT 1 FROM [ActivityLogType] WHERE [SystemKeyword] = N'EditReviewType')
+BEGIN
+	INSERT [ActivityLogType] ([SystemKeyword], [Name], [Enabled])
+	VALUES (N'EditReviewType', N'Edit a review type', N'true')
 END
 GO
 
@@ -3058,3 +3163,51 @@ BEGIN
 	VALUES (N'adminareasettings.checkcopyrightremovalkey', N'true', 0)
 END
 GO
+
+--Review type
+IF NOT EXISTS (SELECT 1 FROM sys.objects WHERE object_id = object_id(N'[ReviewType]') AND objectproperty(object_id, N'IsUserTable') = 1)
+BEGIN
+	CREATE TABLE [dbo].[ReviewType](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Name] [nvarchar](max) NOT NULL,
+	[Description] [nvarchar](max) NOT NULL,
+	[DisplayOrder] [int] NOT NULL,	
+	[VisibleToAllCustomers] [bit] NOT NULL,
+	[IsRequired] [bit] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = ON, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, FILLFACTOR = 80) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+
+END
+GO
+
+--Product review and review type mapping
+IF NOT EXISTS (SELECT 1 FROM sys.objects WHERE object_id = object_id(N'[ProductReview_ReviewType_Mapping]') AND objectproperty(object_id, N'IsUserTable') = 1)
+BEGIN
+	CREATE TABLE [dbo].[ProductReview_ReviewType_Mapping](
+		[Id] [int] IDENTITY(1,1) NOT NULL,
+		[ProductReviewID] [int] NOT NULL,
+		[ReviewTypeID] [int] NOT NULL,
+		[Rating] [int] NOT NULL,
+	PRIMARY KEY CLUSTERED 
+	(
+		[Id] ASC
+	)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = ON, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, FILLFACTOR = 80) ON [PRIMARY]
+	) ON [PRIMARY]	
+
+	ALTER TABLE [dbo].[ProductReview_ReviewType_Mapping]  WITH CHECK ADD  CONSTRAINT [ProductReviewReviewTypeRel_ProductReview] FOREIGN KEY([ProductReviewID])
+	REFERENCES [dbo].[ProductReview] ([Id])
+	ON DELETE CASCADE	
+
+	ALTER TABLE [dbo].[ProductReview_ReviewType_Mapping] CHECK CONSTRAINT [ProductReviewReviewTypeRel_ProductReview]	
+
+	ALTER TABLE [dbo].[ProductReview_ReviewType_Mapping]  WITH CHECK ADD  CONSTRAINT [ProductReviewReviewTypeRel_ReviewType] FOREIGN KEY([ReviewTypeID])
+	REFERENCES [dbo].[ReviewType] ([Id])
+	ON DELETE CASCADE	
+
+	ALTER TABLE [dbo].[ProductReview_ReviewType_Mapping] CHECK CONSTRAINT [ProductReviewReviewTypeRel_ReviewType]	
+END
+GO
+

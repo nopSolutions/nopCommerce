@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
@@ -323,6 +324,20 @@ namespace Nop.Web.Areas.Admin.Controllers
                           })
                 .ToList();
             return Json(result);
+        }
+
+        [HttpPost]
+        public virtual IActionResult ProductReviewReviewTypeMappingList(ProductReviewReviewTypeMappingSearchModel searchModel)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProductReviews))
+                return AccessDeniedKendoGridJson();
+            var productReview = _productService.GetProductReviewById(searchModel.ProductReviewId)
+                ?? throw new ArgumentException("No product review found with the specified id");
+
+            //prepare model
+            var model = _productReviewModelFactory.PrepareProductReviewReviewTypeMappingListModel(searchModel, productReview);
+
+            return Json(model);
         }
 
         #endregion
