@@ -5,7 +5,7 @@ using Nop.Services.Catalog;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Security;
-using Nop.Web.Areas.Admin.Extensions;
+using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Web.Framework.Mvc.Filters;
@@ -115,7 +115,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                var reviewType = model.ToEntity();
+                var reviewType = model.ToEntity<ReviewType>();
                 _reviewTypeService.InsertReviewType(reviewType);                
 
                 //activity log

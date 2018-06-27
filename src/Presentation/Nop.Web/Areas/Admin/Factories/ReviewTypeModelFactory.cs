@@ -3,7 +3,7 @@ using System.Linq;
 using Nop.Core.Domain.Catalog;
 using Nop.Services.Catalog;
 using Nop.Services.Localization;
-using Nop.Web.Areas.Admin.Extensions;
+using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Factories;
@@ -70,7 +70,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new ReviewTypeListModel
             {
                 //fill in model values from the entity
-                Data = reviewTypes.PaginationByRequestModel(searchModel).Select(reviewType => reviewType.ToModel()),
+                Data = reviewTypes.PaginationByRequestModel(searchModel).Select(reviewType => reviewType.ToModel<ReviewTypeModel>()),
                 Total = reviewTypes.Count
             };
 
@@ -92,7 +92,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (reviewType != null)
             {
                 //fill in model values from the entity
-                model = model ?? reviewType.ToModel();
+                model = model ?? reviewType.ToModel<ReviewTypeModel>();
 
                 //define localized model configuration action
                 localizedModelConfiguration = (locale, languageId) =>

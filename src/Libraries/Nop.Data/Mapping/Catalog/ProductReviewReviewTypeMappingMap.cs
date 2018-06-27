@@ -1,4 +1,6 @@
-﻿using Nop.Core.Domain.Catalog;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Nop.Core.Domain.Catalog;
 
 namespace Nop.Data.Mapping.Catalog
 {
@@ -7,23 +9,30 @@ namespace Nop.Data.Mapping.Catalog
     /// </summary>
     public partial class ProductReviewReviewTypeMappingMap : NopEntityTypeConfiguration<ProductReviewReviewTypeMapping>
     {
+        #region Methods
+
         /// <summary>
-        /// Ctor
+        /// Configures the entity
         /// </summary>
-        public ProductReviewReviewTypeMappingMap()
+        /// <param name="builder">The builder to be used to configure the entity</param>
+        public override void Configure(EntityTypeBuilder<ProductReviewReviewTypeMapping> builder)
         {
-            this.ToTable("ProductReview_ReviewType_Mapping");
-            this.HasKey(pam => pam.Id);
+            builder.ToTable(NopMappingDefaults.ProductReview_ReviewTypeTable);
+            builder.HasKey(prrt => prrt.Id);
 
-            this.HasRequired(pam => pam.ProductReview)
+            builder.HasOne(prrt => prrt.ProductReview)
                 .WithMany(r => r.ProductReviewReviewTypeMappingEntries)
-                .HasForeignKey(pam => pam.ProductReviewId)
-                .WillCascadeOnDelete(true);
+                .HasForeignKey(prrt => prrt.ProductReviewId)
+                .OnDelete(DeleteBehavior.Cascade);
 
-            this.HasRequired(pam => pam.ReviewType)
+            builder.HasOne(pam => pam.ReviewType)
                 .WithMany()
-                .HasForeignKey(pam => pam.ReviewTypeId)
-                .WillCascadeOnDelete(true);
+                .HasForeignKey(prrt => prrt.ReviewTypeId)
+                .OnDelete(DeleteBehavior.Cascade);            
+
+            base.Configure(builder);
         }
+
+        #endregion
     }
 }

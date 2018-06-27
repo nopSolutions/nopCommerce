@@ -30,6 +30,11 @@ namespace Nop.Data.Mapping
         /// Gets a name of the Product-ProductTag mapping table
         /// </summary>
         public static string ProductProductTagTable => "Product_ProductTag_Mapping";
+        
+        /// <summary>
+        /// Gets a name of the ProductReview_ReviewType mapping table
+        /// </summary>
+        public static string ProductReview_ReviewTypeTable => "ProductReview_ReviewType_Mapping";
 
         /// <summary>
         /// Gets a name of the Product-SpecificationAttribute mapping table
