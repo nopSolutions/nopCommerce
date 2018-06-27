@@ -1322,6 +1322,36 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.AdditionalProductReviews.Fields.VisibleToAllCustomers">
     <Value>Visible to all customers</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.ExternalAuthenticationMethods.BackToList">
+    <Value>back to external authentication method list</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.ShowCustomersJoinDate">
+    <Value>Show customers join date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.ShowCustomersJoinDate.Hint">
+    <Value>A value indicating whether to show customers join date.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.Captcha.Instructions">
+    <Value><![CDATA[<p>CAPTCHA is a program that can tell whether its user is a human or a computer. You''ve probably seen them — colorful images with distorted text at the bottom of Web registration forms. CAPTCHAs are used by many websites to prevent abuse from "bots" or automated programs usually written to generate spam. No computer programcan read distorted text as well as humans can, so bots cannot navigate sites protected by CAPTCHAs. nopCommerce uses <a href="http://www.google.com/recaptcha" target="_blank">reCAPTCHA</a>.</p>]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.OrderCancelled.CustomerNotification">
+	  <Value>This message template is used to notify a customer that the certain order was cancelled. The order can ba cancelled by a customer on the account page or by store owner in Customers - Customers in Orders tab or in Sales - Orders.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.RecurringPaymentCancelled.CustomerNotification">
+	  <Value>This message template is used to notify a customer that the certain recurring payment is cancelled. Payment can be cancelled by a customer in the account page or by a store owner in Sales - Recurring payments in History tab by clicking "Cancel recurring payment" button.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.RecurringPaymentCancelled.StoreOwnerNotification">
+	  <Value>This message template is used to notify a store owner that the certain recurring payment is cancelled. Payment can be cancelled by a customer in the account page or by a store owner in Sales - Recurring payments in History tab by clicking "Cancel recurring payment" button.</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Configuration.Languages.Resources.SearchResourceName.Hint">
+    <Value>Search for the name of a resource. These are system-internal names for a language entry. All resource names with ''admin.'' in their names, for example, are only displayed in the admin center, all others in the public area of the shop. Resource names with ''hint.'' in the name are helps like this.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.CategoryBreadcrumbEnabled.Hint">
+    <Value>Select to enable  the category path (breadcrumb). This is the bar at the top of the screen that indicates which categories and subcategories the product was viewed in on the product pages. Each sub-element of the bar is a separate hyperlink.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Stores.Fields.SslEnabled.Hint">
+    <Value>Check if your store will be SSL secured. SSL (Secure Socket Layer) is the standard security technology for establishing an encrypted connection between a web server and the browser. This ensures that all data exchanged between web server and browser arrives unchanged.</Value>
+  </LocaleResource>
 </Language>
 '
 

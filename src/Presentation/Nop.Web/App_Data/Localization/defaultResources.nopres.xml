@@ -4720,7 +4720,7 @@
     <Value>External authentication</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.ExternalAuthenticationMethods.BackToList">
-    <Value>back to extenal authentication method list</Value>
+    <Value>back to external authentication method list</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.ExternalAuthenticationMethods.Configure">
     <Value>Configure</Value>
@@ -4867,7 +4867,7 @@
     <Value>Resource name</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Languages.Resources.SearchResourceName.Hint">
-    <Value>Search by a specific resource.</Value>
+    <Value>Search for the name of a resource. These are system-internal names for a language entry. All resource names with 'admin.' in their names, for example, are only displayed in the admin center, all others in the public area of the shop. Resource names with 'hint.' in the name are helps like this.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Languages.Resources.SearchResourceValue">
     <Value>Value</Value>
@@ -5326,7 +5326,7 @@
     <Value>Category breadcrumb enabled</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.CategoryBreadcrumbEnabled.Hint">
-    <Value>Check to show category breadcrumb.</Value>
+    <Value>Select to enable  the category path (breadcrumb). This is the bar at the top of the screen that indicates which categories and subcategories the product was viewed in on the product pages. Each sub-element of the bar is a separate hyperlink.</Value>
   </LocaleResource>  
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.CompareProductsEnabled">
     <Value>'Compare Products' enabled</Value>
@@ -6124,10 +6124,10 @@
     <Value>Require account creation to purchase downloadable products.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.ShowCustomersJoinDate">
-    <Value>Show customers' join date</Value>
+    <Value>Show customers join date</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.ShowCustomersJoinDate.Hint">
-    <Value>A value indicating whether to show customers' join date.</Value>
+    <Value>A value indicating whether to show customers join date.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.ShowCustomersLocation">
     <Value>Show customers' location</Value>
@@ -6541,8 +6541,8 @@
     <Value>The goal of the canonicalization process is to transform a URL into a canonical URL so it is possible to determine if two syntactically different URLs may be equivalent.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.Captcha.Instructions">
-    <Value><![CDATA[<p>CAPTCHA is a program that can tell whether its user is a human or a computer. You've probably seen them — colorful images with distorted text at the bottom ofWeb registration forms. CAPTCHAs are used by many websites to prevent abuse from "bots" or automated programs usually written to generate spam. No computer programcan read distorted text as well as humans can, so bots cannot navigate sites protectedby CAPTCHAs. nopCommerce uses <a href="http://www.google.com/recaptcha" target="_blank">reCAPTCHA</a>.</p>]]></Value>
-  </LocaleResource>  
+    <Value><![CDATA[<p>CAPTCHA is a program that can tell whether its user is a human or a computer. You've probably seen them — colorful images with distorted text at the bottom of Web registration forms. CAPTCHAs are used by many websites to prevent abuse from "bots" or automated programs usually written to generate spam. No computer programcan read distorted text as well as humans can, so bots cannot navigate sites protected by CAPTCHAs. nopCommerce uses <a href="http://www.google.com/recaptcha" target="_blank">reCAPTCHA</a>.</p>]]></Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaAppropriateKeysNotEnteredError">
     <Value>Captcha is enabled but the appropriate keys are not entered</Value>
   </LocaleResource>  
@@ -8809,7 +8809,7 @@
     <Value>SSL enabled</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Stores.Fields.SslEnabled.Hint">
-    <Value>Check if your store will be SSL secured.</Value>
+    <Value>Check if your store will be SSL secured. SSL (Secure Socket Layer) is the standard security technology for establishing an encrypted connection between a web server and the browser. This ensures that all data exchanged between web server and browser arrives unchanged.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Stores.Fields.SslEnabled.Hint2">
     <Value>WARNING: Do not enable it until you have SSL certificate installed on the server.</Value>
@@ -9232,7 +9232,7 @@
 	  <Value><![CDATA[This message template is used when a new VAT is submitted. The message is received by a store owner. You can set up this option by clicking <strong>Notify admin when a new VAT number is submitted</strong> in Configuration - Settings - Tax settings.]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.OrderCancelled.CustomerNotification">
-	  <Value>This message template is used to notify a customer that the certain order was canceled. The order can ba canceled by a customer on the account page or by store owner in Customers - Customers in Orders tab or in Sales - Orders.</Value>
+	  <Value>This message template is used to notify a customer that the certain order was cancelled. The order can ba cancelled by a customer on the account page or by store owner in Customers - Customers in Orders tab or in Sales - Orders.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.OrderCompleted.CustomerNotification">
 	  <Value>This message template is used to notify a customer that the certain order was completed. The order gets the order status Complete when it's paid and delivered, or it can be changed manually to Complete in Sales - Orders.</Value>
@@ -9280,10 +9280,10 @@
 	  <Value><![CDATA[This message template is used to notify a store owner that the certain product is getting low stock. You can set up the minimum  product quantity when creating or editing the product in Inventory section, <strong>Minimum stock qty field</strong>.]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.RecurringPaymentCancelled.CustomerNotification">
-	  <Value>This message template is used to notify a customer that the certain recurring payment is canceled. Payment can be canceled by a customer in the account page or by a store owner in Sales - Recurring payments in History tab by clicking "Cancel recurring payment" button.</Value>
+	  <Value>This message template is used to notify a customer that the certain recurring payment is cancelled. Payment can be cancelled by a customer in the account page or by a store owner in Sales - Recurring payments in History tab by clicking "Cancel recurring payment" button.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.RecurringPaymentCancelled.StoreOwnerNotification">
-	  <Value>This message template is used to notify a store owner that the certain recurring payment is canceled. Payment can be canceled by a customer in the account page or by a store owner in Sales - Recurring payments in History tab by clicking "Cancel recurring payment" button.</Value>
+	  <Value>This message template is used to notify a store owner that the certain recurring payment is cancelled. Payment can be cancelled by a customer in the account page or by a store owner in Sales - Recurring payments in History tab by clicking "Cancel recurring payment" button.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.RecurringPaymentFailed.CustomerNotification">
 	  <Value>This message template is used to notify a customer that the certain recurring payment is failed. For example, the amount can't be charged from the provided credit card.</Value>
