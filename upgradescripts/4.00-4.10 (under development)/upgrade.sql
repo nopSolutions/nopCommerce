@@ -1884,10 +1884,10 @@ set @resources='
     <Value>Activity log</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.ActivityLog.ActivityLog.Fields.ActivityLogType">
-    <Value>Activity log Type</Value>
+    <Value>Activity log type</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.ActivityLog.ActivityLog.Fields.ActivityLogType.Hint">
-    <Value>The activity log Type.</Value>
+    <Value>The activity log type.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.ActivityLog.ActivityLog.Fields.ActivityLogTypeColumn">
     <Value>Activity log type</Value>
