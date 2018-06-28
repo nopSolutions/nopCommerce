@@ -13203,7 +13203,6 @@
   <LocaleResource Name="Admin.Settings.ReviewType.Updated">
     <Value>The review type has been updated successfully.</Value>
   </LocaleResource>
-  <!--Review type-->
   <LocaleResource Name="Admin.ShoppingCartType.ShoppingCartType">
     <Value>Shopping cart type</Value>
   </LocaleResource>
