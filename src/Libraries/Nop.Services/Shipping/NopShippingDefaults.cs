@@ -6,6 +6,25 @@ namespace Nop.Services.Shipping
     /// </summary>
     public static partial class NopShippingDefaults
     {
+        #region Shipping methods
+
+        /// <summary>
+        /// Gets a key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : country identifier
+        /// </remarks>
+        public static string ShippingMethodsAllCacheKey => "Nop.shippingmethod.all-{0}";
+
+        /// <summary>
+        /// Gets a key pattern to clear cache
+        /// </summary>
+        public static string ShippingMethodsPatternCacheKey => "Nop.shippingmethod.";
+
+        #endregion
+
+        #region Warehouses
+
         /// <summary>
         /// Gets a key for caching
         /// </summary>
@@ -18,5 +37,8 @@ namespace Nop.Services.Shipping
         /// Gets a key pattern to clear cache
         /// </summary>
         public static string WarehousesPatternCacheKey => "Nop.warehouse.";
+
+        #endregion
+
     }
 }

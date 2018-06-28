@@ -197,6 +197,8 @@ namespace Nop.Services.Shipping
 
             _shippingMethodRepository.Delete(shippingMethod);
 
+            _cacheManager.RemoveByPattern(NopShippingDefaults.ShippingMethodsPatternCacheKey);
+
             //event notification
             _eventPublisher.EntityDeleted(shippingMethod);
         }
@@ -221,29 +223,31 @@ namespace Nop.Services.Shipping
         /// <returns>Shipping methods</returns>
         public virtual IList<ShippingMethod> GetAllShippingMethods(int? filterByCountryId = null)
         {
-            if (filterByCountryId.HasValue && filterByCountryId.Value > 0)
-            {
-                var query1 = from sm in _shippingMethodRepository.Table
-                             where
-                             sm.ShippingMethodCountryMappings.Select(mapping => mapping.CountryId).Contains(filterByCountryId.Value)
-                             select sm.Id;
+            var key = string.Format(NopShippingDefaults.ShippingMethodsAllCacheKey, filterByCountryId.HasValue ? filterByCountryId.Value : 0);
 
-                var query2 = from sm in _shippingMethodRepository.Table
-                             where !query1.Contains(sm.Id)
-                             orderby sm.DisplayOrder, sm.Id
-                             select sm;
-
-                var shippingMethods = query2.ToList();
-                return shippingMethods;
-            }
-            else
+            return _cacheManager.Get(key, () =>
             {
-                var query = from sm in _shippingMethodRepository.Table
-                            orderby sm.DisplayOrder, sm.Id
-                            select sm;
-                var shippingMethods = query.ToList();
-                return shippingMethods;
-            }
+                if (filterByCountryId.HasValue && filterByCountryId.Value > 0)
+                {
+                    var query1 = from sm in _shippingMethodRepository.Table
+                        where sm.ShippingMethodCountryMappings.Select(mapping => mapping.CountryId).Contains(filterByCountryId.Value)
+                        select sm.Id;
+
+                    var query2 = from sm in _shippingMethodRepository.Table
+                        where !query1.Contains(sm.Id)
+                        orderby sm.DisplayOrder, sm.Id
+                        select sm;
+
+                    return query2.ToList();
+                }
+                else
+                {
+                    var query = from sm in _shippingMethodRepository.Table
+                        orderby sm.DisplayOrder, sm.Id
+                        select sm;
+                    return query.ToList();
+                }
+            });
         }
 
         /// <summary>
@@ -256,6 +260,8 @@ namespace Nop.Services.Shipping
                 throw new ArgumentNullException(nameof(shippingMethod));
 
             _shippingMethodRepository.Insert(shippingMethod);
+
+            _cacheManager.RemoveByPattern(NopShippingDefaults.ShippingMethodsPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(shippingMethod);
@@ -271,6 +277,8 @@ namespace Nop.Services.Shipping
                 throw new ArgumentNullException(nameof(shippingMethod));
 
             _shippingMethodRepository.Update(shippingMethod);
+
+            _cacheManager.RemoveByPattern(NopShippingDefaults.ShippingMethodsPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(shippingMethod);
