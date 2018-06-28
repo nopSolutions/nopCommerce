@@ -26,7 +26,6 @@ namespace Nop.Web.Models.Catalog
             AddProductReview = new AddProductReviewModel();
             ReviewTypeList = new List<ReviewTypeModel>();
             AddAdditionalProductReviewList = new List<AddProductReviewReviewTypeMappingModel>();
-            AverageRating = new Dictionary<int, double>();
         }
 
         public int ProductId { get; set; }
@@ -41,9 +40,7 @@ namespace Nop.Web.Models.Catalog
 
         public IList<ReviewTypeModel> ReviewTypeList { get; set; }
 
-        public IList<AddProductReviewReviewTypeMappingModel> AddAdditionalProductReviewList { get; set; }
-
-        public IDictionary<int, double> AverageRating { get; set; }
+        public IList<AddProductReviewReviewTypeMappingModel> AddAdditionalProductReviewList { get; set; }        
     }
 
     public partial class ReviewTypeModel : BaseNopEntityModel
@@ -57,6 +54,8 @@ namespace Nop.Web.Models.Catalog
         public bool IsRequired { get; set; }
 
         public bool VisibleToAllCustomers { get; set; }
+
+        public double AverageRating { get; set; }
     }
 
     public partial class ProductReviewModel : BaseNopEntityModel

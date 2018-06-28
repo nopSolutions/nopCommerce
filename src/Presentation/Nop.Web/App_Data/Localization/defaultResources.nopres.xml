@@ -13183,7 +13183,7 @@
     <Value>Required</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Settings.ReviewType.Fields.IsRequired.Hint">
-    <Value>When an attribute is required, the customer must choose an appropriate the rating value before they can continue.</Value>
+    <Value>When required, customers have to choose an appropriate rating value before they can continue.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Settings.ReviewType.Fields.Name">
     <Value>Name</Value>
