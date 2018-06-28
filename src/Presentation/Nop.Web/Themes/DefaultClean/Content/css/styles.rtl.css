@@ -2892,18 +2892,22 @@ label, label + * {
 #check-availability-button:hover {
 	background-color: #999;
 }
-.accept-consent {
-	margin: 0 0 20px;
-	text-align: center;
+.inputs.accept-consent {
+    text-align: center;
 }
-.accept-consent > * {
-	display: inline-block;
-	line-height: 32px;
+.inputs.accept-consent > * {
+    display: inline-block;
+    line-height: 32px;
 }
-.accept-consent span,
-.accept-consent a {
-	color: #4ab2f1;
-	cursor: pointer;
+.inputs.accept-consent span, 
+.inputs.accept-consent a {
+    color: #4ab2f1;
+    cursor: pointer;
+    font-size: 14px;
+}
+.inputs.accept-consent label {
+    width: auto;
+    margin-right: 10px;
 }
 .registration-page .button-1,
 .registration-result-page .button-1,
