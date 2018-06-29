@@ -17,6 +17,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
     {
         private const string ButtonIdAttributeName = "asp-button-id";
         private const string ActionAttributeName = "asp-action";
+        private const string AdditionaConfirmText = "asp-additional-confirm";
 
         private readonly IHtmlHelper _htmlHelper;
 
@@ -43,6 +44,12 @@ namespace Nop.Web.Framework.TagHelpers.Admin
         [HtmlAttributeNotBound]
         [ViewContext]
         public ViewContext ViewContext { get; set; }
+
+        /// <summary>
+        /// Additional confirm text
+        /// </summary>
+        [HtmlAttributeName(AdditionaConfirmText)]
+        public string ConfirmText { get; set; }
 
         /// <summary>
         /// Ctor
@@ -85,7 +92,8 @@ namespace Nop.Web.Framework.TagHelpers.Admin
             {
                 ControllerName = _htmlHelper.ViewContext.RouteData.Values["controller"].ToString(),
                 ActionName = Action,
-                WindowId = modalId
+                WindowId = modalId,
+                AdditonalConfirmText = ConfirmText
             };
 
             //tag details
