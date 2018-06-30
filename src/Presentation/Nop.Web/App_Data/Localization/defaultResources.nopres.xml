@@ -517,7 +517,7 @@
     <Value>New Customer</Value>
   </LocaleResource>
   <LocaleResource Name="Account.Login.NewCustomerText">
-    <Value>By creating an account on our website you will be able to shop faster, be up to date on an orders status, and keep track of the orders you have previously made.</Value>
+    <Value>By creating an account on our website, you will be able to shop faster, be up to date on an orders status, and keep track of the orders you have previously made.</Value>
   </LocaleResource>
   <LocaleResource Name="Account.Login.ReturningCustomer">
     <Value>Returning Customer</Value>
@@ -1624,7 +1624,7 @@
     <Value>Enable condition</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Condition.EnableCondition.Hint">
-    <Value>Check to specify a condition (depending on other attribute) when this attribute should be enabled (visible).</Value>
+    <Value>Check to specify a condition (depending on another attribute) when this attribute should be enabled (visible).</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Condition.NoAttributeExists">
     <Value>No attribute exists that could be used as condition.</Value>
@@ -2677,7 +2677,7 @@
     <Value>Customer roles</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.AclCustomerRoles.Hint">
-    <Value>Choose one or several customer roles i.e. administrators, vendors, guests, who will be able to see this product in catalog. If you don't need this option just leave this field empty. In order to use this functionality you have to disable the following setting: Configuration > Catalog settings > Ignore ACL rules (sitewide).</Value>
+    <Value>Choose one or several customer roles i.e. administrators, vendors, guests, who will be able to see this product in catalog. If you don't need this option just leave this field empty. In order to use this functionality, you have to disable the following setting: Configuration > Catalog settings > Ignore ACL rules (sitewide).</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.AdditionalShippingCharge">
     <Value>Additional shipping charge</Value>
@@ -2971,7 +2971,7 @@
     <Value>Inventory method</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.ManageInventoryMethod.Hint">
-    <Value>Select inventory method. There are three methods: Don’t track inventory, Track inventory and Track inventory by attributes. You should use Track inventory by attributes when the product has different combinations of these attributes and then manage inventory for this combinations.</Value>
+    <Value>Select inventory method. There are three methods: Don’t track inventory, Track inventory and Track inventory by attributes. You should use Track inventory by attributes when the product has different combinations of these attributes and then manage inventory for these combinations.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.ManufacturerPartNumber">
     <Value>Manufacturer part number</Value>
@@ -2992,7 +2992,7 @@
     <Value>Mark as new</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.MarkAsNew.Hint">
-    <Value>Check to mark  the product as new. Use this option for promoting new products.</Value>
+    <Value>Check to mark the product as new. Use this option for promoting new products.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.MarkAsNewStartDateTimeUtc">
     <Value>Mark as new. Start date</Value>
@@ -3220,7 +3220,7 @@
     <Value>Limited to stores</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.LimitedToStores.Hint">
-    <Value>Option to limit this product to a certain store. If you have multiple stores, choose one or several from the list. If you don't use this option just leave this field empty. In order to use this functionality you have to disable the following setting: Configuration > Catalog settings > Ignore "limit per store" rules (sitewide).</Value>
+    <Value>Option to limit this product to a certain store. If you have multiple stores, choose one or several from the list. If you don't use this option just leave this field empty. In order to use this functionality, you have to disable the following setting: Configuration > Catalog settings > Ignore "limit per store" rules (sitewide).</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.ShipSeparately">
     <Value>Ship separately</Value>
@@ -3301,7 +3301,7 @@
     <Value>Warehouse</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.Warehouse.Hint">
-    <Value>Choose the warehouse which will be used when calculating shipping rates. You can manage warehouses by selecting  Configuration > Shipping > Warehouses.</Value>
+    <Value>Choose the warehouse which will be used when calculating shipping rates. You can manage warehouses by selecting Configuration > Shipping > Warehouses.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.Warehouse.None">
     <Value>None</Value>
@@ -3523,7 +3523,7 @@
     <Value>No picture</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.Sku">
-    <Value>Sku</Value>
+    <Value>SKU</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.Sku.Hint">
     <Value>Product stock keeping unit (SKU). Your internal unique identifier that can be used to track this attribute combination.</Value>
@@ -3586,7 +3586,7 @@
     <Value>Enable condition</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Attributes.Condition.EnableCondition.Hint">
-    <Value>Check to specify a condition (depending on other attribute) when this attribute should be enabled (visible).</Value>
+    <Value>Check to specify a condition (depending on another attribute) when this attribute should be enabled (visible).</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Attributes.Condition.SaveBeforeEdit">
     <Value>You need to save the product attribute before you can edit conditional attributes.</Value>
@@ -5311,8 +5311,8 @@
     <Value>Category breadcrumb enabled</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.CategoryBreadcrumbEnabled.Hint">
-    <Value>Select to enable  the category path (breadcrumb). This is the bar at the top of the screen that indicates which categories and subcategories the product was viewed in on the product pages. Each sub-element of the bar is a separate hyperlink.</Value>
-  </LocaleResource>  
+    <Value>Select to enable the category path (breadcrumb). This is the bar at the top of the screen that indicates which categories and subcategories the product was viewed in on the product pages. Each sub-element of the bar is a separate hyperlink.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.CompareProductsEnabled">
     <Value>'Compare Products' enabled</Value>
   </LocaleResource>
@@ -6136,13 +6136,13 @@
     <Value>Store IP addresses</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.StoreIpAddresses.Hint">
-    <Value>When enabled, IP addresses of customers will be stored. When disabled, it can improved performance. Furthermore, it's prohibited to store IP addresses in some countries (private customer data).</Value>
+    <Value>When enabled, IP addresses of customers will be stored. When disabled, it can improve performance. Furthermore, it's prohibited to store IP addresses in some countries (private customer data).</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.StoreLastVisitedPage">
     <Value>Store last visited page</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.StoreLastVisitedPage.Hint">
-    <Value>When enabled, the last visited page will be stored. When disabled, it can improved performance.</Value>
+    <Value>When enabled, the last visited page will be stored. When disabled, it can improve performance.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.StreetAddress2Enabled">
     <Value>'Street address 2' enabled</Value>
@@ -6526,7 +6526,7 @@
     <Value>The goal of the canonicalization process is to transform a URL into a canonical URL so it is possible to determine if two syntactically different URLs may be equivalent.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.Captcha.Instructions">
-    <Value><![CDATA[<p>CAPTCHA is a program that can tell whether its user is a human or a computer. You've probably seen them — colorful images with distorted text at the bottom of Web registration forms. CAPTCHAs are used by many websites to prevent abuse from "bots" or automated programs usually written to generate spam. No computer programcan read distorted text as well as humans can, so bots cannot navigate sites protected by CAPTCHAs. nopCommerce uses <a href="http://www.google.com/recaptcha" target="_blank">reCAPTCHA</a>.</p>]]></Value>
+    <Value><![CDATA[<p>CAPTCHA is a program that can tell whether its user is a human or a computer. You've probably seen them — colorful images with distorted text at the bottom of Web registration forms. CAPTCHAs are used by many websites to prevent abuse from "bots" or automated programs usually written to generate spam. No computer program can read distorted text as well as humans can, so bots cannot navigate sites protected by CAPTCHAs. nopCommerce uses <a href="http://www.google.com/recaptcha" target="_blank">reCAPTCHA</a>.</p>]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaAppropriateKeysNotEnteredError">
     <Value>Captcha is enabled but the appropriate keys are not entered</Value>
@@ -6898,7 +6898,7 @@
     <Value>When enabled, all locale resources will be loaded on application startup. The application start will be slower, but then all pages could be opened much faster.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.LoadAllLocaleRecordsOnStartup.Warning">
-    <Value>It seems that you use Redis server for caching, keep in mind that enabling this setting create a lot of traffic between the Redis server and the application because of the large number of locales.</Value>
+    <Value>It seems that you use Redis server for caching, keep in mind that enabling this setting creates a lot of traffic between the Redis server and the application because of the large number of locales.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.LoadAllLocalizedPropertiesOnStartup">
     <Value>Load all localized properties on startup</Value>
@@ -8169,8 +8169,8 @@
   <LocaleResource Name="Admin.Configuration.Settings.Tax.BlockTitle.Shipping">
     <Value>Shipping</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Tax.BlockTitle.TaxDispaying">
-    <Value>Tax dispaying</Value>
+  <LocaleResource Name="Admin.Configuration.Settings.Tax.BlockTitle.TaxDisplaying">
+    <Value>Tax displaying</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Tax.BlockTitle.VAT">
     <Value>VAT</Value>
@@ -9223,7 +9223,7 @@
 	  <Value><![CDATA[This message template is used when a new VAT is submitted. The message is received by a store owner. You can set up this option by clicking <strong>Notify admin when a new VAT number is submitted</strong> in Configuration - Settings - Tax settings.]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.OrderCancelled.CustomerNotification">
-	  <Value>This message template is used to notify a customer that the certain order was cancelled. The order can ba cancelled by a customer on the account page or by store owner in Customers - Customers in Orders tab or in Sales - Orders.</Value>
+	  <Value>This message template is used to notify a customer that the certain order was cancelled. The order can be cancelled by a customer on the account page or by store owner in Customers - Customers in Orders tab or in Sales - Orders.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.OrderCompleted.CustomerNotification">
 	  <Value>This message template is used to notify a customer that the certain order was completed. The order gets the order status Complete when it's paid and delivered, or it can be changed manually to Complete in Sales - Orders.</Value>
@@ -9268,7 +9268,7 @@
 	  <Value>This message template is used to notify a store owner that the certain product attribute combination is getting low stock. You can set up the combination minimum quantity when creating or editing the product in Product attribute tab - Attributes combinations tab in Notify admin for quantity below field.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.QuantityBelow.StoreOwnerNotification">
-	  <Value><![CDATA[This message template is used to notify a store owner that the certain product is getting low stock. You can set up the minimum  product quantity when creating or editing the product in Inventory section, <strong>Minimum stock qty field</strong>.]]></Value>
+	  <Value><![CDATA[This message template is used to notify a store owner that the certain product is getting low stock. You can set up the minimum product quantity when creating or editing the product in Inventory section, <strong>Minimum stock qty field</strong>.]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.RecurringPaymentCancelled.CustomerNotification">
 	  <Value>This message template is used to notify a customer that the certain recurring payment is cancelled. Payment can be cancelled by a customer in the account page or by a store owner in Sales - Recurring payments in History tab by clicking "Cancel recurring payment" button.</Value>
@@ -9424,7 +9424,7 @@
     <Value>Send test email</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Tokens.ConditionalStatement">
-    <Value>For conditional expressions use the token %if (your conditions ) ... endif%</Value>
+    <Value>For conditional expressions use the token %if (your conditions) ... endif%</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Updated">
     <Value>The message template has been updated successfully.</Value>
@@ -11572,7 +11572,7 @@
     <Value>Order statuses</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.List.OrderStatus.Hint">
-    <Value>Search by a specific order statuses e.g. Complete.</Value>
+    <Value>Search by a specific order status e.g. Complete.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.List.PaymentMethod">
     <Value>Payment method</Value>
@@ -11584,7 +11584,7 @@
     <Value>Payment statuses</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.List.PaymentStatus.Hint">
-    <Value>Search by a specific payment statuses e.g. Paid.</Value>
+    <Value>Search by a specific payment status e.g. Paid.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.List.Product">
     <Value>Product</Value>
@@ -11596,7 +11596,7 @@
     <Value>Shipping statuses</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.List.ShippingStatus.Hint">
-    <Value>Search by a specific shipping statuses e.g. Not yet shipped.</Value>
+    <Value>Search by a specific shipping status e.g. Not yet shipped.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.List.StartDate">
     <Value>Start date</Value>
@@ -11857,7 +11857,7 @@
     <Value>Set as delivered</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Shipments.DeliveryDate.EnterUtc">
-    <Value>Date and time should entered in Coordinated Universal Time (UTC)</Value>
+    <Value>Date and time should be entered in Coordinated Universal Time (UTC)</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Shipments.DeliveryDate.Hint">
     <Value>The date this shipment was delivered.</Value>
@@ -12010,7 +12010,7 @@
     <Value>Set as shipped</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Shipments.ShippedDate.EnterUtc">
-    <Value>Date and time should entered in Coordinated Universal Time (UTC)</Value>
+    <Value>Date and time should be entered in Coordinated Universal Time (UTC)</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Shipments.ShippedDate.Hint">
     <Value>The date this shipment was shipped.</Value>
@@ -12325,7 +12325,7 @@
     <Value>Cumulative with other discounts</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Discounts.Fields.IsCumulative.Hint">
-    <Value>If checked, this discount can be used with other ones simultaneously. Please note that this feature works only for discounts with the same discount type. Right now discounts with distinct types are already cumulative.</Value>
+    <Value>If checked, this discount can be used with other ones simultaneously. Please note that this feature works only for discounts with the same discount type. Right now, discounts with distinct types are already cumulative.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Discounts.Fields.LimitationTimes">
     <Value>N times</Value>
@@ -12490,7 +12490,7 @@
     <Value>The discount has been updated successfully.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Discounts.IgnoreDiscounts.Warning">
-    <Value>In order to use this functionality you have to disable the following setting: Configuration > Catalog settings > Ignore discounts (sitewide).</Value>
+    <Value>In order to use this functionality, you have to disable the following setting: Configuration > Catalog settings > Ignore discounts (sitewide).</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions">
     <Value>Newsletter subscribers</Value>
@@ -13948,13 +13948,13 @@
     <Value>Performance. You use only one store. Recommended to ignore store limitations (catalog settings)</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.Warnings.Performance.IgnoreStoreLimitations.Notification">
-    <Value>In order to use this functionality you have to disable the following setting: Catalog settings > Ignore "limit per store" rules.</Value>
+    <Value>In order to use this functionality, you have to disable the following setting: Catalog settings > Ignore "limit per store" rules.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.Warnings.Performance.IgnoreAcl">
     <Value>Performance. Recommended to ignore ACL rules if you don't use them (catalog settings)</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.Warnings.Performance.IgnoreAcl.Notification">
-    <Value>In order to use this functionality you have to disable the following setting: Catalog settings > Ignore ACL rules.</Value>
+    <Value>In order to use this functionality, you have to disable the following setting: Catalog settings > Ignore ACL rules.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.Warnings.PluginNotEnabled">
     <Value>You could uninstall and remove the plugin(s) which you don't use, this might increase performance</Value>
