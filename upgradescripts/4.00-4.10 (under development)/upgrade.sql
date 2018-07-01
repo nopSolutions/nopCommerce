@@ -1962,7 +1962,7 @@ set @resources='
     <Value>SKU</Value>
   </LocaleResource>
   <LocaleResource Name="Plugins.Pickup.PickupInStore.Fields.OpeningHours.Hint">
-    <Value>Specify an opening hours of the pickup point (Monday - Friday: 09:00 - 19:00 for example).</Value>
+    <Value>Specify opening hours of the pickup point (Monday - Friday: 09:00 - 19:00 for example).</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Tax.BlockTitle.TaxDispaying">
     <Value></Value>
