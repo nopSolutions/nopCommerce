@@ -72,12 +72,6 @@
                                 @Html.Raw(Model.ShortDescription)
                             </div>
                         }
-                        @if (!string.IsNullOrEmpty(Model.Author))
-                        {
-                            <div class="short-description">
-                                @T("Products.Author"):  @Html.Raw(Model.Author)
-                            </div>
-                        }
                         @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProductDetailsOverviewTop, additionalData = Model })
                         <!--product reviews-->
                         @await Html.PartialAsync("_ProductReviewOverview", Model.ProductReviewOverview)
