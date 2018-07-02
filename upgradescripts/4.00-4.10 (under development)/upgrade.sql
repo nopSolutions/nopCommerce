@@ -2283,14 +2283,14 @@ BEGIN
 END
 GO
 
-IF EXISTS (SELECT 1 FROM sys.objects WHERE NAME = 'VendorAttributeValue_VendorAttribute' AND PARENT_OBJECT_ID = object_id('VendorAttributeValue') AND objectproperty(object_id, N'IsForeignKey') = 1)
+IF EXISTS (SELECT 1 FROM sys.objects WHERE NAME = 'FK_VendorAttributeValue_VendorAttribute_VendorAttributeId' AND PARENT_OBJECT_ID = object_id('VendorAttributeValue') AND objectproperty(object_id, N'IsForeignKey') = 1)
 BEGIN
-	ALTER TABLE dbo.VendorAttributeValue DROP CONSTRAINT [VendorAttributeValue_VendorAttribute]
+	ALTER TABLE dbo.VendorAttributeValue DROP CONSTRAINT [FK_VendorAttributeValue_VendorAttribute_VendorAttributeId]
 END
 GO
 
 ALTER TABLE [dbo].[VendorAttributeValue] WITH CHECK 
-	ADD CONSTRAINT [VendorAttributeValue_VendorAttribute] FOREIGN KEY([VendorAttributeId]) REFERENCES [dbo].[VendorAttribute] ([Id]) ON DELETE CASCADE
+	ADD CONSTRAINT [FK_VendorAttributeValue_VendorAttribute_VendorAttributeId] FOREIGN KEY([VendorAttributeId]) REFERENCES [dbo].[VendorAttribute] ([Id]) ON DELETE CASCADE
 GO
 
 --new activity type
