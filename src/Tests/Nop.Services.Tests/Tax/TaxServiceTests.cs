@@ -6,6 +6,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Shipping;
+using Nop.Core.Domain.Stores;
 using Nop.Core.Domain.Tax;
 using Nop.Services.Common;
 using Nop.Services.Directory;
@@ -23,7 +24,7 @@ namespace Nop.Services.Tests.Tax
     {
         private Mock<IAddressService> _addressService;
         private IWorkContext _workContext;
-        private IStoreContext _storeContext;
+        private Mock<IStoreContext> _storeContext;
         private TaxSettings _taxSettings;
         private Mock<IEventPublisher> _eventPublisher;
         private ITaxService _taxService;
@@ -45,7 +46,8 @@ namespace Nop.Services.Tests.Tax
             };
 
             _workContext = null;
-            _storeContext = null;
+            _storeContext = new Mock<IStoreContext>();
+            _storeContext.Setup(x => x.CurrentStore).Returns(new Store { Id = 1 });
 
             _addressService = new Mock<IAddressService>();
             //default tax address
@@ -66,7 +68,7 @@ namespace Nop.Services.Tests.Tax
             _shippingSettings = new ShippingSettings();
             _addressSettings = new AddressSettings();
 
-            _taxService = new TaxService(_addressService.Object, _workContext, _storeContext, _taxSettings,
+            _taxService = new TaxService(_addressService.Object, _workContext, _storeContext.Object, _taxSettings,
                 pluginFinder, _geoLookupService.Object, _countryService.Object, _stateProvinceService.Object, _logger.Object, _webHelper.Object,
                 _customerSettings, _shippingSettings, _addressSettings);
         }
