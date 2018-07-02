@@ -1979,6 +1979,9 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.StoreLastVisitedPage.Hint">
     <Value>When enabled, the last visited page will be stored. When disabled, it can improve performance.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Common.DeleteConfirmation.Selected">
+    <Value></Value>
+  </LocaleResource>
 </Language>
 '
 

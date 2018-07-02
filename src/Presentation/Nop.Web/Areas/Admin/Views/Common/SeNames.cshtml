@@ -17,6 +17,7 @@
             <i class="fa fa-trash-o"></i>
             @T("Admin.System.SeNames.DeleteSelected")
         </button>
+        <nop-action-confirmation asp-button-id="delete-selected" />
         @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.SenamesButtons })
     </div>
 </div>
@@ -167,35 +168,31 @@
         });
 
         //"delete selected" button
-        $('#delete-selected').click(function(e) {
-            e.preventDefault();
-
+        $("#delete-selected-action-confirmation-submit-button").bind("click", function () {
             var postData = {
                 selectedIds: selectedIds
             };
             addAntiForgeryToken(postData);
-
-            if (confirm('@T("Admin.Common.DeleteConfirmation.Selected")')) {
-                $.ajax({
-                    cache: false,
-                    type: "POST",
-                    url: "@(Url.Action("DeleteSelectedSeNames", "Common"))",
-                    data: postData,
-                    complete: function(data) {
-                        //reload grid
-                        var grid = $('#sename-grid').data('kendoGrid');
-                        grid.dataSource.page(1); //new search. Set page size to 1
-                        //grid.dataSource.read(); we already loaded the grid above using "page" function
-                        //clear selected checkboxes
-                        $('.checkboxGroups').attr('checked', false).change();
-                        selectedIds = [];
-                    },
-                    error: function(xhr, ajaxOptions, thrownError) {
-                        alert(thrownError);
-                    },
-                    traditional: true
-                });
-            }
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: "@(Url.Action("DeleteSelectedSeNames", "Common"))",
+                data: postData,
+                complete: function (data) {
+                    //reload grid
+                    var grid = $('#sename-grid').data('kendoGrid');
+                    grid.dataSource.page(1); //new search. Set page size to 1
+                    //grid.dataSource.read(); we already loaded the grid above using "page" function
+                    //clear selected checkboxes
+                    $('.checkboxGroups').attr('checked', false).change();
+                    selectedIds = [];
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert(thrownError);
+                },
+                traditional: true
+            });
+            $('#delete-selected-action-confirmation').modal('toggle');
             return false;
         });
 
