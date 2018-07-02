@@ -160,7 +160,8 @@ namespace Nop.Services.Tax
                 Customer = customer,
                 Product = product,
                 Price = price,
-                TaxCategoryId = taxCategoryId > 0 ? taxCategoryId : (product != null ? product.TaxCategoryId : 0)
+                TaxCategoryId = taxCategoryId > 0 ? taxCategoryId : (product != null ? product.TaxCategoryId : 0),
+                CurrentStoreId = _storeContext.CurrentStore.Id
             };
 
             var basedOn = _taxSettings.TaxBasedOn;
