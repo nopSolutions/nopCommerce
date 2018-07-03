@@ -128,9 +128,6 @@ namespace Nop.Core.Infrastructure
                 }
             });
 
-            //register AutoMapper
-            services.AddAutoMapper();
-
             //register
             AutoMapperConfiguration.Init(config);
         }
