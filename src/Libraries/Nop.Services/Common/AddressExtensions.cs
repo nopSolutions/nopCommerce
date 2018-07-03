@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using Nop.Core.Domain.Common;
-using Nop.Core.Extensions;
 
 namespace Nop.Services.Common
 {
@@ -44,9 +43,9 @@ namespace Nop.Services.Common
                 ((string.IsNullOrEmpty(a.Address2) && string.IsNullOrEmpty(address2)) || a.Address2 == address2) &&
                 ((string.IsNullOrEmpty(a.City) && string.IsNullOrEmpty(city)) || a.City == city) &&
                 ((string.IsNullOrEmpty(a.County) && string.IsNullOrEmpty(county)) || a.County == county) &&
-                ((a.StateProvinceId.IsNullOrDefault() && stateProvinceId.IsNullOrDefault()) || a.StateProvinceId == stateProvinceId) &&
+                ((a.StateProvinceId == null && stateProvinceId == null) || a.StateProvinceId.Value == stateProvinceId.Value) &&
                 ((string.IsNullOrEmpty(a.ZipPostalCode) && string.IsNullOrEmpty(zipPostalCode)) || a.ZipPostalCode == zipPostalCode) &&
-                ((a.CountryId.IsNullOrDefault() && countryId.IsNullOrDefault()) || a.CountryId == countryId) &&
+                ((a.CountryId == null && countryId == null) || a.CountryId.Value == countryId.Value) &&
                 //actually we should parse custom address attribute (in case if "Display order" is changed) and then compare
                 //bu we simplify this process and simply compare their values in XML
                 ((string.IsNullOrEmpty(a.CustomAttributes) && string.IsNullOrEmpty(customAttributes)) || a.CustomAttributes == customAttributes));
