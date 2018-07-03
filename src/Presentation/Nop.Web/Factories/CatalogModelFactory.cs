@@ -429,8 +429,7 @@ namespace Nop.Web.Factories
                 IPagedList<Product> featuredProducts = null;
                 var cacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_HAS_FEATURED_PRODUCTS_KEY, category.Id,
                     string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()), _storeContext.CurrentStore.Id);
-                var hasFeaturedProductsCache = _cacheManager.Get<bool?>(cacheKey);
-                if (!hasFeaturedProductsCache.HasValue)
+                var hasFeaturedProductsCache = _cacheManager.Get(cacheKey, () =>
                 {
                     //no value in the cache yet
                     //let's load products and cache the result (true/false)
@@ -439,10 +438,9 @@ namespace Nop.Web.Factories
                        storeId: _storeContext.CurrentStore.Id,
                        visibleIndividuallyOnly: true,
                        featuredProducts: true);
-                    hasFeaturedProductsCache = featuredProducts.TotalCount > 0;
-                    _cacheManager.Set(cacheKey, hasFeaturedProductsCache, 60);
-                }
-                if (hasFeaturedProductsCache.Value && featuredProducts == null)
+                    return featuredProducts.TotalCount > 0;
+                });
+                if (hasFeaturedProductsCache && featuredProducts == null)
                 {
                     //cache indicates that the category has featured products
                     //let's load them
@@ -774,8 +772,7 @@ namespace Nop.Web.Factories
                     manufacturer.Id,
                     string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                     _storeContext.CurrentStore.Id);
-                var hasFeaturedProductsCache = _cacheManager.Get<bool?>(cacheKey);
-                if (!hasFeaturedProductsCache.HasValue)
+                var hasFeaturedProductsCache = _cacheManager.Get(cacheKey, () =>
                 {
                     //no value in the cache yet
                     //let's load products and cache the result (true/false)
@@ -784,10 +781,9 @@ namespace Nop.Web.Factories
                        storeId: _storeContext.CurrentStore.Id,
                        visibleIndividuallyOnly: true,
                        featuredProducts: true);
-                    hasFeaturedProductsCache = featuredProducts.TotalCount > 0;
-                    _cacheManager.Set(cacheKey, hasFeaturedProductsCache, 60);
-                }
-                if (hasFeaturedProductsCache.Value && featuredProducts == null)
+                    return featuredProducts.TotalCount > 0;
+                });
+                if (hasFeaturedProductsCache && featuredProducts == null)
                 {
                     //cache indicates that the manufacturer has featured products
                     //let's load them

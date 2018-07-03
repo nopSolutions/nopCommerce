@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
@@ -139,16 +140,29 @@ namespace Nop.Core.Caching
         #endregion
 
         #region Methods
-
+        
         /// <summary>
-        /// Gets or sets the value associated with the specified key.
+        /// Get a cached item. If it's not in the cache yet, then load and cache it
         /// </summary>
         /// <typeparam name="T">Type of cached item</typeparam>
-        /// <param name="key">Key of cached item</param>
+        /// <param name="key">Cache key</param>
+        /// <param name="acquire">Function to load item if it's not in the cache yet</param>
+        /// <param name="cacheTime">Cache time in minutes; pass 0 to do not cache; pass null to use the default time</param>
         /// <returns>The cached value associated with the specified key</returns>
-        public virtual T Get<T>(string key)
+        public virtual T Get<T>(string key, Func<T> acquire, int? cacheTime = null)
         {
-            return _cache.Get<T>(key);
+            //item already is in cache, so return it
+            if (_cache.TryGetValue(key, out T value))
+                return value;
+
+            //or create it using passed function
+            var result = acquire();
+
+            //and set in cache (if cache time is defined)
+            if ((cacheTime ?? NopCachingDefaults.CacheTime) > 0)
+                Set(key, result, cacheTime ?? NopCachingDefaults.CacheTime);
+
+            return result;
         }
 
         /// <summary>
@@ -219,7 +233,15 @@ namespace Nop.Core.Caching
         /// <param name="pattern">String key pattern</param>
         public virtual void RemoveByPattern(string pattern)
         {
-            this.RemoveByPattern(pattern, _allKeys.Where(p => p.Value).Select(p => p.Key));
+            //get cache keys that matches pattern
+            var regex = new Regex(pattern, RegexOptions.Singleline | RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            var matchesKeys = _allKeys.Where(p => p.Value).Select(p => p.Key).Where(key => regex.IsMatch(key)).ToList();
+
+            //remove matching values
+            foreach (var key in matchesKeys)
+            {
+                _cache.Remove(RemoveKey(key));
+            }
         }
 
         /// <summary>

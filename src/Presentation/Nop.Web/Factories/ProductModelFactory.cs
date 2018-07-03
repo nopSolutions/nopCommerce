@@ -738,16 +738,14 @@ namespace Nop.Web.Factories
             //We cache a value indicating whether a product has attributes
             IList<ProductAttributeMapping> productAttributeMapping = null;
             var cacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_HAS_PRODUCT_ATTRIBUTES_KEY, product.Id);
-            var hasProductAttributesCache = _cacheManager.Get<bool?>(cacheKey);
-            if (!hasProductAttributesCache.HasValue)
+            var hasProductAttributesCache = _cacheManager.Get(cacheKey, () =>
             {
                 //no value in the cache yet
                 //let's load attributes and cache the result (true/false)
                 productAttributeMapping = _productAttributeService.GetProductAttributeMappingsByProductId(product.Id);
-                hasProductAttributesCache = productAttributeMapping.Any();
-                _cacheManager.Set(cacheKey, hasProductAttributesCache, 60);
-            }
-            if (hasProductAttributesCache.Value && productAttributeMapping == null)
+                return productAttributeMapping.Any();
+            });
+            if (hasProductAttributesCache && productAttributeMapping == null)
             {
                 //cache indicates that the product has attributes
                 //let's load them

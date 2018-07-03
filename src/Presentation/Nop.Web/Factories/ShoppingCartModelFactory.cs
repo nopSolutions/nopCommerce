@@ -761,10 +761,10 @@ namespace Nop.Web.Factories
         public virtual PictureModel PrepareCartItemPictureModel(ShoppingCartItem sci, int pictureSize, bool showDefaultPicture, string productName)
         {
             var pictureCacheKey = string.Format(ModelCacheEventConsumer.CART_PICTURE_MODEL_KEY, sci.Id, pictureSize, true, _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore.Id);
-            var model = _cacheManager.Get(pictureCacheKey, 
-                //as we cache per user (shopping cart item identifier)
-                //let's cache just for 3 minutes
-                3, () =>
+            //as we cache per user (shopping cart item identifier)
+            //let's cache just for 3 minutes
+            var cacheTime = 3;
+            var model = _cacheManager.Get(pictureCacheKey, () =>
             {
                 //shopping cart item picture
                 var sciPicture = sci.Product.GetProductPicture(sci.AttributesXml, _pictureService, _productAttributeParser);
@@ -774,7 +774,7 @@ namespace Nop.Web.Factories
                     Title = string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat"), productName),
                     AlternateText = string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat"), productName),
                 };
-            });
+            }, cacheTime);
             return model;
         }
 

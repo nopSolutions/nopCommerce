@@ -371,7 +371,7 @@ namespace Nop.Web.Framework.UI
                         //we periodically re-check already bundles file
                         //so if we have minification enabled, it could take up to several minutes to see changes in updated resource files (or just reset the cache or restart the site)
                         var cacheKey = $"Nop.minification.shouldrebuild.js-{outputFileName}";
-                        var shouldRebuild = _cacheManager.Get(cacheKey, RecheckBundledFilesPeriod, () => true);
+                        var shouldRebuild = _cacheManager.Get(cacheKey, () => true, RecheckBundledFilesPeriod);
                         if (shouldRebuild)
                         {
                             //store json file to see a generated config file (for debugging purposes)
@@ -592,7 +592,7 @@ namespace Nop.Web.Framework.UI
                         //we periodically re-check already bundles file
                         //so if we have minification enabled, it could take up to several minutes to see changes in updated resource files (or just reset the cache or restart the site)
                         var cacheKey = $"Nop.minification.shouldrebuild.css-{outputFileName}";
-                        var shouldRebuild = _cacheManager.Get<bool>(cacheKey, RecheckBundledFilesPeriod, () => true);
+                        var shouldRebuild = _cacheManager.Get(cacheKey, () => true, RecheckBundledFilesPeriod);
                         if (shouldRebuild)
                         {
                             //store json file to see a generated config file (for debugging purposes)

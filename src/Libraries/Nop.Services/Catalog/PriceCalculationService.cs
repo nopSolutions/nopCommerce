@@ -416,7 +416,7 @@ namespace Nop.Services.Catalog
             //otherwise, it can cause memory leaks (to store all possible date period combinations)
             if (product.IsRental)
                 cacheTime = 0;
-            var cachedPrice = _cacheManager.Get(cacheKey, cacheTime, () =>
+            var cachedPrice = _cacheManager.Get(cacheKey, () =>
             {
                 var result = new ProductPriceForCaching();
 
@@ -454,7 +454,7 @@ namespace Nop.Services.Catalog
 
                 result.Price = price;
                 return result;
-            });
+            }, cacheTime);
 
             if (includeDiscounts)
             {
