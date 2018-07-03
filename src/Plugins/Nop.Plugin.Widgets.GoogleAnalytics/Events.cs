@@ -20,7 +20,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
     {
         private readonly ICategoryService _categoryService;
         private readonly ILogger _logger;
-        private readonly IProductAttributeParser _productAttributeParser;
+        private readonly IProductService _productService;
         private readonly ISettingService _settingService;
         private readonly IStoreContext _storeContext;
         private readonly IStoreService _storeService;
@@ -30,7 +30,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
 
         public EventConsumer(ICategoryService categoryService,
             ILogger logger,
-            IProductAttributeParser productAttributeParser,
+            IProductService productService,
             ISettingService settingService,
             IStoreContext storeContext,
             IStoreService storeService,
@@ -40,7 +40,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
         {
             this._logger = logger;
             this._categoryService = categoryService;
-            this._productAttributeParser = productAttributeParser;
+            this._productService = productService;
             this._settingService = settingService;
             this._storeContext = storeContext;
             this._storeService = storeService;
@@ -110,7 +110,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
                     if (!add)
                         qty = -qty;
 
-                    var sku = item.Product.FormatSku(item.AttributesXml, _productAttributeParser);
+                    var sku = _productService.FormatSku(item.Product, item.AttributesXml);
                     if (String.IsNullOrEmpty(sku))
                         sku = item.Product.Id.ToString();
                     var product = new TransactionItem(FixIllegalJavaScriptChars(orderId), 

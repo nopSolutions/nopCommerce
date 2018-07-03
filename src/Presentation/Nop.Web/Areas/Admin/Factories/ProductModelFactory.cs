@@ -748,7 +748,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     productModel.PictureThumbnailUrl = _pictureService.GetPictureUrl(defaultProductPicture, 75);
                     productModel.ProductTypeName = product.ProductType.GetLocalizedEnum(_localizationService, _workContext);
                     if (product.ProductType == ProductType.SimpleProduct && product.ManageInventoryMethod == ManageInventoryMethod.ManageStock)
-                        productModel.StockQuantityStr = product.GetTotalStockQuantity().ToString();
+                        productModel.StockQuantityStr = _productService.GetTotalStockQuantity(product).ToString();
 
                     return productModel;
                 }),
@@ -1581,7 +1581,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             return model;
         }
-        
+
         /// <summary>
         /// Prepare bulk edit product search model
         /// </summary>

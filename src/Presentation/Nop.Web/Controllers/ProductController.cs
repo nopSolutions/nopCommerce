@@ -117,7 +117,7 @@ namespace Nop.Web.Controllers
                 //Store mapping
                 !_storeMappingService.Authorize(product) ||
                 //availability dates
-                !product.IsAvailable();
+                !_productService.ProductIsAvailable(product);
             //Check whether the current user has a "Manage products" permission (usually a store owner)
             //We should allows him (her) to use "Preview" functionality
             if (notAvailable && !_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
@@ -179,7 +179,7 @@ namespace Nop.Web.Controllers
 
             return View(productTemplateViewPath, model);
         }
-        
+
         #endregion
 
         #region Recently viewed products
@@ -224,7 +224,7 @@ namespace Nop.Web.Controllers
         public virtual IActionResult NewProductsRss()
         {
             var feed = new RssFeed(
-                $"{_storeContext.CurrentStore.GetLocalized(x => x.Name)}: New products", 
+                $"{_storeContext.CurrentStore.GetLocalized(x => x.Name)}: New products",
                 "Information about products",
                 new Uri(_webHelper.GetStoreLocation()),
                 DateTime.UtcNow);
@@ -289,7 +289,7 @@ namespace Nop.Web.Controllers
 
             //default value
             model.AddProductReview.Rating = _catalogSettings.DefaultProductRatingValue;
-            
+
             //default value for all additional review types
             if (model.ReviewTypeList.Count > 0)
                 foreach (var additionalProductReview in model.AddAdditionalProductReviewList)
@@ -513,7 +513,7 @@ namespace Nop.Web.Controllers
             {
                 ModelState.AddModelError("", _localizationService.GetResource("Products.EmailAFriend.OnlyRegisteredUsers"));
             }
-            
+
             if (ModelState.IsValid)
             {
                 //email
@@ -535,7 +535,7 @@ namespace Nop.Web.Controllers
         }
 
         #endregion
-        
+
         #region Comparing products
 
         [HttpPost]
@@ -602,7 +602,7 @@ namespace Nop.Web.Controllers
             //ACL and store mapping
             products = products.Where(p => _aclService.Authorize(p) && _storeMappingService.Authorize(p)).ToList();
             //availability dates
-            products = products.Where(p => p.IsAvailable()).ToList();
+            products = products.Where(p => _productService.ProductIsAvailable(p)).ToList();
 
             //prepare model
             _productModelFactory.PrepareProductOverviewModels(products, prepareSpecificationAttributes: true)

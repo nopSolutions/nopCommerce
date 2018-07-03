@@ -46,6 +46,7 @@ namespace Nop.Web.Factories
         private readonly IPaymentService _paymentService;
         private readonly IPriceFormatter _priceFormatter;
         private readonly IProductAttributeParser _productAttributeParser;
+        private readonly IProductService _productService;
         private readonly IRewardPointService _rewardPointService;
         private readonly IShippingService _shippingService;
         private readonly IStoreContext _storeContext;
@@ -60,22 +61,23 @@ namespace Nop.Web.Factories
 
         #endregion
 
-		#region Ctor
+        #region Ctor
 
         public OrderModelFactory(AddressSettings addressSettings,
             CatalogSettings catalogSettings,
-            IAddressModelFactory addressModelFactory, 
-            ICountryService countryService, 
+            IAddressModelFactory addressModelFactory,
+            ICountryService countryService,
             ICurrencyService currencyService,
             IDateTimeHelper dateTimeHelper,
             IDownloadService downloadService,
             ILocalizationService localizationService,
-            IOrderProcessingService orderProcessingService, 
+            IOrderProcessingService orderProcessingService,
             IOrderService orderService,
             IOrderTotalCalculationService orderTotalCalculationService,
-            IPaymentService paymentService, 
+            IPaymentService paymentService,
             IPriceFormatter priceFormatter,
             IProductAttributeParser productAttributeParser,
+            IProductService productService,
             IRewardPointService rewardPointService,
             IShippingService shippingService,
             IStoreContext storeContext,
@@ -84,7 +86,7 @@ namespace Nop.Web.Factories
             OrderSettings orderSettings,
             PdfSettings pdfSettings,
             RewardPointsSettings rewardPointsSettings,
-            ShippingSettings shippingSettings, 
+            ShippingSettings shippingSettings,
             TaxSettings taxSettings,
             VendorSettings vendorSettings)
         {
@@ -102,6 +104,7 @@ namespace Nop.Web.Factories
             this._paymentService = paymentService;
             this._priceFormatter = priceFormatter;
             this._productAttributeParser = productAttributeParser;
+            this._productService = productService;
             this._rewardPointService = rewardPointService;
             this._shippingService = shippingService;
             this._storeContext = storeContext;
@@ -206,14 +209,14 @@ namespace Nop.Web.Factories
                 }
                 else
                     if (order.PickupAddress != null)
-                        model.PickupAddress = new AddressModel
-                        {
-                            Address1 = order.PickupAddress.Address1,
-                            City = order.PickupAddress.City,
-                            County = order.PickupAddress.County,
-                            CountryName = order.PickupAddress.Country != null ? order.PickupAddress.Country.Name : string.Empty,
-                            ZipPostalCode = order.PickupAddress.ZipPostalCode
-                        };
+                    model.PickupAddress = new AddressModel
+                    {
+                        Address1 = order.PickupAddress.Address1,
+                        City = order.PickupAddress.City,
+                        County = order.PickupAddress.County,
+                        CountryName = order.PickupAddress.Country != null ? order.PickupAddress.Country.Name : string.Empty,
+                        ZipPostalCode = order.PickupAddress.ZipPostalCode
+                    };
                 model.ShippingMethod = order.ShippingMethod;
 
                 //shipments (only already shipped)
@@ -392,14 +395,14 @@ namespace Nop.Web.Factories
             var orderItems = order.OrderItems;
 
             var vendors = _vendorSettings.ShowVendorOnOrderDetailsPage ? _vendorService.GetVendorsByIds(orderItems.Select(item => item.Product.VendorId).ToArray()) : new List<Vendor>();
-            
+
             foreach (var orderItem in orderItems)
             {
                 var orderItemModel = new OrderDetailsModel.OrderItemModel
                 {
                     Id = orderItem.Id,
                     OrderItemGuid = orderItem.OrderItemGuid,
-                    Sku = orderItem.Product.FormatSku(orderItem.AttributesXml, _productAttributeParser),
+                    Sku = _productService.FormatSku(orderItem.Product, orderItem.AttributesXml),
                     VendorName = vendors.FirstOrDefault(v => v.Id == orderItem.Product.VendorId)?.Name ?? string.Empty,
                     ProductId = orderItem.Product.Id,
                     ProductName = orderItem.Product.GetLocalized(x => x.Name),
@@ -410,8 +413,10 @@ namespace Nop.Web.Factories
                 //rental info
                 if (orderItem.Product.IsRental)
                 {
-                    var rentalStartDate = orderItem.RentalStartDateUtc.HasValue ? orderItem.Product.FormatRentalDate(orderItem.RentalStartDateUtc.Value) : "";
-                    var rentalEndDate = orderItem.RentalEndDateUtc.HasValue ? orderItem.Product.FormatRentalDate(orderItem.RentalEndDateUtc.Value) : "";
+                    var rentalStartDate = orderItem.RentalStartDateUtc.HasValue
+                        ? _productService.FormatRentalDate(orderItem.Product, orderItem.RentalStartDateUtc.Value) : "";
+                    var rentalEndDate = orderItem.RentalEndDateUtc.HasValue
+                        ? _productService.FormatRentalDate(orderItem.Product, orderItem.RentalEndDateUtc.Value) : "";
                     orderItemModel.RentalInfo = string.Format(_localizationService.GetResource("Order.Rental.FormattedDate"),
                         rentalStartDate, rentalEndDate);
                 }
@@ -468,7 +473,7 @@ namespace Nop.Web.Factories
                 model.ShippedDate = _dateTimeHelper.ConvertToUserTime(shipment.ShippedDateUtc.Value, DateTimeKind.Utc);
             if (shipment.DeliveryDateUtc.HasValue)
                 model.DeliveryDate = _dateTimeHelper.ConvertToUserTime(shipment.DeliveryDateUtc.Value, DateTimeKind.Utc);
-            
+
             //tracking number and shipment information
             if (!string.IsNullOrEmpty(shipment.TrackingNumber))
             {
@@ -508,7 +513,7 @@ namespace Nop.Web.Factories
                 var shipmentItemModel = new ShipmentDetailsModel.ShipmentItemModel
                 {
                     Id = shipmentItem.Id,
-                    Sku = orderItem.Product.FormatSku(orderItem.AttributesXml, _productAttributeParser),
+                    Sku = _productService.FormatSku(orderItem.Product, orderItem.AttributesXml),
                     ProductId = orderItem.Product.Id,
                     ProductName = orderItem.Product.GetLocalized(x => x.Name),
                     ProductSeName = orderItem.Product.GetSeName(),
@@ -519,8 +524,10 @@ namespace Nop.Web.Factories
                 //rental info
                 if (orderItem.Product.IsRental)
                 {
-                    var rentalStartDate = orderItem.RentalStartDateUtc.HasValue ? orderItem.Product.FormatRentalDate(orderItem.RentalStartDateUtc.Value) : "";
-                    var rentalEndDate = orderItem.RentalEndDateUtc.HasValue ? orderItem.Product.FormatRentalDate(orderItem.RentalEndDateUtc.Value) : "";
+                    var rentalStartDate = orderItem.RentalStartDateUtc.HasValue
+                        ? _productService.FormatRentalDate(orderItem.Product, orderItem.RentalStartDateUtc.Value) : "";
+                    var rentalEndDate = orderItem.RentalEndDateUtc.HasValue
+                        ? _productService.FormatRentalDate(orderItem.Product, orderItem.RentalEndDateUtc.Value) : "";
                     shipmentItemModel.RentalInfo = string.Format(_localizationService.GetResource("Order.Rental.FormattedDate"),
                         rentalStartDate, rentalEndDate);
                 }
@@ -529,7 +536,7 @@ namespace Nop.Web.Factories
 
             //order details model
             model.Order = PrepareOrderDetailsModel(order);
-            
+
             return model;
         }
 
@@ -571,7 +578,7 @@ namespace Nop.Web.Factories
                 ShowTotalSummary = true,
                 RouteActionName = "CustomerRewardPointsPaged",
                 UseRouteLinks = true,
-                RouteValues = new RewardPointsRouteValues { pageNumber = page ?? 0}
+                RouteValues = new RewardPointsRouteValues { pageNumber = page ?? 0 }
             };
 
             //current amount/balance

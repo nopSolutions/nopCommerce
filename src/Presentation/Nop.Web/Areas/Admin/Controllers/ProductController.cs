@@ -948,7 +948,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     model.ShowOnHomePage = product.ShowOnHomePage;
 
                 //some previously used values
-                var prevTotalStockQuantity = product.GetTotalStockQuantity();
+                var prevTotalStockQuantity = _productService.GetTotalStockQuantity(product);
                 var prevDownloadId = product.DownloadId;
                 var prevSampleDownloadId = product.SampleDownloadId;
                 var previousStockQuantity = product.StockQuantity;
@@ -995,7 +995,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStock &&
                     product.BackorderMode == BackorderMode.NoBackorders &&
                     product.AllowBackInStockSubscriptions &&
-                    product.GetTotalStockQuantity() > 0 &&
+                    _productService.GetTotalStockQuantity(product) > 0 &&
                     prevTotalStockQuantity <= 0 &&
                     product.Published &&
                     !product.Deleted)
@@ -1341,7 +1341,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
                         continue;
 
-                    if (existingRelatedProducts.FindRelatedProduct(model.ProductId, product.Id) != null)
+                    if (_productService.FindRelatedProduct(existingRelatedProducts, model.ProductId, product.Id) != null)
                         continue;
 
                     _productService.InsertRelatedProduct(new RelatedProduct
@@ -1445,7 +1445,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
                         continue;
 
-                    if (existingCrossSellProducts.FindCrossSellProduct(model.ProductId, product.Id) != null)
+                    if (_productService.FindCrossSellProduct(existingCrossSellProducts, model.ProductId, product.Id) != null)
                         continue;
 
                     _productService.InsertCrossSellProduct(new CrossSellProduct
@@ -1910,7 +1910,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //prepare model
             model = _productModelFactory.PrepareProductTagModel(model, productTag, true);
-            
+
             //if we got this far, something failed, redisplay form
             return View(model);
         }
@@ -2186,7 +2186,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         #endregion
-        
+
         #region Bulk editing
 
         public virtual IActionResult BulkEdit()
@@ -2232,7 +2232,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
                     continue;
 
-                var prevTotalStockQuantity = product.GetTotalStockQuantity();
+                var prevTotalStockQuantity = _productService.GetTotalStockQuantity(product);
                 var previousStockQuantity = product.StockQuantity;
 
                 product.Name = pModel.Name;
@@ -2248,7 +2248,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStock &&
                     product.BackorderMode == BackorderMode.NoBackorders &&
                     product.AllowBackInStockSubscriptions &&
-                    product.GetTotalStockQuantity() > 0 &&
+                    _productService.GetTotalStockQuantity(product) > 0 &&
                     prevTotalStockQuantity <= 0 &&
                     product.Published &&
                     !product.Deleted)

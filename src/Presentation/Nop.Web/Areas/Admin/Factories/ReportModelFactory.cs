@@ -131,7 +131,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Name = product.Name,
                 ManageInventoryMethod = product
                     .ManageInventoryMethod.GetLocalizedEnum(_localizationService, _workContext.WorkingLanguage.Id),
-                StockQuantity = product.GetTotalStockQuantity(),
+                StockQuantity = _productService.GetTotalStockQuantity(product),
                 Published = product.Published
             }));
 

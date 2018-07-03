@@ -90,7 +90,7 @@ namespace Nop.Web.Factories
 
         #endregion
 
-		#region Ctor
+        #region Ctor
 
         public ShoppingCartModelFactory(AddressSettings addressSettings,
             CaptchaSettings captchaSettings,
@@ -180,7 +180,7 @@ namespace Nop.Web.Factories
         }
 
         #endregion
-        
+
         #region Utilities
 
         /// <summary>
@@ -299,7 +299,7 @@ namespace Nop.Web.Factories
                                     attributeModel.SelectedYear = selectedDate.Year;
                                 }
                             }
-                            
+
                         }
                         break;
                     case AttributeControlType.FileUpload:
@@ -341,7 +341,7 @@ namespace Nop.Web.Factories
             var cartItemModel = new ShoppingCartModel.ShoppingCartItemModel
             {
                 Id = sci.Id,
-                Sku = sci.Product.FormatSku(sci.AttributesXml, _productAttributeParser),
+                Sku = _productService.FormatSku(sci.Product, sci.AttributesXml),
                 VendorName = vendors.FirstOrDefault(v => v.Id == sci.Product.VendorId)?.Name ?? string.Empty,
                 ProductId = sci.Product.Id,
                 ProductName = sci.Product.GetLocalized(x => x.Name),
@@ -363,10 +363,10 @@ namespace Nop.Web.Factories
 
             //disable removal?
             //1. do other items require this one?
-            cartItemModel.DisableRemoval = cart.Any( item => item.Product.RequireOtherProducts && item.Product.ParseRequiredProductIds().Contains(sci.ProductId));
+            cartItemModel.DisableRemoval = cart.Any(item => item.Product.RequireOtherProducts && _productService.ParseRequiredProductIds(item.Product).Contains(sci.ProductId));
 
             //allowed quantities
-            var allowedQuantities = sci.Product.ParseAllowedQuantities();
+            var allowedQuantities = _productService.ParseAllowedQuantities(sci.Product);
             foreach (var qty in allowedQuantities)
             {
                 cartItemModel.AllowedQuantities.Add(new SelectListItem
@@ -387,10 +387,10 @@ namespace Nop.Web.Factories
             if (sci.Product.IsRental)
             {
                 var rentalStartDate = sci.RentalStartDateUtc.HasValue
-                    ? sci.Product.FormatRentalDate(sci.RentalStartDateUtc.Value)
+                    ? _productService.FormatRentalDate(sci.Product, sci.RentalStartDateUtc.Value)
                     : "";
                 var rentalEndDate = sci.RentalEndDateUtc.HasValue
-                    ? sci.Product.FormatRentalDate(sci.RentalEndDateUtc.Value)
+                    ? _productService.FormatRentalDate(sci.Product, sci.RentalEndDateUtc.Value)
                     : "";
                 cartItemModel.RentalInfo =
                     string.Format(_localizationService.GetResource("ShoppingCart.Rental.FormattedDate"),
@@ -480,7 +480,7 @@ namespace Nop.Web.Factories
             var cartItemModel = new WishlistModel.ShoppingCartItemModel
             {
                 Id = sci.Id,
-                Sku = sci.Product.FormatSku(sci.AttributesXml, _productAttributeParser),
+                Sku = _productService.FormatSku(sci.Product, sci.AttributesXml),
                 ProductId = sci.Product.Id,
                 ProductName = sci.Product.GetLocalized(x => x.Name),
                 ProductSeName = sci.Product.GetSeName(),
@@ -500,7 +500,7 @@ namespace Nop.Web.Factories
                                              sci.Product.VisibleIndividually;
 
             //allowed quantities
-            var allowedQuantities = sci.Product.ParseAllowedQuantities();
+            var allowedQuantities = _productService.ParseAllowedQuantities(sci.Product);
             foreach (var qty in allowedQuantities)
             {
                 cartItemModel.AllowedQuantities.Add(new SelectListItem
@@ -521,10 +521,10 @@ namespace Nop.Web.Factories
             if (sci.Product.IsRental)
             {
                 var rentalStartDate = sci.RentalStartDateUtc.HasValue
-                    ? sci.Product.FormatRentalDate(sci.RentalStartDateUtc.Value)
+                    ? _productService.FormatRentalDate(sci.Product, sci.RentalStartDateUtc.Value)
                     : "";
                 var rentalEndDate = sci.RentalEndDateUtc.HasValue
-                    ? sci.Product.FormatRentalDate(sci.RentalEndDateUtc.Value)
+                    ? _productService.FormatRentalDate(sci.Product, sci.RentalEndDateUtc.Value)
                     : "";
                 cartItemModel.RentalInfo =
                     string.Format(_localizationService.GetResource("ShoppingCart.Rental.FormattedDate"),
@@ -627,7 +627,7 @@ namespace Nop.Web.Factories
             {
                 model.IsShippable = true;
 
-                var pickupPoint = _workContext.CurrentCustomer.GetAttribute<PickupPoint>(NopCustomerDefaults.SelectedPickupPointAttribute,_storeContext.CurrentStore.Id);
+                var pickupPoint = _workContext.CurrentCustomer.GetAttribute<PickupPoint>(NopCustomerDefaults.SelectedPickupPointAttribute, _storeContext.CurrentStore.Id);
                 model.SelectedPickUpInStore = _shippingSettings.AllowPickUpInStore && pickupPoint != null;
                 if (!model.SelectedPickUpInStore)
                 {
@@ -787,9 +787,9 @@ namespace Nop.Web.Factories
         /// <param name="validateCheckoutAttributes">Whether to validate checkout attributes</param>
         /// <param name="prepareAndDisplayOrderReviewData">Whether to prepare and display order review data</param>
         /// <returns>Shopping cart model</returns>
-        public virtual ShoppingCartModel PrepareShoppingCartModel(ShoppingCartModel model, 
-            IList<ShoppingCartItem> cart, bool isEditable = true, 
-            bool validateCheckoutAttributes = false, 
+        public virtual ShoppingCartModel PrepareShoppingCartModel(ShoppingCartModel model,
+            IList<ShoppingCartItem> cart, bool isEditable = true,
+            bool validateCheckoutAttributes = false,
             bool prepareAndDisplayOrderReviewData = false)
         {
             if (cart == null)
@@ -846,14 +846,14 @@ namespace Nop.Web.Factories
             model.CheckoutAttributes = PrepareCheckoutAttributeModels(cart);
 
             var vendors = _vendorSettings.ShowVendorOnOrderDetailsPage ? _vendorService.GetVendorsByIds(cart.Select(item => item.Product.VendorId).ToArray()) : new List<Vendor>();
-    
+
             //cart items
             foreach (var sci in cart)
             {
                 var cartItemModel = PrepareShoppingCartItemModel(cart, sci, vendors);
                 model.Items.Add(cartItemModel);
             }
-            
+
             //payment methods
             //all payment methods (do not filter by country here as it could be not specified yet)
             var paymentMethods = _paymentService
@@ -878,7 +878,7 @@ namespace Nop.Web.Factories
             }
             //hide "Checkout" button if we have only "Button" payment methods
             model.HideCheckoutButton = !nonButtonPaymentMethods.Any() && model.ButtonPaymentMethodViewComponentNames.Any();
-            
+
             //order review data
             if (prepareAndDisplayOrderReviewData)
             {
@@ -917,12 +917,12 @@ namespace Nop.Web.Factories
             model.CustomerFullname = customer.GetFullName();
             model.ShowProductImages = _shoppingCartSettings.ShowProductImagesOnWishList;
             model.ShowSku = _catalogSettings.ShowSkuOnProductDetailsPage;
-            
+
             //cart warnings
             var cartWarnings = _shoppingCartService.GetShoppingCartWarnings(cart, "", false);
             foreach (var warning in cartWarnings)
                 model.Warnings.Add(warning);
-            
+
             //cart items
             foreach (var sci in cart)
             {
@@ -1030,7 +1030,7 @@ namespace Nop.Web.Factories
                     }
                 }
             }
-            
+
             return model;
         }
 
@@ -1042,7 +1042,7 @@ namespace Nop.Web.Factories
         {
             var checkoutAttributesXml = _workContext.CurrentCustomer
                 .GetAttribute<string>(NopCustomerDefaults.CheckoutAttributes, _genericAttributeService, _storeContext.CurrentStore.Id);
-           return _checkoutAttributeFormatter.FormatAttributes(checkoutAttributesXml, _workContext.CurrentCustomer);
+            return _checkoutAttributeFormatter.FormatAttributes(checkoutAttributesXml, _workContext.CurrentCustomer);
         }
 
         /// <summary>
@@ -1303,7 +1303,7 @@ namespace Nop.Web.Factories
             }
             return model;
         }
-        
+
         #endregion
     }
 }

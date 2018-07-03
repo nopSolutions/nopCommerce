@@ -36,19 +36,6 @@ namespace Nop.Services.Catalog
 
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="catalogSettings">Catalog settings</param>
-        /// <param name="categoryService">Category service</param>
-        /// <param name="discountService">Discount service</param>
-        /// <param name="manufacturerService">Manufacturer service</param>
-        /// <param name="productAttributeParser">Product attribute parser</param>
-        /// <param name="productService">Product service</param>
-        /// <param name="cacheManager">Cache manager</param>
-        /// <param name="storeContext">Store context</param>
-        /// <param name="workContext">Work context</param>
-        /// <param name="shoppingCartSettings">Shopping cart settings</param>
         public PriceCalculationService(CatalogSettings catalogSettings,
             ICategoryService categoryService,
             IDiscountService discountService,
@@ -71,7 +58,7 @@ namespace Nop.Services.Catalog
             this._workContext = workContext;
             this._shoppingCartSettings = shoppingCartSettings;
         }
-        
+
         #endregion
 
         #region Nested classes
@@ -331,9 +318,9 @@ namespace Nop.Services.Catalog
         /// <param name="discountAmount">Applied discount amount</param>
         /// <param name="appliedDiscounts">Applied discounts</param>
         /// <returns>Final price</returns>
-        public virtual decimal GetFinalPrice(Product product, 
+        public virtual decimal GetFinalPrice(Product product,
             Customer customer,
-            decimal additionalCharge, 
+            decimal additionalCharge,
             bool includeDiscounts,
             int quantity,
             out decimal discountAmount,
@@ -386,10 +373,10 @@ namespace Nop.Services.Catalog
         /// <param name="discountAmount">Applied discount amount</param>
         /// <param name="appliedDiscounts">Applied discounts</param>
         /// <returns>Final price</returns>
-        public virtual decimal GetFinalPrice(Product product, 
+        public virtual decimal GetFinalPrice(Product product,
             Customer customer,
             decimal? overriddenProductPrice,
-            decimal additionalCharge, 
+            decimal additionalCharge,
             bool includeDiscounts,
             int quantity,
             DateTime? rentalStartDate,
@@ -407,11 +394,11 @@ namespace Nop.Services.Catalog
                 product.Id,
                 overriddenProductPrice.HasValue ? overriddenProductPrice.Value.ToString(CultureInfo.InvariantCulture) : null,
                 additionalCharge.ToString(CultureInfo.InvariantCulture),
-                includeDiscounts, 
+                includeDiscounts,
                 quantity,
                 string.Join(",", customer.GetCustomerRoleIds()),
                 _storeContext.CurrentStore.Id);
-             var cacheTime = _catalogSettings.CacheProductPrices ? 60 : 0;
+            var cacheTime = _catalogSettings.CacheProductPrices ? 60 : 0;
             //we do not cache price for rental products
             //otherwise, it can cause memory leaks (to store all possible date period combinations)
             if (product.IsRental)
@@ -421,10 +408,10 @@ namespace Nop.Services.Catalog
                 var result = new ProductPriceForCaching();
 
                 //initial price
-                var price = overriddenProductPrice.HasValue ? overriddenProductPrice.Value : product.Price;
+                var price = overriddenProductPrice ?? product.Price;
 
                 //tier prices
-                var tierPrice = product.GetPreferredTierPrice(customer, _storeContext.CurrentStore.Id, quantity);
+                var tierPrice = _productService.GetPreferredTierPrice(product, customer, _storeContext.CurrentStore.Id, quantity);
                 if (tierPrice != null)
                     price = tierPrice.Price;
 
@@ -434,7 +421,7 @@ namespace Nop.Services.Catalog
                 //rental products
                 if (product.IsRental)
                     if (rentalStartDate.HasValue && rentalEndDate.HasValue)
-                        price = price * product.GetRentalPeriods(rentalStartDate.Value, rentalEndDate.Value);
+                        price = price * _productService.GetRentalPeriods(product, rentalStartDate.Value, rentalEndDate.Value);
 
                 if (includeDiscounts)
                 {
@@ -528,7 +515,7 @@ namespace Nop.Services.Catalog
         /// <param name="appliedDiscounts">Applied discounts</param>
         /// <returns>Shopping cart unit price (one item)</returns>
         public virtual decimal GetUnitPrice(Product product,
-            Customer customer, 
+            Customer customer,
             ShoppingCartType shoppingCartType,
             int quantity,
             string attributesXml,
@@ -610,7 +597,7 @@ namespace Nop.Services.Catalog
                         out discountAmount, out appliedDiscounts);
                 }
             }
-            
+
             //rounding
             if (_shoppingCartSettings.RoundPricesDuringCalculation)
                 finalPrice = RoundingHelper.RoundPrice(finalPrice);
@@ -675,7 +662,7 @@ namespace Nop.Services.Catalog
 
                     var notDiscountedQuantity = shoppingCartItem.Quantity - discountedQuantity;
                     var notDiscountedUnitPrice = GetUnitPrice(shoppingCartItem, false);
-                    var notDiscountedSubTotal = notDiscountedUnitPrice*notDiscountedQuantity;
+                    var notDiscountedSubTotal = notDiscountedUnitPrice * notDiscountedQuantity;
 
                     subTotal = discountedSubTotal + notDiscountedSubTotal;
                 }
@@ -739,7 +726,7 @@ namespace Nop.Services.Catalog
             if (value == null)
                 throw new ArgumentNullException(nameof(value));
 
-           
+
             var adjustment = decimal.Zero;
             switch (value.AttributeValueType)
             {
@@ -751,7 +738,7 @@ namespace Nop.Services.Catalog
                             if (!productPrice.HasValue)
                                 productPrice = GetFinalPrice(value.ProductAttributeMapping.Product, customer);
 
-                            adjustment = (decimal) ((float) productPrice * (float) value.PriceAdjustment / 100f);
+                            adjustment = (decimal)((float)productPrice * (float)value.PriceAdjustment / 100f);
                         }
                         else
                         {

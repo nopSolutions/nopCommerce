@@ -31,7 +31,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Components
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ILogger _logger;
         private readonly IOrderService _orderService;
-        private readonly IProductAttributeParser _productAttributeParser;
+        private readonly IProductService _productService;
         private readonly ISettingService _settingService;
         private readonly IStoreContext _storeContext;
         private readonly IWorkContext _workContext;
@@ -47,7 +47,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Components
             IGenericAttributeService genericAttributeService,
             ILogger logger,
             IOrderService orderService,
-            IProductAttributeParser productAttributeParser,
+            IProductService productService,
             ISettingService settingService,
             IStoreContext storeContext,
             IWorkContext workContext)
@@ -59,7 +59,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Components
             this._genericAttributeService = genericAttributeService;
             this._logger = logger;
             this._orderService = orderService;
-            this._productAttributeParser = productAttributeParser;
+            this._productService = productService;
             this._settingService = settingService;
             this._storeContext = storeContext;
             this._workContext = workContext;
@@ -144,7 +144,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Components
                     'price': '{UNITPRICE}'
                     }
                     ";
-                    var sku = item.Product.FormatSku(item.AttributesXml, _productAttributeParser);
+                    var sku = _productService.FormatSku(item.Product, item.AttributesXml);
                     if (String.IsNullOrEmpty(sku))
                         sku = item.Product.Id.ToString();
                     analyticsEcommerceDetailScript = analyticsEcommerceDetailScript.Replace("{PRODUCTSKU}", FixIllegalJavaScriptChars(sku));

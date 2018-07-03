@@ -256,7 +256,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 };
 
                 //fill in additional values (not existing in the entity)
-                orderItemModel.Sku = orderItem.Product.FormatSku(orderItem.AttributesXml, _productAttributeParser);
+                orderItemModel.Sku = _productService.FormatSku(orderItem.Product, orderItem.AttributesXml);
                 orderItemModel.VendorName = _vendorService.GetVendorById(orderItem.Product.VendorId)?.Name;
 
                 //picture
@@ -300,9 +300,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 if (orderItem.Product.IsRental)
                 {
                     var rentalStartDate = orderItem.RentalStartDateUtc.HasValue
-                        ? orderItem.Product.FormatRentalDate(orderItem.RentalStartDateUtc.Value) : string.Empty;
+                        ? _productService.FormatRentalDate(orderItem.Product, orderItem.RentalStartDateUtc.Value) : string.Empty;
                     var rentalEndDate = orderItem.RentalEndDateUtc.HasValue
-                        ? orderItem.Product.FormatRentalDate(orderItem.RentalEndDateUtc.Value) : string.Empty;
+                        ? _productService.FormatRentalDate(orderItem.Product, orderItem.RentalEndDateUtc.Value) : string.Empty;
                     orderItemModel.RentalInfo = string.Format(_localizationService.GetResource("Order.Rental.FormattedDate"),
                         rentalStartDate, rentalEndDate);
                 }
@@ -667,7 +667,7 @@ namespace Nop.Web.Areas.Admin.Factories
             model.OrderItemId = orderItem.Id;
             model.ProductId = orderItem.ProductId;
             model.ProductName = orderItem.Product.Name;
-            model.Sku = orderItem.Product.FormatSku(orderItem.AttributesXml, _productAttributeParser);
+            model.Sku = _productService.FormatSku(orderItem.Product, orderItem.AttributesXml);
             model.AttributeInfo = orderItem.AttributeDescription;
             model.ShipSeparately = orderItem.Product.ShipSeparately;
             model.QuantityOrdered = orderItem.Quantity;
@@ -684,8 +684,10 @@ namespace Nop.Web.Areas.Admin.Factories
             if (!orderItem.Product.IsRental)
                 return;
 
-            var rentalStartDate = orderItem.RentalStartDateUtc.HasValue ? orderItem.Product.FormatRentalDate(orderItem.RentalStartDateUtc.Value) : string.Empty;
-            var rentalEndDate = orderItem.RentalEndDateUtc.HasValue ? orderItem.Product.FormatRentalDate(orderItem.RentalEndDateUtc.Value) : string.Empty;
+            var rentalStartDate = orderItem.RentalStartDateUtc.HasValue
+                ? _productService.FormatRentalDate(orderItem.Product, orderItem.RentalStartDateUtc.Value) : string.Empty;
+            var rentalEndDate = orderItem.RentalEndDateUtc.HasValue
+                ? _productService.FormatRentalDate(orderItem.Product, orderItem.RentalEndDateUtc.Value) : string.Empty;
             model.RentalInfo = string.Format(_localizationService.GetResource("Order.Rental.FormattedDate"), rentalStartDate, rentalEndDate);
         }
 
@@ -1299,7 +1301,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 searchModel.LoadNotShipped,
                 startDateValue,
                 endDateValue,
-                searchModel.Page - 1, 
+                searchModel.Page - 1,
                 searchModel.PageSize);
 
             //prepare list model
@@ -1694,7 +1696,7 @@ namespace Nop.Web.Areas.Admin.Factories
             };
 
             return model;
-        }        
+        }
 
         /// <summary>
         /// Prepare order average line summary report list model

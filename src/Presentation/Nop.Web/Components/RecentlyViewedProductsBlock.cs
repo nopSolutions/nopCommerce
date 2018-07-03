@@ -16,18 +16,21 @@ namespace Nop.Web.Components
         private readonly CatalogSettings _catalogSettings;
         private readonly IAclService _aclService;
         private readonly IProductModelFactory _productModelFactory;
+        private readonly IProductService _productService;
         private readonly IRecentlyViewedProductsService _recentlyViewedProductsService;
         private readonly IStoreMappingService _storeMappingService;
 
         public RecentlyViewedProductsBlockViewComponent(CatalogSettings catalogSettings,
             IAclService aclService,
             IProductModelFactory productModelFactory,
+            IProductService productService,
             IRecentlyViewedProductsService recentlyViewedProductsService,
             IStoreMappingService storeMappingService)
         {
             this._catalogSettings = catalogSettings;
             this._aclService = aclService;
             this._productModelFactory = productModelFactory;
+            this._productService = productService;
             this._recentlyViewedProductsService = recentlyViewedProductsService;
             this._storeMappingService = storeMappingService;
         }
@@ -43,7 +46,7 @@ namespace Nop.Web.Components
             //ACL and store mapping
             products = products.Where(p => _aclService.Authorize(p) && _storeMappingService.Authorize(p)).ToList();
             //availability dates
-            products = products.Where(p => p.IsAvailable()).ToList();
+            products = products.Where(p => _productService.ProductIsAvailable(p)).ToList();
 
             if (!products.Any())
                 return Content("");

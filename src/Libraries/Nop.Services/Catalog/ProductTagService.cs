@@ -61,7 +61,7 @@ namespace Nop.Services.Catalog
         }
 
         #endregion
-        
+
         #region Utilities
 
         /// <summary>
@@ -76,7 +76,7 @@ namespace Nop.Services.Catalog
             {
                 return _dbContext.QueryFromSql<ProductTagWithCount>($"Exec ProductTagCountLoadAll {storeId}")
                     .ToDictionary(item => item.ProductTagId, item => item.ProductCount);
-                
+
             });
         }
 
@@ -125,10 +125,10 @@ namespace Nop.Services.Catalog
             return _cacheManager.Get(key, () =>
             {
                 var query = from pt in _productTagRepository.Table
-                    join ppt in _productProductTagMappingRepository.Table on pt.Id equals ppt.ProductTagId
-                    where ppt.ProductId == productId
-                    orderby pt.Id
-                    select pt;
+                            join ppt in _productProductTagMappingRepository.Table on pt.Id equals ppt.ProductTagId
+                            where ppt.ProductId == productId
+                            orderby pt.Id
+                            select pt;
 
                 var productTags = query.ToList();
                 return productTags;
@@ -162,7 +162,7 @@ namespace Nop.Services.Catalog
             var productTag = query.FirstOrDefault();
             return productTag;
         }
-        
+
         /// <summary>
         /// Inserts a product tag
         /// </summary>
@@ -215,7 +215,7 @@ namespace Nop.Services.Catalog
             var dictionary = GetProductCount(storeId);
             if (dictionary.ContainsKey(productTagId))
                 return dictionary[productTagId];
-            
+
             return 0;
         }
 
@@ -272,7 +272,7 @@ namespace Nop.Services.Catalog
                 {
                     productTag = productTag2;
                 }
-                if (!product.ProductTagExists(productTag.Id))
+                if (!_productService.ProductTagExists(product, productTag.Id))
                 {
                     //product.ProductTags.Add(productTag);
                     product.ProductProductTagMappings.Add(new ProductProductTagMapping { ProductTag = productTag });

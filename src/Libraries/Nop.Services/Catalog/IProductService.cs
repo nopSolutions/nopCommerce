@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 
@@ -31,14 +32,14 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <returns>Products</returns>
         IList<Product> GetAllProductsDisplayedOnHomePage();
-        
+
         /// <summary>
         /// Gets product
         /// </summary>
         /// <param name="productId">Product identifier</param>
         /// <returns>Product</returns>
         Product GetProductById(int productId);
-        
+
         /// <summary>
         /// Gets products by identifier
         /// </summary>
@@ -185,9 +186,9 @@ namespace Nop.Services.Catalog
             bool searchDescriptions = false,
             bool searchManufacturerPartNumber = true,
             bool searchSku = true,
-            bool searchProductTags = false, 
+            bool searchProductTags = false,
             int languageId = 0,
-            IList<int> filteredSpecs = null, 
+            IList<int> filteredSpecs = null,
             ProductSortingEnum orderBy = ProductSortingEnum.Position,
             bool showHidden = false,
             bool? overridePublished = null);
@@ -277,6 +278,108 @@ namespace Nop.Services.Catalog
         /// <returns>Number of products</returns>
         int GetNumberOfProductsByVendorId(int vendorId);
 
+        /// <summary>
+        /// Parse "required product Ids" property
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <returns>A list of required product IDs</returns>
+        int[] ParseRequiredProductIds(Product product);
+
+        /// <summary>
+        /// Get a value indicating whether a product is available now (availability dates)
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="dateTime">Datetime to check; pass null to use current date</param>
+        /// <returns>Result</returns>
+        bool ProductIsAvailable(Product product, DateTime? dateTime = null);
+
+        /// <summary>
+        /// Indicates whether a product tag exists
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="productTagId">Product tag identifier</param>
+        /// <returns>Result</returns>
+        bool ProductTagExists(Product product, int productTagId);
+
+        /// <summary>
+        /// Get a list of allowed quantities (parse 'AllowedQuantities' property)
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <returns>Result</returns>
+        int[] ParseAllowedQuantities(Product product);
+
+        /// <summary>
+        /// Get total quantity
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="useReservedQuantity">
+        /// A value indicating whether we should consider "Reserved Quantity" property 
+        /// when "multiple warehouses" are used
+        /// </param>
+        /// <param name="warehouseId">
+        /// Warehouse identifier. Used to limit result to certain warehouse.
+        /// Used only with "multiple warehouses" enabled.
+        /// </param>
+        /// <returns>Result</returns>
+        int GetTotalStockQuantity(Product product, bool useReservedQuantity = true, int warehouseId = 0);
+
+        /// <summary>
+        /// Get number of rental periods (price ratio)
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="startDate">Start date</param>
+        /// <param name="endDate">End date</param>
+        /// <returns>Number of rental periods</returns>
+        int GetRentalPeriods(Product product, DateTime startDate, DateTime endDate);
+
+        /// <summary>
+        /// Formats the stock availability/quantity message
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="attributesXml">Selected product attributes in XML format (if specified)</param>
+        /// <returns>The stock message</returns>
+        string FormatStockMessage(Product product, string attributesXml);
+
+        /// <summary>
+        /// Formats SKU
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="attributesXml">Attributes in XML format</param>
+        /// <returns>SKU</returns>
+        string FormatSku(Product product, string attributesXml = null);
+
+        /// <summary>
+        /// Formats manufacturer part number
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="attributesXml">Attributes in XML format</param>
+        /// <returns>Manufacturer part number</returns>
+        string FormatMpn(Product product, string attributesXml = null);
+
+        /// <summary>
+        /// Formats GTIN
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="attributesXml">Attributes in XML format</param>
+        /// <returns>GTIN</returns>
+        string FormatGtin(Product product, string attributesXml = null);
+
+        /// <summary>
+        /// Formats start/end date for rental product
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="date">Date</param>
+        /// <returns>Formatted date</returns>
+        string FormatRentalDate(Product product, DateTime date);
+
+        /// <summary>
+        /// Format base price (PAngV)
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="productPrice">Product price (in primary currency). Pass null if you want to use a default produce price</param>
+        /// <returns>Base price</returns>
+        string FormatBasePrice(Product product, decimal? productPrice);
+
         #endregion
 
         #region Inventory management methods
@@ -359,6 +462,15 @@ namespace Nop.Services.Catalog
         /// <param name="relatedProduct">Related product</param>
         void UpdateRelatedProduct(RelatedProduct relatedProduct);
 
+        /// <summary>
+        /// Finds a related product item by specified identifiers
+        /// </summary>
+        /// <param name="source">Source</param>
+        /// <param name="productId1">The first product identifier</param>
+        /// <param name="productId2">The second product identifier</param>
+        /// <returns>Related product</returns>
+        RelatedProduct FindRelatedProduct(IList<RelatedProduct> source, int productId1, int productId2);
+
         #endregion
 
         #region Cross-sell products
@@ -403,7 +515,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="crossSellProduct">Cross-sell product</param>
         void UpdateCrossSellProduct(CrossSellProduct crossSellProduct);
-        
+
         /// <summary>
         /// Gets a cross-sells
         /// </summary>
@@ -412,8 +524,17 @@ namespace Nop.Services.Catalog
         /// <returns>Cross-sells</returns>
         IList<Product> GetCrosssellProductsByShoppingCart(IList<ShoppingCartItem> cart, int numberOfProducts);
 
+        /// <summary>
+        /// Finds a cross-sell product item by specified identifiers
+        /// </summary>
+        /// <param name="source">Source</param>
+        /// <param name="productId1">The first product identifier</param>
+        /// <param name="productId2">The second product identifier</param>
+        /// <returns>Cross-sell product</returns>
+        CrossSellProduct FindCrossSellProduct(IList<CrossSellProduct> source, int productId1, int productId2);
+
         #endregion
-        
+
         #region Tier prices
 
         /// <summary>
@@ -440,6 +561,16 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="tierPrice">Tier price</param>
         void UpdateTierPrice(TierPrice tierPrice);
+
+        /// <summary>
+        /// Gets a preferred tier price
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="customer">Customer</param>
+        /// <param name="storeId">Store identifier</param>
+        /// <param name="quantity">Quantity</param>
+        /// <returns>Tier price</returns>
+        TierPrice GetPreferredTierPrice(Product product, Customer customer, int storeId, int quantity);
 
         #endregion
 
@@ -482,7 +613,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productsIds">Products IDs</param>
         /// <returns>All picture identifiers grouped by product ID</returns>
-        IDictionary<int, int[]> GetProductsImagesIds(int [] productsIds);
+        IDictionary<int, int[]> GetProductsImagesIds(int[] productsIds);
 
         #endregion
 

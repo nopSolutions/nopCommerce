@@ -38,7 +38,7 @@ namespace Nop.Web.Factories
     public partial class ProductModelFactory : IProductModelFactory
     {
         #region Fields
-        
+
         private readonly CaptchaSettings _captchaSettings;
         private readonly CatalogSettings _catalogSettings;
         private readonly CustomerSettings _customerSettings;
@@ -216,17 +216,17 @@ namespace Nop.Web.Factories
             switch (product.ProductType)
             {
                 case ProductType.GroupedProduct:
-                {
-                    //grouped product
-                    PrepareGroupedProductOverviewPriceModel(product, priceModel);
-                }
+                    {
+                        //grouped product
+                        PrepareGroupedProductOverviewPriceModel(product, priceModel);
+                    }
                     break;
                 case ProductType.SimpleProduct:
                 default:
-                {
-                    //simple product
-                    PrepareSimpleProductOverviewPriceModel(product, priceModel);
-                }
+                    {
+                        //simple product
+                        PrepareSimpleProductOverviewPriceModel(product, priceModel);
+                    }
                     break;
             }
 
@@ -345,7 +345,7 @@ namespace Nop.Web.Factories
                     priceModel.DisplayTaxShippingInfo = _catalogSettings.DisplayTaxShippingInfoProductBoxes && product.IsShipEnabled && !product.IsFreeShipping;
 
                     //PAngV baseprice (used in Germany)
-                    priceModel.BasePricePAngV = product.FormatBasePrice(finalPriceWithDiscount, _localizationService, _measureService, _currencyService, _workContext, _priceFormatter);
+                    priceModel.BasePricePAngV = _productService.FormatBasePrice(product, finalPriceWithDiscount);
                 }
             }
             else
@@ -425,9 +425,7 @@ namespace Nop.Web.Factories
                     priceModel.PriceValue = finalPrice;
 
                     //PAngV baseprice (used in Germany)
-                    priceModel.BasePricePAngV = product.FormatBasePrice(finalPriceBase,
-                        _localizationService, _measureService, _currencyService, _workContext,
-                        _priceFormatter);
+                    priceModel.BasePricePAngV = _productService.FormatBasePrice(product, finalPriceBase);
                 }
             }
             else
@@ -616,9 +614,7 @@ namespace Nop.Web.Factories
                             !product.IsFreeShipping;
 
                         //PAngV baseprice (used in Germany)
-                        model.BasePricePAngV = product.FormatBasePrice(finalPriceWithDiscountBase,
-                            _localizationService, _measureService, _currencyService, _workContext, _priceFormatter);
-
+                        model.BasePricePAngV = _productService.FormatBasePrice(product, finalPriceWithDiscountBase);
                         //currency code
                         model.CurrencyCode = _workContext.WorkingCurrency.CurrencyCode;
 
@@ -667,7 +663,7 @@ namespace Nop.Web.Factories
             //quantity
             model.EnteredQuantity = updatecartitem != null ? updatecartitem.Quantity : product.OrderMinimumQuantity;
             //allowed quantities
-            var allowedQuantities = product.ParseAllowedQuantities();
+            var allowedQuantities = _productService.ParseAllowedQuantities(product);
             foreach (var qty in allowedQuantities)
             {
                 model.AllowedQuantities.Add(new SelectListItem
@@ -1206,7 +1202,7 @@ namespace Nop.Web.Factories
                 ShowGtin = _catalogSettings.ShowGtin,
                 Gtin = product.Gtin,
                 ManageInventoryMethod = product.ManageInventoryMethod,
-                StockAvailability = product.FormatStockMessage("", _localizationService, _productAttributeParser, _dateRangeService, _productAttributeService),
+                StockAvailability = _productService.FormatStockMessage(product, ""),
                 HasSampleDownload = product.IsDownload && product.HasSampleDownload,
                 DisplayDiscontinuedMessage = !product.Published && _catalogSettings.DisplayDiscontinuedMessageForUnpublishedProducts
             };
@@ -1271,7 +1267,7 @@ namespace Nop.Web.Factories
             if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStock &&
                 product.BackorderMode == BackorderMode.NoBackorders &&
                 product.AllowBackInStockSubscriptions &&
-                product.GetTotalStockQuantity() <= 0)
+                _productService.GetTotalStockQuantity(product) <= 0)
             {
                 //out of stock
                 model.DisplayBackInStockSubscription = true;
@@ -1290,8 +1286,8 @@ namespace Nop.Web.Factories
             {
                 model.ProductTags = PrepareProductTagModels(product);
             }
-            
-           //pictures
+
+            //pictures
             model.DefaultPictureZoomEnabled = _mediaSettings.DefaultPictureZoomEnabled;
             model.DefaultPictureModel = PrepareProductDetailsPictureModel(product, isAssociatedProduct, out IList<PictureModel> allPictureModels);
             model.PictureModels = allPictureModels;
@@ -1329,7 +1325,7 @@ namespace Nop.Web.Factories
 
             //product attributes
             model.ProductAttributes = PrepareProductAttributeModels(product, updatecartitem);
-            
+
             //product specifications
             //do not prepare this model for the associated products. anyway it's not used
             if (!isAssociatedProduct)
@@ -1416,9 +1412,9 @@ namespace Nop.Web.Factories
                     Description = reviewType.GetLocalized(entity => entity.Description),
                     VisibleToAllCustomers = reviewType.VisibleToAllCustomers,
                     DisplayOrder = reviewType.DisplayOrder,
-                    IsRequired = reviewType.IsRequired,                    
+                    IsRequired = reviewType.IsRequired,
                 });
-            }            
+            }
 
             //filling data from db
             foreach (var pr in productReviews)
@@ -1444,7 +1440,7 @@ namespace Nop.Web.Factories
                 };
 
                 foreach (var q in _reviewTypeService.GetProductReviewReviewTypeMappingsByProductReviewId(pr.Id))
-                {                  
+                {
                     productReviewModel.AdditionalProductReviewList.Add(new ProductReviewReviewTypeMappingModel
                     {
                         ReviewTypeId = q.ReviewTypeId,
@@ -1489,7 +1485,7 @@ namespace Nop.Web.Factories
                 }
 
                 rtm.AverageRating = (double)totalRating / (totalCount > 0 ? totalCount : 1);
-            }          
+            }
 
             model.AddProductReview.CanCurrentCustomerLeaveReview = _catalogSettings.AllowAnonymousUsersToReviewProduct || !_workContext.CurrentCustomer.IsGuest();
             model.AddProductReview.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnProductReviewPage;
@@ -1512,10 +1508,10 @@ namespace Nop.Web.Factories
                 pageIndex = page.Value - 1;
             }
 
-            var list = _productService.GetAllProductReviews(customerId: _workContext.CurrentCustomer.Id, 
-                approved: null, 
+            var list = _productService.GetAllProductReviews(customerId: _workContext.CurrentCustomer.Id,
+                approved: null,
                 storeId: _storeContext.CurrentStore.Id,
-                pageIndex: pageIndex, 
+                pageIndex: pageIndex,
                 pageSize: pageSize);
 
             var productReviews = new List<CustomerProductReviewModel>();

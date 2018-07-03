@@ -14,7 +14,7 @@ namespace Nop.Web.Controllers
 {
     public partial class BackInStockSubscriptionController : BasePublicController
     {
-		#region Fields
+        #region Fields
 
         private readonly CatalogSettings _catalogSettings;
         private readonly CustomerSettings _customerSettings;
@@ -23,10 +23,10 @@ namespace Nop.Web.Controllers
         private readonly IProductService _productService;
         private readonly IStoreContext _storeContext;
         private readonly IWorkContext _workContext;
-        
+
         #endregion
 
-		#region Ctor
+        #region Ctor
 
         public BackInStockSubscriptionController(CatalogSettings catalogSettings,
             CustomerSettings customerSettings,
@@ -70,7 +70,7 @@ namespace Nop.Web.Controllers
             if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStock &&
                 product.BackorderMode == BackorderMode.NoBackorders &&
                 product.AllowBackInStockSubscriptions &&
-                product.GetTotalStockQuantity() <= 0)
+                _productService.GetTotalStockQuantity(product) <= 0)
             {
                 //out of stock
                 model.SubscriptionAllowed = true;
@@ -93,7 +93,7 @@ namespace Nop.Web.Controllers
             if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStock &&
                 product.BackorderMode == BackorderMode.NoBackorders &&
                 product.AllowBackInStockSubscriptions &&
-                product.GetTotalStockQuantity() <= 0)
+                _productService.GetTotalStockQuantity(product) <= 0)
             {
                 //out of stock
                 var subscription = _backInStockSubscriptionService
