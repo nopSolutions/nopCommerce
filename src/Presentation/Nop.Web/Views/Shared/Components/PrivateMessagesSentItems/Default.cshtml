@@ -3,14 +3,14 @@
     <script asp-location="Footer">
         $(document).ready(function () {
 
-            $('#selectall-sent').click(function () {
-                $('#pm-sent-table .rowcheckbox').attr('checked', $(this).is(':checked')).change();
+            $('#selectall-sent').on('click', function () {
+                $('#pm-sent-table .rowcheckbox').prop('checked', $(this).is(':checked')).trigger('change');
             });
 
             $('#pm-sent-table .rowcheckbox').on('change', function (e) {
                 var numChkBoxes = $('#pm-sent-table .rowcheckbox').length;
                 var numChkBoxesChecked = $('#pm-sent-table .rowcheckbox:checked').length;
-                $('#selectall-sent').attr('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
+                $('#selectall-sent').prop('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
             });
         });
     </script>
@@ -26,47 +26,47 @@
                         <col width="1" />
                     </colgroup>
                     <thead>
-                    <tr>
-                        <th class="select">
-                            <input type="checkbox" id="selectall-sent" />
-                        </th>
-                        <th class="to">
-                            @T("PrivateMessages.Inbox.ToColumn")
-                        </th>
-                        <th class="subject">
-                            @T("PrivateMessages.Inbox.SubjectColumn")
-                        </th>
-                        <th class="date">
-                            @T("PrivateMessages.Inbox.DateColumn")
-                        </th>
-                    </tr>
+                        <tr>
+                            <th class="select">
+                                <input type="checkbox" id="selectall-sent" />
+                            </th>
+                            <th class="to">
+                                @T("PrivateMessages.Inbox.ToColumn")
+                            </th>
+                            <th class="subject">
+                                @T("PrivateMessages.Inbox.SubjectColumn")
+                            </th>
+                            <th class="date">
+                                @T("PrivateMessages.Inbox.DateColumn")
+                            </th>
+                        </tr>
                     </thead>
                     <tbody>
-                    @for (var i = 0; i < Model.Messages.Count; i++)
-                    {
-                        var item = Model.Messages[i];
-                        <tr @(i % 2 == 0 ? Html.Raw(" class=\"odd\"") : Html.Raw(" class=\"even\""))>
-                            <td class="select">
-                                <input type="checkbox" name="si@(item.Id)" class="rowcheckbox" />
-                            </td>
-                            <td class="to">
-                                @if (item.AllowViewingToProfile)
-                                {
-                                    @Html.RouteLink(item.CustomerToName, "CustomerProfile", new { Id = item.ToCustomerId })
-                                }
-                                else
-                                {
-                                    @item.CustomerToName
-                                }
-                            </td>
-                            <td class="subject">
-                                @Html.RouteLink(item.Subject, "ViewPM", new { privateMessageId = item.Id }, new { @class = "pm-read" })
-                            </td>
-                            <td class="date">
-                                @item.CreatedOn
-                            </td>
-                        </tr>
-                    }
+                        @for (var i = 0; i < Model.Messages.Count; i++)
+                        {
+                            var item = Model.Messages[i];
+                            <tr @(i % 2 == 0 ? Html.Raw(" class=\"odd\"") : Html.Raw(" class=\"even\""))>
+                                <td class="select">
+                                    <input type="checkbox" name="si@(item.Id)" class="rowcheckbox" />
+                                </td>
+                                <td class="to">
+                                    @if (item.AllowViewingToProfile)
+                                    {
+                                        @Html.RouteLink(item.CustomerToName, "CustomerProfile", new { Id = item.ToCustomerId })
+                                    }
+                                    else
+                                    {
+                                        @item.CustomerToName
+                                    }
+                                </td>
+                                <td class="subject">
+                                    @Html.RouteLink(item.Subject, "ViewPM", new { privateMessageId = item.Id }, new { @class = "pm-read" })
+                                </td>
+                                <td class="date">
+                                    @item.CreatedOn
+                                </td>
+                            </tr>
+                        }
                     </tbody>
                 </table>
             </div>
@@ -75,9 +75,9 @@
             }
             @if (!string.IsNullOrEmpty(pager.ToHtmlString()))
             {
-            <div class="pager">
-                @pager
-            </div>
+                <div class="pager">
+                    @pager
+                </div>
             }
             <div class="buttons">
                 <input class="button-1 delete-selected-pm-button" name="delete-sent" type="submit" value="@T("PrivateMessages.Inbox.DeleteSelected")" />

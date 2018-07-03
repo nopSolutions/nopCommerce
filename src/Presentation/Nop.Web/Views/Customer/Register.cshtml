@@ -12,7 +12,7 @@
 {
     <script asp-location="Footer">
         $(document).ready(function () {
-            $("#@Html.IdFor(model => model.CountryId)").change(function () {
+            $("#@Html.IdFor(model => model.CountryId)").on('change', function () {
                 var selectedItem = $(this).val();
                 var ddlStates = $("#@Html.IdFor(model => model.StateProvinceId)");
                 var statesProgress = $("#states-loading-progress");
@@ -161,11 +161,11 @@
                 </div>
             }
             @if (Model.StreetAddressEnabled ||
-Model.StreetAddress2Enabled ||
-Model.ZipPostalCodeEnabled ||
-Model.CityEnabled ||
-Model.CountyEnabled ||
-Model.CountryEnabled)
+                   Model.StreetAddress2Enabled ||
+                   Model.ZipPostalCodeEnabled ||
+                   Model.CityEnabled ||
+                   Model.CountyEnabled ||
+                   Model.CountryEnabled)
             {
                 <div class="fieldset">
                     <div class="title">
@@ -370,7 +370,7 @@ Model.CountryEnabled)
                     <div class="form-fields">
                         <script asp-location="Footer">
                             $(document).ready(function() {
-                                $('#register-button').click(function() {
+                                $('#register-button').on('click', function() {
                                     if ($('#accept-consent').is(':checked')) {
                                         //do some stuff
                                         return true;
@@ -418,7 +418,7 @@ Model.CountryEnabled)
                             {
                                 <script asp-location="Footer">
                                     $(document).ready(function() {
-                                       $('#save-info-button').click(function() {
+                                        $('#register-button').on('click', function() {
                                             if ($('#consent@(consent.Id)').is(':checked')) {
                                                     //do some stuff
                                                     return true;

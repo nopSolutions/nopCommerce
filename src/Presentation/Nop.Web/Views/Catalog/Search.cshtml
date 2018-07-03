@@ -9,7 +9,7 @@
 }
 <script asp-location="Footer">
     $(document).ready(function () {
-        $("#@Html.IdFor(model => model.adv)").click(toggleAdvancedSearch);
+        $("#@Html.IdFor(model => model.adv)").on('click', toggleAdvancedSearch);
         toggleAdvancedSearch();
     });
 

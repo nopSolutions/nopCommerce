@@ -30,9 +30,9 @@
     </div>
     <script asp-location="Footer">
         $(document).ready(function () {
-            $('#discountcouponcode').keydown(function (event) {
+            $('#discountcouponcode').on('keydown', function (event) {
                 if (event.keyCode == 13) {
-                    $('#applydiscountcouponcode').click();
+                    $('#applydiscountcouponcode').trigger("click");
                     return false;
                 }
             });

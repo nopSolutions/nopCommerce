@@ -9,7 +9,7 @@
 
 <script>
     $(document).ready(function () {
-        $('#@Html.IdFor(model => model.StoredCardId)').change(toggleStoredCard);
+        $('#@Html.IdFor(model => model.StoredCardId)').on('change', toggleStoredCard);
         toggleStoredCard();
 
         var submitForm = false;
@@ -53,7 +53,7 @@
                     'version': '@(worldpayPaymentSettings.UseSandbox ? WorldpayPaymentDefaults.SandboxDeveloperVersion : WorldpayPaymentDefaults.DeveloperVersion)'
                 }
             }).done(function (result) {
-                var response = $.parseJSON(JSON.stringify(result));
+                var response = JSON.parse(JSON.stringify(result));
                 if (response.success) {
                     $('#@Html.IdFor(model => model.Token)').val(response.token);
                 } else {
@@ -61,12 +61,12 @@
                     errorsExist = true;
                 }
                 submitForm = true;
-                $('input.payment-info-next-step-button').click();
+                $('input.payment-info-next-step-button').trigger("click");
             }).fail(function () {
                 $('#@Html.IdFor(model => model.Errors)').val('Failed to get payment token');
                 errorsExist = true;
                 submitForm = true;
-                $('input.payment-info-next-step-button').click();
+                $('input.payment-info-next-step-button').trigger("click");
             });
         }
 

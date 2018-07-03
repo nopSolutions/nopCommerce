@@ -21,7 +21,7 @@
 {
     <script asp-location="Footer">
         $(document).ready(function () {
-            $("#@Html.IdFor(model => model.CountryId)").change(function () {
+            $("#@Html.IdFor(model => model.CountryId)").on('change', function () {
                 var selectedItem = $(this).val();
                 var ddlStates = $("#@Html.IdFor(model => model.StateProvinceId)");
                 var statesProgress = $("#states-loading-progress");
@@ -435,6 +435,7 @@
                     }
                 </div>
             }
+
             @if (Model.GdprConsents.Count > 0)
             {
                 <div class="fieldset">
@@ -445,7 +446,7 @@
                             {
                                 <script asp-location="Footer">
                                     $(document).ready(function() {
-                                       $('#save-info-button').click(function() {
+                                        $('#save-info-button').on('click', function() {
                                             if ($('#consent@(consent.Id)').is(':checked')) {
                                                     //do some stuff
                                                     return true;

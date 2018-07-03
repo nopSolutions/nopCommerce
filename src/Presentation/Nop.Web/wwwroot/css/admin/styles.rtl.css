@@ -97,6 +97,7 @@ ul.common-list {
     position: fixed;
     width: 61px;
     height: 48px;
+    z-index: 1000;
 }
 .btn-back-top::before {
     content: "";
@@ -1328,36 +1329,46 @@ span.grid-report-item.red {
 /*bootstrap touchspin*/
 .bootstrap-touchspin {
     max-width: 300px;
+    width: 100%;
 }
 .bootstrap-touchspin input {
     height: auto;
     display: table-cell !important;
     min-height: 34px;
-    border-left: none;
 }
 .bootstrap-touchspin-postfix {
-    border-left: none;
+    border-right: none;
 }
 .bootstrap-touchspin .input-group-btn-vertical i {
-    left: 6px;
+    right: 6px;
 }
 .input-group-addon.bootstrap-touchspin-postfix {
     background-color: #eee;
     height: 34px;
+    padding-left: 30px;
 }
-.bootstrap-touchspin .input-group-btn-vertical>.btn {
+.bootstrap-touchspin .input-group-btn-vertical {
+    left: 22px;
+    right: auto;
+}
+.bootstrap-touchspin .input-group-btn-vertical > .btn {
     background: #fff;
     border-color: #d2d6de;
     border-radius: 0;
-    padding: 0 10px;
     height: 18px;
+    font-size: 0;
+    padding-left: 15px;
+    padding-right: 5px;
 }
-.bootstrap-touchspin .input-group-btn-vertical>.btn:hover {
+.bootstrap-touchspin .input-group-btn-vertical > .btn:before {
+    font-size: 9px;
+}
+.bootstrap-touchspin .input-group-btn-vertical > .btn:hover {
     border-color: #afafaf;
 }
 .bootstrap-touchspin .input-group-btn-vertical .bootstrap-touchspin-down {
-   margin-top: -1px;
-   height: 17px;
+    margin-top: 16px;
+    height: 17px;
 }
 
 /* THROBBER */

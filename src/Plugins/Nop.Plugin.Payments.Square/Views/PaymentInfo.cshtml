@@ -31,7 +31,7 @@
 
 <script>
     $(document).ready(function () {
-        $('#@Html.IdFor(model => model.StoredCardId)').change(toggleStoredCard);
+        $('#@Html.IdFor(model => model.StoredCardId)').on('change', toggleStoredCard);
         toggleStoredCard();
 
         var submitForm = false;
@@ -40,7 +40,7 @@
         $('.payment-info-next-step-button').attr('onclick', null);
         $('.payment-info-next-step-button').prop('disabled', true);
         $('.payment-info-next-step-button').css("opacity", .3);
-        
+
         var paymentForm = new SqPaymentForm({
             applicationId: '@squarePaymentSettings.ApplicationId',
             inputClass: 'square-input',
@@ -78,7 +78,7 @@
                     }
 
                     submitForm = true;
-                    $('input.payment-info-next-step-button').click();
+                    $('input.payment-info-next-step-button').trigger("click");
                 },
 
                 unsupportedBrowserDetected: function () {

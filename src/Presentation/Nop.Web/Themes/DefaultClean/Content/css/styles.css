@@ -4907,13 +4907,16 @@ label, label + * {
 /* jQuery tabs */
 
 .ui-tabs {
-	/*override jQuery UI styles, do not delete doubled properties*/
-	border: none;
-	border-radius: 0;
-	background: none;
-	padding: 0;
-	font: normal 14px Arial, Helvetica, sans-serif;
-	color: #777;
+    /*override jQuery UI styles, do not delete doubled properties*/
+    border: none;
+    border-radius: 0;
+    background: none;
+    padding: 0;
+    font: normal 14px Arial, Helvetica, sans-serif;
+    color: #777;
+}
+.ui-widget.ui-widget-content.ui-tabs {
+    border: none;
 }
 .ui-tabs-nav {
 	margin: 0 0 30px;

@@ -47,7 +47,7 @@
                     
                     <script asp-location="Footer">
                         $(document).ready(function() {
-                            $('#delete-account').click(function() {
+                            $('#delete-account').on('click', function() {
                                 return confirm('@T("Common.AreYouSure")');
                             });
                         });

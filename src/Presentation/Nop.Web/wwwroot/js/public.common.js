@@ -72,7 +72,6 @@ function displayPopupContentFromUrl(url, title, modal, width) {
     $('<div></div>').load(url)
         .dialog({
             modal: isModal,
-            position: ['center', 20],
             width: targetWidth,
             maxHeight: maxHeight,
             title: title,
@@ -118,12 +117,12 @@ function displayBarNotification(message, messagetype, timeout) {
     $('#bar-notification').append(htmlcode)
         .addClass(cssclass)
         .fadeIn('slow')
-        .mouseenter(function ()
+        .on('mouseenter', function ()
             {
                 clearTimeout(barNotificationTimeout);
             });
 
-    $('#bar-notification .close').unbind('click').click(function () {
+    $('#bar-notification .close').off('click').on('click', function () {
         $('#bar-notification').fadeOut('slow');
     });
 

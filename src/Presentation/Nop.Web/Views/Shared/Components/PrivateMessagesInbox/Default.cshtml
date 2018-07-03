@@ -2,14 +2,14 @@
 <div class="private-messages-box">
     <script asp-location="Footer">
         $(document).ready(function () {
-            $('#select-all-inbox').click(function () {
-                $('#pm-inbox-table .rowcheckbox').attr('checked', $(this).is(':checked')).change();
+            $('#select-all-inbox').on('click', function () {
+                $('#pm-inbox-table .rowcheckbox').prop('checked', $(this).is(':checked')).trigger('change');
             });
 
             $('#pm-inbox-table .rowcheckbox').on('change', function (e) {
                 var numChkBoxes = $('#pm-inbox-table .rowcheckbox').length;
                 var numChkBoxesChecked = $('#pm-inbox-table .rowcheckbox:checked').length;
-                $('#select-all-inbox').attr('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
+                $('#select-all-inbox').prop('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
             });
         });
     </script>
