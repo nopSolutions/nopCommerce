@@ -82,6 +82,30 @@ namespace Nop.Services.Blogs
         /// <param name="blogPost">Blog post</param>
         void UpdateBlogPost(BlogPost blogPost);
 
+        /// <summary>
+        /// Returns all posts published between the two dates.
+        /// </summary>
+        /// <param name="blogPosts">Source</param>
+        /// <param name="dateFrom">Date from</param>
+        /// <param name="dateTo">Date to</param>
+        /// <returns>Filtered posts</returns>
+        IList<BlogPost> GetPostsByDate(IList<BlogPost> blogPosts, DateTime dateFrom, DateTime dateTo);
+
+        /// <summary>
+        /// Parse tags
+        /// </summary>
+        /// <param name="blogPost">Blog post</param>
+        /// <returns>Tags</returns>
+        IList<string> ParseTags(BlogPost blogPost);
+
+        /// <summary>
+        /// Get a value indicating whether a blog post is available now (availability dates)
+        /// </summary>
+        /// <param name="blogPost">Blog post</param>
+        /// <param name="dateTime">Datetime to check; pass null to use current date</param>
+        /// <returns>Result</returns>
+        bool BlogPostIsAvailable(BlogPost blogPost, DateTime? dateTime = null);
+
         #endregion
 
         #region Blog comments

@@ -146,7 +146,7 @@ namespace Nop.Web.Controllers
             
             var hasAdminAccess = _permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && _permissionService.Authorize(StandardPermissionProvider.ManageBlog);
             //access to Blog preview
-            if (!blogPost.IsAvailable() && !hasAdminAccess)
+            if (!_blogService.BlogPostIsAvailable(blogPost) && !hasAdminAccess)
                 return RedirectToRoute("HomePage");
 
             //Store mapping

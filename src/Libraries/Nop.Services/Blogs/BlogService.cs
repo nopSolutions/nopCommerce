@@ -161,7 +161,7 @@ namespace Nop.Services.Blogs
             var taggedBlogPosts = new List<BlogPost>();
             foreach (var blogPost in blogPostsAll)
             {
-                var tags = blogPost.ParseTags();
+                var tags = this.ParseTags(blogPost);
                 if (!string.IsNullOrEmpty(tags.FirstOrDefault(t => t.Equals(tag, StringComparison.InvariantCultureIgnoreCase))))
                     taggedBlogPosts.Add(blogPost);
             }
@@ -185,7 +185,7 @@ namespace Nop.Services.Blogs
             var blogPosts = GetAllBlogPosts(storeId: storeId, languageId: languageId, showHidden: showHidden);
             foreach (var blogPost in blogPosts)
             {
-                var tags = blogPost.ParseTags();
+                var tags = this.ParseTags(blogPost);
                 foreach (var tag in tags)
                 {
                     var foundBlogPostTag = blogPostTags.Find(bpt => bpt.Name.Equals(tag, StringComparison.InvariantCultureIgnoreCase));
@@ -234,6 +234,59 @@ namespace Nop.Services.Blogs
 
             //event notification
             _eventPublisher.EntityUpdated(blogPost);
+        }
+
+        /// <summary>
+        /// Returns all posts published between the two dates.
+        /// </summary>
+        /// <param name="blogPosts">Source</param>
+        /// <param name="dateFrom">Date from</param>
+        /// <param name="dateTo">Date to</param>
+        /// <returns>Filtered posts</returns>
+        public virtual IList<BlogPost> GetPostsByDate(IList<BlogPost> blogPosts, DateTime dateFrom, DateTime dateTo)
+        {
+            if (blogPosts == null)
+                throw new ArgumentNullException(nameof(blogPosts));
+
+            return blogPosts
+                .Where(p => dateFrom.Date <= (p.StartDateUtc ?? p.CreatedOnUtc) && (p.StartDateUtc ?? p.CreatedOnUtc).Date <= dateTo)
+                .ToList();
+        }
+
+        /// <summary>
+        /// Parse tags
+        /// </summary>
+        /// <param name="blogPost">Blog post</param>
+        /// <returns>Tags</returns>
+        public virtual IList<string> ParseTags(BlogPost blogPost)
+        {
+            if (blogPost == null)
+                throw new ArgumentNullException(nameof(blogPost));
+
+            var tags = blogPost.Tags.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                .Where(tag => !string.IsNullOrEmpty(tag.Trim())).ToList();
+
+            return tags;
+        }
+
+        /// <summary>
+        /// Get a value indicating whether a blog post is available now (availability dates)
+        /// </summary>
+        /// <param name="blogPost">Blog post</param>
+        /// <param name="dateTime">Datetime to check; pass null to use current date</param>
+        /// <returns>Result</returns>
+        public virtual bool BlogPostIsAvailable(BlogPost blogPost, DateTime? dateTime = null)
+        {
+            if (blogPost == null)
+                throw new ArgumentNullException(nameof(blogPost));
+
+            if (blogPost.StartDateUtc.HasValue && blogPost.StartDateUtc.Value >= (dateTime ?? DateTime.UtcNow))
+                return false;
+
+            if (blogPost.EndDateUtc.HasValue && blogPost.EndDateUtc.Value <= (dateTime ?? DateTime.UtcNow))
+                return false;
+
+            return true;
         }
 
         #endregion

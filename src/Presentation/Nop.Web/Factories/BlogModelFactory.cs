@@ -122,7 +122,7 @@ namespace Nop.Web.Factories
             model.BodyOverview = blogPost.BodyOverview;
             model.AllowComments = blogPost.AllowComments;
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(blogPost.StartDateUtc ?? blogPost.CreatedOnUtc, DateTimeKind.Utc);
-            model.Tags = blogPost.ParseTags().ToList();
+            model.Tags = _blogService.ParseTags(blogPost);
             model.AddNewComment.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnBlogCommentPage;
 
             //number of blog comments
@@ -244,7 +244,8 @@ namespace Nop.Web.Factories
                     var first = blogPost.StartDateUtc ?? blogPost.CreatedOnUtc;
                     while (DateTime.SpecifyKind(first, DateTimeKind.Utc) <= DateTime.UtcNow.AddMonths(1))
                     {
-                        var list = blogPosts.GetPostsByDate(new DateTime(first.Year, first.Month, 1), new DateTime(first.Year, first.Month, 1).AddMonths(1).AddSeconds(-1));
+                        var list = _blogService.GetPostsByDate(blogPosts, new DateTime(first.Year, first.Month, 1),
+                            new DateTime(first.Year, first.Month, 1).AddMonths(1).AddSeconds(-1));
                         if (list.Any())
                         {
                             var date = new DateTime(first.Year, first.Month, 1);
