@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Http;
 using Nop.Core.Domain.Common;
 
 namespace Nop.Services.Common
@@ -45,5 +46,12 @@ namespace Nop.Services.Common
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <returns>Warnings</returns>
         IList<string> GetAttributeWarnings(string attributesXml);
+
+        /// <summary>
+        /// Get custom address attributes from the passed form
+        /// </summary>
+        /// <param name="form">Form values</param>
+        /// <returns>Attributes in XML format</returns>
+        string ParseCustomAddressAttributes(IFormCollection form);
     }
 }
