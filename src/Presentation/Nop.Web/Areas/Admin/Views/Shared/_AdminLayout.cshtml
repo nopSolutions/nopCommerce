@@ -275,6 +275,16 @@
                     var collapsed = !$('body').hasClass('sidebar-collapse');
                     saveUserPreferences('@(Url.Action("SavePreference", "Preferences"))', '@hideSidebarAttributeName', collapsed);
                 });
+
+                //bug-fix for unexpected auto-closing of grid's page size DropDownList in Chrome (Kendo grid bug)
+                var ddl = $(".k-grid-pager [data-role='dropdownlist']").data("kendoDropDownList");
+                if (ddl) {
+                    ddl.bind("close", pager_close);
+
+                    function pager_close(e) {
+                        e.sender.refresh()
+                    }
+                }
             });
         </script>
     </body>
