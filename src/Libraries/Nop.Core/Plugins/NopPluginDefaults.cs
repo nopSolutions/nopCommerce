@@ -1,4 +1,5 @@
-﻿
+﻿using System.Collections.Generic;
+
 namespace Nop.Core.Plugins
 {
     /// <summary>
@@ -55,6 +56,11 @@ namespace Nop.Core.Plugins
         /// Gets the name pattern of reserve folder for plugins shadow copies
         /// </summary>
         public static string ReserveShadowCopyPathNamePattern => "reserve_bin_*";
+
+        /// <summary>
+        /// Gets supported extensions of logo file
+        /// </summary>
+        public static List<string> SupportedLogoImageExtensions => new List<string> { "jpg", "png", "gif" };
 
         /// <summary>
         /// Gets the path to temp directory with uploads

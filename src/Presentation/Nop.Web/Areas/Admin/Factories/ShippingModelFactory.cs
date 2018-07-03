@@ -166,7 +166,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     //fill in additional values (not existing in the entity)
                     shippingProviderModel.IsActive = provider.IsShippingRateComputationMethodActive(_shippingSettings);
                     shippingProviderModel.ConfigurationUrl = provider.GetConfigurationPageUrl();
-                    shippingProviderModel.LogoUrl = provider.PluginDescriptor.GetLogoUrl(_webHelper);
+                    shippingProviderModel.LogoUrl = PluginManager.GetLogoUrl(provider.PluginDescriptor);
 
                     return shippingProviderModel;
                 }),
@@ -216,7 +216,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     //fill in additional values (not existing in the entity)
                     pickupPointProviderModel.IsActive = provider.IsPickupPointProviderActive(_shippingSettings);
                     pickupPointProviderModel.ConfigurationUrl = provider.GetConfigurationPageUrl();
-                    pickupPointProviderModel.LogoUrl = provider.PluginDescriptor.GetLogoUrl(_webHelper);
+                    pickupPointProviderModel.LogoUrl = PluginManager.GetLogoUrl(provider.PluginDescriptor);
 
                     return pickupPointProviderModel;
                 }),

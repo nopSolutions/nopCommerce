@@ -404,7 +404,7 @@ namespace Nop.Web.Factories
                     Name = pm.GetLocalizedFriendlyName(_localizationService, _workContext.WorkingLanguage.Id),
                     Description = _paymentSettings.ShowPaymentMethodDescriptions ? pm.PaymentMethodDescription : string.Empty,
                     PaymentMethodSystemName = pm.PluginDescriptor.SystemName,
-                    LogoUrl = pm.PluginDescriptor.GetLogoUrl(_webHelper)
+                    LogoUrl = PluginManager.GetLogoUrl(pm.PluginDescriptor)
                 };
                 //payment method additional fee
                 var paymentMethodAdditionalFee = _paymentService.GetAdditionalHandlingFee(cart, pm.PluginDescriptor.SystemName);

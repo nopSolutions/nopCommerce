@@ -685,6 +685,30 @@ namespace Nop.Core.Plugins
             return true;
         }
 
+        /// <summary>
+        /// Get plugin logo URL
+        /// </summary>
+        /// <param name="pluginDescriptor">Plugin descriptor</param>
+        /// <returns>Logo URL</returns>
+        public static string GetLogoUrl(PluginDescriptor pluginDescriptor)
+        {
+            if (pluginDescriptor == null)
+                throw new ArgumentNullException(nameof(pluginDescriptor));
+            
+            var pluginDirectory = _fileProvider.GetDirectoryName(pluginDescriptor.OriginalAssemblyFile);
+            if (string.IsNullOrEmpty(pluginDirectory))
+                return null;
+
+            var logoExtension = NopPluginDefaults.SupportedLogoImageExtensions
+                .FirstOrDefault(ext => _fileProvider.FileExists(_fileProvider.Combine(pluginDirectory, $"{NopPluginDefaults.LogoFileName}.{ext}")));
+            if (string.IsNullOrWhiteSpace(logoExtension))
+                return null; //No logo file was found with any of the supported extensions.
+
+            var webHelper = EngineContext.Current.Resolve<IWebHelper>();
+            var logoUrl = $"{webHelper.GetStoreLocation()}plugins/{_fileProvider.GetDirectoryNameOnly(pluginDirectory)}/{NopPluginDefaults.LogoFileName}.{logoExtension}";
+            return logoUrl;
+        }
+
         #endregion
 
         #region Properties
