@@ -226,7 +226,7 @@ namespace Nop.Services.Orders
         /// <param name="updatedOrder">Order</param>
         /// <param name="taxTotal">Tax</param>
         /// <param name="customer">Customer</param>
-        protected virtual void UpdateTotal(UpdateOrderParameters updateOrderParameters, decimal subTotalExclTax, 
+        protected virtual void UpdateTotal(UpdateOrderParameters updateOrderParameters, decimal subTotalExclTax,
             decimal discountAmountExclTax, decimal shippingTotalExclTax, Order updatedOrder, decimal taxTotal, Customer customer)
         {
             var total = subTotalExclTax - discountAmountExclTax + shippingTotalExclTax + updatedOrder.PaymentMethodAdditionalFeeExclTax + taxTotal;
@@ -388,7 +388,7 @@ namespace Nop.Services.Orders
         /// <param name="shippingTotalInclTax">Shipping (incl tax)</param>
         /// <param name="shippingTaxRate">Shipping tax rate</param>
         /// <returns>Shipping total</returns>
-        protected virtual decimal UpdateShipping(UpdateOrderParameters updateOrderParameters, IList<ShoppingCartItem> restoredCart, 
+        protected virtual decimal UpdateShipping(UpdateOrderParameters updateOrderParameters, IList<ShoppingCartItem> restoredCart,
             decimal subTotalInclTax, decimal subTotalExclTax, Order updatedOrder, Customer customer, out decimal shippingTotalInclTax, out decimal shippingTaxRate)
         {
             var shippingTotalExclTax = decimal.Zero;
@@ -540,8 +540,8 @@ namespace Nop.Services.Orders
         /// <param name="subTotalTaxRates">Subtotal tax rates</param>
         /// <param name="discountAmountExclTax">Discount amount (excl tax)</param>
         /// <returns>Subtotal</returns>
-        protected virtual decimal UpdateSubTotal(UpdateOrderParameters updateOrderParameters, IList<ShoppingCartItem> restoredCart, 
-            OrderItem updatedOrderItem, Order updatedOrder, Customer customer, 
+        protected virtual decimal UpdateSubTotal(UpdateOrderParameters updateOrderParameters, IList<ShoppingCartItem> restoredCart,
+            OrderItem updatedOrderItem, Order updatedOrder, Customer customer,
             out decimal subTotalInclTax, out SortedDictionary<decimal, decimal> subTotalTaxRates, out decimal discountAmountExclTax)
         {
             var subTotalExclTax = decimal.Zero;
@@ -648,7 +648,7 @@ namespace Nop.Services.Orders
         /// <param name="useRewardPoints">A value indicating whether to use reward points</param>
         /// <param name="customer">Customer</param>
         /// <param name="orderTotal">Order total</param>
-        protected virtual void SetRewardPoints(ref int redeemedRewardPoints, ref decimal redeemedRewardPointsAmount, 
+        protected virtual void SetRewardPoints(ref int redeemedRewardPoints, ref decimal redeemedRewardPointsAmount,
             bool? useRewardPoints, Customer customer, decimal orderTotal)
         {
             if (!_rewardPointsSettings.Enabled)
@@ -662,7 +662,7 @@ namespace Nop.Services.Orders
 
             var rewardPointsBalance = _rewardPointService.GetRewardPointsBalance(customer.Id, _storeContext.CurrentStore.Id);
             rewardPointsBalance = _rewardPointService.GetReducedPointsBalance(rewardPointsBalance);
-            
+
             if (!CheckMinimumRewardPointsToUseRequirement(rewardPointsBalance))
                 return;
 
@@ -690,7 +690,7 @@ namespace Nop.Services.Orders
         /// <param name="appliedGiftCards">Applied gift cards</param>
         /// <param name="customer">Customer</param>
         /// <param name="resultTemp"></param>
-        protected virtual void AppliedGiftCards(IList<ShoppingCartItem> cart, List<AppliedGiftCard> appliedGiftCards, 
+        protected virtual void AppliedGiftCards(IList<ShoppingCartItem> cart, List<AppliedGiftCard> appliedGiftCards,
             Customer customer, ref decimal resultTemp)
         {
             if (cart.IsRecurring())
@@ -705,7 +705,7 @@ namespace Nop.Services.Orders
             {
                 if (resultTemp <= decimal.Zero) continue;
 
-                var remainingAmount = gc.GetGiftCardRemainingAmount();
+                var remainingAmount = _giftCardService.GetGiftCardRemainingAmount(gc);
                 var amountCanBeUsed = resultTemp > remainingAmount ? remainingAmount : resultTemp;
 
                 //reduce subtotal
@@ -980,7 +980,7 @@ namespace Nop.Services.Orders
             //free shipping
             if (IsFreeShipping(cart))
                 return decimal.Zero;
-            
+
             //with additional shipping charges
             var adjustedRate = shippingRate + GetShoppingCartAdditionalShippingCharge(cart);
 
@@ -1335,8 +1335,8 @@ namespace Nop.Services.Orders
                 resultTemp = decimal.Zero;
             if (_shoppingCartSettings.RoundPricesDuringCalculation)
                 resultTemp = RoundingHelper.RoundPrice(resultTemp);
-            
-            
+
+
             //let's apply gift cards now (gift cards that can be used)
             appliedGiftCards = new List<AppliedGiftCard>();
             AppliedGiftCards(cart, appliedGiftCards, customer, ref resultTemp);

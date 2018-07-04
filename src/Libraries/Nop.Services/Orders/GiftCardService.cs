@@ -181,7 +181,7 @@ namespace Nop.Services.Orders
                 var giftCards = GetAllGiftCards(isGiftCardActivated: true, giftCardCouponCode: couponCode);
                 foreach (var gc in giftCards)
                 {
-                    if (gc.IsGiftCardValid())
+                    if (this.IsGiftCardValid(gc))
                         result.Add(gc);
                 }
             }
@@ -216,6 +216,46 @@ namespace Nop.Services.Orders
             {
                 UpdateGiftCard(giftCard);
             }
+        }
+
+        /// <summary>
+        /// Gets a gift card remaining amount
+        /// </summary>
+        /// <returns>Gift card remaining amount</returns>
+        public virtual decimal GetGiftCardRemainingAmount(GiftCard giftCard)
+        {
+            if (giftCard == null)
+                throw new ArgumentNullException(nameof(giftCard));
+
+            var result = giftCard.Amount;
+
+            foreach (var gcuh in giftCard.GiftCardUsageHistory)
+                result -= gcuh.UsedValue;
+
+            if (result < decimal.Zero)
+                result = decimal.Zero;
+
+            return result;
+        }
+
+        /// <summary>
+        /// Is gift card valid
+        /// </summary>
+        /// <param name="giftCard">Gift card</param>
+        /// <returns>Result</returns>
+        public virtual bool IsGiftCardValid(GiftCard giftCard)
+        {
+            if (giftCard == null)
+                throw new ArgumentNullException(nameof(giftCard));
+
+            if (!giftCard.IsGiftCardActivated)
+                return false;
+
+            var remainingAmount = this.GetGiftCardRemainingAmount(giftCard);
+            if (remainingAmount > decimal.Zero)
+                return true;
+
+            return false;
         }
 
         #endregion

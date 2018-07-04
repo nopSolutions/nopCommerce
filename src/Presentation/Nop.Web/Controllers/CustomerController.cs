@@ -13,7 +13,6 @@ using Nop.Core.Domain.Gdpr;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Messages;
-using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Tax;
 using Nop.Services.Authentication;
@@ -1658,9 +1657,9 @@ namespace Nop.Web.Controllers
             if (ModelState.IsValid)
             {
                 var giftCard = _giftCardService.GetAllGiftCards(giftCardCouponCode: model.GiftCardCode).FirstOrDefault();
-                if (giftCard?.IsGiftCardValid() ?? false)
+                if (giftCard != null && _giftCardService.IsGiftCardValid(giftCard))
                 {
-                    var remainingAmount = _currencyService.ConvertFromPrimaryStoreCurrency(giftCard.GetGiftCardRemainingAmount(), _workContext.WorkingCurrency);
+                    var remainingAmount = _currencyService.ConvertFromPrimaryStoreCurrency(_giftCardService.GetGiftCardRemainingAmount(giftCard), _workContext.WorkingCurrency);
                     model.Result = _priceFormatter.FormatPrice(remainingAmount, true, false);
                 }
                 else

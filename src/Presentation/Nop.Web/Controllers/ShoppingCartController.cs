@@ -1500,7 +1500,7 @@ namespace Nop.Web.Controllers
                 if (!string.IsNullOrWhiteSpace(giftcardcouponcode))
                 {
                     var giftCard = _giftCardService.GetAllGiftCards(giftCardCouponCode: giftcardcouponcode).FirstOrDefault();
-                    var isGiftCardValid = giftCard != null && giftCard.IsGiftCardValid();
+                    var isGiftCardValid = giftCard != null && _giftCardService.IsGiftCardValid(giftCard);
                     if (isGiftCardValid)
                     {
                         _customerService.ApplyGiftCardCouponCode(_workContext.CurrentCustomer, giftcardcouponcode);

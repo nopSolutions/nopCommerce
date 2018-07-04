@@ -60,6 +60,7 @@ namespace Nop.Web.Factories
         private readonly IDiscountService _discountService;
         private readonly IDownloadService _downloadService;
         private readonly IGenericAttributeService _genericAttributeService;
+        private readonly IGiftCardService _giftCardService;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ILocalizationService _localizationService;
         private readonly IOrderProcessingService _orderProcessingService;
@@ -108,6 +109,7 @@ namespace Nop.Web.Factories
             IDiscountService discountService,
             IDownloadService downloadService,
             IGenericAttributeService genericAttributeService,
+            IGiftCardService giftCardService,
             IHttpContextAccessor httpContextAccessor,
             ILocalizationService localizationService,
             IOrderProcessingService orderProcessingService,
@@ -152,6 +154,7 @@ namespace Nop.Web.Factories
             this._discountService = discountService;
             this._downloadService = downloadService;
             this._genericAttributeService = genericAttributeService;
+            this._giftCardService = giftCardService;
             this._httpContextAccessor = httpContextAccessor;
             this._localizationService = localizationService;
             this._orderProcessingService = orderProcessingService;
@@ -1173,7 +1176,7 @@ namespace Nop.Web.Factories
                         var amountCanBeUsed = _currencyService.ConvertFromPrimaryStoreCurrency(appliedGiftCard.AmountCanBeUsed, _workContext.WorkingCurrency);
                         gcModel.Amount = _priceFormatter.FormatPrice(-amountCanBeUsed, true, false);
 
-                        var remainingAmountBase = appliedGiftCard.GiftCard.GetGiftCardRemainingAmount() - appliedGiftCard.AmountCanBeUsed;
+                        var remainingAmountBase = _giftCardService.GetGiftCardRemainingAmount(appliedGiftCard.GiftCard) - appliedGiftCard.AmountCanBeUsed;
                         var remainingAmount = _currencyService.ConvertFromPrimaryStoreCurrency(remainingAmountBase, _workContext.WorkingCurrency);
                         gcModel.Remaining = _priceFormatter.FormatPrice(remainingAmount, true, false);
 
