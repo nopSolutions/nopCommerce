@@ -58,7 +58,7 @@ namespace Nop.Web.Framework
                 string host = _httpContextAccessor.HttpContext?.Request?.Headers[HeaderNames.Host];
 
                 var allStores = _storeService.GetAllStores();
-                var store = allStores.FirstOrDefault(s => s.ContainsHostValue(host));
+                var store = allStores.FirstOrDefault(s => _storeService.ContainsHostValue(s, host));
 
                 if (store == null)
                 {
