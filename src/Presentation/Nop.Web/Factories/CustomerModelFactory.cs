@@ -151,7 +151,7 @@ namespace Nop.Web.Factories
         protected virtual GdprConsentModel PrepareGdprConsentModel(GdprConsent consent, bool accepted)
         {
             if (consent == null)
-                throw  new ArgumentNullException(nameof(consent));
+                throw new ArgumentNullException(nameof(consent));
 
             return new GdprConsentModel
             {
@@ -208,7 +208,7 @@ namespace Nop.Web.Factories
 
                 //set already selected attributes
                 var selectedAttributesXml = !string.IsNullOrEmpty(overrideAttributesXml) ?
-                    overrideAttributesXml : 
+                    overrideAttributesXml :
                     customer.GetAttribute<string>(NopCustomerDefaults.CustomCustomerAttributes, _genericAttributeService);
                 switch (attribute.AttributeControlType)
                 {
@@ -271,7 +271,7 @@ namespace Nop.Web.Factories
         /// <param name="excludeProperties">Whether to exclude populating of model properties from the entity</param>
         /// <param name="overrideCustomCustomerAttributesXml">Overridden customer attributes in XML format; pass null to use CustomCustomerAttributes of customer</param>
         /// <returns>Customer info model</returns>
-        public virtual CustomerInfoModel PrepareCustomerInfoModel(CustomerInfoModel model, Customer customer, 
+        public virtual CustomerInfoModel PrepareCustomerInfoModel(CustomerInfoModel model, Customer customer,
             bool excludeProperties, string overrideCustomCustomerAttributesXml = "")
         {
             if (model == null)
@@ -325,7 +325,7 @@ namespace Nop.Web.Factories
 
             if (_customerSettings.UserRegistrationType == UserRegistrationType.EmailValidation)
                 model.EmailToRevalidate = customer.EmailToRevalidate;
-            
+
             //countries and states
             if (_customerSettings.CountryEnabled)
             {
@@ -406,7 +406,7 @@ namespace Nop.Web.Factories
             foreach (var record in customer.ExternalAuthenticationRecords)
             {
                 var authMethod = _externalAuthenticationService.LoadExternalAuthenticationMethodBySystemName(record.ProviderSystemName);
-                if (authMethod == null || !authMethod.IsMethodActive(_externalAuthenticationSettings))
+                if (authMethod == null || !_externalAuthenticationService.IsExternalAuthenticationMethodActive(authMethod))
                     continue;
 
                 model.AssociatedExternalAuthRecords.Add(new CustomerInfoModel.AssociatedExternalAuthModel
@@ -446,7 +446,7 @@ namespace Nop.Web.Factories
         /// <param name="overrideCustomCustomerAttributesXml">Overridden customer attributes in XML format; pass null to use CustomCustomerAttributes of customer</param>
         /// <param name="setDefaultValues">Whether to populate model properties by default values</param>
         /// <returns>Customer register model</returns>
-        public virtual RegisterModel PrepareRegisterModel(RegisterModel model, bool excludeProperties, 
+        public virtual RegisterModel PrepareRegisterModel(RegisterModel model, bool excludeProperties,
             string overrideCustomCustomerAttributesXml = "", bool setDefaultValues = false)
         {
             if (model == null)
@@ -529,14 +529,14 @@ namespace Nop.Web.Factories
 
                         model.AvailableStates.Add(new SelectListItem
                         {
-                            Text = _localizationService.GetResource(anyCountrySelected ? "Address.OtherNonUS" : "Address.SelectState"), 
+                            Text = _localizationService.GetResource(anyCountrySelected ? "Address.OtherNonUS" : "Address.SelectState"),
                             Value = "0"
                         });
                     }
 
                 }
             }
-            
+
             //custom customer attributes
             var customAttributes = PrepareCustomCustomerAttributes(_workContext.CurrentCustomer, overrideCustomCustomerAttributesXml); foreach (var attribute in customAttributes)
                 model.CustomerAttributes.Add(attribute);
@@ -841,7 +841,7 @@ namespace Nop.Web.Factories
         /// <param name="orderItem">Order item</param>
         /// <param name="product">Product</param>
         /// <returns>User agreement model</returns>
-        public virtual UserAgreementModel PrepareUserAgreementModel(OrderItem orderItem,Product product)
+        public virtual UserAgreementModel PrepareUserAgreementModel(OrderItem orderItem, Product product)
         {
             if (orderItem == null)
                 throw new ArgumentNullException(nameof(orderItem));

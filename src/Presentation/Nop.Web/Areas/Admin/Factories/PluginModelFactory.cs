@@ -4,7 +4,6 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Domain.Cms;
-using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
@@ -31,9 +30,9 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
-        private readonly ExternalAuthenticationSettings _externalAuthenticationSettings;
         private readonly IAclSupportedModelFactory _aclSupportedModelFactory;
         private readonly IBaseAdminModelFactory _baseAdminModelFactory;
+        private readonly IExternalAuthenticationService _externalAuthenticationService;
         private readonly ILocalizationService _localizationService;
         private readonly ILocalizedModelFactory _localizedModelFactory;
         private readonly IOfficialFeedManager _officialFeedManager;
@@ -49,9 +48,9 @@ namespace Nop.Web.Areas.Admin.Factories
 
         #region Ctor
 
-        public PluginModelFactory(ExternalAuthenticationSettings externalAuthenticationSettings,
-            IAclSupportedModelFactory aclSupportedModelFactory,
+        public PluginModelFactory(IAclSupportedModelFactory aclSupportedModelFactory,
             IBaseAdminModelFactory baseAdminModelFactory,
+            IExternalAuthenticationService externalAuthenticationService,
             ILocalizationService localizationService,
             ILocalizedModelFactory localizedModelFactory,
             IOfficialFeedManager officialFeedManager,
@@ -63,9 +62,9 @@ namespace Nop.Web.Areas.Admin.Factories
             TaxSettings taxSettings,
             WidgetSettings widgetSettings)
         {
-            this._externalAuthenticationSettings = externalAuthenticationSettings;
             this._aclSupportedModelFactory = aclSupportedModelFactory;
             this._baseAdminModelFactory = baseAdminModelFactory;
+            this._externalAuthenticationService = externalAuthenticationService;
             this._localizationService = localizationService;
             this._localizedModelFactory = localizedModelFactory;
             this._officialFeedManager = officialFeedManager;
@@ -120,7 +119,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     break;
 
                 case IExternalAuthenticationMethod externalAuthenticationMethod:
-                    model.IsEnabled = externalAuthenticationMethod.IsMethodActive(_externalAuthenticationSettings);
+                    model.IsEnabled = _externalAuthenticationService.IsExternalAuthenticationMethodActive(externalAuthenticationMethod);
                     break;
 
                 case IWidgetPlugin widgetPlugin:

@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Net.Http.Headers;
-using Newtonsoft.Json;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Cms;
@@ -38,8 +37,8 @@ using Nop.Services.Seo;
 using Nop.Services.Shipping;
 using Nop.Services.Shipping.Pickup;
 using Nop.Services.Stores;
-using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Services.Tax;
+using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Common;
 using Nop.Web.Areas.Admin.Models.Localization;
 using Nop.Web.Framework.Extensions;
@@ -75,6 +74,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly ICurrencyService _currencyService;
         private readonly ICustomerService _customerService;
         private readonly IDateTimeHelper _dateTimeHelper;
+        private readonly IExternalAuthenticationService _externalAuthenticationService;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
@@ -111,6 +111,7 @@ namespace Nop.Web.Areas.Admin.Factories
             ICurrencyService currencyService,
             ICustomerService customerService,
             IDateTimeHelper dateTimeHelper,
+            IExternalAuthenticationService externalAuthenticationService,
             INopFileProvider fileProvider,
             IHttpContextAccessor httpContextAccessor,
             ILanguageService languageService,
@@ -143,6 +144,7 @@ namespace Nop.Web.Areas.Admin.Factories
             this._currencyService = currencyService;
             this._customerService = customerService;
             this._dateTimeHelper = dateTimeHelper;
+            this._externalAuthenticationService = externalAuthenticationService;
             this._fileProvider = fileProvider;
             this._httpContextAccessor = httpContextAccessor;
             this._languageService = languageService;
@@ -552,7 +554,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             var notEnabled = new List<string>();
 
-            foreach (var plugin in pluginDescriptors.Select(pd=>pd.Instance()))
+            foreach (var plugin in pluginDescriptors.Select(pd => pd.Instance()))
             {
                 var isEnabled = true;
 
@@ -577,14 +579,14 @@ namespace Nop.Web.Areas.Admin.Factories
                         break;
 
                     case IExternalAuthenticationMethod externalAuthenticationMethod:
-                        isEnabled = externalAuthenticationMethod.IsMethodActive(_externalAuthenticationSettings);
+                        isEnabled = _externalAuthenticationService.IsExternalAuthenticationMethodActive(externalAuthenticationMethod);
                         break;
 
                     case IWidgetPlugin widgetPlugin:
                         isEnabled = widgetPlugin.IsWidgetActive(_widgetSettings);
                         break;
 
-                    case IExchangeRateProvider  exchangeRateProvider :
+                    case IExchangeRateProvider exchangeRateProvider:
                         isEnabled = exchangeRateProvider.PluginDescriptor.SystemName == _currencySettings.ActiveExchangeRateProviderSystemName;
                         break;
                 }
@@ -662,7 +664,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     //we use a simple method because the more Jeff Atwood's solution doesn't work anymore 
                     //more info at https://blog.codinghorror.com/determining-build-date-the-hard-way/
                     loadedAssemblyModel.BuildDate = assembly.IsDynamic ? null : (DateTime?)TimeZoneInfo.ConvertTimeFromUtc(_fileProvider.GetLastWriteTimeUtc(assembly.Location), TimeZoneInfo.Local);
-                        
+
                 }
                 catch { }
                 model.LoadedAssemblies.Add(loadedAssemblyModel);

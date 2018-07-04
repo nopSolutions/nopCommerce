@@ -35,6 +35,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly ExternalAuthenticationSettings _externalAuthenticationSettings;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly IEventPublisher _eventPublisher;
+        private readonly IExternalAuthenticationService _externalAuthenticationService;
         private readonly ILocalizationService _localizationService;
         private readonly IPermissionService _permissionService;
         private readonly IPluginFinder _pluginFinder;
@@ -54,6 +55,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public PluginController(ExternalAuthenticationSettings externalAuthenticationSettings,
             ICustomerActivityService customerActivityService,
             IEventPublisher eventPublisher,
+            IExternalAuthenticationService externalAuthenticationService,
             ILocalizationService localizationService,
             IPermissionService permissionService,
             IPluginFinder pluginFinder,
@@ -69,6 +71,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             this._externalAuthenticationSettings = externalAuthenticationSettings;
             this._customerActivityService = customerActivityService;
             this._eventPublisher = eventPublisher;
+            this._externalAuthenticationService = externalAuthenticationService;
             this._localizationService = localizationService;
             this._permissionService = permissionService;
             this._pluginFinder = pluginFinder;
@@ -99,7 +102,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             var model = _pluginModelFactory.PreparePluginsConfigurationModel(new PluginsConfigurationModel());
 
             return View(model);
-        }       
+        }
 
         [HttpPost]
         public virtual IActionResult ListSelect(PluginSearchModel searchModel)
@@ -424,7 +427,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                             _settingService.SaveSetting(_taxSettings);
                             break;
                         case IExternalAuthenticationMethod externalAuthenticationMethod:
-                            if (externalAuthenticationMethod.IsMethodActive(_externalAuthenticationSettings) && !model.IsEnabled)
+                            if (_externalAuthenticationService.IsExternalAuthenticationMethodActive(externalAuthenticationMethod) && !model.IsEnabled)
                             {
                                 //mark as disabled
                                 _externalAuthenticationSettings.ActiveAuthenticationMethodSystemNames.Remove(pluginDescriptor.SystemName);
@@ -432,7 +435,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                                 break;
                             }
 
-                            if (!externalAuthenticationMethod.IsMethodActive(_externalAuthenticationSettings) && model.IsEnabled)
+                            if (!_externalAuthenticationService.IsExternalAuthenticationMethodActive(externalAuthenticationMethod) && model.IsEnabled)
                             {
                                 //mark as enabled
                                 _externalAuthenticationSettings.ActiveAuthenticationMethodSystemNames.Add(pluginDescriptor.SystemName);
@@ -468,7 +471,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 return View(model);
             }
-            
+
             //prepare model
             model = _pluginModelFactory.PreparePluginModel(model, pluginDescriptor, true);
 
