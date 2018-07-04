@@ -2,8 +2,8 @@
 using System.Linq;
 using Nop.Core;
 using Nop.Core.Caching;
+using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Topics;
-using Nop.Services.Customers;
 using Nop.Services.Localization;
 using Nop.Services.Security;
 using Nop.Services.Seo;
@@ -100,7 +100,7 @@ namespace Nop.Web.Factories
                 var topic = _topicService.GetTopicById(topicId);
                 //ACL (access control list)
                 if (topic == null || !_aclService.Authorize(topic))
-                    return null;                
+                    return null;
                 return PrepareTopicModel(topic);
             });
 

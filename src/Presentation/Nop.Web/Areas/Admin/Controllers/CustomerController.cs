@@ -1011,7 +1011,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     EmailAccountId = emailAccount.Id,
                     FromName = emailAccount.DisplayName,
                     From = emailAccount.Email,
-                    ToName = customer.GetFullName(),
+                    ToName = _customerService.GetCustomerFullName(customer),
                     To = customer.Email,
                     Subject = model.SendEmail.Subject,
                     Body = model.SendEmail.Body,
@@ -1167,7 +1167,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (address == null)
                 return Content("No address found with the specified id");
 
-            customer.RemoveAddress(address);
+            _customerService.RemoveCustomerAddress(customer, address);
             _customerService.UpdateCustomer(customer);
 
             //now delete the address record
@@ -1561,7 +1561,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //export
                 //export
                 var bytes = _exportManager.ExportCustomerGdprInfoToXlsx(_workContext.CurrentCustomer, _storeContext.CurrentStore.Id);
-            
+
                 return File(bytes, MimeTypes.TextXlsx, $"customerdata-{customer.Id}.xlsx");
             }
             catch (Exception exc)

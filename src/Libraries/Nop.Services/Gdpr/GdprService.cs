@@ -360,7 +360,7 @@ namespace Nop.Services.Gdpr
             //external authentication record
             foreach (var ear in customer.ExternalAuthenticationRecords)
                 _externalAuthenticationService.DeleteExternalAuthenticationRecord(ear);
-            
+
             //forum subscriptions
             var forumSubscriptions = _forumService.GetAllSubscriptions(customerId: customer.Id);
             foreach (var forumSubscription in forumSubscriptions)
@@ -369,7 +369,7 @@ namespace Nop.Services.Gdpr
             //shopping cart items
             foreach (var sci in customer.ShoppingCartItems)
                 _shoppingCartService.DeleteShoppingCartItem(sci);
-             
+
             //private messages (sent)
             foreach (var pm in _forumService.GetAllPrivateMessages(storeId: 0, fromCustomerId: customer.Id, toCustomerId: 0,
                 isRead: null, isDeletedByAuthor: null, isDeletedByRecipient: null, keywords: null))
@@ -391,7 +391,7 @@ namespace Nop.Services.Gdpr
             //addresses
             foreach (var address in customer.Addresses)
             {
-                customer.RemoveAddress(address);
+                _customerService.RemoveCustomerAddress(customer, address);
                 _customerService.UpdateCustomer(customer);
                 //now delete the address record
                 _addressService.DeleteAddress(address);

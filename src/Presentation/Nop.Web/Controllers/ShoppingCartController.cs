@@ -1450,7 +1450,7 @@ namespace Nop.Web.Controllers
                     if (anyValidDiscount)
                     {
                         //valid
-                        _workContext.CurrentCustomer.ApplyDiscountCouponCode(discountcouponcode);
+                        _customerService.ApplyDiscountCouponCode(_workContext.CurrentCustomer, discountcouponcode);
                         model.DiscountBox.Messages.Add(_localizationService.GetResource("ShoppingCart.DiscountCouponCode.Applied"));
                         model.DiscountBox.IsApplied = true;
                     }
@@ -1503,7 +1503,7 @@ namespace Nop.Web.Controllers
                     var isGiftCardValid = giftCard != null && giftCard.IsGiftCardValid();
                     if (isGiftCardValid)
                     {
-                        _workContext.CurrentCustomer.ApplyGiftCardCouponCode(giftcardcouponcode);
+                        _customerService.ApplyGiftCardCouponCode(_workContext.CurrentCustomer, giftcardcouponcode);
                         model.GiftCardBox.Message = _localizationService.GetResource("ShoppingCart.GiftCardCouponCode.Applied");
                         model.GiftCardBox.IsApplied = true;
                     }
@@ -1578,7 +1578,7 @@ namespace Nop.Web.Controllers
                     discountId = Convert.ToInt32(formValue.Substring("removediscount-".Length));
             var discount = _discountService.GetDiscountById(discountId);
             if (discount != null)
-                _workContext.CurrentCustomer.RemoveDiscountCouponCode(discount.CouponCode);
+                _customerService.RemoveDiscountCouponCode(_workContext.CurrentCustomer, discount.CouponCode);
 
 
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
@@ -1602,7 +1602,7 @@ namespace Nop.Web.Controllers
                     giftCardId = Convert.ToInt32(formValue.Substring("removegiftcard-".Length));
             var gc = _giftCardService.GetGiftCardById(giftCardId);
             if (gc != null)
-                _workContext.CurrentCustomer.RemoveGiftCardCouponCode(gc.GiftCardCouponCode);
+                _customerService.RemoveGiftCardCouponCode(_workContext.CurrentCustomer, gc.GiftCardCouponCode);
 
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)

@@ -33,7 +33,6 @@ using Nop.Services.Security;
 using Nop.Services.Seo;
 using Nop.Services.Themes;
 using Nop.Services.Topics;
-using Nop.Web.Framework.Security.Captcha;
 using Nop.Web.Framework.Themes;
 using Nop.Web.Framework.UI;
 using Nop.Web.Infrastructure.Cache;
@@ -58,6 +57,7 @@ namespace Nop.Web.Factories
         private readonly IActionContextAccessor _actionContextAccessor;
         private readonly ICategoryService _categoryService;
         private readonly ICurrencyService _currencyService;
+        private readonly ICustomerService _customerService;
         private readonly IForumService _forumService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IHostingEnvironment _hostingEnvironment;
@@ -98,6 +98,7 @@ namespace Nop.Web.Factories
             IActionContextAccessor actionContextAccessor,
             ICategoryService categoryService,
             ICurrencyService currencyService,
+            ICustomerService customerService,
             IForumService forumService,
             IGenericAttributeService genericAttributeService,
             IHostingEnvironment hostingEnvironment,
@@ -134,6 +135,7 @@ namespace Nop.Web.Factories
             this._actionContextAccessor = actionContextAccessor;
             this._categoryService = categoryService;
             this._currencyService = currencyService;
+            this._customerService = customerService;
             this._forumService = forumService;
             this._genericAttributeService = genericAttributeService;
             this._hostingEnvironment = hostingEnvironment;
@@ -248,7 +250,7 @@ namespace Nop.Web.Factories
                 AvailableLanguages = availableLanguages,
                 UseImages = _localizationSettings.UseImagesForLanguageSelection
             };
-            
+
             return model;
         }
 
@@ -333,7 +335,7 @@ namespace Nop.Web.Factories
             var model = new HeaderLinksModel
             {
                 IsAuthenticated = customer.IsRegistered(),
-                CustomerName = customer.IsRegistered() ? customer.FormatUserName() : "",
+                CustomerName = customer.IsRegistered() ? _customerService.FormatUserName(customer) : "",
                 ShoppingCartEnabled = _permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart),
                 WishlistEnabled = _permissionService.Authorize(StandardPermissionProvider.EnableWishlist),
                 AllowPrivateMessages = customer.IsRegistered() && _forumSettings.AllowPrivateMessages,
@@ -368,7 +370,7 @@ namespace Nop.Web.Factories
 
             var model = new AdminHeaderLinksModel
             {
-                ImpersonatedCustomerName = customer.IsRegistered() ? customer.FormatUserName() : "",
+                ImpersonatedCustomerName = customer.IsRegistered() ? _customerService.FormatUserName(customer) : "",
                 IsCustomerImpersonated = _workContext.OriginalCustomerIfImpersonated != null,
                 DisplayAdminLink = _permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel),
                 EditPageUrl = _pageHeadBuilder.GetEditPageUrl()
@@ -449,13 +451,13 @@ namespace Nop.Web.Factories
                 DisplayForumsFooterItem = _displayDefaultFooterItemSettings.DisplayForumsFooterItem,
                 DisplayRecentlyViewedProductsFooterItem = _displayDefaultFooterItemSettings.DisplayRecentlyViewedProductsFooterItem,
                 DisplayCompareProductsFooterItem = _displayDefaultFooterItemSettings.DisplayCompareProductsFooterItem,
-                DisplayNewProductsFooterItem = _displayDefaultFooterItemSettings.DisplayNewProductsFooterItem,                
+                DisplayNewProductsFooterItem = _displayDefaultFooterItemSettings.DisplayNewProductsFooterItem,
                 DisplayCustomerInfoFooterItem = _displayDefaultFooterItemSettings.DisplayCustomerInfoFooterItem,
                 DisplayCustomerOrdersFooterItem = _displayDefaultFooterItemSettings.DisplayCustomerOrdersFooterItem,
                 DisplayCustomerAddressesFooterItem = _displayDefaultFooterItemSettings.DisplayCustomerAddressesFooterItem,
                 DisplayShoppingCartFooterItem = _displayDefaultFooterItemSettings.DisplayShoppingCartFooterItem,
                 DisplayWishlistFooterItem = _displayDefaultFooterItemSettings.DisplayWishlistFooterItem,
-                DisplayApplyVendorAccountFooterItem = _displayDefaultFooterItemSettings.DisplayApplyVendorAccountFooterItem                
+                DisplayApplyVendorAccountFooterItem = _displayDefaultFooterItemSettings.DisplayApplyVendorAccountFooterItem
             };
 
             return model;
@@ -475,11 +477,11 @@ namespace Nop.Web.Factories
             if (!excludeProperties)
             {
                 model.Email = _workContext.CurrentCustomer.Email;
-                model.FullName = _workContext.CurrentCustomer.GetFullName();
+                model.FullName = _customerService.GetCustomerFullName(_workContext.CurrentCustomer);
             }
             model.SubjectEnabled = _commonSettings.SubjectFieldOnContactUsForm;
             model.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnContactUsPage;
-            
+
             return model;
         }
 
@@ -501,14 +503,14 @@ namespace Nop.Web.Factories
             if (!excludeProperties)
             {
                 model.Email = _workContext.CurrentCustomer.Email;
-                model.FullName = _workContext.CurrentCustomer.GetFullName();
+                model.FullName = _customerService.GetCustomerFullName(_workContext.CurrentCustomer);
             }
 
             model.SubjectEnabled = _commonSettings.SubjectFieldOnContactUsForm;
             model.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnContactUsPage;
             model.VendorId = vendor.Id;
             model.VendorName = vendor.GetLocalized(x => x.Name);
-            
+
             return model;
         }
 
@@ -528,7 +530,7 @@ namespace Nop.Web.Factories
             {
                 //get URL helper
                 var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
-                
+
                 var model = new SitemapModel();
 
                 //prepare common items
@@ -889,7 +891,7 @@ namespace Nop.Web.Factories
 
             return sb.ToString();
         }
-        
+
         #endregion
     }
 }

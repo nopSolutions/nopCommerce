@@ -40,6 +40,7 @@ namespace Nop.Services.Messages
         private readonly EmailAccountSettings _emailAccountSettings;
         private readonly IEventPublisher _eventPublisher;
         private readonly IAffiliateService _affiliateService;
+        private readonly ICustomerService _customerService;
 
         #endregion
 
@@ -60,6 +61,7 @@ namespace Nop.Services.Messages
         /// <param name="emailAccountSettings">Email account settings</param>
         /// <param name="eventPublisher">Event publisher</param>
         /// <param name="affiliateService">Affiliate service</param>
+        /// <param name="customerService">Customer service</param>
         public WorkflowMessageService(IMessageTemplateService messageTemplateService,
             IQueuedEmailService queuedEmailService,
             ILanguageService languageService,
@@ -71,7 +73,8 @@ namespace Nop.Services.Messages
             CommonSettings commonSettings,
             EmailAccountSettings emailAccountSettings,
             IEventPublisher eventPublisher,
-            IAffiliateService affiliateService)
+            IAffiliateService affiliateService,
+            ICustomerService customerService)
         {
             this._messageTemplateService = messageTemplateService;
             this._queuedEmailService = queuedEmailService;
@@ -85,6 +88,7 @@ namespace Nop.Services.Messages
             this._emailAccountSettings = emailAccountSettings;
             this._eventPublisher = eventPublisher;
             this._affiliateService = affiliateService;
+            this._customerService = customerService;
         }
 
         #endregion
@@ -240,7 +244,7 @@ namespace Nop.Services.Messages
                 _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
 
                 var toEmail = customer.Email;
-                var toName = customer.GetFullName();
+                var toName = _customerService.GetCustomerFullName(customer);
 
                 return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
             }).ToList();
@@ -280,7 +284,7 @@ namespace Nop.Services.Messages
                 _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
 
                 var toEmail = customer.Email;
-                var toName = customer.GetFullName();
+                var toName = _customerService.GetCustomerFullName(customer);
 
                 return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
             }).ToList();
@@ -321,7 +325,7 @@ namespace Nop.Services.Messages
 
                 //email to re-validate
                 var toEmail = customer.EmailToRevalidate;
-                var toName = customer.GetFullName();
+                var toName = _customerService.GetCustomerFullName(customer);
 
                 return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
             }).ToList();
@@ -361,7 +365,7 @@ namespace Nop.Services.Messages
                 _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
 
                 var toEmail = customer.Email;
-                var toName = customer.GetFullName();
+                var toName = _customerService.GetCustomerFullName(customer);
 
                 return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
             }).ToList();
@@ -557,7 +561,7 @@ namespace Nop.Services.Messages
 
             var affiliate = _affiliateService.GetAffiliateById(order.AffiliateId);
 
-            if(affiliate == null)
+            if (affiliate == null)
                 throw new ArgumentNullException(nameof(affiliate));
 
             var store = _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
@@ -1420,7 +1424,7 @@ namespace Nop.Services.Messages
                     returnRequest.Customer.Email;
                 var toName = returnRequest.Customer.IsGuest() ?
                     orderItem.Order.BillingAddress.FirstName :
-                    returnRequest.Customer.GetFullName();
+                    _customerService.GetCustomerFullName(returnRequest.Customer);
 
                 return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
             }).ToList();
@@ -1467,7 +1471,7 @@ namespace Nop.Services.Messages
                     returnRequest.Customer.Email;
                 var toName = returnRequest.Customer.IsGuest() ?
                     orderItem.Order.BillingAddress.FirstName :
-                    returnRequest.Customer.GetFullName();
+                    _customerService.GetCustomerFullName(returnRequest.Customer);
 
                 return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
             }).ToList();
@@ -1514,7 +1518,7 @@ namespace Nop.Services.Messages
                 _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
 
                 var toEmail = customer.Email;
-                var toName = customer.GetFullName();
+                var toName = _customerService.GetCustomerFullName(customer);
 
                 return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
             }).ToList();
@@ -1561,7 +1565,7 @@ namespace Nop.Services.Messages
                 _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
 
                 var toEmail = customer.Email;
-                var toName = customer.GetFullName();
+                var toName = _customerService.GetCustomerFullName(customer);
 
                 return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
             }).ToList();
@@ -1601,7 +1605,7 @@ namespace Nop.Services.Messages
                 _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
 
                 var toEmail = privateMessage.ToCustomer.Email;
-                var toName = privateMessage.ToCustomer.GetFullName();
+                var toName = _customerService.GetCustomerFullName(privateMessage.ToCustomer);
 
                 return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
             }).ToList();
@@ -1814,7 +1818,7 @@ namespace Nop.Services.Messages
                 _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
 
                 var toEmail = productReview.Customer.Email;
-                var toName = productReview.Customer.GetFullName();
+                var toName = _customerService.GetCustomerFullName(productReview.Customer);
 
                 return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
             }).ToList();
@@ -2063,7 +2067,7 @@ namespace Nop.Services.Messages
 
                 var customer = subscription.Customer;
                 var toEmail = customer.Email;
-                var toName = customer.GetFullName();
+                var toName = _customerService.GetCustomerFullName(customer);
 
                 return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
             }).ToList();

@@ -1339,12 +1339,12 @@ namespace Nop.Services.Orders
             if (includeCouponCodes)
             {
                 //discount
-                foreach (var code in fromCustomer.ParseAppliedDiscountCouponCodes())
-                    toCustomer.ApplyDiscountCouponCode(code);
+                foreach (var code in _customerService.ParseAppliedDiscountCouponCodes(fromCustomer))
+                    _customerService.ApplyDiscountCouponCode(toCustomer, code);
 
                 //gift card
-                foreach (var code in fromCustomer.ParseAppliedGiftCardCouponCodes())
-                    toCustomer.ApplyGiftCardCouponCode(code);
+                foreach (var code in _customerService.ParseAppliedGiftCardCouponCodes(fromCustomer))
+                    _customerService.ApplyGiftCardCouponCode(toCustomer, code);
 
                 //save customer
                 _customerService.UpdateCustomer(toCustomer);

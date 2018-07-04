@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Net;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
@@ -61,7 +60,7 @@ namespace Nop.Web.Controllers
         private readonly IAddressService _addressService;
         private readonly IAuthenticationService _authenticationService;
         private readonly ICountryService _countryService;
-        private readonly ICurrencyService _currencyService;        
+        private readonly ICurrencyService _currencyService;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly ICustomerAttributeParser _customerAttributeParser;
         private readonly ICustomerAttributeService _customerAttributeService;
@@ -135,46 +134,46 @@ namespace Nop.Web.Controllers
             StoreInformationSettings storeInformationSettings,
             TaxSettings taxSettings)
         {
-            this._addressSettings=addressSettings;
-            this._captchaSettings=captchaSettings;
-            this._customerSettings=customerSettings;
-            this._dateTimeSettings=dateTimeSettings;
-            this._forumSettings=forumSettings;
-            this._gdprSettings=gdprSettings;
-            this._addressAttributeParser=addressAttributeParser;
-            this._addressAttributeService=addressAttributeService;
-            this._addressModelFactory=addressModelFactory;
-            this._addressService=addressService;
-            this._authenticationService=authenticationService;
-            this._countryService=countryService;
-            this._currencyService=currencyService;
-            this._customerActivityService=customerActivityService;
-            this._customerAttributeParser=customerAttributeParser;
-            this._customerAttributeService=customerAttributeService;
-            this._customerModelFactory=customerModelFactory;
-            this._customerRegistrationService=customerRegistrationService;
-            this._customerService=customerService;
-            this._eventPublisher=eventPublisher;
-            this._exportManager=exportManager;
-            this._externalAuthenticationService=externalAuthenticationService;
-            this._gdprService=gdprService;
-            this._genericAttributeService=genericAttributeService;
-            this._giftCardService=giftCardService;
-            this._localizationService=localizationService;
-            this._newsLetterSubscriptionService=newsLetterSubscriptionService;
-            this._orderService=orderService;
-            this._pictureService=pictureService;
-            this._priceFormatter=priceFormatter;
-            this._shoppingCartService=shoppingCartService;
-            this._storeContext=storeContext;
-            this._taxService=taxService;
-            this._webHelper=webHelper;
-            this._workContext=workContext;
-            this._workflowMessageService=workflowMessageService;
-            this._localizationSettings=localizationSettings;
-            this._mediaSettings=mediaSettings;
+            this._addressSettings = addressSettings;
+            this._captchaSettings = captchaSettings;
+            this._customerSettings = customerSettings;
+            this._dateTimeSettings = dateTimeSettings;
+            this._forumSettings = forumSettings;
+            this._gdprSettings = gdprSettings;
+            this._addressAttributeParser = addressAttributeParser;
+            this._addressAttributeService = addressAttributeService;
+            this._addressModelFactory = addressModelFactory;
+            this._addressService = addressService;
+            this._authenticationService = authenticationService;
+            this._countryService = countryService;
+            this._currencyService = currencyService;
+            this._customerActivityService = customerActivityService;
+            this._customerAttributeParser = customerAttributeParser;
+            this._customerAttributeService = customerAttributeService;
+            this._customerModelFactory = customerModelFactory;
+            this._customerRegistrationService = customerRegistrationService;
+            this._customerService = customerService;
+            this._eventPublisher = eventPublisher;
+            this._exportManager = exportManager;
+            this._externalAuthenticationService = externalAuthenticationService;
+            this._gdprService = gdprService;
+            this._genericAttributeService = genericAttributeService;
+            this._giftCardService = giftCardService;
+            this._localizationService = localizationService;
+            this._newsLetterSubscriptionService = newsLetterSubscriptionService;
+            this._orderService = orderService;
+            this._pictureService = pictureService;
+            this._priceFormatter = priceFormatter;
+            this._shoppingCartService = shoppingCartService;
+            this._storeContext = storeContext;
+            this._taxService = taxService;
+            this._webHelper = webHelper;
+            this._workContext = workContext;
+            this._workflowMessageService = workflowMessageService;
+            this._localizationSettings = localizationSettings;
+            this._mediaSettings = mediaSettings;
             this._storeInformationSettings = storeInformationSettings;
-            this._taxSettings=taxSettings;
+            this._taxSettings = taxSettings;
         }
 
         #endregion
@@ -259,7 +258,7 @@ namespace Nop.Web.Controllers
 
             return attributesXml;
         }
-        
+
         #endregion
 
         #region Methods
@@ -361,8 +360,8 @@ namespace Nop.Web.Controllers
             if (_workContext.OriginalCustomerIfImpersonated != null)
             {
                 //activity log
-                _customerActivityService.InsertActivity(_workContext.OriginalCustomerIfImpersonated, "Impersonation.Finished", 
-                    string.Format(_localizationService.GetResource("ActivityLog.Impersonation.Finished.StoreOwner"), 
+                _customerActivityService.InsertActivity(_workContext.OriginalCustomerIfImpersonated, "Impersonation.Finished",
+                    string.Format(_localizationService.GetResource("ActivityLog.Impersonation.Finished.StoreOwner"),
                         _workContext.CurrentCustomer.Email, _workContext.CurrentCustomer.Id),
                     _workContext.CurrentCustomer);
 
@@ -476,14 +475,14 @@ namespace Nop.Web.Controllers
             var model = _customerModelFactory.PreparePasswordRecoveryConfirmModel();
 
             //validate token
-            if (!customer.IsPasswordRecoveryTokenValid(token))
+            if (!_customerService.IsPasswordRecoveryTokenValid(customer, token))
             {
                 model.DisablePasswordChanging = true;
                 model.Result = _localizationService.GetResource("Account.PasswordRecovery.WrongToken");
             }
 
             //validate token expiration date
-            if (customer.IsPasswordRecoveryLinkExpired(_customerSettings))
+            if (_customerService.IsPasswordRecoveryLinkExpired(customer))
             {
                 model.DisablePasswordChanging = true;
                 model.Result = _localizationService.GetResource("Account.PasswordRecovery.LinkExpired");
@@ -504,7 +503,7 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("HomePage");
 
             //validate token
-            if (!customer.IsPasswordRecoveryTokenValid(token))
+            if (!_customerService.IsPasswordRecoveryTokenValid(customer, token))
             {
                 model.DisablePasswordChanging = true;
                 model.Result = _localizationService.GetResource("Account.PasswordRecovery.WrongToken");
@@ -512,7 +511,7 @@ namespace Nop.Web.Controllers
             }
 
             //validate token expiration date
-            if (customer.IsPasswordRecoveryLinkExpired(_customerSettings))
+            if (_customerService.IsPasswordRecoveryLinkExpired(customer))
             {
                 model.DisablePasswordChanging = true;
                 model.Result = _localizationService.GetResource("Account.PasswordRecovery.LinkExpired");
@@ -1260,7 +1259,7 @@ namespace Nop.Web.Controllers
             var address = customer.Addresses.FirstOrDefault(a => a.Id == addressId);
             if (address != null)
             {
-                customer.RemoveAddress(address);
+                _customerService.RemoveCustomerAddress(customer, address);
                 _customerService.UpdateCustomer(customer);
                 //now delete the address record
                 _addressService.DeleteAddress(address);
@@ -1442,7 +1441,7 @@ namespace Nop.Web.Controllers
             var model = _customerModelFactory.PrepareChangePasswordModel();
 
             //display the cause of the change password 
-            if (_workContext.CurrentCustomer.PasswordIsExpired())
+            if (_customerService.PasswordIsExpired(_workContext.CurrentCustomer))
                 ModelState.AddModelError(string.Empty, _localizationService.GetResource("Account.ChangePassword.PasswordIsExpired"));
 
             return View(model);
@@ -1600,10 +1599,10 @@ namespace Nop.Web.Controllers
 
             //log
             _gdprService.InsertLog(_workContext.CurrentCustomer, 0, GdprRequestType.ExportData, _localizationService.GetResource("Gdpr.Exported"));
-            
+
             //export
             var bytes = _exportManager.ExportCustomerGdprInfoToXlsx(_workContext.CurrentCustomer, _storeContext.CurrentStore.Id);
-            
+
             return File(bytes, MimeTypes.TextXlsx, "customerdata.xlsx");
         }
 
@@ -1633,7 +1632,7 @@ namespace Nop.Web.Controllers
         //check gift card balance page
         [HttpsRequirement(SslRequirement.Yes)]
         //available even when a store is closed
-        [CheckAccessClosedStore(true)]        
+        [CheckAccessClosedStore(true)]
         public virtual IActionResult CheckGiftCardBalance()
         {
             if (!(_captchaSettings.Enabled && _customerSettings.AllowCustomersToCheckGiftCardBalance))
@@ -1644,7 +1643,7 @@ namespace Nop.Web.Controllers
             var model = _customerModelFactory.PrepareCheckGiftCardBalanceModel();
             return View(model);
         }
-        
+
         [HttpPost, ActionName("CheckGiftCardBalance")]
         [FormValueRequired("checkbalancegiftcard")]
         [ValidateCaptcha]
@@ -1670,7 +1669,7 @@ namespace Nop.Web.Controllers
                 }
             }
 
-            return View(model); 
+            return View(model);
         }
 
         #endregion

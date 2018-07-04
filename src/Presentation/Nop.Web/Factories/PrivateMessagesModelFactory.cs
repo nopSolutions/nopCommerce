@@ -20,6 +20,7 @@ namespace Nop.Web.Factories
 
         private readonly CustomerSettings _customerSettings;
         private readonly ForumSettings _forumSettings;
+        private readonly ICustomerService _customerService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IForumService _forumService;
         private readonly IStoreContext _storeContext;
@@ -31,6 +32,7 @@ namespace Nop.Web.Factories
 
         public PrivateMessagesModelFactory(CustomerSettings customerSettings,
             ForumSettings forumSettings,
+            ICustomerService customerService,
             IDateTimeHelper dateTimeHelper,
             IForumService forumService,
             IStoreContext storeContext,
@@ -38,6 +40,7 @@ namespace Nop.Web.Factories
         {
             this._customerSettings = customerSettings;
             this._forumSettings = forumSettings;
+            this._customerService = customerService;
             this._dateTimeHelper = dateTimeHelper;
             this._forumService = forumService;
             this._storeContext = storeContext;
@@ -187,7 +190,7 @@ namespace Nop.Web.Factories
             var model = new SendPrivateMessageModel
             {
                 ToCustomerId = customerTo.Id,
-                CustomerToName = customerTo.FormatUserName(),
+                CustomerToName = _customerService.FormatUserName(customerTo),
                 AllowViewingToProfile = _customerSettings.AllowViewingProfiles && !customerTo.IsGuest()
             };
 
@@ -218,10 +221,10 @@ namespace Nop.Web.Factories
             {
                 Id = pm.Id,
                 FromCustomerId = pm.FromCustomer.Id,
-                CustomerFromName = pm.FromCustomer.FormatUserName(),
+                CustomerFromName = _customerService.FormatUserName(pm.FromCustomer),
                 AllowViewingFromProfile = _customerSettings.AllowViewingProfiles && pm.FromCustomer != null && !pm.FromCustomer.IsGuest(),
                 ToCustomerId = pm.ToCustomer.Id,
-                CustomerToName = pm.ToCustomer.FormatUserName(),
+                CustomerToName = _customerService.FormatUserName(pm.ToCustomer),
                 AllowViewingToProfile = _customerSettings.AllowViewingProfiles && pm.ToCustomer != null && !pm.ToCustomer.IsGuest(),
                 Subject = pm.Subject,
                 Message = pm.FormatPrivateMessageText(),

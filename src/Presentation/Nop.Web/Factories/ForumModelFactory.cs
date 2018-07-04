@@ -31,13 +31,14 @@ namespace Nop.Web.Factories
         private readonly CustomerSettings _customerSettings;
         private readonly ForumSettings _forumSettings;
         private readonly ICountryService _countryService;
+        private readonly ICustomerService _customerService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IForumService _forumService;
         private readonly ILocalizationService _localizationService;
         private readonly IPictureService _pictureService;
         private readonly IWorkContext _workContext;
         private readonly MediaSettings _mediaSettings;
-        
+
         #endregion
 
         #region Ctor
@@ -45,6 +46,7 @@ namespace Nop.Web.Factories
         public ForumModelFactory(CustomerSettings customerSettings,
             ForumSettings forumSettings,
             ICountryService countryService,
+            ICustomerService customerService,
             IDateTimeHelper dateTimeHelper,
             IForumService forumService,
             ILocalizationService localizationService,
@@ -55,6 +57,7 @@ namespace Nop.Web.Factories
             this._customerSettings = customerSettings;
             this._forumSettings = forumSettings;
             this._countryService = countryService;
+            this._customerService = customerService;
             this._dateTimeHelper = dateTimeHelper;
             this._forumService = forumService;
             this._localizationService = localizationService;
@@ -66,7 +69,7 @@ namespace Nop.Web.Factories
         #endregion
 
         #region Utilities
-        
+
         /// <summary>
         /// Get the list of forum topic types
         /// </summary>
@@ -120,7 +123,7 @@ namespace Nop.Web.Factories
 
             return forumsList;
         }
-        
+
         #endregion
 
         #region Methods
@@ -147,7 +150,7 @@ namespace Nop.Web.Factories
                 ForumTopicType = topic.ForumTopicType,
                 CustomerId = topic.CustomerId,
                 AllowViewingProfiles = _customerSettings.AllowViewingProfiles && !topic.Customer.IsGuest(),
-                CustomerName = topic.Customer.FormatUserName()
+                CustomerName = _customerService.FormatUserName(topic.Customer)
             };
 
             var forumPosts = _forumService.GetAllPosts(topic.Id, 0, string.Empty, 1, _forumSettings.PostsPageSize);
@@ -381,7 +384,7 @@ namespace Nop.Web.Factories
                     IsCurrentCustomerAllowedToDeletePost = _forumService.IsCustomerAllowedToDeletePost(_workContext.CurrentCustomer, post),
                     CustomerId = post.CustomerId,
                     AllowViewingProfiles = _customerSettings.AllowViewingProfiles && !post.Customer.IsGuest(),
-                    CustomerName = post.Customer.FormatUserName(),
+                    CustomerName = _customerService.FormatUserName(post.Customer),
                     IsCustomerForumModerator = post.Customer.IsForumModerator(),
                     ShowCustomersPostCount = _forumSettings.ShowCustomersPostCount,
                     ForumPostCount = post.Customer.GetAttribute<int>(NopCustomerDefaults.ForumPostCountAttribute),
@@ -570,10 +573,10 @@ namespace Nop.Web.Factories
                         switch (_forumSettings.ForumEditor)
                         {
                             case EditorType.SimpleTextBox:
-                                text = $"{quotePost.Customer.FormatUserName()}:\n{quotePostText}\n";
+                                text = $"{_customerService.FormatUserName(quotePost.Customer)}:\n{quotePostText}\n";
                                 break;
                             case EditorType.BBCodeEditor:
-                                text = $"[quote={quotePost.Customer.FormatUserName()}]{BBCodeHelper.RemoveQuotes(quotePostText)}[/quote]";
+                                text = $"[quote={_customerService.FormatUserName(quotePost.Customer)}]{BBCodeHelper.RemoveQuotes(quotePostText)}[/quote]";
                                 break;
                         }
                         model.Text = text;
@@ -645,7 +648,7 @@ namespace Nop.Web.Factories
             var model = new SearchModel();
 
             var pageSize = 10;
-            
+
             // Create the values for the "Limit results to previous" select list
             var limitList = new List<SelectListItem>
             {
@@ -840,7 +843,7 @@ namespace Nop.Web.Factories
             model.ForumTopicSubject = forumPost.ForumTopic.StripTopicSubject();
             model.CustomerId = forumPost.CustomerId;
             model.AllowViewingProfiles = _customerSettings.AllowViewingProfiles && !forumPost.Customer.IsGuest();
-            model.CustomerName = forumPost.Customer.FormatUserName();
+            model.CustomerName = _customerService.FormatUserName(forumPost.Customer);
             //created on string
             if (_forumSettings.RelativeDateTimeFormattingEnabled)
                 model.PostCreatedOnStr = forumPost.CreatedOnUtc.RelativeFormat(true, "f");

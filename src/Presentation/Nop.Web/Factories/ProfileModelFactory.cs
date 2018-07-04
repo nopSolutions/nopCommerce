@@ -27,6 +27,7 @@ namespace Nop.Web.Factories
         private readonly CustomerSettings _customerSettings;
         private readonly ForumSettings _forumSettings;
         private readonly ICountryService _countryService;
+        private readonly ICustomerService _customerService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IForumService _forumService;
         private readonly ILocalizationService _localizationService;
@@ -40,6 +41,7 @@ namespace Nop.Web.Factories
         public ProfileModelFactory(CustomerSettings customerSettings,
             ForumSettings forumSettings,
             ICountryService countryService,
+            ICustomerService customerService,
             IDateTimeHelper dateTimeHelper,
             IForumService forumService,
             ILocalizationService localizationService,
@@ -49,6 +51,7 @@ namespace Nop.Web.Factories
             this._customerSettings = customerSettings;
             this._forumSettings = forumSettings;
             this._countryService = countryService;
+            this._customerService = customerService;
             this._dateTimeHelper = dateTimeHelper;
             this._forumService = forumService;
             this._localizationService = localizationService;
@@ -69,7 +72,7 @@ namespace Nop.Web.Factories
         public virtual ProfileIndexModel PrepareProfileIndexModel(Customer customer, int? page)
         {
             if (customer == null)
-                throw  new ArgumentNullException(nameof(customer));
+                throw new ArgumentNullException(nameof(customer));
 
             var pagingPosts = false;
             var postsPage = 0;
@@ -80,7 +83,7 @@ namespace Nop.Web.Factories
                 pagingPosts = true;
             }
 
-            var name = customer.FormatUserName();
+            var name = _customerService.FormatUserName(customer);
             var title = string.Format(_localizationService.GetResource("Profile.ProfileOf"), name);
 
             var model = new ProfileIndexModel
@@ -108,7 +111,7 @@ namespace Nop.Web.Factories
             var avatarUrl = "";
             if (_customerSettings.AllowCustomersToUploadAvatars)
             {
-                avatarUrl =_pictureService.GetPictureUrl(
+                avatarUrl = _pictureService.GetPictureUrl(
                  customer.GetAttribute<int>(NopCustomerDefaults.AvatarPictureIdAttribute),
                  _mediaSettings.AvatarPictureSize,
                  _customerSettings.DefaultAvatarEnabled,

@@ -56,6 +56,7 @@ namespace Nop.Web.Factories
         private readonly ICheckoutAttributeService _checkoutAttributeService;
         private readonly ICountryService _countryService;
         private readonly ICurrencyService _currencyService;
+        private readonly ICustomerService _customerService;
         private readonly IDiscountService _discountService;
         private readonly IDownloadService _downloadService;
         private readonly IGenericAttributeService _genericAttributeService;
@@ -103,6 +104,7 @@ namespace Nop.Web.Factories
             ICheckoutAttributeService checkoutAttributeService,
             ICountryService countryService,
             ICurrencyService currencyService,
+            ICustomerService customerService,
             IDiscountService discountService,
             IDownloadService downloadService,
             IGenericAttributeService genericAttributeService,
@@ -146,6 +148,7 @@ namespace Nop.Web.Factories
             this._checkoutAttributeService = checkoutAttributeService;
             this._countryService = countryService;
             this._currencyService = currencyService;
+            this._customerService = customerService;
             this._discountService = discountService;
             this._downloadService = downloadService;
             this._genericAttributeService = genericAttributeService;
@@ -820,7 +823,7 @@ namespace Nop.Web.Factories
 
             //discount and gift card boxes
             model.DiscountBox.Display = _shoppingCartSettings.ShowDiscountBox;
-            var discountCouponCodes = _workContext.CurrentCustomer.ParseAppliedDiscountCouponCodes();
+            var discountCouponCodes = _customerService.ParseAppliedDiscountCouponCodes(_workContext.CurrentCustomer);
             foreach (var couponCode in discountCouponCodes)
             {
                 var discount = _discountService.GetAllDiscountsForCaching(couponCode: couponCode)
@@ -914,7 +917,7 @@ namespace Nop.Web.Factories
             //simple properties
             var customer = cart.GetCustomer();
             model.CustomerGuid = customer.CustomerGuid;
-            model.CustomerFullname = customer.GetFullName();
+            model.CustomerFullname = _customerService.GetCustomerFullName(customer);
             model.ShowProductImages = _shoppingCartSettings.ShowProductImagesOnWishList;
             model.ShowSku = _catalogSettings.ShowSkuOnProductDetailsPage;
 

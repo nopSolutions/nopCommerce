@@ -5,10 +5,10 @@ using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Stores;
 using Nop.Core.Domain.Topics;
-using Nop.Services.Customers;
 using Nop.Services.Events;
 using Nop.Services.Security;
 using Nop.Services.Stores;
@@ -48,7 +48,7 @@ namespace Nop.Services.Topics
         /// <param name="catalogSettings">Catalog settings</param>
         /// <param name="eventPublisher">Event publisher</param>
         /// <param name="cacheManager">Cache manager</param>
-        public TopicService(IRepository<Topic> topicRepository, 
+        public TopicService(IRepository<Topic> topicRepository,
             IRepository<StoreMapping> storeMappingRepository,
             IAclService aclService,
             IStoreMappingService storeMappingService,
@@ -162,27 +162,27 @@ namespace Nop.Services.Topics
                         //ACL (access control list)
                         var allowedCustomerRolesIds = _workContext.CurrentCustomer.GetCustomerRoleIds();
                         query = from c in query
-                            join acl in _aclRepository.Table
-                            on new {c1 = c.Id, c2 = "Topic"} equals new {c1 = acl.EntityId, c2 = acl.EntityName} into cAcl
-                            from acl in cAcl.DefaultIfEmpty()
-                            where !c.SubjectToAcl || allowedCustomerRolesIds.Contains(acl.CustomerRoleId)
-                            select c;
+                                join acl in _aclRepository.Table
+                                on new { c1 = c.Id, c2 = "Topic" } equals new { c1 = acl.EntityId, c2 = acl.EntityName } into cAcl
+                                from acl in cAcl.DefaultIfEmpty()
+                                where !c.SubjectToAcl || allowedCustomerRolesIds.Contains(acl.CustomerRoleId)
+                                select c;
                     }
                     if (!_catalogSettings.IgnoreStoreLimitations && storeId > 0)
                     {
                         //Store mapping
                         query = from c in query
-                            join sm in _storeMappingRepository.Table
-                            on new {c1 = c.Id, c2 = "Topic"} equals new {c1 = sm.EntityId, c2 = sm.EntityName} into cSm
-                            from sm in cSm.DefaultIfEmpty()
-                            where !c.LimitedToStores || storeId == sm.StoreId
-                            select c;
+                                join sm in _storeMappingRepository.Table
+                                on new { c1 = c.Id, c2 = "Topic" } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into cSm
+                                from sm in cSm.DefaultIfEmpty()
+                                where !c.LimitedToStores || storeId == sm.StoreId
+                                select c;
                     }
 
                     query = query.Distinct().OrderBy(t => t.DisplayOrder).ThenBy(t => t.SystemName);
                 }
 
-                return query.ToList();                            
+                return query.ToList();
             });
         }
 

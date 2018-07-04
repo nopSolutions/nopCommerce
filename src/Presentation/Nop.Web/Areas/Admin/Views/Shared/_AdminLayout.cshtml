@@ -2,6 +2,7 @@
 @inject IWorkContext workContext
 @inject IDateTimeHelper dateTimeHelper
 @inject IPermissionService permissionService
+@inject ICustomerService customerService
 @inject IEventPublisher eventPublisher
 @inject IHttpContextAccessor httpContextAccessor
 @inject CommonSettings commonSettings
@@ -149,7 +150,7 @@
                                 @if (currentCustomer.IsRegistered())
                                 {
                                     <li class="account-info">
-                                        @currentCustomer.GetFullName()
+                                        @customerService.GetCustomerFullName(currentCustomer)
                                     </li>
                                     <li>
                                         <a asp-controller="Customer" asp-action="Logout" asp-area="">@T("Admin.Header.Logout")</a>

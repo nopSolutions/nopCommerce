@@ -1,7 +1,5 @@
 using System;
 using System.Linq;
-using Nop.Core.Domain.Common;
-using Nop.Core.Domain.Tax;
 
 namespace Nop.Core.Domain.Customers
 {
@@ -10,8 +8,6 @@ namespace Nop.Core.Domain.Customers
     /// </summary>
     public static class CustomerExtensions
     {
-        #region Customer role
-
         /// <summary>
         /// Gets a value indicating whether customer is in a certain customer role
         /// </summary>
@@ -123,44 +119,22 @@ namespace Nop.Core.Domain.Customers
         }
 
         /// <summary>
-        /// Gets a default tax display type (if configured)
+        /// Get customer role identifiers
         /// </summary>
         /// <param name="customer">Customer</param>
-        /// <returns>Result</returns>
-        public static TaxDisplayType? GetDefaultTaxDisplayType(this Customer customer)
+        /// <param name="showHidden">A value indicating whether to load hidden records</param>
+        /// <returns>Customer role identifiers</returns>
+        public static int[] GetCustomerRoleIds(this Customer customer, bool showHidden = false)
         {
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
 
-            var roleWithOverriddenTaxType = customer.CustomerRoles.FirstOrDefault(cr => cr.Active && cr.OverrideTaxDisplayType);
-            if (roleWithOverriddenTaxType == null)
-                return null;
+            var customerRolesIds = customer.CustomerRoles
+               .Where(cr => showHidden || cr.Active)
+               .Select(cr => cr.Id)
+               .ToArray();
 
-            return (TaxDisplayType)roleWithOverriddenTaxType.DefaultTaxDisplayTypeId;
+            return customerRolesIds;
         }
-
-        #endregion
-
-        #region Addresses
-
-        /// <summary>
-        /// Remove address
-        /// </summary>
-        /// <param name="customer">Customer</param>
-        /// <param name="address">Address</param>
-        public static void RemoveAddress(this Customer customer, Address address)
-        {
-            if (!customer.Addresses.Contains(address)) 
-                return;
-
-            if (customer.BillingAddress == address) customer.BillingAddress = null;
-            if (customer.ShippingAddress == address) customer.ShippingAddress = null;
-
-            //customer.Addresses.Remove(address);
-            customer.CustomerAddressMappings
-                .Remove(customer.CustomerAddressMappings.FirstOrDefault(mapping => mapping.AddressId == address.Id));
-        }
-
-        #endregion
     }
 }

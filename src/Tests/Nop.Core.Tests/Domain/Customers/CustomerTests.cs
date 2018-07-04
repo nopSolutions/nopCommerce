@@ -167,7 +167,7 @@ namespace Nop.Core.Tests.Domain.Customers
 
             customer.BillingAddress.ShouldBeTheSameAs(customer.Addresses.First());
 
-            customer.RemoveAddress(address);
+            _customerService.RemoveCustomerAddress(customer, address);
             customer.Addresses.Count.ShouldEqual(0);
             customer.BillingAddress.ShouldBeNull();
         }

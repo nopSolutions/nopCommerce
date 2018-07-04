@@ -29,6 +29,7 @@ namespace Nop.Web.Factories
         private readonly CaptchaSettings _captchaSettings;
         private readonly CustomerSettings _customerSettings;
         private readonly IBlogService _blogService;
+        private readonly ICustomerService _customerService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IPictureService _pictureService;
         private readonly IStaticCacheManager _cacheManager;
@@ -44,6 +45,7 @@ namespace Nop.Web.Factories
             CaptchaSettings captchaSettings,
             CustomerSettings customerSettings,
             IBlogService blogService,
+            ICustomerService customerService,
             IDateTimeHelper dateTimeHelper,
             IPictureService pictureService,
             IStaticCacheManager cacheManager,
@@ -55,6 +57,7 @@ namespace Nop.Web.Factories
             this._captchaSettings = captchaSettings;
             this._customerSettings = customerSettings;
             this._blogService = blogService;
+            this._customerService = customerService;
             this._dateTimeHelper = dateTimeHelper;
             this._pictureService = pictureService;
             this._cacheManager = cacheManager;
@@ -81,7 +84,7 @@ namespace Nop.Web.Factories
             {
                 Id = blogComment.Id,
                 CustomerId = blogComment.CustomerId,
-                CustomerName = blogComment.Customer.FormatUserName(),
+                CustomerName = _customerService.FormatUserName(blogComment.Customer),
                 CommentText = blogComment.CommentText,
                 CreatedOn = _dateTimeHelper.ConvertToUserTime(blogComment.CreatedOnUtc, DateTimeKind.Utc),
                 AllowViewingProfiles = _customerSettings.AllowViewingProfiles && blogComment.Customer != null && !blogComment.Customer.IsGuest()

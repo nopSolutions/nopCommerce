@@ -16,9 +16,10 @@ namespace Nop.Services.Orders
     public partial class GiftCardService : IGiftCardService
     {
         #region Fields
-        
+
         private readonly IRepository<GiftCard> _giftCardRepository;
         private readonly IRepository<GiftCardUsageHistory> _giftCardUsageHistoryRepository;
+        private readonly ICustomerService _customerService;
         private readonly IEventPublisher _eventPublisher;
 
         #endregion
@@ -29,18 +30,22 @@ namespace Nop.Services.Orders
         /// Ctor
         /// </summary>
         /// <param name="giftCardRepository">Gift card context</param>
-        /// <param name="eventPublisher">Event publisher</param>
         /// <param name="giftCardUsageHistoryRepository">Gift card usage history repository</param>
-        public GiftCardService(IRepository<GiftCard> giftCardRepository, IEventPublisher eventPublisher,
-            IRepository<GiftCardUsageHistory> giftCardUsageHistoryRepository)
+        /// <param name="customerService">Customer service</param>
+        /// <param name="eventPublisher">Event publisher</param>
+        public GiftCardService(IRepository<GiftCard> giftCardRepository,
+            IRepository<GiftCardUsageHistory> giftCardUsageHistoryRepository,
+            ICustomerService customerService,
+            IEventPublisher eventPublisher)
         {
-            _giftCardRepository = giftCardRepository;
-            _eventPublisher = eventPublisher;
-            _giftCardUsageHistoryRepository = giftCardUsageHistoryRepository;
+            this._giftCardRepository = giftCardRepository;
+            this._giftCardUsageHistoryRepository = giftCardUsageHistoryRepository;
+            this._customerService = customerService;
+            this._eventPublisher = eventPublisher;
         }
 
         #endregion
-        
+
         #region Methods
 
         /// <summary>
@@ -85,7 +90,7 @@ namespace Nop.Services.Orders
         /// <param name="pageSize">Page size</param>
         /// <returns>Gift cards</returns>
         public virtual IPagedList<GiftCard> GetAllGiftCards(int? purchasedWithOrderId = null, int? usedWithOrderId = null,
-            DateTime? createdFromUtc = null, DateTime? createdToUtc = null, 
+            DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
             bool? isGiftCardActivated = null, string giftCardCouponCode = null,
             string recipientName = null,
             int pageIndex = 0, int pageSize = int.MaxValue)
@@ -170,7 +175,7 @@ namespace Nop.Services.Orders
             if (customer == null)
                 return result;
 
-            var couponCodes = customer.ParseAppliedGiftCardCouponCodes();
+            var couponCodes = _customerService.ParseAppliedGiftCardCouponCodes(customer);
             foreach (var couponCode in couponCodes)
             {
                 var giftCards = GetAllGiftCards(isGiftCardActivated: true, giftCardCouponCode: couponCode);
@@ -196,7 +201,7 @@ namespace Nop.Services.Orders
                 result = result.Substring(0, length);
             return result;
         }
-        
+
         /// <summary>
         /// Delete gift card usage history
         /// </summary>

@@ -68,6 +68,7 @@ namespace Nop.Services.Messages
         private readonly IStoreContext _storeContext;
         private readonly IUrlHelperFactory _urlHelperFactory;
         private readonly IActionContextAccessor _actionContextAccessor;
+        private readonly ICustomerService _customerService;
 
         private readonly MessageTemplatesSettings _templatesSettings;
         private readonly CatalogSettings _catalogSettings;
@@ -101,6 +102,7 @@ namespace Nop.Services.Messages
             IVendorAttributeFormatter vendorAttributeFormatter,
             IUrlHelperFactory urlHelperFactory,
             IActionContextAccessor actionContextAccessor,
+            ICustomerService customerService,
             MessageTemplatesSettings templatesSettings,
             CatalogSettings catalogSettings,
             TaxSettings taxSettings,
@@ -124,6 +126,7 @@ namespace Nop.Services.Messages
             this._vendorAttributeFormatter = vendorAttributeFormatter;
             this._urlHelperFactory = urlHelperFactory;
             this._actionContextAccessor = actionContextAccessor;
+            this._customerService = customerService;
             this._storeService = storeService;
             this._storeContext = storeContext;
 
@@ -1112,7 +1115,7 @@ namespace Nop.Services.Messages
         {
             tokens.Add(new Token("Customer.Email", customer.Email));
             tokens.Add(new Token("Customer.Username", customer.Username));
-            tokens.Add(new Token("Customer.FullName", customer.GetFullName()));
+            tokens.Add(new Token("Customer.FullName", _customerService.GetCustomerFullName(customer)));
             tokens.Add(new Token("Customer.FirstName", customer.GetAttribute<string>(NopCustomerDefaults.FirstNameAttribute)));
             tokens.Add(new Token("Customer.LastName", customer.GetAttribute<string>(NopCustomerDefaults.LastNameAttribute)));
             tokens.Add(new Token("Customer.VatNumber", customer.GetAttribute<string>(NopCustomerDefaults.VatNumberAttribute)));
@@ -1293,7 +1296,7 @@ namespace Nop.Services.Messages
         /// <param name="forumPost">Forum post</param>
         public virtual void AddForumPostTokens(IList<Token> tokens, ForumPost forumPost)
         {
-            tokens.Add(new Token("Forums.PostAuthor", forumPost.Customer.FormatUserName()));
+            tokens.Add(new Token("Forums.PostAuthor", _customerService.FormatUserName(forumPost.Customer)));
             tokens.Add(new Token("Forums.PostBody", forumPost.FormatPostText(), true));
 
             //event notification

@@ -26,6 +26,7 @@ namespace Nop.Web.Factories
 
         private readonly CaptchaSettings _captchaSettings;
         private readonly CustomerSettings _customerSettings;
+        private readonly ICustomerService _customerService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly INewsService _newsService;
         private readonly IPictureService _pictureService;
@@ -41,6 +42,7 @@ namespace Nop.Web.Factories
 
         public NewsModelFactory(CaptchaSettings captchaSettings,
             CustomerSettings customerSettings,
+            ICustomerService customerService,
             IDateTimeHelper dateTimeHelper,
             INewsService newsService,
             IPictureService pictureService,
@@ -52,6 +54,7 @@ namespace Nop.Web.Factories
         {
             this._captchaSettings = captchaSettings;
             this._customerSettings = customerSettings;
+            this._customerService = customerService;
             this._dateTimeHelper = dateTimeHelper;
             this._newsService = newsService;
             this._pictureService = pictureService;
@@ -80,7 +83,7 @@ namespace Nop.Web.Factories
             {
                 Id = newsComment.Id,
                 CustomerId = newsComment.CustomerId,
-                CustomerName = newsComment.Customer.FormatUserName(),
+                CustomerName = _customerService.FormatUserName(newsComment.Customer),
                 CommentTitle = newsComment.CommentTitle,
                 CommentText = newsComment.CommentText,
                 CreatedOn = _dateTimeHelper.ConvertToUserTime(newsComment.CreatedOnUtc, DateTimeKind.Utc),

@@ -10,7 +10,6 @@ using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Orders;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
-using Nop.Services.Discounts.Cache;
 using Nop.Services.Events;
 using Nop.Services.Localization;
 using Nop.Services.Orders;
@@ -33,6 +32,7 @@ namespace Nop.Services.Discounts
         private readonly IRepository<Product> _productRepository;
         private readonly IStaticCacheManager _cacheManager;
         private readonly IStoreContext _storeContext;
+        private readonly ICustomerService _customerService;
         private readonly ILocalizationService _localizationService;
         private readonly ICategoryService _categoryService;
         private readonly IPluginFinder _pluginFinder;
@@ -53,6 +53,7 @@ namespace Nop.Services.Discounts
         /// <param name="manufacturerRepository">Manufacturer repository</param>
         /// <param name="productRepository">Product repository</param>
         /// <param name="storeContext">Store context</param>
+        /// <param name="customerService">Customer service</param>
         /// <param name="localizationService">Localization service</param>
         /// <param name="categoryService">Category service</param>
         /// <param name="pluginFinder">Plugin finder</param>
@@ -65,6 +66,7 @@ namespace Nop.Services.Discounts
             IRepository<Manufacturer> manufacturerRepository,
             IRepository<Product> productRepository,
             IStoreContext storeContext,
+            ICustomerService customerService,
             ILocalizationService localizationService,
             ICategoryService categoryService,
             IPluginFinder pluginFinder,
@@ -78,6 +80,7 @@ namespace Nop.Services.Discounts
             this._manufacturerRepository = manufacturerRepository;
             this._productRepository = productRepository;
             this._storeContext = storeContext;
+            this._customerService = customerService;
             this._localizationService = localizationService;
             this._categoryService = categoryService;
             this._pluginFinder = pluginFinder;
@@ -125,7 +128,7 @@ namespace Nop.Services.Discounts
                 InteractionType = requirement.InteractionType,
                 ChildRequirements = GetReqirementsForCaching(requirement.ChildRequirements)
             });
-            
+
             return requirementForCaching.ToList();
         }
 
@@ -137,7 +140,7 @@ namespace Nop.Services.Discounts
         /// <param name="customer">Customer</param>
         /// <param name="errors">Errors</param>
         /// <returns>True if result is valid; otherwise false</returns>
-        protected bool GetValidationResult(IEnumerable<DiscountRequirementForCaching> requirements, 
+        protected bool GetValidationResult(IEnumerable<DiscountRequirementForCaching> requirements,
             RequirementGroupInteractionType groupInteractionType, Customer customer, List<string> errors)
         {
             var result = false;
@@ -147,7 +150,7 @@ namespace Nop.Services.Discounts
                 if (requirement.IsGroup)
                 {
                     //get child requirements for the group
-                    var interactionType = requirement.InteractionType.HasValue 
+                    var interactionType = requirement.InteractionType.HasValue
                         ? requirement.InteractionType.Value : RequirementGroupInteractionType.And;
                     result = GetValidationResult(requirement.ChildRequirements, interactionType, customer, errors);
                 }
@@ -235,15 +238,15 @@ namespace Nop.Services.Discounts
         /// <param name="endDateUtc">Discount end date; pass null to load all records</param>
         /// <returns>Discounts</returns>
         public virtual IList<Discount> GetAllDiscounts(DiscountType? discountType = null,
-            string couponCode = null, string discountName = null, bool showHidden = false, 
+            string couponCode = null, string discountName = null, bool showHidden = false,
             DateTime? startDateUtc = null, DateTime? endDateUtc = null)
         {
             var query = _discountRepository.Table;
 
             if (!showHidden)
             {
-                query = query.Where(discount => 
-                    (!discount.StartDateUtc.HasValue || discount.StartDateUtc <= DateTime.UtcNow)  && 
+                query = query.Where(discount =>
+                    (!discount.StartDateUtc.HasValue || discount.StartDateUtc <= DateTime.UtcNow) &&
                     (!discount.EndDateUtc.HasValue || discount.EndDateUtc >= DateTime.UtcNow));
             }
 
@@ -308,7 +311,7 @@ namespace Nop.Services.Discounts
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>List of categories</returns>
-        public virtual IPagedList<Category> GetCategoriesWithAppliedDiscount(int? discountId = null, 
+        public virtual IPagedList<Category> GetCategoriesWithAppliedDiscount(int? discountId = null,
             bool showHidden = false, int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var categories = _categoryRepository.Table;
@@ -395,7 +398,7 @@ namespace Nop.Services.Discounts
             //we load all discounts, and filter them using "discountType" parameter later (in memory)
             //we do it because we know that this method is invoked several times per HTTP request with distinct "discountType" parameter
             //that's why let's access the database only once
-            var cacheKey = string.Format(NopDiscountDefaults.DiscountAllCacheKey, 
+            var cacheKey = string.Format(NopDiscountDefaults.DiscountAllCacheKey,
                 showHidden, couponCode ?? string.Empty, discountName ?? string.Empty);
             var discounts = _cacheManager.Get(cacheKey, () =>
             {
@@ -502,7 +505,7 @@ namespace Nop.Services.Discounts
                 query = query.Where(requirement => !requirement.ParentId.HasValue);
 
             query = query.OrderBy(requirement => requirement.Id);
-            
+
             return query.ToList();
         }
 
@@ -544,7 +547,7 @@ namespace Nop.Services.Discounts
         {
             return _pluginFinder.GetPlugins<IDiscountRequirementRule>(customer: customer).ToList();
         }
-        
+
         #endregion
 
         #region Validation
@@ -592,7 +595,7 @@ namespace Nop.Services.Discounts
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
 
-            var couponCodesToValidate = customer.ParseAppliedDiscountCouponCodes();
+            var couponCodesToValidate = _customerService.ParseAppliedDiscountCouponCodes(customer);
             return ValidateDiscount(discount, customer, couponCodesToValidate);
         }
 
@@ -784,7 +787,7 @@ namespace Nop.Services.Discounts
                 throw new ArgumentNullException(nameof(discountUsageHistory));
 
             _discountUsageHistoryRepository.Insert(discountUsageHistory);
-            
+
             //event notification
             _eventPublisher.EntityInserted(discountUsageHistory);
         }
@@ -799,7 +802,7 @@ namespace Nop.Services.Discounts
                 throw new ArgumentNullException(nameof(discountUsageHistory));
 
             _discountUsageHistoryRepository.Update(discountUsageHistory);
-            
+
             //event notification
             _eventPublisher.EntityUpdated(discountUsageHistory);
         }
@@ -814,7 +817,7 @@ namespace Nop.Services.Discounts
                 throw new ArgumentNullException(nameof(discountUsageHistory));
 
             _discountUsageHistoryRepository.Delete(discountUsageHistory);
-            
+
             //event notification
             _eventPublisher.EntityDeleted(discountUsageHistory);
         }

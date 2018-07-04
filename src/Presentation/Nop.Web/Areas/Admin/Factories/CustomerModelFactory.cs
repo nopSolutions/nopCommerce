@@ -76,7 +76,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IWorkContext _workContext;
         private readonly MediaSettings _mediaSettings;
         private readonly RewardPointsSettings _rewardPointsSettings;
-        private readonly TaxSettings _taxSettings;        
+        private readonly TaxSettings _taxSettings;
 
         #endregion
 
@@ -197,7 +197,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     Id = record.Id,
                     Email = record.Email,
-                    ExternalIdentifier = !string.IsNullOrEmpty(record.ExternalDisplayIdentifier) 
+                    ExternalIdentifier = !string.IsNullOrEmpty(record.ExternalDisplayIdentifier)
                         ? record.ExternalDisplayIdentifier : record.ExternalIdentifier,
                     AuthMethodName = method.PluginDescriptor.FriendlyName
                 });
@@ -458,7 +458,7 @@ namespace Nop.Web.Areas.Admin.Factories
             searchModel.SetGridPageSize();
 
             return searchModel;
-        }        
+        }
 
         /// <summary>
         /// Prepare customer shopping cart search model
@@ -607,7 +607,7 @@ namespace Nop.Web.Areas.Admin.Factories
                         Id = customer.Id,
                         Email = customer.IsRegistered() ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest"),
                         Username = customer.Username,
-                        FullName = customer.GetFullName(),
+                        FullName = _customerService.GetCustomerFullName(customer),
                         Company = customer.GetAttribute<string>(NopCustomerDefaults.CompanyAttribute),
                         Phone = customer.GetAttribute<string>(NopCustomerDefaults.PhoneAttribute),
                         ZipPostalCode = customer.GetAttribute<string>(NopCustomerDefaults.ZipPostalCodeAttribute),
@@ -957,7 +957,7 @@ namespace Nop.Web.Areas.Admin.Factories
             };
 
             return model;
-        }        
+        }
 
         /// <summary>
         /// Prepare paged customer shopping cart list model
@@ -1148,13 +1148,13 @@ namespace Nop.Web.Areas.Admin.Factories
                     customerModel.LastActivityDate = _dateTimeHelper.ConvertToUserTime(customer.LastActivityDateUtc, DateTimeKind.Utc);
 
                     //fill in additional values (not existing in the entity)
-                    customerModel.CustomerInfo = customer.IsRegistered() 
+                    customerModel.CustomerInfo = customer.IsRegistered()
                         ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
                     customerModel.LastIpAddress = _customerSettings.StoreIpAddresses
                         ? customer.LastIpAddress : _localizationService.GetResource("Admin.Customers.OnlineCustomers.Fields.IPAddress.Disabled");
                     customerModel.Location = _geoLookupService.LookupCountryName(customer.LastIpAddress);
-                    customerModel.LastVisitedPage = _customerSettings.StoreLastVisitedPage 
-                        ? customer.GetAttribute<string>(NopCustomerDefaults.LastVisitedPageAttribute) 
+                    customerModel.LastVisitedPage = _customerSettings.StoreLastVisitedPage
+                        ? customer.GetAttribute<string>(NopCustomerDefaults.LastVisitedPageAttribute)
                         : _localizationService.GetResource("Admin.Customers.OnlineCustomers.Fields.LastVisitedPage.Disabled");
 
                     return customerModel;
@@ -1208,10 +1208,10 @@ namespace Nop.Web.Areas.Admin.Factories
             }
             //get requests
             var gdprLog = _gdprService.GetAllLog(
-                customerId : customerId,
+                customerId: customerId,
                 customerInfo: customerInfo,
                 requestType: searchModel.SearchRequestTypeId > 0 ? (GdprRequestType?)searchModel.SearchRequestTypeId : null,
-                pageIndex: searchModel.Page - 1, 
+                pageIndex: searchModel.Page - 1,
                 pageSize: searchModel.PageSize);
 
             //prepare list model
@@ -1225,8 +1225,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     var requestModel = new GdprLogModel
                     {
                         Id = log.Id,
-                        CustomerInfo = customer != null && !customer.Deleted && !String.IsNullOrEmpty(customer.Email) ? 
-                            customer.Email : 
+                        CustomerInfo = customer != null && !customer.Deleted && !String.IsNullOrEmpty(customer.Email) ?
+                            customer.Email :
                             log.CustomerInfo,
                         RequestType = log.RequestType.GetLocalizedEnum(_localizationService, _workContext),
                         RequestDetails = log.RequestDetails,

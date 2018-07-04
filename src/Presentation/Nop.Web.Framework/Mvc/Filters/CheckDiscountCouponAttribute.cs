@@ -7,7 +7,6 @@ using Microsoft.Extensions.Primitives;
 using Nop.Core;
 using Nop.Core.Data;
 using Nop.Core.Domain.Customers;
-using Nop.Services;
 using Nop.Services.Customers;
 using Nop.Services.Discounts;
 
@@ -38,6 +37,7 @@ namespace Nop.Web.Framework.Mvc.Filters
         {
             #region Fields
 
+            private readonly ICustomerService _customerService;
             private readonly IDiscountService _discountService;
             private readonly IWorkContext _workContext;
 
@@ -45,9 +45,11 @@ namespace Nop.Web.Framework.Mvc.Filters
 
             #region Ctor
 
-            public CheckDiscountCouponFilter(IDiscountService discountService, 
+            public CheckDiscountCouponFilter(ICustomerService customerService,
+                IDiscountService discountService,
                 IWorkContext workContext)
             {
+                this._customerService = customerService;
                 this._discountService = discountService;
                 this._workContext = workContext;
             }
@@ -64,7 +66,7 @@ namespace Nop.Web.Framework.Mvc.Filters
             {
                 if (context == null)
                     throw new ArgumentNullException(nameof(context));
-                
+
                 //check request query parameters
                 if (!context.HttpContext.Request?.Query?.Any() ?? true)
                     return;
@@ -75,7 +77,7 @@ namespace Nop.Web.Framework.Mvc.Filters
 
                 if (!DataSettingsManager.DatabaseIsInstalled)
                     return;
-                
+
                 //ignore search engines
                 if (_workContext.CurrentCustomer.IsSearchEngineAccount())
                     return;
@@ -93,7 +95,7 @@ namespace Nop.Web.Framework.Mvc.Filters
                     .ToList();
 
                 //apply discount coupon codes to customer
-                discounts.ForEach(discount => _workContext.CurrentCustomer.ApplyDiscountCouponCode(discount.CouponCode));
+                discounts.ForEach(discount => _customerService.ApplyDiscountCouponCode(_workContext.CurrentCustomer, discount.CouponCode));
             }
 
             /// <summary>

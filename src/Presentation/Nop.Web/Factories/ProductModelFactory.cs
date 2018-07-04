@@ -45,6 +45,7 @@ namespace Nop.Web.Factories
         private readonly IAclService _aclService;
         private readonly ICategoryService _categoryService;
         private readonly ICurrencyService _currencyService;
+        private readonly ICustomerService _customerService;
         private readonly IDateRangeService _dateRangeService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IDownloadService _downloadService;
@@ -84,6 +85,7 @@ namespace Nop.Web.Factories
             IAclService aclService,
             ICategoryService categoryService,
             ICurrencyService currencyService,
+            ICustomerService customerService,
             IDateRangeService dateRangeService,
             IDateTimeHelper dateTimeHelper,
             IDownloadService downloadService,
@@ -119,6 +121,7 @@ namespace Nop.Web.Factories
             this._aclService = aclService;
             this._categoryService = categoryService;
             this._currencyService = currencyService;
+            this._customerService = customerService;
             this._dateRangeService = dateRangeService;
             this._dateTimeHelper = dateTimeHelper;
             this._downloadService = downloadService;
@@ -1306,7 +1309,7 @@ namespace Nop.Web.Factories
 
                 if (updatecartitem == null)
                 {
-                    model.GiftCard.SenderName = _workContext.CurrentCustomer.GetFullName();
+                    model.GiftCard.SenderName = _customerService.GetCustomerFullName(_workContext.CurrentCustomer);
                     model.GiftCard.SenderEmail = _workContext.CurrentCustomer.Email;
                 }
                 else
@@ -1424,7 +1427,7 @@ namespace Nop.Web.Factories
                 {
                     Id = pr.Id,
                     CustomerId = pr.CustomerId,
-                    CustomerName = customer.FormatUserName(),
+                    CustomerName = _customerService.FormatUserName(customer),
                     AllowViewingProfiles = _customerSettings.AllowViewingProfiles && customer != null && !customer.IsGuest(),
                     Title = pr.Title,
                     ReviewText = pr.ReviewText,

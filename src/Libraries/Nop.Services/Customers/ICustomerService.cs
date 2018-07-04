@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using Nop.Core;
+using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Domain.Tax;
 
 namespace Nop.Services.Customers
 {
@@ -76,7 +78,7 @@ namespace Nop.Services.Customers
         /// <param name="customerIds">Customer identifiers</param>
         /// <returns>Customers</returns>
         IList<Customer> GetCustomersByIds(int[] customerIds);
-        
+
         /// <summary>
         /// Gets a customer by GUID
         /// </summary>
@@ -90,7 +92,7 @@ namespace Nop.Services.Customers
         /// <param name="email">Email</param>
         /// <returns>Customer</returns>
         Customer GetCustomerByEmail(string email);
-        
+
         /// <summary>
         /// Get customer by system role
         /// </summary>
@@ -122,7 +124,7 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="customer">Customer</param>
         void UpdateCustomer(Customer customer);
-        
+
         /// <summary>
         /// Reset data required for checkout
         /// </summary>
@@ -146,6 +148,82 @@ namespace Nop.Services.Customers
         /// <param name="onlyWithoutShoppingCart">A value indicating whether to delete customers only without shopping cart</param>
         /// <returns>Number of deleted customers</returns>
         int DeleteGuestCustomers(DateTime? createdFromUtc, DateTime? createdToUtc, bool onlyWithoutShoppingCart);
+
+        /// <summary>
+        /// Gets a default tax display type (if configured)
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <returns>Result</returns>
+        TaxDisplayType? GetCustomerDefaultTaxDisplayType(Customer customer);
+
+        /// <summary>
+        /// Remove address
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="address">Address</param>
+        void RemoveCustomerAddress(Customer customer, Address address);
+
+        /// <summary>
+        /// Get full name
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <returns>Customer full name</returns>
+        string GetCustomerFullName(Customer customer);
+
+        /// <summary>
+        /// Formats the customer name
+        /// </summary>
+        /// <param name="customer">Source</param>
+        /// <param name="stripTooLong">Strip too long customer name</param>
+        /// <param name="maxLength">Maximum customer name length</param>
+        /// <returns>Formatted text</returns>
+        string FormatUserName(Customer customer, bool stripTooLong = false, int maxLength = 0);
+
+        /// <summary>
+        /// Gets coupon codes
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <returns>Coupon codes</returns>
+        string[] ParseAppliedDiscountCouponCodes(Customer customer);
+
+        /// <summary>
+        /// Adds a coupon code
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="couponCode">Coupon code</param>
+        /// <returns>New coupon codes document</returns>
+        void ApplyDiscountCouponCode(Customer customer, string couponCode);
+
+        /// <summary>
+        /// Removes a coupon code
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="couponCode">Coupon code to remove</param>
+        /// <returns>New coupon codes document</returns>
+        void RemoveDiscountCouponCode(Customer customer, string couponCode);
+
+        /// <summary>
+        /// Gets coupon codes
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <returns>Coupon codes</returns>
+        string[] ParseAppliedGiftCardCouponCodes(Customer customer);
+
+        /// <summary>
+        /// Adds a coupon code
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="couponCode">Coupon code</param>
+        /// <returns>New coupon codes document</returns>
+        void ApplyGiftCardCouponCode(Customer customer, string couponCode);
+
+        /// <summary>
+        /// Removes a coupon code
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="couponCode">Coupon code to remove</param>
+        /// <returns>New coupon codes document</returns>
+        void RemoveGiftCardCouponCode(Customer customer, string couponCode);
 
         #endregion
 
@@ -222,6 +300,28 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="customerPassword">Customer password</param>
         void UpdateCustomerPassword(CustomerPassword customerPassword);
+
+        /// <summary>
+        /// Check whether password recovery token is valid
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="token">Token to validate</param>
+        /// <returns>Result</returns>
+        bool IsPasswordRecoveryTokenValid(Customer customer, string token);
+
+        /// <summary>
+        /// Check whether password recovery link is expired
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <returns>Result</returns>
+        bool IsPasswordRecoveryLinkExpired(Customer customer);
+
+        /// <summary>
+        /// Check whether customer password is expired 
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <returns>True if password is expired; otherwise false</returns>
+        bool PasswordIsExpired(Customer customer);
 
         #endregion
     }
