@@ -2121,7 +2121,7 @@ namespace Nop.Services.Orders
             }
 
             //check whether we have more items to ship
-            if (order.HasItemsToAddToShipment() || order.HasItemsToShip())
+            if (_orderService.HasItemsToAddToShipment(order) || _orderService.HasItemsToShip(order))
                 order.ShippingStatusId = (int)ShippingStatus.PartiallyShipped;
             else
                 order.ShippingStatusId = (int)ShippingStatus.Shipped;
@@ -2168,7 +2168,7 @@ namespace Nop.Services.Orders
             shipment.DeliveryDateUtc = DateTime.UtcNow;
             _shipmentService.UpdateShipment(shipment);
 
-            if (!order.HasItemsToAddToShipment() && !order.HasItemsToShip() && !order.HasItemsToDeliver())
+            if (!_orderService.HasItemsToAddToShipment(order) && !_orderService.HasItemsToShip(order) && !_orderService.HasItemsToDeliver(order))
                 order.ShippingStatusId = (int)ShippingStatus.Delivered;
             _orderService.UpdateOrder(order);
 

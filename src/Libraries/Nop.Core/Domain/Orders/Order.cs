@@ -166,7 +166,7 @@ namespace Nop.Core.Domain.Orders
         /// Gets or sets the reward points history entry identifier when reward points were earned (gained) for placing this order
         /// </summary>
         public int? RewardPointsHistoryEntryId { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the checkout attribute description
         /// </summary>
@@ -266,7 +266,7 @@ namespace Nop.Core.Domain.Orders
         /// Gets or sets the paid date and time
         /// </summary>
         public DateTime? PaidDateUtc { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the shipping method
         /// </summary>
@@ -410,11 +410,6 @@ namespace Nop.Core.Domain.Orders
             get => (TaxDisplayType)CustomerTaxDisplayTypeId;
             set => CustomerTaxDisplayTypeId = (int)value;
         }
-
-        /// <summary>
-        /// Gets the applied tax rates
-        /// </summary>
-        public SortedDictionary<decimal, decimal> TaxRatesDictionary => this.ParseTaxRates(TaxRates);
 
         #endregion
     }

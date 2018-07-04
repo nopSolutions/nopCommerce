@@ -664,7 +664,7 @@ namespace Nop.Services.Messages
                 else
                 {
                     taxRates = new SortedDictionary<decimal, decimal>();
-                    foreach (var tr in order.TaxRatesDictionary)
+                    foreach (var tr in _orderService.ParseTaxRates(order, order.TaxRates))
                         taxRates.Add(tr.Key, _currencyService.ConvertCurrency(tr.Value, order.CurrencyRate));
 
                     displayTaxRates = _taxSettings.DisplayTaxRates && taxRates.Any();
@@ -1036,7 +1036,7 @@ namespace Nop.Services.Messages
         /// <param name="orderNote">Order note</param>
         public virtual void AddOrderNoteTokens(IList<Token> tokens, OrderNote orderNote)
         {
-            tokens.Add(new Token("Order.NewNoteText", orderNote.FormatOrderNoteText(), true));
+            tokens.Add(new Token("Order.NewNoteText", _orderService.FormatOrderNoteText(orderNote), true));
             var orderNoteAttachmentUrl = RouteUrl(orderNote.Order.StoreId, "GetOrderNoteFile", new { ordernoteid = orderNote.Id });
             tokens.Add(new Token("Order.OrderNoteAttachmentUrl", orderNoteAttachmentUrl, true));
 

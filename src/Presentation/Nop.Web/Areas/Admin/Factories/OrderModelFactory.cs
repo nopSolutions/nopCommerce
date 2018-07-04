@@ -399,10 +399,10 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //tax
             model.Tax = _priceFormatter.FormatPrice(order.OrderTax, true, false);
-            var taxRates = order.TaxRatesDictionary;
+            var taxRates = _orderService.ParseTaxRates(order, order.TaxRates);
             var displayTaxRates = _taxSettings.DisplayTaxRates && taxRates.Any();
             var displayTax = !displayTaxRates;
-            foreach (var tr in order.TaxRatesDictionary)
+            foreach (var tr in taxRates)
             {
                 model.TaxRates.Add(new OrderModel.TaxRate
                 {
@@ -557,7 +557,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             model.IsShippable = true;
             model.ShippingMethod = order.ShippingMethod;
-            model.CanAddNewShipments = order.HasItemsToAddToShipment();
+            model.CanAddNewShipments = _orderService.HasItemsToAddToShipment(order);
             model.PickUpInStore = order.PickUpInStore;
             if (!order.PickUpInStore)
             {
@@ -671,8 +671,8 @@ namespace Nop.Web.Areas.Admin.Factories
             model.AttributeInfo = orderItem.AttributeDescription;
             model.ShipSeparately = orderItem.Product.ShipSeparately;
             model.QuantityOrdered = orderItem.Quantity;
-            model.QuantityInAllShipments = orderItem.GetTotalNumberOfItemsInAllShipment();
-            model.QuantityToAdd = orderItem.GetTotalNumberOfItemsCanBeAddedToShipment();
+            model.QuantityInAllShipments = _orderService.GetTotalNumberOfItemsInAllShipment(orderItem);
+            model.QuantityToAdd = _orderService.GetTotalNumberOfItemsCanBeAddedToShipment(orderItem);
 
             var baseWeight = _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId)?.Name;
             var baseDimension = _measureService.GetMeasureDimensionById(_measureSettings.BaseDimensionId)?.Name;
@@ -1624,7 +1624,7 @@ namespace Nop.Web.Areas.Admin.Factories
                         OrderId = orderNote.OrderId,
                         DownloadId = orderNote.DownloadId,
                         DisplayToCustomer = orderNote.DisplayToCustomer,
-                        Note = orderNote.FormatOrderNoteText()
+                        Note = _orderService.FormatOrderNoteText(orderNote)
                     };
 
                     //convert dates to the user time

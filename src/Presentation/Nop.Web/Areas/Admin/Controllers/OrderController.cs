@@ -2203,7 +2203,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     continue;
 
                 //ensure that this product can be shipped (have at least one item to ship)
-                var maxQtyToAdd = orderItem.GetTotalNumberOfItemsCanBeAddedToShipment();
+                var maxQtyToAdd = _orderService.GetTotalNumberOfItemsCanBeAddedToShipment(orderItem);
                 if (maxQtyToAdd <= 0)
                     continue;
 

@@ -395,7 +395,7 @@ namespace Nop.Services.Tests.ExportImport
                 "CaptureTransactionId", "CaptureTransactionResult", "SubscriptionTransactionId", "PaidDateUtc",
                 "Deleted", "PickupAddress", "RedeemedRewardPointsEntry", "DiscountUsageHistory", "GiftCardUsageHistory",
                 "OrderNotes", "OrderItems", "Shipments", "OrderStatus", "PaymentStatus", "ShippingStatus ",
-                "CustomerTaxDisplayType", "TaxRatesDictionary", "CustomOrderNumber"
+                "CustomerTaxDisplayType", "CustomOrderNumber"
             });
 
             //fields tested individually

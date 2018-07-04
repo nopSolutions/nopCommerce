@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Nop.Core;
 using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Html;
 using Nop.Services.Events;
 
 namespace Nop.Services.Orders
@@ -44,7 +46,7 @@ namespace Nop.Services.Orders
             IRepository<OrderNote> orderNoteRepository,
             IRepository<Product> productRepository,
             IRepository<RecurringPayment> recurringPaymentRepository,
-            IRepository<Customer> customerRepository, 
+            IRepository<Customer> customerRepository,
             IEventPublisher eventPublisher)
         {
             this._orderRepository = orderRepository;
@@ -84,7 +86,7 @@ namespace Nop.Services.Orders
         {
             if (string.IsNullOrEmpty(customOrderNumber))
                 return null;
-           
+
             return _orderRepository.Table.FirstOrDefault(o => o.CustomOrderNumber == customOrderNumber);
         }
 
@@ -200,7 +202,7 @@ namespace Nop.Services.Orders
                     .Any(orderItem =>
                         //"Use multiple warehouses" enabled
                         //we search in each warehouse
-                        (orderItem.Product.ManageInventoryMethodId == manageStockInventoryMethodId && 
+                        (orderItem.Product.ManageInventoryMethodId == manageStockInventoryMethodId &&
                         orderItem.Product.UseMultipleWarehouses &&
                         orderItem.Product.ProductWarehouseInventory.Any(pwi => pwi.WarehouseId == warehouseId))
                         ||
@@ -278,21 +280,139 @@ namespace Nop.Services.Orders
         /// <param name="authorizationTransactionId">Authorization transaction ID</param>
         /// <param name="paymentMethodSystemName">Payment method system name</param>
         /// <returns>Order</returns>
-        public virtual Order GetOrderByAuthorizationTransactionIdAndPaymentMethod(string authorizationTransactionId, 
+        public virtual Order GetOrderByAuthorizationTransactionIdAndPaymentMethod(string authorizationTransactionId,
             string paymentMethodSystemName)
-        { 
+        {
             var query = _orderRepository.Table;
             if (!string.IsNullOrWhiteSpace(authorizationTransactionId))
                 query = query.Where(o => o.AuthorizationTransactionId == authorizationTransactionId);
-            
+
             if (!string.IsNullOrWhiteSpace(paymentMethodSystemName))
                 query = query.Where(o => o.PaymentMethodSystemName == paymentMethodSystemName);
-            
+
             query = query.OrderByDescending(o => o.CreatedOnUtc);
             var order = query.FirstOrDefault();
             return order;
         }
-        
+
+        /// <summary>
+        /// Parse tax rates
+        /// </summary>
+        /// <param name="order">Order</param>
+        /// <param name="taxRatesStr"></param>
+        /// <returns>Rates</returns>
+        public virtual SortedDictionary<decimal, decimal> ParseTaxRates(Order order, string taxRatesStr)
+        {
+            var taxRatesDictionary = new SortedDictionary<decimal, decimal>();
+
+            if (string.IsNullOrEmpty(taxRatesStr))
+                return taxRatesDictionary;
+
+            var lines = taxRatesStr.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+            foreach (var line in lines)
+            {
+                if (string.IsNullOrEmpty(line.Trim()))
+                    continue;
+
+                var taxes = line.Split(':');
+                if (taxes.Length != 2)
+                    continue;
+
+                try
+                {
+                    var taxRate = decimal.Parse(taxes[0].Trim(), CultureInfo.InvariantCulture);
+                    var taxValue = decimal.Parse(taxes[1].Trim(), CultureInfo.InvariantCulture);
+                    taxRatesDictionary.Add(taxRate, taxValue);
+                }
+                catch { }
+            }
+
+            //add at least one tax rate (0%)
+            if (!taxRatesDictionary.Any())
+                taxRatesDictionary.Add(decimal.Zero, decimal.Zero);
+
+            return taxRatesDictionary;
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether an order has items to be added to a shipment
+        /// </summary>
+        /// <param name="order">Order</param>
+        /// <returns>A value indicating whether an order has items to be added to a shipment</returns>
+        public virtual bool HasItemsToAddToShipment(Order order)
+        {
+            if (order == null)
+                throw new ArgumentNullException(nameof(order));
+
+            foreach (var orderItem in order.OrderItems)
+            {
+                //we can ship only shippable products
+                if (!orderItem.Product.IsShipEnabled)
+                    continue;
+
+                var totalNumberOfItemsCanBeAddedToShipment = this.GetTotalNumberOfItemsCanBeAddedToShipment(orderItem);
+                if (totalNumberOfItemsCanBeAddedToShipment <= 0)
+                    continue;
+
+                //yes, we have at least one item to create a new shipment
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether an order has items to ship
+        /// </summary>
+        /// <param name="order">Order</param>
+        /// <returns>A value indicating whether an order has items to ship</returns>
+        public virtual bool HasItemsToShip(Order order)
+        {
+            if (order == null)
+                throw new ArgumentNullException(nameof(order));
+
+            foreach (var orderItem in order.OrderItems)
+            {
+                //we can ship only shippable products
+                if (!orderItem.Product.IsShipEnabled)
+                    continue;
+
+                var totalNumberOfNotYetShippedItems = this.GetTotalNumberOfNotYetShippedItems(orderItem);
+                if (totalNumberOfNotYetShippedItems <= 0)
+                    continue;
+
+                //yes, we have at least one item to ship
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether an order has items to deliver
+        /// </summary>
+        /// <param name="order">Order</param>
+        /// <returns>A value indicating whether an order has items to deliver</returns>
+        public virtual bool HasItemsToDeliver(Order order)
+        {
+            if (order == null)
+                throw new ArgumentNullException(nameof(order));
+
+            foreach (var orderItem in order.OrderItems)
+            {
+                //we can ship only shippable products
+                if (!orderItem.Product.IsShipEnabled)
+                    continue;
+
+                var totalNumberOfShippedItems = this.GetTotalNumberOfShippedItems(orderItem);
+                var totalNumberOfDeliveredItems = this.GetTotalNumberOfDeliveredItems(orderItem);
+                if (totalNumberOfShippedItems <= totalNumberOfDeliveredItems)
+                    continue;
+
+                //yes, we have at least one item to deliver
+                return true;
+            }
+            return false;
+        }
+
         #endregion
 
         #region Orders items
@@ -326,7 +446,7 @@ namespace Nop.Services.Orders
             var item = query.FirstOrDefault();
             return item;
         }
-        
+
         /// <summary>
         /// Gets all downloadable order items
         /// </summary>
@@ -365,6 +485,141 @@ namespace Nop.Services.Orders
             _eventPublisher.EntityDeleted(orderItem);
         }
 
+        /// <summary>
+        /// Gets a total number of items in all shipments
+        /// </summary>
+        /// <param name="orderItem">Order item</param>
+        /// <returns>Total number of items in all shipments</returns>
+        public virtual int GetTotalNumberOfItemsInAllShipment(OrderItem orderItem)
+        {
+            if (orderItem == null)
+                throw new ArgumentNullException(nameof(orderItem));
+
+            var totalInShipments = 0;
+            var shipments = orderItem.Order.Shipments.ToList();
+            for (var i = 0; i < shipments.Count; i++)
+            {
+                var shipment = shipments[i];
+                var si = shipment.ShipmentItems
+                    .FirstOrDefault(x => x.OrderItemId == orderItem.Id);
+                if (si != null)
+                {
+                    totalInShipments += si.Quantity;
+                }
+            }
+            return totalInShipments;
+        }
+
+        /// <summary>
+        /// Gets a total number of already items which can be added to new shipments
+        /// </summary>
+        /// <param name="orderItem">Order item</param>
+        /// <returns>Total number of already delivered items which can be added to new shipments</returns>
+        public virtual int GetTotalNumberOfItemsCanBeAddedToShipment(OrderItem orderItem)
+        {
+            if (orderItem == null)
+                throw new ArgumentNullException(nameof(orderItem));
+
+            var totalInShipments = this.GetTotalNumberOfItemsInAllShipment(orderItem);
+
+            var qtyOrdered = orderItem.Quantity;
+            var qtyCanBeAddedToShipmentTotal = qtyOrdered - totalInShipments;
+            if (qtyCanBeAddedToShipmentTotal < 0)
+                qtyCanBeAddedToShipmentTotal = 0;
+
+            return qtyCanBeAddedToShipmentTotal;
+        }
+
+        /// <summary>
+        /// Gets a total number of not yet shipped items (but added to shipments)
+        /// </summary>
+        /// <param name="orderItem">Order item</param>
+        /// <returns>Total number of not yet shipped items (but added to shipments)</returns>
+        public virtual int GetTotalNumberOfNotYetShippedItems(OrderItem orderItem)
+        {
+            if (orderItem == null)
+                throw new ArgumentNullException(nameof(orderItem));
+
+            var result = 0;
+            var shipments = orderItem.Order.Shipments.ToList();
+            for (var i = 0; i < shipments.Count; i++)
+            {
+                var shipment = shipments[i];
+                if (shipment.ShippedDateUtc.HasValue)
+                    //already shipped
+                    continue;
+
+                var si = shipment.ShipmentItems
+                    .FirstOrDefault(x => x.OrderItemId == orderItem.Id);
+                if (si != null)
+                {
+                    result += si.Quantity;
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Gets a total number of already shipped items
+        /// </summary>
+        /// <param name="orderItem">Order item</param>
+        /// <returns>Total number of already shipped items</returns>
+        public virtual int GetTotalNumberOfShippedItems(OrderItem orderItem)
+        {
+            if (orderItem == null)
+                throw new ArgumentNullException(nameof(orderItem));
+
+            var result = 0;
+            var shipments = orderItem.Order.Shipments.ToList();
+            for (var i = 0; i < shipments.Count; i++)
+            {
+                var shipment = shipments[i];
+                if (!shipment.ShippedDateUtc.HasValue)
+                    //not shipped yet
+                    continue;
+
+                var si = shipment.ShipmentItems
+                    .FirstOrDefault(x => x.OrderItemId == orderItem.Id);
+                if (si != null)
+                {
+                    result += si.Quantity;
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Gets a total number of already delivered items
+        /// </summary>
+        /// <param name="orderItem">Order  item</param>
+        /// <returns>Total number of already delivered items</returns>
+        public virtual int GetTotalNumberOfDeliveredItems(OrderItem orderItem)
+        {
+            if (orderItem == null)
+                throw new ArgumentNullException(nameof(orderItem));
+
+            var result = 0;
+            var shipments = orderItem.Order.Shipments.ToList();
+            for (var i = 0; i < shipments.Count; i++)
+            {
+                var shipment = shipments[i];
+                if (!shipment.DeliveryDateUtc.HasValue)
+                    //not delivered yet
+                    continue;
+
+                var si = shipment.ShipmentItems
+                    .FirstOrDefault(x => x.OrderItemId == orderItem.Id);
+                if (si != null)
+                {
+                    result += si.Quantity;
+                }
+            }
+
+            return result;
+        }
+
         #endregion
 
         #region Orders notes
@@ -397,6 +652,26 @@ namespace Nop.Services.Orders
             _eventPublisher.EntityDeleted(orderNote);
         }
 
+        /// <summary>
+        /// Formats the order note text
+        /// </summary>
+        /// <param name="orderNote">Order note</param>
+        /// <returns>Formatted text</returns>
+        public virtual string FormatOrderNoteText(OrderNote orderNote)
+        {
+            if (orderNote == null)
+                throw new ArgumentNullException(nameof(orderNote));
+
+            var text = orderNote.Note;
+
+            if (string.IsNullOrEmpty(text))
+                return string.Empty;
+
+            text = HtmlHelper.FormatText(text, false, true, false, false, false, false);
+
+            return text;
+        }
+
         #endregion
 
         #region Recurring payments
@@ -427,7 +702,7 @@ namespace Nop.Services.Orders
             if (recurringPaymentId == 0)
                 return null;
 
-           return _recurringPaymentRepository.GetById(recurringPaymentId);
+            return _recurringPaymentRepository.GetById(recurringPaymentId);
         }
 
         /// <summary>
@@ -480,23 +755,23 @@ namespace Nop.Services.Orders
                 initialOrderStatusId = (int)initialOrderStatus.Value;
 
             var query1 = from rp in _recurringPaymentRepository.Table
-                join c in _customerRepository.Table on rp.InitialOrder.CustomerId equals c.Id
-                where
-                (!rp.Deleted) &&
-                (showHidden || !rp.InitialOrder.Deleted) &&
-                (showHidden || !c.Deleted) &&
-                (showHidden || rp.IsActive) &&
-                (customerId == 0 || rp.InitialOrder.CustomerId == customerId) &&
-                (storeId == 0 || rp.InitialOrder.StoreId == storeId) &&
-                (initialOrderId == 0 || rp.InitialOrder.Id == initialOrderId) &&
-                (!initialOrderStatusId.HasValue || initialOrderStatusId.Value == 0 ||
-                 rp.InitialOrder.OrderStatusId == initialOrderStatusId.Value)
-                select rp.Id;
+                         join c in _customerRepository.Table on rp.InitialOrder.CustomerId equals c.Id
+                         where
+                         (!rp.Deleted) &&
+                         (showHidden || !rp.InitialOrder.Deleted) &&
+                         (showHidden || !c.Deleted) &&
+                         (showHidden || rp.IsActive) &&
+                         (customerId == 0 || rp.InitialOrder.CustomerId == customerId) &&
+                         (storeId == 0 || rp.InitialOrder.StoreId == storeId) &&
+                         (initialOrderId == 0 || rp.InitialOrder.Id == initialOrderId) &&
+                         (!initialOrderStatusId.HasValue || initialOrderStatusId.Value == 0 ||
+                          rp.InitialOrder.OrderStatusId == initialOrderStatusId.Value)
+                         select rp.Id;
 
             var query2 = from rp in _recurringPaymentRepository.Table
-                where query1.Contains(rp.Id)
-                orderby rp.StartDateUtc, rp.Id
-                select rp;
+                         where query1.Contains(rp.Id)
+                         orderby rp.StartDateUtc, rp.Id
+                         select rp;
 
             var recurringPayments = new PagedList<RecurringPayment>(query2, pageIndex, pageSize);
             return recurringPayments;

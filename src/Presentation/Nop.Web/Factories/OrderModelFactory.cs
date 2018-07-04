@@ -321,14 +321,15 @@ namespace Nop.Web.Factories
                 }
                 else
                 {
-                    displayTaxRates = _taxSettings.DisplayTaxRates && order.TaxRatesDictionary.Any();
+                    var taxRates = _orderService.ParseTaxRates(order, order.TaxRates);
+                    displayTaxRates = _taxSettings.DisplayTaxRates && taxRates.Any();
                     displayTax = !displayTaxRates;
 
                     var orderTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderTax, order.CurrencyRate);
                     //TODO pass languageId to _priceFormatter.FormatPrice
                     model.Tax = _priceFormatter.FormatPrice(orderTaxInCustomerCurrency, true, order.CustomerCurrencyCode, false, _workContext.WorkingLanguage);
 
-                    foreach (var tr in order.TaxRatesDictionary)
+                    foreach (var tr in taxRates)
                     {
                         model.TaxRates.Add(new OrderDetailsModel.TaxRate
                         {
@@ -383,7 +384,7 @@ namespace Nop.Web.Factories
                 {
                     Id = orderNote.Id,
                     HasDownload = orderNote.DownloadId > 0,
-                    Note = orderNote.FormatOrderNoteText(),
+                    Note = _orderService.FormatOrderNoteText(orderNote),
                     CreatedOn = _dateTimeHelper.ConvertToUserTime(orderNote.CreatedOnUtc, DateTimeKind.Utc)
                 });
             }

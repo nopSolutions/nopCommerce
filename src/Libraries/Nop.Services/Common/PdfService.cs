@@ -402,7 +402,7 @@ namespace Nop.Services.Common
                 cellOrderNote.HorizontalAlignment = Element.ALIGN_LEFT;
                 notesTable.AddCell(cellOrderNote);
 
-                cellOrderNote = GetPdfCell(HtmlHelper.ConvertHtmlToPlainText(orderNote.FormatOrderNoteText(), true, true), font);
+                cellOrderNote = GetPdfCell(HtmlHelper.ConvertHtmlToPlainText(_orderService.FormatOrderNoteText(orderNote), true, true), font);
                 cellOrderNote.HorizontalAlignment = Element.ALIGN_LEFT;
                 notesTable.AddCell(cellOrderNote);
 
@@ -582,7 +582,7 @@ namespace Nop.Services.Common
                 }
                 else
                 {
-                    taxRates = order.TaxRatesDictionary;
+                    taxRates = _orderService.ParseTaxRates(order, order.TaxRates);
 
                     displayTaxRates = _taxSettings.DisplayTaxRates && taxRates.Any();
                     displayTax = !displayTaxRates;
