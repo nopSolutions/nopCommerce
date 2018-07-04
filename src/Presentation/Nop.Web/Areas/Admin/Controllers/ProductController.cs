@@ -313,7 +313,8 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //add manufacturers
             foreach (var manufacturerId in model.SelectedManufacturerIds)
-                if (existingProductManufacturers.FindProductManufacturer(product.Id, manufacturerId) == null)
+            {
+                if (_manufacturerService.FindProductManufacturer(existingProductManufacturers, product.Id, manufacturerId) == null)
                 {
                     //find next display order
                     var displayOrder = 1;
@@ -327,6 +328,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                         DisplayOrder = displayOrder
                     });
                 }
+            }
         }
 
         protected virtual void SaveDiscountMappings(Product product, ProductModel model)

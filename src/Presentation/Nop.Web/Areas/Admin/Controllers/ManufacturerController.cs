@@ -577,7 +577,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 foreach (var product in selectedProducts)
                 {
                     //whether product manufacturer with such parameters already exists
-                    if (existingProductmanufacturers.FindProductManufacturer(product.Id, model.ManufacturerId) != null)
+                    if (_manufacturerService.FindProductManufacturer(existingProductmanufacturers, product.Id, model.ManufacturerId) != null)
                         continue;
 
                     //insert the new product manufacturer mapping
