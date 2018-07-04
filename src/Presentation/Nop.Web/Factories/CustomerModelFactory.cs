@@ -154,12 +154,13 @@ namespace Nop.Web.Factories
             if (consent == null)
                 throw  new ArgumentNullException(nameof(consent));
 
+            var requiredMessage = consent.GetLocalized(x => x.RequiredMessage);
             return new GdprConsentModel
             {
                 Id = consent.Id,
-                Message = consent.Message,
+                Message = consent.GetLocalized(x => x.Message),
                 IsRequired = consent.IsRequired,
-                RequiredMessage = !String.IsNullOrEmpty(consent.RequiredMessage) ? consent.RequiredMessage : $"'{consent.Message}' is required",
+                RequiredMessage = !string.IsNullOrEmpty(requiredMessage) ? requiredMessage : $"'{consent.Message}' is required",
                 Accepted = accepted
             };
         }
