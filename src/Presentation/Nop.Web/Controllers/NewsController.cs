@@ -33,7 +33,7 @@ namespace Nop.Web.Controllers
 
         private readonly CaptchaSettings _captchaSettings;
         private readonly ICustomerActivityService _customerActivityService;
-        private readonly IEventPublisher _eventPublisher;        
+        private readonly IEventPublisher _eventPublisher;
         private readonly ILocalizationService _localizationService;
         private readonly INewsModelFactory _newsModelFactory;
         private readonly INewsService _newsService;
@@ -44,9 +44,9 @@ namespace Nop.Web.Controllers
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly LocalizationSettings _localizationSettings;
         private readonly NewsSettings _newsSettings;
-        
+
         #endregion
-        
+
         #region Ctor
 
         public NewsController(CaptchaSettings captchaSettings,
@@ -79,7 +79,7 @@ namespace Nop.Web.Controllers
         }
 
         #endregion
-        
+
         #region Methods
 
         public virtual IActionResult List(NewsPagingFilteringModel command)
@@ -112,7 +112,7 @@ namespace Nop.Web.Controllers
             feed.Items = items;
             return new RssActionResult(feed, _webHelper.GetThisPageUrl(false));
         }
-        
+
         public virtual IActionResult NewsItem(int newsItemId)
         {
             if (!_newsSettings.Enabled)
@@ -121,11 +121,11 @@ namespace Nop.Web.Controllers
             var newsItem = _newsService.GetNewsById(newsItemId);
             if (newsItem == null)
                 return RedirectToRoute("HomePage");
-            
+
             var hasAdminAccess = _permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && _permissionService.Authorize(StandardPermissionProvider.ManageNews);
             //access to News preview
-            if ((!newsItem.Published || !newsItem.IsAvailable()) && !hasAdminAccess)            
-                return RedirectToRoute("HomePage");                        
+            if ((!newsItem.Published || !_newsService.IsNewsAvailable(newsItem)) && !hasAdminAccess)
+                return RedirectToRoute("HomePage");
 
             var model = new NewsItemModel();
             model = _newsModelFactory.PrepareNewsItemModel(model, newsItem, true);
@@ -190,7 +190,7 @@ namespace Nop.Web.Controllers
 
                 //The text boxes should be cleared after a comment has been posted
                 //That' why we reload the page
-                TempData["nop.news.addcomment.result"] = comment.IsApproved 
+                TempData["nop.news.addcomment.result"] = comment.IsApproved
                     ? _localizationService.GetResource("News.Comments.SuccessfullyAdded")
                     : _localizationService.GetResource("News.Comments.SeeAfterApproving");
 
@@ -201,7 +201,7 @@ namespace Nop.Web.Controllers
             model = _newsModelFactory.PrepareNewsItemModel(model, newsItem, true);
             return View(model);
         }
-        
+
         #endregion
     }
 }

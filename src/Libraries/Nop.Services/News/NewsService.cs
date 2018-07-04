@@ -35,7 +35,7 @@ namespace Nop.Services.News
         /// <param name="storeMappingRepository">Store mapping repository</param>
         /// <param name="catalogSettings">Catalog settings</param>
         /// <param name="eventPublisher">Event publisher</param>
-        public NewsService(IRepository<NewsItem> newsItemRepository, 
+        public NewsService(IRepository<NewsItem> newsItemRepository,
             IRepository<NewsComment> newsCommentRepository,
             IRepository<StoreMapping> storeMappingRepository,
             CatalogSettings catalogSettings,
@@ -64,7 +64,7 @@ namespace Nop.Services.News
                 throw new ArgumentNullException(nameof(newsItem));
 
             _newsItemRepository.Delete(newsItem);
-            
+
             //event notification
             _eventPublisher.EntityDeleted(newsItem);
         }
@@ -126,7 +126,7 @@ namespace Nop.Services.News
                         from sm in n_sm.DefaultIfEmpty()
                         where !n.LimitedToStores || storeId == sm.StoreId
                         select n;
-                
+
                 query = query.Distinct().OrderByDescending(n => n.StartDateUtc ?? n.CreatedOnUtc);
             }
 
@@ -159,11 +159,30 @@ namespace Nop.Services.News
                 throw new ArgumentNullException(nameof(news));
 
             _newsItemRepository.Update(news);
-            
+
             //event notification
             _eventPublisher.EntityUpdated(news);
         }
 
+        /// <summary>
+        /// Get a value indicating whether a news item is available now (availability dates)
+        /// </summary>
+        /// <param name="newsItem">News item</param>
+        /// <param name="dateTime">Datetime to check; pass null to use current date</param>
+        /// <returns>Result</returns>
+        public virtual bool IsNewsAvailable(NewsItem newsItem, DateTime? dateTime = null)
+        {
+            if (newsItem == null)
+                throw new ArgumentNullException(nameof(newsItem));
+
+            if (newsItem.StartDateUtc.HasValue && newsItem.StartDateUtc.Value >= dateTime)
+                return false;
+
+            if (newsItem.EndDateUtc.HasValue && newsItem.EndDateUtc.Value <= dateTime)
+                return false;
+
+            return true;
+        }
         #endregion
 
         #region News comments
@@ -297,7 +316,7 @@ namespace Nop.Services.News
                 DeleteNewsComment(newsComment);
             }
         }
-        
+
         #endregion
 
         #endregion
