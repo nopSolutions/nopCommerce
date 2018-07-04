@@ -533,7 +533,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = discountCategories.Select(category => new DiscountCategoryModel
                 {
                     CategoryId = category.Id,
-                    CategoryName = category.GetFormattedBreadCrumb(_categoryService)
+                    CategoryName = _categoryService.GetFormattedBreadCrumb(category)
                 }),
                 Total = discountCategories.TotalCount
             };
@@ -581,7 +581,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     var categoryModel = category.ToModel<CategoryModel>();
 
                     //fill in additional values (not existing in the entity)
-                    categoryModel.Breadcrumb = category.GetFormattedBreadCrumb(_categoryService);
+                    categoryModel.Breadcrumb = _categoryService.GetFormattedBreadCrumb(category);
 
                     return categoryModel;
                 }),

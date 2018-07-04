@@ -577,7 +577,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 foreach (var product in selectedProducts)
                 {
                     //whether product category with such parameters already exists
-                    if (existingProductCategories.FindProductCategory(product.Id, model.CategoryId) != null)
+                    if (_categoryService.FindProductCategory(existingProductCategories, product.Id, model.CategoryId) != null)
                         continue;
 
                     //insert the new product category mapping
@@ -592,7 +592,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             ViewBag.RefreshPage = true;
-            
+
             return View(new AddProductToCategorySearchModel());
         }
 

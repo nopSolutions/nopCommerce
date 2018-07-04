@@ -80,7 +80,7 @@ namespace Nop.Services.ExportImport
         #endregion
 
         #region Ctor
-        
+
         public ExportManager(ICategoryService categoryService,
             IManufacturerService manufacturerService,
             ICustomerService customerService,
@@ -210,7 +210,7 @@ namespace Nop.Services.ExportImport
                 xmlWriter.WriteEndElement();
             }
         }
-        
+
         /// <summary>
         /// Returns the path to the image file by ID
         /// </summary>
@@ -235,7 +235,7 @@ namespace Nop.Services.ExportImport
                 if (_catalogSettings.ExportImportRelatedEntitiesByName)
                 {
                     categoryNames += _catalogSettings.ExportImportProductCategoryBreadcrumb
-                        ? pc.Category.GetFormattedBreadCrumb(_categoryService)
+                        ? _categoryService.GetFormattedBreadCrumb(pc.Category)
                         : pc.Category.Name;
                 }
                 else
@@ -326,7 +326,7 @@ namespace Nop.Services.ExportImport
 
             return new[] { picture1, picture2, picture3 };
         }
-        
+
         protected virtual bool IgnoreExportPoductProperty(Func<ProductEditorSettings, bool> func)
         {
             var productAdvancedMode = true;
@@ -422,7 +422,7 @@ namespace Nop.Services.ExportImport
 
             return new PropertyManager<ExportSpecificationAttribute>(attributeProperties, _catalogSettings);
         }
-        
+
         private byte[] ExportProductsToXlsxWithAttributes(PropertyByName<Product>[] properties, IEnumerable<Product> itemsToExport)
         {
             var productAttributeManager = GetProductAttributeManager();
@@ -526,7 +526,7 @@ namespace Nop.Services.ExportImport
                 worksheet.Row(row).OutlineLevel = 1;
                 worksheet.Row(row).Collapsed = true;
             }
-            
+
             return row + 1;
         }
 
@@ -536,7 +536,7 @@ namespace Nop.Services.ExportImport
                 psa => new ExportSpecificationAttribute
                 {
                     AttributeTypeId = psa.AttributeTypeId,
-                    CustomValue = psa.CustomValue, 
+                    CustomValue = psa.CustomValue,
                     AllowFiltering = psa.AllowFiltering,
                     ShowOnProductPage = psa.ShowOnProductPage,
                     DisplayOrder = psa.DisplayOrder,
@@ -602,7 +602,7 @@ namespace Nop.Services.ExportImport
                     {
                         manager.CurrentObject = order;
                         manager.WriteToXlsx(worksheet, row++);
-                        
+
                         //products
                         var orederItems = order.OrderItems.ToList();
 
@@ -659,7 +659,7 @@ namespace Nop.Services.ExportImport
             xmlWriter.WriteStartDocument();
             xmlWriter.WriteStartElement("Manufacturers");
             xmlWriter.WriteAttributeString("Version", NopVersion.CurrentVersion);
-            
+
             foreach (var manufacturer in manufacturers)
             {
                 xmlWriter.WriteStartElement("Manufacturer");
@@ -786,7 +786,11 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Category>("MetaTitle", p => p.MetaTitle, IgnoreExportCategoryProperty()),
                 new PropertyByName<Category>("SeName", p => p.GetSeName(0), IgnoreExportCategoryProperty()),
                 new PropertyByName<Category>("ParentCategoryId", p => p.ParentCategoryId),
-                new PropertyByName<Category>("ParentCategoryName", p => parentCatagories.FirstOrDefault(c => c.Id == p.ParentCategoryId)?.GetFormattedBreadCrumb(_categoryService), !_catalogSettings.ExportImportCategoriesUsingCategoryName),
+                new PropertyByName<Category>("ParentCategoryName", p =>
+                {
+                    var category = parentCatagories.FirstOrDefault(c => c.Id == p.ParentCategoryId);
+                    return category != null ? _categoryService.GetFormattedBreadCrumb(category) : null;
+                }, !_catalogSettings.ExportImportCategoriesUsingCategoryName),
                 new PropertyByName<Category>("Picture", p => GetPictures(p.PictureId)),
                 new PropertyByName<Category>("PageSize", p => p.PageSize, IgnoreExportCategoryProperty()),
                 new PropertyByName<Category>("AllowCustomersToSelectPageSize", p => p.AllowCustomersToSelectPageSize, IgnoreExportCategoryProperty()),
@@ -1282,12 +1286,12 @@ namespace Nop.Services.ExportImport
 
             var productList = products.ToList();
 
-            var productAdvancedMode=true;
+            var productAdvancedMode = true;
             try
             {
                 productAdvancedMode = _workContext.CurrentCustomer.GetAttribute<bool>("product-advanced-mode");
             }
-            catch(ArgumentNullException)
+            catch (ArgumentNullException)
             {
             }
 
@@ -1696,7 +1700,7 @@ namespace Nop.Services.ExportImport
 
             return sb.ToString();
         }
-        
+
         /// <summary>
         /// Export customer info (GDPR request) to XLSX 
         /// </summary>
@@ -1801,7 +1805,7 @@ namespace Nop.Services.ExportImport
             }, _catalogSettings);
 
             //customer private messages
-            var privateMessageManager = new PropertyManager<PrivateMessage>(new []
+            var privateMessageManager = new PropertyManager<PrivateMessage>(new[]
             {
                 new PropertyByName<PrivateMessage>("From", pm => _customerSettings.UsernamesEnabled ? pm.FromCustomer.Username : pm.FromCustomer.Email),
                 new PropertyByName<PrivateMessage>("To", pm => _customerSettings.UsernamesEnabled ? pm.ToCustomer.Username : pm.ToCustomer.Email),
@@ -1818,10 +1822,10 @@ namespace Nop.Services.ExportImport
             }
 
             //customer GDPR logs
-            var gdprLogManager = new PropertyManager<GdprLog>(new []
+            var gdprLogManager = new PropertyManager<GdprLog>(new[]
             {
-                new PropertyByName<GdprLog>("Request type", log=>log.RequestType.GetLocalizedEnum(_localizationService, _workContext)), 
-                new PropertyByName<GdprLog>("Request details", log=>log.RequestDetails), 
+                new PropertyByName<GdprLog>("Request type", log=>log.RequestType.GetLocalizedEnum(_localizationService, _workContext)),
+                new PropertyByName<GdprLog>("Request details", log=>log.RequestDetails),
                 new PropertyByName<GdprLog>("Created on", log=>_dateTimeHelper.ConvertToUserTime(log.CreatedOnUtc, DateTimeKind.Utc).ToString("D"))
             }, _catalogSettings);
 

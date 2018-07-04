@@ -518,9 +518,7 @@ namespace Nop.Services.ExportImport
                 category.AllowCustomersToSelectPageSize = true;
             }
             else
-            {
-                curentCategoryBreadCrumb = category.GetFormattedBreadCrumb(_categoryService);
-            }
+                curentCategoryBreadCrumb = _categoryService.GetFormattedBreadCrumb(category);
 
             return category;
         }
@@ -532,7 +530,7 @@ namespace Nop.Services.ExportImport
             else
                 _categoryService.UpdateCategory(category);
 
-            var categoryBreadCrumb = category.GetFormattedBreadCrumb(_categoryService);
+            var categoryBreadCrumb = _categoryService.GetFormattedBreadCrumb(category);
             if (!allCategories.ContainsKey(categoryBreadCrumb))
                 allCategories.Add(categoryBreadCrumb, category);
             if (!string.IsNullOrEmpty(curentCategoryBreadCrumb) && allCategories.ContainsKey(curentCategoryBreadCrumb) &&
@@ -1127,7 +1125,7 @@ namespace Nop.Services.ExportImport
                 }
             }
         }
-       
+
         #endregion
 
         #region Methods
@@ -1162,7 +1160,7 @@ namespace Nop.Services.ExportImport
 
             return properties;
         }
-        
+
         /// <summary>
         /// Import products from XLSX file
         /// </summary>
@@ -1175,7 +1173,7 @@ namespace Nop.Services.ExportImport
                 var worksheet = xlPackage.Workbook.Worksheets.FirstOrDefault();
                 if (worksheet == null)
                     throw new NopException("No worksheet found");
-                
+
                 var downloadedFiles = new List<string>();
 
                 var metadata = PrepareImportProductData(worksheet);
@@ -1695,7 +1693,7 @@ namespace Nop.Services.ExportImport
                         var filter = pruductTagsByIds.Select(pt => pt.Id.ToString()).ToList();
 
                         //product tag mappings
-                        _productTagService.UpdateProductTags(product, productTags.Where(pt=>!filter.Contains(pt)).ToArray());
+                        _productTagService.UpdateProductTags(product, productTags.Where(pt => !filter.Contains(pt)).ToArray());
                     }
 
                     var picture1 = DownloadFile(metadata.Manager.GetProperty("Picture1")?.StringValue, downloadedFiles);
@@ -1725,7 +1723,7 @@ namespace Nop.Services.ExportImport
 
                 foreach (var downloadedFile in downloadedFiles)
                 {
-                    if(!_fileProvider.FileExists(downloadedFile))
+                    if (!_fileProvider.FileExists(downloadedFile))
                         continue;
 
                     try
@@ -1734,7 +1732,7 @@ namespace Nop.Services.ExportImport
                     }
                     catch
                     {
-                       
+
                     }
                 }
 
@@ -1742,7 +1740,7 @@ namespace Nop.Services.ExportImport
                 _customerActivityService.InsertActivity("ImportProducts", string.Format(_localizationService.GetResource("ActivityLog.ImportProducts"), metadata.CountProductsInFile));
             }
         }
-        
+
         /// <summary>
         /// Import newsletter subscribers from TXT file
         /// </summary>
@@ -2030,7 +2028,7 @@ namespace Nop.Services.ExportImport
                 //performance optimization, load all categories in one SQL request
                 var allCategories = _categoryService
                     .GetAllCategories(showHidden: true, loadCacheableCopy: false)
-                    .GroupBy(c => c.GetFormattedBreadCrumb(_categoryService))
+                    .GroupBy(c => _categoryService.GetFormattedBreadCrumb(c))
                     .ToDictionary(c => c.Key, c => c.First());
 
                 var saveNextTime = new List<int>();
@@ -2131,7 +2129,7 @@ namespace Nop.Services.ExportImport
         {
             public CategoryKey(Category category, ICategoryService categoryService, IStoreMappingService storeMappingService)
             {
-                Key = category.GetFormattedBreadCrumb(categoryService);
+                Key = categoryService.GetFormattedBreadCrumb(category);
                 StoresIds = category.LimitedToStores ? storeMappingService.GetStoresIdsWithAccess(category).ToList() : new List<int>();
                 Category = category;
             }
@@ -2154,13 +2152,13 @@ namespace Nop.Services.ExportImport
                 if (Category != null && y.Category != null)
                     return Category.Id == y.Category.Id;
 
-                if ((StoresIds.Any() || y.StoresIds.Any()) 
+                if ((StoresIds.Any() || y.StoresIds.Any())
                     && (StoresIds.All(id => !y.StoresIds.Contains(id)) || y.StoresIds.All(id => !StoresIds.Contains(id))))
                     return false;
 
                 return Key.Equals(y.Key);
             }
-            
+
             public override int GetHashCode()
             {
                 if (StoresIds.Any())

@@ -12,6 +12,7 @@ using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Stores;
 using Nop.Data;
 using Nop.Services.Events;
+using Nop.Services.Localization;
 using Nop.Services.Security;
 using Nop.Services.Stores;
 
@@ -245,7 +246,7 @@ namespace Nop.Services.Catalog
             var unsortedCategories = query.ToList();
 
             //sort categories
-            var sortedCategories = unsortedCategories.SortCategoriesForTree();
+            var sortedCategories = this.SortCategoriesForTree(unsortedCategories);
 
             //paging
             return new PagedList<Category>(sortedCategories, pageIndex, pageSize);
@@ -671,6 +672,113 @@ namespace Nop.Services.Catalog
                         select p;
 
             return query.ToList();
+        }
+
+        /// <summary>
+        /// Sort categories for tree representation
+        /// </summary>
+        /// <param name="source">Source</param>
+        /// <param name="parentId">Parent category identifier</param>
+        /// <param name="ignoreCategoriesWithoutExistingParent">A value indicating whether categories without parent category in provided category list (source) should be ignored</param>
+        /// <returns>Sorted categories</returns>
+        public virtual IList<Category> SortCategoriesForTree(IList<Category> source, int parentId = 0,
+            bool ignoreCategoriesWithoutExistingParent = false)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            var result = new List<Category>();
+
+            foreach (var cat in source.Where(c => c.ParentCategoryId == parentId).ToList())
+            {
+                result.Add(cat);
+                result.AddRange(SortCategoriesForTree(source, cat.Id, true));
+            }
+            if (!ignoreCategoriesWithoutExistingParent && result.Count != source.Count)
+            {
+                //find categories without parent in provided category source and insert them into result
+                foreach (var cat in source)
+                    if (result.FirstOrDefault(x => x.Id == cat.Id) == null)
+                        result.Add(cat);
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Returns a ProductCategory that has the specified values
+        /// </summary>
+        /// <param name="source">Source</param>
+        /// <param name="productId">Product identifier</param>
+        /// <param name="categoryId">Category identifier</param>
+        /// <returns>A ProductCategory that has the specified values; otherwise null</returns>
+        public virtual ProductCategory FindProductCategory(IList<ProductCategory> source, int productId, int categoryId)
+        {
+            foreach (var productCategory in source)
+                if (productCategory.ProductId == productId && productCategory.CategoryId == categoryId)
+                    return productCategory;
+
+            return null;
+        }
+
+        /// <summary>
+        /// Get formatted category breadcrumb 
+        /// Note: ACL and store mapping is ignored
+        /// </summary>
+        /// <param name="category">Category</param>
+        /// <param name="allCategories">All categories</param>
+        /// <param name="separator">Separator</param>
+        /// <param name="languageId">Language identifier for localization</param>
+        /// <returns>Formatted breadcrumb</returns>
+        public virtual string GetFormattedBreadCrumb(Category category, IList<Category> allCategories = null,
+            string separator = ">>", int languageId = 0)
+        {
+            var result = string.Empty;
+
+            var breadcrumb = this.GetCategoryBreadCrumb(category, allCategories, true);
+            for (var i = 0; i <= breadcrumb.Count - 1; i++)
+            {
+                var categoryName = breadcrumb[i].GetLocalized(x => x.Name, languageId);
+                result = string.IsNullOrEmpty(result)
+                    ? categoryName
+                    : $"{result} {separator} {categoryName}";
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Get category breadcrumb 
+        /// </summary>
+        /// <param name="category">Category</param>
+        /// <param name="allCategories">All categories</param>
+        /// <param name="showHidden">A value indicating whether to load hidden records</param>
+        /// <returns>Category breadcrumb </returns>
+        public virtual IList<Category> GetCategoryBreadCrumb(Category category, IList<Category> allCategories = null, bool showHidden = false)
+        {
+            if (category == null)
+                throw new ArgumentNullException(nameof(category));
+
+            var result = new List<Category>();
+
+            //used to prevent circular references
+            var alreadyProcessedCategoryIds = new List<int>();
+
+            while (category != null && //not null
+                !category.Deleted && //not deleted
+                (showHidden || category.Published) && //published
+                (showHidden || _aclService.Authorize(category)) && //ACL
+                (showHidden || _storeMappingService.Authorize(category)) && //Store mapping
+                !alreadyProcessedCategoryIds.Contains(category.Id)) //prevent circular references
+            {
+                result.Add(category);
+
+                alreadyProcessedCategoryIds.Add(category.Id);
+
+                category = allCategories != null ? allCategories.FirstOrDefault(c => c.Id == c.ParentCategoryId)
+                    : this.GetCategoryById(category.ParentCategoryId);
+            }
+            result.Reverse();
+            return result;
         }
 
         #endregion

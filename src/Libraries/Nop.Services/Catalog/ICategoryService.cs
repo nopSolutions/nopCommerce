@@ -50,7 +50,7 @@ namespace Nop.Services.Catalog
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Categories</returns>
         IList<Category> GetAllCategoriesDisplayedOnHomePage(bool showHidden = false);
-        
+
         /// <summary>
         /// Gets child category identifiers
         /// </summary>
@@ -152,5 +152,45 @@ namespace Nop.Services.Catalog
         /// <param name="categoryIds">Category identifiers</param>
         /// <returns>Categories</returns>
         List<Category> GetCategoriesByIds(int[] categoryIds);
+
+        /// <summary>
+        /// Sort categories for tree representation
+        /// </summary>
+        /// <param name="source">Source</param>
+        /// <param name="parentId">Parent category identifier</param>
+        /// <param name="ignoreCategoriesWithoutExistingParent">A value indicating whether categories without parent category in provided category list (source) should be ignored</param>
+        /// <returns>Sorted categories</returns>
+        IList<Category> SortCategoriesForTree(IList<Category> source, int parentId = 0,
+            bool ignoreCategoriesWithoutExistingParent = false);
+
+        /// <summary>
+        /// Returns a ProductCategory that has the specified values
+        /// </summary>
+        /// <param name="source">Source</param>
+        /// <param name="productId">Product identifier</param>
+        /// <param name="categoryId">Category identifier</param>
+        /// <returns>A ProductCategory that has the specified values; otherwise null</returns>
+        ProductCategory FindProductCategory(IList<ProductCategory> source, int productId, int categoryId);
+
+        /// <summary>
+        /// Get formatted category breadcrumb 
+        /// Note: ACL and store mapping is ignored
+        /// </summary>
+        /// <param name="category">Category</param>
+        /// <param name="allCategories">All categories</param>
+        /// <param name="separator">Separator</param>
+        /// <param name="languageId">Language identifier for localization</param>
+        /// <returns>Formatted breadcrumb</returns>
+        string GetFormattedBreadCrumb(Category category, IList<Category> allCategories = null,
+            string separator = ">>", int languageId = 0);
+
+        /// <summary>
+        /// Get category breadcrumb 
+        /// </summary>
+        /// <param name="category">Category</param>
+        /// <param name="allCategories">All categories</param>
+        /// <param name="showHidden">A value indicating whether to load hidden records</param>
+        /// <returns>Category breadcrumb </returns>
+        IList<Category> GetCategoryBreadCrumb(Category category, IList<Category> allCategories = null, bool showHidden = false);
     }
 }

@@ -284,7 +284,8 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //add categories
             foreach (var categoryId in model.SelectedCategoryIds)
-                if (existingProductCategories.FindProductCategory(product.Id, categoryId) == null)
+            {
+                if (_categoryService.FindProductCategory(existingProductCategories, product.Id, categoryId) == null)
                 {
                     //find next display order
                     var displayOrder = 1;
@@ -298,6 +299,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                         DisplayOrder = displayOrder
                     });
                 }
+            }
         }
 
         protected virtual void SaveManufacturerMappings(Product product, ProductModel model)

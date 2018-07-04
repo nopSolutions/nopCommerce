@@ -22,7 +22,6 @@ using Nop.Services.Media;
 using Nop.Services.Security;
 using Nop.Services.Seo;
 using Nop.Services.Shipping.Date;
-using Nop.Services.Stores;
 using Nop.Services.Tax;
 using Nop.Services.Vendors;
 using Nop.Web.Infrastructure.Cache;
@@ -42,7 +41,6 @@ namespace Nop.Web.Factories
         private readonly CaptchaSettings _captchaSettings;
         private readonly CatalogSettings _catalogSettings;
         private readonly CustomerSettings _customerSettings;
-        private readonly IAclService _aclService;
         private readonly ICategoryService _categoryService;
         private readonly ICurrencyService _currencyService;
         private readonly ICustomerService _customerService;
@@ -65,7 +63,6 @@ namespace Nop.Web.Factories
         private readonly ISpecificationAttributeService _specificationAttributeService;
         private readonly IStaticCacheManager _cacheManager;
         private readonly IStoreContext _storeContext;
-        private readonly IStoreMappingService _storeMappingService;
         private readonly ITaxService _taxService;
         private readonly IVendorService _vendorService;
         private readonly IWebHelper _webHelper;
@@ -82,7 +79,6 @@ namespace Nop.Web.Factories
         public ProductModelFactory(CaptchaSettings captchaSettings,
             CatalogSettings catalogSettings,
             CustomerSettings customerSettings,
-            IAclService aclService,
             ICategoryService categoryService,
             ICurrencyService currencyService,
             ICustomerService customerService,
@@ -105,7 +101,6 @@ namespace Nop.Web.Factories
             ISpecificationAttributeService specificationAttributeService,
             IStaticCacheManager cacheManager,
             IStoreContext storeContext,
-            IStoreMappingService storeMappingService,
             ITaxService taxService,
             IVendorService vendorService,
             IWebHelper webHelper,
@@ -118,7 +113,6 @@ namespace Nop.Web.Factories
             this._captchaSettings = captchaSettings;
             this._catalogSettings = catalogSettings;
             this._customerSettings = customerSettings;
-            this._aclService = aclService;
             this._categoryService = categoryService;
             this._currencyService = currencyService;
             this._customerService = customerService;
@@ -141,7 +135,6 @@ namespace Nop.Web.Factories
             this._specificationAttributeService = specificationAttributeService;
             this._cacheManager = cacheManager;
             this._storeContext = storeContext;
-            this._storeMappingService = storeMappingService;
             this._taxService = taxService;
             this._vendorService = vendorService;
             this._webHelper = webHelper;
@@ -516,7 +509,7 @@ namespace Nop.Web.Factories
                 if (category == null)
                     return breadcrumbModel;
 
-                foreach (var catBr in category.GetCategoryBreadCrumb(_categoryService, _aclService, _storeMappingService))
+                foreach (var catBr in _categoryService.GetCategoryBreadCrumb(category))
                 {
                     breadcrumbModel.CategoryBreadcrumb.Add(new CategorySimpleModel
                     {

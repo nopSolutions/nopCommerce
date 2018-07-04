@@ -18,9 +18,7 @@ using Nop.Services.Directory;
 using Nop.Services.Events;
 using Nop.Services.Localization;
 using Nop.Services.Media;
-using Nop.Services.Security;
 using Nop.Services.Seo;
-using Nop.Services.Stores;
 using Nop.Services.Topics;
 using Nop.Services.Vendors;
 using Nop.Web.Framework.Events;
@@ -38,7 +36,6 @@ namespace Nop.Web.Factories
         private readonly CatalogSettings _catalogSettings;
         private readonly DisplayDefaultMenuItemSettings _displayDefaultMenuItemSettings;
         private readonly ForumSettings _forumSettings;
-        private readonly IAclService _aclService;
         private readonly ICategoryService _categoryService;
         private readonly ICategoryTemplateService _categoryTemplateService;
         private readonly ICurrencyService _currencyService;
@@ -56,7 +53,6 @@ namespace Nop.Web.Factories
         private readonly ISpecificationAttributeService _specificationAttributeService;
         private readonly IStaticCacheManager _cacheManager;
         private readonly IStoreContext _storeContext;
-        private readonly IStoreMappingService _storeMappingService;
         private readonly ITopicService _topicService;
         private readonly IVendorService _vendorService;
         private readonly IWebHelper _webHelper;
@@ -72,7 +68,6 @@ namespace Nop.Web.Factories
             CatalogSettings catalogSettings,
             DisplayDefaultMenuItemSettings displayDefaultMenuItemSettings,
             ForumSettings forumSettings,
-            IAclService aclService,
             ICategoryService categoryService,
             ICategoryTemplateService categoryTemplateService,
             ICurrencyService currencyService,
@@ -90,7 +85,6 @@ namespace Nop.Web.Factories
             ISpecificationAttributeService specificationAttributeService,
             IStaticCacheManager cacheManager,
             IStoreContext storeContext,
-            IStoreMappingService storeMappingService,
             ITopicService topicService,
             IVendorService vendorService,
             IWebHelper webHelper,
@@ -102,7 +96,6 @@ namespace Nop.Web.Factories
             this._catalogSettings = catalogSettings;
             this._displayDefaultMenuItemSettings = displayDefaultMenuItemSettings;
             this._forumSettings = forumSettings;
-            this._aclService = aclService;
             this._categoryService = categoryService;
             this._categoryTemplateService = categoryTemplateService;
             this._currencyService = currencyService;
@@ -120,7 +113,6 @@ namespace Nop.Web.Factories
             this._specificationAttributeService = specificationAttributeService;
             this._cacheManager = cacheManager;
             this._storeContext = storeContext;
-            this._storeMappingService = storeMappingService;
             this._topicService = topicService;
             this._vendorService = vendorService;
             this._webHelper = webHelper;
@@ -368,9 +360,7 @@ namespace Nop.Web.Factories
                     _storeContext.CurrentStore.Id,
                     _workContext.WorkingLanguage.Id);
                 model.CategoryBreadcrumb = _cacheManager.Get(breadcrumbCacheKey, () =>
-                    category
-                    .GetCategoryBreadCrumb(_categoryService, _aclService, _storeMappingService)
-                    .Select(catBr => new CategoryModel
+                    _categoryService.GetCategoryBreadCrumb(category).Select(catBr => new CategoryModel
                     {
                         Id = catBr.Id,
                         Name = catBr.GetLocalized(x => x.Name),
@@ -1207,7 +1197,7 @@ namespace Nop.Web.Factories
                 {
                     //generate full category name (breadcrumb)
                     var categoryBreadcrumb = "";
-                    var breadcrumb = c.GetCategoryBreadCrumb(allCategories, _aclService, _storeMappingService);
+                    var breadcrumb = _categoryService.GetCategoryBreadCrumb(c, allCategories);
                     for (var i = 0; i <= breadcrumb.Count - 1; i++)
                     {
                         categoryBreadcrumb += breadcrumb[i].GetLocalized(x => x.Name);

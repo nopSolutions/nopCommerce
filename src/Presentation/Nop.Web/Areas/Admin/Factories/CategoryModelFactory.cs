@@ -116,7 +116,7 @@ namespace Nop.Web.Areas.Admin.Factories
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
-            
+
             //get categories
             var categories = _categoryService.GetAllCategories(categoryName: searchModel.SearchCategoryName,
                 showHidden: true,
@@ -132,7 +132,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     var categoryModel = category.ToModel<CategoryModel>();
 
                     //fill in additional values (not existing in the entity)
-                    categoryModel.Breadcrumb = category.GetFormattedBreadCrumb(_categoryService);
+                    categoryModel.Breadcrumb = _categoryService.GetFormattedBreadCrumb(category);
 
                     return categoryModel;
                 }),
@@ -285,7 +285,7 @@ namespace Nop.Web.Areas.Admin.Factories
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
-            
+
             //get products
             var products = _productService.SearchProducts(showHidden: true,
                 categoryIds: new List<int> { searchModel.SearchCategoryId },
