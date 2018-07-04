@@ -30,7 +30,6 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly ILocalizationService _localizationService;
         private readonly IOrderService _orderService;
         private readonly IPriceFormatter _priceFormatter;
-        private readonly IWebHelper _webHelper;
         private readonly IWorkContext _workContext;
 
         #endregion
@@ -44,7 +43,6 @@ namespace Nop.Web.Areas.Admin.Factories
             ILocalizationService localizationService,
             IOrderService orderService,
             IPriceFormatter priceFormatter,
-            IWebHelper webHelper,
             IWorkContext workContext)
         {
             this._affiliateService = affiliateService;
@@ -54,7 +52,6 @@ namespace Nop.Web.Areas.Admin.Factories
             this._localizationService = localizationService;
             this._orderService = orderService;
             this._priceFormatter = priceFormatter;
-            this._webHelper = webHelper;
             this._workContext = workContext;
         }
 
@@ -102,7 +99,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare available states
             _baseAdminModelFactory.PrepareStatesAndProvinces(model.AvailableStates, model.CountryId);
         }
-        
+
         /// <summary>
         /// Prepare affiliated order search model
         /// </summary>
@@ -181,7 +178,7 @@ namespace Nop.Web.Areas.Admin.Factories
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
-            
+
             //get affiliates
             var affiliates = _affiliateService.GetAllAffiliates(searchModel.SearchFriendlyUrlName,
                 searchModel.SearchFirstName,
@@ -221,7 +218,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (affiliate != null)
             {
                 model = model ?? affiliate.ToModel<AffiliateModel>();
-                model.Url = affiliate.GenerateUrl(_webHelper);
+                model.Url = _affiliateService.GenerateUrl(affiliate);
 
                 //prepare nested search models
                 PrepareAffiliatedOrderSearchModel(model.AffiliatedOrderSearchModel, affiliate);
@@ -253,7 +250,7 @@ namespace Nop.Web.Areas.Admin.Factories
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
-            
+
             if (affiliate == null)
                 throw new ArgumentNullException(nameof(affiliate));
 
@@ -302,7 +299,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="searchModel">Affiliated customer search model</param>
         /// <param name="affiliate">Affiliate</param>
         /// <returns>Affiliated customer list model</returns>
-        public virtual AffiliatedCustomerListModel PrepareAffiliatedCustomerListModel(AffiliatedCustomerSearchModel searchModel, 
+        public virtual AffiliatedCustomerListModel PrepareAffiliatedCustomerListModel(AffiliatedCustomerSearchModel searchModel,
             Affiliate affiliate)
         {
             if (searchModel == null)

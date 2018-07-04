@@ -698,7 +698,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     if (affiliate != null)
                     {
                         model.AffiliateId = affiliate.Id;
-                        model.AffiliateName = affiliate.GetFullName();
+                        model.AffiliateName = _affiliateService.GetAffiliateFullName(affiliate);
                     }
 
                     //prepare model newsletter subscriptions
