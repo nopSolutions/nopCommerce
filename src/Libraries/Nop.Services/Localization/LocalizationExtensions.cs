@@ -137,7 +137,7 @@ namespace Nop.Services.Localization
         {
             var settingService = EngineContext.Current.Resolve<ISettingService>();
 
-            var key = settings.GetSettingKey(keySelector);
+            var key = settingService.GetSettingKey(settings, keySelector);
 
             //we do not support localized settings per store (overridden store settings)
             var setting = settingService.GetSetting(key, storeId: storeId, loadSharedValueIfNotFound: true);
@@ -163,7 +163,7 @@ namespace Nop.Services.Localization
             var settingService = EngineContext.Current.Resolve<ISettingService>();
             var localizedEntityService = EngineContext.Current.Resolve<ILocalizedEntityService>();
 
-            var key = settings.GetSettingKey(keySelector);
+            var key = settingService.GetSettingKey(settings, keySelector);
 
             //we do not support localized settings per store (overridden store settings)
             var setting = settingService.GetSetting(key, storeId: 0, loadSharedValueIfNotFound: false);
