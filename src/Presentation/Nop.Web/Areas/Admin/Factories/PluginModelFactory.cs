@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
-using Nop.Core.Domain.Cms;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
@@ -39,10 +38,10 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IPluginFinder _pluginFinder;
         private readonly IStoreMappingSupportedModelFactory _storeMappingSupportedModelFactory;
         private readonly IWebHelper _webHelper;
+        private readonly IWidgetService _widgetService;
         private readonly PaymentSettings _paymentSettings;
         private readonly ShippingSettings _shippingSettings;
         private readonly TaxSettings _taxSettings;
-        private readonly WidgetSettings _widgetSettings;
 
         #endregion
 
@@ -57,10 +56,10 @@ namespace Nop.Web.Areas.Admin.Factories
             IPluginFinder pluginFinder,
             IStoreMappingSupportedModelFactory storeMappingSupportedModelFactory,
             IWebHelper webHelper,
+            IWidgetService widgetService,
             PaymentSettings paymentSettings,
             ShippingSettings shippingSettings,
-            TaxSettings taxSettings,
-            WidgetSettings widgetSettings)
+            TaxSettings taxSettings)
         {
             this._aclSupportedModelFactory = aclSupportedModelFactory;
             this._baseAdminModelFactory = baseAdminModelFactory;
@@ -71,10 +70,10 @@ namespace Nop.Web.Areas.Admin.Factories
             this._pluginFinder = pluginFinder;
             this._storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
             this._webHelper = webHelper;
+            this._widgetService = widgetService;
             this._paymentSettings = paymentSettings;
             this._shippingSettings = shippingSettings;
             this._taxSettings = taxSettings;
-            this._widgetSettings = widgetSettings;
         }
 
         #endregion
@@ -123,7 +122,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     break;
 
                 case IWidgetPlugin widgetPlugin:
-                    model.IsEnabled = widgetPlugin.IsWidgetActive(_widgetSettings);
+                    model.IsEnabled = _widgetService.IsWidgetActive(widgetPlugin);
                     break;
 
                 default:

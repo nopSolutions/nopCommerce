@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Routing;
-using Nop.Core.Domain.Cms;
 using Nop.Services.Cms;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Cms;
@@ -18,17 +17,14 @@ namespace Nop.Web.Areas.Admin.Factories
         #region Fields
 
         private readonly IWidgetService _widgetService;
-        private readonly WidgetSettings _widgetSettings;
 
         #endregion
 
         #region Ctor
 
-        public WidgetModelFactory(IWidgetService widgetService,
-            WidgetSettings widgetSettings)
+        public WidgetModelFactory(IWidgetService widgetService)
         {
             this._widgetService = widgetService;
-            this._widgetSettings = widgetSettings;
         }
 
         #endregion
@@ -73,7 +69,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     var widgetMethodModel = widget.ToPluginModel<WidgetModel>();
 
                     //fill in additional values (not existing in the entity)
-                    widgetMethodModel.IsActive = widget.IsWidgetActive(_widgetSettings);
+                    widgetMethodModel.IsActive = _widgetService.IsWidgetActive(widget);
                     widgetMethodModel.ConfigurationUrl = widget.GetConfigurationPageUrl();
 
                     return widgetMethodModel;

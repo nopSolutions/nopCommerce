@@ -12,7 +12,6 @@ using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Net.Http.Headers;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
-using Nop.Core.Domain.Cms;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
@@ -92,12 +91,12 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IUrlHelperFactory _urlHelperFactory;
         private readonly IUrlRecordService _urlRecordService;
         private readonly IWebHelper _webHelper;
+        private readonly IWidgetService _widgetService;
         private readonly IWorkContext _workContext;
         private readonly MeasureSettings _measureSettings;
         private readonly PaymentSettings _paymentSettings;
         private readonly ShippingSettings _shippingSettings;
         private readonly TaxSettings _taxSettings;
-        private readonly WidgetSettings _widgetSettings;
 
         #endregion
 
@@ -129,12 +128,12 @@ namespace Nop.Web.Areas.Admin.Factories
             IUrlHelperFactory urlHelperFactory,
             IUrlRecordService urlRecordService,
             IWebHelper webHelper,
+            IWidgetService widgetService,
             IWorkContext workContext,
             MeasureSettings measureSettings,
             PaymentSettings paymentSettings,
             ShippingSettings shippingSettings,
-            TaxSettings taxSettings,
-            WidgetSettings widgetSettings)
+            TaxSettings taxSettings)
         {
             this._adminAreaSettings = adminAreaSettings;
             this._catalogSettings = catalogSettings;
@@ -162,12 +161,12 @@ namespace Nop.Web.Areas.Admin.Factories
             this._urlHelperFactory = urlHelperFactory;
             this._urlRecordService = urlRecordService;
             this._webHelper = webHelper;
+            this._widgetService = widgetService;
             this._workContext = workContext;
             this._measureSettings = measureSettings;
             this._paymentSettings = paymentSettings;
             this._shippingSettings = shippingSettings;
             this._taxSettings = taxSettings;
-            this._widgetSettings = widgetSettings;
         }
 
         #endregion
@@ -583,7 +582,7 @@ namespace Nop.Web.Areas.Admin.Factories
                         break;
 
                     case IWidgetPlugin widgetPlugin:
-                        isEnabled = widgetPlugin.IsWidgetActive(_widgetSettings);
+                        isEnabled = _widgetService.IsWidgetActive(widgetPlugin);
                         break;
 
                     case IExchangeRateProvider exchangeRateProvider:

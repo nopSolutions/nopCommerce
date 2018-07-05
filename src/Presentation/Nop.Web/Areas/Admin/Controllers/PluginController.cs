@@ -43,6 +43,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly ISettingService _settingService;
         private readonly IUploadService _uploadService;
         private readonly IWebHelper _webHelper;
+        private readonly IWidgetService _widgetService;
         private readonly PaymentSettings _paymentSettings;
         private readonly ShippingSettings _shippingSettings;
         private readonly TaxSettings _taxSettings;
@@ -63,6 +64,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             ISettingService settingService,
             IUploadService uploadService,
             IWebHelper webHelper,
+            IWidgetService widgetService,
             PaymentSettings paymentSettings,
             ShippingSettings shippingSettings,
             TaxSettings taxSettings,
@@ -79,6 +81,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             this._settingService = settingService;
             this._uploadService = uploadService;
             this._webHelper = webHelper;
+            this._widgetService = widgetService;
             this._paymentSettings = paymentSettings;
             this._shippingSettings = shippingSettings;
             this._taxSettings = taxSettings;
@@ -444,7 +447,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                             break;
                         case IWidgetPlugin widgetPlugin:
-                            if (widgetPlugin.IsWidgetActive(_widgetSettings) && !model.IsEnabled)
+                            if (_widgetService.IsWidgetActive(widgetPlugin) && !model.IsEnabled)
                             {
                                 //mark as disabled
                                 _widgetSettings.ActiveWidgetSystemNames.Remove(pluginDescriptor.SystemName);
@@ -452,7 +455,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                                 break;
                             }
 
-                            if (!widgetPlugin.IsWidgetActive(_widgetSettings) && model.IsEnabled)
+                            if (!_widgetService.IsWidgetActive(widgetPlugin) && model.IsEnabled)
                             {
                                 //mark as enabled
                                 _widgetSettings.ActiveWidgetSystemNames.Add(pluginDescriptor.SystemName);
