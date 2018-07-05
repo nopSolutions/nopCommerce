@@ -204,12 +204,12 @@ namespace Nop.Services.Tests.Catalog
             var cacheManager = new NopNullCache();
 
             _productAttributeService = new ProductAttributeService(cacheManager,
-                _productAttributeRepo.Object,
-                _productAttributeMappingRepo.Object,
-                _productAttributeCombinationRepo.Object,
-                _productAttributeValueRepo.Object,
+                _eventPublisher.Object,
                 _predefinedProductAttributeValueRepo.Object,
-                _eventPublisher.Object);
+                _productAttributeRepo.Object,
+                _productAttributeCombinationRepo.Object,
+                _productAttributeMappingRepo.Object,
+                _productAttributeValueRepo.Object);
 
             _context = new Mock<IDbContext>();
 
@@ -232,15 +232,15 @@ namespace Nop.Services.Tests.Catalog
             _webHelper = new Mock<IWebHelper>();
             _shoppingCartSettings = new ShoppingCartSettings();
 
-            _productAttributeFormatter = new ProductAttributeFormatter(_workContext.Object,
-                _productAttributeParser,
-                _currencyService.Object,
-                _localizationService.Object,
-                _taxService.Object,
-                _priceFormatter.Object,
+            _productAttributeFormatter = new ProductAttributeFormatter(_currencyService.Object,
                 _downloadService.Object,
-                _webHelper.Object,
+                _localizationService.Object,
                 _priceCalculationService.Object,
+                _priceFormatter.Object,
+                _productAttributeParser,
+                _taxService.Object,
+                _webHelper.Object,
+                _workContext.Object,
                 _shoppingCartSettings);
         }
 

@@ -1,7 +1,6 @@
 ﻿@model MeasureSearchModel
 
 <div id="measuredimension-grid"></div>
-
 <script>
     $(document).ready(function() {
         $("#measuredimension-grid").kendoGrid({
@@ -134,11 +133,20 @@
         });
     });
 </script>
+<button type="submit" class="btn btn-default" id="btnMarkAsPrimaryDimension" style="display:none" />
+
 <script>
+    var selectedId;
+
     function markAsPrimaryDimension(id) {
-        if (confirm('@T("Admin.Common.AreYouSure")')) {
+        selectedId = id;
+        $("#btnMarkAsPrimaryDimension").click();
+    };
+
+    $(document).ready(function () {
+        $("#btnMarkAsPrimaryDimension-action-confirmation-submit-button").bind("click", function () {
             var postData = {
-                id: id
+                id: selectedId
             };
             addAntiForgeryToken(postData);
             $.ajax({
@@ -146,14 +154,15 @@
                 type: "POST",
                 url: "@(Url.Action("MarkAsPrimaryDimension", "Measure"))",
                 data: postData,
-                success: function(data) {
+                success: function (data) {
                     var grid = $("#measuredimension-grid").data('kendoGrid');
                     grid.dataSource.read();
                 },
-                error: function(xhr, ajaxOptions, thrownError) {
+                error: function (xhr, ajaxOptions, thrownError) {
                     alert('Failed to update dimension');
                 }
             });
-        }
-    };
+            $('#btnMarkAsPrimaryDimension-action-confirmation').modal('toggle');
+        });
+    });        
 </script>

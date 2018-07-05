@@ -102,11 +102,11 @@ namespace Nop.Services.Tests.Orders
             _shoppingCartSettings = new ShoppingCartSettings();
             _catalogSettings = new CatalogSettings();
 
-            _priceCalcService = new PriceCalculationService(_workContext.Object, _storeContext.Object,
-                _discountService.Object, _categoryService.Object, 
-                _manufacturerService.Object, _productAttributeParser.Object,
-                _productService.Object, cacheManager, 
-                _shoppingCartSettings, _catalogSettings);
+            _priceCalcService = new PriceCalculationService(_catalogSettings, _categoryService.Object,
+                _discountService.Object, _manufacturerService.Object,
+                _productAttributeParser.Object, _productService.Object,
+                cacheManager, _storeContext.Object,
+                _workContext.Object, _shoppingCartSettings);
             
             _eventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
 

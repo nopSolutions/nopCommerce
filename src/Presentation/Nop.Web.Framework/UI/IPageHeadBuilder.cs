@@ -127,7 +127,13 @@ namespace Nop.Web.Framework.UI
         /// <param name="bundleFiles">A value indicating whether to bundle script elements</param>
         /// <returns>Generated string</returns>
         string GenerateCssFiles(IUrlHelper urlHelper, ResourceLocation location, bool? bundleFiles = null);
-
+        /// <summary>
+        /// Generates a version string for a file based on the last write time of the file
+        /// </summary>
+        /// <param name="url">The url of the file to get a version for</param>
+        /// <param name="includeVersionEquals">A boolean value indicating whether or not to use the version identifier "?v=" in the returned version string</param>
+        /// <returns>Generated version string for file</returns>
+        string GetVersion(string url, bool includeVersionEquals = true);
         /// <summary>
         /// Add canonical URL element to the <![CDATA[<head>]]>
         /// </summary>

@@ -17,9 +17,9 @@ namespace Nop.Services.Catalog
     {
         #region Fields
 
+        private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<BackInStockSubscription> _backInStockSubscriptionRepository;
         private readonly IWorkflowMessageService _workflowMessageService;
-        private readonly IEventPublisher _eventPublisher;
 
         #endregion
         
@@ -28,16 +28,16 @@ namespace Nop.Services.Catalog
         /// <summary>
         /// Ctor
         /// </summary>
+        /// <param name="eventPublisher">Event publisher</param>
         /// <param name="backInStockSubscriptionRepository">Back in stock subscription repository</param>
         /// <param name="workflowMessageService">Workflow message service</param>
-        /// <param name="eventPublisher">Event publisher</param>
-        public BackInStockSubscriptionService(IRepository<BackInStockSubscription> backInStockSubscriptionRepository,
-            IWorkflowMessageService workflowMessageService,
-            IEventPublisher eventPublisher)
+        public BackInStockSubscriptionService(IEventPublisher eventPublisher,
+            IRepository<BackInStockSubscription> backInStockSubscriptionRepository,
+            IWorkflowMessageService workflowMessageService)
         {
+            this._eventPublisher = eventPublisher;
             this._backInStockSubscriptionRepository = backInStockSubscriptionRepository;
             this._workflowMessageService = workflowMessageService;
-            this._eventPublisher = eventPublisher;
         }
 
         #endregion

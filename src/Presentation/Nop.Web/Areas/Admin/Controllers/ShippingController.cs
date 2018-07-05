@@ -785,6 +785,10 @@ namespace Nop.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        //we ignore this filter for increase RequestFormLimits
+        [AdminAntiForgery(true)]
+        //we use 2048 value because in some cases default value (1024) is too small for this action
+        [RequestFormLimits(ValueCountLimit = 2048)]
         [HttpPost, ActionName("Restrictions")]
         public virtual IActionResult RestrictionSave(ShippingMethodRestrictionModel model)
         {

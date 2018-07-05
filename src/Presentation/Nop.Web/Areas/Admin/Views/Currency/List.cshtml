@@ -37,7 +37,7 @@
                     <div class="panel-body">
                         <div class="form-group">
                             <div class="col-md-3">
-                                <nop-label asp-for="ExchangeRateProviderModel.ExchangeRateProvider"/>
+                                <nop-label asp-for="ExchangeRateProviderModel.ExchangeRateProvider" />
                             </div>
                             <div class="col-md-9">
                                 <nop-select asp-for-name="ExchangeRateProviderModel.ExchangeRateProvider" asp-items="Model.ExchangeRateProviderModel.ExchangeRateProviders" />
@@ -46,10 +46,10 @@
                         </div>
                         <div class="form-group">
                             <div class="col-md-3">
-                                <nop-label asp-for="ExchangeRateProviderModel.AutoUpdateEnabled"/>
+                                <nop-label asp-for="ExchangeRateProviderModel.AutoUpdateEnabled" />
                             </div>
                             <div class="col-md-9">
-                                <nop-editor asp-for="ExchangeRateProviderModel.AutoUpdateEnabled"/>
+                                <nop-editor asp-for="ExchangeRateProviderModel.AutoUpdateEnabled" />
                                 <span asp-validation-for="ExchangeRateProviderModel.AutoUpdateEnabled"></span>
                             </div>
                         </div>
@@ -156,33 +156,17 @@
                                 });
                             });
                         </script>
+                        <button type="submit" class="btn btn-default" id="btnMarkPERC" style="display:none" />
+                        <button type="submit" class="btn btn-default" id="btnMarkPSC" style="display:none" />
 
                         <script>
-                            function markAsPrimaryExchangeRateCurrency(id) {
-                                if (confirm('@T("Admin.Common.AreYouSure")')) {
+                            var selectedId;
+
+                            $(document).ready(function () {
+
+                                $("#btnMarkPSC-action-confirmation-submit-button").bind("click", function () {
                                     var postData = {
-                                        id: id
-                                    };
-                                    addAntiForgeryToken(postData);
-                                    $.ajax({
-                                        cache: false,
-                                        type: "POST",
-                                        url: "@(Url.Action("MarkAsPrimaryExchangeRateCurrency", "Currency"))",
-                                        data: postData,
-                                        success: function (data) {
-                                            var grid = $("#currencies-grid").data('kendoGrid');
-                                            grid.dataSource.read();
-                                        },
-                                        error: function (xhr, ajaxOptions, thrownError) {
-                                            alert('Failed to update currency');
-                                        }
-                                    });
-                                }
-                            };
-                            function markAsPrimaryStoreCurrency(id) {
-                                if (confirm('@T("Admin.Common.AreYouSure")')) {
-                                    var postData = {
-                                        id: id
+                                        id: selectedId
                                     };
                                     addAntiForgeryToken(postData);
                                     $.ajax({
@@ -198,9 +182,44 @@
                                             alert('Failed to update currency');
                                         }
                                     });
-                                }
+                                    $('#btnMarkPSC-action-confirmation').modal('toggle');
+                                });
+
+                                $("#btnMarkPERC-action-confirmation-submit-button").bind("click", function () {
+                                    var postData = {
+                                        id: selectedId
+                                    };
+                                    addAntiForgeryToken(postData);
+                                    $.ajax({
+                                        cache: false,
+                                        type: "POST",
+                                        url: "@(Url.Action("MarkAsPrimaryExchangeRateCurrency", "Currency"))",
+                                        data: postData,
+                                        success: function (data) {
+                                            var grid = $("#currencies-grid").data('kendoGrid');
+                                            grid.dataSource.read();
+                                        },
+                                        error: function (xhr, ajaxOptions, thrownError) {
+                                            alert('Failed to update currency');
+                                        }
+                                    });
+                                    $('#btnMarkPERC-action-confirmation').modal('toggle');
+                                });
+
+                            });
+
+                            function markAsPrimaryExchangeRateCurrency(id) {
+                                selectedId = id;
+                                $("#btnMarkPERC").click();
                             };
+
+                            function markAsPrimaryStoreCurrency(id) {
+                                selectedId = id;
+                                $("#btnMarkPSC").click();
+                            };
+
                         </script>
+
                     </div>
                 </div>
                 @if (Model.ExchangeRateProviderModel.ExchangeRates?.Any() ?? false)
@@ -305,3 +324,5 @@
         </div>
     </div>
 </form>
+<nop-action-confirmation asp-button-id="btnMarkPERC" asp-additional-confirm="Admin.Configuration.Currencies.AdditionalConfirm" />
+<nop-action-confirmation asp-button-id="btnMarkPSC" asp-additional-confirm="Admin.Configuration.Currencies.AdditionalConfirm"/>

@@ -19,10 +19,10 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         private readonly ICategoryTemplateService _categoryTemplateService;
         private readonly IManufacturerTemplateService _manufacturerTemplateService;
+        private readonly IPermissionService _permissionService;
         private readonly IProductTemplateService _productTemplateService;
         private readonly ITemplateModelFactory _templateModelFactory;
         private readonly ITopicTemplateService _topicTemplateService;
-        private readonly IPermissionService _permissionService;
 
         #endregion
 
@@ -30,17 +30,17 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public TemplateController(ICategoryTemplateService categoryTemplateService,
             IManufacturerTemplateService manufacturerTemplateService,
+            IPermissionService permissionService,
             IProductTemplateService productTemplateService,
             ITemplateModelFactory templateModelFactory,
-            ITopicTemplateService topicTemplateService,
-            IPermissionService permissionService)
+            ITopicTemplateService topicTemplateService)
         {
             this._categoryTemplateService = categoryTemplateService;
             this._manufacturerTemplateService = manufacturerTemplateService;
+            this._permissionService = permissionService;
             this._productTemplateService = productTemplateService;
             this._templateModelFactory = templateModelFactory;
             this._topicTemplateService = topicTemplateService;
-            this._permissionService = permissionService;
         }
 
         #endregion

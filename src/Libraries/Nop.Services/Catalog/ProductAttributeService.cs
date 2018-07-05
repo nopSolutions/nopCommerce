@@ -16,13 +16,13 @@ namespace Nop.Services.Catalog
     {
         #region Fields
 
-        private readonly IRepository<ProductAttribute> _productAttributeRepository;
-        private readonly IRepository<ProductAttributeMapping> _productAttributeMappingRepository;
-        private readonly IRepository<ProductAttributeCombination> _productAttributeCombinationRepository;
-        private readonly IRepository<ProductAttributeValue> _productAttributeValueRepository;
-        private readonly IRepository<PredefinedProductAttributeValue> _predefinedProductAttributeValueRepository;
-        private readonly IEventPublisher _eventPublisher;
         private readonly ICacheManager _cacheManager;
+        private readonly IEventPublisher _eventPublisher;
+        private readonly IRepository<PredefinedProductAttributeValue> _predefinedProductAttributeValueRepository;
+        private readonly IRepository<ProductAttribute> _productAttributeRepository;
+        private readonly IRepository<ProductAttributeCombination> _productAttributeCombinationRepository;
+        private readonly IRepository<ProductAttributeMapping> _productAttributeMappingRepository;
+        private readonly IRepository<ProductAttributeValue> _productAttributeValueRepository;
 
         #endregion
 
@@ -32,27 +32,27 @@ namespace Nop.Services.Catalog
         /// Ctor
         /// </summary>
         /// <param name="cacheManager">Cache manager</param>
-        /// <param name="productAttributeRepository">Product attribute repository</param>
-        /// <param name="productAttributeMappingRepository">Product attribute mapping repository</param>
-        /// <param name="productAttributeCombinationRepository">Product attribute combination repository</param>
-        /// <param name="productAttributeValueRepository">Product attribute value repository</param>
-        /// <param name="predefinedProductAttributeValueRepository">Predefined product attribute value repository</param>
         /// <param name="eventPublisher">Event publisher</param>
+        /// <param name="predefinedProductAttributeValueRepository">Predefined product attribute value repository</param>
+        /// <param name="productAttributeRepository">Product attribute repository</param>
+        /// <param name="productAttributeCombinationRepository">Product attribute combination repository</param>
+        /// <param name="productAttributeMappingRepository">Product attribute mapping repository</param>
+        /// <param name="productAttributeValueRepository">Product attribute value repository</param>
         public ProductAttributeService(ICacheManager cacheManager,
-            IRepository<ProductAttribute> productAttributeRepository,
-            IRepository<ProductAttributeMapping> productAttributeMappingRepository,
-            IRepository<ProductAttributeCombination> productAttributeCombinationRepository,
-            IRepository<ProductAttributeValue> productAttributeValueRepository,
+            IEventPublisher eventPublisher,
             IRepository<PredefinedProductAttributeValue> predefinedProductAttributeValueRepository,
-            IEventPublisher eventPublisher)
+            IRepository<ProductAttribute> productAttributeRepository,
+            IRepository<ProductAttributeCombination> productAttributeCombinationRepository,
+            IRepository<ProductAttributeMapping> productAttributeMappingRepository,
+            IRepository<ProductAttributeValue> productAttributeValueRepository)
         {
             this._cacheManager = cacheManager;
-            this._productAttributeRepository = productAttributeRepository;
-            this._productAttributeMappingRepository = productAttributeMappingRepository;
-            this._productAttributeCombinationRepository = productAttributeCombinationRepository;
-            this._productAttributeValueRepository = productAttributeValueRepository;
-            this._predefinedProductAttributeValueRepository = predefinedProductAttributeValueRepository;
             this._eventPublisher = eventPublisher;
+            this._predefinedProductAttributeValueRepository = predefinedProductAttributeValueRepository;
+            this._productAttributeRepository = productAttributeRepository;
+            this._productAttributeCombinationRepository = productAttributeCombinationRepository;
+            this._productAttributeMappingRepository = productAttributeMappingRepository;
+            this._productAttributeValueRepository = productAttributeValueRepository;
         }
 
         #endregion

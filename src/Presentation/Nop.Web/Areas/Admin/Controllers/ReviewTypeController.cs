@@ -19,24 +19,23 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
+        private readonly ICustomerActivityService _customerActivityService;
+        private readonly ILocalizationService _localizationService;
+        private readonly ILocalizedEntityService _localizedEntityService;
+        private readonly IPermissionService _permissionService;
         private readonly IReviewTypeModelFactory _reviewTypeModelFactory;
         private readonly IReviewTypeService _reviewTypeService;
-        private readonly ICustomerActivityService _customerActivityService;
-        private readonly ILocalizedEntityService _localizedEntityService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IPermissionService _permissionService;
 
         #endregion
 
         #region Ctor
 
-        public ReviewTypeController(
-           IReviewTypeModelFactory reviewTypeModelFactory,
-           IReviewTypeService reviewTypeService,
-           ICustomerActivityService customerActivityService,
-           ILocalizedEntityService localizedEntityService,
-           ILocalizationService localizationService,
-           IPermissionService permissionService)
+        public ReviewTypeController(ICustomerActivityService customerActivityService,
+            ILocalizationService localizationService,
+            ILocalizedEntityService localizedEntityService,
+            IPermissionService permissionService,
+            IReviewTypeModelFactory reviewTypeModelFactory,
+            IReviewTypeService reviewTypeService)
         {
             this._reviewTypeModelFactory = reviewTypeModelFactory;
             this._reviewTypeService = reviewTypeService;

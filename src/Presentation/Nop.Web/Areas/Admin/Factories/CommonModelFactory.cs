@@ -70,6 +70,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly AdminAreaSettings _adminAreaSettings;
         private readonly CatalogSettings _catalogSettings;
         private readonly CurrencySettings _currencySettings;
+        private readonly ExternalAuthenticationSettings _externalAuthenticationSettings;
         private readonly IActionContextAccessor _actionContextAccessor;
         private readonly ICurrencyService _currencyService;
         private readonly ICustomerService _customerService;
@@ -79,6 +80,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly ILocalizationService _localizationService;
         private readonly IMaintenanceService _maintenanceService;
         private readonly IMeasureService _measureService;
+        private readonly INopFileProvider _fileProvider;
         private readonly IOrderService _orderService;
         private readonly IPaymentService _paymentService;
         private readonly IPluginFinder _pluginFinder;
@@ -91,9 +93,6 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IUrlRecordService _urlRecordService;
         private readonly IWebHelper _webHelper;
         private readonly IWorkContext _workContext;
-        private readonly INopFileProvider _fileProvider;
-
-        private readonly ExternalAuthenticationSettings _externalAuthenticationSettings;
         private readonly MeasureSettings _measureSettings;
         private readonly PaymentSettings _paymentSettings;
         private readonly ShippingSettings _shippingSettings;
@@ -107,6 +106,7 @@ namespace Nop.Web.Areas.Admin.Factories
         public CommonModelFactory(AdminAreaSettings adminAreaSettings,
             CatalogSettings catalogSettings,
             CurrencySettings currencySettings,
+            ExternalAuthenticationSettings externalAuthenticationSettings,
             IActionContextAccessor actionContextAccessor,
             ICurrencyService currencyService,
             ICustomerService customerService,
@@ -129,7 +129,6 @@ namespace Nop.Web.Areas.Admin.Factories
             IUrlRecordService urlRecordService,
             IWebHelper webHelper,
             IWorkContext workContext,
-            ExternalAuthenticationSettings externalAuthenticationSettings,
             MeasureSettings measureSettings,
             PaymentSettings paymentSettings,
             ShippingSettings shippingSettings,
@@ -139,6 +138,7 @@ namespace Nop.Web.Areas.Admin.Factories
             this._adminAreaSettings = adminAreaSettings;
             this._catalogSettings = catalogSettings;
             this._currencySettings = currencySettings;
+            this._externalAuthenticationSettings = externalAuthenticationSettings;
             this._actionContextAccessor = actionContextAccessor;
             this._currencyService = currencyService;
             this._customerService = customerService;
@@ -161,7 +161,6 @@ namespace Nop.Web.Areas.Admin.Factories
             this._urlRecordService = urlRecordService;
             this._webHelper = webHelper;
             this._workContext = workContext;
-            this._externalAuthenticationSettings = externalAuthenticationSettings;
             this._measureSettings = measureSettings;
             this._paymentSettings = paymentSettings;
             this._shippingSettings = shippingSettings;

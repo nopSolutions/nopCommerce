@@ -19,6 +19,7 @@
             <i class="fa fa-trash-o"></i>
             @T("Admin.ContentManagement.News.Comments.DeleteSelected")
         </button>
+        <nop-action-confirmation asp-button-id="delete-selected" />
         @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.NewsCommentListButtons })
     </div>
 </div>
@@ -253,33 +254,29 @@
                                 });
 
                             //"delete selected" button
-                            $('#delete-selected').click(function(e) {
-                                e.preventDefault();
-
+                            $("#delete-selected-action-confirmation-submit-button").bind("click", function () {
                                 var postData = {
                                     selectedIds: selectedIds
                                 };
                                 addAntiForgeryToken(postData);
-
-                                if (confirm('@T("Admin.Common.DeleteConfirmation.Selected")')) {
-                                    $.ajax({
-                                        cache: false,
-                                        type: "POST",
-                                        url: "@(Url.Action("DeleteSelectedComments", "News"))",
-                                        data: postData,
-                                        complete: function(data) {
-                                            //reload grid
-                                            var grid = $('#comments-grid').data('kendoGrid');
-                                            grid.dataSource.read();
-                                        },
-                                        error: function(xhr, ajaxOptions, thrownError) {
-                                            alert(thrownError);
-                                        },
-                                        traditional: true
-                                    });
-                                }
+                                $.ajax({
+                                    cache: false,
+                                    type: "POST",
+                                    url: "@(Url.Action("DeleteSelectedComments", "News"))",
+                                    data: postData,
+                                    complete: function (data) {
+                                        //reload grid
+                                        var grid = $('#comments-grid').data('kendoGrid');
+                                        grid.dataSource.read(); 
+                                    },
+                                    error: function (xhr, ajaxOptions, thrownError) {
+                                        alert(thrownError);
+                                    },
+                                    traditional: true
+                                });
+                                $('#delete-selected-action-confirmation').modal('toggle');
                                 return false;
-                            });
+                            });                           
                             
                             //"approve selected" button
                             $('#approve-selected')

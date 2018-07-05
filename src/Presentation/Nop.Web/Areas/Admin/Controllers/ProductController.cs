@@ -54,6 +54,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly ILocalizationService _localizationService;
         private readonly ILocalizedEntityService _localizedEntityService;
         private readonly IManufacturerService _manufacturerService;
+        private readonly INopFileProvider _fileProvider;
         private readonly IPdfService _pdfService;
         private readonly IPermissionService _permissionService;
         private readonly IPictureService _pictureService;
@@ -71,7 +72,6 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly IUrlRecordService _urlRecordService;
         private readonly IWorkContext _workContext;
         private readonly VendorSettings _vendorSettings;
-        private readonly INopFileProvider _fileProvider;
 
         #endregion
 
@@ -91,6 +91,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             ILocalizationService localizationService,
             ILocalizedEntityService localizedEntityService,
             IManufacturerService manufacturerService,
+            INopFileProvider fileProvider,
             IPdfService pdfService,
             IPermissionService permissionService,
             IPictureService pictureService,
@@ -107,8 +108,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             IStoreService storeService,
             IUrlRecordService urlRecordService,
             IWorkContext workContext,
-            VendorSettings vendorSettings,
-            INopFileProvider fileProvider)
+            VendorSettings vendorSettings)
         {
             this._aclService = aclService;
             this._backInStockSubscriptionService = backInStockSubscriptionService;
@@ -124,6 +124,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             this._localizationService = localizationService;
             this._localizedEntityService = localizedEntityService;
             this._manufacturerService = manufacturerService;
+            this._fileProvider = fileProvider;
             this._pdfService = pdfService;
             this._permissionService = permissionService;
             this._pictureService = pictureService;
@@ -141,7 +142,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             this._urlRecordService = urlRecordService;
             this._workContext = workContext;
             this._vendorSettings = vendorSettings;
-            this._fileProvider = fileProvider;
         }
 
         #endregion

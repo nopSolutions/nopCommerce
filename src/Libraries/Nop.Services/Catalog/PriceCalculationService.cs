@@ -21,16 +21,16 @@ namespace Nop.Services.Catalog
     {
         #region Fields
 
-        private readonly IWorkContext _workContext;
-        private readonly IStoreContext _storeContext;
-        private readonly IDiscountService _discountService;
+        private readonly CatalogSettings _catalogSettings;
         private readonly ICategoryService _categoryService;
+        private readonly IDiscountService _discountService;
         private readonly IManufacturerService _manufacturerService;
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly IProductService _productService;
         private readonly IStaticCacheManager _cacheManager;
+        private readonly IStoreContext _storeContext;
+        private readonly IWorkContext _workContext;
         private readonly ShoppingCartSettings _shoppingCartSettings;
-        private readonly CatalogSettings _catalogSettings;
 
         #endregion
 
@@ -39,37 +39,37 @@ namespace Nop.Services.Catalog
         /// <summary>
         /// Ctor
         /// </summary>
-        /// <param name="workContext">Work context</param>
-        /// <param name="storeContext">Store context</param>
-        /// <param name="discountService">Discount service</param>
+        /// <param name="catalogSettings">Catalog settings</param>
         /// <param name="categoryService">Category service</param>
+        /// <param name="discountService">Discount service</param>
         /// <param name="manufacturerService">Manufacturer service</param>
-        /// <param name="productAttributeParser">Product atrribute parser</param>
+        /// <param name="productAttributeParser">Product attribute parser</param>
         /// <param name="productService">Product service</param>
         /// <param name="cacheManager">Cache manager</param>
+        /// <param name="storeContext">Store context</param>
+        /// <param name="workContext">Work context</param>
         /// <param name="shoppingCartSettings">Shopping cart settings</param>
-        /// <param name="catalogSettings">Catalog settings</param>
-        public PriceCalculationService(IWorkContext workContext,
-            IStoreContext storeContext,
-            IDiscountService discountService, 
+        public PriceCalculationService(CatalogSettings catalogSettings,
             ICategoryService categoryService,
+            IDiscountService discountService,
             IManufacturerService manufacturerService,
-            IProductAttributeParser productAttributeParser, 
+            IProductAttributeParser productAttributeParser,
             IProductService productService,
             IStaticCacheManager cacheManager,
-            ShoppingCartSettings shoppingCartSettings, 
-            CatalogSettings catalogSettings)
+            IStoreContext storeContext,
+            IWorkContext workContext,
+            ShoppingCartSettings shoppingCartSettings)
         {
-            this._workContext = workContext;
-            this._storeContext = storeContext;
-            this._discountService = discountService;
+            this._catalogSettings = catalogSettings;
             this._categoryService = categoryService;
+            this._discountService = discountService;
             this._manufacturerService = manufacturerService;
             this._productAttributeParser = productAttributeParser;
             this._productService = productService;
             this._cacheManager = cacheManager;
+            this._storeContext = storeContext;
+            this._workContext = workContext;
             this._shoppingCartSettings = shoppingCartSettings;
-            this._catalogSettings = catalogSettings;
         }
         
         #endregion
