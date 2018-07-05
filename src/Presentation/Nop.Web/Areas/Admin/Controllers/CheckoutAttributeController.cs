@@ -54,19 +54,19 @@ namespace Nop.Web.Areas.Admin.Controllers
             IStoreService storeService,
             MeasureSettings measureSettings)
         {
+            this._currencySettings = currencySettings;
             this._checkoutAttributeModelFactory = checkoutAttributeModelFactory;
             this._checkoutAttributeParser = checkoutAttributeParser;
             this._checkoutAttributeService = checkoutAttributeService;
             this._currencyService = currencyService;
-            this._currencySettings = currencySettings;
             this._customerActivityService = customerActivityService;
             this._localizationService = localizationService;
             this._localizedEntityService = localizedEntityService;
             this._measureService = measureService;
-            this._measureSettings = measureSettings;
             this._permissionService = permissionService;
             this._storeMappingService = storeMappingService;
             this._storeService = storeService;
+            this._measureSettings = measureSettings;
         }
 
         #endregion

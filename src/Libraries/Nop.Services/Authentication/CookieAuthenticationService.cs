@@ -15,11 +15,11 @@ namespace Nop.Services.Authentication
     {
         #region Fields
 
+        private Customer _cachedCustomer;
         private readonly CustomerSettings _customerSettings;
         private readonly ICustomerService _customerService;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private Customer _cachedCustomer;
-
+        
         #endregion
 
         #region Ctor

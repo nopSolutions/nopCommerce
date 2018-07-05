@@ -17,8 +17,8 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
         
-        private readonly IReviewTypeService _reviewTypeService;
         private readonly ILocalizedModelFactory _localizedModelFactory;
+        private readonly IReviewTypeService _reviewTypeService;
 
         #endregion
 

@@ -17,30 +17,30 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
+        private readonly ICustomerActivityService _customerActivityService;
         private readonly ICustomerAttributeModelFactory _customerAttributeModelFactory;
         private readonly ICustomerAttributeService _customerAttributeService;
-        private readonly ILocalizedEntityService _localizedEntityService;
         private readonly ILocalizationService _localizationService;
+        private readonly ILocalizedEntityService _localizedEntityService;
         private readonly IPermissionService _permissionService;
-        private readonly ICustomerActivityService _customerActivityService;
 
         #endregion
 
         #region Ctor
 
-        public CustomerAttributeController(ICustomerAttributeModelFactory customerAttributeModelFactory,
+        public CustomerAttributeController(ICustomerActivityService customerActivityService,
+            ICustomerAttributeModelFactory customerAttributeModelFactory,
             ICustomerAttributeService customerAttributeService,
-            ILocalizedEntityService localizedEntityService,
             ILocalizationService localizationService,
-            IPermissionService permissionService,
-            ICustomerActivityService customerActivityService)
+            ILocalizedEntityService localizedEntityService,
+            IPermissionService permissionService)
         {
+            this._customerActivityService = customerActivityService;
             this._customerAttributeModelFactory = customerAttributeModelFactory;
             this._customerAttributeService = customerAttributeService;
-            this._localizedEntityService = localizedEntityService;
             this._localizationService = localizationService;
+            this._localizedEntityService = localizedEntityService;
             this._permissionService = permissionService;
-            this._customerActivityService = customerActivityService;
         }
 
         #endregion

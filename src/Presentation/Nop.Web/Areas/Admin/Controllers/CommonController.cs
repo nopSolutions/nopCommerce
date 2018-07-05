@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.AspNetCore.Hosting;
-using System.Reflection;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Caching;
@@ -34,17 +32,16 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly ICommonModelFactory _commonModelFactory;
         private readonly ICustomerService _customerService;
         private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly IHostingEnvironment _hostingEnvironment;
         private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
         private readonly IMaintenanceService _maintenanceService;
+        private readonly INopFileProvider _fileProvider;
         private readonly IPermissionService _permissionService;
         private readonly IShoppingCartService _shoppingCartService;
         private readonly IStaticCacheManager _cacheManager;
         private readonly IUrlRecordService _urlRecordService;
         private readonly IWebHelper _webHelper;
         private readonly IWorkContext _workContext;
-        private readonly INopFileProvider _fileProvider;
 
         #endregion
 
@@ -53,32 +50,30 @@ namespace Nop.Web.Areas.Admin.Controllers
         public CommonController(ICommonModelFactory commonModelFactory,
             ICustomerService customerService,
             IDateTimeHelper dateTimeHelper,
-            IHostingEnvironment hostingEnvironment,
             ILanguageService languageService,
             ILocalizationService localizationService,
             IMaintenanceService maintenanceService,
+            INopFileProvider fileProvider,
             IPermissionService permissionService,
             IShoppingCartService shoppingCartService,
             IStaticCacheManager cacheManager,
             IUrlRecordService urlRecordService,
             IWebHelper webHelper,
-            IWorkContext workContext,
-            INopFileProvider fileProvider)
+            IWorkContext workContext)
         {
             this._commonModelFactory = commonModelFactory;
             this._customerService = customerService;
             this._dateTimeHelper = dateTimeHelper;
-            this._hostingEnvironment = hostingEnvironment;
             this._languageService = languageService;
             this._localizationService = localizationService;
             this._maintenanceService = maintenanceService;
+            this._fileProvider = fileProvider;
             this._permissionService = permissionService;
             this._shoppingCartService = shoppingCartService;
             this._cacheManager = cacheManager;
             this._urlRecordService = urlRecordService;
             this._webHelper = webHelper;
             this._workContext = workContext;
-            this._fileProvider = fileProvider;
         }
 
         #endregion

@@ -25,45 +25,45 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
-        private readonly ILocalizationService _localizationService;
-        private readonly IWorkContext _workContext;
-        private readonly IProductService _productService;
-        private readonly IProductAttributeFormatter _productAttributeFormatter;
         private readonly IBaseAdminModelFactory _baseAdminModelFactory;
         private readonly ICountryService _countryService;
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly IOrderReportService _orderReportService;
-        private readonly IPriceFormatter _priceFormatter;
         private readonly ICustomerReportService _customerReportService;
         private readonly ICustomerService _customerService;
+        private readonly IDateTimeHelper _dateTimeHelper;
+        private readonly ILocalizationService _localizationService;
+        private readonly IOrderReportService _orderReportService;
+        private readonly IPriceFormatter _priceFormatter;
+        private readonly IProductAttributeFormatter _productAttributeFormatter;
+        private readonly IProductService _productService;
+        private readonly IWorkContext _workContext;
 
         #endregion
 
         #region Ctor
 
-        public ReportModelFactory(ILocalizationService localizationService,
-            IWorkContext workContext,
-            IProductService productService,
-            IProductAttributeFormatter productAttributeFormatter,
-            IBaseAdminModelFactory baseAdminModelFactory,
+        public ReportModelFactory(IBaseAdminModelFactory baseAdminModelFactory,
             ICountryService countryService,
+            ICustomerReportService customerReportService,
+            ICustomerService customerService,
             IDateTimeHelper dateTimeHelper,
+            ILocalizationService localizationService,
             IOrderReportService orderReportService,
             IPriceFormatter priceFormatter,
-            ICustomerReportService customerReportService,
-            ICustomerService customerService)
+            IProductAttributeFormatter productAttributeFormatter,
+            IProductService productService,
+            IWorkContext workContext)
         {
-            this._localizationService = localizationService;
-            this._workContext = workContext;
-            this._productService = productService;
-            this._productAttributeFormatter = productAttributeFormatter;
             this._baseAdminModelFactory = baseAdminModelFactory;
             this._countryService = countryService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._orderReportService = orderReportService;
-            this._priceFormatter = priceFormatter;
             this._customerReportService = customerReportService;
             this._customerService = customerService;
+            this._dateTimeHelper = dateTimeHelper;
+            this._localizationService = localizationService;
+            this._orderReportService = orderReportService;
+            this._priceFormatter = priceFormatter;
+            this._productAttributeFormatter = productAttributeFormatter;
+            this._productService = productService;
+            this._workContext = workContext;
         }
 
         #endregion

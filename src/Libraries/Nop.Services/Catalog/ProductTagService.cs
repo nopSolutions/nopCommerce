@@ -17,13 +17,13 @@ namespace Nop.Services.Catalog
     {
         #region Fields
 
-        private readonly IRepository<ProductTag> _productTagRepository;
-        private readonly IRepository<ProductProductTagMapping> _productProductTagMappingRepository;
-        private readonly IDbContext _dbContext;
         private readonly ICacheManager _cacheManager;
-        private readonly IStaticCacheManager _staticCacheManager;
+        private readonly IDbContext _dbContext;
         private readonly IEventPublisher _eventPublisher;
         private readonly IProductService _productService;
+        private readonly IRepository<ProductProductTagMapping> _productProductTagMappingRepository;
+        private readonly IRepository<ProductTag> _productTagRepository;
+        private readonly IStaticCacheManager _staticCacheManager;
         private readonly IUrlRecordService _urlRecordService;
 
         #endregion
@@ -33,30 +33,30 @@ namespace Nop.Services.Catalog
         /// <summary>
         /// Ctor
         /// </summary>
-        /// <param name="productTagRepository">Product tag repository</param>
-        /// <param name="productProductTagMappingRepository">Product - product tag repository</param>
-        /// <param name="dbContext">Database Context</param>
         /// <param name="cacheManager">Cache manager</param>
-        /// <param name="staticCacheManager">Static cache manager</param>
+        /// <param name="dbContext">Database Context</param>
         /// <param name="eventPublisher">Event publisher</param>
         /// <param name="productService">Product service</param>
+        /// <param name="productProductTagMappingRepository">Product - product tag repository</param>
+        /// <param name="productTagRepository">Product tag repository</param>
+        /// <param name="staticCacheManager">Static cache manager</param>
         /// <param name="urlRecordService">Url record service</param>
-        public ProductTagService(IRepository<ProductTag> productTagRepository,
-            IRepository<ProductProductTagMapping> productProductTagMappingRepository,
+        public ProductTagService(ICacheManager cacheManager,
             IDbContext dbContext,
-            ICacheManager cacheManager,
-            IStaticCacheManager staticCacheManager,
             IEventPublisher eventPublisher,
             IProductService productService,
+            IRepository<ProductProductTagMapping> productProductTagMappingRepository,
+            IRepository<ProductTag> productTagRepository,
+            IStaticCacheManager staticCacheManager,
             IUrlRecordService urlRecordService)
         {
-            this._productTagRepository = productTagRepository;
-            this._productProductTagMappingRepository = productProductTagMappingRepository;
-            this._dbContext = dbContext;
             this._cacheManager = cacheManager;
-            this._staticCacheManager = staticCacheManager;
+            this._dbContext = dbContext;
             this._eventPublisher = eventPublisher;
             this._productService = productService;
+            this._productProductTagMappingRepository = productProductTagMappingRepository;
+            this._productTagRepository = productTagRepository;
+            this._staticCacheManager = staticCacheManager;
             this._urlRecordService = urlRecordService;
         }
 

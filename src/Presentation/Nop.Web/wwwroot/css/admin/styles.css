@@ -468,6 +468,7 @@ td.k-state-focused.k-state-selected {
 }
 .k-multiselect-wrap>.k-input {
     height: 28px;
+				width: 100% !important;
 }
 .k-multiselect-wrap li {
     line-height: 27px;

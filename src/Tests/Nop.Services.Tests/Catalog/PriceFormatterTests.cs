@@ -87,8 +87,8 @@ namespace Nop.Services.Tests.Catalog
             _localizationService.Setup(x => x.GetResource("Products.InclTaxSuffix", 1, false, string.Empty, false)).Returns("{0} incl tax");
             _localizationService.Setup(x => x.GetResource("Products.ExclTaxSuffix", 1, false, string.Empty, false)).Returns("{0} excl tax");
             
-            _priceFormatter = new PriceFormatter(_workContext.Object, _currencyService,_localizationService.Object, 
-                _taxSettings, _currencySettings);
+            _priceFormatter = new PriceFormatter(_currencySettings, _currencyService, _localizationService.Object,
+                _workContext.Object, _taxSettings);
 
             var nopEngine = new Mock<NopEngine>();
            
