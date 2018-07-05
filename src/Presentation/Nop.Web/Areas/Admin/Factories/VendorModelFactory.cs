@@ -379,7 +379,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     vendorNoteModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(note.CreatedOnUtc, DateTimeKind.Utc);
 
                     //fill in additional values (not existing in the entity)
-                    vendorNoteModel.Note = note.FormatVendorNoteText();
+                    vendorNoteModel.Note = _vendorService.FormatVendorNoteText(note);
 
                     return vendorNoteModel;
                 }),
