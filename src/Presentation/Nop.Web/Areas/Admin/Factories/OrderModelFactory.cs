@@ -698,7 +698,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (models == null)
                 throw new ArgumentNullException(nameof(models));
 
-            var shipmentTracker = shipment.GetShipmentTracker(_shippingService, _shippingSettings);
+            var shipmentTracker = _shipmentService.GetShipmentTracker(shipment);
             var shipmentEvents = shipmentTracker.GetShipmentEvents(shipment.TrackingNumber);
             if (shipmentEvents == null)
                 return;
@@ -1396,7 +1396,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 //prepare shipment events
                 if (!string.IsNullOrEmpty(shipment.TrackingNumber))
                 {
-                    var shipmentTracker = shipment.GetShipmentTracker(_shippingService, _shippingSettings);
+                    var shipmentTracker = _shipmentService.GetShipmentTracker(shipment);
                     if (shipmentTracker != null)
                     {
                         model.TrackingNumberUrl = shipmentTracker.GetUrl(shipment.TrackingNumber);

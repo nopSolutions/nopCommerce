@@ -18,7 +18,6 @@ using Nop.Services.Orders;
 using Nop.Services.Payments;
 using Nop.Services.Seo;
 using Nop.Services.Shipping;
-using Nop.Services.Shipping.Tracking;
 using Nop.Services.Vendors;
 using Nop.Web.Models.Common;
 using Nop.Web.Models.Order;
@@ -48,6 +47,7 @@ namespace Nop.Web.Factories
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly IProductService _productService;
         private readonly IRewardPointService _rewardPointService;
+        private readonly IShipmentService _shipmentService;
         private readonly IShippingService _shippingService;
         private readonly IStoreContext _storeContext;
         private readonly IVendorService _vendorService;
@@ -79,6 +79,7 @@ namespace Nop.Web.Factories
             IProductAttributeParser productAttributeParser,
             IProductService productService,
             IRewardPointService rewardPointService,
+            IShipmentService shipmentService,
             IShippingService shippingService,
             IStoreContext storeContext,
             IVendorService vendorService,
@@ -106,6 +107,7 @@ namespace Nop.Web.Factories
             this._productAttributeParser = productAttributeParser;
             this._productService = productService;
             this._rewardPointService = rewardPointService;
+            this._shipmentService = shipmentService;
             this._shippingService = shippingService;
             this._storeContext = storeContext;
             this._vendorService = vendorService;
@@ -479,7 +481,7 @@ namespace Nop.Web.Factories
             if (!string.IsNullOrEmpty(shipment.TrackingNumber))
             {
                 model.TrackingNumber = shipment.TrackingNumber;
-                var shipmentTracker = shipment.GetShipmentTracker(_shippingService, _shippingSettings);
+                var shipmentTracker = _shipmentService.GetShipmentTracker(shipment);
                 if (shipmentTracker != null)
                 {
                     model.TrackingNumberUrl = shipmentTracker.GetUrl(shipment.TrackingNumber);

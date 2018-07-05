@@ -1014,9 +1014,8 @@ namespace Nop.Services.Messages
             var trackingNumberUrl = string.Empty;
             if (!string.IsNullOrEmpty(shipment.TrackingNumber))
             {
-                //we cannot inject IShippingService into constructor because it'll cause circular references.
-                //that's why we resolve it here this way
-                var shipmentTracker = shipment.GetShipmentTracker(EngineContext.Current.Resolve<IShippingService>(), _shippingSettings);
+                var shipmentService = EngineContext.Current.Resolve<IShipmentService>();
+                var shipmentTracker = shipmentService.GetShipmentTracker(shipment);
                 if (shipmentTracker != null)
                     trackingNumberUrl = shipmentTracker.GetUrl(shipment.TrackingNumber);
             }
