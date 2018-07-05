@@ -645,7 +645,7 @@ namespace Nop.Web.Framework.UI
             // Get the roots
             var webRoot = _hostingEnvironment.WebRootPath + Path.DirectorySeparatorChar;
             var contentRoot = _hostingEnvironment.ContentRootPath + Path.DirectorySeparatorChar;
-            var versionEquals = includeVersionEquals ? "?v=" : "";
+            var versionEquals = includeVersionEquals ? "?v=" : string.Empty;
 
             // Fix the url 
             url = url.Replace("~", "").Replace("/", "\\").TrimStart(Path.DirectorySeparatorChar);
