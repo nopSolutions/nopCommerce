@@ -11133,8 +11133,8 @@
   <LocaleResource Name="Admin.Orders.BackToList">
     <Value>back to order list</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Orders.BillingInfo">
-    <Value>Billing info</Value>
+  <LocaleResource Name="Admin.Orders.BillingShippingInfo">
+    <Value>Billing &amp; shipping info</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.EditOrderDetails">
     <Value>Edit order details</Value>
@@ -12044,9 +12044,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Shipments.ViewDetails">
     <Value>View shipment details</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Orders.ShippingInfo">
-    <Value>Shipping info</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.ShippingInfo.NotRequired">
     <Value>Shipping not required</Value>

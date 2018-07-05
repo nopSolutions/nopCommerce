@@ -1991,6 +1991,15 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Shipping.Measures.AdditionalConfirm">
     <Value><![CDATA[<p>WARNING. It is not recommended to do this on live sites because: </p><ol><li>Other rates have to be updated manually</li><li>You have to ensure that each product has a valid measure (dimension and weights) - they are not adjusted automatically</li></ol>]]></Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.BillingInfo">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.ShippingInfo">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.BillingShippingInfo">
+    <Value>Billing &amp; shipping info</Value>
+  </LocaleResource>
 </Language>
 '
 
