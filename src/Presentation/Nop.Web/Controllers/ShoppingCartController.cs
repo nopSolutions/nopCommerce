@@ -165,7 +165,7 @@ namespace Nop.Web.Controllers
                 throw new ArgumentNullException(nameof(form));
 
             var attributesXml = string.Empty;
-            var excludeShippableAttributes = !cart.RequiresShipping(_productService, _productAttributeParser);
+            var excludeShippableAttributes = !_shoppingCartService.ShoppingCartRequiresShipping(cart);
             var checkoutAttributes = _checkoutAttributeService.GetAllCheckoutAttributes(_storeContext.CurrentStore.Id, excludeShippableAttributes);
             foreach (var attribute in checkoutAttributes)
             {
@@ -576,8 +576,7 @@ namespace Nop.Web.Controllers
                             _workContext.CurrentCustomer.ShoppingCartItems
                                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist)
                                 .LimitPerStore(_storeContext.CurrentStore.Id)
-                                .ToList()
-                                .GetTotalProducts());
+                                .Sum(item => item.Quantity));
 
                         return Json(new
                         {
@@ -610,8 +609,7 @@ namespace Nop.Web.Controllers
                             _workContext.CurrentCustomer.ShoppingCartItems
                                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
                                 .LimitPerStore(_storeContext.CurrentStore.Id)
-                                .ToList()
-                                .GetTotalProducts());
+                                .Sum(item => item.Quantity));
 
                         var updateflyoutcartsectionhtml = _shoppingCartSettings.MiniShoppingCartEnabled
                             ? RenderViewComponentToString("FlyoutShoppingCart")
@@ -785,11 +783,10 @@ namespace Nop.Web.Controllers
 
                         //display notification message and update appropriate blocks
                         var updatetopwishlistsectionhtml = string.Format(_localizationService.GetResource("Wishlist.HeaderQuantity"),
-                        _workContext.CurrentCustomer.ShoppingCartItems
-                        .Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist)
-                        .LimitPerStore(_storeContext.CurrentStore.Id)
-                        .ToList()
-                        .GetTotalProducts());
+                            _workContext.CurrentCustomer.ShoppingCartItems
+                            .Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist)
+                            .LimitPerStore(_storeContext.CurrentStore.Id)
+                            .Sum(item => item.Quantity));
                         return Json(new
                         {
                             success = true,
@@ -818,8 +815,7 @@ namespace Nop.Web.Controllers
                         _workContext.CurrentCustomer.ShoppingCartItems
                         .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
                         .LimitPerStore(_storeContext.CurrentStore.Id)
-                        .ToList()
-                        .GetTotalProducts());
+                        .Sum(item => item.Quantity));
 
                         var updateflyoutcartsectionhtml = _shoppingCartSettings.MiniShoppingCartEnabled
                             ? this.RenderViewComponentToString("FlyoutShoppingCart")
@@ -1088,7 +1084,7 @@ namespace Nop.Web.Controllers
             //conditions
             var enabledAttributeIds = new List<int>();
             var disabledAttributeIds = new List<int>();
-            var excludeShippableAttributes = !cart.RequiresShipping(_productService, _productAttributeParser);
+            var excludeShippableAttributes = !_shoppingCartService.ShoppingCartRequiresShipping(cart);
             var attributes = _checkoutAttributeService.GetAllCheckoutAttributes(_storeContext.CurrentStore.Id, excludeShippableAttributes);
             foreach (var attribute in attributes)
             {
@@ -1495,7 +1491,7 @@ namespace Nop.Web.Controllers
             ParseAndSaveCheckoutAttributes(cart, form);
 
             var model = new ShoppingCartModel();
-            if (!cart.IsRecurring())
+            if (!_shoppingCartService.ShoppingCartIsRecurring(cart))
             {
                 if (!string.IsNullOrWhiteSpace(giftcardcouponcode))
                 {

@@ -518,7 +518,7 @@ namespace Nop.Services.Orders
             details.OrderSubTotalDiscountExclTax = orderSubTotalDiscountAmount;
 
             //shipping info
-            if (details.Cart.RequiresShipping(_productService, _productAttributeParser))
+            if (_shoppingCartService.ShoppingCartRequiresShipping(details.Cart))
             {
                 var pickupPoint = details.Customer.GetAttribute<PickupPoint>(NopCustomerDefaults.SelectedPickupPointAttribute, processPaymentRequest.StoreId);
                 if (_shippingSettings.AllowPickUpInStore && pickupPoint != null)
@@ -613,10 +613,11 @@ namespace Nop.Services.Orders
             processPaymentRequest.OrderTotal = details.OrderTotal;
 
             //recurring or standard shopping cart?
-            details.IsRecurringShoppingCart = details.Cart.IsRecurring();
+            details.IsRecurringShoppingCart = _shoppingCartService.ShoppingCartIsRecurring(details.Cart);
             if (details.IsRecurringShoppingCart)
             {
-                var recurringCyclesError = details.Cart.GetRecurringCycleInfo(_localizationService, out int recurringCycleLength, out RecurringProductCyclePeriod recurringCyclePeriod, out int recurringTotalCycles);
+                var recurringCyclesError = _shoppingCartService.GetRecurringCycleInfo(details.Cart,
+                    out int recurringCycleLength, out RecurringProductCyclePeriod recurringCyclePeriod, out int recurringTotalCycles);
                 if (!string.IsNullOrEmpty(recurringCyclesError))
                     throw new NopException(recurringCyclesError);
 

@@ -8,7 +8,6 @@ using Nop.Plugin.Shipping.FixedByWeightByTotal.Services;
 using Nop.Services.Catalog;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
-using Nop.Services.Orders;
 using Nop.Services.Shipping;
 using Nop.Services.Shipping.Tracking;
 
@@ -23,8 +22,6 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal
 
         private readonly FixedByWeightByTotalSettings _fixedByWeightByTotalSettings;
         private readonly IPriceCalculationService _priceCalculationService;
-        private readonly IProductAttributeParser _productAttributeParser;
-        private readonly IProductService _productService;
         private readonly ISettingService _settingService;
         private readonly IShippingByWeightByTotalService _shippingByWeightByTotalService;
         private readonly IShippingService _shippingService;
@@ -38,8 +35,6 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal
 
         public FixedByWeightByTotalComputationMethod(FixedByWeightByTotalSettings fixedByWeightByTotalSettings,
             IPriceCalculationService priceCalculationService,
-            IProductAttributeParser productAttributeParser,
-            IProductService productService,
             ISettingService settingService,
             IShippingByWeightByTotalService shippingByWeightByTotalService,
             IShippingService shippingService,
@@ -49,8 +44,6 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal
         {
             this._fixedByWeightByTotalSettings = fixedByWeightByTotalSettings;
             this._priceCalculationService = priceCalculationService;
-            this._productAttributeParser = productAttributeParser;
-            this._productService = productService;
             this._settingService = settingService;
             this._shippingByWeightByTotalService = shippingByWeightByTotalService;
             this._shippingService = shippingService;
@@ -159,7 +152,7 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal
                 var subTotal = decimal.Zero;
                 foreach (var packageItem in getShippingOptionRequest.Items)
                 {
-                    if (packageItem.ShoppingCartItem.IsFreeShipping(_productService, _productAttributeParser))
+                    if (_shippingService.IsFreeShipping(packageItem.ShoppingCartItem))
                         continue;
 
                     //TODO we should use getShippingOptionRequest.Items.GetQuantity() method to get subtotal

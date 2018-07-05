@@ -201,7 +201,7 @@ namespace Nop.Web.Factories
 
             var model = new List<ShoppingCartModel.CheckoutAttributeModel>();
 
-            var excludeShippableAttributes = !cart.RequiresShipping(_productService, _productAttributeParser);
+            var excludeShippableAttributes = !_shoppingCartService.ShoppingCartRequiresShipping(cart);
             var checkoutAttributes = _checkoutAttributeService.GetAllCheckoutAttributes(_storeContext.CurrentStore.Id, excludeShippableAttributes);
             foreach (var attribute in checkoutAttributes)
             {
@@ -629,7 +629,7 @@ namespace Nop.Web.Factories
             }
 
             //shipping info
-            if (cart.RequiresShipping(_productService, _productAttributeParser))
+            if (_shoppingCartService.ShoppingCartRequiresShipping(cart))
             {
                 model.IsShippable = true;
 
@@ -699,7 +699,7 @@ namespace Nop.Web.Factories
 
             var model = new EstimateShippingModel
             {
-                Enabled = cart.Any() && cart.RequiresShipping(_productService, _productAttributeParser) && _shippingSettings.EstimateShippingEnabled
+                Enabled = cart.Any() && _shoppingCartService.ShoppingCartRequiresShipping(cart) && _shippingSettings.EstimateShippingEnabled
             };
             if (model.Enabled)
             {
@@ -876,7 +876,7 @@ namespace Nop.Web.Factories
                 .ToList();
             foreach (var pm in buttonPaymentMethods)
             {
-                if (cart.IsRecurring() && pm.RecurringPaymentType == RecurringPaymentType.NotSupported)
+                if (_shoppingCartService.ShoppingCartIsRecurring(cart) && pm.RecurringPaymentType == RecurringPaymentType.NotSupported)
                     continue;
 
                 var viewComponentName = pm.GetPublicViewComponentName();
@@ -918,7 +918,7 @@ namespace Nop.Web.Factories
                 return model;
 
             //simple properties
-            var customer = cart.GetCustomer();
+            var customer = cart.FirstOrDefault(item => item.Customer != null)?.Customer;
             model.CustomerGuid = customer.CustomerGuid;
             model.CustomerFullname = _customerService.GetCustomerFullName(customer);
             model.ShowProductImages = _shoppingCartSettings.ShowProductImagesOnWishList;
@@ -961,7 +961,7 @@ namespace Nop.Web.Factories
                     .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
                     .LimitPerStore(_storeContext.CurrentStore.Id)
                     .ToList();
-                model.TotalProducts = cart.GetTotalProducts();
+                model.TotalProducts = cart.Sum(item => item.Quantity);
                 if (cart.Any())
                 {
                     //subtotal
@@ -971,7 +971,7 @@ namespace Nop.Web.Factories
                     var subtotal = _currencyService.ConvertFromPrimaryStoreCurrency(subtotalBase, _workContext.WorkingCurrency);
                     model.SubTotal = _priceFormatter.FormatPrice(subtotal, false, _workContext.WorkingCurrency, _workContext.WorkingLanguage, subTotalIncludingTax);
 
-                    var requiresShipping = cart.RequiresShipping(_productService, _productAttributeParser);
+                    var requiresShipping = _shoppingCartService.ShoppingCartRequiresShipping(cart);
                     //a customer should visit the shopping cart page (hide checkout button) before going to checkout if:
                     //1. "terms of service" are enabled
                     //2. min order sub-total is OK
@@ -1081,7 +1081,7 @@ namespace Nop.Web.Factories
 
 
                 //shipping info
-                model.RequiresShipping = cart.RequiresShipping(_productService, _productAttributeParser);
+                model.RequiresShipping = _shoppingCartService.ShoppingCartRequiresShipping(cart);
                 if (model.RequiresShipping)
                 {
                     var shoppingCartShippingBase = _orderTotalCalculationService.GetShoppingCartShippingTotal(cart);
@@ -1222,7 +1222,7 @@ namespace Nop.Web.Factories
         {
             var model = new EstimateShippingResultModel();
 
-            if (cart.RequiresShipping(_productService, _productAttributeParser))
+            if (_shoppingCartService.ShoppingCartRequiresShipping(cart))
             {
                 var address = new Address
                 {

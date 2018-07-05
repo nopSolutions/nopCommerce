@@ -29,8 +29,6 @@ namespace Nop.Services.Orders
         private readonly IWorkContext _workContext;
         private readonly IStoreContext _storeContext;
         private readonly IPriceCalculationService _priceCalculationService;
-        private readonly IProductService _productService;
-        private readonly IProductAttributeParser _productAttributeParser;
         private readonly ITaxService _taxService;
         private readonly IShippingService _shippingService;
         private readonly IPaymentService _paymentService;
@@ -39,6 +37,7 @@ namespace Nop.Services.Orders
         private readonly IGiftCardService _giftCardService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IRewardPointService _rewardPointService;
+        private readonly IShoppingCartService _shoppingCartService;
         private readonly TaxSettings _taxSettings;
         private readonly RewardPointsSettings _rewardPointsSettings;
         private readonly ShippingSettings _shippingSettings;
@@ -55,8 +54,6 @@ namespace Nop.Services.Orders
         /// <param name="workContext">Work context</param>
         /// <param name="storeContext">Store context</param>
         /// <param name="priceCalculationService">Price calculation service</param>
-        /// <param name="productService">Product service</param>
-        /// <param name="productAttributeParser">Product attribute parser</param>
         /// <param name="taxService">Tax service</param>
         /// <param name="shippingService">Shipping service</param>
         /// <param name="paymentService">Payment service</param>
@@ -65,6 +62,7 @@ namespace Nop.Services.Orders
         /// <param name="giftCardService">Gift card service</param>
         /// <param name="genericAttributeService">Generic attribute service</param>
         /// <param name="rewardPointService">Reward point service</param>
+        /// <param name="shoppingCartService">Shopping cart service</param>
         /// <param name="taxSettings">Tax settings</param>
         /// <param name="rewardPointsSettings">Reward points settings</param>
         /// <param name="shippingSettings">Shipping settings</param>
@@ -73,8 +71,6 @@ namespace Nop.Services.Orders
         public OrderTotalCalculationService(IWorkContext workContext,
             IStoreContext storeContext,
             IPriceCalculationService priceCalculationService,
-            IProductService productService,
-            IProductAttributeParser productAttributeParser,
             ITaxService taxService,
             IShippingService shippingService,
             IPaymentService paymentService,
@@ -83,6 +79,7 @@ namespace Nop.Services.Orders
             IGiftCardService giftCardService,
             IGenericAttributeService genericAttributeService,
             IRewardPointService rewardPointService,
+            IShoppingCartService shoppingCartService,
             TaxSettings taxSettings,
             RewardPointsSettings rewardPointsSettings,
             ShippingSettings shippingSettings,
@@ -92,8 +89,6 @@ namespace Nop.Services.Orders
             this._workContext = workContext;
             this._storeContext = storeContext;
             this._priceCalculationService = priceCalculationService;
-            this._productService = productService;
-            this._productAttributeParser = productAttributeParser;
             this._taxService = taxService;
             this._shippingService = shippingService;
             this._paymentService = paymentService;
@@ -102,6 +97,7 @@ namespace Nop.Services.Orders
             this._giftCardService = giftCardService;
             this._genericAttributeService = genericAttributeService;
             this._rewardPointService = rewardPointService;
+            this._shoppingCartService = shoppingCartService;
             this._taxSettings = taxSettings;
             this._rewardPointsSettings = rewardPointsSettings;
             this._shippingSettings = shippingSettings;
@@ -395,7 +391,7 @@ namespace Nop.Services.Orders
             shippingTotalInclTax = decimal.Zero;
             shippingTaxRate = decimal.Zero;
 
-            if (restoredCart.RequiresShipping(_productService, _productAttributeParser))
+            if (_shoppingCartService.ShoppingCartRequiresShipping(restoredCart))
             {
                 if (!IsFreeShipping(restoredCart, _shippingSettings.FreeShippingOverXIncludingTax ? subTotalInclTax : subTotalExclTax))
                 {
@@ -693,7 +689,7 @@ namespace Nop.Services.Orders
         protected virtual void AppliedGiftCards(IList<ShoppingCartItem> cart, List<AppliedGiftCard> appliedGiftCards,
             Customer customer, ref decimal resultTemp)
         {
-            if (cart.IsRecurring())
+            if (_shoppingCartService.ShoppingCartIsRecurring(cart))
                 return;
 
             //we don't apply gift cards for recurring products
@@ -768,7 +764,7 @@ namespace Nop.Services.Orders
                 return;
 
             //get the customer 
-            var customer = cart.GetCustomer();
+            var customer = cart.FirstOrDefault(item => item.Customer != null)?.Customer;
 
             //sub totals
             var subTotalExclTaxWithoutDiscount = decimal.Zero;
@@ -906,7 +902,7 @@ namespace Nop.Services.Orders
             var updatedOrderItem = updateOrderParameters.UpdatedOrderItem;
 
             //get the customer 
-            var customer = restoredCart.GetCustomer();
+            var customer = restoredCart.FirstOrDefault(item => item.Customer != null)?.Customer;
 
             //sub total
             var subTotalExclTax = UpdateSubTotal(updateOrderParameters, restoredCart, updatedOrderItem, updatedOrder, customer, out var subTotalInclTax, out var subTotalTaxRates, out var discountAmountExclTax);
@@ -928,7 +924,7 @@ namespace Nop.Services.Orders
         /// <returns>Additional shipping charge</returns>
         public virtual decimal GetShoppingCartAdditionalShippingCharge(IList<ShoppingCartItem> cart)
         {
-            return cart.Sum(shoppingCartItem => shoppingCartItem.GetAdditionalShippingCharge(_productService, _productAttributeParser));
+            return cart.Sum(shoppingCartItem => _shippingService.GetAdditionalShippingCharge(shoppingCartItem));
         }
 
         /// <summary>
@@ -940,12 +936,12 @@ namespace Nop.Services.Orders
         public virtual bool IsFreeShipping(IList<ShoppingCartItem> cart, decimal? subTotal = null)
         {
             //check whether customer is in a customer role with free shipping applied
-            var customer = cart.GetCustomer();
+            var customer = cart.FirstOrDefault(item => item.Customer != null)?.Customer;
             if (customer != null && customer.CustomerRoles.Where(role => role.Active).Any(role => role.FreeShipping))
                 return true;
 
             //check whether all shopping cart items and their associated products marked as free shipping
-            if (cart.All(shoppingCartItem => shoppingCartItem.IsFreeShipping(_productService, _productAttributeParser)))
+            if (cart.All(shoppingCartItem => _shippingService.IsFreeShipping(shoppingCartItem)))
                 return true;
 
             //free shipping over $X
@@ -985,7 +981,7 @@ namespace Nop.Services.Orders
             var adjustedRate = shippingRate + GetShoppingCartAdditionalShippingCharge(cart);
 
             //discount
-            var discountAmount = GetShippingDiscount(cart.GetCustomer(), adjustedRate, out appliedDiscounts);
+            var discountAmount = GetShippingDiscount(cart.FirstOrDefault(item => item.Customer != null)?.Customer, adjustedRate, out appliedDiscounts);
             adjustedRate -= discountAmount;
 
             adjustedRate = Math.Max(adjustedRate, decimal.Zero);
@@ -1046,7 +1042,7 @@ namespace Nop.Services.Orders
             appliedDiscounts = new List<DiscountForCaching>();
             taxRate = decimal.Zero;
 
-            var customer = cart.GetCustomer();
+            var customer = cart.FirstOrDefault(item => item.Customer != null)?.Customer;
 
             var isFreeShipping = IsFreeShipping(cart);
             if (isFreeShipping)
@@ -1153,7 +1149,7 @@ namespace Nop.Services.Orders
 
             taxRates = new SortedDictionary<decimal, decimal>();
 
-            var customer = cart.GetCustomer();
+            var customer = cart.FirstOrDefault(item => item.Customer != null)?.Customer;
             var paymentMethodSystemName = "";
             if (customer != null)
             {
@@ -1277,7 +1273,7 @@ namespace Nop.Services.Orders
             redeemedRewardPoints = 0;
             redeemedRewardPointsAmount = decimal.Zero;
 
-            var customer = cart.GetCustomer();
+            var customer = cart.FirstOrDefault(item => item.Customer != null)?.Customer;
             var paymentMethodSystemName = "";
             if (customer != null)
             {

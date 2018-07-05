@@ -229,6 +229,27 @@ namespace Nop.Services.Shipping
         /// <returns>Pickup points</returns>
         GetPickupPointsResponse GetPickupPoints(Address address, Customer customer = null, string providerSystemName = null, int storeId = 0);
 
+        /// <summary>
+        /// Whether the shopping cart item is ship enabled
+        /// </summary>
+        /// <param name="shoppingCartItem">Shopping cart item</param>
+        /// <returns>True if the shopping cart item requires shipping; otherwise false</returns>
+        bool IsShipEnabled(ShoppingCartItem shoppingCartItem);
+
+        /// <summary>
+        /// Whether the shopping cart item is free shipping
+        /// </summary>
+        /// <param name="shoppingCartItem">Shopping cart item</param>
+        /// <returns>True if the shopping cart item is free shipping; otherwise false</returns>
+        bool IsFreeShipping(ShoppingCartItem shoppingCartItem);
+
+        /// <summary>
+        /// Get the additional shipping charge
+        /// </summary> 
+        /// <param name="shoppingCartItem">Shopping cart item</param>
+        /// <returns>The additional shipping charge of the shopping cart item</returns>
+        decimal GetAdditionalShippingCharge(ShoppingCartItem shoppingCartItem);
+
         #endregion
     }
 }

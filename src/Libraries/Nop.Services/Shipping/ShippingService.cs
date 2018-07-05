@@ -234,21 +234,21 @@ namespace Nop.Services.Shipping
                 if (filterByCountryId.HasValue && filterByCountryId.Value > 0)
                 {
                     var query1 = from sm in _shippingMethodRepository.Table
-                        where sm.ShippingMethodCountryMappings.Select(mapping => mapping.CountryId).Contains(filterByCountryId.Value)
-                        select sm.Id;
+                                 where sm.ShippingMethodCountryMappings.Select(mapping => mapping.CountryId).Contains(filterByCountryId.Value)
+                                 select sm.Id;
 
                     var query2 = from sm in _shippingMethodRepository.Table
-                        where !query1.Contains(sm.Id)
-                        orderby sm.DisplayOrder, sm.Id
-                        select sm;
+                                 where !query1.Contains(sm.Id)
+                                 orderby sm.DisplayOrder, sm.Id
+                                 select sm;
 
                     return query2.ToList();
                 }
                 else
                 {
                     var query = from sm in _shippingMethodRepository.Table
-                        orderby sm.DisplayOrder, sm.Id
-                        select sm;
+                                orderby sm.DisplayOrder, sm.Id
+                                select sm;
                     return query.ToList();
                 }
             });
@@ -481,12 +481,12 @@ namespace Nop.Services.Shipping
         /// <param name="includeCheckoutAttributes">A value indicating whether we should calculate weights of selected checkotu attributes</param>
         /// <param name="ignoreFreeShippedItems">Whether to ignore the weight of the products marked as "Free shipping"</param>
         /// <returns>Total weight</returns>
-        public virtual decimal GetTotalWeight(GetShippingOptionRequest request, 
+        public virtual decimal GetTotalWeight(GetShippingOptionRequest request,
             bool includeCheckoutAttributes = true, bool ignoreFreeShippedItems = false)
         {
             if (request == null)
                 throw new ArgumentNullException(nameof(request));
-            
+
             var totalWeight = decimal.Zero;
 
             //shopping cart items
@@ -712,7 +712,7 @@ namespace Nop.Services.Shipping
 
             foreach (var sci in cart)
             {
-                if (!sci.IsShipEnabled(_productService, _productAttributeParser))
+                if (!this.IsShipEnabled(sci))
                     continue;
 
                 var product = sci.Product;
@@ -768,7 +768,7 @@ namespace Nop.Services.Shipping
                         StoreId = storeId
                     };
                     //customer
-                    request.Customer = cart.GetCustomer();
+                    request.Customer = cart.FirstOrDefault(item => item.Customer != null)?.Customer;
                     //ship to
                     request.ShippingAddress = shippingAddress;
                     //ship from
@@ -847,7 +847,7 @@ namespace Nop.Services.Shipping
         /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
         /// <returns>Shipping options</returns>
         public virtual GetShippingOptionResponse GetShippingOptions(IList<ShoppingCartItem> cart,
-            Address shippingAddress, Customer customer = null, string allowedShippingRateComputationMethodSystemName = "", 
+            Address shippingAddress, Customer customer = null, string allowedShippingRateComputationMethodSystemName = "",
             int storeId = 0)
         {
             if (cart == null)
@@ -942,11 +942,11 @@ namespace Nop.Services.Shipping
                 if (result.ShippingOptions.Any() && result.Errors.Any())
                     result.Errors.Clear();
             }
-            
+
             //no shipping options loaded
             if (!result.ShippingOptions.Any() && !result.Errors.Any())
                 result.Errors.Add(_localizationService.GetResource("Checkout.ShippingOptionCouldNotBeLoaded"));
-            
+
             return result;
         }
 
@@ -996,6 +996,75 @@ namespace Nop.Services.Shipping
             }
 
             return result;
+        }
+
+        /// <summary>
+        /// Whether the shopping cart item is ship enabled
+        /// </summary>
+        /// <param name="shoppingCartItem">Shopping cart item</param>
+        /// <returns>True if the shopping cart item requires shipping; otherwise false</returns>
+        public virtual bool IsShipEnabled(ShoppingCartItem shoppingCartItem)
+        {
+            //whether the product requires shipping
+            if (shoppingCartItem.Product != null && shoppingCartItem.Product.IsShipEnabled)
+                return true;
+
+            if (string.IsNullOrEmpty(shoppingCartItem.AttributesXml))
+                return false;
+
+            //or whether associated products of the shopping cart item require shipping
+            return _productAttributeParser.ParseProductAttributeValues(shoppingCartItem.AttributesXml)
+                .Where(attributeValue => attributeValue.AttributeValueType == AttributeValueType.AssociatedToProduct)
+                .Any(attributeValue => _productService.GetProductById(attributeValue.AssociatedProductId)?.IsShipEnabled ?? false);
+        }
+
+        /// <summary>
+        /// Whether the shopping cart item is free shipping
+        /// </summary>
+        /// <param name="shoppingCartItem">Shopping cart item</param>
+        /// <returns>True if the shopping cart item is free shipping; otherwise false</returns>
+        public virtual bool IsFreeShipping(ShoppingCartItem shoppingCartItem)
+        {
+            //first, check whether shipping is required
+            if (!this.IsShipEnabled(shoppingCartItem))
+                return true;
+
+            //then whether the product is free shipping
+            if (shoppingCartItem.Product != null && !shoppingCartItem.Product.IsFreeShipping)
+                return false;
+
+            if (string.IsNullOrEmpty(shoppingCartItem.AttributesXml))
+                return true;
+
+            //and whether associated products of the shopping cart item is free shipping
+            return _productAttributeParser.ParseProductAttributeValues(shoppingCartItem.AttributesXml)
+                .Where(attributeValue => attributeValue.AttributeValueType == AttributeValueType.AssociatedToProduct)
+                .All(attributeValue => _productService.GetProductById(attributeValue.AssociatedProductId)?.IsFreeShipping ?? true);
+        }
+
+        /// <summary>
+        /// Get the additional shipping charge
+        /// </summary> 
+        /// <param name="shoppingCartItem">Shopping cart item</param>
+        /// <returns>The additional shipping charge of the shopping cart item</returns>
+        public virtual decimal GetAdditionalShippingCharge(ShoppingCartItem shoppingCartItem)
+        {
+            //first, check whether shipping is free
+            if (this.IsFreeShipping(shoppingCartItem))
+                return decimal.Zero;
+
+            //get additional shipping charge of the product
+            var additionalShippingCharge = (shoppingCartItem.Product?.AdditionalShippingCharge ?? decimal.Zero) * shoppingCartItem.Quantity;
+
+            if (string.IsNullOrEmpty(shoppingCartItem.AttributesXml))
+                return additionalShippingCharge;
+
+            //and sum with associated products additional shipping charges
+            additionalShippingCharge += _productAttributeParser.ParseProductAttributeValues(shoppingCartItem.AttributesXml)
+                .Where(attributeValue => attributeValue.AttributeValueType == AttributeValueType.AssociatedToProduct)
+                .Sum(attributeValue => _productService.GetProductById(attributeValue.AssociatedProductId)?.AdditionalShippingCharge ?? decimal.Zero);
+
+            return additionalShippingCharge;
         }
 
         #endregion

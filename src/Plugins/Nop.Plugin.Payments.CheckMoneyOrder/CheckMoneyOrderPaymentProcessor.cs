@@ -22,6 +22,7 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder
         private readonly ILocalizationService _localizationService;
         private readonly IOrderTotalCalculationService _orderTotalCalculationService;
         private readonly ISettingService _settingService;
+        private readonly IShoppingCartService _shoppingCartService;
         private readonly IWebHelper _webHelper;
 
         #endregion
@@ -32,19 +33,21 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder
             ILocalizationService localizationService,
             IOrderTotalCalculationService orderTotalCalculationService,
             ISettingService settingService,
+            IShoppingCartService shoppingCartService,
             IWebHelper webHelper)
         {
             this._checkMoneyOrderPaymentSettings = checkMoneyOrderPaymentSettings;
             this._localizationService = localizationService;
             this._orderTotalCalculationService = orderTotalCalculationService;
             this._settingService = settingService;
+            this._shoppingCartService = shoppingCartService;
             this._webHelper = webHelper;
         }
 
         #endregion
-        
+
         #region Methods
-        
+
         /// <summary>
         /// Process a payment
         /// </summary>
@@ -75,7 +78,7 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder
             //for example, hide this payment method if all products in the cart are downloadable
             //or hide this payment method if current customer is from certain country
 
-            if (_checkMoneyOrderPaymentSettings.ShippableProductRequired && !cart.RequiresShipping())
+            if (_checkMoneyOrderPaymentSettings.ShippableProductRequired && !_shoppingCartService.ShoppingCartRequiresShipping(cart))
                 return true;
 
             return false;
@@ -237,7 +240,7 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder
             this.DeletePluginLocaleResource("Plugins.Payment.CheckMoneyOrder.PaymentMethodDescription");
             this.DeletePluginLocaleResource("Plugins.Payment.CheckMoneyOrder.ShippableProductRequired");
             this.DeletePluginLocaleResource("Plugins.Payment.CheckMoneyOrder.ShippableProductRequired.Hint");
-            
+
             base.Uninstall();
         }
 

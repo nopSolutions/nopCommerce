@@ -19,6 +19,7 @@ using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Security;
 using Nop.Services.Seo;
+using Nop.Services.Shipping;
 using Nop.Services.Shipping.Date;
 using Nop.Services.Stores;
 
@@ -55,6 +56,7 @@ namespace Nop.Services.Orders
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IActionContextAccessor _actionContextAccessor;
         private readonly IUrlHelperFactory _urlHelperFactory;
+        private readonly IShippingService _shippingService;
 
         #endregion
 
@@ -87,6 +89,7 @@ namespace Nop.Services.Orders
         /// <param name="dateTimeHelper">Datetime helper</param>
         /// <param name="actionContextAccessor">Action context accessor</param>
         /// <param name="urlHelperFactory">Url helper factory</param>
+        /// <param name="shippingService">Shipping service</param>
         public ShoppingCartService(IRepository<ShoppingCartItem> sciRepository,
             IWorkContext workContext,
             IStoreContext storeContext,
@@ -110,7 +113,8 @@ namespace Nop.Services.Orders
             IProductAttributeService productAttributeService,
             IDateTimeHelper dateTimeHelper,
             IActionContextAccessor actionContextAccessor,
-            IUrlHelperFactory urlHelperFactory)
+            IUrlHelperFactory urlHelperFactory, 
+            IShippingService shippingService)
         {
             this._sciRepository = sciRepository;
             this._workContext = workContext;
@@ -136,6 +140,7 @@ namespace Nop.Services.Orders
             this._dateTimeHelper = dateTimeHelper;
             this._actionContextAccessor = actionContextAccessor;
             this._urlHelperFactory = urlHelperFactory;
+            this._shippingService = shippingService;
         }
 
         #endregion
@@ -924,7 +929,7 @@ namespace Nop.Services.Orders
             //recurring cart validation
             if (hasRecurringProducts)
             {
-                var cyclesError = shoppingCart.GetRecurringCycleInfo(_localizationService, out int _, out RecurringProductCyclePeriod _, out int _);
+                var cyclesError = this.GetRecurringCycleInfo(shoppingCart, out int _, out RecurringProductCyclePeriod _, out int _);
                 if (!string.IsNullOrEmpty(cyclesError))
                 {
                     warnings.Add(cyclesError);
@@ -939,7 +944,7 @@ namespace Nop.Services.Orders
                 var attributes1 = _checkoutAttributeParser.ParseCheckoutAttributes(checkoutAttributesXml);
 
                 //existing checkout attributes
-                var excludeShippableAttributes = !shoppingCart.RequiresShipping(_productService, _productAttributeParser);
+                var excludeShippableAttributes = !this.ShoppingCartRequiresShipping(shoppingCart);
                 var attributes2 = _checkoutAttributeService.GetAllCheckoutAttributes(_storeContext.CurrentStore.Id, excludeShippableAttributes);
 
                 //validate conditional attributes only (if specified)
@@ -1354,6 +1359,84 @@ namespace Nop.Services.Orders
             //move selected checkout attributes
             var checkoutAttributesXml = fromCustomer.GetAttribute<string>(NopCustomerDefaults.CheckoutAttributes, _genericAttributeService, _storeContext.CurrentStore.Id);
             _genericAttributeService.SaveAttribute(toCustomer, NopCustomerDefaults.CheckoutAttributes, checkoutAttributesXml, _storeContext.CurrentStore.Id);
+        }
+
+        /// <summary>
+        /// Indicates whether the shopping cart requires shipping
+        /// </summary>
+        /// <param name="shoppingCart">Shopping cart</param>
+        /// <returns>True if the shopping cart requires shipping; otherwise, false.</returns>
+        public virtual bool ShoppingCartRequiresShipping(IList<ShoppingCartItem> shoppingCart)
+        {
+            return shoppingCart.Any(shoppingCartItem => _shippingService.IsShipEnabled(shoppingCartItem));
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether shopping cart is recurring
+        /// </summary>
+        /// <param name="shoppingCart">Shopping cart</param>
+        /// <returns>Result</returns>
+        public virtual bool ShoppingCartIsRecurring(IList<ShoppingCartItem> shoppingCart)
+        {
+            return shoppingCart.Any(item => item.Product?.IsRecurring ?? false);
+        }
+
+        /// <summary>
+        /// Get a recurring cycle information
+        /// </summary>
+        /// <param name="shoppingCart">Shopping cart</param>
+        /// <param name="cycleLength">Cycle length</param>
+        /// <param name="cyclePeriod">Cycle period</param>
+        /// <param name="totalCycles">Total cycles</param>
+        /// <returns>Error (if exists); otherwise, empty string</returns>
+        public virtual string GetRecurringCycleInfo(IList<ShoppingCartItem> shoppingCart,
+            out int cycleLength, out RecurringProductCyclePeriod cyclePeriod, out int totalCycles)
+        {
+            cycleLength = 0;
+            cyclePeriod = 0;
+            totalCycles = 0;
+
+            int? _cycleLength = null;
+            RecurringProductCyclePeriod? _cyclePeriod = null;
+            int? _totalCycles = null;
+
+            foreach (var sci in shoppingCart)
+            {
+                var product = sci.Product;
+                if (product == null)
+                {
+                    throw new NopException($"Product (Id={sci.ProductId}) cannot be loaded");
+                }
+
+                if (product.IsRecurring)
+                {
+                    var conflictError = _localizationService.GetResource("ShoppingCart.ConflictingShipmentSchedules");
+
+                    //cycle length
+                    if (_cycleLength.HasValue && _cycleLength.Value != product.RecurringCycleLength)
+                        return conflictError;
+                    _cycleLength = product.RecurringCycleLength;
+
+                    //cycle period
+                    if (_cyclePeriod.HasValue && _cyclePeriod.Value != product.RecurringCyclePeriod)
+                        return conflictError;
+                    _cyclePeriod = product.RecurringCyclePeriod;
+
+                    //total cycles
+                    if (_totalCycles.HasValue && _totalCycles.Value != product.RecurringTotalCycles)
+                        return conflictError;
+                    _totalCycles = product.RecurringTotalCycles;
+                }
+            }
+
+            if (_cycleLength.HasValue && _cyclePeriod.HasValue && _totalCycles.HasValue)
+            {
+                cycleLength = _cycleLength.Value;
+                cyclePeriod = _cyclePeriod.Value;
+                totalCycles = _totalCycles.Value;
+            }
+
+            return "";
         }
 
         #endregion

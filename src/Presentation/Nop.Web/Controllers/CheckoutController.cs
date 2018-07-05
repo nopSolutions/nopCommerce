@@ -312,7 +312,7 @@ namespace Nop.Web.Controllers
                 .ToList();
 
             //ship to the same address?
-            if (_shippingSettings.ShipToSameAddress && shipToSameAddress && cart.RequiresShipping(_productService, _productAttributeParser) && address.Country.AllowsShipping)
+            if (_shippingSettings.ShipToSameAddress && shipToSameAddress && _shoppingCartService.ShoppingCartRequiresShipping(cart) && address.Country.AllowsShipping)
             {
                 _workContext.CurrentCustomer.ShippingAddress = _workContext.CurrentCustomer.BillingAddress;
                 _customerService.UpdateCustomer(_workContext.CurrentCustomer);
@@ -384,7 +384,7 @@ namespace Nop.Web.Controllers
                 _customerService.UpdateCustomer(_workContext.CurrentCustomer);
 
                 //ship to the same address?
-                if (_shippingSettings.ShipToSameAddress && model.ShipToSameAddress && cart.RequiresShipping(_productService, _productAttributeParser))
+                if (_shippingSettings.ShipToSameAddress && model.ShipToSameAddress && _shoppingCartService.ShoppingCartRequiresShipping(cart))
                 {
                     _workContext.CurrentCustomer.ShippingAddress = _workContext.CurrentCustomer.BillingAddress;
                     _customerService.UpdateCustomer(_workContext.CurrentCustomer);
@@ -424,7 +424,7 @@ namespace Nop.Web.Controllers
             if (_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed)
                 return Challenge();
 
-            if (!cart.RequiresShipping(_productService, _productAttributeParser))
+            if (!_shoppingCartService.ShoppingCartRequiresShipping(cart))
             {
                 _workContext.CurrentCustomer.ShippingAddress = null;
                 _customerService.UpdateCustomer(_workContext.CurrentCustomer);
@@ -479,7 +479,7 @@ namespace Nop.Web.Controllers
             if (_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed)
                 return Challenge();
 
-            if (!cart.RequiresShipping(_productService, _productAttributeParser))
+            if (!_shoppingCartService.ShoppingCartRequiresShipping(cart))
             {
                 _workContext.CurrentCustomer.ShippingAddress = null;
                 _customerService.UpdateCustomer(_workContext.CurrentCustomer);
@@ -584,7 +584,7 @@ namespace Nop.Web.Controllers
             if (_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed)
                 return Challenge();
 
-            if (!cart.RequiresShipping(_productService, _productAttributeParser))
+            if (!_shoppingCartService.ShoppingCartRequiresShipping(cart))
             {
                 _genericAttributeService.SaveAttribute<ShippingOption>(_workContext.CurrentCustomer, NopCustomerDefaults.SelectedShippingOptionAttribute, null, _storeContext.CurrentStore.Id);
                 return RedirectToRoute("CheckoutPaymentMethod");
@@ -629,7 +629,7 @@ namespace Nop.Web.Controllers
             if (_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed)
                 return Challenge();
 
-            if (!cart.RequiresShipping(_productService, _productAttributeParser))
+            if (!_shoppingCartService.ShoppingCartRequiresShipping(cart))
             {
                 _genericAttributeService.SaveAttribute<ShippingOption>(_workContext.CurrentCustomer,
                     NopCustomerDefaults.SelectedShippingOptionAttribute, null, _storeContext.CurrentStore.Id);
@@ -1243,7 +1243,7 @@ namespace Nop.Web.Controllers
                     _customerService.UpdateCustomer(_workContext.CurrentCustomer);
                 }
 
-                if (cart.RequiresShipping(_productService, _productAttributeParser))
+                if (_shoppingCartService.ShoppingCartRequiresShipping(cart))
                 {
                     //shipping is required
                     if (_shippingSettings.ShipToSameAddress && model.ShipToSameAddress && _workContext.CurrentCustomer.BillingAddress.Country.AllowsShipping)
@@ -1309,7 +1309,7 @@ namespace Nop.Web.Controllers
                 if (_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed)
                     throw new Exception("Anonymous checkout is not allowed");
 
-                if (!cart.RequiresShipping(_productService, _productAttributeParser))
+                if (!_shoppingCartService.ShoppingCartRequiresShipping(cart))
                     throw new Exception("Shipping is not required");
 
                 //pickup point
@@ -1452,7 +1452,7 @@ namespace Nop.Web.Controllers
                 if (_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed)
                     throw new Exception("Anonymous checkout is not allowed");
 
-                if (!cart.RequiresShipping(_productService, _productAttributeParser))
+                if (!_shoppingCartService.ShoppingCartRequiresShipping(cart))
                     throw new Exception("Shipping is not required");
 
                 //parse selected method 

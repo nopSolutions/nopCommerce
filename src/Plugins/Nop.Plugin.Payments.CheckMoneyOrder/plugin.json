@@ -2,7 +2,7 @@
   "Group": "Payment methods",
   "FriendlyName": "Check / Money Order",
   "SystemName": "Payments.CheckMoneyOrder",
-  "Version": "1.35",
+  "Version": "1.36",
   "SupportedVersions": [ "4.10" ],
   "Author": "nopCommerce team",
   "DisplayOrder": 1,

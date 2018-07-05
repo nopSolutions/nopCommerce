@@ -348,13 +348,11 @@ namespace Nop.Web.Factories
                 model.ShoppingCartItems = customer.ShoppingCartItems
                     .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
                     .LimitPerStore(_storeContext.CurrentStore.Id)
-                    .ToList()
-                    .GetTotalProducts();
+                    .Sum(item => item.Quantity);
                 model.WishlistItems = customer.ShoppingCartItems
                     .Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist)
                     .LimitPerStore(_storeContext.CurrentStore.Id)
-                    .ToList()
-                    .GetTotalProducts();
+                    .Sum(item => item.Quantity);
             }
 
             return model;

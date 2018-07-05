@@ -42,6 +42,7 @@ namespace Nop.Web.Factories
         private readonly IProductService _productService;
         private readonly IRewardPointService _rewardPointService;
         private readonly IShippingService _shippingService;
+        private readonly IShoppingCartService _shoppingCartService;
         private readonly IStateProvinceService _stateProvinceService;
         private readonly IStoreContext _storeContext;
         private readonly IStoreMappingService _storeMappingService;
@@ -55,7 +56,7 @@ namespace Nop.Web.Factories
 
         #endregion
 
-		#region Ctor
+        #region Ctor
 
         public CheckoutModelFactory(AddressSettings addressSettings,
             CommonSettings commonSettings,
@@ -72,6 +73,7 @@ namespace Nop.Web.Factories
             IProductService productService,
             IRewardPointService rewardPointService,
             IShippingService shippingService,
+            IShoppingCartService shoppingCartService,
             IStateProvinceService stateProvinceService,
             IStoreContext storeContext,
             IStoreMappingService storeMappingService,
@@ -83,31 +85,32 @@ namespace Nop.Web.Factories
             RewardPointsSettings rewardPointsSettings,
             ShippingSettings shippingSettings)
         {
-            this._addressSettings=addressSettings;
-            this._commonSettings=commonSettings;
-            this._addressModelFactory=addressModelFactory;
-            this._countryService=countryService;
-            this._currencyService=currencyService;
-            this._genericAttributeService=genericAttributeService;
-            this._localizationService=localizationService;
-            this._orderProcessingService=orderProcessingService;
-            this._orderTotalCalculationService=orderTotalCalculationService;
-            this._paymentService=paymentService;
-            this._priceFormatter=priceFormatter;
-            this._productAttributeParser=productAttributeParser;
-            this._productService=productService;
-            this._rewardPointService=rewardPointService;
-            this._shippingService=shippingService;
-            this._stateProvinceService=stateProvinceService;
-            this._storeContext=storeContext;
-            this._storeMappingService=storeMappingService;
-            this._taxService=taxService;
-            this._webHelper=webHelper;
-            this._workContext=workContext;
-            this._orderSettings=orderSettings;
-            this._paymentSettings=paymentSettings;
-            this._rewardPointsSettings=rewardPointsSettings;
-            this._shippingSettings=shippingSettings;
+            this._addressSettings = addressSettings;
+            this._commonSettings = commonSettings;
+            this._addressModelFactory = addressModelFactory;
+            this._countryService = countryService;
+            this._currencyService = currencyService;
+            this._genericAttributeService = genericAttributeService;
+            this._localizationService = localizationService;
+            this._orderProcessingService = orderProcessingService;
+            this._orderTotalCalculationService = orderTotalCalculationService;
+            this._paymentService = paymentService;
+            this._priceFormatter = priceFormatter;
+            this._productAttributeParser = productAttributeParser;
+            this._productService = productService;
+            this._rewardPointService = rewardPointService;
+            this._shippingService = shippingService;
+            this._shoppingCartService = shoppingCartService;
+            this._stateProvinceService = stateProvinceService;
+            this._storeContext = storeContext;
+            this._storeMappingService = storeMappingService;
+            this._taxService = taxService;
+            this._webHelper = webHelper;
+            this._workContext = workContext;
+            this._orderSettings = orderSettings;
+            this._paymentSettings = paymentSettings;
+            this._rewardPointsSettings = rewardPointsSettings;
+            this._shippingSettings = shippingSettings;
         }
 
         #endregion
@@ -129,18 +132,18 @@ namespace Nop.Web.Factories
         {
             var model = new CheckoutBillingAddressModel
             {
-                ShipToSameAddressAllowed = _shippingSettings.ShipToSameAddress && cart.RequiresShipping(_productService, _productAttributeParser),
+                ShipToSameAddressAllowed = _shippingSettings.ShipToSameAddress && _shoppingCartService.ShoppingCartRequiresShipping(cart),
                 //allow customers to enter (choose) a shipping address if "Disable Billing address step" setting is enabled
                 ShipToSameAddress = !_orderSettings.DisableBillingAddressCheckoutStep
             };
 
             //existing addresses
             var addresses = _workContext.CurrentCustomer.Addresses
-                .Where(a => a.Country == null || 
+                .Where(a => a.Country == null ||
                     (//published
-                    a.Country.Published && 
+                    a.Country.Published &&
                     //allow billing
-                    a.Country.AllowsBilling && 
+                    a.Country.AllowsBilling &&
                     //enabled for the current store
                     _storeMappingService.Authorize(a.Country)))
                 .ToList();
@@ -148,8 +151,8 @@ namespace Nop.Web.Factories
             {
                 var addressModel = new AddressModel();
                 _addressModelFactory.PrepareAddressModel(addressModel,
-                    address: address, 
-                    excludeProperties: false, 
+                    address: address,
+                    excludeProperties: false,
                     addressSettings: _addressSettings);
                 model.ExistingAddresses.Add(addressModel);
             }
@@ -242,10 +245,10 @@ namespace Nop.Web.Factories
                     return model;
                 }
             }
-            
+
             //existing addresses
             var addresses = _workContext.CurrentCustomer.Addresses
-                .Where(a => a.Country == null || 
+                .Where(a => a.Country == null ||
                     (//published
                     a.Country.Published &&
                     //allow shipping
@@ -300,12 +303,12 @@ namespace Nop.Web.Factories
                 foreach (var shippingOption in getShippingOptionResponse.ShippingOptions)
                 {
                     var soModel = new CheckoutShippingMethodModel.ShippingMethodModel
-                                      {
-                                          Name = shippingOption.Name,
-                                          Description = shippingOption.Description,
-                                          ShippingRateComputationMethodSystemName = shippingOption.ShippingRateComputationMethodSystemName,
-                                          ShippingOption = shippingOption,
-                                      };
+                    {
+                        Name = shippingOption.Name,
+                        Description = shippingOption.Description,
+                        ShippingRateComputationMethodSystemName = shippingOption.ShippingRateComputationMethodSystemName,
+                        ShippingOption = shippingOption,
+                    };
 
                     //adjust rate
                     var shippingTotal = _orderTotalCalculationService.AdjustShippingRate(shippingOption.Rate, cart, out List<DiscountForCaching> _);
@@ -323,11 +326,11 @@ namespace Nop.Web.Factories
                 if (selectedShippingOption != null)
                 {
                     var shippingOptionToSelect = model.ShippingMethods.ToList()
-                        .Find( so =>
-                            !string.IsNullOrEmpty(so.Name) &&
-                            so.Name.Equals(selectedShippingOption.Name, StringComparison.InvariantCultureIgnoreCase) &&
-                            !string.IsNullOrEmpty(so.ShippingRateComputationMethodSystemName) &&
-                            so.ShippingRateComputationMethodSystemName.Equals(selectedShippingOption.ShippingRateComputationMethodSystemName, StringComparison.InvariantCultureIgnoreCase));
+                        .Find(so =>
+                           !string.IsNullOrEmpty(so.Name) &&
+                           so.Name.Equals(selectedShippingOption.Name, StringComparison.InvariantCultureIgnoreCase) &&
+                           !string.IsNullOrEmpty(so.ShippingRateComputationMethodSystemName) &&
+                           so.ShippingRateComputationMethodSystemName.Equals(selectedShippingOption.ShippingRateComputationMethodSystemName, StringComparison.InvariantCultureIgnoreCase));
                     if (shippingOptionToSelect != null)
                     {
                         shippingOptionToSelect.Selected = true;
@@ -369,14 +372,14 @@ namespace Nop.Web.Factories
             var model = new CheckoutPaymentMethodModel();
 
             //reward points
-            if (_rewardPointsSettings.Enabled && !cart.IsRecurring())
+            if (_rewardPointsSettings.Enabled && !_shoppingCartService.ShoppingCartIsRecurring(cart))
             {
                 var rewardPointsBalance = _rewardPointService.GetRewardPointsBalance(_workContext.CurrentCustomer.Id, _storeContext.CurrentStore.Id);
                 rewardPointsBalance = _rewardPointService.GetReducedPointsBalance(rewardPointsBalance);
 
                 var rewardPointsAmountBase = _orderTotalCalculationService.ConvertRewardPointsToAmount(rewardPointsBalance);
                 var rewardPointsAmount = _currencyService.ConvertFromPrimaryStoreCurrency(rewardPointsAmountBase, _workContext.WorkingCurrency);
-                if (rewardPointsAmount > decimal.Zero && 
+                if (rewardPointsAmount > decimal.Zero &&
                     _orderTotalCalculationService.CheckMinimumRewardPointsToUseRequirement(rewardPointsBalance))
                 {
                     model.DisplayRewardPoints = true;
@@ -396,7 +399,7 @@ namespace Nop.Web.Factories
                 .ToList();
             foreach (var pm in paymentMethods)
             {
-                if (cart.IsRecurring() && pm.RecurringPaymentType == RecurringPaymentType.NotSupported)
+                if (_shoppingCartService.ShoppingCartIsRecurring(cart) && pm.RecurringPaymentType == RecurringPaymentType.NotSupported)
                     continue;
 
                 var pmModel = new CheckoutPaymentMethodModel.PaymentMethodModel
@@ -415,7 +418,7 @@ namespace Nop.Web.Factories
 
                 model.PaymentMethods.Add(pmModel);
             }
-            
+
             //find a selected (previously) payment method
             var selectedPaymentMethodSystemName = _workContext.CurrentCustomer.GetAttribute<string>(
                 NopCustomerDefaults.SelectedPaymentMethodAttribute,
@@ -482,7 +485,7 @@ namespace Nop.Web.Factories
         /// <returns>Checkout completed model</returns>
         public virtual CheckoutCompletedModel PrepareCheckoutCompletedModel(Order order)
         {
-            if (order ==null)
+            if (order == null)
                 throw new ArgumentNullException(nameof(order));
 
             var model = new CheckoutCompletedModel
@@ -502,7 +505,7 @@ namespace Nop.Web.Factories
         /// <returns>Checkout progress model</returns>
         public virtual CheckoutProgressModel PrepareCheckoutProgressModel(CheckoutProgressStep step)
         {
-            var model = new CheckoutProgressModel {CheckoutProgressStep = step};
+            var model = new CheckoutProgressModel { CheckoutProgressStep = step };
             return model;
         }
 
@@ -514,11 +517,11 @@ namespace Nop.Web.Factories
         public virtual OnePageCheckoutModel PrepareOnePageCheckoutModel(IList<ShoppingCartItem> cart)
         {
             if (cart == null)
-                throw  new ArgumentNullException(nameof(cart));
+                throw new ArgumentNullException(nameof(cart));
 
             var model = new OnePageCheckoutModel
             {
-                ShippingRequired = cart.RequiresShipping(_productService, _productAttributeParser),
+                ShippingRequired = _shoppingCartService.ShoppingCartRequiresShipping(cart),
                 DisableBillingAddressCheckoutStep = _orderSettings.DisableBillingAddressCheckoutStep,
                 BillingAddress = PrepareBillingAddressModel(cart, prePopulateNewAddressWithCustomerFields: true)
             };
