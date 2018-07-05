@@ -1,5 +1,6 @@
 ﻿@using Nop.Core
 @using Nop.Services.Localization
+@inject CommonSettings commonSettings
 @inject IThemeContext themeContext
 @inject IWorkContext workContext;
 @{
@@ -12,7 +13,15 @@
     <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
     <link href="@Url.Content($"~/Themes/{themeName}/Content/css/print.css")" rel="stylesheet" type="text/css" />
     <script src="@Url.Content("~/lib/jquery/jquery-3.3.1.min.js")"></script>
-    <script src="@Url.Content("~/lib/jquery-migrate/jquery-migrate-3.0.1.js")"></script>
+    @*/when jQuery migrate script logging is active you will see the log in the browser console*@
+    @if (commonSettings.JqueryMigrateScriptLoggingActive)
+    {
+        <script src="@Url.Content("~/lib/jquery-migrate/jquery-migrate-3.0.1.js")"></script>
+    }
+    else
+    {
+        <script src="@Url.Content("~/lib/jquery-migrate/jquery-migrate-3.0.1.min.js")"></script>
+    }
     @Html.NopInlineScripts(this.Url, ResourceLocation.Head)
 </head>
 <body>

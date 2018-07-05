@@ -16,7 +16,15 @@
 @{
     Html.AppendScriptParts(ResourceLocation.Footer, "~/js/public.ajaxcart.js");
     Html.AppendScriptParts(ResourceLocation.Footer, "~/js/public.common.js");
-    Html.AppendScriptParts(ResourceLocation.Footer, "~/lib/jquery-migrate/jquery-migrate-3.0.1.js");
+    //when jQuery migrate script logging is active you will see the log in the browser console
+    if (commonSettings.JqueryMigrateScriptLoggingActive)
+    {
+        Html.AppendScriptParts(ResourceLocation.Footer, "~/lib/jquery-migrate/jquery-migrate-3.0.1.js");
+    }
+    else
+    {
+        Html.AppendScriptParts(ResourceLocation.Footer, "~/lib/jquery-migrate/jquery-migrate-3.0.1.min.js");
+    }
     Html.AppendScriptParts(ResourceLocation.Footer, "~/lib/jquery-ui/jquery-ui-1.12.1.custom/jquery-ui.min.js");
     Html.AppendScriptParts(ResourceLocation.Footer, "~/lib/jquery-validate/jquery.validate.unobtrusive-v3.2.10/jquery.validate.unobtrusive.min.js");
     Html.AppendScriptParts(ResourceLocation.Footer, "~/lib/jquery-validate/jquery.validate-v1.17.0/jquery.validate.min.js");

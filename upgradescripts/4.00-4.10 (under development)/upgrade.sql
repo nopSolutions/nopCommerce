@@ -3868,3 +3868,11 @@ BEGIN
 END
 GO
 
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'commonsettings.jquerymigratescriptloggingactive')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'commonsettings.jquerymigratescriptloggingactive', N'False', 0)
+END
+GO

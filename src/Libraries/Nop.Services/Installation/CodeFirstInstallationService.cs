@@ -5926,7 +5926,8 @@ namespace Nop.Services.Installation
                 RenderXuaCompatible = false,
                 XuaCompatibleValue = "IE=edge",
                 BbcodeEditorOpenLinksInNewWindow = false,
-                PopupForTermsOfServiceLinks = true
+                PopupForTermsOfServiceLinks = true,
+                JqueryMigrateScriptLoggingActive = false
             });
 
             settingService.SaveSetting(new SeoSettings
