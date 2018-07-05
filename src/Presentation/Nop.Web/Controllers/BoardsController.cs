@@ -30,9 +30,9 @@ namespace Nop.Web.Controllers
         private readonly IStoreContext _storeContext;
         private readonly IWebHelper _webHelper;
         private readonly IWorkContext _workContext;
-        
+
         #endregion
-        
+
         #region Ctor
 
         public BoardsController(ForumSettings forumSettings,
@@ -53,7 +53,7 @@ namespace Nop.Web.Controllers
         }
 
         #endregion
-        
+
         #region Methods
 
         public virtual IActionResult Index()
@@ -66,7 +66,7 @@ namespace Nop.Web.Controllers
             var model = _forumModelFactory.PrepareBoardsIndexModel();
             return View(model);
         }
-        
+
         public virtual IActionResult ActiveDiscussions(int forumId = 0, int pageNumber = 1)
         {
             if (!_forumSettings.ForumsEnabled)
@@ -132,7 +132,7 @@ namespace Nop.Web.Controllers
             {
                 return RedirectToRoute("Boards");
             }
-            
+
             var model = _forumModelFactory.PrepareForumGroupModel(forumGroup);
             return View(model);
         }
@@ -151,7 +151,7 @@ namespace Nop.Web.Controllers
             var model = _forumModelFactory.PrepareForumPageModel(forum, pageNumber);
             return View(model);
         }
-        
+
         public virtual IActionResult ForumRss(int id)
         {
             if (!_forumSettings.ForumsEnabled)
@@ -265,12 +265,12 @@ namespace Nop.Web.Controllers
             var model = _forumModelFactory.PrepareForumTopicPageModel(forumTopic, pageNumber);
             //if no posts loaded, redirect to the first page
             if (!model.ForumPostModels.Any() && pageNumber > 1)
-                return RedirectToRoute("TopicSlug", new {id = forumTopic.Id, slug = forumTopic.GetSeName()});
-            
+                return RedirectToRoute("TopicSlug", new { id = forumTopic.Id, slug = forumTopic.GetSeName() });
+
             //update view count
             forumTopic.Views += 1;
             _forumService.UpdateTopic(forumTopic);
-            
+
             return View(model);
         }
 
@@ -620,7 +620,7 @@ namespace Nop.Web.Controllers
                     _forumService.UpdateTopic(forumTopic);
 
                     //forum post                
-                    var firstPost = forumTopic.GetFirstPost(_forumService);
+                    var firstPost = _forumService.GetFirstPost(forumTopic);
                     if (firstPost != null)
                     {
                         firstPost.Text = text;
@@ -981,11 +981,11 @@ namespace Nop.Web.Controllers
             {
                 return RedirectToRoute("HomePage");
             }
-            
-            var model = _forumModelFactory.PrepareSearchModel(searchterms,adv, forumId, within, limitDays, page);
+
+            var model = _forumModelFactory.PrepareSearchModel(searchterms, adv, forumId, within, limitDays, page);
             return View(model);
         }
-        
+
         public virtual IActionResult CustomerForumSubscriptions(int? pageNumber)
         {
             if (!_forumSettings.AllowCustomersToManageSubscriptions)
@@ -1033,27 +1033,27 @@ namespace Nop.Web.Controllers
 
             if (!_workContext.CurrentCustomer.IsRegistered())
                 return Json(new
-                    {
-                        Error = _localizationService.GetResource("Forum.Votes.Login"),
-                        VoteCount = forumPost.VoteCount
-                    });
+                {
+                    Error = _localizationService.GetResource("Forum.Votes.Login"),
+                    VoteCount = forumPost.VoteCount
+                });
 
             if (_workContext.CurrentCustomer.Id == forumPost.CustomerId)
                 return Json(new
-                    {
-                        Error = _localizationService.GetResource("Forum.Votes.OwnPost"),
-                        VoteCount = forumPost.VoteCount
-                    });
+                {
+                    Error = _localizationService.GetResource("Forum.Votes.OwnPost"),
+                    VoteCount = forumPost.VoteCount
+                });
 
             var forumPostVote = _forumService.GetPostVote(postId, _workContext.CurrentCustomer);
             if (forumPostVote != null)
             {
                 if ((forumPostVote.IsUp && isUp) || (!forumPostVote.IsUp && !isUp))
                     return Json(new
-                        {
-                            Error = _localizationService.GetResource("Forum.Votes.AlreadyVoted"),
-                            VoteCount = forumPost.VoteCount
-                        });
+                    {
+                        Error = _localizationService.GetResource("Forum.Votes.AlreadyVoted"),
+                        VoteCount = forumPost.VoteCount
+                    });
 
                 _forumService.DeletePostVote(forumPostVote);
                 return Json(new { VoteCount = forumPost.VoteCount });

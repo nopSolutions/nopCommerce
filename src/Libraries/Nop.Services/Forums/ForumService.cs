@@ -6,6 +6,7 @@ using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Forums;
+using Nop.Core.Html;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Events;
@@ -347,7 +348,7 @@ namespace Nop.Services.Forums
         /// </summary>
         /// <param name="forum">Forum</param>
         public virtual void DeleteForum(Forum forum)
-        {            
+        {
             if (forum == null)
             {
                 throw new ArgumentNullException(nameof(forum));
@@ -355,8 +356,8 @@ namespace Nop.Services.Forums
 
             //delete forum subscriptions (topics)
             var queryTopicIds = from ft in _forumTopicRepository.Table
-                           where ft.ForumId == forum.Id
-                           select ft.Id;
+                                where ft.ForumId == forum.Id
+                                select ft.Id;
             var queryFs1 = from fs in _forumSubscriptionRepository.Table
                            where queryTopicIds.Contains(fs.TopicId)
                            select fs;
@@ -452,7 +453,7 @@ namespace Nop.Services.Forums
             }
 
             _forumRepository.Update(forum);
-            
+
             _cacheManager.RemoveByPattern(NopForumDefaults.ForumGroupPatternCacheKey);
             _cacheManager.RemoveByPattern(NopForumDefaults.ForumPatternCacheKey);
 
@@ -465,11 +466,11 @@ namespace Nop.Services.Forums
         /// </summary>
         /// <param name="forumTopic">Forum topic</param>
         public virtual void DeleteTopic(ForumTopic forumTopic)
-        {            
+        {
             if (forumTopic == null)
-            {                
+            {
                 throw new ArgumentNullException(nameof(forumTopic));
-            }                
+            }
 
             var customerId = forumTopic.CustomerId;
             var forumId = forumTopic.ForumId;
@@ -565,7 +566,7 @@ namespace Nop.Services.Forums
                          (
                             !searchKeywords ||
                             (searchTopicTitles && ft.Subject.Contains(keywords)) ||
-                            (searchPostText && fp.Text.Contains(keywords))) && 
+                            (searchPostText && fp.Text.Contains(keywords))) &&
                          (!limitDate.HasValue || limitDate.Value <= ft.LastPostTime)
                          select ft.Id;
 
@@ -585,7 +586,7 @@ namespace Nop.Services.Forums
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Forum Topics</returns>
-        public virtual IPagedList<ForumTopic> GetActiveTopics(int forumId = 0, 
+        public virtual IPagedList<ForumTopic> GetActiveTopics(int forumId = 0,
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query1 = from ft in _forumTopicRepository.Table
@@ -709,7 +710,7 @@ namespace Nop.Services.Forums
         /// </summary>
         /// <param name="forumPost">Forum post</param>
         public virtual void DeletePost(ForumPost forumPost)
-        {            
+        {
             if (forumPost == null)
             {
                 throw new ArgumentNullException(nameof(forumPost));
@@ -722,7 +723,7 @@ namespace Nop.Services.Forums
 
             //delete topic if it was the first post
             var deleteTopic = false;
-            var firstPost = forumTopic.GetFirstPost(this);
+            var firstPost = this.GetFirstPost(forumTopic);
             if (firstPost != null && firstPost.Id == forumPost.Id)
             {
                 deleteTopic = true;
@@ -777,7 +778,7 @@ namespace Nop.Services.Forums
         /// <param name="pageSize">Page size</param>
         /// <returns>Posts</returns>
         public virtual IPagedList<ForumPost> GetAllPosts(int forumTopicId = 0,
-            int customerId = 0, string keywords = "", 
+            int customerId = 0, string keywords = "",
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
             return GetAllPosts(forumTopicId, customerId, keywords, true,
@@ -795,7 +796,7 @@ namespace Nop.Services.Forums
         /// <param name="pageSize">Page size</param>
         /// <returns>Forum Posts</returns>
         public virtual IPagedList<ForumPost> GetAllPosts(int forumTopicId = 0, int customerId = 0,
-            string keywords = "", bool ascSort = false, 
+            string keywords = "", bool ascSort = false,
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = _forumPostRepository.Table;
@@ -858,7 +859,7 @@ namespace Nop.Services.Forums
                 var languageId = _workContext.WorkingLanguage.Id;
 
                 var friendlyTopicPageIndex = CalculateTopicPageIndex(forumPost.TopicId,
-                    _forumSettings.PostsPageSize > 0 ? _forumSettings.PostsPageSize : 10, 
+                    _forumSettings.PostsPageSize > 0 ? _forumSettings.PostsPageSize : 10,
                     forumPost.Id) + 1;
 
                 foreach (var subscription in subscriptions)
@@ -998,7 +999,7 @@ namespace Nop.Services.Forums
             //Email notification
             if (_forumSettings.NotifyAboutPrivateMessages)
             {
-                _workflowMessageService.SendPrivateMessageNotification(privateMessage, _workContext.WorkingLanguage.Id);                
+                _workflowMessageService.SendPrivateMessageNotification(privateMessage, _workContext.WorkingLanguage.Id);
             }
         }
 
@@ -1112,7 +1113,7 @@ namespace Nop.Services.Forums
             {
                 throw new ArgumentNullException(nameof(forumSubscription));
             }
-            
+
             _forumSubscriptionRepository.Update(forumSubscription);
 
             //event notification
@@ -1317,7 +1318,7 @@ namespace Nop.Services.Forums
 
             return false;
         }
-        
+
         /// <summary>
         /// Check whether customer is allowed to delete post
         /// </summary>
@@ -1375,7 +1376,7 @@ namespace Nop.Services.Forums
             if (IsForumModerator(customer))
             {
                 return true;
-            }            
+            }
 
             return false;
         }
@@ -1508,6 +1509,155 @@ namespace Nop.Services.Forums
             //event notification
             _eventPublisher.EntityDeleted(postVote);
         }
+
+        /// <summary>
+        /// Formats the forum post text
+        /// </summary>
+        /// <param name="forumPost">Forum post</param>
+        /// <returns>Formatted text</returns>
+        public virtual string FormatPostText(ForumPost forumPost)
+        {
+            var text = forumPost.Text;
+
+            if (string.IsNullOrEmpty(text))
+                return string.Empty;
+
+            switch (_forumSettings.ForumEditor)
+            {
+                case EditorType.SimpleTextBox:
+                    {
+                        text = HtmlHelper.FormatText(text, false, true, false, false, false, false);
+                    }
+                    break;
+                case EditorType.BBCodeEditor:
+                    {
+                        text = HtmlHelper.FormatText(text, false, true, false, true, false, false);
+                    }
+                    break;
+                default:
+                    break;
+            }
+
+            return text;
+        }
+
+        /// <summary>
+        /// Strips the topic subject
+        /// </summary>
+        /// <param name="forumTopic">Forum topic</param>
+        /// <returns>Formatted subject</returns>
+        public virtual string StripTopicSubject(ForumTopic forumTopic)
+        {
+            var subject = forumTopic.Subject;
+            if (string.IsNullOrEmpty(subject))
+            {
+                return subject;
+            }
+
+            var strippedTopicMaxLength = _forumSettings.StrippedTopicMaxLength;
+            if (strippedTopicMaxLength <= 0)
+                return subject;
+
+            if (subject.Length <= strippedTopicMaxLength)
+                return subject;
+
+            var index = subject.IndexOf(" ", strippedTopicMaxLength);
+            if (index > 0)
+            {
+                subject = subject.Substring(0, index);
+                subject += "...";
+            }
+
+            return subject;
+        }
+
+        /// <summary>
+        /// Formats the forum signature text
+        /// </summary>
+        /// <param name="text">Text</param>
+        /// <returns>Formatted text</returns>
+        public virtual string FormatForumSignatureText(string text)
+        {
+            if (string.IsNullOrEmpty(text))
+                return string.Empty;
+
+            text = HtmlHelper.FormatText(text, false, true, false, false, false, false);
+            return text;
+        }
+
+        /// <summary>
+        /// Formats the private message text
+        /// </summary>
+        /// <param name="pm">Private message</param>
+        /// <returns>Formatted text</returns>
+        public virtual string FormatPrivateMessageText(PrivateMessage pm)
+        {
+            var text = pm.Text;
+
+            if (string.IsNullOrEmpty(text))
+                return string.Empty;
+
+            text = HtmlHelper.FormatText(text, false, true, false, true, false, false);
+
+            return text;
+        }
+
+        /// <summary>
+        /// Get forum last topic
+        /// </summary>
+        /// <param name="forum">Forum</param>
+        /// <returns>Forum topic</returns>
+        public virtual ForumTopic GetLastTopic(Forum forum)
+        {
+            if (forum == null)
+                throw new ArgumentNullException(nameof(forum));
+
+            return this.GetTopicById(forum.LastTopicId);
+        }
+
+        /// <summary>
+        /// Get forum last post
+        /// </summary>
+        /// <param name="forum">Forum</param>
+        /// <returns>Forum topic</returns>
+        public virtual ForumPost GetLastPost(Forum forum)
+        {
+            if (forum == null)
+                throw new ArgumentNullException(nameof(forum));
+
+            return this.GetPostById(forum.LastPostId);
+        }
+
+        /// <summary>
+        /// Get first post
+        /// </summary>
+        /// <param name="forumTopic">Forum topic</param>
+        /// <returns>Forum post</returns>
+        public virtual ForumPost GetFirstPost(ForumTopic forumTopic)
+        {
+            if (forumTopic == null)
+                throw new ArgumentNullException(nameof(forumTopic));
+
+            var forumPosts = this.GetAllPosts(forumTopic.Id, 0, string.Empty, 0, 1);
+            if (forumPosts.Any())
+                return forumPosts[0];
+
+            return null;
+        }
+
+        /// <summary>
+        /// Get last post
+        /// </summary>
+        /// <param name="forumTopic">Forum topic</param>
+        /// <returns>Forum post</returns>
+        public virtual ForumPost GetLastPost(ForumTopic forumTopic)
+        {
+            if (forumTopic == null)
+                throw new ArgumentNullException(nameof(forumTopic));
+
+            return this.GetPostById(forumTopic.LastPostId);
+        }
+
         #endregion
     }
 }

@@ -227,7 +227,7 @@ namespace Nop.Web.Factories
                 CustomerToName = _customerService.FormatUserName(pm.ToCustomer),
                 AllowViewingToProfile = _customerSettings.AllowViewingProfiles && pm.ToCustomer != null && !pm.ToCustomer.IsGuest(),
                 Subject = pm.Subject,
-                Message = pm.FormatPrivateMessageText(),
+                Message = _forumService.FormatPrivateMessageText(pm),
                 CreatedOn = _dateTimeHelper.ConvertToUserTime(pm.CreatedOnUtc, DateTimeKind.Utc),
                 IsRead = pm.IsRead,
             };

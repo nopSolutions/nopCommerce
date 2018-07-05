@@ -1296,8 +1296,9 @@ namespace Nop.Services.Messages
         /// <param name="forumPost">Forum post</param>
         public virtual void AddForumPostTokens(IList<Token> tokens, ForumPost forumPost)
         {
+            var forumService = EngineContext.Current.Resolve<IForumService>();
             tokens.Add(new Token("Forums.PostAuthor", _customerService.FormatUserName(forumPost.Customer)));
-            tokens.Add(new Token("Forums.PostBody", forumPost.FormatPostText(), true));
+            tokens.Add(new Token("Forums.PostBody", forumService.FormatPostText(forumPost), true));
 
             //event notification
             _eventPublisher.EntityTokensAdded(forumPost, tokens);
@@ -1325,8 +1326,9 @@ namespace Nop.Services.Messages
         /// <param name="privateMessage">Private message</param>
         public virtual void AddPrivateMessageTokens(IList<Token> tokens, PrivateMessage privateMessage)
         {
+            var forumService = EngineContext.Current.Resolve<IForumService>();
             tokens.Add(new Token("PrivateMessage.Subject", privateMessage.Subject));
-            tokens.Add(new Token("PrivateMessage.Text", privateMessage.FormatPrivateMessageText(), true));
+            tokens.Add(new Token("PrivateMessage.Text", forumService.FormatPrivateMessageText(privateMessage), true));
 
             //event notification
             _eventPublisher.EntityTokensAdded(privateMessage, tokens);

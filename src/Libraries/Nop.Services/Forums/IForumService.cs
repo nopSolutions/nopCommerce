@@ -117,7 +117,7 @@ namespace Nop.Services.Forums
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Forum Topics</returns>
-        IPagedList<ForumTopic> GetActiveTopics(int forumId = 0, 
+        IPagedList<ForumTopic> GetActiveTopics(int forumId = 0,
             int pageIndex = 0, int pageSize = int.MaxValue);
 
         /// <summary>
@@ -164,7 +164,7 @@ namespace Nop.Services.Forums
         /// <param name="pageSize">Page size</param>
         /// <returns>Posts</returns>
         IPagedList<ForumPost> GetAllPosts(int forumTopicId = 0,
-            int customerId = 0, string keywords = "", 
+            int customerId = 0, string keywords = "",
             int pageIndex = 0, int pageSize = int.MaxValue);
 
         /// <summary>
@@ -178,7 +178,7 @@ namespace Nop.Services.Forums
         /// <param name="pageSize">Page size</param>
         /// <returns>Forum Posts</returns>
         IPagedList<ForumPost> GetAllPosts(int forumTopicId = 0, int customerId = 0,
-            string keywords = "", bool ascSort = false, 
+            string keywords = "", bool ascSort = false,
             int pageIndex = 0, int pageSize = int.MaxValue);
 
         /// <summary>
@@ -385,5 +385,61 @@ namespace Nop.Services.Forums
         /// </summary>
         /// <param name="postVote">Post vote</param>
         void DeletePostVote(ForumPostVote postVote);
+
+        /// <summary>
+        /// Formats the forum post text
+        /// </summary>
+        /// <param name="forumPost">Forum post</param>
+        /// <returns>Formatted text</returns>
+        string FormatPostText(ForumPost forumPost);
+
+        /// <summary>
+        /// Strips the topic subject
+        /// </summary>
+        /// <param name="forumTopic">Forum topic</param>
+        /// <returns>Formatted subject</returns>
+        string StripTopicSubject(ForumTopic forumTopic);
+
+        /// <summary>
+        /// Formats the forum signature text
+        /// </summary>
+        /// <param name="text">Text</param>
+        /// <returns>Formatted text</returns>
+        string FormatForumSignatureText(string text);
+
+        /// <summary>
+        /// Formats the private message text
+        /// </summary>
+        /// <param name="pm">Private message</param>
+        /// <returns>Formatted text</returns>
+        string FormatPrivateMessageText(PrivateMessage pm);
+
+        /// <summary>
+        /// Get forum last topic
+        /// </summary>
+        /// <param name="forum">Forum</param>
+        /// <returns>Forum topic</returns>
+        ForumTopic GetLastTopic(Forum forum);
+
+        /// <summary>
+        /// Get forum last post
+        /// </summary>
+        /// <param name="forum">Forum</param>
+        /// <returns>Forum topic</returns>
+        ForumPost GetLastPost(Forum forum);
+
+        /// <summary>
+        /// Get first post
+        /// </summary>
+        /// <param name="forumTopic">Forum topic</param>
+        /// <returns>Forum post</returns>
+        ForumPost GetFirstPost(ForumTopic forumTopic);
+
+        /// <summary>
+        /// Get last post
+        /// </summary>
+        /// <param name="forumTopic">Forum topic</param>
+        /// <returns>Forum post</returns>
+        ForumPost GetLastPost(ForumTopic forumTopic);
     }
 }

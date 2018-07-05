@@ -156,7 +156,7 @@ namespace Nop.Web.Factories
             var forumPosts = _forumService.GetAllPosts(topic.Id, 0, string.Empty, 1, _forumSettings.PostsPageSize);
             topicModel.TotalPostPages = forumPosts.TotalPages;
 
-            var firstPost = topic.GetFirstPost(_forumService);
+            var firstPost = _forumService.GetFirstPost(topic);
             topicModel.Votes = firstPost != null ? firstPost.VoteCount : 0;
             return topicModel;
         }
@@ -379,7 +379,7 @@ namespace Nop.Web.Factories
                     Id = post.Id,
                     ForumTopicId = post.TopicId,
                     ForumTopicSeName = forumTopic.GetSeName(),
-                    FormattedText = post.FormatPostText(),
+                    FormattedText = _forumService.FormatPostText(post),
                     IsCurrentCustomerAllowedToEditPost = _forumService.IsCustomerAllowedToEditPost(_workContext.CurrentCustomer, post),
                     IsCurrentCustomerAllowedToDeletePost = _forumService.IsCustomerAllowedToDeletePost(_workContext.CurrentCustomer, post),
                     CustomerId = post.CustomerId,
@@ -392,7 +392,7 @@ namespace Nop.Web.Factories
                     CustomerJoinDate = post.Customer.CreatedOnUtc,
                     AllowPrivateMessages = _forumSettings.AllowPrivateMessages && !post.Customer.IsGuest(),
                     SignaturesEnabled = _forumSettings.SignaturesEnabled,
-                    FormattedSignature = post.Customer.GetAttribute<string>(NopCustomerDefaults.SignatureAttribute).FormatForumSignatureText(),
+                    FormattedSignature = _forumService.FormatForumSignatureText(post.Customer.GetAttribute<string>(NopCustomerDefaults.SignatureAttribute)),
                 };
                 //created on string
                 if (_forumSettings.RelativeDateTimeFormattingEnabled)
@@ -511,7 +511,7 @@ namespace Nop.Web.Factories
 
             if (!excludeProperties)
             {
-                var firstPost = forumTopic.GetFirstPost(_forumService);
+                var firstPost = _forumService.GetFirstPost(forumTopic);
                 model.Text = firstPost.Text;
                 model.Subject = forumTopic.Subject;
                 model.TopicTypeId = forumTopic.TopicTypeId;
@@ -840,7 +840,7 @@ namespace Nop.Web.Factories
             model.Id = forumPost.Id;
             model.ForumTopicId = forumPost.TopicId;
             model.ForumTopicSeName = forumPost.ForumTopic.GetSeName();
-            model.ForumTopicSubject = forumPost.ForumTopic.StripTopicSubject();
+            model.ForumTopicSubject = _forumService.StripTopicSubject(forumPost.ForumTopic);
             model.CustomerId = forumPost.CustomerId;
             model.AllowViewingProfiles = _customerSettings.AllowViewingProfiles && !forumPost.Customer.IsGuest();
             model.CustomerName = _customerService.FormatUserName(forumPost.Customer);
