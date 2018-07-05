@@ -133,12 +133,12 @@ namespace Nop.Services.Orders
             if (allDiscounts != null)
                 foreach (var discount in allDiscounts)
                     if (_discountService.ValidateDiscount(discount, customer).IsValid &&
-                        !allowedDiscounts.ContainsDiscount(discount))
+                        !_discountService.ContainsDiscount(allowedDiscounts, discount))
                     {
                         allowedDiscounts.Add(discount);
                     }
 
-            appliedDiscounts = allowedDiscounts.GetPreferredDiscount(orderSubTotal, out discountAmount);
+            appliedDiscounts = _discountService.GetPreferredDiscount(allowedDiscounts, orderSubTotal, out discountAmount);
 
             if (discountAmount < decimal.Zero)
                 discountAmount = decimal.Zero;
@@ -165,12 +165,12 @@ namespace Nop.Services.Orders
             if (allDiscounts != null)
                 foreach (var discount in allDiscounts)
                     if (_discountService.ValidateDiscount(discount, customer).IsValid &&
-                        !allowedDiscounts.ContainsDiscount(discount))
+                        !_discountService.ContainsDiscount(allowedDiscounts, discount))
                     {
                         allowedDiscounts.Add(discount);
                     }
 
-            appliedDiscounts = allowedDiscounts.GetPreferredDiscount(shippingTotal, out shippingDiscountAmount);
+            appliedDiscounts = _discountService.GetPreferredDiscount(allowedDiscounts, shippingTotal, out shippingDiscountAmount);
 
             if (shippingDiscountAmount < decimal.Zero)
                 shippingDiscountAmount = decimal.Zero;
@@ -200,12 +200,12 @@ namespace Nop.Services.Orders
             if (allDiscounts != null)
                 foreach (var discount in allDiscounts)
                     if (_discountService.ValidateDiscount(discount, customer).IsValid &&
-                        !allowedDiscounts.ContainsDiscount(discount))
+                        !_discountService.ContainsDiscount(allowedDiscounts, discount))
                     {
                         allowedDiscounts.Add(discount);
                     }
 
-            appliedDiscounts = allowedDiscounts.GetPreferredDiscount(orderTotal, out discountAmount);
+            appliedDiscounts = _discountService.GetPreferredDiscount(allowedDiscounts, orderTotal, out discountAmount);
 
             if (discountAmount < decimal.Zero)
                 discountAmount = decimal.Zero;
@@ -287,7 +287,7 @@ namespace Nop.Services.Orders
             updatedOrder.OrderTotal = total;
 
             foreach (var discount in orderAppliedDiscounts)
-                if (!updateOrderParameters.AppliedDiscounts.ContainsDiscount(discount))
+                if (!_discountService.ContainsDiscount(updateOrderParameters.AppliedDiscounts, discount))
                     updateOrderParameters.AppliedDiscounts.Add(discount);
         }
 
@@ -516,7 +516,7 @@ namespace Nop.Services.Orders
                         updatedOrder.ShippingStatus = ShippingStatus.PartiallyShipped;
 
                     foreach (var discount in shippingTotalDiscounts)
-                        if (!updateOrderParameters.AppliedDiscounts.ContainsDiscount(discount))
+                        if (!_discountService.ContainsDiscount(updateOrderParameters.AppliedDiscounts, discount))
                             updateOrderParameters.AppliedDiscounts.Add(discount);
                 }
             }
@@ -578,7 +578,7 @@ namespace Nop.Services.Orders
                 }
 
                 foreach (var discount in itemDiscounts)
-                    if (!updateOrderParameters.AppliedDiscounts.ContainsDiscount(discount))
+                    if (!_discountService.ContainsDiscount(updateOrderParameters.AppliedDiscounts, discount))
                         updateOrderParameters.AppliedDiscounts.Add(discount);
 
                 subTotalExclTax += itemSubTotalExclTax;
@@ -635,7 +635,7 @@ namespace Nop.Services.Orders
             updatedOrder.OrderSubTotalDiscountInclTax = discountAmountInclTax;
 
             foreach (var discount in subTotalDiscounts)
-                if (!updateOrderParameters.AppliedDiscounts.ContainsDiscount(discount))
+                if (!_discountService.ContainsDiscount(updateOrderParameters.AppliedDiscounts, discount))
                     updateOrderParameters.AppliedDiscounts.Add(discount);
             return subTotalExclTax;
         }

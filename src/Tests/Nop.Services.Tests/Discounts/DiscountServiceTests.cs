@@ -44,7 +44,7 @@ namespace Nop.Services.Tests.Discounts
                 Name = "Discount 1",
                 UsePercentage = true,
                 DiscountPercentage = 10,
-                DiscountAmount =0,
+                DiscountAmount = 0,
                 DiscountLimitation = DiscountLimitationType.Unlimited,
                 LimitationTimes = 0
             };
@@ -127,7 +127,7 @@ namespace Nop.Services.Tests.Discounts
                 CouponCode = "CouponCode 1",
                 DiscountLimitation = DiscountLimitationType.Unlimited
             };
-            
+
             var customer = new Customer
             {
                 CustomerGuid = Guid.NewGuid(),
@@ -137,15 +137,15 @@ namespace Nop.Services.Tests.Discounts
                 CreatedOnUtc = new DateTime(2010, 01, 01),
                 LastActivityDateUtc = new DateTime(2010, 01, 02)
             };
-            
+
 
             //UNDONE: little workaround here
             //we have to register "nop_cache_static" cache manager (null manager) from DependencyRegistrar.cs
             //because DiscountService right now dynamically Resolve<ICacheManager>("nop_cache_static")
             //we cannot inject it because DiscountService already has "per-request" cache manager injected 
             //EngineContext.Initialize(false);
-            
-            _discountService.ValidateDiscount(discount, customer, new [] { "CouponCode 1" }).IsValid.ShouldEqual(true);
+
+            _discountService.ValidateDiscount(discount, customer, new[] { "CouponCode 1" }).IsValid.ShouldEqual(true);
         }
 
 
@@ -205,6 +205,67 @@ namespace Nop.Services.Tests.Discounts
 
             discount.StartDateUtc = DateTime.UtcNow.AddDays(1);
             _discountService.ValidateDiscount(discount, customer, null).IsValid.ShouldEqual(false);
+        }
+
+        [Test]
+        public void Can_calculate_discount_amount_percentage()
+        {
+            var discount = new Discount
+            {
+                UsePercentage = true,
+                DiscountPercentage = 30
+            };
+
+            discount.GetDiscountAmount(100).ShouldEqual(30);
+
+            discount.DiscountPercentage = 60;
+            discount.GetDiscountAmount(200).ShouldEqual(120);
+        }
+
+        [Test]
+        public void Can_calculate_discount_amount_fixed()
+        {
+            var discount = new Discount
+            {
+                UsePercentage = false,
+                DiscountAmount = 10
+            };
+
+            discount.GetDiscountAmount(100).ShouldEqual(10);
+
+            discount.DiscountAmount = 20;
+            discount.GetDiscountAmount(200).ShouldEqual(20);
+        }
+
+        [Test]
+        public void Maximum_discount_amount_is_used()
+        {
+            var discount = new Discount
+            {
+                UsePercentage = true,
+                DiscountPercentage = 30,
+                MaximumDiscountAmount = 3.4M
+            };
+
+            discount.GetDiscountAmount(100).ShouldEqual(3.4M);
+
+            discount.DiscountPercentage = 60;
+            discount.GetDiscountAmount(200).ShouldEqual(3.4M);
+            discount.GetDiscountAmount(100).ShouldEqual(3.4M);
+
+            discount.DiscountPercentage = 1;
+            discount.GetDiscountAmount(200).ShouldEqual(2);
+        }
+    }
+
+    public static class DiscountExtensions
+    {
+        public static decimal GetDiscountAmount(this Discount discount, decimal amount)
+        {
+            if (discount == null)
+                throw new ArgumentNullException(nameof(discount));
+
+            return _discountService.MapDiscount(discount).GetDiscountAmount(amount);
         }
     }
 }

@@ -120,7 +120,7 @@ namespace Nop.Services.Catalog
                 {
                     if (_discountService.ValidateDiscount(discount, customer).IsValid &&
                         discount.DiscountType == DiscountType.AssignedToSkus)
-                        allowedDiscounts.Add(discount.MapDiscount());
+                        allowedDiscounts.Add(_discountService.MapDiscount(discount));
                 }
             }
 
@@ -166,7 +166,7 @@ namespace Nop.Services.Catalog
                     if (discountCategoryIds.Contains(categoryId))
                     {
                         if (_discountService.ValidateDiscount(discount, customer).IsValid &&
-                            !allowedDiscounts.ContainsDiscount(discount))
+                            !_discountService.ContainsDiscount(allowedDiscounts, discount))
                             allowedDiscounts.Add(discount);
                     }
                 }
@@ -213,7 +213,7 @@ namespace Nop.Services.Catalog
                     if (discountManufacturerIds.Contains(manufacturerId))
                     {
                         if (_discountService.ValidateDiscount(discount, customer).IsValid &&
-                            !allowedDiscounts.ContainsDiscount(discount))
+                            !_discountService.ContainsDiscount(allowedDiscounts, discount))
                             allowedDiscounts.Add(discount);
                     }
                 }
@@ -236,17 +236,17 @@ namespace Nop.Services.Catalog
 
             //discounts applied to products
             foreach (var discount in GetAllowedDiscountsAppliedToProduct(product, customer))
-                if (!allowedDiscounts.ContainsDiscount(discount))
+                if (!_discountService.ContainsDiscount(allowedDiscounts, discount))
                     allowedDiscounts.Add(discount);
 
             //discounts applied to categories
             foreach (var discount in GetAllowedDiscountsAppliedToCategories(product, customer))
-                if (!allowedDiscounts.ContainsDiscount(discount))
+                if (!_discountService.ContainsDiscount(allowedDiscounts, discount))
                     allowedDiscounts.Add(discount);
 
             //discounts applied to manufacturers
             foreach (var discount in GetAllowedDiscountsAppliedToManufacturers(product, customer))
-                if (!allowedDiscounts.ContainsDiscount(discount))
+                if (!_discountService.ContainsDiscount(allowedDiscounts, discount))
                     allowedDiscounts.Add(discount);
 
             return allowedDiscounts;
@@ -285,7 +285,7 @@ namespace Nop.Services.Catalog
             if (!allowedDiscounts.Any())
                 return appliedDiscountAmount;
 
-            appliedDiscounts = allowedDiscounts.GetPreferredDiscount(productPriceWithoutDiscount, out appliedDiscountAmount);
+            appliedDiscounts = _discountService.GetPreferredDiscount(allowedDiscounts, productPriceWithoutDiscount, out appliedDiscountAmount);
             return appliedDiscountAmount;
         }
 
