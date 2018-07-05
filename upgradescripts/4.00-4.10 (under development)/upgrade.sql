@@ -1985,6 +1985,12 @@ set @resources='
   <LocaleResource Name="Admin.Common.DeleteConfirmation.Selected">
     <Value></Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Currencies.AdditionalConfirm">
+    <Value><![CDATA[<p>WARNING. It is not recommended to do this on live sites because: </p><ol><li>Product prices, order totals, shipping rates, etc are not automatically converted to a new currency</li><li>Currency exhange rates are not automatically updated</li></ol>]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Measures.AdditionalConfirm">
+    <Value><![CDATA[<p>WARNING. It is not recommended to do this on live sites because: </p><ol><li>Other rates have to be updated manually</li><li>You have to ensure that each product has a valid measure (dimension and weights) - they are not adjusted automatically</li></ol>]]></Value>
+  </LocaleResource>
 </Language>
 '
 
