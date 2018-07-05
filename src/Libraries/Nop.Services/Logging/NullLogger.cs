@@ -55,7 +55,7 @@ namespace Nop.Services.Logging
         /// <param name="pageSize">Page size</param>
         /// <returns>Log item items</returns>
         public virtual IPagedList<Log> GetAllLogs(DateTime? fromUtc = null, DateTime? toUtc = null,
-            string message = "", LogLevel? logLevel = null, 
+            string message = "", LogLevel? logLevel = null,
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
             return new PagedList<Log>(new List<Log>(), pageIndex, pageSize);
@@ -92,6 +92,36 @@ namespace Nop.Services.Logging
         public virtual Log InsertLog(LogLevel logLevel, string shortMessage, string fullMessage = "", Customer customer = null)
         {
             return null;
+        }
+
+        /// <summary>
+        /// Information
+        /// </summary>
+        /// <param name="message">Message</param>
+        /// <param name="exception">Exception</param>
+        /// <param name="customer">Customer</param>
+        public virtual void Information(string message, Exception exception = null, Customer customer = null)
+        {
+        }
+
+        /// <summary>
+        /// Warning
+        /// </summary>
+        /// <param name="message">Message</param>
+        /// <param name="exception">Exception</param>
+        /// <param name="customer">Customer</param>
+        public virtual void Warning(string message, Exception exception = null, Customer customer = null)
+        {
+        }
+
+        /// <summary>
+        /// Error
+        /// </summary>
+        /// <param name="message">Message</param>
+        /// <param name="exception">Exception</param>
+        /// <param name="customer">Customer</param>
+        public virtual void Error(string message, Exception exception = null, Customer customer = null)
+        {
         }
     }
 }
