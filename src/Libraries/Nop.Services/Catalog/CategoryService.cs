@@ -24,22 +24,22 @@ namespace Nop.Services.Catalog
     {
         #region Fields
 
-        private readonly IRepository<Category> _categoryRepository;
-        private readonly IRepository<ProductCategory> _productCategoryRepository;
-        private readonly IRepository<Product> _productRepository;
-        private readonly IRepository<AclRecord> _aclRepository;
-        private readonly IRepository<StoreMapping> _storeMappingRepository;
-        private readonly IDbContext _dbContext;
-        private readonly IDataProvider _dataProvider;
-        private readonly IWorkContext _workContext;
-        private readonly IStoreContext _storeContext;
-        private readonly IEventPublisher _eventPublisher;
-        private readonly ICacheManager _cacheManager;
-        private readonly IStaticCacheManager _staticCacheManager;
-        private readonly IStoreMappingService _storeMappingService;
-        private readonly IAclService _aclService;
-        private readonly CommonSettings _commonSettings;
         private readonly CatalogSettings _catalogSettings;
+        private readonly CommonSettings _commonSettings;
+        private readonly IAclService _aclService;
+        private readonly ICacheManager _cacheManager;
+        private readonly IDataProvider _dataProvider;
+        private readonly IDbContext _dbContext;
+        private readonly IEventPublisher _eventPublisher;
+        private readonly IRepository<AclRecord> _aclRepository;
+        private readonly IRepository<Category> _categoryRepository;
+        private readonly IRepository<Product> _productRepository;
+        private readonly IRepository<ProductCategory> _productCategoryRepository;
+        private readonly IRepository<StoreMapping> _storeMappingRepository;
+        private readonly IStaticCacheManager _staticCacheManager;
+        private readonly IStoreContext _storeContext;
+        private readonly IStoreMappingService _storeMappingService;
+        private readonly IWorkContext _workContext;
 
         #endregion
 
@@ -48,55 +48,55 @@ namespace Nop.Services.Catalog
         /// <summary>
         /// Ctor
         /// </summary>
-        /// <param name="cacheManager">Cache manager</param>
-        /// <param name="staticCacheManager">Static cache manager</param>
-        /// <param name="categoryRepository">Category repository</param>
-        /// <param name="productCategoryRepository">ProductCategory repository</param>
-        /// <param name="productRepository">Product repository</param>
-        /// <param name="aclRepository">ACL record repository</param>
-        /// <param name="storeMappingRepository">Store mapping repository</param>
-        /// <param name="dbContext">DB context</param>
-        /// <param name="dataProvider">Data provider</param>
-        /// <param name="workContext">Work context</param>
-        /// <param name="storeContext">Store context</param>
-        /// <param name="eventPublisher">Event publisher</param>
-        /// <param name="storeMappingService">Store mapping service</param>
-        /// <param name="aclService">ACL service</param>
-        /// <param name="commonSettings">Common settings</param>
         /// <param name="catalogSettings">Catalog settings</param>
-        public CategoryService(ICacheManager cacheManager,
-            IStaticCacheManager staticCacheManager,
-            IRepository<Category> categoryRepository,
-            IRepository<ProductCategory> productCategoryRepository,
-            IRepository<Product> productRepository,
-            IRepository<AclRecord> aclRepository,
-            IRepository<StoreMapping> storeMappingRepository,
-            IDbContext dbContext,
-            IDataProvider dataProvider,
-            IWorkContext workContext,
-            IStoreContext storeContext,
-            IEventPublisher eventPublisher,
-            IStoreMappingService storeMappingService,
-            IAclService aclService,
+        /// <param name="commonSettings">Common settings</param>
+        /// <param name="aclService">ACL service</param>
+        /// <param name="cacheManager">Cache manager</param>
+        /// <param name="dataProvider">Data provider</param>
+        /// <param name="dbContext">DB context</param>
+        /// <param name="eventPublisher">Event publisher</param>
+        /// <param name="aclRepository">ACL record repository</param>
+        /// <param name="categoryRepository">Category repository</param>
+        /// <param name="productRepository">Product repository</param>
+        /// <param name="productCategoryRepository">ProductCategory repository</param>
+        /// <param name="storeMappingRepository">Store mapping repository</param>
+        /// <param name="staticCacheManager">Static cache manager</param>
+        /// <param name="storeContext">Store context</param>
+        /// <param name="storeMappingService">Store mapping service</param>
+        /// <param name="workContext">Work context</param>
+        public CategoryService(CatalogSettings catalogSettings,
             CommonSettings commonSettings,
-            CatalogSettings catalogSettings)
+            IAclService aclService,
+            ICacheManager cacheManager,
+            IDataProvider dataProvider,
+            IDbContext dbContext,
+            IEventPublisher eventPublisher,
+            IRepository<AclRecord> aclRepository,
+            IRepository<Category> categoryRepository,
+            IRepository<Product> productRepository,
+            IRepository<ProductCategory> productCategoryRepository,
+            IRepository<StoreMapping> storeMappingRepository,
+            IStaticCacheManager staticCacheManager,
+            IStoreContext storeContext,
+            IStoreMappingService storeMappingService,
+            IWorkContext workContext)
         {
-            this._cacheManager = cacheManager;
-            this._staticCacheManager = staticCacheManager;
-            this._categoryRepository = categoryRepository;
-            this._productCategoryRepository = productCategoryRepository;
-            this._productRepository = productRepository;
-            this._aclRepository = aclRepository;
-            this._storeMappingRepository = storeMappingRepository;
-            this._dbContext = dbContext;
-            this._dataProvider = dataProvider;
-            this._workContext = workContext;
-            this._storeContext = storeContext;
-            this._eventPublisher = eventPublisher;
-            this._storeMappingService = storeMappingService;
-            this._aclService = aclService;
-            this._commonSettings = commonSettings;
             this._catalogSettings = catalogSettings;
+            this._commonSettings = commonSettings;
+            this._aclService = aclService;
+            this._cacheManager = cacheManager;
+            this._dataProvider = dataProvider;
+            this._dbContext = dbContext;
+            this._eventPublisher = eventPublisher;
+            this._aclRepository = aclRepository;
+            this._categoryRepository = categoryRepository;
+            this._productRepository = productRepository;
+            this._productCategoryRepository = productCategoryRepository;
+            this._storeMappingRepository = storeMappingRepository;
+            this._staticCacheManager = staticCacheManager;
+            this._storeContext = storeContext;
+            this._storeMappingService = storeMappingService;
+            this._workContext = workContext;
         }
 
         #endregion

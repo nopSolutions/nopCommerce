@@ -149,10 +149,10 @@ namespace Nop.Services.Tests.Orders
             var cacheManager = new NopNullCache();
 
             //price calculation service
-            _priceCalcService = new PriceCalculationService(_workContext, _storeContext.Object,
-                _discountService.Object, _categoryService.Object, _manufacturerService.Object,
-                _productAttributeParser.Object, _productService.Object, 
-                cacheManager, _shoppingCartSettings, _catalogSettings);
+            _priceCalcService = new PriceCalculationService(_catalogSettings, _categoryService.Object,
+                _discountService.Object, _manufacturerService.Object, _productAttributeParser.Object,
+                _productService.Object, cacheManager,
+                _storeContext.Object, _workContext, _shoppingCartSettings);
             
             _eventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
 

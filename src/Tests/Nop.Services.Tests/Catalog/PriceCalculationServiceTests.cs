@@ -53,16 +53,16 @@ namespace Nop.Services.Tests.Catalog
 
             _cacheManager = new NopNullCache();
 
-            _priceCalcService = new PriceCalculationService(serviceProvider.WorkContext.Object,
-                _storeContext.Object, 
-                _discountService.Object,
+            _priceCalcService = new PriceCalculationService(_catalogSettings,
                 _categoryService.Object,
+                _discountService.Object,
                 _manufacturerService.Object,
                 _productAttributeParser.Object,
                 _productService.Object,
                 _cacheManager,
-                _shoppingCartSettings, 
-                _catalogSettings);
+                _storeContext.Object,
+                serviceProvider.WorkContext.Object,
+                _shoppingCartSettings);
 
             var nopEngine = new Mock<NopEngine>();
 
