@@ -23,8 +23,7 @@ namespace Nop.Data.Mapping.Topics
             builder.Property(template => template.Name).HasMaxLength(400).IsRequired();
             builder.Property(template => template.ViewPath).HasMaxLength(400).IsRequired();
 
-            //add custom configuration
-            this.PostConfigure(builder);
+            base.Configure(builder);
         }
 
         #endregion

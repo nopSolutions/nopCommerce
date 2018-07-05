@@ -8,7 +8,7 @@ using Nop.Core.Domain.Topics;
 using Nop.Services.Localization;
 using Nop.Services.Seo;
 using Nop.Services.Topics;
-using Nop.Web.Areas.Admin.Extensions;
+using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Topics;
 using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Factories;
@@ -106,7 +106,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = topics.PaginationByRequestModel(searchModel).Select(topic =>
                 {
                     //fill in model values from the entity
-                    var topicModel = topic.ToModel();
+                    var topicModel = topic.ToModel<TopicModel>();
 
                     //little performance optimization: ensure that "Body" is not returned
                     topicModel.Body = string.Empty;
@@ -133,7 +133,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (topic != null)
             {
                 //fill in model values from the entity
-                model = model ?? topic.ToModel();
+                model = model ?? topic.ToModel<TopicModel>();
 
                 model.Url = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext)
                     .RouteUrl("Topic", new { SeName = topic.GetSeName() }, _webHelper.CurrentRequestProtocol);

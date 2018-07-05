@@ -4,13 +4,17 @@
     //page title
     ViewBag.Title = T("Admin.Catalog.BulkEdit").Text;
     //active menu item (system name)
-    Html.SetActiveMenuItemSystemName("Bulk edit products");
+    Html.SetActiveMenuItemSystemName("Products");
 }
 
 <form asp-controller="Product" asp-action="BulkEdit" method="post">
         <div class="content-header clearfix">
             <h1 class="pull-left">
                 @T("Admin.Catalog.BulkEdit")
+                <small>
+                    <i class="fa fa-arrow-circle-left"></i>
+                    <a asp-action="List">@T("Admin.Catalog.Products.BackToList")</a>
+                </small>
             </h1>
             <div class="pull-right">
                 &nbsp;

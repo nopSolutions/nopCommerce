@@ -128,7 +128,7 @@ namespace Nop.Services.Customers
         {
             var date = _dateTimeHelper.ConvertToUserTime(DateTime.Now).AddDays(-days);
 
-            var registeredCustomerRole = _customerService.GetCustomerRoleBySystemName(SystemCustomerRoleNames.Registered);
+            var registeredCustomerRole = _customerService.GetCustomerRoleBySystemName(NopCustomerDefaults.RegisteredRoleName);
             if (registeredCustomerRole == null)
                 return 0;
 

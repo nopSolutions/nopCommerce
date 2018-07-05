@@ -10,15 +10,6 @@ namespace Nop.Services.Authentication.External
     /// </summary>
     public static partial class ExternalAuthorizerHelper
     {
-        #region Constants
-
-        /// <summary>
-        /// Key for store external authentication errors to session
-        /// </summary>
-        private const string EXTERNAL_AUTHENTICATION_ERRORS = "nop.externalauth.errors";
-
-        #endregion
-
         #region Methods
 
         /// <summary>
@@ -28,9 +19,9 @@ namespace Nop.Services.Authentication.External
         public static void AddErrorsToDisplay(string error)
         {
             var session = EngineContext.Current.Resolve<IHttpContextAccessor>().HttpContext.Session;
-            var errors = session.Get<IList<string>>(EXTERNAL_AUTHENTICATION_ERRORS) ?? new List<string>();
+            var errors = session.Get<IList<string>>(NopAuthenticationDefaults.ExternalAuthenticationErrorsSessionKey) ?? new List<string>();
             errors.Add(error);
-            session.Set(EXTERNAL_AUTHENTICATION_ERRORS, errors);
+            session.Set(NopAuthenticationDefaults.ExternalAuthenticationErrorsSessionKey, errors);
         }
 
         /// <summary>
@@ -40,10 +31,10 @@ namespace Nop.Services.Authentication.External
         public static IList<string> RetrieveErrorsToDisplay()
         {
             var session = EngineContext.Current.Resolve<IHttpContextAccessor>().HttpContext.Session;
-            var errors = session.Get<IList<string>>(EXTERNAL_AUTHENTICATION_ERRORS);
+            var errors = session.Get<IList<string>>(NopAuthenticationDefaults.ExternalAuthenticationErrorsSessionKey);
 
             if (errors != null)
-                session.Remove(EXTERNAL_AUTHENTICATION_ERRORS);
+                session.Remove(NopAuthenticationDefaults.ExternalAuthenticationErrorsSessionKey);
 
             return errors;
         }

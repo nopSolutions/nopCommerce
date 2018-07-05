@@ -188,7 +188,7 @@ namespace Nop.Services.Catalog
                 if (CommonHelper.IsValidEmail(subscription.Customer.Email))
                 {
                     var customer = subscription.Customer;
-                    var customerLanguageId = customer.GetAttribute<int>(SystemCustomerAttributeNames.LanguageId, subscription.StoreId);
+                    var customerLanguageId = customer.GetAttribute<int>(NopCustomerDefaults.LanguageIdAttribute, subscription.StoreId);
                     _workflowMessageService.SendBackInStockNotification(subscription, customerLanguageId);
                     result++;
                 }

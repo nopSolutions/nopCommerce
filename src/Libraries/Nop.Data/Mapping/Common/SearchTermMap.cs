@@ -20,8 +20,7 @@ namespace Nop.Data.Mapping.Common
             builder.ToTable(nameof(SearchTerm));
             builder.HasKey(searchTerm => searchTerm.Id);
 
-            //add custom configuration
-            this.PostConfigure(builder);
+            base.Configure(builder);
         }
 
         #endregion

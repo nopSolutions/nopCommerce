@@ -7,7 +7,7 @@ namespace Nop.Web.Areas.Admin.Models.Cms
     /// <summary>
     /// Represents a widget model
     /// </summary>
-    public partial class WidgetModel : BaseNopModel
+    public partial class WidgetModel : BaseNopModel, IPluginModel
     {
         #region Properties
 
@@ -25,6 +25,8 @@ namespace Nop.Web.Areas.Admin.Models.Cms
 
         [NopResourceDisplayName("Admin.ContentManagement.Widgets.Configure")]
         public string ConfigurationUrl { get; set; }
+
+        public string LogoUrl { get; set; }
 
         public string WidgetViewComponentName { get; set; }
 

@@ -2417,36 +2417,59 @@ label, label + * {
 .write-review .fieldset {
 	margin: 0 0 30px;
 }
+
+.tooltip {    
+    position: initial;
+    display: inline-block;
+    border-bottom: 1px dotted black;
+    color: #444;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: auto;
+    background: #f0f0f0 no-repeat 100% 5%;
+    border: #c0c0c0 1px dotted;
+    text-align: right;    
+    padding: 10px 10px 5px 5px;
+    position: absolute;
+    z-index: 1;    
+    left: 10%;    
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.tooltip .tooltiptext::after {
+    content: "";
+    position: absolute;    
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+    cursor: help;
+}
+
 .write-review .review-rating {
-	text-align: center;
+    text-align: center;
+    padding-top: 10px;
+    padding-bottom: 10px;
 }
 .write-review .review-rating label {
     display: block;
     margin: 0 0 5px;
     font-size: 14px;
 }
-.write-review .review-rating ul {
-    font-size: 0;
-    vertical-align: middle;
-}
-.write-review .review-rating li {
-	display: inline-block;
-	margin: 0 5px;
-	cursor: default;
-    vertical-align: middle;
-    font-size: 14px;
-    height: 17px;
-}
-.write-review .review-rating li.first {
+.write-review .review-rating div.first {
 	color: #e4444c;
 }
-.write-review .review-rating li.rating-options {
+.write-review .review-rating div.rating-options {
     padding-top: 2px;
 }
-.write-review .review-rating li.rating-options input {
+.write-review .review-rating div.rating-options input {
 	vertical-align: baseline;
 }
-.write-review .review-rating li.last {
+.write-review .review-rating div.last {
 	color: #4cb17c;
 }
 .write-review .captcha-box {
@@ -2869,18 +2892,22 @@ label, label + * {
 #check-availability-button:hover {
 	background-color: #999;
 }
-.accept-consent {
-	margin: 0 0 20px;
-	text-align: center;
+.inputs.accept-consent {
+    text-align: center;
 }
-.accept-consent > * {
-	display: inline-block;
-	line-height: 32px;
+.inputs.accept-consent > * {
+    display: inline-block;
+    line-height: 32px;
 }
-.accept-consent span,
-.accept-consent a {
-	color: #4ab2f1;
-	cursor: pointer;
+.inputs.accept-consent span, 
+.inputs.accept-consent a {
+    color: #4ab2f1;
+    cursor: pointer;
+    font-size: 14px;
+}
+.inputs.accept-consent label {
+    width: auto;
+    margin-right: 10px;
 }
 .registration-page .button-1,
 .registration-result-page .button-1,
@@ -3245,6 +3272,18 @@ label, label + * {
     margin-top: 15px;
 }
 
+.check-gift-card-balance-page .page-title {
+    margin: 0 0 -1px;
+}
+
+.check-gift-card-balance-page .result,
+.check-gift-card-balance-page .message-error {
+    margin: 20px 0;
+}
+
+.check-gift-card-balance-page .fieldset {
+    margin: 0 0 30px;
+}
 
 /********** SHOPPING CART **********/
 
@@ -4911,6 +4950,9 @@ label, label + * {
 	font: normal 14px Arial, Helvetica, sans-serif;
 	color: #777;
 }
+.ui-widget.ui-widget-content.ui-tabs {
+    border: none;
+}
 .ui-tabs-nav {
 	margin: 0 0 30px;
 	border-bottom: 1px solid #ddd;
@@ -5125,6 +5167,23 @@ pre {
 
 
 
+@media all and (max-width: 769px) {
+
+    .review-rating .name-description {
+        text-align: center;
+        width: 100%;
+        display: block;
+    }
+
+    .write-review .review-rating div {
+        text-align: center;
+        padding-bottom: 10px;
+        display: inline-block;
+    }
+}
+
+
+
 
 
 @media all and (max-width: 1000px) {
@@ -5304,6 +5363,14 @@ pre {
 .block-account-navigation {
 	float: none;
 	margin: auto !important;
+}
+.write-review .review-rating {
+   text-align: center;
+}
+.write-review .review-rating div.name-description {
+    width: 100%;
+    margin: 0 5px 0 0;
+    text-align: center;
 }
 
 }
@@ -5734,6 +5801,15 @@ pre {
 }
 .product-review-item .product-review-box {
 	float: left;
+}
+
+.write-review .review-rating div {
+    display: inline-block;
+    margin: 0 0 0 5px;
+    cursor: default;
+    vertical-align: middle;
+    font-size: 14px;
+    height: 17px;
 }
 
 
@@ -6629,6 +6705,12 @@ pre {
 	max-width: 850px;
 }
 
+.write-review .review-rating div.name-description {
+    width: 265px;
+    margin: 0 5px 0 0;
+    text-align: right
+}
+
 
 /*** WISHLIST & COMPARE LIST ***/
 
@@ -6952,6 +7034,10 @@ pre {
 	max-width: 1050px;
 }
 
+.write-review .review-rating div.name-description {
+    margin: 0 5px 0 0;
+    min-width: 375px;
+}
 
 /*** REGISTRATION, LOGIN, ACCOUNT ***/
 

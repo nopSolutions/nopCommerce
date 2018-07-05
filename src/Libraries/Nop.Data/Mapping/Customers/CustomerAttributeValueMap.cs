@@ -27,8 +27,7 @@ namespace Nop.Data.Mapping.Customers
                 .HasForeignKey(value => value.CustomerAttributeId)
                 .IsRequired();
 
-            //add custom configuration
-            this.PostConfigure(builder);
+            base.Configure(builder);
         }
 
         #endregion

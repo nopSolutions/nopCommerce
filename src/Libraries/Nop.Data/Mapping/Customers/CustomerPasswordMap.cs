@@ -27,8 +27,7 @@ namespace Nop.Data.Mapping.Customers
 
             builder.Ignore(password => password.PasswordFormat);
 
-            //add custom configuration
-            this.PostConfigure(builder);
+            base.Configure(builder);
         }
 
         #endregion

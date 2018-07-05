@@ -7,9 +7,11 @@ namespace Nop.Web.Areas.Admin.Models.Settings
     /// <summary>
     /// Represents a full-text settings model
     /// </summary>
-    public partial class FullTextSettingsModel : BaseNopModel
+    public partial class FullTextSettingsModel : BaseNopModel, ISettingsModel
     {
         #region Properties
+
+        public int ActiveStoreScopeConfiguration { get; set; }
 
         public bool Supported { get; set; }
 

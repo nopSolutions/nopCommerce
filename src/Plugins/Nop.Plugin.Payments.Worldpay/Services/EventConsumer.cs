@@ -75,7 +75,7 @@ namespace Nop.Plugin.Payments.Worldpay.Services
         /// Handle admin tabstrip created event
         /// </summary>
         /// <param name="eventMessage">Event message</param>
-        public void HandleEvent(AdminTabStripCreated eventMessage)
+        public async void HandleEvent(AdminTabStripCreated eventMessage)
         {
             if (eventMessage?.Helper == null)
                 return;
@@ -125,7 +125,7 @@ namespace Nop.Plugin.Payments.Worldpay.Services
                         $(`
                             <div class='tab-pane' id='{worldpayCustomerTabElementId}'>
                                 {
-                                    eventMessage.Helper.Partial("~/Plugins/Payments.Worldpay/Views/Customer/_CreateOrUpdate.Worldpay.cshtml", model).RenderHtmlContent()
+                                    (await eventMessage.Helper.PartialAsync("~/Plugins/Payments.Worldpay/Views/Customer/_CreateOrUpdate.Worldpay.cshtml", model)).RenderHtmlContent()
                                         .Replace("</script>", "<\\/script>") //we need escape a closing script tag to prevent terminating the script block early
                                 }
                             </div>

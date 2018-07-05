@@ -38,11 +38,27 @@
                         <div class="review-text">
                             @Html.Raw(Nop.Core.Html.HtmlHelper.FormatText(review.ReviewText, false, true, false, false, false, false))
                         </div>
+                        @foreach (var reviewType in review.AdditionalProductReviewList.Where(x => x.Rating > 0))
+                        {
+                            var ratingExtPercent = reviewType.Rating * 20;
+                            <div class="review-type-rating-ext">
+                                <div class="review-title">
+                                    <i>@reviewType.Name</i>
+                                </div>
+                                <div class="product-review-box">
+                                    <div class="rating">
+                                        <div style="width: @(ratingExtPercent)%">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br /><br />
+                        }
                         <div class="review-info">
                             <span class="user">
                                 <label>@T("Account.CustomerProductReviews.ProductReviewFor"):</label>
                                 <a href="@Url.RouteUrl("Product", new {SeName = review.ProductSeName})">@review.ProductName</a>
-                    
+
                             </span>
                             <span class="separator">|</span>
                             <span class="date">

@@ -22,9 +22,8 @@ namespace Nop.Data.Mapping.Customers
 
             builder.Property(role => role.Name).HasMaxLength(255).IsRequired();
             builder.Property(role => role.SystemName).HasMaxLength(255);
-            
-            //add custom configuration
-            this.PostConfigure(builder);
+
+            base.Configure(builder);
         }
 
         #endregion

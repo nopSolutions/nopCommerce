@@ -24,8 +24,7 @@ namespace Nop.Data.Mapping.Directory
             builder.Property(weight => weight.SystemKeyword).HasMaxLength(100).IsRequired();
             builder.Property(weight => weight.Ratio).HasColumnType("decimal(18, 8)");
 
-            //add custom configuration
-            this.PostConfigure(builder);
+            base.Configure(builder);
         }
 
         #endregion

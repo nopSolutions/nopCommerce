@@ -6,13 +6,13 @@ using Nop.Core.Caching;
 using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Media;
+using Nop.Core.Domain.Security;
 using Nop.Services.Blogs;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Helpers;
 using Nop.Services.Media;
 using Nop.Services.Seo;
-using Nop.Web.Framework.Security.Captcha;
 using Nop.Web.Infrastructure.Cache;
 using Nop.Web.Models.Blogs;
 
@@ -90,7 +90,7 @@ namespace Nop.Web.Factories
             if (_customerSettings.AllowCustomersToUploadAvatars)
             {
                 model.CustomerAvatarUrl = _pictureService.GetPictureUrl(
-                    blogComment.Customer.GetAttribute<int>(SystemCustomerAttributeNames.AvatarPictureId),
+                    blogComment.Customer.GetAttribute<int>(NopCustomerDefaults.AvatarPictureIdAttribute),
                     _mediaSettings.AvatarPictureSize,
                     _customerSettings.DefaultAvatarEnabled,
                     defaultPictureType: PictureType.Avatar);

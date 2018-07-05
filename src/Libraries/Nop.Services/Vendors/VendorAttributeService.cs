@@ -13,49 +13,6 @@ namespace Nop.Services.Vendors
     /// </summary>
     public partial class VendorAttributeService : IVendorAttributeService
     {
-        #region Constants
-
-        /// <summary>
-        /// Key for caching all vendor attributes
-        /// </summary>
-        private const string VENDORATTRIBUTES_ALL_KEY = "Nop.vendorattribute.all";
-
-        /// <summary>
-        /// Key for caching a vendor attribute
-        /// </summary>
-        /// <remarks>
-        /// {0} : vendor attribute ID
-        /// </remarks>
-        private const string VENDORATTRIBUTES_BY_ID_KEY = "Nop.vendorattribute.id-{0}";
-
-        /// <summary>
-        /// Key for caching vendor attribute values of the vendor attribute
-        /// </summary>
-        /// <remarks>
-        /// {0} : vendor attribute ID
-        /// </remarks>
-        private const string VENDORATTRIBUTEVALUES_ALL_KEY = "Nop.vendorattributevalue.all-{0}";
-
-        /// <summary>
-        /// Key for caching a vendor attribute value
-        /// </summary>
-        /// <remarks>
-        /// {0} : vendor attribute value ID
-        /// </remarks>
-        private const string VENDORATTRIBUTEVALUES_BY_ID_KEY = "Nop.vendorattributevalue.id-{0}";
-
-        /// <summary>
-        /// Key pattern to clear cached vendor attributes
-        /// </summary>
-        private const string VENDORATTRIBUTES_PATTERN_KEY = "Nop.vendorattribute.";
-
-        /// <summary>
-        /// Key pattern to clear cached vendor attribute values
-        /// </summary>
-        private const string VENDORATTRIBUTEVALUES_PATTERN_KEY = "Nop.vendorattributevalue.";
-
-        #endregion
-
         #region Fields
 
         private readonly ICacheManager _cacheManager;
@@ -97,8 +54,7 @@ namespace Nop.Services.Vendors
         /// <returns>Vendor attributes</returns>
         public virtual IList<VendorAttribute> GetAllVendorAttributes()
         {
-            var key = VENDORATTRIBUTES_ALL_KEY;
-            return _cacheManager.Get(key, () =>
+            return _cacheManager.Get(NopVendorsServiceDefaults.VendorAttributesAllCacheKey, () =>
             {
                 return _vendorAttributeRepository.Table
                     .OrderBy(vendorAttribute => vendorAttribute.DisplayOrder).ThenBy(vendorAttribute => vendorAttribute.Id)
@@ -116,7 +72,7 @@ namespace Nop.Services.Vendors
             if (vendorAttributeId == 0)
                 return null;
 
-            var key = string.Format(VENDORATTRIBUTES_BY_ID_KEY, vendorAttributeId);
+            var key = string.Format(NopVendorsServiceDefaults.VendorAttributesByIdCacheKey, vendorAttributeId);
             return _cacheManager.Get(key, () => _vendorAttributeRepository.GetById(vendorAttributeId));
         }
 
@@ -131,8 +87,8 @@ namespace Nop.Services.Vendors
 
             _vendorAttributeRepository.Insert(vendorAttribute);
 
-            _cacheManager.RemoveByPattern(VENDORATTRIBUTES_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(VENDORATTRIBUTEVALUES_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopVendorsServiceDefaults.VendorAttributesPatternCacheKey);
+            _cacheManager.RemoveByPattern(NopVendorsServiceDefaults.VendorAttributeValuesPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(vendorAttribute);
@@ -149,8 +105,8 @@ namespace Nop.Services.Vendors
 
             _vendorAttributeRepository.Update(vendorAttribute);
 
-            _cacheManager.RemoveByPattern(VENDORATTRIBUTES_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(VENDORATTRIBUTEVALUES_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopVendorsServiceDefaults.VendorAttributesPatternCacheKey);
+            _cacheManager.RemoveByPattern(NopVendorsServiceDefaults.VendorAttributeValuesPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(vendorAttribute);
@@ -167,8 +123,8 @@ namespace Nop.Services.Vendors
 
             _vendorAttributeRepository.Delete(vendorAttribute);
 
-            _cacheManager.RemoveByPattern(VENDORATTRIBUTES_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(VENDORATTRIBUTEVALUES_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopVendorsServiceDefaults.VendorAttributesPatternCacheKey);
+            _cacheManager.RemoveByPattern(NopVendorsServiceDefaults.VendorAttributeValuesPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityDeleted(vendorAttribute);
@@ -185,7 +141,7 @@ namespace Nop.Services.Vendors
         /// <returns>Vendor attribute values</returns>
         public virtual IList<VendorAttributeValue> GetVendorAttributeValues(int vendorAttributeId)
         {
-            var key = string.Format(VENDORATTRIBUTEVALUES_ALL_KEY, vendorAttributeId);
+            var key = string.Format(NopVendorsServiceDefaults.VendorAttributeValuesAllCacheKey, vendorAttributeId);
             return _cacheManager.Get(key, () =>
             {
                 return _vendorAttributeValueRepository.Table
@@ -205,7 +161,7 @@ namespace Nop.Services.Vendors
             if (vendorAttributeValueId == 0)
                 return null;
 
-            var key = string.Format(VENDORATTRIBUTEVALUES_BY_ID_KEY, vendorAttributeValueId);
+            var key = string.Format(NopVendorsServiceDefaults.VendorAttributeValuesByIdCacheKey, vendorAttributeValueId);
             return _cacheManager.Get(key, () => _vendorAttributeValueRepository.GetById(vendorAttributeValueId));
         }
 
@@ -220,8 +176,8 @@ namespace Nop.Services.Vendors
 
             _vendorAttributeValueRepository.Insert(vendorAttributeValue);
 
-            _cacheManager.RemoveByPattern(VENDORATTRIBUTES_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(VENDORATTRIBUTEVALUES_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopVendorsServiceDefaults.VendorAttributesPatternCacheKey);
+            _cacheManager.RemoveByPattern(NopVendorsServiceDefaults.VendorAttributeValuesPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(vendorAttributeValue);
@@ -238,8 +194,8 @@ namespace Nop.Services.Vendors
 
             _vendorAttributeValueRepository.Update(vendorAttributeValue);
 
-            _cacheManager.RemoveByPattern(VENDORATTRIBUTES_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(VENDORATTRIBUTEVALUES_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopVendorsServiceDefaults.VendorAttributesPatternCacheKey);
+            _cacheManager.RemoveByPattern(NopVendorsServiceDefaults.VendorAttributeValuesPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(vendorAttributeValue);
@@ -256,8 +212,8 @@ namespace Nop.Services.Vendors
 
             _vendorAttributeValueRepository.Delete(vendorAttributeValue);
 
-            _cacheManager.RemoveByPattern(VENDORATTRIBUTES_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(VENDORATTRIBUTEVALUES_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopVendorsServiceDefaults.VendorAttributesPatternCacheKey);
+            _cacheManager.RemoveByPattern(NopVendorsServiceDefaults.VendorAttributeValuesPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityDeleted(vendorAttributeValue);

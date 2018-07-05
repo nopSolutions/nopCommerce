@@ -42,7 +42,7 @@
                                 <option selected="@attributeValue.IsPreSelected" value="@attributeValue.Id">@attributeName</option>
                             }
                         </select>
-                            attributeChangeScriptsBuilder.AppendFormat("$('#{0}').change(function(){{checkoutAttributeChange();}});\n", controlId);
+                            attributeChangeScriptsBuilder.AppendFormat("$('#{0}').on('change', function(){{checkoutAttributeChange();}});\n", controlId);
                             }
                             break;
                         case AttributeControlType.RadioList:
@@ -57,7 +57,7 @@
                                     <input id="@(controlId)_@(attributeValue.Id)" type="radio" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" />
                                     <label for="@(controlId)_@(attributeValue.Id)">@attributeName</label>
                                 </li>
-                                attributeChangeScriptsBuilder.AppendFormat("$('#{0}_{1}').click(function(){{checkoutAttributeChange();}});\n", controlId, attributeValue.Id);
+                                attributeChangeScriptsBuilder.AppendFormat("$('#{0}_{1}').on('click', function(){{checkoutAttributeChange();}});\n", controlId, attributeValue.Id);
                             }
                         </ul>
                             }
@@ -75,7 +75,7 @@
                                     <input id="@(controlId)_@(attributeValue.Id)" type="checkbox" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" @(attribute.AttributeControlType == AttributeControlType.ReadonlyCheckboxes ? Html.Raw(" disabled=\"disabled\"") : null) />
                                     <label for="@(controlId)_@(attributeValue.Id)">@attributeName</label>
                                 </li>
-                                attributeChangeScriptsBuilder.AppendFormat("$('#{0}_{1}').click(function(){{checkoutAttributeChange();}});\n", controlId, attributeValue.Id);
+                                attributeChangeScriptsBuilder.AppendFormat("$('#{0}_{1}').on('click', function(){{checkoutAttributeChange();}});\n", controlId, attributeValue.Id);
                             }
                         </ul>
                             }
@@ -113,8 +113,8 @@
                                 }
 
                                 //register CSS and JS
-                                Html.AddCssFileParts("~/lib/fineuploader/fineuploader-4.2.2.min.css");
-                                Html.AddScriptParts(ResourceLocation.Footer, "~/lib/fineuploader/jquery.fineuploader-4.2.2.min.js");
+                                Html.AddCssFileParts("~/lib/fineuploader/fine-uploader.min.css");
+                                Html.AddScriptParts(ResourceLocation.Footer, "~/lib/fineuploader/jquery.fine-uploader.min.js");
 
                                 //ex. ['jpg', 'jpeg', 'png', 'gif'] or []
                                 var allowedFileExtensions = string.Join(", ", attribute.AllowedFileExtensions.Select(x => "'" + x.Trim() + "'").ToList());
@@ -183,7 +183,7 @@
                                             }
                                         });
 
-                                        $("#@(controlId + "remove")").click(function(e) {
+                                        $("#@(controlId + "remove")").on("click", function(e) {
                                             $("#@(controlId + "downloadurl")").html("");
                                             $("#@(controlId)").val('');
                                             $(this).hide();
@@ -226,12 +226,12 @@
                                                 @*<span class="name">@attributeName</span>*@
                                             </label>
                                         </li>
-                                        attributeChangeScriptsBuilder.AppendFormat("$('#{0}_{1}').click(function(){{checkoutAttributeChange();}});\n", controlId, attributeValue.Id);
+                                        attributeChangeScriptsBuilder.AppendFormat("$('#{0}_{1}').on('click', function(){{checkoutAttributeChange();}});\n", controlId, attributeValue.Id);
                                     }
                                 </ul>
                                 <script asp-location="Footer">
                                     $(document).ready(function() {
-                                        $('.checkout-attributes #color-squares-@(attribute.Id)').delegate('input', 'click', function (event) {
+                                        $('.checkout-attributes #color-squares-@(attribute.Id)').on('click', 'input', function (event) {
                                             $('.checkout-attributes #color-squares-@(attribute.Id)').find('li').removeClass('selected-value');
                                             $(this).closest('li').addClass('selected-value');
                                         });
@@ -280,7 +280,7 @@
                             $('#checkout_attribute_input_' + data.disabledattributeids[i]).hide();
                         }
                     }
-                    $.event.trigger({ type: "checkout_attributes_changed", changedData: data });
+                    $(document).trigger({ type: "checkout_attributes_changed", changedData: data });
                 }
             });
         }

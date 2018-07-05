@@ -23,8 +23,7 @@ namespace Nop.Data.Mapping.Media
             builder.Property(picture => picture.MimeType).HasMaxLength(40).IsRequired();
             builder.Property(picture => picture.SeoFilename).HasMaxLength(300);
 
-            //add custom configuration
-            this.PostConfigure(builder);
+            base.Configure(builder);
         }
 
         #endregion

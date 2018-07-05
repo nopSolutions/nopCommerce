@@ -8,6 +8,13 @@ namespace Nop.Web.Areas.Admin.Factories
     public partial interface ITemplateModelFactory
     {
         /// <summary>
+        /// Prepare templates model
+        /// </summary>
+        /// <param name="model">Templates model</param>
+        /// <returns>Templates model</returns>
+        TemplatesModel PrepareTemplatesModel(TemplatesModel model);
+
+        /// <summary>
         /// Prepare category template search model
         /// </summary>
         /// <param name="searchModel">Category template search model</param>

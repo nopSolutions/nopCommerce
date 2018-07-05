@@ -295,7 +295,7 @@ namespace Nop.Web.Factories
                 //performance optimization. cache returned shipping options.
                 //we'll use them later (after a customer has selected an option).
                 _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer,
-                                                       SystemCustomerAttributeNames.OfferedShippingOptions,
+                                                       NopCustomerDefaults.OfferedShippingOptionsAttribute,
                                                        getShippingOptionResponse.ShippingOptions,
                                                        _storeContext.CurrentStore.Id);
 
@@ -321,7 +321,7 @@ namespace Nop.Web.Factories
 
                 //find a selected (previously) shipping method
                 var selectedShippingOption = _workContext.CurrentCustomer.GetAttribute<ShippingOption>(
-                        SystemCustomerAttributeNames.SelectedShippingOption, _storeContext.CurrentStore.Id);
+                        NopCustomerDefaults.SelectedShippingOptionAttribute, _storeContext.CurrentStore.Id);
                 if (selectedShippingOption != null)
                 {
                     var shippingOptionToSelect = model.ShippingMethods.ToList()
@@ -420,7 +420,7 @@ namespace Nop.Web.Factories
             
             //find a selected (previously) payment method
             var selectedPaymentMethodSystemName = _workContext.CurrentCustomer.GetAttribute<string>(
-                SystemCustomerAttributeNames.SelectedPaymentMethod,
+                NopCustomerDefaults.SelectedPaymentMethodAttribute,
                 _genericAttributeService, _storeContext.CurrentStore.Id);
             if (!string.IsNullOrEmpty(selectedPaymentMethodSystemName))
             {

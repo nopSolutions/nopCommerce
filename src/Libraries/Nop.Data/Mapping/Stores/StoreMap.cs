@@ -28,8 +28,7 @@ namespace Nop.Data.Mapping.Stores
             builder.Property(store => store.CompanyPhoneNumber).HasMaxLength(1000);
             builder.Property(store => store.CompanyVat).HasMaxLength(1000);
 
-            //add custom configuration
-            this.PostConfigure(builder);
+            base.Configure(builder);
         }
 
         #endregion

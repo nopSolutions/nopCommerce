@@ -12,6 +12,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Domain.Security;
 using Nop.Core.Html;
 using Nop.Core.Infrastructure;
 using Nop.Services.Catalog;
@@ -55,6 +56,7 @@ namespace Nop.Web.Controllers
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly ITaxService _taxService;
         private readonly ICurrencyService _currencyService;
+        private readonly IMeasureService _measureService;
         private readonly IPriceCalculationService _priceCalculationService;
         private readonly IPriceFormatter _priceFormatter;
         private readonly ICheckoutAttributeParser _checkoutAttributeParser;
@@ -91,7 +93,8 @@ namespace Nop.Web.Controllers
             ILocalizationService localizationService, 
             IProductAttributeService productAttributeService, 
             IProductAttributeParser productAttributeParser,
-            ITaxService taxService, ICurrencyService currencyService, 
+            ITaxService taxService, ICurrencyService currencyService,
+            IMeasureService measureService,
             IPriceCalculationService priceCalculationService,
             IPriceFormatter priceFormatter,
             ICheckoutAttributeParser checkoutAttributeParser,
@@ -125,6 +128,7 @@ namespace Nop.Web.Controllers
             this._productAttributeParser = productAttributeParser;
             this._taxService = taxService;
             this._currencyService = currencyService;
+            this._measureService = measureService;
             this._priceCalculationService = priceCalculationService;
             this._priceFormatter = priceFormatter;
             this._checkoutAttributeParser = checkoutAttributeParser;
@@ -268,7 +272,7 @@ namespace Nop.Web.Controllers
             }
 
             //save checkout attributes
-            _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.CheckoutAttributes, attributesXml, _storeContext.CurrentStore.Id);
+            _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, NopCustomerDefaults.CheckoutAttributes, attributesXml, _storeContext.CurrentStore.Id);
         }
 
         /// <summary>
@@ -969,6 +973,8 @@ namespace Nop.Web.Controllers
 
             //price
             var price = "";
+            //base price
+            var basepricepangv = "";
             if (_permissionService.Authorize(StandardPermissionProvider.DisplayPrices) && !product.CustomerEntersPrice)
             {
                 //we do not calculate price of "customer enters price" option is enabled
@@ -982,6 +988,8 @@ namespace Nop.Web.Controllers
                 var finalPriceWithDiscountBase = _taxService.GetProductPrice(product, finalPrice, out decimal _);
                 var finalPriceWithDiscount = _currencyService.ConvertFromPrimaryStoreCurrency(finalPriceWithDiscountBase, _workContext.WorkingCurrency);
                 price = _priceFormatter.FormatPrice(finalPriceWithDiscount);
+                basepricepangv = product.FormatBasePrice(finalPriceWithDiscountBase, _localizationService,
+                    _measureService, _currencyService, _workContext, _priceFormatter);
             }
 
             //stock
@@ -1055,6 +1063,7 @@ namespace Nop.Web.Controllers
                 mpn,
                 sku,
                 price,
+                basepricepangv,
                 stockAvailability,
                 enabledattributemappingids = enabledAttributeMappingIds.ToArray(),
                 disabledattributemappingids = disabledAttributeMappingIds.ToArray(),
@@ -1075,7 +1084,7 @@ namespace Nop.Web.Controllers
 
             //save selected attributes
             ParseAndSaveCheckoutAttributes(cart, form);
-            var attributeXml = _workContext.CurrentCustomer.GetAttribute<string>(SystemCustomerAttributeNames.CheckoutAttributes,
+            var attributeXml = _workContext.CurrentCustomer.GetAttribute<string>(NopCustomerDefaults.CheckoutAttributes,
                 _genericAttributeService, _storeContext.CurrentStore.Id);
 
             //conditions
@@ -1358,7 +1367,7 @@ namespace Nop.Web.Controllers
         [FormValueRequired("continueshopping")]
         public virtual IActionResult ContinueShopping()
         {
-            var returnUrl = _workContext.CurrentCustomer.GetAttribute<string>(SystemCustomerAttributeNames.LastContinueShoppingPage, _storeContext.CurrentStore.Id);
+            var returnUrl = _workContext.CurrentCustomer.GetAttribute<string>(NopCustomerDefaults.LastContinueShoppingPageAttribute, _storeContext.CurrentStore.Id);
             if (!string.IsNullOrEmpty(returnUrl))
             {
                 return Redirect(returnUrl);
@@ -1379,7 +1388,7 @@ namespace Nop.Web.Controllers
             ParseAndSaveCheckoutAttributes(cart, form);
 
             //validate attributes
-            var checkoutAttributes = _workContext.CurrentCustomer.GetAttribute<string>(SystemCustomerAttributeNames.CheckoutAttributes, _genericAttributeService, _storeContext.CurrentStore.Id);
+            var checkoutAttributes = _workContext.CurrentCustomer.GetAttribute<string>(NopCustomerDefaults.CheckoutAttributes, _genericAttributeService, _storeContext.CurrentStore.Id);
             var checkoutAttributeWarnings = _shoppingCartService.GetShoppingCartWarnings(cart, checkoutAttributes, true);
             if (checkoutAttributeWarnings.Any())
             {

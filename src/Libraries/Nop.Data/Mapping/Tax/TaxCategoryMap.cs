@@ -22,8 +22,7 @@ namespace Nop.Data.Mapping.Tax
 
             builder.Property(taxCategory => taxCategory.Name).HasMaxLength(400).IsRequired();
 
-            //add custom configuration
-            this.PostConfigure(builder);
+            base.Configure(builder);
         }
 
         #endregion

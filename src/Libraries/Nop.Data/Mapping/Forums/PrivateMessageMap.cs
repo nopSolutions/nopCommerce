@@ -17,7 +17,7 @@ namespace Nop.Data.Mapping.Forums
         /// <param name="builder">The builder to be used to configure the entity</param>
         public override void Configure(EntityTypeBuilder<PrivateMessage> builder)
         {
-            builder.ToTable("Forums_PrivateMessage");
+            builder.ToTable(NopMappingDefaults.PrivateMessageTable);
             builder.HasKey(message => message.Id);
 
             builder.Property(message => message.Subject).HasMaxLength(450).IsRequired();
@@ -35,8 +35,7 @@ namespace Nop.Data.Mapping.Forums
                .IsRequired()
                .OnDelete(DeleteBehavior.Restrict);
 
-            //add custom configuration
-            this.PostConfigure(builder);
+            base.Configure(builder);
         }
 
         #endregion

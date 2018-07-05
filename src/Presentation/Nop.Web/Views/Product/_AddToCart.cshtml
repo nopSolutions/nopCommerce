@@ -13,7 +13,7 @@
                 <div class="price-input">
                     <label asp-for="CustomerEnteredPrice" asp-postfix=":" class="enter-price-label"></label>
                     @*round price*@
-                    <input asp-for="CustomerEnteredPrice" value="@Convert.ToInt32(Math.Ceiling(Model.CustomerEnteredPrice))" class="enter-price-input"/>
+                    <input asp-for="CustomerEnteredPrice" value="@Convert.ToInt32(Math.Ceiling(Model.CustomerEnteredPrice))" class="enter-price-input" />
                 </div>
                 <div class="price-range">
                     @Model.CustomerEnteredPriceRange
@@ -38,9 +38,9 @@
                     <script asp-location="Footer">
                         //when a customer clicks 'Enter' button we submit the "add to cart" button (if visible)
                         $(document).ready(function() {
-                            $("#@Html.IdFor(model => model.EnteredQuantity)").keydown(function(event) {
+                            $("#@Html.IdFor(model => model.EnteredQuantity)").on("keydown", function(event) {
                                 if (event.keyCode == 13) {
-                                    $("#add-to-cart-button-@Model.ProductId").click();
+                                    $("#add-to-cart-button-@Model.ProductId").trigger("click");
                                     return false;
                                 }
                             });
@@ -68,6 +68,13 @@
                     <input type="button" id="add-to-cart-button-@Model.ProductId" class="button-1 add-to-cart-button" value="@addToCartText" data-productid="@Model.ProductId" onclick="AjaxCart.addproducttocart_details('@Url.RouteUrl("AddProductToCart-Details", new {productId = Model.ProductId, shoppingCartTypeId = (int) ShoppingCartType.ShoppingCart})', '#product-details-form');return false;"/>
                 }
             </div>
+            if (!string.IsNullOrEmpty(Model.PreOrderAvailabilityStartDateTimeUserTime))
+            {
+                <div class="pre-order-availability-date">
+                    <label>@T("ShoppingCart.PreOrderAvailability"):</label>
+                    @Html.Raw(Model.PreOrderAvailabilityStartDateTimeUserTime)
+                </div>
+            }
         }
         @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProductDetailsAddInfo, additionalData = Model })
     </div>

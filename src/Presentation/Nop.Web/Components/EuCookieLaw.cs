@@ -33,7 +33,7 @@ namespace Nop.Web.Components
             if (_workContext.CurrentCustomer.IsSearchEngineAccount())
                 return Content("");
 
-            if (_workContext.CurrentCustomer.GetAttribute<bool>(SystemCustomerAttributeNames.EuCookieLawAccepted, _storeContext.CurrentStore.Id))
+            if (_workContext.CurrentCustomer.GetAttribute<bool>(NopCustomerDefaults.EuCookieLawAcceptedAttribute, _storeContext.CurrentStore.Id))
                 //already accepted
                 return Content("");
 

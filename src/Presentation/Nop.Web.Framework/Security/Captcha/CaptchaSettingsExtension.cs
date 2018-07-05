@@ -1,4 +1,5 @@
-﻿using Nop.Services.Localization;
+﻿using Nop.Core.Domain.Security;
+using Nop.Services.Localization;
 
 namespace Nop.Web.Framework.Security.Captcha
 {

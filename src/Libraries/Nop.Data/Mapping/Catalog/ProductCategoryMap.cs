@@ -17,7 +17,7 @@ namespace Nop.Data.Mapping.Catalog
         /// <param name="builder">The builder to be used to configure the entity</param>
         public override void Configure(EntityTypeBuilder<ProductCategory> builder)
         {
-            builder.ToTable("Product_Category_Mapping");
+            builder.ToTable(NopMappingDefaults.ProductCategoryTable);
             builder.HasKey(productCategory => productCategory.Id);
 
             builder.HasOne(productCategory => productCategory.Category)
@@ -30,8 +30,7 @@ namespace Nop.Data.Mapping.Catalog
                 .HasForeignKey(productCategory => productCategory.ProductId)
                 .IsRequired();
 
-            //add custom configuration
-            this.PostConfigure(builder);
+            base.Configure(builder);
         }
 
         #endregion

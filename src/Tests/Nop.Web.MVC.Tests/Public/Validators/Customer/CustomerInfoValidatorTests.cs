@@ -1,10 +1,10 @@
 ﻿using FluentValidation.TestHelper;
+using Moq;
 using Nop.Core.Domain.Customers;
 using Nop.Services.Directory;
 using Nop.Web.Models.Customer;
 using Nop.Web.Validators.Customer;
 using NUnit.Framework;
-using Rhino.Mocks;
 
 namespace Nop.Web.MVC.Tests.Public.Validators.Customer
 {
@@ -16,7 +16,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
         [Test]
         public void Should_have_error_when_email_is_null_or_empty()
         {
-            _stateProvinceService = MockRepository.GenerateMock<IStateProvinceService>();
+            _stateProvinceService = new Mock<IStateProvinceService>().Object;
 
             var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService, new CustomerSettings());
 

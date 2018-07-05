@@ -25,22 +25,6 @@ namespace Nop.Services.Shipping
     /// </summary>
     public partial class ShippingService : IShippingService
     {
-        #region Constants
-
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : warehouse ID
-        /// </remarks>
-        private const string WAREHOUSES_BY_ID_KEY = "Nop.warehouse.id-{0}";
-        /// <summary>
-        /// Key pattern to clear cache
-        /// </summary>
-        private const string WAREHOUSES_PATTERN_KEY = "Nop.warehouse.";
-
-        #endregion
-
         #region Fields
 
         private readonly IRepository<ShippingMethod> _shippingMethodRepository;
@@ -213,6 +197,8 @@ namespace Nop.Services.Shipping
 
             _shippingMethodRepository.Delete(shippingMethod);
 
+            _cacheManager.RemoveByPattern(NopShippingDefaults.ShippingMethodsPatternCacheKey);
+
             //event notification
             _eventPublisher.EntityDeleted(shippingMethod);
         }
@@ -237,29 +223,31 @@ namespace Nop.Services.Shipping
         /// <returns>Shipping methods</returns>
         public virtual IList<ShippingMethod> GetAllShippingMethods(int? filterByCountryId = null)
         {
-            if (filterByCountryId.HasValue && filterByCountryId.Value > 0)
-            {
-                var query1 = from sm in _shippingMethodRepository.Table
-                             where
-                             sm.ShippingMethodCountryMappings.Select(mapping => mapping.CountryId).Contains(filterByCountryId.Value)
-                             select sm.Id;
+            var key = string.Format(NopShippingDefaults.ShippingMethodsAllCacheKey, filterByCountryId.HasValue ? filterByCountryId.Value : 0);
 
-                var query2 = from sm in _shippingMethodRepository.Table
-                             where !query1.Contains(sm.Id)
-                             orderby sm.DisplayOrder, sm.Id
-                             select sm;
-
-                var shippingMethods = query2.ToList();
-                return shippingMethods;
-            }
-            else
+            return _cacheManager.Get(key, () =>
             {
-                var query = from sm in _shippingMethodRepository.Table
-                            orderby sm.DisplayOrder, sm.Id
-                            select sm;
-                var shippingMethods = query.ToList();
-                return shippingMethods;
-            }
+                if (filterByCountryId.HasValue && filterByCountryId.Value > 0)
+                {
+                    var query1 = from sm in _shippingMethodRepository.Table
+                        where sm.ShippingMethodCountryMappings.Select(mapping => mapping.CountryId).Contains(filterByCountryId.Value)
+                        select sm.Id;
+
+                    var query2 = from sm in _shippingMethodRepository.Table
+                        where !query1.Contains(sm.Id)
+                        orderby sm.DisplayOrder, sm.Id
+                        select sm;
+
+                    return query2.ToList();
+                }
+                else
+                {
+                    var query = from sm in _shippingMethodRepository.Table
+                        orderby sm.DisplayOrder, sm.Id
+                        select sm;
+                    return query.ToList();
+                }
+            });
         }
 
         /// <summary>
@@ -272,6 +260,8 @@ namespace Nop.Services.Shipping
                 throw new ArgumentNullException(nameof(shippingMethod));
 
             _shippingMethodRepository.Insert(shippingMethod);
+
+            _cacheManager.RemoveByPattern(NopShippingDefaults.ShippingMethodsPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(shippingMethod);
@@ -287,6 +277,8 @@ namespace Nop.Services.Shipping
                 throw new ArgumentNullException(nameof(shippingMethod));
 
             _shippingMethodRepository.Update(shippingMethod);
+
+            _cacheManager.RemoveByPattern(NopShippingDefaults.ShippingMethodsPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(shippingMethod);
@@ -308,7 +300,7 @@ namespace Nop.Services.Shipping
             _warehouseRepository.Delete(warehouse);
 
             //clear cache
-            _cacheManager.RemoveByPattern(WAREHOUSES_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopShippingDefaults.WarehousesPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityDeleted(warehouse);
@@ -324,7 +316,7 @@ namespace Nop.Services.Shipping
             if (warehouseId == 0)
                 return null;
 
-            var key = string.Format(WAREHOUSES_BY_ID_KEY, warehouseId);
+            var key = string.Format(NopShippingDefaults.WarehousesByIdCacheKey, warehouseId);
             return _cacheManager.Get(key, () => _warehouseRepository.GetById(warehouseId));
         }
 
@@ -353,7 +345,7 @@ namespace Nop.Services.Shipping
             _warehouseRepository.Insert(warehouse);
 
             //clear cache
-            _cacheManager.RemoveByPattern(WAREHOUSES_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopShippingDefaults.WarehousesPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(warehouse);
@@ -371,7 +363,7 @@ namespace Nop.Services.Shipping
             _warehouseRepository.Update(warehouse);
 
             //clear cache
-            _cacheManager.RemoveByPattern(WAREHOUSES_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopShippingDefaults.WarehousesPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(warehouse);
@@ -500,7 +492,7 @@ namespace Nop.Services.Shipping
             //checkout attributes
             if (request.Customer != null && includeCheckoutAttributes)
             {
-                var checkoutAttributesXml = request.Customer.GetAttribute<string>(SystemCustomerAttributeNames.CheckoutAttributes, _genericAttributeService, _storeContext.CurrentStore.Id);
+                var checkoutAttributesXml = request.Customer.GetAttribute<string>(NopCustomerDefaults.CheckoutAttributes, _genericAttributeService, _storeContext.CurrentStore.Id);
                 if (!string.IsNullOrEmpty(checkoutAttributesXml))
                 {
                     var attributeValues = _checkoutAttributeParser.ParseCheckoutAttributeValues(checkoutAttributesXml);

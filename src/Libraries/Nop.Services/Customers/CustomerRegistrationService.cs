@@ -19,8 +19,6 @@ namespace Nop.Services.Customers
     {
         #region Fields
 
-        private const int SALT_KEY_SIZE = 5;
-
         private readonly ICustomerService _customerService;
         private readonly IEncryptionService _encryptionService;
         private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
@@ -259,7 +257,7 @@ namespace Nop.Services.Customers
                     break;
                 case PasswordFormat.Hashed:
                     {
-                        var saltKey = _encryptionService.CreateSaltKey(SALT_KEY_SIZE);
+                        var saltKey = _encryptionService.CreateSaltKey(NopCustomerServiceDefaults.PasswordSaltKeySize);
                         customerPassword.PasswordSalt = saltKey;
                         customerPassword.Password = _encryptionService.CreatePasswordHash(request.Password, saltKey, _customerSettings.HashedPasswordFormat);
                     }
@@ -270,13 +268,13 @@ namespace Nop.Services.Customers
             request.Customer.Active = request.IsApproved;
             
             //add to 'Registered' role
-            var registeredRole = _customerService.GetCustomerRoleBySystemName(SystemCustomerRoleNames.Registered);
+            var registeredRole = _customerService.GetCustomerRoleBySystemName(NopCustomerDefaults.RegisteredRoleName);
             if (registeredRole == null)
                 throw new NopException("'Registered' role could not be loaded");
             //request.Customer.CustomerRoles.Add(registeredRole);
             request.Customer.CustomerCustomerRoleMappings.Add(new CustomerCustomerRoleMapping { CustomerRole = registeredRole });
             //remove from 'Guests' role
-            var guestRole = request.Customer.CustomerRoles.FirstOrDefault(cr => cr.SystemName == SystemCustomerRoleNames.Guests);
+            var guestRole = request.Customer.CustomerRoles.FirstOrDefault(cr => cr.SystemName == NopCustomerDefaults.GuestsRoleName);
             if (guestRole != null)
             {
                 //request.Customer.CustomerRoles.Remove(guestRole);
@@ -368,7 +366,7 @@ namespace Nop.Services.Customers
                     break;
                 case PasswordFormat.Hashed:
                     {
-                        var saltKey = _encryptionService.CreateSaltKey(SALT_KEY_SIZE);
+                        var saltKey = _encryptionService.CreateSaltKey(NopCustomerServiceDefaults.PasswordSaltKeySize);
                         customerPassword.PasswordSalt = saltKey;
                         customerPassword.Password = _encryptionService.CreatePasswordHash(request.NewPassword, saltKey, _customerSettings.HashedPasswordFormat);
                     }
@@ -416,7 +414,7 @@ namespace Nop.Services.Customers
                 _customerService.UpdateCustomer(customer);
 
                 //email re-validation message
-                _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.EmailRevalidationToken, Guid.NewGuid().ToString());
+                _genericAttributeService.SaveAttribute(customer, NopCustomerDefaults.EmailRevalidationTokenAttribute, Guid.NewGuid().ToString());
                 _workflowMessageService.SendCustomerEmailRevalidationMessage(customer, _workContext.WorkingLanguage.Id);
             }
             else
@@ -455,7 +453,7 @@ namespace Nop.Services.Customers
 
             newUsername = newUsername.Trim();
 
-            if (newUsername.Length > 100)
+            if (newUsername.Length > NopCustomerServiceDefaults.CustomerUsernameLength)
                 throw new NopException(_localizationService.GetResource("Account.EmailUsernameErrors.UsernameTooLong"));
 
             var user2 = _customerService.GetCustomerByUsername(newUsername);

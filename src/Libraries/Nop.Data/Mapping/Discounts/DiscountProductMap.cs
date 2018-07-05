@@ -17,7 +17,7 @@ namespace Nop.Data.Mapping.Discounts
         /// <param name="builder">The builder to be used to configure the entity</param>
         public override void Configure(EntityTypeBuilder<DiscountProductMapping> builder)
         {
-            builder.ToTable("Discount_AppliedToProducts");
+            builder.ToTable(NopMappingDefaults.DiscountAppliedToProductsTable);
             builder.HasKey(mapping => new { mapping.DiscountId, mapping.ProductId});
 
             builder.Property(mapping => mapping.DiscountId).HasColumnName("Discount_Id");
@@ -35,8 +35,7 @@ namespace Nop.Data.Mapping.Discounts
 
             builder.Ignore(mapping => mapping.Id);
 
-            //add custom configuration
-            this.PostConfigure(builder);
+            base.Configure(builder);
         }
 
         #endregion

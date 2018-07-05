@@ -8,6 +8,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Media;
+using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Vendors;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -261,7 +262,7 @@ namespace Nop.Web.Controllers
                 UpdatePictureSeoNames(vendor);
 
                 //save vendor attributes
-                _genericAttributeService.SaveAttribute(vendor, VendorAttributeNames.VendorAttributes, vendorAttributesXml);
+                _genericAttributeService.SaveAttribute(vendor, NopVendorDefaults.VendorAttributes, vendorAttributesXml);
 
                 //notify store owner here (email)
                 _workflowMessageService.SendNewVendorAccountApplyStoreOwnerNotification(_workContext.CurrentCustomer,
@@ -348,7 +349,7 @@ namespace Nop.Web.Controllers
                 _vendorService.UpdateVendor(vendor);
 
                 //save vendor attributes
-                _genericAttributeService.SaveAttribute(vendor, VendorAttributeNames.VendorAttributes, vendorAttributesXml);
+                _genericAttributeService.SaveAttribute(vendor, NopVendorDefaults.VendorAttributes, vendorAttributesXml);
 
                 //notifications
                 if (_vendorSettings.NotifyStoreOwnerAboutVendorInformationChange)

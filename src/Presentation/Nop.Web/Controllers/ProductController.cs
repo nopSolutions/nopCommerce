@@ -7,6 +7,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Domain.Security;
 using Nop.Services.Catalog;
 using Nop.Services.Events;
 using Nop.Services.Localization;
@@ -288,6 +289,14 @@ namespace Nop.Web.Controllers
 
             //default value
             model.AddProductReview.Rating = _catalogSettings.DefaultProductRatingValue;
+            
+            //default value for all additional review types
+            if (model.ReviewTypeList.Count > 0)
+                foreach (var additionalProductReview in model.AddAdditionalProductReviewList)
+                {
+                    additionalProductReview.Rating = additionalProductReview.IsRequired ? _catalogSettings.DefaultProductRatingValue : 0;
+                }
+
             return View(model);
         }
 
@@ -343,8 +352,20 @@ namespace Nop.Web.Controllers
                     CreatedOnUtc = DateTime.UtcNow,
                     StoreId = _storeContext.CurrentStore.Id,
                 };
+
                 product.ProductReviews.Add(productReview);
-                _productService.UpdateProduct(product);
+
+                //add product review and review type mapping                
+                foreach (var additionalReview in model.AddAdditionalProductReviewList)
+                {
+                    var additionalProductReview = new ProductReviewReviewTypeMapping
+                    {
+                        ProductReviewId = productReview.Id,
+                        ReviewTypeId = additionalReview.ReviewTypeId,
+                        Rating = additionalReview.Rating
+                    };
+                    productReview.ProductReviewReviewTypeMappingEntries.Add(additionalProductReview);
+                }
 
                 //update product totals
                 _productService.UpdateProductReviewTotals(product);

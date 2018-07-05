@@ -17,29 +17,6 @@ namespace Nop.Services.Directory
     /// </summary>
     public partial class CurrencyService : ICurrencyService
     {
-        #region Constants
-
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : currency ID
-        /// </remarks>
-        private const string CURRENCIES_BY_ID_KEY = "Nop.currency.id-{0}";
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : show hidden records?
-        /// </remarks>
-        private const string CURRENCIES_ALL_KEY = "Nop.currency.all-{0}";
-        /// <summary>
-        /// Key pattern to clear cache
-        /// </summary>
-        private const string CURRENCIES_PATTERN_KEY = "Nop.currency.";
-
-        #endregion
-
         #region Fields
 
         private readonly IRepository<Currency> _currencyRepository;
@@ -112,7 +89,7 @@ namespace Nop.Services.Directory
 
             _currencyRepository.Delete(currency);
 
-            _cacheManager.RemoveByPattern(CURRENCIES_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopDirectoryDefaults.CurrenciesPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityDeleted(currency);
@@ -137,7 +114,7 @@ namespace Nop.Services.Directory
             if (loadCacheableCopy)
             {
                 //cacheable copy
-                var key = string.Format(CURRENCIES_BY_ID_KEY, currencyId);
+                var key = string.Format(NopDirectoryDefaults.CurrenciesByIdCacheKey, currencyId);
                 return _cacheManager.Get(key, () =>
                 {
                     var currency = loadCurrencyFunc();
@@ -185,7 +162,7 @@ namespace Nop.Services.Directory
             if (loadCacheableCopy)
             {
                 //cacheable copy
-                var key = string.Format(CURRENCIES_ALL_KEY, showHidden);
+                var key = string.Format(NopDirectoryDefaults.CurrenciesAllCacheKey, showHidden);
                 currencies = _cacheManager.Get(key, () =>
                 {
                     var result = new List<Currency>();
@@ -223,7 +200,7 @@ namespace Nop.Services.Directory
 
             _currencyRepository.Insert(currency);
 
-            _cacheManager.RemoveByPattern(CURRENCIES_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopDirectoryDefaults.CurrenciesPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(currency);
@@ -243,7 +220,7 @@ namespace Nop.Services.Directory
 
             _currencyRepository.Update(currency);
 
-            _cacheManager.RemoveByPattern(CURRENCIES_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopDirectoryDefaults.CurrenciesPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(currency);

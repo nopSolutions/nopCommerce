@@ -25,8 +25,7 @@ namespace Nop.Data.Mapping.Localization
             builder.Property(language => language.UniqueSeoCode).HasMaxLength(2);
             builder.Property(language => language.FlagImageFileName).HasMaxLength(50);
 
-            //add custom configuration
-            this.PostConfigure(builder);
+            base.Configure(builder);
         }
 
         #endregion

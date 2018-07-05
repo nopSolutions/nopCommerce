@@ -163,6 +163,7 @@ namespace Nop.Web.Framework.Extensions
             var builder = new TagBuilder("div");
             builder.MergeAttribute("title", value);
             builder.MergeAttribute("class", "ico-help");
+            builder.MergeAttribute("data-toggle", "tooltip");
             var icon = new StringBuilder();
             icon.Append("<i class='fa fa-question-circle'></i>");
             builder.InnerHtml.AppendHtml(icon.ToString());

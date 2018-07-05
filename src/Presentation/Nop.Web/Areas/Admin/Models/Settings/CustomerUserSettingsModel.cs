@@ -7,7 +7,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
     /// <summary>
     /// Represents a customer user settings model
     /// </summary>
-    public partial class CustomerUserSettingsModel : BaseNopModel
+    public partial class CustomerUserSettingsModel : BaseNopModel, ISettingsModel
     {
         #region Ctor
 

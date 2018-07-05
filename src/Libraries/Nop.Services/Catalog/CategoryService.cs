@@ -22,77 +22,6 @@ namespace Nop.Services.Catalog
     /// </summary>
     public partial class CategoryService : ICategoryService
     {
-        #region Constants
-
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : category ID
-        /// </remarks>
-        private const string CATEGORIES_BY_ID_KEY = "Nop.category.id-{0}";
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : parent category ID
-        /// {1} : show hidden records?
-        /// {2} : current customer ID
-        /// {3} : store ID
-        /// </remarks>
-        private const string CATEGORIES_BY_PARENT_CATEGORY_ID_KEY = "Nop.category.byparent-{0}-{1}-{2}-{3}";
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : current store ID
-        /// {1} : comma separated list of customer roles
-        /// {2} : show hidden records?
-        /// </remarks>
-        private const string CATEGORIES_ALL_KEY = "Nop.category.all-{0}-{1}-{2}";
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : parent category id
-        /// {1} : comma separated list of customer roles
-        /// {2} : current store ID
-        /// {3} : show hidden records?
-        /// </remarks>
-        private const string CATEGORIES_CHILD_IDENTIFIERS_KEY = "Nop.category.childidentifiers-{0}-{1}-{2}-{3}";
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : show hidden records?
-        /// {1} : category ID
-        /// {2} : page index
-        /// {3} : page size
-        /// {4} : current customer ID
-        /// {5} : store ID
-        /// </remarks>
-        private const string PRODUCTCATEGORIES_ALLBYCATEGORYID_KEY = "Nop.productcategory.allbycategoryid-{0}-{1}-{2}-{3}-{4}-{5}";
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : show hidden records?
-        /// {1} : product ID
-        /// {2} : current customer ID
-        /// {3} : store ID
-        /// </remarks>
-        private const string PRODUCTCATEGORIES_ALLBYPRODUCTID_KEY = "Nop.productcategory.allbyproductid-{0}-{1}-{2}-{3}";
-        /// <summary>
-        /// Key pattern to clear cache
-        /// </summary>
-        private const string CATEGORIES_PATTERN_KEY = "Nop.category.";
-        /// <summary>
-        /// Key pattern to clear cache
-        /// </summary>
-        private const string PRODUCTCATEGORIES_PATTERN_KEY = "Nop.productcategory.";
-
-        #endregion
-
         #region Fields
 
         private readonly IRepository<Category> _categoryRepository;
@@ -219,7 +148,7 @@ namespace Nop.Services.Catalog
             if (loadCacheableCopy)
             {
                 //cacheable copy
-                var key = string.Format(CATEGORIES_ALL_KEY, 
+                var key = string.Format(NopCatalogDefaults.CategoriesAllCacheKey, 
                     storeId,
                     string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()), 
                     showHidden);
@@ -332,7 +261,7 @@ namespace Nop.Services.Catalog
         public virtual IList<Category> GetAllCategoriesByParentCategoryId(int parentCategoryId,
             bool showHidden = false)
         {
-            var key = string.Format(CATEGORIES_BY_PARENT_CATEGORY_ID_KEY, parentCategoryId, showHidden, _workContext.CurrentCustomer.Id, _storeContext.CurrentStore.Id);
+            var key = string.Format(NopCatalogDefaults.CategoriesByParentCategoryIdCacheKey, parentCategoryId, showHidden, _workContext.CurrentCustomer.Id, _storeContext.CurrentStore.Id);
             return _cacheManager.Get(key, () =>
             {
                 var query = _categoryRepository.Table;
@@ -409,7 +338,7 @@ namespace Nop.Services.Catalog
         /// <returns>Category identifiers</returns>
         public virtual IList<int> GetChildCategoryIds(int parentCategoryId, int storeId = 0, bool showHidden = false)
         {
-            var cacheKey = string.Format(CATEGORIES_CHILD_IDENTIFIERS_KEY,
+            var cacheKey = string.Format(NopCatalogDefaults.CategoriesChildIdentifiersCacheKey,
                 parentCategoryId,
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                 _storeContext.CurrentStore.Id,
@@ -441,7 +370,7 @@ namespace Nop.Services.Catalog
             if (categoryId == 0)
                 return null;
             
-            var key = string.Format(CATEGORIES_BY_ID_KEY, categoryId);
+            var key = string.Format(NopCatalogDefaults.CategoriesByIdCacheKey, categoryId);
             return _cacheManager.Get(key, () => _categoryRepository.GetById(categoryId));
         }
 
@@ -460,9 +389,9 @@ namespace Nop.Services.Catalog
             _categoryRepository.Insert(category);
 
             //cache
-            _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
-            _staticCacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(PRODUCTCATEGORIES_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopCatalogDefaults.CategoriesPatternCacheKey);
+            _staticCacheManager.RemoveByPattern(NopCatalogDefaults.CategoriesPatternCacheKey);
+            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductCategoriesPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(category);
@@ -495,9 +424,9 @@ namespace Nop.Services.Catalog
             _categoryRepository.Update(category);
 
             //cache
-            _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
-            _staticCacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(PRODUCTCATEGORIES_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopCatalogDefaults.CategoriesPatternCacheKey);
+            _staticCacheManager.RemoveByPattern(NopCatalogDefaults.CategoriesPatternCacheKey);
+            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductCategoriesPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(category);
@@ -515,7 +444,7 @@ namespace Nop.Services.Catalog
             _productCategoryRepository.Delete(productCategory);
 
             //cache
-            _cacheManager.RemoveByPattern(PRODUCTCATEGORIES_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductCategoriesPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityDeleted(productCategory);
@@ -535,7 +464,7 @@ namespace Nop.Services.Catalog
             if (categoryId == 0)
                 return new PagedList<ProductCategory>(new List<ProductCategory>(), pageIndex, pageSize);
 
-            var key = string.Format(PRODUCTCATEGORIES_ALLBYCATEGORYID_KEY, showHidden, categoryId, pageIndex, pageSize, _workContext.CurrentCustomer.Id, _storeContext.CurrentStore.Id);
+            var key = string.Format(NopCatalogDefaults.ProductCategoriesAllByCategoryIdCacheKey, showHidden, categoryId, pageIndex, pageSize, _workContext.CurrentCustomer.Id, _storeContext.CurrentStore.Id);
             return _cacheManager.Get(key, () =>
             {
                 var query = from pc in _productCategoryRepository.Table
@@ -604,7 +533,7 @@ namespace Nop.Services.Catalog
             if (productId == 0)
                 return new List<ProductCategory>();
 
-            var key = string.Format(PRODUCTCATEGORIES_ALLBYPRODUCTID_KEY, showHidden, productId, _workContext.CurrentCustomer.Id, storeId);
+            var key = string.Format(NopCatalogDefaults.ProductCategoriesAllByProductIdCacheKey, showHidden, productId, _workContext.CurrentCustomer.Id, storeId);
             return _cacheManager.Get(key, () =>
             {
                 var query = from pc in _productCategoryRepository.Table
@@ -661,7 +590,7 @@ namespace Nop.Services.Catalog
             _productCategoryRepository.Insert(productCategory);
 
             //cache
-            _cacheManager.RemoveByPattern(PRODUCTCATEGORIES_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductCategoriesPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(productCategory);
@@ -679,7 +608,7 @@ namespace Nop.Services.Catalog
             _productCategoryRepository.Update(productCategory);
 
             //cache
-            _cacheManager.RemoveByPattern(PRODUCTCATEGORIES_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductCategoriesPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(productCategory);

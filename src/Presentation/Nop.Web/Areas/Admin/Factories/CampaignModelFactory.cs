@@ -3,7 +3,7 @@ using System.Linq;
 using Nop.Core.Domain.Messages;
 using Nop.Services.Helpers;
 using Nop.Services.Messages;
-using Nop.Web.Areas.Admin.Extensions;
+using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Messages;
 using Nop.Web.Framework.Extensions;
 
@@ -81,7 +81,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = campaigns.PaginationByRequestModel(searchModel).Select(campaign =>
                 {
                     //fill in model values from the entity
-                    var campaignModel = campaign.ToModel();
+                    var campaignModel = campaign.ToModel<CampaignModel>();
 
                     //convert dates to the user time
                     campaignModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(campaign.CreatedOnUtc, DateTimeKind.Utc);
@@ -111,7 +111,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //fill in model values from the entity
             if (campaign != null)
             {
-                model = model ?? campaign.ToModel();
+                model = model ?? campaign.ToModel<CampaignModel>();
                 if (campaign.DontSendBeforeDateUtc.HasValue)
                     model.DontSendBeforeDate = _dateTimeHelper.ConvertToUserTime(campaign.DontSendBeforeDateUtc.Value, DateTimeKind.Utc);
             }

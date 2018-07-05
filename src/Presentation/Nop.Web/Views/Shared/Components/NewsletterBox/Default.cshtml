@@ -5,7 +5,7 @@
     </div>
     <div class="newsletter-subscribe" id="newsletter-subscribe-block">
         <div class="newsletter-email">
-            <input asp-for="NewsletterEmail" id="newsletter-email" class="newsletter-subscribe-text" placeholder=@T("Newsletter.Email.Placeholder")/>
+            <input asp-for="NewsletterEmail" id="newsletter-email" class="newsletter-subscribe-text" placeholder=@T("Newsletter.Email.Placeholder") aria-label="@T("Newsletter.Subscribe")"/>
             <input type="button" value="@T(Model.AllowToUnsubscribe ? "Newsletter.Options.Send" : "Newsletter.Options.Subscribe")" id="newsletter-subscribe-button" class="button-1 newsletter-subscribe-button"/>
             @if (Model.AllowToUnsubscribe)
             {
@@ -58,7 +58,7 @@
         }
 
         $(document).ready(function () {
-            $('#newsletter-subscribe-button').click(function () {
+            $('#newsletter-subscribe-button').on('click', function () {
                 @if (Model.AllowToUnsubscribe)
                 {
                     <text>if ($('#newsletter_subscribe').is(':checked')) {
@@ -72,9 +72,9 @@
                     <text>newsletter_subscribe('true');</text>
                 }
             });
-            $("#newsletter-email").keydown(function (event) {
+            $("#newsletter-email").on("keydown", function (event) {
                 if (event.keyCode == 13) {
-                    $("#newsletter-subscribe-button").click();
+                    $("#newsletter-subscribe-button").trigger("click");
                     return false;
                 }
             });

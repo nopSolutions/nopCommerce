@@ -22,8 +22,7 @@ namespace Nop.Data.Mapping.Messages
 
             builder.Property(subscription => subscription.Email).HasMaxLength(255).IsRequired();
 
-            //add custom configuration
-            this.PostConfigure(builder);
+            base.Configure(builder);
         }
 
         #endregion

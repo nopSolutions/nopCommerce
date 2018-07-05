@@ -39,8 +39,7 @@ namespace Nop.Data.Mapping.Customers
             builder.Ignore(customer => customer.CustomerRoles);
             builder.Ignore(customer => customer.Addresses);
 
-            //add custom configuration
-            this.PostConfigure(builder);
+            base.Configure(builder);
         }
 
         #endregion

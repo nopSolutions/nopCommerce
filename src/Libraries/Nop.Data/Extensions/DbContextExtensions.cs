@@ -163,7 +163,7 @@ namespace Nop.Data.Extensions
             if (!tableNames.ContainsKey(entityTypeFullName))
             {
                 //get entity type
-                var entityType = dbContext.Model.FindEntityType(typeof(TEntity));
+                var entityType = dbContext.Model.FindRuntimeEntityType(typeof(TEntity));
 
                 //get the name of the table to which the entity type is mapped
                 tableNames.TryAdd(entityTypeFullName, entityType.Relational().TableName);

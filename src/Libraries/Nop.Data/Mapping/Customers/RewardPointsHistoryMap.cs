@@ -33,8 +33,7 @@ namespace Nop.Data.Mapping.Customers
                 .HasForeignKey<Order>(order => order.RewardPointsHistoryEntryId)
                 .OnDelete(DeleteBehavior.ClientSetNull);
 
-            //add custom configuration
-            this.PostConfigure(builder);
+            base.Configure(builder);
         }
 
         #endregion

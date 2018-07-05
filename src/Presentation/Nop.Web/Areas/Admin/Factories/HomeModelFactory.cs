@@ -115,7 +115,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 var request = WebRequest.Create(nopCommerceNewsUrl);
 
                 //specify request timeout
-                request.Timeout = 5000;
+                request.Timeout = 3000;
 
                 //try to get nopCommerce news RSS feed
                 using (var response = request.GetResponse())

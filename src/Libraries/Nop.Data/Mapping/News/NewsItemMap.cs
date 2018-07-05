@@ -17,7 +17,7 @@ namespace Nop.Data.Mapping.News
         /// <param name="builder">The builder to be used to configure the entity</param>
         public override void Configure(EntityTypeBuilder<NewsItem> builder)
         {
-            builder.ToTable("News");
+            builder.ToTable(NopMappingDefaults.NewsItemTable);
             builder.HasKey(newsItem => newsItem.Id);
 
             builder.Property(newsItem => newsItem.Title).IsRequired();
@@ -31,8 +31,7 @@ namespace Nop.Data.Mapping.News
                 .HasForeignKey(newsItem => newsItem.LanguageId)
                 .IsRequired();
 
-            //add custom configuration
-            this.PostConfigure(builder);
+            base.Configure(builder);
         }
 
         #endregion

@@ -104,7 +104,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
 
                         if (!string.IsNullOrEmpty(hintResource))
                         {
-                            var hintContent = $"<div title='{WebUtility.HtmlEncode(hintResource)}' class='ico-help'><i class='fa fa-question-circle'></i></div>";
+                            var hintContent = $"<div title='{WebUtility.HtmlEncode(hintResource)}' data-toggle='tooltip' class='ico-help'><i class='fa fa-question-circle'></i></div>";
                             output.Content.AppendHtml(hintContent);
                         }
                     }

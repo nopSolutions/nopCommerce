@@ -24,8 +24,7 @@ namespace Nop.Data.Mapping.Messages
             builder.Property(campaign => campaign.Subject).IsRequired();
             builder.Property(campaign => campaign.Body).IsRequired();
 
-            //add custom configuration
-            this.PostConfigure(builder);
+            base.Configure(builder);
         }
 
         #endregion

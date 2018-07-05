@@ -22,8 +22,7 @@ namespace Nop.Data.Mapping.Gdpr
 
             builder.Property(category => category.Message).IsRequired();
 
-            //add custom configuration
-            this.PostConfigure(builder);
+            base.Configure(builder);
         }
 
         #endregion

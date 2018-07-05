@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
@@ -59,7 +60,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
         /// </summary>
         /// <param name="context">Context</param>
         /// <param name="output">Output</param>
-        public override void Process(TagHelperContext context, TagHelperOutput output)
+        public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
             if (context == null)
             {
@@ -96,7 +97,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
             output.Attributes.Add("tabindex", "-1");
             output.Attributes.Add("role", "dialog");
             output.Attributes.Add("aria-labelledby", $"{modalId}-title");
-            output.Content.SetHtmlContent(_htmlHelper.Partial("Confirm", actionConfirmationModel));
+            output.Content.SetHtmlContent(await _htmlHelper.PartialAsync("Confirm", actionConfirmationModel));
 
             //modal script
             var script = new TagBuilder("script");

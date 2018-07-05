@@ -17,13 +17,12 @@ namespace Nop.Data.Mapping.Forums
         /// <param name="builder">The builder to be used to configure the entity</param>
         public override void Configure(EntityTypeBuilder<ForumGroup> builder)
         {
-            builder.ToTable("Forums_Group");
+            builder.ToTable(NopMappingDefaults.ForumsGroupTable);
             builder.HasKey(forumGroup => forumGroup.Id);
 
             builder.Property(forumGroup => forumGroup.Name).HasMaxLength(200).IsRequired();
 
-            //add custom configuration
-            this.PostConfigure(builder);
+            base.Configure(builder);
         }
 
         #endregion

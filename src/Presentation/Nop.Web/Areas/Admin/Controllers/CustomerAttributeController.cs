@@ -5,8 +5,8 @@ using Nop.Services.Customers;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Security;
-using Nop.Web.Areas.Admin.Extensions;
 using Nop.Web.Areas.Admin.Factories;
+using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Customers;
 using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.Filters;
@@ -121,7 +121,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                var customerAttribute = model.ToEntity();
+                var customerAttribute = model.ToEntity<CustomerAttribute>();
                 _customerAttributeService.InsertCustomerAttribute(customerAttribute);
 
                 //activity log
@@ -271,14 +271,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                var cav = new CustomerAttributeValue
-                {
-                    CustomerAttributeId = model.CustomerAttributeId,
-                    Name = model.Name,
-                    IsPreSelected = model.IsPreSelected,
-                    DisplayOrder = model.DisplayOrder
-                };
-
+                var cav = model.ToEntity<CustomerAttributeValue>();
                 _customerAttributeService.InsertCustomerAttributeValue(cav);
 
                 //activity log
@@ -338,9 +331,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                customerAttributeValue.Name = model.Name;
-                customerAttributeValue.IsPreSelected = model.IsPreSelected;
-                customerAttributeValue.DisplayOrder = model.DisplayOrder;
+                customerAttributeValue = model.ToEntity(customerAttributeValue);
                 _customerAttributeService.UpdateCustomerAttributeValue(customerAttributeValue);
 
                 //activity log

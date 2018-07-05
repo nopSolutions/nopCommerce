@@ -5,7 +5,7 @@ using Nop.Core.Domain.Messages;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Messages;
-using Nop.Web.Areas.Admin.Extensions;
+using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Messages;
 
 namespace Nop.Web.Areas.Admin.Factories
@@ -93,7 +93,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = queuedEmails.Select(queuedEmail =>
                 {
                     //fill in model values from the entity
-                    var queuedEmailModel = queuedEmail.ToModel();
+                    var queuedEmailModel = queuedEmail.ToModel<QueuedEmailModel>();
 
                     //little performance optimization: ensure that "Body" is not returned
                     queuedEmailModel.Body = string.Empty;
@@ -133,7 +133,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 return model;
 
             //fill in model values from the entity
-            model = model ?? queuedEmail.ToModel();
+            model = model ?? queuedEmail.ToModel<QueuedEmailModel>();
 
             model.PriorityName = queuedEmail.Priority.GetLocalizedEnum(_localizationService, _workContext);
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(queuedEmail.CreatedOnUtc, DateTimeKind.Utc);

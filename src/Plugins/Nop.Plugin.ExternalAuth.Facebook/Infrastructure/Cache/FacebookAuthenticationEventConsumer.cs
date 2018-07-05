@@ -41,11 +41,11 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Infrastructure.Cache
             //store some of the customer fields
             var firstName = eventMessage.AuthenticationParameters.Claims?.FirstOrDefault(claim => claim.Type == ClaimTypes.GivenName)?.Value;
             if (!string.IsNullOrEmpty(firstName))
-                _genericAttributeService.SaveAttribute(eventMessage.Customer, SystemCustomerAttributeNames.FirstName, firstName);
+                _genericAttributeService.SaveAttribute(eventMessage.Customer, NopCustomerDefaults.FirstNameAttribute, firstName);
 
             var lastName = eventMessage.AuthenticationParameters.Claims?.FirstOrDefault(claim => claim.Type == ClaimTypes.Surname)?.Value;
             if (!string.IsNullOrEmpty(lastName))
-                _genericAttributeService.SaveAttribute(eventMessage.Customer, SystemCustomerAttributeNames.LastName, lastName);
+                _genericAttributeService.SaveAttribute(eventMessage.Customer, NopCustomerDefaults.LastNameAttribute, lastName);
         }
 
         #endregion

@@ -17,7 +17,7 @@ namespace Nop.Data.Mapping.Catalog
         /// <param name="builder">The builder to be used to configure the entity</param>
         public override void Configure(EntityTypeBuilder<ProductAttributeMapping> builder)
         {
-            builder.ToTable("Product_ProductAttribute_Mapping");
+            builder.ToTable(NopMappingDefaults.ProductProductAttributeTable);
             builder.HasKey(productAttributeMapping => productAttributeMapping.Id);
 
             builder.HasOne(productAttributeMapping => productAttributeMapping.Product)
@@ -32,8 +32,7 @@ namespace Nop.Data.Mapping.Catalog
 
             builder.Ignore(pam => pam.AttributeControlType);
 
-            //add custom configuration
-            this.PostConfigure(builder);
+            base.Configure(builder);
         }
 
         #endregion

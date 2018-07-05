@@ -16,32 +16,6 @@ namespace Nop.Services.Security
     /// </summary>
     public partial class PermissionService : IPermissionService
     {
-        #region Constants
-
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : customer role ID
-        /// {1} : permission system name
-        /// </remarks>
-        private const string PERMISSIONS_ALLOWED_KEY = "Nop.permission.allowed-{0}-{1}";
-
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : customer role ID
-        /// </remarks>
-        private const string PERMISSIONS_ALLBYCUSTOMERTROLEID_KEY = "Nop.permission.allbycustomerroleid-{0}";
-
-        /// <summary>
-        /// Key pattern to clear cache
-        /// </summary>
-        private const string PERMISSIONS_PATTERN_KEY = "Nop.permission.";
-
-        #endregion
-
         #region Fields
 
         private readonly IRepository<PermissionRecord> _permissionRecordRepository;
@@ -98,7 +72,7 @@ namespace Nop.Services.Security
         /// <returns>Permissions</returns>
         protected virtual IList<PermissionRecord> GetPermissionRecordsByCustomerRoleId(int customerRoleId)
         {
-            var key = string.Format(PERMISSIONS_ALLBYCUSTOMERTROLEID_KEY, customerRoleId);
+            var key = string.Format(NopSecurityDefaults.PermissionsAllByCustomerRoleIdCacheKey, customerRoleId);
             return _cacheManager.Get(key, () =>
             {
                 var query = from pr in _permissionRecordRepository.Table
@@ -115,17 +89,17 @@ namespace Nop.Services.Security
         /// Authorize permission
         /// </summary>
         /// <param name="permissionRecordSystemName">Permission record system name</param>
-        /// <param name="customerRole">Customer role</param>
+        /// <param name="customerRoleId">Customer role identifier</param>
         /// <returns>true - authorized; otherwise, false</returns>
-        protected virtual bool Authorize(string permissionRecordSystemName, CustomerRole customerRole)
+        protected virtual bool Authorize(string permissionRecordSystemName, int customerRoleId)
         {
             if (string.IsNullOrEmpty(permissionRecordSystemName))
                 return false;
             
-            var key = string.Format(PERMISSIONS_ALLOWED_KEY, customerRole.Id, permissionRecordSystemName);
+            var key = string.Format(NopSecurityDefaults.PermissionsAllowedCacheKey, customerRoleId, permissionRecordSystemName);
             return _staticCacheManager.Get(key, () =>
             {
-                var permissions = GetPermissionRecordsByCustomerRoleId(customerRole.Id);
+                var permissions = GetPermissionRecordsByCustomerRoleId(customerRoleId);
                 foreach (var permission1 in permissions)
                     if (permission1.SystemName.Equals(permissionRecordSystemName, StringComparison.InvariantCultureIgnoreCase))
                         return true;
@@ -149,8 +123,8 @@ namespace Nop.Services.Security
 
             _permissionRecordRepository.Delete(permission);
 
-            _cacheManager.RemoveByPattern(PERMISSIONS_PATTERN_KEY);
-            _staticCacheManager.RemoveByPattern(PERMISSIONS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopSecurityDefaults.PermissionsPatternCacheKey);
+            _staticCacheManager.RemoveByPattern(NopSecurityDefaults.PermissionsPatternCacheKey);
         }
 
         /// <summary>
@@ -209,8 +183,8 @@ namespace Nop.Services.Security
 
             _permissionRecordRepository.Insert(permission);
 
-            _cacheManager.RemoveByPattern(PERMISSIONS_PATTERN_KEY);
-            _staticCacheManager.RemoveByPattern(PERMISSIONS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopSecurityDefaults.PermissionsPatternCacheKey);
+            _staticCacheManager.RemoveByPattern(NopSecurityDefaults.PermissionsPatternCacheKey);
         }
 
         /// <summary>
@@ -224,8 +198,8 @@ namespace Nop.Services.Security
 
             _permissionRecordRepository.Update(permission);
 
-            _cacheManager.RemoveByPattern(PERMISSIONS_PATTERN_KEY);
-            _staticCacheManager.RemoveByPattern(PERMISSIONS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopSecurityDefaults.PermissionsPatternCacheKey);
+            _staticCacheManager.RemoveByPattern(NopSecurityDefaults.PermissionsPatternCacheKey);
         }
 
         /// <summary>
@@ -368,7 +342,7 @@ namespace Nop.Services.Security
 
             var customerRoles = customer.CustomerRoles.Where(cr => cr.Active);
             foreach (var role in customerRoles)
-                if (Authorize(permissionRecordSystemName, role))
+                if (Authorize(permissionRecordSystemName, role.Id))
                     //yes, we have such permission
                     return true;
             

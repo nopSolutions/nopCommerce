@@ -2,6 +2,7 @@
 using System.Linq;
 using Nop.Services.Helpers;
 using Nop.Services.Tasks;
+using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Tasks;
 using Nop.Web.Framework.Extensions;
 
@@ -67,14 +68,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = scheduleTasks.PaginationByRequestModel(searchModel).Select(scheduleTask =>
                 {
                     //fill in model values from the entity
-                    var scheduleTaskModel = new ScheduleTaskModel
-                    {
-                        Id = scheduleTask.Id,
-                        Name = scheduleTask.Name,
-                        Seconds = scheduleTask.Seconds,
-                        Enabled = scheduleTask.Enabled,
-                        StopOnError = scheduleTask.StopOnError
-                    };
+                    var scheduleTaskModel = scheduleTask.ToModel<ScheduleTaskModel>();
 
                     //convert dates to the user time
                     if (scheduleTask.LastStartUtc.HasValue)

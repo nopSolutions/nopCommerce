@@ -98,10 +98,10 @@
     </ul>
     <script asp-location="Footer">
         $(document).ready(function () {
-            $('.menu-toggle').click(function () {
+            $('.menu-toggle').on('click', function () {
                 $(this).siblings('.top-menu.mobile').slideToggle('slow');
             });
-            $('.top-menu.mobile .sublist-toggle').click(function () {
+            $('.top-menu.mobile .sublist-toggle').on('click', function () {
                 $(this).siblings('.sublist').slideToggle('slow');
             });
         });

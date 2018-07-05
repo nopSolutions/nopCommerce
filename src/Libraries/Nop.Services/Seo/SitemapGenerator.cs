@@ -25,17 +25,6 @@ namespace Nop.Services.Seo
     /// </summary>
     public partial class SitemapGenerator : ISitemapGenerator
     {
-        #region Constants
-
-        private const string DATE_FORMAT = @"yyyy-MM-dd";
-
-        /// <summary>
-        /// At now each provided sitemap file must have no more than 50000 URLs
-        /// </summary>
-        private const int MAX_SITEMAP_URL_NUMBER = 50000;
-
-        #endregion
-
         #region Fields
 
         private readonly IStoreContext _storeContext;
@@ -162,7 +151,7 @@ namespace Nop.Services.Seo
         /// <returns>Protocol name as string</returns>
         protected virtual string GetHttpProtocol()
         {
-            return _securitySettings.ForceSslForAllPages ? "https" : "http";
+            return _securitySettings.ForceSslForAllPages ? Uri.UriSchemeHttps : Uri.UriSchemeHttp;
         }
 
         /// <summary>
@@ -340,7 +329,7 @@ namespace Nop.Services.Seo
 
                     writer.WriteStartElement("sitemap");
                     writer.WriteElementString("loc", location);
-                    writer.WriteElementString("lastmod", DateTime.UtcNow.ToString(DATE_FORMAT));
+                    writer.WriteElementString("lastmod", DateTime.UtcNow.ToString(NopSeoDefaults.SitemapDateFormat));
                     writer.WriteEndElement();
                 }
 
@@ -372,7 +361,7 @@ namespace Nop.Services.Seo
 
                     writer.WriteElementString("loc", location);
                     writer.WriteElementString("changefreq", url.UpdateFrequency.ToString().ToLowerInvariant());
-                    writer.WriteElementString("lastmod", url.UpdatedOn.ToString(DATE_FORMAT, CultureInfo.InvariantCulture));
+                    writer.WriteElementString("lastmod", url.UpdatedOn.ToString(NopSeoDefaults.SitemapDateFormat, CultureInfo.InvariantCulture));
                     writer.WriteEndElement();
                 }
 
@@ -412,7 +401,8 @@ namespace Nop.Services.Seo
 
             //split URLs into separate lists based on the max size 
             var sitemaps = sitemapUrls.Select((url, index) => new { Index = index, Value = url })
-                .GroupBy(group => group.Index / MAX_SITEMAP_URL_NUMBER).Select(group => group.Select(url => url.Value).ToList()).ToList();
+                .GroupBy(group => group.Index / NopSeoDefaults.SitemapMaxUrlNumber)
+                    .Select(group => group.Select(url => url.Value).ToList()).ToList();
 
             if (!sitemaps.Any())
                 return;
@@ -430,7 +420,7 @@ namespace Nop.Services.Seo
             else
             {
                 //URLs more than the maximum allowable, so generate a sitemap index file
-                if (sitemapUrls.Count >= MAX_SITEMAP_URL_NUMBER)
+                if (sitemapUrls.Count >= NopSeoDefaults.SitemapMaxUrlNumber)
                 {
                     //write a sitemap index file into the stream
                     WriteSitemapIndex(stream, sitemaps.Count);

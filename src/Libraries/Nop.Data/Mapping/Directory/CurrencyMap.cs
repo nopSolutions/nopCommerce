@@ -28,8 +28,7 @@ namespace Nop.Data.Mapping.Directory
 
             builder.Ignore(currency => currency.RoundingType);
 
-            //add custom configuration
-            this.PostConfigure(builder);
+            base.Configure(builder);
         }
 
         #endregion

@@ -27,8 +27,8 @@ using Nop.Services.Security;
 using Nop.Services.Seo;
 using Nop.Services.Shipping;
 using Nop.Services.Stores;
-using Nop.Web.Areas.Admin.Extensions;
 using Nop.Web.Areas.Admin.Factories;
+using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc;
@@ -833,7 +833,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     model.ShowOnHomePage = false;
 
                 //product
-                var product = model.ToEntity();
+                var product = model.ToEntity<Product>();
                 product.CreatedOnUtc = DateTime.UtcNow;
                 product.UpdatedOnUtc = DateTime.UtcNow;
                 _productService.InsertProduct(product);
@@ -2186,34 +2186,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         #endregion
-
-        #region Low stock reports
-
-        public virtual IActionResult LowStockReport()
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
-            //prepare model
-            var model = _productModelFactory.PrepareLowStockProductSearchModel(new LowStockProductSearchModel());
-
-            return View(model);
-        }
-
-        [HttpPost]
-        public virtual IActionResult LowStockReportList(LowStockProductSearchModel searchModel)
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedKendoGridJson();
-
-            //prepare model
-            var model = _productModelFactory.PrepareLowStockProductListModel(searchModel);
-
-            return Json(model);
-        }
-
-        #endregion
-
+        
         #region Bulk editing
 
         public virtual IActionResult BulkEdit()
@@ -3379,7 +3352,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
 
             var productEditorSettings = _settingService.LoadSetting<ProductEditorSettings>();
-            productEditorSettings = model.ProductEditorSettingsModel.ToEntity(productEditorSettings);
+            productEditorSettings = model.ProductEditorSettingsModel.ToSettings(productEditorSettings);
             _settingService.SaveSetting(productEditorSettings);
 
             //product list

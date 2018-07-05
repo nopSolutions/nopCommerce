@@ -1,10 +1,10 @@
 ﻿using FluentValidation.TestHelper;
+using Moq;
 using Nop.Core.Domain.Common;
 using Nop.Services.Directory;
 using Nop.Web.Models.Common;
 using Nop.Web.Validators.Common;
 using NUnit.Framework;
-using Rhino.Mocks;
 
 namespace Nop.Web.MVC.Tests.Public.Validators.Common
 {
@@ -16,7 +16,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Common
         [SetUp]
         public new void Setup()
         {
-            _stateProvinceService = MockRepository.GenerateMock<IStateProvinceService>();
+            _stateProvinceService = new Mock<IStateProvinceService>().Object;
         }
 
         [Test]

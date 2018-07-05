@@ -26,8 +26,7 @@ namespace Nop.Data.Mapping.Vendors
             builder.Property(vendor => vendor.MetaTitle).HasMaxLength(400);
             builder.Property(vendor => vendor.PageSizeOptions).HasMaxLength(200);
 
-            //add custom configuration
-            this.PostConfigure(builder);
+            base.Configure(builder);
         }
 
         #endregion

@@ -24,8 +24,7 @@ namespace Nop.Data.Mapping.Customers
 
             builder.Ignore(attribute => attribute.AttributeControlType);
 
-            //add custom configuration
-            this.PostConfigure(builder);
+            base.Configure(builder);
         }
 
         #endregion

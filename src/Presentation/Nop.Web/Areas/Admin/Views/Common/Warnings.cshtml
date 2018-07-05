@@ -31,15 +31,31 @@
                                 {
                                     <p class="text-green">
                                         <i class="icon fa fa-check"></i>
-                                        @warning.Text
+                                        @if (warning.DontEncode)
+                                        {
+                                            @Html.Raw(warning.Text)
+                                        }
+                                        else
+                                        {
+                                            @warning.Text
+                                        }
                                     </p>
                                 }
                                 break;
+                            case SystemWarningLevel.CopyrightRemovalKey:
+                            case SystemWarningLevel.Recommendation:
                             case SystemWarningLevel.Warning:
                                 {
                                     <p class="text-yellow">
                                         <i class="icon fa fa-warning"></i>
-                                        @warning.Text
+                                        @if (warning.DontEncode)
+                                        {
+                                            @Html.Raw(warning.Text)
+                                        }
+                                        else
+                                        {
+                                            @warning.Text
+                                        }
                                     </p>
                                 }
                                 break;
@@ -47,7 +63,14 @@
                                 {
                                     <p class="text-red">
                                         <i class="icon fa fa-ban"></i>
-                                        @warning.Text
+                                        @if (warning.DontEncode)
+                                        {
+                                            @Html.Raw(warning.Text)
+                                        }
+                                        else
+                                        {
+                                            @warning.Text
+                                        }
                                     </p>
                                 }
                                 break;

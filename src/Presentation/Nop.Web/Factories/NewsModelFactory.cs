@@ -5,13 +5,13 @@ using Nop.Core.Caching;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.News;
+using Nop.Core.Domain.Security;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Helpers;
 using Nop.Services.Media;
 using Nop.Services.News;
 using Nop.Services.Seo;
-using Nop.Web.Framework.Security.Captcha;
 using Nop.Web.Infrastructure.Cache;
 using Nop.Web.Models.News;
 
@@ -91,7 +91,7 @@ namespace Nop.Web.Factories
             if (_customerSettings.AllowCustomersToUploadAvatars)
             {
                 model.CustomerAvatarUrl = _pictureService.GetPictureUrl(
-                    newsComment.Customer.GetAttribute<int>(SystemCustomerAttributeNames.AvatarPictureId),
+                    newsComment.Customer.GetAttribute<int>(NopCustomerDefaults.AvatarPictureIdAttribute),
                     _mediaSettings.AvatarPictureSize,
                     _customerSettings.DefaultAvatarEnabled,
                     defaultPictureType: PictureType.Avatar);

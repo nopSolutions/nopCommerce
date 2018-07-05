@@ -28,8 +28,7 @@ namespace Nop.Data.Mapping.Orders
                 .WithMany(orderItem => orderItem.AssociatedGiftCards)
                 .HasForeignKey(giftCard => giftCard.PurchasedWithOrderItemId);
 
-            //add custom configuration
-            this.PostConfigure(builder);
+            base.Configure(builder);
         }
 
         #endregion

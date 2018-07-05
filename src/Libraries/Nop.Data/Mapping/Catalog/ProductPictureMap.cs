@@ -17,7 +17,7 @@ namespace Nop.Data.Mapping.Catalog
         /// <param name="builder">The builder to be used to configure the entity</param>
         public override void Configure(EntityTypeBuilder<ProductPicture> builder)
         {
-            builder.ToTable("Product_Picture_Mapping");
+            builder.ToTable(NopMappingDefaults.ProductPictureTable);
             builder.HasKey(productPicture => productPicture.Id);
 
             builder.HasOne(productPicture => productPicture.Picture)
@@ -30,8 +30,7 @@ namespace Nop.Data.Mapping.Catalog
                 .HasForeignKey(productPicture => productPicture.ProductId)
                 .IsRequired();
 
-            //add custom configuration
-            this.PostConfigure(builder);
+            base.Configure(builder);
         }
 
         #endregion

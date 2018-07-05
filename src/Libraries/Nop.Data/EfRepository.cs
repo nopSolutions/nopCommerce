@@ -204,10 +204,7 @@ namespace Nop.Data
         /// <summary>
         /// Gets a table with "no tracking" enabled (EF feature) Use it only when you load record(s) only for read-only operations
         /// </summary>
-        public virtual IQueryable<TEntity> TableNoTracking =>
-            //AsNoTracking method temporarily doesn't work, it's a bug in EF Core 2.1 (details in https://github.com/aspnet/EntityFrameworkCore/issues/11689)
-            //Entities.AsNoTracking();
-            Entities;
+        public virtual IQueryable<TEntity> TableNoTracking => Entities.AsNoTracking();
 
         /// <summary>
         /// Gets an entity set

@@ -7,7 +7,7 @@ namespace Nop.Web.Areas.Admin.Models.Shipping
     /// <summary>
     /// Represents a pickup point provider model
     /// </summary>
-    public partial class PickupPointProviderModel : BaseNopModel
+    public partial class PickupPointProviderModel : BaseNopModel, IPluginModel
     {
         #region Properties
 
@@ -28,12 +28,6 @@ namespace Nop.Web.Areas.Admin.Models.Shipping
 
         [NopResourceDisplayName("Admin.Configuration.Shipping.PickupPointProviders.Configure")]
         public string ConfigurationUrl { get; set; }
-
-        public string ConfigurationActionName { get; set; }
-
-        public string ConfigurationControllerName { get; set; }
-
-        public RouteValueDictionary ConfigurationRouteValues { get; set; }
 
         #endregion
     }

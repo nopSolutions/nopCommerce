@@ -11,7 +11,6 @@ using Nop.Core.Configuration;
 using Nop.Core.Data;
 using Nop.Core.Domain.Security;
 using Nop.Core.Infrastructure;
-using Nop.Web.Framework.Compression;
 using Nop.Web.Framework.Infrastructure.Extensions;
 
 namespace Nop.Web.Framework.Infrastructure
@@ -25,8 +24,8 @@ namespace Nop.Web.Framework.Infrastructure
         /// Add and configure any of the middleware
         /// </summary>
         /// <param name="services">Collection of service descriptors</param>
-        /// <param name="configuration">Configuration root of the application</param>
-        public void ConfigureServices(IServiceCollection services, IConfigurationRoot configuration)
+        /// <param name="configuration">Configuration of the application</param>
+        public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
             //compression
             services.AddResponseCompression();
@@ -67,8 +66,6 @@ namespace Nop.Web.Framework.Infrastructure
             {
                 //gzip by default
                 application.UseResponseCompression();
-                //workaround with "vary" header
-                application.UseMiddleware<ResponseCompressionVaryWorkaroundMiddleware>();
             }
 
             //static files

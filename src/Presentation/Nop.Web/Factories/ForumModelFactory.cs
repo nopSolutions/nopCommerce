@@ -384,12 +384,12 @@ namespace Nop.Web.Factories
                     CustomerName = post.Customer.FormatUserName(),
                     IsCustomerForumModerator = post.Customer.IsForumModerator(),
                     ShowCustomersPostCount = _forumSettings.ShowCustomersPostCount,
-                    ForumPostCount = post.Customer.GetAttribute<int>(SystemCustomerAttributeNames.ForumPostCount),
+                    ForumPostCount = post.Customer.GetAttribute<int>(NopCustomerDefaults.ForumPostCountAttribute),
                     ShowCustomersJoinDate = _customerSettings.ShowCustomersJoinDate && !post.Customer.IsGuest(),
                     CustomerJoinDate = post.Customer.CreatedOnUtc,
                     AllowPrivateMessages = _forumSettings.AllowPrivateMessages && !post.Customer.IsGuest(),
                     SignaturesEnabled = _forumSettings.SignaturesEnabled,
-                    FormattedSignature = post.Customer.GetAttribute<string>(SystemCustomerAttributeNames.Signature).FormatForumSignatureText(),
+                    FormattedSignature = post.Customer.GetAttribute<string>(NopCustomerDefaults.SignatureAttribute).FormatForumSignatureText(),
                 };
                 //created on string
                 if (_forumSettings.RelativeDateTimeFormattingEnabled)
@@ -401,7 +401,7 @@ namespace Nop.Web.Factories
                 if (_customerSettings.AllowCustomersToUploadAvatars)
                 {
                     forumPostModel.CustomerAvatarUrl = _pictureService.GetPictureUrl(
-                        post.Customer.GetAttribute<int>(SystemCustomerAttributeNames.AvatarPictureId),
+                        post.Customer.GetAttribute<int>(NopCustomerDefaults.AvatarPictureIdAttribute),
                         _mediaSettings.AvatarPictureSize,
                         _customerSettings.DefaultAvatarEnabled,
                         defaultPictureType: PictureType.Avatar);
@@ -410,7 +410,7 @@ namespace Nop.Web.Factories
                 forumPostModel.ShowCustomersLocation = _customerSettings.ShowCustomersLocation && !post.Customer.IsGuest();
                 if (_customerSettings.ShowCustomersLocation)
                 {
-                    var countryId = post.Customer.GetAttribute<int>(SystemCustomerAttributeNames.CountryId);
+                    var countryId = post.Customer.GetAttribute<int>(NopCustomerDefaults.CountryIdAttribute);
                     var country = _countryService.GetCountryById(countryId);
                     forumPostModel.CustomerLocation = country != null ? country.GetLocalized(x => x.Name) : string.Empty;
                 }

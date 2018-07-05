@@ -1,6 +1,5 @@
 ﻿using System;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Nop.Web.Framework.Infrastructure.Extensions;
@@ -15,22 +14,18 @@ namespace Nop.Web
         #region Properties
 
         /// <summary>
-        /// Get configuration root of the application
+        /// Get Configuration of the application
         /// </summary>
-        public IConfigurationRoot Configuration { get; }
+        public IConfiguration Configuration { get; }
 
         #endregion
 
         #region Ctor
 
-        public Startup(IHostingEnvironment environment)
+        public Startup(IConfiguration configuration)
         {
-            //create configuration
-            Configuration = new ConfigurationBuilder()
-                .SetBasePath(environment.ContentRootPath)
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                .AddEnvironmentVariables()
-                .Build();
+            //set configuration
+            Configuration = configuration;
         }
 
         #endregion

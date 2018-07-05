@@ -2,13 +2,14 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Models;
+using Nop.Web.Areas.Admin.Models.Catalog;
 
 namespace Nop.Web.Areas.Admin.Models.Settings
 {
     /// <summary>
     /// Represents a catalog settings model
     /// </summary>
-    public partial class CatalogSettingsModel : BaseNopModel
+    public partial class CatalogSettingsModel : BaseNopModel, ISettingsModel
     {
         #region Ctor
 
@@ -16,6 +17,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         {
             AvailableViewModes = new List<SelectListItem>();
             SortOptionSearchModel = new SortOptionSearchModel();
+            ReviewTypeSearchModel = new ReviewTypeSearchModel();
         }
 
         #endregion
@@ -300,7 +302,13 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.CacheProductPrices")]
         public bool CacheProductPrices { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.DisplayDatePreOrderAvailability")]
+        public bool DisplayDatePreOrderAvailability { get; set; }
+        public bool DisplayDatePreOrderAvailability_OverrideForStore { get; set; }
+
         public SortOptionSearchModel SortOptionSearchModel { get; set; }
+
+        public ReviewTypeSearchModel ReviewTypeSearchModel { get; set; }
 
         #endregion
     }

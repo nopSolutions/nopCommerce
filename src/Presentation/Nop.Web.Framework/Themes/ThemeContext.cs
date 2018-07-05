@@ -66,7 +66,7 @@ namespace Nop.Web.Framework.Themes
 
                 //whether customers are allowed to select a theme
                 if (_storeInformationSettings.AllowCustomerToSelectTheme && _workContext.CurrentCustomer != null)
-                    themeName = _workContext.CurrentCustomer.GetAttribute<string>(SystemCustomerAttributeNames.WorkingThemeName, _genericAttributeService, _storeContext.CurrentStore.Id);
+                    themeName = _workContext.CurrentCustomer.GetAttribute<string>(NopCustomerDefaults.WorkingThemeNameAttribute, _genericAttributeService, _storeContext.CurrentStore.Id);
 
                 //if not, try to get default store theme
                 if (string.IsNullOrEmpty(themeName))
@@ -93,7 +93,7 @@ namespace Nop.Web.Framework.Themes
 
                 //save selected by customer theme system name
                 _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, 
-                    SystemCustomerAttributeNames.WorkingThemeName, value, _storeContext.CurrentStore.Id);
+                    NopCustomerDefaults.WorkingThemeNameAttribute, value, _storeContext.CurrentStore.Id);
 
                 //clear cache
                 this._cachedThemeName = null;

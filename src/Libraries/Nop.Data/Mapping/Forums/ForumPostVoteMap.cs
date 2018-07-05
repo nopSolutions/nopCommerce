@@ -17,7 +17,7 @@ namespace Nop.Data.Mapping.Forums
         /// <param name="builder">The builder to be used to configure the entity</param>
         public override void Configure(EntityTypeBuilder<ForumPostVote> builder)
         {
-            builder.ToTable("Forums_PostVote");
+            builder.ToTable(NopMappingDefaults.ForumsPostVoteTable);
             builder.HasKey(postVote => postVote.Id);
 
             builder.HasOne(postVote => postVote.ForumPost)
@@ -25,8 +25,7 @@ namespace Nop.Data.Mapping.Forums
                 .HasForeignKey(postVote => postVote.ForumPostId)
                 .IsRequired();
 
-            //add custom configuration
-            this.PostConfigure(builder);
+            base.Configure(builder);
         }
 
         #endregion

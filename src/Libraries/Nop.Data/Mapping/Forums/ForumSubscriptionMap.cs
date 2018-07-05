@@ -17,7 +17,7 @@ namespace Nop.Data.Mapping.Forums
         /// <param name="builder">The builder to be used to configure the entity</param>
         public override void Configure(EntityTypeBuilder<ForumSubscription> builder)
         {
-            builder.ToTable("Forums_Subscription");
+            builder.ToTable(NopMappingDefaults.ForumsSubscriptionTable);
             builder.HasKey(subscription => subscription.Id);
 
             builder.HasOne(subscription => subscription.Customer)
@@ -26,8 +26,7 @@ namespace Nop.Data.Mapping.Forums
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
 
-            //add custom configuration
-            this.PostConfigure(builder);
+            base.Configure(builder);
         }
 
         #endregion

@@ -14,6 +14,7 @@ using Nop.Services.Security;
 using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Areas.Admin.Models.Payments;
 using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Web.Areas.Admin.Controllers
 {
@@ -130,6 +131,10 @@ namespace Nop.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        //we ignore this filter for increase RequestFormLimits
+        [AdminAntiForgery(true)]
+        //we use 2048 value because in some cases default value (1024) is too small for this action
+        [RequestFormLimits(ValueCountLimit = 2048)]
         [HttpPost, ActionName("MethodRestrictions")]
         public virtual IActionResult MethodRestrictionsSave(PaymentMethodsModel model)
         {

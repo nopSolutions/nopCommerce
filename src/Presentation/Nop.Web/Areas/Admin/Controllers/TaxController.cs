@@ -4,8 +4,8 @@ using Nop.Core.Domain.Tax;
 using Nop.Services.Configuration;
 using Nop.Services.Security;
 using Nop.Services.Tax;
-using Nop.Web.Areas.Admin.Extensions;
 using Nop.Web.Areas.Admin.Factories;
+using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Tax;
 using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
@@ -44,6 +44,19 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #endregion
 
+        #region Methods
+
+        public virtual IActionResult List()
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
+                return AccessDeniedView();
+
+            //prepare model
+            var model = _taxModelFactory.PrepareTaxConfigurationModel(new TaxConfigurationModel());
+
+            return View(model);
+        }
+
         #region Tax Providers
 
         public virtual IActionResult Providers()
@@ -75,16 +88,16 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             if (string.IsNullOrEmpty(systemName))
-                return RedirectToAction("Providers");
+                return RedirectToAction("List");
 
             var taxProvider = _taxService.LoadTaxProviderBySystemName(systemName);
             if (taxProvider == null)
-                return RedirectToAction("Providers");
+                return RedirectToAction("List");
 
             _taxSettings.ActiveTaxProviderSystemName = systemName;
             _settingService.SaveSetting(_taxSettings);
 
-            return RedirectToAction("Providers");
+            return RedirectToAction("List");
         }
 
         #endregion
@@ -160,6 +173,8 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             return new NullJsonResult();
         }
+
+        #endregion
 
         #endregion
     }

@@ -23,8 +23,7 @@ namespace Nop.Data.Mapping.Tasks
             builder.Property(task => task.Name).IsRequired();
             builder.Property(task => task.Type).IsRequired();
 
-            //add custom configuration
-            this.PostConfigure(builder);
+            base.Configure(builder);
         }
 
         #endregion

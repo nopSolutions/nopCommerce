@@ -6,8 +6,8 @@ using Nop.Services.Localization;
 using Nop.Services.Polls;
 using Nop.Services.Security;
 using Nop.Services.Stores;
-using Nop.Web.Areas.Admin.Extensions;
 using Nop.Web.Areas.Admin.Factories;
+using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Polls;
 using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
@@ -122,7 +122,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                var poll = model.ToEntity();
+                var poll = model.ToEntity<Poll>();
                 poll.StartDateUtc = model.StartDate;
                 poll.EndDateUtc = model.EndDate;
                 _pollService.InsertPoll(poll);

@@ -100,9 +100,9 @@ namespace Nop.Core.Caching
         protected void TryRemoveKey(string key)
         {
             //try to remove key from dictionary
-            if (!_allKeys.TryRemove(key, out bool _))
+            if (!_allKeys.TryRemove(key, out _))
                 //if not possible to remove key from dictionary, then try to mark key as not existing in cache
-                _allKeys.TryUpdate(key, false, false);
+                _allKeys.TryUpdate(key, false, true);
         }
 
         /// <summary>

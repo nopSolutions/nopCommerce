@@ -10,8 +10,8 @@ using Nop.Services.Logging;
 using Nop.Services.Security;
 using Nop.Services.Seo;
 using Nop.Services.Stores;
-using Nop.Web.Areas.Admin.Extensions;
 using Nop.Web.Areas.Admin.Factories;
+using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Blogs;
 using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.Filters;
@@ -87,6 +87,8 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #endregion
 
+        #region Methods        
+
         #region Blog posts
 
         public virtual IActionResult Index()
@@ -94,13 +96,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             return RedirectToAction("List");
         }
 
-        public virtual IActionResult List()
+        public virtual IActionResult List(int? filterByBlogPostId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageBlog))
                 return AccessDeniedView();
 
             //prepare model
-            var model = _blogModelFactory.PrepareBlogPostSearchModel(new BlogPostSearchModel());
+            var model = _blogModelFactory.PrepareBlogContentModel(new BlogContentModel(), filterByBlogPostId);            
 
             return View(model);
         }
@@ -117,7 +119,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             return Json(model);
         }
 
-        public virtual IActionResult Create()
+        public virtual IActionResult BlogPostCreate()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageBlog))
                 return AccessDeniedView();
@@ -129,14 +131,14 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public virtual IActionResult Create(BlogPostModel model, bool continueEditing)
+        public virtual IActionResult BlogPostCreate(BlogPostModel model, bool continueEditing)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageBlog))
                 return AccessDeniedView();
 
             if (ModelState.IsValid)
             {
-                var blogPost = model.ToEntity();
+                var blogPost = model.ToEntity<BlogPost>();
                 blogPost.StartDateUtc = model.StartDate;
                 blogPost.EndDateUtc = model.EndDate;
                 blogPost.CreatedOnUtc = DateTime.UtcNow;
@@ -161,7 +163,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //selected tab
                 SaveSelectedTabName();
 
-                return RedirectToAction("Edit", new { id = blogPost.Id });
+                return RedirectToAction("BlogPostEdit", new { id = blogPost.Id });
             }
 
             //prepare model
@@ -171,7 +173,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             return View(model);
         }
 
-        public virtual IActionResult Edit(int id)
+        public virtual IActionResult BlogPostEdit(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageBlog))
                 return AccessDeniedView();
@@ -188,7 +190,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public virtual IActionResult Edit(BlogPostModel model, bool continueEditing)
+        public virtual IActionResult BlogPostEdit(BlogPostModel model, bool continueEditing)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageBlog))
                 return AccessDeniedView();
@@ -224,7 +226,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //selected tab
                 SaveSelectedTabName();
 
-                return RedirectToAction("Edit", new { id = blogPost.Id });
+                return RedirectToAction("BlogPostEdit", new { id = blogPost.Id });
             }
 
             //prepare model
@@ -270,8 +272,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (blogPost == null && filterByBlogPostId.HasValue)
                 return RedirectToAction("List");
 
-            ViewBag.FilterByBlogPostId = filterByBlogPostId;
-
             //prepare model
             var model = _blogModelFactory.PrepareBlogCommentSearchModel(new BlogCommentSearchModel(), blogPost);
 
@@ -279,18 +279,13 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual IActionResult Comments(BlogCommentSearchModel searchModel, int? filterByBlogPostId)
+        public virtual IActionResult Comments(BlogCommentSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageBlog))
-                return AccessDeniedKendoGridJson();
-
-            //try to get a blog post with the specified id
-            var blogPost = _blogService.GetBlogPostById(filterByBlogPostId ?? 0);
-            if (blogPost == null && filterByBlogPostId.HasValue)
-                throw new ArgumentException("No blog post found with the specified id", nameof(filterByBlogPostId));
+                return AccessDeniedKendoGridJson();           
 
             //prepare model
-            var model = _blogModelFactory.PrepareBlogCommentListModel(searchModel, blogPost);
+            var model = _blogModelFactory.PrepareBlogCommentListModel(searchModel, searchModel.BlogPostId);
 
             return Json(model);
         }
@@ -413,6 +408,8 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             return Json(new { Result = true });
         }
+
+        #endregion
 
         #endregion
     }

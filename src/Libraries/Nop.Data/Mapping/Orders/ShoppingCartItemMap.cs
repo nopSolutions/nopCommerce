@@ -34,8 +34,7 @@ namespace Nop.Data.Mapping.Orders
 
             builder.Ignore(item => item.ShoppingCartType);
 
-            //add custom configuration
-            this.PostConfigure(builder);
+            base.Configure(builder);
         }
 
         #endregion

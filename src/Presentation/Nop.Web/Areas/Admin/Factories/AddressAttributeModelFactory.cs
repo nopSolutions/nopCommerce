@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Services.Common;
 using Nop.Services.Localization;
-using Nop.Web.Areas.Admin.Extensions;
+using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Common;
 using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Factories;
@@ -18,6 +20,7 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
+        private readonly IAddressAttributeParser _addressAttributeParser;
         private readonly IAddressAttributeService _addressAttributeService;
         private readonly ILocalizationService _localizationService;
         private readonly ILocalizedModelFactory _localizedModelFactory;
@@ -27,11 +30,13 @@ namespace Nop.Web.Areas.Admin.Factories
 
         #region Ctor
 
-        public AddressAttributeModelFactory(IAddressAttributeService addressAttributeService,
+        public AddressAttributeModelFactory(IAddressAttributeParser addressAttributeParser,
+            IAddressAttributeService addressAttributeService,
             ILocalizationService localizationService,
             ILocalizedModelFactory localizedModelFactory,
             IWorkContext workContext)
         {
+            this._addressAttributeParser = addressAttributeParser;
             this._addressAttributeService = addressAttributeService;
             this._localizationService = localizationService;
             this._localizedModelFactory = localizedModelFactory;
@@ -103,7 +108,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = addressAttributes.PaginationByRequestModel(searchModel).Select(attribute =>
                 {
                     //fill in model values from the entity
-                    var attributeModel = attribute.ToModel();
+                    var attributeModel = attribute.ToModel<AddressAttributeModel>();
 
                     //fill in additional values (not existing in the entity)
                     attributeModel.AttributeControlTypeName = attribute.AttributeControlType.GetLocalizedEnum(_localizationService, _workContext);
@@ -131,7 +136,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (addressAttribute != null)
             {
                 //fill in model values from the entity
-                model = model ?? addressAttribute.ToModel();
+                model = model ?? addressAttribute.ToModel<AddressAttributeModel>();
 
                 //prepare nested search model
                 PrepareAddressAttributeValueSearchModel(model.AddressAttributeValueSearchModel, addressAttribute);
@@ -172,14 +177,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new AddressAttributeValueListModel
             {
                 //fill in model values from the entity
-                Data = addressAttributeValues.PaginationByRequestModel(searchModel).Select(value => new AddressAttributeValueModel
-                {
-                    Id = value.Id,
-                    AddressAttributeId = value.AddressAttributeId,
-                    Name = value.Name,
-                    IsPreSelected = value.IsPreSelected,
-                    DisplayOrder = value.DisplayOrder
-                }),
+                Data = addressAttributeValues.PaginationByRequestModel(searchModel).Select(value => value.ToModel<AddressAttributeValueModel>()),
                 Total = addressAttributeValues.Count
             };
 
@@ -205,12 +203,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (addressAttributeValue != null)
             {
                 //fill in model values from the entity
-                model = model ?? new AddressAttributeValueModel
-                {
-                    Name = addressAttributeValue.Name,
-                    IsPreSelected = addressAttributeValue.IsPreSelected,
-                    DisplayOrder = addressAttributeValue.DisplayOrder
-                };
+                model = model ?? addressAttributeValue.ToModel<AddressAttributeValueModel>();
 
                 //define localized model configuration action
                 localizedModelConfiguration = (locale, languageId) =>
@@ -226,6 +219,96 @@ namespace Nop.Web.Areas.Admin.Factories
                 model.Locales = _localizedModelFactory.PrepareLocalizedModels(localizedModelConfiguration);
 
             return model;
+        }
+
+        /// <summary>
+        /// Prepare custom address attributes
+        /// </summary>
+        /// <param name="models">List of address attribute models</param>
+        /// <param name="address">Address</param>
+        public virtual void PrepareCustomAddressAttributes(IList<AddressModel.AddressAttributeModel> models, Address address)
+        {
+            if (models == null)
+                throw new ArgumentNullException(nameof(models));
+            
+            var attributes = _addressAttributeService.GetAllAddressAttributes();
+            foreach (var attribute in attributes)
+            {
+                var attributeModel = new AddressModel.AddressAttributeModel
+                {
+                    Id = attribute.Id,
+                    Name = attribute.Name,
+                    IsRequired = attribute.IsRequired,
+                    AttributeControlType = attribute.AttributeControlType,
+                };
+
+                if (attribute.ShouldHaveValues())
+                {
+                    //values
+                    var attributeValues = _addressAttributeService.GetAddressAttributeValues(attribute.Id);
+                    foreach (var attributeValue in attributeValues)
+                    {
+                        var attributeValueModel = new AddressModel.AddressAttributeValueModel
+                        {
+                            Id = attributeValue.Id,
+                            Name = attributeValue.Name,
+                            IsPreSelected = attributeValue.IsPreSelected
+                        };
+                        attributeModel.Values.Add(attributeValueModel);
+                    }
+                }
+
+                //set already selected attributes
+                var selectedAddressAttributes = address?.CustomAttributes;
+                switch (attribute.AttributeControlType)
+                {
+                    case AttributeControlType.DropdownList:
+                    case AttributeControlType.RadioList:
+                    case AttributeControlType.Checkboxes:
+                        {
+                            if (!string.IsNullOrEmpty(selectedAddressAttributes))
+                            {
+                                //clear default selection
+                                foreach (var item in attributeModel.Values)
+                                    item.IsPreSelected = false;
+
+                                //select new values
+                                var selectedValues = _addressAttributeParser.ParseAddressAttributeValues(selectedAddressAttributes);
+                                foreach (var attributeValue in selectedValues)
+                                    foreach (var item in attributeModel.Values)
+                                        if (attributeValue.Id == item.Id)
+                                            item.IsPreSelected = true;
+                            }
+                        }
+                        break;
+                    case AttributeControlType.ReadonlyCheckboxes:
+                        {
+                            //do nothing
+                            //values are already pre-set
+                        }
+                        break;
+                    case AttributeControlType.TextBox:
+                    case AttributeControlType.MultilineTextbox:
+                        {
+                            if (!string.IsNullOrEmpty(selectedAddressAttributes))
+                            {
+                                var enteredText = _addressAttributeParser.ParseValues(selectedAddressAttributes, attribute.Id);
+                                if (enteredText.Any())
+                                    attributeModel.DefaultValue = enteredText[0];
+                            }
+                        }
+                        break;
+                    case AttributeControlType.ColorSquares:
+                    case AttributeControlType.ImageSquares:
+                    case AttributeControlType.Datepicker:
+                    case AttributeControlType.FileUpload:
+                    default:
+                        //not supported attribute control types
+                        break;
+                }
+
+                models.Add(attributeModel);
+            }
         }
 
         #endregion

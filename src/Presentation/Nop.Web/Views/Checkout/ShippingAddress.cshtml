@@ -27,7 +27,7 @@
                     </div>
                     <script asp-location="Footer">
                         $(document).ready(function() {
-                            $("#@Html.IdFor(model => model.PickUpInStore)").change(togglePickUpInStore);
+                            $("#@Html.IdFor(model => model.PickUpInStore)").on('change', togglePickUpInStore);
                             togglePickUpInStore();
                         });
 
@@ -181,11 +181,11 @@
                                                 }
                                             }
 
-                                            $('#pickup-points-select').change(function() {
+                                                        $('#pickup-points-select').on('change', function() {
                                                 new google.maps.event.trigger(markers.get(this.value), 'click');
                                             });
 
-                                            $("#@Html.IdFor(model => model.PickUpInStore)").change(function() {
+                                            $("#@Html.IdFor(model => model.PickUpInStore)").on('change', function() {
                                                 if ($('#@Html.IdFor(model => model.PickUpInStore)').is(':checked')) {
                                                     var center = googleMap.getCenter();
                                                     google.maps.event.trigger(googleMap, 'resize');
