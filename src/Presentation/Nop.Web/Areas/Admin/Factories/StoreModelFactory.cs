@@ -18,23 +18,23 @@ namespace Nop.Web.Areas.Admin.Factories
         #region Fields
 
         private readonly IBaseAdminModelFactory _baseAdminModelFactory;
+        private readonly ILocalizationService _localizationService;
         private readonly ILocalizedModelFactory _localizedModelFactory;
         private readonly IStoreService _storeService;
-        private readonly ILocalizationService _localizationService;
 
         #endregion
 
         #region Ctor
 
         public StoreModelFactory(IBaseAdminModelFactory baseAdminModelFactory,
+            ILocalizationService localizationService,
             ILocalizedModelFactory localizedModelFactory,
-            IStoreService storeService,
-            ILocalizationService localizationService)
+            IStoreService storeService)
         {
             this._baseAdminModelFactory = baseAdminModelFactory;
+            this._localizationService = localizationService;
             this._localizedModelFactory = localizedModelFactory;
             this._storeService = storeService;
-            this._localizationService = localizationService;
         }
 
         #endregion

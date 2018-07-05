@@ -10,14 +10,15 @@ namespace Nop.Web.Areas.Admin.Controllers
 {
     public partial class PictureController : BaseAdminController
     {
-        private readonly IPictureService _pictureService;
         private readonly INopFileProvider _fileProvider;
+        private readonly IPictureService _pictureService;
+        
 
-        public PictureController(IPictureService pictureService,
-            INopFileProvider fileProvider)
+        public PictureController(INopFileProvider fileProvider,
+            IPictureService pictureService)
         {
-            this._pictureService = pictureService;
             this._fileProvider = fileProvider;
+            this._pictureService = pictureService;
         }
 
         [HttpPost]

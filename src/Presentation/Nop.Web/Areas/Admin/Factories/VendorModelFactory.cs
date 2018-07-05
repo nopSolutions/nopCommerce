@@ -26,8 +26,6 @@ namespace Nop.Web.Areas.Admin.Factories
         #region Fields
 
         private readonly IAddressAttributeModelFactory _addressAttributeModelFactory;
-        private readonly IAddressAttributeParser _addressAttributeParser;
-        private readonly IAddressAttributeService _addressAttributeService;
         private readonly IAddressService _addressService;
         private readonly IBaseAdminModelFactory _baseAdminModelFactory;
         private readonly ICustomerService _customerService;
@@ -44,8 +42,6 @@ namespace Nop.Web.Areas.Admin.Factories
         #region Ctor
 
         public VendorModelFactory(IAddressAttributeModelFactory addressAttributeModelFactory,
-            IAddressAttributeParser addressAttributeParser,
-            IAddressAttributeService addressAttributeService,
             IAddressService addressService,
             IBaseAdminModelFactory baseAdminModelFactory,
             ICustomerService customerService,
@@ -58,8 +54,6 @@ namespace Nop.Web.Areas.Admin.Factories
             VendorSettings vendorSettings)
         {
             this._addressAttributeModelFactory = addressAttributeModelFactory;
-            this._addressAttributeParser = addressAttributeParser;
-            this._addressAttributeService = addressAttributeService;
             this._addressService = addressService;
             this._baseAdminModelFactory = baseAdminModelFactory;
             this._customerService = customerService;
