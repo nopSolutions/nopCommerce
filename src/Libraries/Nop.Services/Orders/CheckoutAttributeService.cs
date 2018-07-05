@@ -94,7 +94,7 @@ namespace Nop.Services.Orders
                 if (excludeShippableAttributes)
                 {
                     //remove attributes which require shippable products
-                    checkoutAttributes = checkoutAttributes.RemoveShippableAttributes().ToList();
+                    checkoutAttributes = checkoutAttributes.Where(x => !x.ShippableProductRequired).ToList();
                 }
                 return checkoutAttributes;
             });
