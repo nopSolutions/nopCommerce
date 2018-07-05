@@ -81,17 +81,17 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Services
         /// <param name="pageSize">Page size</param>
         /// <returns>List of the shipping by weight record</returns>
         public virtual IPagedList<ShippingByWeightByTotalRecord> FindRecords(int shippingMethodId, int storeId, int warehouseId,
-            int countryId, int stateProvinceId, string zip, decimal weight, decimal orderSubtotal, int pageIndex, int pageSize)
+            int countryId, int stateProvinceId, string zip, decimal? weight, decimal? orderSubtotal, int pageIndex, int pageSize)
         {
             zip = zip?.Trim() ?? string.Empty;
 
             //filter by weight and shipping method
             var existingRates = GetAll()
-                .Where(sbw => sbw.ShippingMethodId == shippingMethodId && weight >= sbw.WeightFrom && weight <= sbw.WeightTo)
+                .Where(sbw => sbw.ShippingMethodId == shippingMethodId && (!weight.HasValue || weight >= sbw.WeightFrom && weight <= sbw.WeightTo))
                 .ToList();
 
             //filter by order subtotal
-            var matchedBySubtotal =
+            var matchedBySubtotal = !orderSubtotal.HasValue ? existingRates :
                 existingRates.Where(sbw => orderSubtotal >= sbw.OrderSubtotalFrom && orderSubtotal <= sbw.OrderSubtotalTo);
 
             //filter by store
@@ -143,7 +143,7 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Services
         public virtual ShippingByWeightByTotalRecord FindRecords(int shippingMethodId, int storeId, int warehouseId, 
             int countryId, int stateProvinceId, string zip, decimal weight, decimal orderSubtotal)
         {
-            var foundRecords = FindRecords(shippingMethodId, storeId, warehouseId,countryId, stateProvinceId, zip, weight, orderSubtotal,0,0);
+            var foundRecords = FindRecords(shippingMethodId, storeId, warehouseId, countryId, stateProvinceId, zip, weight, orderSubtotal, 0, int.MaxValue);
 
             return foundRecords.FirstOrDefault();
         }
