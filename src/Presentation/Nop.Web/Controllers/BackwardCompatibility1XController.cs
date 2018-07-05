@@ -141,6 +141,10 @@ namespace Nop.Web.Controllers
                     {
                         return RedirectToRoutePermanent("Wishlist");
                     }
+                case "CheckGiftCardBalance":
+                    {
+                        return RedirectToRoutePermanent("CheckGiftCardBalance");
+                    }
                 default:
                     break;
             }

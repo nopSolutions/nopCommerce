@@ -18,19 +18,6 @@ namespace Nop.Services.Configuration
     /// </summary>
     public partial class SettingService : ISettingService
     {
-        #region Constants
-
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        private const string SETTINGS_ALL_KEY = "Nop.setting.all";
-        /// <summary>
-        /// Key pattern to clear cache
-        /// </summary>
-        private const string SETTINGS_PATTERN_KEY = "Nop.setting.";
-
-        #endregion
-
         #region Fields
 
         private readonly IRepository<Setting> _settingRepository;
@@ -83,8 +70,7 @@ namespace Nop.Services.Configuration
         protected virtual IDictionary<string, IList<SettingForCaching>> GetAllSettingsCached()
         {
             //cache
-            var key = string.Format(SETTINGS_ALL_KEY);
-            return _cacheManager.Get(key, () =>
+            return _cacheManager.Get(NopConfigurationDefaults.SettingsAllCacheKey, () =>
             {
                 //we use no tracking here for performance optimization
                 //anyway records are loaded only for read-only operations
@@ -178,7 +164,7 @@ namespace Nop.Services.Configuration
 
             //cache
             if (clearCache)
-                _cacheManager.RemoveByPattern(SETTINGS_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(NopConfigurationDefaults.SettingsPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(setting);
@@ -198,7 +184,7 @@ namespace Nop.Services.Configuration
 
             //cache
             if (clearCache)
-                _cacheManager.RemoveByPattern(SETTINGS_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(NopConfigurationDefaults.SettingsPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(setting);
@@ -216,7 +202,7 @@ namespace Nop.Services.Configuration
             _settingRepository.Delete(setting);
 
             //cache
-            _cacheManager.RemoveByPattern(SETTINGS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopConfigurationDefaults.SettingsPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityDeleted(setting);
@@ -234,7 +220,7 @@ namespace Nop.Services.Configuration
             _settingRepository.Delete(settings);
 
             //cache
-            _cacheManager.RemoveByPattern(SETTINGS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopConfigurationDefaults.SettingsPatternCacheKey);
 
             //event notification
             foreach (var setting in settings)
@@ -545,7 +531,7 @@ namespace Nop.Services.Configuration
         /// </summary>
         public virtual void ClearCache()
         {
-            _cacheManager.RemoveByPattern(SETTINGS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopConfigurationDefaults.SettingsPatternCacheKey);
         }
 
         #endregion

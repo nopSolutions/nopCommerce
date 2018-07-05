@@ -18,32 +18,6 @@ namespace Nop.Web.Extensions
 {
     public static class HtmlExtensions
     {
-        /// <summary>
-        /// BBCode editor
-        /// </summary>
-        /// <typeparam name="TModel">Model</typeparam>
-        /// <param name="html">HTML Helper</param>
-        /// <param name="name">Name</param>
-        /// <returns>Editor</returns>
-        public static IHtmlContent BBCodeEditor<TModel>(this IHtmlHelper<TModel> html, string name)
-        {
-            var sb = new StringBuilder();
-
-            var storeLocation = EngineContext.Current.Resolve<IWebHelper>().GetStoreLocation();
-            var bbEditorWebRoot = $"{storeLocation}js/";
-
-            sb.AppendFormat("<script src=\"{0}js/bbeditor/ed.js\" type=\"{1}\"></script>", storeLocation, MimeTypes.TextJavascript);
-            sb.AppendLine();
-            sb.AppendFormat("<script language=\"javascript\" type=\"{0}\">", MimeTypes.TextJavascript);
-            sb.AppendLine();
-            sb.AppendFormat("edToolbar('{0}','{1}');", name, bbEditorWebRoot);
-            sb.AppendLine();
-            sb.Append("</script>");
-            sb.AppendLine();
-
-            return new HtmlString(sb.ToString());
-        }
-
         //we have two pagers:
         //The first one can have custom routes
         //The second one just adds query string parameter

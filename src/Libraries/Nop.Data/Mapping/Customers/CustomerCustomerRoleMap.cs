@@ -17,7 +17,7 @@ namespace Nop.Data.Mapping.Customers
         /// <param name="builder">The builder to be used to configure the entity</param>
         public override void Configure(EntityTypeBuilder<CustomerCustomerRoleMapping> builder)
         {
-            builder.ToTable("Customer_CustomerRole_Mapping");
+            builder.ToTable(NopMappingDefaults.CustomerCustomerRoleTable);
             builder.HasKey(mapping => new { mapping.CustomerId, mapping.CustomerRoleId });
 
             builder.Property(mapping => mapping.CustomerId).HasColumnName("Customer_Id");

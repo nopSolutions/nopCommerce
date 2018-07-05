@@ -7,9 +7,11 @@ namespace Nop.Web.Areas.Admin.Models.Settings
     /// <summary>
     /// Represents a SEO settings model
     /// </summary>
-    public partial class SeoSettingsModel : BaseNopModel
+    public partial class SeoSettingsModel : BaseNopModel, ISettingsModel
     {
         #region Properties
+
+        public int ActiveStoreScopeConfiguration { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.PageTitleSeparator")]
         [NoTrim]

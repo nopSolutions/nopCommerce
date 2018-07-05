@@ -112,5 +112,11 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <returns>GDPR tools model</returns>
         GdprToolsModel PrepareGdprToolsModel();
+
+        /// <summary>
+        /// Prepare the check gift card balance model
+        /// </summary>
+        /// <returns>check gift card balance model</returns>
+        CheckGiftCardBalanceModel PrepareCheckGiftCardBalanceModel();
     }
 }

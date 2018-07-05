@@ -14,24 +14,6 @@ namespace Nop.Services.Directory
     /// </summary>
     public partial class StateProvinceService : IStateProvinceService
     {
-        #region Constants
-
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : country ID
-        /// {1} : language ID
-        /// {2} : show hidden records?
-        /// </remarks>
-        private const string STATEPROVINCES_ALL_KEY = "Nop.stateprovince.all-{0}-{1}-{2}";
-        /// <summary>
-        /// Key pattern to clear cache
-        /// </summary>
-        private const string STATEPROVINCES_PATTERN_KEY = "Nop.stateprovince.";
-
-        #endregion
-
         #region Fields
 
         private readonly IRepository<StateProvince> _stateProvinceRepository;
@@ -71,7 +53,7 @@ namespace Nop.Services.Directory
             
             _stateProvinceRepository.Delete(stateProvince);
 
-            _cacheManager.RemoveByPattern(STATEPROVINCES_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopDirectoryDefaults.StateProvincesPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityDeleted(stateProvince);
@@ -120,7 +102,7 @@ namespace Nop.Services.Directory
         /// <returns>States</returns>
         public virtual IList<StateProvince> GetStateProvincesByCountryId(int countryId, int languageId = 0, bool showHidden = false)
         {
-            var key = string.Format(STATEPROVINCES_ALL_KEY, countryId, languageId, showHidden);
+            var key = string.Format(NopDirectoryDefaults.StateProvincesAllCacheKey, countryId, languageId, showHidden);
             return _cacheManager.Get(key, () =>
             {
                 var query = from sp in _stateProvinceRepository.Table
@@ -168,7 +150,7 @@ namespace Nop.Services.Directory
 
             _stateProvinceRepository.Insert(stateProvince);
 
-            _cacheManager.RemoveByPattern(STATEPROVINCES_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopDirectoryDefaults.StateProvincesPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(stateProvince);
@@ -185,7 +167,7 @@ namespace Nop.Services.Directory
 
             _stateProvinceRepository.Update(stateProvince);
 
-            _cacheManager.RemoveByPattern(STATEPROVINCES_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopDirectoryDefaults.StateProvincesPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(stateProvince);

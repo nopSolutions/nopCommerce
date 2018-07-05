@@ -11,15 +11,6 @@ namespace Nop.Services.Catalog
     /// </summary>
     public partial class RecentlyViewedProductsService : IRecentlyViewedProductsService
     {
-        #region Constants
-
-        /// <summary>
-        /// Recently viewed products cookie name
-        /// </summary>
-        private const string RECENTLY_VIEWED_PRODUCTS_COOKIE_NAME = ".Nop.RecentlyViewedProducts";
-
-        #endregion
-
         #region Fields
 
         private readonly CatalogSettings _catalogSettings;
@@ -70,7 +61,7 @@ namespace Nop.Services.Catalog
                 return new List<int>();
 
             //try to get cookie
-            if (!httpContext.Request.Cookies.TryGetValue(RECENTLY_VIEWED_PRODUCTS_COOKIE_NAME, out string productIdsCookie) || string.IsNullOrEmpty(productIdsCookie))
+            if (!httpContext.Request.Cookies.TryGetValue(NopCatalogDefaults.RecentlyViewedProductsCookieName, out string productIdsCookie) || string.IsNullOrEmpty(productIdsCookie))
                 return new List<int>();
 
             //get array of string product identifiers from cookie
@@ -87,7 +78,7 @@ namespace Nop.Services.Catalog
         protected virtual void AddRecentlyViewedProductsCookie(IEnumerable<int> recentlyViewedProductIds)
         {
             //delete current cookie if exists
-            _httpContextAccessor.HttpContext.Response.Cookies.Delete(RECENTLY_VIEWED_PRODUCTS_COOKIE_NAME);
+            _httpContextAccessor.HttpContext.Response.Cookies.Delete(NopCatalogDefaults.RecentlyViewedProductsCookieName);
 
             //create cookie value
             var productIdsCookie = string.Join(",", recentlyViewedProductIds);
@@ -101,7 +92,7 @@ namespace Nop.Services.Catalog
             };
 
             //add cookie
-            _httpContextAccessor.HttpContext.Response.Cookies.Append(RECENTLY_VIEWED_PRODUCTS_COOKIE_NAME, productIdsCookie, cookieOptions);
+            _httpContextAccessor.HttpContext.Response.Cookies.Append(NopCatalogDefaults.RecentlyViewedProductsCookieName, productIdsCookie, cookieOptions);
         }
 
         #endregion

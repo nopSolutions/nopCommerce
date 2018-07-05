@@ -79,22 +79,7 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.Sku.Reserved">
     <Value>The entered SKU is already reserved for one of combinations of the product ''{0}''</Value>
-  </LocaleResource> 
-  <LocaleResource Name="Admin.Catalog.LowStockReport.SearchPublished">
-    <Value>Published</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.LowStockReport.SearchPublished.Hint">
-    <Value>Search by a "Published" property.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.LowStockReport.SearchPublished.All">
-    <Value>All</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.LowStockReport.SearchPublished.PublishedOnly">
-    <Value>Published only</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.LowStockReport.SearchPublished.UnpublishedOnly">
-    <Value>Unpublished only</Value>
-  </LocaleResource>
+  </LocaleResource>  
   <LocaleResource Name="Products.Availability.SelectRequiredAttributes">
     <Value>Please select required attribute(s)</Value>
   </LocaleResource>
@@ -1193,6 +1178,807 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.DisplayDatePreOrderAvailability.Hint">
     <Value>Check to display the date for pre-order availability.</Value>
   </LocaleResource>   
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AllowCustomersToCheckGiftCardBalance">
+    <Value>Allow customers to check gift card balance</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AllowCustomersToCheckGiftCardBalance.Hint">
+    <Value>Check to allow customers to check gift card balance. If checked, then CAPTCHA setting must be enabled in the admin area. This feature is potentially not safe and CAPTCHA is needed to prevent and complicate bruteforce.</Value>
+  </LocaleResource>
+  <LocaleResource Name="PageTitle.CheckGiftCardBalance">
+    <Value>Check gift card balance</Value>
+  </LocaleResource>
+  <LocaleResource Name="CheckGiftCardBalance">
+    <Value>Check gift card balance</Value>
+  </LocaleResource>
+  <LocaleResource Name="CheckGiftCard.GiftCardCouponCode.Button">
+    <Value>Check gift card</Value>
+  </LocaleResource>
+  <LocaleResource Name="CheckGiftCardBalance.GiftCardCouponCode.Invalid">
+    <Value>Coupon code is not valid.</Value>
+  </LocaleResource>
+  <LocaleResource Name="CheckGiftCardBalance.GiftCardCouponCode.Empty">
+    <Value>Coupon code is empty.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Maintenance.BackupDatabase.Description">
+    <Value>Database backup functionality works only when your nopCommerce application is deployed on the same server as the database. Otherwise you will have to take care of the backup yourself (contact your system administrator).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Catalog.OrderBy.Label">
+    <Value>Select product sort order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Catalog.PageSize.Label">
+    <Value>Select number of products per page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Currency.Selector.Label">
+    <Value>Currency selector</Value>
+  </LocaleResource>
+  <LocaleResource Name="Search.SearchBox.Text.Label">
+    <Value>Search store</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.DiscountCouponCode.Label">
+    <Value>Enter discount coupon code</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.GiftCardCouponCode.Label">
+    <Value>Enter gift card code</Value>
+  </LocaleResource>	
+  <LocaleResource Name="Admin.System.Warnings.PluginNotEnabled">
+    <Value>You could uninstall and remove the plugin(s) which you don''t use, this might increase performance</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.System.Warnings.Errors">
+    <Value>The store has some error(s) or warning(s). Please find more information on the Warnings page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Settings.ReviewType">
+    <Value>Review types</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Settings.ReviewType.Added">
+    <Value>The new review type has been added successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Settings.ReviewType.AddNew">
+    <Value>Add a new review type</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Settings.ReviewType.BackToList">
+    <Value>back to catalog settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Settings.ReviewType.Deleted">
+    <Value>The review type has been deleted successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Settings.ReviewType.Description">
+    <Value>You can configure a list of review types if you think that a basic review is not enough.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Settings.ReviewType.EditDetails">
+    <Value>Edit review type details</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Settings.ReviewType.Fields.Description">
+    <Value>Description</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Settings.ReviewType.Fields.Description.Hint">
+    <Value>The description of the review type.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Settings.ReviewType.Fields.Description.Required">
+    <Value>Please provide a description.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Settings.ReviewType.Fields.DisplayOrder">
+    <Value>Display order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Settings.ReviewType.Fields.DisplayOrder.Hint">
+    <Value>The review type display order. 1 represents the first item on the list.</Value>
+  </LocaleResource> 
+  <LocaleResource Name="Admin.Settings.ReviewType.Fields.IsRequired">
+    <Value>Required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Settings.ReviewType.Fields.IsRequired.Hint">
+    <Value>When required, customers have to choose an appropriate rating value before they can continue.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Settings.ReviewType.Fields.Name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Settings.ReviewType.Fields.Name.Hint">
+    <Value>The name of the review type.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Settings.ReviewType.Fields.Name.Required">
+    <Value>Please provide a name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Settings.ReviewType.Fields.VisibleToAllCustomers">
+    <Value>Visible to all customers</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Settings.ReviewType.Fields.VisibleToAllCustomers.Hint">
+    <Value>Sets visibility of the review type for all customers.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Settings.ReviewType.Updated">
+    <Value>The review type has been updated successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.AddNewReviewType">
+    <Value>Added a new review type (ID = {0})</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.EditReviewType">
+    <Value>Edited a review type (ID = {0})</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.DeleteReviewType">
+   <Value>Deleted a review type (ID = {0})</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.AdditionalProductReviews.Fields.Description">
+    <Value>Description</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.AdditionalProductReviews.Fields.Name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.AdditionalProductReviews.Fields.Rating">
+    <Value>Rating</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.AdditionalProductReviews.Fields.VisibleToAllCustomers">
+    <Value>Visible to all customers</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.ExternalAuthenticationMethods.BackToList">
+    <Value>back to external authentication method list</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.ShowCustomersJoinDate">
+    <Value>Show customers join date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.ShowCustomersJoinDate.Hint">
+    <Value>A value indicating whether to show customers join date.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.Captcha.Instructions">
+    <Value><![CDATA[<p>CAPTCHA is a program that can tell whether its user is a human or a computer. You''ve probably seen them — colorful images with distorted text at the bottom of Web registration forms. CAPTCHAs are used by many websites to prevent abuse from "bots" or automated programs usually written to generate spam. No computer programcan read distorted text as well as humans can, so bots cannot navigate sites protected by CAPTCHAs. nopCommerce uses <a href="http://www.google.com/recaptcha" target="_blank">reCAPTCHA</a>.</p>]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.OrderCancelled.CustomerNotification">
+	  <Value>This message template is used to notify a customer that the certain order was cancelled. The order can ba cancelled by a customer on the account page or by store owner in Customers - Customers in Orders tab or in Sales - Orders.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.RecurringPaymentCancelled.CustomerNotification">
+	  <Value>This message template is used to notify a customer that the certain recurring payment is cancelled. Payment can be cancelled by a customer in the account page or by a store owner in Sales - Recurring payments in History tab by clicking "Cancel recurring payment" button.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.RecurringPaymentCancelled.StoreOwnerNotification">
+	  <Value>This message template is used to notify a store owner that the certain recurring payment is cancelled. Payment can be cancelled by a customer in the account page or by a store owner in Sales - Recurring payments in History tab by clicking "Cancel recurring payment" button.</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Configuration.Languages.Resources.SearchResourceName.Hint">
+    <Value>Search for the name of a resource. These are system-internal names for a language entry. All resource names with ''admin.'' in their names, for example, are only displayed in the admin center, all others in the public area of the shop. Resource names with ''hint.'' in the name are helps like this.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.CategoryBreadcrumbEnabled.Hint">
+    <Value>Select to enable  the category path (breadcrumb). This is the bar at the top of the screen that indicates which categories and subcategories the product was viewed in on the product pages. Each sub-element of the bar is a separate hyperlink.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Stores.Fields.SslEnabled.Hint">
+    <Value>Check if your store will be SSL secured. SSL (Secure Socket Layer) is the standard security technology for establishing an encrypted connection between a web server and the browser. This ensures that all data exchanged between web server and browser arrives unchanged.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Common.BulkEdit">
+    <Value>Bulk edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports">
+    <Value>Reports</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.LowStockReport">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.LowStockReport.SearchPublished">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.LowStockReport.SearchPublished.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.LowStockReport.SearchPublished.All">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.LowStockReport.SearchPublished.PublishedOnly">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.LowStockReport.SearchPublished.UnpublishedOnly">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.LowStock">
+  <Value>Low stock</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.LowStock.SearchPublished">
+    <Value>Published</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.LowStock.SearchPublished.Hint">
+    <Value>Search by a "Published" property.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.LowStock.SearchPublished.All">
+    <Value>All</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.LowStock.SearchPublished.PublishedOnly">
+    <Value>Published only</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.LowStock.SearchPublished.UnpublishedOnly">
+    <Value>Unpublished only</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.Bestsellers">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.Bestsellers.BillingCountry">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.Bestsellers.BillingCountry.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.Bestsellers.ByAmount">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.Bestsellers.ByQuantity">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.Bestsellers.Category">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.Bestsellers.Category.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.Bestsellers.EndDate">
+   <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.Bestsellers.EndDate.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.Bestsellers.Fields.Name">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.Bestsellers.Fields.TotalAmount">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.Bestsellers.Fields.TotalQuantity">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.Bestsellers.Manufacturer">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.Bestsellers.Manufacturer.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.Bestsellers.OrderStatus">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.Bestsellers.OrderStatus.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.Bestsellers.PaymentStatus">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.Bestsellers.PaymentStatus.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.Bestsellers.RunReport">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.Bestsellers.StartDate">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.Bestsellers.StartDate.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.Bestsellers.Store">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.Bestsellers.Store.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.Bestsellers.Vendor">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.Bestsellers.Vendor.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Sales.Bestsellers">
+    <Value>Bestsellers</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Sales.Bestsellers.BillingCountry">
+    <Value>Billing country</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Sales.Bestsellers.BillingCountry.Hint">
+    <Value>Filter by order billing country.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Sales.Bestsellers.ByAmount">
+    <Value>Bestsellers by amount</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Sales.Bestsellers.ByQuantity">
+    <Value>Bestsellers by quantity</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Sales.Bestsellers.Category">
+    <Value>Category</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Sales.Bestsellers.Category.Hint">
+    <Value>Search in a specific category.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Sales.Bestsellers.EndDate">
+    <Value>End date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Sales.Bestsellers.EndDate.Hint">
+    <Value>The end date for the search.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Sales.Bestsellers.Fields.Name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Sales.Bestsellers.Fields.TotalAmount">
+    <Value>Total amount (excl tax)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Sales.Bestsellers.Fields.TotalQuantity">
+    <Value>Total quantity</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Sales.Bestsellers.Manufacturer">
+    <Value>Manufacturer</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Sales.Bestsellers.Manufacturer.Hint">
+    <Value>Search in a specific manufacturer.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Sales.Bestsellers.OrderStatus">
+    <Value>Order status</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Sales.Bestsellers.OrderStatus.Hint">
+    <Value>Search by a specific order status e.g. Complete.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Sales.Bestsellers.PaymentStatus">
+    <Value>Payment status</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Sales.Bestsellers.PaymentStatus.Hint">
+    <Value>Search by a specific payment status e.g. Paid.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Sales.Bestsellers.RunReport">
+    <Value>Run report</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Sales.Bestsellers.StartDate">
+    <Value>Start date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Sales.Bestsellers.StartDate.Hint">
+    <Value>The start date for the search.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Sales.Bestsellers.Store">
+    <Value>Store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Sales.Bestsellers.Store.Hint">
+    <Value>Filter report by orders placed in a specific store.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Sales.Bestsellers.Vendor">
+    <Value>Vendor</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Sales.Bestsellers.Vendor.Hint">
+    <Value>Search by a specific vendor.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.NeverSold">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.NeverSold.EndDate">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.NeverSold.EndDate.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.NeverSold.Fields.Name">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.NeverSold.RunReport">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.NeverSold.SearchCategory">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.NeverSold.SearchCategory.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.NeverSold.SearchManufacturer">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.NeverSold.SearchManufacturer.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.NeverSold.SearchStore">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.NeverSold.SearchStore.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.NeverSold.SearchVendor">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.NeverSold.SearchVendor.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.NeverSold.StartDate">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.NeverSold.StartDate.Hint">
+   <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Sales.NeverSold">
+    <Value>Products never purchased</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Sales.NeverSold.EndDate">
+    <Value>End date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Sales.NeverSold.EndDate.Hint">
+    <Value>The end date for the search.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Sales.NeverSold.Fields.Name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Sales.NeverSold.RunReport">
+    <Value>Run report</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Sales.NeverSold.SearchCategory">
+    <Value>Category</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Sales.NeverSold.SearchCategory.Hint">
+    <Value>Load products only from a specific category.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Sales.NeverSold.SearchManufacturer">
+    <Value>Manufacturer</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Sales.NeverSold.SearchManufacturer.Hint">
+    <Value>Load products only from a specific manufacturer.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Sales.NeverSold.SearchStore">
+    <Value>Store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Sales.NeverSold.SearchStore.Hint">
+    <Value>Load products only from a specific store (available in this store).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Sales.NeverSold.SearchVendor">
+    <Value>Vendor</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Sales.NeverSold.SearchVendor.Hint">
+    <Value>Load products only by a specific vendor (owned by this vendor).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Sales.NeverSold.StartDate">
+    <Value>Start date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Sales.NeverSold.StartDate.Hint">
+    <Value>The start date for the search.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.Country">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.Country.EndDate">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.Country.EndDate.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.Country.Fields.CountryName">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.Country.Fields.SumOrders">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.Country.Fields.TotalOrders">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.Country.OrderStatus">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.Country.OrderStatus.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.Country.PaymentStatus">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.Country.PaymentStatus.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.Country.RunReport">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.Country.StartDate">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.Country.StartDate.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Sales.Country">
+    <Value>Country sales</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Sales.Country.EndDate">
+    <Value>End date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Sales.Country.EndDate.Hint">
+    <Value>The end date for the search.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Sales.Country.Fields.CountryName">
+    <Value>Country</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Sales.Country.Fields.SumOrders">
+    <Value>Order total</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Sales.Country.Fields.TotalOrders">
+    <Value>Number of orders</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Sales.Country.OrderStatus">
+    <Value>Order status</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Sales.Country.OrderStatus.Hint">
+    <Value>Search by a specific order status e.g. Complete.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Sales.Country.PaymentStatus">
+    <Value>Payment status</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Sales.Country.PaymentStatus.Hint">
+    <Value>Search by a specific payment status e.g. Paid.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Sales.Country.RunReport">
+    <Value>Run report</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Sales.Country.StartDate">
+    <Value>Start date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Sales.Country.StartDate.Hint">
+    <Value>The start date for the search.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Reports">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Reports.BestBy.BestByNumberOfOrders">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Reports.BestBy.BestByOrderTotal">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Reports.BestBy.EndDate">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Reports.BestBy.EndDate.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Reports.BestBy.Fields.Customer">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Reports.BestBy.Fields.OrderCount">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Reports.BestBy.Fields.OrderTotal">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Reports.BestBy.OrderStatus">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Reports.BestBy.OrderStatus.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Reports.BestBy.PaymentStatus">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Reports.BestBy.PaymentStatus.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Reports.BestBy.ShippingStatus">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Reports.BestBy.ShippingStatus.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Reports.BestBy.StartDate">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Reports.BestBy.StartDate.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Reports.RegisteredCustomers">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Reports.RegisteredCustomers.Fields.Customers">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Reports.RegisteredCustomers.Fields.Period">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Reports.RegisteredCustomers.Fields.Period.14days">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Reports.RegisteredCustomers.Fields.Period.7days">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Reports.RegisteredCustomers.Fields.Period.month">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Reports.RegisteredCustomers.Fields.Period.year">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Reports.RunReport">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Reports.CustomerStatistics">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Reports.CustomerStatistics.Month">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Reports.CustomerStatistics.Week">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Reports.CustomerStatistics.Year">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Customers">
+    <Value>Customer reports</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Customers.BestBy.BestByNumberOfOrders">
+    <Value>Customers by number of orders</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Customers.BestBy.BestByOrderTotal">
+    <Value>Customers by order total</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Customers.BestBy.EndDate">
+    <Value>End date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Customers.BestBy.EndDate.Hint">
+    <Value>The end date for the search.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Customers.BestBy.Fields.Customer">
+    <Value>Customer</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Customers.BestBy.Fields.OrderCount">
+    <Value>Number of orders</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Customers.BestBy.Fields.OrderTotal">
+    <Value>Order total</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Customers.BestBy.OrderStatus">
+    <Value>Order status</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Customers.BestBy.OrderStatus.Hint">
+    <Value>Search by a specific order status e.g. Complete.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Customers.BestBy.PaymentStatus">
+    <Value>Payment status</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Customers.BestBy.PaymentStatus.Hint">
+    <Value>Search by a specific payment status e.g. Paid.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Customers.BestBy.ShippingStatus">
+    <Value>Shipping status</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Customers.BestBy.ShippingStatus.Hint">
+    <Value>Search by a specific shipping status e.g. Not yet shipped.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Customers.BestBy.StartDate">
+    <Value>Start date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Customers.BestBy.StartDate.Hint">
+    <Value>The start date for the search.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Customers.RegisteredCustomers">
+    <Value>Registered customers</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Customers.RegisteredCustomers.Fields.Customers">
+    <Value>Count</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Customers.RegisteredCustomers.Fields.Period">
+    <Value>Period</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Customers.RegisteredCustomers.Fields.Period.14days">
+    <Value>In the last 14 days</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Customers.RegisteredCustomers.Fields.Period.7days">
+    <Value>In the last 7 days</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Customers.RegisteredCustomers.Fields.Period.month">
+    <Value>In the last month</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Customers.RegisteredCustomers.Fields.Period.year">
+    <Value>In the last year</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Customers.RunReport">
+    <Value>Run report</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Customers.CustomerStatistics">
+    <Value>New customers</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Customers.CustomerStatistics.Month">
+    <Value>Month</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Customers.CustomerStatistics.Week">
+    <Value>Week</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Customers.CustomerStatistics.Year">
+    <Value>Year</Value>
+  </LocaleResource>    
+  <LocaleResource Name="Admin.ContentManagement.Blog.Comments.List.BlogPostId">
+    <Value>Blog post ID</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.Comments.List.BlogPostId.Hint">
+    <Value>Search by blog post ID.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.News.Comments.List.NewsItemId">
+    <Value>News item ID</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.News.Comments.List.NewsItemId.Hint">
+    <Value>Search by news item ID.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.ActivityLog">
+    <Value>Activity log</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.ActivityLog.ActivityLog">
+    <Value>Activity log</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.ActivityLog.ActivityLog.Fields.ActivityLogType">
+    <Value>Activity log type</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.ActivityLog.ActivityLog.Fields.ActivityLogType.Hint">
+    <Value>The activity log type.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.ActivityLog.ActivityLog.Fields.ActivityLogTypeColumn">
+    <Value>Activity log type</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.OrderCancelled.CustomerNotification">
+	  <Value>This message template is used to notify a customer that the certain order was cancelled. The order can be cancelled by a customer on the account page or by store owner in Customers - Customers in Orders tab or in Sales - Orders.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.Captcha.Instructions">
+    <Value><![CDATA[<p>CAPTCHA is a program that can tell whether its user is a human or a computer. You''ve probably seen them — colorful images with distorted text at the bottom of Web registration forms. CAPTCHAs are used by many websites to prevent abuse from "bots" or automated programs usually written to generate spam. No computer program can read distorted text as well as humans can, so bots cannot navigate sites protected by CAPTCHAs. nopCommerce uses <a href="http://www.google.com/recaptcha" target="_blank">reCAPTCHA</a>.</p>]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Login.NewCustomerText">
+    <Value>By creating an account on our website, you will be able to shop faster, be up to date on an orders status, and keep track of the orders you have previously made.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.MarkAsNew.Hint">
+    <Value>Check to mark the product as new. Use this option for promoting new products.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Attributes.Condition.EnableCondition.Hint">
+    <Value>Check to specify a condition (depending on another attribute) when this attribute should be enabled (visible).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Condition.EnableCondition.Hint">
+    <Value>Check to specify a condition (depending on another attribute) when this attribute should be enabled (visible).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.IgnoreDiscounts.Warning">
+    <Value>In order to use this functionality, you have to disable the following setting: Configuration > Catalog settings > Ignore discounts (sitewide).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.Warehouse.Hint">
+    <Value>Choose the warehouse which will be used when calculating shipping rates. You can manage warehouses by selecting Configuration > Shipping > Warehouses.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.DeliveryDate.EnterUtc">
+    <Value>Date and time should be entered in Coordinated Universal Time (UTC)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.ShippedDate.EnterUtc">
+    <Value>Date and time should be entered in Coordinated Universal Time (UTC)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Tokens.ConditionalStatement">
+    <Value>For conditional expressions use the token %if (your conditions) ... endif%</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Fields.IsCumulative.Hint">
+    <Value>If checked, this discount can be used with other ones simultaneously. Please note that this feature works only for discounts with the same discount type. Right now, discounts with distinct types are already cumulative.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Warnings.Performance.IgnoreStoreLimitations.Notification">
+    <Value>In order to use this functionality, you have to disable the following setting: Catalog settings > Ignore "limit per store" rules.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Warnings.Performance.IgnoreAcl.Notification">
+    <Value>In order to use this functionality, you have to disable the following setting: Catalog settings > Ignore ACL rules.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.AclCustomerRoles.Hint">
+    <Value>Choose one or several customer roles i.e. administrators, vendors, guests, who will be able to see this product in catalog. If you don''t need this option just leave this field empty. In order to use this functionality, you have to disable the following setting: Configuration > Catalog settings > Ignore ACL rules (sitewide).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.LimitedToStores.Hint">
+    <Value>Option to limit this product to a certain store. If you have multiple stores, choose one or several from the list. If you don''t use this option just leave this field empty. In order to use this functionality, you have to disable the following setting: Configuration > Catalog settings > Ignore "limit per store" rules (sitewide).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.LoadAllLocaleRecordsOnStartup.Warning">
+    <Value>It seems that you use Redis server for caching, keep in mind that enabling this setting creates a lot of traffic between the Redis server and the application because of the large number of locales.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.List.OrderStatus.Hint">
+    <Value>Search by a specific order status e.g. Complete.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.List.PaymentStatus.Hint">
+    <Value>Search by a specific payment status e.g. Paid.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.List.ShippingStatus.Hint">
+    <Value>Search by a specific shipping status e.g. Not yet shipped.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.ManageInventoryMethod.Hint">
+    <Value>Select inventory method. There are three methods: Don’t track inventory, Track inventory and Track inventory by attributes. You should use Track inventory by attributes when the product has different combinations of these attributes and then manage inventory for these combinations.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.CategoryBreadcrumbEnabled.Hint">
+    <Value>Select to enable the category path (breadcrumb). This is the bar at the top of the screen that indicates which categories and subcategories the product was viewed in on the product pages. Each sub-element of the bar is a separate hyperlink.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.Sku">
+    <Value>SKU</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Pickup.PickupInStore.Fields.OpeningHours.Hint">
+    <Value>Specify opening hours of the pickup point (Monday - Friday: 09:00 - 19:00 for example).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Tax.BlockTitle.TaxDispaying">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Tax.BlockTitle.TaxDisplaying">
+    <Value>Tax displaying</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.QuantityBelow.StoreOwnerNotification">
+	  <Value><![CDATA[This message template is used to notify a store owner that the certain product is getting low stock. You can set up the minimum product quantity when creating or editing the product in Inventory section, <strong>Minimum stock qty field</strong>.]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.StoreIpAddresses.Hint">
+    <Value>When enabled, IP addresses of customers will be stored. When disabled, it can improve performance. Furthermore, it''s prohibited to store IP addresses in some countries (private customer data).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.StoreLastVisitedPage.Hint">
+    <Value>When enabled, the last visited page will be stored. When disabled, it can improve performance.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -1497,14 +2283,14 @@ BEGIN
 END
 GO
 
-IF EXISTS (SELECT 1 FROM sys.objects WHERE NAME = 'VendorAttributeValue_VendorAttribute' AND PARENT_OBJECT_ID = object_id('VendorAttributeValue') AND objectproperty(object_id, N'IsForeignKey') = 1)
+IF EXISTS (SELECT 1 FROM sys.objects WHERE NAME = 'FK_VendorAttributeValue_VendorAttribute_VendorAttributeId' AND PARENT_OBJECT_ID = object_id('VendorAttributeValue') AND objectproperty(object_id, N'IsForeignKey') = 1)
 BEGIN
-	ALTER TABLE dbo.VendorAttributeValue DROP CONSTRAINT [VendorAttributeValue_VendorAttribute]
+	ALTER TABLE dbo.VendorAttributeValue DROP CONSTRAINT [FK_VendorAttributeValue_VendorAttribute_VendorAttributeId]
 END
 GO
 
 ALTER TABLE [dbo].[VendorAttributeValue] WITH CHECK 
-	ADD CONSTRAINT [VendorAttributeValue_VendorAttribute] FOREIGN KEY([VendorAttributeId]) REFERENCES [dbo].[VendorAttribute] ([Id]) ON DELETE CASCADE
+	ADD CONSTRAINT [FK_VendorAttributeValue_VendorAttribute_VendorAttributeId] FOREIGN KEY([VendorAttributeId]) REFERENCES [dbo].[VendorAttribute] ([Id]) ON DELETE CASCADE
 GO
 
 --new activity type
@@ -1552,6 +2338,30 @@ IF NOT EXISTS (SELECT 1 FROM [ActivityLogType] WHERE [SystemKeyword] = N'DeleteV
 BEGIN
 	INSERT [ActivityLogType] ([SystemKeyword], [Name], [Enabled])
 	VALUES (N'DeleteVendorAttributeValue', N'Delete a vendor attribute value', N'true')
+END
+GO
+
+--new activity type
+IF NOT EXISTS (SELECT 1 FROM [ActivityLogType] WHERE [SystemKeyword] = N'AddNewReviewType')
+BEGIN
+	INSERT [ActivityLogType] ([SystemKeyword], [Name], [Enabled])
+	VALUES (N'AddNewReviewType', N'Add a new review type', N'true')
+END
+GO
+
+--new activity type
+IF NOT EXISTS (SELECT 1 FROM [ActivityLogType] WHERE [SystemKeyword] = N'DeleteReviewType')
+BEGIN
+	INSERT [ActivityLogType] ([SystemKeyword], [Name], [Enabled])
+	VALUES (N'DeleteReviewType', N'Delete a review type', N'true')
+END
+GO
+
+--new activity type
+IF NOT EXISTS (SELECT 1 FROM [ActivityLogType] WHERE [SystemKeyword] = N'EditReviewType')
+BEGIN
+	INSERT [ActivityLogType] ([SystemKeyword], [Name], [Enabled])
+	VALUES (N'EditReviewType', N'Edit a review type', N'true')
 END
 GO
 
@@ -2241,8 +3051,12 @@ BEGIN
 	IF @CategoryIdsCount > 0
 	BEGIN
 		SET @sql = @sql + '
-		AND pcm.CategoryId IN (SELECT CategoryId FROM #FilteredCategoryIds)'
+		AND pcm.CategoryId IN ('
 		
+		SET @sql = @sql + + CAST(@CategoryIds AS nvarchar(max))
+
+		SET @sql = @sql + ')'
+
 		IF @FeaturedProducts IS NOT NULL
 		BEGIN
 			SET @sql = @sql + '
@@ -2982,3 +3796,75 @@ BEGIN
 	VALUES (N'catalogsettings.displaydatepreorderavailability', N'False', 0)
 END
 GO
+	
+--new setting	
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'adminareasettings.richeditorallowstyletag')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'adminareasettings.richeditorallowstyletag', N'False', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'customersettings.allowcustomerstocheckgiftcardbalance')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'customersettings.allowcustomerstocheckgiftcardbalance', N'false', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'adminareasettings.checkcopyrightremovalkey')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'adminareasettings.checkcopyrightremovalkey', N'true', 0)
+END
+GO
+
+--Review type
+IF NOT EXISTS (SELECT 1 FROM sys.objects WHERE object_id = object_id(N'[ReviewType]') AND objectproperty(object_id, N'IsUserTable') = 1)
+BEGIN
+	CREATE TABLE [dbo].[ReviewType](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Name] [nvarchar](max) NOT NULL,
+	[Description] [nvarchar](max) NOT NULL,
+	[DisplayOrder] [int] NOT NULL,	
+	[VisibleToAllCustomers] [bit] NOT NULL,
+	[IsRequired] [bit] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = ON, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, FILLFACTOR = 80) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+
+END
+GO
+
+--Product review and review type mapping
+IF NOT EXISTS (SELECT 1 FROM sys.objects WHERE object_id = object_id(N'[ProductReview_ReviewType_Mapping]') AND objectproperty(object_id, N'IsUserTable') = 1)
+BEGIN
+	CREATE TABLE [dbo].[ProductReview_ReviewType_Mapping](
+		[Id] [int] IDENTITY(1,1) NOT NULL,
+		[ProductReviewID] [int] NOT NULL,
+		[ReviewTypeID] [int] NOT NULL,
+		[Rating] [int] NOT NULL,
+	PRIMARY KEY CLUSTERED 
+	(
+		[Id] ASC
+	)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = ON, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, FILLFACTOR = 80) ON [PRIMARY]
+	) ON [PRIMARY]	
+
+	ALTER TABLE [dbo].[ProductReview_ReviewType_Mapping]  WITH CHECK ADD  CONSTRAINT [ProductReviewReviewTypeRel_ProductReview] FOREIGN KEY([ProductReviewID])
+	REFERENCES [dbo].[ProductReview] ([Id])
+	ON DELETE CASCADE	
+
+	ALTER TABLE [dbo].[ProductReview_ReviewType_Mapping] CHECK CONSTRAINT [ProductReviewReviewTypeRel_ProductReview]	
+
+	ALTER TABLE [dbo].[ProductReview_ReviewType_Mapping]  WITH CHECK ADD  CONSTRAINT [ProductReviewReviewTypeRel_ReviewType] FOREIGN KEY([ReviewTypeID])
+	REFERENCES [dbo].[ReviewType] ([Id])
+	ON DELETE CASCADE	
+
+	ALTER TABLE [dbo].[ProductReview_ReviewType_Mapping] CHECK CONSTRAINT [ProductReviewReviewTypeRel_ReviewType]	
+END
+GO
+

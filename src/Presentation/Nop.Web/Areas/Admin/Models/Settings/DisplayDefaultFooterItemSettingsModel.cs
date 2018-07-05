@@ -6,9 +6,11 @@ namespace Nop.Web.Areas.Admin.Models.Settings
     /// <summary>
     /// Represents a display default footer item settings model
     /// </summary>
-    public partial class DisplayDefaultFooterItemSettingsModel : BaseNopModel
+    public partial class DisplayDefaultFooterItemSettingsModel : BaseNopModel, ISettingsModel
     {
         #region Properties
+
+        public int ActiveStoreScopeConfiguration { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.DisplayDefaultFooterItemSettingsModel.DisplaySitemapFooterItem")]
         public bool DisplaySitemapFooterItem { get; set; }
@@ -44,7 +46,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
 
         [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.DisplayDefaultFooterItemSettingsModel.DisplayNewProductsFooterItem")]
         public bool DisplayNewProductsFooterItem { get; set; }
-        public bool DisplayNewProductsFooterItem_OverrideForStore { get; set; }
+        public bool DisplayNewProductsFooterItem_OverrideForStore { get; set; }       
 
         [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.DisplayDefaultFooterItemSettingsModel.DisplayCustomerInfoFooterItem")]
         public bool DisplayCustomerInfoFooterItem { get; set; }

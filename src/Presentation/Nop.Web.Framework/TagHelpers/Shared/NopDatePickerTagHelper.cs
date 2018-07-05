@@ -30,7 +30,6 @@ namespace Nop.Web.Framework.TagHelpers.Shared
         private const string SelectedMonthAttributeName = "asp-selected-month";
         private const string SelectedYearAttributeName = "asp-selected-year";
 
-        private const string LocalizeLabelsAttributeName = "asp-localize-labels";
         private const string WrapTagsAttributeName = "asp-wrap-tags";
 
         private readonly IHtmlHelper _htmlHelper;
@@ -87,12 +86,6 @@ namespace Nop.Web.Framework.TagHelpers.Shared
         /// </summary>
         [HtmlAttributeName(SelectedYearAttributeName)]
         public int? SelectedYear { get; set; }
-
-        /// <summary>
-        /// Localize labels
-        /// </summary>
-        [HtmlAttributeName(LocalizeLabelsAttributeName)]
-        public string LocalizeLabels { get; set; }
 
         /// <summary>
         /// Wrap tags
@@ -163,7 +156,6 @@ namespace Nop.Web.Framework.TagHelpers.Shared
                 SelectedDayAttributeName,
                 SelectedMonthAttributeName,
                 SelectedYearAttributeName,
-                LocalizeLabelsAttributeName,
                 WrapTagsAttributeName
             };
             var customerAttributes = new Dictionary<string, object>();
@@ -181,27 +173,14 @@ namespace Nop.Web.Framework.TagHelpers.Shared
             var months = new StringBuilder();
             var years = new StringBuilder();
 
-            string dayLocale, monthLocale, yearLocale;
-            if (bool.TryParse(LocalizeLabels, out bool localizeLabels) && localizeLabels)
-            {
-                var locService = EngineContext.Current.Resolve<ILocalizationService>();
-                dayLocale = locService.GetResource("Common.Day");
-                monthLocale = locService.GetResource("Common.Month");
-                yearLocale = locService.GetResource("Common.Year");
-            }
-            else
-            {
-                dayLocale = "Day";
-                monthLocale = "Month";
-                yearLocale = "Year";
-            }
+            var locService = EngineContext.Current.Resolve<ILocalizationService>();
 
-            days.AppendFormat("<option value='{0}'>{1}</option>", "0", dayLocale);
+            days.AppendFormat("<option value='{0}'>{1}</option>", "0", locService.GetResource("Common.Day"));
             for (var i = 1; i <= 31; i++)
-                days.AppendFormat("<option value='{0}'{1}>{0}</option>", i,
+                days.AppendFormat("<option value='{0}'{1}>{0}</option>", i, 
                     (SelectedDay.HasValue && SelectedDay.Value == i) ? " selected=\"selected\"" : null);
 
-            months.AppendFormat("<option value='{0}'>{1}</option>", "0", monthLocale);
+            months.AppendFormat("<option value='{0}'>{1}</option>", "0", locService.GetResource("Common.Month"));
             for (var i = 1; i <= 12; i++)
             {
                 months.AppendFormat("<option value='{0}'{1}>{2}</option>",
@@ -210,7 +189,7 @@ namespace Nop.Web.Framework.TagHelpers.Shared
                     CultureInfo.CurrentUICulture.DateTimeFormat.GetMonthName(i));
             }
             
-            years.AppendFormat("<option value='{0}'>{1}</option>", "0", yearLocale);
+            years.AppendFormat("<option value='{0}'>{1}</option>", "0", locService.GetResource("Common.Year"));
 
             if (BeginYear == null)
                 BeginYear = DateTime.UtcNow.Year - 100;

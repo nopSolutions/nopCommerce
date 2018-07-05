@@ -11,8 +11,8 @@ using Nop.Services.Discounts;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Security;
-using Nop.Web.Areas.Admin.Extensions;
 using Nop.Web.Areas.Admin.Factories;
+using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Discounts;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc;
@@ -135,7 +135,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                var discount = model.ToEntity();
+                var discount = model.ToEntity<Discount>();
                 _discountService.InsertDiscount(discount);
 
                 //activity log

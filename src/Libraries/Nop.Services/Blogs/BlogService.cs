@@ -17,11 +17,11 @@ namespace Nop.Services.Blogs
     {
         #region Fields
 
-        private readonly IRepository<BlogPost> _blogPostRepository;
-        private readonly IRepository<BlogComment> _blogCommentRepository;
-        private readonly IRepository<StoreMapping> _storeMappingRepository;
         private readonly CatalogSettings _catalogSettings;
         private readonly IEventPublisher _eventPublisher;
+        private readonly IRepository<BlogComment> _blogCommentRepository;
+        private readonly IRepository<BlogPost> _blogPostRepository;
+        private readonly IRepository<StoreMapping> _storeMappingRepository;
 
         #endregion
 
@@ -30,22 +30,22 @@ namespace Nop.Services.Blogs
         /// <summary>
         /// Ctor
         /// </summary>
-        /// <param name="blogPostRepository">Blog post repository</param>
-        /// <param name="blogCommentRepository">Blog comment repository</param>
-        /// <param name="storeMappingRepository">Store mapping repository</param>
         /// <param name="catalogSettings">Catalog settings</param>
         /// <param name="eventPublisher">Event publisher</param>
-        public BlogService(IRepository<BlogPost> blogPostRepository,
+        /// <param name="blogCommentRepository">Blog comment repository</param>
+        /// <param name="blogPostRepository">Blog post repository</param>
+        /// <param name="storeMappingRepository">Store mapping repository</param>
+        public BlogService(CatalogSettings catalogSettings, 
+            IEventPublisher eventPublisher,
             IRepository<BlogComment> blogCommentRepository,
-            IRepository<StoreMapping> storeMappingRepository,
-            CatalogSettings catalogSettings, 
-            IEventPublisher eventPublisher)
+            IRepository<BlogPost> blogPostRepository,
+            IRepository<StoreMapping> storeMappingRepository)
         {
-            this._blogPostRepository = blogPostRepository;
-            this._blogCommentRepository = blogCommentRepository;
-            this._storeMappingRepository = storeMappingRepository;
             this._catalogSettings = catalogSettings;
             this._eventPublisher = eventPublisher;
+            this._blogCommentRepository = blogCommentRepository;
+            this._blogPostRepository = blogPostRepository;
+            this._storeMappingRepository = storeMappingRepository;
         }
 
         #endregion

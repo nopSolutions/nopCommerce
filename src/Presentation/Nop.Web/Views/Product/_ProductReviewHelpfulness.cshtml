@@ -12,10 +12,10 @@
 
     <script asp-location="Footer">
         $(document).ready(function () {
-            $('#vote-yes-@(Model.ProductReviewId)').click(function () {
+            $('#vote-yes-@(Model.ProductReviewId)').on('click', function () {
                 setProductReviewHelpfulness@(Model.ProductReviewId)('true');
             });
-            $('#vote-no-@(Model.ProductReviewId)').click(function () {
+            $('#vote-no-@(Model.ProductReviewId)').on('click', function () {
                 setProductReviewHelpfulness@(Model.ProductReviewId)('false');
             });
         });

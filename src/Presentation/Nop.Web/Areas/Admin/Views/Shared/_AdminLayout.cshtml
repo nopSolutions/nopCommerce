@@ -31,25 +31,25 @@
     if (supportRtl)
     {
         Html.AppendCssFileParts("~/css/admin/styles.rtl.css");
-        Html.AppendCssFileParts("~/lib/adminLTE/AdminLTE-2.3.0.rtl.css");
+        Html.AppendCssFileParts("~/lib/adminLTE/css/AdminLTE.rtl.css");
         Html.AppendCssFileParts("~/lib/bootstrap/css/bootstrap.rtl.css");
     }
     else
     {
         Html.AppendCssFileParts("~/css/admin/styles.css");
-        Html.AppendCssFileParts("~/lib/adminLTE/AdminLTE-2.3.0.min.css");
+        Html.AppendCssFileParts("~/lib/adminLTE/css/AdminLTE.min.css");
         Html.AppendCssFileParts("~/lib/bootstrap/css/bootstrap.min.css");
     }
 
     Html.AppendCssFileParts($"~/lib/kendo/{kendoVersion}/kendo.rtl.min.css");
     Html.AppendCssFileParts($"~/lib/kendo/{kendoVersion}/kendo.default.min.css");
     Html.AppendCssFileParts($"~/lib/kendo/{kendoVersion}/kendo.common.min.css");
-    Html.AppendCssFileParts("~/lib/jquery-ui-themes/smoothness/jquery-ui-1.10.3.custom.min.css");
-    Html.AppendCssFileParts("~/lib/fontAwesome/css/font-awesome-4.6.3.min.css");
+    Html.AppendCssFileParts("~/lib/jquery-ui/jquery-ui-1.10.3/jquery-ui-themes/smoothness/jquery-ui-1.10.3.custom.min.css");
+    Html.AppendCssFileParts("~/lib/fontAwesome/css/font-awesome.min.css");
     Html.AppendCssFileParts("~/lib/typeahead/typeahead.css");
     Html.AppendCssFileParts("~/lib/bootstrap-touchspin/jquery.bootstrap-touchspin.min.css");
     <!-- AdminLTE Skins (choose a skin from the css/skins) -->
-    Html.AppendCssFileParts("~/lib/adminLTE/skins/_all-skins.min.css");
+    Html.AppendCssFileParts("~/lib/adminLTE/css/skins/_all-skins.min.css");
 
     //scripts
     Html.AppendScriptParts($"~/lib/kendo/{kendoVersion}/kendo.web.min.js");
@@ -57,14 +57,14 @@
     Html.AppendScriptParts("~/js/admin.navigation.js");
     Html.AppendScriptParts("~/js/admin.common.js");
     Html.AppendScriptParts("~/lib/typeahead/typeahead.bundle.min.js");
-    Html.AppendScriptParts("~/lib/jquery-migrate-1.2.1.min.js");
-    Html.AppendScriptParts("~/lib/jquery-ui-1.10.3.custom.min.js");
-    Html.AppendScriptParts("~/lib/jquery.validate.unobtrusive.min.js");
-    Html.AppendScriptParts("~/lib/jquery.validate.min.js");
-    Html.AppendScriptParts("~/lib/adminLTE/app.min.js");
-    Html.AppendScriptParts("~/lib/bootstrap/bootstrap.min.js");
+    Html.AppendScriptParts("~/lib/jquery-migrate/jquery-migrate-1.2.1.min.js");
+    Html.AppendScriptParts("~/lib/jquery-ui/jquery-ui-1.10.3/jquery-ui-1.10.3.custom.min.js");
+    Html.AppendScriptParts("~/lib/jquery-validate/jquery.validate.unobtrusive/jquery.validate.unobtrusive.min.js");
+    Html.AppendScriptParts("~/lib/jquery-validate/jquery.validate-v1.11.1/jquery.validate.min.js");
+    Html.AppendScriptParts("~/lib/adminLTE/js/adminlte.min.js");
+    Html.AppendScriptParts("~/lib/bootstrap/js/bootstrap.min.js");
     Html.AppendScriptParts("~/lib/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js");
-    Html.AppendScriptParts("~/lib/jquery-1.10.2.min.js");
+    Html.AppendScriptParts("~/lib/jquery/jquery-1.10.2.min.js");
 
     //page title
     string adminPageTitle = !string.IsNullOrWhiteSpace(ViewBag.Title) ? ViewBag.Title + " / " : "";
@@ -97,6 +97,8 @@
         <title>@adminPageTitle</title>
         <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
         <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+        @*Google Font*@
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
         @Html.NopHeadCustom()
         @Html.NopCssFiles(this.Url, ResourceLocation.Head, false)
         @Html.NopScripts(this.Url, ResourceLocation.Head, false)
@@ -134,7 +136,7 @@
                         <span class="logo-lg"></span>
                     </a>
                     <div class="navbar navbar-static-top" role="navigation">
-                        <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+                        <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
                             <span class="sr-only">&nbsp;</span>
                         </a>
                         @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.HeaderToggleAfter })
@@ -262,12 +264,27 @@
         <a id="backTop" class="btn btn-back-top bg-teal"></a>
         <script>
             $(document).ready(function () {
+                //enable "back top" arrow
                 $('#backTop').backTop();
 
+                //enable tooltips
+                $('[data-toggle="tooltip"]').tooltip()
+
+                //save sidebar preferences
                 $('a.sidebar-toggle').on('click', function () {
-                    var collapsed = $('body').hasClass('sidebar-collapse');
+                    var collapsed = !$('body').hasClass('sidebar-collapse');
                     saveUserPreferences('@(Url.Action("SavePreference", "Preferences"))', '@hideSidebarAttributeName', collapsed);
                 });
+
+                //bug-fix for unexpected auto-closing of grid's page size DropDownList in Chrome (Kendo grid bug)
+                var ddl = $(".k-grid-pager [data-role='dropdownlist']").data("kendoDropDownList");
+                if (ddl) {
+                    ddl.bind("close", pager_close);
+
+                    function pager_close(e) {
+                        e.sender.refresh()
+                    }
+                }
             });
         </script>
     </body>

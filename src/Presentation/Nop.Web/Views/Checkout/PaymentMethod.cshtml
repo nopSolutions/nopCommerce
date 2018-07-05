@@ -24,10 +24,10 @@
                         <label asp-for="UseRewardPoints">@string.Format(T("Checkout.UseRewardPoints").Text, Model.RewardPointsBalance, Model.RewardPointsAmount)</label>
                         @if (Model.RewardPointsEnoughToPayForOrder)
                         {
-                            <script asp-location="Footer">
+                        <script asp-location="Footer">
                                 $(document).ready(function() {
                                     $("#@Html.IdFor(model => model.UseRewardPoints)")
-                                        .change(toggleUseRewardPoints);
+                                        .on('change', toggleUseRewardPoints);
                                     toggleUseRewardPoints();
                                 });
 
@@ -38,7 +38,7 @@
                                         $('#payment-method-block').show();
                                     }
                                 }
-                            </script>
+                        </script>
                         }
                     </div>
                 }

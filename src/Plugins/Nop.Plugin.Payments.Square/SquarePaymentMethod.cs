@@ -264,10 +264,10 @@ namespace Nop.Plugin.Payments.Square
                         (
                             EmailAddress: customer.Email,
                             Nickname: customer.Username,
-                            GivenName: customer.GetAttribute<string>(SystemCustomerAttributeNames.FirstName),
-                            FamilyName: customer.GetAttribute<string>(SystemCustomerAttributeNames.LastName),
-                            PhoneNumber: customer.GetAttribute<string>(SystemCustomerAttributeNames.Phone),
-                            CompanyName: customer.GetAttribute<string>(SystemCustomerAttributeNames.Company),
+                            GivenName: customer.GetAttribute<string>(NopCustomerDefaults.FirstNameAttribute),
+                            FamilyName: customer.GetAttribute<string>(NopCustomerDefaults.LastNameAttribute),
+                            PhoneNumber: customer.GetAttribute<string>(NopCustomerDefaults.PhoneAttribute),
+                            CompanyName: customer.GetAttribute<string>(NopCustomerDefaults.CompanyAttribute),
                             ReferenceId: customer.CustomerGuid.ToString()
                         );
                         squareCustomer = _squarePaymentManager.CreateCustomer(customerRequest);

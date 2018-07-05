@@ -32,7 +32,7 @@
                 <a class="watch-forum" href="#" id="watch-forum">@Model.WatchForumText</a>
                 <script asp-location="Footer">
                     $(document).ready(function() {
-                        $('#watch-forum').click(function() {
+                        $('#watch-forum').on('click', function() {
                             $.ajax({
                                 cache: false,
                                 type: 'POST',

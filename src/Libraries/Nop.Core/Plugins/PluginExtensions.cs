@@ -40,12 +40,13 @@ namespace Nop.Core.Plugins
                 return null;
             }
 
-            var logoExtension = SupportedLogoImageExtensions.FirstOrDefault(ext => fileProvider.FileExists(fileProvider.Combine(pluginDirectory, "logo." + ext)));
+            var logoExtension = SupportedLogoImageExtensions
+                .FirstOrDefault(ext => fileProvider.FileExists(fileProvider.Combine(pluginDirectory, $"{NopPluginDefaults.LogoFileName}.{ext}")));
 
             if (string.IsNullOrWhiteSpace(logoExtension))
                 return null; //No logo file was found with any of the supported extensions.
 
-            var logoUrl = $"{webHelper.GetStoreLocation()}plugins/{fileProvider.GetDirectoryNameOnly(pluginDirectory)}/logo.{logoExtension}";
+            var logoUrl = $"{webHelper.GetStoreLocation()}plugins/{fileProvider.GetDirectoryNameOnly(pluginDirectory)}/{NopPluginDefaults.LogoFileName}.{logoExtension}";
             return logoUrl;
         }
     }

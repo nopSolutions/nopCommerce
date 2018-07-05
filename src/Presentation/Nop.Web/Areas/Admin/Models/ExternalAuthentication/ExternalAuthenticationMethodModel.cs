@@ -6,7 +6,7 @@ namespace Nop.Web.Areas.Admin.Models.ExternalAuthentication
     /// <summary>
     /// Represents an external authentication method model
     /// </summary>
-    public partial class ExternalAuthenticationMethodModel : BaseNopModel
+    public partial class ExternalAuthenticationMethodModel : BaseNopModel, IPluginModel
     {
         #region Properties
 
@@ -24,6 +24,8 @@ namespace Nop.Web.Areas.Admin.Models.ExternalAuthentication
 
         [NopResourceDisplayName("Admin.Configuration.ExternalAuthenticationMethods.Configure")]
         public string ConfigurationUrl { get; set; }
+
+        public string LogoUrl { get; set; }
 
         #endregion
     }

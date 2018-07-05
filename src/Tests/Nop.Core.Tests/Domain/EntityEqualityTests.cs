@@ -25,16 +25,6 @@ namespace Nop.Core.Tests.Domain
         }
 
         [Test]
-        public void Two_references_with_the_same_id_should_be_equal() {
-            
-            var id = 10;
-            var p1 = new Product { Id = id };
-            var p2 = new Product { Id = id };
-
-            Assert.AreEqual(p1, p2, "Entities with the same id should be equal");
-        }
-
-        [Test]
         public void Entities_with_different_id_should_not_be_equal() {
             
             var p1 = new Product { Id = 2 };
@@ -62,18 +52,6 @@ namespace Nop.Core.Tests.Domain
             Assert.AreNotEqual(p1, c1, "Entities of different types should not be equal, even if they have the same id");
         }
 
-        [Test]
-        public void Equality_works_using_operators() {
-
-            var p1 = new Product { Id = 1 };
-            var p2 = new Product { Id = 1 };
-
-            Assert.IsTrue(p1 == p2);
-
-            var p3 = new Product();
-
-            Assert.IsTrue(p1 != p3);
-        }
     }
 
 }

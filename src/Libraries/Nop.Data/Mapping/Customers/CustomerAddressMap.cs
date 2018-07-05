@@ -17,7 +17,7 @@ namespace Nop.Data.Mapping.Customers
         /// <param name="builder">The builder to be used to configure the entity</param>
         public override void Configure(EntityTypeBuilder<CustomerAddressMapping> builder)
         {
-            builder.ToTable("CustomerAddresses");
+            builder.ToTable(NopMappingDefaults.CustomerAddressesTable);
             builder.HasKey(mapping => new { mapping.CustomerId, mapping.AddressId });
 
             builder.Property(mapping => mapping.CustomerId).HasColumnName("Customer_Id");

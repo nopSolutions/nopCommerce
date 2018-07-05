@@ -4,7 +4,7 @@ using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Services.Customers;
 using Nop.Services.Localization;
-using Nop.Web.Areas.Admin.Extensions;
+using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Customers;
 using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Factories;
@@ -104,7 +104,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = customerAttributes.PaginationByRequestModel(searchModel).Select(attribute =>
                 {
                     //fill in model values from the entity
-                    var attributeModel = attribute.ToModel();
+                    var attributeModel = attribute.ToModel<CustomerAttributeModel>();
 
                     //fill in additional values (not existing in the entity)
                     attributeModel.AttributeControlTypeName = attribute.AttributeControlType.GetLocalizedEnum(_localizationService, _workContext);
@@ -132,7 +132,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (customerAttribute != null)
             {
                 //fill in model values from the entity
-                model = model ?? customerAttribute.ToModel();
+                model = model ?? customerAttribute.ToModel<CustomerAttributeModel>();
 
                 //prepare nested search model
                 PrepareCustomerAttributeValueSearchModel(model.CustomerAttributeValueSearchModel, customerAttribute);
@@ -173,14 +173,8 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new CustomerAttributeValueListModel
             {
                 //fill in model values from the entity
-                Data = customerAttributeValues.PaginationByRequestModel(searchModel).Select(value => new CustomerAttributeValueModel
-                {
-                    Id = value.Id,
-                    CustomerAttributeId = value.CustomerAttributeId,
-                    Name = value.Name,
-                    IsPreSelected = value.IsPreSelected,
-                    DisplayOrder = value.DisplayOrder
-                }),
+                Data = customerAttributeValues.PaginationByRequestModel(searchModel)
+                    .Select(value => value.ToModel<CustomerAttributeValueModel>()),
                 Total = customerAttributeValues.Count
             };
 
@@ -206,12 +200,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (customerAttributeValue != null)
             {
                 //fill in model values from the entity
-                model = model ?? new CustomerAttributeValueModel
-                {
-                    Name = customerAttributeValue.Name,
-                    IsPreSelected = customerAttributeValue.IsPreSelected,
-                    DisplayOrder = customerAttributeValue.DisplayOrder
-                };
+                model = model ?? customerAttributeValue.ToModel<CustomerAttributeValueModel>();
 
                 //define localized model configuration action
                 localizedModelConfiguration = (locale, languageId) =>

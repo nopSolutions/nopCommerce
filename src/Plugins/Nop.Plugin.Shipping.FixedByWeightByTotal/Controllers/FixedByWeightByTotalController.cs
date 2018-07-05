@@ -195,8 +195,8 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Controllers
               stateProvinceId: filter.SearchStateProvinceId,
               zip: filter.SearchZip,
               shippingMethodId: filter.SearchShippingMethodId,
-              weight: 0,
-              orderSubtotal: 0
+              weight: null,
+              orderSubtotal: null
               );
 
             var sbwModel = records.Select(record =>

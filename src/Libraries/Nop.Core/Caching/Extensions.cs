@@ -11,11 +11,6 @@ namespace Nop.Core.Caching
     public static class CacheExtensions
     {
         /// <summary>
-        /// Get default cache time in minutes
-        /// </summary>
-        private static int DefaultCacheTimeMinutes => 60;
-
-        /// <summary>
         /// Get a cached item. If it's not in the cache yet, then load and cache it
         /// </summary>
         /// <typeparam name="T">Type of cached item</typeparam>
@@ -26,7 +21,7 @@ namespace Nop.Core.Caching
         public static T Get<T>(this ICacheManager cacheManager, string key, Func<T> acquire)
         {
             //use default cache time
-            return Get(cacheManager, key, DefaultCacheTimeMinutes, acquire);
+            return Get(cacheManager, key, NopCachingDefaults.CacheTime, acquire);
         }
 
         /// <summary>

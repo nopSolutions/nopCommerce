@@ -31,8 +31,8 @@ using Nop.Services.Media;
 using Nop.Services.Orders;
 using Nop.Services.Security;
 using Nop.Services.Stores;
-using Nop.Web.Areas.Admin.Extensions;
 using Nop.Web.Areas.Admin.Factories;
+using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Settings;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
@@ -40,7 +40,6 @@ using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Localization;
 using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.Filters;
-using Nop.Web.Framework.Security.Captcha;
 
 namespace Nop.Web.Areas.Admin.Controllers
 {
@@ -120,7 +119,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (store != null || storeid == 0)
             {
                 _genericAttributeService
-                    .SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.AdminAreaStoreScopeConfiguration, storeid);
+                    .SaveAttribute(_workContext.CurrentCustomer, NopCustomerDefaults.AdminAreaStoreScopeConfigurationAttribute, storeid);
             }
 
             //home page
@@ -153,7 +152,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //load settings for a chosen store scope
             var storeScope = _storeContext.ActiveStoreScopeConfiguration;
             var blogSettings = _settingService.LoadSetting<BlogSettings>(storeScope);
-            blogSettings = model.ToEntity(blogSettings);
+            blogSettings = model.ToSettings(blogSettings);
 
              //we do not clear cache after each setting update.
              //this behavior can increase performance because cached settings will not be cleared 
@@ -197,7 +196,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //load settings for a chosen store scope
             var storeScope = _storeContext.ActiveStoreScopeConfiguration;
             var vendorSettings = _settingService.LoadSetting<VendorSettings>(storeScope);
-            vendorSettings = model.ToEntity(vendorSettings);
+            vendorSettings = model.ToSettings(vendorSettings);
 
             //we do not clear cache after each setting update.
             //this behavior can increase performance because cached settings will not be cleared 
@@ -244,7 +243,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //load settings for a chosen store scope
             var storeScope = _storeContext.ActiveStoreScopeConfiguration;
             var forumSettings = _settingService.LoadSetting<ForumSettings>(storeScope);
-            forumSettings = model.ToEntity(forumSettings);
+            forumSettings = model.ToSettings(forumSettings);
 
             //we do not clear cache after each setting update.
             //this behavior can increase performance because cached settings will not be cleared 
@@ -303,7 +302,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //load settings for a chosen store scope
             var storeScope = _storeContext.ActiveStoreScopeConfiguration;
             var newsSettings = _settingService.LoadSetting<NewsSettings>(storeScope);
-            newsSettings = model.ToEntity(newsSettings);
+            newsSettings = model.ToSettings(newsSettings);
 
             //we do not clear cache after each setting update.
             //this behavior can increase performance because cached settings will not be cleared 
@@ -348,7 +347,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //load settings for a chosen store scope
             var storeScope = _storeContext.ActiveStoreScopeConfiguration;
             var shippingSettings = _settingService.LoadSetting<ShippingSettings>(storeScope);
-            shippingSettings = model.ToEntity(shippingSettings);
+            shippingSettings = model.ToSettings(shippingSettings);
 
             //we do not clear cache after each setting update.
             //this behavior can increase performance because cached settings will not be cleared 
@@ -423,7 +422,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //load settings for a chosen store scope
             var storeScope = _storeContext.ActiveStoreScopeConfiguration;
             var taxSettings = _settingService.LoadSetting<TaxSettings>(storeScope);
-            taxSettings = model.ToEntity(taxSettings);
+            taxSettings = model.ToSettings(taxSettings);
 
             //we do not clear cache after each setting update.
             //this behavior can increase performance because cached settings will not be cleared 
@@ -506,7 +505,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //load settings for a chosen store scope
             var storeScope = _storeContext.ActiveStoreScopeConfiguration;
             var catalogSettings = _settingService.LoadSetting<CatalogSettings>(storeScope);
-            catalogSettings = model.ToEntity(catalogSettings);
+            catalogSettings = model.ToSettings(catalogSettings);
 
             //we do not clear cache after each setting update.
             //this behavior can increase performance because cached settings will not be cleared 
@@ -647,7 +646,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //load settings for a chosen store scope
                 var storeScope = _storeContext.ActiveStoreScopeConfiguration;
                 var rewardPointsSettings = _settingService.LoadSetting<RewardPointsSettings>(storeScope);
-                rewardPointsSettings = model.ToEntity(rewardPointsSettings);
+                rewardPointsSettings = model.ToSettings(rewardPointsSettings);
 
                 if (model.ActivatePointsImmediately)
                     rewardPointsSettings.ActivationDelay = 0;
@@ -711,7 +710,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //load settings for a chosen store scope
                 var storeScope = _storeContext.ActiveStoreScopeConfiguration;
                 var orderSettings = _settingService.LoadSetting<OrderSettings>(storeScope);
-                orderSettings = model.ToEntity(orderSettings);
+                orderSettings = model.ToSettings(orderSettings);
 
                 //we do not clear cache after each setting update.
                 //this behavior can increase performance because cached settings will not be cleared 
@@ -799,7 +798,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //load settings for a chosen store scope
             var storeScope = _storeContext.ActiveStoreScopeConfiguration;
             var shoppingCartSettings = _settingService.LoadSetting<ShoppingCartSettings>(storeScope);
-            shoppingCartSettings = model.ToEntity(shoppingCartSettings);
+            shoppingCartSettings = model.ToSettings(shoppingCartSettings);
 
             //we do not clear cache after each setting update.
             //this behavior can increase performance because cached settings will not be cleared 
@@ -854,7 +853,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //load settings for a chosen store scope
             var storeScope = _storeContext.ActiveStoreScopeConfiguration;
             var mediaSettings = _settingService.LoadSetting<MediaSettings>(storeScope);
-            mediaSettings = model.ToEntity(mediaSettings);
+            mediaSettings = model.ToSettings(mediaSettings);
 
             //we do not clear cache after each setting update.
             //this behavior can increase performance because cached settings will not be cleared 
@@ -929,7 +928,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             var dateTimeSettings = _settingService.LoadSetting<DateTimeSettings>(storeScope);
             var externalAuthenticationSettings = _settingService.LoadSetting<ExternalAuthenticationSettings>(storeScope);
 
-            customerSettings = model.CustomerSettings.ToEntity(customerSettings);
+            customerSettings = model.CustomerSettings.ToSettings(customerSettings);
 
             if (customerSettings.UsernameValidationEnabled && customerSettings.UsernameValidationUseRegex)
             {
@@ -951,7 +950,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             _settingService.SaveSetting(customerSettings);
 
-            addressSettings = model.AddressSettings.ToEntity(addressSettings);
+            addressSettings = model.AddressSettings.ToSettings(addressSettings);
             _settingService.SaveSetting(addressSettings);
 
             dateTimeSettings.DefaultStoreTimeZoneId = model.DateTimeSettings.DefaultStoreTimeZoneId;
@@ -991,7 +990,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //load settings for a chosen store scope
             var storeScope = _storeContext.ActiveStoreScopeConfiguration;
             var gdprSettings = _settingService.LoadSetting<GdprSettings>(storeScope);
-            gdprSettings = model.ToEntity(gdprSettings);
+            gdprSettings = model.ToSettings(gdprSettings);
 
             //we do not clear cache after each setting update.
             //this behavior can increase performance because cached settings will not be cleared 
@@ -1040,7 +1039,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                var gdprConsent = model.ToEntity();
+                var gdprConsent = model.ToEntity<GdprConsent>();
                 _gdprService.InsertConsent(gdprConsent);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Settings.Gdpr.Consent.Added"));
@@ -1157,7 +1156,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             commonSettings.SubjectFieldOnContactUsForm = model.StoreInformationSettings.SubjectFieldOnContactUsForm;
             commonSettings.UseSystemEmailForContactUsForm = model.StoreInformationSettings.UseSystemEmailForContactUsForm;
             //terms of service
-            commonSettings.PopupForTermsOfServiceLinks = model.StoreInformationSettings.PopupForTermsOfServiceLinks;
+            commonSettings.PopupForTermsOfServiceLinks = model.StoreInformationSettings.PopupForTermsOfServiceLinks;            
             //sitemap
             commonSettings.SitemapEnabled = model.StoreInformationSettings.SitemapEnabled;
             commonSettings.SitemapPageSize = model.StoreInformationSettings.SitemapPageSize;

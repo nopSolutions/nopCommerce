@@ -18,50 +18,50 @@ namespace Nop.Services.Catalog
     /// </summary>
     public partial class ProductAttributeFormatter : IProductAttributeFormatter
     {
-        private readonly IWorkContext _workContext;
-        private readonly IProductAttributeParser _productAttributeParser;
         private readonly ICurrencyService _currencyService;
-        private readonly ILocalizationService _localizationService;
-        private readonly ITaxService _taxService;
-        private readonly IPriceFormatter _priceFormatter;
         private readonly IDownloadService _downloadService;
-        private readonly IWebHelper _webHelper;
+        private readonly ILocalizationService _localizationService;
         private readonly IPriceCalculationService _priceCalculationService;
+        private readonly IPriceFormatter _priceFormatter;
+        private readonly IProductAttributeParser _productAttributeParser;
+        private readonly ITaxService _taxService;
+        private readonly IWebHelper _webHelper;
+        private readonly IWorkContext _workContext;
         private readonly ShoppingCartSettings _shoppingCartSettings;
 
         /// <summary>
         /// Ctor
         /// </summary>
-        /// <param name="workContext">Work context</param>
-        /// <param name="productAttributeParser">Product attribute parser</param>
         /// <param name="currencyService">Currency service</param>
-        /// <param name="localizationService">Localization service</param>
-        /// <param name="taxService">Tax service</param>
-        /// <param name="priceFormatter"> Price formatter</param>
         /// <param name="downloadService">Download service</param>
-        /// <param name="webHelper">Web helper</param>
+        /// <param name="localizationService">Localization service</param>
         /// <param name="priceCalculationService">Price calculation service</param>
+        /// <param name="priceFormatter"> Price formatter</param>
+        /// <param name="productAttributeParser">Product attribute parser</param>
+        /// <param name="taxService">Tax service</param>
+        /// <param name="webHelper">Web helper</param>
+        /// <param name="workContext">Work context</param>
         /// <param name="shoppingCartSettings">Shopping cart settings</param>
-        public ProductAttributeFormatter(IWorkContext workContext,
-            IProductAttributeParser productAttributeParser,
-            ICurrencyService currencyService,
-            ILocalizationService localizationService,
-            ITaxService taxService,
-            IPriceFormatter priceFormatter,
+        public ProductAttributeFormatter(ICurrencyService currencyService,
             IDownloadService downloadService,
-            IWebHelper webHelper,
+            ILocalizationService localizationService,
             IPriceCalculationService priceCalculationService,
+            IPriceFormatter priceFormatter,
+            IProductAttributeParser productAttributeParser,
+            ITaxService taxService,
+            IWebHelper webHelper,
+            IWorkContext workContext,
             ShoppingCartSettings shoppingCartSettings)
         {
-            this._workContext = workContext;
-            this._productAttributeParser = productAttributeParser;
             this._currencyService = currencyService;
-            this._localizationService = localizationService;
-            this._taxService = taxService;
-            this._priceFormatter = priceFormatter;
             this._downloadService = downloadService;
-            this._webHelper = webHelper;
+            this._localizationService = localizationService;
             this._priceCalculationService = priceCalculationService;
+            this._priceFormatter = priceFormatter;
+            this._productAttributeParser = productAttributeParser;
+            this._taxService = taxService;
+            this._webHelper = webHelper;
+            this._workContext = workContext;
             this._shoppingCartSettings = shoppingCartSettings;
         }
 

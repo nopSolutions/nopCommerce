@@ -17,30 +17,6 @@ namespace Nop.Services.Messages
     /// </summary>
     public partial class MessageTemplateService: IMessageTemplateService
     {
-        #region Constants
-
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : store ID
-        /// </remarks>
-        private const string MESSAGETEMPLATES_ALL_KEY = "Nop.messagetemplate.all-{0}";
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : template name
-        /// {1} : store ID
-        /// </remarks>
-        private const string MESSAGETEMPLATES_BY_NAME_KEY = "Nop.messagetemplate.name-{0}-{1}";
-        /// <summary>
-        /// Key pattern to clear cache
-        /// </summary>
-        private const string MESSAGETEMPLATES_PATTERN_KEY = "Nop.messagetemplate.";
-
-        #endregion
-
         #region Fields
 
         private readonly IRepository<MessageTemplate> _messageTemplateRepository;
@@ -101,7 +77,7 @@ namespace Nop.Services.Messages
 
             _messageTemplateRepository.Delete(messageTemplate);
 
-            _cacheManager.RemoveByPattern(MESSAGETEMPLATES_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopMessageDefaults.MessageTemplatesPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityDeleted(messageTemplate);
@@ -118,7 +94,7 @@ namespace Nop.Services.Messages
 
             _messageTemplateRepository.Insert(messageTemplate);
 
-            _cacheManager.RemoveByPattern(MESSAGETEMPLATES_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopMessageDefaults.MessageTemplatesPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(messageTemplate);
@@ -135,7 +111,7 @@ namespace Nop.Services.Messages
 
             _messageTemplateRepository.Update(messageTemplate);
 
-            _cacheManager.RemoveByPattern(MESSAGETEMPLATES_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopMessageDefaults.MessageTemplatesPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(messageTemplate);
@@ -165,7 +141,7 @@ namespace Nop.Services.Messages
             if (string.IsNullOrWhiteSpace(messageTemplateName))
                 throw new ArgumentException(nameof(messageTemplateName));
 
-            var key = string.Format(MESSAGETEMPLATES_BY_NAME_KEY, messageTemplateName, storeId ?? 0);
+            var key = string.Format(NopMessageDefaults.MessageTemplatesByNameCacheKey, messageTemplateName, storeId ?? 0);
             return _cacheManager.Get(key, () =>
             {
                 //get message templates with the passed name
@@ -188,7 +164,7 @@ namespace Nop.Services.Messages
         /// <returns>Message template list</returns>
         public virtual IList<MessageTemplate> GetAllMessageTemplates(int storeId)
         {
-            var key = string.Format(MESSAGETEMPLATES_ALL_KEY, storeId);
+            var key = string.Format(NopMessageDefaults.MessageTemplatesAllCacheKey, storeId);
             return _cacheManager.Get(key, () =>
             {
                 var query = _messageTemplateRepository.Table;

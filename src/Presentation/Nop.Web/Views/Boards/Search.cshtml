@@ -11,7 +11,7 @@
 <script asp-location="Footer">
     $(document).ready(function () {
         toggleAdvancedSearch();
-        $('#adv').click(function () {
+        $('#adv').on('click', function () {
             toggleAdvancedSearch();
         });
     });

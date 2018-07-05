@@ -222,7 +222,7 @@ namespace Nop.Web.Factories
 
             //vendor attributes
             if (string.IsNullOrEmpty(overriddenVendorAttributesXml))
-                overriddenVendorAttributesXml = vendor.GetAttribute<string>(VendorAttributeNames.VendorAttributes, _genericAttributeService);
+                overriddenVendorAttributesXml = vendor.GetAttribute<string>(NopVendorDefaults.VendorAttributes, _genericAttributeService);
             model.VendorAttributes = PrepareVendorAttributes(overriddenVendorAttributesXml);
 
             return model;

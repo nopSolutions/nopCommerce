@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Moq;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
@@ -14,29 +15,28 @@ using Nop.Services.Localization;
 using Nop.Services.Plugins;
 using Nop.Tests;
 using NUnit.Framework;
-using Rhino.Mocks;
 
 namespace Nop.Services.Tests.Discounts
 {
     [TestFixture]
     public class DiscountServiceTests : ServiceTest
     {
-        private IRepository<Discount> _discountRepo;
-        private IRepository<DiscountRequirement> _discountRequirementRepo;
-        private IRepository<DiscountUsageHistory> _discountUsageHistoryRepo;
-        private IEventPublisher _eventPublisher;
-        private ILocalizationService _localizationService;
-        private ICategoryService _categoryService;
+        private Mock<IRepository<Discount>> _discountRepo;
+        private Mock<IRepository<DiscountRequirement>> _discountRequirementRepo;
+        private Mock<IRepository<DiscountUsageHistory>> _discountUsageHistoryRepo;
+        private Mock<IEventPublisher> _eventPublisher;
+        private Mock<ILocalizationService> _localizationService;
+        private Mock<ICategoryService> _categoryService;
         private IDiscountService _discountService;
-        private IStoreContext _storeContext;
-        private IRepository<Category> _categoryRepo;
-        private IRepository<Manufacturer> _manufacturerRepo;
-        private IRepository<Product> _productRepo;
+        private Mock<IStoreContext> _storeContext;
+        private Mock<IRepository<Category>> _categoryRepo;
+        private Mock<IRepository<Manufacturer>> _manufacturerRepo;
+        private Mock<IRepository<Product>> _productRepo;
 
         [SetUp]
         public new void SetUp()
         {
-            _discountRepo = MockRepository.GenerateMock<IRepository<Discount>>();
+            _discountRepo = new Mock<IRepository<Discount>>();
             var discount1 = new Discount
             {
                 Id = 1,
@@ -46,7 +46,7 @@ namespace Nop.Services.Tests.Discounts
                 DiscountPercentage = 10,
                 DiscountAmount =0,
                 DiscountLimitation = DiscountLimitationType.Unlimited,
-                LimitationTimes = 0,
+                LimitationTimes = 0
             };
             var discount2 = new Discount
             {
@@ -59,35 +59,35 @@ namespace Nop.Services.Tests.Discounts
                 RequiresCouponCode = true,
                 CouponCode = "SecretCode",
                 DiscountLimitation = DiscountLimitationType.NTimesPerCustomer,
-                LimitationTimes = 3,
+                LimitationTimes = 3
             };
 
-            _discountRepo.Expect(x => x.Table).Return(new List<Discount> { discount1, discount2 }.AsQueryable());
+            _discountRepo.Setup(x => x.Table).Returns(new List<Discount> { discount1, discount2 }.AsQueryable());
 
-            _eventPublisher = MockRepository.GenerateMock<IEventPublisher>();
-            _eventPublisher.Expect(x => x.Publish(Arg<object>.Is.Anything));
+            _eventPublisher = new Mock<IEventPublisher>();
+            _eventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
 
-            _storeContext = MockRepository.GenerateMock<IStoreContext>();
+            _storeContext = new Mock<IStoreContext>();
 
-            _categoryRepo = MockRepository.GenerateMock<IRepository<Category>>();
-            _categoryRepo.Expect(x => x.Table).Return(new List<Category>().AsQueryable());
-            _manufacturerRepo = MockRepository.GenerateMock<IRepository<Manufacturer>>();
-            _manufacturerRepo.Expect(x => x.Table).Return(new List<Manufacturer>().AsQueryable());
-            _productRepo = MockRepository.GenerateMock<IRepository<Product>>();
-            _productRepo.Expect(x => x.Table).Return(new List<Product>().AsQueryable());
+            _categoryRepo = new Mock<IRepository<Category>>();
+            _categoryRepo.Setup(x => x.Table).Returns(new List<Category>().AsQueryable());
+            _manufacturerRepo = new Mock<IRepository<Manufacturer>>();
+            _manufacturerRepo.Setup(x => x.Table).Returns(new List<Manufacturer>().AsQueryable());
+            _productRepo = new Mock<IRepository<Product>>();
+            _productRepo.Setup(x => x.Table).Returns(new List<Product>().AsQueryable());
 
             var cacheManager = new NopNullCache();
-            _discountRequirementRepo = MockRepository.GenerateMock<IRepository<DiscountRequirement>>();
-            _discountRequirementRepo.Expect(x => x.Table).Return(new List<DiscountRequirement>().AsQueryable());
+            _discountRequirementRepo = new Mock<IRepository<DiscountRequirement>>();
+            _discountRequirementRepo.Setup(x => x.Table).Returns(new List<DiscountRequirement>().AsQueryable());
 
-            _discountUsageHistoryRepo = MockRepository.GenerateMock<IRepository<DiscountUsageHistory>>();
-            var pluginFinder = new PluginFinder(_eventPublisher);
-            _localizationService = MockRepository.GenerateMock<ILocalizationService>();
-            _categoryService = MockRepository.GenerateMock<ICategoryService>();
+            _discountUsageHistoryRepo = new Mock<IRepository<DiscountUsageHistory>>();
+            var pluginFinder = new PluginFinder(_eventPublisher.Object);
+            _localizationService = new Mock<ILocalizationService>();
+            _categoryService = new Mock<ICategoryService>();
 
-            _discountService = new DiscountService(cacheManager, _discountRepo, _discountRequirementRepo,
-                _discountUsageHistoryRepo, _categoryRepo, _manufacturerRepo, _productRepo, _storeContext,
-                _localizationService, _categoryService, pluginFinder, _eventPublisher);
+            _discountService = new DiscountService(cacheManager, _discountRepo.Object, _discountRequirementRepo.Object,
+                _discountUsageHistoryRepo.Object, _categoryRepo.Object, _manufacturerRepo.Object, _productRepo.Object, _storeContext.Object,
+                _localizationService.Object, _categoryService.Object, pluginFinder, _eventPublisher.Object);
         }
 
         [Test]
@@ -95,7 +95,7 @@ namespace Nop.Services.Tests.Discounts
         {
             var discounts = _discountService.GetAllDiscounts();
             discounts.ShouldNotBeNull();
-            (discounts.Any()).ShouldBeTrue();
+            discounts.Any().ShouldBeTrue();
         }
 
         [Test]
@@ -103,7 +103,7 @@ namespace Nop.Services.Tests.Discounts
         {
             var rules = _discountService.LoadAllDiscountRequirementRules();
             rules.ShouldNotBeNull();
-            (rules.Any()).ShouldBeTrue();
+            rules.Any().ShouldBeTrue();
         }
 
         [Test]
@@ -125,7 +125,7 @@ namespace Nop.Services.Tests.Discounts
                 DiscountAmount = 5,
                 RequiresCouponCode = true,
                 CouponCode = "CouponCode 1",
-                DiscountLimitation = DiscountLimitationType.Unlimited,
+                DiscountLimitation = DiscountLimitationType.Unlimited
             };
             
             var customer = new Customer
@@ -161,7 +161,7 @@ namespace Nop.Services.Tests.Discounts
                 DiscountAmount = 5,
                 RequiresCouponCode = true,
                 CouponCode = "CouponCode 1",
-                DiscountLimitation = DiscountLimitationType.Unlimited,
+                DiscountLimitation = DiscountLimitationType.Unlimited
             };
 
             var customer = new Customer
@@ -189,7 +189,7 @@ namespace Nop.Services.Tests.Discounts
                 StartDateUtc = DateTime.UtcNow.AddDays(-1),
                 EndDateUtc = DateTime.UtcNow.AddDays(1),
                 RequiresCouponCode = false,
-                DiscountLimitation = DiscountLimitationType.Unlimited,
+                DiscountLimitation = DiscountLimitationType.Unlimited
             };
 
             var customer = new Customer

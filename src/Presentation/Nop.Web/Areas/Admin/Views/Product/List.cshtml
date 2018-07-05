@@ -69,10 +69,14 @@
                 @T("Admin.Common.Import")
             </button>
             }
+            <a asp-action="BulkEdit" class="btn bg-yellow">
+                <i class="fa fa-edit"></i>
+                @T("Admin.Common.BulkEdit")
+            </a>
             <button type="button" id="delete-selected" class="btn bg-red">
                 <i class="fa fa-trash-o"></i>
                 @T("Admin.Common.Delete.Selected")
-            </button>
+            </button>             
             @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductListButtons })
         </div>
     </div>

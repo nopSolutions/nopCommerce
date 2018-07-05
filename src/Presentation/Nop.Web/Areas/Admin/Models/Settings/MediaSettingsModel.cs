@@ -6,7 +6,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
     /// <summary>
     /// Represents a media settings model
     /// </summary>
-    public partial class MediaSettingsModel : BaseNopModel
+    public partial class MediaSettingsModel : BaseNopModel, ISettingsModel
     {
         #region Properties
 

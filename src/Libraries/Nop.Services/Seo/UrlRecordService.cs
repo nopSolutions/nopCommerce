@@ -15,35 +15,6 @@ namespace Nop.Services.Seo
     /// </summary>
     public partial class UrlRecordService : IUrlRecordService
     {
-        #region Constants
-
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : entity ID
-        /// {1} : entity name
-        /// {2} : language ID
-        /// </remarks>
-        private const string URLRECORD_ACTIVE_BY_ID_NAME_LANGUAGE_KEY = "Nop.urlrecord.active.id-name-language-{0}-{1}-{2}";
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        private const string URLRECORD_ALL_KEY = "Nop.urlrecord.all";
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : slug
-        /// </remarks>
-        private const string URLRECORD_BY_SLUG_KEY = "Nop.urlrecord.active.slug-{0}";
-        /// <summary>
-        /// Key pattern to clear cache
-        /// </summary>
-        private const string URLRECORD_PATTERN_KEY = "Nop.urlrecord.";
-
-        #endregion
-
         #region Fields
 
         private readonly IRepository<UrlRecord> _urlRecordRepository;
@@ -102,8 +73,7 @@ namespace Nop.Services.Seo
         protected virtual IList<UrlRecordForCaching> GetAllUrlRecordsCached()
         {
             //cache
-            var key = string.Format(URLRECORD_ALL_KEY);
-            return _cacheManager.Get(key, () =>
+            return _cacheManager.Get(NopSeoDefaults.UrlRecordAllCacheKey, () =>
             {
                 //we use no tracking here for performance optimization
                 //anyway records are loaded only for read-only operations
@@ -154,7 +124,7 @@ namespace Nop.Services.Seo
             _urlRecordRepository.Delete(urlRecord);
 
             //cache
-            _cacheManager.RemoveByPattern(URLRECORD_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopSeoDefaults.UrlRecordPatternCacheKey);
         }
 
         /// <summary>
@@ -169,7 +139,7 @@ namespace Nop.Services.Seo
             _urlRecordRepository.Delete(urlRecords);
 
             //cache
-            _cacheManager.RemoveByPattern(URLRECORD_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopSeoDefaults.UrlRecordPatternCacheKey);
         }
 
         /// <summary>
@@ -209,7 +179,7 @@ namespace Nop.Services.Seo
             _urlRecordRepository.Insert(urlRecord);
 
             //cache
-            _cacheManager.RemoveByPattern(URLRECORD_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopSeoDefaults.UrlRecordPatternCacheKey);
         }
 
         /// <summary>
@@ -224,7 +194,7 @@ namespace Nop.Services.Seo
             _urlRecordRepository.Update(urlRecord);
 
             //cache
-            _cacheManager.RemoveByPattern(URLRECORD_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopSeoDefaults.UrlRecordPatternCacheKey);
         }
 
         /// <summary>
@@ -272,7 +242,7 @@ namespace Nop.Services.Seo
             }
 
             //gradual loading
-            var key = string.Format(URLRECORD_BY_SLUG_KEY, slug);
+            var key = string.Format(NopSeoDefaults.UrlRecordBySlugCacheKey, slug);
             return _cacheManager.Get(key, () =>
             {
                 var urlRecord = GetBySlug(slug);
@@ -313,7 +283,7 @@ namespace Nop.Services.Seo
         {
             if (_localizationSettings.LoadAllUrlRecordsOnStartup)
             {
-                var key = string.Format(URLRECORD_ACTIVE_BY_ID_NAME_LANGUAGE_KEY, entityId, entityName, languageId);
+                var key = string.Format(NopSeoDefaults.UrlRecordActiveByIdNameLanguageCacheKey, entityId, entityName, languageId);
                 return _cacheManager.Get(key, () =>
                 {
                     //load all records (we know they are cached)
@@ -335,7 +305,7 @@ namespace Nop.Services.Seo
             else
             {
                 //gradual loading
-                var key = string.Format(URLRECORD_ACTIVE_BY_ID_NAME_LANGUAGE_KEY, entityId, entityName, languageId);
+                var key = string.Format(NopSeoDefaults.UrlRecordActiveByIdNameLanguageCacheKey, entityId, entityName, languageId);
                 return _cacheManager.Get(key, () =>
                 {
                     var source = _urlRecordRepository.Table;
@@ -368,7 +338,7 @@ namespace Nop.Services.Seo
                 throw new ArgumentNullException(nameof(entity));
 
             var entityId = entity.Id;
-            var entityName = entity.GetType().BaseType.Name;
+            var entityName = entity.GetUnproxiedEntityType().Name;
 
             var query = from ur in _urlRecordRepository.Table
                 where ur.EntityId == entityId &&

@@ -15,40 +15,15 @@ namespace Nop.Services.Catalog
     /// </summary>
     public partial class ProductTagService : IProductTagService
     {
-        #region Constants
-
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : store ID
-        /// </remarks>
-        private const string PRODUCTTAG_COUNT_KEY = "Nop.producttag.count-{0}";
-
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : product ID
-        /// </remarks>
-        private const string PRODUCTTAG_ALLBYPRODUCTID_KEY = "Nop.producttag.allbyproductid-{0}";
-
-        /// <summary>
-        /// Key pattern to clear cache
-        /// </summary>
-        private const string PRODUCTTAG_PATTERN_KEY = "Nop.producttag.";
-
-        #endregion
-
         #region Fields
 
-        private readonly IRepository<ProductTag> _productTagRepository;
-        private readonly IRepository<ProductProductTagMapping> _productProductTagMappingRepository;
-        private readonly IDbContext _dbContext;
         private readonly ICacheManager _cacheManager;
-        private readonly IStaticCacheManager _staticCacheManager;
+        private readonly IDbContext _dbContext;
         private readonly IEventPublisher _eventPublisher;
         private readonly IProductService _productService;
+        private readonly IRepository<ProductProductTagMapping> _productProductTagMappingRepository;
+        private readonly IRepository<ProductTag> _productTagRepository;
+        private readonly IStaticCacheManager _staticCacheManager;
         private readonly IUrlRecordService _urlRecordService;
 
         #endregion
@@ -58,30 +33,30 @@ namespace Nop.Services.Catalog
         /// <summary>
         /// Ctor
         /// </summary>
-        /// <param name="productTagRepository">Product tag repository</param>
-        /// <param name="productProductTagMappingRepository">Product - product tag repository</param>
-        /// <param name="dbContext">Database Context</param>
         /// <param name="cacheManager">Cache manager</param>
-        /// <param name="staticCacheManager">Static cache manager</param>
+        /// <param name="dbContext">Database Context</param>
         /// <param name="eventPublisher">Event publisher</param>
         /// <param name="productService">Product service</param>
+        /// <param name="productProductTagMappingRepository">Product - product tag repository</param>
+        /// <param name="productTagRepository">Product tag repository</param>
+        /// <param name="staticCacheManager">Static cache manager</param>
         /// <param name="urlRecordService">Url record service</param>
-        public ProductTagService(IRepository<ProductTag> productTagRepository,
-            IRepository<ProductProductTagMapping> productProductTagMappingRepository,
+        public ProductTagService(ICacheManager cacheManager,
             IDbContext dbContext,
-            ICacheManager cacheManager,
-            IStaticCacheManager staticCacheManager,
             IEventPublisher eventPublisher,
             IProductService productService,
+            IRepository<ProductProductTagMapping> productProductTagMappingRepository,
+            IRepository<ProductTag> productTagRepository,
+            IStaticCacheManager staticCacheManager,
             IUrlRecordService urlRecordService)
         {
-            this._productTagRepository = productTagRepository;
-            this._productProductTagMappingRepository = productProductTagMappingRepository;
-            this._dbContext = dbContext;
             this._cacheManager = cacheManager;
-            this._staticCacheManager = staticCacheManager;
+            this._dbContext = dbContext;
             this._eventPublisher = eventPublisher;
             this._productService = productService;
+            this._productProductTagMappingRepository = productProductTagMappingRepository;
+            this._productTagRepository = productTagRepository;
+            this._staticCacheManager = staticCacheManager;
             this._urlRecordService = urlRecordService;
         }
 
@@ -96,7 +71,7 @@ namespace Nop.Services.Catalog
         /// <returns>Dictionary of "product tag ID : product count"</returns>
         private Dictionary<int, int> GetProductCount(int storeId)
         {
-            var key = string.Format(PRODUCTTAG_COUNT_KEY, storeId);
+            var key = string.Format(NopCatalogDefaults.ProductTagCountCacheKey, storeId);
             return _staticCacheManager.Get(key, () =>
             {
                 return _dbContext.QueryFromSql<ProductTagWithCount>($"Exec ProductTagCountLoadAll {storeId}")
@@ -121,8 +96,8 @@ namespace Nop.Services.Catalog
             _productTagRepository.Delete(productTag);
 
             //cache
-            _cacheManager.RemoveByPattern(PRODUCTTAG_PATTERN_KEY);
-            _staticCacheManager.RemoveByPattern(PRODUCTTAG_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductTagPatternCacheKey);
+            _staticCacheManager.RemoveByPattern(NopCatalogDefaults.ProductTagPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityDeleted(productTag);
@@ -146,7 +121,7 @@ namespace Nop.Services.Catalog
         /// <returns>Product tags</returns>
         public virtual IList<ProductTag> GetAllProductTagsByProductId(int productId)
         {
-            var key = string.Format(PRODUCTTAG_ALLBYPRODUCTID_KEY, productId);
+            var key = string.Format(NopCatalogDefaults.ProductTagAllByProductIdCacheKey, productId);
             return _cacheManager.Get(key, () =>
             {
                 var query = from pt in _productTagRepository.Table
@@ -200,8 +175,8 @@ namespace Nop.Services.Catalog
             _productTagRepository.Insert(productTag);
 
             //cache
-            _cacheManager.RemoveByPattern(PRODUCTTAG_PATTERN_KEY);
-            _staticCacheManager.RemoveByPattern(PRODUCTTAG_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductTagPatternCacheKey);
+            _staticCacheManager.RemoveByPattern(NopCatalogDefaults.ProductTagPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(productTag);
@@ -222,8 +197,8 @@ namespace Nop.Services.Catalog
             _urlRecordService.SaveSlug(productTag, seName, 0);
 
             //cache
-            _cacheManager.RemoveByPattern(PRODUCTTAG_PATTERN_KEY);
-            _staticCacheManager.RemoveByPattern(PRODUCTTAG_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductTagPatternCacheKey);
+            _staticCacheManager.RemoveByPattern(NopCatalogDefaults.ProductTagPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(productTag);

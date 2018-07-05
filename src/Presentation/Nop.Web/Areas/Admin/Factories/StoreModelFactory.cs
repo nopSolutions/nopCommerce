@@ -3,7 +3,7 @@ using System.Linq;
 using Nop.Core.Domain.Stores;
 using Nop.Services.Localization;
 using Nop.Services.Stores;
-using Nop.Web.Areas.Admin.Extensions;
+using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Stores;
 using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Factories;
@@ -18,23 +18,23 @@ namespace Nop.Web.Areas.Admin.Factories
         #region Fields
 
         private readonly IBaseAdminModelFactory _baseAdminModelFactory;
+        private readonly ILocalizationService _localizationService;
         private readonly ILocalizedModelFactory _localizedModelFactory;
         private readonly IStoreService _storeService;
-        private readonly ILocalizationService _localizationService;
 
         #endregion
 
         #region Ctor
 
         public StoreModelFactory(IBaseAdminModelFactory baseAdminModelFactory,
+            ILocalizationService localizationService,
             ILocalizedModelFactory localizedModelFactory,
-            IStoreService storeService,
-            ILocalizationService localizationService)
+            IStoreService storeService)
         {
             this._baseAdminModelFactory = baseAdminModelFactory;
+            this._localizationService = localizationService;
             this._localizedModelFactory = localizedModelFactory;
             this._storeService = storeService;
-            this._localizationService = localizationService;
         }
 
         #endregion
@@ -74,7 +74,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new StoreListModel
             {
                 //fill in model values from the entity
-                Data = stores.PaginationByRequestModel(searchModel).Select(store => store.ToModel()),
+                Data = stores.PaginationByRequestModel(searchModel).Select(store => store.ToModel<StoreModel>()),
                 Total = stores.Count
             };
 
@@ -95,7 +95,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (store != null)
             {
                 //fill in model values from the entity
-                model = model ?? store.ToModel();
+                model = model ?? store.ToModel<StoreModel>();
 
                 //define localized model configuration action
                 localizedModelConfiguration = (locale, languageId) =>

@@ -26,7 +26,7 @@
                 <div class="panel panel-default">
                     <div class="panel-body">
                         <div class="row">
-                            <div class="col-md-4">
+                            <div class="col-md-4 margin-t-5">
                                 <div class="panel panel-default" style="min-height: 230px;">
                                     <div class="panel-heading">
                                         @T("Admin.System.Maintenance.DeleteGuests")
@@ -78,7 +78,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-4 margin-t-5">
                                 <div class="panel panel-default" style="min-height: 230px;">
                                     <div class="panel-heading">
                                         @T("Admin.System.Maintenance.DeleteAbandonedCarts")
@@ -114,7 +114,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-4 margin-t-5">
                                 <div class="panel panel-default" style="min-height: 230px;">
                                     <div class="panel-heading">
                                         @T("Admin.System.Maintenance.DeleteExportedFiles")
@@ -159,8 +159,8 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row margin-t-5">
-                            <div class="col-md-4">
+                        <div class="row">
+                            <div class="col-md-4 margin-t-5">
                                 <div class="panel panel-default" style="min-height: 230px;">
                                     <div class="panel-heading">
                                         @T("Admin.System.Maintenance.ReIndexTables")
@@ -192,6 +192,9 @@
                         @T("Admin.System.Maintenance.BackupDatabase.DatabaseBackups")
                     </div>
                     <div class="panel-body">
+                        <p>
+                            @T("Admin.System.Maintenance.BackupDatabase.Description")
+                        </p>
                         <div id="backup-list"></div>
                     </div>
                     <div class="panel-footer">

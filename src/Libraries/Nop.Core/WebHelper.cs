@@ -11,6 +11,7 @@ using Microsoft.Extensions.Primitives;
 using Microsoft.Net.Http.Headers;
 using Nop.Core.Configuration;
 using Nop.Core.Data;
+using Nop.Core.Http;
 using Nop.Core.Infrastructure;
 
 namespace Nop.Core
@@ -20,12 +21,6 @@ namespace Nop.Core
     /// </summary>
     public partial class WebHelper : IWebHelper
     {
-        #region Const
-
-        private const string NullIpAddress = "::1";
-
-        #endregion
-
         #region Fields 
 
         private readonly IHttpContextAccessor _httpContextAccessor;
@@ -83,7 +78,7 @@ namespace Nop.Core
         /// <returns>Result</returns>
         protected virtual bool IsIpAddressSet(IPAddress address)
         {
-            return address != null && address.ToString() != NullIpAddress;
+            return address != null && address.ToString() != IPAddress.IPv6Loopback.ToString();
         }
 
         /// <summary>
@@ -94,7 +89,7 @@ namespace Nop.Core
         {
             try
             {
-                _fileProvider.SetLastWriteTimeUtc(_fileProvider.MapPath("~/web.config"), DateTime.UtcNow);
+                _fileProvider.SetLastWriteTimeUtc(_fileProvider.MapPath(NopInfrastructureDefaults.WebConfigPath), DateTime.UtcNow);
                 return true;
             }
             catch
@@ -137,7 +132,7 @@ namespace Nop.Core
                 {
                     //the X-Forwarded-For (XFF) HTTP header field is a de facto standard for identifying the originating IP address of a client
                     //connecting to a web server through an HTTP proxy or load balancer
-                    var forwardedHttpHeaderKey = "X-FORWARDED-FOR";
+                    var forwardedHttpHeaderKey = NopHttpDefaults.XForwardedForHeader;
                     if (!string.IsNullOrEmpty(_hostingConfig.ForwardedHttpHeader))
                     {
                         //but in some cases server use other HTTP header
@@ -160,8 +155,8 @@ namespace Nop.Core
             }
 
             //some of the validation
-            if (result != null && result.Equals("::1", StringComparison.InvariantCultureIgnoreCase))
-                result = "127.0.0.1";
+            if (result != null && result.Equals(IPAddress.IPv6Loopback.ToString(), StringComparison.InvariantCultureIgnoreCase))
+                result = IPAddress.Loopback.ToString();
 
             //"TryParse" doesn't support IPv4 with port number
             if (IPAddress.TryParse(result ?? string.Empty, out var ip))
@@ -185,7 +180,7 @@ namespace Nop.Core
         {
             if (!IsRequestAvailable())
                 return string.Empty;
-            
+
             //get store location
             var storeLocation = GetStoreLocation(useSsl ?? IsCurrentConnectionSecured());
 
@@ -195,7 +190,7 @@ namespace Nop.Core
             //add query string to the URL
             if (includeQueryString)
                 pageUrl = $"{pageUrl}{_httpContextAccessor.HttpContext.Request.QueryString}";
-            
+
             //whether to convert the URL to lower case
             if (lowercaseUrl)
                 pageUrl = pageUrl.ToLowerInvariant();
@@ -215,11 +210,11 @@ namespace Nop.Core
             //check whether hosting uses a load balancer
             //use HTTP_CLUSTER_HTTPS?
             if (_hostingConfig.UseHttpClusterHttps)
-                return _httpContextAccessor.HttpContext.Request.Headers["HTTP_CLUSTER_HTTPS"].ToString().Equals("on", StringComparison.OrdinalIgnoreCase);
+                return _httpContextAccessor.HttpContext.Request.Headers[NopHttpDefaults.HttpClusterHttpsHeader].ToString().Equals("on", StringComparison.OrdinalIgnoreCase);
 
             //use HTTP_X_FORWARDED_PROTO?
             if (_hostingConfig.UseHttpXForwardedProto)
-                return _httpContextAccessor.HttpContext.Request.Headers["X-Forwarded-Proto"].ToString().Equals("https", StringComparison.OrdinalIgnoreCase);
+                return _httpContextAccessor.HttpContext.Request.Headers[NopHttpDefaults.HttpXForwardedProtoHeader].ToString().Equals("https", StringComparison.OrdinalIgnoreCase);
 
             return _httpContextAccessor.HttpContext.Request.IsHttps;
         }
@@ -240,8 +235,8 @@ namespace Nop.Core
                 return string.Empty;
 
             //add scheme to the URL
-            var storeHost = $"{(useSsl ? Uri.UriSchemeHttps : Uri.UriSchemeHttp)}://{hostHeader.FirstOrDefault()}";
-            
+            var storeHost = $"{(useSsl ? Uri.UriSchemeHttps : Uri.UriSchemeHttp)}{Uri.SchemeDelimiter}{hostHeader.FirstOrDefault()}";
+
             //ensure that host is ended with slash
             storeHost = $"{storeHost.TrimEnd('/')}/";
 
@@ -278,7 +273,7 @@ namespace Nop.Core
 
             return storeLocation;
         }
-        
+
         /// <summary>
         /// Returns true if the requested resource is one of the typical resources that needn't be processed by the cms engine.
         /// </summary>
@@ -347,11 +342,11 @@ namespace Nop.Core
             var queryParameters = QueryHelpers.ParseQuery(uri.Query)
                 .SelectMany(parameter => parameter.Value, (parameter, queryValue) => new KeyValuePair<string, string>(parameter.Key, queryValue))
                 .ToList();
-           
+
             if (!string.IsNullOrEmpty(value))
             {
                 //remove a specific query parameter value if it's passed
-                queryParameters.RemoveAll(parameter => parameter.Key.Equals(key, StringComparison.InvariantCultureIgnoreCase) 
+                queryParameters.RemoveAll(parameter => parameter.Key.Equals(key, StringComparison.InvariantCultureIgnoreCase)
                     && parameter.Value.Equals(value, StringComparison.InvariantCultureIgnoreCase));
             }
             else
@@ -359,7 +354,7 @@ namespace Nop.Core
                 //or remove query parameter by the key
                 queryParameters.RemoveAll(parameter => parameter.Key.Equals(key, StringComparison.InvariantCultureIgnoreCase));
             }
-            
+
             //create new URL without passed query parameters
             url = $"{uri.GetLeftPart(UriPartial.Path)}{new QueryBuilder(queryParameters).ToQueryString()}{uri.Fragment}";
 
@@ -424,13 +419,13 @@ namespace Nop.Core
         {
             get
             {
-                if (_httpContextAccessor.HttpContext.Items["nop.IsPOSTBeingDone"] == null)
+                if (_httpContextAccessor.HttpContext.Items[NopHttpDefaults.IsPostBeingDoneRequestItem] == null)
                     return false;
 
-                return Convert.ToBoolean(_httpContextAccessor.HttpContext.Items["nop.IsPOSTBeingDone"]);
+                return Convert.ToBoolean(_httpContextAccessor.HttpContext.Items[NopHttpDefaults.IsPostBeingDoneRequestItem]);
             }
 
-            set => _httpContextAccessor.HttpContext.Items["nop.IsPOSTBeingDone"] = value;
+            set => _httpContextAccessor.HttpContext.Items[NopHttpDefaults.IsPostBeingDoneRequestItem] = value;
         }
 
         /// <summary>

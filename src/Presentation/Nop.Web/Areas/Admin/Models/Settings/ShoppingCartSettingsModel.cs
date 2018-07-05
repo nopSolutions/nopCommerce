@@ -6,7 +6,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
     /// <summary>
     /// Represents a shopping cart settings model
     /// </summary>
-    public partial class ShoppingCartSettingsModel : BaseNopModel
+    public partial class ShoppingCartSettingsModel : BaseNopModel, ISettingsModel
     {
         #region Properties
 

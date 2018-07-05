@@ -1,12 +1,5 @@
 @model PaymentMethodsModel
 
-@{
-    //page title
-    ViewBag.Title = T("Admin.Configuration.Payment.MethodRestrictions").Text;
-    //active menu item (system name)
-    Html.SetActiveMenuItemSystemName("PaymentMethods");
-}
-
 <div class="panel-group">
     @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.PaymentMethodRestrictionsTop, additionalData = Model })
     <div class="panel panel-default">

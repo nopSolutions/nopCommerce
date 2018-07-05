@@ -18,19 +18,19 @@ namespace Nop.Services.Catalog
     {
         #region Fields
 
-        private readonly IProductService _productService;
-        private readonly IProductAttributeService _productAttributeService;
-        private readonly ILanguageService _languageService;
-        private readonly ILocalizedEntityService _localizedEntityService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IPictureService _pictureService;
         private readonly ICategoryService _categoryService;
-        private readonly IManufacturerService _manufacturerService;
-        private readonly ISpecificationAttributeService _specificationAttributeService;
         private readonly IDownloadService _downloadService;
+        private readonly ILanguageService _languageService;
+        private readonly ILocalizationService _localizationService;
+        private readonly ILocalizedEntityService _localizedEntityService;
+        private readonly IManufacturerService _manufacturerService;
+        private readonly IPictureService _pictureService;
         private readonly IProductAttributeParser _productAttributeParser;
-        private readonly IUrlRecordService _urlRecordService;
+        private readonly IProductAttributeService _productAttributeService;
+        private readonly IProductService _productService;
+        private readonly ISpecificationAttributeService _specificationAttributeService;
         private readonly IStoreMappingService _storeMappingService;
+        private readonly IUrlRecordService _urlRecordService;
 
         #endregion
 
@@ -39,46 +39,46 @@ namespace Nop.Services.Catalog
         /// <summary>
         /// Ctor
         /// </summary>
-        /// <param name="productService">pProduct service</param>
-        /// <param name="productAttributeService">Product attribute service</param>
-        /// <param name="languageService">Language service</param>
-        /// <param name="localizedEntityService">Localized entity service</param>
-        /// <param name="localizationService">Localization service</param>
-        /// <param name="pictureService">Picture service</param>
         /// <param name="categoryService">Category service</param>
-        /// <param name="manufacturerService">Manufacturer service</param>
-        /// <param name="specificationAttributeService">Specification attribute service</param>
         /// <param name="downloadService">Download service</param>
+        /// <param name="languageService">Language service</param>
+        /// <param name="localizationService">Localization service</param>
+        /// <param name="localizedEntityService">Localized entity service</param>
+        /// <param name="manufacturerService">Manufacturer service</param>
+        /// <param name="pictureService">Picture service</param>
         /// <param name="productAttributeParser">Product attribute parser</param>
-        /// <param name="urlRecordService">URL record service</param>
+        /// <param name="productAttributeService">Product attribute service</param>
+        /// <param name="productService">pProduct service</param>
+        /// <param name="specificationAttributeService">Specification attribute service</param>
         /// <param name="storeMappingService">Store mapping service</param>
-        public CopyProductService(IProductService productService,
-            IProductAttributeService productAttributeService,
-            ILanguageService languageService,
-            ILocalizedEntityService localizedEntityService, 
-            ILocalizationService localizationService,
-            IPictureService pictureService,
-            ICategoryService categoryService, 
-            IManufacturerService manufacturerService,
-            ISpecificationAttributeService specificationAttributeService,
+        /// <param name="urlRecordService">URL record service</param>
+        public CopyProductService(ICategoryService categoryService,
             IDownloadService downloadService,
+            ILanguageService languageService,
+            ILocalizationService localizationService,
+            ILocalizedEntityService localizedEntityService,
+            IManufacturerService manufacturerService,
+            IPictureService pictureService,
             IProductAttributeParser productAttributeParser,
-            IUrlRecordService urlRecordService, 
-            IStoreMappingService storeMappingService)
+            IProductAttributeService productAttributeService,
+            IProductService productService,
+            ISpecificationAttributeService specificationAttributeService,
+            IStoreMappingService storeMappingService,
+            IUrlRecordService urlRecordService)
         {
-            this._productService = productService;
-            this._productAttributeService = productAttributeService;
-            this._languageService = languageService;
-            this._localizedEntityService = localizedEntityService;
-            this._localizationService = localizationService;
-            this._pictureService = pictureService;
             this._categoryService = categoryService;
-            this._manufacturerService = manufacturerService;
-            this._specificationAttributeService = specificationAttributeService;
             this._downloadService = downloadService;
+            this._languageService = languageService;
+            this._localizationService = localizationService;
+            this._localizedEntityService = localizedEntityService;
+            this._manufacturerService = manufacturerService;
+            this._pictureService = pictureService;
             this._productAttributeParser = productAttributeParser;
-            this._urlRecordService = urlRecordService;
+            this._productAttributeService = productAttributeService;
+            this._productService = productService;
+            this._specificationAttributeService = specificationAttributeService;
             this._storeMappingService = storeMappingService;
+            this._urlRecordService = urlRecordService;
         }
 
         #endregion
@@ -115,7 +115,8 @@ namespace Nop.Services.Catalog
             var associatedProducts = _productService.GetAssociatedProducts(product.Id, showHidden: true);
             foreach (var associatedProduct in associatedProducts)
             {
-                var associatedProductCopy = CopyProduct(associatedProduct, $"Copy of {associatedProduct.Name}",
+                var associatedProductCopy = CopyProduct(associatedProduct, 
+                    string.Format(NopCatalogDefaults.ProductCopyNameTemplate, associatedProduct.Name),
                     isPublished, copyImages, false);
                 associatedProductCopy.ParentGroupedProductId = productCopy.Id;
                 _productService.UpdateProduct(productCopy);

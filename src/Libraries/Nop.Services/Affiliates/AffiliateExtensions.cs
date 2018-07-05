@@ -56,9 +56,9 @@ namespace Nop.Services.Affiliates
             var storeUrl = webHelper.GetStoreLocation(false);
             var url = !string.IsNullOrEmpty(affiliate.FriendlyUrlName) ?
                 //use friendly URL
-                webHelper.ModifyQueryString(storeUrl, "affiliate", affiliate.FriendlyUrlName) :
+                webHelper.ModifyQueryString(storeUrl, NopAffiliateDefaults.AffiliateQueryParameter, affiliate.FriendlyUrlName) :
                 //use ID
-                webHelper.ModifyQueryString(storeUrl, "affiliateid", affiliate.Id.ToString());
+                webHelper.ModifyQueryString(storeUrl, NopAffiliateDefaults.AffiliateIdQueryParameter, affiliate.Id.ToString());
 
             return url;
         }
@@ -78,10 +78,8 @@ namespace Nop.Services.Affiliates
             friendlyUrlName = SeoExtensions.GetSeName(friendlyUrlName);
 
             //max length
-            //For long URLs we can get the following error:
-            //"the specified path, file name, or both are too long. The fully qualified file name must be less than 260 characters, and the directory name must be less than 248 characters"
-            //that's why we limit it to 200 here (consider a store URL + probably added {0}-{1} below)
-            friendlyUrlName = CommonHelper.EnsureMaximumLength(friendlyUrlName, 200);
+            //(consider a store URL + probably added {0}-{1} below)
+            friendlyUrlName = CommonHelper.EnsureMaximumLength(friendlyUrlName, NopAffiliateDefaults.FriendlyUrlNameLength);
 
             //ensure this name is not reserved yet
             //empty? nothing to check

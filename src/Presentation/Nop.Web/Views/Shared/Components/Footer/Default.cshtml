@@ -60,6 +60,10 @@
                 {
                     <li><a href="@Url.RouteUrl("Topic", new {SeName = topic.SeName})">@topic.Name</a></li>
                 }
+                @if (Model.AllowCustomersToCheckGiftCardBalance)
+                {
+                    <li><a href="@Url.RouteUrl("CheckGiftCardBalance")">@T("CheckGiftCardBalance")</a></li>
+                }
             </ul>
         </div>
         <div class="footer-block my-account">
@@ -132,7 +136,7 @@
 </div>
 <script asp-location="Footer">
     $(document).ready(function () {
-        $('.footer-block .title').click(function () {
+        $('.footer-block .title').on('click', function () {
             var e = window, a = 'inner';
             if (!('innerWidth' in window)) {
                 a = 'client';
@@ -147,7 +151,7 @@
 </script>
 <script asp-location="Footer">
     $(document).ready(function () {
-        $('.block .title').click(function () {
+        $('.block .title').on('click', function () {
             var e = window, a = 'inner';
             if (!('innerWidth' in window)) {
                 a = 'client';

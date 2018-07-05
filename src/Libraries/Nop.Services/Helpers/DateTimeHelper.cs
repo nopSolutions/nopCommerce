@@ -163,7 +163,7 @@ namespace Nop.Services.Helpers
             {
                 var timeZoneId = string.Empty;
                 if (customer != null)
-                    timeZoneId = customer.GetAttribute<string>(SystemCustomerAttributeNames.TimeZoneId, _genericAttributeService);
+                    timeZoneId = customer.GetAttribute<string>(NopCustomerDefaults.TimeZoneIdAttribute, _genericAttributeService);
 
                 try
                 {
@@ -240,7 +240,7 @@ namespace Nop.Services.Helpers
                 }
 
                 _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer,
-                    SystemCustomerAttributeNames.TimeZoneId, timeZoneId);
+                    NopCustomerDefaults.TimeZoneIdAttribute, timeZoneId);
             }
         }
     }

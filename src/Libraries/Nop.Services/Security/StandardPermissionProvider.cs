@@ -134,7 +134,7 @@ namespace Nop.Services.Security
             {
                 new DefaultPermissionRecord 
                 {
-                    CustomerRoleSystemName = SystemCustomerRoleNames.Administrators,
+                    CustomerRoleSystemName = NopCustomerDefaults.AdministratorsRoleName,
                     PermissionRecords = new[] 
                     {
                         AccessAdminPanel,
@@ -191,7 +191,7 @@ namespace Nop.Services.Security
                 },
                 new DefaultPermissionRecord 
                 {
-                    CustomerRoleSystemName = SystemCustomerRoleNames.ForumModerators,
+                    CustomerRoleSystemName = NopCustomerDefaults.ForumModeratorsRoleName,
                     PermissionRecords = new[] 
                     {
                         DisplayPrices,
@@ -202,7 +202,7 @@ namespace Nop.Services.Security
                 },
                 new DefaultPermissionRecord 
                 {
-                    CustomerRoleSystemName = SystemCustomerRoleNames.Guests,
+                    CustomerRoleSystemName = NopCustomerDefaults.GuestsRoleName,
                     PermissionRecords = new[] 
                     {
                         DisplayPrices,
@@ -213,7 +213,7 @@ namespace Nop.Services.Security
                 },
                 new DefaultPermissionRecord 
                 {
-                    CustomerRoleSystemName = SystemCustomerRoleNames.Registered,
+                    CustomerRoleSystemName = NopCustomerDefaults.RegisteredRoleName,
                     PermissionRecords = new[] 
                     {
                         DisplayPrices,
@@ -224,7 +224,7 @@ namespace Nop.Services.Security
                 },
                 new DefaultPermissionRecord 
                 {
-                    CustomerRoleSystemName = SystemCustomerRoleNames.Vendors,
+                    CustomerRoleSystemName = NopCustomerDefaults.VendorsRoleName,
                     PermissionRecords = new[] 
                     {
                         AccessAdminPanel,

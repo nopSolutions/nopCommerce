@@ -2,7 +2,7 @@
 using System.Linq;
 using Nop.Core.Domain.Customers;
 using Nop.Services.Authentication.External;
-using Nop.Web.Areas.Admin.Extensions;
+using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.ExternalAuthentication;
 using Nop.Web.Framework.Extensions;
 
@@ -70,7 +70,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = externalAuthenticationMethods.PaginationByRequestModel(searchModel).Select(method =>
                 {
                     //fill in model values from the entity
-                    var externalAuthenticationMethodModel = method.ToModel();
+                    var externalAuthenticationMethodModel = method.ToPluginModel<ExternalAuthenticationMethodModel>();
 
                     //fill in additional values (not existing in the entity)
                     externalAuthenticationMethodModel.IsActive = method.IsMethodActive(_externalAuthenticationSettings);

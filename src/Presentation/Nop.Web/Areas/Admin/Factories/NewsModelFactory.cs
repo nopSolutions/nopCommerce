@@ -8,7 +8,7 @@ using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.News;
 using Nop.Services.Stores;
-using Nop.Web.Areas.Admin.Extensions;
+using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.News;
 using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Factories;
@@ -56,6 +56,25 @@ namespace Nop.Web.Areas.Admin.Factories
         #region Methods
 
         /// <summary>
+        /// Prepare news content model
+        /// </summary>
+        /// <param name="newsContentModel">News content model</param>
+        /// <param name="filterByNewsItemId">Filter by news item ID</param>
+        /// <returns>News content model</returns>
+        public virtual NewsContentModel PrepareNewsContentModel(NewsContentModel newsContentModel, int? filterByNewsItemId)
+        {
+            if (newsContentModel == null)
+                throw new ArgumentNullException(nameof(newsContentModel));
+
+            //prepare nested search models
+            PrepareNewsItemSearchModel(newsContentModel.NewsItems);
+            var newsItem = _newsService.GetNewsById(filterByNewsItemId ?? 0);
+            PrepareNewsCommentSearchModel(newsContentModel.NewsComments, newsItem);
+
+            return newsContentModel;
+        }
+
+        /// <summary>
         /// Prepare news item search model
         /// </summary>
         /// <param name="searchModel">News item search model</param>
@@ -95,7 +114,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = newsItems.Select(newsItem =>
                 {
                     //fill in model values from the entity
-                    var newsItemModel = newsItem.ToModel();
+                    var newsItemModel = newsItem.ToModel<NewsItemModel>();
 
                     //little performance optimization: ensure that "Full" is not returned
                     newsItemModel.Full = string.Empty;
@@ -132,7 +151,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //fill in model values from the entity
             if (newsItem != null)
             {
-                model = model ?? newsItem.ToModel();
+                model = model ?? newsItem.ToModel<NewsItemModel>();
 
                 model.StartDate = newsItem.StartDateUtc;
                 model.EndDate = newsItem.EndDateUtc;
@@ -182,6 +201,8 @@ namespace Nop.Web.Areas.Admin.Factories
                 Value = "2"
             });
 
+            searchModel.NewsItemId = newsItem?.Id;
+
             //prepare page parameters
             searchModel.SetGridPageSize();
 
@@ -192,9 +213,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare paged news comment list model
         /// </summary>
         /// <param name="searchModel">News comment search model</param>
-        /// <param name="newsItem">News item; pass null to prepare comment models for all news items</param>
+        /// <param name="newsItemId">News item Id; pass null to prepare comment models for all news items</param>
         /// <returns>News comment list model</returns>
-        public virtual NewsCommentListModel PrepareNewsCommentListModel(NewsCommentSearchModel searchModel, NewsItem newsItem)
+        public virtual NewsCommentListModel PrepareNewsCommentListModel(NewsCommentSearchModel searchModel, int? newsItemId)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -207,7 +228,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var isApprovedOnly = searchModel.SearchApprovedId == 0 ? null : searchModel.SearchApprovedId == 1 ? true : (bool?)false;
 
             //get comments
-            var comments = _newsService.GetAllComments(newsItemId: newsItem?.Id,
+            var comments = _newsService.GetAllComments(newsItemId: newsItemId,
                 approved: isApprovedOnly,
                 fromUtc: createdOnFromValue,
                 toUtc: createdOnToValue,

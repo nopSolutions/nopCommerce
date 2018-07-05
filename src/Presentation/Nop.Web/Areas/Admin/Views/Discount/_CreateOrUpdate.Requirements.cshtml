@@ -1,7 +1,7 @@
 ﻿@model DiscountModel
 @using System.Text.Encodings.Web
 @{
-    Html.AddScriptParts("~/lib/jquery.tmpl.min.js");
+    Html.AddScriptParts("~/lib/jquery-tmpl/jquery.tmpl.min.js");
 }
 <div class="panel-group">
     @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.DiscountDetailsRequirementsTop, additionalData = Model })

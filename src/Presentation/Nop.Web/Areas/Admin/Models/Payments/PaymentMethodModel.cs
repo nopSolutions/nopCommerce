@@ -6,7 +6,7 @@ namespace Nop.Web.Areas.Admin.Models.Payments
     /// <summary>
     /// Represents a payment method model
     /// </summary>
-    public partial class PaymentMethodModel : BaseNopModel
+    public partial class PaymentMethodModel : BaseNopModel, IPluginModel
     {
         #region Properties
 

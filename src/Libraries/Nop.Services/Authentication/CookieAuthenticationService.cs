@@ -15,11 +15,11 @@ namespace Nop.Services.Authentication
     {
         #region Fields
 
+        private Customer _cachedCustomer;
         private readonly CustomerSettings _customerSettings;
         private readonly ICustomerService _customerService;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private Customer _cachedCustomer;
-
+        
         #endregion
 
         #region Ctor
@@ -57,13 +57,13 @@ namespace Nop.Services.Authentication
             var claims = new List<Claim>();
 
             if (!string.IsNullOrEmpty(customer.Username))
-                claims.Add(new Claim(ClaimTypes.Name, customer.Username, ClaimValueTypes.String, NopCookieAuthenticationDefaults.ClaimsIssuer));
+                claims.Add(new Claim(ClaimTypes.Name, customer.Username, ClaimValueTypes.String, NopAuthenticationDefaults.ClaimsIssuer));
 
             if (!string.IsNullOrEmpty(customer.Email))
-                claims.Add(new Claim(ClaimTypes.Email, customer.Email, ClaimValueTypes.Email, NopCookieAuthenticationDefaults.ClaimsIssuer));
+                claims.Add(new Claim(ClaimTypes.Email, customer.Email, ClaimValueTypes.Email, NopAuthenticationDefaults.ClaimsIssuer));
 
             //create principal for the current authentication scheme
-            var userIdentity = new ClaimsIdentity(claims, NopCookieAuthenticationDefaults.AuthenticationScheme);
+            var userIdentity = new ClaimsIdentity(claims, NopAuthenticationDefaults.AuthenticationScheme);
             var userPrincipal = new ClaimsPrincipal(userIdentity);
 
             //set value indicating whether session is persisted and the time at which the authentication was issued
@@ -74,7 +74,7 @@ namespace Nop.Services.Authentication
             };
 
             //sign in
-            await _httpContextAccessor.HttpContext.SignInAsync(NopCookieAuthenticationDefaults.AuthenticationScheme, userPrincipal, authenticationProperties);
+            await _httpContextAccessor.HttpContext.SignInAsync(NopAuthenticationDefaults.AuthenticationScheme, userPrincipal, authenticationProperties);
 
             //cache authenticated customer
             _cachedCustomer = customer;
@@ -89,7 +89,7 @@ namespace Nop.Services.Authentication
             _cachedCustomer = null;
 
             //and sign out from the current authentication scheme
-            await _httpContextAccessor.HttpContext.SignOutAsync(NopCookieAuthenticationDefaults.AuthenticationScheme);
+            await _httpContextAccessor.HttpContext.SignOutAsync(NopAuthenticationDefaults.AuthenticationScheme);
         }
 
         /// <summary>
@@ -103,7 +103,7 @@ namespace Nop.Services.Authentication
                 return _cachedCustomer;
 
             //try to get authenticated user identity
-            var authenticateResult = _httpContextAccessor.HttpContext.AuthenticateAsync(NopCookieAuthenticationDefaults.AuthenticationScheme).Result;
+            var authenticateResult = _httpContextAccessor.HttpContext.AuthenticateAsync(NopAuthenticationDefaults.AuthenticationScheme).Result;
             if (!authenticateResult.Succeeded)
                 return null;
 
@@ -112,7 +112,7 @@ namespace Nop.Services.Authentication
             {
                 //try to get customer by username
                 var usernameClaim = authenticateResult.Principal.FindFirst(claim => claim.Type == ClaimTypes.Name
-                    && claim.Issuer.Equals(NopCookieAuthenticationDefaults.ClaimsIssuer, StringComparison.InvariantCultureIgnoreCase));
+                    && claim.Issuer.Equals(NopAuthenticationDefaults.ClaimsIssuer, StringComparison.InvariantCultureIgnoreCase));
                 if (usernameClaim != null)
                     customer = _customerService.GetCustomerByUsername(usernameClaim.Value);
             }
@@ -120,7 +120,7 @@ namespace Nop.Services.Authentication
             {
                 //try to get customer by email
                 var emailClaim = authenticateResult.Principal.FindFirst(claim => claim.Type == ClaimTypes.Email 
-                    && claim.Issuer.Equals(NopCookieAuthenticationDefaults.ClaimsIssuer, StringComparison.InvariantCultureIgnoreCase));
+                    && claim.Issuer.Equals(NopAuthenticationDefaults.ClaimsIssuer, StringComparison.InvariantCultureIgnoreCase));
                 if (emailClaim != null)
                     customer = _customerService.GetCustomerByEmail(emailClaim.Value);
             }

@@ -96,11 +96,10 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
                 return AccessDeniedView();
 
-            //prepare model
-            var model = _pluginModelFactory.PreparePluginSearchModel(new PluginSearchModel());
+            var model = _pluginModelFactory.PreparePluginsConfigurationModel(new PluginsConfigurationModel());
 
             return View(model);
-        }
+        }       
 
         [HttpPost]
         public virtual IActionResult ListSelect(PluginSearchModel searchModel)

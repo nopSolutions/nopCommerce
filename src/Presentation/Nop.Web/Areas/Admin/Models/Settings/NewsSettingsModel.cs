@@ -6,7 +6,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
     /// <summary>
     /// Represents a news settings model
     /// </summary>
-    public partial class NewsSettingsModel : BaseNopModel
+    public partial class NewsSettingsModel : BaseNopModel, ISettingsModel
     {
         #region Properties
 

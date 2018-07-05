@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Moq;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
@@ -32,104 +33,130 @@ using Nop.Services.Tax;
 using Nop.Services.Vendors;
 using Nop.Tests;
 using NUnit.Framework;
-using Rhino.Mocks;
 
 namespace Nop.Services.Tests.Orders
 {
     [TestFixture]
     public class OrderProcessingServiceTests : ServiceTest
     {
-        private IWorkContext _workContext;
-        private IStoreContext _storeContext;
-        private ITaxService _taxService;
-        private IShippingService _shippingService;
-        private IShipmentService _shipmentService;
-        private IPaymentService _paymentService;
-        private ICheckoutAttributeParser _checkoutAttributeParser;
-        private IDiscountService _discountService;
-        private IGiftCardService _giftCardService;
-        private IGenericAttributeService _genericAttributeService;
         private TaxSettings _taxSettings;
         private RewardPointsSettings _rewardPointsSettings;
-        private ICategoryService _categoryService;
-        private IManufacturerService _manufacturerService;
-        private IProductAttributeParser _productAttributeParser;
-        private IPriceCalculationService _priceCalcService;
-        private IOrderTotalCalculationService _orderTotalCalcService;
-        private IAddressService _addressService;
         private ShippingSettings _shippingSettings;
-        private ILogger _logger;
-        private IRepository<ShippingMethod> _shippingMethodRepository;
-        private IRepository<Warehouse> _warehouseRepository;
-        private IOrderService _orderService;
-        private IWebHelper _webHelper;
-        private ILocalizationService _localizationService;
-        private ILanguageService _languageService;
-        private IProductService _productService;
-        private IPriceFormatter _priceFormatter;
-        private IProductAttributeFormatter _productAttributeFormatter;
-        private IShoppingCartService _shoppingCartService;
-        private ICheckoutAttributeFormatter _checkoutAttributeFormatter;
-        private ICustomerService _customerService;
-        private IEncryptionService _encryptionService;
-        private IWorkflowMessageService _workflowMessageService;
-        private ICustomerActivityService _customerActivityService;
-        private ICurrencyService _currencyService;
         private PaymentSettings _paymentSettings;
         private OrderSettings _orderSettings;
         private LocalizationSettings _localizationSettings;
         private ShoppingCartSettings _shoppingCartSettings;
         private CatalogSettings _catalogSettings;
-        private IOrderProcessingService _orderProcessingService;
-        private IEventPublisher _eventPublisher;
         private CurrencySettings _currencySettings;
-        private IAffiliateService _affiliateService;
-        private IVendorService _vendorService;
-        private IPdfService _pdfService;
-        private IRewardPointService _rewardPointService;
-
-        private IGeoLookupService _geoLookupService;
-        private ICountryService _countryService;
-        private IStateProvinceService _stateProvinceService;
         private CustomerSettings _customerSettings;
         private AddressSettings _addressSettings;
-        private ICustomNumberFormatter _customNumberFormatter;
-
+        private IWorkContext _workContext;
         private Store _store;
+        private Mock<IStoreContext> _storeContext;
+        private Mock<IProductService> _productService;
+        private Mock<IDiscountService> _discountService;
+        private Mock<ICategoryService> _categoryService;
+        private Mock<IManufacturerService> _manufacturerService;
+        private Mock<IProductAttributeParser> _productAttributeParser;
+        private PriceCalculationService _priceCalcService;
+        private Mock<IEventPublisher> _eventPublisher;
+        private Mock<ILocalizationService> _localizationService;
+        private Mock<IRepository<ShippingMethod>> _shippingMethodRepository;
+        private Mock<IRepository<Warehouse>> _warehouseRepository;
+        private NullLogger _logger;
+        private ShippingService _shippingService;
+        private Mock<IShipmentService> _shipmentService;
+        private Mock<IPaymentService> _paymentService;
+        private Mock<ICheckoutAttributeParser> _checkoutAttributeParser;
+        private Mock<IGiftCardService> _giftCardService;
+        private Mock<IGenericAttributeService> _genericAttributeService;
+        private Mock<IGeoLookupService> _geoLookupService;
+        private Mock<ICountryService> _countryService;
+        private Mock<IStateProvinceService> _stateProvinceService;
+        private Mock<IAddressService> _addressService;
+        private TaxService _taxService;
+        private Mock<IRewardPointService> _rewardPointService;
+        private OrderTotalCalculationService _orderTotalCalcService;
+        private Mock<IOrderService> _orderService;
+        private Mock<IWebHelper> _webHelper;
+        private Mock<ILanguageService> _languageService;
+        private Mock<IPriceFormatter> _priceFormatter;
+        private Mock<IProductAttributeFormatter> _productAttributeFormatter;
+        private Mock<IShoppingCartService> _shoppingCartService;
+        private Mock<ICheckoutAttributeFormatter> _checkoutAttributeFormatter;
+        private Mock<ICustomerService> _customerService;
+        private Mock<IEncryptionService> _encryptionService;
+        private Mock<IWorkflowMessageService> _workflowMessageService;
+        private Mock<ICustomerActivityService> _customerActivityService;
+        private Mock<ICurrencyService> _currencyService;
+        private Mock<IAffiliateService> _affiliateService;
+        private Mock<IVendorService> _vendorService;
+        private Mock<IPdfService> _pdfService;
+        private Mock<ICustomNumberFormatter> _customNumberFormatter;
+        private OrderProcessingService _orderProcessingService;
 
         [SetUp]
         public new void SetUp()
-        {
+        {   
+            _productService = new Mock<IProductService>();
+            _storeContext = new Mock<IStoreContext>();
+            _discountService = new Mock<IDiscountService>();
+            _categoryService = new Mock<ICategoryService>();
+            _manufacturerService = new Mock<IManufacturerService>();
+            _productAttributeParser = new Mock<IProductAttributeParser>();
+            _eventPublisher = new Mock<IEventPublisher>();
+            _localizationService = new Mock<ILocalizationService>();
+            _shippingMethodRepository = new Mock<IRepository<ShippingMethod>>();
+            _warehouseRepository = new Mock<IRepository<Warehouse>>();
+            _shipmentService = new Mock<IShipmentService>();
+            _paymentService = new Mock<IPaymentService>();
+            _checkoutAttributeParser = new Mock<ICheckoutAttributeParser>();
+            _giftCardService = new Mock<IGiftCardService>();
+            _genericAttributeService = new Mock<IGenericAttributeService>();
+            _geoLookupService = new Mock<IGeoLookupService>();
+            _countryService = new Mock<ICountryService>();
+            _stateProvinceService = new Mock<IStateProvinceService>();
+            _eventPublisher = new Mock<IEventPublisher>();
+            _addressService = new Mock<IAddressService>();
+            _rewardPointService = new Mock<IRewardPointService>();
+            _orderService = new Mock<IOrderService>();
+            _webHelper = new Mock<IWebHelper>();
+            _languageService = new Mock<ILanguageService>();
+            _priceFormatter= new Mock<IPriceFormatter>();
+            _productAttributeFormatter= new Mock<IProductAttributeFormatter>();
+            _shoppingCartService= new Mock<IShoppingCartService>();
+            _checkoutAttributeFormatter= new Mock<ICheckoutAttributeFormatter>();
+            _customerService= new Mock<ICustomerService>();
+            _encryptionService = new Mock<IEncryptionService>();
+            _workflowMessageService = new Mock<IWorkflowMessageService>();
+            _customerActivityService = new Mock<ICustomerActivityService>();
+            _currencyService = new Mock<ICurrencyService>();
+            _affiliateService = new Mock<IAffiliateService>();
+            _vendorService = new Mock<IVendorService>();
+            _pdfService = new Mock<IPdfService>();
+            _customNumberFormatter = new Mock<ICustomNumberFormatter>();
+            _rewardPointService = new Mock<IRewardPointService>();
+
             _workContext = null;
 
             _store = new Store { Id = 1 };
-            _storeContext = MockRepository.GenerateMock<IStoreContext>();
-            _storeContext.Expect(x => x.CurrentStore).Return(_store);
+            
+            _storeContext.Setup(x => x.CurrentStore).Returns(_store);
 
             _shoppingCartSettings = new ShoppingCartSettings();
             _catalogSettings = new CatalogSettings();
             
             var cacheManager = new NopNullCache();
 
-            _productService = MockRepository.GenerateMock<IProductService>();
-
             //price calculation service
-            _discountService = MockRepository.GenerateMock<IDiscountService>();
-            _categoryService = MockRepository.GenerateMock<ICategoryService>();
-            _manufacturerService = MockRepository.GenerateMock<IManufacturerService>();
+            _priceCalcService = new PriceCalculationService(_catalogSettings, _categoryService.Object,
+                _discountService.Object, _manufacturerService.Object, _productAttributeParser.Object,
+                _productService.Object, cacheManager,
+                _storeContext.Object, _workContext, _shoppingCartSettings);
+            
+            _eventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
 
-            _productAttributeParser = MockRepository.GenerateMock<IProductAttributeParser>();
-            _priceCalcService = new PriceCalculationService(_workContext, _storeContext,
-                _discountService, _categoryService, _manufacturerService,
-                _productAttributeParser, _productService, 
-                cacheManager, _shoppingCartSettings, _catalogSettings);
-
-            _eventPublisher = MockRepository.GenerateMock<IEventPublisher>();
-            _eventPublisher.Expect(x => x.Publish(Arg<object>.Is.Anything));
-
-            var pluginFinder = new PluginFinder(_eventPublisher);
-
-            _localizationService = MockRepository.GenerateMock<ILocalizationService>();
+            var pluginFinder = new PluginFinder(_eventPublisher.Object);
 
             //shipping
             _shippingSettings = new ShippingSettings
@@ -137,37 +164,26 @@ namespace Nop.Services.Tests.Orders
                 ActiveShippingRateComputationMethodSystemNames = new List<string>()
             };
             _shippingSettings.ActiveShippingRateComputationMethodSystemNames.Add("FixedRateTestShippingRateComputationMethod");
-            _shippingMethodRepository = MockRepository.GenerateMock<IRepository<ShippingMethod>>();
-            _warehouseRepository = MockRepository.GenerateMock<IRepository<Warehouse>>();
-            _logger = new NullLogger();
-            _shippingService = new ShippingService(_shippingMethodRepository,
-                _warehouseRepository,
-                _logger,
-                _productService,
-                _productAttributeParser,
-                _checkoutAttributeParser,
-                _genericAttributeService,
-                _localizationService,
-                _addressService,
-                _shippingSettings, 
-                pluginFinder, 
-                _storeContext,
-                _eventPublisher, 
-                _shoppingCartSettings,
-                cacheManager);
-            _shipmentService = MockRepository.GenerateMock<IShipmentService>();
             
-
-            _paymentService = MockRepository.GenerateMock<IPaymentService>();
-            _checkoutAttributeParser = MockRepository.GenerateMock<ICheckoutAttributeParser>();
-            _giftCardService = MockRepository.GenerateMock<IGiftCardService>();
-            _genericAttributeService = MockRepository.GenerateMock<IGenericAttributeService>();
-
-            _geoLookupService = MockRepository.GenerateMock<IGeoLookupService>();
-            _countryService = MockRepository.GenerateMock<ICountryService>();
-            _stateProvinceService = MockRepository.GenerateMock<IStateProvinceService>();
+            _logger = new NullLogger();
             _customerSettings = new CustomerSettings();
             _addressSettings = new AddressSettings();
+
+            _shippingService = new ShippingService(_shippingMethodRepository.Object,
+                _warehouseRepository.Object,
+                _logger,
+                _productService.Object,
+                _productAttributeParser.Object,
+                _checkoutAttributeParser.Object,
+                _genericAttributeService.Object,
+                _localizationService.Object,
+                _addressService.Object,
+                _shippingSettings, 
+                pluginFinder, 
+                _storeContext.Object,
+                _eventPublisher.Object, 
+                _shoppingCartSettings,
+                cacheManager);
 
             //tax
             _taxSettings = new TaxSettings
@@ -176,37 +192,20 @@ namespace Nop.Services.Tests.Orders
                 PaymentMethodAdditionalFeeIsTaxable = true,
                 DefaultTaxAddressId = 10
             };
-            _addressService = MockRepository.GenerateMock<IAddressService>();
-            _addressService.Expect(x => x.GetAddressById(_taxSettings.DefaultTaxAddressId)).Return(new Address { Id = _taxSettings.DefaultTaxAddressId });
-            _taxService = new TaxService(_addressService, _workContext, _storeContext, _taxSettings,
-                pluginFinder, _geoLookupService, _countryService, _stateProvinceService, _logger, _webHelper,
+            
+            _addressService.Setup(x => x.GetAddressById(_taxSettings.DefaultTaxAddressId)).Returns(new Address { Id = _taxSettings.DefaultTaxAddressId });
+            _taxService = new TaxService(_addressService.Object, _workContext, _storeContext.Object, _taxSettings,
+                pluginFinder, _geoLookupService.Object, _countryService.Object, _stateProvinceService.Object, _logger, _webHelper.Object,
                 _customerSettings, _shippingSettings, _addressSettings);
 
-            _rewardPointService = MockRepository.GenerateMock<IRewardPointService>();
+           
             _rewardPointsSettings = new RewardPointsSettings();
 
-            _orderTotalCalcService = new OrderTotalCalculationService(_workContext, _storeContext,
-                _priceCalcService, _productService, _productAttributeParser, _taxService, _shippingService, _paymentService,
-                _checkoutAttributeParser, _discountService, _giftCardService,
-                _genericAttributeService, _rewardPointService,
+            _orderTotalCalcService = new OrderTotalCalculationService(_workContext, _storeContext.Object,
+                _priceCalcService, _productService.Object, _productAttributeParser.Object, _taxService, _shippingService, _paymentService.Object,
+                _checkoutAttributeParser.Object, _discountService.Object, _giftCardService.Object,
+                _genericAttributeService.Object, _rewardPointService.Object,
                 _taxSettings, _rewardPointsSettings, _shippingSettings, _shoppingCartSettings, _catalogSettings);
-
-            _orderService = MockRepository.GenerateMock<IOrderService>();
-            _webHelper = MockRepository.GenerateMock<IWebHelper>();
-            _languageService = MockRepository.GenerateMock<ILanguageService>();
-            _priceFormatter= MockRepository.GenerateMock<IPriceFormatter>();
-            _productAttributeFormatter= MockRepository.GenerateMock<IProductAttributeFormatter>();
-            _shoppingCartService= MockRepository.GenerateMock<IShoppingCartService>();
-            _checkoutAttributeFormatter= MockRepository.GenerateMock<ICheckoutAttributeFormatter>();
-            _customerService= MockRepository.GenerateMock<ICustomerService>();
-            _encryptionService = MockRepository.GenerateMock<IEncryptionService>();
-            _workflowMessageService = MockRepository.GenerateMock<IWorkflowMessageService>();
-            _customerActivityService = MockRepository.GenerateMock<ICustomerActivityService>();
-            _currencyService = MockRepository.GenerateMock<ICurrencyService>();
-            _affiliateService = MockRepository.GenerateMock<IAffiliateService>();
-            _vendorService = MockRepository.GenerateMock<IVendorService>();
-            _pdfService = MockRepository.GenerateMock<IPdfService>();
-            _customNumberFormatter = MockRepository.GenerateMock<ICustomNumberFormatter>();
 
             _paymentSettings = new PaymentSettings
             {
@@ -218,30 +217,28 @@ namespace Nop.Services.Tests.Orders
             _orderSettings = new OrderSettings();
 
             _localizationSettings = new LocalizationSettings();
-
-            _eventPublisher = MockRepository.GenerateMock<IEventPublisher>();
-            _eventPublisher.Expect(x => x.Publish(Arg<object>.Is.Anything));
-
-            _rewardPointService = MockRepository.GenerateMock<IRewardPointService>();
+            
+            _eventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
+            
             _currencySettings = new CurrencySettings();
 
-            _orderProcessingService = new OrderProcessingService(_orderService, _webHelper,
-                _localizationService, _languageService,
-                _productService, _paymentService, _logger,
-                _orderTotalCalcService, _priceCalcService, _priceFormatter,
-                _productAttributeParser, _productAttributeFormatter,
-                _giftCardService, _shoppingCartService, _checkoutAttributeFormatter,
-                _shippingService, _shipmentService, _taxService,
-                _customerService, _discountService,
-                _encryptionService, _workContext, 
-                _workflowMessageService, _vendorService,
-                _customerActivityService, _currencyService, _affiliateService,
-                _eventPublisher,_pdfService, _rewardPointService,
-                _genericAttributeService,
-                _countryService, _stateProvinceService,
+            _orderProcessingService = new OrderProcessingService(_orderService.Object, _webHelper.Object,
+                _localizationService.Object, _languageService.Object,
+                _productService.Object, _paymentService.Object, _logger,
+                _orderTotalCalcService, _priceCalcService, _priceFormatter.Object,
+                _productAttributeParser.Object, _productAttributeFormatter.Object,
+                _giftCardService.Object, _shoppingCartService.Object, _checkoutAttributeFormatter.Object,
+                _shippingService, _shipmentService.Object, _taxService,
+                _customerService.Object, _discountService.Object,
+                _encryptionService.Object, _workContext, 
+                _workflowMessageService.Object, _vendorService.Object,
+                _customerActivityService.Object, _currencyService.Object, _affiliateService.Object,
+                _eventPublisher.Object,_pdfService.Object, _rewardPointService.Object,
+                _genericAttributeService.Object,
+                _countryService.Object, _stateProvinceService.Object,
                 _shippingSettings, _paymentSettings, _rewardPointsSettings,
                 _orderSettings, _taxSettings, _localizationSettings,
-                _currencySettings, _customNumberFormatter);
+                _currencySettings, _customNumberFormatter.Object);
         }
         
         [Test]
@@ -283,8 +280,8 @@ namespace Nop.Services.Tests.Orders
         [Test]
         public void Ensure_order_can_only_be_captured_when_orderStatus_is_not_cancelled_or_pending_and_paymentstatus_is_authorized_and_paymentModule_supports_capture()
         {
-            _paymentService.Expect(ps => ps.SupportCapture("paymentMethodSystemName_that_supports_capture")).Return(true);
-            _paymentService.Expect(ps => ps.SupportCapture("paymentMethodSystemName_that_doesn't_support_capture")).Return(false);
+            _paymentService.Setup(ps => ps.SupportCapture("paymentMethodSystemName_that_supports_capture")).Returns(true);
+            _paymentService.Setup(ps => ps.SupportCapture("paymentMethodSystemName_that_doesn't_support_capture")).Returns(false);
             var order = new Order
             {
                 PaymentMethodSystemName = "paymentMethodSystemName_that_supports_capture"
@@ -297,8 +294,8 @@ namespace Nop.Services.Tests.Orders
                         order.PaymentStatus = ps;
                         order.ShippingStatus = ss;
 
-                        if ((os != OrderStatus.Cancelled && os != OrderStatus.Pending)
-                            && (ps == PaymentStatus.Authorized))
+                        if (os != OrderStatus.Cancelled && os != OrderStatus.Pending
+                            && ps == PaymentStatus.Authorized)
                             _orderProcessingService.CanCapture(order).ShouldBeTrue();
                         else
                             _orderProcessingService.CanCapture(order).ShouldBeFalse();
@@ -329,8 +326,7 @@ namespace Nop.Services.Tests.Orders
                         order.OrderStatus = os;
                         order.PaymentStatus = ps;
                         order.ShippingStatus = ss;
-                        if (os == OrderStatus.Cancelled
-                            || (ps == PaymentStatus.Paid || ps == PaymentStatus.Refunded || ps == PaymentStatus.Voided))
+                        if (os == OrderStatus.Cancelled || ps == PaymentStatus.Paid || ps == PaymentStatus.Refunded || ps == PaymentStatus.Voided)
                             _orderProcessingService.CanMarkOrderAsPaid(order).ShouldBeFalse();
                         else
                             _orderProcessingService.CanMarkOrderAsPaid(order).ShouldBeTrue();
@@ -340,8 +336,8 @@ namespace Nop.Services.Tests.Orders
         [Test]
         public void Ensure_order_can_only_be_refunded_when_paymentstatus_is_paid_and_paymentModule_supports_refund()
         {
-            _paymentService.Expect(ps => ps.SupportRefund("paymentMethodSystemName_that_supports_refund")).Return(true);
-            _paymentService.Expect(ps => ps.SupportRefund("paymentMethodSystemName_that_doesn't_support_refund")).Return(false);
+            _paymentService.Setup(ps => ps.SupportRefund("paymentMethodSystemName_that_supports_refund")).Returns(true);
+            _paymentService.Setup(ps => ps.SupportRefund("paymentMethodSystemName_that_doesn't_support_refund")).Returns(false);
             var order = new Order
             {
                 OrderTotal = 1,
@@ -380,7 +376,7 @@ namespace Nop.Services.Tests.Orders
         [Test]
         public void Ensure_order_cannot_be_refunded_when_orderTotal_is_zero()
         {
-            _paymentService.Expect(ps => ps.SupportRefund("paymentMethodSystemName_that_supports_refund")).Return(true);
+            _paymentService.Setup(ps => ps.SupportRefund("paymentMethodSystemName_that_supports_refund")).Returns(true);
             var order = new Order
             {
                 PaymentMethodSystemName = "paymentMethodSystemName_that_supports_refund"
@@ -403,7 +399,7 @@ namespace Nop.Services.Tests.Orders
         {
             var order = new Order
             {
-                OrderTotal = 1,
+                OrderTotal = 1
             };
             foreach (OrderStatus os in Enum.GetValues(typeof(OrderStatus)))
                 foreach (PaymentStatus ps in Enum.GetValues(typeof(PaymentStatus)))
@@ -440,8 +436,8 @@ namespace Nop.Services.Tests.Orders
         [Test]
         public void Ensure_order_can_only_be_voided_when_paymentstatus_is_authorized_and_paymentModule_supports_void()
         {
-            _paymentService.Expect(ps => ps.SupportVoid("paymentMethodSystemName_that_supports_void")).Return(true);
-            _paymentService.Expect(ps => ps.SupportVoid("paymentMethodSystemName_that_doesn't_support_void")).Return(false);
+            _paymentService.Setup(ps => ps.SupportVoid("paymentMethodSystemName_that_supports_void")).Returns(true);
+            _paymentService.Setup(ps => ps.SupportVoid("paymentMethodSystemName_that_doesn't_support_void")).Returns(false);
             var order = new Order
             {
                 OrderTotal = 1,
@@ -480,7 +476,7 @@ namespace Nop.Services.Tests.Orders
         [Test]
         public void Ensure_order_cannot_be_voided_when_orderTotal_is_zero()
         {
-            _paymentService.Expect(ps => ps.SupportVoid("paymentMethodSystemName_that_supports_void")).Return(true);
+            _paymentService.Setup(ps => ps.SupportVoid("paymentMethodSystemName_that_supports_void")).Returns(true);
             var order = new Order
             {
                 PaymentMethodSystemName = "paymentMethodSystemName_that_supports_void"
@@ -503,7 +499,7 @@ namespace Nop.Services.Tests.Orders
         {
             var order = new Order
             {
-                OrderTotal = 1,
+                OrderTotal = 1
             };
             foreach (OrderStatus os in Enum.GetValues(typeof(OrderStatus)))
                 foreach (PaymentStatus ps in Enum.GetValues(typeof(PaymentStatus)))
@@ -540,8 +536,8 @@ namespace Nop.Services.Tests.Orders
         [Test]
         public void Ensure_order_can_only_be_partially_refunded_when_paymentstatus_is_paid_or_partiallyRefunded_and_paymentModule_supports_partialRefund()
         {
-            _paymentService.Expect(ps => ps.SupportPartiallyRefund("paymentMethodSystemName_that_supports_partialrefund")).Return(true);
-            _paymentService.Expect(ps => ps.SupportPartiallyRefund("paymentMethodSystemName_that_doesn't_support_partialrefund")).Return(false);
+            _paymentService.Setup(ps => ps.SupportPartiallyRefund("paymentMethodSystemName_that_supports_partialrefund")).Returns(true);
+            _paymentService.Setup(ps => ps.SupportPartiallyRefund("paymentMethodSystemName_that_doesn't_support_partialrefund")).Returns(false);
             var order = new Order
             {
                 OrderTotal = 100,
@@ -580,13 +576,14 @@ namespace Nop.Services.Tests.Orders
         [Test]
         public void Ensure_order_cannot_be_partially_refunded_when_amountToRefund_is_greater_than_amount_that_can_be_refunded()
         {
-            _paymentService.Expect(ps => ps.SupportPartiallyRefund("paymentMethodSystemName_that_supports_partialrefund")).Return(true);
+            _paymentService.Setup(ps => ps.SupportPartiallyRefund("paymentMethodSystemName_that_supports_partialrefund")).Returns(true);
             var order = new Order
             {
                 OrderTotal = 100,
                 RefundedAmount = 30, //100-30=70 can be refunded
+                PaymentMethodSystemName = "paymentMethodSystemName_that_supports_partialrefund"
+
             };
-            order.PaymentMethodSystemName = "paymentMethodSystemName_that_supports_partialrefund";
 
             foreach (OrderStatus os in Enum.GetValues(typeof(OrderStatus)))
                 foreach (PaymentStatus ps in Enum.GetValues(typeof(PaymentStatus)))
@@ -635,7 +632,7 @@ namespace Nop.Services.Tests.Orders
             var order = new Order
             {
                 OrderTotal = 100,
-                RefundedAmount = 30, //100-30=70 can be refunded
+                RefundedAmount = 30 //100-30=70 can be refunded
             };
 
             foreach (OrderStatus os in Enum.GetValues(typeof(OrderStatus)))

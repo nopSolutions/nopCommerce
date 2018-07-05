@@ -18,17 +18,16 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
-        private readonly IPermissionService _permissionService;
         private readonly INopFileProvider _fileProvider;
-
+        private readonly IPermissionService _permissionService;
+       
         #endregion
-
-
-        public JbimagesController(IPermissionService permissionService,
-            INopFileProvider fileProvider)
+        
+        public JbimagesController(INopFileProvider fileProvider,
+            IPermissionService permissionService)
         {
-            this._permissionService = permissionService;
             this._fileProvider = fileProvider;
+            this._permissionService = permissionService;
         }
 
         protected virtual IList<string> GetAllowedFileTypes()

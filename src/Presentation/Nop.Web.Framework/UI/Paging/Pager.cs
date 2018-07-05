@@ -73,6 +73,35 @@ namespace Nop.Web.Framework.UI.Paging
         /// Boolean parameter names
         /// </summary>
         protected IList<string> booleanParameterNames;
+		/// <summary>
+		/// First page css class name
+		/// </summary>
+		protected string firstPageCssClass = "first-page";
+		/// <summary>
+		/// Previous page css class name
+		/// </summary>
+		protected string previousPageCssClass = "previous-page";
+        /// <summary>
+		/// Current page css class name
+		/// </summary>
+        protected string currentPageCssClass = "current-page";
+		/// <summary>
+		/// Individual page css class name
+		/// </summary>
+        protected string individualPageCssClass = "individual-page";
+        /// <summary>
+		/// Next page css class name
+		/// </summary>
+        protected string nextPageCssClass = "next-page";
+        /// <summary>
+		/// Last page css class name
+		/// </summary>
+        protected string lastPageCssClass = "last-page";
+        /// <summary>
+		/// Main ul css class name
+		/// </summary>
+        protected string mainUlCssClass = "";
+
 
         /// <summary>
         /// Ctor
@@ -205,6 +234,69 @@ namespace Nop.Web.Framework.UI.Paging
             booleanParameterNames.Add(paramName);
             return this;
         }
+        /// <summary>
+        /// Set first page pager css class name
+        /// </summary>
+        /// <param name="value">Value</param>
+        /// <returns>Pager</returns>
+        public Pager FirstPageCssClass(string value) {
+            this.firstPageCssClass = value;
+            return this;
+        }
+        /// <summary>
+        /// Set previous page pager css class name
+        /// </summary>
+        /// <param name="value">Value</param>
+        /// <returns>Pager</returns>
+        public Pager PreviousPageCssClass(string value) {
+            this.previousPageCssClass = value;
+            return this;
+        }
+        /// <summary>
+        /// Set current page pager css class name
+        /// </summary>
+        /// <param name="value">Value</param>
+        /// <returns>Pager</returns>
+        public Pager CurrentPageCssClass(string value) {
+            this.currentPageCssClass = value;
+            return this;
+        }
+        /// <summary>
+        /// Set individual page pager css class name
+        /// </summary>
+        /// <param name="value">Value</param>
+        /// <returns>Pager</returns>
+        public Pager IndividualPageCssClass(string value) {
+            this.individualPageCssClass = value;
+            return this;
+        }
+        /// <summary>
+        /// Set next page pager css class name
+        /// </summary>
+        /// <param name="value">Value</param>
+        /// <returns>Pager</returns>
+        public Pager NextPageCssClass(string value) {
+            this.nextPageCssClass = value;
+            return this;
+        }
+        /// <summary>
+        /// Set last page pager css class name
+        /// </summary>
+        /// <param name="value">Value</param>
+        /// <returns>Pager</returns>
+        public Pager LastPageCssClass(string value) {
+            this.lastPageCssClass = value;
+            return this;
+        }
+        /// <summary>
+        /// Set main ul css class name
+        /// </summary>
+        /// <param name="value">Value</param>
+        /// <returns>Pager</returns>
+        public Pager MainUlCssClass(string value) {
+            this.mainUlCssClass = value;
+            return this;
+        }
 
         /// <summary>
         /// Write control
@@ -248,7 +340,7 @@ namespace Nop.Web.Framework.UI.Paging
                     //first page
                     if ((model.PageIndex >= 3) && (model.TotalPages > individualPagesDisplayedCount))
                     {
-                        links.Append(CreatePageLink(1, localizationService.GetResource("Pager.First"), "first-page"));
+                        links.Append(CreatePageLink(1, localizationService.GetResource("Pager.First"), firstPageCssClass));
                     }
                 }
                 if (showPrevious)
@@ -256,7 +348,7 @@ namespace Nop.Web.Framework.UI.Paging
                     //previous page
                     if (model.PageIndex > 0)
                     {
-                        links.Append(CreatePageLink(model.PageIndex, localizationService.GetResource("Pager.Previous"), "previous-page"));
+                        links.Append(CreatePageLink(model.PageIndex, localizationService.GetResource("Pager.Previous"), previousPageCssClass));
                     }
                 }
                 if (showIndividualPages)
@@ -268,11 +360,11 @@ namespace Nop.Web.Framework.UI.Paging
                     {
                         if (model.PageIndex == i)
                         {
-                            links.AppendFormat("<li class=\"current-page\"><span>{0}</span></li>", (i + 1));
+                            links.AppendFormat("<li class=\"" + currentPageCssClass + "\"><span>{0}</span></li>", (i + 1));
                         }
                         else
                         {
-                            links.Append(CreatePageLink(i + 1, (i + 1).ToString(), "individual-page"));
+                            links.Append(CreatePageLink(i + 1, (i + 1).ToString(), individualPageCssClass));
                         }
                     }
                 }
@@ -281,7 +373,7 @@ namespace Nop.Web.Framework.UI.Paging
                     //next page
                     if ((model.PageIndex + 1) < model.TotalPages)
                     {
-                        links.Append(CreatePageLink(model.PageIndex + 2, localizationService.GetResource("Pager.Next"), "next-page"));
+                        links.Append(CreatePageLink(model.PageIndex + 2, localizationService.GetResource("Pager.Next"), nextPageCssClass));
                     }
                 }
                 if (showLast)
@@ -289,7 +381,7 @@ namespace Nop.Web.Framework.UI.Paging
                     //last page
                     if (((model.PageIndex + 3) < model.TotalPages) && (model.TotalPages > individualPagesDisplayedCount))
                     {
-                        links.Append(CreatePageLink(model.TotalPages, localizationService.GetResource("Pager.Last"), "last-page"));
+                        links.Append(CreatePageLink(model.TotalPages, localizationService.GetResource("Pager.Last"), lastPageCssClass));
                     }
                 }
             }
@@ -297,7 +389,8 @@ namespace Nop.Web.Framework.UI.Paging
             var result = links.ToString();
             if (!string.IsNullOrEmpty(result))
             {
-                result = "<ul>" + result + "</ul>";
+                
+                result = string.Format("<ul{0}>", string.IsNullOrEmpty(mainUlCssClass) ? "" : " class=\"" + mainUlCssClass + "\"") + result + "</ul>";
             }
             return result;
 		}

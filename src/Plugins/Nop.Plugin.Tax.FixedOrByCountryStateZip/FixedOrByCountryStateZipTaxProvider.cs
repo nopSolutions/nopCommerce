@@ -91,7 +91,7 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip
                 Percentage = taxRate.Percentage
             }).ToList());
 
-            var storeId = _storeContext.CurrentStore.Id;
+            var storeId = calculateTaxRequest.CurrentStoreId;
             var taxCategoryId = calculateTaxRequest.TaxCategoryId;
             var countryId = calculateTaxRequest.Address.Country?.Id ?? 0;
             var stateProvinceId = calculateTaxRequest.Address.StateProvince?.Id ?? 0;

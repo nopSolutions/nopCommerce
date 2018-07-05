@@ -12,12 +12,12 @@
     <div class="box-header with-border">
         <h3 class="box-title">
             <i class="fa fa-user"></i>
-            @T("Admin.Customers.Reports.CustomerStatistics")
+            @T("Admin.Reports.Customers.CustomerStatistics")
         </h3>
         <div class="box-tools pull-right">
-            <button class="btn btn-xs btn-info btn-flat margin-r-5" @if (hidePanel) { <text> disabled="disabled" </text>  } data-chart-role="toggle-chart" data-chart-period="year">@T("Admin.Customers.Reports.CustomerStatistics.Year")</button>
-            <button class="btn btn-xs btn-info btn-flat margin-r-5" @if (hidePanel) { <text> disabled="disabled" </text>  } data-chart-role="toggle-chart" data-chart-period="month">@T("Admin.Customers.Reports.CustomerStatistics.Month")</button>
-            <button class="btn btn-xs btn-info btn-flat" @if (hidePanel) { <text> disabled="disabled" </text>  } data-chart-role="toggle-chart" data-chart-period="week">@T("Admin.Customers.Reports.CustomerStatistics.Week")</button>
+            <button class="btn btn-xs btn-info btn-flat margin-r-5" @if (hidePanel) { <text> disabled="disabled" </text>  } data-chart-role="toggle-chart" data-chart-period="year">@T("Admin.Reports.Customers.CustomerStatistics.Year")</button>
+            <button class="btn btn-xs btn-info btn-flat margin-r-5" @if (hidePanel) { <text> disabled="disabled" </text>  } data-chart-role="toggle-chart" data-chart-period="month">@T("Admin.Reports.Customers.CustomerStatistics.Month")</button>
+            <button class="btn btn-xs btn-info btn-flat" @if (hidePanel) { <text> disabled="disabled" </text>  } data-chart-role="toggle-chart" data-chart-period="week">@T("Admin.Reports.Customers.CustomerStatistics.Week")</button>
             <button class="btn btn-box-tool margin-l-10" data-widget="collapse">
                 @if (hidePanel)
                 {
@@ -60,7 +60,7 @@
                 labels: [],
                 datasets: [
                     {
-                        label: "@T("Admin.Customers.Reports.CustomerStatistics")",
+                        label: "@T("Admin.Reports.Customers.CustomerStatistics")",
                         fillColor: "rgba(60,141,188,0.9)",
                         strokeColor: "rgba(60,141,188,0.8)",
                         pointColor: "#00a65a",

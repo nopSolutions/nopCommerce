@@ -32,13 +32,13 @@ namespace Nop.Core.Data
                 return Singleton<DataSettings>.Instance;
 
             fileProvider = fileProvider ?? CommonHelper.DefaultFileProvider;
-            filePath = filePath ?? fileProvider.MapPath(DataSettingsFilePath);
+            filePath = filePath ?? fileProvider.MapPath(NopDataSettingsDefaults.FilePath);
 
             //check whether file exists
             if (!fileProvider.FileExists(filePath))
             {
                 //if not, try to parse the file that was used in previous nopCommerce versions
-                filePath = fileProvider.MapPath(ObsoleteDataSettingsFilePath);
+                filePath = fileProvider.MapPath(NopDataSettingsDefaults.ObsoleteFilePath);
                 if (!fileProvider.FileExists(filePath))
                     return new DataSettings();
 
@@ -101,7 +101,7 @@ namespace Nop.Core.Data
             Singleton<DataSettings>.Instance = settings ?? throw new ArgumentNullException(nameof(settings));
 
             fileProvider = fileProvider ?? CommonHelper.DefaultFileProvider;
-            var filePath = fileProvider.MapPath(DataSettingsFilePath);
+            var filePath = fileProvider.MapPath(NopDataSettingsDefaults.FilePath);
 
             //create file if not exists
             fileProvider.CreateFile(filePath);
@@ -122,16 +122,6 @@ namespace Nop.Core.Data
         #endregion
 
         #region Properties
-
-        /// <summary>
-        /// Gets a path to the file that was used in old nopCommerce versions to contain data settings
-        /// </summary>
-        protected static string ObsoleteDataSettingsFilePath => "~/App_Data/Settings.txt";
-
-        /// <summary>
-        /// Gets a path to the file that contains data settings
-        /// </summary>
-        public static string DataSettingsFilePath => "~/App_Data/dataSettings.json";
 
         /// <summary>
         /// Gets a value indicating whether database is already installed
