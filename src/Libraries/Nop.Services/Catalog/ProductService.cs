@@ -44,7 +44,6 @@ namespace Nop.Services.Catalog
         private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
         private readonly IMeasureService _measureService;
-        private readonly IPriceFormatter _priceFormatter;
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly IProductAttributeService _productAttributeService;
         private readonly IRepository<AclRecord> _aclRepository;
@@ -78,7 +77,6 @@ namespace Nop.Services.Catalog
             ILanguageService languageService,
             ILocalizationService localizationService,
             IMeasureService measureService,
-            IPriceFormatter priceFormatter,
             IProductAttributeParser productAttributeParser,
             IProductAttributeService productAttributeService,
             IRepository<AclRecord> aclRepository,
@@ -108,7 +106,6 @@ namespace Nop.Services.Catalog
             this._languageService = languageService;
             this._localizationService = localizationService;
             this._measureService = measureService;
-            this._priceFormatter = priceFormatter;
             this._productAttributeParser = productAttributeParser;
             this._productAttributeService = productAttributeService;
             this._aclRepository = aclRepository;
@@ -1300,48 +1297,6 @@ namespace Nop.Services.Catalog
                 return null;
 
             return date.ToShortDateString();
-        }
-
-        /// <summary>
-        /// Format base price (PAngV)
-        /// </summary>
-        /// <param name="product">Product</param>
-        /// <param name="productPrice">Product price (in primary currency). Pass null if you want to use a default produce price</param>
-        /// <returns>Base price</returns>
-        public virtual string FormatBasePrice(Product product, decimal? productPrice)
-        {
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
-
-            if (!product.BasepriceEnabled)
-                return null;
-
-            var productAmount = product.BasepriceAmount;
-            //Amount in product cannot be 0
-            if (productAmount == 0)
-                return null;
-            var referenceAmount = product.BasepriceBaseAmount;
-            var productUnit = _measureService.GetMeasureWeightById(product.BasepriceUnitId);
-            //measure weight cannot be loaded
-            if (productUnit == null)
-                return null;
-            var referenceUnit = _measureService.GetMeasureWeightById(product.BasepriceBaseUnitId);
-            //measure weight cannot be loaded
-            if (referenceUnit == null)
-                return null;
-
-            productPrice = productPrice ?? product.Price;
-
-            var basePrice = productPrice.Value /
-                //do not round. otherwise, it can cause issues
-                _measureService.ConvertWeight(productAmount, productUnit, referenceUnit, false) *
-                referenceAmount;
-            var basePriceInCurrentCurrency = _currencyService.ConvertFromPrimaryStoreCurrency(basePrice, _workContext.WorkingCurrency);
-            var basePriceStr = _priceFormatter.FormatPrice(basePriceInCurrentCurrency, true, false);
-
-            var result = string.Format(_localizationService.GetResource("Products.BasePrice"),
-                basePriceStr, referenceAmount.ToString("G29"), referenceUnit.Name);
-            return result;
         }
 
         #endregion

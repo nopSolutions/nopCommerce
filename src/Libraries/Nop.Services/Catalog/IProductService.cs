@@ -372,14 +372,6 @@ namespace Nop.Services.Catalog
         /// <returns>Formatted date</returns>
         string FormatRentalDate(Product product, DateTime date);
 
-        /// <summary>
-        /// Format base price (PAngV)
-        /// </summary>
-        /// <param name="product">Product</param>
-        /// <param name="productPrice">Product price (in primary currency). Pass null if you want to use a default produce price</param>
-        /// <returns>Base price</returns>
-        string FormatBasePrice(Product product, decimal? productPrice);
-
         #endregion
 
         #region Inventory management methods

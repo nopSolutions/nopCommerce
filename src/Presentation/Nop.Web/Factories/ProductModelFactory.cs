@@ -341,7 +341,7 @@ namespace Nop.Web.Factories
                     priceModel.DisplayTaxShippingInfo = _catalogSettings.DisplayTaxShippingInfoProductBoxes && product.IsShipEnabled && !product.IsFreeShipping;
 
                     //PAngV baseprice (used in Germany)
-                    priceModel.BasePricePAngV = _productService.FormatBasePrice(product, finalPriceWithDiscount);
+                    priceModel.BasePricePAngV = _priceFormatter.FormatBasePrice(product, finalPriceWithDiscount);
                 }
             }
             else
@@ -421,7 +421,7 @@ namespace Nop.Web.Factories
                     priceModel.PriceValue = finalPrice;
 
                     //PAngV baseprice (used in Germany)
-                    priceModel.BasePricePAngV = _productService.FormatBasePrice(product, finalPriceBase);
+                    priceModel.BasePricePAngV = _priceFormatter.FormatBasePrice(product, finalPriceBase);
                 }
             }
             else
@@ -610,7 +610,7 @@ namespace Nop.Web.Factories
                             !product.IsFreeShipping;
 
                         //PAngV baseprice (used in Germany)
-                        model.BasePricePAngV = _productService.FormatBasePrice(product, finalPriceWithDiscountBase);
+                        model.BasePricePAngV = _priceFormatter.FormatBasePrice(product, finalPriceWithDiscountBase);
                         //currency code
                         model.CurrencyCode = _workContext.WorkingCurrency.CurrencyCode;
 

@@ -35,6 +35,7 @@ namespace Nop.Services.Shipping
         private readonly ICheckoutAttributeParser _checkoutAttributeParser;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ILocalizationService _localizationService;
+        private readonly IPriceCalculationService _priceCalculationService;
         private readonly IAddressService _addressService;
         private readonly ShippingSettings _shippingSettings;
         private readonly IPluginFinder _pluginFinder;
@@ -58,6 +59,7 @@ namespace Nop.Services.Shipping
         /// <param name="checkoutAttributeParser">Checkout attribute parser</param>
         /// <param name="genericAttributeService">Generic attribute service</param>
         /// <param name="localizationService">Localization service</param>
+        /// <param name="priceCalculationService">Price calculation service</param>
         /// <param name="addressService">Address service</param>
         /// <param name="shippingSettings">Shipping settings</param>
         /// <param name="pluginFinder">Plugin finder</param>
@@ -73,6 +75,7 @@ namespace Nop.Services.Shipping
             ICheckoutAttributeParser checkoutAttributeParser,
             IGenericAttributeService genericAttributeService,
             ILocalizationService localizationService,
+            IPriceCalculationService priceCalculationService,
             IAddressService addressService,
             ShippingSettings shippingSettings,
             IPluginFinder pluginFinder,
@@ -89,6 +92,7 @@ namespace Nop.Services.Shipping
             this._checkoutAttributeParser = checkoutAttributeParser;
             this._genericAttributeService = genericAttributeService;
             this._localizationService = localizationService;
+            this._priceCalculationService = priceCalculationService;
             this._addressService = addressService;
             this._shippingSettings = shippingSettings;
             this._pluginFinder = pluginFinder;
@@ -926,7 +930,7 @@ namespace Nop.Services.Shipping
                         if (string.IsNullOrEmpty(so.ShippingRateComputationMethodSystemName))
                             so.ShippingRateComputationMethodSystemName = srcm.PluginDescriptor.SystemName;
                         if (_shoppingCartSettings.RoundPricesDuringCalculation)
-                            so.Rate = RoundingHelper.RoundPrice(so.Rate);
+                            so.Rate = _priceCalculationService.RoundPrice(so.Rate);
                         result.ShippingOptions.Add(so);
                     }
                 }

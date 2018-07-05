@@ -27,14 +27,7 @@ namespace Nop.Services.Payments
 
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="paymentSettings">Payment settings</param>
-        /// <param name="pluginFinder">Plugin finder</param>
-        /// <param name="settingService">Setting service</param>
-        /// <param name="shoppingCartSettings">Shopping cart settings</param>
-        public PaymentService(PaymentSettings paymentSettings, 
+        public PaymentService(PaymentSettings paymentSettings,
             IPluginFinder pluginFinder,
             ISettingService settingService,
             ShoppingCartSettings shoppingCartSettings)
@@ -240,10 +233,13 @@ namespace Nop.Services.Payments
             var result = paymentMethod.GetAdditionalHandlingFee(cart);
             if (result < decimal.Zero)
                 result = decimal.Zero;
+
             if (_shoppingCartSettings.RoundPricesDuringCalculation)
             {
-                result = RoundingHelper.RoundPrice(result);
+                var priceCalculationService = EngineContext.Current.Resolve<IPriceCalculationService>();
+                result = priceCalculationService.RoundPrice(result);
             }
+
             return result;
         }
         

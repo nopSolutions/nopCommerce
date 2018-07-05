@@ -987,7 +987,7 @@ namespace Nop.Web.Controllers
                 var finalPriceWithDiscountBase = _taxService.GetProductPrice(product, finalPrice, out decimal _);
                 var finalPriceWithDiscount = _currencyService.ConvertFromPrimaryStoreCurrency(finalPriceWithDiscountBase, _workContext.WorkingCurrency);
                 price = _priceFormatter.FormatPrice(finalPriceWithDiscount);
-                basepricepangv = _productService.FormatBasePrice(product, finalPriceWithDiscountBase);
+                basepricepangv = _priceFormatter.FormatBasePrice(product, finalPriceWithDiscountBase);
             }
 
             //stock
