@@ -57,11 +57,9 @@ namespace Nop.Web.Framework.TagHelpers.Public
 
             var script1 = new TagBuilder("script");
             script1.Attributes.Add("src", $"{storeLocation}js/bbeditor/ed.js");
-            script1.Attributes.Add("type", MimeTypes.TextJavascript);
 
             var script2 = new TagBuilder("script");
             script2.Attributes.Add("language", "javascript");
-            script2.Attributes.Add("type", MimeTypes.TextJavascript);
             script2.InnerHtml.AppendHtml($"edToolbar('{For.Name}','{bbEditorWebRoot}');");
 
             output.Content.AppendHtml(script1);

@@ -383,7 +383,7 @@ namespace Nop.Web.Framework.UI
                         }
                     }
                     //render
-                    result.AppendFormat("<script src=\"{0}\" type=\"{1}\"></script>", urlHelper.Content("~/bundles/" + outputFileName + ".min.js"), MimeTypes.TextJavascript);
+                    result.AppendFormat("<script src=\"{0}\"></script>", urlHelper.Content("~/bundles/" + outputFileName + ".min.js"));
                     result.Append(Environment.NewLine);
                 }
 
@@ -392,7 +392,7 @@ namespace Nop.Web.Framework.UI
                 foreach (var item in partsToDontBundle)
                 {
                     var src = debugModel ? item.DebugSrc : item.Src;
-                    result.AppendFormat("<script {2}src=\"{0}\" type=\"{1}\"></script>", urlHelper.Content(src), MimeTypes.TextJavascript, item.IsAsync ? "async " : "");
+                    result.AppendFormat("<script {1}src=\"{0}\"></script>", urlHelper.Content(src),  item.IsAsync ? "async " : "");
                     result.Append(Environment.NewLine);
                 }
                 return result.ToString();
@@ -404,7 +404,7 @@ namespace Nop.Web.Framework.UI
                 foreach (var item in _scriptParts[location].Distinct())
                 {
                     var src = debugModel ? item.DebugSrc : item.Src;
-                    result.AppendFormat("<script {2}src=\"{0}\" type=\"{1}\"></script>", urlHelper.Content(src), MimeTypes.TextJavascript, item.IsAsync ? "async ":"");
+                    result.AppendFormat("<script {1}src=\"{0}\"></script>", urlHelper.Content(src), item.IsAsync ? "async ":"");
                     result.Append(Environment.NewLine);
                 }
                 return result.ToString();

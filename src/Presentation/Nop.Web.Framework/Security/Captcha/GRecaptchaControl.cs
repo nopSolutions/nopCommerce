@@ -41,7 +41,6 @@ namespace Nop.Web.Framework.Security.Captcha
             {
                 TagRenderMode = TagRenderMode.Normal
             };
-            scriptCallbackTag.Attributes.Add("type", MimeTypes.TextJavascript);
             scriptCallbackTag.InnerHtml.AppendHtml(
                 $"var onloadCallback = function() {{grecaptcha.render('{Id}', {{'sitekey' : '{PublicKey}', 'theme' : '{Theme}' }});}};");
 
