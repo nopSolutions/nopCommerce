@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
-using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Plugins;
@@ -35,11 +34,11 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly ILocalizationService _localizationService;
         private readonly ILocalizedModelFactory _localizedModelFactory;
         private readonly IOfficialFeedManager _officialFeedManager;
+        private readonly IPaymentService _paymentService;
         private readonly IPluginFinder _pluginFinder;
         private readonly IStoreMappingSupportedModelFactory _storeMappingSupportedModelFactory;
         private readonly IWebHelper _webHelper;
         private readonly IWidgetService _widgetService;
-        private readonly PaymentSettings _paymentSettings;
         private readonly ShippingSettings _shippingSettings;
         private readonly TaxSettings _taxSettings;
 
@@ -53,11 +52,11 @@ namespace Nop.Web.Areas.Admin.Factories
             ILocalizationService localizationService,
             ILocalizedModelFactory localizedModelFactory,
             IOfficialFeedManager officialFeedManager,
+            IPaymentService paymentService,
             IPluginFinder pluginFinder,
             IStoreMappingSupportedModelFactory storeMappingSupportedModelFactory,
             IWebHelper webHelper,
             IWidgetService widgetService,
-            PaymentSettings paymentSettings,
             ShippingSettings shippingSettings,
             TaxSettings taxSettings)
         {
@@ -67,11 +66,11 @@ namespace Nop.Web.Areas.Admin.Factories
             this._localizationService = localizationService;
             this._localizedModelFactory = localizedModelFactory;
             this._officialFeedManager = officialFeedManager;
+            this._paymentService = paymentService;
             this._pluginFinder = pluginFinder;
             this._storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
             this._webHelper = webHelper;
             this._widgetService = widgetService;
-            this._paymentSettings = paymentSettings;
             this._shippingSettings = shippingSettings;
             this._taxSettings = taxSettings;
         }
@@ -101,7 +100,7 @@ namespace Nop.Web.Areas.Admin.Factories
             switch (plugin)
             {
                 case IPaymentMethod paymentMethod:
-                    model.IsEnabled = paymentMethod.IsPaymentMethodActive(_paymentSettings);
+                    model.IsEnabled = _paymentService.IsPaymentMethodActive(paymentMethod);
                     break;
 
                 case IShippingRateComputationMethod shippingRateComputationMethod:

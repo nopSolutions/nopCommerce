@@ -772,7 +772,7 @@ namespace Nop.Web.Controllers
 
             var paymentMethodInst = _paymentService.LoadPaymentMethodBySystemName(paymentmethod);
             if (paymentMethodInst == null ||
-                !paymentMethodInst.IsPaymentMethodActive(_paymentSettings) ||
+                !_paymentService.IsPaymentMethodActive(paymentMethodInst) ||
                 !_pluginFinder.AuthenticateStore(paymentMethodInst.PluginDescriptor, _storeContext.CurrentStore.Id) ||
                 !_pluginFinder.AuthorizedForUser(paymentMethodInst.PluginDescriptor, _workContext.CurrentCustomer))
                 return PaymentMethod();
@@ -1053,7 +1053,7 @@ namespace Nop.Web.Controllers
 
                     var paymentMethodInst = _paymentService.LoadPaymentMethodBySystemName(selectedPaymentMethodSystemName);
                     if (paymentMethodInst == null ||
-                        !paymentMethodInst.IsPaymentMethodActive(_paymentSettings) ||
+                        !_paymentService.IsPaymentMethodActive(paymentMethodInst) ||
                         !_pluginFinder.AuthenticateStore(paymentMethodInst.PluginDescriptor, _storeContext.CurrentStore.Id) ||
                         !_pluginFinder.AuthorizedForUser(paymentMethodInst.PluginDescriptor, _workContext.CurrentCustomer))
                         throw new Exception("Selected payment method can't be parsed");
@@ -1553,7 +1553,7 @@ namespace Nop.Web.Controllers
 
                 var paymentMethodInst = _paymentService.LoadPaymentMethodBySystemName(paymentmethod);
                 if (paymentMethodInst == null ||
-                    !paymentMethodInst.IsPaymentMethodActive(_paymentSettings) ||
+                    !_paymentService.IsPaymentMethodActive(paymentMethodInst) ||
                     !_pluginFinder.AuthenticateStore(paymentMethodInst.PluginDescriptor, _storeContext.CurrentStore.Id) ||
                     !_pluginFinder.AuthorizedForUser(paymentMethodInst.PluginDescriptor, _workContext.CurrentCustomer))
                     throw new Exception("Selected payment method can't be parsed");

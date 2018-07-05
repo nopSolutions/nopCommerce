@@ -16,7 +16,6 @@ using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
-using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Infrastructure;
@@ -94,7 +93,6 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IWidgetService _widgetService;
         private readonly IWorkContext _workContext;
         private readonly MeasureSettings _measureSettings;
-        private readonly PaymentSettings _paymentSettings;
         private readonly ShippingSettings _shippingSettings;
         private readonly TaxSettings _taxSettings;
 
@@ -131,7 +129,6 @@ namespace Nop.Web.Areas.Admin.Factories
             IWidgetService widgetService,
             IWorkContext workContext,
             MeasureSettings measureSettings,
-            PaymentSettings paymentSettings,
             ShippingSettings shippingSettings,
             TaxSettings taxSettings)
         {
@@ -164,7 +161,6 @@ namespace Nop.Web.Areas.Admin.Factories
             this._widgetService = widgetService;
             this._workContext = workContext;
             this._measureSettings = measureSettings;
-            this._paymentSettings = paymentSettings;
             this._shippingSettings = shippingSettings;
             this._taxSettings = taxSettings;
         }
@@ -560,7 +556,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 switch (plugin)
                 {
                     case IPaymentMethod paymentMethod:
-                        isEnabled = paymentMethod.IsPaymentMethodActive(_paymentSettings);
+                        isEnabled = _paymentService.IsPaymentMethodActive(paymentMethod);
                         break;
 
                     case IShippingRateComputationMethod shippingRateComputationMethod:

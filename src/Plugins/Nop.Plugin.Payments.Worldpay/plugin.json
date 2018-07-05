@@ -2,7 +2,7 @@
   "Group": "Payment methods",
   "FriendlyName": "Credit Card",
   "SystemName": "Payments.WorldpayUS",
-  "Version": "3.16",
+  "Version": "3.17",
   "SupportedVersions": [ "4.10" ],
   "Author": "nopCommerce team",
   "DisplayOrder": 1,

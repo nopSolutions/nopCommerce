@@ -31,7 +31,7 @@ namespace Nop.Services.Tests.Payments
         public void Can_serialize_and_deserialize_empty_CustomValues()
         {
             var processPaymentRequest = new ProcessPaymentRequest();
-            var serializedXml = processPaymentRequest.SerializeCustomValues();
+            var serializedXml = _paymentService.SerializeCustomValues(processPaymentRequest);
             var deserialized = processPaymentRequest.DeserializeCustomValues(serializedXml);
 
             deserialized.ShouldNotBeNull();
@@ -46,7 +46,7 @@ namespace Nop.Services.Tests.Payments
             processPaymentRequest.CustomValues.Add("key2", null);
             processPaymentRequest.CustomValues.Add("key3", 3);
             processPaymentRequest.CustomValues.Add("<test key4>", "<test value 4>");
-            var serializedXml = processPaymentRequest.SerializeCustomValues();
+            var serializedXml = _paymentService.SerializeCustomValues(processPaymentRequest);
             var deserialized = processPaymentRequest.DeserializeCustomValues(serializedXml);
 
             deserialized.ShouldNotBeNull();

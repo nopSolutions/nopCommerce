@@ -810,7 +810,7 @@ namespace Nop.Services.Orders
                 PickUpInStore = details.PickUpInStore,
                 PickupAddress = details.PickupAddress,
                 ShippingRateComputationMethodSystemName = details.ShippingRateComputationMethodSystemName,
-                CustomValuesXml = processPaymentRequest.SerializeCustomValues(),
+                CustomValuesXml = _paymentService.SerializeCustomValues(processPaymentRequest),
                 VatNumber = details.VatNumber,
                 CreatedOnUtc = DateTime.UtcNow,
                 CustomOrderNumber = string.Empty
@@ -1381,7 +1381,7 @@ namespace Nop.Services.Orders
                     throw new NopException("Payment method couldn't be loaded");
 
                 //ensure that payment method is active
-                if (!paymentMethod.IsPaymentMethodActive(_paymentSettings))
+                if (!_paymentService.IsPaymentMethodActive(paymentMethod))
                     throw new NopException("Payment method is not active");
 
                 if (details.IsRecurringShoppingCart)
@@ -1801,7 +1801,7 @@ namespace Nop.Services.Orders
                     RecurringCycleLength = recurringPayment.CycleLength,
                     RecurringCyclePeriod = recurringPayment.CyclePeriod,
                     RecurringTotalCycles = recurringPayment.TotalCycles,
-                    CustomValues = initialOrder.DeserializeCustomValues()
+                    CustomValues = _paymentService.DeserializeCustomValues(initialOrder)
                 };
 
                 //prepare order details
@@ -1816,7 +1816,7 @@ namespace Nop.Services.Orders
                     if (paymentMethod == null)
                         throw new NopException("Payment method couldn't be loaded");
 
-                    if (!paymentMethod.IsPaymentMethodActive(_paymentSettings))
+                    if (!_paymentService.IsPaymentMethodActive(paymentMethod))
                         throw new NopException("Payment method is not active");
 
                     //Old credit card info

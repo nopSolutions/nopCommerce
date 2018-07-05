@@ -251,7 +251,7 @@ namespace Nop.Web.Factories
             model.PaymentMethodStatus = order.PaymentStatus.GetLocalizedEnum(_localizationService, _workContext);
             model.CanRePostProcessPayment = _paymentService.CanRePostProcessPayment(order);
             //custom values
-            model.CustomValues = order.DeserializeCustomValues();
+            model.CustomValues = _paymentService.DeserializeCustomValues(order);
 
             //order subtotal
             if (order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax && !_taxSettings.ForceTaxExclusionFromOrderSubtotal)

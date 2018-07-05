@@ -948,7 +948,7 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("Order.PaymentMethod", paymentMethodName));
             tokens.Add(new Token("Order.VatNumber", order.VatNumber));
             var sbCustomValues = new StringBuilder();
-            var customValues = order.DeserializeCustomValues();
+            var customValues = _paymentService.DeserializeCustomValues(order);
             if (customValues != null)
             {
                 foreach (var item in customValues)

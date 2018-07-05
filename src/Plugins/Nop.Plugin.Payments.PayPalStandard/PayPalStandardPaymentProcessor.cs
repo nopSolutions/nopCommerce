@@ -36,7 +36,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ILocalizationService _localizationService;
-        private readonly IOrderTotalCalculationService _orderTotalCalculationService;
+        private readonly IPaymentService _paymentService;
         private readonly ISettingService _settingService;
         private readonly ITaxService _taxService;
         private readonly IWebHelper _webHelper;
@@ -52,7 +52,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
             IGenericAttributeService genericAttributeService,
             IHttpContextAccessor httpContextAccessor,
             ILocalizationService localizationService,
-            IOrderTotalCalculationService orderTotalCalculationService,
+            IPaymentService paymentService,
             ISettingService settingService,
             ITaxService taxService,
             IWebHelper webHelper,
@@ -64,7 +64,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
             this._genericAttributeService = genericAttributeService;
             this._httpContextAccessor = httpContextAccessor;
             this._localizationService = localizationService;
-            this._orderTotalCalculationService = orderTotalCalculationService;
+            this._paymentService = paymentService;
             this._settingService = settingService;
             this._taxService = taxService;
             this._webHelper = webHelper;
@@ -92,7 +92,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
         /// <returns></returns>
         private string GetIpnPaypalUrl()
         {
-            return _paypalStandardPaymentSettings.UseSandbox ? 
+            return _paypalStandardPaymentSettings.UseSandbox ?
                 "https://ipnpb.sandbox.paypal.com/cgi-bin/webscr" :
                 "https://ipnpb.paypal.com/cgi-bin/webscr";
         }
@@ -114,7 +114,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
 
             var formContent = $"cmd=_notify-synch&at={_paypalStandardPaymentSettings.PdtToken}&tx={tx}";
             req.ContentLength = formContent.Length;
-            
+
             using (var sw = new StreamWriter(req.GetRequestStream(), Encoding.ASCII))
                 sw.Write(formContent);
 
@@ -158,7 +158,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
 
             var formContent = $"cmd=_notify-validate&{formString}";
             req.ContentLength = formContent.Length;
-            
+
             using (var sw = new StreamWriter(req.GetRequestStream(), Encoding.ASCII))
             {
                 sw.Write(formContent);
@@ -395,7 +395,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
                     return;
                 }
             }
-            
+
             //or add only an order total query parameters to the request
             AddOrderTotalParameters(queryParameters, postProcessPaymentRequest);
 
@@ -427,7 +427,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
         /// <returns>Additional handling fee</returns>
         public decimal GetAdditionalHandlingFee(IList<ShoppingCartItem> cart)
         {
-            return this.CalculateAdditionalFee(_orderTotalCalculationService, cart,
+            return _paymentService.CalculateAdditionalFee(cart,
                 _paypalStandardPaymentSettings.AdditionalFee, _paypalStandardPaymentSettings.AdditionalFeePercentage);
         }
 
@@ -490,7 +490,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
         {
             if (order == null)
                 throw new ArgumentNullException(nameof(order));
-            
+
             //let's ensure that at least 5 seconds passed after order is placed
             //P.S. there's no any particular reason for that. we just do it
             if ((DateTime.UtcNow - order.CreatedOnUtc).TotalSeconds < 5)

@@ -37,7 +37,6 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
         private readonly IStoreContext _storeContext;
         private readonly ILogger _logger;
         private readonly IWebHelper _webHelper;
-        private readonly PaymentSettings _paymentSettings;
         private readonly PayPalStandardPaymentSettings _payPalStandardPaymentSettings;
         private readonly ShoppingCartSettings _shoppingCartSettings;
 
@@ -46,17 +45,16 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
         #region Ctor
 
         public PaymentPayPalStandardController(IWorkContext workContext,
-            ISettingService settingService, 
-            IPaymentService paymentService, 
-            IOrderService orderService, 
+            ISettingService settingService,
+            IPaymentService paymentService,
+            IOrderService orderService,
             IOrderProcessingService orderProcessingService,
             IPermissionService permissionService,
             IGenericAttributeService genericAttributeService,
             ILocalizationService localizationService,
             IStoreContext storeContext,
-            ILogger logger, 
+            ILogger logger,
             IWebHelper webHelper,
-            PaymentSettings paymentSettings,
             PayPalStandardPaymentSettings payPalStandardPaymentSettings,
             ShoppingCartSettings shoppingCartSettings)
         {
@@ -71,7 +69,6 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
             this._storeContext = storeContext;
             this._logger = logger;
             this._webHelper = webHelper;
-            this._paymentSettings = paymentSettings;
             this._payPalStandardPaymentSettings = payPalStandardPaymentSettings;
             this._shoppingCartSettings = shoppingCartSettings;
         }
@@ -147,7 +144,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
             _settingService.SaveSettingOverridablePerStore(payPalStandardPaymentSettings, x => x.PassProductNamesAndTotals, model.PassProductNamesAndTotals_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(payPalStandardPaymentSettings, x => x.AdditionalFee, model.AdditionalFee_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(payPalStandardPaymentSettings, x => x.AdditionalFeePercentage, model.AdditionalFeePercentage_OverrideForStore, storeScope, false);
-            
+
             //now clear settings cache
             _settingService.ClearCache();
 
@@ -170,14 +167,14 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
 
             return Json(new { Result = string.Empty });
         }
-        
+
         public IActionResult PDTHandler()
         {
             var tx = _webHelper.QueryString<string>("tx");
 
             var processor = _paymentService.LoadPaymentMethodBySystemName("Payments.PayPalStandard") as PayPalStandardPaymentProcessor;
             if (processor == null ||
-                !processor.IsPaymentMethodActive(_paymentSettings) || !processor.PluginDescriptor.Installed)
+                !_paymentService.IsPaymentMethodActive(processor) || !processor.PluginDescriptor.Installed)
                 throw new NopException("PayPal Standard module cannot be loaded");
 
             if (processor.GetPdtDetails(tx, out Dictionary<string, string> values, out string response))
@@ -275,7 +272,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                     }
                 }
 
-                return RedirectToRoute("CheckoutCompleted", new { orderId = order.Id});
+                return RedirectToRoute("CheckoutCompleted", new { orderId = order.Id });
             }
             else
             {
@@ -302,7 +299,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                 return RedirectToAction("Index", "Home", new { area = "" });
             }
         }
-        
+
         public IActionResult IPNHandler()
         {
             byte[] parameters;
@@ -315,7 +312,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
 
             var processor = _paymentService.LoadPaymentMethodBySystemName("Payments.PayPalStandard") as PayPalStandardPaymentProcessor;
             if (processor == null ||
-                !processor.IsPaymentMethodActive(_paymentSettings) || !processor.PluginDescriptor.Installed)
+                !_paymentService.IsPaymentMethodActive(processor) || !processor.PluginDescriptor.Installed)
                 throw new NopException("PayPal Standard module cannot be loaded");
 
             if (processor.VerifyIpn(strRequest, out Dictionary<string, string> values))
@@ -414,7 +411,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                                             //failed payment
                                             var failedPaymentResult = new ProcessPaymentResult
                                             {
-                                                Errors = new[] {$"PayPal IPN. Recurring payment is {payment_status} ."},
+                                                Errors = new[] { $"PayPal IPN. Recurring payment is {payment_status} ." },
                                                 RecurringPaymentFailed = true
                                             };
                                             _orderProcessingService.ProcessNextRecurringPayment(rp, failedPaymentResult);
@@ -429,7 +426,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                             {
                                 _logger.Error("PayPal IPN. Order is not found", new NopException(sb.ToString()));
                             }
-                        }                       
+                        }
                         break;
                     case "recurring_payment_failed":
                         if (Guid.TryParse(rp_invoice_id, out Guid orderGuid))
@@ -591,7 +588,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
 
         public IActionResult CancelOrder()
         {
-            var order = _orderService.SearchOrders(storeId: _storeContext.CurrentStore.Id, 
+            var order = _orderService.SearchOrders(storeId: _storeContext.CurrentStore.Id,
                 customerId: _workContext.CurrentCustomer.Id, pageSize: 1).FirstOrDefault();
             if (order != null)
                 return RedirectToRoute("OrderDetails", new { orderId = order.Id });

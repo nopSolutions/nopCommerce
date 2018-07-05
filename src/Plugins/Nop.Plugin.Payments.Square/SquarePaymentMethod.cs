@@ -19,7 +19,6 @@ using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
-using Nop.Services.Orders;
 using Nop.Services.Payments;
 using Nop.Services.Tasks;
 using Nop.Web.Framework.UI;
@@ -40,7 +39,7 @@ namespace Nop.Plugin.Payments.Square
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ILocalizationService _localizationService;
         private readonly ILogger _logger;
-        private readonly IOrderTotalCalculationService _orderTotalCalculationService;
+        private readonly IPaymentService _paymentService;
         private readonly IPageHeadBuilder _pageHeadBuilder;
         private readonly ISettingService _settingService;
         private readonly IScheduleTaskService _scheduleTaskService;
@@ -58,7 +57,7 @@ namespace Nop.Plugin.Payments.Square
             IGenericAttributeService genericAttributeService,
             ILocalizationService localizationService,
             ILogger logger,
-            IOrderTotalCalculationService orderTotalCalculationService,
+            IPaymentService paymentService,
             IPageHeadBuilder pageHeadBuilder,
             ISettingService settingService,
             IScheduleTaskService scheduleTaskService,
@@ -72,7 +71,7 @@ namespace Nop.Plugin.Payments.Square
             this._genericAttributeService = genericAttributeService;
             this._localizationService = localizationService;
             this._logger = logger;
-            this._orderTotalCalculationService = orderTotalCalculationService;
+            this._paymentService = paymentService;
             this._pageHeadBuilder = pageHeadBuilder;
             this._settingService = settingService;
             this._scheduleTaskService = scheduleTaskService;
@@ -371,7 +370,7 @@ namespace Nop.Plugin.Payments.Square
         /// <returns>Additional handling fee</returns>
         public decimal GetAdditionalHandlingFee(IList<ShoppingCartItem> cart)
         {
-            var result = this.CalculateAdditionalFee(_orderTotalCalculationService, cart,
+            var result = _paymentService.CalculateAdditionalFee(cart,
                 _squarePaymentSettings.AdditionalFee, _squarePaymentSettings.AdditionalFeePercentage);
 
             return result;
@@ -677,7 +676,7 @@ namespace Nop.Plugin.Payments.Square
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.RevokeAccessTokens", "Revoke access tokens");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.RevokeAccessTokens.Error", "An error occurred while revoking access tokens");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.RevokeAccessTokens.Success", "All access tokens were successfully revoked");
-            
+
             base.Install();
         }
 

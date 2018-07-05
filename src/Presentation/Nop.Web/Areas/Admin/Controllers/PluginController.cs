@@ -37,6 +37,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly IEventPublisher _eventPublisher;
         private readonly IExternalAuthenticationService _externalAuthenticationService;
         private readonly ILocalizationService _localizationService;
+        private readonly IPaymentService _paymentService;
         private readonly IPermissionService _permissionService;
         private readonly IPluginFinder _pluginFinder;
         private readonly IPluginModelFactory _pluginModelFactory;
@@ -58,6 +59,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             IEventPublisher eventPublisher,
             IExternalAuthenticationService externalAuthenticationService,
             ILocalizationService localizationService,
+            IPaymentService paymentService,
             IPermissionService permissionService,
             IPluginFinder pluginFinder,
             IPluginModelFactory pluginModelFactory,
@@ -75,6 +77,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             this._eventPublisher = eventPublisher;
             this._externalAuthenticationService = externalAuthenticationService;
             this._localizationService = localizationService;
+            this._paymentService = paymentService;
             this._permissionService = permissionService;
             this._pluginFinder = pluginFinder;
             this._pluginModelFactory = pluginModelFactory;
@@ -366,7 +369,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     switch (pluginInstance)
                     {
                         case IPaymentMethod paymentMethod:
-                            if (paymentMethod.IsPaymentMethodActive(_paymentSettings) && !model.IsEnabled)
+                            if (_paymentService.IsPaymentMethodActive(paymentMethod) && !model.IsEnabled)
                             {
                                 //mark as disabled
                                 _paymentSettings.ActivePaymentMethodSystemNames.Remove(pluginDescriptor.SystemName);
@@ -374,7 +377,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                                 break;
                             }
 
-                            if (!paymentMethod.IsPaymentMethodActive(_paymentSettings) && model.IsEnabled)
+                            if (!_paymentService.IsPaymentMethodActive(paymentMethod) && model.IsEnabled)
                             {
                                 //mark as enabled
                                 _paymentSettings.ActivePaymentMethodSystemNames.Add(pluginDescriptor.SystemName);

@@ -1088,7 +1088,7 @@ namespace Nop.Services.Common
                 }
 
                 //custom values
-                var customValues = order.DeserializeCustomValues();
+                var customValues = _paymentService.DeserializeCustomValues(order);
                 if (customValues != null)
                 {
                     foreach (var item in customValues)

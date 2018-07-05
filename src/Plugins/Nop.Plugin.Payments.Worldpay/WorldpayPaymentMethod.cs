@@ -37,7 +37,7 @@ namespace Nop.Plugin.Payments.Worldpay
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ILocalizationService _localizationService;
         private readonly ILogger _logger;
-        private readonly IOrderTotalCalculationService _orderTotalCalculationService;
+        private readonly IPaymentService _paymentService;
         private readonly ISettingService _settingService;
         private readonly IStoreService _storeService;
         private readonly IWebHelper _webHelper;
@@ -53,7 +53,7 @@ namespace Nop.Plugin.Payments.Worldpay
             IGenericAttributeService genericAttributeService,
             ILocalizationService localizationService,
             ILogger logger,
-            IOrderTotalCalculationService orderTotalCalculationService,
+            IPaymentService paymentService,
             ISettingService settingService,
             IStoreService storeService,
             IWebHelper webHelper,
@@ -65,7 +65,7 @@ namespace Nop.Plugin.Payments.Worldpay
             this._genericAttributeService = genericAttributeService;
             this._localizationService = localizationService;
             this._logger = logger;
-            this._orderTotalCalculationService = orderTotalCalculationService;
+            this._paymentService = paymentService;
             this._settingService = settingService;
             this._storeService = storeService;
             this._webHelper = webHelper;
@@ -128,7 +128,7 @@ namespace Nop.Plugin.Payments.Worldpay
         /// <param name="paymentRequest">Payment request parameters</param>
         /// <param name="isRecurringPayment">Whether it is a recurring payment</param>
         /// <returns>Charge request parameters</returns>
-        private ChargeRequest CreateChargeRequest(ProcessPaymentRequest paymentRequest,bool isRecurringPayment)
+        private ChargeRequest CreateChargeRequest(ProcessPaymentRequest paymentRequest, bool isRecurringPayment)
         {
             //get customer
             var customer = _customerService.GetCustomerById(paymentRequest.CustomerId);
@@ -170,7 +170,7 @@ namespace Nop.Plugin.Payments.Worldpay
             if (paymentRequest.CustomValues.TryGetValue(storedCardKey, out object storedCardId) && !storedCardId.ToString().Equals(Guid.Empty.ToString()))
             {
                 //check whether customer exists in Vault
-                var vaultCustomer = _worldpayPaymentManager.GetCustomer(customer.GetAttribute<string>(WorldpayPaymentDefaults.CustomerIdAttribute)) 
+                var vaultCustomer = _worldpayPaymentManager.GetCustomer(customer.GetAttribute<string>(WorldpayPaymentDefaults.CustomerIdAttribute))
                     ?? throw new NopException("Failed to retrieve customer");
 
                 //use previously stored card to charge
@@ -243,7 +243,8 @@ namespace Nop.Plugin.Payments.Worldpay
                     if (isRecurringPayment)
                         throw new NopException("For recurring payments you need to save the card details");
                 }
-            } else if (isRecurringPayment)
+            }
+            else if (isRecurringPayment)
                 throw new NopException("For recurring payments you need to save the card details");
 
             //use card token to charge
@@ -298,7 +299,7 @@ namespace Nop.Plugin.Payments.Worldpay
         /// <returns>Additional handling fee</returns>
         public decimal GetAdditionalHandlingFee(IList<ShoppingCartItem> cart)
         {
-            var result = this.CalculateAdditionalFee(_orderTotalCalculationService, cart,
+            var result = _paymentService.CalculateAdditionalFee(cart,
                 _worldpayPaymentSettings.AdditionalFee, _worldpayPaymentSettings.AdditionalFeePercentage);
 
             return result;
@@ -332,7 +333,7 @@ namespace Nop.Plugin.Payments.Worldpay
                     InvoiceDescription = $"Order from the '{_storeService.GetStoreById(capturePaymentRequest.Order.StoreId)?.Name}'"
                 }
             }) ?? throw new NopException("An error occurred while processing. Error details in the log");
-            
+
             //sucessfully captured
             return new CapturePaymentResult
             {
@@ -366,7 +367,7 @@ namespace Nop.Plugin.Payments.Worldpay
                 Amount = Math.Round(amount, 2),
                 OrderId = CommonHelper.EnsureMaximumLength(Guid.NewGuid().ToString(), 25)
             }) ?? throw new NopException("An error occurred while processing. Error details in the log");
-            
+
             //sucessfully refunded
             return new RefundPaymentResult
             {
@@ -391,7 +392,7 @@ namespace Nop.Plugin.Payments.Worldpay
                 OrderId = CommonHelper.EnsureMaximumLength(Guid.NewGuid().ToString(), 25),
                 VoidType = VoidType.MerchantGenerated
             }) ?? throw new NopException("An error occurred while processing. Error details in the log");
-            
+
             //sucessfully voided
             return new VoidPaymentResult
             {
@@ -449,7 +450,7 @@ namespace Nop.Plugin.Payments.Worldpay
         {
             if (form == null)
                 throw new ArgumentException(nameof(form));
-            
+
             //try to get errors
             if (form.TryGetValue("Errors", out StringValues errorsString) && !StringValues.IsNullOrEmpty(errorsString))
                 return new[] { errorsString.ToString() }.ToList();

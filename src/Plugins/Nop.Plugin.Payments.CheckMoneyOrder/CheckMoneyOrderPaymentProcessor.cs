@@ -20,7 +20,7 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder
 
         private readonly CheckMoneyOrderPaymentSettings _checkMoneyOrderPaymentSettings;
         private readonly ILocalizationService _localizationService;
-        private readonly IOrderTotalCalculationService _orderTotalCalculationService;
+        private readonly IPaymentService _paymentService;
         private readonly ISettingService _settingService;
         private readonly IShoppingCartService _shoppingCartService;
         private readonly IWebHelper _webHelper;
@@ -31,14 +31,14 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder
 
         public CheckMoneyOrderPaymentProcessor(CheckMoneyOrderPaymentSettings checkMoneyOrderPaymentSettings,
             ILocalizationService localizationService,
-            IOrderTotalCalculationService orderTotalCalculationService,
+            IPaymentService paymentService,
             ISettingService settingService,
             IShoppingCartService shoppingCartService,
             IWebHelper webHelper)
         {
             this._checkMoneyOrderPaymentSettings = checkMoneyOrderPaymentSettings;
             this._localizationService = localizationService;
-            this._orderTotalCalculationService = orderTotalCalculationService;
+            this._paymentService = paymentService;
             this._settingService = settingService;
             this._shoppingCartService = shoppingCartService;
             this._webHelper = webHelper;
@@ -91,7 +91,7 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder
         /// <returns>Additional handling fee</returns>
         public decimal GetAdditionalHandlingFee(IList<ShoppingCartItem> cart)
         {
-            return this.CalculateAdditionalFee(_orderTotalCalculationService, cart,
+            return _paymentService.CalculateAdditionalFee(cart,
                 _checkMoneyOrderPaymentSettings.AdditionalFee, _checkMoneyOrderPaymentSettings.AdditionalFeePercentage);
         }
 

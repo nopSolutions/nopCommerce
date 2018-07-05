@@ -36,6 +36,13 @@ namespace Nop.Services.Payments
         /// <returns>Payment providers</returns>
         IList<IPaymentMethod> LoadAllPaymentMethods(Customer customer = null, int storeId = 0, int filterByCountryId = 0);
 
+        /// <summary>
+        /// Is payment method active?
+        /// </summary>
+        /// <param name="paymentMethod">Payment method</param>
+        /// <returns>Result</returns>
+        bool IsPaymentMethodActive(IPaymentMethod paymentMethod);
+
         #endregion
 
         #region Restrictions
@@ -162,6 +169,29 @@ namespace Nop.Services.Payments
         /// <param name="creditCardNumber">Credit card number</param>
         /// <returns>Masked credit card number</returns>
         string GetMaskedCreditCardNumber(string creditCardNumber);
+
+        /// <summary>
+        /// Calculate payment method fee
+        /// </summary>
+        /// <param name="cart">Shopping cart</param>
+        /// <param name="fee">Fee value</param>
+        /// <param name="usePercentage">Is fee amount specified as percentage or fixed value?</param>
+        /// <returns>Result</returns>
+        decimal CalculateAdditionalFee(IList<ShoppingCartItem> cart, decimal fee, bool usePercentage);
+
+        /// <summary>
+        /// Serialize CustomValues of ProcessPaymentRequest
+        /// </summary>
+        /// <param name="request">Request</param>
+        /// <returns>Serialized CustomValues</returns>
+        string SerializeCustomValues(ProcessPaymentRequest request);
+
+        /// <summary>
+        /// Deserialize CustomValues of Order
+        /// </summary>
+        /// <param name="order">Order</param>
+        /// <returns>Serialized CustomValues CustomValues</returns>
+        Dictionary<string, object> DeserializeCustomValues(Order order);
 
         #endregion
     }

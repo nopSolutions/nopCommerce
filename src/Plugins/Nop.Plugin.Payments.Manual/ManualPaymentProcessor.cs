@@ -10,7 +10,6 @@ using Nop.Plugin.Payments.Manual.Models;
 using Nop.Plugin.Payments.Manual.Validators;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
-using Nop.Services.Orders;
 using Nop.Services.Payments;
 
 namespace Nop.Plugin.Payments.Manual
@@ -23,7 +22,7 @@ namespace Nop.Plugin.Payments.Manual
         #region Fields
 
         private readonly ILocalizationService _localizationService;
-        private readonly IOrderTotalCalculationService _orderTotalCalculationService;
+        private readonly IPaymentService _paymentService;
         private readonly ISettingService _settingService;
         private readonly IWebHelper _webHelper;
         private readonly ManualPaymentSettings _manualPaymentSettings;
@@ -33,13 +32,13 @@ namespace Nop.Plugin.Payments.Manual
         #region Ctor
 
         public ManualPaymentProcessor(ILocalizationService localizationService,
-            IOrderTotalCalculationService orderTotalCalculationService,
+            IPaymentService paymentService,
             ISettingService settingService,
             IWebHelper webHelper,
             ManualPaymentSettings manualPaymentSettings)
         {
             this._localizationService = localizationService;
-            this._orderTotalCalculationService = orderTotalCalculationService;
+            this._paymentService = paymentService;
             this._settingService = settingService;
             this._webHelper = webHelper;
             this._manualPaymentSettings = manualPaymentSettings;
@@ -48,7 +47,7 @@ namespace Nop.Plugin.Payments.Manual
         #endregion
 
         #region Methods
-        
+
         /// <summary>
         /// Process a payment
         /// </summary>
@@ -107,7 +106,7 @@ namespace Nop.Plugin.Payments.Manual
         /// <returns>Additional handling fee</returns>
         public decimal GetAdditionalHandlingFee(IList<ShoppingCartItem> cart)
         {
-            return this.CalculateAdditionalFee(_orderTotalCalculationService,  cart,
+            return _paymentService.CalculateAdditionalFee(cart,
                 _manualPaymentSettings.AdditionalFee, _manualPaymentSettings.AdditionalFeePercentage);
         }
 
@@ -354,7 +353,7 @@ namespace Nop.Plugin.Payments.Manual
         {
             get { return PaymentMethodType.Standard; }
         }
-        
+
         /// <summary>
         /// Gets a value indicating whether we should display a payment information page for this plugin
         /// </summary>
