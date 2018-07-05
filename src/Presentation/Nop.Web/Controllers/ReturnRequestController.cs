@@ -139,7 +139,7 @@ namespace Nop.Web.Controllers
                 {
                     var rrr = _returnRequestService.GetReturnRequestReasonById(model.ReturnRequestReasonId);
                     var rra = _returnRequestService.GetReturnRequestActionById(model.ReturnRequestActionId);
-                    
+
                     var rr = new ReturnRequest
                     {
                         CustomNumber = "",
@@ -178,7 +178,7 @@ namespace Nop.Web.Controllers
 
             return View(model);
         }
-        
+
         [HttpPost]
         public virtual IActionResult UploadFileReturnRequest()
         {
@@ -202,7 +202,7 @@ namespace Nop.Web.Controllers
                 });
             }
 
-            var fileBinary = httpPostedFile.GetDownloadBits();
+            var fileBinary = _downloadService.GetDownloadBits(httpPostedFile);
 
             var qqFileNameParameter = "qqfilename";
             var fileName = httpPostedFile.FileName;
@@ -253,11 +253,11 @@ namespace Nop.Web.Controllers
             {
                 success = true,
                 message = _localizationService.GetResource("ShoppingCart.FileUploaded"),
-                downloadUrl = Url.Action("GetFileUpload", "Download", new {downloadId = download.DownloadGuid}),
+                downloadUrl = Url.Action("GetFileUpload", "Download", new { downloadId = download.DownloadGuid }),
                 downloadGuid = download.DownloadGuid,
             });
         }
-        
+
         #endregion
     }
 }

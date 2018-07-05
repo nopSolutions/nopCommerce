@@ -51,6 +51,7 @@ namespace Nop.Web.Controllers
         private readonly CaptchaSettings _captchaSettings;
         private readonly CustomerSettings _customerSettings;
         private readonly DateTimeSettings _dateTimeSettings;
+        private readonly IDownloadService _downloadService;
         private readonly ForumSettings _forumSettings;
         private readonly GdprSettings _gdprSettings;
         private readonly IAddressAttributeParser _addressAttributeParser;
@@ -96,6 +97,7 @@ namespace Nop.Web.Controllers
             CaptchaSettings captchaSettings,
             CustomerSettings customerSettings,
             DateTimeSettings dateTimeSettings,
+            IDownloadService downloadService,
             ForumSettings forumSettings,
             GdprSettings gdprSettings,
             IAddressAttributeParser addressAttributeParser,
@@ -137,6 +139,7 @@ namespace Nop.Web.Controllers
             this._captchaSettings = captchaSettings;
             this._customerSettings = customerSettings;
             this._dateTimeSettings = dateTimeSettings;
+            this._downloadService = downloadService;
             this._forumSettings = forumSettings;
             this._gdprSettings = gdprSettings;
             this._addressAttributeParser = addressAttributeParser;
@@ -1517,7 +1520,7 @@ namespace Nop.Web.Controllers
                         if (uploadedFile.Length > avatarMaxSize)
                             throw new NopException(string.Format(_localizationService.GetResource("Account.Avatar.MaximumUploadedFileSize"), avatarMaxSize));
 
-                        var customerPictureBinary = uploadedFile.GetPictureBits();
+                        var customerPictureBinary = _downloadService.GetDownloadBits(uploadedFile);
                         if (customerAvatar != null)
                             customerAvatar = _pictureService.UpdatePicture(customerAvatar.Id, customerPictureBinary, uploadedFile.ContentType, null);
                         else

@@ -773,7 +773,7 @@ namespace Nop.Web.Factories
             var model = _cacheManager.Get(pictureCacheKey, () =>
             {
                 //shopping cart item picture
-                var sciPicture = sci.Product.GetProductPicture(sci.AttributesXml, _pictureService, _productAttributeParser);
+                var sciPicture = _pictureService.GetProductPicture(sci.Product, sci.AttributesXml);
                 return new PictureModel
                 {
                     ImageUrl = _pictureService.GetPictureUrl(sciPicture, pictureSize, showDefaultPicture),

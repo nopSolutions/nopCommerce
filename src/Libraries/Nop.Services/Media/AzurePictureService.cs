@@ -11,6 +11,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Media;
 using Nop.Core.Infrastructure;
 using Nop.Data;
+using Nop.Services.Catalog;
 using Nop.Services.Configuration;
 using Nop.Services.Events;
 
@@ -49,6 +50,7 @@ namespace Nop.Services.Media
         /// <param name="pictureBinaryRepository">PictureBinary repository</param>
         public AzurePictureService(IRepository<Picture> pictureRepository,
             IRepository<ProductPicture> productPictureRepository,
+            IProductAttributeParser productAttributeParser,
             ISettingService settingService,
             IWebHelper webHelper,
             IDbContext dbContext,
@@ -61,6 +63,7 @@ namespace Nop.Services.Media
             IRepository<PictureBinary> pictureBinaryRepository)
             : base(pictureRepository,
                 productPictureRepository,
+                productAttributeParser,
                 settingService,
                 webHelper,
                 dbContext,

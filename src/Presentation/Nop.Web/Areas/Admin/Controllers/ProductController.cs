@@ -473,7 +473,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                                     DownloadGuid = Guid.NewGuid(),
                                     UseDownloadUrl = false,
                                     DownloadUrl = string.Empty,
-                                    DownloadBinary = httpPostedFile.GetDownloadBits(),
+                                    DownloadBinary = _downloadService.GetDownloadBits(httpPostedFile),
                                     ContentType = httpPostedFile.ContentType,
                                     Filename = _fileProvider.GetFileNameWithoutExtension(httpPostedFile.FileName),
                                     Extension = _fileProvider.GetFileExtension(httpPostedFile.FileName),

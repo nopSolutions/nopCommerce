@@ -32,6 +32,7 @@ namespace Nop.Web.Controllers
 
         private readonly CaptchaSettings _captchaSettings;
         private readonly ICustomerService _customerService;
+        private readonly IDownloadService _downloadService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ILocalizationService _localizationService;
         private readonly IPictureService _pictureService;
@@ -44,13 +45,14 @@ namespace Nop.Web.Controllers
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly LocalizationSettings _localizationSettings;
         private readonly VendorSettings _vendorSettings;
-        
+
         #endregion
-        
+
         #region Ctor
 
         public VendorController(CaptchaSettings captchaSettings,
             ICustomerService customerService,
+            IDownloadService downloadService,
             IGenericAttributeService genericAttributeService,
             ILocalizationService localizationService,
             IPictureService pictureService,
@@ -66,6 +68,7 @@ namespace Nop.Web.Controllers
         {
             this._captchaSettings = captchaSettings;
             this._customerService = customerService;
+            this._downloadService = downloadService;
             this._genericAttributeService = genericAttributeService;
             this._localizationService = localizationService;
             this._pictureService = pictureService;
@@ -81,9 +84,9 @@ namespace Nop.Web.Controllers
         }
 
         #endregion
-        
+
         #region Utilities
-        
+
         protected virtual void UpdatePictureSeoNames(Vendor vendor)
         {
             var picture = _pictureService.GetPictureById(vendor.PictureId);
@@ -213,7 +216,7 @@ namespace Nop.Web.Controllers
                 try
                 {
                     var contentType = uploadedFile.ContentType;
-                    var vendorPictureBinary = uploadedFile.GetPictureBits();
+                    var vendorPictureBinary = _downloadService.GetDownloadBits(uploadedFile);
                     var picture = _pictureService.InsertPicture(vendorPictureBinary, contentType, null);
 
                     if (picture != null)
@@ -300,15 +303,15 @@ namespace Nop.Web.Controllers
 
             if (_workContext.CurrentVendor == null || !_vendorSettings.AllowVendorsToEditInfo)
                 return RedirectToRoute("CustomerInfo");
-            
+
             Picture picture = null;
 
             if (uploadedFile != null && !string.IsNullOrEmpty(uploadedFile.FileName))
             {
                 try
-                 {
+                {
                     var contentType = uploadedFile.ContentType;
-                    var vendorPictureBinary = uploadedFile.GetPictureBits();
+                    var vendorPictureBinary = _downloadService.GetDownloadBits(uploadedFile);
                     picture = _pictureService.InsertPicture(vendorPictureBinary, contentType, null);
                 }
                 catch (Exception)
@@ -323,7 +326,7 @@ namespace Nop.Web.Controllers
             //vendor attributes
             var vendorAttributesXml = ParseVendorAttributes(model.Form);
             _vendorAttributeParser.GetAttributeWarnings(vendorAttributesXml).ToList()
-                .ForEach(warning =>  ModelState.AddModelError(string.Empty, warning));
+                .ForEach(warning => ModelState.AddModelError(string.Empty, warning));
 
             if (ModelState.IsValid)
             {
@@ -387,7 +390,7 @@ namespace Nop.Web.Controllers
 
             return RedirectToAction("Info");
         }
-        
+
         #endregion
     }
 }

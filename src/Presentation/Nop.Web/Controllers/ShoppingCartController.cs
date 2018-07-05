@@ -1139,7 +1139,7 @@ namespace Nop.Web.Controllers
                 });
             }
 
-            var fileBinary = httpPostedFile.GetDownloadBits();
+            var fileBinary = _downloadService.GetDownloadBits(httpPostedFile);
 
             var qqFileNameParameter = "qqfilename";
             var fileName = httpPostedFile.FileName;
@@ -1220,7 +1220,7 @@ namespace Nop.Web.Controllers
                 });
             }
 
-            var fileBinary = httpPostedFile.GetDownloadBits();
+            var fileBinary = _downloadService.GetDownloadBits(httpPostedFile);
 
             var qqFileNameParameter = "qqfilename";
             var fileName = httpPostedFile.FileName;

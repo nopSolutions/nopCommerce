@@ -70,7 +70,6 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IPictureService _pictureService;
         private readonly IPriceCalculationService _priceCalculationService;
         private readonly IPriceFormatter _priceFormatter;
-        private readonly IProductAttributeParser _productAttributeParser;
         private readonly IProductAttributeService _productAttributeService;
         private readonly IProductService _productService;
         private readonly IReturnRequestService _returnRequestService;
@@ -113,7 +112,6 @@ namespace Nop.Web.Areas.Admin.Factories
             IPictureService pictureService,
             IPriceCalculationService priceCalculationService,
             IPriceFormatter priceFormatter,
-            IProductAttributeParser productAttributeParser,
             IProductAttributeService productAttributeService,
             IProductService productService,
             IReturnRequestService returnRequestService,
@@ -152,7 +150,6 @@ namespace Nop.Web.Areas.Admin.Factories
             this._pictureService = pictureService;
             this._priceCalculationService = priceCalculationService;
             this._priceFormatter = priceFormatter;
-            this._productAttributeParser = productAttributeParser;
             this._productAttributeService = productAttributeService;
             this._productService = productService;
             this._returnRequestService = returnRequestService;
@@ -260,7 +257,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 orderItemModel.VendorName = _vendorService.GetVendorById(orderItem.Product.VendorId)?.Name;
 
                 //picture
-                var orderItemPicture = orderItem.Product.GetProductPicture(orderItem.AttributesXml, _pictureService, _productAttributeParser);
+                var orderItemPicture = _pictureService.GetProductPicture(orderItem.Product, orderItem.AttributesXml);
                 orderItemModel.PictureThumbnailUrl = _pictureService.GetPictureUrl(orderItemPicture, 75);
 
                 //license file

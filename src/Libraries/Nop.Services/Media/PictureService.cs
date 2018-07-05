@@ -9,6 +9,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Media;
 using Nop.Core.Infrastructure;
 using Nop.Data;
+using Nop.Services.Catalog;
 using Nop.Services.Configuration;
 using Nop.Services.Events;
 using Nop.Services.Seo;
@@ -35,6 +36,7 @@ namespace Nop.Services.Media
 
         private readonly IRepository<Picture> _pictureRepository;
         private readonly IRepository<ProductPicture> _productPictureRepository;
+        private readonly IProductAttributeParser _productAttributeParser;
         private readonly ISettingService _settingService;
         private readonly IWebHelper _webHelper;
         private readonly IDbContext _dbContext;
@@ -53,6 +55,7 @@ namespace Nop.Services.Media
         /// </summary>
         /// <param name="pictureRepository">Picture repository</param>
         /// <param name="productPictureRepository">Product picture repository</param>
+        /// <param name="productAttributeParser">Product attribute parser</param>
         /// <param name="settingService">Setting service</param>
         /// <param name="webHelper">Web helper</param>
         /// <param name="dbContext">Database context</param>
@@ -63,6 +66,7 @@ namespace Nop.Services.Media
         /// <param name="pictureBinaryRepository">PictureBinary repository</param>
         public PictureService(IRepository<Picture> pictureRepository,
             IRepository<ProductPicture> productPictureRepository,
+            IProductAttributeParser productAttributeParser,
             ISettingService settingService,
             IWebHelper webHelper,
             IDbContext dbContext,
@@ -74,6 +78,7 @@ namespace Nop.Services.Media
         {
             this._pictureRepository = pictureRepository;
             this._productPictureRepository = productPictureRepository;
+            this._productAttributeParser = productAttributeParser;
             this._settingService = settingService;
             this._webHelper = webHelper;
             this._dbContext = dbContext;
@@ -875,6 +880,46 @@ namespace Nop.Services.Media
             return _dbContext
                 .QueryFromSql<PictureHashItem>(string.Format(strCommand, supportedLengthOfBinaryHash, picturesIds.Select(p => p.ToString()).Aggregate((all, current) => all + ", " + current))).Distinct()
                 .ToDictionary(p => p.PictureId, p => BitConverter.ToString(p.Hash).Replace("-", ""));
+        }
+
+        /// <summary>
+        /// Get product picture (for shopping cart and order details pages)
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="attributesXml">Atributes (in XML format)</param>
+        /// <returns>Picture</returns>
+        public virtual Picture GetProductPicture(Product product, string attributesXml)
+        {
+            if (product == null)
+                throw new ArgumentNullException(nameof(product));
+
+            //first, try to get product attribute combination picture
+            var combination = _productAttributeParser.FindProductAttributeCombination(product, attributesXml);
+            var combinationPicture = this.GetPictureById(combination?.PictureId ?? 0);
+            if (combinationPicture != null)
+                return combinationPicture;
+
+            //then, let's see whether we have attribute values with pictures
+            var attributePicture = _productAttributeParser.ParseProductAttributeValues(attributesXml)
+                .Select(attributeValue => this.GetPictureById(attributeValue?.PictureId ?? 0))
+                .FirstOrDefault(picture => picture != null);
+            if (attributePicture != null)
+                return attributePicture;
+
+            //now let's load the default product picture
+            var productPicture = this.GetPicturesByProductId(product.Id, 1).FirstOrDefault();
+            if (productPicture != null)
+                return productPicture;
+
+            //finally, let's check whether this product has some parent "grouped" product
+            if (!product.VisibleIndividually && product.ParentGroupedProductId > 0)
+            {
+                var parentGroupedProductPicture = this.GetPicturesByProductId(product.ParentGroupedProductId, 1).FirstOrDefault();
+                if (parentGroupedProductPicture != null)
+                    return parentGroupedProductPicture;
+            }
+
+            return null;
         }
 
         #endregion
