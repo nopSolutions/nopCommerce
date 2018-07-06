@@ -224,7 +224,7 @@ namespace Nop.Plugin.Payments.Square
             if (paymentRequest.CustomValues.TryGetValue(storedCardKey, out object storedCardId) && !storedCardId.ToString().Equals("0"))
             {
                 //check whether customer exists
-                var customerId = customer.GetAttribute<string>(SquarePaymentDefaults.CustomerIdAttribute);
+                var customerId = _genericAttributeService.GetAttribute<string>(customer, SquarePaymentDefaults.CustomerIdAttribute);
                 var squareCustomer = _squarePaymentManager.GetCustomer(customerId);
                 if (squareCustomer == null)
                     throw new NopException("Failed to retrieve customer");
@@ -253,7 +253,7 @@ namespace Nop.Plugin.Payments.Square
                 try
                 {
                     //check whether customer exists
-                    var customerId = customer.GetAttribute<string>(SquarePaymentDefaults.CustomerIdAttribute);
+                    var customerId = _genericAttributeService.GetAttribute<string>(customer, SquarePaymentDefaults.CustomerIdAttribute);
                     var squareCustomer = _squarePaymentManager.GetCustomer(customerId);
 
                     if (squareCustomer == null)
@@ -263,10 +263,10 @@ namespace Nop.Plugin.Payments.Square
                         (
                             EmailAddress: customer.Email,
                             Nickname: customer.Username,
-                            GivenName: customer.GetAttribute<string>(NopCustomerDefaults.FirstNameAttribute),
-                            FamilyName: customer.GetAttribute<string>(NopCustomerDefaults.LastNameAttribute),
-                            PhoneNumber: customer.GetAttribute<string>(NopCustomerDefaults.PhoneAttribute),
-                            CompanyName: customer.GetAttribute<string>(NopCustomerDefaults.CompanyAttribute),
+                            GivenName: _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.FirstNameAttribute),
+                            FamilyName: _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.LastNameAttribute),
+                            PhoneNumber: _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.PhoneAttribute),
+                            CompanyName: _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.CompanyAttribute),
                             ReferenceId: customer.CustomerGuid.ToString()
                         );
                         squareCustomer = _squarePaymentManager.CreateCustomer(customerRequest);

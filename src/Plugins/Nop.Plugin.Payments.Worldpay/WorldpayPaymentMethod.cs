@@ -170,7 +170,7 @@ namespace Nop.Plugin.Payments.Worldpay
             if (paymentRequest.CustomValues.TryGetValue(storedCardKey, out object storedCardId) && !storedCardId.ToString().Equals(Guid.Empty.ToString()))
             {
                 //check whether customer exists in Vault
-                var vaultCustomer = _worldpayPaymentManager.GetCustomer(customer.GetAttribute<string>(WorldpayPaymentDefaults.CustomerIdAttribute))
+                var vaultCustomer = _worldpayPaymentManager.GetCustomer(_genericAttributeService.GetAttribute<string>(customer, WorldpayPaymentDefaults.CustomerIdAttribute))
                     ?? throw new NopException("Failed to retrieve customer");
 
                 //use previously stored card to charge
@@ -207,17 +207,17 @@ namespace Nop.Plugin.Payments.Worldpay
                 try
                 {
                     //check whether customer exists and try to create the new one, if not exists
-                    var vaultCustomer = _worldpayPaymentManager.GetCustomer(customer.GetAttribute<string>(WorldpayPaymentDefaults.CustomerIdAttribute))
+                    var vaultCustomer = _worldpayPaymentManager.GetCustomer(_genericAttributeService.GetAttribute<string>(customer, WorldpayPaymentDefaults.CustomerIdAttribute))
                         ?? _worldpayPaymentManager.CreateCustomer(new CreateCustomerRequest
                         {
                             CustomerId = customer.Id.ToString(),
                             CustomerDuplicateCheckType = CustomerDuplicateCheckType.Ignore,
                             EmailReceiptEnabled = !string.IsNullOrEmpty(customer.Email),
                             Email = customer.Email,
-                            FirstName = customer.GetAttribute<string>(NopCustomerDefaults.FirstNameAttribute),
-                            LastName = customer.GetAttribute<string>(NopCustomerDefaults.LastNameAttribute),
-                            Company = customer.GetAttribute<string>(NopCustomerDefaults.CompanyAttribute),
-                            Phone = customer.GetAttribute<string>(NopCustomerDefaults.PhoneAttribute),
+                            FirstName = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.FirstNameAttribute),
+                            LastName = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.LastNameAttribute),
+                            Company = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.CompanyAttribute),
+                            Phone = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.PhoneAttribute),
                             BillingAddress = new Address
                             {
                                 Line1 = customer.BillingAddress?.Address1,

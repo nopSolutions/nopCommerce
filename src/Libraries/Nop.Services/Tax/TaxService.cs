@@ -25,6 +25,7 @@ namespace Nop.Services.Tax
         #region Fields
 
         private readonly IAddressService _addressService;
+        private readonly IGenericAttributeService _genericAttributeService;
         private readonly IWorkContext _workContext;
         private readonly IStoreContext _storeContext;
         private readonly TaxSettings _taxSettings;
@@ -59,6 +60,7 @@ namespace Nop.Services.Tax
         /// <param name="shippingSettings">Shipping settings</param>
         /// <param name="addressSettings">Address settings</param>
         public TaxService(IAddressService addressService,
+            IGenericAttributeService genericAttributeService,
             IWorkContext workContext,
             IStoreContext storeContext,
             TaxSettings taxSettings,
@@ -73,6 +75,7 @@ namespace Nop.Services.Tax
             AddressSettings addressSettings)
         {
             this._addressService = addressService;
+            this._genericAttributeService = genericAttributeService;
             this._workContext = workContext;
             this._storeContext = storeContext;
             this._taxSettings = taxSettings;
@@ -110,7 +113,7 @@ namespace Nop.Services.Tax
             //get country specified during registration?
             if (country == null && _customerSettings.CountryEnabled)
             {
-                var countryId = customer.GetAttribute<int>(NopCustomerDefaults.CountryIdAttribute);
+                var countryId = _genericAttributeService.GetAttribute<int>(customer, NopCustomerDefaults.CountryIdAttribute);
                 country = _countryService.GetCountryById(countryId);
             }
 
@@ -131,7 +134,7 @@ namespace Nop.Services.Tax
                 return false;
 
             //company (business) or consumer?
-            var customerVatStatus = (VatNumberStatus)customer.GetAttribute<int>(NopCustomerDefaults.VatNumberStatusIdAttribute);
+            var customerVatStatus = (VatNumberStatus)_genericAttributeService.GetAttribute<int>(customer, NopCustomerDefaults.VatNumberStatusIdAttribute);
             if (customerVatStatus == VatNumberStatus.Valid)
                 return false;
 
@@ -181,7 +184,8 @@ namespace Nop.Services.Tax
             //tax is based on pickup point address
             if (!overriddenBasedOn && _taxSettings.TaxBasedOnPickupPointAddress && _shippingSettings.AllowPickUpInStore)
             {
-                var pickupPoint = customer.GetAttribute<PickupPoint>(NopCustomerDefaults.SelectedPickupPointAttribute, _storeContext.CurrentStore.Id);
+                var pickupPoint = _genericAttributeService.GetAttribute<PickupPoint>(customer,
+                    NopCustomerDefaults.SelectedPickupPointAttribute, _storeContext.CurrentStore.Id);
                 if (pickupPoint != null)
                 {
                     var country = _countryService.GetCountryByTwoLetterIsoCode(pickupPoint.CountryCode);
@@ -840,7 +844,7 @@ namespace Nop.Services.Tax
 
             // VAT not chargeable if address, customer and config meet our VAT exemption requirements:
             // returns true if this customer is VAT exempt because they are shipping within the EU but outside our shop country, they have supplied a validated VAT number, and the shop is configured to allow VAT exemption
-            var customerVatStatus = (VatNumberStatus) customer.GetAttribute<int>(NopCustomerDefaults.VatNumberStatusIdAttribute);
+            var customerVatStatus = (VatNumberStatus)_genericAttributeService.GetAttribute<int>(customer, NopCustomerDefaults.VatNumberStatusIdAttribute);
             return address.CountryId != _taxSettings.EuVatShopCountryId &&
                    customerVatStatus == VatNumberStatus.Valid &&
                    _taxSettings.EuVatAllowVatExemption;

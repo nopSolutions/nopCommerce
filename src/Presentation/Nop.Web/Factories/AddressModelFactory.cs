@@ -26,6 +26,7 @@ namespace Nop.Web.Factories
         private readonly IAddressAttributeFormatter _addressAttributeFormatter;
         private readonly IAddressAttributeParser _addressAttributeParser;
         private readonly IAddressAttributeService _addressAttributeService;
+        private readonly IGenericAttributeService _genericAttributeService;
         private readonly ILocalizationService _localizationService;
         private readonly IStateProvinceService _stateProvinceService;
 
@@ -37,6 +38,7 @@ namespace Nop.Web.Factories
             IAddressAttributeFormatter addressAttributeFormatter,
             IAddressAttributeParser addressAttributeParser,
             IAddressAttributeService addressAttributeService,
+            IGenericAttributeService genericAttributeService,
             ILocalizationService localizationService,
             IStateProvinceService stateProvinceService)
         {
@@ -44,6 +46,7 @@ namespace Nop.Web.Factories
             this._addressAttributeFormatter = addressAttributeFormatter;
             this._addressAttributeParser = addressAttributeParser;
             this._addressAttributeService = addressAttributeService;
+            this._genericAttributeService = genericAttributeService;
             this._localizationService = localizationService;
             this._stateProvinceService = stateProvinceService;
         }
@@ -201,19 +204,19 @@ namespace Nop.Web.Factories
                 if (customer == null)
                     throw new Exception("Customer cannot be null when prepopulating an address");
                 model.Email = customer.Email;
-                model.FirstName = customer.GetAttribute<string>(NopCustomerDefaults.FirstNameAttribute);
-                model.LastName = customer.GetAttribute<string>(NopCustomerDefaults.LastNameAttribute);
-                model.Company = customer.GetAttribute<string>(NopCustomerDefaults.CompanyAttribute);
-                model.Address1 = customer.GetAttribute<string>(NopCustomerDefaults.StreetAddressAttribute);
-                model.Address2 = customer.GetAttribute<string>(NopCustomerDefaults.StreetAddress2Attribute);
-                model.ZipPostalCode = customer.GetAttribute<string>(NopCustomerDefaults.ZipPostalCodeAttribute);
-                model.City = customer.GetAttribute<string>(NopCustomerDefaults.CityAttribute);
-                model.County = customer.GetAttribute<string>(NopCustomerDefaults.CountyAttribute);
+                model.FirstName = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.FirstNameAttribute);
+                model.LastName = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.LastNameAttribute);
+                model.Company = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.CompanyAttribute);
+                model.Address1 = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.StreetAddressAttribute);
+                model.Address2 = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.StreetAddress2Attribute);
+                model.ZipPostalCode = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.ZipPostalCodeAttribute);
+                model.City = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.CityAttribute);
+                model.County = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.CountyAttribute);
                 //ignore country and state for prepopulation. it can cause some issues when posting pack with errors, etc
-                //model.CountryId = customer.GetAttribute<int>(SystemCustomerAttributeNames.CountryId);
-                //model.StateProvinceId = customer.GetAttribute<int>(SystemCustomerAttributeNames.StateProvinceId);
-                model.PhoneNumber = customer.GetAttribute<string>(NopCustomerDefaults.PhoneAttribute);
-                model.FaxNumber = customer.GetAttribute<string>(NopCustomerDefaults.FaxAttribute);
+                //model.CountryId = _genericAttributeService.GetAttribute<int>(SystemCustomerAttributeNames.CountryId);
+                //model.StateProvinceId = _genericAttributeService.GetAttribute<int>(SystemCustomerAttributeNames.StateProvinceId);
+                model.PhoneNumber = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.PhoneAttribute);
+                model.FaxNumber = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.FaxAttribute);
             }
 
             //countries and states

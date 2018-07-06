@@ -28,6 +28,7 @@ namespace Nop.Web.Factories
         private readonly CustomerSettings _customerSettings;
         private readonly ICustomerService _customerService;
         private readonly IDateTimeHelper _dateTimeHelper;
+        private readonly IGenericAttributeService _genericAttributeService;
         private readonly INewsService _newsService;
         private readonly IPictureService _pictureService;
         private readonly IStaticCacheManager _cacheManager;
@@ -45,6 +46,7 @@ namespace Nop.Web.Factories
             CustomerSettings customerSettings,
             ICustomerService customerService,
             IDateTimeHelper dateTimeHelper,
+            IGenericAttributeService genericAttributeService,
             INewsService newsService,
             IPictureService pictureService,
             IStaticCacheManager cacheManager,
@@ -58,6 +60,7 @@ namespace Nop.Web.Factories
             this._customerSettings = customerSettings;
             this._customerService = customerService;
             this._dateTimeHelper = dateTimeHelper;
+            this._genericAttributeService = genericAttributeService;
             this._newsService = newsService;
             this._pictureService = pictureService;
             this._cacheManager = cacheManager;
@@ -95,10 +98,8 @@ namespace Nop.Web.Factories
             if (_customerSettings.AllowCustomersToUploadAvatars)
             {
                 model.CustomerAvatarUrl = _pictureService.GetPictureUrl(
-                    newsComment.Customer.GetAttribute<int>(NopCustomerDefaults.AvatarPictureIdAttribute),
-                    _mediaSettings.AvatarPictureSize,
-                    _customerSettings.DefaultAvatarEnabled,
-                    defaultPictureType: PictureType.Avatar);
+                    _genericAttributeService.GetAttribute<int>(newsComment.Customer, NopCustomerDefaults.AvatarPictureIdAttribute),
+                    _mediaSettings.AvatarPictureSize, _customerSettings.DefaultAvatarEnabled, defaultPictureType: PictureType.Avatar);
             }
 
             return model;

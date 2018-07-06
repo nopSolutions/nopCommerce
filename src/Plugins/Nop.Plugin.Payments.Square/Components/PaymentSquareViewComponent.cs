@@ -15,6 +15,7 @@ namespace Nop.Plugin.Payments.Square.Components
     {
         #region Fields
 
+        private readonly IGenericAttributeService _genericAttributeService;
         private readonly ILocalizationService _localizationService;
         private readonly IWorkContext _workContext;
         private readonly SquarePaymentManager _squarePaymentManager;
@@ -23,10 +24,12 @@ namespace Nop.Plugin.Payments.Square.Components
 
         #region Ctor
 
-        public PaymentSquareViewComponent(ILocalizationService localizationService,
+        public PaymentSquareViewComponent(IGenericAttributeService genericAttributeService,
+            ILocalizationService localizationService,
             IWorkContext workContext,
             SquarePaymentManager squarePaymentManager)
         {
+            this._genericAttributeService = genericAttributeService;
             this._localizationService = localizationService;
             this._workContext = workContext;
             this._squarePaymentManager = squarePaymentManager;
@@ -50,7 +53,7 @@ namespace Nop.Plugin.Payments.Square.Components
             };
 
             //whether customer already has stored cards
-            var customerId = _workContext.CurrentCustomer.GetAttribute<string>(SquarePaymentDefaults.CustomerIdAttribute);
+            var customerId = _genericAttributeService.GetAttribute<string>(_workContext.CurrentCustomer, SquarePaymentDefaults.CustomerIdAttribute);
             var customer = _squarePaymentManager.GetCustomer(customerId);
             if (customer?.Cards != null)
             {

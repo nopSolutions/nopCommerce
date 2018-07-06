@@ -33,6 +33,7 @@ namespace Nop.Web.Factories
         private readonly ICustomerService _customerService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IForumService _forumService;
+        private readonly IGenericAttributeService _genericAttributeService;
         private readonly ILocalizationService _localizationService;
         private readonly IPictureService _pictureService;
         private readonly IWorkContext _workContext;
@@ -48,6 +49,7 @@ namespace Nop.Web.Factories
             ICustomerService customerService,
             IDateTimeHelper dateTimeHelper,
             IForumService forumService,
+            IGenericAttributeService genericAttributeService,
             ILocalizationService localizationService,
             IPictureService pictureService,
             IWorkContext workContext,
@@ -59,6 +61,7 @@ namespace Nop.Web.Factories
             this._customerService = customerService;
             this._dateTimeHelper = dateTimeHelper;
             this._forumService = forumService;
+            this._genericAttributeService = genericAttributeService;
             this._localizationService = localizationService;
             this._pictureService = pictureService;
             this._workContext = workContext;
@@ -386,12 +389,12 @@ namespace Nop.Web.Factories
                     CustomerName = _customerService.FormatUserName(post.Customer),
                     IsCustomerForumModerator = post.Customer.IsForumModerator(),
                     ShowCustomersPostCount = _forumSettings.ShowCustomersPostCount,
-                    ForumPostCount = post.Customer.GetAttribute<int>(NopCustomerDefaults.ForumPostCountAttribute),
+                    ForumPostCount = _genericAttributeService.GetAttribute<int>(post.Customer, NopCustomerDefaults.ForumPostCountAttribute),
                     ShowCustomersJoinDate = _customerSettings.ShowCustomersJoinDate && !post.Customer.IsGuest(),
                     CustomerJoinDate = post.Customer.CreatedOnUtc,
                     AllowPrivateMessages = _forumSettings.AllowPrivateMessages && !post.Customer.IsGuest(),
                     SignaturesEnabled = _forumSettings.SignaturesEnabled,
-                    FormattedSignature = _forumService.FormatForumSignatureText(post.Customer.GetAttribute<string>(NopCustomerDefaults.SignatureAttribute)),
+                    FormattedSignature = _forumService.FormatForumSignatureText(_genericAttributeService.GetAttribute<string>(post.Customer, NopCustomerDefaults.SignatureAttribute)),
                 };
                 //created on string
                 if (_forumSettings.RelativeDateTimeFormattingEnabled)
@@ -403,7 +406,7 @@ namespace Nop.Web.Factories
                 if (_customerSettings.AllowCustomersToUploadAvatars)
                 {
                     forumPostModel.CustomerAvatarUrl = _pictureService.GetPictureUrl(
-                        post.Customer.GetAttribute<int>(NopCustomerDefaults.AvatarPictureIdAttribute),
+                        _genericAttributeService.GetAttribute<int>(post.Customer, NopCustomerDefaults.AvatarPictureIdAttribute),
                         _mediaSettings.AvatarPictureSize,
                         _customerSettings.DefaultAvatarEnabled,
                         defaultPictureType: PictureType.Avatar);
@@ -412,7 +415,7 @@ namespace Nop.Web.Factories
                 forumPostModel.ShowCustomersLocation = _customerSettings.ShowCustomersLocation && !post.Customer.IsGuest();
                 if (_customerSettings.ShowCustomersLocation)
                 {
-                    var countryId = post.Customer.GetAttribute<int>(NopCustomerDefaults.CountryIdAttribute);
+                    var countryId = _genericAttributeService.GetAttribute<int>(post.Customer, NopCustomerDefaults.CountryIdAttribute);
                     var country = _countryService.GetCountryById(countryId);
                     forumPostModel.CustomerLocation = country != null ? country.GetLocalized(x => x.Name) : string.Empty;
                 }

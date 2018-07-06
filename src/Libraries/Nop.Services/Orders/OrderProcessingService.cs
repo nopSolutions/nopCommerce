@@ -431,7 +431,7 @@ namespace Nop.Services.Orders
 
             //customer currency
             var currencyTmp = _currencyService.GetCurrencyById(
-                details.Customer.GetAttribute<int>(NopCustomerDefaults.CurrencyIdAttribute, processPaymentRequest.StoreId));
+                _genericAttributeService.GetAttribute<int>(details.Customer, NopCustomerDefaults.CurrencyIdAttribute, processPaymentRequest.StoreId));
             var customerCurrency = (currencyTmp != null && currencyTmp.Published) ? currencyTmp : _workContext.WorkingCurrency;
             var primaryStoreCurrency = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId);
             details.CustomerCurrencyCode = customerCurrency.CurrencyCode;
@@ -439,7 +439,7 @@ namespace Nop.Services.Orders
 
             //customer language
             details.CustomerLanguage = _languageService.GetLanguageById(
-                details.Customer.GetAttribute<int>(NopCustomerDefaults.LanguageIdAttribute, processPaymentRequest.StoreId));
+                _genericAttributeService.GetAttribute<int>(details.Customer, NopCustomerDefaults.LanguageIdAttribute, processPaymentRequest.StoreId));
             if (details.CustomerLanguage == null || !details.CustomerLanguage.Published)
                 details.CustomerLanguage = _workContext.WorkingLanguage;
 
@@ -455,7 +455,7 @@ namespace Nop.Services.Orders
                 throw new NopException($"Country '{details.BillingAddress.Country.Name}' is not allowed for billing");
 
             //checkout attributes
-            details.CheckoutAttributesXml = details.Customer.GetAttribute<string>(NopCustomerDefaults.CheckoutAttributes, processPaymentRequest.StoreId);
+            details.CheckoutAttributesXml = _genericAttributeService.GetAttribute<string>(details.Customer, NopCustomerDefaults.CheckoutAttributes, processPaymentRequest.StoreId);
             details.CheckoutAttributeDescription = _checkoutAttributeFormatter.FormatAttributes(details.CheckoutAttributesXml, details.Customer);
 
             //load shopping cart
@@ -497,7 +497,7 @@ namespace Nop.Services.Orders
 
             //tax display type
             if (_taxSettings.AllowCustomersToSelectTaxDisplayType)
-                details.CustomerTaxDisplayType = (TaxDisplayType)details.Customer.GetAttribute<int>(NopCustomerDefaults.TaxDisplayTypeIdAttribute, processPaymentRequest.StoreId);
+                details.CustomerTaxDisplayType = (TaxDisplayType)_genericAttributeService.GetAttribute<int>(details.Customer, NopCustomerDefaults.TaxDisplayTypeIdAttribute, processPaymentRequest.StoreId);
             else
                 details.CustomerTaxDisplayType = _taxSettings.TaxDisplayType;
 
@@ -520,7 +520,8 @@ namespace Nop.Services.Orders
             //shipping info
             if (_shoppingCartService.ShoppingCartRequiresShipping(details.Cart))
             {
-                var pickupPoint = details.Customer.GetAttribute<PickupPoint>(NopCustomerDefaults.SelectedPickupPointAttribute, processPaymentRequest.StoreId);
+                var pickupPoint = _genericAttributeService.GetAttribute<PickupPoint>(details.Customer, 
+                    NopCustomerDefaults.SelectedPickupPointAttribute, processPaymentRequest.StoreId);
                 if (_shippingSettings.AllowPickUpInStore && pickupPoint != null)
                 {
                     var country = _countryService.GetCountryByTwoLetterIsoCode(pickupPoint.CountryCode);
@@ -552,7 +553,8 @@ namespace Nop.Services.Orders
                         throw new NopException($"Country '{details.ShippingAddress.Country.Name}' is not allowed for shipping");
                 }
 
-                var shippingOption = details.Customer.GetAttribute<ShippingOption>(NopCustomerDefaults.SelectedShippingOptionAttribute, processPaymentRequest.StoreId);
+                var shippingOption = _genericAttributeService.GetAttribute<ShippingOption>(details.Customer,
+                    NopCustomerDefaults.SelectedShippingOptionAttribute, processPaymentRequest.StoreId);
                 if (shippingOption != null)
                 {
                     details.ShippingMethodName = shippingOption.Name;
@@ -586,9 +588,9 @@ namespace Nop.Services.Orders
             details.OrderTaxTotal = _orderTotalCalculationService.GetTaxTotal(details.Cart, out SortedDictionary<decimal, decimal> taxRatesDictionary);
 
             //VAT number
-            var customerVatStatus = (VatNumberStatus)details.Customer.GetAttribute<int>(NopCustomerDefaults.VatNumberStatusIdAttribute);
+            var customerVatStatus = (VatNumberStatus)_genericAttributeService.GetAttribute<int>(details.Customer, NopCustomerDefaults.VatNumberStatusIdAttribute);
             if (_taxSettings.EuVatEnabled && customerVatStatus == VatNumberStatus.Valid)
-                details.VatNumber = details.Customer.GetAttribute<string>(NopCustomerDefaults.VatNumberAttribute);
+                details.VatNumber = _genericAttributeService.GetAttribute<string>(details.Customer, NopCustomerDefaults.VatNumberAttribute);
 
             //tax rates
             details.TaxRates = taxRatesDictionary.Aggregate(string.Empty, (current, next) =>

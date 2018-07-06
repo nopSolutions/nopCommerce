@@ -31,6 +31,7 @@ namespace Nop.Web.Factories
         private readonly IBlogService _blogService;
         private readonly ICustomerService _customerService;
         private readonly IDateTimeHelper _dateTimeHelper;
+        private readonly IGenericAttributeService _genericAttributeService;
         private readonly IPictureService _pictureService;
         private readonly IStaticCacheManager _cacheManager;
         private readonly IStoreContext _storeContext;
@@ -48,6 +49,7 @@ namespace Nop.Web.Factories
             IBlogService blogService,
             ICustomerService customerService,
             IDateTimeHelper dateTimeHelper,
+            IGenericAttributeService genericAttributeService,
             IPictureService pictureService,
             IStaticCacheManager cacheManager,
             IStoreContext storeContext,
@@ -61,6 +63,7 @@ namespace Nop.Web.Factories
             this._blogService = blogService;
             this._customerService = customerService;
             this._dateTimeHelper = dateTimeHelper;
+            this._genericAttributeService = genericAttributeService;
             this._pictureService = pictureService;
             this._cacheManager = cacheManager;
             this._storeContext = storeContext;
@@ -95,10 +98,8 @@ namespace Nop.Web.Factories
             if (_customerSettings.AllowCustomersToUploadAvatars)
             {
                 model.CustomerAvatarUrl = _pictureService.GetPictureUrl(
-                    blogComment.Customer.GetAttribute<int>(NopCustomerDefaults.AvatarPictureIdAttribute),
-                    _mediaSettings.AvatarPictureSize,
-                    _customerSettings.DefaultAvatarEnabled,
-                    defaultPictureType: PictureType.Avatar);
+                    _genericAttributeService.GetAttribute<int>(blogComment.Customer, NopCustomerDefaults.AvatarPictureIdAttribute),
+                    _mediaSettings.AvatarPictureSize, _customerSettings.DefaultAvatarEnabled, defaultPictureType: PictureType.Avatar);
             }
 
             return model;

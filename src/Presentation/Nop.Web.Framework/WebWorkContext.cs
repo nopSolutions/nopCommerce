@@ -233,7 +233,8 @@ namespace Nop.Web.Framework
                 if (customer != null && !customer.Deleted && customer.Active && !customer.RequireReLogin)
                 {
                     //get impersonate user if required
-                    var impersonatedCustomerId = customer.GetAttribute<int?>(NopCustomerDefaults.ImpersonatedCustomerIdAttribute);
+                    var impersonatedCustomerId = _genericAttributeService
+                        .GetAttribute<int?>(customer, NopCustomerDefaults.ImpersonatedCustomerIdAttribute);
                     if (impersonatedCustomerId.HasValue && impersonatedCustomerId.Value > 0)
                     {
                         var impersonatedCustomer = _customerService.GetCustomerById(impersonatedCustomerId.Value);
@@ -343,8 +344,8 @@ namespace Nop.Web.Framework
                 if (detectedLanguage == null && _localizationSettings.AutomaticallyDetectLanguage)
                 {
                     //whether language already detected by this way
-                    var alreadyDetected = this.CurrentCustomer.GetAttribute<bool>(NopCustomerDefaults.LanguageAutomaticallyDetectedAttribute,
-                        _genericAttributeService, _storeContext.CurrentStore.Id);
+                    var alreadyDetected = _genericAttributeService.GetAttribute<bool>(this.CurrentCustomer,
+                        NopCustomerDefaults.LanguageAutomaticallyDetectedAttribute, _storeContext.CurrentStore.Id);
 
                     //if not, try to get language from the request
                     if (!alreadyDetected)
@@ -363,8 +364,8 @@ namespace Nop.Web.Framework
                 if (detectedLanguage != null)
                 {
                     //get current saved language identifier
-                    var currentLanguageId = this.CurrentCustomer.GetAttribute<int>(NopCustomerDefaults.LanguageIdAttribute,
-                        _genericAttributeService, _storeContext.CurrentStore.Id);
+                    var currentLanguageId = _genericAttributeService.GetAttribute<int>(this.CurrentCustomer,
+                        NopCustomerDefaults.LanguageIdAttribute, _storeContext.CurrentStore.Id);
 
                     //save the detected language identifier if it differs from the current one
                     if (detectedLanguage.Id != currentLanguageId)
@@ -375,8 +376,8 @@ namespace Nop.Web.Framework
                 }
 
                 //get current customer language identifier
-                var customerLanguageId = this.CurrentCustomer.GetAttribute<int>(NopCustomerDefaults.LanguageIdAttribute,
-                    _genericAttributeService, _storeContext.CurrentStore.Id);
+                var customerLanguageId = _genericAttributeService.GetAttribute<int>(this.CurrentCustomer,
+                    NopCustomerDefaults.LanguageIdAttribute, _storeContext.CurrentStore.Id);
 
                 var allStoreLanguages = _languageService.GetAllLanguages(storeId: _storeContext.CurrentStore.Id);
 
@@ -438,8 +439,8 @@ namespace Nop.Web.Framework
                 }
 
                 //find a currency previously selected by a customer
-                var customerCurrencyId = this.CurrentCustomer.GetAttribute<int>(NopCustomerDefaults.CurrencyIdAttribute,
-                    _genericAttributeService, _storeContext.CurrentStore.Id);
+                var customerCurrencyId = _genericAttributeService.GetAttribute<int>(this.CurrentCustomer,
+                    NopCustomerDefaults.CurrencyIdAttribute, _storeContext.CurrentStore.Id);
 
                 var allStoreCurrencies = _currencyService.GetAllCurrencies(storeId: _storeContext.CurrentStore.Id);
 
@@ -495,8 +496,8 @@ namespace Nop.Web.Framework
                 if (_taxSettings.AllowCustomersToSelectTaxDisplayType && this.CurrentCustomer != null)
                 {
                     //try to get previously saved tax display type
-                    var taxDisplayTypeId = this.CurrentCustomer.GetAttribute<int?>(NopCustomerDefaults.TaxDisplayTypeIdAttribute,
-                        _genericAttributeService, _storeContext.CurrentStore.Id);
+                    var taxDisplayTypeId = _genericAttributeService.GetAttribute<int?>(this.CurrentCustomer,
+                        NopCustomerDefaults.TaxDisplayTypeIdAttribute, _storeContext.CurrentStore.Id);
                     if (taxDisplayTypeId.HasValue)
                     {
                         taxDisplayType = (TaxDisplayType)taxDisplayTypeId.Value;

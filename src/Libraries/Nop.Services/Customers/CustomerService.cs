@@ -650,8 +650,8 @@ namespace Nop.Services.Customers
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
 
-            var firstName = customer.GetAttribute<string>(NopCustomerDefaults.FirstNameAttribute);
-            var lastName = customer.GetAttribute<string>(NopCustomerDefaults.LastNameAttribute);
+            var firstName = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.FirstNameAttribute);
+            var lastName = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.LastNameAttribute);
 
             var fullName = "";
             if (!string.IsNullOrWhiteSpace(firstName) && !string.IsNullOrWhiteSpace(lastName))
@@ -695,7 +695,7 @@ namespace Nop.Services.Customers
                     result = this.GetCustomerFullName(customer);
                     break;
                 case CustomerNameFormat.ShowFirstName:
-                    result = customer.GetAttribute<string>(NopCustomerDefaults.FirstNameAttribute);
+                    result = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.FirstNameAttribute);
                     break;
                 default:
                     break;
@@ -717,7 +717,7 @@ namespace Nop.Services.Customers
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
 
-            var existingCouponCodes = customer.GetAttribute<string>(NopCustomerDefaults.DiscountCouponCodeAttribute, _genericAttributeService);
+            var existingCouponCodes = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.DiscountCouponCodeAttribute);
 
             var couponCodes = new List<string>();
             if (string.IsNullOrEmpty(existingCouponCodes))
@@ -757,7 +757,7 @@ namespace Nop.Services.Customers
             var result = string.Empty;
             try
             {
-                var existingCouponCodes = customer.GetAttribute<string>(NopCustomerDefaults.DiscountCouponCodeAttribute, _genericAttributeService);
+                var existingCouponCodes = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.DiscountCouponCodeAttribute);
 
                 couponCode = couponCode.Trim().ToLower();
 
@@ -838,7 +838,7 @@ namespace Nop.Services.Customers
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
 
-            var existingCouponCodes = customer.GetAttribute<string>(NopCustomerDefaults.GiftCardCouponCodesAttribute, _genericAttributeService);
+            var existingCouponCodes = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.GiftCardCouponCodesAttribute);
 
             var couponCodes = new List<string>();
             if (string.IsNullOrEmpty(existingCouponCodes))
@@ -878,7 +878,7 @@ namespace Nop.Services.Customers
             var result = string.Empty;
             try
             {
-                var existingCouponCodes = customer.GetAttribute<string>(NopCustomerDefaults.GiftCardCouponCodesAttribute, _genericAttributeService);
+                var existingCouponCodes = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.GiftCardCouponCodesAttribute);
 
                 couponCode = couponCode.Trim().ToLower();
 
@@ -1147,7 +1147,7 @@ namespace Nop.Services.Customers
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
 
-            var cPrt = customer.GetAttribute<string>(NopCustomerDefaults.PasswordRecoveryTokenAttribute);
+            var cPrt = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.PasswordRecoveryTokenAttribute);
             if (string.IsNullOrEmpty(cPrt))
                 return false;
 
@@ -1170,7 +1170,7 @@ namespace Nop.Services.Customers
             if (_customerSettings.PasswordRecoveryLinkDaysValid == 0)
                 return false;
 
-            var geneatedDate = customer.GetAttribute<DateTime?>(NopCustomerDefaults.PasswordRecoveryTokenDateGeneratedAttribute);
+            var geneatedDate = _genericAttributeService.GetAttribute<DateTime?>(customer, NopCustomerDefaults.PasswordRecoveryTokenDateGeneratedAttribute);
             if (!geneatedDate.HasValue)
                 return false;
 

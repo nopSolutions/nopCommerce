@@ -25,6 +25,7 @@ namespace Nop.Plugin.Payments.Worldpay.Services
         #region Fields
 
         private readonly ICustomerService _customerService;
+        private readonly IGenericAttributeService _genericAttributeService;
         private readonly ILocalizationService _localizationService;
         private readonly IPaymentService _paymentService;
         private readonly WorldpayPaymentManager _worldpayPaymentManager;
@@ -34,11 +35,13 @@ namespace Nop.Plugin.Payments.Worldpay.Services
         #region Ctor
 
         public EventConsumer(ICustomerService customerService,
+            IGenericAttributeService genericAttributeService,
             ILocalizationService localizationService,
             IPaymentService paymentService,
             WorldpayPaymentManager worldpayPaymentManager)
         {
             this._customerService = customerService;
+            this._genericAttributeService = genericAttributeService;
             this._localizationService = localizationService;
             this._paymentService = paymentService;
             this._worldpayPaymentManager = worldpayPaymentManager;
@@ -96,7 +99,7 @@ namespace Nop.Plugin.Payments.Worldpay.Services
                 return;
 
             //try to get stored in Vault customer
-            var vaultCustomer = _worldpayPaymentManager.GetCustomer(customer.GetAttribute<string>(WorldpayPaymentDefaults.CustomerIdAttribute));
+            var vaultCustomer = _worldpayPaymentManager.GetCustomer(_genericAttributeService.GetAttribute<string>(customer, WorldpayPaymentDefaults.CustomerIdAttribute));
 
             //prepare model
             var model = new WorldpayCustomerModel

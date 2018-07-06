@@ -1,12 +1,12 @@
 ﻿@using Nop.Core
-@using Nop.Services.Common
+@inject Nop.Services.Common.IGenericAttributeService genericAttributeService
 @inject IWorkContext workContext
 @{
     Html.AppendScriptParts("~/lib/chartjs/Chart.min.js");
 
     const string prefix = "customer-statistics";
     const string hidePanelAttributeName = "HideCustomerStatisticsPanel";
-    var hidePanel = workContext.CurrentCustomer.GetAttribute<bool>(hidePanelAttributeName);
+    var hidePanel = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hidePanelAttributeName);
 }
 <div class="box box-info @if (hidePanel){<text>collapsed-box</text>}" id="@(prefix)-box">
     <div class="box-header with-border">

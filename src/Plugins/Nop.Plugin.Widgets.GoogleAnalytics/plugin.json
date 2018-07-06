@@ -2,7 +2,7 @@
   "Group": "Widgets",
   "FriendlyName": "Google Analytics",
   "SystemName": "Widgets.GoogleAnalytics",
-  "Version": "1.49",
+  "Version": "1.50",
   "SupportedVersions": [ "4.10" ],
   "Author": "nopCommerce team, Nicolas Muniere",
   "DisplayOrder": 1,

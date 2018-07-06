@@ -27,7 +27,7 @@ namespace Nop.Services.Helpers
         /// <param name="dateTimeSettings">Datetime settings</param>
         public DateTimeHelper(IWorkContext workContext,
             IGenericAttributeService genericAttributeService,
-            ISettingService settingService, 
+            ISettingService settingService,
             DateTimeSettings dateTimeSettings)
         {
             this._workContext = workContext;
@@ -146,7 +146,7 @@ namespace Nop.Services.Helpers
                 //could not convert
                 return dt;
             }
-            
+
             return TimeZoneInfo.ConvertTimeToUtc(dt, sourceTimeZone);
         }
 
@@ -163,7 +163,7 @@ namespace Nop.Services.Helpers
             {
                 var timeZoneId = string.Empty;
                 if (customer != null)
-                    timeZoneId = customer.GetAttribute<string>(NopCustomerDefaults.TimeZoneIdAttribute, _genericAttributeService);
+                    timeZoneId = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.TimeZoneIdAttribute);
 
                 try
                 {

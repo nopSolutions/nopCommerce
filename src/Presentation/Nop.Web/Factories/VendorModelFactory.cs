@@ -165,7 +165,7 @@ namespace Nop.Web.Factories
         /// <param name="excludeProperties">Whether to exclude populating of model properties from the entity</param>
         /// <param name="vendorAttributesXml">Vendor attributes in XML format</param>
         /// <returns>The apply vendor model</returns>
-        public virtual ApplyVendorModel PrepareApplyVendorModel(ApplyVendorModel model, 
+        public virtual ApplyVendorModel PrepareApplyVendorModel(ApplyVendorModel model,
             bool validateVendor, bool excludeProperties, string vendorAttributesXml)
         {
             if (model == null)
@@ -200,7 +200,7 @@ namespace Nop.Web.Factories
         /// <param name="excludeProperties">Whether to exclude populating of model properties from the entity</param>
         /// <param name="overriddenVendorAttributesXml">Overridden vendor attributes in XML format; pass null to use VendorAttributes of vendor</param>
         /// <returns>Vendor info model</returns>
-        public virtual VendorInfoModel PrepareVendorInfoModel(VendorInfoModel model, 
+        public virtual VendorInfoModel PrepareVendorInfoModel(VendorInfoModel model,
             bool excludeProperties, string overriddenVendorAttributesXml = "")
         {
             if (model == null)
@@ -220,7 +220,7 @@ namespace Nop.Web.Factories
 
             //vendor attributes
             if (string.IsNullOrEmpty(overriddenVendorAttributesXml))
-                overriddenVendorAttributesXml = vendor.GetAttribute<string>(NopVendorDefaults.VendorAttributes, _genericAttributeService);
+                overriddenVendorAttributesXml = _genericAttributeService.GetAttribute<string>(vendor, NopVendorDefaults.VendorAttributes);
             model.VendorAttributes = PrepareVendorAttributes(overriddenVendorAttributesXml);
 
             return model;

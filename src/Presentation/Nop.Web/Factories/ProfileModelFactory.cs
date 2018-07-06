@@ -30,6 +30,7 @@ namespace Nop.Web.Factories
         private readonly ICustomerService _customerService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IForumService _forumService;
+        private readonly IGenericAttributeService _genericAttributeService;
         private readonly ILocalizationService _localizationService;
         private readonly IPictureService _pictureService;
         private readonly MediaSettings _mediaSettings;
@@ -44,6 +45,7 @@ namespace Nop.Web.Factories
             ICustomerService customerService,
             IDateTimeHelper dateTimeHelper,
             IForumService forumService,
+            IGenericAttributeService genericAttributeService,
             ILocalizationService localizationService,
             IPictureService pictureService,
             MediaSettings mediaSettings)
@@ -54,6 +56,7 @@ namespace Nop.Web.Factories
             this._customerService = customerService;
             this._dateTimeHelper = dateTimeHelper;
             this._forumService = forumService;
+            this._genericAttributeService = genericAttributeService;
             this._localizationService = localizationService;
             this._pictureService = pictureService;
             this._mediaSettings = mediaSettings;
@@ -112,7 +115,7 @@ namespace Nop.Web.Factories
             if (_customerSettings.AllowCustomersToUploadAvatars)
             {
                 avatarUrl = _pictureService.GetPictureUrl(
-                 customer.GetAttribute<int>(NopCustomerDefaults.AvatarPictureIdAttribute),
+                 _genericAttributeService.GetAttribute<int>(customer, NopCustomerDefaults.AvatarPictureIdAttribute),
                  _mediaSettings.AvatarPictureSize,
                  _customerSettings.DefaultAvatarEnabled,
                  defaultPictureType: PictureType.Avatar);
@@ -125,7 +128,7 @@ namespace Nop.Web.Factories
             {
                 locationEnabled = true;
 
-                var countryId = customer.GetAttribute<int>(NopCustomerDefaults.CountryIdAttribute);
+                var countryId = _genericAttributeService.GetAttribute<int>(customer, NopCustomerDefaults.CountryIdAttribute);
                 var country = _countryService.GetCountryById(countryId);
                 if (country != null)
                 {
@@ -146,7 +149,7 @@ namespace Nop.Web.Factories
             if (_forumSettings.ForumsEnabled && _forumSettings.ShowCustomersPostCount)
             {
                 totalPostsEnabled = true;
-                totalPosts = customer.GetAttribute<int>(NopCustomerDefaults.ForumPostCountAttribute);
+                totalPosts = _genericAttributeService.GetAttribute<int>(customer, NopCustomerDefaults.ForumPostCountAttribute);
             }
 
             //registration date
@@ -164,7 +167,7 @@ namespace Nop.Web.Factories
             var dateOfBirth = string.Empty;
             if (_customerSettings.DateOfBirthEnabled)
             {
-                var dob = customer.GetAttribute<DateTime?>(NopCustomerDefaults.DateOfBirthAttribute);
+                var dob = _genericAttributeService.GetAttribute<DateTime?>(customer, NopCustomerDefaults.DateOfBirthAttribute);
                 if (dob.HasValue)
                 {
                     dateOfBirthEnabled = true;

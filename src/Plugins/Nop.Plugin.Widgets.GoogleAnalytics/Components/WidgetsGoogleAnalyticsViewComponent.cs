@@ -81,11 +81,11 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Components
 
         private Order GetLastOrder()
         {
-            var order = _orderService.SearchOrders(storeId: _storeContext.CurrentStore.Id, 
+            var order = _orderService.SearchOrders(storeId: _storeContext.CurrentStore.Id,
                 customerId: _workContext.CurrentCustomer.Id, pageSize: 1).FirstOrDefault();
             return order;
         }
-        
+
         private string GetEcommerceScript(Order order)
         {
             var analyticsTrackingScript = _googleAnalyticsSettings.TrackingScript + "\n";
@@ -104,7 +104,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Components
             //ecommerce info
             var googleAnalyticsSettings = _settingService.LoadSetting<GoogleAnalyticsSettings>(_storeContext.CurrentStore.Id);
             //ensure that ecommerce tracking code is renderred only once (avoid duplicated data in Google Analytics)
-            if (order != null && !order.GetAttribute<bool>(ORDER_ALREADY_PROCESSED_ATTRIBUTE_NAME))
+            if (order != null && !_genericAttributeService.GetAttribute<bool>(order, ORDER_ALREADY_PROCESSED_ATTRIBUTE_NAME))
             {
                 var usCulture = new CultureInfo("en-US");
 

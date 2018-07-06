@@ -237,7 +237,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                     _orderService.UpdateOrder(order);
 
                     //validate order total
-                    var orderTotalSentToPayPal = order.GetAttribute<decimal?>(PayPalHelper.OrderTotalSentToPayPal);
+                    var orderTotalSentToPayPal = _genericAttributeService.GetAttribute<decimal?>(order, PayPalHelper.OrderTotalSentToPayPal);
                     if (orderTotalSentToPayPal.HasValue && mc_gross != orderTotalSentToPayPal.Value)
                     {
                         var errorStr =

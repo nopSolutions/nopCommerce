@@ -321,7 +321,7 @@ namespace Nop.Web.Factories
                 }
 
                 //find a selected (previously) shipping method
-                var selectedShippingOption = _workContext.CurrentCustomer.GetAttribute<ShippingOption>(
+                var selectedShippingOption = _genericAttributeService.GetAttribute<ShippingOption>(_workContext.CurrentCustomer,
                         NopCustomerDefaults.SelectedShippingOptionAttribute, _storeContext.CurrentStore.Id);
                 if (selectedShippingOption != null)
                 {
@@ -420,9 +420,8 @@ namespace Nop.Web.Factories
             }
 
             //find a selected (previously) payment method
-            var selectedPaymentMethodSystemName = _workContext.CurrentCustomer.GetAttribute<string>(
-                NopCustomerDefaults.SelectedPaymentMethodAttribute,
-                _genericAttributeService, _storeContext.CurrentStore.Id);
+            var selectedPaymentMethodSystemName = _genericAttributeService.GetAttribute<string>(_workContext.CurrentCustomer,
+                NopCustomerDefaults.SelectedPaymentMethodAttribute, _storeContext.CurrentStore.Id);
             if (!string.IsNullOrEmpty(selectedPaymentMethodSystemName))
             {
                 var paymentMethodToSelect = model.PaymentMethods.ToList()

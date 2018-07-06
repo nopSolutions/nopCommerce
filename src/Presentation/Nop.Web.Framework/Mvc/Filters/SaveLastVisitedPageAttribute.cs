@@ -45,7 +45,7 @@ namespace Nop.Web.Framework.Mvc.Filters
 
             public SaveLastVisitedPageFilter(CustomerSettings customerSettings,
                 IGenericAttributeService genericAttributeService,
-                IWebHelper webHelper, 
+                IWebHelper webHelper,
                 IWorkContext workContext)
             {
                 this._customerSettings = customerSettings;
@@ -85,14 +85,14 @@ namespace Nop.Web.Framework.Mvc.Filters
                 var pageUrl = _webHelper.GetThisPageUrl(true);
                 if (string.IsNullOrEmpty(pageUrl))
                     return;
-                
+
                 //get previous last page
-                var previousPageUrl = _workContext.CurrentCustomer.GetAttribute<string>(NopCustomerDefaults.LastVisitedPageAttribute);
+                var previousPageUrl = _genericAttributeService.GetAttribute<string>(_workContext.CurrentCustomer, NopCustomerDefaults.LastVisitedPageAttribute);
 
                 //save new one if don't match
                 if (!pageUrl.Equals(previousPageUrl, StringComparison.InvariantCultureIgnoreCase))
                     _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, NopCustomerDefaults.LastVisitedPageAttribute, pageUrl);
-                
+
             }
 
             /// <summary>

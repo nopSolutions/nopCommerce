@@ -651,7 +651,7 @@ namespace Nop.Services.Orders
                 return;
 
             if (!useRewardPoints.HasValue)
-                useRewardPoints = customer.GetAttribute<bool>(NopCustomerDefaults.UseRewardPointsDuringCheckoutAttribute, _genericAttributeService, _storeContext.CurrentStore.Id);
+                useRewardPoints = _genericAttributeService.GetAttribute<bool>(customer, NopCustomerDefaults.UseRewardPointsDuringCheckoutAttribute, _storeContext.CurrentStore.Id);
 
             if (!useRewardPoints.Value)
                 return;
@@ -796,7 +796,7 @@ namespace Nop.Services.Orders
             //checkout attributes
             if (customer != null)
             {
-                var checkoutAttributesXml = customer.GetAttribute<string>(NopCustomerDefaults.CheckoutAttributes, _genericAttributeService, _storeContext.CurrentStore.Id);
+                var checkoutAttributesXml = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.CheckoutAttributes, _storeContext.CurrentStore.Id);
                 var attributeValues = _checkoutAttributeParser.ParseCheckoutAttributeValues(checkoutAttributesXml);
                 if (attributeValues != null)
                 {
@@ -1050,7 +1050,7 @@ namespace Nop.Services.Orders
 
             ShippingOption shippingOption = null;
             if (customer != null)
-                shippingOption = customer.GetAttribute<ShippingOption>(NopCustomerDefaults.SelectedShippingOptionAttribute, _genericAttributeService, _storeContext.CurrentStore.Id);
+                shippingOption = _genericAttributeService.GetAttribute<ShippingOption>(customer, NopCustomerDefaults.SelectedShippingOptionAttribute, _storeContext.CurrentStore.Id);
 
             if (shippingOption != null)
             {
@@ -1153,10 +1153,8 @@ namespace Nop.Services.Orders
             var paymentMethodSystemName = "";
             if (customer != null)
             {
-                paymentMethodSystemName = customer.GetAttribute<string>(
-                    NopCustomerDefaults.SelectedPaymentMethodAttribute,
-                    _genericAttributeService,
-                    _storeContext.CurrentStore.Id);
+                paymentMethodSystemName = _genericAttributeService.GetAttribute<string>(customer, 
+                    NopCustomerDefaults.SelectedPaymentMethodAttribute, _storeContext.CurrentStore.Id);
             }
 
             //order sub total (items + checkout attributes)
@@ -1277,10 +1275,8 @@ namespace Nop.Services.Orders
             var paymentMethodSystemName = "";
             if (customer != null)
             {
-                paymentMethodSystemName = customer.GetAttribute<string>(
-                    NopCustomerDefaults.SelectedPaymentMethodAttribute,
-                    _genericAttributeService,
-                    _storeContext.CurrentStore.Id);
+                paymentMethodSystemName = _genericAttributeService.GetAttribute<string>(customer,
+                    NopCustomerDefaults.SelectedPaymentMethodAttribute, _storeContext.CurrentStore.Id);
             }
 
             //subtotal without tax

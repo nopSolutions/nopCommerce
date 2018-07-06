@@ -18,6 +18,7 @@ namespace Nop.Web.Framework
     {
         #region Fields
 
+        private readonly IGenericAttributeService _genericAttributeService;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IStoreService _storeService;
 
@@ -33,9 +34,11 @@ namespace Nop.Web.Framework
         /// </summary>
         /// <param name="httpContextAccessor">HTTP context accessor</param>
         /// <param name="storeService">Store service</param>
-        public WebStoreContext(IHttpContextAccessor httpContextAccessor,
+        public WebStoreContext(IGenericAttributeService genericAttributeService,
+            IHttpContextAccessor httpContextAccessor,
             IStoreService storeService)
         {
+            this._genericAttributeService = genericAttributeService;
             this._httpContextAccessor = httpContextAccessor;
             this._storeService = storeService;
         }
@@ -89,7 +92,8 @@ namespace Nop.Web.Framework
                     var currentCustomer = EngineContext.Current.Resolve<IWorkContext>().CurrentCustomer;
 
                     //try to get store identifier from attributes
-                    var storeId = currentCustomer.GetAttribute<int>(NopCustomerDefaults.AdminAreaStoreScopeConfigurationAttribute);
+                    var storeId = _genericAttributeService
+                        .GetAttribute<int>(currentCustomer, NopCustomerDefaults.AdminAreaStoreScopeConfigurationAttribute);
 
                     _cachedActiveStoreScopeConfiguration = _storeService.GetStoreById(storeId)?.Id ?? 0;
                 }

@@ -55,6 +55,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IFulltextService _fulltextService;
         private readonly IGdprService _gdprService;
+        private readonly IGenericAttributeService _genericAttributeService;
         private readonly ILocalizationService _localizationService;
         private readonly IMaintenanceService _maintenanceService;
         private readonly IPictureService _pictureService;
@@ -80,6 +81,7 @@ namespace Nop.Web.Areas.Admin.Factories
             IDateTimeHelper dateTimeHelper,
             IFulltextService fulltextService,
             IGdprService gdprService,
+            IGenericAttributeService genericAttributeService,
             ILocalizationService localizationService,
             IMaintenanceService maintenanceService,
             IPictureService pictureService,
@@ -101,6 +103,7 @@ namespace Nop.Web.Areas.Admin.Factories
             this._dateTimeHelper = dateTimeHelper;
             this._fulltextService = fulltextService;
             this._gdprService = gdprService;
+            this._genericAttributeService = genericAttributeService;
             this._localizationService = localizationService;
             this._maintenanceService = maintenanceService;
             this._pictureService = pictureService;
@@ -655,7 +658,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //fill in additional values (not existing in the entity)
             model.ActiveStoreScopeConfiguration = storeId;
-            
+
             if (storeId <= 0)
                 return model;
 
@@ -725,7 +728,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //fill in additional values (not existing in the entity)
             model.ActiveStoreScopeConfiguration = storeId;
             model.ForumEditorValues = forumSettings.ForumEditor.ToSelectList();
-            
+
             if (storeId <= 0)
                 return model;
 
@@ -772,7 +775,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //fill in additional values (not existing in the entity)
             model.ActiveStoreScopeConfiguration = storeId;
-            
+
             if (storeId <= 0)
                 return model;
 
@@ -1060,7 +1063,7 @@ namespace Nop.Web.Areas.Admin.Factories
             model.ActiveStoreScopeConfiguration = storeId;
             model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId)?.CurrencyCode;
             model.ActivatePointsImmediately = model.ActivationDelay <= 0;
-            
+
             if (storeId <= 0)
                 return model;
 
@@ -1151,7 +1154,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //fill in additional values (not existing in the entity)
             model.ActiveStoreScopeConfiguration = storeId;
-            
+
             if (storeId <= 0)
                 return model;
 
@@ -1194,7 +1197,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //fill in additional values (not existing in the entity)
             model.ActiveStoreScopeConfiguration = storeId;
             model.PicturesStoredIntoDatabase = _pictureService.StoreInDb;
-            
+
             if (storeId <= 0)
                 return model;
 
@@ -1455,7 +1458,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new SettingModeModel
             {
                 ModeName = modeName,
-                Enabled = _workContext.CurrentCustomer.GetAttribute<bool>(modeName)
+                Enabled = _genericAttributeService.GetAttribute<bool>(_workContext.CurrentCustomer, modeName)
             };
 
             return model;

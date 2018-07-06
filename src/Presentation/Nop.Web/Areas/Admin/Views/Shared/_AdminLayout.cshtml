@@ -8,6 +8,7 @@
 @inject CommonSettings commonSettings
 @inject LocalizationSettings localizationSettings
 @inject StoreInformationSettings storeInformationSettings
+@inject Nop.Services.Common.IGenericAttributeService genericAttributeService
 @using System.Globalization
 @using System.Text.Encodings.Web
 @using Microsoft.AspNetCore.Http
@@ -16,7 +17,6 @@
 @using Nop.Core;
 @using Nop.Core.Domain
 @using Nop.Core.Domain.Localization
-@using Nop.Services.Common
 @using Nop.Services.Customers
 @using Nop.Services.Helpers
 @using Nop.Services.Localization
@@ -82,7 +82,7 @@
 
     //sidebar
     const string hideSidebarAttributeName = "HideSidebar";
-    var hideSidebar = workContext.CurrentCustomer.GetAttribute<bool>(hideSidebarAttributeName);
+    var hideSidebar = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSidebarAttributeName);
 
     //avatar
     var currentCustomer = workContext.CurrentCustomer;
