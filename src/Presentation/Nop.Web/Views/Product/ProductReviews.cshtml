@@ -77,7 +77,8 @@
                                                 <input asp-for="@Model.AddAdditionalProductReviewList[curAdditionalReview].Description" value="@(additionalReview.Description)" type="hidden" />
                                                 <input asp-for="@Model.AddAdditionalProductReviewList[curAdditionalReview].DisplayOrder" value="@(additionalReview.DisplayOrder)" type="hidden" />
                                                 <input asp-for="@Model.AddAdditionalProductReviewList[curAdditionalReview].IsRequired" value="@(additionalReview.IsRequired)" type="hidden" />
-                                                <input asp-for="@Model.AddAdditionalProductReviewList[curAdditionalReview].Rating" value="0" type="radio" hidden="hidden" id="addproductratingext_0_@(additionalReview.ReviewTypeId)" />
+                                                
+                                                <input asp-for="@Model.AddAdditionalProductReviewList[curAdditionalReview].Rating" value="0" type="radio" id="addproductratingext_0_@(additionalReview.ReviewTypeId)" style="display: none;"/>
                                                 <input asp-for="@Model.AddAdditionalProductReviewList[curAdditionalReview].Rating" value="1" type="radio" id="addproductratingext_1_@(additionalReview.ReviewTypeId)" />
                                                 <input asp-for="@Model.AddAdditionalProductReviewList[curAdditionalReview].Rating" value="2" type="radio" id="addproductratingext_2_@(additionalReview.ReviewTypeId)" />
                                                 <input asp-for="@Model.AddAdditionalProductReviewList[curAdditionalReview].Rating" value="3" type="radio" id="addproductratingext_3_@(additionalReview.ReviewTypeId)" />
