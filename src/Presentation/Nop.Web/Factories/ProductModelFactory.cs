@@ -289,8 +289,11 @@ namespace Nop.Web.Factories
 
                     var oldPriceBase = _taxService.GetProductPrice(product, product.OldPrice, out decimal taxRate);
                     var finalPriceBase = _taxService.GetProductPrice(product, minPossiblePrice, out taxRate);
+                    var finalPriceWithoutDiscountBase = _taxService.GetProductPrice(product, _priceCalculationService.GetFinalPrice(product, _workContext.CurrentCustomer, includeDiscounts: false), out taxRate);
+                    var finalPriceWithDiscountBase = _taxService.GetProductPrice(product, _priceCalculationService.GetFinalPrice(product, _workContext.CurrentCustomer, includeDiscounts: true), out taxRate);
 
                     var oldPrice = _currencyService.ConvertFromPrimaryStoreCurrency(oldPriceBase, _workContext.WorkingCurrency);
+                    var finalPriceWithoutDiscount = _currencyService.ConvertFromPrimaryStoreCurrency(finalPriceWithoutDiscountBase, _workContext.WorkingCurrency);
                     var finalPrice = _currencyService.ConvertFromPrimaryStoreCurrency(finalPriceBase, _workContext.WorkingCurrency);
 
                     //do we have tier prices configured?
@@ -315,18 +318,18 @@ namespace Nop.Web.Factories
                     }
                     else
                     {
-                        if (finalPriceBase != oldPriceBase && oldPriceBase != decimal.Zero)
-                        {
-                            priceModel.OldPrice = _priceFormatter.FormatPrice(oldPrice);
-                            priceModel.Price = _priceFormatter.FormatPrice(finalPrice);
-                            priceModel.PriceValue = finalPrice;
-                        }
-                        else
-                        {
-                            priceModel.OldPrice = null;
-                            priceModel.Price = _priceFormatter.FormatPrice(finalPrice);
-                            priceModel.PriceValue = finalPrice;
-                        }
+                        var strikethroughPrice = decimal.Zero;
+                        if (finalPriceWithoutDiscountBase != finalPriceWithDiscountBase)
+                            strikethroughPrice = finalPriceWithoutDiscount;
+
+                        if (finalPriceWithoutDiscountBase != oldPriceBase && oldPriceBase > decimal.Zero)
+                            strikethroughPrice = oldPrice;
+
+                        if(strikethroughPrice > decimal.Zero)
+                            priceModel.OldPrice = _priceFormatter.FormatPrice(strikethroughPrice);
+
+                        priceModel.Price = _priceFormatter.FormatPrice(finalPrice);
+                        priceModel.PriceValue = finalPrice;
                     }
 
                     if (product.IsRental)
