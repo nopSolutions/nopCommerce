@@ -69,6 +69,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IStaticCacheManager _cacheManager;
         private readonly IStoreMappingSupportedModelFactory _storeMappingSupportedModelFactory;
         private readonly IStoreService _storeService;
+        private readonly IUrlRecordService _urlRecordService;
         private readonly IWorkContext _workContext;
         private readonly MeasureSettings _measureSettings;
         private readonly TaxSettings _taxSettings;
@@ -107,6 +108,7 @@ namespace Nop.Web.Areas.Admin.Factories
             IStaticCacheManager cacheManager,
             IStoreMappingSupportedModelFactory storeMappingSupportedModelFactory,
             IStoreService storeService,
+            IUrlRecordService urlRecordService,
             IWorkContext workContext,
             MeasureSettings measureSettings,
             TaxSettings taxSettings,
@@ -142,6 +144,7 @@ namespace Nop.Web.Areas.Admin.Factories
             this._cacheManager = cacheManager;
             this._storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
             this._storeService = storeService;
+            this._urlRecordService = urlRecordService;
             this._workContext = workContext;
             this._taxSettings = taxSettings;
             this._vendorSettings = vendorSettings;
@@ -822,7 +825,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     locale.MetaKeywords = product.GetLocalized(entity => entity.MetaKeywords, languageId, false, false);
                     locale.MetaDescription = product.GetLocalized(entity => entity.MetaDescription, languageId, false, false);
                     locale.MetaTitle = product.GetLocalized(entity => entity.MetaTitle, languageId, false, false);
-                    locale.SeName = product.GetSeName(languageId, false, false);
+                    locale.SeName = _urlRecordService.GetSeName(product, languageId, false, false);
                 };
             }
 

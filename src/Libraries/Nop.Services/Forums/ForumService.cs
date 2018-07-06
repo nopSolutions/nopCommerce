@@ -6,11 +6,13 @@ using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Forums;
+using Nop.Core.Domain.Seo;
 using Nop.Core.Html;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Events;
 using Nop.Services.Messages;
+using Nop.Services.Seo;
 
 namespace Nop.Services.Forums
 {
@@ -36,6 +38,8 @@ namespace Nop.Services.Forums
         private readonly IWorkContext _workContext;
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly IEventPublisher _eventPublisher;
+        private readonly IUrlRecordService _urlRecordService;
+        private readonly SeoSettings _seoSettings;
 
         #endregion
 
@@ -73,8 +77,9 @@ namespace Nop.Services.Forums
             ICustomerService customerService,
             IWorkContext workContext,
             IWorkflowMessageService workflowMessageService,
-            IEventPublisher eventPublisher
-            )
+            IEventPublisher eventPublisher,
+            IUrlRecordService urlRecordService,
+            SeoSettings seoSettings)
         {
             this._cacheManager = cacheManager;
             this._forumGroupRepository = forumGroupRepository;
@@ -90,7 +95,9 @@ namespace Nop.Services.Forums
             this._customerService = customerService;
             this._workContext = workContext;
             this._workflowMessageService = workflowMessageService;
-            _eventPublisher = eventPublisher;
+            this._eventPublisher = eventPublisher;
+            this._urlRecordService = urlRecordService;
+            this._seoSettings = seoSettings;
         }
 
         #endregion
@@ -1656,6 +1663,54 @@ namespace Nop.Services.Forums
                 throw new ArgumentNullException(nameof(forumTopic));
 
             return this.GetPostById(forumTopic.LastPostId);
+        }
+
+        /// <summary>
+        /// Gets ForumGroup SE (search engine) name
+        /// </summary>
+        /// <param name="forumGroup">ForumGroup</param>
+        /// <returns>ForumGroup SE (search engine) name</returns>
+        public virtual string GetForumGroupSeName(ForumGroup forumGroup)
+        {
+            if (forumGroup == null)
+                throw new ArgumentNullException(nameof(forumGroup));
+
+            var seName = _urlRecordService.GetSeName(forumGroup.Name, _seoSettings.ConvertNonWesternChars, _seoSettings.AllowUnicodeCharsInUrls);
+            return seName;
+        }
+
+        /// <summary>
+        /// Gets Forum SE (search engine) name
+        /// </summary>
+        /// <param name="forum">Forum</param>
+        /// <returns>Forum SE (search engine) name</returns>
+        public virtual string GetForumSeName(Forum forum)
+        {
+            if (forum == null)
+                throw new ArgumentNullException(nameof(forum));
+
+            var seName = _urlRecordService.GetSeName(forum.Name, _seoSettings.ConvertNonWesternChars, _seoSettings.AllowUnicodeCharsInUrls);
+            return seName;
+        }
+
+        /// <summary>
+        /// Gets ForumTopic SE (search engine) name
+        /// </summary>
+        /// <param name="forumTopic">ForumTopic</param>
+        /// <returns>ForumTopic SE (search engine) name</returns>
+        public virtual string GetTopicSeName(ForumTopic forumTopic)
+        {
+            if (forumTopic == null)
+                throw new ArgumentNullException(nameof(forumTopic));
+
+            var seName = _urlRecordService.GetSeName(forumTopic.Subject, _seoSettings.ConvertNonWesternChars, _seoSettings.AllowUnicodeCharsInUrls);
+
+            // Trim SE name to avoid URLs that are too long
+            var maxLength = NopSeoDefaults.ForumTopicLength;
+            if (seName.Length > maxLength)
+                seName = seName.Substring(0, maxLength);
+
+            return seName;
         }
 
         #endregion

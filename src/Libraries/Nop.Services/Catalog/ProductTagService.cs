@@ -193,7 +193,7 @@ namespace Nop.Services.Catalog
 
             _productTagRepository.Update(productTag);
 
-            var seName = productTag.ValidateSeName("", productTag.Name, true);
+            var seName = _urlRecordService.ValidateSeName(productTag, "", productTag.Name, true);
             _urlRecordService.SaveSlug(productTag, seName, 0);
 
             //cache
@@ -279,7 +279,7 @@ namespace Nop.Services.Catalog
                     _productService.UpdateProduct(product);
                 }
 
-                var seName = productTag.ValidateSeName("", productTag.Name, true);
+                var seName = _urlRecordService.ValidateSeName(productTag, "", productTag.Name, true);
                 _urlRecordService.SaveSlug(productTag, seName, 0);
 
             }

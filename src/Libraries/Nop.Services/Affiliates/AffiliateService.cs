@@ -4,6 +4,7 @@ using Nop.Core;
 using Nop.Core.Data;
 using Nop.Core.Domain.Affiliates;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Domain.Seo;
 using Nop.Services.Events;
 using Nop.Services.Seo;
 
@@ -19,21 +20,27 @@ namespace Nop.Services.Affiliates
         private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<Affiliate> _affiliateRepository;
         private readonly IRepository<Order> _orderRepository;
+        private readonly IUrlRecordService _urlRecordService;
         private readonly IWebHelper _webHelper;
+        private readonly SeoSettings _seoSettings;
 
         #endregion
 
         #region Ctor
 
-        public AffiliateService(IEventPublisher eventPublisher, 
+        public AffiliateService(IEventPublisher eventPublisher,
             IRepository<Affiliate> affiliateRepository,
             IRepository<Order> orderRepository,
-            IWebHelper webHelper)
+            IUrlRecordService urlRecordService,
+            IWebHelper webHelper,
+            SeoSettings seoSettings)
         {
             this._eventPublisher = eventPublisher;
             this._affiliateRepository = affiliateRepository;
             this._orderRepository = orderRepository;
+            this._urlRecordService = urlRecordService;
             this._webHelper = webHelper;
+            this._seoSettings = seoSettings;
         }
 
         #endregion
@@ -230,7 +237,7 @@ namespace Nop.Services.Affiliates
                 throw new ArgumentNullException(nameof(affiliate));
 
             //ensure we have only valid chars
-            friendlyUrlName = SeoExtensions.GetSeName(friendlyUrlName);
+            friendlyUrlName = _urlRecordService.GetSeName(friendlyUrlName, _seoSettings.ConvertNonWesternChars, _seoSettings.AllowUnicodeCharsInUrls);
 
             //max length
             //(consider a store URL + probably added {0}-{1} below)

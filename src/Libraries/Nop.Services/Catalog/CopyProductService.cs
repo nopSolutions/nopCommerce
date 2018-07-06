@@ -36,22 +36,6 @@ namespace Nop.Services.Catalog
 
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="categoryService">Category service</param>
-        /// <param name="downloadService">Download service</param>
-        /// <param name="languageService">Language service</param>
-        /// <param name="localizationService">Localization service</param>
-        /// <param name="localizedEntityService">Localized entity service</param>
-        /// <param name="manufacturerService">Manufacturer service</param>
-        /// <param name="pictureService">Picture service</param>
-        /// <param name="productAttributeParser">Product attribute parser</param>
-        /// <param name="productAttributeService">Product attribute service</param>
-        /// <param name="productService">pProduct service</param>
-        /// <param name="specificationAttributeService">Specification attribute service</param>
-        /// <param name="storeMappingService">Store mapping service</param>
-        /// <param name="urlRecordService">URL record service</param>
         public CopyProductService(ICategoryService categoryService,
             IDownloadService downloadService,
             ILanguageService languageService,
@@ -115,7 +99,7 @@ namespace Nop.Services.Catalog
             var associatedProducts = _productService.GetAssociatedProducts(product.Id, showHidden: true);
             foreach (var associatedProduct in associatedProducts)
             {
-                var associatedProductCopy = CopyProduct(associatedProduct, 
+                var associatedProductCopy = CopyProduct(associatedProduct,
                     string.Format(NopCatalogDefaults.ProductCopyNameTemplate, associatedProduct.Name),
                     isPublished, copyImages, false);
                 associatedProductCopy.ParentGroupedProductId = productCopy.Id;
@@ -562,7 +546,7 @@ namespace Nop.Services.Catalog
                     _localizedEntityService.SaveLocalizedValue(productCopy, x => x.MetaTitle, metaTitle, lang.Id);
 
                 //search engine name
-                _urlRecordService.SaveSlug(productCopy, productCopy.ValidateSeName("", name, false), lang.Id);
+                _urlRecordService.SaveSlug(productCopy, _urlRecordService.ValidateSeName(productCopy, "", name, false), lang.Id);
             }
         }
 
@@ -729,10 +713,10 @@ namespace Nop.Services.Catalog
             _productService.InsertProduct(productCopy);
 
             //search engine name
-            _urlRecordService.SaveSlug(productCopy, productCopy.ValidateSeName("", productCopy.Name, true), 0);
+            _urlRecordService.SaveSlug(productCopy, _urlRecordService.ValidateSeName(productCopy, "", productCopy.Name, true), 0);
             return productCopy;
         }
-        
+
         #endregion
 
         #region Methods

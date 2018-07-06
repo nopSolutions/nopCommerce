@@ -14,7 +14,6 @@ using Nop.Services.Forums;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Media;
-using Nop.Services.Seo;
 using Nop.Web.Framework.Extensions;
 using Nop.Web.Models.Boards;
 using Nop.Web.Models.Common;
@@ -142,7 +141,7 @@ namespace Nop.Web.Factories
             {
                 Id = topic.Id,
                 Subject = topic.Subject,
-                SeName = topic.GetSeName(),
+                SeName = _forumService.GetTopicSeName(topic),
                 LastPostId = topic.LastPostId,
                 NumPosts = topic.NumPosts,
                 Views = topic.Views,
@@ -175,7 +174,7 @@ namespace Nop.Web.Factories
             {
                 Id = forum.Id,
                 Name = forum.Name,
-                SeName = forum.GetSeName(),
+                SeName = _forumService.GetForumSeName(forum),
                 Description = forum.Description,
                 NumTopics = forum.NumTopics,
                 NumPosts = forum.NumPosts,
@@ -198,7 +197,7 @@ namespace Nop.Web.Factories
             {
                 Id = forumGroup.Id,
                 Name = forumGroup.Name,
-                SeName = forumGroup.GetSeName(),
+                SeName = _forumService.GetForumGroupSeName(forumGroup),
             };
             var forums = _forumService.GetAllForumsByGroupId(forumGroup.Id);
             foreach (var forum in forums)
@@ -296,7 +295,7 @@ namespace Nop.Web.Factories
             {
                 Id = forum.Id,
                 Name = forum.Name,
-                SeName = forum.GetSeName(),
+                SeName = _forumService.GetForumSeName(forum),
                 Description = forum.Description
             };
 
@@ -351,7 +350,7 @@ namespace Nop.Web.Factories
             {
                 Id = forumTopic.Id,
                 Subject = forumTopic.Subject,
-                SeName = forumTopic.GetSeName(),
+                SeName = _forumService.GetTopicSeName(forumTopic),
 
                 IsCustomerAllowedToEditTopic = _forumService.IsCustomerAllowedToEditTopic(_workContext.CurrentCustomer, forumTopic),
                 IsCustomerAllowedToDeleteTopic = _forumService.IsCustomerAllowedToDeleteTopic(_workContext.CurrentCustomer, forumTopic),
@@ -378,7 +377,7 @@ namespace Nop.Web.Factories
                 {
                     Id = post.Id,
                     ForumTopicId = post.TopicId,
-                    ForumTopicSeName = forumTopic.GetSeName(),
+                    ForumTopicSeName = _forumService.GetTopicSeName(forumTopic),
                     FormattedText = _forumService.FormatPostText(post),
                     IsCurrentCustomerAllowedToEditPost = _forumService.IsCustomerAllowedToEditPost(_workContext.CurrentCustomer, post),
                     IsCurrentCustomerAllowedToDeletePost = _forumService.IsCustomerAllowedToDeletePost(_workContext.CurrentCustomer, post),
@@ -450,7 +449,7 @@ namespace Nop.Web.Factories
             {
                 ForumList = ForumGroupsForumsList(),
                 Id = forumTopic.Id,
-                TopicSeName = forumTopic.GetSeName(),
+                TopicSeName = _forumService.GetTopicSeName(forumTopic),
                 ForumSelected = forumTopic.ForumId
             };
 
@@ -473,7 +472,7 @@ namespace Nop.Web.Factories
             model.IsEdit = false;
             model.ForumId = forum.Id;
             model.ForumName = forum.Name;
-            model.ForumSeName = forum.GetSeName();
+            model.ForumSeName = _forumService.GetForumSeName(forum);
             model.ForumEditor = _forumSettings.ForumEditor;
             model.IsCustomerAllowedToSetTopicPriority = _forumService.IsCustomerAllowedToSetTopicPriority(_workContext.CurrentCustomer);
             model.TopicPriorities = ForumTopicTypesList();
@@ -502,7 +501,7 @@ namespace Nop.Web.Factories
             model.Id = forumTopic.Id;
             model.TopicPriorities = ForumTopicTypesList();
             model.ForumName = forum.Name;
-            model.ForumSeName = forum.GetSeName();
+            model.ForumSeName = _forumService.GetForumSeName(forum);
             model.ForumId = forum.Id;
             model.ForumEditor = _forumSettings.ForumEditor;
 
@@ -547,7 +546,7 @@ namespace Nop.Web.Factories
                 ForumEditor = _forumSettings.ForumEditor,
                 ForumName = forum.Name,
                 ForumTopicSubject = forumTopic.Subject,
-                ForumTopicSeName = forumTopic.GetSeName(),
+                ForumTopicSeName = _forumService.GetTopicSeName(forumTopic),
                 IsCustomerAllowedToSubscribe = _forumService.IsCustomerAllowedToSubscribe(_workContext.CurrentCustomer)
             };
 
@@ -614,7 +613,7 @@ namespace Nop.Web.Factories
                 ForumEditor = _forumSettings.ForumEditor,
                 ForumName = forum.Name,
                 ForumTopicSubject = forumTopic.Subject,
-                ForumTopicSeName = forumTopic.GetSeName(),
+                ForumTopicSeName = _forumService.GetTopicSeName(forumTopic),
                 IsCustomerAllowedToSubscribe = _forumService.IsCustomerAllowedToSubscribe(_workContext.CurrentCustomer)
             };
 
@@ -839,7 +838,7 @@ namespace Nop.Web.Factories
 
             model.Id = forumPost.Id;
             model.ForumTopicId = forumPost.TopicId;
-            model.ForumTopicSeName = forumPost.ForumTopic.GetSeName();
+            model.ForumTopicSeName = _forumService.GetTopicSeName(forumPost.ForumTopic);
             model.ForumTopicSubject = _forumService.StripTopicSubject(forumPost.ForumTopic);
             model.CustomerId = forumPost.CustomerId;
             model.AllowViewingProfiles = _customerSettings.AllowViewingProfiles && !forumPost.Customer.IsGuest();
@@ -872,7 +871,7 @@ namespace Nop.Web.Factories
                 {
                     model.ForumTopicId = forumTopic.Id;
                     model.ForumTopicSubject = forumTopic.Subject;
-                    model.ForumTopicSeName = forumTopic.GetSeName();
+                    model.ForumTopicSeName = _forumService.GetTopicSeName(forumTopic);
                 }
             }
 
@@ -881,7 +880,7 @@ namespace Nop.Web.Factories
             {
                 model.ForumId = forum.Id;
                 model.ForumName = forum.Name;
-                model.ForumSeName = forum.GetSeName();
+                model.ForumSeName = _forumService.GetForumSeName(forum);
             }
 
             var forumGroup = _forumService.GetForumGroupById(forum != null ? forum.ForumGroupId : (forumGroupId.HasValue ? forumGroupId.Value : 0));
@@ -889,7 +888,7 @@ namespace Nop.Web.Factories
             {
                 model.ForumGroupId = forumGroup.Id;
                 model.ForumGroupName = forumGroup.Name;
-                model.ForumGroupSeName = forumGroup.GetSeName();
+                model.ForumGroupSeName = _forumService.GetForumGroupSeName(forumGroup);
             }
 
             return model;
@@ -931,7 +930,7 @@ namespace Nop.Web.Factories
                     if (forumTopic != null)
                     {
                         title = forumTopic.Subject;
-                        slug = forumTopic.GetSeName();
+                        slug = _forumService.GetTopicSeName(forumTopic);
                     }
                 }
                 else
@@ -940,7 +939,7 @@ namespace Nop.Web.Factories
                     if (forum != null)
                     {
                         title = forum.Name;
-                        slug = forum.GetSeName();
+                        slug = _forumService.GetForumSeName(forum);
                     }
                 }
 

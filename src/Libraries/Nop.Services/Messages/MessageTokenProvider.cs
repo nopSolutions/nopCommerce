@@ -39,7 +39,6 @@ using Nop.Services.Orders;
 using Nop.Services.Payments;
 using Nop.Services.Seo;
 using Nop.Services.Shipping;
-using Nop.Services.Shipping.Tracking;
 using Nop.Services.Stores;
 using Nop.Services.Vendors;
 
@@ -69,6 +68,7 @@ namespace Nop.Services.Messages
         private readonly IUrlHelperFactory _urlHelperFactory;
         private readonly IActionContextAccessor _actionContextAccessor;
         private readonly ICustomerService _customerService;
+        private readonly IUrlRecordService _urlRecordService;
 
         private readonly MessageTemplatesSettings _templatesSettings;
         private readonly CatalogSettings _catalogSettings;
@@ -103,6 +103,7 @@ namespace Nop.Services.Messages
             IUrlHelperFactory urlHelperFactory,
             IActionContextAccessor actionContextAccessor,
             ICustomerService customerService,
+            IUrlRecordService urlRecordService,
             MessageTemplatesSettings templatesSettings,
             CatalogSettings catalogSettings,
             TaxSettings taxSettings,
@@ -127,6 +128,7 @@ namespace Nop.Services.Messages
             this._urlHelperFactory = urlHelperFactory;
             this._actionContextAccessor = actionContextAccessor;
             this._customerService = customerService;
+            this._urlRecordService = urlRecordService;
             this._storeService = storeService;
             this._storeContext = storeContext;
 
@@ -1231,7 +1233,7 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("Product.SKU", product.Sku));
             tokens.Add(new Token("Product.StockQuantity", productService.GetTotalStockQuantity(product)));
 
-            var productUrl = RouteUrl(routeName: "Product", routeValues: new { SeName = product.GetSeName() });
+            var productUrl = RouteUrl(routeName: "Product", routeValues: new { SeName = _urlRecordService.GetSeName(product) });
             tokens.Add(new Token("Product.ProductURLForCustomer", productUrl, true));
 
             //event notification
@@ -1274,11 +1276,12 @@ namespace Nop.Services.Messages
         public virtual void AddForumTopicTokens(IList<Token> tokens, ForumTopic forumTopic,
             int? friendlyForumTopicPageIndex = null, int? appendedPostIdentifierAnchor = null)
         {
+            var forumService = EngineContext.Current.Resolve<IForumService>();
             string topicUrl;
             if (friendlyForumTopicPageIndex.HasValue && friendlyForumTopicPageIndex.Value > 1)
-                topicUrl = RouteUrl(routeName: "TopicSlugPaged", routeValues: new { id = forumTopic.Id, slug = forumTopic.GetSeName(), pageNumber = friendlyForumTopicPageIndex.Value });
+                topicUrl = RouteUrl(routeName: "TopicSlugPaged", routeValues: new { id = forumTopic.Id, slug = forumService.GetTopicSeName(forumTopic), pageNumber = friendlyForumTopicPageIndex.Value });
             else
-                topicUrl = RouteUrl(routeName: "TopicSlug", routeValues: new { id = forumTopic.Id, slug = forumTopic.GetSeName() });
+                topicUrl = RouteUrl(routeName: "TopicSlug", routeValues: new { id = forumTopic.Id, slug = forumService.GetTopicSeName(forumTopic) });
             if (appendedPostIdentifierAnchor.HasValue && appendedPostIdentifierAnchor.Value > 0)
                 topicUrl = $"{topicUrl}#{appendedPostIdentifierAnchor.Value}";
             tokens.Add(new Token("Forums.TopicURL", topicUrl, true));
@@ -1310,7 +1313,8 @@ namespace Nop.Services.Messages
         /// <param name="forum">Forum</param>
         public virtual void AddForumTokens(IList<Token> tokens, Forum forum)
         {
-            var forumUrl = RouteUrl(routeName: "ForumSlug", routeValues: new { id = forum.Id, slug = forum.GetSeName() });
+            var forumService = EngineContext.Current.Resolve<IForumService>();
+            var forumUrl = RouteUrl(routeName: "ForumSlug", routeValues: new { id = forum.Id, slug = forumService.GetForumSeName(forum) });
             tokens.Add(new Token("Forums.ForumURL", forumUrl, true));
             tokens.Add(new Token("Forums.ForumName", forum.Name));
 
@@ -1341,7 +1345,7 @@ namespace Nop.Services.Messages
         public virtual void AddBackInStockTokens(IList<Token> tokens, BackInStockSubscription subscription)
         {
             tokens.Add(new Token("BackInStockSubscription.ProductName", subscription.Product.Name));
-            var productUrl = RouteUrl(subscription.StoreId, "Product", new { SeName = subscription.Product.GetSeName() });
+            var productUrl = RouteUrl(subscription.StoreId, "Product", new { SeName = _urlRecordService.GetSeName(subscription.Product) });
             tokens.Add(new Token("BackInStockSubscription.ProductUrl", productUrl, true));
 
             //event notification

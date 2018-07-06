@@ -34,6 +34,7 @@ namespace Nop.Web.Factories
         private readonly IPictureService _pictureService;
         private readonly IStaticCacheManager _cacheManager;
         private readonly IStoreContext _storeContext;
+        private readonly IUrlRecordService _urlRecordService;
         private readonly IWorkContext _workContext;
         private readonly MediaSettings _mediaSettings;
 
@@ -50,6 +51,7 @@ namespace Nop.Web.Factories
             IPictureService pictureService,
             IStaticCacheManager cacheManager,
             IStoreContext storeContext,
+            IUrlRecordService urlRecordService,
             IWorkContext workContext,
             MediaSettings mediaSettings)
         {
@@ -62,6 +64,7 @@ namespace Nop.Web.Factories
             this._pictureService = pictureService;
             this._cacheManager = cacheManager;
             this._storeContext = storeContext;
+            this._urlRecordService = urlRecordService;
             this._workContext = workContext;
             this._mediaSettings = mediaSettings;
         }
@@ -119,7 +122,7 @@ namespace Nop.Web.Factories
             model.MetaTitle = blogPost.MetaTitle;
             model.MetaDescription = blogPost.MetaDescription;
             model.MetaKeywords = blogPost.MetaKeywords;
-            model.SeName = blogPost.GetSeName(blogPost.LanguageId, ensureTwoPublishedLanguages: false);
+            model.SeName = _urlRecordService.GetSeName(blogPost, blogPost.LanguageId, ensureTwoPublishedLanguages: false);
             model.Title = blogPost.Title;
             model.Body = blogPost.Body;
             model.BodyOverview = blogPost.BodyOverview;

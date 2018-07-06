@@ -7,7 +7,7 @@ namespace Nop.Services.Seo
     /// <summary>
     /// Provides information about URL records
     /// </summary>
-    public partial interface  IUrlRecordService
+    public partial interface IUrlRecordService
     {
         /// <summary>
         /// Deletes an URL record
@@ -33,7 +33,7 @@ namespace Nop.Services.Seo
         /// </summary>
         /// <param name="urlRecordIds">URL record identifiers</param>
         /// <returns>URL record</returns>
-        IList<UrlRecord> GetUrlRecordsByIds(int [] urlRecordIds);
+        IList<UrlRecord> GetUrlRecordsByIds(int[] urlRecordIds);
 
         /// <summary>
         /// Inserts an URL record
@@ -89,5 +89,59 @@ namespace Nop.Services.Seo
         /// <param name="slug">Slug</param>
         /// <param name="languageId">Language ID</param>
         void SaveSlug<T>(T entity, string slug, int languageId) where T : BaseEntity, ISlugSupported;
+
+        /// <summary>
+        ///  Get search engine friendly name (slug)
+        /// </summary>
+        /// <typeparam name="T">Entity type</typeparam>
+        /// <param name="entity">Entity</param>
+        /// <param name="languageId">Language identifier; pass null to use the current language</param>
+        /// <param name="returnDefaultValue">A value indicating whether to return default value (if language specified one is not found)</param>
+        /// <param name="ensureTwoPublishedLanguages">A value indicating whether to ensure that we have at least two published languages; otherwise, load only default value</param>
+        /// <returns>Search engine  name (slug)</returns>
+        string GetSeName<T>(T entity, int? languageId = null, bool returnDefaultValue = true,
+            bool ensureTwoPublishedLanguages = true) where T : BaseEntity, ISlugSupported;
+
+        /// <summary>
+        /// Get search engine friendly name (slug)
+        /// </summary>
+        /// <param name="entityId">Entity identifier</param>
+        /// <param name="entityName">Entity name</param>
+        /// <param name="languageId">Language identifier; pass null to use the current language</param>
+        /// <param name="returnDefaultValue">A value indicating whether to return default value (if language specified one is not found)</param>
+        /// <param name="ensureTwoPublishedLanguages">A value indicating whether to ensure that we have at least two published languages; otherwise, load only default value</param>
+        /// <returns>Search engine  name (slug)</returns>
+        string GetSeName(int entityId, string entityName, int? languageId = null,
+            bool returnDefaultValue = true, bool ensureTwoPublishedLanguages = true);
+
+        /// <summary>
+        /// Get SE name
+        /// </summary>
+        /// <param name="name">Name</param>
+        /// <param name="convertNonWesternChars">A value indicating whether non western chars should be converted</param>
+        /// <param name="allowUnicodeCharsInUrls">A value indicating whether Unicode chars are allowed</param>
+        /// <returns>Result</returns>
+        string GetSeName(string name, bool convertNonWesternChars, bool allowUnicodeCharsInUrls);
+
+        /// <summary>
+        /// Validate search engine name
+        /// </summary>
+        /// <param name="entity">Entity</param>
+        /// <param name="seName">Search engine name to validate</param>
+        /// <param name="name">User-friendly name used to generate sename</param>
+        /// <param name="ensureNotEmpty">Ensure that sename is not empty</param>
+        /// <returns>Valid sename</returns>
+        string ValidateSeName<T>(T entity, string seName, string name, bool ensureNotEmpty) where T : BaseEntity, ISlugSupported;
+
+        /// <summary>
+        /// Validate search engine name
+        /// </summary>
+        /// <param name="entityId">Entity identifier</param>
+        /// <param name="entityName">Entity name</param>
+        /// <param name="seName">Search engine name to validate</param>
+        /// <param name="name">User-friendly name used to generate sename</param>
+        /// <param name="ensureNotEmpty">Ensure that sename is not empty</param>
+        /// <returns>Valid sename</returns>
+        string ValidateSeName(int entityId, string entityName, string seName, string name, bool ensureNotEmpty);
     }
 }

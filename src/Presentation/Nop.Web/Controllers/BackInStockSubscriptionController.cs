@@ -22,6 +22,7 @@ namespace Nop.Web.Controllers
         private readonly ILocalizationService _localizationService;
         private readonly IProductService _productService;
         private readonly IStoreContext _storeContext;
+        private readonly IUrlRecordService _urlRecordService;
         private readonly IWorkContext _workContext;
 
         #endregion
@@ -34,6 +35,7 @@ namespace Nop.Web.Controllers
             ILocalizationService localizationService,
             IProductService productService,
             IStoreContext storeContext,
+            IUrlRecordService urlRecordService,
             IWorkContext workContext)
         {
             this._catalogSettings = catalogSettings;
@@ -42,6 +44,7 @@ namespace Nop.Web.Controllers
             this._localizationService = localizationService;
             this._productService = productService;
             this._storeContext = storeContext;
+            this._urlRecordService = urlRecordService;
             this._workContext = workContext;
         }
 
@@ -60,7 +63,7 @@ namespace Nop.Web.Controllers
             {
                 ProductId = product.Id,
                 ProductName = product.GetLocalized(x => x.Name),
-                ProductSeName = product.GetSeName(),
+                ProductSeName = _urlRecordService.GetSeName(product),
                 IsCurrentCustomerRegistered = _workContext.CurrentCustomer.IsRegistered(),
                 MaximumBackInStockSubscriptions = _catalogSettings.MaximumBackInStockSubscriptions,
                 CurrentNumberOfBackInStockSubscriptions = _backInStockSubscriptionService
@@ -172,7 +175,7 @@ namespace Nop.Web.Controllers
                         Id = subscription.Id,
                         ProductId = product.Id,
                         ProductName = product.GetLocalized(x => x.Name),
-                        SeName = product.GetSeName(),
+                        SeName = _urlRecordService.GetSeName(product),
                     };
                     model.Subscriptions.Add(subscriptionModel);
                 }

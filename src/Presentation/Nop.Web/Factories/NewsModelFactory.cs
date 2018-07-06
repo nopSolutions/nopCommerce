@@ -32,6 +32,7 @@ namespace Nop.Web.Factories
         private readonly IPictureService _pictureService;
         private readonly IStaticCacheManager _cacheManager;
         private readonly IStoreContext _storeContext;
+        private readonly IUrlRecordService _urlRecordService;
         private readonly IWorkContext _workContext;
         private readonly MediaSettings _mediaSettings;
         private readonly NewsSettings _newsSettings;
@@ -48,6 +49,7 @@ namespace Nop.Web.Factories
             IPictureService pictureService,
             IStaticCacheManager cacheManager,
             IStoreContext storeContext,
+            IUrlRecordService urlRecordService,
             IWorkContext workContext,
             MediaSettings mediaSettings,
             NewsSettings newsSettings)
@@ -60,6 +62,7 @@ namespace Nop.Web.Factories
             this._pictureService = pictureService;
             this._cacheManager = cacheManager;
             this._storeContext = storeContext;
+            this._urlRecordService = urlRecordService;
             this._workContext = workContext;
             this._mediaSettings = mediaSettings;
             this._newsSettings = newsSettings;
@@ -120,7 +123,7 @@ namespace Nop.Web.Factories
             model.MetaTitle = newsItem.MetaTitle;
             model.MetaDescription = newsItem.MetaDescription;
             model.MetaKeywords = newsItem.MetaKeywords;
-            model.SeName = newsItem.GetSeName(newsItem.LanguageId, ensureTwoPublishedLanguages: false);
+            model.SeName = _urlRecordService.GetSeName(newsItem, newsItem.LanguageId, ensureTwoPublishedLanguages: false);
             model.Title = newsItem.Title;
             model.Short = newsItem.Short;
             model.Full = newsItem.Full;

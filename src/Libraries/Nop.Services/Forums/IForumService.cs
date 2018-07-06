@@ -441,5 +441,26 @@ namespace Nop.Services.Forums
         /// <param name="forumTopic">Forum topic</param>
         /// <returns>Forum post</returns>
         ForumPost GetLastPost(ForumTopic forumTopic);
+
+        /// <summary>
+        /// Gets ForumGroup SE (search engine) name
+        /// </summary>
+        /// <param name="forumGroup">ForumGroup</param>
+        /// <returns>ForumGroup SE (search engine) name</returns>
+        string GetForumGroupSeName(ForumGroup forumGroup);
+
+        /// <summary>
+        /// Gets Forum SE (search engine) name
+        /// </summary>
+        /// <param name="forum">Forum</param>
+        /// <returns>Forum SE (search engine) name</returns>
+        string GetForumSeName(Forum forum);
+
+        /// <summary>
+        /// Gets ForumTopic SE (search engine) name
+        /// </summary>
+        /// <param name="forumTopic">ForumTopic</param>
+        /// <returns>ForumTopic SE (search engine) name</returns>
+        string GetTopicSeName(ForumTopic forumTopic);
     }
 }

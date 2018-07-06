@@ -29,6 +29,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly ILocalizedModelFactory _localizedModelFactory;
         private readonly IProductService _productService;
         private readonly IStoreMappingSupportedModelFactory _storeMappingSupportedModelFactory;
+        private readonly IUrlRecordService _urlRecordService;
 
         #endregion
 
@@ -42,7 +43,8 @@ namespace Nop.Web.Areas.Admin.Factories
             IDiscountSupportedModelFactory discountSupportedModelFactory,
             ILocalizedModelFactory localizedModelFactory,
             IProductService productService,
-            IStoreMappingSupportedModelFactory storeMappingSupportedModelFactory)
+            IStoreMappingSupportedModelFactory storeMappingSupportedModelFactory,
+            IUrlRecordService urlRecordService)
         {
             this._catalogSettings = catalogSettings;
             this._aclSupportedModelFactory = aclSupportedModelFactory;
@@ -53,6 +55,7 @@ namespace Nop.Web.Areas.Admin.Factories
             this._localizedModelFactory = localizedModelFactory;
             this._productService = productService;
             this._storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
+            this._urlRecordService = urlRecordService;
         }
 
         #endregion
@@ -160,7 +163,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     locale.MetaKeywords = manufacturer.GetLocalized(entity => entity.MetaKeywords, languageId, false, false);
                     locale.MetaDescription = manufacturer.GetLocalized(entity => entity.MetaDescription, languageId, false, false);
                     locale.MetaTitle = manufacturer.GetLocalized(entity => entity.MetaTitle, languageId, false, false);
-                    locale.SeName = manufacturer.GetSeName(languageId, false, false);
+                    locale.SeName = _urlRecordService.GetSeName(manufacturer, languageId, false, false);
                 };
             }
 

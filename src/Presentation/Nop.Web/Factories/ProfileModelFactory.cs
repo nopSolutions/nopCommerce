@@ -228,7 +228,7 @@ namespace Nop.Web.Factories
                 {
                     ForumTopicId = forumPost.TopicId,
                     ForumTopicTitle = forumPost.ForumTopic.Subject,
-                    ForumTopicSlug = forumPost.ForumTopic.GetSeName(),
+                    ForumTopicSlug = _forumService.GetTopicSeName(forumPost.ForumTopic),
                     ForumPostText = _forumService.FormatPostText(forumPost),
                     Posted = posted
                 });

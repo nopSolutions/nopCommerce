@@ -30,6 +30,7 @@ namespace Nop.Web.Framework.UI
         private readonly IHostingEnvironment _hostingEnvironment;
         private readonly IStaticCacheManager _cacheManager;
         private readonly INopFileProvider _fileProvider;
+        private readonly IUrlRecordService _urlRecordService;
         private BundleFileProcessor _processor;
 
         private readonly List<string> _titleParts;
@@ -61,12 +62,14 @@ namespace Nop.Web.Framework.UI
         public PageHeadBuilder(SeoSettings seoSettings,
             IHostingEnvironment hostingEnvironment,
             IStaticCacheManager cacheManager,
-            INopFileProvider fileProvider)
+            INopFileProvider fileProvider,
+            IUrlRecordService urlRecordService)
         {
             this._seoSettings = seoSettings;
             this._hostingEnvironment = hostingEnvironment;
             this._cacheManager = cacheManager;
             this._fileProvider = fileProvider;
+            this._urlRecordService = urlRecordService;
             this._processor = new BundleFileProcessor();
 
             this._titleParts = new List<string>();
@@ -110,7 +113,8 @@ namespace Nop.Web.Framework.UI
                 hash = WebEncoders.Base64UrlEncode(input);
             }
             //ensure only valid chars
-            hash = SeoExtensions.GetSeName(hash);
+            hash = _urlRecordService.GetSeName(hash, _seoSettings.ConvertNonWesternChars, _seoSettings.AllowUnicodeCharsInUrls);
+
             return hash;
         }
 
@@ -378,7 +382,7 @@ namespace Nop.Web.Framework.UI
                             //BundleHandler.AddBundle(configFilePath, bundle);
 
                             //process
-                            _processor.Process(configFilePath, new List<Bundle> {bundle});
+                            _processor.Process(configFilePath, new List<Bundle> { bundle });
                             _cacheManager.Set(cacheKey, false, RecheckBundledFilesPeriod);
                         }
                     }

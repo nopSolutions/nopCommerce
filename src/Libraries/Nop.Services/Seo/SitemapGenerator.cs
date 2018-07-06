@@ -41,6 +41,7 @@ namespace Nop.Services.Seo
         private readonly ForumSettings _forumSettings;
         private readonly SecuritySettings _securitySettings;
         private readonly IProductTagService _productTagService;
+        private readonly IUrlRecordService _urlRecordService;
 
         #endregion
 
@@ -76,7 +77,8 @@ namespace Nop.Services.Seo
             NewsSettings newsSettings,
             ForumSettings forumSettings,
             SecuritySettings securitySettings,
-            IProductTagService productTagService)
+            IProductTagService productTagService,
+            IUrlRecordService urlRecordService)
         {
             this._storeContext = storeContext;
             this._categoryService = categoryService;
@@ -92,6 +94,7 @@ namespace Nop.Services.Seo
             this._forumSettings = forumSettings;
             this._securitySettings = securitySettings;
             this._productTagService = productTagService;
+            this._urlRecordService = urlRecordService;
         }
 
         #endregion
@@ -230,7 +233,7 @@ namespace Nop.Services.Seo
             var urlHelper = GetUrlHelper();
             return _categoryService.GetAllCategories().Select(category =>
             {
-                var url = urlHelper.RouteUrl("Category", new { SeName = category.GetSeName() }, GetHttpProtocol());
+                var url = urlHelper.RouteUrl("Category", new { SeName = _urlRecordService.GetSeName(category) }, GetHttpProtocol());
                 return new SitemapUrl(url, UpdateFrequency.Weekly, category.UpdatedOnUtc);
             });
         }
@@ -244,7 +247,7 @@ namespace Nop.Services.Seo
             var urlHelper = GetUrlHelper();
             return _manufacturerService.GetAllManufacturers(storeId: _storeContext.CurrentStore.Id).Select(manufacturer =>
             {
-                var url = urlHelper.RouteUrl("Manufacturer", new { SeName = manufacturer.GetSeName() }, GetHttpProtocol());
+                var url = urlHelper.RouteUrl("Manufacturer", new { SeName = _urlRecordService.GetSeName(manufacturer) }, GetHttpProtocol());
                 return new SitemapUrl(url, UpdateFrequency.Weekly, manufacturer.UpdatedOnUtc);
             });
         }
@@ -258,10 +261,10 @@ namespace Nop.Services.Seo
             var urlHelper = GetUrlHelper();
             return _productService.SearchProducts(storeId: _storeContext.CurrentStore.Id,
                 visibleIndividuallyOnly: true, orderBy: ProductSortingEnum.CreatedOn).Select(product =>
-            { 
-                var url = urlHelper.RouteUrl("Product", new { SeName = product.GetSeName() }, GetHttpProtocol());
-                return new SitemapUrl(url, UpdateFrequency.Weekly, product.UpdatedOnUtc);
-            });
+                {
+                    var url = urlHelper.RouteUrl("Product", new { SeName = _urlRecordService.GetSeName(product) }, GetHttpProtocol());
+                    return new SitemapUrl(url, UpdateFrequency.Weekly, product.UpdatedOnUtc);
+                });
         }
 
         /// <summary>
@@ -273,7 +276,7 @@ namespace Nop.Services.Seo
             var urlHelper = GetUrlHelper();
             return _productTagService.GetAllProductTags().Select(productTag =>
             {
-                var url = urlHelper.RouteUrl("ProductsByTag", new { SeName = productTag.GetSeName() }, GetHttpProtocol());
+                var url = urlHelper.RouteUrl("ProductsByTag", new { SeName = _urlRecordService.GetSeName(productTag) }, GetHttpProtocol());
                 return new SitemapUrl(url, UpdateFrequency.Weekly, DateTime.UtcNow);
             });
         }
@@ -287,7 +290,7 @@ namespace Nop.Services.Seo
             var urlHelper = GetUrlHelper();
             return _topicService.GetAllTopics(_storeContext.CurrentStore.Id).Where(t => t.IncludeInSitemap).Select(topic =>
             {
-                var url = urlHelper.RouteUrl("Topic", new { SeName = topic.GetSeName() }, GetHttpProtocol());
+                var url = urlHelper.RouteUrl("Topic", new { SeName = _urlRecordService.GetSeName(topic) }, GetHttpProtocol());
                 return new SitemapUrl(url, UpdateFrequency.Weekly, DateTime.UtcNow);
             });
         }
@@ -300,7 +303,7 @@ namespace Nop.Services.Seo
         {
             var storeLocation = _webHelper.GetStoreLocation();
 
-            return _commonSettings.SitemapCustomUrls.Select(customUrl => 
+            return _commonSettings.SitemapCustomUrls.Select(customUrl =>
                 new SitemapUrl(string.Concat(storeLocation, customUrl), UpdateFrequency.Weekly, DateTime.UtcNow));
         }
 
@@ -415,7 +418,7 @@ namespace Nop.Services.Seo
 
                 //otherwise write a certain numbered sitemap file into the stream
                 WriteSitemap(stream, sitemaps.ElementAt(id.Value - 1));
-                
+
             }
             else
             {

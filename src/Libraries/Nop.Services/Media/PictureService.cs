@@ -45,6 +45,7 @@ namespace Nop.Services.Media
         private readonly IDataProvider _dataProvider;
         private readonly INopFileProvider _fileProvider;
         private readonly IRepository<PictureBinary> _pictureBinaryRepository;
+        private readonly IUrlRecordService _urlRecordService;
 
         #endregion
 
@@ -74,7 +75,8 @@ namespace Nop.Services.Media
             MediaSettings mediaSettings,
             IDataProvider dataProvider,
             INopFileProvider fileProvider,
-            IRepository<PictureBinary> pictureBinaryRepository)
+            IRepository<PictureBinary> pictureBinaryRepository,
+            IUrlRecordService urlRecordService)
         {
             this._pictureRepository = pictureRepository;
             this._productPictureRepository = productPictureRepository;
@@ -87,6 +89,7 @@ namespace Nop.Services.Media
             this._dataProvider = dataProvider;
             this._fileProvider = fileProvider;
             this._pictureBinaryRepository = pictureBinaryRepository;
+            this._urlRecordService = urlRecordService;
         }
 
         #endregion
@@ -438,7 +441,7 @@ namespace Nop.Services.Media
         /// <returns>Result</returns>
         public virtual string GetPictureSeName(string name)
         {
-            return SeoExtensions.GetSeName(name, true, false);
+            return _urlRecordService.GetSeName(name, true, false);
         }
 
         /// <summary>

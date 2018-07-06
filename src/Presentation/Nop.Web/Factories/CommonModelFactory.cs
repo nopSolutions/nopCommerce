@@ -77,6 +77,7 @@ namespace Nop.Web.Factories
         private readonly IThemeProvider _themeProvider;
         private readonly ITopicService _topicService;
         private readonly IUrlHelperFactory _urlHelperFactory;
+        private readonly IUrlRecordService _urlRecordService;
         private readonly IWebHelper _webHelper;
         private readonly IWorkContext _workContext;
         private readonly LocalizationSettings _localizationSettings;
@@ -118,6 +119,7 @@ namespace Nop.Web.Factories
             IThemeProvider themeProvider,
             ITopicService topicService,
             IUrlHelperFactory urlHelperFactory,
+            IUrlRecordService urlRecordService,
             IWebHelper webHelper,
             IWorkContext workContext,
             LocalizationSettings localizationSettings,
@@ -155,6 +157,7 @@ namespace Nop.Web.Factories
             this._themeProvider = themeProvider;
             this._topicService = topicService;
             this._urlHelperFactory = urlHelperFactory;
+            this._urlRecordService = urlRecordService;
             this._webHelper = webHelper;
             this._workContext = workContext;
             this._localizationSettings = localizationSettings;
@@ -414,7 +417,7 @@ namespace Nop.Web.Factories
                 {
                     Id = t.Id,
                     Name = t.GetLocalized(x => x.Title),
-                    SeName = t.GetSeName(),
+                    SeName = _urlRecordService.GetSeName(t),
                     IncludeInFooterColumn1 = t.IncludeInFooterColumn1,
                     IncludeInFooterColumn2 = t.IncludeInFooterColumn2,
                     IncludeInFooterColumn3 = t.IncludeInFooterColumn3
@@ -605,7 +608,7 @@ namespace Nop.Web.Factories
                 {
                     GroupTitle = commonGroupTitle,
                     Name = topic.GetLocalized(x => x.Title),
-                    Url = urlHelper.RouteUrl("Topic", new { SeName = topic.GetSeName() })
+                    Url = urlHelper.RouteUrl("Topic", new { SeName = _urlRecordService.GetSeName(topic) })
                 }));
 
                 //categories
@@ -617,7 +620,7 @@ namespace Nop.Web.Factories
                     {
                         GroupTitle = categoriesGroupTitle,
                         Name = category.GetLocalized(x => x.Name),
-                        Url = urlHelper.RouteUrl("Category", new { SeName = category.GetSeName() })
+                        Url = urlHelper.RouteUrl("Category", new { SeName = _urlRecordService.GetSeName(category) })
                     }));
                 }
 
@@ -630,7 +633,7 @@ namespace Nop.Web.Factories
                     {
                         GroupTitle = manufacturersGroupTitle,
                         Name = manufacturer.GetLocalized(x => x.Name),
-                        Url = urlHelper.RouteUrl("Manufacturer", new { SeName = manufacturer.GetSeName() })
+                        Url = urlHelper.RouteUrl("Manufacturer", new { SeName = _urlRecordService.GetSeName(manufacturer) })
                     }));
                 }
 
@@ -643,7 +646,7 @@ namespace Nop.Web.Factories
                     {
                         GroupTitle = productsGroupTitle,
                         Name = product.GetLocalized(x => x.Name),
-                        Url = urlHelper.RouteUrl("Product", new { SeName = product.GetSeName() })
+                        Url = urlHelper.RouteUrl("Product", new { SeName = _urlRecordService.GetSeName(product) })
                     }));
                 }
 
@@ -656,7 +659,7 @@ namespace Nop.Web.Factories
                     {
                         GroupTitle = productTagsGroupTitle,
                         Name = productTag.GetLocalized(x => x.Name),
-                        Url = urlHelper.RouteUrl("ProductsByTag", new { SeName = productTag.GetSeName() })
+                        Url = urlHelper.RouteUrl("ProductsByTag", new { SeName = _urlRecordService.GetSeName(productTag) })
                     }));
                 }
 

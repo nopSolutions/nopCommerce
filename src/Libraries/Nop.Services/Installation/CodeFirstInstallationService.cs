@@ -107,6 +107,7 @@ namespace Nop.Services.Installation
         private readonly IWebHelper _webHelper;
         private readonly IHostingEnvironment _hostingEnvironment;
         private readonly INopFileProvider _fileProvider;
+        private readonly IUrlRecordService _urlRecordService;
 
         #endregion
 
@@ -168,7 +169,8 @@ namespace Nop.Services.Installation
             IGenericAttributeService genericAttributeService,
             IWebHelper webHelper,
             IHostingEnvironment hostingEnvironment,
-            INopFileProvider fileProvider)
+            INopFileProvider fileProvider,
+            IUrlRecordService urlRecordService)
         {
             this._storeRepository = storeRepository;
             this._measureDimensionRepository = measureDimensionRepository;
@@ -227,6 +229,7 @@ namespace Nop.Services.Installation
             this._webHelper = webHelper;
             this._hostingEnvironment = hostingEnvironment;
             this._fileProvider = fileProvider;
+            this._urlRecordService = urlRecordService;
         }
 
         #endregion
@@ -5890,7 +5893,7 @@ namespace Nop.Services.Installation
                     EntityName = "Topic",
                     LanguageId = 0,
                     IsActive = true,
-                    Slug = topic.ValidateSeName("", !string.IsNullOrEmpty(topic.Title) ? topic.Title : topic.SystemName, true)
+                    Slug = _urlRecordService.ValidateSeName(topic, "", !string.IsNullOrEmpty(topic.Title) ? topic.Title : topic.SystemName, true)
                 });
             }
         }
@@ -6024,7 +6027,7 @@ namespace Nop.Services.Installation
                 Weight = true,
                 Dimensions = true,
                 ProductAttributes = true,
-                SpecificationAttributes =true
+                SpecificationAttributes = true
             });
 
             settingService.SaveSetting(new GdprSettings
@@ -6064,7 +6067,7 @@ namespace Nop.Services.Installation
                 RecentlyViewedProductsNumber = 3,
                 RecentlyViewedProductsEnabled = true,
                 NewProductsNumber = 6,
-                NewProductsEnabled = true,                
+                NewProductsEnabled = true,
                 CompareProductsEnabled = true,
                 CompareProductsNumber = 4,
                 ProductSearchAutoCompleteEnabled = true,
@@ -7069,7 +7072,7 @@ namespace Nop.Services.Installation
                     EntityName = "Category",
                     LanguageId = 0,
                     IsActive = true,
-                    Slug = category.ValidateSeName("", category.Name, true)
+                    Slug = _urlRecordService.ValidateSeName(category, "", category.Name, true)
                 });
             }
         }
@@ -7142,7 +7145,7 @@ namespace Nop.Services.Installation
                     EntityName = "Manufacturer",
                     LanguageId = 0,
                     IsActive = true,
-                    Slug = manufacturer.ValidateSeName("", manufacturer.Name, true)
+                    Slug = _urlRecordService.ValidateSeName(manufacturer, "", manufacturer.Name, true)
                 });
             }
         }
@@ -9903,7 +9906,7 @@ namespace Nop.Services.Installation
             #endregion
 
             #region Jewelry
-            
+
             var productElegantGemstoneNecklace = new Product
             {
                 ProductType = ProductType.SimpleProduct,
@@ -10200,7 +10203,7 @@ namespace Nop.Services.Installation
                     EntityName = "Product",
                     LanguageId = 0,
                     IsActive = true,
-                    Slug = product.ValidateSeName("", product.Name, true)
+                    Slug = _urlRecordService.ValidateSeName(product, "", product.Name, true)
                 });
             }
 
@@ -10875,7 +10878,7 @@ namespace Nop.Services.Installation
                     EntityName = "BlogPost",
                     LanguageId = blogPost.LanguageId,
                     IsActive = true,
-                    Slug = blogPost.ValidateSeName("", blogPost.Title, true)
+                    Slug = _urlRecordService.ValidateSeName(blogPost, "", blogPost.Title, true)
                 });
             }
 
@@ -10952,7 +10955,7 @@ namespace Nop.Services.Installation
                     EntityName = "NewsItem",
                     LanguageId = newsItem.LanguageId,
                     IsActive = true,
-                    Slug = newsItem.ValidateSeName("", newsItem.Title, true)
+                    Slug = _urlRecordService.ValidateSeName(newsItem, "", newsItem.Title, true)
                 });
             }
 
@@ -12172,7 +12175,7 @@ namespace Nop.Services.Installation
                     EntityName = "Vendor",
                     LanguageId = 0,
                     IsActive = true,
-                    Slug = vendor.ValidateSeName("", vendor.Name, true)
+                    Slug = _urlRecordService.ValidateSeName(vendor, "", vendor.Name, true)
                 });
             }
         }
@@ -12223,7 +12226,7 @@ namespace Nop.Services.Installation
                 EntityName = "ProductTag",
                 LanguageId = 0,
                 IsActive = true,
-                Slug = productTag.ValidateSeName("", productTag.Name, true)
+                Slug = _urlRecordService.ValidateSeName(productTag, "", productTag.Name, true)
             });
         }
 

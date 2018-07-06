@@ -250,7 +250,7 @@ namespace Nop.Web.Controllers
                 };
                 _vendorService.InsertVendor(vendor);
                 //search engine name (the same as vendor name)
-                var seName = vendor.ValidateSeName(vendor.Name, vendor.Name, true);
+                var seName = _urlRecordService.ValidateSeName(vendor, vendor.Name, vendor.Name, true);
                 _urlRecordService.SaveSlug(vendor, seName, 0);
 
                 //associate to the current customer

@@ -178,7 +178,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     localized.LanguageId);
 
                 //search engine name
-                var seName = product.ValidateSeName(localized.SeName, localized.Name, false);
+                var seName = _urlRecordService.ValidateSeName(product, localized.SeName, localized.Name, false);
                 _urlRecordService.SaveSlug(product, seName, localized.LanguageId);
             }
         }
@@ -192,7 +192,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     localized.Name,
                     localized.LanguageId);
 
-                var seName = productTag.ValidateSeName(string.Empty, localized.Name, false);
+                var seName = _urlRecordService.ValidateSeName(productTag, string.Empty, localized.Name, false);
                 _urlRecordService.SaveSlug(productTag, seName, localized.LanguageId);
             }
         }
@@ -843,7 +843,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _productService.InsertProduct(product);
 
                 //search engine name
-                model.SeName = product.ValidateSeName(model.SeName, product.Name, true);
+                model.SeName = _urlRecordService.ValidateSeName(product, model.SeName, product.Name, true);
                 _urlRecordService.SaveSlug(product, model.SeName, 0);
 
                 //locales
@@ -965,7 +965,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _productService.UpdateProduct(product);
 
                 //search engine name
-                model.SeName = product.ValidateSeName(model.SeName, product.Name, true);
+                model.SeName = _urlRecordService.ValidateSeName(product, model.SeName, product.Name, true);
                 _urlRecordService.SaveSlug(product, model.SeName, 0);
 
                 //locales

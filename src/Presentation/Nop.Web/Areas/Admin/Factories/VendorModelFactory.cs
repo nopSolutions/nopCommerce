@@ -32,6 +32,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ILocalizedModelFactory _localizedModelFactory;
+        private readonly IUrlRecordService _urlRecordService;
         private readonly IVendorAttributeParser _vendorAttributeParser;
         private readonly IVendorAttributeService _vendorAttributeService;
         private readonly IVendorService _vendorService;
@@ -48,6 +49,7 @@ namespace Nop.Web.Areas.Admin.Factories
             IDateTimeHelper dateTimeHelper,
             IGenericAttributeService genericAttributeService,
             ILocalizedModelFactory localizedModelFactory,
+            IUrlRecordService urlRecordService,
             IVendorAttributeParser vendorAttributeParser,
             IVendorAttributeService vendorAttributeService,
             IVendorService vendorService,
@@ -60,6 +62,7 @@ namespace Nop.Web.Areas.Admin.Factories
             this._dateTimeHelper = dateTimeHelper;
             this._genericAttributeService = genericAttributeService;
             this._localizedModelFactory = localizedModelFactory;
+            this._urlRecordService = urlRecordService;
             this._vendorAttributeParser = vendorAttributeParser;
             this._vendorAttributeService = vendorAttributeService;
             this._vendorService = vendorService;
@@ -311,7 +314,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     locale.MetaKeywords = vendor.GetLocalized(entity => entity.MetaKeywords, languageId, false, false);
                     locale.MetaDescription = vendor.GetLocalized(entity => entity.MetaDescription, languageId, false, false);
                     locale.MetaTitle = vendor.GetLocalized(entity => entity.MetaTitle, languageId, false, false);
-                    locale.SeName = vendor.GetSeName(languageId, false, false);
+                    locale.SeName = _urlRecordService.GetSeName(vendor, languageId, false, false);
                 };
 
                 //prepare associated customers

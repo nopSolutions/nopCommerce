@@ -54,6 +54,7 @@ namespace Nop.Web.Factories
         private readonly IStaticCacheManager _cacheManager;
         private readonly IStoreContext _storeContext;
         private readonly ITopicService _topicService;
+        private readonly IUrlRecordService _urlRecordService;
         private readonly IVendorService _vendorService;
         private readonly IWebHelper _webHelper;
         private readonly IWorkContext _workContext;
@@ -86,6 +87,7 @@ namespace Nop.Web.Factories
             IStaticCacheManager cacheManager,
             IStoreContext storeContext,
             ITopicService topicService,
+            IUrlRecordService urlRecordService,
             IVendorService vendorService,
             IWebHelper webHelper,
             IWorkContext workContext,
@@ -114,6 +116,7 @@ namespace Nop.Web.Factories
             this._cacheManager = cacheManager;
             this._storeContext = storeContext;
             this._topicService = topicService;
+            this._urlRecordService = urlRecordService;
             this._vendorService = vendorService;
             this._webHelper = webHelper;
             this._workContext = workContext;
@@ -322,7 +325,7 @@ namespace Nop.Web.Factories
                 MetaKeywords = category.GetLocalized(x => x.MetaKeywords),
                 MetaDescription = category.GetLocalized(x => x.MetaDescription),
                 MetaTitle = category.GetLocalized(x => x.MetaTitle),
-                SeName = category.GetSeName(),
+                SeName = _urlRecordService.GetSeName(category),
             };
 
             //sorting
@@ -364,7 +367,7 @@ namespace Nop.Web.Factories
                     {
                         Id = catBr.Id,
                         Name = catBr.GetLocalized(x => x.Name),
-                        SeName = catBr.GetSeName()
+                        SeName = _urlRecordService.GetSeName(catBr)
                     })
                     .ToList()
                 );
@@ -388,7 +391,7 @@ namespace Nop.Web.Factories
                     {
                         Id = x.Id,
                         Name = x.GetLocalized(y => y.Name),
-                        SeName = x.GetSeName(),
+                        SeName = _urlRecordService.GetSeName(x),
                         Description = x.GetLocalized(y => y.Description)
                     };
 
@@ -557,7 +560,7 @@ namespace Nop.Web.Factories
                 {
                     Id = t.Id,
                     Name = t.GetLocalized(x => x.Title),
-                    SeName = t.GetSeName()
+                    SeName = _urlRecordService.GetSeName(t)
                 })
                 .ToList()
             );
@@ -606,7 +609,7 @@ namespace Nop.Web.Factories
                         MetaKeywords = category.GetLocalized(x => x.MetaKeywords),
                         MetaDescription = category.GetLocalized(x => x.MetaDescription),
                         MetaTitle = category.GetLocalized(x => x.MetaTitle),
-                        SeName = category.GetSeName(),
+                        SeName = _urlRecordService.GetSeName(category),
                     };
 
                     //prepare picture model
@@ -669,7 +672,7 @@ namespace Nop.Web.Factories
                 {
                     Id = category.Id,
                     Name = category.GetLocalized(x => x.Name),
-                    SeName = category.GetSeName(),
+                    SeName = _urlRecordService.GetSeName(category),
                     IncludeInTopMenu = category.IncludeInTopMenu
                 };
 
@@ -725,7 +728,7 @@ namespace Nop.Web.Factories
                 MetaKeywords = manufacturer.GetLocalized(x => x.MetaKeywords),
                 MetaDescription = manufacturer.GetLocalized(x => x.MetaDescription),
                 MetaTitle = manufacturer.GetLocalized(x => x.MetaTitle),
-                SeName = manufacturer.GetSeName(),
+                SeName = _urlRecordService.GetSeName(manufacturer),
             };
 
             //sorting
@@ -846,7 +849,7 @@ namespace Nop.Web.Factories
                     MetaKeywords = manufacturer.GetLocalized(x => x.MetaKeywords),
                     MetaDescription = manufacturer.GetLocalized(x => x.MetaDescription),
                     MetaTitle = manufacturer.GetLocalized(x => x.MetaTitle),
-                    SeName = manufacturer.GetSeName(),
+                    SeName = _urlRecordService.GetSeName(manufacturer),
                 };
 
                 //prepare picture model
@@ -899,7 +902,7 @@ namespace Nop.Web.Factories
                     {
                         Id = manufacturer.Id,
                         Name = manufacturer.GetLocalized(x => x.Name),
-                        SeName = manufacturer.GetSeName(),
+                        SeName = _urlRecordService.GetSeName(manufacturer),
                         IsActive = currentManufacturer != null && currentManufacturer.Id == manufacturer.Id,
                     };
                     model.Manufacturers.Add(modelMan);
@@ -933,7 +936,7 @@ namespace Nop.Web.Factories
                 MetaKeywords = vendor.GetLocalized(x => x.MetaKeywords),
                 MetaDescription = vendor.GetLocalized(x => x.MetaDescription),
                 MetaTitle = vendor.GetLocalized(x => x.MetaTitle),
-                SeName = vendor.GetSeName(),
+                SeName = _urlRecordService.GetSeName(vendor),
                 AllowCustomersToContactVendors = _vendorSettings.AllowCustomersToContactVendors
             };
 
@@ -981,7 +984,7 @@ namespace Nop.Web.Factories
                     MetaKeywords = vendor.GetLocalized(x => x.MetaKeywords),
                     MetaDescription = vendor.GetLocalized(x => x.MetaDescription),
                     MetaTitle = vendor.GetLocalized(x => x.MetaTitle),
-                    SeName = vendor.GetSeName(),
+                    SeName = _urlRecordService.GetSeName(vendor),
                     AllowCustomersToContactVendors = _vendorSettings.AllowCustomersToContactVendors
                 };
 
@@ -1027,7 +1030,7 @@ namespace Nop.Web.Factories
                     {
                         Id = vendor.Id,
                         Name = vendor.GetLocalized(x => x.Name),
-                        SeName = vendor.GetSeName(),
+                        SeName = _urlRecordService.GetSeName(vendor),
                     });
                 }
                 return model;
@@ -1073,7 +1076,7 @@ namespace Nop.Web.Factories
                     {
                         Id = tag.Id,
                         Name = tag.GetLocalized(y => y.Name),
-                        SeName = tag.GetSeName(),
+                        SeName = _urlRecordService.GetSeName(tag),
                         ProductCount = _productTagService.GetProductCount(tag.Id, _storeContext.CurrentStore.Id)
                     });
                 return model;
@@ -1097,7 +1100,7 @@ namespace Nop.Web.Factories
             {
                 Id = productTag.Id,
                 TagName = productTag.GetLocalized(y => y.Name),
-                TagSeName = productTag.GetSeName()
+                TagSeName = _urlRecordService.GetSeName(productTag)
             };
 
             //sorting
@@ -1144,7 +1147,7 @@ namespace Nop.Web.Factories
                     {
                         Id = x.Id,
                         Name = x.GetLocalized(y => y.Name),
-                        SeName = x.GetSeName(),
+                        SeName = _urlRecordService.GetSeName(x),
                         ProductCount = _productTagService.GetProductCount(x.Id, _storeContext.CurrentStore.Id)
                     };
                     return ptModel;

@@ -122,7 +122,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     localized.LanguageId);
 
                 //search engine name
-                var seName = manufacturer.ValidateSeName(localized.SeName, localized.Name, false);
+                var seName = _urlRecordService.ValidateSeName(manufacturer, localized.SeName, localized.Name, false);
                 _urlRecordService.SaveSlug(manufacturer, seName, localized.LanguageId);
             }
         }
@@ -243,7 +243,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _manufacturerService.InsertManufacturer(manufacturer);
 
                 //search engine name
-                model.SeName = manufacturer.ValidateSeName(model.SeName, manufacturer.Name, true);
+                model.SeName = _urlRecordService.ValidateSeName(manufacturer, model.SeName, manufacturer.Name, true);
                 _urlRecordService.SaveSlug(manufacturer, model.SeName, 0);
 
                 //locales
@@ -326,7 +326,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _manufacturerService.UpdateManufacturer(manufacturer);
 
                 //search engine name
-                model.SeName = manufacturer.ValidateSeName(model.SeName, manufacturer.Name, true);
+                model.SeName = _urlRecordService.ValidateSeName(manufacturer, model.SeName, manufacturer.Name, true);
                 _urlRecordService.SaveSlug(manufacturer, model.SeName, 0);
 
                 //locales

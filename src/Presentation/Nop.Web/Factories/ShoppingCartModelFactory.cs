@@ -79,6 +79,7 @@ namespace Nop.Web.Factories
         private readonly IStaticCacheManager _cacheManager;
         private readonly IStoreContext _storeContext;
         private readonly ITaxService _taxService;
+        private readonly IUrlRecordService _urlRecordService;
         private readonly IVendorService _vendorService;
         private readonly IWebHelper _webHelper;
         private readonly IWorkContext _workContext;
@@ -128,6 +129,7 @@ namespace Nop.Web.Factories
             IStaticCacheManager cacheManager,
             IStoreContext storeContext,
             ITaxService taxService,
+            IUrlRecordService urlRecordService,
             IVendorService vendorService,
             IWebHelper webHelper,
             IWorkContext workContext,
@@ -173,6 +175,7 @@ namespace Nop.Web.Factories
             this._cacheManager = cacheManager;
             this._storeContext = storeContext;
             this._taxService = taxService;
+            this._urlRecordService = urlRecordService;
             this._vendorService = vendorService;
             this._webHelper = webHelper;
             this._workContext = workContext;
@@ -351,7 +354,7 @@ namespace Nop.Web.Factories
                 VendorName = vendors.FirstOrDefault(v => v.Id == sci.Product.VendorId)?.Name ?? string.Empty,
                 ProductId = sci.Product.Id,
                 ProductName = sci.Product.GetLocalized(x => x.Name),
-                ProductSeName = sci.Product.GetSeName(),
+                ProductSeName = _urlRecordService.GetSeName(sci.Product),
                 Quantity = sci.Quantity,
                 AttributeInfo = _productAttributeFormatter.FormatAttributes(sci.Product, sci.AttributesXml),
             };
@@ -489,7 +492,7 @@ namespace Nop.Web.Factories
                 Sku = _productService.FormatSku(sci.Product, sci.AttributesXml),
                 ProductId = sci.Product.Id,
                 ProductName = sci.Product.GetLocalized(x => x.Name),
-                ProductSeName = sci.Product.GetSeName(),
+                ProductSeName = _urlRecordService.GetSeName(sci.Product),
                 Quantity = sci.Quantity,
                 AttributeInfo = _productAttributeFormatter.FormatAttributes(sci.Product, sci.AttributesXml),
             };
@@ -1006,7 +1009,7 @@ namespace Nop.Web.Factories
                             Id = sci.Id,
                             ProductId = sci.Product.Id,
                             ProductName = sci.Product.GetLocalized(x => x.Name),
-                            ProductSeName = sci.Product.GetSeName(),
+                            ProductSeName = _urlRecordService.GetSeName(sci.Product),
                             Quantity = sci.Quantity,
                             AttributeInfo = _productAttributeFormatter.FormatAttributes(sci.Product, sci.AttributesXml)
                         };

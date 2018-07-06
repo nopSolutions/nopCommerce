@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using Microsoft.AspNetCore.StaticFiles;
+using Microsoft.Extensions.DependencyInjection;
 using Nop.Core;
 using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
@@ -12,6 +14,7 @@ using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
+using Nop.Core.Infrastructure;
 using Nop.Services.Catalog;
 using Nop.Services.Directory;
 using Nop.Services.ExportImport.Help;
@@ -23,13 +26,10 @@ using Nop.Services.Security;
 using Nop.Services.Seo;
 using Nop.Services.Shipping;
 using Nop.Services.Shipping.Date;
+using Nop.Services.Stores;
 using Nop.Services.Tax;
 using Nop.Services.Vendors;
 using OfficeOpenXml;
-using System.Net;
-using Microsoft.Extensions.DependencyInjection;
-using Nop.Services.Stores;
-using Nop.Core.Infrastructure;
 
 namespace Nop.Services.ExportImport
 {
@@ -539,7 +539,7 @@ namespace Nop.Services.ExportImport
 
             //search engine name
             if (setSeName)
-                _urlRecordService.SaveSlug(category, category.ValidateSeName(seName, category.Name, true), 0);
+                _urlRecordService.SaveSlug(category, _urlRecordService.ValidateSeName(category, seName, category.Name, true), 0);
         }
 
         protected virtual void SetOutLineForProductAttributeRow(object cellValue, ExcelWorksheet worksheet, int endRow)
@@ -1607,7 +1607,7 @@ namespace Nop.Services.ExportImport
                     {
                         var seName = tempProperty.StringValue;
                         //search engine name
-                        _urlRecordService.SaveSlug(product, product.ValidateSeName(seName, product.Name, true), 0);
+                        _urlRecordService.SaveSlug(product, _urlRecordService.ValidateSeName(product, seName, product.Name, true), 0);
                     }
 
                     tempProperty = metadata.Manager.GetProperty("Categories");
@@ -1993,7 +1993,7 @@ namespace Nop.Services.ExportImport
 
                     //search engine name
                     if (setSeName)
-                        _urlRecordService.SaveSlug(manufacturer, manufacturer.ValidateSeName(seName, manufacturer.Name, true), 0);
+                        _urlRecordService.SaveSlug(manufacturer, _urlRecordService.ValidateSeName(manufacturer, seName, manufacturer.Name, true), 0);
 
                     iRow++;
                 }

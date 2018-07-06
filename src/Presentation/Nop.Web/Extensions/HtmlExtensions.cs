@@ -237,7 +237,8 @@ namespace Nop.Web.Extensions
                 if (topic == null)
                     return "";
 
-                return topic.GetSeName();
+                var urlRecordService = EngineContext.Current.Resolve<IUrlRecordService>();
+                return urlRecordService.GetSeName(topic);
             });
             return cachedSeName;
         }

@@ -22,7 +22,7 @@ namespace Nop.Web.Factories
     /// </summary>
     public partial class ReturnRequestModelFactory : IReturnRequestModelFactory
     {
-		#region Fields
+        #region Fields
 
         private readonly ICurrencyService _currencyService;
         private readonly IDateTimeHelper _dateTimeHelper;
@@ -33,6 +33,7 @@ namespace Nop.Web.Factories
         private readonly IReturnRequestService _returnRequestService;
         private readonly IStaticCacheManager _cacheManager;
         private readonly IStoreContext _storeContext;
+        private readonly IUrlRecordService _urlRecordService;
         private readonly IWorkContext _workContext;
         private readonly OrderSettings _orderSettings;
 
@@ -49,6 +50,7 @@ namespace Nop.Web.Factories
             IReturnRequestService returnRequestService,
             IStaticCacheManager cacheManager,
             IStoreContext storeContext,
+            IUrlRecordService urlRecordService,
             IWorkContext workContext,
             OrderSettings orderSettings)
         {
@@ -61,6 +63,7 @@ namespace Nop.Web.Factories
             this._returnRequestService = returnRequestService;
             this._cacheManager = cacheManager;
             this._storeContext = storeContext;
+            this._urlRecordService = urlRecordService;
             this._workContext = workContext;
             this._orderSettings = orderSettings;
         }
@@ -86,7 +89,7 @@ namespace Nop.Web.Factories
                 Id = orderItem.Id,
                 ProductId = orderItem.Product.Id,
                 ProductName = orderItem.Product.GetLocalized(x => x.Name),
-                ProductSeName = orderItem.Product.GetSeName(),
+                ProductSeName = _urlRecordService.GetSeName(orderItem.Product),
                 AttributeInfo = orderItem.AttributeDescription,
                 Quantity = orderItem.Quantity
             };
@@ -189,7 +192,7 @@ namespace Nop.Web.Factories
                         ReturnRequestStatus = returnRequest.ReturnRequestStatus.GetLocalizedEnum(_localizationService, _workContext),
                         ProductId = product.Id,
                         ProductName = product.GetLocalized(x => x.Name),
-                        ProductSeName = product.GetSeName(),
+                        ProductSeName = _urlRecordService.GetSeName(product),
                         Quantity = returnRequest.Quantity,
                         ReturnAction = returnRequest.RequestedAction,
                         ReturnReason = returnRequest.ReasonForReturn,
@@ -203,7 +206,7 @@ namespace Nop.Web.Factories
 
             return model;
         }
-        
+
         #endregion
     }
 }

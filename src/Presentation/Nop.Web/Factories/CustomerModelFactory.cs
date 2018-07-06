@@ -63,6 +63,7 @@ namespace Nop.Web.Factories
         private readonly IStateProvinceService _stateProvinceService;
         private readonly IStoreContext _storeContext;
         private readonly IStoreMappingService _storeMappingService;
+        private readonly IUrlRecordService _urlRecordService;
         private readonly IWorkContext _workContext;
         private readonly MediaSettings _mediaSettings;
         private readonly OrderSettings _orderSettings;
@@ -101,6 +102,7 @@ namespace Nop.Web.Factories
             IStateProvinceService stateProvinceService,
             IStoreContext storeContext,
             IStoreMappingService storeMappingService,
+            IUrlRecordService urlRecordService,
             IWorkContext workContext,
             MediaSettings mediaSettings,
             OrderSettings orderSettings,
@@ -135,6 +137,7 @@ namespace Nop.Web.Factories
             this._stateProvinceService = stateProvinceService;
             this._storeContext = storeContext;
             this._storeMappingService = storeMappingService;
+            this._urlRecordService = urlRecordService;
             this._workContext = workContext;
             this._mediaSettings = mediaSettings;
             this._orderSettings = orderSettings;
@@ -819,7 +822,7 @@ namespace Nop.Web.Factories
                     CustomOrderNumber = item.Order.CustomOrderNumber,
                     CreatedOn = _dateTimeHelper.ConvertToUserTime(item.Order.CreatedOnUtc, DateTimeKind.Utc),
                     ProductName = item.Product.GetLocalized(x => x.Name),
-                    ProductSeName = item.Product.GetSeName(),
+                    ProductSeName = _urlRecordService.GetSeName(item.Product),
                     ProductAttributes = item.AttributeDescription,
                     ProductId = item.ProductId
                 };

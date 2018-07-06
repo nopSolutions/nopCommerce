@@ -50,6 +50,7 @@ namespace Nop.Web.Factories
         private readonly IShipmentService _shipmentService;
         private readonly IShippingService _shippingService;
         private readonly IStoreContext _storeContext;
+        private readonly IUrlRecordService _urlRecordService;
         private readonly IVendorService _vendorService;
         private readonly IWorkContext _workContext;
         private readonly OrderSettings _orderSettings;
@@ -82,6 +83,7 @@ namespace Nop.Web.Factories
             IShipmentService shipmentService,
             IShippingService shippingService,
             IStoreContext storeContext,
+            IUrlRecordService urlRecordService,
             IVendorService vendorService,
             IWorkContext workContext,
             OrderSettings orderSettings,
@@ -110,6 +112,7 @@ namespace Nop.Web.Factories
             this._shipmentService = shipmentService;
             this._shippingService = shippingService;
             this._storeContext = storeContext;
+            this._urlRecordService = urlRecordService;
             this._vendorService = vendorService;
             this._workContext = workContext;
             this._orderSettings = orderSettings;
@@ -409,7 +412,7 @@ namespace Nop.Web.Factories
                     VendorName = vendors.FirstOrDefault(v => v.Id == orderItem.Product.VendorId)?.Name ?? string.Empty,
                     ProductId = orderItem.Product.Id,
                     ProductName = orderItem.Product.GetLocalized(x => x.Name),
-                    ProductSeName = orderItem.Product.GetSeName(),
+                    ProductSeName = _urlRecordService.GetSeName(orderItem.Product),
                     Quantity = orderItem.Quantity,
                     AttributeInfo = orderItem.AttributeDescription,
                 };
@@ -519,7 +522,7 @@ namespace Nop.Web.Factories
                     Sku = _productService.FormatSku(orderItem.Product, orderItem.AttributesXml),
                     ProductId = orderItem.Product.Id,
                     ProductName = orderItem.Product.GetLocalized(x => x.Name),
-                    ProductSeName = orderItem.Product.GetSeName(),
+                    ProductSeName = _urlRecordService.GetSeName(orderItem.Product),
                     AttributeInfo = orderItem.AttributeDescription,
                     QuantityOrdered = orderItem.Quantity,
                     QuantityShipped = shipmentItem.Quantity,

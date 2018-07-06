@@ -64,6 +64,7 @@ namespace Nop.Web.Factories
         private readonly IStaticCacheManager _cacheManager;
         private readonly IStoreContext _storeContext;
         private readonly ITaxService _taxService;
+        private readonly IUrlRecordService _urlRecordService;
         private readonly IVendorService _vendorService;
         private readonly IWebHelper _webHelper;
         private readonly IWorkContext _workContext;
@@ -102,6 +103,7 @@ namespace Nop.Web.Factories
             IStaticCacheManager cacheManager,
             IStoreContext storeContext,
             ITaxService taxService,
+            IUrlRecordService urlRecordService,
             IVendorService vendorService,
             IWebHelper webHelper,
             IWorkContext workContext,
@@ -136,6 +138,7 @@ namespace Nop.Web.Factories
             this._cacheManager = cacheManager;
             this._storeContext = storeContext;
             this._taxService = taxService;
+            this._urlRecordService = urlRecordService;
             this._vendorService = vendorService;
             this._webHelper = webHelper;
             this._workContext = workContext;
@@ -499,7 +502,7 @@ namespace Nop.Web.Factories
                     Enabled = _catalogSettings.CategoryBreadcrumbEnabled,
                     ProductId = product.Id,
                     ProductName = product.GetLocalized(x => x.Name),
-                    ProductSeName = product.GetSeName()
+                    ProductSeName = _urlRecordService.GetSeName(product)
                 };
                 var productCategories = _categoryService.GetProductCategoriesByProductId(product.Id);
                 if (!productCategories.Any())
@@ -515,7 +518,7 @@ namespace Nop.Web.Factories
                     {
                         Id = catBr.Id,
                         Name = catBr.GetLocalized(x => x.Name),
-                        SeName = catBr.GetSeName(),
+                        SeName = _urlRecordService.GetSeName(catBr),
                         IncludeInTopMenu = catBr.IncludeInTopMenu
                     });
                 }
@@ -544,7 +547,7 @@ namespace Nop.Web.Factories
                 {
                     Id = x.Id,
                     Name = x.GetLocalized(y => y.Name),
-                    SeName = x.GetSeName(),
+                    SeName = _urlRecordService.GetSeName(x),
                     ProductCount = _productTagService.GetProductCount(x.Id, _storeContext.CurrentStore.Id)
                 })
                 .ToList());
@@ -996,7 +999,7 @@ namespace Nop.Web.Factories
                         {
                             Id = manufacturer.Id,
                             Name = manufacturer.GetLocalized(x => x.Name),
-                            SeName = manufacturer.GetSeName()
+                            SeName = _urlRecordService.GetSeName(manufacturer)
                         };
                         return modelMan;
                     })
@@ -1131,7 +1134,7 @@ namespace Nop.Web.Factories
                     Name = product.GetLocalized(x => x.Name),
                     ShortDescription = product.GetLocalized(x => x.ShortDescription),
                     FullDescription = product.GetLocalized(x => x.FullDescription),
-                    SeName = product.GetSeName(),
+                    SeName = _urlRecordService.GetSeName(product),
                     Sku = product.Sku,
                     ProductType = product.ProductType,
                     MarkAsNew = product.MarkAsNew &&
@@ -1188,7 +1191,7 @@ namespace Nop.Web.Factories
                 MetaKeywords = product.GetLocalized(x => x.MetaKeywords),
                 MetaDescription = product.GetLocalized(x => x.MetaDescription),
                 MetaTitle = product.GetLocalized(x => x.MetaTitle),
-                SeName = product.GetSeName(),
+                SeName = _urlRecordService.GetSeName(product),
                 ProductType = product.ProductType,
                 ShowSku = _catalogSettings.ShowSkuOnProductDetailsPage,
                 Sku = product.Sku,
@@ -1242,7 +1245,7 @@ namespace Nop.Web.Factories
                     {
                         Id = vendor.Id,
                         Name = vendor.GetLocalized(x => x.Name),
-                        SeName = vendor.GetSeName(),
+                        SeName = _urlRecordService.GetSeName(vendor),
                     };
                 }
             }
@@ -1388,7 +1391,7 @@ namespace Nop.Web.Factories
 
             model.ProductId = product.Id;
             model.ProductName = product.GetLocalized(x => x.Name);
-            model.ProductSeName = product.GetSeName();
+            model.ProductSeName = _urlRecordService.GetSeName(product);
 
             var productReviews = _catalogSettings.ShowProductReviewsPerStore
                 ? product.ProductReviews.Where(pr => pr.IsApproved && pr.StoreId == _storeContext.CurrentStore.Id)
@@ -1520,7 +1523,7 @@ namespace Nop.Web.Factories
                     Title = review.Title,
                     ProductId = product.Id,
                     ProductName = product.GetLocalized(p => p.Name),
-                    ProductSeName = product.GetSeName(),
+                    ProductSeName = _urlRecordService.GetSeName(product),
                     Rating = review.Rating,
                     ReviewText = review.ReviewText,
                     ReplyText = review.ReplyText,
@@ -1585,7 +1588,7 @@ namespace Nop.Web.Factories
 
             model.ProductId = product.Id;
             model.ProductName = product.GetLocalized(x => x.Name);
-            model.ProductSeName = product.GetSeName();
+            model.ProductSeName = _urlRecordService.GetSeName(product);
             model.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnEmailProductToFriendPage;
             if (!excludeProperties)
             {

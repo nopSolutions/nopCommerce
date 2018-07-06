@@ -149,7 +149,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     string.Format(_localizationService.GetResource("ActivityLog.AddNewNews"), newsItem.Id), newsItem);
 
                 //search engine name
-                var seName = newsItem.ValidateSeName(model.SeName, model.Title, true);
+                var seName = _urlRecordService.ValidateSeName(newsItem, model.SeName, model.Title, true);
                 _urlRecordService.SaveSlug(newsItem, seName, newsItem.LanguageId);
 
                 //Stores
@@ -212,7 +212,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     string.Format(_localizationService.GetResource("ActivityLog.EditNews"), newsItem.Id), newsItem);
 
                 //search engine name
-                var seName = newsItem.ValidateSeName(model.SeName, model.Title, true);
+                var seName = _urlRecordService.ValidateSeName(newsItem, model.SeName, model.Title, true);
                 _urlRecordService.SaveSlug(newsItem, seName, newsItem.LanguageId);
 
                 //stores

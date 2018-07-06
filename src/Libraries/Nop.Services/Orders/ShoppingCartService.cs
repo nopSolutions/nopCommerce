@@ -57,6 +57,7 @@ namespace Nop.Services.Orders
         private readonly IActionContextAccessor _actionContextAccessor;
         private readonly IUrlHelperFactory _urlHelperFactory;
         private readonly IShippingService _shippingService;
+        private readonly IUrlRecordService _urlRecordService;
 
         #endregion
 
@@ -113,8 +114,9 @@ namespace Nop.Services.Orders
             IProductAttributeService productAttributeService,
             IDateTimeHelper dateTimeHelper,
             IActionContextAccessor actionContextAccessor,
-            IUrlHelperFactory urlHelperFactory, 
-            IShippingService shippingService)
+            IUrlHelperFactory urlHelperFactory,
+            IShippingService shippingService,
+            IUrlRecordService urlRecordService)
         {
             this._sciRepository = sciRepository;
             this._workContext = workContext;
@@ -141,6 +143,7 @@ namespace Nop.Services.Orders
             this._actionContextAccessor = actionContextAccessor;
             this._urlHelperFactory = urlHelperFactory;
             this._shippingService = shippingService;
+            this._urlRecordService = urlRecordService;
         }
 
         #endregion
@@ -313,7 +316,7 @@ namespace Nop.Services.Orders
                 //prepare warning message
                 var requiredProductName = WebUtility.HtmlEncode(requiredProduct.GetLocalized(x => x.Name));
                 var requiredProductWarning = _catalogSettings.UseLinksInRequiredProductWarnings
-                    ? string.Format(warningLocale, $"<a href=\"{(urlHelper.RouteUrl(nameof(Product), new { SeName = requiredProduct.GetSeName() }))}\">{requiredProductName}</a>", requiredProductRequiredQuantity)
+                    ? string.Format(warningLocale, $"<a href=\"{(urlHelper.RouteUrl(nameof(Product), new { SeName = _urlRecordService.GetSeName(requiredProduct) }))}\">{requiredProductName}</a>", requiredProductRequiredQuantity)
                     : string.Format(warningLocale, requiredProductName, requiredProductRequiredQuantity);
 
                 //add to cart (if possible)

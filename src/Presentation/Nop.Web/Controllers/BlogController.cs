@@ -41,13 +41,14 @@ namespace Nop.Web.Controllers
         private readonly IPermissionService _permissionService;
         private readonly IStoreContext _storeContext;
         private readonly IStoreMappingService _storeMappingService;
+        private readonly IUrlRecordService _urlRecordService;
         private readonly IWebHelper _webHelper;
         private readonly IWorkContext _workContext;
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly LocalizationSettings _localizationSettings;
-        
+
         #endregion
-        
+
         #region Ctor
 
         public BlogController(BlogSettings blogSettings,
@@ -60,6 +61,7 @@ namespace Nop.Web.Controllers
             IPermissionService permissionService,
             IStoreContext storeContext,
             IStoreMappingService storeMappingService,
+            IUrlRecordService urlRecordService,
             IWebHelper webHelper,
             IWorkContext workContext,
             IWorkflowMessageService workflowMessageService,
@@ -75,6 +77,7 @@ namespace Nop.Web.Controllers
             this._permissionService = permissionService;
             this._storeContext = storeContext;
             this._storeMappingService = storeMappingService;
+            this._urlRecordService = urlRecordService;
             this._webHelper = webHelper;
             this._workContext = workContext;
             this._workflowMessageService = workflowMessageService;
@@ -82,7 +85,7 @@ namespace Nop.Web.Controllers
         }
 
         #endregion
-        
+
         #region Methods
 
         public virtual IActionResult List(BlogPagingFilteringModel command)
@@ -127,7 +130,7 @@ namespace Nop.Web.Controllers
             var blogPosts = _blogService.GetAllBlogPosts(_storeContext.CurrentStore.Id, languageId);
             foreach (var blogPost in blogPosts)
             {
-                var blogPostUrl = Url.RouteUrl("BlogPost", new { SeName = blogPost.GetSeName(blogPost.LanguageId, ensureTwoPublishedLanguages: false) }, _webHelper.CurrentRequestProtocol);
+                var blogPostUrl = Url.RouteUrl("BlogPost", new { SeName = _urlRecordService.GetSeName(blogPost, blogPost.LanguageId, ensureTwoPublishedLanguages: false) }, _webHelper.CurrentRequestProtocol);
                 items.Add(new RssItem(blogPost.Title, blogPost.Body, new Uri(blogPostUrl),
                     $"urn:store:{_storeContext.CurrentStore.Id}:blog:post:{blogPost.Id}", blogPost.CreatedOnUtc));
             }
@@ -143,7 +146,7 @@ namespace Nop.Web.Controllers
             var blogPost = _blogService.GetBlogPostById(blogPostId);
             if (blogPost == null)
                 return RedirectToRoute("HomePage");
-            
+
             var hasAdminAccess = _permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && _permissionService.Authorize(StandardPermissionProvider.ManageBlog);
             //access to Blog preview
             if (!_blogService.BlogPostIsAvailable(blogPost) && !hasAdminAccess)
@@ -152,7 +155,7 @@ namespace Nop.Web.Controllers
             //Store mapping
             if (!_storeMappingService.Authorize(blogPost))
                 return InvokeHttp404();
-            
+
             //display "edit" (manage) link
             if (hasAdminAccess)
                 DisplayEditLink(Url.Action("Edit", "Blog", new { id = blogPost.Id, area = AreaNames.Admin }));
@@ -218,14 +221,14 @@ namespace Nop.Web.Controllers
                 TempData["nop.blog.addcomment.result"] = comment.IsApproved
                     ? _localizationService.GetResource("Blog.Comments.SuccessfullyAdded")
                     : _localizationService.GetResource("Blog.Comments.SeeAfterApproving");
-                return RedirectToRoute("BlogPost", new { SeName = blogPost.GetSeName(blogPost.LanguageId, ensureTwoPublishedLanguages: false) });
+                return RedirectToRoute("BlogPost", new { SeName = _urlRecordService.GetSeName(blogPost, blogPost.LanguageId, ensureTwoPublishedLanguages: false) });
             }
 
             //If we got this far, something failed, redisplay form
             _blogModelFactory.PrepareBlogPostModel(model, blogPost, true);
             return View(model);
         }
-        
+
         #endregion
     }
 }

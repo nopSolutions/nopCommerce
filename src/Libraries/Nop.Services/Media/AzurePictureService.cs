@@ -14,6 +14,7 @@ using Nop.Data;
 using Nop.Services.Catalog;
 using Nop.Services.Configuration;
 using Nop.Services.Events;
+using Nop.Services.Seo;
 
 namespace Nop.Services.Media
 {
@@ -60,7 +61,8 @@ namespace Nop.Services.Media
             NopConfig config,
             IDataProvider dataProvider,
             INopFileProvider fileProvider,
-            IRepository<PictureBinary> pictureBinaryRepository)
+            IRepository<PictureBinary> pictureBinaryRepository,
+            IUrlRecordService urlRecordService)
             : base(pictureRepository,
                 productPictureRepository,
                 productAttributeParser,
@@ -71,7 +73,8 @@ namespace Nop.Services.Media
                 mediaSettings,
                 dataProvider,
                 fileProvider,
-                pictureBinaryRepository)
+                pictureBinaryRepository,
+                urlRecordService)
         {
             this._cacheManager = cacheManager;
             this._mediaSettings = mediaSettings;

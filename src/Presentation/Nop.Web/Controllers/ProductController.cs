@@ -47,6 +47,7 @@ namespace Nop.Web.Controllers
         private readonly IRecentlyViewedProductsService _recentlyViewedProductsService;
         private readonly IStoreContext _storeContext;
         private readonly IStoreMappingService _storeMappingService;
+        private readonly IUrlRecordService _urlRecordService;
         private readonly IWebHelper _webHelper;
         private readonly IWorkContext _workContext;
         private readonly IWorkflowMessageService _workflowMessageService;
@@ -71,6 +72,7 @@ namespace Nop.Web.Controllers
             IRecentlyViewedProductsService recentlyViewedProductsService,
             IStoreContext storeContext,
             IStoreMappingService storeMappingService,
+            IUrlRecordService urlRecordService,
             IWebHelper webHelper,
             IWorkContext workContext,
             IWorkflowMessageService workflowMessageService,
@@ -91,6 +93,7 @@ namespace Nop.Web.Controllers
             this._recentlyViewedProductsService = recentlyViewedProductsService;
             this._storeContext = storeContext;
             this._storeMappingService = storeMappingService;
+            this._urlRecordService = urlRecordService;
             this._webHelper = webHelper;
             this._workContext = workContext;
             this._workflowMessageService = workflowMessageService;
@@ -131,7 +134,7 @@ namespace Nop.Web.Controllers
                 if (parentGroupedProduct == null)
                     return RedirectToRoute("HomePage");
 
-                return RedirectToRoute("Product", new { SeName = parentGroupedProduct.GetSeName() });
+                return RedirectToRoute("Product", new { SeName = _urlRecordService.GetSeName(parentGroupedProduct) });
             }
 
             //update existing shopping cart or wishlist  item?
@@ -145,12 +148,12 @@ namespace Nop.Web.Controllers
                 //not found?
                 if (updatecartitem == null)
                 {
-                    return RedirectToRoute("Product", new { SeName = product.GetSeName() });
+                    return RedirectToRoute("Product", new { SeName = _urlRecordService.GetSeName(product) });
                 }
                 //is it this product?
                 if (product.Id != updatecartitem.ProductId)
                 {
-                    return RedirectToRoute("Product", new { SeName = product.GetSeName() });
+                    return RedirectToRoute("Product", new { SeName = _urlRecordService.GetSeName(product) });
                 }
             }
 
@@ -242,7 +245,7 @@ namespace Nop.Web.Controllers
                 pageSize: _catalogSettings.NewProductsNumber);
             foreach (var product in products)
             {
-                var productUrl = Url.RouteUrl("Product", new { SeName = product.GetSeName() }, _webHelper.CurrentRequestProtocol);
+                var productUrl = Url.RouteUrl("Product", new { SeName = _urlRecordService.GetSeName(product) }, _webHelper.CurrentRequestProtocol);
                 var productName = product.GetLocalized(x => x.Name);
                 var productDescription = product.GetLocalized(x => x.ShortDescription);
                 var item = new RssItem(productName, productDescription, new Uri(productUrl), $"urn:store:{_storeContext.CurrentStore.Id}:newProducts:product:{product.Id}", product.CreatedOnUtc);

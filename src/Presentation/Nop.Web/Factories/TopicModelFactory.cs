@@ -26,6 +26,7 @@ namespace Nop.Web.Factories
         private readonly IStoreContext _storeContext;
         private readonly ITopicService _topicService;
         private readonly ITopicTemplateService _topicTemplateService;
+        private readonly IUrlRecordService _urlRecordService;
         private readonly IWorkContext _workContext;
 
         #endregion
@@ -37,6 +38,7 @@ namespace Nop.Web.Factories
             IStoreContext storeContext,
             ITopicService topicService,
             ITopicTemplateService topicTemplateService,
+            IUrlRecordService urlRecordService,
             IWorkContext workContext)
         {
             this._aclService = aclService;
@@ -44,6 +46,7 @@ namespace Nop.Web.Factories
             this._storeContext = storeContext;
             this._topicService = topicService;
             this._topicTemplateService = topicTemplateService;
+            this._urlRecordService = urlRecordService;
             this._workContext = workContext;
         }
 
@@ -72,7 +75,7 @@ namespace Nop.Web.Factories
                 MetaKeywords = topic.GetLocalized(x => x.MetaKeywords),
                 MetaDescription = topic.GetLocalized(x => x.MetaDescription),
                 MetaTitle = topic.GetLocalized(x => x.MetaTitle),
-                SeName = topic.GetSeName(),
+                SeName = _urlRecordService.GetSeName(topic),
                 TopicTemplateId = topic.TopicTemplateId,
                 Published = topic.Published
             };

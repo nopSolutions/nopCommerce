@@ -72,6 +72,7 @@ namespace Nop.Web.Controllers
         private readonly IStaticCacheManager _cacheManager;
         private readonly IStoreContext _storeContext;
         private readonly ITaxService _taxService;
+        private readonly IUrlRecordService _urlRecordService;
         private readonly IWebHelper _webHelper;
         private readonly IWorkContext _workContext;
         private readonly IWorkflowMessageService _workflowMessageService;
@@ -110,6 +111,7 @@ namespace Nop.Web.Controllers
             IStaticCacheManager cacheManager,
             IStoreContext storeContext,
             ITaxService taxService,
+            IUrlRecordService urlRecordService,
             IWebHelper webHelper,
             IWorkContext workContext,
             IWorkflowMessageService workflowMessageService,
@@ -144,6 +146,7 @@ namespace Nop.Web.Controllers
             this._cacheManager = cacheManager;
             this._storeContext = storeContext;
             this._taxService = taxService;
+            this._urlRecordService = urlRecordService;
             this._webHelper = webHelper;
             this._workContext = workContext;
             this._workflowMessageService = workflowMessageService;
@@ -653,7 +656,7 @@ namespace Nop.Web.Controllers
             {
                 return Json(new
                 {
-                    redirect = Url.RouteUrl("Product", new { SeName = product.GetSeName() })
+                    redirect = Url.RouteUrl("Product", new { SeName = _urlRecordService.GetSeName(product) })
                 });
             }
 
@@ -664,7 +667,7 @@ namespace Nop.Web.Controllers
                 //it can confuse customers. That's why we redirect customers to the product details page
                 return Json(new
                 {
-                    redirect = Url.RouteUrl("Product", new { SeName = product.GetSeName() })
+                    redirect = Url.RouteUrl("Product", new { SeName = _urlRecordService.GetSeName(product) })
                 });
             }
 
@@ -673,7 +676,7 @@ namespace Nop.Web.Controllers
                 //cannot be added to the cart (requires a customer to enter price)
                 return Json(new
                 {
-                    redirect = Url.RouteUrl("Product", new { SeName = product.GetSeName() })
+                    redirect = Url.RouteUrl("Product", new { SeName = _urlRecordService.GetSeName(product) })
                 });
             }
 
@@ -682,7 +685,7 @@ namespace Nop.Web.Controllers
                 //rental products require start/end dates to be entered
                 return Json(new
                 {
-                    redirect = Url.RouteUrl("Product", new { SeName = product.GetSeName() })
+                    redirect = Url.RouteUrl("Product", new { SeName = _urlRecordService.GetSeName(product) })
                 });
             }
 
@@ -692,7 +695,7 @@ namespace Nop.Web.Controllers
                 //cannot be added to the cart (requires a customer to select a quantity from dropdownlist)
                 return Json(new
                 {
-                    redirect = Url.RouteUrl("Product", new { SeName = product.GetSeName() })
+                    redirect = Url.RouteUrl("Product", new { SeName = _urlRecordService.GetSeName(product) })
                 });
             }
 
@@ -703,7 +706,7 @@ namespace Nop.Web.Controllers
                 //product has some attributes. let a customer see them
                 return Json(new
                 {
-                    redirect = Url.RouteUrl("Product", new { SeName = product.GetSeName() })
+                    redirect = Url.RouteUrl("Product", new { SeName = _urlRecordService.GetSeName(product) })
                 });
             }
 
@@ -759,7 +762,7 @@ namespace Nop.Web.Controllers
                 //but we do not display attribute and gift card warnings here. let's do it on the product details page
                 return Json(new
                 {
-                    redirect = Url.RouteUrl("Product", new { SeName = product.GetSeName() })
+                    redirect = Url.RouteUrl("Product", new { SeName = _urlRecordService.GetSeName(product) })
                 });
             }
 
