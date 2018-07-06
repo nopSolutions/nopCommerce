@@ -16,31 +16,31 @@ namespace Nop.Web.Components
     public class HomepageBestSellersViewComponent : NopViewComponent
     {
         private readonly CatalogSettings _catalogSettings;
+        private readonly IAclService _aclService;
+        private readonly IOrderReportService _orderReportService;
         private readonly IProductModelFactory _productModelFactory;
         private readonly IProductService _productService;
-        private readonly IStoreContext _storeContext;
-        private readonly IAclService _aclService;
-        private readonly IStoreMappingService _storeMappingService;
-        private readonly IOrderReportService _orderReportService;
         private readonly IStaticCacheManager _cacheManager;
+        private readonly IStoreContext _storeContext;
+        private readonly IStoreMappingService _storeMappingService;
 
         public HomepageBestSellersViewComponent(CatalogSettings catalogSettings,
+            IAclService aclService,
+            IOrderReportService orderReportService,
             IProductModelFactory productModelFactory,
             IProductService productService,
+            IStaticCacheManager cacheManager,
             IStoreContext storeContext,
-            IAclService aclService,
-            IStoreMappingService storeMappingService,
-            IOrderReportService orderReportService,
-            IStaticCacheManager cacheManager)
+            IStoreMappingService storeMappingService)
         {
             this._catalogSettings = catalogSettings;
+            this._aclService = aclService;
+            this._orderReportService = orderReportService;
             this._productModelFactory = productModelFactory;
             this._productService = productService;
-            this._storeContext = storeContext;
-            this._aclService = aclService;
-            this._storeMappingService = storeMappingService;
-            this._orderReportService = orderReportService;
             this._cacheManager = cacheManager;
+            this._storeContext = storeContext;
+            this._storeMappingService = storeMappingService;
         }
 
         public IViewComponentResult Invoke(int? productThumbPictureSize)

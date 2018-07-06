@@ -28,39 +28,39 @@ namespace Nop.Web.Factories
     {
         #region Fields
 
+        private readonly CustomerSettings _customerSettings;
+        private readonly ForumSettings _forumSettings;
+        private readonly ICountryService _countryService;
+        private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IForumService _forumService;
         private readonly ILocalizationService _localizationService;
         private readonly IPictureService _pictureService;
-        private readonly ICountryService _countryService;
         private readonly IWorkContext _workContext;
-        private readonly ForumSettings _forumSettings;
-        private readonly CustomerSettings _customerSettings;
         private readonly MediaSettings _mediaSettings;
-        private readonly IDateTimeHelper _dateTimeHelper;
-
+        
         #endregion
 
         #region Ctor
 
-        public ForumModelFactory(IForumService forumService,
+        public ForumModelFactory(CustomerSettings customerSettings,
+            ForumSettings forumSettings,
+            ICountryService countryService,
+            IDateTimeHelper dateTimeHelper,
+            IForumService forumService,
             ILocalizationService localizationService,
             IPictureService pictureService,
-            ICountryService countryService,
             IWorkContext workContext,
-            ForumSettings forumSettings,
-            CustomerSettings customerSettings,
-            MediaSettings mediaSettings,
-            IDateTimeHelper dateTimeHelper)
+            MediaSettings mediaSettings)
         {
+            this._customerSettings = customerSettings;
+            this._forumSettings = forumSettings;
+            this._countryService = countryService;
+            this._dateTimeHelper = dateTimeHelper;
             this._forumService = forumService;
             this._localizationService = localizationService;
             this._pictureService = pictureService;
-            this._countryService = countryService;
             this._workContext = workContext;
-            this._forumSettings = forumSettings;
-            this._customerSettings = customerSettings;
             this._mediaSettings = mediaSettings;
-            this._dateTimeHelper = dateTimeHelper;
         }
 
         #endregion

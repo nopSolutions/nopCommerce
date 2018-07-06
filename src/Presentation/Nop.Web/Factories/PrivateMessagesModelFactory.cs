@@ -18,30 +18,30 @@ namespace Nop.Web.Factories
     {
         #region Fields
 
-        private readonly IForumService _forumService;
-        private readonly IWorkContext _workContext;
-        private readonly IStoreContext _storeContext;
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly ForumSettings _forumSettings;
         private readonly CustomerSettings _customerSettings;
+        private readonly ForumSettings _forumSettings;
+        private readonly IDateTimeHelper _dateTimeHelper;
+        private readonly IForumService _forumService;
+        private readonly IStoreContext _storeContext;
+        private readonly IWorkContext _workContext;
 
         #endregion
 
         #region Ctor
 
-        public PrivateMessagesModelFactory(IForumService forumService,
-            IWorkContext workContext, 
-            IStoreContext storeContext,
-            IDateTimeHelper dateTimeHelper,
+        public PrivateMessagesModelFactory(CustomerSettings customerSettings,
             ForumSettings forumSettings,
-            CustomerSettings customerSettings)
+            IDateTimeHelper dateTimeHelper,
+            IForumService forumService,
+            IStoreContext storeContext,
+            IWorkContext workContext)
         {
-            this._forumService = forumService;
-            this._workContext = workContext;
-            this._storeContext = storeContext;
-            this._dateTimeHelper = dateTimeHelper;
-            this._forumSettings = forumSettings;
             this._customerSettings = customerSettings;
+            this._forumSettings = forumSettings;
+            this._dateTimeHelper = dateTimeHelper;
+            this._forumService = forumService;
+            this._storeContext = storeContext;
+            this._workContext = workContext;
         }
 
         #endregion

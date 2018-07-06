@@ -34,99 +34,99 @@ namespace Nop.Web.Factories
     {
         #region Fields
 
-        private readonly IProductModelFactory _productModelFactory;
-        private readonly ICategoryService _categoryService;
-        private readonly IManufacturerService _manufacturerService;
-        private readonly IProductService _productService;
-        private readonly IVendorService _vendorService;
-        private readonly ICategoryTemplateService _categoryTemplateService;
-        private readonly IManufacturerTemplateService _manufacturerTemplateService;
-        private readonly IWorkContext _workContext;
-        private readonly IStoreContext _storeContext;
-        private readonly ICurrencyService _currencyService;
-        private readonly IPictureService _pictureService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IPriceFormatter _priceFormatter;
-        private readonly IWebHelper _webHelper;
-        private readonly ISpecificationAttributeService _specificationAttributeService;
-        private readonly IProductTagService _productTagService;
+        private readonly BlogSettings _blogSettings;
+        private readonly CatalogSettings _catalogSettings;
+        private readonly DisplayDefaultMenuItemSettings _displayDefaultMenuItemSettings;
+        private readonly ForumSettings _forumSettings;
         private readonly IAclService _aclService;
+        private readonly ICategoryService _categoryService;
+        private readonly ICategoryTemplateService _categoryTemplateService;
+        private readonly ICurrencyService _currencyService;
+        private readonly IEventPublisher _eventPublisher;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly ILocalizationService _localizationService;
+        private readonly IManufacturerService _manufacturerService;
+        private readonly IManufacturerTemplateService _manufacturerTemplateService;
+        private readonly IPictureService _pictureService;
+        private readonly IPriceFormatter _priceFormatter;
+        private readonly IProductModelFactory _productModelFactory;
+        private readonly IProductService _productService;
+        private readonly IProductTagService _productTagService;
+        private readonly ISearchTermService _searchTermService;
+        private readonly ISpecificationAttributeService _specificationAttributeService;
+        private readonly IStaticCacheManager _cacheManager;
+        private readonly IStoreContext _storeContext;
         private readonly IStoreMappingService _storeMappingService;
         private readonly ITopicService _topicService;
-        private readonly IEventPublisher _eventPublisher;
-        private readonly ISearchTermService _searchTermService;
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IVendorService _vendorService;
+        private readonly IWebHelper _webHelper;
+        private readonly IWorkContext _workContext;
         private readonly MediaSettings _mediaSettings;
-        private readonly CatalogSettings _catalogSettings;
         private readonly VendorSettings _vendorSettings;
-        private readonly BlogSettings _blogSettings;
-        private readonly ForumSettings _forumSettings;
-        private readonly IStaticCacheManager _cacheManager;
-        private readonly DisplayDefaultMenuItemSettings _displayDefaultMenuItemSettings;
 
         #endregion
 
         #region Ctor
 
-        public CatalogModelFactory(IProductModelFactory productModelFactory,
-            ICategoryService categoryService, 
-            IManufacturerService manufacturerService,
-            IProductService productService, 
-            IVendorService vendorService,
-            ICategoryTemplateService categoryTemplateService,
-            IManufacturerTemplateService manufacturerTemplateService,
-            IWorkContext workContext, 
-            IStoreContext storeContext,
-            ICurrencyService currencyService,
-            IPictureService pictureService, 
-            ILocalizationService localizationService,
-            IPriceFormatter priceFormatter,
-            IWebHelper webHelper, 
-            ISpecificationAttributeService specificationAttributeService,
-            IProductTagService productTagService,
+        public CatalogModelFactory(BlogSettings blogSettings,
+            CatalogSettings catalogSettings,
+            DisplayDefaultMenuItemSettings displayDefaultMenuItemSettings,
+            ForumSettings forumSettings,
             IAclService aclService,
+            ICategoryService categoryService,
+            ICategoryTemplateService categoryTemplateService,
+            ICurrencyService currencyService,
+            IEventPublisher eventPublisher,
+            IHttpContextAccessor httpContextAccessor,
+            ILocalizationService localizationService,
+            IManufacturerService manufacturerService,
+            IManufacturerTemplateService manufacturerTemplateService,
+            IPictureService pictureService,
+            IPriceFormatter priceFormatter,
+            IProductModelFactory productModelFactory,
+            IProductService productService,
+            IProductTagService productTagService,
+            ISearchTermService searchTermService,
+            ISpecificationAttributeService specificationAttributeService,
+            IStaticCacheManager cacheManager,
+            IStoreContext storeContext,
             IStoreMappingService storeMappingService,
             ITopicService topicService,
-            IEventPublisher eventPublisher,
-            ISearchTermService searchTermService,
-            IHttpContextAccessor httpContextAccessor,
+            IVendorService vendorService,
+            IWebHelper webHelper,
+            IWorkContext workContext,
             MediaSettings mediaSettings,
-            CatalogSettings catalogSettings,
-            VendorSettings vendorSettings,
-            BlogSettings blogSettings,
-            ForumSettings  forumSettings,
-            IStaticCacheManager cacheManager,
-            DisplayDefaultMenuItemSettings displayDefaultMenuItemSettings)
+            VendorSettings vendorSettings)
         {
-            this._productModelFactory = productModelFactory;
-            this._categoryService = categoryService;
-            this._manufacturerService = manufacturerService;
-            this._productService = productService;
-            this._vendorService = vendorService;
-            this._categoryTemplateService = categoryTemplateService;
-            this._manufacturerTemplateService = manufacturerTemplateService;
-            this._workContext = workContext;
-            this._storeContext = storeContext;
-            this._currencyService = currencyService;
-            this._pictureService = pictureService;
-            this._localizationService = localizationService;
-            this._priceFormatter = priceFormatter;
-            this._webHelper = webHelper;
-            this._specificationAttributeService = specificationAttributeService;
-            this._productTagService = productTagService;
+            this._blogSettings = blogSettings;
+            this._catalogSettings = catalogSettings;
+            this._displayDefaultMenuItemSettings = displayDefaultMenuItemSettings;
+            this._forumSettings = forumSettings;
             this._aclService = aclService;
+            this._categoryService = categoryService;
+            this._categoryTemplateService = categoryTemplateService;
+            this._currencyService = currencyService;
+            this._eventPublisher = eventPublisher;
+            this._httpContextAccessor = httpContextAccessor;
+            this._localizationService = localizationService;
+            this._manufacturerService = manufacturerService;
+            this._manufacturerTemplateService = manufacturerTemplateService;
+            this._pictureService = pictureService;
+            this._priceFormatter = priceFormatter;
+            this._productModelFactory = productModelFactory;
+            this._productService = productService;
+            this._productTagService = productTagService;
+            this._searchTermService = searchTermService;
+            this._specificationAttributeService = specificationAttributeService;
+            this._cacheManager = cacheManager;
+            this._storeContext = storeContext;
             this._storeMappingService = storeMappingService;
             this._topicService = topicService;
-            this._eventPublisher = eventPublisher;
-            this._searchTermService = searchTermService;
-            this._httpContextAccessor = httpContextAccessor;
+            this._vendorService = vendorService;
+            this._webHelper = webHelper;
+            this._workContext = workContext;
             this._mediaSettings = mediaSettings;
-            this._catalogSettings = catalogSettings;
             this._vendorSettings = vendorSettings;
-            this._blogSettings = blogSettings;
-            this._forumSettings = forumSettings;
-            this._cacheManager = cacheManager;
-            this._displayDefaultMenuItemSettings = displayDefaultMenuItemSettings;
         }
 
         #endregion

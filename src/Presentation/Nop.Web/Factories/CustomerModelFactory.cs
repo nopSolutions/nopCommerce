@@ -37,111 +37,110 @@ namespace Nop.Web.Factories
     {
         #region Fields
 
-        private readonly IAddressModelFactory _addressModelFactory;
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly DateTimeSettings _dateTimeSettings;
-        private readonly TaxSettings _taxSettings;
-        private readonly ILocalizationService _localizationService;
-        private readonly IWorkContext _workContext;
-        private readonly IStoreContext _storeContext;
-        private readonly IStoreMappingService _storeMappingService;
-        private readonly ICustomerAttributeParser _customerAttributeParser;
-        private readonly ICustomerAttributeService _customerAttributeService;
-        private readonly IGdprService _gdprService;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly RewardPointsSettings _rewardPointsSettings;
+        private readonly AddressSettings _addressSettings;
+        private readonly CaptchaSettings _captchaSettings;
+        private readonly CatalogSettings _catalogSettings;
         private readonly CommonSettings _commonSettings;
         private readonly CustomerSettings _customerSettings;
-        private readonly AddressSettings _addressSettings;
+        private readonly DateTimeSettings _dateTimeSettings;
+        private readonly ExternalAuthenticationSettings _externalAuthenticationSettings;
         private readonly ForumSettings _forumSettings;
-        private readonly OrderSettings _orderSettings;
+        private readonly GdprSettings _gdprSettings;
+        private readonly IAddressModelFactory _addressModelFactory;
         private readonly ICountryService _countryService;
-        private readonly IStateProvinceService _stateProvinceService;
+        private readonly ICustomerAttributeParser _customerAttributeParser;
+        private readonly ICustomerAttributeService _customerAttributeService;
+        private readonly IDateTimeHelper _dateTimeHelper;
+        private readonly IDownloadService _downloadService;
+        private readonly IExternalAuthenticationService _externalAuthenticationService;
+        private readonly IGdprService _gdprService;
+        private readonly IGenericAttributeService _genericAttributeService;
+        private readonly ILocalizationService _localizationService;
+        private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
         private readonly IOrderService _orderService;
         private readonly IPictureService _pictureService;
-        private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
-        private readonly IExternalAuthenticationService _externalAuthenticationService;
-        private readonly IDownloadService _downloadService;
         private readonly IReturnRequestService _returnRequestService;
-
-        private readonly GdprSettings _gdprSettings;
+        private readonly IStateProvinceService _stateProvinceService;
+        private readonly IStoreContext _storeContext;
+        private readonly IStoreMappingService _storeMappingService;
+        private readonly IWorkContext _workContext;
         private readonly MediaSettings _mediaSettings;
-        private readonly CaptchaSettings _captchaSettings;
+        private readonly OrderSettings _orderSettings;
+        private readonly RewardPointsSettings _rewardPointsSettings;
         private readonly SecuritySettings _securitySettings;
-        private readonly ExternalAuthenticationSettings _externalAuthenticationSettings;
-        private readonly CatalogSettings _catalogSettings;
+        private readonly TaxSettings _taxSettings;
         private readonly VendorSettings _vendorSettings;
 
         #endregion
 
         #region Ctor
 
-        public CustomerModelFactory(IAddressModelFactory addressModelFactory, 
-            IDateTimeHelper dateTimeHelper,
-            DateTimeSettings dateTimeSettings, 
-            TaxSettings taxSettings,
-            ILocalizationService localizationService,
-            IWorkContext workContext,
-            IStoreContext storeContext,
-            IStoreMappingService storeMappingService,
-            ICustomerAttributeParser customerAttributeParser,
-            ICustomerAttributeService customerAttributeService,
-            IGdprService gdprService,
-            IGenericAttributeService genericAttributeService,
-            RewardPointsSettings rewardPointsSettings,
+        public CustomerModelFactory(AddressSettings addressSettings,
+            CaptchaSettings captchaSettings,
+            CatalogSettings catalogSettings,
             CommonSettings commonSettings,
             CustomerSettings customerSettings,
-            AddressSettings addressSettings, 
-            ForumSettings forumSettings,
-            OrderSettings orderSettings,
-            ICountryService countryService,
-            IStateProvinceService stateProvinceService,
-            IOrderService orderService,
-            IPictureService pictureService, 
-            INewsLetterSubscriptionService newsLetterSubscriptionService,
-            IExternalAuthenticationService externalAuthenticationService,
-            IDownloadService downloadService,
-            IReturnRequestService returnRequestService,
-            GdprSettings gdprSettings,
-            MediaSettings mediaSettings,
-            CaptchaSettings captchaSettings,
-            SecuritySettings securitySettings,
+            DateTimeSettings dateTimeSettings,
             ExternalAuthenticationSettings externalAuthenticationSettings,
-            CatalogSettings catalogSettings, 
+            ForumSettings forumSettings,
+            GdprSettings gdprSettings,
+            IAddressModelFactory addressModelFactory,
+            ICountryService countryService,
+            ICustomerAttributeParser customerAttributeParser,
+            ICustomerAttributeService customerAttributeService,
+            IDateTimeHelper dateTimeHelper,
+            IDownloadService downloadService,
+            IExternalAuthenticationService externalAuthenticationService,
+            IGdprService gdprService,
+            IGenericAttributeService genericAttributeService,
+            ILocalizationService localizationService,
+            INewsLetterSubscriptionService newsLetterSubscriptionService,
+            IOrderService orderService,
+            IPictureService pictureService,
+            IReturnRequestService returnRequestService,
+            IStateProvinceService stateProvinceService,
+            IStoreContext storeContext,
+            IStoreMappingService storeMappingService,
+            IWorkContext workContext,
+            MediaSettings mediaSettings,
+            OrderSettings orderSettings,
+            RewardPointsSettings rewardPointsSettings,
+            SecuritySettings securitySettings,
+            TaxSettings taxSettings,
             VendorSettings vendorSettings)
         {
-            this._addressModelFactory = addressModelFactory;
-            this._dateTimeHelper = dateTimeHelper;
-            this._dateTimeSettings = dateTimeSettings;
-            this._taxSettings = taxSettings;
-            this._localizationService = localizationService;
-            this._workContext = workContext;
-            this._storeContext = storeContext;
-            this._storeMappingService = storeMappingService;
-            this._customerAttributeParser = customerAttributeParser;
-            this._customerAttributeService = customerAttributeService;
-            this._gdprService = gdprService;
-            this._genericAttributeService = genericAttributeService;
-            this._rewardPointsSettings = rewardPointsSettings;
+            this._addressSettings = addressSettings;
+            this._captchaSettings = captchaSettings;
+            this._catalogSettings = catalogSettings;
             this._commonSettings = commonSettings;
             this._customerSettings = customerSettings;
-            this._addressSettings = addressSettings;
+            this._dateTimeSettings = dateTimeSettings;
+            this._externalAuthenticationSettings = externalAuthenticationSettings;
             this._forumSettings = forumSettings;
-            this._orderSettings = orderSettings;
+            this._gdprSettings = gdprSettings;
+            this._addressModelFactory = addressModelFactory;
             this._countryService = countryService;
-            this._stateProvinceService = stateProvinceService;
+            this._customerAttributeParser = customerAttributeParser;
+            this._customerAttributeService = customerAttributeService;
+            this._dateTimeHelper = dateTimeHelper;
+            this._downloadService = downloadService;
+            this._externalAuthenticationService = externalAuthenticationService;
+            this._gdprService = gdprService;
+            this._genericAttributeService = genericAttributeService;
+            this._localizationService = localizationService;
+            this._newsLetterSubscriptionService = newsLetterSubscriptionService;
             this._orderService = orderService;
             this._pictureService = pictureService;
-            this._newsLetterSubscriptionService = newsLetterSubscriptionService;
-            this._externalAuthenticationService = externalAuthenticationService;
-            this._downloadService = downloadService;
             this._returnRequestService = returnRequestService;
-            this._gdprSettings = gdprSettings;
+            this._stateProvinceService = stateProvinceService;
+            this._storeContext = storeContext;
+            this._storeMappingService = storeMappingService;
+            this._workContext = workContext;
             this._mediaSettings = mediaSettings;
-            this._captchaSettings = captchaSettings;
+            this._orderSettings = orderSettings;
+            this._rewardPointsSettings = rewardPointsSettings;
             this._securitySettings = securitySettings;
-            this._externalAuthenticationSettings = externalAuthenticationSettings;
-            this._catalogSettings = catalogSettings;
+            this._taxSettings = taxSettings;
             this._vendorSettings = vendorSettings;
         }
 

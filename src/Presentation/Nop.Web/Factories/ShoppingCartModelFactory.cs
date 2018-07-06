@@ -45,138 +45,137 @@ namespace Nop.Web.Factories
     {
         #region Fields
 
-        private readonly IAddressModelFactory _addressModelFactory;
-        private readonly IWorkContext _workContext;
-        private readonly IStoreContext _storeContext;
-        private readonly IShoppingCartService _shoppingCartService;
-        private readonly IPictureService _pictureService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IProductService _productService;
-        private readonly IProductAttributeFormatter _productAttributeFormatter;
-        private readonly IProductAttributeParser _productAttributeParser;
-        private readonly ITaxService _taxService;
-        private readonly ICurrencyService _currencyService;
-        private readonly IPriceCalculationService _priceCalculationService;
-        private readonly IPriceFormatter _priceFormatter;
-        private readonly ICheckoutAttributeParser _checkoutAttributeParser;
-        private readonly ICheckoutAttributeFormatter _checkoutAttributeFormatter;
-        private readonly IOrderProcessingService _orderProcessingService;
-        private readonly IDiscountService _discountService;
-        private readonly ICountryService _countryService;
-        private readonly IStateProvinceService _stateProvinceService;
-        private readonly IShippingService _shippingService;
-        private readonly IOrderTotalCalculationService _orderTotalCalculationService;
-        private readonly ICheckoutAttributeService _checkoutAttributeService;
-        private readonly IPaymentService _paymentService;
-        private readonly IPermissionService _permissionService;
-        private readonly IDownloadService _downloadService;
-        private readonly IStaticCacheManager _cacheManager;
-        private readonly IWebHelper _webHelper;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-
-        private readonly MediaSettings _mediaSettings;
-        private readonly ShoppingCartSettings _shoppingCartSettings;
+        private readonly AddressSettings _addressSettings;
+        private readonly CaptchaSettings _captchaSettings;
         private readonly CatalogSettings _catalogSettings;
         private readonly CommonSettings _commonSettings;
-        private readonly OrderSettings _orderSettings;
-        private readonly ShippingSettings _shippingSettings;
-        private readonly TaxSettings _taxSettings;
-        private readonly CaptchaSettings _captchaSettings;
-        private readonly AddressSettings _addressSettings;
-        private readonly RewardPointsSettings _rewardPointsSettings;
         private readonly CustomerSettings _customerSettings;
+        private readonly IAddressModelFactory _addressModelFactory;
+        private readonly ICheckoutAttributeFormatter _checkoutAttributeFormatter;
+        private readonly ICheckoutAttributeParser _checkoutAttributeParser;
+        private readonly ICheckoutAttributeService _checkoutAttributeService;
+        private readonly ICountryService _countryService;
+        private readonly ICurrencyService _currencyService;
+        private readonly IDiscountService _discountService;
+        private readonly IDownloadService _downloadService;
+        private readonly IGenericAttributeService _genericAttributeService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly ILocalizationService _localizationService;
+        private readonly IOrderProcessingService _orderProcessingService;
+        private readonly IOrderTotalCalculationService _orderTotalCalculationService;
+        private readonly IPaymentService _paymentService;
+        private readonly IPermissionService _permissionService;
+        private readonly IPictureService _pictureService;
+        private readonly IPriceCalculationService _priceCalculationService;
+        private readonly IPriceFormatter _priceFormatter;
+        private readonly IProductAttributeFormatter _productAttributeFormatter;
+        private readonly IProductAttributeParser _productAttributeParser;
+        private readonly IProductService _productService;
+        private readonly IShippingService _shippingService;
+        private readonly IShoppingCartService _shoppingCartService;
+        private readonly IStateProvinceService _stateProvinceService;
+        private readonly IStaticCacheManager _cacheManager;
+        private readonly IStoreContext _storeContext;
+        private readonly ITaxService _taxService;
         private readonly IVendorService _vendorService;
+        private readonly IWebHelper _webHelper;
+        private readonly IWorkContext _workContext;
+        private readonly MediaSettings _mediaSettings;
+        private readonly OrderSettings _orderSettings;
+        private readonly RewardPointsSettings _rewardPointsSettings;
+        private readonly ShippingSettings _shippingSettings;
+        private readonly ShoppingCartSettings _shoppingCartSettings;
+        private readonly TaxSettings _taxSettings;
         private readonly VendorSettings _vendorSettings;
 
         #endregion
 
 		#region Ctor
 
-        public ShoppingCartModelFactory(IAddressModelFactory addressModelFactory, 
-            IStoreContext storeContext,
-            IWorkContext workContext,
-            IShoppingCartService shoppingCartService, 
-            IPictureService pictureService,
-            ILocalizationService localizationService,
-            IProductService productService, 
-            IProductAttributeFormatter productAttributeFormatter,
-            IProductAttributeParser productAttributeParser,
-            ITaxService taxService, ICurrencyService currencyService, 
-            IPriceCalculationService priceCalculationService,
-            IPriceFormatter priceFormatter,
-            ICheckoutAttributeParser checkoutAttributeParser,
-            ICheckoutAttributeFormatter checkoutAttributeFormatter, 
-            IOrderProcessingService orderProcessingService,
-            IDiscountService discountService,
-            ICountryService countryService,
-            IStateProvinceService stateProvinceService,
-            IShippingService shippingService,
-            IOrderTotalCalculationService orderTotalCalculationService,
-            ICheckoutAttributeService checkoutAttributeService, 
-            IPaymentService paymentService,
-            IPermissionService permissionService, 
-            IDownloadService downloadService,
-            IStaticCacheManager cacheManager,
-            IWebHelper webHelper, 
-            IGenericAttributeService genericAttributeService,
-            IHttpContextAccessor httpContextAccessor,
-            MediaSettings mediaSettings,
-            ShoppingCartSettings shoppingCartSettings,
+        public ShoppingCartModelFactory(AddressSettings addressSettings,
+            CaptchaSettings captchaSettings,
             CatalogSettings catalogSettings,
             CommonSettings commonSettings,
-            OrderSettings orderSettings,
-            ShippingSettings shippingSettings, 
-            TaxSettings taxSettings,
-            CaptchaSettings captchaSettings, 
-            AddressSettings addressSettings,
-            RewardPointsSettings rewardPointsSettings,
             CustomerSettings customerSettings,
+            IAddressModelFactory addressModelFactory,
+            ICheckoutAttributeFormatter checkoutAttributeFormatter,
+            ICheckoutAttributeParser checkoutAttributeParser,
+            ICheckoutAttributeService checkoutAttributeService,
+            ICountryService countryService,
+            ICurrencyService currencyService,
+            IDiscountService discountService,
+            IDownloadService downloadService,
+            IGenericAttributeService genericAttributeService,
+            IHttpContextAccessor httpContextAccessor,
+            ILocalizationService localizationService,
+            IOrderProcessingService orderProcessingService,
+            IOrderTotalCalculationService orderTotalCalculationService,
+            IPaymentService paymentService,
+            IPermissionService permissionService,
+            IPictureService pictureService,
+            IPriceCalculationService priceCalculationService,
+            IPriceFormatter priceFormatter,
+            IProductAttributeFormatter productAttributeFormatter,
+            IProductAttributeParser productAttributeParser,
+            IProductService productService,
+            IShippingService shippingService,
+            IShoppingCartService shoppingCartService,
+            IStateProvinceService stateProvinceService,
+            IStaticCacheManager cacheManager,
+            IStoreContext storeContext,
+            ITaxService taxService,
             IVendorService vendorService,
+            IWebHelper webHelper,
+            IWorkContext workContext,
+            MediaSettings mediaSettings,
+            OrderSettings orderSettings,
+            RewardPointsSettings rewardPointsSettings,
+            ShippingSettings shippingSettings,
+            ShoppingCartSettings shoppingCartSettings,
+            TaxSettings taxSettings,
             VendorSettings vendorSettings)
         {
-            this._addressModelFactory = addressModelFactory;
-            this._workContext = workContext;
-            this._storeContext = storeContext;
-            this._shoppingCartService = shoppingCartService;
-            this._pictureService = pictureService;
-            this._localizationService = localizationService;
-            this._productService = productService;
-            this._productAttributeFormatter = productAttributeFormatter;
-            this._productAttributeParser = productAttributeParser;
-            this._taxService = taxService;
-            this._currencyService = currencyService;
-            this._priceCalculationService = priceCalculationService;
-            this._priceFormatter = priceFormatter;
-            this._checkoutAttributeParser = checkoutAttributeParser;
-            this._checkoutAttributeFormatter = checkoutAttributeFormatter;
-            this._orderProcessingService = orderProcessingService;
-            this._discountService = discountService;
-            this._countryService = countryService;
-            this._stateProvinceService = stateProvinceService;
-            this._shippingService = shippingService;
-            this._orderTotalCalculationService = orderTotalCalculationService;
-            this._checkoutAttributeService = checkoutAttributeService;
-            this._paymentService = paymentService;
-            this._permissionService = permissionService;
-            this._downloadService = downloadService;
-            this._cacheManager = cacheManager;
-            this._webHelper = webHelper;
-            this._genericAttributeService = genericAttributeService;
-            this._httpContextAccessor = httpContextAccessor;
-
-            this._mediaSettings = mediaSettings;
-            this._shoppingCartSettings = shoppingCartSettings;
+            this._addressSettings = addressSettings;
+            this._captchaSettings = captchaSettings;
             this._catalogSettings = catalogSettings;
             this._commonSettings = commonSettings;
-            this._orderSettings = orderSettings;
-            this._shippingSettings = shippingSettings;
-            this._taxSettings = taxSettings;
-            this._captchaSettings = captchaSettings;
-            this._addressSettings = addressSettings;
-            this._rewardPointsSettings = rewardPointsSettings;
             this._customerSettings = customerSettings;
+            this._addressModelFactory = addressModelFactory;
+            this._checkoutAttributeFormatter = checkoutAttributeFormatter;
+            this._checkoutAttributeParser = checkoutAttributeParser;
+            this._checkoutAttributeService = checkoutAttributeService;
+            this._countryService = countryService;
+            this._currencyService = currencyService;
+            this._discountService = discountService;
+            this._downloadService = downloadService;
+            this._genericAttributeService = genericAttributeService;
+            this._httpContextAccessor = httpContextAccessor;
+            this._localizationService = localizationService;
+            this._orderProcessingService = orderProcessingService;
+            this._orderTotalCalculationService = orderTotalCalculationService;
+            this._paymentService = paymentService;
+            this._permissionService = permissionService;
+            this._pictureService = pictureService;
+            this._priceCalculationService = priceCalculationService;
+            this._priceFormatter = priceFormatter;
+            this._productAttributeFormatter = productAttributeFormatter;
+            this._productAttributeParser = productAttributeParser;
+            this._productService = productService;
+            this._shippingService = shippingService;
+            this._shoppingCartService = shoppingCartService;
+            this._stateProvinceService = stateProvinceService;
+            this._cacheManager = cacheManager;
+            this._storeContext = storeContext;
+            this._taxService = taxService;
             this._vendorService = vendorService;
+            this._webHelper = webHelper;
+            this._workContext = workContext;
+            this._mediaSettings = mediaSettings;
+            this._orderSettings = orderSettings;
+            this._rewardPointsSettings = rewardPointsSettings;
+            this._shippingSettings = shippingSettings;
+            this._shoppingCartSettings = shoppingCartSettings;
+            this._taxSettings = taxSettings;
             this._vendorSettings = vendorSettings;
         }
 

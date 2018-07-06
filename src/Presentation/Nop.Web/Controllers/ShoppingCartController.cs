@@ -45,112 +45,111 @@ namespace Nop.Web.Controllers
     {
         #region Fields
 
-        private readonly IShoppingCartModelFactory _shoppingCartModelFactory;
-        private readonly IProductService _productService;
-        private readonly IWorkContext _workContext;
-        private readonly IStoreContext _storeContext;
-        private readonly IShoppingCartService _shoppingCartService;
-        private readonly IPictureService _pictureService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IProductAttributeService _productAttributeService;
-        private readonly IProductAttributeParser _productAttributeParser;
-        private readonly ITaxService _taxService;
-        private readonly ICurrencyService _currencyService;
-        private readonly IMeasureService _measureService;
-        private readonly IPriceCalculationService _priceCalculationService;
-        private readonly IPriceFormatter _priceFormatter;
-        private readonly ICheckoutAttributeParser _checkoutAttributeParser;
-        private readonly IDiscountService _discountService;
-        private readonly ICustomerService _customerService;
-        private readonly IGiftCardService _giftCardService;
-        private readonly IDateRangeService _dateRangeService;
-        private readonly ICheckoutAttributeService _checkoutAttributeService;
-        private readonly IWorkflowMessageService _workflowMessageService;
-        private readonly IPermissionService _permissionService;
-        private readonly IDownloadService _downloadService;
-        private readonly IStaticCacheManager _cacheManager;
-        private readonly IWebHelper _webHelper;
-        private readonly ICustomerActivityService _customerActivityService;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly INopFileProvider _fileProvider;
-
-        private readonly MediaSettings _mediaSettings;
-        private readonly ShoppingCartSettings _shoppingCartSettings;
-        private readonly OrderSettings _orderSettings;
         private readonly CaptchaSettings _captchaSettings;
         private readonly CustomerSettings _customerSettings;
+        private readonly ICheckoutAttributeParser _checkoutAttributeParser;
+        private readonly ICheckoutAttributeService _checkoutAttributeService;
+        private readonly ICurrencyService _currencyService;
+        private readonly ICustomerActivityService _customerActivityService;
+        private readonly ICustomerService _customerService;
+        private readonly IDateRangeService _dateRangeService;
+        private readonly IDiscountService _discountService;
+        private readonly IDownloadService _downloadService;
+        private readonly IGenericAttributeService _genericAttributeService;
+        private readonly IGiftCardService _giftCardService;
+        private readonly ILocalizationService _localizationService;
+        private readonly IMeasureService _measureService;
+        private readonly INopFileProvider _fileProvider;
+        private readonly IPermissionService _permissionService;
+        private readonly IPictureService _pictureService;
+        private readonly IPriceCalculationService _priceCalculationService;
+        private readonly IPriceFormatter _priceFormatter;
+        private readonly IProductAttributeParser _productAttributeParser;
+        private readonly IProductAttributeService _productAttributeService;
+        private readonly IProductService _productService;
+        private readonly IShoppingCartModelFactory _shoppingCartModelFactory;
+        private readonly IShoppingCartService _shoppingCartService;
+        private readonly IStaticCacheManager _cacheManager;
+        private readonly IStoreContext _storeContext;
+        private readonly ITaxService _taxService;
+        private readonly IWebHelper _webHelper;
+        private readonly IWorkContext _workContext;
+        private readonly IWorkflowMessageService _workflowMessageService;
+        private readonly MediaSettings _mediaSettings;
+        private readonly OrderSettings _orderSettings;
+        private readonly ShoppingCartSettings _shoppingCartSettings;
         
         #endregion
         
         #region Ctor
 
-        public ShoppingCartController(IShoppingCartModelFactory shoppingCartModelFactory,
-            IProductService productService, 
-            IStoreContext storeContext,
-            IWorkContext workContext,
-            IShoppingCartService shoppingCartService, 
-            IPictureService pictureService,
-            ILocalizationService localizationService, 
-            IProductAttributeService productAttributeService, 
-            IProductAttributeParser productAttributeParser,
-            ITaxService taxService, ICurrencyService currencyService,
+        public ShoppingCartController(CaptchaSettings captchaSettings,
+            CustomerSettings customerSettings,
+            ICheckoutAttributeParser checkoutAttributeParser,
+            ICheckoutAttributeService checkoutAttributeService,
+            ICurrencyService currencyService,
+            ICustomerActivityService customerActivityService,
+            ICustomerService customerService,
+            IDateRangeService dateRangeService,
+            IDiscountService discountService,
+            IDownloadService downloadService,
+            IGenericAttributeService genericAttributeService,
+            IGiftCardService giftCardService,
+            ILocalizationService localizationService,
             IMeasureService measureService,
+            INopFileProvider fileProvider,
+            IPermissionService permissionService,
+            IPictureService pictureService,
             IPriceCalculationService priceCalculationService,
             IPriceFormatter priceFormatter,
-            ICheckoutAttributeParser checkoutAttributeParser,
-            IDiscountService discountService,
-            ICustomerService customerService, 
-            IGiftCardService giftCardService,
-            IDateRangeService dateRangeService,
-            ICheckoutAttributeService checkoutAttributeService, 
-            IWorkflowMessageService workflowMessageService,
-            IPermissionService permissionService, 
-            IDownloadService downloadService,
+            IProductAttributeParser productAttributeParser,
+            IProductAttributeService productAttributeService,
+            IProductService productService,
+            IShoppingCartModelFactory shoppingCartModelFactory,
+            IShoppingCartService shoppingCartService,
             IStaticCacheManager cacheManager,
-            IWebHelper webHelper, 
-            ICustomerActivityService customerActivityService,
-            IGenericAttributeService genericAttributeService,
+            IStoreContext storeContext,
+            ITaxService taxService,
+            IWebHelper webHelper,
+            IWorkContext workContext,
+            IWorkflowMessageService workflowMessageService,
             MediaSettings mediaSettings,
-            ShoppingCartSettings shoppingCartSettings,
             OrderSettings orderSettings,
-            CaptchaSettings captchaSettings,
-            CustomerSettings customerSettings,
-            INopFileProvider fileProvider)
+            ShoppingCartSettings shoppingCartSettings)
         {
-            this._shoppingCartModelFactory = shoppingCartModelFactory;
-            this._productService = productService;
-            this._workContext = workContext;
-            this._storeContext = storeContext;
-            this._shoppingCartService = shoppingCartService;
-            this._pictureService = pictureService;
-            this._localizationService = localizationService;
-            this._productAttributeService = productAttributeService;
-            this._productAttributeParser = productAttributeParser;
-            this._taxService = taxService;
-            this._currencyService = currencyService;
-            this._measureService = measureService;
-            this._priceCalculationService = priceCalculationService;
-            this._priceFormatter = priceFormatter;
-            this._checkoutAttributeParser = checkoutAttributeParser;
-            this._discountService = discountService;
-            this._customerService = customerService;
-            this._giftCardService = giftCardService;
-            this._dateRangeService = dateRangeService;
-            this._checkoutAttributeService = checkoutAttributeService;
-            this._workflowMessageService = workflowMessageService;
-            this._permissionService = permissionService;
-            this._downloadService = downloadService;
-            this._cacheManager = cacheManager;
-            this._webHelper = webHelper;
-            this._customerActivityService = customerActivityService;
-            this._genericAttributeService = genericAttributeService;
-            this._fileProvider = fileProvider;
-
-            this._mediaSettings = mediaSettings;
-            this._shoppingCartSettings = shoppingCartSettings;
-            this._orderSettings = orderSettings;
             this._captchaSettings = captchaSettings;
             this._customerSettings = customerSettings;
+            this._checkoutAttributeParser = checkoutAttributeParser;
+            this._checkoutAttributeService = checkoutAttributeService;
+            this._currencyService = currencyService;
+            this._customerActivityService = customerActivityService;
+            this._customerService = customerService;
+            this._dateRangeService = dateRangeService;
+            this._discountService = discountService;
+            this._downloadService = downloadService;
+            this._genericAttributeService = genericAttributeService;
+            this._giftCardService = giftCardService;
+            this._localizationService = localizationService;
+            this._measureService = measureService;
+            this._fileProvider = fileProvider;
+            this._permissionService = permissionService;
+            this._pictureService = pictureService;
+            this._priceCalculationService = priceCalculationService;
+            this._priceFormatter = priceFormatter;
+            this._productAttributeParser = productAttributeParser;
+            this._productAttributeService = productAttributeService;
+            this._productService = productService;
+            this._shoppingCartModelFactory = shoppingCartModelFactory;
+            this._shoppingCartService = shoppingCartService;
+            this._cacheManager = cacheManager;
+            this._storeContext = storeContext;
+            this._taxService = taxService;
+            this._webHelper = webHelper;
+            this._workContext = workContext;
+            this._workflowMessageService = workflowMessageService;
+            this._mediaSettings = mediaSettings;
+            this._orderSettings = orderSettings;
+            this._shoppingCartSettings = shoppingCartSettings;
         }
 
         #endregion

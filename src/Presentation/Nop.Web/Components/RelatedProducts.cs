@@ -14,26 +14,26 @@ namespace Nop.Web.Components
 {
     public class RelatedProductsViewComponent : NopViewComponent
     {
+        private readonly IAclService _aclService;
         private readonly IProductModelFactory _productModelFactory;
         private readonly IProductService _productService;
-        private readonly IStoreContext _storeContext;
-        private readonly IAclService _aclService;
-        private readonly IStoreMappingService _storeMappingService;
         private readonly IStaticCacheManager _cacheManager;
+        private readonly IStoreContext _storeContext;
+        private readonly IStoreMappingService _storeMappingService;
 
-        public RelatedProductsViewComponent(IProductModelFactory productModelFactory,
+        public RelatedProductsViewComponent(IAclService aclService,
+            IProductModelFactory productModelFactory,
             IProductService productService,
+            IStaticCacheManager cacheManager,
             IStoreContext storeContext,
-            IAclService aclService,
-            IStoreMappingService storeMappingService,
-            IStaticCacheManager cacheManager)
+            IStoreMappingService storeMappingService)
         {
+            this._aclService = aclService;
             this._productModelFactory = productModelFactory;
             this._productService = productService;
-            this._storeContext = storeContext;
-            this._aclService = aclService;
-            this._storeMappingService = storeMappingService;
             this._cacheManager = cacheManager;
+            this._storeContext = storeContext;
+            this._storeMappingService = storeMappingService;
         }
 
         public IViewComponentResult Invoke(int productId, int? productThumbPictureSize)

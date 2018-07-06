@@ -24,44 +24,42 @@ namespace Nop.Web.Factories
     {
         #region Fields
 
-        private readonly INewsService _newsService;
-        private readonly IWorkContext _workContext;
-        private readonly IStoreContext _storeContext;
-        private readonly IPictureService _pictureService;
+        private readonly CaptchaSettings _captchaSettings;
+        private readonly CustomerSettings _customerSettings;
         private readonly IDateTimeHelper _dateTimeHelper;
+        private readonly INewsService _newsService;
+        private readonly IPictureService _pictureService;
         private readonly IStaticCacheManager _cacheManager;
-
+        private readonly IStoreContext _storeContext;
+        private readonly IWorkContext _workContext;
         private readonly MediaSettings _mediaSettings;
         private readonly NewsSettings _newsSettings;
-        private readonly CustomerSettings _customerSettings;
-        private readonly CaptchaSettings _captchaSettings;
 
         #endregion
 
         #region Ctor
 
-        public NewsModelFactory(INewsService newsService,
-            IWorkContext workContext, 
-            IStoreContext storeContext,
-            IPictureService pictureService, 
-            IDateTimeHelper dateTimeHelper,
-            IStaticCacheManager cacheManager,
-            MediaSettings mediaSettings, 
-            NewsSettings newsSettings,
+        public NewsModelFactory(CaptchaSettings captchaSettings,
             CustomerSettings customerSettings,
-            CaptchaSettings captchaSettings)
+            IDateTimeHelper dateTimeHelper,
+            INewsService newsService,
+            IPictureService pictureService,
+            IStaticCacheManager cacheManager,
+            IStoreContext storeContext,
+            IWorkContext workContext,
+            MediaSettings mediaSettings,
+            NewsSettings newsSettings)
         {
-            this._newsService = newsService;
-            this._workContext = workContext;
-            this._storeContext = storeContext;
-            this._pictureService = pictureService;
+            this._captchaSettings = captchaSettings;
+            this._customerSettings = customerSettings;
             this._dateTimeHelper = dateTimeHelper;
+            this._newsService = newsService;
+            this._pictureService = pictureService;
             this._cacheManager = cacheManager;
-
+            this._storeContext = storeContext;
+            this._workContext = workContext;
             this._mediaSettings = mediaSettings;
             this._newsSettings = newsSettings;
-            this._customerSettings = customerSettings;
-            this._captchaSettings = captchaSettings;
         }
 
         #endregion

@@ -30,58 +30,56 @@ namespace Nop.Web.Controllers
     {
         #region Fields
 
-        private readonly IVendorModelFactory _vendorModelFactory;
-        private readonly IWorkContext _workContext;
-        private readonly ILocalizationService _localizationService;
+        private readonly CaptchaSettings _captchaSettings;
         private readonly ICustomerService _customerService;
-        private readonly IWorkflowMessageService _workflowMessageService;
-        private readonly IVendorService _vendorService;
-        private readonly IUrlRecordService _urlRecordService;
-        private readonly IPictureService _pictureService;
         private readonly IGenericAttributeService _genericAttributeService;
+        private readonly ILocalizationService _localizationService;
+        private readonly IPictureService _pictureService;
+        private readonly IUrlRecordService _urlRecordService;
         private readonly IVendorAttributeParser _vendorAttributeParser;
         private readonly IVendorAttributeService _vendorAttributeService;
-
+        private readonly IVendorModelFactory _vendorModelFactory;
+        private readonly IVendorService _vendorService;
+        private readonly IWorkContext _workContext;
+        private readonly IWorkflowMessageService _workflowMessageService;
         private readonly LocalizationSettings _localizationSettings;
         private readonly VendorSettings _vendorSettings;
-        private readonly CaptchaSettings _captchaSettings;
         
         #endregion
         
         #region Ctor
 
-        public VendorController(IVendorModelFactory vendorModelFactory,
-            IWorkContext workContext,
-            ILocalizationService localizationService,
+        public VendorController(CaptchaSettings captchaSettings,
             ICustomerService customerService,
-            IWorkflowMessageService workflowMessageService,
-            IVendorService vendorService,
-            IUrlRecordService urlRecordService,
-            IPictureService pictureService,
             IGenericAttributeService genericAttributeService,
+            ILocalizationService localizationService,
+            IPictureService pictureService,
+            IUrlRecordService urlRecordService,
             IVendorAttributeParser vendorAttributeParser,
             IVendorAttributeService vendorAttributeService,
+            IVendorModelFactory vendorModelFactory,
+            IVendorService vendorService,
+            IWorkContext workContext,
+            IWorkflowMessageService workflowMessageService,
             LocalizationSettings localizationSettings,
-            VendorSettings vendorSettings,
-            CaptchaSettings captchaSettings)
+            VendorSettings vendorSettings)
         {
-            this._vendorModelFactory = vendorModelFactory;
-            this._workContext = workContext;
-            this._localizationService = localizationService;
+            this._captchaSettings = captchaSettings;
             this._customerService = customerService;
-            this._workflowMessageService = workflowMessageService;
-            this._vendorService = vendorService;
-            this._urlRecordService = urlRecordService;
-            this._pictureService = pictureService;
             this._genericAttributeService = genericAttributeService;
+            this._localizationService = localizationService;
+            this._pictureService = pictureService;
+            this._urlRecordService = urlRecordService;
             this._vendorAttributeParser = vendorAttributeParser;
             this._vendorAttributeService = vendorAttributeService;
-
+            this._vendorModelFactory = vendorModelFactory;
+            this._vendorService = vendorService;
+            this._workContext = workContext;
+            this._workflowMessageService = workflowMessageService;
             this._localizationSettings = localizationSettings;
             this._vendorSettings = vendorSettings;
-            this._captchaSettings = captchaSettings;
         }
-        
+
         #endregion
         
         #region Utilities

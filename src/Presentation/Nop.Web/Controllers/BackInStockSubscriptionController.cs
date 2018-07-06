@@ -16,33 +16,33 @@ namespace Nop.Web.Controllers
     {
 		#region Fields
 
-        private readonly IProductService _productService;
-        private readonly IWorkContext _workContext;
-        private readonly IStoreContext _storeContext;
-        private readonly ILocalizationService _localizationService;
-        private readonly IBackInStockSubscriptionService _backInStockSubscriptionService;
         private readonly CatalogSettings _catalogSettings;
         private readonly CustomerSettings _customerSettings;
+        private readonly IBackInStockSubscriptionService _backInStockSubscriptionService;
+        private readonly ILocalizationService _localizationService;
+        private readonly IProductService _productService;
+        private readonly IStoreContext _storeContext;
+        private readonly IWorkContext _workContext;
         
         #endregion
 
 		#region Ctor
 
-        public BackInStockSubscriptionController(IProductService productService,
-            IWorkContext workContext, 
-            IStoreContext storeContext,
-            ILocalizationService localizationService,
+        public BackInStockSubscriptionController(CatalogSettings catalogSettings,
+            CustomerSettings customerSettings,
             IBackInStockSubscriptionService backInStockSubscriptionService,
-            CatalogSettings catalogSettings,
-            CustomerSettings customerSettings)
+            ILocalizationService localizationService,
+            IProductService productService,
+            IStoreContext storeContext,
+            IWorkContext workContext)
         {
-            this._productService = productService;
-            this._workContext = workContext;
-            this._storeContext = storeContext;
-            this._localizationService = localizationService;
-            this._backInStockSubscriptionService = backInStockSubscriptionService;
             this._catalogSettings = catalogSettings;
             this._customerSettings = customerSettings;
+            this._backInStockSubscriptionService = backInStockSubscriptionService;
+            this._localizationService = localizationService;
+            this._productService = productService;
+            this._storeContext = storeContext;
+            this._workContext = workContext;
         }
 
         #endregion

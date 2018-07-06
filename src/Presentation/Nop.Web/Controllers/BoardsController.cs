@@ -23,35 +23,35 @@ namespace Nop.Web.Controllers
     {
         #region Fields
 
+        private readonly ForumSettings _forumSettings;
+        private readonly IForumModelFactory _forumModelFactory;
         private readonly IForumService _forumService;
         private readonly ILocalizationService _localizationService;
+        private readonly IStoreContext _storeContext;
         private readonly IWebHelper _webHelper;
         private readonly IWorkContext _workContext;
-        private readonly IStoreContext _storeContext;
-        private readonly IForumModelFactory _forumModelFactory;
-        private readonly ForumSettings _forumSettings;
         
         #endregion
         
         #region Ctor
 
-        public BoardsController(IForumService forumService,
-            ILocalizationService localizationService,
-            IWebHelper webHelper,
-            IWorkContext workContext,
-            IStoreContext storeContext,
+        public BoardsController(ForumSettings forumSettings,
             IForumModelFactory forumModelFactory,
-            ForumSettings forumSettings)
+            IForumService forumService,
+            ILocalizationService localizationService,
+            IStoreContext storeContext,
+            IWebHelper webHelper,
+            IWorkContext workContext)
         {
+            this._forumSettings = forumSettings;
+            this._forumModelFactory = forumModelFactory;
             this._forumService = forumService;
             this._localizationService = localizationService;
+            this._storeContext = storeContext;
             this._webHelper = webHelper;
             this._workContext = workContext;
-            this._storeContext = storeContext;
-            this._forumModelFactory = forumModelFactory;
-            this._forumSettings = forumSettings;
         }
-        
+
         #endregion
         
         #region Methods

@@ -27,89 +27,87 @@ namespace Nop.Web.Factories
     {
         #region Fields
 
+        private readonly AddressSettings _addressSettings;
+        private readonly CommonSettings _commonSettings;
         private readonly IAddressModelFactory _addressModelFactory;
-        private readonly IWorkContext _workContext;
-        private readonly IStoreContext _storeContext;
-        private readonly IStoreMappingService _storeMappingService;
-        private readonly ILocalizationService _localizationService;
-        private readonly ITaxService _taxService;
+        private readonly ICountryService _countryService;
         private readonly ICurrencyService _currencyService;
-        private readonly IPriceFormatter _priceFormatter;
+        private readonly IGenericAttributeService _genericAttributeService;
+        private readonly ILocalizationService _localizationService;
         private readonly IOrderProcessingService _orderProcessingService;
+        private readonly IOrderTotalCalculationService _orderTotalCalculationService;
+        private readonly IPaymentService _paymentService;
+        private readonly IPriceFormatter _priceFormatter;
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly IProductService _productService;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly ICountryService _countryService;
-        private readonly IStateProvinceService _stateProvinceService;
-        private readonly IShippingService _shippingService;
-        private readonly IPaymentService _paymentService;
-        private readonly IOrderTotalCalculationService _orderTotalCalculationService;
         private readonly IRewardPointService _rewardPointService;
+        private readonly IShippingService _shippingService;
+        private readonly IStateProvinceService _stateProvinceService;
+        private readonly IStoreContext _storeContext;
+        private readonly IStoreMappingService _storeMappingService;
+        private readonly ITaxService _taxService;
         private readonly IWebHelper _webHelper;
-
-        private readonly CommonSettings _commonSettings;
+        private readonly IWorkContext _workContext;
         private readonly OrderSettings _orderSettings;
-        private readonly RewardPointsSettings _rewardPointsSettings;
         private readonly PaymentSettings _paymentSettings;
+        private readonly RewardPointsSettings _rewardPointsSettings;
         private readonly ShippingSettings _shippingSettings;
-        private readonly AddressSettings _addressSettings;
 
         #endregion
 
 		#region Ctor
 
-        public CheckoutModelFactory(IAddressModelFactory addressModelFactory, 
-            IWorkContext workContext,
-            IStoreContext storeContext,
-            IStoreMappingService storeMappingService,
-            ILocalizationService localizationService, 
-            ITaxService taxService, 
-            ICurrencyService currencyService, 
-            IPriceFormatter priceFormatter, 
+        public CheckoutModelFactory(AddressSettings addressSettings,
+            CommonSettings commonSettings,
+            IAddressModelFactory addressModelFactory,
+            ICountryService countryService,
+            ICurrencyService currencyService,
+            IGenericAttributeService genericAttributeService,
+            ILocalizationService localizationService,
             IOrderProcessingService orderProcessingService,
+            IOrderTotalCalculationService orderTotalCalculationService,
+            IPaymentService paymentService,
+            IPriceFormatter priceFormatter,
             IProductAttributeParser productAttributeParser,
             IProductService productService,
-            IGenericAttributeService genericAttributeService,
-            ICountryService countryService,
-            IStateProvinceService stateProvinceService,
-            IShippingService shippingService, 
-            IPaymentService paymentService,
-            IOrderTotalCalculationService orderTotalCalculationService,
             IRewardPointService rewardPointService,
+            IShippingService shippingService,
+            IStateProvinceService stateProvinceService,
+            IStoreContext storeContext,
+            IStoreMappingService storeMappingService,
+            ITaxService taxService,
             IWebHelper webHelper,
-            CommonSettings commonSettings,
-            OrderSettings orderSettings, 
-            RewardPointsSettings rewardPointsSettings,
+            IWorkContext workContext,
+            OrderSettings orderSettings,
             PaymentSettings paymentSettings,
-            ShippingSettings shippingSettings,
-            AddressSettings addressSettings)
+            RewardPointsSettings rewardPointsSettings,
+            ShippingSettings shippingSettings)
         {
-            this._addressModelFactory = addressModelFactory;
-            this._workContext = workContext;
-            this._storeContext = storeContext;
-            this._storeMappingService = storeMappingService;
-            this._localizationService = localizationService;
-            this._taxService = taxService;
-            this._currencyService = currencyService;
-            this._priceFormatter = priceFormatter;
-            this._orderProcessingService = orderProcessingService;
-            this._productAttributeParser = productAttributeParser;
-            this._productService = productService;
-            this._genericAttributeService = genericAttributeService;
-            this._countryService = countryService;
-            this._stateProvinceService = stateProvinceService;
-            this._shippingService = shippingService;
-            this._paymentService = paymentService;
-            this._orderTotalCalculationService = orderTotalCalculationService;
-            this._rewardPointService = rewardPointService;
-            this._webHelper = webHelper;
-
-            this._commonSettings = commonSettings;
-            this._orderSettings = orderSettings;
-            this._rewardPointsSettings = rewardPointsSettings;
-            this._paymentSettings = paymentSettings;
-            this._shippingSettings = shippingSettings;
-            this._addressSettings = addressSettings;
+            this._addressSettings=addressSettings;
+            this._commonSettings=commonSettings;
+            this._addressModelFactory=addressModelFactory;
+            this._countryService=countryService;
+            this._currencyService=currencyService;
+            this._genericAttributeService=genericAttributeService;
+            this._localizationService=localizationService;
+            this._orderProcessingService=orderProcessingService;
+            this._orderTotalCalculationService=orderTotalCalculationService;
+            this._paymentService=paymentService;
+            this._priceFormatter=priceFormatter;
+            this._productAttributeParser=productAttributeParser;
+            this._productService=productService;
+            this._rewardPointService=rewardPointService;
+            this._shippingService=shippingService;
+            this._stateProvinceService=stateProvinceService;
+            this._storeContext=storeContext;
+            this._storeMappingService=storeMappingService;
+            this._taxService=taxService;
+            this._webHelper=webHelper;
+            this._workContext=workContext;
+            this._orderSettings=orderSettings;
+            this._paymentSettings=paymentSettings;
+            this._rewardPointsSettings=rewardPointsSettings;
+            this._shippingSettings=shippingSettings;
         }
 
         #endregion

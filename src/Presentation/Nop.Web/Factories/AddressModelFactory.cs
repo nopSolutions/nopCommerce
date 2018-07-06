@@ -22,30 +22,30 @@ namespace Nop.Web.Factories
     {
         #region Fields
 
-        private readonly IAddressAttributeService _addressAttributeService;
+        private readonly AddressSettings _addressSettings;
+        private readonly IAddressAttributeFormatter _addressAttributeFormatter;
         private readonly IAddressAttributeParser _addressAttributeParser;
+        private readonly IAddressAttributeService _addressAttributeService;
         private readonly ILocalizationService _localizationService;
         private readonly IStateProvinceService _stateProvinceService;
-        private readonly IAddressAttributeFormatter _addressAttributeFormatter;
-        private readonly AddressSettings _addressSettings;
 
         #endregion
 
         #region Ctor
 
-        public AddressModelFactory(IAddressAttributeService addressAttributeService,
-            IAddressAttributeParser addressAttributeParser,
-            ILocalizationService localizationService,
-            IStateProvinceService stateProvinceService,
+        public AddressModelFactory(AddressSettings addressSettings,
             IAddressAttributeFormatter addressAttributeFormatter,
-            AddressSettings addressSettings)
+            IAddressAttributeParser addressAttributeParser,
+            IAddressAttributeService addressAttributeService,
+            ILocalizationService localizationService,
+            IStateProvinceService stateProvinceService)
         {
-            this._addressAttributeService = addressAttributeService;
+            this._addressSettings = addressSettings;
+            this._addressAttributeFormatter = addressAttributeFormatter;
             this._addressAttributeParser = addressAttributeParser;
+            this._addressAttributeService = addressAttributeService;
             this._localizationService = localizationService;
             this._stateProvinceService = stateProvinceService;
-            this._addressAttributeFormatter = addressAttributeFormatter;
-            this._addressSettings = addressSettings;
         }
 
         #endregion

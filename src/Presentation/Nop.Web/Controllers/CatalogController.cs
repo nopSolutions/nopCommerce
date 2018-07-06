@@ -24,68 +24,68 @@ namespace Nop.Web.Controllers
     {
         #region Fields
 
-        private readonly ICatalogModelFactory _catalogModelFactory;
-        private readonly IProductModelFactory _productModelFactory;
-        private readonly ICategoryService _categoryService;
-        private readonly IManufacturerService _manufacturerService;
-        private readonly IProductService _productService;
-        private readonly IVendorService _vendorService;
-        private readonly IWorkContext _workContext;
-        private readonly IStoreContext _storeContext;
-        private readonly ILocalizationService _localizationService;
-        private readonly IWebHelper _webHelper;
-        private readonly IProductTagService _productTagService;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly IAclService _aclService;
-        private readonly IStoreMappingService _storeMappingService;
-        private readonly IPermissionService _permissionService;
-        private readonly ICustomerActivityService _customerActivityService;
-        private readonly MediaSettings _mediaSettings;
         private readonly CatalogSettings _catalogSettings;
+        private readonly IAclService _aclService;
+        private readonly ICatalogModelFactory _catalogModelFactory;
+        private readonly ICategoryService _categoryService;
+        private readonly ICustomerActivityService _customerActivityService;
+        private readonly IGenericAttributeService _genericAttributeService;
+        private readonly ILocalizationService _localizationService;
+        private readonly IManufacturerService _manufacturerService;
+        private readonly IPermissionService _permissionService;
+        private readonly IProductModelFactory _productModelFactory;
+        private readonly IProductService _productService;
+        private readonly IProductTagService _productTagService;
+        private readonly IStoreContext _storeContext;
+        private readonly IStoreMappingService _storeMappingService;
+        private readonly IVendorService _vendorService;
+        private readonly IWebHelper _webHelper;
+        private readonly IWorkContext _workContext;
+        private readonly MediaSettings _mediaSettings;
         private readonly VendorSettings _vendorSettings;
 
         #endregion
 
         #region Ctor
 
-        public CatalogController(ICatalogModelFactory catalogModelFactory,
-            IProductModelFactory productModelFactory,
-            ICategoryService categoryService, 
-            IManufacturerService manufacturerService,
-            IProductService productService, 
-            IVendorService vendorService,
-            IWorkContext workContext, 
-            IStoreContext storeContext,
-            ILocalizationService localizationService,
-            IWebHelper webHelper,
-            IProductTagService productTagService,
-            IGenericAttributeService genericAttributeService,
+        public CatalogController(CatalogSettings catalogSettings,
             IAclService aclService,
-            IStoreMappingService storeMappingService,
-            IPermissionService permissionService, 
+            ICatalogModelFactory catalogModelFactory,
+            ICategoryService categoryService, 
             ICustomerActivityService customerActivityService,
+            IGenericAttributeService genericAttributeService,
+            ILocalizationService localizationService,
+            IManufacturerService manufacturerService,
+            IPermissionService permissionService, 
+            IProductModelFactory productModelFactory,
+            IProductService productService, 
+            IProductTagService productTagService,
+            IStoreContext storeContext,
+            IStoreMappingService storeMappingService,
+            IVendorService vendorService,
+            IWebHelper webHelper,
+            IWorkContext workContext, 
             MediaSettings mediaSettings,
-            CatalogSettings catalogSettings,
             VendorSettings vendorSettings)
         {
-            this._catalogModelFactory = catalogModelFactory;
-            this._productModelFactory = productModelFactory;
-            this._categoryService = categoryService;
-            this._manufacturerService = manufacturerService;
-            this._productService = productService;
-            this._vendorService = vendorService;
-            this._workContext = workContext;
-            this._storeContext = storeContext;
-            this._localizationService = localizationService;
-            this._webHelper = webHelper;
-            this._productTagService = productTagService;
-            this._genericAttributeService = genericAttributeService;
-            this._aclService = aclService;
-            this._storeMappingService = storeMappingService;
-            this._permissionService = permissionService;
-            this._customerActivityService = customerActivityService;
-            this._mediaSettings = mediaSettings;
             this._catalogSettings = catalogSettings;
+            this._aclService = aclService;
+            this._catalogModelFactory = catalogModelFactory;
+            this._categoryService = categoryService;
+            this._customerActivityService = customerActivityService;
+            this._genericAttributeService = genericAttributeService;
+            this._localizationService = localizationService;
+            this._manufacturerService = manufacturerService;
+            this._permissionService = permissionService;
+            this._productModelFactory = productModelFactory;
+            this._productService = productService;
+            this._productTagService = productTagService;
+            this._storeContext = storeContext;
+            this._storeMappingService = storeMappingService;
+            this._vendorService = vendorService;
+            this._webHelper = webHelper;
+            this._workContext = workContext;
+            this._mediaSettings = mediaSettings;
             this._vendorSettings = vendorSettings;
         }
 

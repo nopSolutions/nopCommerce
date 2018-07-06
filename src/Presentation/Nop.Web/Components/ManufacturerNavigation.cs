@@ -8,14 +8,13 @@ namespace Nop.Web.Components
 {
     public class ManufacturerNavigationViewComponent : NopViewComponent
     {
-        private readonly ICatalogModelFactory _catalogModelFactory;
         private readonly CatalogSettings _catalogSettings;
+        private readonly ICatalogModelFactory _catalogModelFactory;
 
-        public ManufacturerNavigationViewComponent(ICatalogModelFactory catalogModelFactory,
-            CatalogSettings catalogSettings)
+        public ManufacturerNavigationViewComponent(CatalogSettings catalogSettings, ICatalogModelFactory catalogModelFactory)
         {
-            this._catalogModelFactory = catalogModelFactory;
             this._catalogSettings = catalogSettings;
+            this._catalogModelFactory = catalogModelFactory;
         }
 
         public IViewComponentResult Invoke(int currentManufacturerId)

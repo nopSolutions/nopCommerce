@@ -11,18 +11,18 @@ namespace Nop.Web.Factories
     {
         #region Fields
 
-        private readonly ILocalizationService _localizationService;
         private readonly CustomerSettings _customerSettings;
+        private readonly ILocalizationService _localizationService;
 
         #endregion
 
         #region Ctor
 
-        public NewsletterModelFactory(ILocalizationService localizationService,
-            CustomerSettings customerSettings)
+        public NewsletterModelFactory(CustomerSettings customerSettings,
+            ILocalizationService localizationService)
         {
-            this._localizationService = localizationService;
             this._customerSettings = customerSettings;
+            this._localizationService = localizationService;
         }
 
         #endregion

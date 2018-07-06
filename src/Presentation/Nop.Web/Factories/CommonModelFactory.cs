@@ -48,118 +48,117 @@ namespace Nop.Web.Factories
     {
         #region Fields
 
+        private readonly BlogSettings _blogSettings;
+        private readonly CaptchaSettings _captchaSettings;
+        private readonly CatalogSettings _catalogSettings;
+        private readonly CommonSettings _commonSettings;
+        private readonly CustomerSettings _customerSettings;
+        private readonly DisplayDefaultFooterItemSettings _displayDefaultFooterItemSettings;
+        private readonly ForumSettings _forumSettings;
+        private readonly IActionContextAccessor _actionContextAccessor;
         private readonly ICategoryService _categoryService;
-        private readonly IProductService _productService;
-        private readonly IManufacturerService _manufacturerService;
-        private readonly ITopicService _topicService;
-        private readonly ILanguageService _languageService;
         private readonly ICurrencyService _currencyService;
+        private readonly IForumService _forumService;
+        private readonly IGenericAttributeService _genericAttributeService;
+        private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
-        private readonly IWorkContext _workContext;
-        private readonly IStoreContext _storeContext;
+        private readonly IManufacturerService _manufacturerService;
+        private readonly INopFileProvider _fileProvider;
+        private readonly IPageHeadBuilder _pageHeadBuilder;
+        private readonly IPermissionService _permissionService;
+        private readonly IPictureService _pictureService;
+        private readonly IProductService _productService;
+        private readonly IProductTagService _productTagService;
         private readonly ISitemapGenerator _sitemapGenerator;
+        private readonly IStaticCacheManager _cacheManager;
+        private readonly IStoreContext _storeContext;
         private readonly IThemeContext _themeContext;
         private readonly IThemeProvider _themeProvider;
-        private readonly IForumService _forumservice;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly IWebHelper _webHelper;
-        private readonly IPermissionService _permissionService;
-        private readonly IStaticCacheManager _cacheManager;
-        private readonly IPageHeadBuilder _pageHeadBuilder;
-        private readonly IPictureService _pictureService;
-        private readonly IHostingEnvironment _hostingEnvironment;
-        private readonly IProductTagService _productTagService;
+        private readonly ITopicService _topicService;
         private readonly IUrlHelperFactory _urlHelperFactory;
-        private readonly IActionContextAccessor _actionContextAccessor;
-        private readonly INopFileProvider _fileProvider;
-
-        private readonly CatalogSettings _catalogSettings;
-        private readonly CustomerSettings _customerSettings;
-        private readonly StoreInformationSettings _storeInformationSettings;
-        private readonly CommonSettings _commonSettings;
-        private readonly BlogSettings _blogSettings;
-        private readonly NewsSettings _newsSettings;
-        private readonly ForumSettings _forumSettings;
+        private readonly IWebHelper _webHelper;
+        private readonly IWorkContext _workContext;
         private readonly LocalizationSettings _localizationSettings;
-        private readonly CaptchaSettings _captchaSettings;
+        private readonly NewsSettings _newsSettings;
+        private readonly StoreInformationSettings _storeInformationSettings;
         private readonly VendorSettings _vendorSettings;
-        private readonly DisplayDefaultFooterItemSettings _displayDefaultFooterItemSettings;
 
         #endregion
 
         #region Ctor
 
-        public CommonModelFactory(ICategoryService categoryService,
-            IProductService productService,
-            IManufacturerService manufacturerService,
-            ITopicService topicService,
-            ILanguageService languageService,
+        public CommonModelFactory(BlogSettings blogSettings,
+            CaptchaSettings captchaSettings,
+            CatalogSettings catalogSettings,
+            CommonSettings commonSettings,
+            CustomerSettings customerSettings,
+            DisplayDefaultFooterItemSettings displayDefaultFooterItemSettings,
+            ForumSettings forumSettings,
+            IActionContextAccessor actionContextAccessor,
+            ICategoryService categoryService,
             ICurrencyService currencyService,
-            ILocalizationService localizationService,
-            IWorkContext workContext,
-            IStoreContext storeContext,
-            ISitemapGenerator sitemapGenerator,
-            IThemeContext themeContext,
-            IThemeProvider themeProvider,
             IForumService forumService,
             IGenericAttributeService genericAttributeService,
-            IWebHelper webHelper,
-            IPermissionService permissionService,
-            IStaticCacheManager cacheManager,
-            IPageHeadBuilder pageHeadBuilder,
-            IPictureService pictureService,
             IHostingEnvironment hostingEnvironment,
-            IUrlHelperFactory urlHelperFactory,
-            IActionContextAccessor actionContextAccessor,
-            CatalogSettings catalogSettings,
-            CustomerSettings customerSettings,
-            StoreInformationSettings storeInformationSettings,
-            CommonSettings commonSettings,
-            BlogSettings blogSettings,
-            NewsSettings newsSettings,
-            ForumSettings forumSettings,
-            LocalizationSettings localizationSettings,
-            CaptchaSettings captchaSettings,
-            VendorSettings vendorSettings,
+            ILanguageService languageService,
+            ILocalizationService localizationService,
+            IManufacturerService manufacturerService,
+            INopFileProvider fileProvider,
+            IPageHeadBuilder pageHeadBuilder,
+            IPermissionService permissionService,
+            IPictureService pictureService,
+            IProductService productService,
             IProductTagService productTagService,
-            DisplayDefaultFooterItemSettings displayDefaultFooterItemSettings,
-            INopFileProvider fileProvider)
+            ISitemapGenerator sitemapGenerator,
+            IStaticCacheManager cacheManager,
+            IStoreContext storeContext,
+            IThemeContext themeContext,
+            IThemeProvider themeProvider,
+            ITopicService topicService,
+            IUrlHelperFactory urlHelperFactory,
+            IWebHelper webHelper,
+            IWorkContext workContext,
+            LocalizationSettings localizationSettings,
+            NewsSettings newsSettings,
+            StoreInformationSettings storeInformationSettings,
+            VendorSettings vendorSettings)
         {
+            this._blogSettings = blogSettings;
+            this._captchaSettings = captchaSettings;
+            this._catalogSettings = catalogSettings;
+            this._commonSettings = commonSettings;
+            this._customerSettings = customerSettings;
+            this._displayDefaultFooterItemSettings = displayDefaultFooterItemSettings;
+            this._forumSettings = forumSettings;
+            this._actionContextAccessor = actionContextAccessor;
             this._categoryService = categoryService;
-            this._productService = productService;
-            this._manufacturerService = manufacturerService;
-            this._topicService = topicService;
-            this._languageService = languageService;
             this._currencyService = currencyService;
+            this._forumService = forumService;
+            this._genericAttributeService = genericAttributeService;
+            this._hostingEnvironment = hostingEnvironment;
+            this._languageService = languageService;
             this._localizationService = localizationService;
-            this._workContext = workContext;
-            this._storeContext = storeContext;
+            this._manufacturerService = manufacturerService;
+            this._fileProvider = fileProvider;
+            this._pageHeadBuilder = pageHeadBuilder;
+            this._permissionService = permissionService;
+            this._pictureService = pictureService;
+            this._productService = productService;
+            this._productTagService = productTagService;
             this._sitemapGenerator = sitemapGenerator;
+            this._cacheManager = cacheManager;
+            this._storeContext = storeContext;
             this._themeContext = themeContext;
             this._themeProvider = themeProvider;
-            this._forumservice = forumService;
-            this._genericAttributeService = genericAttributeService;
-            this._webHelper = webHelper;
-            this._permissionService = permissionService;
-            this._cacheManager = cacheManager;
-            this._pageHeadBuilder = pageHeadBuilder;
-            this._pictureService = pictureService;
-            this._hostingEnvironment = hostingEnvironment;
+            this._topicService = topicService;
             this._urlHelperFactory = urlHelperFactory;
-            this._actionContextAccessor = actionContextAccessor;
-            this._catalogSettings = catalogSettings;
-            this._customerSettings = customerSettings;
-            this._storeInformationSettings = storeInformationSettings;
-            this._commonSettings = commonSettings;
-            this._blogSettings = blogSettings;
-            this._newsSettings = newsSettings;
-            this._forumSettings = forumSettings;
+            this._webHelper = webHelper;
+            this._workContext = workContext;
             this._localizationSettings = localizationSettings;
-            this._captchaSettings = captchaSettings;
+            this._newsSettings = newsSettings;
+            this._storeInformationSettings = storeInformationSettings;
             this._vendorSettings = vendorSettings;
-            this._productTagService = productTagService;
-            this._displayDefaultFooterItemSettings = displayDefaultFooterItemSettings;
-            this._fileProvider = fileProvider;
         }
 
         #endregion
@@ -176,7 +175,7 @@ namespace Nop.Web.Factories
             var customer = _workContext.CurrentCustomer;
             if (_forumSettings.AllowPrivateMessages && !customer.IsGuest())
             {
-                var privateMessages = _forumservice.GetAllPrivateMessages(_storeContext.CurrentStore.Id,
+                var privateMessages = _forumService.GetAllPrivateMessages(_storeContext.CurrentStore.Id,
                     0, customer.Id, false, null, false, string.Empty, 0, 1);
 
                 if (privateMessages.TotalCount > 0)
