@@ -23,13 +23,13 @@ namespace Nop.Web.Controllers
         #region Fields
 
         private readonly IOrderModelFactory _orderModelFactory;
-        private readonly IOrderService _orderService;
-        private readonly IShipmentService _shipmentService;
-        private readonly IWorkContext _workContext;
         private readonly IOrderProcessingService _orderProcessingService;
+        private readonly IOrderService _orderService;
         private readonly IPaymentService _paymentService;
         private readonly IPdfService _pdfService;
+        private readonly IShipmentService _shipmentService;
         private readonly IWebHelper _webHelper;
+        private readonly IWorkContext _workContext;
         private readonly RewardPointsSettings _rewardPointsSettings;
 
         #endregion
@@ -37,23 +37,23 @@ namespace Nop.Web.Controllers
 		#region Ctor
 
         public OrderController(IOrderModelFactory orderModelFactory,
-            IOrderService orderService, 
-            IShipmentService shipmentService, 
-            IWorkContext workContext,
             IOrderProcessingService orderProcessingService, 
+            IOrderService orderService, 
             IPaymentService paymentService, 
-            IPdfService pdfService, 
+            IPdfService pdfService,
+            IShipmentService shipmentService, 
             IWebHelper webHelper,
+            IWorkContext workContext,
             RewardPointsSettings rewardPointsSettings)
         {
             this._orderModelFactory = orderModelFactory;
-            this._orderService = orderService;
-            this._shipmentService = shipmentService;
-            this._workContext = workContext;
             this._orderProcessingService = orderProcessingService;
+            this._orderService = orderService;
             this._paymentService = paymentService;
             this._pdfService = pdfService;
+            this._shipmentService = shipmentService;
             this._webHelper = webHelper;
+            this._workContext = workContext;
             this._rewardPointsSettings = rewardPointsSettings;
         }
 

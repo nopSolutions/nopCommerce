@@ -24,45 +24,45 @@ namespace Nop.Web.Factories
     {
 		#region Fields
 
-        private readonly IReturnRequestService _returnRequestService;
-        private readonly IOrderService _orderService;
-        private readonly IWorkContext _workContext;
-        private readonly IStoreContext _storeContext;
         private readonly ICurrencyService _currencyService;
-        private readonly IPriceFormatter _priceFormatter;
-        private readonly ILocalizationService _localizationService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IDownloadService _downloadService;
-        private readonly OrderSettings _orderSettings;
+        private readonly ILocalizationService _localizationService;
+        private readonly IOrderService _orderService;
+        private readonly IPriceFormatter _priceFormatter;
+        private readonly IReturnRequestService _returnRequestService;
         private readonly IStaticCacheManager _cacheManager;
+        private readonly IStoreContext _storeContext;
+        private readonly IWorkContext _workContext;
+        private readonly OrderSettings _orderSettings;
 
         #endregion
 
         #region Ctor
 
-        public ReturnRequestModelFactory(IReturnRequestService returnRequestService,
-            IOrderService orderService, 
-            IWorkContext workContext, 
-            IStoreContext storeContext,
-            ICurrencyService currencyService, 
-            IPriceFormatter priceFormatter,
-            ILocalizationService localizationService,
+        public ReturnRequestModelFactory(ICurrencyService currencyService,
             IDateTimeHelper dateTimeHelper,
-            IDownloadService downloadService, 
-            OrderSettings orderSettings,
-            IStaticCacheManager cacheManager)
+            IDownloadService downloadService,
+            ILocalizationService localizationService,
+            IOrderService orderService,
+            IPriceFormatter priceFormatter,
+            IReturnRequestService returnRequestService,
+            IStaticCacheManager cacheManager,
+            IStoreContext storeContext,
+            IWorkContext workContext,
+            OrderSettings orderSettings)
         {
-            this._returnRequestService = returnRequestService;
-            this._orderService = orderService;
-            this._workContext = workContext;
-            this._storeContext = storeContext;
             this._currencyService = currencyService;
-            this._priceFormatter = priceFormatter;
-            this._localizationService = localizationService;
             this._dateTimeHelper = dateTimeHelper;
             this._downloadService = downloadService;
-            this._orderSettings = orderSettings;
+            this._localizationService = localizationService;
+            this._orderService = orderService;
+            this._priceFormatter = priceFormatter;
+            this._returnRequestService = returnRequestService;
             this._cacheManager = cacheManager;
+            this._storeContext = storeContext;
+            this._workContext = workContext;
+            this._orderSettings = orderSettings;
         }
 
         #endregion

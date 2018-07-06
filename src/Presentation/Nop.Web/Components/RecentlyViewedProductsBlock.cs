@@ -13,20 +13,20 @@ namespace Nop.Web.Components
 {
     public class RecentlyViewedProductsBlockViewComponent : NopViewComponent
     {
-        private readonly IAclService _aclService;
         private readonly CatalogSettings _catalogSettings;
+        private readonly IAclService _aclService;
         private readonly IProductModelFactory _productModelFactory;
         private readonly IRecentlyViewedProductsService _recentlyViewedProductsService;
         private readonly IStoreMappingService _storeMappingService;
 
-        public RecentlyViewedProductsBlockViewComponent(IAclService aclService,
-            CatalogSettings catalogSettings,
+        public RecentlyViewedProductsBlockViewComponent(CatalogSettings catalogSettings,
+            IAclService aclService,
             IProductModelFactory productModelFactory,
             IRecentlyViewedProductsService recentlyViewedProductsService,
             IStoreMappingService storeMappingService)
         {
-            this._aclService = aclService;
             this._catalogSettings = catalogSettings;
+            this._aclService = aclService;
             this._productModelFactory = productModelFactory;
             this._recentlyViewedProductsService = recentlyViewedProductsService;
             this._storeMappingService = storeMappingService;

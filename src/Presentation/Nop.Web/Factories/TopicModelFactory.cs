@@ -21,33 +21,30 @@ namespace Nop.Web.Factories
     {
         #region Fields
 
-        private readonly ITopicService _topicService;
-        private readonly IWorkContext _workContext;
-        private readonly IStoreContext _storeContext;
-        private readonly IStaticCacheManager _cacheManager;
-        private readonly IStoreMappingService _storeMappingService;
         private readonly IAclService _aclService;
+        private readonly IStaticCacheManager _cacheManager;
+        private readonly IStoreContext _storeContext;
+        private readonly ITopicService _topicService;
         private readonly ITopicTemplateService _topicTemplateService;
+        private readonly IWorkContext _workContext;
 
         #endregion
 
         #region Ctor
 
-        public TopicModelFactory(ITopicService topicService,
-            IWorkContext workContext,
-            IStoreContext storeContext,
+        public TopicModelFactory(IAclService aclService,
             IStaticCacheManager cacheManager,
-            IStoreMappingService storeMappingService,
-            IAclService aclService,
-            ITopicTemplateService topicTemplateService)
+            IStoreContext storeContext,
+            ITopicService topicService,
+            ITopicTemplateService topicTemplateService,
+            IWorkContext workContext)
         {
-            this._topicService = topicService;
-            this._workContext = workContext;
-            this._storeContext = storeContext;
-            this._cacheManager = cacheManager;
-            this._storeMappingService = storeMappingService;
             this._aclService = aclService;
+            this._cacheManager = cacheManager;
+            this._storeContext = storeContext;
+            this._topicService = topicService;
             this._topicTemplateService = topicTemplateService;
+            this._workContext = workContext;
         }
 
         #endregion

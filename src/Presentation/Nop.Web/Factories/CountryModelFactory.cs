@@ -18,27 +18,28 @@ namespace Nop.Web.Factories
 		#region Fields
 
         private readonly ICountryService _countryService;
-        private readonly IStateProvinceService _stateProvinceService;
         private readonly ILocalizationService _localizationService;
-        private readonly IWorkContext _workContext;
+        private readonly IStateProvinceService _stateProvinceService;
         private readonly IStaticCacheManager _cacheManager;
+        private readonly IWorkContext _workContext;
 
 	    #endregion
 
 		#region Ctor
 
-        public CountryModelFactory(ICountryService countryService, 
-            IStateProvinceService stateProvinceService, 
-            ILocalizationService localizationService, 
-            IWorkContext workContext,
-            IStaticCacheManager cacheManager)
-		{
+        public CountryModelFactory(ICountryService countryService,
+
+            ILocalizationService localizationService,
+            IStateProvinceService stateProvinceService,
+            IStaticCacheManager cacheManager,
+            IWorkContext workContext)
+        {
             this._countryService = countryService;
-            this._stateProvinceService = stateProvinceService;
             this._localizationService = localizationService;
-            this._workContext = workContext;
+            this._stateProvinceService = stateProvinceService;
             this._cacheManager = cacheManager;
-		}
+            this._workContext = workContext;
+        }
 
         #endregion
 

@@ -33,69 +33,69 @@ namespace Nop.Web.Controllers
     {
         #region Fields
 
-        private readonly IProductModelFactory _productModelFactory;
-        private readonly IProductService _productService;
-        private readonly IWorkContext _workContext;
-        private readonly IStoreContext _storeContext;
-        private readonly ILocalizationService _localizationService;
-        private readonly IWebHelper _webHelper;
-        private readonly IRecentlyViewedProductsService _recentlyViewedProductsService;
-        private readonly ICompareProductsService _compareProductsService;
-        private readonly IWorkflowMessageService _workflowMessageService;
-        private readonly IOrderService _orderService;
+        private readonly CaptchaSettings _captchaSettings;
+        private readonly CatalogSettings _catalogSettings;
         private readonly IAclService _aclService;
-        private readonly IStoreMappingService _storeMappingService;
-        private readonly IPermissionService _permissionService;
+        private readonly ICompareProductsService _compareProductsService;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly IEventPublisher _eventPublisher;
-        private readonly CatalogSettings _catalogSettings;
-        private readonly ShoppingCartSettings _shoppingCartSettings;
+        private readonly ILocalizationService _localizationService;
+        private readonly IOrderService _orderService;
+        private readonly IPermissionService _permissionService;
+        private readonly IProductModelFactory _productModelFactory;
+        private readonly IProductService _productService;
+        private readonly IRecentlyViewedProductsService _recentlyViewedProductsService;
+        private readonly IStoreContext _storeContext;
+        private readonly IStoreMappingService _storeMappingService;
+        private readonly IWebHelper _webHelper;
+        private readonly IWorkContext _workContext;
+        private readonly IWorkflowMessageService _workflowMessageService;
         private readonly LocalizationSettings _localizationSettings;
-        private readonly CaptchaSettings _captchaSettings;
+        private readonly ShoppingCartSettings _shoppingCartSettings;
 
         #endregion
 
         #region Ctor
 
-        public ProductController(IProductModelFactory productModelFactory,
-            IProductService productService,
-            IWorkContext workContext,
-            IStoreContext storeContext,
-            ILocalizationService localizationService,
-            IWebHelper webHelper,
-            IRecentlyViewedProductsService recentlyViewedProductsService,
-            ICompareProductsService compareProductsService,
-            IWorkflowMessageService workflowMessageService,
-            IOrderService orderService,
+        public ProductController(CaptchaSettings captchaSettings,
+            CatalogSettings catalogSettings,
             IAclService aclService,
-            IStoreMappingService storeMappingService,
-            IPermissionService permissionService,
+            ICompareProductsService compareProductsService,
             ICustomerActivityService customerActivityService,
             IEventPublisher eventPublisher,
-            CatalogSettings catalogSettings,
-            ShoppingCartSettings shoppingCartSettings,
+            ILocalizationService localizationService,
+            IOrderService orderService,
+            IPermissionService permissionService,
+            IProductModelFactory productModelFactory,
+            IProductService productService,
+            IRecentlyViewedProductsService recentlyViewedProductsService,
+            IStoreContext storeContext,
+            IStoreMappingService storeMappingService,
+            IWebHelper webHelper,
+            IWorkContext workContext,
+            IWorkflowMessageService workflowMessageService,
             LocalizationSettings localizationSettings,
-            CaptchaSettings captchaSettings)
+            ShoppingCartSettings shoppingCartSettings)
         {
-            this._productModelFactory = productModelFactory;
-            this._productService = productService;
-            this._workContext = workContext;
-            this._storeContext = storeContext;
-            this._localizationService = localizationService;
-            this._webHelper = webHelper;
-            this._recentlyViewedProductsService = recentlyViewedProductsService;
-            this._compareProductsService = compareProductsService;
-            this._workflowMessageService = workflowMessageService;
-            this._orderService = orderService;
+            this._captchaSettings = captchaSettings;
+            this._catalogSettings = catalogSettings;
             this._aclService = aclService;
-            this._storeMappingService = storeMappingService;
-            this._permissionService = permissionService;
+            this._compareProductsService = compareProductsService;
             this._customerActivityService = customerActivityService;
             this._eventPublisher = eventPublisher;
-            this._catalogSettings = catalogSettings;
-            this._shoppingCartSettings = shoppingCartSettings;
+            this._localizationService = localizationService;
+            this._orderService = orderService;
+            this._permissionService = permissionService;
+            this._productModelFactory = productModelFactory;
+            this._productService = productService;
+            this._recentlyViewedProductsService = recentlyViewedProductsService;
+            this._storeContext = storeContext;
+            this._storeMappingService = storeMappingService;
+            this._webHelper = webHelper;
+            this._workContext = workContext;
+            this._workflowMessageService = workflowMessageService;
             this._localizationSettings = localizationSettings;
-            this._captchaSettings = captchaSettings;
+            this._shoppingCartSettings = shoppingCartSettings;
         }
 
         #endregion

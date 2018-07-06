@@ -14,30 +14,30 @@ namespace Nop.Web.Controllers
     {
         #region Fields
 
+        private readonly IAclService _aclService;
+        private readonly ILocalizationService _localizationService;
+        private readonly IPermissionService _permissionService;
+        private readonly IStoreMappingService _storeMappingService;
         private readonly ITopicModelFactory _topicModelFactory;
         private readonly ITopicService _topicService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IStoreMappingService _storeMappingService;
-        private readonly IAclService _aclService;
-        private readonly IPermissionService _permissionService;
 
         #endregion
 
         #region Ctor
 
-        public TopicController(ITopicModelFactory topicModelFactory,
-            ITopicService topicService,
+        public TopicController(IAclService aclService,
             ILocalizationService localizationService,
+            IPermissionService permissionService,
             IStoreMappingService storeMappingService,
-            IAclService aclService,
-            IPermissionService permissionService)
+            ITopicModelFactory topicModelFactory,
+            ITopicService topicService)
         {
+            this._aclService = aclService;
+            this._localizationService = localizationService;
+            this._permissionService = permissionService;
+            this._storeMappingService = storeMappingService;
             this._topicModelFactory = topicModelFactory;
             this._topicService = topicService;
-            this._localizationService = localizationService;
-            this._storeMappingService = storeMappingService;
-            this._aclService = aclService;
-            this._permissionService = permissionService;
         }
 
         #endregion

@@ -34,92 +34,90 @@ namespace Nop.Web.Controllers
     {
         #region Fields
 
-        private readonly ICheckoutModelFactory _checkoutModelFactory;
-        private readonly IWorkContext _workContext;
-        private readonly IStoreContext _storeContext;
-        private readonly IShoppingCartService _shoppingCartService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IProductAttributeParser _productAttributeParser;
-        private readonly IProductService _productService;
-        private readonly IOrderProcessingService _orderProcessingService;
-        private readonly ICustomerService _customerService;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly ICountryService _countryService;
-        private readonly IStateProvinceService _stateProvinceService;
-        private readonly IShippingService _shippingService;
-        private readonly IPaymentService _paymentService;
-        private readonly IPluginFinder _pluginFinder;
-        private readonly ILogger _logger;
-        private readonly IOrderService _orderService;
-        private readonly IWebHelper _webHelper;
-        private readonly IAddressAttributeParser _addressAttributeParser;
-        private readonly IAddressAttributeService _addressAttributeService;
-
-        private readonly OrderSettings _orderSettings;
-        private readonly RewardPointsSettings _rewardPointsSettings;
-        private readonly PaymentSettings _paymentSettings;
-        private readonly ShippingSettings _shippingSettings;
         private readonly AddressSettings _addressSettings;
         private readonly CustomerSettings _customerSettings;
+        private readonly IAddressAttributeParser _addressAttributeParser;
+        private readonly IAddressAttributeService _addressAttributeService;
+        private readonly ICheckoutModelFactory _checkoutModelFactory;
+        private readonly ICountryService _countryService;
+        private readonly ICustomerService _customerService;
+        private readonly IGenericAttributeService _genericAttributeService;
+        private readonly ILocalizationService _localizationService;
+        private readonly ILogger _logger;
+        private readonly IOrderProcessingService _orderProcessingService;
+        private readonly IOrderService _orderService;
+        private readonly IPaymentService _paymentService;
+        private readonly IPluginFinder _pluginFinder;
+        private readonly IProductAttributeParser _productAttributeParser;
+        private readonly IProductService _productService;
+        private readonly IShippingService _shippingService;
+        private readonly IShoppingCartService _shoppingCartService;
+        private readonly IStateProvinceService _stateProvinceService;
+        private readonly IStoreContext _storeContext;
+        private readonly IWebHelper _webHelper;
+        private readonly IWorkContext _workContext;
+        private readonly OrderSettings _orderSettings;
+        private readonly PaymentSettings _paymentSettings;
+        private readonly RewardPointsSettings _rewardPointsSettings;
+        private readonly ShippingSettings _shippingSettings;
         
         #endregion
 
 		#region Ctor
 
-        public CheckoutController(ICheckoutModelFactory checkoutModelFactory,
-            IWorkContext workContext,
-            IStoreContext storeContext,
-            IShoppingCartService shoppingCartService, 
-            ILocalizationService localizationService,
-            IProductAttributeParser productAttributeParser,
-            IProductService productService, 
-            IOrderProcessingService orderProcessingService,
-            ICustomerService customerService, 
-            IGenericAttributeService genericAttributeService,
-            ICountryService countryService,
-            IStateProvinceService stateProvinceService,
-            IShippingService shippingService, 
-            IPaymentService paymentService,
-            IPluginFinder pluginFinder,
-            ILogger logger,
-            IOrderService orderService,
-            IWebHelper webHelper,
+        public CheckoutController(AddressSettings addressSettings,
+            CustomerSettings customerSettings,
             IAddressAttributeParser addressAttributeParser,
             IAddressAttributeService addressAttributeService,
-            OrderSettings orderSettings, 
-            RewardPointsSettings rewardPointsSettings,
+            ICheckoutModelFactory checkoutModelFactory,
+            ICountryService countryService,
+            ICustomerService customerService,
+            IGenericAttributeService genericAttributeService,
+            ILocalizationService localizationService,
+            ILogger logger,
+            IOrderProcessingService orderProcessingService,
+            IOrderService orderService,
+            IPaymentService paymentService,
+            IPluginFinder pluginFinder,
+            IProductAttributeParser productAttributeParser,
+            IProductService productService,
+            IShippingService shippingService,
+            IShoppingCartService shoppingCartService,
+            IStateProvinceService stateProvinceService,
+            IStoreContext storeContext,
+            IWebHelper webHelper,
+            IWorkContext workContext,
+            OrderSettings orderSettings,
             PaymentSettings paymentSettings,
-            ShippingSettings shippingSettings,
-            AddressSettings addressSettings,
-            CustomerSettings customerSettings)
+            RewardPointsSettings rewardPointsSettings,
+            ShippingSettings shippingSettings)
         {
-            this._checkoutModelFactory = checkoutModelFactory;
-            this._workContext = workContext;
-            this._storeContext = storeContext;
-            this._shoppingCartService = shoppingCartService;
-            this._localizationService = localizationService;
-            this._productAttributeParser = productAttributeParser;
-            this._productService = productService;
-            this._orderProcessingService = orderProcessingService;
-            this._customerService = customerService;
-            this._genericAttributeService = genericAttributeService;
-            this._countryService = countryService;
-            this._stateProvinceService = stateProvinceService;
-            this._shippingService = shippingService;
-            this._paymentService = paymentService;
-            this._pluginFinder = pluginFinder;
-            this._logger = logger;
-            this._orderService = orderService;
-            this._webHelper = webHelper;
-            this._addressAttributeParser = addressAttributeParser;
-            this._addressAttributeService = addressAttributeService;
-
-            this._orderSettings = orderSettings;
-            this._rewardPointsSettings = rewardPointsSettings;
-            this._paymentSettings = paymentSettings;
-            this._shippingSettings = shippingSettings;
             this._addressSettings = addressSettings;
             this._customerSettings = customerSettings;
+            this._addressAttributeParser = addressAttributeParser;
+            this._addressAttributeService = addressAttributeService;
+            this._checkoutModelFactory = checkoutModelFactory;
+            this._countryService = countryService;
+            this._customerService = customerService;
+            this._genericAttributeService = genericAttributeService;
+            this._localizationService = localizationService;
+            this._logger = logger;
+            this._orderProcessingService = orderProcessingService;
+            this._orderService = orderService;
+            this._paymentService = paymentService;
+            this._pluginFinder = pluginFinder;
+            this._productAttributeParser = productAttributeParser;
+            this._productService = productService;
+            this._shippingService = shippingService;
+            this._shoppingCartService = shoppingCartService;
+            this._stateProvinceService = stateProvinceService;
+            this._storeContext = storeContext;
+            this._webHelper = webHelper;
+            this._workContext = workContext;
+            this._orderSettings = orderSettings;
+            this._paymentSettings = paymentSettings;
+            this._rewardPointsSettings = rewardPointsSettings;
+            this._shippingSettings = shippingSettings;
         }
 
         #endregion

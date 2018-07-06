@@ -7,13 +7,13 @@ namespace Nop.Web.Components
 {
     public class BlogTagsViewComponent : NopViewComponent
     {
-        private readonly IBlogModelFactory _blogModelFactory;
         private readonly BlogSettings _blogSettings;
+        private readonly IBlogModelFactory _blogModelFactory;
 
-        public BlogTagsViewComponent(IBlogModelFactory blogModelFactory, BlogSettings blogSettings)
+        public BlogTagsViewComponent(BlogSettings blogSettings, IBlogModelFactory blogModelFactory)
         {
-            this._blogModelFactory = blogModelFactory;
             this._blogSettings = blogSettings;
+            this._blogModelFactory = blogModelFactory;
         }
 
         public IViewComponentResult Invoke(int currentCategoryId, int currentProductId)

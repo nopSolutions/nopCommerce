@@ -12,11 +12,11 @@ namespace Nop.Web.Controllers
     {
 		#region Fields
 
-        private readonly IProductService _productService;
+        private readonly IBlogService _blogService;
         private readonly ICategoryService _categoryService;
         private readonly IManufacturerService _manufacturerService;
         private readonly INewsService _newsService;
-        private readonly IBlogService _blogService;
+        private readonly IProductService _productService;
         private readonly ITopicService _topicService;
         private readonly IVendorService _vendorService;
 
@@ -24,19 +24,19 @@ namespace Nop.Web.Controllers
 
 		#region Ctor
 
-        public BackwardCompatibility2XController(IProductService productService,
+        public BackwardCompatibility2XController(IBlogService blogService,
             ICategoryService categoryService, 
             IManufacturerService manufacturerService,
             INewsService newsService, 
-            IBlogService blogService,
+            IProductService productService,
             ITopicService topicService,
             IVendorService vendorService)
         {
-            this._productService = productService;
+            this._blogService = blogService;
             this._categoryService = categoryService;
             this._manufacturerService = manufacturerService;
             this._newsService = newsService;
-            this._blogService = blogService;
+            this._productService = productService;
             this._topicService = topicService;
             this._vendorService = vendorService;
         }

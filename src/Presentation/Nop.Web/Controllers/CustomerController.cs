@@ -49,133 +49,132 @@ namespace Nop.Web.Controllers
     {
         #region Fields
 
-        private readonly IAddressModelFactory _addressModelFactory;
-        private readonly ICustomerModelFactory _customerModelFactory;
-        private readonly IAuthenticationService _authenticationService;
-        private readonly DateTimeSettings _dateTimeSettings;
-        private readonly TaxSettings _taxSettings;
-        private readonly ILocalizationService _localizationService;
-        private readonly IWorkContext _workContext;
-        private readonly IStoreContext _storeContext;
-        private readonly ICurrencyService _currencyService;        
-        private readonly ICustomerService _customerService;
-        private readonly IGiftCardService _giftCardService;
-        private readonly IPriceFormatter _priceFormatter;
-        private readonly ICustomerAttributeParser _customerAttributeParser;
-        private readonly ICustomerAttributeService _customerAttributeService;
-        private readonly IExportManager _exportManager;
-        private readonly IGdprService _gdprService;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly ICustomerRegistrationService _customerRegistrationService;
-        private readonly ITaxService _taxService;
-        private readonly CustomerSettings _customerSettings;
         private readonly AddressSettings _addressSettings;
+        private readonly CaptchaSettings _captchaSettings;
+        private readonly CustomerSettings _customerSettings;
+        private readonly DateTimeSettings _dateTimeSettings;
         private readonly ForumSettings _forumSettings;
-        private readonly IAddressService _addressService;
-        private readonly ICountryService _countryService;
-        private readonly IOrderService _orderService;
-        private readonly IPictureService _pictureService;
-        private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
-        private readonly IShoppingCartService _shoppingCartService;
-        private readonly IExternalAuthenticationService _externalAuthenticationService;
-        private readonly IWebHelper _webHelper;
-        private readonly ICustomerActivityService _customerActivityService;
+        private readonly GdprSettings _gdprSettings;
         private readonly IAddressAttributeParser _addressAttributeParser;
         private readonly IAddressAttributeService _addressAttributeService;
+        private readonly IAddressModelFactory _addressModelFactory;
+        private readonly IAddressService _addressService;
+        private readonly IAuthenticationService _authenticationService;
+        private readonly ICountryService _countryService;
+        private readonly ICurrencyService _currencyService;        
+        private readonly ICustomerActivityService _customerActivityService;
+        private readonly ICustomerAttributeParser _customerAttributeParser;
+        private readonly ICustomerAttributeService _customerAttributeService;
+        private readonly ICustomerModelFactory _customerModelFactory;
+        private readonly ICustomerRegistrationService _customerRegistrationService;
+        private readonly ICustomerService _customerService;
         private readonly IEventPublisher _eventPublisher;
-
-        private readonly MediaSettings _mediaSettings;
+        private readonly IExportManager _exportManager;
+        private readonly IExternalAuthenticationService _externalAuthenticationService;
+        private readonly IGdprService _gdprService;
+        private readonly IGenericAttributeService _genericAttributeService;
+        private readonly IGiftCardService _giftCardService;
+        private readonly ILocalizationService _localizationService;
+        private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
+        private readonly IOrderService _orderService;
+        private readonly IPictureService _pictureService;
+        private readonly IPriceFormatter _priceFormatter;
+        private readonly IShoppingCartService _shoppingCartService;
+        private readonly IStoreContext _storeContext;
+        private readonly ITaxService _taxService;
+        private readonly IWebHelper _webHelper;
+        private readonly IWorkContext _workContext;
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly LocalizationSettings _localizationSettings;
-        private readonly CaptchaSettings _captchaSettings;
-        private readonly GdprSettings _gdprSettings;
+        private readonly MediaSettings _mediaSettings;
         private readonly StoreInformationSettings _storeInformationSettings;
+        private readonly TaxSettings _taxSettings;
 
         #endregion
 
         #region Ctor
 
-        public CustomerController(IAddressModelFactory addressModelFactory,
-            ICustomerModelFactory customerModelFactory,
-            IAuthenticationService authenticationService,
-            DateTimeSettings dateTimeSettings,
-            TaxSettings taxSettings,
-            ILocalizationService localizationService,
-            IWorkContext workContext,
-            IStoreContext storeContext,
-            ICurrencyService currencyService,
-            ICustomerService customerService,
-            IGiftCardService giftCardService,
-            IPriceFormatter priceFormatter,
-            ICustomerAttributeParser customerAttributeParser,
-            ICustomerAttributeService customerAttributeService,
-            IExportManager exportManager,
-            IGdprService gdprService,
-            IGenericAttributeService genericAttributeService,
-            ICustomerRegistrationService customerRegistrationService,
-            ITaxService taxService,
+        public CustomerController(AddressSettings addressSettings,
+            CaptchaSettings captchaSettings,
             CustomerSettings customerSettings,
-            AddressSettings addressSettings,
+            DateTimeSettings dateTimeSettings,
             ForumSettings forumSettings,
-            IAddressService addressService,
-            ICountryService countryService,
-            IOrderService orderService,
-            IPictureService pictureService,
-            INewsLetterSubscriptionService newsLetterSubscriptionService,
-            IShoppingCartService shoppingCartService,
-            IExternalAuthenticationService externalAuthenticationService,
-            IWebHelper webHelper,
-            ICustomerActivityService customerActivityService,
+            GdprSettings gdprSettings,
             IAddressAttributeParser addressAttributeParser,
             IAddressAttributeService addressAttributeService,
+            IAddressModelFactory addressModelFactory,
+            IAddressService addressService,
+            IAuthenticationService authenticationService,
+            ICountryService countryService,
+            ICurrencyService currencyService,
+            ICustomerActivityService customerActivityService,
+            ICustomerAttributeParser customerAttributeParser,
+            ICustomerAttributeService customerAttributeService,
+            ICustomerModelFactory customerModelFactory,
+            ICustomerRegistrationService customerRegistrationService,
+            ICustomerService customerService,
             IEventPublisher eventPublisher,
-            MediaSettings mediaSettings,
+            IExportManager exportManager,
+            IExternalAuthenticationService externalAuthenticationService,
+            IGdprService gdprService,
+            IGenericAttributeService genericAttributeService,
+            IGiftCardService giftCardService,
+            ILocalizationService localizationService,
+            INewsLetterSubscriptionService newsLetterSubscriptionService,
+            IOrderService orderService,
+            IPictureService pictureService,
+            IPriceFormatter priceFormatter,
+            IShoppingCartService shoppingCartService,
+            IStoreContext storeContext,
+            ITaxService taxService,
+            IWebHelper webHelper,
+            IWorkContext workContext,
             IWorkflowMessageService workflowMessageService,
             LocalizationSettings localizationSettings,
-            CaptchaSettings captchaSettings,
-            GdprSettings gdprSettings,
-            StoreInformationSettings storeInformationSettings)
+            MediaSettings mediaSettings,
+            StoreInformationSettings storeInformationSettings,
+            TaxSettings taxSettings)
         {
-            this._addressModelFactory = addressModelFactory;
-            this._customerModelFactory = customerModelFactory;
-            this._authenticationService = authenticationService;
-            this._dateTimeSettings = dateTimeSettings;
-            this._taxSettings = taxSettings;
-            this._localizationService = localizationService;
-            this._workContext = workContext;
-            this._storeContext = storeContext;
-            this._currencyService = currencyService;
-            this._customerService = customerService;
-            this._giftCardService = giftCardService;
-            this._priceFormatter = priceFormatter;
-            this._customerAttributeParser = customerAttributeParser;
-            this._customerAttributeService = customerAttributeService;
-            this._exportManager = exportManager;
-            this._gdprService = gdprService;
-            this._genericAttributeService = genericAttributeService;
-            this._customerRegistrationService = customerRegistrationService;
-            this._taxService = taxService;
-            this._customerSettings = customerSettings;
-            this._addressSettings = addressSettings;
-            this._forumSettings = forumSettings;
-            this._addressService = addressService;
-            this._countryService = countryService;
-            this._orderService = orderService;
-            this._pictureService = pictureService;
-            this._newsLetterSubscriptionService = newsLetterSubscriptionService;
-            this._shoppingCartService = shoppingCartService;
-            this._externalAuthenticationService = externalAuthenticationService;
-            this._webHelper = webHelper;
-            this._customerActivityService = customerActivityService;
-            this._addressAttributeParser = addressAttributeParser;
-            this._addressAttributeService = addressAttributeService;
-            this._eventPublisher = eventPublisher;
-            this._mediaSettings = mediaSettings;
-            this._workflowMessageService = workflowMessageService;
-            this._localizationSettings = localizationSettings;
-            this._captchaSettings = captchaSettings;
-            this._gdprSettings = gdprSettings;
+            this._addressSettings=addressSettings;
+            this._captchaSettings=captchaSettings;
+            this._customerSettings=customerSettings;
+            this._dateTimeSettings=dateTimeSettings;
+            this._forumSettings=forumSettings;
+            this._gdprSettings=gdprSettings;
+            this._addressAttributeParser=addressAttributeParser;
+            this._addressAttributeService=addressAttributeService;
+            this._addressModelFactory=addressModelFactory;
+            this._addressService=addressService;
+            this._authenticationService=authenticationService;
+            this._countryService=countryService;
+            this._currencyService=currencyService;
+            this._customerActivityService=customerActivityService;
+            this._customerAttributeParser=customerAttributeParser;
+            this._customerAttributeService=customerAttributeService;
+            this._customerModelFactory=customerModelFactory;
+            this._customerRegistrationService=customerRegistrationService;
+            this._customerService=customerService;
+            this._eventPublisher=eventPublisher;
+            this._exportManager=exportManager;
+            this._externalAuthenticationService=externalAuthenticationService;
+            this._gdprService=gdprService;
+            this._genericAttributeService=genericAttributeService;
+            this._giftCardService=giftCardService;
+            this._localizationService=localizationService;
+            this._newsLetterSubscriptionService=newsLetterSubscriptionService;
+            this._orderService=orderService;
+            this._pictureService=pictureService;
+            this._priceFormatter=priceFormatter;
+            this._shoppingCartService=shoppingCartService;
+            this._storeContext=storeContext;
+            this._taxService=taxService;
+            this._webHelper=webHelper;
+            this._workContext=workContext;
+            this._workflowMessageService=workflowMessageService;
+            this._localizationSettings=localizationSettings;
+            this._mediaSettings=mediaSettings;
             this._storeInformationSettings = storeInformationSettings;
+            this._taxSettings=taxSettings;
         }
 
         #endregion

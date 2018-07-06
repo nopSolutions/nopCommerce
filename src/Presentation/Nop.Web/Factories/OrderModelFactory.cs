@@ -32,88 +32,86 @@ namespace Nop.Web.Factories
     {
         #region Fields
 
-        private readonly IAddressModelFactory _addressModelFactory;
-        private readonly IOrderService _orderService;
-        private readonly IWorkContext _workContext;
-        private readonly ICurrencyService _currencyService;
-        private readonly IPriceFormatter _priceFormatter;
-        private readonly IOrderProcessingService _orderProcessingService;
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly IPaymentService _paymentService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IShippingService _shippingService;
-        private readonly ICountryService _countryService;
-        private readonly IProductAttributeParser _productAttributeParser;
-        private readonly IDownloadService _downloadService;
-        private readonly IStoreContext _storeContext;
-        private readonly IOrderTotalCalculationService _orderTotalCalculationService;
-        private readonly IRewardPointService _rewardPointService;
-
-        private readonly OrderSettings _orderSettings;
-        private readonly TaxSettings _taxSettings;
-        private readonly CatalogSettings _catalogSettings;
-        private readonly ShippingSettings _shippingSettings;
         private readonly AddressSettings _addressSettings;
-        private readonly RewardPointsSettings _rewardPointsSettings;
-        private readonly PdfSettings _pdfSettings;
+        private readonly CatalogSettings _catalogSettings;
+        private readonly IAddressModelFactory _addressModelFactory;
+        private readonly ICountryService _countryService;
+        private readonly ICurrencyService _currencyService;
+        private readonly IDateTimeHelper _dateTimeHelper;
+        private readonly IDownloadService _downloadService;
+        private readonly ILocalizationService _localizationService;
+        private readonly IOrderProcessingService _orderProcessingService;
+        private readonly IOrderService _orderService;
+        private readonly IOrderTotalCalculationService _orderTotalCalculationService;
+        private readonly IPaymentService _paymentService;
+        private readonly IPriceFormatter _priceFormatter;
+        private readonly IProductAttributeParser _productAttributeParser;
+        private readonly IRewardPointService _rewardPointService;
+        private readonly IShippingService _shippingService;
+        private readonly IStoreContext _storeContext;
         private readonly IVendorService _vendorService;
+        private readonly IWorkContext _workContext;
+        private readonly OrderSettings _orderSettings;
+        private readonly PdfSettings _pdfSettings;
+        private readonly RewardPointsSettings _rewardPointsSettings;
+        private readonly ShippingSettings _shippingSettings;
+        private readonly TaxSettings _taxSettings;
         private readonly VendorSettings _vendorSettings;
 
         #endregion
 
 		#region Ctor
 
-        public OrderModelFactory(IAddressModelFactory addressModelFactory, 
-            IOrderService orderService,
-            IWorkContext workContext,
-            ICurrencyService currencyService,
-            IPriceFormatter priceFormatter,
-            IOrderProcessingService orderProcessingService, 
-            IDateTimeHelper dateTimeHelper,
-            IPaymentService paymentService, 
-            ILocalizationService localizationService,
-            IShippingService shippingService,
-            ICountryService countryService, 
-            IProductAttributeParser productAttributeParser,
-            IDownloadService downloadService,
-            IStoreContext storeContext,
-            IOrderTotalCalculationService orderTotalCalculationService,
-            IRewardPointService rewardPointService,
+        public OrderModelFactory(AddressSettings addressSettings,
             CatalogSettings catalogSettings,
-            OrderSettings orderSettings,
-            TaxSettings taxSettings,
-            ShippingSettings shippingSettings, 
-            AddressSettings addressSettings,
-            RewardPointsSettings rewardPointsSettings,
-            PdfSettings pdfSettings,
+            IAddressModelFactory addressModelFactory, 
+            ICountryService countryService, 
+            ICurrencyService currencyService,
+            IDateTimeHelper dateTimeHelper,
+            IDownloadService downloadService,
+            ILocalizationService localizationService,
+            IOrderProcessingService orderProcessingService, 
+            IOrderService orderService,
+            IOrderTotalCalculationService orderTotalCalculationService,
+            IPaymentService paymentService, 
+            IPriceFormatter priceFormatter,
+            IProductAttributeParser productAttributeParser,
+            IRewardPointService rewardPointService,
+            IShippingService shippingService,
+            IStoreContext storeContext,
             IVendorService vendorService,
+            IWorkContext workContext,
+            OrderSettings orderSettings,
+            PdfSettings pdfSettings,
+            RewardPointsSettings rewardPointsSettings,
+            ShippingSettings shippingSettings, 
+            TaxSettings taxSettings,
             VendorSettings vendorSettings)
         {
-            this._addressModelFactory = addressModelFactory;
-            this._orderService = orderService;
-            this._workContext = workContext;
-            this._currencyService = currencyService;
-            this._priceFormatter = priceFormatter;
-            this._orderProcessingService = orderProcessingService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._paymentService = paymentService;
-            this._localizationService = localizationService;
-            this._shippingService = shippingService;
-            this._countryService = countryService;
-            this._productAttributeParser = productAttributeParser;
-            this._downloadService = downloadService;
-            this._storeContext = storeContext;
-            this._orderTotalCalculationService = orderTotalCalculationService;
-            this._rewardPointService = rewardPointService;
-
-            this._catalogSettings = catalogSettings;
-            this._orderSettings = orderSettings;
-            this._taxSettings = taxSettings;
-            this._shippingSettings = shippingSettings;
             this._addressSettings = addressSettings;
-            this._rewardPointsSettings = rewardPointsSettings;
-            this._pdfSettings = pdfSettings;
+            this._catalogSettings = catalogSettings;
+            this._addressModelFactory = addressModelFactory;
+            this._countryService = countryService;
+            this._currencyService = currencyService;
+            this._dateTimeHelper = dateTimeHelper;
+            this._downloadService = downloadService;
+            this._localizationService = localizationService;
+            this._orderProcessingService = orderProcessingService;
+            this._orderService = orderService;
+            this._orderTotalCalculationService = orderTotalCalculationService;
+            this._paymentService = paymentService;
+            this._priceFormatter = priceFormatter;
+            this._productAttributeParser = productAttributeParser;
+            this._rewardPointService = rewardPointService;
+            this._shippingService = shippingService;
+            this._storeContext = storeContext;
             this._vendorService = vendorService;
+            this._workContext = workContext;
+            this._orderSettings = orderSettings;
+            this._pdfSettings = pdfSettings;
+            this._rewardPointsSettings = rewardPointsSettings;
+            this._shippingSettings = shippingSettings;
+            this._taxSettings = taxSettings;
             this._vendorSettings = vendorSettings;
         }
 

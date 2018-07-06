@@ -16,41 +16,45 @@ namespace Nop.Web.Controllers
     {
 		#region Fields
 
-        private readonly IProductService _productService;
-        private readonly ICategoryService _categoryService;
-        private readonly IManufacturerService _manufacturerService;
-        private readonly IProductTagService _productTagService;
-        private readonly INewsService _newsService;
         private readonly IBlogService _blogService;
-        private readonly ITopicService _topicService;
-        private readonly IForumService _forumService;
+        private readonly ICategoryService _categoryService;
         private readonly ICustomerService _customerService;
+        private readonly IForumService _forumService;
+        private readonly IManufacturerService _manufacturerService;
+        private readonly INewsService _newsService;
+        private readonly IProductService _productService;
+        private readonly IProductTagService _productTagService;
+        private readonly ITopicService _topicService;
         private readonly IWebHelper _webHelper;
 
         #endregion
 
         #region Ctor
 
-        public BackwardCompatibility1XController(IWebHelper webHelper,
+        public BackwardCompatibility1XController(IBlogService blogService,
+            ICategoryService categoryService,
+            ICustomerService customerService,
+            IForumService forumService,
+            IManufacturerService manufacturerService,
+            INewsService newsService,
             IProductService productService,
-            ICategoryService categoryService, IManufacturerService manufacturerService,
-            IProductTagService productTagService, INewsService newsService,
-            IBlogService blogService, ITopicService topicService,
-            IForumService forumService, ICustomerService customerService)
+            IProductTagService productTagService,
+            ITopicService topicService,
+            IWebHelper webHelper)
         {
-            this._webHelper = webHelper;
-            this._productService = productService;
-            this._categoryService = categoryService;
-            this._manufacturerService = manufacturerService;
-            this._productTagService = productTagService;
-            this._newsService = newsService;
             this._blogService = blogService;
-            this._topicService = topicService;
-            this._forumService = forumService;
+            this._categoryService = categoryService;
             this._customerService = customerService;
+            this._forumService = forumService;
+            this._manufacturerService = manufacturerService;
+            this._newsService = newsService;
+            this._productService = productService;
+            this._productTagService = productTagService;
+            this._topicService = topicService;
+            this._webHelper = webHelper;
         }
 
-		#endregion
+        #endregion
         
         #region Methods
 

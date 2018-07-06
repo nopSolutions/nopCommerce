@@ -25,43 +25,42 @@ namespace Nop.Web.Factories
     {
         #region Fields
 
-        private readonly IBlogService _blogService;
-        private readonly IWorkContext _workContext;
-        private readonly IStoreContext _storeContext;
-        private readonly IPictureService _pictureService;
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly IStaticCacheManager _cacheManager;
-
-        private readonly MediaSettings _mediaSettings;
         private readonly BlogSettings _blogSettings;
-        private readonly CustomerSettings _customerSettings;
         private readonly CaptchaSettings _captchaSettings;
+        private readonly CustomerSettings _customerSettings;
+        private readonly IBlogService _blogService;
+        private readonly IDateTimeHelper _dateTimeHelper;
+        private readonly IPictureService _pictureService;
+        private readonly IStaticCacheManager _cacheManager;
+        private readonly IStoreContext _storeContext;
+        private readonly IWorkContext _workContext;
+        private readonly MediaSettings _mediaSettings;
 
         #endregion
 
         #region Ctor
 
-        public BlogModelFactory(IBlogService blogService,
-            IWorkContext workContext,
-            IStoreContext storeContext,
-            IPictureService pictureService,
-            IDateTimeHelper dateTimeHelper,
-            IStaticCacheManager cacheManager,
-            MediaSettings mediaSettings,
-            BlogSettings blogSettings,
+        public BlogModelFactory(BlogSettings blogSettings,
+            CaptchaSettings captchaSettings,
             CustomerSettings customerSettings,
-            CaptchaSettings captchaSettings)
+            IBlogService blogService,
+            IDateTimeHelper dateTimeHelper,
+            IPictureService pictureService,
+            IStaticCacheManager cacheManager,
+            IStoreContext storeContext,
+            IWorkContext workContext,
+            MediaSettings mediaSettings)
         {
-            this._blogService = blogService;
-            this._workContext = workContext;
-            this._storeContext = storeContext;
-            this._pictureService = pictureService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._cacheManager = cacheManager;
-            this._mediaSettings = mediaSettings;
             this._blogSettings = blogSettings;
-            this._customerSettings = customerSettings;
             this._captchaSettings = captchaSettings;
+            this._customerSettings = customerSettings;
+            this._blogService = blogService;
+            this._dateTimeHelper = dateTimeHelper;
+            this._pictureService = pictureService;
+            this._cacheManager = cacheManager;
+            this._storeContext = storeContext;
+            this._workContext = workContext;
+            this._mediaSettings = mediaSettings;
         }
 
         #endregion

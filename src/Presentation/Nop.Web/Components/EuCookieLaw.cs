@@ -10,17 +10,17 @@ namespace Nop.Web.Components
 {
     public class EuCookieLawViewComponent : NopViewComponent
     {
-        private readonly StoreInformationSettings _storeInformationSettings;
-        private readonly IWorkContext _workContext;
         private readonly IStoreContext _storeContext;
+        private readonly IWorkContext _workContext;
+        private readonly StoreInformationSettings _storeInformationSettings;
 
-        public EuCookieLawViewComponent(StoreInformationSettings storeInformationSettings,
+        public EuCookieLawViewComponent(IStoreContext storeContext,
             IWorkContext workContext,
-            IStoreContext storeContext)
+            StoreInformationSettings storeInformationSettings)
         {
-            this._storeInformationSettings = storeInformationSettings;
-            this._workContext = workContext;
             this._storeContext = storeContext;
+            this._workContext = workContext;
+            this._storeInformationSettings = storeInformationSettings;
         }
 
         public IViewComponentResult Invoke()

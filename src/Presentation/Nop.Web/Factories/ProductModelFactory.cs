@@ -39,114 +39,114 @@ namespace Nop.Web.Factories
     {
         #region Fields
         
-        private readonly ISpecificationAttributeService _specificationAttributeService;
+        private readonly CaptchaSettings _captchaSettings;
+        private readonly CatalogSettings _catalogSettings;
+        private readonly CustomerSettings _customerSettings;
+        private readonly IAclService _aclService;
         private readonly ICategoryService _categoryService;
-        private readonly IManufacturerService _manufacturerService;
-        private readonly IProductService _productService;
-        private readonly IVendorService _vendorService;
-        private readonly IProductTemplateService _productTemplateService;
-        private readonly IProductAttributeService _productAttributeService;
-        private readonly IWorkContext _workContext;
-        private readonly IStoreContext _storeContext;
-        private readonly ITaxService _taxService;
         private readonly ICurrencyService _currencyService;
-        private readonly IPictureService _pictureService;
+        private readonly IDateRangeService _dateRangeService;
+        private readonly IDateTimeHelper _dateTimeHelper;
+        private readonly IDownloadService _downloadService;
         private readonly ILocalizationService _localizationService;
+        private readonly IManufacturerService _manufacturerService;
         private readonly IMeasureService _measureService;
+        private readonly IPermissionService _permissionService;
+        private readonly IPictureService _pictureService;
         private readonly IPriceCalculationService _priceCalculationService;
         private readonly IPriceFormatter _priceFormatter;
-        private readonly IWebHelper _webHelper;
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly IProductTagService _productTagService;
-        private readonly IAclService _aclService;
-        private readonly IStoreMappingService _storeMappingService;
-        private readonly IPermissionService _permissionService;
-        private readonly IDownloadService _downloadService;
         private readonly IProductAttributeParser _productAttributeParser;
-        private readonly IDateRangeService _dateRangeService;
+        private readonly IProductAttributeService _productAttributeService;
+        private readonly IProductService _productService;
+        private readonly IProductTagService _productTagService;
+        private readonly IProductTemplateService _productTemplateService;
+        private readonly IReviewTypeService _reviewTypeService;
+        private readonly ISpecificationAttributeService _specificationAttributeService;
+        private readonly IStaticCacheManager _cacheManager;
+        private readonly IStoreContext _storeContext;
+        private readonly IStoreMappingService _storeMappingService;
+        private readonly ITaxService _taxService;
+        private readonly IVendorService _vendorService;
+        private readonly IWebHelper _webHelper;
+        private readonly IWorkContext _workContext;
         private readonly MediaSettings _mediaSettings;
-        private readonly CatalogSettings _catalogSettings;
-        private readonly VendorSettings _vendorSettings;
-        private readonly CustomerSettings _customerSettings;
-        private readonly CaptchaSettings _captchaSettings;
         private readonly OrderSettings _orderSettings;
         private readonly SeoSettings _seoSettings;
-        private readonly IStaticCacheManager _cacheManager;
-        private readonly IReviewTypeService _reviewTypeService;
+        private readonly VendorSettings _vendorSettings;
 
         #endregion
 
         #region Ctor
 
-        public ProductModelFactory(ISpecificationAttributeService specificationAttributeService,
+        public ProductModelFactory(CaptchaSettings captchaSettings,
+            CatalogSettings catalogSettings,
+            CustomerSettings customerSettings,
+            IAclService aclService,
             ICategoryService categoryService,
-            IManufacturerService manufacturerService,
-            IProductService productService,
-            IVendorService vendorService,
-            IProductTemplateService productTemplateService,
-            IProductAttributeService productAttributeService,
-            IWorkContext workContext,
-            IStoreContext storeContext,
-            ITaxService taxService,
             ICurrencyService currencyService,
-            IPictureService pictureService,
+            IDateRangeService dateRangeService,
+            IDateTimeHelper dateTimeHelper,
+            IDownloadService downloadService,
             ILocalizationService localizationService,
+            IManufacturerService manufacturerService,
             IMeasureService measureService,
+            IPermissionService permissionService,
+            IPictureService pictureService,
             IPriceCalculationService priceCalculationService,
             IPriceFormatter priceFormatter,
-            IWebHelper webHelper,
-            IDateTimeHelper dateTimeHelper,
-            IProductTagService productTagService,
-            IAclService aclService,
-            IStoreMappingService storeMappingService,
-            IPermissionService permissionService,
-            IDownloadService downloadService,
             IProductAttributeParser productAttributeParser,
-            IDateRangeService dateRangeService,
+            IProductAttributeService productAttributeService,
+            IProductService productService,
+            IProductTagService productTagService,
+            IProductTemplateService productTemplateService,
+            IReviewTypeService reviewTypeService,
+            ISpecificationAttributeService specificationAttributeService,
+            IStaticCacheManager cacheManager,
+            IStoreContext storeContext,
+            IStoreMappingService storeMappingService,
+            ITaxService taxService,
+            IVendorService vendorService,
+            IWebHelper webHelper,
+            IWorkContext workContext,
             MediaSettings mediaSettings,
-            CatalogSettings catalogSettings,
-            VendorSettings vendorSettings,
-            CustomerSettings customerSettings,
-            CaptchaSettings captchaSettings,
             OrderSettings orderSettings,
             SeoSettings seoSettings,
-            IStaticCacheManager cacheManager,
-            IReviewTypeService reviewTypeService)
+            VendorSettings vendorSettings)
         {
-            this._specificationAttributeService = specificationAttributeService;
+            this._captchaSettings = captchaSettings;
+            this._catalogSettings = catalogSettings;
+            this._customerSettings = customerSettings;
+            this._aclService = aclService;
             this._categoryService = categoryService;
-            this._manufacturerService = manufacturerService;
-            this._productService = productService;
-            this._vendorService = vendorService;
-            this._productTemplateService = productTemplateService;
-            this._productAttributeService = productAttributeService;
-            this._workContext = workContext;
-            this._storeContext = storeContext;
-            this._taxService = taxService;
             this._currencyService = currencyService;
-            this._pictureService = pictureService;
+            this._dateRangeService = dateRangeService;
+            this._dateTimeHelper = dateTimeHelper;
+            this._downloadService = downloadService;
             this._localizationService = localizationService;
+            this._manufacturerService = manufacturerService;
             this._measureService = measureService;
+            this._permissionService = permissionService;
+            this._pictureService = pictureService;
             this._priceCalculationService = priceCalculationService;
             this._priceFormatter = priceFormatter;
-            this._webHelper = webHelper;
-            this._dateTimeHelper = dateTimeHelper;
-            this._productTagService = productTagService;
-            this._aclService = aclService;
-            this._storeMappingService = storeMappingService;
-            this._permissionService = permissionService;
-            this._downloadService = downloadService;
             this._productAttributeParser = productAttributeParser;
-            this._dateRangeService = dateRangeService;
+            this._productAttributeService = productAttributeService;
+            this._productService = productService;
+            this._productTagService = productTagService;
+            this._productTemplateService = productTemplateService;
+            this._reviewTypeService = reviewTypeService;
+            this._specificationAttributeService = specificationAttributeService;
+            this._cacheManager = cacheManager;
+            this._storeContext = storeContext;
+            this._storeMappingService = storeMappingService;
+            this._taxService = taxService;
+            this._vendorService = vendorService;
+            this._webHelper = webHelper;
+            this._workContext = workContext;
             this._mediaSettings = mediaSettings;
-            this._catalogSettings = catalogSettings;
-            this._vendorSettings = vendorSettings;
-            this._customerSettings = customerSettings;
-            this._captchaSettings = captchaSettings;
             this._orderSettings = orderSettings;
             this._seoSettings = seoSettings;
-            this._cacheManager = cacheManager;
-            this._reviewTypeService = reviewTypeService;
+            this._vendorSettings = vendorSettings;
         }
 
         #endregion

@@ -17,25 +17,25 @@ namespace Nop.Web.Components
         private readonly IAclService _aclService;
         private readonly IProductModelFactory _productModelFactory;
         private readonly IProductService _productService;
+        private readonly IStoreContext _storeContext;
         private readonly IStoreMappingService _storeMappingService;
         private readonly IWorkContext _workContext;
-        private readonly IStoreContext _storeContext;
         private readonly ShoppingCartSettings _shoppingCartSettings;
 
         public CrossSellProductsViewComponent(IAclService aclService,
             IProductModelFactory productModelFactory,
             IProductService productService,
+            IStoreContext storeContext,
             IStoreMappingService storeMappingService,
             IWorkContext workContext,
-            IStoreContext storeContext,
             ShoppingCartSettings shoppingCartSettings)
         {
             this._aclService = aclService;
             this._productModelFactory = productModelFactory;
             this._productService = productService;
+            this._storeContext = storeContext;
             this._storeMappingService = storeMappingService;
             this._workContext = workContext;
-            this._storeContext = storeContext;
             this._shoppingCartSettings = shoppingCartSettings;
         }
 

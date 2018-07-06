@@ -11,26 +11,26 @@ namespace Nop.Web.Controllers
 {
     public partial class DownloadController : BasePublicController
     {
-        private readonly IDownloadService _downloadService;
-        private readonly IProductService _productService;
-        private readonly IOrderService _orderService;
-        private readonly IWorkContext _workContext;
-        private readonly ILocalizationService _localizationService;
         private readonly CustomerSettings _customerSettings;
+        private readonly IDownloadService _downloadService;
+        private readonly ILocalizationService _localizationService;
+        private readonly IOrderService _orderService;
+        private readonly IProductService _productService;
+        private readonly IWorkContext _workContext;
 
-        public DownloadController(IDownloadService downloadService,
-            IProductService productService,
-            IOrderService orderService,
-            IWorkContext workContext,
+        public DownloadController(CustomerSettings customerSettings,
+            IDownloadService downloadService,
             ILocalizationService localizationService,
-            CustomerSettings customerSettings)
+            IOrderService orderService,
+            IProductService productService,
+            IWorkContext workContext)
         {
-            this._downloadService = downloadService;
-            this._productService = productService;
-            this._orderService = orderService;
-            this._workContext = workContext;
-            this._localizationService = localizationService;
             this._customerSettings = customerSettings;
+            this._downloadService = downloadService;
+            this._localizationService = localizationService;
+            this._orderService = orderService;
+            this._productService = productService;
+            this._workContext = workContext;
         }
         
         public virtual IActionResult Sample(int productId)

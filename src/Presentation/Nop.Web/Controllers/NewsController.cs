@@ -31,56 +31,53 @@ namespace Nop.Web.Controllers
     {
         #region Fields
 
+        private readonly CaptchaSettings _captchaSettings;
+        private readonly ICustomerActivityService _customerActivityService;
+        private readonly IEventPublisher _eventPublisher;        
+        private readonly ILocalizationService _localizationService;
         private readonly INewsModelFactory _newsModelFactory;
         private readonly INewsService _newsService;
-        private readonly IWorkContext _workContext;
-        private readonly IStoreContext _storeContext;
-        private readonly ILocalizationService _localizationService;
-        private readonly IWorkflowMessageService _workflowMessageService;
-        private readonly IWebHelper _webHelper;
-        private readonly ICustomerActivityService _customerActivityService;
-        private readonly IStoreMappingService _storeMappingService;
         private readonly IPermissionService _permissionService;
-        private readonly IEventPublisher _eventPublisher;        
-        private readonly NewsSettings _newsSettings;
+        private readonly IStoreContext _storeContext;
+        private readonly IWebHelper _webHelper;
+        private readonly IWorkContext _workContext;
+        private readonly IWorkflowMessageService _workflowMessageService;
         private readonly LocalizationSettings _localizationSettings;
-        private readonly CaptchaSettings _captchaSettings;
+        private readonly NewsSettings _newsSettings;
         
         #endregion
         
         #region Ctor
 
-        public NewsController(INewsModelFactory newsModelFactory,
-            INewsService newsService,
-            IWorkContext workContext, 
-            IStoreContext storeContext,
-            ILocalizationService localizationService,
-            IWorkflowMessageService workflowMessageService,
-            IWebHelper webHelper,
+        public NewsController(CaptchaSettings captchaSettings,
             ICustomerActivityService customerActivityService,
-            IStoreMappingService storeMappingService,
+            IEventPublisher eventPublisher,
+            ILocalizationService localizationService,
+            INewsModelFactory newsModelFactory,
+            INewsService newsService,
             IPermissionService permissionService,
-            IEventPublisher eventPublisher,            
-            NewsSettings newsSettings,
-            LocalizationSettings localizationSettings, 
-            CaptchaSettings captchaSettings)
+            IStoreContext storeContext,
+            IWebHelper webHelper,
+            IWorkContext workContext,
+            IWorkflowMessageService workflowMessageService,
+            LocalizationSettings localizationSettings,
+            NewsSettings newsSettings)
         {
+            this._captchaSettings = captchaSettings;
+            this._customerActivityService = customerActivityService;
+            this._eventPublisher = eventPublisher;
+            this._localizationService = localizationService;
             this._newsModelFactory = newsModelFactory;
             this._newsService = newsService;
-            this._workContext = workContext;
-            this._storeContext = storeContext;
-            this._localizationService = localizationService;
-            this._workflowMessageService = workflowMessageService;
-            this._webHelper = webHelper;
-            this._customerActivityService = customerActivityService;
-            this._storeMappingService = storeMappingService;
             this._permissionService = permissionService;
-            this._eventPublisher = eventPublisher;
-            this._newsSettings = newsSettings;
+            this._storeContext = storeContext;
+            this._webHelper = webHelper;
+            this._workContext = workContext;
+            this._workflowMessageService = workflowMessageService;
             this._localizationSettings = localizationSettings;
-            this._captchaSettings = captchaSettings;
+            this._newsSettings = newsSettings;
         }
-        
+
         #endregion
         
         #region Methods

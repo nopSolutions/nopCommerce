@@ -23,54 +23,54 @@ namespace Nop.Web.Controllers
     {
         #region Fields
 
-        private readonly IReturnRequestModelFactory _returnRequestModelFactory;
-        private readonly IReturnRequestService _returnRequestService;
-        private readonly IOrderService _orderService;
-        private readonly IWorkContext _workContext;
-        private readonly IStoreContext _storeContext;
-        private readonly IOrderProcessingService _orderProcessingService;
-        private readonly ILocalizationService _localizationService;
         private readonly ICustomerService _customerService;
-        private readonly IWorkflowMessageService _workflowMessageService;
         private readonly ICustomNumberFormatter _customNumberFormatter;
         private readonly IDownloadService _downloadService;
+        private readonly ILocalizationService _localizationService;
+        private readonly INopFileProvider _fileProvider;
+        private readonly IOrderProcessingService _orderProcessingService;
+        private readonly IOrderService _orderService;
+        private readonly IReturnRequestModelFactory _returnRequestModelFactory;
+        private readonly IReturnRequestService _returnRequestService;
+        private readonly IStoreContext _storeContext;
+        private readonly IWorkContext _workContext;
+        private readonly IWorkflowMessageService _workflowMessageService;
         private readonly LocalizationSettings _localizationSettings;
         private readonly OrderSettings _orderSettings;
-        private readonly INopFileProvider _fileProvider;
 
         #endregion
 
         #region Ctor
 
-        public ReturnRequestController(IReturnRequestModelFactory returnRequestModelFactory,
-            IReturnRequestService returnRequestService,
-            IOrderService orderService, 
-            IWorkContext workContext, 
-            IStoreContext storeContext,
-            IOrderProcessingService orderProcessingService,
-            ILocalizationService localizationService,
-            ICustomerService customerService,
-            IWorkflowMessageService workflowMessageService,
+        public ReturnRequestController(ICustomerService customerService,
             ICustomNumberFormatter customNumberFormatter,
             IDownloadService downloadService,
+            ILocalizationService localizationService,
+            INopFileProvider fileProvider,
+            IOrderProcessingService orderProcessingService,
+            IOrderService orderService,
+            IReturnRequestModelFactory returnRequestModelFactory,
+            IReturnRequestService returnRequestService,
+            IStoreContext storeContext,
+            IWorkContext workContext,
+            IWorkflowMessageService workflowMessageService,
             LocalizationSettings localizationSettings,
-            OrderSettings orderSettings,
-            INopFileProvider fileProvider)
+            OrderSettings orderSettings)
         {
-            this._returnRequestModelFactory = returnRequestModelFactory;
-            this._returnRequestService = returnRequestService;
-            this._orderService = orderService;
-            this._workContext = workContext;
-            this._storeContext = storeContext;
-            this._orderProcessingService = orderProcessingService;
-            this._localizationService = localizationService;
             this._customerService = customerService;
-            this._workflowMessageService = workflowMessageService;
             this._customNumberFormatter = customNumberFormatter;
             this._downloadService = downloadService;
+            this._localizationService = localizationService;
+            this._fileProvider = fileProvider;
+            this._orderProcessingService = orderProcessingService;
+            this._orderService = orderService;
+            this._returnRequestModelFactory = returnRequestModelFactory;
+            this._returnRequestService = returnRequestService;
+            this._storeContext = storeContext;
+            this._workContext = workContext;
+            this._workflowMessageService = workflowMessageService;
             this._localizationSettings = localizationSettings;
             this._orderSettings = orderSettings;
-            this._fileProvider = fileProvider;
         }
 
         #endregion

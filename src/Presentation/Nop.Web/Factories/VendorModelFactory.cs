@@ -22,15 +22,14 @@ namespace Nop.Web.Factories
     {
         #region Fields
 
-        private readonly IWorkContext _workContext;
-        private readonly ILocalizationService _localizationService;
-        private readonly IPictureService _pictureService;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly IVendorAttributeParser _vendorAttributeParser;
-        private readonly IVendorAttributeService _vendorAttributeService;
-
         private readonly CaptchaSettings _captchaSettings;
         private readonly CommonSettings _commonSettings;
+        private readonly IGenericAttributeService _genericAttributeService;
+        private readonly ILocalizationService _localizationService;
+        private readonly IPictureService _pictureService;
+        private readonly IVendorAttributeParser _vendorAttributeParser;
+        private readonly IVendorAttributeService _vendorAttributeService;
+        private readonly IWorkContext _workContext;
         private readonly MediaSettings _mediaSettings;
         private readonly VendorSettings _vendorSettings;
 
@@ -38,26 +37,25 @@ namespace Nop.Web.Factories
 
         #region Ctor
 
-        public VendorModelFactory(IWorkContext workContext,
+        public VendorModelFactory(CaptchaSettings captchaSettings,
+            CommonSettings commonSettings,
+            IGenericAttributeService genericAttributeService,
             ILocalizationService localizationService,
             IPictureService pictureService,
-            IGenericAttributeService genericAttributeService,
             IVendorAttributeParser vendorAttributeParser,
             IVendorAttributeService vendorAttributeService,
-            CaptchaSettings captchaSettings,
-            CommonSettings commonSettings,
+            IWorkContext workContext,
             MediaSettings mediaSettings,
             VendorSettings vendorSettings)
         {
-            this._workContext = workContext;
-            this._localizationService = localizationService;
-            this._pictureService = pictureService;
-            this._genericAttributeService = genericAttributeService;
-            this._vendorAttributeParser = vendorAttributeParser;
-            this._vendorAttributeService = vendorAttributeService;
-
             this._captchaSettings = captchaSettings;
             this._commonSettings = commonSettings;
+            this._genericAttributeService = genericAttributeService;
+            this._localizationService = localizationService;
+            this._pictureService = pictureService;
+            this._vendorAttributeParser = vendorAttributeParser;
+            this._vendorAttributeService = vendorAttributeService;
+            this._workContext = workContext;
             this._mediaSettings = mediaSettings;
             this._vendorSettings = vendorSettings;
         }
