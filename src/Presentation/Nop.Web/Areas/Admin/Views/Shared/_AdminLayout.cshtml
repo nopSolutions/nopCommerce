@@ -9,6 +9,7 @@
 @inject LocalizationSettings localizationSettings
 @inject StoreInformationSettings storeInformationSettings
 @inject Nop.Services.Common.IGenericAttributeService genericAttributeService
+@inject Nop.Services.Localization.ILanguageService languageService
 @using System.Globalization
 @using System.Text.Encodings.Web
 @using Microsoft.AspNetCore.Http
@@ -19,7 +20,6 @@
 @using Nop.Core.Domain.Localization
 @using Nop.Services.Customers
 @using Nop.Services.Helpers
-@using Nop.Services.Localization
 @using Nop.Services.Security;
 
 @{
@@ -93,7 +93,7 @@
     //info: we specify "Admin" area for actions and widgets here for cases when we use this layout in a plugin that is running in a different area than "admin"
 }
 <!DOCTYPE html>
-<html lang="@workContext.WorkingLanguage.GetTwoLetterIsoLanguageName()"@(supportRtl ? Html.Raw(" dir=\"rtl\"") : null)>
+<html lang="@languageService.GetTwoLetterIsoLanguageName(workContext.WorkingLanguage)"@(supportRtl ? Html.Raw(" dir=\"rtl\"") : null)>
     <head>
         <title>@adminPageTitle</title>
         <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />

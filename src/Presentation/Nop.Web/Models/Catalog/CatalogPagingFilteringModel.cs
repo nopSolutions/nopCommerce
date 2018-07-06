@@ -369,12 +369,13 @@ namespace Nop.Web.Models.Catalog
             /// <param name="alreadyFilteredSpecOptionIds">IDs of already filtered specification options</param>
             /// <param name="filterableSpecificationAttributeOptionIds">IDs of filterable specification options</param>
             /// <param name="specificationAttributeService"></param>
+            /// <param name="localizationService">Localization service</param>
             /// <param name="webHelper">Web helper</param>
             /// <param name="workContext">Work context</param>
             /// <param name="cacheManager">Cache manager</param>
             public virtual void PrepareSpecsFilters(IList<int> alreadyFilteredSpecOptionIds,
                 int[] filterableSpecificationAttributeOptionIds,
-                ISpecificationAttributeService specificationAttributeService, 
+                ISpecificationAttributeService specificationAttributeService, ILocalizationService localizationService,
                 IWebHelper webHelper, IWorkContext workContext, ICacheManager cacheManager)
             {
                 Enabled = false;
@@ -387,10 +388,10 @@ namespace Nop.Web.Models.Catalog
                     new SpecificationAttributeOptionFilter
                     {
                         SpecificationAttributeId = sao.SpecificationAttribute.Id,
-                        SpecificationAttributeName = sao.SpecificationAttribute.GetLocalized(x => x.Name, workContext.WorkingLanguage.Id),
+                        SpecificationAttributeName = localizationService.GetLocalized(sao.SpecificationAttribute, x => x.Name, workContext.WorkingLanguage.Id),
                         SpecificationAttributeDisplayOrder = sao.SpecificationAttribute.DisplayOrder,
                         SpecificationAttributeOptionId = sao.Id,
-                        SpecificationAttributeOptionName = sao.GetLocalized(x => x.Name, workContext.WorkingLanguage.Id),
+                        SpecificationAttributeOptionName = localizationService.GetLocalized(sao, x => x.Name, workContext.WorkingLanguage.Id),
                         SpecificationAttributeOptionColorRgb = sao.ColorSquaresRgb,
                         SpecificationAttributeOptionDisplayOrder = sao.DisplayOrder
                     }).ToList());

@@ -220,7 +220,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 localizedModelConfiguration = (locale, languageId) =>
                 {
                     var plugin = pluginDescriptor.Instance();
-                    locale.FriendlyName = plugin.GetLocalizedFriendlyName(_localizationService, languageId, false);
+                    locale.FriendlyName = _localizationService.GetLocalizedFriendlyName(plugin, languageId, false);
                 };
             }
 

@@ -204,7 +204,7 @@ namespace Nop.Web.Factories
         {
             var model = new LogoModel
             {
-                StoreName = _storeContext.CurrentStore.GetLocalized(x => x.Name)
+                StoreName = _localizationService.GetLocalized(_storeContext.CurrentStore, x => x.Name)
             };
 
             var cacheKey = string.Format(ModelCacheEventConsumer.STORE_LOGO_PATH, _storeContext.CurrentStore.Id, _themeContext.WorkingThemeName, _webHelper.IsCurrentConnectionSecured());
@@ -279,7 +279,7 @@ namespace Nop.Web.Factories
                         var currencyModel = new CurrencyModel
                         {
                             Id = x.Id,
-                            Name = x.GetLocalized(y => y.Name),
+                            Name = _localizationService.GetLocalized(x, y => y.Name),
                             CurrencySymbol = currencySymbol
                         };
                         return currencyModel;
@@ -416,7 +416,7 @@ namespace Nop.Web.Factories
                 .Select(t => new FooterModel.FooterTopicModel
                 {
                     Id = t.Id,
-                    Name = t.GetLocalized(x => x.Title),
+                    Name = _localizationService.GetLocalized(t, x => x.Title),
                     SeName = _urlRecordService.GetSeName(t),
                     IncludeInFooterColumn1 = t.IncludeInFooterColumn1,
                     IncludeInFooterColumn2 = t.IncludeInFooterColumn2,
@@ -428,7 +428,7 @@ namespace Nop.Web.Factories
             //model
             var model = new FooterModel
             {
-                StoreName = _storeContext.CurrentStore.GetLocalized(x => x.Name),
+                StoreName = _localizationService.GetLocalized(_storeContext.CurrentStore, x => x.Name),
                 WishlistEnabled = _permissionService.Authorize(StandardPermissionProvider.EnableWishlist),
                 ShoppingCartEnabled = _permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart),
                 SitemapEnabled = _commonSettings.SitemapEnabled,
@@ -510,7 +510,7 @@ namespace Nop.Web.Factories
             model.SubjectEnabled = _commonSettings.SubjectFieldOnContactUsForm;
             model.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnContactUsPage;
             model.VendorId = vendor.Id;
-            model.VendorName = vendor.GetLocalized(x => x.Name);
+            model.VendorName = _localizationService.GetLocalized(vendor, x => x.Name);
 
             return model;
         }
@@ -607,7 +607,7 @@ namespace Nop.Web.Factories
                 model.Items.AddRange(topics.Select(topic => new SitemapModel.SitemapItemModel
                 {
                     GroupTitle = commonGroupTitle,
-                    Name = topic.GetLocalized(x => x.Title),
+                    Name = _localizationService.GetLocalized(topic, x => x.Title),
                     Url = urlHelper.RouteUrl("Topic", new { SeName = _urlRecordService.GetSeName(topic) })
                 }));
 
@@ -619,7 +619,7 @@ namespace Nop.Web.Factories
                     model.Items.AddRange(categories.Select(category => new SitemapModel.SitemapItemModel
                     {
                         GroupTitle = categoriesGroupTitle,
-                        Name = category.GetLocalized(x => x.Name),
+                        Name = _localizationService.GetLocalized(category, x => x.Name),
                         Url = urlHelper.RouteUrl("Category", new { SeName = _urlRecordService.GetSeName(category) })
                     }));
                 }
@@ -632,7 +632,7 @@ namespace Nop.Web.Factories
                     model.Items.AddRange(manufacturers.Select(manufacturer => new SitemapModel.SitemapItemModel
                     {
                         GroupTitle = manufacturersGroupTitle,
-                        Name = manufacturer.GetLocalized(x => x.Name),
+                        Name = _localizationService.GetLocalized(manufacturer, x => x.Name),
                         Url = urlHelper.RouteUrl("Manufacturer", new { SeName = _urlRecordService.GetSeName(manufacturer) })
                     }));
                 }
@@ -645,7 +645,7 @@ namespace Nop.Web.Factories
                     model.Items.AddRange(products.Select(product => new SitemapModel.SitemapItemModel
                     {
                         GroupTitle = productsGroupTitle,
-                        Name = product.GetLocalized(x => x.Name),
+                        Name = _localizationService.GetLocalized(product, x => x.Name),
                         Url = urlHelper.RouteUrl("Product", new { SeName = _urlRecordService.GetSeName(product) })
                     }));
                 }
@@ -658,7 +658,7 @@ namespace Nop.Web.Factories
                     model.Items.AddRange(productTags.Select(productTag => new SitemapModel.SitemapItemModel
                     {
                         GroupTitle = productTagsGroupTitle,
-                        Name = productTag.GetLocalized(x => x.Name),
+                        Name = _localizationService.GetLocalized(productTag, x => x.Name),
                         Url = urlHelper.RouteUrl("ProductsByTag", new { SeName = _urlRecordService.GetSeName(productTag) })
                     }));
                 }

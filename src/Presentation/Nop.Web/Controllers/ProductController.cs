@@ -227,7 +227,7 @@ namespace Nop.Web.Controllers
         public virtual IActionResult NewProductsRss()
         {
             var feed = new RssFeed(
-                $"{_storeContext.CurrentStore.GetLocalized(x => x.Name)}: New products",
+                $"{_localizationService.GetLocalized(_storeContext.CurrentStore, x => x.Name)}: New products",
                 "Information about products",
                 new Uri(_webHelper.GetStoreLocation()),
                 DateTime.UtcNow);
@@ -246,8 +246,8 @@ namespace Nop.Web.Controllers
             foreach (var product in products)
             {
                 var productUrl = Url.RouteUrl("Product", new { SeName = _urlRecordService.GetSeName(product) }, _webHelper.CurrentRequestProtocol);
-                var productName = product.GetLocalized(x => x.Name);
-                var productDescription = product.GetLocalized(x => x.ShortDescription);
+                var productName = _localizationService.GetLocalized(product, x => x.Name);
+                var productDescription = _localizationService.GetLocalized(product, x => x.ShortDescription);
                 var item = new RssItem(productName, productDescription, new Uri(productUrl), $"urn:store:{_storeContext.CurrentStore.Id}:newProducts:product:{product.Id}", product.CreatedOnUtc);
                 items.Add(item);
                 //uncomment below if you want to add RSS enclosure for pictures

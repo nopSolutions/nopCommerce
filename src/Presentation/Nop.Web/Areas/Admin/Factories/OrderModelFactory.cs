@@ -289,8 +289,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 if (orderItem.Product.IsRecurring)
                 {
                     orderItemModel.RecurringInfo = string.Format(_localizationService.GetResource("Admin.Orders.Products.RecurringPeriod"),
-                        orderItem.Product.RecurringCycleLength,
-                        orderItem.Product.RecurringCyclePeriod.GetLocalizedEnum(_localizationService, _workContext));
+                        orderItem.Product.RecurringCycleLength, _localizationService.GetLocalizedEnum(orderItem.Product.RecurringCyclePeriod));
                 }
 
                 //rental info
@@ -515,7 +514,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //payment method info
             var pm = _paymentService.LoadPaymentMethodBySystemName(order.PaymentMethodSystemName);
             model.PaymentMethod = pm != null ? pm.PluginDescriptor.FriendlyName : order.PaymentMethodSystemName;
-            model.PaymentStatus = order.PaymentStatus.GetLocalizedEnum(_localizationService, _workContext);
+            model.PaymentStatus = _localizationService.GetLocalizedEnum(order.PaymentStatus);
 
             //payment method buttons
             model.CanCancelOrder = _orderProcessingService.CanCancelOrder(order);
@@ -548,7 +547,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (order == null)
                 throw new ArgumentNullException(nameof(order));
 
-            model.ShippingStatus = order.ShippingStatus.GetLocalizedEnum(_localizationService, _workContext);
+            model.ShippingStatus = _localizationService.GetLocalizedEnum(order.ShippingStatus);
             if (order.ShippingStatus == ShippingStatus.ShippingNotRequired)
                 return;
 
@@ -713,7 +712,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 };
                 var shipmentEventCountry = _countryService.GetCountryByTwoLetterIsoCode(shipmentEvent.CountryCode);
                 shipmentStatusEventModel.Country = shipmentEventCountry != null
-                    ? shipmentEventCountry.GetLocalized(x => x.Name) : shipmentEvent.CountryCode;
+                    ? _localizationService.GetLocalized(shipmentEventCountry, x => x.Name) : shipmentEvent.CountryCode;
                 models.Add(shipmentStatusEventModel);
             }
         }
@@ -925,9 +924,9 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     //fill in additional values (not existing in the entity)
                     orderModel.StoreName = _storeService.GetStoreById(order.StoreId)?.Name ?? "Deleted";
-                    orderModel.OrderStatus = order.OrderStatus.GetLocalizedEnum(_localizationService, _workContext);
-                    orderModel.PaymentStatus = order.PaymentStatus.GetLocalizedEnum(_localizationService, _workContext);
-                    orderModel.ShippingStatus = order.ShippingStatus.GetLocalizedEnum(_localizationService, _workContext);
+                    orderModel.OrderStatus = _localizationService.GetLocalizedEnum(order.OrderStatus);
+                    orderModel.PaymentStatus = _localizationService.GetLocalizedEnum(order.PaymentStatus);
+                    orderModel.ShippingStatus = _localizationService.GetLocalizedEnum(order.ShippingStatus);
                     orderModel.OrderTotal = _priceFormatter.FormatPrice(order.OrderTotal, true, false);
 
                     return orderModel;
@@ -1035,7 +1034,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     CheckoutAttributeInfo = order.CheckoutAttributeDescription
                 };
 
-                model.OrderStatus = order.OrderStatus.GetLocalizedEnum(_localizationService, _workContext);
+                model.OrderStatus = _localizationService.GetLocalizedEnum(order.OrderStatus);
                 model.StoreName = _storeService.GetStoreById(order.StoreId)?.Name ?? "Deleted";
                 model.CustomerInfo = order.Customer.IsRegistered() ? order.Customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
                 model.CreatedOn = _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, DateTimeKind.Utc);
@@ -1715,7 +1714,7 @@ namespace Nop.Web.Areas.Admin.Factories
             {
                 Data = report.Select(reportItem => new OrderAverageReportModel
                 {
-                    OrderStatus = reportItem.OrderStatus.GetLocalizedEnum(_localizationService, _workContext),
+                    OrderStatus = _localizationService.GetLocalizedEnum(reportItem.OrderStatus),
                     SumTodayOrders = _priceFormatter.FormatPrice(reportItem.SumTodayOrders, true, false),
                     SumThisWeekOrders = _priceFormatter.FormatPrice(reportItem.SumThisWeekOrders, true, false),
                     SumThisMonthOrders = _priceFormatter.FormatPrice(reportItem.SumThisMonthOrders, true, false),

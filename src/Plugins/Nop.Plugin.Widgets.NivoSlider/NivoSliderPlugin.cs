@@ -15,14 +15,19 @@ namespace Nop.Plugin.Widgets.NivoSlider
     /// </summary>
     public class NivoSliderPlugin : BasePlugin, IWidgetPlugin
     {
+        private readonly ILocalizationService _localizationService;
         private readonly IPictureService _pictureService;
         private readonly ISettingService _settingService;
         private readonly IWebHelper _webHelper;
         private readonly INopFileProvider _fileProvider;
 
-        public NivoSliderPlugin(IPictureService pictureService,
-            ISettingService settingService, IWebHelper webHelper, INopFileProvider fileProvider)
+        public NivoSliderPlugin(ILocalizationService localizationService,
+            IPictureService pictureService,
+            ISettingService settingService,
+            IWebHelper webHelper,
+            INopFileProvider fileProvider)
         {
+            this._localizationService = localizationService;
             this._pictureService = pictureService;
             this._settingService = settingService;
             this._webHelper = webHelper;
@@ -63,7 +68,7 @@ namespace Nop.Plugin.Widgets.NivoSlider
         {
             //pictures
             var sampleImagesPath = _fileProvider.MapPath("~/Plugins/Widgets.NivoSlider/Content/nivoslider/sample-images/");
-            
+
             //settings
             var settings = new NivoSliderSettings
             {
@@ -80,19 +85,19 @@ namespace Nop.Plugin.Widgets.NivoSlider
             _settingService.SaveSetting(settings);
 
 
-            this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.NivoSlider.Picture1", "Picture 1");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.NivoSlider.Picture2", "Picture 2");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.NivoSlider.Picture3", "Picture 3");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.NivoSlider.Picture4", "Picture 4");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.NivoSlider.Picture5", "Picture 5");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.NivoSlider.Picture", "Picture");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.NivoSlider.Picture.Hint", "Upload picture.");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.NivoSlider.Text", "Comment");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.NivoSlider.Text.Hint", "Enter comment for picture. Leave empty if you don't want to display any text.");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.NivoSlider.Link", "URL");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.NivoSlider.Link.Hint", "Enter URL. Leave empty if you don't want this picture to be clickable.");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.NivoSlider.AltText", "Image alternate text");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.NivoSlider.AltText.Hint", "Enter alternate text that will be added to image.");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Widgets.NivoSlider.Picture1", "Picture 1");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Widgets.NivoSlider.Picture2", "Picture 2");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Widgets.NivoSlider.Picture3", "Picture 3");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Widgets.NivoSlider.Picture4", "Picture 4");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Widgets.NivoSlider.Picture5", "Picture 5");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Widgets.NivoSlider.Picture", "Picture");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Widgets.NivoSlider.Picture.Hint", "Upload picture.");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Widgets.NivoSlider.Text", "Comment");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Widgets.NivoSlider.Text.Hint", "Enter comment for picture. Leave empty if you don't want to display any text.");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Widgets.NivoSlider.Link", "URL");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Widgets.NivoSlider.Link.Hint", "Enter URL. Leave empty if you don't want this picture to be clickable.");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Widgets.NivoSlider.AltText", "Image alternate text");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Widgets.NivoSlider.AltText.Hint", "Enter alternate text that will be added to image.");
 
             base.Install();
         }
@@ -106,19 +111,19 @@ namespace Nop.Plugin.Widgets.NivoSlider
             _settingService.DeleteSetting<NivoSliderSettings>();
 
             //locales
-            this.DeletePluginLocaleResource("Plugins.Widgets.NivoSlider.Picture1");
-            this.DeletePluginLocaleResource("Plugins.Widgets.NivoSlider.Picture2");
-            this.DeletePluginLocaleResource("Plugins.Widgets.NivoSlider.Picture3");
-            this.DeletePluginLocaleResource("Plugins.Widgets.NivoSlider.Picture4");
-            this.DeletePluginLocaleResource("Plugins.Widgets.NivoSlider.Picture5");
-            this.DeletePluginLocaleResource("Plugins.Widgets.NivoSlider.Picture");
-            this.DeletePluginLocaleResource("Plugins.Widgets.NivoSlider.Picture.Hint");
-            this.DeletePluginLocaleResource("Plugins.Widgets.NivoSlider.Text");
-            this.DeletePluginLocaleResource("Plugins.Widgets.NivoSlider.Text.Hint");
-            this.DeletePluginLocaleResource("Plugins.Widgets.NivoSlider.Link");
-            this.DeletePluginLocaleResource("Plugins.Widgets.NivoSlider.Link.Hint");
-            this.DeletePluginLocaleResource("Plugins.Widgets.NivoSlider.AltText");
-            this.DeletePluginLocaleResource("Plugins.Widgets.NivoSlider.AltText.Hint");
+            _localizationService.DeletePluginLocaleResource("Plugins.Widgets.NivoSlider.Picture1");
+            _localizationService.DeletePluginLocaleResource("Plugins.Widgets.NivoSlider.Picture2");
+            _localizationService.DeletePluginLocaleResource("Plugins.Widgets.NivoSlider.Picture3");
+            _localizationService.DeletePluginLocaleResource("Plugins.Widgets.NivoSlider.Picture4");
+            _localizationService.DeletePluginLocaleResource("Plugins.Widgets.NivoSlider.Picture5");
+            _localizationService.DeletePluginLocaleResource("Plugins.Widgets.NivoSlider.Picture");
+            _localizationService.DeletePluginLocaleResource("Plugins.Widgets.NivoSlider.Picture.Hint");
+            _localizationService.DeletePluginLocaleResource("Plugins.Widgets.NivoSlider.Text");
+            _localizationService.DeletePluginLocaleResource("Plugins.Widgets.NivoSlider.Text.Hint");
+            _localizationService.DeletePluginLocaleResource("Plugins.Widgets.NivoSlider.Link");
+            _localizationService.DeletePluginLocaleResource("Plugins.Widgets.NivoSlider.Link.Hint");
+            _localizationService.DeletePluginLocaleResource("Plugins.Widgets.NivoSlider.AltText");
+            _localizationService.DeletePluginLocaleResource("Plugins.Widgets.NivoSlider.AltText.Hint");
 
             base.Uninstall();
         }

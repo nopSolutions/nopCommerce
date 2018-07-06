@@ -64,7 +64,7 @@ namespace Nop.Plugin.Payments.Worldpay.Components
             model.CardTypes = Enum.GetValues(typeof(CreditCardType)).OfType<CreditCardType>().Select(cardType => new SelectListItem
             {
                 Value = JsonConvert.SerializeObject(cardType, new StringEnumConverter()),
-                Text = cardType.GetLocalizedEnum(_localizationService, _workContext)
+                Text = _localizationService.GetLocalizedEnum(cardType)
             }).ToList();
 
             //whether current customer is guest

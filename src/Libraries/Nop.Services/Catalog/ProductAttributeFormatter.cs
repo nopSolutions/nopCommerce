@@ -111,7 +111,7 @@ namespace Nop.Services.Catalog
                             if (attribute.AttributeControlType == AttributeControlType.MultilineTextbox)
                             {
                                 //multiline textbox
-                                var attributeName = attribute.ProductAttribute.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id);
+                                var attributeName = _localizationService.GetLocalized(attribute.ProductAttribute, a => a.Name, _workContext.WorkingLanguage.Id);
 
                                 //encode (if required)
                                 if (htmlEncode)
@@ -137,7 +137,7 @@ namespace Nop.Services.Catalog
                                     var attributeText = allowHyperlinks ? $"<a href=\"{_webHelper.GetStoreLocation(false)}download/getfileupload/?downloadId={download.DownloadGuid}\" class=\"fileuploadattribute\">{fileName}</a>"
                                         : fileName;
 
-                                    var attributeName = attribute.ProductAttribute.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id);
+                                    var attributeName = _localizationService.GetLocalized(attribute.ProductAttribute, a => a.Name, _workContext.WorkingLanguage.Id);
 
                                     //encode (if required)
                                     if (htmlEncode)
@@ -149,7 +149,7 @@ namespace Nop.Services.Catalog
                             else
                             {
                                 //other attributes (textbox, datepicker)
-                                formattedAttribute = $"{attribute.ProductAttribute.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id)}: {value}";
+                                formattedAttribute = $"{_localizationService.GetLocalized(attribute.ProductAttribute, a => a.Name, _workContext.WorkingLanguage.Id)}: {value}";
 
                                 //encode (if required)
                                 if (htmlEncode)
@@ -169,7 +169,7 @@ namespace Nop.Services.Catalog
                     {
                         foreach (var attributeValue in _productAttributeParser.ParseProductAttributeValues(attributesXml, attribute.Id))
                         {
-                            var formattedAttribute = $"{attribute.ProductAttribute.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id)}: {attributeValue.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id)}";
+                            var formattedAttribute = $"{_localizationService.GetLocalized(attribute.ProductAttribute, a => a.Name, _workContext.WorkingLanguage.Id)}: {_localizationService.GetLocalized(attributeValue, a => a.Name, _workContext.WorkingLanguage.Id)}";
 
                             if (renderPrices)
                             {

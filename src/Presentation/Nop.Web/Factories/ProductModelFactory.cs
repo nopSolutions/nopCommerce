@@ -446,7 +446,7 @@ namespace Nop.Web.Factories
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
-            var productName = product.GetLocalized(x => x.Name);
+            var productName = _localizationService.GetLocalized(product, x => x.Name);
             //If a size has been set in the view, we use it in priority
             var pictureSize = productThumbPictureSize ?? _mediaSettings.ProductThumbPictureSize;
 
@@ -501,7 +501,7 @@ namespace Nop.Web.Factories
                 {
                     Enabled = _catalogSettings.CategoryBreadcrumbEnabled,
                     ProductId = product.Id,
-                    ProductName = product.GetLocalized(x => x.Name),
+                    ProductName = _localizationService.GetLocalized(product, x => x.Name),
                     ProductSeName = _urlRecordService.GetSeName(product)
                 };
                 var productCategories = _categoryService.GetProductCategoriesByProductId(product.Id);
@@ -517,7 +517,7 @@ namespace Nop.Web.Factories
                     breadcrumbModel.CategoryBreadcrumb.Add(new CategorySimpleModel
                     {
                         Id = catBr.Id,
-                        Name = catBr.GetLocalized(x => x.Name),
+                        Name = _localizationService.GetLocalized(catBr, x => x.Name),
                         SeName = _urlRecordService.GetSeName(catBr),
                         IncludeInTopMenu = catBr.IncludeInTopMenu
                     });
@@ -546,7 +546,7 @@ namespace Nop.Web.Factories
                 .Select(x => new ProductTagModel
                 {
                     Id = x.Id,
-                    Name = x.GetLocalized(y => y.Name),
+                    Name = _localizationService.GetLocalized(x, y => y.Name),
                     SeName = _urlRecordService.GetSeName(x),
                     ProductCount = _productTagService.GetProductCount(x.Id, _storeContext.CurrentStore.Id)
                 })
@@ -760,9 +760,9 @@ namespace Nop.Web.Factories
                     Id = attribute.Id,
                     ProductId = product.Id,
                     ProductAttributeId = attribute.ProductAttributeId,
-                    Name = attribute.ProductAttribute.GetLocalized(x => x.Name),
-                    Description = attribute.ProductAttribute.GetLocalized(x => x.Description),
-                    TextPrompt = attribute.GetLocalized(x => x.TextPrompt),
+                    Name = _localizationService.GetLocalized(attribute.ProductAttribute, x => x.Name),
+                    Description = _localizationService.GetLocalized(attribute.ProductAttribute, x => x.Description),
+                    TextPrompt = _localizationService.GetLocalized(attribute, x => x.TextPrompt),
                     IsRequired = attribute.IsRequired,
                     AttributeControlType = attribute.AttributeControlType,
                     DefaultValue = updatecartitem != null ? null : attribute.DefaultValue,
@@ -784,7 +784,7 @@ namespace Nop.Web.Factories
                         var valueModel = new ProductDetailsModel.ProductAttributeValueModel
                         {
                             Id = attributeValue.Id,
-                            Name = attributeValue.GetLocalized(x => x.Name),
+                            Name = _localizationService.GetLocalized(attributeValue, x => x.Name),
                             ColorSquaresRgb = attributeValue.ColorSquaresRgb, //used with "Color squares" attribute type
                             IsPreSelected = attributeValue.IsPreSelected,
                             CustomerEntersQty = attributeValue.CustomerEntersQty,
@@ -998,7 +998,7 @@ namespace Nop.Web.Factories
                         var modelMan = new ManufacturerBriefInfoModel
                         {
                             Id = manufacturer.Id,
-                            Name = manufacturer.GetLocalized(x => x.Name),
+                            Name = _localizationService.GetLocalized(manufacturer, x => x.Name),
                             SeName = _urlRecordService.GetSeName(manufacturer)
                         };
                         return modelMan;
@@ -1030,7 +1030,7 @@ namespace Nop.Web.Factories
             var productPicturesCacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_DETAILS_PICTURES_MODEL_KEY, product.Id, defaultPictureSize, isAssociatedProduct, _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore.Id);
             var cachedPictures = _cacheManager.Get(productPicturesCacheKey, () =>
             {
-                var productName = product.GetLocalized(x => x.Name);
+                var productName = _localizationService.GetLocalized(product, x => x.Name);
 
                 var pictures = _pictureService.GetPicturesByProductId(product.Id);
                 var defaultPicture = pictures.FirstOrDefault();
@@ -1131,9 +1131,9 @@ namespace Nop.Web.Factories
                 var model = new ProductOverviewModel
                 {
                     Id = product.Id,
-                    Name = product.GetLocalized(x => x.Name),
-                    ShortDescription = product.GetLocalized(x => x.ShortDescription),
-                    FullDescription = product.GetLocalized(x => x.FullDescription),
+                    Name = _localizationService.GetLocalized(product, x => x.Name),
+                    ShortDescription = _localizationService.GetLocalized(product, x => x.ShortDescription),
+                    FullDescription = _localizationService.GetLocalized(product, x => x.FullDescription),
                     SeName = _urlRecordService.GetSeName(product),
                     Sku = product.Sku,
                     ProductType = product.ProductType,
@@ -1185,12 +1185,12 @@ namespace Nop.Web.Factories
             var model = new ProductDetailsModel
             {
                 Id = product.Id,
-                Name = product.GetLocalized(x => x.Name),
-                ShortDescription = product.GetLocalized(x => x.ShortDescription),
-                FullDescription = product.GetLocalized(x => x.FullDescription),
-                MetaKeywords = product.GetLocalized(x => x.MetaKeywords),
-                MetaDescription = product.GetLocalized(x => x.MetaDescription),
-                MetaTitle = product.GetLocalized(x => x.MetaTitle),
+                Name = _localizationService.GetLocalized(product, x => x.Name),
+                ShortDescription = _localizationService.GetLocalized(product, x => x.ShortDescription),
+                FullDescription = _localizationService.GetLocalized(product, x => x.FullDescription),
+                MetaKeywords = _localizationService.GetLocalized(product, x => x.MetaKeywords),
+                MetaDescription = _localizationService.GetLocalized(product, x => x.MetaDescription),
+                MetaTitle = _localizationService.GetLocalized(product, x => x.MetaTitle),
                 SeName = _urlRecordService.GetSeName(product),
                 ProductType = product.ProductType,
                 ShowSku = _catalogSettings.ShowSkuOnProductDetailsPage,
@@ -1222,7 +1222,7 @@ namespace Nop.Web.Factories
                 var deliveryDate = _dateRangeService.GetDeliveryDateById(product.DeliveryDateId);
                 if (deliveryDate != null)
                 {
-                    model.DeliveryDate = deliveryDate.GetLocalized(dd => dd.Name);
+                    model.DeliveryDate = _localizationService.GetLocalized(deliveryDate, dd => dd.Name);
                 }
             }
 
@@ -1231,7 +1231,7 @@ namespace Nop.Web.Factories
             //compare products
             model.CompareProductsEnabled = _catalogSettings.CompareProductsEnabled;
             //store name
-            model.CurrentStoreName = _storeContext.CurrentStore.GetLocalized(x => x.Name);
+            model.CurrentStoreName = _localizationService.GetLocalized(_storeContext.CurrentStore, x => x.Name);
 
             //vendor details
             if (_vendorSettings.ShowVendorOnProductDetailsPage)
@@ -1244,7 +1244,7 @@ namespace Nop.Web.Factories
                     model.VendorModel = new VendorBriefInfoModel
                     {
                         Id = vendor.Id,
-                        Name = vendor.GetLocalized(x => x.Name),
+                        Name = _localizationService.GetLocalized(vendor, x => x.Name),
                         SeName = _urlRecordService.GetSeName(vendor),
                     };
                 }
@@ -1390,7 +1390,7 @@ namespace Nop.Web.Factories
                 throw new ArgumentNullException(nameof(product));
 
             model.ProductId = product.Id;
-            model.ProductName = product.GetLocalized(x => x.Name);
+            model.ProductName = _localizationService.GetLocalized(product, x => x.Name);
             model.ProductSeName = _urlRecordService.GetSeName(product);
 
             var productReviews = _catalogSettings.ShowProductReviewsPerStore
@@ -1407,8 +1407,8 @@ namespace Nop.Web.Factories
                 model.ReviewTypeList.Add(new ReviewTypeModel
                 {
                     Id = reviewType.Id,
-                    Name = reviewType.GetLocalized(entity => entity.Name),
-                    Description = reviewType.GetLocalized(entity => entity.Description),
+                    Name = _localizationService.GetLocalized(reviewType, entity => entity.Name),
+                    Description = _localizationService.GetLocalized(reviewType, entity => entity.Description),
                     VisibleToAllCustomers = reviewType.VisibleToAllCustomers,
                     DisplayOrder = reviewType.DisplayOrder,
                     IsRequired = reviewType.IsRequired,
@@ -1445,7 +1445,7 @@ namespace Nop.Web.Factories
                         ReviewTypeId = q.ReviewTypeId,
                         ProductReviewId = pr.Id,
                         Rating = q.Rating,
-                        Name = q.ReviewType.GetLocalized(x => x.Name),
+                        Name = _localizationService.GetLocalized(q.ReviewType, x => x.Name),
                         VisibleToAllCustomers = q.ReviewType.VisibleToAllCustomers || _workContext.CurrentCustomer.Id == pr.CustomerId,
                     });
                 }
@@ -1460,8 +1460,8 @@ namespace Nop.Web.Factories
                 var reviewTypeMappingModel = new AddProductReviewReviewTypeMappingModel
                 {
                     ReviewTypeId = rt.Id,
-                    Name = reviewType.GetLocalized(entity => entity.Name),
-                    Description = reviewType.GetLocalized(entity => entity.Description),
+                    Name = _localizationService.GetLocalized(reviewType, entity => entity.Name),
+                    Description = _localizationService.GetLocalized(reviewType, entity => entity.Description),
                     DisplayOrder = rt.DisplayOrder,
                     IsRequired = rt.IsRequired,
                 };
@@ -1522,7 +1522,7 @@ namespace Nop.Web.Factories
                 {
                     Title = review.Title,
                     ProductId = product.Id,
-                    ProductName = product.GetLocalized(p => p.Name),
+                    ProductName = _localizationService.GetLocalized(product, p => p.Name),
                     ProductSeName = _urlRecordService.GetSeName(product),
                     Rating = review.Rating,
                     ReviewText = review.ReviewText,
@@ -1544,7 +1544,7 @@ namespace Nop.Web.Factories
                         ReviewTypeId = q.ReviewTypeId,
                         ProductReviewId = review.Id,
                         Rating = q.Rating,
-                        Name = q.ReviewType.GetLocalized(x => x.Name),
+                        Name = _localizationService.GetLocalized(q.ReviewType, x => x.Name),
                     });
                 }
 
@@ -1587,7 +1587,7 @@ namespace Nop.Web.Factories
                 throw new ArgumentNullException(nameof(product));
 
             model.ProductId = product.Id;
-            model.ProductName = product.GetLocalized(x => x.Name);
+            model.ProductName = _localizationService.GetLocalized(product, x => x.Name);
             model.ProductSeName = _urlRecordService.GetSeName(product);
             model.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnEmailProductToFriendPage;
             if (!excludeProperties)
@@ -1616,14 +1616,14 @@ namespace Nop.Web.Factories
                     var m = new ProductSpecificationModel
                     {
                         SpecificationAttributeId = psa.SpecificationAttributeOption.SpecificationAttributeId,
-                        SpecificationAttributeName = psa.SpecificationAttributeOption.SpecificationAttribute.GetLocalized(x => x.Name),
+                        SpecificationAttributeName = _localizationService.GetLocalized(psa.SpecificationAttributeOption.SpecificationAttribute, x => x.Name),
                         ColorSquaresRgb = psa.SpecificationAttributeOption.ColorSquaresRgb
                     };
 
                     switch (psa.AttributeType)
                     {
                         case SpecificationAttributeType.Option:
-                            m.ValueRaw = WebUtility.HtmlEncode(psa.SpecificationAttributeOption.GetLocalized(x => x.Name));
+                            m.ValueRaw = WebUtility.HtmlEncode(_localizationService.GetLocalized(psa.SpecificationAttributeOption, x => x.Name));
                             break;
                         case SpecificationAttributeType.CustomText:
                             m.ValueRaw = WebUtility.HtmlEncode(psa.CustomValue);

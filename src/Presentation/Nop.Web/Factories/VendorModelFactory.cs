@@ -79,7 +79,7 @@ namespace Nop.Web.Factories
                 var attributeModel = new VendorAttributeModel
                 {
                     Id = attribute.Id,
-                    Name = attribute.GetLocalized(x => x.Name),
+                    Name = _localizationService.GetLocalized(attribute, x => x.Name),
                     IsRequired = attribute.IsRequired,
                     AttributeControlType = attribute.AttributeControlType,
                 };
@@ -93,7 +93,7 @@ namespace Nop.Web.Factories
                         var valueModel = new VendorAttributeValueModel
                         {
                             Id = attributeValue.Id,
-                            Name = attributeValue.GetLocalized(x => x.Name),
+                            Name = _localizationService.GetLocalized(attributeValue, x => x.Name),
                             IsPreSelected = attributeValue.IsPreSelected
                         };
                         attributeModel.Values.Add(valueModel);

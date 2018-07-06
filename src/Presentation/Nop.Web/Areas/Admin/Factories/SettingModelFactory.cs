@@ -1033,7 +1033,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     };
 
                     //fill in additional values (not existing in the entity)
-                    sortOptionModel.Name = option.GetLocalizedEnum(_localizationService, _workContext);
+                    sortOptionModel.Name = _localizationService.GetLocalizedEnum(option);
                     sortOptionModel.IsActive = !catalogSettings.ProductSortingEnumDisabled.Contains((int)option);
                     sortOptionModel.DisplayOrder = catalogSettings
                         .ProductSortingEnumDisplayOrder.TryGetValue((int)option, out var value) ? value : (int)option;

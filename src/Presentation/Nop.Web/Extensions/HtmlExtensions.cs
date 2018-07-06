@@ -267,7 +267,8 @@ namespace Nop.Web.Extensions
                 if (topic == null)
                     return "";
 
-                return topic.GetLocalized(x => x.Title);
+                var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
+                return localizationService.GetLocalized(topic, x => x.Title);
             });
             return cachedTitle;
         }

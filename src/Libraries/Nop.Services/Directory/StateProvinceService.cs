@@ -19,24 +19,21 @@ namespace Nop.Services.Directory
         private readonly IRepository<StateProvince> _stateProvinceRepository;
         private readonly IEventPublisher _eventPublisher;
         private readonly ICacheManager _cacheManager;
+        private readonly ILocalizationService _localizationService;
 
         #endregion
 
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="cacheManager">Cache manager</param>
-        /// <param name="stateProvinceRepository">State/province repository</param>
-        /// <param name="eventPublisher">Event publisher</param>
         public StateProvinceService(ICacheManager cacheManager,
             IRepository<StateProvince> stateProvinceRepository,
-            IEventPublisher eventPublisher)
+            IEventPublisher eventPublisher,
+            ILocalizationService localizationService)
         {
             _cacheManager = cacheManager;
             _stateProvinceRepository = stateProvinceRepository;
             _eventPublisher = eventPublisher;
+            this._localizationService = localizationService;
         }
 
         #endregion
@@ -50,7 +47,7 @@ namespace Nop.Services.Directory
         {
             if (stateProvince == null)
                 throw new ArgumentNullException(nameof(stateProvince));
-            
+
             _stateProvinceRepository.Delete(stateProvince);
 
             _cacheManager.RemoveByPattern(NopDirectoryDefaults.StateProvincesPatternCacheKey);
@@ -92,7 +89,7 @@ namespace Nop.Services.Directory
             var stateProvince = query.FirstOrDefault();
             return stateProvince;
         }
-        
+
         /// <summary>
         /// Gets a state/province collection by country identifier
         /// </summary>
@@ -117,7 +114,7 @@ namespace Nop.Services.Directory
                     //we should sort states by localized names when they have the same display order
                     stateProvinces = stateProvinces
                         .OrderBy(c => c.DisplayOrder)
-                        .ThenBy(c => c.GetLocalized(x => x.Name, languageId))
+                        .ThenBy(c => _localizationService.GetLocalized(c, x => x.Name, languageId))
                         .ToList();
                 }
                 return stateProvinces;
@@ -133,8 +130,8 @@ namespace Nop.Services.Directory
         {
             var query = from sp in _stateProvinceRepository.Table
                         orderby sp.CountryId, sp.DisplayOrder, sp.Name
-                where showHidden || sp.Published
-                select sp;
+                        where showHidden || sp.Published
+                        select sp;
             var stateProvinces = query.ToList();
             return stateProvinces;
         }

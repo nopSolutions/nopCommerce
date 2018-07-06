@@ -211,8 +211,8 @@ namespace Nop.Web.Factories
                 var attributeModel = new ShoppingCartModel.CheckoutAttributeModel
                 {
                     Id = attribute.Id,
-                    Name = attribute.GetLocalized(x => x.Name),
-                    TextPrompt = attribute.GetLocalized(x => x.TextPrompt),
+                    Name = _localizationService.GetLocalized(attribute, x => x.Name),
+                    TextPrompt = _localizationService.GetLocalized(attribute, x => x.TextPrompt),
                     IsRequired = attribute.IsRequired,
                     AttributeControlType = attribute.AttributeControlType,
                     DefaultValue = attribute.DefaultValue
@@ -233,7 +233,7 @@ namespace Nop.Web.Factories
                         var attributeValueModel = new ShoppingCartModel.CheckoutAttributeValueModel
                         {
                             Id = attributeValue.Id,
-                            Name = attributeValue.GetLocalized(x => x.Name),
+                            Name = _localizationService.GetLocalized(attributeValue, x => x.Name),
                             ColorSquaresRgb = attributeValue.ColorSquaresRgb,
                             IsPreSelected = attributeValue.IsPreSelected,
                         };
@@ -354,7 +354,7 @@ namespace Nop.Web.Factories
                 Sku = _productService.FormatSku(sci.Product, sci.AttributesXml),
                 VendorName = vendors.FirstOrDefault(v => v.Id == sci.Product.VendorId)?.Name ?? string.Empty,
                 ProductId = sci.Product.Id,
-                ProductName = sci.Product.GetLocalized(x => x.Name),
+                ProductName = _localizationService.GetLocalized(sci.Product, x => x.Name),
                 ProductSeName = _urlRecordService.GetSeName(sci.Product),
                 Quantity = sci.Quantity,
                 AttributeInfo = _productAttributeFormatter.FormatAttributes(sci.Product, sci.AttributesXml),
@@ -390,8 +390,7 @@ namespace Nop.Web.Factories
             //recurring info
             if (sci.Product.IsRecurring)
                 cartItemModel.RecurringInfo = string.Format(_localizationService.GetResource("ShoppingCart.RecurringPeriod"),
-                        sci.Product.RecurringCycleLength,
-                        sci.Product.RecurringCyclePeriod.GetLocalizedEnum(_localizationService, _workContext));
+                        sci.Product.RecurringCycleLength, _localizationService.GetLocalizedEnum(sci.Product.RecurringCyclePeriod));
 
             //rental info
             if (sci.Product.IsRental)
@@ -492,7 +491,7 @@ namespace Nop.Web.Factories
                 Id = sci.Id,
                 Sku = _productService.FormatSku(sci.Product, sci.AttributesXml),
                 ProductId = sci.Product.Id,
-                ProductName = sci.Product.GetLocalized(x => x.Name),
+                ProductName = _localizationService.GetLocalized(sci.Product, x => x.Name),
                 ProductSeName = _urlRecordService.GetSeName(sci.Product),
                 Quantity = sci.Quantity,
                 AttributeInfo = _productAttributeFormatter.FormatAttributes(sci.Product, sci.AttributesXml),
@@ -524,8 +523,7 @@ namespace Nop.Web.Factories
             //recurring info
             if (sci.Product.IsRecurring)
                 cartItemModel.RecurringInfo = string.Format(_localizationService.GetResource("ShoppingCart.RecurringPeriod"),
-                        sci.Product.RecurringCycleLength,
-                        sci.Product.RecurringCyclePeriod.GetLocalizedEnum(_localizationService, _workContext));
+                        sci.Product.RecurringCycleLength, _localizationService.GetLocalizedEnum(sci.Product.RecurringCyclePeriod));
 
             //rental info
             if (sci.Product.IsRental)
@@ -677,7 +675,7 @@ namespace Nop.Web.Factories
             var selectedPaymentMethodSystemName = _genericAttributeService.GetAttribute<string>(_workContext.CurrentCustomer, NopCustomerDefaults.SelectedPaymentMethodAttribute, _storeContext.CurrentStore.Id);
             var paymentMethod = _paymentService.LoadPaymentMethodBySystemName(selectedPaymentMethodSystemName);
             model.PaymentMethod = paymentMethod != null
-                ? paymentMethod.GetLocalizedFriendlyName(_localizationService, _workContext.WorkingLanguage.Id)
+                ? _localizationService.GetLocalizedFriendlyName(paymentMethod, _workContext.WorkingLanguage.Id)
                 : "";
 
             //custom values
@@ -722,7 +720,7 @@ namespace Nop.Web.Factories
                 foreach (var c in _countryService.GetAllCountriesForShipping(_workContext.WorkingLanguage.Id))
                     model.AvailableCountries.Add(new SelectListItem
                     {
-                        Text = c.GetLocalized(x => x.Name),
+                        Text = _localizationService.GetLocalized(c, x => x.Name),
                         Value = c.Id.ToString(),
                         Selected = c.Id == defaultEstimateCountryId
                     });
@@ -740,7 +738,7 @@ namespace Nop.Web.Factories
                     {
                         model.AvailableStates.Add(new SelectListItem
                         {
-                            Text = s.GetLocalized(x => x.Name),
+                            Text = _localizationService.GetLocalized(s, x => x.Name),
                             Value = s.Id.ToString(),
                             Selected = s.Id == defaultEstimateStateId
                         });
@@ -1012,7 +1010,7 @@ namespace Nop.Web.Factories
                         {
                             Id = sci.Id,
                             ProductId = sci.Product.Id,
-                            ProductName = sci.Product.GetLocalized(x => x.Name),
+                            ProductName = _localizationService.GetLocalized(sci.Product, x => x.Name),
                             ProductSeName = _urlRecordService.GetSeName(sci.Product),
                             Quantity = sci.Quantity,
                             AttributeInfo = _productAttributeFormatter.FormatAttributes(sci.Product, sci.AttributesXml)

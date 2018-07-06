@@ -31,6 +31,7 @@ namespace Nop.Services.Messages
         private readonly IMessageTemplateService _messageTemplateService;
         private readonly IQueuedEmailService _queuedEmailService;
         private readonly ILanguageService _languageService;
+        private readonly ILocalizationService _localizationService;
         private readonly ITokenizer _tokenizer;
         private readonly IEmailAccountService _emailAccountService;
         private readonly IMessageTokenProvider _messageTokenProvider;
@@ -46,25 +47,10 @@ namespace Nop.Services.Messages
 
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="messageTemplateService">Message template service</param>
-        /// <param name="queuedEmailService">Queued email service</param>
-        /// <param name="languageService">Language service</param>
-        /// <param name="tokenizer">Tokenizer</param>
-        /// <param name="emailAccountService">Email account service</param>
-        /// <param name="messageTokenProvider">Message token provider</param>
-        /// <param name="storeService">Store service</param>
-        /// <param name="storeContext">Store context</param>
-        /// <param name="commonSettings">Common settings</param>
-        /// <param name="emailAccountSettings">Email account settings</param>
-        /// <param name="eventPublisher">Event publisher</param>
-        /// <param name="affiliateService">Affiliate service</param>
-        /// <param name="customerService">Customer service</param>
         public WorkflowMessageService(IMessageTemplateService messageTemplateService,
             IQueuedEmailService queuedEmailService,
             ILanguageService languageService,
+            ILocalizationService localizationService,
             ITokenizer tokenizer,
             IEmailAccountService emailAccountService,
             IMessageTokenProvider messageTokenProvider,
@@ -79,6 +65,7 @@ namespace Nop.Services.Messages
             this._messageTemplateService = messageTemplateService;
             this._queuedEmailService = queuedEmailService;
             this._languageService = languageService;
+            this._localizationService = localizationService;
             this._tokenizer = tokenizer;
             this._emailAccountService = emailAccountService;
             this._messageTokenProvider = messageTokenProvider;
@@ -124,7 +111,7 @@ namespace Nop.Services.Messages
         /// <returns>EmailAccount</returns>
         protected virtual EmailAccount GetEmailAccountOfMessageTemplate(MessageTemplate messageTemplate, int languageId)
         {
-            var emailAccountId = messageTemplate.GetLocalized(mt => mt.EmailAccountId, languageId);
+            var emailAccountId = _localizationService.GetLocalized(messageTemplate, mt => mt.EmailAccountId, languageId);
             //some 0 validation (for localizable "Email account" dropdownlist which saves 0 if "Standard" value is chosen)
             if (emailAccountId == 0)
                 emailAccountId = messageTemplate.EmailAccountId;
@@ -2257,10 +2244,10 @@ namespace Nop.Services.Messages
                 throw new ArgumentNullException(nameof(emailAccount));
 
             //retrieve localized message template data
-            var bcc = messageTemplate.GetLocalized(mt => mt.BccEmailAddresses, languageId);
+            var bcc = _localizationService.GetLocalized(messageTemplate, mt => mt.BccEmailAddresses, languageId);
             if (string.IsNullOrEmpty(subject))
-                subject = messageTemplate.GetLocalized(mt => mt.Subject, languageId);
-            var body = messageTemplate.GetLocalized(mt => mt.Body, languageId);
+                subject = _localizationService.GetLocalized(messageTemplate, mt => mt.Subject, languageId);
+            var body = _localizationService.GetLocalized(messageTemplate, mt => mt.Body, languageId);
 
             //Replace subject and body tokens 
             var subjectReplaced = _tokenizer.Replace(subject, tokens, false);

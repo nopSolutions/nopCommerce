@@ -31,6 +31,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly ICustomerService _customerService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IGenericAttributeService _genericAttributeService;
+        private readonly ILocalizationService _localizationService;
         private readonly ILocalizedModelFactory _localizedModelFactory;
         private readonly IUrlRecordService _urlRecordService;
         private readonly IVendorAttributeParser _vendorAttributeParser;
@@ -48,6 +49,7 @@ namespace Nop.Web.Areas.Admin.Factories
             ICustomerService customerService,
             IDateTimeHelper dateTimeHelper,
             IGenericAttributeService genericAttributeService,
+            ILocalizationService localizationService,
             ILocalizedModelFactory localizedModelFactory,
             IUrlRecordService urlRecordService,
             IVendorAttributeParser vendorAttributeParser,
@@ -61,6 +63,7 @@ namespace Nop.Web.Areas.Admin.Factories
             this._customerService = customerService;
             this._dateTimeHelper = dateTimeHelper;
             this._genericAttributeService = genericAttributeService;
+            this._localizationService = localizationService;
             this._localizedModelFactory = localizedModelFactory;
             this._urlRecordService = urlRecordService;
             this._vendorAttributeParser = vendorAttributeParser;
@@ -309,11 +312,11 @@ namespace Nop.Web.Areas.Admin.Factories
                 //define localized model configuration action
                 localizedModelConfiguration = (locale, languageId) =>
                 {
-                    locale.Name = vendor.GetLocalized(entity => entity.Name, languageId, false, false);
-                    locale.Description = vendor.GetLocalized(entity => entity.Description, languageId, false, false);
-                    locale.MetaKeywords = vendor.GetLocalized(entity => entity.MetaKeywords, languageId, false, false);
-                    locale.MetaDescription = vendor.GetLocalized(entity => entity.MetaDescription, languageId, false, false);
-                    locale.MetaTitle = vendor.GetLocalized(entity => entity.MetaTitle, languageId, false, false);
+                    locale.Name = _localizationService.GetLocalized(vendor, entity => entity.Name, languageId, false, false);
+                    locale.Description = _localizationService.GetLocalized(vendor, entity => entity.Description, languageId, false, false);
+                    locale.MetaKeywords = _localizationService.GetLocalized(vendor, entity => entity.MetaKeywords, languageId, false, false);
+                    locale.MetaDescription = _localizationService.GetLocalized(vendor, entity => entity.MetaDescription, languageId, false, false);
+                    locale.MetaTitle = _localizationService.GetLocalized(vendor, entity => entity.MetaTitle, languageId, false, false);
                     locale.SeName = _urlRecordService.GetSeName(vendor, languageId, false, false);
                 };
 

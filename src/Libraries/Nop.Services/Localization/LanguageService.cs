@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Nop.Core.Caching;
 using Nop.Core.Data;
@@ -53,7 +54,7 @@ namespace Nop.Services.Localization
         }
 
         #endregion
-        
+
         #region Methods
 
         /// <summary>
@@ -81,7 +82,7 @@ namespace Nop.Services.Localization
                     }
                 }
             }
-            
+
             _languageRepository.Delete(language);
 
             //cache
@@ -210,6 +211,27 @@ namespace Nop.Services.Localization
 
             //event notification
             _eventPublisher.EntityUpdated(language);
+        }
+
+        /// <summary>
+        /// Get 2 letter ISO language code
+        /// </summary>
+        /// <param name="language">Language</param>
+        /// <returns>ISO language code</returns>
+        public virtual string GetTwoLetterIsoLanguageName(Language language)
+        {
+            if (language == null)
+                throw new ArgumentNullException(nameof(language));
+
+            if (string.IsNullOrEmpty(language.LanguageCulture))
+                return "en";
+
+            var culture = new CultureInfo(language.LanguageCulture);
+            var code = culture.TwoLetterISOLanguageName;
+            if (String.IsNullOrEmpty(code))
+                return "en";
+
+            return code;
         }
 
         #endregion

@@ -22,6 +22,7 @@ namespace Nop.Web.Factories
         #region Fields
 
         private readonly IAclService _aclService;
+        private readonly ILocalizationService _localizationService;
         private readonly IStaticCacheManager _cacheManager;
         private readonly IStoreContext _storeContext;
         private readonly ITopicService _topicService;
@@ -34,6 +35,7 @@ namespace Nop.Web.Factories
         #region Ctor
 
         public TopicModelFactory(IAclService aclService,
+            ILocalizationService localizationService,
             IStaticCacheManager cacheManager,
             IStoreContext storeContext,
             ITopicService topicService,
@@ -42,6 +44,7 @@ namespace Nop.Web.Factories
             IWorkContext workContext)
         {
             this._aclService = aclService;
+            this._localizationService = localizationService;
             this._cacheManager = cacheManager;
             this._storeContext = storeContext;
             this._topicService = topicService;
@@ -70,11 +73,11 @@ namespace Nop.Web.Factories
                 SystemName = topic.SystemName,
                 IncludeInSitemap = topic.IncludeInSitemap,
                 IsPasswordProtected = topic.IsPasswordProtected,
-                Title = topic.IsPasswordProtected ? "" : topic.GetLocalized(x => x.Title),
-                Body = topic.IsPasswordProtected ? "" : topic.GetLocalized(x => x.Body),
-                MetaKeywords = topic.GetLocalized(x => x.MetaKeywords),
-                MetaDescription = topic.GetLocalized(x => x.MetaDescription),
-                MetaTitle = topic.GetLocalized(x => x.MetaTitle),
+                Title = topic.IsPasswordProtected ? "" : _localizationService.GetLocalized(topic, x => x.Title),
+                Body = topic.IsPasswordProtected ? "" : _localizationService.GetLocalized(topic, x => x.Body),
+                MetaKeywords = _localizationService.GetLocalized(topic, x => x.MetaKeywords),
+                MetaDescription = _localizationService.GetLocalized(topic, x => x.MetaDescription),
+                MetaTitle = _localizationService.GetLocalized(topic, x => x.MetaTitle),
                 SeName = _urlRecordService.GetSeName(topic),
                 TopicTemplateId = topic.TopicTemplateId,
                 Published = topic.Published

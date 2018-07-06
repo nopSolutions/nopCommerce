@@ -15,13 +15,14 @@ namespace Nop.Services.Messages
     /// <summary>
     /// Message template service
     /// </summary>
-    public partial class MessageTemplateService: IMessageTemplateService
+    public partial class MessageTemplateService : IMessageTemplateService
     {
         #region Fields
 
         private readonly IRepository<MessageTemplate> _messageTemplateRepository;
         private readonly IRepository<StoreMapping> _storeMappingRepository;
         private readonly ILanguageService _languageService;
+        private readonly ILocalizationService _localizationService;
         private readonly IStoreMappingService _storeMappingService;
         private readonly ILocalizedEntityService _localizedEntityService;
         private readonly CatalogSettings _catalogSettings;
@@ -32,20 +33,10 @@ namespace Nop.Services.Messages
 
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="cacheManager">Cache manager</param>
-        /// <param name="storeMappingRepository">Store mapping repository</param>
-        /// <param name="languageService">Language service</param>
-        /// <param name="localizedEntityService">Localized entity service</param>
-        /// <param name="storeMappingService">Store mapping service</param>
-        /// <param name="messageTemplateRepository">Message template repository</param>
-        /// <param name="catalogSettings">Catalog settings</param>
-        /// <param name="eventPublisher">Event publisher</param>
         public MessageTemplateService(ICacheManager cacheManager,
             IRepository<StoreMapping> storeMappingRepository,
             ILanguageService languageService,
+            ILocalizationService localizationService,
             ILocalizedEntityService localizedEntityService,
             IStoreMappingService storeMappingService,
             IRepository<MessageTemplate> messageTemplateRepository,
@@ -55,6 +46,7 @@ namespace Nop.Services.Messages
             this._cacheManager = cacheManager;
             this._storeMappingRepository = storeMappingRepository;
             this._languageService = languageService;
+            this._localizationService = localizationService;
             this._localizedEntityService = localizedEntityService;
             this._storeMappingService = storeMappingService;
             this._messageTemplateRepository = messageTemplateRepository;
@@ -179,7 +171,7 @@ namespace Nop.Services.Messages
                             from sm in tSm.DefaultIfEmpty()
                             where !t.LimitedToStores || storeId == sm.StoreId
                             select t;
-                    
+
                     query = query.Distinct().OrderBy(t => t.Name);
                 }
 
@@ -218,19 +210,19 @@ namespace Nop.Services.Messages
             //localization
             foreach (var lang in languages)
             {
-                var bccEmailAddresses = messageTemplate.GetLocalized(x => x.BccEmailAddresses, lang.Id, false, false);
+                var bccEmailAddresses = _localizationService.GetLocalized(messageTemplate, x => x.BccEmailAddresses, lang.Id, false, false);
                 if (!string.IsNullOrEmpty(bccEmailAddresses))
                     _localizedEntityService.SaveLocalizedValue(mtCopy, x => x.BccEmailAddresses, bccEmailAddresses, lang.Id);
 
-                var subject = messageTemplate.GetLocalized(x => x.Subject, lang.Id, false, false);
+                var subject = _localizationService.GetLocalized(messageTemplate, x => x.Subject, lang.Id, false, false);
                 if (!string.IsNullOrEmpty(subject))
                     _localizedEntityService.SaveLocalizedValue(mtCopy, x => x.Subject, subject, lang.Id);
 
-                var body = messageTemplate.GetLocalized(x => x.Body, lang.Id, false, false);
+                var body = _localizationService.GetLocalized(messageTemplate, x => x.Body, lang.Id, false, false);
                 if (!string.IsNullOrEmpty(body))
                     _localizedEntityService.SaveLocalizedValue(mtCopy, x => x.Body, body, lang.Id);
 
-                var emailAccountId = messageTemplate.GetLocalized(x => x.EmailAccountId, lang.Id, false, false);
+                var emailAccountId = _localizationService.GetLocalized(messageTemplate, x => x.EmailAccountId, lang.Id, false, false);
                 if (emailAccountId > 0)
                     _localizedEntityService.SaveLocalizedValue(mtCopy, x => x.EmailAccountId, emailAccountId, lang.Id);
             }

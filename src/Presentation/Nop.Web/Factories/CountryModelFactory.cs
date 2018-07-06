@@ -66,7 +66,7 @@ namespace Nop.Web.Factories
                     result.Add(new StateProvinceModel
                     {
                         id = state.Id,
-                        name = state.GetLocalized(x => x.Name)
+                        name = _localizationService.GetLocalized(state, x => x.Name)
                     });
 
                 if (country == null)

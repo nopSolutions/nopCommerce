@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Nop.Core;
 using Nop.Services.Customers;
 using Nop.Services.Localization;
 using Nop.Services.Security;
@@ -21,7 +20,6 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly ICustomerService _customerService;
         private readonly ILocalizationService _localizationService;
         private readonly IPermissionService _permissionService;
-        private readonly IWorkContext _workContext;
 
         #endregion
 
@@ -29,13 +27,11 @@ namespace Nop.Web.Areas.Admin.Factories
 
         public SecurityModelFactory(ICustomerService customerService,
             ILocalizationService localizationService,
-            IPermissionService permissionService,
-            IWorkContext workContext)
+            IPermissionService permissionService)
         {
             this._customerService = customerService;
             this._localizationService = localizationService;
             this._permissionService = permissionService;
-            this._workContext = workContext;
         }
 
         #endregion
@@ -59,7 +55,7 @@ namespace Nop.Web.Areas.Admin.Factories
             {
                 model.AvailablePermissions.Add(new PermissionRecordModel
                 {
-                    Name = permissionRecord.GetLocalizedPermissionName(_localizationService, _workContext),
+                    Name = _localizationService.GetLocalizedPermissionName(permissionRecord),
                     SystemName = permissionRecord.SystemName
                 });
 

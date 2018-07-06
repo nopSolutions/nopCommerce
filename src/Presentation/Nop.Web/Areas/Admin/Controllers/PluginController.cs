@@ -362,7 +362,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //locales
                 foreach (var localized in model.Locales)
                 {
-                    pluginDescriptor.Instance().SaveLocalizedFriendlyName(_localizationService, localized.LanguageId, localized.FriendlyName);
+                    _localizationService.SaveLocalizedFriendlyName(pluginDescriptor.Instance(), localized.LanguageId, localized.FriendlyName);
                 }
 
                 //enabled/disabled

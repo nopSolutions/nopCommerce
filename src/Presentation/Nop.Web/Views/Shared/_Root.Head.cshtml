@@ -3,7 +3,6 @@
 @using Nop.Core.Domain.Common
 @using Nop.Core.Domain.Seo
 @using Nop.Services.Events
-@using Nop.Services.Localization
 @using Nop.Services.Security
 @using Nop.Web.Framework.Events
 @using Nop.Core
@@ -13,6 +12,7 @@
 @inject IWorkContext workContext
 @inject SeoSettings seoSettings
 @inject StoreInformationSettings storeInformationSettings
+@inject Nop.Services.Localization.ILanguageService languageService
 @{
     Html.AppendScriptParts(ResourceLocation.Footer, "~/js/public.ajaxcart.js");
     Html.AppendScriptParts(ResourceLocation.Footer, "~/js/public.common.js");
@@ -47,7 +47,7 @@
     eventPublisher.Publish(new PageRenderingEvent(this.Html));
 }
 <!DOCTYPE html>
-<html lang="@workContext.WorkingLanguage.GetTwoLetterIsoLanguageName()" @(this.ShouldUseRtlTheme() ? Html.Raw(" dir=\"rtl\"") : null) @Html.NopPageCssClasses()>
+<html lang="@languageService.GetTwoLetterIsoLanguageName(workContext.WorkingLanguage)" @(this.ShouldUseRtlTheme() ? Html.Raw(" dir=\"rtl\"") : null) @Html.NopPageCssClasses()>
 <head>
     <title>@Html.NopTitle()</title>
     <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />

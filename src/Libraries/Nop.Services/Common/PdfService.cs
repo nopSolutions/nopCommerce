@@ -800,7 +800,7 @@ namespace Nop.Services.Common
                 pAttribTable.DefaultCell.Border = Rectangle.NO_BORDER;
 
                 //product name
-                var name = p.GetLocalized(x => x.Name, lang.Id);
+                var name = _localizationService.GetLocalized(p, x => x.Name, lang.Id);
                 pAttribTable.AddCell(new Paragraph(name, font));
                 cellProductItem.AddElement(new Paragraph(name, font));
                 //attributes
@@ -968,13 +968,13 @@ namespace Nop.Services.Common
                     {
                         var addressLine = $"{indent}{order.ShippingAddress.City}, " +
                             $"{(!string.IsNullOrEmpty(order.ShippingAddress.County) ? $"{order.ShippingAddress.County}, " : string.Empty)}" +
-                            $"{(order.ShippingAddress.StateProvince?.GetLocalized(x => x.Name, lang.Id) ?? string.Empty)} " +
+                            $"{(order.ShippingAddress.StateProvince != null ? _localizationService.GetLocalized(order.ShippingAddress.StateProvince, x => x.Name, lang.Id) : string.Empty)} " +
                             $"{order.ShippingAddress.ZipPostalCode}";
                         shippingAddress.AddCell(new Paragraph(addressLine, font));
                     }
                     if (_addressSettings.CountryEnabled && order.ShippingAddress.Country != null)
                         shippingAddress.AddCell(
-                            new Paragraph(indent + order.ShippingAddress.Country.GetLocalized(x => x.Name, lang.Id), font));
+                            new Paragraph(indent + _localizationService.GetLocalized(order.ShippingAddress.Country, x => x.Name, lang.Id), font));
                     //custom attributes
                     var customShippingAddressAttributes =
                         _addressAttributeFormatter.FormatAttributes(order.ShippingAddress.CustomAttributes);
@@ -999,7 +999,7 @@ namespace Nop.Services.Common
                         shippingAddress.AddCell(new Paragraph($"{indent}{order.PickupAddress.County}", font));
                     if (order.PickupAddress.Country != null)
                         shippingAddress.AddCell(
-                            new Paragraph($"{indent}{order.PickupAddress.Country.GetLocalized(x => x.Name, lang.Id)}", font));
+                            new Paragraph($"{indent}{_localizationService.GetLocalized(order.PickupAddress.Country, x => x.Name, lang.Id)}", font));
                     if (!string.IsNullOrEmpty(order.PickupAddress.ZipPostalCode))
                         shippingAddress.AddCell(new Paragraph($"{indent}{order.PickupAddress.ZipPostalCode}", font));
                     shippingAddress.AddCell(new Paragraph(" "));
@@ -1050,12 +1050,12 @@ namespace Nop.Services.Common
             {
                 var addressLine = $"{indent}{order.BillingAddress.City}, " +
                     $"{(!string.IsNullOrEmpty(order.BillingAddress.County) ? $"{order.BillingAddress.County}, " : string.Empty)}" +
-                    $"{(order.BillingAddress.StateProvince?.GetLocalized(x => x.Name, lang.Id) ?? string.Empty)} " +
+                    $"{(order.BillingAddress.StateProvince != null ? _localizationService.GetLocalized(order.BillingAddress.StateProvince, x => x.Name, lang.Id) : string.Empty)} " +
                     $"{order.BillingAddress.ZipPostalCode}";
                 billingAddress.AddCell(new Paragraph(addressLine, font));
             }
             if (_addressSettings.CountryEnabled && order.BillingAddress.Country != null)
-                billingAddress.AddCell(new Paragraph(indent + order.BillingAddress.Country.GetLocalized(x => x.Name, lang.Id),
+                billingAddress.AddCell(new Paragraph(indent + _localizationService.GetLocalized(order.BillingAddress.Country, x => x.Name, lang.Id),
                     font));
 
             //VAT number
@@ -1078,7 +1078,7 @@ namespace Nop.Services.Common
                 //payment method
                 var paymentMethod = _paymentService.LoadPaymentMethodBySystemName(order.PaymentMethodSystemName);
                 var paymentMethodStr = paymentMethod != null
-                    ? paymentMethod.GetLocalizedFriendlyName(_localizationService, lang.Id)
+                    ? _localizationService.GetLocalizedFriendlyName(paymentMethod, lang.Id)
                     : order.PaymentMethodSystemName;
                 if (!string.IsNullOrEmpty(paymentMethodStr))
                 {
@@ -1341,13 +1341,13 @@ namespace Nop.Services.Common
                     {
                         var addressLine = $"{order.ShippingAddress.City}, " +
                             $"{(!string.IsNullOrEmpty(order.ShippingAddress.County) ? $"{order.ShippingAddress.County}, " : string.Empty)}" +
-                            $"{(order.ShippingAddress.StateProvince?.GetLocalized(x => x.Name, lang.Id) ?? string.Empty)} " +
+                            $"{(order.ShippingAddress.StateProvince != null ? _localizationService.GetLocalized(order.ShippingAddress.StateProvince, x => x.Name, lang.Id) : string.Empty)} " +
                             $"{order.ShippingAddress.ZipPostalCode}";
                         addressTable.AddCell(new Paragraph(addressLine, font));
                     }
 
                     if (_addressSettings.CountryEnabled && order.ShippingAddress.Country != null)
-                        addressTable.AddCell(new Paragraph(order.ShippingAddress.Country.GetLocalized(x => x.Name, lang.Id), font));
+                        addressTable.AddCell(new Paragraph(_localizationService.GetLocalized(order.ShippingAddress.Country, x => x.Name, lang.Id), font));
 
                     //custom attributes
                     var customShippingAddressAttributes = _addressAttributeFormatter.FormatAttributes(order.ShippingAddress.CustomAttributes);
@@ -1367,7 +1367,7 @@ namespace Nop.Services.Common
                     if (!string.IsNullOrEmpty(order.PickupAddress.County))
                         addressTable.AddCell(new Paragraph($"   {order.PickupAddress.County}", font));
                     if (order.PickupAddress.Country != null)
-                        addressTable.AddCell(new Paragraph($"   {order.PickupAddress.Country.GetLocalized(x => x.Name, lang.Id)}", font));
+                        addressTable.AddCell(new Paragraph($"   {_localizationService.GetLocalized(order.PickupAddress.Country, x => x.Name, lang.Id)}", font));
                     if (!string.IsNullOrEmpty(order.PickupAddress.ZipPostalCode))
                         addressTable.AddCell(new Paragraph($"   {order.PickupAddress.ZipPostalCode}", font));
                     addressTable.AddCell(new Paragraph(" "));
@@ -1421,7 +1421,7 @@ namespace Nop.Services.Common
                         continue;
 
                     var p = orderItem.Product;
-                    var name = p.GetLocalized(x => x.Name, lang.Id);
+                    var name = _localizationService.GetLocalized(p, x => x.Name, lang.Id);
                     productAttribTable.AddCell(new Paragraph(name, font));
                     //attributes
                     if (!string.IsNullOrEmpty(orderItem.AttributeDescription))
@@ -1504,8 +1504,8 @@ namespace Nop.Services.Common
 
             foreach (var product in products)
             {
-                var productName = product.GetLocalized(x => x.Name, lang.Id);
-                var productDescription = product.GetLocalized(x => x.FullDescription, lang.Id);
+                var productName = _localizationService.GetLocalized(product, x => x.Name, lang.Id);
+                var productDescription = _localizationService.GetLocalized(product, x => x.FullDescription, lang.Id);
 
                 var productTable = new PdfPTable(1) { WidthPercentage = 100f };
                 productTable.DefaultCell.Border = Rectangle.NO_BORDER;
@@ -1580,11 +1580,11 @@ namespace Nop.Services.Common
                     var pvNum = 1;
                     foreach (var associatedProduct in _productService.GetAssociatedProducts(product.Id, showHidden: true))
                     {
-                        productTable.AddCell(new Paragraph($"{productNumber}-{pvNum}. {associatedProduct.GetLocalized(x => x.Name, lang.Id)}", font));
+                        productTable.AddCell(new Paragraph($"{productNumber}-{pvNum}. {_localizationService.GetLocalized(associatedProduct, x => x.Name, lang.Id)}", font));
                         productTable.AddCell(new Paragraph(" "));
 
                         //uncomment to render associated product description
-                        //string apDescription = associatedProduct.GetLocalized(x => x.ShortDescription, lang.Id);
+                        //string apDescription = associated_localizationService.GetLocalized(product, x => x.ShortDescription, lang.Id);
                         //if (!string.IsNullOrEmpty(apDescription))
                         //{
                         //    productTable.AddCell(new Paragraph(HtmlHelper.StripTags(HtmlHelper.ConvertHtmlToPlainText(apDescription)), font));

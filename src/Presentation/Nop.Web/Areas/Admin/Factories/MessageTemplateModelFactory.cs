@@ -133,10 +133,10 @@ namespace Nop.Web.Areas.Admin.Factories
                 //define localized model configuration action
                 localizedModelConfiguration = (locale, languageId) =>
                 {
-                    locale.BccEmailAddresses = messageTemplate.GetLocalized(entity => entity.BccEmailAddresses, languageId, false, false);
-                    locale.Subject = messageTemplate.GetLocalized(entity => entity.Subject, languageId, false, false);
-                    locale.Body = messageTemplate.GetLocalized(entity => entity.Body, languageId, false, false);
-                    locale.EmailAccountId = messageTemplate.GetLocalized(entity => entity.EmailAccountId, languageId, false, false);
+                    locale.BccEmailAddresses = _localizationService.GetLocalized(messageTemplate, entity => entity.BccEmailAddresses, languageId, false, false);
+                    locale.Subject = _localizationService.GetLocalized(messageTemplate, entity => entity.Subject, languageId, false, false);
+                    locale.Body = _localizationService.GetLocalized(messageTemplate, entity => entity.Body, languageId, false, false);
+                    locale.EmailAccountId = _localizationService.GetLocalized(messageTemplate, entity => entity.EmailAccountId, languageId, false, false);
 
                     //prepare available email accounts
                     _baseAdminModelFactory.PrepareEmailAccounts(locale.AvailableEmailAccounts,
@@ -184,8 +184,8 @@ namespace Nop.Web.Areas.Admin.Factories
             model.LanguageId = languageId;
 
             //filter tokens to the current template
-            var subject = messageTemplate.GetLocalized(entity => entity.Subject, languageId);
-            var body = messageTemplate.GetLocalized(entity => entity.Body, languageId);
+            var subject = _localizationService.GetLocalized(messageTemplate, entity => entity.Subject, languageId);
+            var body = _localizationService.GetLocalized(messageTemplate, entity => entity.Body, languageId);
             model.Tokens = _messageTokenProvider.GetListOfAllowedTokens()
                 .Where(token => subject.Contains(token) || body.Contains(token)).ToList();
 

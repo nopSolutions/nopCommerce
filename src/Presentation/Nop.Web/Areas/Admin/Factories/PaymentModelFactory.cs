@@ -24,7 +24,6 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly ILocalizationService _localizationService;
         private readonly IPaymentService _paymentService;
         private readonly IWebHelper _webHelper;
-        private readonly IWorkContext _workContext;
 
         #endregion
 
@@ -33,14 +32,12 @@ namespace Nop.Web.Areas.Admin.Factories
         public PaymentModelFactory(ICountryService countryService,
             ILocalizationService localizationService,
             IPaymentService paymentService,
-            IWebHelper webHelper,
-            IWorkContext workContext)
+            IWebHelper webHelper)
         {
             this._countryService = countryService;
             this._localizationService = localizationService;
             this._paymentService = paymentService;
             this._webHelper = webHelper;
-            this._workContext = workContext;
         }
 
         #endregion
@@ -105,7 +102,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     paymentMethodModel.IsActive = _paymentService.IsPaymentMethodActive(method);
                     paymentMethodModel.ConfigurationUrl = method.GetConfigurationPageUrl();
                     paymentMethodModel.LogoUrl = PluginManager.GetLogoUrl(method.PluginDescriptor);
-                    paymentMethodModel.RecurringPaymentType = method.RecurringPaymentType.GetLocalizedEnum(_localizationService, _workContext);
+                    paymentMethodModel.RecurringPaymentType = _localizationService.GetLocalizedEnum(method.RecurringPaymentType);
 
                     return paymentMethodModel;
                 }),

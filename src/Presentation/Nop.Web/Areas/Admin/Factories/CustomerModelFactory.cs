@@ -73,7 +73,6 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IStoreContext _storeContext;
         private readonly IStoreService _storeService;
         private readonly ITaxService _taxService;
-        private readonly IWorkContext _workContext;
         private readonly MediaSettings _mediaSettings;
         private readonly RewardPointsSettings _rewardPointsSettings;
         private readonly TaxSettings _taxSettings;
@@ -112,7 +111,6 @@ namespace Nop.Web.Areas.Admin.Factories
             IStoreContext storeContext,
             IStoreService storeService,
             ITaxService taxService,
-            IWorkContext workContext,
             MediaSettings mediaSettings,
             RewardPointsSettings rewardPointsSettings,
             TaxSettings taxSettings)
@@ -147,7 +145,6 @@ namespace Nop.Web.Areas.Admin.Factories
             this._storeContext = storeContext;
             this._storeService = storeService;
             this._taxService = taxService;
-            this._workContext = workContext;
             this._mediaSettings = mediaSettings;
             this._rewardPointsSettings = rewardPointsSettings;
             this._taxSettings = taxSettings;
@@ -682,9 +679,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     model.Fax = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.FaxAttribute);
                     model.TimeZoneId = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.TimeZoneIdAttribute);
                     model.VatNumber = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.VatNumberAttribute);
-                    model.VatNumberStatusNote = ((VatNumberStatus)_genericAttributeService
-                        .GetAttribute<int>(customer, NopCustomerDefaults.VatNumberStatusIdAttribute))
-                        .GetLocalizedEnum(_localizationService, _workContext);
+                    model.VatNumberStatusNote = _localizationService.GetLocalizedEnum((VatNumberStatus)_genericAttributeService
+                        .GetAttribute<int>(customer, NopCustomerDefaults.VatNumberStatusIdAttribute));
                     model.CreatedOn = _dateTimeHelper.ConvertToUserTime(customer.CreatedOnUtc, DateTimeKind.Utc);
                     model.LastActivityDate = _dateTimeHelper.ConvertToUserTime(customer.LastActivityDateUtc, DateTimeKind.Utc);
                     model.LastIpAddress = customer.LastIpAddress;
@@ -937,10 +933,10 @@ namespace Nop.Web.Areas.Admin.Factories
                     var orderModel = new CustomerOrderModel
                     {
                         Id = order.Id,
-                        OrderStatus = order.OrderStatus.GetLocalizedEnum(_localizationService, _workContext),
+                        OrderStatus = _localizationService.GetLocalizedEnum(order.OrderStatus),
                         OrderStatusId = order.OrderStatusId,
-                        PaymentStatus = order.PaymentStatus.GetLocalizedEnum(_localizationService, _workContext),
-                        ShippingStatus = order.ShippingStatus.GetLocalizedEnum(_localizationService, _workContext),
+                        PaymentStatus = _localizationService.GetLocalizedEnum(order.PaymentStatus),
+                        ShippingStatus = _localizationService.GetLocalizedEnum(order.ShippingStatus),
                         OrderTotal = _priceFormatter.FormatPrice(order.OrderTotal, true, false),
                         CustomOrderNumber = order.CustomOrderNumber
                     };
@@ -1228,7 +1224,7 @@ namespace Nop.Web.Areas.Admin.Factories
                         CustomerInfo = customer != null && !customer.Deleted && !String.IsNullOrEmpty(customer.Email) ?
                             customer.Email :
                             log.CustomerInfo,
-                        RequestType = log.RequestType.GetLocalizedEnum(_localizationService, _workContext),
+                        RequestType = _localizationService.GetLocalizedEnum(log.RequestType),
                         RequestDetails = log.RequestDetails,
                         CreatedOn = _dateTimeHelper.ConvertToUserTime(log.CreatedOnUtc, DateTimeKind.Utc)
                     };

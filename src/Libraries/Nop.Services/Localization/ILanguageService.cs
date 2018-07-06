@@ -42,5 +42,12 @@ namespace Nop.Services.Localization
         /// </summary>
         /// <param name="language">Language</param>
         void UpdateLanguage(Language language);
+
+        /// <summary>
+        /// Get 2 letter ISO language code
+        /// </summary>
+        /// <param name="language">Language</param>
+        /// <returns>ISO language code</returns>
+        string GetTwoLetterIsoLanguageName(Language language);
     }
 }

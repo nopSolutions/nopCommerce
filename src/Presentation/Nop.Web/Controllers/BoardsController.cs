@@ -97,7 +97,7 @@ namespace Nop.Web.Controllers
             var feedDescription = _localizationService.GetResource("Forum.ActiveDiscussionsFeedDescription");
 
             var feed = new RssFeed(
-                string.Format(feedTitle, _storeContext.CurrentStore.GetLocalized(x => x.Name)),
+                string.Format(feedTitle, _localizationService.GetLocalized(_storeContext.CurrentStore, x => x.Name)),
                 feedDescription,
                 new Uri(url),
                 DateTime.UtcNow);
@@ -179,7 +179,7 @@ namespace Nop.Web.Controllers
                 var feedDescription = _localizationService.GetResource("Forum.ForumFeedDescription");
 
                 var feed = new RssFeed(
-                    string.Format(feedTitle, _storeContext.CurrentStore.GetLocalized(x => x.Name), forum.Name),
+                    string.Format(feedTitle, _localizationService.GetLocalized(_storeContext.CurrentStore, x => x.Name), forum.Name),
                     feedDescription,
                     new Uri(url),
                     DateTime.UtcNow);

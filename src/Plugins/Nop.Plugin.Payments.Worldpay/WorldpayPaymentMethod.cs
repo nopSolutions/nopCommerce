@@ -513,43 +513,43 @@ namespace Nop.Plugin.Payments.Worldpay
             });
 
             //locales
-            this.AddOrUpdatePluginLocaleResource("Enums.Nop.Plugin.Payments.Worldpay.Domain.Enums.CreditCardType.AMEX", "AMEX");
-            this.AddOrUpdatePluginLocaleResource("Enums.Nop.Plugin.Payments.Worldpay.Domain.Enums.CreditCardType.Discover", "DISCOVER");
-            this.AddOrUpdatePluginLocaleResource("Enums.Nop.Plugin.Payments.Worldpay.Domain.Enums.CreditCardType.MasterCard", "MasterCard");
-            this.AddOrUpdatePluginLocaleResource("Enums.Nop.Plugin.Payments.Worldpay.Domain.Enums.CreditCardType.MasterCardFleet", "MasterCard Fleet");
-            this.AddOrUpdatePluginLocaleResource("Enums.Nop.Plugin.Payments.Worldpay.Domain.Enums.CreditCardType.Visa", "VISA");
-            this.AddOrUpdatePluginLocaleResource("Enums.Nop.Plugin.Payments.Worldpay.Domain.Enums.CreditCardType.VisaFleet", "VISA Fleet");
-            this.AddOrUpdatePluginLocaleResource("Enums.Nop.Plugin.Payments.Worldpay.Domain.TransactionMode.Authorize", "Authorize only");
-            this.AddOrUpdatePluginLocaleResource("Enums.Nop.Plugin.Payments.Worldpay.Domain.TransactionMode.Charge", "Charge (authorize and capture)");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Fields.AdditionalFee", "Additional fee");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Fields.AdditionalFee.Hint", "Enter additional fee to charge your customers.");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Fields.AdditionalFeePercentage", "Additional fee. Use percentage");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Fields.AdditionalFeePercentage.Hint", "Determines whether to apply a percentage additional fee to the order total. If not enabled, a fixed value is used.");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Fields.CardId", "Card ID");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Fields.CardType", "Card type");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Fields.ExpirationDate", "Expiration date");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Fields.MaskedNumber", "Masked number");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Fields.PublicKey", "Public key");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Fields.PublicKey.Hint", "Specify the Public key. It will be sent to the email address that you signed up with during the sandbox sign-up process.");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Fields.SaveCard", "Save the card data for future purchasing");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Fields.SaveCard.Key", "Save card details");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Fields.SecureKey", "Secure key");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Fields.SecureKey.Hint", "Specify the Secure key. You can obtain the Secure Key by signing into the Virtual Terminal with the login credentials that you were emailed to you during the sign-up process. You will then need to navigate to Settings and click on the Key Management link.");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Fields.SecureNetId", "SecureNet ID");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Fields.SecureNetId.Hint", "Specify the SecureNet ID. You will get this in an email shortly after signing up for your account.");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Fields.StoredCard", "Use a previously saved card");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Fields.StoredCard.Key", "Pay using stored card identifier");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Fields.StoredCard.SelectCard", "Select a card");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Fields.Token.Key", "Pay using card token");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Fields.TransactionMode", "Transaction mode");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Fields.TransactionMode.Hint", "Choose the transaction mode.");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Fields.UseSandbox", "Use sandbox");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Fields.UseSandbox.Hint", "Determine whether to enable sandbox (testing environment).");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Fields.ValidateAddress", "Validate address");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Fields.ValidateAddress.Hint", "Determine whether to validate customers' billing addresses on processing payments.");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Fields.WorldpayCustomerId", "Worldpay Vault customer ID");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Fields.WorldpayCustomerId.Hint", "Displays Worldpay Vault customer ID. If the customer is not yet stored in the Worldpay Vault, specify the customer ID and click the button 'Store customer to the Worldpay Vault'");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Instructions", @"
+            _localizationService.AddOrUpdatePluginLocaleResource("Enums.Nop.Plugin.Payments.Worldpay.Domain.Enums.CreditCardType.AMEX", "AMEX");
+            _localizationService.AddOrUpdatePluginLocaleResource("Enums.Nop.Plugin.Payments.Worldpay.Domain.Enums.CreditCardType.Discover", "DISCOVER");
+            _localizationService.AddOrUpdatePluginLocaleResource("Enums.Nop.Plugin.Payments.Worldpay.Domain.Enums.CreditCardType.MasterCard", "MasterCard");
+            _localizationService.AddOrUpdatePluginLocaleResource("Enums.Nop.Plugin.Payments.Worldpay.Domain.Enums.CreditCardType.MasterCardFleet", "MasterCard Fleet");
+            _localizationService.AddOrUpdatePluginLocaleResource("Enums.Nop.Plugin.Payments.Worldpay.Domain.Enums.CreditCardType.Visa", "VISA");
+            _localizationService.AddOrUpdatePluginLocaleResource("Enums.Nop.Plugin.Payments.Worldpay.Domain.Enums.CreditCardType.VisaFleet", "VISA Fleet");
+            _localizationService.AddOrUpdatePluginLocaleResource("Enums.Nop.Plugin.Payments.Worldpay.Domain.TransactionMode.Authorize", "Authorize only");
+            _localizationService.AddOrUpdatePluginLocaleResource("Enums.Nop.Plugin.Payments.Worldpay.Domain.TransactionMode.Charge", "Charge (authorize and capture)");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Fields.AdditionalFee", "Additional fee");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Fields.AdditionalFee.Hint", "Enter additional fee to charge your customers.");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Fields.AdditionalFeePercentage", "Additional fee. Use percentage");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Fields.AdditionalFeePercentage.Hint", "Determines whether to apply a percentage additional fee to the order total. If not enabled, a fixed value is used.");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Fields.CardId", "Card ID");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Fields.CardType", "Card type");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Fields.ExpirationDate", "Expiration date");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Fields.MaskedNumber", "Masked number");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Fields.PublicKey", "Public key");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Fields.PublicKey.Hint", "Specify the Public key. It will be sent to the email address that you signed up with during the sandbox sign-up process.");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Fields.SaveCard", "Save the card data for future purchasing");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Fields.SaveCard.Key", "Save card details");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Fields.SecureKey", "Secure key");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Fields.SecureKey.Hint", "Specify the Secure key. You can obtain the Secure Key by signing into the Virtual Terminal with the login credentials that you were emailed to you during the sign-up process. You will then need to navigate to Settings and click on the Key Management link.");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Fields.SecureNetId", "SecureNet ID");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Fields.SecureNetId.Hint", "Specify the SecureNet ID. You will get this in an email shortly after signing up for your account.");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Fields.StoredCard", "Use a previously saved card");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Fields.StoredCard.Key", "Pay using stored card identifier");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Fields.StoredCard.SelectCard", "Select a card");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Fields.Token.Key", "Pay using card token");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Fields.TransactionMode", "Transaction mode");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Fields.TransactionMode.Hint", "Choose the transaction mode.");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Fields.UseSandbox", "Use sandbox");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Fields.UseSandbox.Hint", "Determine whether to enable sandbox (testing environment).");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Fields.ValidateAddress", "Validate address");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Fields.ValidateAddress.Hint", "Determine whether to validate customers' billing addresses on processing payments.");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Fields.WorldpayCustomerId", "Worldpay Vault customer ID");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Fields.WorldpayCustomerId.Hint", "Displays Worldpay Vault customer ID. If the customer is not yet stored in the Worldpay Vault, specify the customer ID and click the button 'Store customer to the Worldpay Vault'");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Instructions", @"
                 <p>
                     For plugin configuration follow these steps:
                     <ul style=""list-style-type:none;"">
@@ -577,10 +577,10 @@ namespace Nop.Plugin.Payments.Worldpay
                     <em>Note: The Worldpay US platform supports only USD currency; ensure that you have correctly configured the exchange rate from your primary store currency to the USD currency.</em>
                     <br />
                 </p>");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.PaymentMethodDescription", "Pay by credit card using Worldpay");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.WorldpayCustomer", "Worldpay Vault");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.WorldpayCustomer.Create", "Store customer to the Worldpay Vault");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.WorldpayCustomer.NotExists", "This customer is not yet stored in the Worldpay Vault");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.PaymentMethodDescription", "Pay by credit card using Worldpay");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.WorldpayCustomer", "Worldpay Vault");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.WorldpayCustomer.Create", "Store customer to the Worldpay Vault");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.WorldpayCustomer.NotExists", "This customer is not yet stored in the Worldpay Vault");
 
             base.Install();
         }
@@ -594,47 +594,47 @@ namespace Nop.Plugin.Payments.Worldpay
             _settingService.DeleteSetting<WorldpayPaymentSettings>();
 
             //locales
-            this.DeletePluginLocaleResource("Enums.Nop.Plugin.Payments.Worldpay.Domain.Enums.CreditCardType.AMEX");
-            this.DeletePluginLocaleResource("Enums.Nop.Plugin.Payments.Worldpay.Domain.Enums.CreditCardType.Discover");
-            this.DeletePluginLocaleResource("Enums.Nop.Plugin.Payments.Worldpay.Domain.Enums.CreditCardType.MasterCard");
-            this.DeletePluginLocaleResource("Enums.Nop.Plugin.Payments.Worldpay.Domain.Enums.CreditCardType.MasterCardFleet");
-            this.DeletePluginLocaleResource("Enums.Nop.Plugin.Payments.Worldpay.Domain.Enums.CreditCardType.Visa");
-            this.DeletePluginLocaleResource("Enums.Nop.Plugin.Payments.Worldpay.Domain.Enums.CreditCardType.VisaFleet");
-            this.DeletePluginLocaleResource("Enums.Nop.Plugin.Payments.Worldpay.Domain.TransactionMode.Authorize");
-            this.DeletePluginLocaleResource("Enums.Nop.Plugin.Payments.Worldpay.Domain.TransactionMode.Charge");
-            this.DeletePluginLocaleResource("Plugins.Payments.Worldpay.Fields.AdditionalFee");
-            this.DeletePluginLocaleResource("Plugins.Payments.Worldpay.Fields.AdditionalFee.Hint");
-            this.DeletePluginLocaleResource("Plugins.Payments.Worldpay.Fields.AdditionalFeePercentage");
-            this.DeletePluginLocaleResource("Plugins.Payments.Worldpay.Fields.AdditionalFeePercentage.Hint");
-            this.DeletePluginLocaleResource("Plugins.Payments.Worldpay.Fields.CardId");
-            this.DeletePluginLocaleResource("Plugins.Payments.Worldpay.Fields.CardType");
-            this.DeletePluginLocaleResource("Plugins.Payments.Worldpay.Fields.ExpirationDate");
-            this.DeletePluginLocaleResource("Plugins.Payments.Worldpay.Fields.MaskedNumber");
-            this.DeletePluginLocaleResource("Plugins.Payments.Worldpay.Fields.PublicKey");
-            this.DeletePluginLocaleResource("Plugins.Payments.Worldpay.Fields.PublicKey.Hint");
-            this.DeletePluginLocaleResource("Plugins.Payments.Worldpay.Fields.SaveCard");
-            this.DeletePluginLocaleResource("Plugins.Payments.Worldpay.Fields.SaveCard.Key");
-            this.DeletePluginLocaleResource("Plugins.Payments.Worldpay.Fields.SecureKey");
-            this.DeletePluginLocaleResource("Plugins.Payments.Worldpay.Fields.SecureKey.Hint");
-            this.DeletePluginLocaleResource("Plugins.Payments.Worldpay.Fields.SecureNetId");
-            this.DeletePluginLocaleResource("Plugins.Payments.Worldpay.Fields.SecureNetId.Hint");
-            this.DeletePluginLocaleResource("Plugins.Payments.Worldpay.Fields.StoredCard");
-            this.DeletePluginLocaleResource("Plugins.Payments.Worldpay.Fields.StoredCard.Key");
-            this.DeletePluginLocaleResource("Plugins.Payments.Worldpay.Fields.StoredCard.SelectCard");
-            this.DeletePluginLocaleResource("Plugins.Payments.Worldpay.Fields.Token.Key");
-            this.DeletePluginLocaleResource("Plugins.Payments.Worldpay.Fields.TransactionMode");
-            this.DeletePluginLocaleResource("Plugins.Payments.Worldpay.Fields.TransactionMode.Hint");
-            this.DeletePluginLocaleResource("Plugins.Payments.Worldpay.Fields.UseSandbox");
-            this.DeletePluginLocaleResource("Plugins.Payments.Worldpay.Fields.UseSandbox.Hint");
-            this.DeletePluginLocaleResource("Plugins.Payments.Worldpay.Fields.ValidateAddress");
-            this.DeletePluginLocaleResource("Plugins.Payments.Worldpay.Fields.ValidateAddress.Hint");
-            this.DeletePluginLocaleResource("Plugins.Payments.Worldpay.Fields.WorldpayCustomerId");
-            this.DeletePluginLocaleResource("Plugins.Payments.Worldpay.Fields.WorldpayCustomerId.Hint");
-            this.DeletePluginLocaleResource("Plugins.Payments.Worldpay.Instructions");
-            this.DeletePluginLocaleResource("Plugins.Payments.Worldpay.PaymentMethodDescription");
-            this.DeletePluginLocaleResource("Plugins.Payments.Worldpay.WorldpayCustomer");
-            this.DeletePluginLocaleResource("Plugins.Payments.Worldpay.WorldpayCustomer.Create");
-            this.DeletePluginLocaleResource("Plugins.Payments.Worldpay.WorldpayCustomer.NotExists");
+            _localizationService.DeletePluginLocaleResource("Enums.Nop.Plugin.Payments.Worldpay.Domain.Enums.CreditCardType.AMEX");
+            _localizationService.DeletePluginLocaleResource("Enums.Nop.Plugin.Payments.Worldpay.Domain.Enums.CreditCardType.Discover");
+            _localizationService.DeletePluginLocaleResource("Enums.Nop.Plugin.Payments.Worldpay.Domain.Enums.CreditCardType.MasterCard");
+            _localizationService.DeletePluginLocaleResource("Enums.Nop.Plugin.Payments.Worldpay.Domain.Enums.CreditCardType.MasterCardFleet");
+            _localizationService.DeletePluginLocaleResource("Enums.Nop.Plugin.Payments.Worldpay.Domain.Enums.CreditCardType.Visa");
+            _localizationService.DeletePluginLocaleResource("Enums.Nop.Plugin.Payments.Worldpay.Domain.Enums.CreditCardType.VisaFleet");
+            _localizationService.DeletePluginLocaleResource("Enums.Nop.Plugin.Payments.Worldpay.Domain.TransactionMode.Authorize");
+            _localizationService.DeletePluginLocaleResource("Enums.Nop.Plugin.Payments.Worldpay.Domain.TransactionMode.Charge");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Worldpay.Fields.AdditionalFee");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Worldpay.Fields.AdditionalFee.Hint");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Worldpay.Fields.AdditionalFeePercentage");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Worldpay.Fields.AdditionalFeePercentage.Hint");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Worldpay.Fields.CardId");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Worldpay.Fields.CardType");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Worldpay.Fields.ExpirationDate");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Worldpay.Fields.MaskedNumber");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Worldpay.Fields.PublicKey");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Worldpay.Fields.PublicKey.Hint");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Worldpay.Fields.SaveCard");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Worldpay.Fields.SaveCard.Key");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Worldpay.Fields.SecureKey");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Worldpay.Fields.SecureKey.Hint");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Worldpay.Fields.SecureNetId");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Worldpay.Fields.SecureNetId.Hint");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Worldpay.Fields.StoredCard");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Worldpay.Fields.StoredCard.Key");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Worldpay.Fields.StoredCard.SelectCard");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Worldpay.Fields.Token.Key");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Worldpay.Fields.TransactionMode");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Worldpay.Fields.TransactionMode.Hint");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Worldpay.Fields.UseSandbox");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Worldpay.Fields.UseSandbox.Hint");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Worldpay.Fields.ValidateAddress");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Worldpay.Fields.ValidateAddress.Hint");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Worldpay.Fields.WorldpayCustomerId");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Worldpay.Fields.WorldpayCustomerId.Hint");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Worldpay.Instructions");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Worldpay.PaymentMethodDescription");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Worldpay.WorldpayCustomer");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Worldpay.WorldpayCustomer.Create");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Worldpay.WorldpayCustomer.NotExists");
 
             base.Uninstall();
         }

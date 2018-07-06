@@ -269,14 +269,14 @@ namespace Nop.Plugin.Payments.Manual
             _settingService.SaveSetting(settings);
 
             //locales
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Manual.Instructions", "This payment method stores credit card information in database (it's not sent to any third-party processor). In order to store credit card information, you must be PCI compliant.");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Manual.Fields.AdditionalFee", "Additional fee");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Manual.Fields.AdditionalFee.Hint", "Enter additional fee to charge your customers.");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Manual.Fields.AdditionalFeePercentage", "Additional fee. Use percentage");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Manual.Fields.AdditionalFeePercentage.Hint", "Determines whether to apply a percentage additional fee to the order total. If not enabled, a fixed value is used.");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Manual.Fields.TransactMode", "After checkout mark payment as");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Manual.Fields.TransactMode.Hint", "Specify transaction mode.");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Manual.PaymentMethodDescription", "Pay by credit / debit card");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Manual.Instructions", "This payment method stores credit card information in database (it's not sent to any third-party processor). In order to store credit card information, you must be PCI compliant.");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Manual.Fields.AdditionalFee", "Additional fee");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Manual.Fields.AdditionalFee.Hint", "Enter additional fee to charge your customers.");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Manual.Fields.AdditionalFeePercentage", "Additional fee. Use percentage");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Manual.Fields.AdditionalFeePercentage.Hint", "Determines whether to apply a percentage additional fee to the order total. If not enabled, a fixed value is used.");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Manual.Fields.TransactMode", "After checkout mark payment as");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Manual.Fields.TransactMode.Hint", "Specify transaction mode.");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Manual.PaymentMethodDescription", "Pay by credit / debit card");
 
             base.Install();
         }
@@ -290,14 +290,14 @@ namespace Nop.Plugin.Payments.Manual
             _settingService.DeleteSetting<ManualPaymentSettings>();
 
             //locales
-            this.DeletePluginLocaleResource("Plugins.Payments.Manual.Instructions");
-            this.DeletePluginLocaleResource("Plugins.Payments.Manual.Fields.AdditionalFee");
-            this.DeletePluginLocaleResource("Plugins.Payments.Manual.Fields.AdditionalFee.Hint");
-            this.DeletePluginLocaleResource("Plugins.Payments.Manual.Fields.AdditionalFeePercentage");
-            this.DeletePluginLocaleResource("Plugins.Payments.Manual.Fields.AdditionalFeePercentage.Hint");
-            this.DeletePluginLocaleResource("Plugins.Payments.Manual.Fields.TransactMode");
-            this.DeletePluginLocaleResource("Plugins.Payments.Manual.Fields.TransactMode.Hint");
-            this.DeletePluginLocaleResource("Plugins.Payments.Manual.PaymentMethodDescription");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Manual.Instructions");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Manual.Fields.AdditionalFee");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Manual.Fields.AdditionalFee.Hint");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Manual.Fields.AdditionalFeePercentage");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Manual.Fields.AdditionalFeePercentage.Hint");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Manual.Fields.TransactMode");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Manual.Fields.TransactMode.Hint");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Manual.PaymentMethodDescription");
 
             base.Uninstall();
         }

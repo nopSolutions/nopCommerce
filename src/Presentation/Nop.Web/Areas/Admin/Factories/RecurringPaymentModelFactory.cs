@@ -104,7 +104,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get recurringPayments
-            var recurringPayments = _orderService.SearchRecurringPayments(showHidden: true, 
+            var recurringPayments = _orderService.SearchRecurringPayments(showHidden: true,
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
@@ -135,7 +135,7 @@ namespace Nop.Web.Areas.Admin.Factories
                         .ConvertToUserTime(recurringPayment.StartDateUtc, DateTimeKind.Utc).ToString(CultureInfo.InvariantCulture);
 
                     //fill in additional values (not existing in the entity)
-                    recurringPaymentModel.CyclePeriodStr = recurringPayment.CyclePeriod.GetLocalizedEnum(_localizationService, _workContext);
+                    recurringPaymentModel.CyclePeriodStr = _localizationService.GetLocalizedEnum(recurringPayment.CyclePeriod);
                     recurringPaymentModel.CustomerEmail = recurringPayment.InitialOrder.Customer.IsRegistered()
                         ? recurringPayment.InitialOrder.Customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
 
@@ -154,7 +154,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="recurringPayment">Recurring payment</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
         /// <returns>Recurring payment model</returns>
-        public virtual RecurringPaymentModel PrepareRecurringPaymentModel(RecurringPaymentModel model, 
+        public virtual RecurringPaymentModel PrepareRecurringPaymentModel(RecurringPaymentModel model,
             RecurringPayment recurringPayment, bool excludeProperties = false)
         {
             if (recurringPayment == null)
@@ -178,12 +178,11 @@ namespace Nop.Web.Areas.Admin.Factories
             if (recurringPayment.NextPaymentDate.HasValue)
                 model.NextPaymentDate = _dateTimeHelper.ConvertToUserTime(recurringPayment.NextPaymentDate.Value, DateTimeKind.Utc).ToString(CultureInfo.InvariantCulture);
             model.StartDate = _dateTimeHelper.ConvertToUserTime(recurringPayment.StartDateUtc, DateTimeKind.Utc).ToString(CultureInfo.InvariantCulture);
-                
+
             model.CustomerEmail = recurringPayment.InitialOrder.Customer.IsRegistered()
                 ? recurringPayment.InitialOrder.Customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
-            model.PaymentType = _paymentService
-                .GetRecurringPaymentType(recurringPayment.InitialOrder.PaymentMethodSystemName)
-                .GetLocalizedEnum(_localizationService, _workContext);
+            model.PaymentType = _localizationService.GetLocalizedEnum(_paymentService
+                .GetRecurringPaymentType(recurringPayment.InitialOrder.PaymentMethodSystemName));
             model.CanCancelRecurringPayment = _orderProcessingService.CanCancelRecurringPayment(_workContext.CurrentCustomer, recurringPayment);
 
             //prepare nested search model
@@ -231,9 +230,9 @@ namespace Nop.Web.Areas.Admin.Factories
                     if (order == null)
                         return historyModel;
 
-                    historyModel.OrderStatus = order.OrderStatus.GetLocalizedEnum(_localizationService, _workContext);
-                    historyModel.PaymentStatus = order.PaymentStatus.GetLocalizedEnum(_localizationService, _workContext);
-                    historyModel.ShippingStatus = order.ShippingStatus.GetLocalizedEnum(_localizationService, _workContext);
+                    historyModel.OrderStatus = _localizationService.GetLocalizedEnum(order.OrderStatus);
+                    historyModel.PaymentStatus = _localizationService.GetLocalizedEnum(order.PaymentStatus);
+                    historyModel.ShippingStatus = _localizationService.GetLocalizedEnum(order.ShippingStatus);
                     historyModel.CustomOrderNumber = order.CustomOrderNumber;
 
                     return historyModel;

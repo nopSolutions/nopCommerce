@@ -22,26 +22,17 @@ namespace Nop.Services.Orders
         private readonly ICheckoutAttributeService _checkoutAttributeService;
         private readonly ICheckoutAttributeParser _checkoutAttributeParser;
         private readonly ICurrencyService _currencyService;
+        private readonly ILocalizationService _localizationService;
         private readonly ITaxService _taxService;
         private readonly IPriceFormatter _priceFormatter;
         private readonly IDownloadService _downloadService;
         private readonly IWebHelper _webHelper;
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="workContext">Work context</param>
-        /// <param name="checkoutAttributeService">Checkout attribute service</param>
-        /// <param name="checkoutAttributeParser">Checkout attribute parser</param>
-        /// <param name="currencyService">Currency service</param>
-        /// <param name="taxService">Tax service</param>
-        /// <param name="priceFormatter">Price formatter</param>
-        /// <param name="downloadService">Download service</param>
-        /// <param name="webHelper">Web helper</param>
         public CheckoutAttributeFormatter(IWorkContext workContext,
             ICheckoutAttributeService checkoutAttributeService,
             ICheckoutAttributeParser checkoutAttributeParser,
             ICurrencyService currencyService,
+            ILocalizationService localizationService,
             ITaxService taxService,
             IPriceFormatter priceFormatter,
             IDownloadService downloadService,
@@ -51,6 +42,7 @@ namespace Nop.Services.Orders
             this._checkoutAttributeService = checkoutAttributeService;
             this._checkoutAttributeParser = checkoutAttributeParser;
             this._currencyService = currencyService;
+            this._localizationService = localizationService;
             this._taxService = taxService;
             this._priceFormatter = priceFormatter;
             this._downloadService = downloadService;
@@ -79,9 +71,9 @@ namespace Nop.Services.Orders
         /// <param name="allowHyperlinks">A value indicating whether to HTML hyperink tags could be rendered (if required)</param>
         /// <returns>Attributes</returns>
         public virtual string FormatAttributes(string attributesXml,
-            Customer customer, 
-            string separator = "<br />", 
-            bool htmlEncode = true, 
+            Customer customer,
+            string separator = "<br />",
+            bool htmlEncode = true,
             bool renderPrices = true,
             bool allowHyperlinks = true)
         {
@@ -102,7 +94,7 @@ namespace Nop.Services.Orders
                         if (attribute.AttributeControlType == AttributeControlType.MultilineTextbox)
                         {
                             //multiline textbox
-                            var attributeName = attribute.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id);
+                            var attributeName = _localizationService.GetLocalized(attribute, a => a.Name, _workContext.WorkingLanguage.Id);
                             //encode (if required)
                             if (htmlEncode)
                                 attributeName = WebUtility.HtmlEncode(attributeName);
@@ -133,7 +125,7 @@ namespace Nop.Services.Orders
                                     //hyperlinks aren't allowed
                                     attributeText = fileName;
                                 }
-                                var attributeName = attribute.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id);
+                                var attributeName = _localizationService.GetLocalized(attribute, a => a.Name, _workContext.WorkingLanguage.Id);
                                 //encode (if required)
                                 if (htmlEncode)
                                     attributeName = WebUtility.HtmlEncode(attributeName);
@@ -143,7 +135,7 @@ namespace Nop.Services.Orders
                         else
                         {
                             //other attributes (textbox, datepicker)
-                            formattedAttribute = $"{attribute.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id)}: {valueStr}";
+                            formattedAttribute = $"{_localizationService.GetLocalized(attribute, a => a.Name, _workContext.WorkingLanguage.Id)}: {valueStr}";
                             //encode (if required)
                             if (htmlEncode)
                                 formattedAttribute = WebUtility.HtmlEncode(formattedAttribute);
@@ -156,7 +148,7 @@ namespace Nop.Services.Orders
                             var attributeValue = _checkoutAttributeService.GetCheckoutAttributeValueById(attributeValueId);
                             if (attributeValue != null)
                             {
-                                formattedAttribute = $"{attribute.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id)}: {attributeValue.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id)}";
+                                formattedAttribute = $"{_localizationService.GetLocalized(attribute, a => a.Name, _workContext.WorkingLanguage.Id)}: {_localizationService.GetLocalized(attributeValue, a => a.Name, _workContext.WorkingLanguage.Id)}";
                                 if (renderPrices)
                                 {
                                     var priceAdjustmentBase = _taxService.GetCheckoutAttributePrice(attributeValue, customer);

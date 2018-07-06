@@ -16,7 +16,8 @@ namespace Nop.Web.Areas.Admin.Factories
     public partial class ReviewTypeModelFactory : IReviewTypeModelFactory
     {
         #region Fields
-        
+
+        private readonly ILocalizationService _localizationService;
         private readonly ILocalizedModelFactory _localizedModelFactory;
         private readonly IReviewTypeService _reviewTypeService;
 
@@ -24,11 +25,11 @@ namespace Nop.Web.Areas.Admin.Factories
 
         #region Ctor
 
-        public ReviewTypeModelFactory(
+        public ReviewTypeModelFactory(ILocalizationService localizationService,
             ILocalizedModelFactory localizedModelFactory,
-            IReviewTypeService reviewTypeService
-            )
+            IReviewTypeService reviewTypeService)
         {
+            this._localizationService = localizationService;
             this._localizedModelFactory = localizedModelFactory;
             this._reviewTypeService = reviewTypeService;
         }
@@ -97,8 +98,8 @@ namespace Nop.Web.Areas.Admin.Factories
                 //define localized model configuration action
                 localizedModelConfiguration = (locale, languageId) =>
                 {
-                    locale.Name = reviewType.GetLocalized(entity => entity.Name, languageId, false, false);
-                    locale.Description = reviewType.GetLocalized(entity => entity.Description, languageId, false, false);
+                    locale.Name = _localizationService.GetLocalized(reviewType, entity => entity.Name, languageId, false, false);
+                    locale.Description = _localizationService.GetLocalized(reviewType, entity => entity.Description, languageId, false, false);
                 };
             }
 

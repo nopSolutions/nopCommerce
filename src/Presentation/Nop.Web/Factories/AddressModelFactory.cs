@@ -70,7 +70,7 @@ namespace Nop.Web.Factories
                 var attributeModel = new AddressAttributeModel
                 {
                     Id = attribute.Id,
-                    Name = attribute.GetLocalized(x => x.Name),
+                    Name = _localizationService.GetLocalized(attribute, x => x.Name),
                     IsRequired = attribute.IsRequired,
                     AttributeControlType = attribute.AttributeControlType,
                 };
@@ -84,7 +84,7 @@ namespace Nop.Web.Factories
                         var attributeValueModel = new AddressAttributeValueModel
                         {
                             Id = attributeValue.Id,
-                            Name = attributeValue.GetLocalized(x => x.Name),
+                            Name = _localizationService.GetLocalized(attributeValue, x => x.Name),
                             IsPreSelected = attributeValue.IsPreSelected
                         };
                         attributeModel.Values.Add(attributeValueModel);
@@ -183,13 +183,9 @@ namespace Nop.Web.Factories
                 model.Email = address.Email;
                 model.Company = address.Company;
                 model.CountryId = address.CountryId;
-                model.CountryName = address.Country != null
-                    ? address.Country.GetLocalized(x => x.Name)
-                    : null;
+                model.CountryName = address.Country != null ? _localizationService.GetLocalized(address.Country, x => x.Name) : null;
                 model.StateProvinceId = address.StateProvinceId;
-                model.StateProvinceName = address.StateProvince != null
-                    ? address.StateProvince.GetLocalized(x => x.Name)
-                    : null;
+                model.StateProvinceName = address.StateProvince != null ? _localizationService.GetLocalized(address.StateProvince, x => x.Name) : null;
                 model.County = address.County;
                 model.City = address.City;
                 model.Address1 = address.Address1;
@@ -237,7 +233,7 @@ namespace Nop.Web.Factories
                 {
                     model.AvailableCountries.Add(new SelectListItem
                     {
-                        Text = c.GetLocalized(x => x.Name),
+                        Text = _localizationService.GetLocalized(c, x => x.Name),
                         Value = c.Id.ToString(),
                         Selected = c.Id == model.CountryId
                     });
@@ -257,7 +253,7 @@ namespace Nop.Web.Factories
                         {
                             model.AvailableStates.Add(new SelectListItem
                             {
-                                Text = s.GetLocalized(x => x.Name),
+                                Text = _localizationService.GetLocalized(s, x => x.Name),
                                 Value = s.Id.ToString(),
                                 Selected = (s.Id == model.StateProvinceId)
                             });

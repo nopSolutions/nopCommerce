@@ -30,6 +30,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IBaseAdminModelFactory _baseAdminModelFactory;
         private readonly ICountryService _countryService;
         private readonly IDateRangeService _dateRangeService;
+        private readonly ILocalizationService _localizationService;
         private readonly ILocalizedModelFactory _localizedModelFactory;
         private readonly IShippingService _shippingService;
         private readonly IWebHelper _webHelper;
@@ -42,6 +43,7 @@ namespace Nop.Web.Areas.Admin.Factories
             IBaseAdminModelFactory baseAdminModelFactory,
             ICountryService countryService,
             IDateRangeService dateRangeService,
+            ILocalizationService localizationService,
             ILocalizedModelFactory localizedModelFactory,
             IShippingService shippingService,
             IWebHelper webHelper)
@@ -50,6 +52,7 @@ namespace Nop.Web.Areas.Admin.Factories
             this._baseAdminModelFactory = baseAdminModelFactory;
             this._countryService = countryService;
             this._dateRangeService = dateRangeService;
+            this._localizationService = localizationService;
             this._localizedModelFactory = localizedModelFactory;
             this._shippingService = shippingService;
             this._webHelper = webHelper;
@@ -283,8 +286,8 @@ namespace Nop.Web.Areas.Admin.Factories
                 //define localized model configuration action
                 localizedModelConfiguration = (locale, languageId) =>
                 {
-                    locale.Name = shippingMethod.GetLocalized(entity => entity.Name, languageId, false, false);
-                    locale.Description = shippingMethod.GetLocalized(entity => entity.Description, languageId, false, false);
+                    locale.Name = _localizationService.GetLocalized(shippingMethod, entity => entity.Name, languageId, false, false);
+                    locale.Description = _localizationService.GetLocalized(shippingMethod, entity => entity.Description, languageId, false, false);
                 };
             }
 
@@ -355,7 +358,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 //define localized model configuration action
                 localizedModelConfiguration = (locale, languageId) =>
                 {
-                    locale.Name = deliveryDate.GetLocalized(entity => entity.Name, languageId, false, false);
+                    locale.Name = _localizationService.GetLocalized(deliveryDate, entity => entity.Name, languageId, false, false);
                 };
             }
 
@@ -411,7 +414,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 //define localized model configuration action
                 localizedModelConfiguration = (locale, languageId) =>
                 {
-                    locale.Name = productAvailabilityRange.GetLocalized(entity => entity.Name, languageId, false, false);
+                    locale.Name = _localizationService.GetLocalized(productAvailabilityRange, entity => entity.Name, languageId, false, false);
                 };
             }
 

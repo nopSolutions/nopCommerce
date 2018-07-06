@@ -10,7 +10,6 @@ using Nop.Services.Forums;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Media;
-using Nop.Services.Seo;
 using Nop.Web.Framework.Extensions;
 using Nop.Web.Models.Common;
 using Nop.Web.Models.Profile;
@@ -132,7 +131,7 @@ namespace Nop.Web.Factories
                 var country = _countryService.GetCountryById(countryId);
                 if (country != null)
                 {
-                    location = country.GetLocalized(x => x.Name);
+                    location = _localizationService.GetLocalized(country, x => x.Name);
                 }
                 else
                 {

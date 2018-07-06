@@ -188,7 +188,7 @@ namespace Nop.Web.Factories
                 var attributeModel = new CustomerAttributeModel
                 {
                     Id = attribute.Id,
-                    Name = attribute.GetLocalized(x => x.Name),
+                    Name = _localizationService.GetLocalized(attribute, x => x.Name),
                     IsRequired = attribute.IsRequired,
                     AttributeControlType = attribute.AttributeControlType,
                 };
@@ -202,7 +202,7 @@ namespace Nop.Web.Factories
                         var valueModel = new CustomerAttributeValueModel
                         {
                             Id = attributeValue.Id,
-                            Name = attributeValue.GetLocalized(x => x.Name),
+                            Name = _localizationService.GetLocalized(attributeValue, x => x.Name),
                             IsPreSelected = attributeValue.IsPreSelected
                         };
                         attributeModel.Values.Add(valueModel);
@@ -337,7 +337,7 @@ namespace Nop.Web.Factories
                 {
                     model.AvailableCountries.Add(new SelectListItem
                     {
-                        Text = c.GetLocalized(x => x.Name),
+                        Text = _localizationService.GetLocalized(c, x => x.Name),
                         Value = c.Id.ToString(),
                         Selected = c.Id == model.CountryId
                     });
@@ -353,7 +353,7 @@ namespace Nop.Web.Factories
 
                         foreach (var s in states)
                         {
-                            model.AvailableStates.Add(new SelectListItem { Text = s.GetLocalized(x => x.Name), Value = s.Id.ToString(), Selected = (s.Id == model.StateProvinceId) });
+                            model.AvailableStates.Add(new SelectListItem { Text = _localizationService.GetLocalized(s, x => x.Name), Value = s.Id.ToString(), Selected = (s.Id == model.StateProvinceId) });
                         }
                     }
                     else
@@ -371,8 +371,8 @@ namespace Nop.Web.Factories
             }
 
             model.DisplayVatNumber = _taxSettings.EuVatEnabled;
-            model.VatNumberStatusNote = ((VatNumberStatus)_genericAttributeService.GetAttribute<int>(customer, NopCustomerDefaults.VatNumberStatusIdAttribute))
-                .GetLocalizedEnum(_localizationService, _workContext);
+            model.VatNumberStatusNote = _localizationService.GetLocalizedEnum((VatNumberStatus)_genericAttributeService
+                .GetAttribute<int>(customer, NopCustomerDefaults.VatNumberStatusIdAttribute));
             model.GenderEnabled = _customerSettings.GenderEnabled;
             model.DateOfBirthEnabled = _customerSettings.DateOfBirthEnabled;
             model.DateOfBirthRequired = _customerSettings.DateOfBirthRequired;
@@ -418,7 +418,7 @@ namespace Nop.Web.Factories
                     Email = record.Email,
                     ExternalIdentifier = !string.IsNullOrEmpty(record.ExternalDisplayIdentifier)
                         ? record.ExternalDisplayIdentifier : record.ExternalIdentifier,
-                    AuthMethodName = authMethod.GetLocalizedFriendlyName(_localizationService, _workContext.WorkingLanguage.Id)
+                    AuthMethodName = _localizationService.GetLocalizedFriendlyName(authMethod, _workContext.WorkingLanguage.Id)
                 });
             }
 
@@ -507,7 +507,7 @@ namespace Nop.Web.Factories
                 {
                     model.AvailableCountries.Add(new SelectListItem
                     {
-                        Text = c.GetLocalized(x => x.Name),
+                        Text = _localizationService.GetLocalized(c, x => x.Name),
                         Value = c.Id.ToString(),
                         Selected = c.Id == model.CountryId
                     });
@@ -523,7 +523,7 @@ namespace Nop.Web.Factories
 
                         foreach (var s in states)
                         {
-                            model.AvailableStates.Add(new SelectListItem { Text = s.GetLocalized(x => x.Name), Value = s.Id.ToString(), Selected = (s.Id == model.StateProvinceId) });
+                            model.AvailableStates.Add(new SelectListItem { Text = _localizationService.GetLocalized(s, x => x.Name), Value = s.Id.ToString(), Selected = (s.Id == model.StateProvinceId) });
                         }
                     }
                     else
@@ -821,7 +821,7 @@ namespace Nop.Web.Factories
                     OrderId = item.OrderId,
                     CustomOrderNumber = item.Order.CustomOrderNumber,
                     CreatedOn = _dateTimeHelper.ConvertToUserTime(item.Order.CreatedOnUtc, DateTimeKind.Utc),
-                    ProductName = item.Product.GetLocalized(x => x.Name),
+                    ProductName = _localizationService.GetLocalized(item.Product, x => x.Name),
                     ProductSeName = _urlRecordService.GetSeName(item.Product),
                     ProductAttributes = item.AttributeDescription,
                     ProductId = item.ProductId

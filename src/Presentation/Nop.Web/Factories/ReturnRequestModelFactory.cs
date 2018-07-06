@@ -88,7 +88,7 @@ namespace Nop.Web.Factories
             {
                 Id = orderItem.Id,
                 ProductId = orderItem.Product.Id,
-                ProductName = orderItem.Product.GetLocalized(x => x.Name),
+                ProductName = _localizationService.GetLocalized(orderItem.Product, x => x.Name),
                 ProductSeName = _urlRecordService.GetSeName(orderItem.Product),
                 AttributeInfo = orderItem.AttributeDescription,
                 Quantity = orderItem.Quantity
@@ -138,7 +138,7 @@ namespace Nop.Web.Factories
                         reasons.Add(new SubmitReturnRequestModel.ReturnRequestReasonModel
                         {
                             Id = rrr.Id,
-                            Name = rrr.GetLocalized(x => x.Name)
+                            Name = _localizationService.GetLocalized(rrr, x => x.Name)
                         });
                     return reasons;
                 });
@@ -152,7 +152,7 @@ namespace Nop.Web.Factories
                         actions.Add(new SubmitReturnRequestModel.ReturnRequestActionModel
                         {
                             Id = rra.Id,
-                            Name = rra.GetLocalized(x => x.Name)
+                            Name = _localizationService.GetLocalized(rra, x => x.Name)
                         });
                     return actions;
                 });
@@ -189,9 +189,9 @@ namespace Nop.Web.Factories
                     {
                         Id = returnRequest.Id,
                         CustomNumber = returnRequest.CustomNumber,
-                        ReturnRequestStatus = returnRequest.ReturnRequestStatus.GetLocalizedEnum(_localizationService, _workContext),
+                        ReturnRequestStatus = _localizationService.GetLocalizedEnum(returnRequest.ReturnRequestStatus),
                         ProductId = product.Id,
-                        ProductName = product.GetLocalized(x => x.Name),
+                        ProductName = _localizationService.GetLocalized(product, x => x.Name),
                         ProductSeName = _urlRecordService.GetSeName(product),
                         Quantity = returnRequest.Quantity,
                         ReturnAction = returnRequest.RequestedAction,

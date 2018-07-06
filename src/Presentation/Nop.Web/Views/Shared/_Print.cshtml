@@ -1,13 +1,13 @@
 ﻿@using Nop.Core
-@using Nop.Services.Localization
-@inject CommonSettings commonSettings
+@inject Nop.Services.Localization.ILanguageService languageService
+@inject Nop.Core.Domain.Common.CommonSettings commonSettings
 @inject IThemeContext themeContext
 @inject IWorkContext workContext;
 @{
     var themeName = themeContext.WorkingThemeName;
 }
 <!DOCTYPE html>
-<html lang="@workContext.WorkingLanguage.GetTwoLetterIsoLanguageName()" @Html.NopPageCssClasses()>
+<html lang="@languageService.GetTwoLetterIsoLanguageName(workContext.WorkingLanguage)" @Html.NopPageCssClasses()>
 <head>
     <title>@Html.NopTitle()</title>
     <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />

@@ -32,6 +32,7 @@ namespace Nop.Services.Catalog
         private readonly IDataProvider _dataProvider;
         private readonly IDbContext _dbContext;
         private readonly IEventPublisher _eventPublisher;
+        private readonly ILocalizationService _localizationService;
         private readonly IRepository<AclRecord> _aclRepository;
         private readonly IRepository<Category> _categoryRepository;
         private readonly IRepository<Product> _productRepository;
@@ -46,25 +47,6 @@ namespace Nop.Services.Catalog
 
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="catalogSettings">Catalog settings</param>
-        /// <param name="commonSettings">Common settings</param>
-        /// <param name="aclService">ACL service</param>
-        /// <param name="cacheManager">Cache manager</param>
-        /// <param name="dataProvider">Data provider</param>
-        /// <param name="dbContext">DB context</param>
-        /// <param name="eventPublisher">Event publisher</param>
-        /// <param name="aclRepository">ACL record repository</param>
-        /// <param name="categoryRepository">Category repository</param>
-        /// <param name="productRepository">Product repository</param>
-        /// <param name="productCategoryRepository">ProductCategory repository</param>
-        /// <param name="storeMappingRepository">Store mapping repository</param>
-        /// <param name="staticCacheManager">Static cache manager</param>
-        /// <param name="storeContext">Store context</param>
-        /// <param name="storeMappingService">Store mapping service</param>
-        /// <param name="workContext">Work context</param>
         public CategoryService(CatalogSettings catalogSettings,
             CommonSettings commonSettings,
             IAclService aclService,
@@ -72,6 +54,7 @@ namespace Nop.Services.Catalog
             IDataProvider dataProvider,
             IDbContext dbContext,
             IEventPublisher eventPublisher,
+            ILocalizationService localizationService,
             IRepository<AclRecord> aclRepository,
             IRepository<Category> categoryRepository,
             IRepository<Product> productRepository,
@@ -89,6 +72,7 @@ namespace Nop.Services.Catalog
             this._dataProvider = dataProvider;
             this._dbContext = dbContext;
             this._eventPublisher = eventPublisher;
+            this._localizationService = localizationService;
             this._aclRepository = aclRepository;
             this._categoryRepository = categoryRepository;
             this._productRepository = productRepository;
@@ -737,10 +721,8 @@ namespace Nop.Services.Catalog
             var breadcrumb = this.GetCategoryBreadCrumb(category, allCategories, true);
             for (var i = 0; i <= breadcrumb.Count - 1; i++)
             {
-                var categoryName = breadcrumb[i].GetLocalized(x => x.Name, languageId);
-                result = string.IsNullOrEmpty(result)
-                    ? categoryName
-                    : $"{result} {separator} {categoryName}";
+                var categoryName = _localizationService.GetLocalized(breadcrumb[i], x => x.Name, languageId);
+                result = string.IsNullOrEmpty(result) ? categoryName : $"{result} {separator} {categoryName}";
             }
 
             return result;

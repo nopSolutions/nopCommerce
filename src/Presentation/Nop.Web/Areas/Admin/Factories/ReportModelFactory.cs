@@ -129,8 +129,7 @@ namespace Nop.Web.Areas.Admin.Factories
             {
                 Id = product.Id,
                 Name = product.Name,
-                ManageInventoryMethod = product
-                    .ManageInventoryMethod.GetLocalizedEnum(_localizationService, _workContext.WorkingLanguage.Id),
+                ManageInventoryMethod = _localizationService.GetLocalizedEnum(product.ManageInventoryMethod),
                 StockQuantity = _productService.GetTotalStockQuantity(product),
                 Published = product.Published
             }));
@@ -141,8 +140,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Name = combination.Product.Name,
                 Attributes = _productAttributeFormatter
                     .FormatAttributes(combination.Product, combination.AttributesXml, _workContext.CurrentCustomer, "<br />", true, true, true, false),
-                ManageInventoryMethod = combination.Product
-                    .ManageInventoryMethod.GetLocalizedEnum(_localizationService, _workContext.WorkingLanguage.Id),
+                ManageInventoryMethod = _localizationService.GetLocalizedEnum(combination.Product.ManageInventoryMethod),
                 StockQuantity = combination.StockQuantity,
                 Published = combination.Product.Published
             }));

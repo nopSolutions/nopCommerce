@@ -467,7 +467,7 @@ namespace Nop.Services.Messages
 
                 sb.AppendLine($"<tr style=\"background-color: {_templatesSettings.Color2};text-align: center;\">");
                 //product name
-                var productName = product.GetLocalized(x => x.Name, languageId);
+                var productName = _localizationService.GetLocalized(product, x => x.Name, languageId);
 
                 sb.AppendLine("<td style=\"padding: 0.6em 0.4em;text-align: left;\">" + WebUtility.HtmlEncode(productName));
 
@@ -797,7 +797,7 @@ namespace Nop.Services.Messages
 
                 sb.AppendLine($"<tr style=\"background-color: {_templatesSettings.Color2};text-align: center;\">");
                 //product name
-                var productName = product.GetLocalized(x => x.Name, languageId);
+                var productName = _localizationService.GetLocalized(product, x => x.Name, languageId);
 
                 sb.AppendLine("<td style=\"padding: 0.6em 0.4em;text-align: left;\">" + WebUtility.HtmlEncode(productName));
 
@@ -885,7 +885,7 @@ namespace Nop.Services.Messages
             if (emailAccount == null)
                 throw new ArgumentNullException(nameof(emailAccount));
 
-            tokens.Add(new Token("Store.Name", store.GetLocalized(x => x.Name)));
+            tokens.Add(new Token("Store.Name", _localizationService.GetLocalized(store, x => x.Name)));
             tokens.Add(new Token("Store.URL", store.Url, true));
             tokens.Add(new Token("Store.Email", emailAccount.Email));
             tokens.Add(new Token("Store.CompanyName", store.CompanyName));
@@ -926,9 +926,9 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("Order.BillingAddress2", order.BillingAddress.Address2));
             tokens.Add(new Token("Order.BillingCity", order.BillingAddress.City));
             tokens.Add(new Token("Order.BillingCounty", order.BillingAddress.County));
-            tokens.Add(new Token("Order.BillingStateProvince", order.BillingAddress.StateProvince != null ? order.BillingAddress.StateProvince.GetLocalized(x => x.Name) : string.Empty));
+            tokens.Add(new Token("Order.BillingStateProvince", order.BillingAddress.StateProvince != null ? _localizationService.GetLocalized(order.BillingAddress.StateProvince, x => x.Name) : string.Empty));
             tokens.Add(new Token("Order.BillingZipPostalCode", order.BillingAddress.ZipPostalCode));
-            tokens.Add(new Token("Order.BillingCountry", order.BillingAddress.Country != null ? order.BillingAddress.Country.GetLocalized(x => x.Name) : string.Empty));
+            tokens.Add(new Token("Order.BillingCountry", order.BillingAddress.Country != null ? _localizationService.GetLocalized(order.BillingAddress.Country, x => x.Name) : string.Empty));
             tokens.Add(new Token("Order.BillingCustomAttributes", _addressAttributeFormatter.FormatAttributes(order.BillingAddress.CustomAttributes), true));
 
             tokens.Add(new Token("Order.Shippable", !string.IsNullOrEmpty(order.ShippingMethod)));
@@ -943,13 +943,13 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("Order.ShippingAddress2", order.ShippingAddress != null ? order.ShippingAddress.Address2 : string.Empty));
             tokens.Add(new Token("Order.ShippingCity", order.ShippingAddress != null ? order.ShippingAddress.City : string.Empty));
             tokens.Add(new Token("Order.ShippingCounty", order.ShippingAddress != null ? order.ShippingAddress.County : string.Empty));
-            tokens.Add(new Token("Order.ShippingStateProvince", order.ShippingAddress != null && order.ShippingAddress.StateProvince != null ? order.ShippingAddress.StateProvince.GetLocalized(x => x.Name) : string.Empty));
+            tokens.Add(new Token("Order.ShippingStateProvince", order.ShippingAddress != null && order.ShippingAddress.StateProvince != null ? _localizationService.GetLocalized(order.ShippingAddress.StateProvince, x => x.Name) : string.Empty));
             tokens.Add(new Token("Order.ShippingZipPostalCode", order.ShippingAddress != null ? order.ShippingAddress.ZipPostalCode : string.Empty));
-            tokens.Add(new Token("Order.ShippingCountry", order.ShippingAddress != null && order.ShippingAddress.Country != null ? order.ShippingAddress.Country.GetLocalized(x => x.Name) : string.Empty));
+            tokens.Add(new Token("Order.ShippingCountry", order.ShippingAddress != null && order.ShippingAddress.Country != null ? _localizationService.GetLocalized(order.ShippingAddress.Country, x => x.Name) : string.Empty));
             tokens.Add(new Token("Order.ShippingCustomAttributes", _addressAttributeFormatter.FormatAttributes(order.ShippingAddress != null ? order.ShippingAddress.CustomAttributes : string.Empty), true));
 
             var paymentMethod = _paymentService.LoadPaymentMethodBySystemName(order.PaymentMethodSystemName);
-            var paymentMethodName = paymentMethod != null ? paymentMethod.GetLocalizedFriendlyName(_localizationService, _workContext.WorkingLanguage.Id) : order.PaymentMethodSystemName;
+            var paymentMethodName = paymentMethod != null ? _localizationService.GetLocalizedFriendlyName(paymentMethod, _workContext.WorkingLanguage.Id) : order.PaymentMethodSystemName;
             tokens.Add(new Token("Order.PaymentMethod", paymentMethodName));
             tokens.Add(new Token("Order.VatNumber", order.VatNumber));
             var sbCustomValues = new StringBuilder();
@@ -1081,7 +1081,7 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("ReturnRequest.RequestedAction", returnRequest.RequestedAction));
             tokens.Add(new Token("ReturnRequest.CustomerComment", HtmlHelper.FormatText(returnRequest.CustomerComments, false, true, false, false, false, false), true));
             tokens.Add(new Token("ReturnRequest.StaffNotes", HtmlHelper.FormatText(returnRequest.StaffNotes, false, true, false, false, false, false), true));
-            tokens.Add(new Token("ReturnRequest.Status", returnRequest.ReturnRequestStatus.GetLocalizedEnum(_localizationService, _workContext)));
+            tokens.Add(new Token("ReturnRequest.Status", _localizationService.GetLocalizedEnum(returnRequest.ReturnRequestStatus)));
 
             //event notification
             _eventPublisher.EntityTokensAdded(returnRequest, tokens);
@@ -1231,8 +1231,8 @@ namespace Nop.Services.Messages
         {
             var productService = EngineContext.Current.Resolve<IProductService>();
             tokens.Add(new Token("Product.ID", product.Id));
-            tokens.Add(new Token("Product.Name", product.GetLocalized(x => x.Name, languageId)));
-            tokens.Add(new Token("Product.ShortDescription", product.GetLocalized(x => x.ShortDescription, languageId), true));
+            tokens.Add(new Token("Product.Name", _localizationService.GetLocalized(product, x => x.Name, languageId)));
+            tokens.Add(new Token("Product.ShortDescription", _localizationService.GetLocalized(product, x => x.ShortDescription, languageId), true));
             tokens.Add(new Token("Product.SKU", product.Sku));
             tokens.Add(new Token("Product.StockQuantity", productService.GetTotalStockQuantity(product)));
 

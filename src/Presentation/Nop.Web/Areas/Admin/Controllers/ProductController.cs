@@ -2585,7 +2585,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //localization
                 foreach (var lang in languages)
                 {
-                    var name = predefinedValue.GetLocalized(x => x.Name, lang.Id, false, false);
+                    var name = _localizationService.GetLocalized(predefinedValue, x => x.Name, lang.Id, false, false);
                     if (!string.IsNullOrEmpty(name))
                         _localizedEntityService.SaveLocalizedValue(pav, x => x.Name, name, lang.Id);
                 }

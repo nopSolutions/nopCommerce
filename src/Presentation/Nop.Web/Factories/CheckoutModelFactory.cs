@@ -211,8 +211,8 @@ namespace Nop.Web.Factories
                                 Address = point.Address,
                                 City = point.City,
                                 County = point.County,
-                                StateName = state?.GetLocalized(x => x.Name, languageId) ?? string.Empty,
-                                CountryName = country?.GetLocalized(x => x.Name, languageId) ?? string.Empty,
+                                StateName = state != null ? _localizationService.GetLocalized(state, x => x.Name, languageId) : string.Empty,
+                                CountryName = country != null ? _localizationService.GetLocalized(country, x => x.Name, languageId) : string.Empty,
                                 ZipPostalCode = point.ZipPostalCode,
                                 Latitude = point.Latitude,
                                 Longitude = point.Longitude,
@@ -404,7 +404,7 @@ namespace Nop.Web.Factories
 
                 var pmModel = new CheckoutPaymentMethodModel.PaymentMethodModel
                 {
-                    Name = pm.GetLocalizedFriendlyName(_localizationService, _workContext.WorkingLanguage.Id),
+                    Name = _localizationService.GetLocalizedFriendlyName(pm, _workContext.WorkingLanguage.Id),
                     Description = _paymentSettings.ShowPaymentMethodDescriptions ? pm.PaymentMethodDescription : string.Empty,
                     PaymentMethodSystemName = pm.PluginDescriptor.SystemName,
                     LogoUrl = PluginManager.GetLogoUrl(pm.PluginDescriptor)

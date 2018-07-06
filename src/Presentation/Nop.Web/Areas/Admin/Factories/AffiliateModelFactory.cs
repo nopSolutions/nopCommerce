@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Nop.Core;
 using Nop.Core.Domain.Affiliates;
 using Nop.Core.Domain.Common;
 using Nop.Services.Affiliates;
@@ -30,7 +29,6 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly ILocalizationService _localizationService;
         private readonly IOrderService _orderService;
         private readonly IPriceFormatter _priceFormatter;
-        private readonly IWorkContext _workContext;
 
         #endregion
 
@@ -42,8 +40,7 @@ namespace Nop.Web.Areas.Admin.Factories
             IDateTimeHelper dateTimeHelper,
             ILocalizationService localizationService,
             IOrderService orderService,
-            IPriceFormatter priceFormatter,
-            IWorkContext workContext)
+            IPriceFormatter priceFormatter)
         {
             this._affiliateService = affiliateService;
             this._baseAdminModelFactory = baseAdminModelFactory;
@@ -52,7 +49,6 @@ namespace Nop.Web.Areas.Admin.Factories
             this._localizationService = localizationService;
             this._orderService = orderService;
             this._priceFormatter = priceFormatter;
-            this._workContext = workContext;
         }
 
         #endregion
@@ -279,10 +275,10 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = orders.Select(order => new AffiliatedOrderModel
                 {
                     Id = order.Id,
-                    OrderStatus = order.OrderStatus.GetLocalizedEnum(_localizationService, _workContext),
+                    OrderStatus = _localizationService.GetLocalizedEnum(order.OrderStatus),
                     OrderStatusId = order.OrderStatusId,
-                    PaymentStatus = order.PaymentStatus.GetLocalizedEnum(_localizationService, _workContext),
-                    ShippingStatus = order.ShippingStatus.GetLocalizedEnum(_localizationService, _workContext),
+                    PaymentStatus = _localizationService.GetLocalizedEnum(order.PaymentStatus),
+                    ShippingStatus = _localizationService.GetLocalizedEnum(order.ShippingStatus),
                     OrderTotal = _priceFormatter.FormatPrice(order.OrderTotal, true, false),
                     CreatedOn = _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, DateTimeKind.Utc),
                     CustomOrderNumber = order.CustomOrderNumber

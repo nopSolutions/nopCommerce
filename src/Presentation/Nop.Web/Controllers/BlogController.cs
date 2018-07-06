@@ -118,7 +118,7 @@ namespace Nop.Web.Controllers
         public virtual IActionResult ListRss(int languageId)
         {
             var feed = new RssFeed(
-                $"{_storeContext.CurrentStore.GetLocalized(x => x.Name)}: Blog",
+                $"{_localizationService.GetLocalized(_storeContext.CurrentStore, x => x.Name)}: Blog",
                 "Blog",
                 new Uri(_webHelper.GetStoreLocation()),
                 DateTime.UtcNow);

@@ -119,7 +119,7 @@ namespace Nop.Plugin.ExchangeRate.EcbExchange
         public override void Install()
         {
             //locales
-            this.AddOrUpdatePluginLocaleResource("Plugins.ExchangeRate.EcbExchange.Error", "You can use ECB (European central bank) exchange rate provider only when the primary exchange rate currency is supported by ECB");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.ExchangeRate.EcbExchange.Error", "You can use ECB (European central bank) exchange rate provider only when the primary exchange rate currency is supported by ECB");
 
             base.Install();
         }
@@ -130,7 +130,7 @@ namespace Nop.Plugin.ExchangeRate.EcbExchange
         public override void Uninstall()
         {
             //locales
-            this.DeletePluginLocaleResource("Plugins.ExchangeRate.EcbExchange.Error");
+            _localizationService.DeletePluginLocaleResource("Plugins.ExchangeRate.EcbExchange.Error");
 
             base.Uninstall();
         }

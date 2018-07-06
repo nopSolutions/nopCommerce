@@ -207,7 +207,7 @@ namespace Nop.Services.Catalog
                     stockMessage = productAvailabilityRange == null
                         ? _localizationService.GetResource("Products.Availability.OutOfStock")
                         : string.Format(_localizationService.GetResource("Products.Availability.AvailabilityRange"),
-                            productAvailabilityRange.GetLocalized(range => range.Name));
+                            _localizationService.GetLocalized(productAvailabilityRange, range => range.Name));
                 }
             }
             else
@@ -220,7 +220,7 @@ namespace Nop.Services.Catalog
                     stockMessage = productAvailabilityRange == null
                         ? _localizationService.GetResource("Products.Availability.OutOfStock")
                         : string.Format(_localizationService.GetResource("Products.Availability.AvailabilityRange"),
-                            productAvailabilityRange.GetLocalized(range => range.Name));
+                            _localizationService.GetLocalized(productAvailabilityRange, range => range.Name));
                 }
                 else
                 {
@@ -263,7 +263,7 @@ namespace Nop.Services.Catalog
                         stockMessage = productAvailabilityRange == null
                             ? _localizationService.GetResource("Products.Availability.OutOfStock")
                             : string.Format(_localizationService.GetResource("Products.Availability.AvailabilityRange"),
-                                productAvailabilityRange.GetLocalized(range => range.Name));
+                                _localizationService.GetLocalized(productAvailabilityRange, range => range.Name));
                         break;
                     case BackorderMode.AllowQtyBelow0:
                         stockMessage = _localizationService.GetResource("Products.Availability.InStock");
@@ -272,7 +272,7 @@ namespace Nop.Services.Catalog
                         stockMessage = productAvailabilityRange == null
                             ? _localizationService.GetResource("Products.Availability.Backordering")
                             : string.Format(_localizationService.GetResource("Products.Availability.BackorderingWithDate"),
-                                productAvailabilityRange.GetLocalized(range => range.Name));
+                                _localizationService.GetLocalized(productAvailabilityRange, range => range.Name));
                         break;
                 }
             }

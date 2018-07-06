@@ -314,7 +314,7 @@ namespace Nop.Services.Orders
                     continue;
 
                 //prepare warning message
-                var requiredProductName = WebUtility.HtmlEncode(requiredProduct.GetLocalized(x => x.Name));
+                var requiredProductName = WebUtility.HtmlEncode(_localizationService.GetLocalized(requiredProduct, x => x.Name));
                 var requiredProductWarning = _catalogSettings.UseLinksInRequiredProductWarnings
                     ? string.Format(warningLocale, $"<a href=\"{(urlHelper.RouteUrl(nameof(Product), new { SeName = _urlRecordService.GetSeName(requiredProduct) }))}\">{requiredProductName}</a>", requiredProductRequiredQuantity)
                     : string.Format(warningLocale, requiredProductName, requiredProductRequiredQuantity);
@@ -464,7 +464,7 @@ namespace Nop.Services.Orders
                                         var productAvailabilityRange = _dateRangeService.GetProductAvailabilityRangeById(product.ProductAvailabilityRangeId);
                                         var warning = productAvailabilityRange == null ? _localizationService.GetResource("ShoppingCart.OutOfStock")
                                             : string.Format(_localizationService.GetResource("ShoppingCart.AvailabilityRange"),
-                                                productAvailabilityRange.GetLocalized(range => range.Name));
+                                                _localizationService.GetLocalized(productAvailabilityRange, range => range.Name));
                                         warnings.Add(warning);
                                     }
                                     else
@@ -488,7 +488,7 @@ namespace Nop.Services.Orders
                                         var productAvailabilityRange = _dateRangeService.GetProductAvailabilityRangeById(product.ProductAvailabilityRangeId);
                                         var warning = productAvailabilityRange == null ? _localizationService.GetResource("ShoppingCart.OutOfStock")
                                             : string.Format(_localizationService.GetResource("ShoppingCart.AvailabilityRange"),
-                                                productAvailabilityRange.GetLocalized(range => range.Name));
+                                                _localizationService.GetLocalized(productAvailabilityRange, range => range.Name));
                                         warnings.Add(warning);
                                     }
                                     else
@@ -506,7 +506,7 @@ namespace Nop.Services.Orders
                                     var productAvailabilityRange = _dateRangeService.GetProductAvailabilityRangeById(product.ProductAvailabilityRangeId);
                                     var warning = productAvailabilityRange == null ? _localizationService.GetResource("ShoppingCart.OutOfStock")
                                         : string.Format(_localizationService.GetResource("ShoppingCart.AvailabilityRange"),
-                                            productAvailabilityRange.GetLocalized(range => range.Name));
+                                            _localizationService.GetLocalized(productAvailabilityRange, range => range.Name));
                                     warnings.Add(warning);
                                 }
                             }
@@ -629,10 +629,10 @@ namespace Nop.Services.Orders
                     //if not found
                     if (!found)
                     {
-                        var textPrompt = a2.GetLocalized(x => x.TextPrompt);
+                        var textPrompt = _localizationService.GetLocalized(a2, x => x.TextPrompt);
                         var notFoundWarning = !string.IsNullOrEmpty(textPrompt) ?
                             textPrompt :
-                            string.Format(_localizationService.GetResource("ShoppingCart.SelectAttribute"), a2.ProductAttribute.GetLocalized(a => a.Name));
+                            string.Format(_localizationService.GetResource("ShoppingCart.SelectAttribute"), _localizationService.GetLocalized(a2.ProductAttribute, a => a.Name));
 
                         warnings.Add(notFoundWarning);
                     }
@@ -676,7 +676,7 @@ namespace Nop.Services.Orders
 
                         if (pam.ValidationMinLength.Value > enteredTextLength)
                         {
-                            warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.TextboxMinimumLength"), pam.ProductAttribute.GetLocalized(a => a.Name), pam.ValidationMinLength.Value));
+                            warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.TextboxMinimumLength"), _localizationService.GetLocalized(pam.ProductAttribute, a => a.Name), pam.ValidationMinLength.Value));
                         }
                     }
                 }
@@ -693,7 +693,7 @@ namespace Nop.Services.Orders
 
                         if (pam.ValidationMaxLength.Value < enteredTextLength)
                         {
-                            warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.TextboxMaximumLength"), pam.ProductAttribute.GetLocalized(a => a.Name), pam.ValidationMaxLength.Value));
+                            warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.TextboxMaximumLength"), _localizationService.GetLocalized(pam.ProductAttribute, a => a.Name), pam.ValidationMaxLength.Value));
                         }
                     }
                 }
@@ -721,8 +721,8 @@ namespace Nop.Services.Orders
                             "", decimal.Zero, null, null, totalQty, false);
                         foreach (var associatedProductWarning in associatedProductWarnings)
                         {
-                            var attributeName = attributeValue.ProductAttributeMapping.ProductAttribute.GetLocalized(a => a.Name);
-                            var attributeValueName = attributeValue.GetLocalized(a => a.Name);
+                            var attributeName = _localizationService.GetLocalized(attributeValue.ProductAttributeMapping.ProductAttribute, a => a.Name);
+                            var attributeValueName = _localizationService.GetLocalized(attributeValue, a => a.Name);
                             warnings.Add(string.Format(
                                 _localizationService.GetResource("ShoppingCart.AssociatedAttributeWarning"),
                                 attributeName, attributeValueName, associatedProductWarning));
@@ -980,10 +980,10 @@ namespace Nop.Services.Orders
                         //if not found
                         if (!found)
                         {
-                            if (!string.IsNullOrEmpty(a2.GetLocalized(a => a.TextPrompt)))
-                                warnings.Add(a2.GetLocalized(a => a.TextPrompt));
+                            if (!string.IsNullOrEmpty(_localizationService.GetLocalized(a2, a => a.TextPrompt)))
+                                warnings.Add(_localizationService.GetLocalized(a2, a => a.TextPrompt));
                             else
-                                warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.SelectAttribute"), a2.GetLocalized(a => a.Name)));
+                                warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.SelectAttribute"), _localizationService.GetLocalized(a2, a => a.Name)));
                         }
                     }
                 }
@@ -1004,7 +1004,7 @@ namespace Nop.Services.Orders
 
                             if (ca.ValidationMinLength.Value > enteredTextLength)
                             {
-                                warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.TextboxMinimumLength"), ca.GetLocalized(a => a.Name), ca.ValidationMinLength.Value));
+                                warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.TextboxMinimumLength"), _localizationService.GetLocalized(ca, a => a.Name), ca.ValidationMinLength.Value));
                             }
                         }
                     }
@@ -1021,7 +1021,7 @@ namespace Nop.Services.Orders
 
                             if (ca.ValidationMaxLength.Value < enteredTextLength)
                             {
-                                warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.TextboxMaximumLength"), ca.GetLocalized(a => a.Name), ca.ValidationMaxLength.Value));
+                                warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.TextboxMaximumLength"), _localizationService.GetLocalized(ca, a => a.Name), ca.ValidationMaxLength.Value));
                             }
                         }
                     }

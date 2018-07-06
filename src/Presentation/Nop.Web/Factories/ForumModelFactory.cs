@@ -417,7 +417,7 @@ namespace Nop.Web.Factories
                 {
                     var countryId = _genericAttributeService.GetAttribute<int>(post.Customer, NopCustomerDefaults.CountryIdAttribute);
                     var country = _countryService.GetCountryById(countryId);
-                    forumPostModel.CustomerLocation = country != null ? country.GetLocalized(x => x.Name) : string.Empty;
+                    forumPostModel.CustomerLocation = country != null ? _localizationService.GetLocalized(country, x => x.Name) : string.Empty;
                 }
 
                 //votes

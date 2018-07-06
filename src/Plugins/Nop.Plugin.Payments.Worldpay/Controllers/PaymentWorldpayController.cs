@@ -33,7 +33,6 @@ namespace Nop.Plugin.Payments.Worldpay.Controllers
         private readonly ILocalizationService _localizationService;
         private readonly IPermissionService _permissionService;
         private readonly ISettingService _settingService;
-        private readonly IWorkContext _workContext;
         private readonly WorldpayPaymentManager _worldpayPaymentManager;
         private readonly WorldpayPaymentSettings _worldpayPaymentSettings;
 
@@ -46,7 +45,6 @@ namespace Nop.Plugin.Payments.Worldpay.Controllers
             ILocalizationService localizationService,
             IPermissionService permissionService,
             ISettingService settingService,
-            IWorkContext workContext,
             WorldpayPaymentManager worldpayPaymentManager,
             WorldpayPaymentSettings worldpayPaymentSettings)
         {
@@ -55,7 +53,6 @@ namespace Nop.Plugin.Payments.Worldpay.Controllers
             this._localizationService = localizationService;
             this._permissionService = permissionService;
             this._settingService = settingService;
-            this._workContext = workContext;
             this._worldpayPaymentManager = worldpayPaymentManager;
             this._worldpayPaymentSettings = worldpayPaymentSettings;
         }
@@ -195,7 +192,7 @@ namespace Nop.Plugin.Payments.Worldpay.Controllers
                 {
                     Id = card.PaymentId,
                     CardId = card.PaymentId,
-                    CardType = card.Card.CreditCardType.HasValue ? card.Card.CreditCardType.Value.GetLocalizedEnum(_localizationService, _workContext) : null,
+                    CardType = card.Card.CreditCardType.HasValue ? _localizationService.GetLocalizedEnum(card.Card.CreditCardType.Value) : null,
                     ExpirationDate = card.Card.ExpirationDate,
                     MaskedNumber = card.Card.MaskedNumber
                 }),

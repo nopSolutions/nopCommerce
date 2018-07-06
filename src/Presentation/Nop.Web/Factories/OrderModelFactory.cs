@@ -143,9 +143,9 @@ namespace Nop.Web.Factories
                     Id = order.Id,
                     CreatedOn = _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, DateTimeKind.Utc),
                     OrderStatusEnum = order.OrderStatus,
-                    OrderStatus = order.OrderStatus.GetLocalizedEnum(_localizationService, _workContext),
-                    PaymentStatus = order.PaymentStatus.GetLocalizedEnum(_localizationService, _workContext),
-                    ShippingStatus = order.ShippingStatus.GetLocalizedEnum(_localizationService, _workContext),
+                    OrderStatus = _localizationService.GetLocalizedEnum(order.OrderStatus),
+                    PaymentStatus = _localizationService.GetLocalizedEnum(order.PaymentStatus),
+                    ShippingStatus = _localizationService.GetLocalizedEnum(order.ShippingStatus),
                     IsReturnRequestAllowed = _orderProcessingService.IsReturnRequestAllowed(order),
                     CustomOrderNumber = order.CustomOrderNumber
                 };
@@ -163,7 +163,7 @@ namespace Nop.Web.Factories
                 {
                     Id = recurringPayment.Id,
                     StartDate = _dateTimeHelper.ConvertToUserTime(recurringPayment.StartDateUtc, DateTimeKind.Utc).ToString(),
-                    CycleInfo = $"{recurringPayment.CycleLength} {recurringPayment.CyclePeriod.GetLocalizedEnum(_localizationService, _workContext)}",
+                    CycleInfo = $"{recurringPayment.CycleLength} {_localizationService.GetLocalizedEnum(recurringPayment.CyclePeriod)}",
                     NextPayment = recurringPayment.NextPaymentDate.HasValue ? _dateTimeHelper.ConvertToUserTime(recurringPayment.NextPaymentDate.Value, DateTimeKind.Utc).ToString() : "",
                     TotalCycles = recurringPayment.TotalCycles,
                     CyclesRemaining = recurringPayment.CyclesRemaining,
@@ -192,14 +192,14 @@ namespace Nop.Web.Factories
             {
                 Id = order.Id,
                 CreatedOn = _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, DateTimeKind.Utc),
-                OrderStatus = order.OrderStatus.GetLocalizedEnum(_localizationService, _workContext),
+                OrderStatus = _localizationService.GetLocalizedEnum(order.OrderStatus),
                 IsReOrderAllowed = _orderSettings.IsReOrderAllowed,
                 IsReturnRequestAllowed = _orderProcessingService.IsReturnRequestAllowed(order),
                 PdfInvoiceDisabled = _pdfSettings.DisablePdfInvoicesForPendingOrders && order.OrderStatus == OrderStatus.Pending,
                 CustomOrderNumber = order.CustomOrderNumber,
 
                 //shipping info
-                ShippingStatus = order.ShippingStatus.GetLocalizedEnum(_localizationService, _workContext)
+                ShippingStatus = _localizationService.GetLocalizedEnum(order.ShippingStatus)
             };
             if (order.ShippingStatus != ShippingStatus.ShippingNotRequired)
             {
@@ -252,8 +252,8 @@ namespace Nop.Web.Factories
 
             //payment method
             var paymentMethod = _paymentService.LoadPaymentMethodBySystemName(order.PaymentMethodSystemName);
-            model.PaymentMethod = paymentMethod != null ? paymentMethod.GetLocalizedFriendlyName(_localizationService, _workContext.WorkingLanguage.Id) : order.PaymentMethodSystemName;
-            model.PaymentMethodStatus = order.PaymentStatus.GetLocalizedEnum(_localizationService, _workContext);
+            model.PaymentMethod = paymentMethod != null ? _localizationService.GetLocalizedFriendlyName(paymentMethod, _workContext.WorkingLanguage.Id) : order.PaymentMethodSystemName;
+            model.PaymentMethodStatus = _localizationService.GetLocalizedEnum(order.PaymentStatus);
             model.CanRePostProcessPayment = _paymentService.CanRePostProcessPayment(order);
             //custom values
             model.CustomValues = _paymentService.DeserializeCustomValues(order);
@@ -411,7 +411,7 @@ namespace Nop.Web.Factories
                     Sku = _productService.FormatSku(orderItem.Product, orderItem.AttributesXml),
                     VendorName = vendors.FirstOrDefault(v => v.Id == orderItem.Product.VendorId)?.Name ?? string.Empty,
                     ProductId = orderItem.Product.Id,
-                    ProductName = orderItem.Product.GetLocalized(x => x.Name),
+                    ProductName = _localizationService.GetLocalized(orderItem.Product, x => x.Name),
                     ProductSeName = _urlRecordService.GetSeName(orderItem.Product),
                     Quantity = orderItem.Quantity,
                     AttributeInfo = orderItem.AttributeDescription,
@@ -496,9 +496,8 @@ namespace Nop.Web.Factories
                             {
                                 var shipmentStatusEventModel = new ShipmentDetailsModel.ShipmentStatusEventModel();
                                 var shipmentEventCountry = _countryService.GetCountryByTwoLetterIsoCode(shipmentEvent.CountryCode);
-                                shipmentStatusEventModel.Country = shipmentEventCountry != null
-                                                                        ? shipmentEventCountry.GetLocalized(x => x.Name)
-                                                                        : shipmentEvent.CountryCode;
+                                shipmentStatusEventModel.Country = shipmentEventCountry != null 
+                                    ? _localizationService.GetLocalized(shipmentEventCountry, x => x.Name) : shipmentEvent.CountryCode;
                                 shipmentStatusEventModel.Date = shipmentEvent.Date;
                                 shipmentStatusEventModel.EventName = shipmentEvent.EventName;
                                 shipmentStatusEventModel.Location = shipmentEvent.Location;
@@ -521,7 +520,7 @@ namespace Nop.Web.Factories
                     Id = shipmentItem.Id,
                     Sku = _productService.FormatSku(orderItem.Product, orderItem.AttributesXml),
                     ProductId = orderItem.Product.Id,
-                    ProductName = orderItem.Product.GetLocalized(x => x.Name),
+                    ProductName = _localizationService.GetLocalized(orderItem.Product, x => x.Name),
                     ProductSeName = _urlRecordService.GetSeName(orderItem.Product),
                     AttributeInfo = orderItem.AttributeDescription,
                     QuantityOrdered = orderItem.Quantity,

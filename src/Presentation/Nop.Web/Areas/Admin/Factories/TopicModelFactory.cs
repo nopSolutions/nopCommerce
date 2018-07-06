@@ -25,6 +25,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IAclSupportedModelFactory _aclSupportedModelFactory;
         private readonly IActionContextAccessor _actionContextAccessor;
         private readonly IBaseAdminModelFactory _baseAdminModelFactory;
+        private readonly ILocalizationService _localizationService;
         private readonly ILocalizedModelFactory _localizedModelFactory;
         private readonly IStoreMappingSupportedModelFactory _storeMappingSupportedModelFactory;
         private readonly ITopicService _topicService;
@@ -39,6 +40,7 @@ namespace Nop.Web.Areas.Admin.Factories
         public TopicModelFactory(IAclSupportedModelFactory aclSupportedModelFactory,
             IActionContextAccessor actionContextAccessor,
             IBaseAdminModelFactory baseAdminModelFactory,
+            ILocalizationService localizationService,
             ILocalizedModelFactory localizedModelFactory,
             IStoreMappingSupportedModelFactory storeMappingSupportedModelFactory,
             ITopicService topicService,
@@ -49,6 +51,7 @@ namespace Nop.Web.Areas.Admin.Factories
             this._aclSupportedModelFactory = aclSupportedModelFactory;
             this._actionContextAccessor = actionContextAccessor;
             this._baseAdminModelFactory = baseAdminModelFactory;
+            this._localizationService = localizationService;
             this._localizedModelFactory = localizedModelFactory;
             this._storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
             this._topicService = topicService;
@@ -144,11 +147,11 @@ namespace Nop.Web.Areas.Admin.Factories
                 //define localized model configuration action
                 localizedModelConfiguration = (locale, languageId) =>
                 {
-                    locale.Title = topic.GetLocalized(entity => entity.Title, languageId, false, false);
-                    locale.Body = topic.GetLocalized(entity => entity.Body, languageId, false, false);
-                    locale.MetaKeywords = topic.GetLocalized(entity => entity.MetaKeywords, languageId, false, false);
-                    locale.MetaDescription = topic.GetLocalized(entity => entity.MetaDescription, languageId, false, false);
-                    locale.MetaTitle = topic.GetLocalized(entity => entity.MetaTitle, languageId, false, false);
+                    locale.Title = _localizationService.GetLocalized(topic, entity => entity.Title, languageId, false, false);
+                    locale.Body = _localizationService.GetLocalized(topic, entity => entity.Body, languageId, false, false);
+                    locale.MetaKeywords = _localizationService.GetLocalized(topic, entity => entity.MetaKeywords, languageId, false, false);
+                    locale.MetaDescription = _localizationService.GetLocalized(topic, entity => entity.MetaDescription, languageId, false, false);
+                    locale.MetaTitle = _localizationService.GetLocalized(topic, entity => entity.MetaTitle, languageId, false, false);
                     locale.SeName = _urlRecordService.GetSeName(topic, languageId, false, false);
                 };
             }

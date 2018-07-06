@@ -26,6 +26,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IManufacturerService _manufacturerService;
         private readonly IDiscountService _discountService;
         private readonly IDiscountSupportedModelFactory _discountSupportedModelFactory;
+        private readonly ILocalizationService _localizationService;
         private readonly ILocalizedModelFactory _localizedModelFactory;
         private readonly IProductService _productService;
         private readonly IStoreMappingSupportedModelFactory _storeMappingSupportedModelFactory;
@@ -41,6 +42,7 @@ namespace Nop.Web.Areas.Admin.Factories
             IManufacturerService manufacturerService,
             IDiscountService discountService,
             IDiscountSupportedModelFactory discountSupportedModelFactory,
+            ILocalizationService localizationService,
             ILocalizedModelFactory localizedModelFactory,
             IProductService productService,
             IStoreMappingSupportedModelFactory storeMappingSupportedModelFactory,
@@ -52,6 +54,7 @@ namespace Nop.Web.Areas.Admin.Factories
             this._manufacturerService = manufacturerService;
             this._discountService = discountService;
             this._discountSupportedModelFactory = discountSupportedModelFactory;
+            this._localizationService = localizationService;
             this._localizedModelFactory = localizedModelFactory;
             this._productService = productService;
             this._storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
@@ -158,11 +161,11 @@ namespace Nop.Web.Areas.Admin.Factories
                 //define localized model configuration action
                 localizedModelConfiguration = (locale, languageId) =>
                 {
-                    locale.Name = manufacturer.GetLocalized(entity => entity.Name, languageId, false, false);
-                    locale.Description = manufacturer.GetLocalized(entity => entity.Description, languageId, false, false);
-                    locale.MetaKeywords = manufacturer.GetLocalized(entity => entity.MetaKeywords, languageId, false, false);
-                    locale.MetaDescription = manufacturer.GetLocalized(entity => entity.MetaDescription, languageId, false, false);
-                    locale.MetaTitle = manufacturer.GetLocalized(entity => entity.MetaTitle, languageId, false, false);
+                    locale.Name = _localizationService.GetLocalized(manufacturer, entity => entity.Name, languageId, false, false);
+                    locale.Description = _localizationService.GetLocalized(manufacturer, entity => entity.Description, languageId, false, false);
+                    locale.MetaKeywords = _localizationService.GetLocalized(manufacturer, entity => entity.MetaKeywords, languageId, false, false);
+                    locale.MetaDescription = _localizationService.GetLocalized(manufacturer, entity => entity.MetaDescription, languageId, false, false);
+                    locale.MetaTitle = _localizationService.GetLocalized(manufacturer, entity => entity.MetaTitle, languageId, false, false);
                     locale.SeName = _urlRecordService.GetSeName(manufacturer, languageId, false, false);
                 };
             }

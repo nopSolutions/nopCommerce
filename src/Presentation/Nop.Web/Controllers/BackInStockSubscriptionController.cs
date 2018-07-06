@@ -62,7 +62,7 @@ namespace Nop.Web.Controllers
             var model = new BackInStockSubscribeModel
             {
                 ProductId = product.Id,
-                ProductName = product.GetLocalized(x => x.Name),
+                ProductName = _localizationService.GetLocalized(product, x => x.Name),
                 ProductSeName = _urlRecordService.GetSeName(product),
                 IsCurrentCustomerRegistered = _workContext.CurrentCustomer.IsRegistered(),
                 MaximumBackInStockSubscriptions = _catalogSettings.MaximumBackInStockSubscriptions,
@@ -174,7 +174,7 @@ namespace Nop.Web.Controllers
                     {
                         Id = subscription.Id,
                         ProductId = product.Id,
-                        ProductName = product.GetLocalized(x => x.Name),
+                        ProductName = _localizationService.GetLocalized(product, x => x.Name),
                         SeName = _urlRecordService.GetSeName(product),
                     };
                     model.Subscriptions.Add(subscriptionModel);

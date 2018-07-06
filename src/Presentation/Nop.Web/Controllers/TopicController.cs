@@ -97,8 +97,8 @@ namespace Nop.Web.Controllers
                 if (topic.Password != null && topic.Password.Equals(password))
                 {
                     authResult = true;
-                    title = topic.GetLocalized(x => x.Title);
-                    body = topic.GetLocalized(x => x.Body);
+                    title = _localizationService.GetLocalized(topic, x => x.Title);
+                    body = _localizationService.GetLocalized(topic, x => x.Body);
                 }
                 else
                 {

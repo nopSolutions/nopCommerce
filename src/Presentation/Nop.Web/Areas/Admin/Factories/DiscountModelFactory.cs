@@ -40,7 +40,6 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IPriceFormatter _priceFormatter;
         private readonly IProductService _productService;
         private readonly IWebHelper _webHelper;
-        private readonly IWorkContext _workContext;
 
         #endregion
 
@@ -57,8 +56,7 @@ namespace Nop.Web.Areas.Admin.Factories
             IOrderService orderService,
             IPriceFormatter priceFormatter,
             IProductService productService,
-            IWebHelper webHelper,
-            IWorkContext workContext)
+            IWebHelper webHelper)
         {
             this._currencySettings = currencySettings;
             this._baseAdminModelFactory = baseAdminModelFactory;
@@ -72,7 +70,6 @@ namespace Nop.Web.Areas.Admin.Factories
             this._priceFormatter = priceFormatter;
             this._productService = productService;
             this._webHelper = webHelper;
-            this._workContext = workContext;
         }
 
         #endregion
@@ -226,7 +223,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     var discountModel = discount.ToModel<DiscountModel>();
 
                     //fill in additional values (not existing in the entity)
-                    discountModel.DiscountTypeName = discount.DiscountType.GetLocalizedEnum(_localizationService, _workContext);
+                    discountModel.DiscountTypeName = _localizationService.GetLocalizedEnum(discount.DiscountType);
                     discountModel.PrimaryStoreCurrencyCode = _currencyService
                         .GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId)?.CurrencyCode;
                     discountModel.TimesUsed = _discountService.GetAllDiscountUsageHistory(discount.Id, pageSize: 1).TotalCount;

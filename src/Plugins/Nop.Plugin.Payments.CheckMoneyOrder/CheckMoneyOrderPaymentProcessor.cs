@@ -209,15 +209,15 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder
             _settingService.SaveSetting(settings);
 
             //locales
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payment.CheckMoneyOrder.AdditionalFee", "Additional fee");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payment.CheckMoneyOrder.AdditionalFee.Hint", "The additional fee.");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payment.CheckMoneyOrder.AdditionalFeePercentage", "Additional fee. Use percentage");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payment.CheckMoneyOrder.AdditionalFeePercentage.Hint", "Determines whether to apply a percentage additional fee to the order total. If not enabled, a fixed value is used.");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payment.CheckMoneyOrder.DescriptionText", "Description");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payment.CheckMoneyOrder.DescriptionText.Hint", "Enter info that will be shown to customers during checkout");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payment.CheckMoneyOrder.PaymentMethodDescription", "Pay by cheque or money order");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payment.CheckMoneyOrder.ShippableProductRequired", "Shippable product required");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payment.CheckMoneyOrder.ShippableProductRequired.Hint", "An option indicating whether shippable products are required in order to display this payment method during checkout.");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payment.CheckMoneyOrder.AdditionalFee", "Additional fee");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payment.CheckMoneyOrder.AdditionalFee.Hint", "The additional fee.");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payment.CheckMoneyOrder.AdditionalFeePercentage", "Additional fee. Use percentage");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payment.CheckMoneyOrder.AdditionalFeePercentage.Hint", "Determines whether to apply a percentage additional fee to the order total. If not enabled, a fixed value is used.");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payment.CheckMoneyOrder.DescriptionText", "Description");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payment.CheckMoneyOrder.DescriptionText.Hint", "Enter info that will be shown to customers during checkout");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payment.CheckMoneyOrder.PaymentMethodDescription", "Pay by cheque or money order");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payment.CheckMoneyOrder.ShippableProductRequired", "Shippable product required");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payment.CheckMoneyOrder.ShippableProductRequired.Hint", "An option indicating whether shippable products are required in order to display this payment method during checkout.");
 
             base.Install();
         }
@@ -231,15 +231,15 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder
             _settingService.DeleteSetting<CheckMoneyOrderPaymentSettings>();
 
             //locales
-            this.DeletePluginLocaleResource("Plugins.Payment.CheckMoneyOrder.AdditionalFee");
-            this.DeletePluginLocaleResource("Plugins.Payment.CheckMoneyOrder.AdditionalFee.Hint");
-            this.DeletePluginLocaleResource("Plugins.Payment.CheckMoneyOrder.AdditionalFeePercentage");
-            this.DeletePluginLocaleResource("Plugins.Payment.CheckMoneyOrder.AdditionalFeePercentage.Hint");
-            this.DeletePluginLocaleResource("Plugins.Payment.CheckMoneyOrder.DescriptionText");
-            this.DeletePluginLocaleResource("Plugins.Payment.CheckMoneyOrder.DescriptionText.Hint");
-            this.DeletePluginLocaleResource("Plugins.Payment.CheckMoneyOrder.PaymentMethodDescription");
-            this.DeletePluginLocaleResource("Plugins.Payment.CheckMoneyOrder.ShippableProductRequired");
-            this.DeletePluginLocaleResource("Plugins.Payment.CheckMoneyOrder.ShippableProductRequired.Hint");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payment.CheckMoneyOrder.AdditionalFee");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payment.CheckMoneyOrder.AdditionalFee.Hint");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payment.CheckMoneyOrder.AdditionalFeePercentage");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payment.CheckMoneyOrder.AdditionalFeePercentage.Hint");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payment.CheckMoneyOrder.DescriptionText");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payment.CheckMoneyOrder.DescriptionText.Hint");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payment.CheckMoneyOrder.PaymentMethodDescription");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payment.CheckMoneyOrder.ShippableProductRequired");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payment.CheckMoneyOrder.ShippableProductRequired.Hint");
 
             base.Uninstall();
         }

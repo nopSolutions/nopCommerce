@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Services.Customers;
 using Nop.Services.Localization;
@@ -21,7 +20,6 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly ICustomerAttributeService _customerAttributeService;
         private readonly ILocalizationService _localizationService;
         private readonly ILocalizedModelFactory _localizedModelFactory;
-        private readonly IWorkContext _workContext;
 
         #endregion
 
@@ -29,13 +27,11 @@ namespace Nop.Web.Areas.Admin.Factories
 
         public CustomerAttributeModelFactory(ICustomerAttributeService customerAttributeService,
             ILocalizationService localizationService,
-            ILocalizedModelFactory localizedModelFactory,
-            IWorkContext workContext)
+            ILocalizedModelFactory localizedModelFactory)
         {
             this._customerAttributeService = customerAttributeService;
             this._localizationService = localizationService;
             this._localizedModelFactory = localizedModelFactory;
-            this._workContext = workContext;
         }
 
         #endregion
@@ -107,7 +103,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     var attributeModel = attribute.ToModel<CustomerAttributeModel>();
 
                     //fill in additional values (not existing in the entity)
-                    attributeModel.AttributeControlTypeName = attribute.AttributeControlType.GetLocalizedEnum(_localizationService, _workContext);
+                    attributeModel.AttributeControlTypeName = _localizationService.GetLocalizedEnum(attribute.AttributeControlType);
 
                     return attributeModel;
                 }),
@@ -140,7 +136,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 //define localized model configuration action
                 localizedModelConfiguration = (locale, languageId) =>
                 {
-                    locale.Name = customerAttribute.GetLocalized(entity => entity.Name, languageId, false, false);
+                    locale.Name = _localizationService.GetLocalized(customerAttribute, entity => entity.Name, languageId, false, false);
                 };
             }
 
@@ -205,7 +201,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 //define localized model configuration action
                 localizedModelConfiguration = (locale, languageId) =>
                 {
-                    locale.Name = customerAttributeValue.GetLocalized(entity => entity.Name, languageId, false, false);
+                    locale.Name = _localizationService.GetLocalized(customerAttributeValue, entity => entity.Name, languageId, false, false);
                 };
             }
 
