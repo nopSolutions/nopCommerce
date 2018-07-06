@@ -186,6 +186,26 @@ namespace Nop.Services.Shipping
             return _pluginFinder.GetPlugins<IShippingRateComputationMethod>(customer: customer, storeId: storeId).ToList();
         }
 
+        /// <summary>
+        /// Is shipping rate computation method active
+        /// </summary>
+        /// <param name="srcm">Shipping rate computation method</param>
+        /// <returns>Result</returns>
+        public virtual bool IsShippingRateComputationMethodActive(IShippingRateComputationMethod srcm)
+        {
+            if (srcm == null)
+                throw new ArgumentNullException(nameof(srcm));
+
+            if (_shippingSettings.ActiveShippingRateComputationMethodSystemNames == null)
+                return false;
+
+            foreach (var activeMethodSystemName in _shippingSettings.ActiveShippingRateComputationMethodSystemNames)
+                if (srcm.PluginDescriptor.SystemName.Equals(activeMethodSystemName, StringComparison.InvariantCultureIgnoreCase))
+                    return true;
+
+            return false;
+        }
+
         #endregion
 
         #region Shipping methods
@@ -286,6 +306,21 @@ namespace Nop.Services.Shipping
 
             //event notification
             _eventPublisher.EntityUpdated(shippingMethod);
+        }
+
+        /// <summary>
+        /// Does country restriction exist
+        /// </summary>
+        /// <param name="shippingMethod">Shipping method</param>
+        /// <param name="countryId">Country identifier</param>
+        /// <returns>Result</returns>
+        public virtual bool CountryRestrictionExists(ShippingMethod shippingMethod, int countryId)
+        {
+            if (shippingMethod == null)
+                throw new ArgumentNullException(nameof(shippingMethod));
+
+            var result = shippingMethod.ShippingMethodCountryMappings.Any(c => c.CountryId == countryId);
+            return result;
         }
 
         #endregion
@@ -412,6 +447,27 @@ namespace Nop.Services.Shipping
         public virtual IList<IPickupPointProvider> LoadAllPickupPointProviders(Customer customer = null, int storeId = 0)
         {
             return _pluginFinder.GetPlugins<IPickupPointProvider>(customer: customer, storeId: storeId).ToList();
+        }
+
+        /// <summary>
+        /// Is pickup point provider active
+        /// </summary>
+        /// <param name="pickupPointProvider">Pickup point provider</param>
+        /// <returns>Result</returns>
+        public virtual bool IsPickupPointProviderActive(IPickupPointProvider pickupPointProvider)
+        {
+            if (pickupPointProvider == null)
+                throw new ArgumentNullException(nameof(pickupPointProvider));
+
+            if (_shippingSettings.ActivePickupPointProviderSystemNames == null)
+                return false;
+
+            foreach (var activeProviderSystemName in _shippingSettings.ActivePickupPointProviderSystemNames)
+                if (pickupPointProvider.PluginDescriptor.SystemName.Equals(activeProviderSystemName, StringComparison.InvariantCultureIgnoreCase))
+                    return true;
+
+            return false;
+
         }
 
         #endregion

@@ -38,6 +38,13 @@ namespace Nop.Services.Shipping
         /// <returns>Shipping rate computation methods</returns>
         IList<IShippingRateComputationMethod> LoadAllShippingRateComputationMethods(Customer customer = null, int storeId = 0);
 
+        /// <summary>
+        /// Is shipping rate computation method active
+        /// </summary>
+        /// <param name="srcm">Shipping rate computation method</param>
+        /// <returns>Result</returns>
+        bool IsShippingRateComputationMethodActive(IShippingRateComputationMethod srcm);
+
         #endregion
 
         #region Shipping methods
@@ -73,6 +80,14 @@ namespace Nop.Services.Shipping
         /// </summary>
         /// <param name="shippingMethod">Shipping method</param>
         void UpdateShippingMethod(ShippingMethod shippingMethod);
+
+        /// <summary>
+        /// Does country restriction exist
+        /// </summary>
+        /// <param name="shippingMethod">Shipping method</param>
+        /// <param name="countryId">Country identifier</param>
+        /// <returns>Result</returns>
+        bool CountryRestrictionExists(ShippingMethod shippingMethod, int countryId);
 
         #endregion
 
@@ -135,6 +150,13 @@ namespace Nop.Services.Shipping
         /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
         /// <returns>Pickup point providers</returns>
         IList<IPickupPointProvider> LoadAllPickupPointProviders(Customer customer = null, int storeId = 0);
+
+        /// <summary>
+        /// Is pickup point provider active
+        /// </summary>
+        /// <param name="pickupPointProvider">Pickup point provider</param>
+        /// <returns>Result</returns>
+        bool IsPickupPointProviderActive(IPickupPointProvider pickupPointProvider);
 
         #endregion
 

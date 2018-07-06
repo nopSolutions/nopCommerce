@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
-using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Plugins;
 using Nop.Services.Authentication.External;
@@ -36,10 +35,10 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IOfficialFeedManager _officialFeedManager;
         private readonly IPaymentService _paymentService;
         private readonly IPluginFinder _pluginFinder;
+        private readonly IShippingService _shippingService;
         private readonly IStoreMappingSupportedModelFactory _storeMappingSupportedModelFactory;
         private readonly IWebHelper _webHelper;
         private readonly IWidgetService _widgetService;
-        private readonly ShippingSettings _shippingSettings;
         private readonly TaxSettings _taxSettings;
 
         #endregion
@@ -54,10 +53,10 @@ namespace Nop.Web.Areas.Admin.Factories
             IOfficialFeedManager officialFeedManager,
             IPaymentService paymentService,
             IPluginFinder pluginFinder,
+            IShippingService shippingService,
             IStoreMappingSupportedModelFactory storeMappingSupportedModelFactory,
             IWebHelper webHelper,
             IWidgetService widgetService,
-            ShippingSettings shippingSettings,
             TaxSettings taxSettings)
         {
             this._aclSupportedModelFactory = aclSupportedModelFactory;
@@ -68,10 +67,10 @@ namespace Nop.Web.Areas.Admin.Factories
             this._officialFeedManager = officialFeedManager;
             this._paymentService = paymentService;
             this._pluginFinder = pluginFinder;
+            this._shippingService = shippingService;
             this._storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
             this._webHelper = webHelper;
             this._widgetService = widgetService;
-            this._shippingSettings = shippingSettings;
             this._taxSettings = taxSettings;
         }
 
@@ -104,11 +103,11 @@ namespace Nop.Web.Areas.Admin.Factories
                     break;
 
                 case IShippingRateComputationMethod shippingRateComputationMethod:
-                    model.IsEnabled = shippingRateComputationMethod.IsShippingRateComputationMethodActive(_shippingSettings);
+                    model.IsEnabled = _shippingService.IsShippingRateComputationMethodActive(shippingRateComputationMethod);
                     break;
 
                 case IPickupPointProvider pickupPointProvider:
-                    model.IsEnabled = pickupPointProvider.IsPickupPointProviderActive(_shippingSettings);
+                    model.IsEnabled = _shippingService.IsPickupPointProviderActive(pickupPointProvider);
                     break;
 
                 case ITaxProvider _:

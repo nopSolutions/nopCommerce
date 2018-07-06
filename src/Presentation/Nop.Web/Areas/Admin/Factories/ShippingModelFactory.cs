@@ -33,7 +33,6 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly ILocalizedModelFactory _localizedModelFactory;
         private readonly IShippingService _shippingService;
         private readonly IWebHelper _webHelper;
-        private readonly ShippingSettings _shippingSettings;
 
         #endregion
 
@@ -45,8 +44,7 @@ namespace Nop.Web.Areas.Admin.Factories
             IDateRangeService dateRangeService,
             ILocalizedModelFactory localizedModelFactory,
             IShippingService shippingService,
-            IWebHelper webHelper,
-            ShippingSettings shippingSettings)
+            IWebHelper webHelper)
         {
             this._addressService = addressService;
             this._baseAdminModelFactory = baseAdminModelFactory;
@@ -55,7 +53,6 @@ namespace Nop.Web.Areas.Admin.Factories
             this._localizedModelFactory = localizedModelFactory;
             this._shippingService = shippingService;
             this._webHelper = webHelper;
-            this._shippingSettings = shippingSettings;
         }
 
         #endregion
@@ -164,7 +161,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     var shippingProviderModel = provider.ToPluginModel<ShippingProviderModel>();
 
                     //fill in additional values (not existing in the entity)
-                    shippingProviderModel.IsActive = provider.IsShippingRateComputationMethodActive(_shippingSettings);
+                    shippingProviderModel.IsActive = _shippingService.IsShippingRateComputationMethodActive(provider);
                     shippingProviderModel.ConfigurationUrl = provider.GetConfigurationPageUrl();
                     shippingProviderModel.LogoUrl = PluginManager.GetLogoUrl(provider.PluginDescriptor);
 
@@ -214,7 +211,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     var pickupPointProviderModel = provider.ToPluginModel<PickupPointProviderModel>();
 
                     //fill in additional values (not existing in the entity)
-                    pickupPointProviderModel.IsActive = provider.IsPickupPointProviderActive(_shippingSettings);
+                    pickupPointProviderModel.IsActive = _shippingService.IsPickupPointProviderActive(provider);
                     pickupPointProviderModel.ConfigurationUrl = provider.GetConfigurationPageUrl();
                     pickupPointProviderModel.LogoUrl = PluginManager.GetLogoUrl(provider.PluginDescriptor);
 
@@ -519,7 +516,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     if (!model.Restricted.ContainsKey(country.Id))
                         model.Restricted[country.Id] = new Dictionary<int, bool>();
 
-                    model.Restricted[country.Id][shippingMethod.Id] = shippingMethod.CountryRestrictionExists(country.Id);
+                    model.Restricted[country.Id][shippingMethod.Id] = _shippingService.CountryRestrictionExists(shippingMethod, country.Id);
                 }
             }
 

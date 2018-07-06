@@ -16,7 +16,6 @@ using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
-using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Infrastructure;
 using Nop.Core.Plugins;
@@ -85,6 +84,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IProductService _productService;
         private readonly IReturnRequestService _returnRequestService;
         private readonly ISearchTermService _searchTermService;
+        private readonly IShippingService _shippingService;
         private readonly IStoreContext _storeContext;
         private readonly IStoreService _storeService;
         private readonly IUrlHelperFactory _urlHelperFactory;
@@ -93,7 +93,6 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IWidgetService _widgetService;
         private readonly IWorkContext _workContext;
         private readonly MeasureSettings _measureSettings;
-        private readonly ShippingSettings _shippingSettings;
         private readonly TaxSettings _taxSettings;
 
         #endregion
@@ -121,6 +120,7 @@ namespace Nop.Web.Areas.Admin.Factories
             IProductService productService,
             IReturnRequestService returnRequestService,
             ISearchTermService searchTermService,
+            IShippingService shippingService,
             IStoreContext storeContext,
             IStoreService storeService,
             IUrlHelperFactory urlHelperFactory,
@@ -129,7 +129,6 @@ namespace Nop.Web.Areas.Admin.Factories
             IWidgetService widgetService,
             IWorkContext workContext,
             MeasureSettings measureSettings,
-            ShippingSettings shippingSettings,
             TaxSettings taxSettings)
         {
             this._adminAreaSettings = adminAreaSettings;
@@ -153,6 +152,7 @@ namespace Nop.Web.Areas.Admin.Factories
             this._productService = productService;
             this._returnRequestService = returnRequestService;
             this._searchTermService = searchTermService;
+            this._shippingService = shippingService;
             this._storeContext = storeContext;
             this._storeService = storeService;
             this._urlHelperFactory = urlHelperFactory;
@@ -161,7 +161,6 @@ namespace Nop.Web.Areas.Admin.Factories
             this._widgetService = widgetService;
             this._workContext = workContext;
             this._measureSettings = measureSettings;
-            this._shippingSettings = shippingSettings;
             this._taxSettings = taxSettings;
         }
 
@@ -561,11 +560,11 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     case IShippingRateComputationMethod shippingRateComputationMethod:
                         isEnabled =
-                            shippingRateComputationMethod.IsShippingRateComputationMethodActive(_shippingSettings);
+                            _shippingService.IsShippingRateComputationMethodActive(shippingRateComputationMethod);
                         break;
 
                     case IPickupPointProvider pickupPointProvider:
-                        isEnabled = pickupPointProvider.IsPickupPointProviderActive(_shippingSettings);
+                        isEnabled = _shippingService.IsPickupPointProviderActive(pickupPointProvider);
                         break;
 
                     case ITaxProvider _:

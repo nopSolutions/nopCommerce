@@ -42,6 +42,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly IPluginFinder _pluginFinder;
         private readonly IPluginModelFactory _pluginModelFactory;
         private readonly ISettingService _settingService;
+        private readonly IShippingService _shippingService;
         private readonly IUploadService _uploadService;
         private readonly IWebHelper _webHelper;
         private readonly IWidgetService _widgetService;
@@ -64,6 +65,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             IPluginFinder pluginFinder,
             IPluginModelFactory pluginModelFactory,
             ISettingService settingService,
+            IShippingService shippingService,
             IUploadService uploadService,
             IWebHelper webHelper,
             IWidgetService widgetService,
@@ -82,6 +84,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             this._pluginFinder = pluginFinder;
             this._pluginModelFactory = pluginModelFactory;
             this._settingService = settingService;
+            this._shippingService = shippingService;
             this._uploadService = uploadService;
             this._webHelper = webHelper;
             this._widgetService = widgetService;
@@ -386,7 +389,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                             break;
                         case IShippingRateComputationMethod shippingRateComputationMethod:
-                            if (shippingRateComputationMethod.IsShippingRateComputationMethodActive(_shippingSettings) && !model.IsEnabled)
+                            if (_shippingService.IsShippingRateComputationMethodActive(shippingRateComputationMethod) && !model.IsEnabled)
                             {
                                 //mark as disabled
                                 _shippingSettings.ActiveShippingRateComputationMethodSystemNames.Remove(pluginDescriptor.SystemName);
@@ -394,7 +397,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                                 break;
                             }
 
-                            if (!shippingRateComputationMethod.IsShippingRateComputationMethodActive(_shippingSettings) && model.IsEnabled)
+                            if (!_shippingService.IsShippingRateComputationMethodActive(shippingRateComputationMethod) && model.IsEnabled)
                             {
                                 //mark as enabled
                                 _shippingSettings.ActiveShippingRateComputationMethodSystemNames.Add(pluginDescriptor.SystemName);
@@ -403,7 +406,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                             break;
                         case IPickupPointProvider pickupPointProvider:
-                            if (pickupPointProvider.IsPickupPointProviderActive(_shippingSettings) && !model.IsEnabled)
+                            if (_shippingService.IsPickupPointProviderActive(pickupPointProvider) && !model.IsEnabled)
                             {
                                 //mark as disabled
                                 _shippingSettings.ActivePickupPointProviderSystemNames.Remove(pluginDescriptor.SystemName);
@@ -411,7 +414,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                                 break;
                             }
 
-                            if (!pickupPointProvider.IsPickupPointProviderActive(_shippingSettings) && model.IsEnabled)
+                            if (!_shippingService.IsPickupPointProviderActive(pickupPointProvider) && model.IsEnabled)
                             {
                                 //mark as enabled
                                 _shippingSettings.ActivePickupPointProviderSystemNames.Add(pluginDescriptor.SystemName);
