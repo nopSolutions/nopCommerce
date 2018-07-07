@@ -85,7 +85,7 @@ namespace Nop.Web.Framework.UI
         #region Utilities
 
         /// <summary>
-        /// Get bundled file name based on last write time of files
+        /// Get bundled file name
         /// </summary>
         /// <param name="parts">Parts to bundle</param>
         /// <returns>File name</returns>
@@ -102,7 +102,7 @@ namespace Nop.Web.Framework.UI
                 var hashInput = "";
                 foreach (var part in parts)
                 {
-                    hashInput += GetVersion(part, false);
+                    hashInput += part;
                     hashInput += ",";
                 }
 
@@ -111,7 +111,6 @@ namespace Nop.Web.Framework.UI
             }
             //ensure only valid chars
             hash = SeoExtensions.GetSeName(hash);
-
             return hash;
         }
 
@@ -379,7 +378,7 @@ namespace Nop.Web.Framework.UI
                             //BundleHandler.AddBundle(configFilePath, bundle);
 
                             //process
-                            _processor.Process(configFilePath, new List<Bundle> { bundle });
+                            _processor.Process(configFilePath, new List<Bundle> {bundle});
                             _cacheManager.Set(cacheKey, false, RecheckBundledFilesPeriod);
                         }
                     }
@@ -392,7 +391,7 @@ namespace Nop.Web.Framework.UI
                 foreach (var item in partsToDontBundle)
                 {
                     var src = debugModel ? item.DebugSrc : item.Src;
-                    result.AppendFormat("<script {1}src=\"{0}\"></script>", urlHelper.Content(src) + GetVersion(src), item.IsAsync ? "async " : "");
+                    result.AppendFormat("<script {1}src=\"{0}\"></script>", urlHelper.Content(src), item.IsAsync ? "async " : "");
                     result.Append(Environment.NewLine);
                 }
                 return result.ToString();
@@ -404,7 +403,7 @@ namespace Nop.Web.Framework.UI
                 foreach (var item in _scriptParts[location].Distinct())
                 {
                     var src = debugModel ? item.DebugSrc : item.Src;
-                    result.AppendFormat("<script {1}src=\"{0}\"></script>", urlHelper.Content(src) + GetVersion(src), item.IsAsync ? "async " : "");
+                    result.AppendFormat("<script {1}src=\"{0}\"></script>", urlHelper.Content(src), item.IsAsync ? "async " : "");
                     result.Append(Environment.NewLine);
                 }
                 return result.ToString();
@@ -614,7 +613,7 @@ namespace Nop.Web.Framework.UI
                 foreach (var item in partsToDontBundle)
                 {
                     var src = debugModel ? item.DebugSrc : item.Src;
-                    result.AppendFormat("<link href=\"{0}\" rel=\"stylesheet\" type=\"{1}\" />", urlHelper.Content(src) + GetVersion(src), MimeTypes.TextCss);
+                    result.AppendFormat("<link href=\"{0}\" rel=\"stylesheet\" type=\"{1}\" />", urlHelper.Content(src), MimeTypes.TextCss);
                     result.Append(Environment.NewLine);
                 }
 
@@ -627,46 +626,11 @@ namespace Nop.Web.Framework.UI
                 foreach (var item in _cssParts[location].Distinct())
                 {
                     var src = debugModel ? item.DebugSrc : item.Src;
-                    result.AppendFormat("<link href=\"{0}\" rel=\"stylesheet\" type=\"{1}\" />", urlHelper.Content(src) + GetVersion(src), MimeTypes.TextCss);
+                    result.AppendFormat("<link href=\"{0}\" rel=\"stylesheet\" type=\"{1}\" />", urlHelper.Content(src), MimeTypes.TextCss);
                     result.AppendLine();
                 }
                 return result.ToString();
             }
-        }
-
-        /// <summary>
-        /// Gets a version number based off of the last write time for the file,
-        /// keeps the browser from using an older cached version of the file when it should use a newer one
-        /// </summary>
-        /// <param name="url">The relative URL of the file to get the version for.</param>
-        /// <param name="includeVersionEquals">Should we include a version identifier?</param>
-        public virtual string GetVersion(string url, bool includeVersionEquals = true)
-        {
-            // Get the roots
-            var webRoot = _hostingEnvironment.WebRootPath + Path.DirectorySeparatorChar;
-            var contentRoot = _hostingEnvironment.ContentRootPath + Path.DirectorySeparatorChar;
-            var versionEquals = includeVersionEquals ? "?v=" : string.Empty;
-
-            // Fix the url 
-            url = url.Replace("~", "").Replace("/", "\\").TrimStart(Path.DirectorySeparatorChar);
-
-            // Try the content root
-            var file = Path.Combine(contentRoot, url);
-            if (_fileProvider.FileExists(file))
-            {
-                return versionEquals + _fileProvider.GetLastWriteTime(file).Ticks;
-            }         
-
-            // Try the web root
-            file = Path.Combine(webRoot, url);
-            if (_fileProvider.FileExists(file))
-            {
-                return versionEquals + _fileProvider.GetLastWriteTime(file).Ticks;
-            }
-
-            // If all else fails, return a random number string
-            // the files should exist, so this should never be hit
-            return versionEquals + (new Random()).Next();
         }
 
         /// <summary>
