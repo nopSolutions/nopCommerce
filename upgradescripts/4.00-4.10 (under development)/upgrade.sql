@@ -1998,7 +1998,7 @@ set @resources='
     <Value></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.BillingShippingInfo">
-    <Value>Billing &amp; shipping info</Value>
+    <Value>Billing &amp; shipping</Value>
   </LocaleResource>
 </Language>
 '
