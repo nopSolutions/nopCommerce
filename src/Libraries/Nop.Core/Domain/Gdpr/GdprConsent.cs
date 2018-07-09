@@ -1,9 +1,11 @@
+using Nop.Core.Domain.Localization;
+
 namespace Nop.Core.Domain.Gdpr
 {
     /// <summary>
     /// Represents a GDPR consent
     /// </summary>
-    public partial class GdprConsent : BaseEntity
+    public partial class GdprConsent : BaseEntity, ILocalizedEntity
     {
         /// <summary>
         /// Gets or sets the message displayed to customers

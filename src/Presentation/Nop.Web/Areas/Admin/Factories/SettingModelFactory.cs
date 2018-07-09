@@ -35,7 +35,7 @@ using Nop.Web.Areas.Admin.Models.Common;
 using Nop.Web.Areas.Admin.Models.Settings;
 using Nop.Web.Areas.Admin.Models.Stores;
 using Nop.Web.Framework.Extensions;
-using Nop.Web.Framework.Security.Captcha;
+using Nop.Web.Framework.Factories;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -55,6 +55,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IFulltextService _fulltextService;
         private readonly IGdprService _gdprService;
+        private readonly ILocalizedModelFactory _localizedModelFactory;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ILocalizationService _localizationService;
         private readonly IMaintenanceService _maintenanceService;
@@ -81,6 +82,7 @@ namespace Nop.Web.Areas.Admin.Factories
             IDateTimeHelper dateTimeHelper,
             IFulltextService fulltextService,
             IGdprService gdprService,
+            ILocalizedModelFactory localizedModelFactory,
             IGenericAttributeService genericAttributeService,
             ILocalizationService localizationService,
             IMaintenanceService maintenanceService,
@@ -103,6 +105,7 @@ namespace Nop.Web.Areas.Admin.Factories
             this._dateTimeHelper = dateTimeHelper;
             this._fulltextService = fulltextService;
             this._gdprService = gdprService;
+            this._localizedModelFactory = localizedModelFactory;
             this._genericAttributeService = genericAttributeService;
             this._localizationService = localizationService;
             this._maintenanceService = maintenanceService;
@@ -1297,7 +1300,15 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare list model
             var model = new GdprConsentListModel
             {
-                Data = consentList.PaginationByRequestModel(searchModel).Select(consent => consent.ToModel<GdprConsentModel>()).ToList(),
+                Data = consentList.PaginationByRequestModel(searchModel).Select(consent =>
+                {
+                    var gdprConsentModel = consent.ToModel<GdprConsentModel>();
+                    var gdprConsent = _gdprService.GetConsentById(gdprConsentModel.Id);
+                    gdprConsentModel.Message = gdprConsent.GetLocalized(entity => entity.Message);
+                    gdprConsentModel.RequiredMessage = gdprConsent.GetLocalized(entity => entity.RequiredMessage);
+
+                    return gdprConsentModel;
+                }),
                 Total = consentList.Count
             };
 
@@ -1313,13 +1324,28 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>GDPR consent model</returns>
         public virtual GdprConsentModel PrepareGdprConsentModel(GdprConsentModel model, GdprConsent gdprConsent, bool excludeProperties = false)
         {
+            Action<GdprConsentLocalizedModel, int> localizedModelConfiguration = null;
+
             //fill in model values from the entity
             if (gdprConsent != null)
+            {
                 model = model ?? gdprConsent.ToModel<GdprConsentModel>();
+
+                //define localized model configuration action
+                localizedModelConfiguration = (locale, languageId) =>
+                {
+                    locale.Message = gdprConsent.GetLocalized(entity => entity.Message, languageId, false, false);
+                    locale.RequiredMessage = gdprConsent.GetLocalized(entity => entity.RequiredMessage, languageId, false, false);
+                };
+            }
 
             //set default values for the new model
             if (gdprConsent == null)
                 model.DisplayOrder = 1;
+
+            //prepare localized models
+            if (!excludeProperties)
+                model.Locales = _localizedModelFactory.PrepareLocalizedModels(localizedModelConfiguration);
 
             return model;
         }
