@@ -11,11 +11,8 @@ namespace Nop.Core.Plugins
     /// </summary>
     public class PluginDescriptor : IDescriptor, IComparable<PluginDescriptor>
     {
-        #region Ctors
+        #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
         public PluginDescriptor()
         {
             this.SupportedVersions = new List<string>();

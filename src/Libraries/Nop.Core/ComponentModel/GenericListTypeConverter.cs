@@ -17,9 +17,6 @@ namespace Nop.Core.ComponentModel
         /// </summary>
         protected readonly TypeConverter typeConverter;
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
         public GenericListTypeConverter()
         {
             typeConverter = TypeDescriptor.GetConverter(typeof(T));
@@ -47,7 +44,7 @@ namespace Nop.Core.ComponentModel
         /// <returns>Result</returns>
         public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
         {
-            if (sourceType != typeof(string)) 
+            if (sourceType != typeof(string))
                 return base.CanConvertFrom(context, sourceType);
 
             var items = GetStringArray(sourceType.ToString());
@@ -63,7 +60,7 @@ namespace Nop.Core.ComponentModel
         /// <returns>Result</returns>
         public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
         {
-            if (!(value is string)) 
+            if (!(value is string))
                 return base.ConvertFrom(context, culture, value);
 
             var items = GetStringArray((string)value);
@@ -94,7 +91,7 @@ namespace Nop.Core.ComponentModel
                 return base.ConvertTo(context, culture, value, destinationType);
 
             var result = string.Empty;
-            if (value == null) 
+            if (value == null)
                 return result;
 
             //we don't use string.Join() because it doesn't support invariant culture

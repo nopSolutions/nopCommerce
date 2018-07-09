@@ -8,9 +8,6 @@ namespace Nop.Core.Domain.Cms
     /// </summary>
     public class WidgetSettings : ISettings
     {
-        /// <summary>
-        /// Ctor
-        /// </summary>
         public WidgetSettings()
         {
             ActiveWidgetSystemNames = new List<string>();

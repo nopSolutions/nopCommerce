@@ -17,20 +17,15 @@ namespace Nop.Core.Caching
 
         private readonly ICacheManager _perRequestCacheManager;
         private readonly IRedisConnectionWrapper _connectionWrapper;
+
         private readonly IDatabase _db;
 
         #endregion
 
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="perRequestCacheManager">Cache manager</param>
-        /// <param name="connectionWrapper">ConnectionW wrapper</param>
-        /// <param name="config">Config</param>
         public RedisCacheManager(ICacheManager perRequestCacheManager,
-            IRedisConnectionWrapper connectionWrapper, 
+            IRedisConnectionWrapper connectionWrapper,
             NopConfig config)
         {
             if (string.IsNullOrEmpty(config.RedisCachingConnectionString))

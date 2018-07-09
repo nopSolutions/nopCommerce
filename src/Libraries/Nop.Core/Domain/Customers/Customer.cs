@@ -17,10 +17,7 @@ namespace Nop.Core.Domain.Customers
         private ICollection<ReturnRequest> _returnRequests;
         protected ICollection<CustomerAddressMapping> _customerAddressMappings;
         private IList<CustomerRole> _customerRoles;
-		
-        /// <summary>
-        /// Ctor
-        /// </summary>
+
         public Customer()
         {
             this.CustomerGuid = Guid.NewGuid();

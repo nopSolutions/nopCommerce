@@ -7,9 +7,6 @@ namespace Nop.Core.Domain.Messages
     /// </summary>
     public class AdditionTokensAddedEvent
     {
-        /// <summary>
-        /// Ctor
-        /// </summary>
         public AdditionTokensAddedEvent()
         {
             this.AdditionTokens = new List<string>();

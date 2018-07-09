@@ -19,9 +19,6 @@ namespace Nop.Core.Caching
 
         #region Ctor
 
-        /// <summary>
-        /// Gets a key/value collection that can be used to share data within the scope of this request 
-        /// </summary>
         public PerRequestCacheManager(IHttpContextAccessor httpContextAccessor)
         {
             this._httpContextAccessor = httpContextAccessor;
@@ -56,7 +53,7 @@ namespace Nop.Core.Caching
             var items = GetItems();
             if (items == null)
                 return acquire();
-                        
+
             //item already is in cache, so return it
             if (items[key] != null)
                 return (T)items[key];
