@@ -2,6 +2,7 @@
 using Nop.Web.Areas.Admin.Validators.Settings;
 using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Models;
+using System.Collections.Generic;
 
 namespace Nop.Web.Areas.Admin.Models.Settings
 {
@@ -9,8 +10,17 @@ namespace Nop.Web.Areas.Admin.Models.Settings
     /// Represents a GDPR consent model
     /// </summary>
     [Validator(typeof(GdprConsentValidator))]
-    public partial class GdprConsentModel : BaseNopEntityModel
+    public partial class GdprConsentModel : BaseNopEntityModel, ILocalizedModel<GdprConsentLocalizedModel>
     {
+        #region Ctor
+
+        public GdprConsentModel()
+        {
+            Locales = new List<GdprConsentLocalizedModel>();
+        }
+
+        #endregion
+
         #region Properties
 
         [NopResourceDisplayName("Admin.Configuration.Settings.Gdpr.Consent.Message")]
@@ -30,6 +40,8 @@ namespace Nop.Web.Areas.Admin.Models.Settings
 
         [NopResourceDisplayName("Admin.Configuration.Settings.Gdpr.Consent.DisplayOrder")]
         public int DisplayOrder { get; set; }
+
+        public IList<GdprConsentLocalizedModel> Locales { get; set; }
 
         #endregion
     }
