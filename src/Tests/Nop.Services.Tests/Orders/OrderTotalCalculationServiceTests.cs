@@ -37,7 +37,7 @@ namespace Nop.Services.Tests.Orders
         private Store _store;
         private Mock<IStoreContext> _storeContext;
         private Mock<IProductService> _productService;
-        private Mock<IDiscountService> _discountService;
+        private IDiscountService _discountService;
         private Mock<ICategoryService> _categoryService;
         private Mock<IManufacturerService> _manufacturerService;
         private Mock<IProductAttributeParser> _productAttributeParser;
@@ -77,7 +77,7 @@ namespace Nop.Services.Tests.Orders
             _workContext = new Mock<IWorkContext>();
             _productService = new Mock<IProductService>();
             _storeContext = new Mock<IStoreContext>();
-            _discountService = new Mock<IDiscountService>();
+            _discountService = TestDiscountService.Init();
             _categoryService = new Mock<ICategoryService>();
             _manufacturerService = new Mock<IManufacturerService>();
             _productAttributeParser = new Mock<IProductAttributeParser>();
@@ -110,7 +110,7 @@ namespace Nop.Services.Tests.Orders
             _currencySettings = new CurrencySettings();
 
             _priceCalcService = new PriceCalculationService(_catalogSettings, _currencySettings, _categoryService.Object,
-                _currencyService.Object, _discountService.Object, _manufacturerService.Object,
+                _currencyService.Object, _discountService, _manufacturerService.Object,
                 _productAttributeParser.Object, _productService.Object,
                 cacheManager, _storeContext.Object,
                 _workContext.Object, _shoppingCartSettings);
@@ -168,7 +168,7 @@ namespace Nop.Services.Tests.Orders
 
             _orderTotalCalcService = new OrderTotalCalculationService(_workContext.Object, _storeContext.Object,
                 _priceCalcService, _taxService, _shippingService, _paymentService.Object, _checkoutAttributeParser.Object,
-                _discountService.Object, _giftCardService.Object, _genericAttributeService.Object,
+                _discountService, _giftCardService.Object, _genericAttributeService.Object,
                 _rewardPointService.Object, _shoppingCartService.Object,
                 _taxSettings, _rewardPointsSettings, _shippingSettings, _shoppingCartSettings, _catalogSettings);
         }
@@ -212,9 +212,6 @@ namespace Nop.Services.Tests.Orders
             var cart = new List<ShoppingCartItem> { sci1, sci2 };
             cart.ForEach(sci => sci.Customer = customer);
             cart.ForEach(sci => sci.CustomerId = customer.Id);
-
-            _discountService.Setup(ds => ds.GetAllDiscountsForCaching(DiscountType.AssignedToCategories, null, null, false)).Returns(new List<DiscountForCaching>());
-            _discountService.Setup(ds => ds.GetAllDiscountsForCaching(DiscountType.AssignedToManufacturers, null, null, false)).Returns(new List<DiscountForCaching>());
 
             //10% - default tax rate
             _orderTotalCalcService.GetShoppingCartSubTotal(cart, false,
@@ -269,9 +266,6 @@ namespace Nop.Services.Tests.Orders
             cart.ForEach(sci => sci.Customer = customer);
             cart.ForEach(sci => sci.CustomerId = customer.Id);
 
-            _discountService.Setup(ds => ds.GetAllDiscountsForCaching(DiscountType.AssignedToCategories, null, null, false)).Returns(new List<DiscountForCaching>());
-            _discountService.Setup(ds => ds.GetAllDiscountsForCaching(DiscountType.AssignedToManufacturers, null, null, false)).Returns(new List<DiscountForCaching>());
-            
             _orderTotalCalcService.GetShoppingCartSubTotal(cart, true,
                 out var discountAmount, out var appliedDiscounts,
                 out var subTotalWithoutDiscount, out var subTotalWithDiscount, out var taxRates);
@@ -324,19 +318,7 @@ namespace Nop.Services.Tests.Orders
             cart.ForEach(sci => sci.Customer = customer);
             cart.ForEach(sci => sci.CustomerId = customer.Id);
             
-            //discounts
-            var discount1 = new DiscountForCaching
-            {
-                Id = 1,
-                Name = "Discount 1",
-                DiscountType = DiscountType.AssignedToOrderSubTotal,
-                DiscountAmount = 3,
-                DiscountLimitation = DiscountLimitationType.Unlimited
-            };
-            _discountService.Setup(ds => ds.ValidateDiscount(discount1, customer)).Returns(new DiscountValidationResult { IsValid = true });
-            _discountService.Setup(ds => ds.GetAllDiscountsForCaching(DiscountType.AssignedToOrderSubTotal, null, null, false)).Returns(new List<DiscountForCaching> { discount1 });
-            _discountService.Setup(ds => ds.GetAllDiscountsForCaching(DiscountType.AssignedToCategories, null, null, false)).Returns(new List<DiscountForCaching>());
-            _discountService.Setup(ds => ds.GetAllDiscountsForCaching(DiscountType.AssignedToManufacturers, null, null, false)).Returns(new List<DiscountForCaching>());
+            (_discountService as TestDiscountService)?.AddDiscount(DiscountType.AssignedToOrderSubTotal);
 
             //10% - default tax rate
             _orderTotalCalcService.GetShoppingCartSubTotal(cart, false,
@@ -392,19 +374,7 @@ namespace Nop.Services.Tests.Orders
             cart.ForEach(sci => sci.Customer = customer);
             cart.ForEach(sci => sci.CustomerId = customer.Id);
 
-            //discounts
-            var discount1 = new DiscountForCaching
-            {
-                Id = 1,
-                Name = "Discount 1",
-                DiscountType = DiscountType.AssignedToOrderSubTotal,
-                DiscountAmount = 3,
-                DiscountLimitation = DiscountLimitationType.Unlimited
-            };
-            _discountService.Setup(ds => ds.ValidateDiscount(discount1, customer)).Returns(new DiscountValidationResult { IsValid = true });
-            _discountService.Setup(ds => ds.GetAllDiscountsForCaching(DiscountType.AssignedToOrderSubTotal, null, null, false)).Returns(new List<DiscountForCaching> { discount1 });
-            _discountService.Setup(ds => ds.GetAllDiscountsForCaching(DiscountType.AssignedToCategories, null, null, false)).Returns(new List<DiscountForCaching>());
-            _discountService.Setup(ds => ds.GetAllDiscountsForCaching(DiscountType.AssignedToManufacturers, null, null, false)).Returns(new List<DiscountForCaching>());
+            (_discountService as TestDiscountService)?.AddDiscount(DiscountType.AssignedToOrderSubTotal);
 
             _orderTotalCalcService.GetShoppingCartSubTotal(cart, true,
                 out var discountAmount, out var appliedDiscounts,
@@ -422,9 +392,7 @@ namespace Nop.Services.Tests.Orders
             taxRates.ContainsKey(10).ShouldBeTrue();
             taxRates[10].ShouldEqual(8.639);
         }
-
-
-
+        
         [Test]
         public void Can_get_shoppingCartItem_additional_shippingCharge()
         {
@@ -791,18 +759,8 @@ namespace Nop.Services.Tests.Orders
             var customer = new Customer();
             cart.ForEach(sci => sci.Customer = customer);
             cart.ForEach(sci => sci.CustomerId = customer.Id);
-
-            //discounts
-            var discount1 = new DiscountForCaching
-            {
-                Id = 1,
-                Name = "Discount 1",
-                DiscountType = DiscountType.AssignedToShipping,
-                DiscountAmount = 3,
-                DiscountLimitation = DiscountLimitationType.Unlimited
-            };
-            _discountService.Setup(ds => ds.ValidateDiscount(discount1, customer)).Returns(new DiscountValidationResult { IsValid = true });
-            _discountService.Setup(ds => ds.GetAllDiscountsForCaching(DiscountType.AssignedToShipping, null, null, false)).Returns(new List<DiscountForCaching> { discount1 });
+            
+            (_discountService as TestDiscountService)?.AddDiscount(DiscountType.AssignedToShipping);
             
             var shipping = _orderTotalCalcService.GetShoppingCartShippingTotal(cart, false, out var taxRate, out var appliedDiscounts);
             appliedDiscounts.Count.ShouldEqual(1);
@@ -870,18 +828,7 @@ namespace Nop.Services.Tests.Orders
             cart.ForEach(sci => sci.Customer = customer);
             cart.ForEach(sci => sci.CustomerId = customer.Id);
 
-            //discounts
-            var discount1 = new DiscountForCaching
-            {
-                Id = 1,
-                Name = "Discount 1",
-                DiscountType = DiscountType.AssignedToShipping,
-                DiscountAmount = 3,
-                DiscountLimitation = DiscountLimitationType.Unlimited
-            };
-            _discountService.Setup(ds => ds.ValidateDiscount(discount1, customer)).Returns(new DiscountValidationResult { IsValid = true });
-            _discountService.Setup(ds => ds.GetAllDiscountsForCaching(DiscountType.AssignedToShipping, null, null, false)).Returns(new List<DiscountForCaching> { discount1 });
-
+            (_discountService as TestDiscountService)?.AddDiscount(DiscountType.AssignedToShipping);
 
             var shipping = _orderTotalCalcService.GetShoppingCartShippingTotal(cart, true, out var taxRate, out var appliedDiscounts);
             appliedDiscounts.Count.ShouldEqual(1);
@@ -949,8 +896,8 @@ namespace Nop.Services.Tests.Orders
                                     }
                             });
             _paymentService.Setup(ps => ps.GetAdditionalHandlingFee(cart, "test1")).Returns(20);
-            _discountService.Setup(ds => ds.GetAllDiscountsForCaching(DiscountType.AssignedToCategories, null, null, false)).Returns(new List<DiscountForCaching>());
-            _discountService.Setup(ds => ds.GetAllDiscountsForCaching(DiscountType.AssignedToManufacturers, null, null, false)).Returns(new List<DiscountForCaching>());
+            //_discountService.Setup(ds => ds.GetAllDiscountsForCaching(DiscountType.AssignedToCategories, null, null, false)).Returns(new List<DiscountForCaching>());
+            //_discountService.Setup(ds => ds.GetAllDiscountsForCaching(DiscountType.AssignedToManufacturers, null, null, false)).Returns(new List<DiscountForCaching>());
 
             //56 - items, 10 - shipping (fixed), 20 - payment fee
 
@@ -1048,10 +995,6 @@ namespace Nop.Services.Tests.Orders
                             });
             _paymentService.Setup(ps => ps.GetAdditionalHandlingFee(cart, "test1")).Returns(20);
 
-            _discountService.Setup(ds => ds.GetAllDiscountsForCaching(DiscountType.AssignedToCategories, null, null, false)).Returns(new List<DiscountForCaching>());
-            _discountService.Setup(ds => ds.GetAllDiscountsForCaching(DiscountType.AssignedToManufacturers, null, null, false)).Returns(new List<DiscountForCaching>());
-
-            
             //shipping is taxable, payment fee is taxable
             _taxSettings.ShippingIsTaxable = true;
             _taxSettings.PaymentMethodAdditionalFeeIsTaxable = true;
@@ -1118,9 +1061,6 @@ namespace Nop.Services.Tests.Orders
                             });
             _paymentService.Setup(ps => ps.GetAdditionalHandlingFee(cart, "test1")).Returns(20);
 
-            _discountService.Setup(ds => ds.GetAllDiscountsForCaching(DiscountType.AssignedToCategories, null, null, false)).Returns(new List<DiscountForCaching>());
-            _discountService.Setup(ds => ds.GetAllDiscountsForCaching(DiscountType.AssignedToManufacturers, null, null, false)).Returns(new List<DiscountForCaching>());
-            
             //shipping is taxable, payment fee is taxable
             _taxSettings.ShippingIsTaxable = true;
             _taxSettings.PaymentMethodAdditionalFeeIsTaxable = true;
@@ -1268,33 +1208,22 @@ namespace Nop.Services.Tests.Orders
             cart.ForEach(sci => sci.Customer = customer);
             cart.ForEach(sci => sci.CustomerId = customer.Id);
 
-            //discounts
-            var discount1 = new DiscountForCaching
-            {
-                Id = 1,
-                Name = "Discount 1",
-                DiscountType = DiscountType.AssignedToOrderTotal,
-                DiscountAmount = 3,
-                DiscountLimitation = DiscountLimitationType.Unlimited
-            };
-            _discountService.Setup(ds => ds.ValidateDiscount(discount1, customer)).Returns(new DiscountValidationResult { IsValid = true });
-            _discountService.Setup(ds => ds.GetAllDiscountsForCaching(DiscountType.AssignedToOrderTotal, null, null, false)).Returns(new List<DiscountForCaching> { discount1 });
-            _discountService.Setup(ds => ds.GetAllDiscountsForCaching(DiscountType.AssignedToCategories, null, null, false)).Returns(new List<DiscountForCaching>());
-            _discountService.Setup(ds => ds.GetAllDiscountsForCaching(DiscountType.AssignedToManufacturers, null, null, false)).Returns(new List<DiscountForCaching>());
+            (_discountService as TestDiscountService)?.AddDiscount(DiscountType.AssignedToOrderTotal);
+            
+            _genericAttributeService.Setup(x =>
+                    x.GetAttribute<GenericAttribute>(It.IsAny<Customer>(), It.IsAny<string>(),
+                        It.IsAny<int>()))
+                .Returns(
+                    new GenericAttribute
+                    {
+                        StoreId = _store.Id,
+                        EntityId = customer.Id,
+                        Key = NopCustomerDefaults.SelectedPaymentMethodAttribute,
+                        KeyGroup = "Customer",
+                        Value = "test1"
+                    }
+                );
 
-
-            _genericAttributeService.Setup(x => x.GetAttributesForEntity(customer.Id, "Customer"))
-                .Returns(new List<GenericAttribute>
-                            {
-                                new GenericAttribute
-                                    {
-                                        StoreId = _store.Id,
-                                        EntityId = customer.Id,
-                                        Key = NopCustomerDefaults.SelectedPaymentMethodAttribute,
-                                        KeyGroup = "Customer",
-                                        Value = "test1"
-                                    }
-                            });
             _paymentService.Setup(ps => ps.GetAdditionalHandlingFee(cart, "test1")).Returns(20);
             
             //shipping is taxable, payment fee is taxable
