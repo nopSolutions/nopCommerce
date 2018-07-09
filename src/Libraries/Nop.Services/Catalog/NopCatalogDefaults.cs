@@ -320,6 +320,36 @@ namespace Nop.Services.Catalog
 
         #endregion
 
+        #region Review type
+
+        /// <summary>
+        /// Key for caching all review types
+        /// </summary>
+        public static string ReviewTypeAllKey => "Nop.reviewType.all";
+
+        /// <summary>
+        /// Key for caching review type
+        /// </summary>
+        /// <remarks>
+        /// {0} : review type ID
+        /// </remarks>
+        public static string ReviewTypeByIdKey => "Nop.reviewType.id-{0}";
+
+        /// <summary>
+        /// Key pattern to clear cache review types
+        /// </summary>
+        public static string ReviewTypeByPatternKey => "Nop.reviewType.";
+
+        /// <summary>
+        /// Key for caching product review and review type mapping
+        /// </summary>
+        /// <remarks>
+        /// {0} : product review ID
+        /// </remarks>
+        public static string ProductReviewReviewTypeMappingAllKey => "Nop.productReviewReviewTypeMapping.all-{0}";
+
+        #endregion
+
         #region Specification attributes
 
         /// <summary>
