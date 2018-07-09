@@ -10,9 +10,6 @@ namespace Nop.Services.Payments
     [Serializable]
     public partial class ProcessPaymentRequest
     {
-        /// <summary>
-        /// Ctor
-        /// </summary>
         public ProcessPaymentRequest()
         {
             this.CustomValues = new Dictionary<string, object>();
@@ -85,7 +82,7 @@ namespace Nop.Services.Payments
         /// Gets or sets an initial (parent) order identifier if order is recurring
         /// </summary>
         public int InitialOrderId { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the cycle length
         /// </summary>

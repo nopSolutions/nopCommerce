@@ -24,70 +24,54 @@ namespace Nop.Services.Tax
     {
         #region Fields
 
-        private readonly IAddressService _addressService;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly IWorkContext _workContext;
-        private readonly IStoreContext _storeContext;
-        private readonly TaxSettings _taxSettings;
-        private readonly IPluginFinder _pluginFinder;
-        private readonly IGeoLookupService _geoLookupService;
-        private readonly ICountryService _countryService;
-        private readonly IStateProvinceService _stateProvinceService;
-        private readonly ILogger _logger;
-        private readonly IWebHelper _webHelper;
-        private readonly CustomerSettings _customerSettings;
-        private readonly ShippingSettings _shippingSettings;
         private readonly AddressSettings _addressSettings;
+        private readonly CustomerSettings _customerSettings;
+        private readonly IAddressService _addressService;
+        private readonly ICountryService _countryService;
+        private readonly IGenericAttributeService _genericAttributeService;
+        private readonly IGeoLookupService _geoLookupService;
+        private readonly ILogger _logger;
+        private readonly IPluginFinder _pluginFinder;
+        private readonly IStateProvinceService _stateProvinceService;
+        private readonly IStoreContext _storeContext;
+        private readonly IWebHelper _webHelper;
+        private readonly IWorkContext _workContext;
+        private readonly ShippingSettings _shippingSettings;
+        private readonly TaxSettings _taxSettings;
 
         #endregion
 
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="addressService">Address service</param>
-        /// <param name="workContext">Work context</param>
-        /// <param name="storeContext">Store context</param>
-        /// <param name="taxSettings">Tax settings</param>
-        /// <param name="pluginFinder">Plugin finder</param>
-        /// <param name="geoLookupService">GEO lookup service</param>
-        /// <param name="countryService">Country service</param>
-        /// <param name="stateProvinceService">State province service</param>
-        /// <param name="logger">Logger service</param>
-        /// <param name="webHelper">Web helper</param>
-        /// <param name="customerSettings">Customer settings</param>
-        /// <param name="shippingSettings">Shipping settings</param>
-        /// <param name="addressSettings">Address settings</param>
-        public TaxService(IAddressService addressService,
-            IGenericAttributeService genericAttributeService,
-            IWorkContext workContext,
-            IStoreContext storeContext,
-            TaxSettings taxSettings,
-            IPluginFinder pluginFinder,
-            IGeoLookupService geoLookupService,
-            ICountryService countryService,
-            IStateProvinceService stateProvinceService,
-            ILogger logger,
-            IWebHelper webHelper,
+        public TaxService(AddressSettings addressSettings,
             CustomerSettings customerSettings,
+            IAddressService addressService,
+            ICountryService countryService,
+            IGenericAttributeService genericAttributeService,
+            IGeoLookupService geoLookupService,
+            ILogger logger,
+            IPluginFinder pluginFinder,
+            IStateProvinceService stateProvinceService,
+            IStoreContext storeContext,
+            IWebHelper webHelper,
+            IWorkContext workContext,
             ShippingSettings shippingSettings,
-            AddressSettings addressSettings)
+            TaxSettings taxSettings)
         {
-            this._addressService = addressService;
-            this._genericAttributeService = genericAttributeService;
-            this._workContext = workContext;
-            this._storeContext = storeContext;
-            this._taxSettings = taxSettings;
-            this._pluginFinder = pluginFinder;
-            this._geoLookupService = geoLookupService;
-            this._countryService = countryService;
-            this._stateProvinceService = stateProvinceService;
-            this._logger = logger;
-            this._webHelper = webHelper;
-            this._customerSettings = customerSettings;
-            this._shippingSettings = shippingSettings;
             this._addressSettings = addressSettings;
+            this._customerSettings = customerSettings;
+            this._addressService = addressService;
+            this._countryService = countryService;
+            this._genericAttributeService = genericAttributeService;
+            this._geoLookupService = geoLookupService;
+            this._logger = logger;
+            this._pluginFinder = pluginFinder;
+            this._stateProvinceService = stateProvinceService;
+            this._storeContext = storeContext;
+            this._webHelper = webHelper;
+            this._workContext = workContext;
+            this._shippingSettings = shippingSettings;
+            this._taxSettings = taxSettings;
         }
 
         #endregion

@@ -27,15 +27,7 @@ namespace Nop.Services.Blogs
 
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="catalogSettings">Catalog settings</param>
-        /// <param name="eventPublisher">Event publisher</param>
-        /// <param name="blogCommentRepository">Blog comment repository</param>
-        /// <param name="blogPostRepository">Blog post repository</param>
-        /// <param name="storeMappingRepository">Store mapping repository</param>
-        public BlogService(CatalogSettings catalogSettings, 
+        public BlogService(CatalogSettings catalogSettings,
             IEventPublisher eventPublisher,
             IRepository<BlogComment> blogCommentRepository,
             IRepository<BlogPost> blogPostRepository,
@@ -130,12 +122,12 @@ namespace Nop.Services.Blogs
                         from sm in bp_sm.DefaultIfEmpty()
                         where !bp.LimitedToStores || storeId == sm.StoreId
                         select bp;
-                
+
                 query = query.Distinct();
             }
 
             query = query.OrderByDescending(b => b.StartDateUtc ?? b.CreatedOnUtc);
-            
+
             var blogPosts = new PagedList<BlogPost>(query, pageIndex, pageSize);
             return blogPosts;
         }

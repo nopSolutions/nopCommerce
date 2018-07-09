@@ -20,27 +20,21 @@ namespace Nop.Services.Configuration
     {
         #region Fields
 
-        private readonly IRepository<Setting> _settingRepository;
         private readonly IEventPublisher _eventPublisher;
+        private readonly IRepository<Setting> _settingRepository;
         private readonly IStaticCacheManager _cacheManager;
 
         #endregion
 
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="cacheManager">Static cache manager</param>
-        /// <param name="eventPublisher">Event publisher</param>
-        /// <param name="settingRepository">Setting repository</param>
-        public SettingService(IStaticCacheManager cacheManager,
-            IEventPublisher eventPublisher,
-            IRepository<Setting> settingRepository)
+        public SettingService(IEventPublisher eventPublisher,
+            IRepository<Setting> settingRepository,
+            IStaticCacheManager cacheManager)
         {
-            this._cacheManager = cacheManager;
             this._eventPublisher = eventPublisher;
             this._settingRepository = settingRepository;
+            this._cacheManager = cacheManager;
         }
 
         #endregion

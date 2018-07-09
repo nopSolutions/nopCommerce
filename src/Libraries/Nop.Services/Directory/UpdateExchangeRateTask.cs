@@ -9,20 +9,25 @@ namespace Nop.Services.Directory
     /// </summary>
     public partial class UpdateExchangeRateTask : IScheduleTask
     {
-        private readonly ICurrencyService _currencyService;
-        private readonly CurrencySettings _currencySettings;
+        #region Fields
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="currencyService">Currency service</param>
-        /// <param name="currencySettings">Currency settings</param>
-        public UpdateExchangeRateTask(ICurrencyService currencyService,
-            CurrencySettings currencySettings)
+        private readonly CurrencySettings _currencySettings;
+        private readonly ICurrencyService _currencyService;
+
+        #endregion
+
+        #region Ctor
+
+        public UpdateExchangeRateTask(CurrencySettings currencySettings,
+            ICurrencyService currencyService)
         {
-            this._currencyService = currencyService;
             this._currencySettings = currencySettings;
+            this._currencyService = currencyService;
         }
+
+        #endregion
+
+        #region Methods
 
         /// <summary>
         /// Executes a task
@@ -46,5 +51,7 @@ namespace Nop.Services.Directory
                 }
             }
         }
+
+        #endregion
     }
 }

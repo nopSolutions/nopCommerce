@@ -21,11 +21,6 @@ namespace Nop.Services.Vendors
 
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="localizationService">Localization service</param>
-        /// <param name="vendorAttributeService">Vendor attribute service</param>
         public VendorAttributeParser(ILocalizationService localizationService,
             IVendorAttributeService vendorAttributeService)
         {

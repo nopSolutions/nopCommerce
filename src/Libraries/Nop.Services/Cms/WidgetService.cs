@@ -21,11 +21,6 @@ namespace Nop.Services.Cms
 
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="pluginFinder">Plugin finder</param>
-        /// <param name="widgetSettings">Widget settings</param>
         public WidgetService(IPluginFinder pluginFinder,
             WidgetSettings widgetSettings)
         {

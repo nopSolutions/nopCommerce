@@ -34,62 +34,48 @@ namespace Nop.Services.Media
     {
         #region Fields
 
-        private readonly IRepository<Picture> _pictureRepository;
-        private readonly IRepository<ProductPicture> _productPictureRepository;
-        private readonly IProductAttributeParser _productAttributeParser;
-        private readonly ISettingService _settingService;
-        private readonly IWebHelper _webHelper;
+        private readonly IDataProvider _dataProvider;
         private readonly IDbContext _dbContext;
         private readonly IEventPublisher _eventPublisher;
-        private readonly MediaSettings _mediaSettings;
-        private readonly IDataProvider _dataProvider;
         private readonly INopFileProvider _fileProvider;
+        private readonly IProductAttributeParser _productAttributeParser;
+        private readonly IRepository<Picture> _pictureRepository;
         private readonly IRepository<PictureBinary> _pictureBinaryRepository;
+        private readonly IRepository<ProductPicture> _productPictureRepository;
+        private readonly ISettingService _settingService;
         private readonly IUrlRecordService _urlRecordService;
+        private readonly IWebHelper _webHelper;
+        private readonly MediaSettings _mediaSettings;
 
         #endregion
 
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="pictureRepository">Picture repository</param>
-        /// <param name="productPictureRepository">Product picture repository</param>
-        /// <param name="productAttributeParser">Product attribute parser</param>
-        /// <param name="settingService">Setting service</param>
-        /// <param name="webHelper">Web helper</param>
-        /// <param name="dbContext">Database context</param>
-        /// <param name="eventPublisher">Event publisher</param>
-        /// <param name="mediaSettings">Media settings</param>
-        /// <param name="dataProvider">Data provider</param>
-        /// <param name="fileProvider">File provider</param>
-        /// <param name="pictureBinaryRepository">PictureBinary repository</param>
-        public PictureService(IRepository<Picture> pictureRepository,
-            IRepository<ProductPicture> productPictureRepository,
-            IProductAttributeParser productAttributeParser,
-            ISettingService settingService,
-            IWebHelper webHelper,
+        public PictureService(IDataProvider dataProvider,
             IDbContext dbContext,
             IEventPublisher eventPublisher,
-            MediaSettings mediaSettings,
-            IDataProvider dataProvider,
             INopFileProvider fileProvider,
+            IProductAttributeParser productAttributeParser,
+            IRepository<Picture> pictureRepository,
             IRepository<PictureBinary> pictureBinaryRepository,
-            IUrlRecordService urlRecordService)
+            IRepository<ProductPicture> productPictureRepository,
+            ISettingService settingService,
+            IUrlRecordService urlRecordService,
+            IWebHelper webHelper,
+            MediaSettings mediaSettings)
         {
-            this._pictureRepository = pictureRepository;
-            this._productPictureRepository = productPictureRepository;
-            this._productAttributeParser = productAttributeParser;
-            this._settingService = settingService;
-            this._webHelper = webHelper;
+            this._dataProvider = dataProvider;
             this._dbContext = dbContext;
             this._eventPublisher = eventPublisher;
-            this._mediaSettings = mediaSettings;
-            this._dataProvider = dataProvider;
             this._fileProvider = fileProvider;
+            this._productAttributeParser = productAttributeParser;
+            this._pictureRepository = pictureRepository;
             this._pictureBinaryRepository = pictureBinaryRepository;
+            this._productPictureRepository = productPictureRepository;
+            this._settingService = settingService;
             this._urlRecordService = urlRecordService;
+            this._webHelper = webHelper;
+            this._mediaSettings = mediaSettings;
         }
 
         #endregion

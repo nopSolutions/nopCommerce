@@ -75,9 +75,6 @@ namespace Nop.Services.Catalog
         [Serializable]
         protected class ProductPriceForCaching
         {
-            /// <summary>
-            /// Ctor
-            /// </summary>
             public ProductPriceForCaching()
             {
                 this.AppliedDiscounts = new List<DiscountForCaching>();

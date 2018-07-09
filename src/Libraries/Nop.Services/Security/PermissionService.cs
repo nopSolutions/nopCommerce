@@ -18,33 +18,33 @@ namespace Nop.Services.Security
     {
         #region Fields
 
+        private readonly ICacheManager _cacheManager;
+        private readonly ICustomerService _customerService;
+        private readonly ILocalizationService _localizationService;
         private readonly IRepository<PermissionRecord> _permissionRecordRepository;
         private readonly IRepository<PermissionRecordCustomerRoleMapping> _permissionRecordCustomerRoleMappingRepository;
-        private readonly ICustomerService _customerService;
-        private readonly IWorkContext _workContext;
-        private readonly ILocalizationService _localizationService;
-        private readonly ICacheManager _cacheManager;
         private readonly IStaticCacheManager _staticCacheManager;
+        private readonly IWorkContext _workContext;
 
         #endregion
 
         #region Ctor
 
-        public PermissionService(IRepository<PermissionRecord> permissionRecordRepository,
-            IRepository<PermissionRecordCustomerRoleMapping> permissionRecordCustomerRoleMappingRepository,
+        public PermissionService(ICacheManager cacheManager,
             ICustomerService customerService,
-            IWorkContext workContext,
             ILocalizationService localizationService,
-            ICacheManager cacheManager,
-            IStaticCacheManager staticCacheManager)
+            IRepository<PermissionRecord> permissionRecordRepository,
+            IRepository<PermissionRecordCustomerRoleMapping> permissionRecordCustomerRoleMappingRepository,
+            IStaticCacheManager staticCacheManager,
+            IWorkContext workContext)
         {
+            this._cacheManager = cacheManager;
+            this._customerService = customerService;
+            this._localizationService = localizationService;
             this._permissionRecordRepository = permissionRecordRepository;
             this._permissionRecordCustomerRoleMappingRepository = permissionRecordCustomerRoleMappingRepository;
-            this._customerService = customerService;
-            this._workContext = workContext;
-            this._localizationService = localizationService;
-            this._cacheManager = cacheManager;
             this._staticCacheManager = staticCacheManager;
+            this._workContext = workContext;
         }
 
         #endregion

@@ -49,102 +49,102 @@ namespace Nop.Services.ExportImport
 
         #region Fields
 
-        private readonly IServiceScopeFactory _serviceScopeFactory;
-        private readonly IProductService _productService;
-        private readonly IProductAttributeService _productAttributeService;
-        private readonly ICategoryService _categoryService;
-        private readonly IManufacturerService _manufacturerService;
-        private readonly IPictureService _pictureService;
-        private readonly IUrlRecordService _urlRecordService;
-        private readonly IStoreContext _storeContext;
-        private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
-        private readonly ICountryService _countryService;
-        private readonly IStateProvinceService _stateProvinceService;
-        private readonly IEncryptionService _encryptionService;
-        private readonly IDataProvider _dataProvider;
-        private readonly MediaSettings _mediaSettings;
-        private readonly IVendorService _vendorService;
-        private readonly IProductTemplateService _productTemplateService;
-        private readonly IShippingService _shippingService;
-        private readonly IDateRangeService _dateRangeService;
-        private readonly ITaxCategoryService _taxCategoryService;
-        private readonly IMeasureService _measureService;
         private readonly CatalogSettings _catalogSettings;
-        private readonly IProductTagService _productTagService;
-        private readonly IWorkContext _workContext;
-        private readonly ILocalizationService _localizationService;
+        private readonly ICategoryService _categoryService;
+        private readonly ICountryService _countryService;
         private readonly ICustomerActivityService _customerActivityService;
-        private readonly VendorSettings _vendorSettings;
-        private readonly ISpecificationAttributeService _specificationAttributeService;
+        private readonly IDataProvider _dataProvider;
+        private readonly IDateRangeService _dateRangeService;
+        private readonly IEncryptionService _encryptionService;
+        private readonly ILocalizationService _localizationService;
         private readonly ILogger _logger;
-        private readonly IStoreMappingService _storeMappingService;
+        private readonly IManufacturerService _manufacturerService;
+        private readonly IMeasureService _measureService;
+        private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
         private readonly INopFileProvider _fileProvider;
+        private readonly IPictureService _pictureService;
+        private readonly IProductAttributeService _productAttributeService;
+        private readonly IProductService _productService;
+        private readonly IProductTagService _productTagService;
+        private readonly IProductTemplateService _productTemplateService;
+        private readonly IServiceScopeFactory _serviceScopeFactory;
+        private readonly IShippingService _shippingService;
+        private readonly ISpecificationAttributeService _specificationAttributeService;
+        private readonly IStateProvinceService _stateProvinceService;
+        private readonly IStoreContext _storeContext;
+        private readonly IStoreMappingService _storeMappingService;
+        private readonly ITaxCategoryService _taxCategoryService;
+        private readonly IUrlRecordService _urlRecordService;
+        private readonly IVendorService _vendorService;
+        private readonly IWorkContext _workContext;
+        private readonly MediaSettings _mediaSettings;
+        private readonly VendorSettings _vendorSettings;
 
         #endregion
 
         #region Ctor
 
-        public ImportManager(IProductService productService,
+        public ImportManager(CatalogSettings catalogSettings,
             ICategoryService categoryService,
-            IManufacturerService manufacturerService,
-            IPictureService pictureService,
-            IUrlRecordService urlRecordService,
-            IStoreContext storeContext,
-            INewsLetterSubscriptionService newsLetterSubscriptionService,
             ICountryService countryService,
-            IStateProvinceService stateProvinceService,
-            IEncryptionService encryptionService,
-            IDataProvider dataProvider,
-            MediaSettings mediaSettings,
-            IVendorService vendorService,
-            IProductTemplateService productTemplateService,
-            IShippingService shippingService,
-            IDateRangeService dateRangeService,
-            ITaxCategoryService taxCategoryService,
-            IMeasureService measureService,
-            IProductAttributeService productAttributeService,
-            CatalogSettings catalogSettings,
-            IProductTagService productTagService,
-            IWorkContext workContext,
-            ILocalizationService localizationService,
             ICustomerActivityService customerActivityService,
-            VendorSettings vendorSettings,
-            ISpecificationAttributeService specificationAttributeService,
+            IDataProvider dataProvider,
+            IDateRangeService dateRangeService,
+            IEncryptionService encryptionService,
+            ILocalizationService localizationService,
             ILogger logger,
+            IManufacturerService manufacturerService,
+            IMeasureService measureService,
+            INewsLetterSubscriptionService newsLetterSubscriptionService,
+            INopFileProvider fileProvider,
+            IPictureService pictureService,
+            IProductAttributeService productAttributeService,
+            IProductService productService,
+            IProductTagService productTagService,
+            IProductTemplateService productTemplateService,
             IServiceScopeFactory serviceScopeFactory,
+            IShippingService shippingService,
+            ISpecificationAttributeService specificationAttributeService,
+            IStateProvinceService stateProvinceService,
+            IStoreContext storeContext,
             IStoreMappingService storeMappingService,
-            INopFileProvider fileProvider)
+            ITaxCategoryService taxCategoryService,
+            IUrlRecordService urlRecordService,
+            IVendorService vendorService,
+            IWorkContext workContext,
+            MediaSettings mediaSettings,
+            VendorSettings vendorSettings)
         {
-            this._productService = productService;
-            this._categoryService = categoryService;
-            this._manufacturerService = manufacturerService;
-            this._pictureService = pictureService;
-            this._urlRecordService = urlRecordService;
-            this._storeContext = storeContext;
-            this._newsLetterSubscriptionService = newsLetterSubscriptionService;
-            this._countryService = countryService;
-            this._stateProvinceService = stateProvinceService;
-            this._encryptionService = encryptionService;
-            this._dataProvider = dataProvider;
-            this._mediaSettings = mediaSettings;
-            this._vendorService = vendorService;
-            this._productTemplateService = productTemplateService;
-            this._shippingService = shippingService;
-            this._dateRangeService = dateRangeService;
-            this._taxCategoryService = taxCategoryService;
-            this._measureService = measureService;
-            this._productAttributeService = productAttributeService;
             this._catalogSettings = catalogSettings;
-            this._productTagService = productTagService;
-            this._workContext = workContext;
-            this._localizationService = localizationService;
+            this._categoryService = categoryService;
+            this._countryService = countryService;
             this._customerActivityService = customerActivityService;
-            this._vendorSettings = vendorSettings;
-            this._specificationAttributeService = specificationAttributeService;
-            this._logger = logger;
-            this._serviceScopeFactory = serviceScopeFactory;
-            this._storeMappingService = storeMappingService;
+            this._dataProvider = dataProvider;
+            this._dateRangeService = dateRangeService;
+            this._encryptionService = encryptionService;
             this._fileProvider = fileProvider;
+            this._localizationService = localizationService;
+            this._logger = logger;
+            this._manufacturerService = manufacturerService;
+            this._measureService = measureService;
+            this._newsLetterSubscriptionService = newsLetterSubscriptionService;
+            this._pictureService = pictureService;
+            this._productAttributeService = productAttributeService;
+            this._productService = productService;
+            this._productTagService = productTagService;
+            this._productTemplateService = productTemplateService;
+            this._serviceScopeFactory = serviceScopeFactory;
+            this._shippingService = shippingService;
+            this._specificationAttributeService = specificationAttributeService;
+            this._stateProvinceService = stateProvinceService;
+            this._storeContext = storeContext;
+            this._storeMappingService = storeMappingService;
+            this._taxCategoryService = taxCategoryService;
+            this._urlRecordService = urlRecordService;
+            this._vendorService = vendorService;
+            this._workContext = workContext;
+            this._mediaSettings = mediaSettings;
+            this._vendorSettings = vendorSettings;
         }
 
         #endregion

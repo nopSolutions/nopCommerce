@@ -15,8 +15,9 @@ namespace Nop.Services.Themes
     {
         #region Fields
 
-        private IList<ThemeDescriptor> _themeDescriptors;
         private readonly INopFileProvider _fileProvider;
+
+        private IList<ThemeDescriptor> _themeDescriptors;
 
         #endregion
 

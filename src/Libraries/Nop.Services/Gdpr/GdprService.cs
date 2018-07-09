@@ -47,24 +47,6 @@ namespace Nop.Services.Gdpr
 
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="addressService">Address service</param>
-        /// <param name="backInStockSubscriptionService">Back in stock subscription service</param>
-        /// <param name="blogService">Blog service</param>
-        /// <param name="customerService">Customer service</param>
-        /// <param name="externalAuthenticationService">External authentication service</param>
-        /// <param name="eventPublisher">Event publisher</param>
-        /// <param name="forumService">Forum service</param>
-        /// <param name="genericAttributeService">Generic attribute service</param>
-        /// <param name="newsService">News service</param>
-        /// <param name="newsLetterSubscriptionService">NewsLetter subscription service</param>
-        /// <param name="productService">Product service</param>
-        /// <param name="gdprConsentRepository">GDPR consent repository</param>
-        /// <param name="gdprLogRepository">GDPR log repository</param>
-        /// <param name="shoppingCartService">Shopping cart service</param>
-        /// <param name="storeService">Store service</param>
         public GdprService(IAddressService addressService,
             IBackInStockSubscriptionService backInStockSubscriptionService,
             IBlogService blogService,

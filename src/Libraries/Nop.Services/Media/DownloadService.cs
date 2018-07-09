@@ -18,23 +18,18 @@ namespace Nop.Services.Media
     {
         #region Fields
 
-        private readonly IRepository<Download> _downloadRepository;
         private readonly IEventPublisher _eventPubisher;
+        private readonly IRepository<Download> _downloadRepository;
 
         #endregion
 
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="downloadRepository">Download repository</param>
-        /// <param name="eventPubisher"></param>
-        public DownloadService(IRepository<Download> downloadRepository,
-            IEventPublisher eventPubisher)
+        public DownloadService(IEventPublisher eventPubisher,
+            IRepository<Download> downloadRepository)
         {
-            _downloadRepository = downloadRepository;
             _eventPubisher = eventPubisher;
+            _downloadRepository = downloadRepository;
         }
 
         #endregion

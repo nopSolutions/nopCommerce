@@ -23,80 +23,62 @@ namespace Nop.Services.Forums
     {
         #region Fields
 
-        private readonly IRepository<ForumGroup> _forumGroupRepository;
+        private readonly ForumSettings _forumSettings;
+        private readonly ICacheManager _cacheManager;
+        private readonly ICustomerService _customerService;
+        private readonly IEventPublisher _eventPublisher;
+        private readonly IGenericAttributeService _genericAttributeService;
+        private readonly IRepository<Customer> _customerRepository;
         private readonly IRepository<Forum> _forumRepository;
-        private readonly IRepository<ForumTopic> _forumTopicRepository;
+        private readonly IRepository<ForumGroup> _forumGroupRepository;
         private readonly IRepository<ForumPost> _forumPostRepository;
         private readonly IRepository<ForumPostVote> _forumPostVoteRepository;
-        private readonly IRepository<PrivateMessage> _forumPrivateMessageRepository;
         private readonly IRepository<ForumSubscription> _forumSubscriptionRepository;
-        private readonly ForumSettings _forumSettings;
-        private readonly IRepository<Customer> _customerRepository;
-        private readonly ICacheManager _cacheManager;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly ICustomerService _customerService;
+        private readonly IRepository<ForumTopic> _forumTopicRepository;
+        private readonly IRepository<PrivateMessage> _forumPrivateMessageRepository;
+        private readonly IUrlRecordService _urlRecordService;
         private readonly IWorkContext _workContext;
         private readonly IWorkflowMessageService _workflowMessageService;
-        private readonly IEventPublisher _eventPublisher;
-        private readonly IUrlRecordService _urlRecordService;
         private readonly SeoSettings _seoSettings;
 
         #endregion
 
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="cacheManager">Cache manager</param>
-        /// <param name="forumGroupRepository">Forum group repository</param>
-        /// <param name="forumRepository">Forum repository</param>
-        /// <param name="forumTopicRepository">Forum topic repository</param>
-        /// <param name="forumPostRepository">Forum post repository</param>
-        /// <param name="forumPostVoteRepository">Forum post vote repository</param>
-        /// <param name="forumPrivateMessageRepository">Private message repository</param>
-        /// <param name="forumSubscriptionRepository">Forum subscription repository</param>
-        /// <param name="forumSettings">Forum settings</param>
-        /// <param name="customerRepository">Customer repository</param>
-        /// <param name="genericAttributeService">Generic attribute service</param>
-        /// <param name="customerService">Customer service</param>
-        /// <param name="workContext">Work context</param>
-        /// <param name="workflowMessageService">Workflow message service</param>
-        /// <param name="eventPublisher">Event publisher</param>
-        public ForumService(ICacheManager cacheManager,
-            IRepository<ForumGroup> forumGroupRepository,
+        public ForumService(ForumSettings forumSettings,
+            ICacheManager cacheManager,
+            ICustomerService customerService,
+            IEventPublisher eventPublisher,
+            IGenericAttributeService genericAttributeService,
+            IRepository<Customer> customerRepository,
             IRepository<Forum> forumRepository,
-            IRepository<ForumTopic> forumTopicRepository,
+            IRepository<ForumGroup> forumGroupRepository,
             IRepository<ForumPost> forumPostRepository,
             IRepository<ForumPostVote> forumPostVoteRepository,
-            IRepository<PrivateMessage> forumPrivateMessageRepository,
             IRepository<ForumSubscription> forumSubscriptionRepository,
-            ForumSettings forumSettings,
-            IRepository<Customer> customerRepository,
-            IGenericAttributeService genericAttributeService,
-            ICustomerService customerService,
+            IRepository<ForumTopic> forumTopicRepository,
+            IRepository<PrivateMessage> forumPrivateMessageRepository,
+            IUrlRecordService urlRecordService,
             IWorkContext workContext,
             IWorkflowMessageService workflowMessageService,
-            IEventPublisher eventPublisher,
-            IUrlRecordService urlRecordService,
             SeoSettings seoSettings)
         {
+            this._forumSettings = forumSettings;
             this._cacheManager = cacheManager;
-            this._forumGroupRepository = forumGroupRepository;
+            this._customerService = customerService;
+            this._eventPublisher = eventPublisher;
+            this._genericAttributeService = genericAttributeService;
+            this._customerRepository = customerRepository;
             this._forumRepository = forumRepository;
-            this._forumTopicRepository = forumTopicRepository;
+            this._forumGroupRepository = forumGroupRepository;
             this._forumPostRepository = forumPostRepository;
             this._forumPostVoteRepository = forumPostVoteRepository;
-            this._forumPrivateMessageRepository = forumPrivateMessageRepository;
             this._forumSubscriptionRepository = forumSubscriptionRepository;
-            this._forumSettings = forumSettings;
-            this._customerRepository = customerRepository;
-            this._genericAttributeService = genericAttributeService;
-            this._customerService = customerService;
+            this._forumTopicRepository = forumTopicRepository;
+            this._forumPrivateMessageRepository = forumPrivateMessageRepository;
+            this._urlRecordService = urlRecordService;
             this._workContext = workContext;
             this._workflowMessageService = workflowMessageService;
-            this._eventPublisher = eventPublisher;
-            this._urlRecordService = urlRecordService;
             this._seoSettings = seoSettings;
         }
 

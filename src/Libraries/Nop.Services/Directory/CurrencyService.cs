@@ -19,39 +19,30 @@ namespace Nop.Services.Directory
     {
         #region Fields
 
-        private readonly IRepository<Currency> _currencyRepository;
-        private readonly IStoreMappingService _storeMappingService;
-        private readonly IStaticCacheManager _cacheManager;
         private readonly CurrencySettings _currencySettings;
-        private readonly IPluginFinder _pluginFinder;
         private readonly IEventPublisher _eventPublisher;
+        private readonly IPluginFinder _pluginFinder;
+        private readonly IRepository<Currency> _currencyRepository;
+        private readonly IStaticCacheManager _cacheManager;
+        private readonly IStoreMappingService _storeMappingService;
 
         #endregion
 
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="cacheManager">Cache manager</param>
-        /// <param name="currencyRepository">Currency repository</param>
-        /// <param name="storeMappingService">Store mapping service</param>
-        /// <param name="currencySettings">Currency settings</param>
-        /// <param name="pluginFinder">Plugin finder</param>
-        /// <param name="eventPublisher">Event publisher</param>
-        public CurrencyService(IStaticCacheManager cacheManager,
-            IRepository<Currency> currencyRepository,
-            IStoreMappingService storeMappingService,
-            CurrencySettings currencySettings,
+        public CurrencyService(CurrencySettings currencySettings,
+            IEventPublisher eventPublisher,
             IPluginFinder pluginFinder,
-            IEventPublisher eventPublisher)
+            IRepository<Currency> currencyRepository,
+            IStaticCacheManager cacheManager,
+            IStoreMappingService storeMappingService)
         {
-            this._cacheManager = cacheManager;
-            this._currencyRepository = currencyRepository;
-            this._storeMappingService = storeMappingService;
             this._currencySettings = currencySettings;
-            this._pluginFinder = pluginFinder;
             this._eventPublisher = eventPublisher;
+            this._pluginFinder = pluginFinder;
+            this._currencyRepository = currencyRepository;
+            this._cacheManager = cacheManager;
+            this._storeMappingService = storeMappingService;
         }
 
         #endregion
@@ -284,7 +275,7 @@ namespace Nop.Services.Directory
             if (primaryExchangeRateCurrency == null)
                 throw new Exception("Primary exchange rate currency cannot be loaded");
 
-            var result = amount; 
+            var result = amount;
             if (result != decimal.Zero && sourceCurrencyCode.Id != primaryExchangeRateCurrency.Id)
             {
                 var exchangeRate = sourceCurrencyCode.Rate;
@@ -351,7 +342,7 @@ namespace Nop.Services.Directory
         }
 
         #endregion
-        
+
         #region Exchange rate providers
 
         /// <summary>
@@ -393,7 +384,7 @@ namespace Nop.Services.Directory
 
             return exchangeRateProviders.OrderBy(tp => tp.PluginDescriptor).ToList();
         }
-        
+
         #endregion
 
         #endregion

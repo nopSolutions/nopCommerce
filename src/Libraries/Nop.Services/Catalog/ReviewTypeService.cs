@@ -15,31 +15,24 @@ namespace Nop.Services.Catalog
     {
         #region Fields
 
-        private readonly IRepository<ReviewType> _reviewTypeRepository;
-        private readonly IRepository<ProductReviewReviewTypeMapping> _productReviewReviewTypeMappingRepository;
         private readonly IEventPublisher _eventPublisher;
+        private readonly IRepository<ProductReviewReviewTypeMapping> _productReviewReviewTypeMappingRepository;
+        private readonly IRepository<ReviewType> _reviewTypeRepository;
         private readonly IStaticCacheManager _cacheManager;
 
         #endregion
 
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="cacheManager">Cache manager</param>
-        /// <param name="reviewTypeRepository">Review type repository</param>
-        /// <param name="productReviewReviewTypeMappingRepository">Product review and review type mapping repository</param>
-        /// <param name="eventPublisher">Event published</param>
-        public ReviewTypeService(IStaticCacheManager cacheManager,
-            IRepository<ReviewType> reviewTypeRepository,
+        public ReviewTypeService(IEventPublisher eventPublisher,
             IRepository<ProductReviewReviewTypeMapping> productReviewReviewTypeMappingRepository,
-            IEventPublisher eventPublisher)
+            IRepository<ReviewType> reviewTypeRepository,
+            IStaticCacheManager cacheManager)
         {
-            this._cacheManager = cacheManager;
-            this._reviewTypeRepository = reviewTypeRepository;
-            this._productReviewReviewTypeMappingRepository = productReviewReviewTypeMappingRepository;
             this._eventPublisher = eventPublisher;
+            this._productReviewReviewTypeMappingRepository = productReviewReviewTypeMappingRepository;
+            this._reviewTypeRepository = reviewTypeRepository;
+            this._cacheManager = cacheManager;
         }
 
         #endregion

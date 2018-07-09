@@ -18,34 +18,26 @@ namespace Nop.Services.Shipping
     {
         #region Fields
 
+        private readonly IEventPublisher _eventPublisher;
+        private readonly IRepository<OrderItem> _orderItemRepository;
         private readonly IRepository<Shipment> _shipmentRepository;
         private readonly IRepository<ShipmentItem> _siRepository;
-        private readonly IRepository<OrderItem> _orderItemRepository;
-        private readonly IEventPublisher _eventPublisher;
         private readonly IShippingService _shippingService;
 
         #endregion
 
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="shipmentRepository">Shipment repository</param>
-        /// <param name="siRepository">Shipment item repository</param>
-        /// <param name="orderItemRepository">Order item repository</param>
-        /// <param name="eventPublisher">Event publisher</param>
-        /// <param name="shippingService">Shipping service</param>
-        public ShipmentService(IRepository<Shipment> shipmentRepository,
-            IRepository<ShipmentItem> siRepository,
+        public ShipmentService(IEventPublisher eventPublisher,
             IRepository<OrderItem> orderItemRepository,
-            IEventPublisher eventPublisher,
+            IRepository<Shipment> shipmentRepository,
+            IRepository<ShipmentItem> siRepository,
             IShippingService shippingService)
         {
+            this._eventPublisher = eventPublisher;
+            this._orderItemRepository = orderItemRepository;
             this._shipmentRepository = shipmentRepository;
             this._siRepository = siRepository;
-            this._orderItemRepository = orderItemRepository;
-            this._eventPublisher = eventPublisher;
             this._shippingService = shippingService;
         }
 

@@ -21,10 +21,6 @@ namespace Nop.Services.Orders
 
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="checkoutAttributeService">Checkout attribute service</param>
         public CheckoutAttributeParser(ICheckoutAttributeService checkoutAttributeService)
         {
             this._checkoutAttributeService = checkoutAttributeService;

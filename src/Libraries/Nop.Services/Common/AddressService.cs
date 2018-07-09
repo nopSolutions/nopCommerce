@@ -16,43 +16,33 @@ namespace Nop.Services.Common
     {
         #region Fields
 
-        private readonly IRepository<Address> _addressRepository;
-        private readonly ICountryService _countryService;
-        private readonly IStateProvinceService _stateProvinceService;
-        private readonly IAddressAttributeService _addressAttributeService;
-        private readonly IEventPublisher _eventPublisher;
         private readonly AddressSettings _addressSettings;
+        private readonly IAddressAttributeService _addressAttributeService;
         private readonly ICacheManager _cacheManager;
+        private readonly ICountryService _countryService;
+        private readonly IEventPublisher _eventPublisher;
+        private readonly IRepository<Address> _addressRepository;
+        private readonly IStateProvinceService _stateProvinceService;
 
         #endregion
 
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="cacheManager">Cache manager</param>
-        /// <param name="addressRepository">Address repository</param>
-        /// <param name="countryService">Country service</param>
-        /// <param name="stateProvinceService">State/province service</param>
-        /// <param name="addressAttributeService">Address attribute service</param>
-        /// <param name="eventPublisher">Event publisher</param>
-        /// <param name="addressSettings">Address settings</param>
-        public AddressService(ICacheManager cacheManager,
-            IRepository<Address> addressRepository,
-            ICountryService countryService,
-            IStateProvinceService stateProvinceService,
+        public AddressService(AddressSettings addressSettings,
             IAddressAttributeService addressAttributeService,
+            ICacheManager cacheManager,
+            ICountryService countryService,
             IEventPublisher eventPublisher,
-            AddressSettings addressSettings)
+            IRepository<Address> addressRepository,
+            IStateProvinceService stateProvinceService)
         {
-            this._cacheManager = cacheManager;
-            this._addressRepository = addressRepository;
-            this._countryService = countryService;
-            this._stateProvinceService = stateProvinceService;
-            this._addressAttributeService = addressAttributeService;
-            this._eventPublisher = eventPublisher;
             this._addressSettings = addressSettings;
+            this._addressAttributeService = addressAttributeService;
+            this._cacheManager = cacheManager;
+            this._countryService = countryService;
+            this._eventPublisher = eventPublisher;
+            this._addressRepository = addressRepository;
+            this._stateProvinceService = stateProvinceService;
         }
 
         #endregion

@@ -9,12 +9,7 @@ namespace Nop.Services.Payments
     /// </summary>
     public partial class VoidPaymentResult
     {
-        private PaymentStatus _newPaymentStatus = PaymentStatus.Pending;
-
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        public VoidPaymentResult() 
+        public VoidPaymentResult()
         {
             this.Errors = new List<string>();
         }
@@ -31,7 +26,7 @@ namespace Nop.Services.Payments
         /// Add error
         /// </summary>
         /// <param name="error">Error</param>
-        public void AddError(string error) 
+        public void AddError(string error)
         {
             Errors.Add(error);
         }
@@ -44,16 +39,6 @@ namespace Nop.Services.Payments
         /// <summary>
         /// Gets or sets a payment status after processing
         /// </summary>
-        public PaymentStatus NewPaymentStatus
-        {
-            get
-            {
-                return _newPaymentStatus;
-            }
-            set
-            {
-                _newPaymentStatus = value;
-            }
-        }
+        public PaymentStatus NewPaymentStatus { get; set; } = PaymentStatus.Pending;
     }
 }

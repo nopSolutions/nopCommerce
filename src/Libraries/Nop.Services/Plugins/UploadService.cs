@@ -21,18 +21,18 @@ namespace Nop.Services.Plugins
     {
         #region Fields
 
-        protected readonly IThemeProvider _themeProvider;
         protected readonly INopFileProvider _fileProvider;
+        protected readonly IThemeProvider _themeProvider;
 
         #endregion
 
         #region Ctor
 
-        public UploadService(IThemeProvider themeProvider,
-            INopFileProvider fileProvider)
+        public UploadService(INopFileProvider fileProvider,
+            IThemeProvider themeProvider)
         {
-            this._themeProvider = themeProvider;
             this._fileProvider = fileProvider;
+            this._themeProvider = themeProvider;
         }
 
         #endregion
@@ -57,8 +57,8 @@ namespace Nop.Services.Plugins
 
                 //read the content of this entry if exists
                 using (var unzippedEntryStream = uploadedItemsFileEntry.Open())
-                    using (var reader = new StreamReader(unzippedEntryStream))
-                        return JsonConvert.DeserializeObject<IList<UploadedItem>>(reader.ReadToEnd());
+                using (var reader = new StreamReader(unzippedEntryStream))
+                    return JsonConvert.DeserializeObject<IList<UploadedItem>>(reader.ReadToEnd());
             }
         }
 
@@ -219,7 +219,7 @@ namespace Nop.Services.Plugins
                     //ensure that the plugin current version is supported
                     if (descriptor is PluginDescriptor pluginDescriptor && !pluginDescriptor.SupportedVersions.Contains(NopVersion.CurrentVersion))
                         continue;
-                    
+
                     //get path to upload
                     var uploadedItemDirectoryName = _fileProvider.GetFileName(itemPath.TrimEnd('/'));
                     var pathToUpload = _fileProvider.Combine(item.Type == UploadedItemType.Plugin ? pluginsDirectory : themesDirectory, uploadedItemDirectoryName);
@@ -238,7 +238,7 @@ namespace Nop.Services.Plugins
                         var fileName = entry.FullName.Substring(itemPath.Length);
                         if (string.IsNullOrEmpty(fileName))
                             continue;
-                        
+
                         var filePath = _fileProvider.Combine(pathToUpload, fileName.Replace("/", "\\"));
                         var directoryPath = _fileProvider.GetDirectoryName(filePath);
 
@@ -312,7 +312,7 @@ namespace Nop.Services.Plugins
         }
 
         #endregion
-        
+
         #region Nested classes
 
         /// <summary>

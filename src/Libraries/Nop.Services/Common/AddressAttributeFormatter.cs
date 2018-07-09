@@ -12,21 +12,31 @@ namespace Nop.Services.Common
     /// </summary>
     public partial class AddressAttributeFormatter : IAddressAttributeFormatter
     {
-        private readonly IWorkContext _workContext;
-        private readonly IAddressAttributeService _addressAttributeService;
-        private readonly IAddressAttributeParser _addressAttributeParser;
-        private readonly ILocalizationService _localizationService;
+        #region Fields
 
-        public AddressAttributeFormatter(IWorkContext workContext,
-            IAddressAttributeService addressAttributeService,
-            IAddressAttributeParser addressAttributeParser,
-            ILocalizationService localizationService)
+        private readonly IAddressAttributeParser _addressAttributeParser;
+        private readonly IAddressAttributeService _addressAttributeService;
+        private readonly ILocalizationService _localizationService;
+        private readonly IWorkContext _workContext;
+
+        #endregion
+
+        #region Ctor
+
+        public AddressAttributeFormatter(IAddressAttributeParser addressAttributeParser,
+            IAddressAttributeService addressAttributeService,            
+            ILocalizationService localizationService,
+            IWorkContext workContext)
         {
-            this._workContext = workContext;
-            this._addressAttributeService = addressAttributeService;
             this._addressAttributeParser = addressAttributeParser;
+            this._addressAttributeService = addressAttributeService;
             this._localizationService = localizationService;
+            this._workContext = workContext;
         }
+
+        #endregion
+
+        #region Methods
 
         /// <summary>
         /// Formats attributes
@@ -103,5 +113,7 @@ namespace Nop.Services.Common
 
             return result.ToString();
         }
+
+        #endregion
     }
 }

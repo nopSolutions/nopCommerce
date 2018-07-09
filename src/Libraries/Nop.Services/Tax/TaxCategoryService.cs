@@ -15,27 +15,21 @@ namespace Nop.Services.Tax
     {
         #region Fields
 
-        private readonly IRepository<TaxCategory> _taxCategoryRepository;
-        private readonly IEventPublisher _eventPublisher;
         private readonly ICacheManager _cacheManager;
+        private readonly IEventPublisher _eventPublisher;
+        private readonly IRepository<TaxCategory> _taxCategoryRepository;
 
         #endregion
 
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="cacheManager">Cache manager</param>
-        /// <param name="taxCategoryRepository">Tax category repository</param>
-        /// <param name="eventPublisher">Event publisher</param>
         public TaxCategoryService(ICacheManager cacheManager,
-            IRepository<TaxCategory> taxCategoryRepository,
-            IEventPublisher eventPublisher)
+            IEventPublisher eventPublisher,
+            IRepository<TaxCategory> taxCategoryRepository)
         {
             _cacheManager = cacheManager;
-            _taxCategoryRepository = taxCategoryRepository;
             _eventPublisher = eventPublisher;
+            _taxCategoryRepository = taxCategoryRepository;
         }
 
         #endregion
@@ -84,7 +78,7 @@ namespace Nop.Services.Tax
         {
             if (taxCategoryId == 0)
                 return null;
-            
+
             var key = string.Format(NopTaxDefaults.TaxCategoriesByIdCacheKey, taxCategoryId);
             return _cacheManager.Get(key, () => _taxCategoryRepository.GetById(taxCategoryId));
         }

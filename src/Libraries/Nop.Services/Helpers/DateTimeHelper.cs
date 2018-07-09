@@ -13,28 +13,31 @@ namespace Nop.Services.Helpers
     /// </summary>
     public partial class DateTimeHelper : IDateTimeHelper
     {
-        private readonly IWorkContext _workContext;
+        #region Fields
+
+        private readonly DateTimeSettings _dateTimeSettings;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ISettingService _settingService;
-        private readonly DateTimeSettings _dateTimeSettings;
+        private readonly IWorkContext _workContext;
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="workContext">Work context</param>
-        /// <param name="genericAttributeService">Generic attribute service</param>
-        /// <param name="settingService">Setting service</param>
-        /// <param name="dateTimeSettings">Datetime settings</param>
-        public DateTimeHelper(IWorkContext workContext,
+        #endregion
+
+        #region Ctor
+
+        public DateTimeHelper(DateTimeSettings dateTimeSettings,
             IGenericAttributeService genericAttributeService,
             ISettingService settingService,
-            DateTimeSettings dateTimeSettings)
+            IWorkContext workContext)
         {
-            this._workContext = workContext;
+            this._dateTimeSettings = dateTimeSettings;
             this._genericAttributeService = genericAttributeService;
             this._settingService = settingService;
-            this._dateTimeSettings = dateTimeSettings;
+            this._workContext = workContext;
         }
+
+        #endregion
+
+        #region Methods
 
         /// <summary>
         /// Retrieves a System.TimeZoneInfo object from the registry based on its identifier.
@@ -243,5 +246,7 @@ namespace Nop.Services.Helpers
                     NopCustomerDefaults.TimeZoneIdAttribute, timeZoneId);
             }
         }
+
+        #endregion
     }
 }

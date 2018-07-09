@@ -50,186 +50,186 @@ namespace Nop.Services.Installation
     {
         #region Fields
 
-        private readonly IRepository<Store> _storeRepository;
-        private readonly IRepository<MeasureDimension> _measureDimensionRepository;
-        private readonly IRepository<MeasureWeight> _measureWeightRepository;
-        private readonly IRepository<TaxCategory> _taxCategoryRepository;
-        private readonly IRepository<Language> _languageRepository;
+        private readonly IGenericAttributeService _genericAttributeService;
+        private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly INopFileProvider _fileProvider;
+        private readonly IRepository<ActivityLog> _activityLogRepository;
+        private readonly IRepository<ActivityLogType> _activityLogTypeRepository;
+        private readonly IRepository<Address> _addressRepository;
+        private readonly IRepository<Affiliate> _affiliateRepository;
+        private readonly IRepository<BlogPost> _blogPostRepository;
+        private readonly IRepository<Category> _categoryRepository;
+        private readonly IRepository<CategoryTemplate> _categoryTemplateRepository;
+        private readonly IRepository<CheckoutAttribute> _checkoutAttributeRepository;
+        private readonly IRepository<Country> _countryRepository;
         private readonly IRepository<Currency> _currencyRepository;
         private readonly IRepository<Customer> _customerRepository;
         private readonly IRepository<CustomerPassword> _customerPasswordRepository;
         private readonly IRepository<CustomerRole> _customerRoleRepository;
-        private readonly IRepository<SpecificationAttribute> _specificationAttributeRepository;
-        private readonly IRepository<CheckoutAttribute> _checkoutAttributeRepository;
-        private readonly IRepository<ProductAttribute> _productAttributeRepository;
-        private readonly IRepository<Category> _categoryRepository;
-        private readonly IRepository<Manufacturer> _manufacturerRepository;
-        private readonly IRepository<Product> _productRepository;
-        private readonly IRepository<UrlRecord> _urlRecordRepository;
-        private readonly IRepository<RelatedProduct> _relatedProductRepository;
-        private readonly IRepository<EmailAccount> _emailAccountRepository;
-        private readonly IRepository<MessageTemplate> _messageTemplateRepository;
-        private readonly IRepository<ForumGroup> _forumGroupRepository;
-        private readonly IRepository<Forum> _forumRepository;
-        private readonly IRepository<Country> _countryRepository;
-        private readonly IRepository<StateProvince> _stateProvinceRepository;
-        private readonly IRepository<Discount> _discountRepository;
-        private readonly IRepository<BlogPost> _blogPostRepository;
-        private readonly IRepository<Topic> _topicRepository;
-        private readonly IRepository<NewsItem> _newsItemRepository;
-        private readonly IRepository<Poll> _pollRepository;
-        private readonly IRepository<ShippingMethod> _shippingMethodRepository;
         private readonly IRepository<DeliveryDate> _deliveryDateRepository;
-        private readonly IRepository<ProductAvailabilityRange> _productAvailabilityRangeRepository;
-        private readonly IRepository<ActivityLogType> _activityLogTypeRepository;
-        private readonly IRepository<ActivityLog> _activityLogRepository;
-        private readonly IRepository<ProductTag> _productTagRepository;
-        private readonly IRepository<ProductTemplate> _productTemplateRepository;
-        private readonly IRepository<CategoryTemplate> _categoryTemplateRepository;
+        private readonly IRepository<Discount> _discountRepository;
+        private readonly IRepository<EmailAccount> _emailAccountRepository;
+        private readonly IRepository<Forum> _forumRepository;
+        private readonly IRepository<ForumGroup> _forumGroupRepository;
+        private readonly IRepository<GiftCard> _giftCardRepository;
+        private readonly IRepository<Language> _languageRepository;
+        private readonly IRepository<Manufacturer> _manufacturerRepository;
         private readonly IRepository<ManufacturerTemplate> _manufacturerTemplateRepository;
-        private readonly IRepository<TopicTemplate> _topicTemplateRepository;
-        private readonly IRepository<ScheduleTask> _scheduleTaskRepository;
-        private readonly IRepository<ReturnRequestReason> _returnRequestReasonRepository;
-        private readonly IRepository<ReturnRequestAction> _returnRequestActionRepository;
-        private readonly IRepository<Address> _addressRepository;
-        private readonly IRepository<Warehouse> _warehouseRepository;
-        private readonly IRepository<Vendor> _vendorRepository;
-        private readonly IRepository<Affiliate> _affiliateRepository;
+        private readonly IRepository<MeasureDimension> _measureDimensionRepository;
+        private readonly IRepository<MeasureWeight> _measureWeightRepository;
+        private readonly IRepository<MessageTemplate> _messageTemplateRepository;
+        private readonly IRepository<NewsItem> _newsItemRepository;
         private readonly IRepository<Order> _orderRepository;
         private readonly IRepository<OrderItem> _orderItemRepository;
         private readonly IRepository<OrderNote> _orderNoteRepository;
-        private readonly IRepository<GiftCard> _giftCardRepository;
-        private readonly IRepository<Shipment> _shipmentRepository;
+        private readonly IRepository<Poll> _pollRepository;
+        private readonly IRepository<Product> _productRepository;
+        private readonly IRepository<ProductAttribute> _productAttributeRepository;
+        private readonly IRepository<ProductAvailabilityRange> _productAvailabilityRangeRepository;
+        private readonly IRepository<ProductTag> _productTagRepository;
+        private readonly IRepository<ProductTemplate> _productTemplateRepository;
+        private readonly IRepository<RelatedProduct> _relatedProductRepository;
+        private readonly IRepository<ReturnRequestAction> _returnRequestActionRepository;
+        private readonly IRepository<ReturnRequestReason> _returnRequestReasonRepository;
+        private readonly IRepository<ScheduleTask> _scheduleTaskRepository;
         private readonly IRepository<SearchTerm> _searchTermRepository;
+        private readonly IRepository<Shipment> _shipmentRepository;
         private readonly IRepository<ShipmentItem> _shipmentItemRepository;
+        private readonly IRepository<ShippingMethod> _shippingMethodRepository;
+        private readonly IRepository<SpecificationAttribute> _specificationAttributeRepository;
+        private readonly IRepository<StateProvince> _stateProvinceRepository;
         private readonly IRepository<StockQuantityHistory> _stockQuantityHistoryRepository;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly IWebHelper _webHelper;
-        private readonly IHostingEnvironment _hostingEnvironment;
-        private readonly INopFileProvider _fileProvider;
+        private readonly IRepository<Store> _storeRepository;
+        private readonly IRepository<TaxCategory> _taxCategoryRepository;
+        private readonly IRepository<Topic> _topicRepository;
+        private readonly IRepository<TopicTemplate> _topicTemplateRepository;
+        private readonly IRepository<UrlRecord> _urlRecordRepository;
+        private readonly IRepository<Vendor> _vendorRepository;
+        private readonly IRepository<Warehouse> _warehouseRepository;
         private readonly IUrlRecordService _urlRecordService;
+        private readonly IWebHelper _webHelper;
 
         #endregion
 
         #region Ctor
 
-        public CodeFirstInstallationService(IRepository<Store> storeRepository,
-            IRepository<MeasureDimension> measureDimensionRepository,
-            IRepository<MeasureWeight> measureWeightRepository,
-            IRepository<TaxCategory> taxCategoryRepository,
-            IRepository<Language> languageRepository,
+        public CodeFirstInstallationService(IGenericAttributeService genericAttributeService,
+            IHostingEnvironment hostingEnvironment,
+            INopFileProvider fileProvider,
+            IRepository<ActivityLog> activityLogRepository,
+            IRepository<ActivityLogType> activityLogTypeRepository,
+            IRepository<Address> addressRepository,
+            IRepository<Affiliate> affiliateRepository,
+            IRepository<BlogPost> blogPostRepository,
+            IRepository<Category> categoryRepository,
+            IRepository<CategoryTemplate> categoryTemplateRepository,
+            IRepository<CheckoutAttribute> checkoutAttributeRepository,
+            IRepository<Country> countryRepository,
             IRepository<Currency> currencyRepository,
             IRepository<Customer> customerRepository,
             IRepository<CustomerPassword> customerPasswordRepository,
             IRepository<CustomerRole> customerRoleRepository,
-            IRepository<SpecificationAttribute> specificationAttributeRepository,
-            IRepository<CheckoutAttribute> checkoutAttributeRepository,
-            IRepository<ProductAttribute> productAttributeRepository,
-            IRepository<Category> categoryRepository,
-            IRepository<Manufacturer> manufacturerRepository,
-            IRepository<Product> productRepository,
-            IRepository<UrlRecord> urlRecordRepository,
-            IRepository<RelatedProduct> relatedProductRepository,
-            IRepository<EmailAccount> emailAccountRepository,
-            IRepository<MessageTemplate> messageTemplateRepository,
-            IRepository<ForumGroup> forumGroupRepository,
-            IRepository<Forum> forumRepository,
-            IRepository<Country> countryRepository,
-            IRepository<StateProvince> stateProvinceRepository,
-            IRepository<Discount> discountRepository,
-            IRepository<BlogPost> blogPostRepository,
-            IRepository<Topic> topicRepository,
-            IRepository<NewsItem> newsItemRepository,
-            IRepository<Poll> pollRepository,
-            IRepository<ShippingMethod> shippingMethodRepository,
             IRepository<DeliveryDate> deliveryDateRepository,
-            IRepository<ProductAvailabilityRange> productAvailabilityRangeRepository,
-            IRepository<ActivityLogType> activityLogTypeRepository,
-            IRepository<ActivityLog> activityLogRepository,
-            IRepository<ProductTag> productTagRepository,
-            IRepository<ProductTemplate> productTemplateRepository,
-            IRepository<CategoryTemplate> categoryTemplateRepository,
+            IRepository<Discount> discountRepository,
+            IRepository<EmailAccount> emailAccountRepository,
+            IRepository<Forum> forumRepository,
+            IRepository<ForumGroup> forumGroupRepository,
+            IRepository<GiftCard> giftCardRepository,
+            IRepository<Language> languageRepository,
+            IRepository<Manufacturer> manufacturerRepository,
             IRepository<ManufacturerTemplate> manufacturerTemplateRepository,
-            IRepository<TopicTemplate> topicTemplateRepository,
-            IRepository<ScheduleTask> scheduleTaskRepository,
-            IRepository<ReturnRequestReason> returnRequestReasonRepository,
-            IRepository<ReturnRequestAction> returnRequestActionRepository,
-            IRepository<Address> addressRepository,
-            IRepository<Warehouse> warehouseRepository,
-            IRepository<Vendor> vendorRepository,
-            IRepository<Affiliate> affiliateRepository,
+            IRepository<MeasureDimension> measureDimensionRepository,
+            IRepository<MeasureWeight> measureWeightRepository,
+            IRepository<MessageTemplate> messageTemplateRepository,
+            IRepository<NewsItem> newsItemRepository,
             IRepository<Order> orderRepository,
             IRepository<OrderItem> orderItemRepository,
             IRepository<OrderNote> orderNoteRepository,
-            IRepository<GiftCard> giftCardRepository,
+            IRepository<Poll> pollRepository,
+            IRepository<Product> productRepository,
+            IRepository<ProductAttribute> productAttributeRepository,
+            IRepository<ProductAvailabilityRange> productAvailabilityRangeRepository,
+            IRepository<ProductTag> productTagRepository,
+            IRepository<ProductTemplate> productTemplateRepository,
+            IRepository<RelatedProduct> relatedProductRepository,
+            IRepository<ReturnRequestAction> returnRequestActionRepository,
+            IRepository<ReturnRequestReason> returnRequestReasonRepository,
+            IRepository<ScheduleTask> scheduleTaskRepository,
+            IRepository<SearchTerm> searchTermRepository,
             IRepository<Shipment> shipmentRepository,
             IRepository<ShipmentItem> shipmentItemRepository,
-            IRepository<SearchTerm> searchTermRepository,
+            IRepository<ShippingMethod> shippingMethodRepository,
+            IRepository<SpecificationAttribute> specificationAttributeRepository,
+            IRepository<StateProvince> stateProvinceRepository,
             IRepository<StockQuantityHistory> stockQuantityHistoryRepository,
-            IGenericAttributeService genericAttributeService,
-            IWebHelper webHelper,
-            IHostingEnvironment hostingEnvironment,
-            INopFileProvider fileProvider,
-            IUrlRecordService urlRecordService)
+            IRepository<Store> storeRepository,
+            IRepository<TaxCategory> taxCategoryRepository,
+            IRepository<Topic> topicRepository,
+            IRepository<TopicTemplate> topicTemplateRepository,
+            IRepository<UrlRecord> urlRecordRepository,
+            IRepository<Vendor> vendorRepository,
+            IRepository<Warehouse> warehouseRepository,
+            IUrlRecordService urlRecordService,
+            IWebHelper webHelper)
         {
-            this._storeRepository = storeRepository;
-            this._measureDimensionRepository = measureDimensionRepository;
-            this._measureWeightRepository = measureWeightRepository;
-            this._taxCategoryRepository = taxCategoryRepository;
-            this._languageRepository = languageRepository;
-            this._currencyRepository = currencyRepository;
-            this._customerRepository = customerRepository;
-            this._customerPasswordRepository = customerPasswordRepository;
-            this._customerRoleRepository = customerRoleRepository;
-            this._specificationAttributeRepository = specificationAttributeRepository;
-            this._checkoutAttributeRepository = checkoutAttributeRepository;
-            this._productAttributeRepository = productAttributeRepository;
-            this._categoryRepository = categoryRepository;
-            this._manufacturerRepository = manufacturerRepository;
-            this._productRepository = productRepository;
-            this._urlRecordRepository = urlRecordRepository;
-            this._relatedProductRepository = relatedProductRepository;
-            this._emailAccountRepository = emailAccountRepository;
-            this._messageTemplateRepository = messageTemplateRepository;
-            this._forumGroupRepository = forumGroupRepository;
-            this._forumRepository = forumRepository;
-            this._countryRepository = countryRepository;
-            this._stateProvinceRepository = stateProvinceRepository;
-            this._discountRepository = discountRepository;
-            this._blogPostRepository = blogPostRepository;
-            this._topicRepository = topicRepository;
-            this._newsItemRepository = newsItemRepository;
-            this._pollRepository = pollRepository;
-            this._shippingMethodRepository = shippingMethodRepository;
-            this._deliveryDateRepository = deliveryDateRepository;
-            this._productAvailabilityRangeRepository = productAvailabilityRangeRepository;
-            this._activityLogTypeRepository = activityLogTypeRepository;
-            this._activityLogRepository = activityLogRepository;
-            this._productTagRepository = productTagRepository;
-            this._productTemplateRepository = productTemplateRepository;
-            this._categoryTemplateRepository = categoryTemplateRepository;
-            this._manufacturerTemplateRepository = manufacturerTemplateRepository;
-            this._topicTemplateRepository = topicTemplateRepository;
-            this._scheduleTaskRepository = scheduleTaskRepository;
-            this._returnRequestReasonRepository = returnRequestReasonRepository;
-            this._returnRequestActionRepository = returnRequestActionRepository;
-            this._addressRepository = addressRepository;
-            this._warehouseRepository = warehouseRepository;
-            this._vendorRepository = vendorRepository;
-            this._affiliateRepository = affiliateRepository;
-            this._orderRepository = orderRepository;
-            this._orderItemRepository = orderItemRepository;
-            this._orderNoteRepository = orderNoteRepository;
-            this._giftCardRepository = giftCardRepository;
-            this._shipmentRepository = shipmentRepository;
-            this._shipmentItemRepository = shipmentItemRepository;
-            this._searchTermRepository = searchTermRepository;
-            this._stockQuantityHistoryRepository = stockQuantityHistoryRepository;
             this._genericAttributeService = genericAttributeService;
-            this._webHelper = webHelper;
             this._hostingEnvironment = hostingEnvironment;
             this._fileProvider = fileProvider;
+            this._activityLogRepository = activityLogRepository;
+            this._activityLogTypeRepository = activityLogTypeRepository;
+            this._addressRepository = addressRepository;
+            this._affiliateRepository = affiliateRepository;
+            this._blogPostRepository = blogPostRepository;
+            this._categoryRepository = categoryRepository;
+            this._categoryTemplateRepository = categoryTemplateRepository;
+            this._checkoutAttributeRepository = checkoutAttributeRepository;
+            this._countryRepository = countryRepository;
+            this._currencyRepository = currencyRepository;
+            this._customerPasswordRepository = customerPasswordRepository;
+            this._customerRepository = customerRepository;
+            this._customerRoleRepository = customerRoleRepository;
+            this._deliveryDateRepository = deliveryDateRepository;
+            this._discountRepository = discountRepository;
+            this._emailAccountRepository = emailAccountRepository;
+            this._forumGroupRepository = forumGroupRepository;
+            this._forumRepository = forumRepository;
+            this._giftCardRepository = giftCardRepository;
+            this._languageRepository = languageRepository;
+            this._manufacturerRepository = manufacturerRepository;
+            this._manufacturerTemplateRepository = manufacturerTemplateRepository;
+            this._measureDimensionRepository = measureDimensionRepository;
+            this._measureWeightRepository = measureWeightRepository;
+            this._messageTemplateRepository = messageTemplateRepository;
+            this._newsItemRepository = newsItemRepository;
+            this._orderItemRepository = orderItemRepository;
+            this._orderNoteRepository = orderNoteRepository;
+            this._orderRepository = orderRepository;
+            this._pollRepository = pollRepository;
+            this._productAttributeRepository = productAttributeRepository;
+            this._productAvailabilityRangeRepository = productAvailabilityRangeRepository;
+            this._productRepository = productRepository;
+            this._productTagRepository = productTagRepository;
+            this._productTemplateRepository = productTemplateRepository;
+            this._relatedProductRepository = relatedProductRepository;
+            this._returnRequestActionRepository = returnRequestActionRepository;
+            this._returnRequestReasonRepository = returnRequestReasonRepository;
+            this._scheduleTaskRepository = scheduleTaskRepository;
+            this._searchTermRepository = searchTermRepository;
+            this._shipmentItemRepository = shipmentItemRepository;
+            this._shipmentRepository = shipmentRepository;
+            this._shippingMethodRepository = shippingMethodRepository;
+            this._specificationAttributeRepository = specificationAttributeRepository;
+            this._stateProvinceRepository = stateProvinceRepository;
+            this._stockQuantityHistoryRepository = stockQuantityHistoryRepository;
+            this._storeRepository = storeRepository;
+            this._taxCategoryRepository = taxCategoryRepository;
+            this._topicRepository = topicRepository;
+            this._topicTemplateRepository = topicTemplateRepository;
+            this._urlRecordRepository = urlRecordRepository;
+            this._vendorRepository = vendorRepository;
+            this._warehouseRepository = warehouseRepository;
             this._urlRecordService = urlRecordService;
+            this._webHelper = webHelper;
         }
 
         #endregion

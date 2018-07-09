@@ -17,35 +17,27 @@ namespace Nop.Services.News
     {
         #region Fields
 
-        private readonly IRepository<NewsItem> _newsItemRepository;
-        private readonly IRepository<NewsComment> _newsCommentRepository;
-        private readonly IRepository<StoreMapping> _storeMappingRepository;
         private readonly CatalogSettings _catalogSettings;
         private readonly IEventPublisher _eventPublisher;
+        private readonly IRepository<NewsComment> _newsCommentRepository;
+        private readonly IRepository<NewsItem> _newsItemRepository;
+        private readonly IRepository<StoreMapping> _storeMappingRepository;
 
         #endregion
 
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="newsItemRepository">News item repository</param>
-        /// <param name="newsCommentRepository">News comment repository</param>
-        /// <param name="storeMappingRepository">Store mapping repository</param>
-        /// <param name="catalogSettings">Catalog settings</param>
-        /// <param name="eventPublisher">Event publisher</param>
-        public NewsService(IRepository<NewsItem> newsItemRepository,
+        public NewsService(CatalogSettings catalogSettings,
+            IEventPublisher eventPublisher,
             IRepository<NewsComment> newsCommentRepository,
-            IRepository<StoreMapping> storeMappingRepository,
-            CatalogSettings catalogSettings,
-            IEventPublisher eventPublisher)
+            IRepository<NewsItem> newsItemRepository,
+            IRepository<StoreMapping> storeMappingRepository)
         {
-            this._newsItemRepository = newsItemRepository;
-            this._newsCommentRepository = newsCommentRepository;
-            this._storeMappingRepository = storeMappingRepository;
             this._catalogSettings = catalogSettings;
             this._eventPublisher = eventPublisher;
+            this._newsCommentRepository = newsCommentRepository;
+            this._newsItemRepository = newsItemRepository;
+            this._storeMappingRepository = storeMappingRepository;
         }
 
         #endregion

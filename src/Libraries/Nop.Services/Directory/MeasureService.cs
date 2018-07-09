@@ -16,35 +16,27 @@ namespace Nop.Services.Directory
     {
         #region Fields
 
+        private readonly ICacheManager _cacheManager;
+        private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<MeasureDimension> _measureDimensionRepository;
         private readonly IRepository<MeasureWeight> _measureWeightRepository;
-        private readonly ICacheManager _cacheManager;
         private readonly MeasureSettings _measureSettings;
-        private readonly IEventPublisher _eventPublisher;
 
         #endregion
 
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="cacheManager">Cache manager</param>
-        /// <param name="measureDimensionRepository">Dimension repository</param>
-        /// <param name="measureWeightRepository">Weight repository</param>
-        /// <param name="measureSettings">Measure settings</param>
-        /// <param name="eventPublisher">Event publisher</param>
         public MeasureService(ICacheManager cacheManager,
+            IEventPublisher eventPublisher,
             IRepository<MeasureDimension> measureDimensionRepository,
             IRepository<MeasureWeight> measureWeightRepository,
-            MeasureSettings measureSettings,
-            IEventPublisher eventPublisher)
+            MeasureSettings measureSettings)
         {
             _cacheManager = cacheManager;
+            _eventPublisher = eventPublisher;
             _measureDimensionRepository = measureDimensionRepository;
             _measureWeightRepository = measureWeightRepository;
             _measureSettings = measureSettings;
-            _eventPublisher = eventPublisher;
         }
 
         #endregion
@@ -110,8 +102,8 @@ namespace Nop.Services.Directory
             return _cacheManager.Get(NopDirectoryDefaults.MeasureDimensionsAllCacheKey, () =>
             {
                 var query = from md in _measureDimensionRepository.Table
-                    orderby md.DisplayOrder, md.Id
-                    select md;
+                            orderby md.DisplayOrder, md.Id
+                            select md;
                 var measureDimensions = query.ToList();
                 return measureDimensions;
 
@@ -289,8 +281,8 @@ namespace Nop.Services.Directory
             return _cacheManager.Get(NopDirectoryDefaults.MeasureWeightsAllCacheKey, () =>
             {
                 var query = from mw in _measureWeightRepository.Table
-                    orderby mw.DisplayOrder, mw.Id
-                    select mw;
+                            orderby mw.DisplayOrder, mw.Id
+                            select mw;
                 var measureWeights = query.ToList();
                 return measureWeights;
             });

@@ -27,79 +27,60 @@ namespace Nop.Services.Shipping
     {
         #region Fields
 
-        private readonly IRepository<ShippingMethod> _shippingMethodRepository;
-        private readonly IRepository<Warehouse> _warehouseRepository;
-        private readonly ILogger _logger;
-        private readonly IProductService _productService;
-        private readonly IProductAttributeParser _productAttributeParser;
+        private readonly IAddressService _addressService;
+        private readonly ICacheManager _cacheManager;
         private readonly ICheckoutAttributeParser _checkoutAttributeParser;
+        private readonly IEventPublisher _eventPublisher;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ILocalizationService _localizationService;
-        private readonly IPriceCalculationService _priceCalculationService;
-        private readonly IAddressService _addressService;
-        private readonly ShippingSettings _shippingSettings;
+        private readonly ILogger _logger;
         private readonly IPluginFinder _pluginFinder;
+        private readonly IPriceCalculationService _priceCalculationService;
+        private readonly IProductAttributeParser _productAttributeParser;
+        private readonly IProductService _productService;
+        private readonly IRepository<ShippingMethod> _shippingMethodRepository;
+        private readonly IRepository<Warehouse> _warehouseRepository;
         private readonly IStoreContext _storeContext;
-        private readonly IEventPublisher _eventPublisher;
+        private readonly ShippingSettings _shippingSettings;
         private readonly ShoppingCartSettings _shoppingCartSettings;
-        private readonly ICacheManager _cacheManager;
 
         #endregion
 
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="shippingMethodRepository">Shipping method repository</param>
-        /// <param name="warehouseRepository">Warehouse repository</param>
-        /// <param name="logger">Logger</param>
-        /// <param name="productService">Product service</param>
-        /// <param name="productAttributeParser">Product attribute parser</param>
-        /// <param name="checkoutAttributeParser">Checkout attribute parser</param>
-        /// <param name="genericAttributeService">Generic attribute service</param>
-        /// <param name="localizationService">Localization service</param>
-        /// <param name="priceCalculationService">Price calculation service</param>
-        /// <param name="addressService">Address service</param>
-        /// <param name="shippingSettings">Shipping settings</param>
-        /// <param name="pluginFinder">Plugin finder</param>
-        /// <param name="storeContext">Store context</param>
-        /// <param name="eventPublisher">Event publisher</param>
-        /// <param name="shoppingCartSettings">Shopping cart settings</param>
-        /// <param name="cacheManager">Cache manager</param>
-        public ShippingService(IRepository<ShippingMethod> shippingMethodRepository,
-            IRepository<Warehouse> warehouseRepository,
-            ILogger logger,
-            IProductService productService,
-            IProductAttributeParser productAttributeParser,
+        public ShippingService(IAddressService addressService,
+            ICacheManager cacheManager,
             ICheckoutAttributeParser checkoutAttributeParser,
+            IEventPublisher eventPublisher,
             IGenericAttributeService genericAttributeService,
             ILocalizationService localizationService,
-            IPriceCalculationService priceCalculationService,
-            IAddressService addressService,
-            ShippingSettings shippingSettings,
+            ILogger logger,
             IPluginFinder pluginFinder,
+            IPriceCalculationService priceCalculationService,
+            IProductAttributeParser productAttributeParser,
+            IProductService productService,
+            IRepository<ShippingMethod> shippingMethodRepository,
+            IRepository<Warehouse> warehouseRepository,
             IStoreContext storeContext,
-            IEventPublisher eventPublisher,
-            ShoppingCartSettings shoppingCartSettings,
-            ICacheManager cacheManager)
+            ShippingSettings shippingSettings,
+            ShoppingCartSettings shoppingCartSettings)
         {
-            this._shippingMethodRepository = shippingMethodRepository;
-            this._warehouseRepository = warehouseRepository;
-            this._logger = logger;
-            this._productService = productService;
-            this._productAttributeParser = productAttributeParser;
+            this._addressService = addressService;
+            this._cacheManager = cacheManager;
             this._checkoutAttributeParser = checkoutAttributeParser;
+            this._eventPublisher = eventPublisher;
             this._genericAttributeService = genericAttributeService;
             this._localizationService = localizationService;
-            this._priceCalculationService = priceCalculationService;
-            this._addressService = addressService;
-            this._shippingSettings = shippingSettings;
+            this._logger = logger;
             this._pluginFinder = pluginFinder;
+            this._priceCalculationService = priceCalculationService;
+            this._productAttributeParser = productAttributeParser;
+            this._productService = productService;
+            this._shippingMethodRepository = shippingMethodRepository;
             this._storeContext = storeContext;
-            this._eventPublisher = eventPublisher;
+            this._warehouseRepository = warehouseRepository;
+            this._shippingSettings = shippingSettings;
             this._shoppingCartSettings = shoppingCartSettings;
-            this._cacheManager = cacheManager;
         }
 
         #endregion

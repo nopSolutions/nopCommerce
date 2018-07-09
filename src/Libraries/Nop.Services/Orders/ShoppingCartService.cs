@@ -32,118 +32,90 @@ namespace Nop.Services.Orders
     {
         #region Fields
 
-        private readonly IRepository<ShoppingCartItem> _sciRepository;
-        private readonly IWorkContext _workContext;
-        private readonly IStoreContext _storeContext;
-        private readonly ICurrencyService _currencyService;
-        private readonly IProductService _productService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IProductAttributeParser _productAttributeParser;
-        private readonly ICheckoutAttributeService _checkoutAttributeService;
-        private readonly ICheckoutAttributeParser _checkoutAttributeParser;
-        private readonly IPriceFormatter _priceFormatter;
-        private readonly ICustomerService _customerService;
         private readonly CatalogSettings _catalogSettings;
+        private readonly IAclService _aclService;
+        private readonly IActionContextAccessor _actionContextAccessor;
+        private readonly ICheckoutAttributeParser _checkoutAttributeParser;
+        private readonly ICheckoutAttributeService _checkoutAttributeService;
+        private readonly ICurrencyService _currencyService;
+        private readonly ICustomerService _customerService;
+        private readonly IDateRangeService _dateRangeService;
+        private readonly IDateTimeHelper _dateTimeHelper;
+        private readonly IEventPublisher _eventPublisher;
+        private readonly IGenericAttributeService _genericAttributeService;
+        private readonly ILocalizationService _localizationService;
+        private readonly IPermissionService _permissionService;
+        private readonly IPriceFormatter _priceFormatter;
+        private readonly IProductAttributeParser _productAttributeParser;
+        private readonly IProductAttributeService _productAttributeService;
+        private readonly IProductService _productService;
+        private readonly IRepository<ShoppingCartItem> _sciRepository;
+        private readonly IShippingService _shippingService;
+        private readonly IStoreContext _storeContext;
+        private readonly IStoreMappingService _storeMappingService;
+        private readonly IUrlHelperFactory _urlHelperFactory;
+        private readonly IUrlRecordService _urlRecordService;
+        private readonly IWorkContext _workContext;
         private readonly OrderSettings _orderSettings;
         private readonly ShoppingCartSettings _shoppingCartSettings;
-        private readonly IEventPublisher _eventPublisher;
-        private readonly IPermissionService _permissionService;
-        private readonly IAclService _aclService;
-        private readonly IDateRangeService _dateRangeService;
-        private readonly IStoreMappingService _storeMappingService;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly IProductAttributeService _productAttributeService;
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly IActionContextAccessor _actionContextAccessor;
-        private readonly IUrlHelperFactory _urlHelperFactory;
-        private readonly IShippingService _shippingService;
-        private readonly IUrlRecordService _urlRecordService;
 
         #endregion
 
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="sciRepository">Shopping cart repository</param>
-        /// <param name="workContext">Work context</param>
-        /// <param name="storeContext">Store context</param>
-        /// <param name="currencyService">Currency service</param>
-        /// <param name="productService">Product settings</param>
-        /// <param name="localizationService">Localization service</param>
-        /// <param name="productAttributeParser">Product attribute parser</param>
-        /// <param name="checkoutAttributeService">Checkout attribute service</param>
-        /// <param name="checkoutAttributeParser">Checkout attribute parser</param>
-        /// <param name="priceFormatter">Price formatter</param>
-        /// <param name="customerService">Customer service</param>
-        /// <param name="catalogSettings">Catalog settings</param>
-        /// <param name="orderSettings">Order settings</param>
-        /// <param name="shoppingCartSettings">Shopping cart settings</param>
-        /// <param name="eventPublisher">Event publisher</param>
-        /// <param name="permissionService">Permission service</param>
-        /// <param name="aclService">ACL service</param>
-        /// <param name="dateRangeService">Date range service</param>
-        /// <param name="storeMappingService">Store mapping service</param>
-        /// <param name="genericAttributeService">Generic attribute service</param>
-        /// <param name="productAttributeService">Product attribute service</param>
-        /// <param name="dateTimeHelper">Datetime helper</param>
-        /// <param name="actionContextAccessor">Action context accessor</param>
-        /// <param name="urlHelperFactory">Url helper factory</param>
-        /// <param name="shippingService">Shipping service</param>
-        public ShoppingCartService(IRepository<ShoppingCartItem> sciRepository,
-            IWorkContext workContext,
-            IStoreContext storeContext,
-            ICurrencyService currencyService,
-            IProductService productService,
-            ILocalizationService localizationService,
-            IProductAttributeParser productAttributeParser,
-            ICheckoutAttributeService checkoutAttributeService,
-            ICheckoutAttributeParser checkoutAttributeParser,
-            IPriceFormatter priceFormatter,
-            ICustomerService customerService,
-            CatalogSettings catalogSettings,
-            OrderSettings orderSettings,
-            ShoppingCartSettings shoppingCartSettings,
-            IEventPublisher eventPublisher,
-            IPermissionService permissionService,
+        public ShoppingCartService(CatalogSettings catalogSettings,
             IAclService aclService,
-            IDateRangeService dateRangeService,
-            IStoreMappingService storeMappingService,
-            IGenericAttributeService genericAttributeService,
-            IProductAttributeService productAttributeService,
-            IDateTimeHelper dateTimeHelper,
             IActionContextAccessor actionContextAccessor,
-            IUrlHelperFactory urlHelperFactory,
+            ICheckoutAttributeParser checkoutAttributeParser,
+            ICheckoutAttributeService checkoutAttributeService,
+            ICurrencyService currencyService,
+            ICustomerService customerService,
+            IDateRangeService dateRangeService,
+            IDateTimeHelper dateTimeHelper,
+            IEventPublisher eventPublisher,
+            IGenericAttributeService genericAttributeService,
+            ILocalizationService localizationService,
+            IPermissionService permissionService,
+            IPriceFormatter priceFormatter,
+            IProductAttributeParser productAttributeParser,
+            IProductAttributeService productAttributeService,
+            IProductService productService,
+            IRepository<ShoppingCartItem> sciRepository,
             IShippingService shippingService,
-            IUrlRecordService urlRecordService)
+            IStoreContext storeContext,
+            IStoreMappingService storeMappingService,
+            IUrlHelperFactory urlHelperFactory,
+            IUrlRecordService urlRecordService,
+            IWorkContext workContext,
+            OrderSettings orderSettings,
+            ShoppingCartSettings shoppingCartSettings)
         {
-            this._sciRepository = sciRepository;
-            this._workContext = workContext;
-            this._storeContext = storeContext;
-            this._currencyService = currencyService;
-            this._productService = productService;
-            this._localizationService = localizationService;
-            this._productAttributeParser = productAttributeParser;
-            this._checkoutAttributeService = checkoutAttributeService;
-            this._checkoutAttributeParser = checkoutAttributeParser;
-            this._priceFormatter = priceFormatter;
-            this._customerService = customerService;
             this._catalogSettings = catalogSettings;
+            this._aclService = aclService;
+            this._actionContextAccessor = actionContextAccessor;
+            this._checkoutAttributeParser = checkoutAttributeParser;
+            this._checkoutAttributeService = checkoutAttributeService;
+            this._currencyService = currencyService;
+            this._customerService = customerService;
+            this._dateRangeService = dateRangeService;
+            this._dateTimeHelper = dateTimeHelper;
+            this._eventPublisher = eventPublisher;
+            this._genericAttributeService = genericAttributeService;
+            this._localizationService = localizationService;
+            this._permissionService = permissionService;
+            this._priceFormatter = priceFormatter;
+            this._productAttributeParser = productAttributeParser;
+            this._productAttributeService = productAttributeService;
+            this._productService = productService;
+            this._sciRepository = sciRepository;
+            this._shippingService = shippingService;
+            this._storeContext = storeContext;
+            this._storeMappingService = storeMappingService;
+            this._urlHelperFactory = urlHelperFactory;
+            this._urlRecordService = urlRecordService;
+            this._workContext = workContext;
             this._orderSettings = orderSettings;
             this._shoppingCartSettings = shoppingCartSettings;
-            this._eventPublisher = eventPublisher;
-            this._permissionService = permissionService;
-            this._aclService = aclService;
-            this._dateRangeService = dateRangeService;
-            this._storeMappingService = storeMappingService;
-            this._genericAttributeService = genericAttributeService;
-            this._productAttributeService = productAttributeService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._actionContextAccessor = actionContextAccessor;
-            this._urlHelperFactory = urlHelperFactory;
-            this._shippingService = shippingService;
-            this._urlRecordService = urlRecordService;
         }
 
         #endregion

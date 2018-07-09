@@ -32,99 +32,75 @@ namespace Nop.Services.Customers
     {
         #region Fields
 
+        private readonly CommonSettings _commonSettings;
+        private readonly CustomerSettings _customerSettings;
+        private readonly ICacheManager _cacheManager;
+        private readonly IDataProvider _dataProvider;
+        private readonly IDbContext _dbContext;
+        private readonly IEventPublisher _eventPublisher;
+        private readonly IGenericAttributeService _genericAttributeService;
+        private readonly IRepository<BlogComment> _blogCommentRepository;
         private readonly IRepository<Customer> _customerRepository;
         private readonly IRepository<CustomerCustomerRoleMapping> _customerCustomerRoleMappingRepository;
         private readonly IRepository<CustomerPassword> _customerPasswordRepository;
         private readonly IRepository<CustomerRole> _customerRoleRepository;
-        private readonly IRepository<GenericAttribute> _gaRepository;
-        private readonly IRepository<Order> _orderRepository;
         private readonly IRepository<ForumPost> _forumPostRepository;
         private readonly IRepository<ForumTopic> _forumTopicRepository;
-        private readonly IRepository<BlogComment> _blogCommentRepository;
+        private readonly IRepository<GenericAttribute> _gaRepository;
         private readonly IRepository<NewsComment> _newsCommentRepository;
+        private readonly IRepository<Order> _orderRepository;
         private readonly IRepository<PollVotingRecord> _pollVotingRecordRepository;
         private readonly IRepository<ProductReview> _productReviewRepository;
         private readonly IRepository<ProductReviewHelpfulness> _productReviewHelpfulnessRepository;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly IDataProvider _dataProvider;
-        private readonly IDbContext _dbContext;
-        private readonly ICacheManager _cacheManager;
         private readonly IStaticCacheManager _staticCacheManager;
-        private readonly IEventPublisher _eventPublisher;
-        private readonly CustomerSettings _customerSettings;
-        private readonly CommonSettings _commonSettings;
 
         #endregion
 
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="cacheManager">Cache manager</param>
-        /// <param name="customerRepository">Customer repository</param>
-        /// <param name="customerCustomerRoleMappingRepository">Customer role mapping repository</param>
-        /// <param name="customerPasswordRepository">Customer password repository</param>
-        /// <param name="customerRoleRepository">Customer role repository</param>
-        /// <param name="gaRepository">Generic attribute repository</param>
-        /// <param name="orderRepository">Order repository</param>
-        /// <param name="forumPostRepository">Forum post repository</param>
-        /// <param name="forumTopicRepository">Forum topic repository</param>
-        /// <param name="blogCommentRepository">Blog comment repository</param>
-        /// <param name="newsCommentRepository">News comment repository</param>
-        /// <param name="pollVotingRecordRepository">Poll voting record repository</param>
-        /// <param name="productReviewRepository">Product review repository</param>
-        /// <param name="productReviewHelpfulnessRepository">Product review helpfulness repository</param>
-        /// <param name="genericAttributeService">Generic attribute service</param>
-        /// <param name="dataProvider">Data provider</param>
-        /// <param name="dbContext">DB context</param>
-        /// <param name="staticCacheManager">Static cache manager</param>
-        /// <param name="eventPublisher">Event publisher</param>
-        /// <param name="customerSettings">Customer settings</param>
-        /// <param name="commonSettings">Common settings</param>
-        public CustomerService(ICacheManager cacheManager,
+        public CustomerService(CommonSettings commonSettings,
+            CustomerSettings customerSettings,
+            ICacheManager cacheManager,
+            IDataProvider dataProvider,
+            IDbContext dbContext,
+            IEventPublisher eventPublisher,
+            IGenericAttributeService genericAttributeService,
+            IRepository<BlogComment> blogCommentRepository,
             IRepository<Customer> customerRepository,
             IRepository<CustomerCustomerRoleMapping> customerCustomerRoleMappingRepository,
             IRepository<CustomerPassword> customerPasswordRepository,
             IRepository<CustomerRole> customerRoleRepository,
-            IRepository<GenericAttribute> gaRepository,
-            IRepository<Order> orderRepository,
             IRepository<ForumPost> forumPostRepository,
             IRepository<ForumTopic> forumTopicRepository,
-            IRepository<BlogComment> blogCommentRepository,
+            IRepository<GenericAttribute> gaRepository,
             IRepository<NewsComment> newsCommentRepository,
+            IRepository<Order> orderRepository,
             IRepository<PollVotingRecord> pollVotingRecordRepository,
             IRepository<ProductReview> productReviewRepository,
             IRepository<ProductReviewHelpfulness> productReviewHelpfulnessRepository,
-            IGenericAttributeService genericAttributeService,
-            IDataProvider dataProvider,
-            IDbContext dbContext,
-            IStaticCacheManager staticCacheManager,
-            IEventPublisher eventPublisher,
-            CustomerSettings customerSettings,
-            CommonSettings commonSettings)
+            IStaticCacheManager staticCacheManager)
         {
+            this._commonSettings = commonSettings;
+            this._customerSettings = customerSettings;
             this._cacheManager = cacheManager;
+            this._dataProvider = dataProvider;
+            this._dbContext = dbContext;
+            this._eventPublisher = eventPublisher;
+            this._genericAttributeService = genericAttributeService;
+            this._blogCommentRepository = blogCommentRepository;
             this._customerRepository = customerRepository;
             this._customerCustomerRoleMappingRepository = customerCustomerRoleMappingRepository;
             this._customerPasswordRepository = customerPasswordRepository;
             this._customerRoleRepository = customerRoleRepository;
-            this._gaRepository = gaRepository;
-            this._orderRepository = orderRepository;
             this._forumPostRepository = forumPostRepository;
             this._forumTopicRepository = forumTopicRepository;
-            this._blogCommentRepository = blogCommentRepository;
+            this._gaRepository = gaRepository;
             this._newsCommentRepository = newsCommentRepository;
+            this._orderRepository = orderRepository;
             this._pollVotingRecordRepository = pollVotingRecordRepository;
             this._productReviewRepository = productReviewRepository;
             this._productReviewHelpfulnessRepository = productReviewHelpfulnessRepository;
-            this._genericAttributeService = genericAttributeService;
-            this._dataProvider = dataProvider;
-            this._dbContext = dbContext;
             this._staticCacheManager = staticCacheManager;
-            this._eventPublisher = eventPublisher;
-            this._customerSettings = customerSettings;
-            this._commonSettings = commonSettings;
         }
 
         #endregion

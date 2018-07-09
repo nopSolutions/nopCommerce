@@ -16,20 +16,15 @@ namespace Nop.Services.Authentication
         #region Fields
 
         private Customer _cachedCustomer;
+
         private readonly CustomerSettings _customerSettings;
         private readonly ICustomerService _customerService;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        
+
         #endregion
 
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="customerSettings">Customer settings</param>
-        /// <param name="customerService">Customer service</param>
-        /// <param name="httpContextAccessor">HTTP context accessor</param>
         public CookieAuthenticationService(CustomerSettings customerSettings,
             ICustomerService customerService,
             IHttpContextAccessor httpContextAccessor)
@@ -119,7 +114,7 @@ namespace Nop.Services.Authentication
             else
             {
                 //try to get customer by email
-                var emailClaim = authenticateResult.Principal.FindFirst(claim => claim.Type == ClaimTypes.Email 
+                var emailClaim = authenticateResult.Principal.FindFirst(claim => claim.Type == ClaimTypes.Email
                     && claim.Issuer.Equals(NopAuthenticationDefaults.ClaimsIssuer, StringComparison.InvariantCultureIgnoreCase));
                 if (emailClaim != null)
                     customer = _customerService.GetCustomerByEmail(emailClaim.Value);

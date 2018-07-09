@@ -19,33 +19,33 @@ namespace Nop.Services.Directory
     {
         #region Fields
 
+        private readonly CatalogSettings _catalogSettings;
+        private readonly ICacheManager _cacheManager;
+        private readonly IEventPublisher _eventPublisher;
+        private readonly ILocalizationService _localizationService;
         private readonly IRepository<Country> _countryRepository;
         private readonly IRepository<StoreMapping> _storeMappingRepository;
         private readonly IStoreContext _storeContext;
-        private readonly CatalogSettings _catalogSettings;
-        private readonly IEventPublisher _eventPublisher;
-        private readonly ICacheManager _cacheManager;
-        private readonly ILocalizationService _localizationService;
 
         #endregion
 
         #region Ctor
 
-        public CountryService(ICacheManager cacheManager,
+        public CountryService(CatalogSettings catalogSettings,
+            ICacheManager cacheManager,
+            IEventPublisher eventPublisher,
+            ILocalizationService localizationService,
             IRepository<Country> countryRepository,
             IRepository<StoreMapping> storeMappingRepository,
-            IStoreContext storeContext,
-            CatalogSettings catalogSettings,
-            IEventPublisher eventPublisher,
-            ILocalizationService localizationService)
+            IStoreContext storeContext)
         {
+            this._catalogSettings = catalogSettings;
             this._cacheManager = cacheManager;
+            this._eventPublisher = eventPublisher;
+            this._localizationService = localizationService;
             this._countryRepository = countryRepository;
             this._storeMappingRepository = storeMappingRepository;
             this._storeContext = storeContext;
-            this._catalogSettings = catalogSettings;
-            this._eventPublisher = eventPublisher;
-            this._localizationService = localizationService;
         }
 
         #endregion

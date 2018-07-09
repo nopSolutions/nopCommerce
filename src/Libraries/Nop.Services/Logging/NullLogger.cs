@@ -11,6 +11,8 @@ namespace Nop.Services.Logging
     /// </summary>
     public partial class NullLogger : ILogger
     {
+        #region Methods
+
         /// <summary>
         /// Determines whether a log level is enabled
         /// </summary>
@@ -123,5 +125,7 @@ namespace Nop.Services.Logging
         public virtual void Error(string message, Exception exception = null, Customer customer = null)
         {
         }
+
+        #endregion
     }
 }

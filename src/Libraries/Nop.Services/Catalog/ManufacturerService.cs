@@ -34,19 +34,6 @@ namespace Nop.Services.Catalog
 
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="catalogSettings">Catalog settings</param>
-        /// <param name="cacheManager">Cache manager</param>
-        /// <param name="eventPublisher">Event publisher</param>
-        /// <param name="aclRepository">ACL record repository</param>
-        /// <param name="manufacturerRepository">Category repository</param>
-        /// <param name="productRepository">Product repository</param>
-        /// <param name="productManufacturerRepository">ProductCategory repository</param>
-        /// <param name="storeMappingRepository">Store mapping repository</param>
-        /// <param name="storeContext">Store context</param>
-        /// <param name="workContext">Work context</param>
         public ManufacturerService(CatalogSettings catalogSettings,
             ICacheManager cacheManager,
             IEventPublisher eventPublisher,

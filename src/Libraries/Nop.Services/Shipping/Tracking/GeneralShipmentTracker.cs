@@ -18,20 +18,16 @@ namespace Nop.Services.Shipping.Tracking
         private readonly ITypeFinder _typeFinder;
 
         #endregion
-        
+
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="typeFinder">Type finder</param>
         public GeneralShipmentTracker(ITypeFinder typeFinder)
         {
             this._typeFinder = typeFinder;
         }
 
         #endregion
-        
+
         #region Utilities
 
         /// <summary>
@@ -56,9 +52,9 @@ namespace Nop.Services.Shipping.Tracking
         {
             return GetAllTrackers().FirstOrDefault(c => c.IsMatch(trackingNumber));
         }
-        
+
         #endregion
-        
+
         #region Methods
 
         /// <summary>

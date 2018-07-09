@@ -9,20 +9,25 @@ namespace Nop.Services.Customers
     /// </summary>
     public partial class DeleteGuestsTask : IScheduleTask
     {
-        private readonly ICustomerService _customerService;
-        private readonly CustomerSettings _customerSettings;
+        #region Fields
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="customerService">Customer service</param>
-        /// <param name="customerSettings">Customer settings</param>
-        public DeleteGuestsTask(ICustomerService customerService,
-            CustomerSettings customerSettings)
+        private readonly CustomerSettings _customerSettings;
+        private readonly ICustomerService _customerService;
+
+        #endregion
+
+        #region Ctor
+
+        public DeleteGuestsTask(CustomerSettings customerSettings,
+            ICustomerService customerService)
         {
-            this._customerService = customerService;
             this._customerSettings = customerSettings;
+            this._customerService = customerService;
         }
+
+        #endregion
+
+        #region Methods
 
         /// <summary>
         /// Executes a task
@@ -32,8 +37,10 @@ namespace Nop.Services.Customers
             var olderThanMinutes = _customerSettings.DeleteGuestTaskOlderThanMinutes;
             // Default value in case 0 is returned.  0 would effectively disable this service and harm performance.
             olderThanMinutes = olderThanMinutes == 0 ? 1440 : olderThanMinutes;
-    
+
             _customerService.DeleteGuestCustomers(null, DateTime.UtcNow.AddMinutes(-olderThanMinutes), true);
         }
+
+        #endregion
     }
 }

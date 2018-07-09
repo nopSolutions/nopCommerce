@@ -30,48 +30,48 @@ namespace Nop.Services.Localization
     {
         #region Fields
 
-        private readonly IRepository<LocaleStringResource> _lsrRepository;
-        private readonly IWorkContext _workContext;
+        private readonly CommonSettings _commonSettings;
+        private readonly IDataProvider _dataProvider;
+        private readonly IDbContext _dbContext;
+        private readonly IEventPublisher _eventPublisher;
         private readonly ILanguageService _languageService;
         private readonly ILocalizedEntityService _localizedEntityService;
         private readonly ILogger _logger;
-        private readonly IStaticCacheManager _cacheManager;
-        private readonly IDataProvider _dataProvider;
-        private readonly IDbContext _dbContext;
+        private readonly IRepository<LocaleStringResource> _lsrRepository;
         private readonly ISettingService _settingService;
-        private readonly CommonSettings _commonSettings;
+        private readonly IStaticCacheManager _cacheManager;
+        private readonly IWorkContext _workContext;
         private readonly LocalizationSettings _localizationSettings;
-        private readonly IEventPublisher _eventPublisher;
 
         #endregion
 
         #region Ctor
 
-        public LocalizationService(IStaticCacheManager cacheManager,
+        public LocalizationService(CommonSettings commonSettings,
+            IDataProvider dataProvider,
+            IDbContext dbContext,
+            IEventPublisher eventPublisher,
             ILanguageService languageService,
             ILocalizedEntityService localizedEntityService,
             ILogger logger,
-            IWorkContext workContext,
             IRepository<LocaleStringResource> lsrRepository,
-            IDataProvider dataProvider,
-            IDbContext dbContext,
             ISettingService settingService,
-            CommonSettings commonSettings,
-            LocalizationSettings localizationSettings,
-            IEventPublisher eventPublisher)
+            IStaticCacheManager cacheManager,
+            IWorkContext workContext,
+            LocalizationSettings localizationSettings)
         {
-            this._cacheManager = cacheManager;
+            this._commonSettings = commonSettings;
+            this._dataProvider = dataProvider;
+            this._dbContext = dbContext;
+            this._eventPublisher = eventPublisher;
             this._languageService = languageService;
             this._localizedEntityService = localizedEntityService;
             this._logger = logger;
-            this._workContext = workContext;
             this._lsrRepository = lsrRepository;
-            this._dataProvider = dataProvider;
-            this._dbContext = dbContext;
             this._settingService = settingService;
-            this._commonSettings = commonSettings;
+            this._cacheManager = cacheManager;
+            this._workContext = workContext;
             this._localizationSettings = localizationSettings;
-            this._eventPublisher = eventPublisher;
         }
 
         #endregion

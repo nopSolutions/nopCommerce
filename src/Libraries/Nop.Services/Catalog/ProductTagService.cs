@@ -30,17 +30,6 @@ namespace Nop.Services.Catalog
 
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="cacheManager">Cache manager</param>
-        /// <param name="dbContext">Database Context</param>
-        /// <param name="eventPublisher">Event publisher</param>
-        /// <param name="productService">Product service</param>
-        /// <param name="productProductTagMappingRepository">Product - product tag repository</param>
-        /// <param name="productTagRepository">Product tag repository</param>
-        /// <param name="staticCacheManager">Static cache manager</param>
-        /// <param name="urlRecordService">Url record service</param>
         public ProductTagService(ICacheManager cacheManager,
             IDbContext dbContext,
             IEventPublisher eventPublisher,

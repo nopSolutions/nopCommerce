@@ -18,6 +18,8 @@ namespace Nop.Services.Catalog
     /// </summary>
     public partial class ProductAttributeFormatter : IProductAttributeFormatter
     {
+        #region Fields
+
         private readonly ICurrencyService _currencyService;
         private readonly IDownloadService _downloadService;
         private readonly ILocalizationService _localizationService;
@@ -29,19 +31,10 @@ namespace Nop.Services.Catalog
         private readonly IWorkContext _workContext;
         private readonly ShoppingCartSettings _shoppingCartSettings;
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="currencyService">Currency service</param>
-        /// <param name="downloadService">Download service</param>
-        /// <param name="localizationService">Localization service</param>
-        /// <param name="priceCalculationService">Price calculation service</param>
-        /// <param name="priceFormatter"> Price formatter</param>
-        /// <param name="productAttributeParser">Product attribute parser</param>
-        /// <param name="taxService">Tax service</param>
-        /// <param name="webHelper">Web helper</param>
-        /// <param name="workContext">Work context</param>
-        /// <param name="shoppingCartSettings">Shopping cart settings</param>
+        #endregion
+
+        #region Ctor
+
         public ProductAttributeFormatter(ICurrencyService currencyService,
             IDownloadService downloadService,
             ILocalizationService localizationService,
@@ -64,6 +57,10 @@ namespace Nop.Services.Catalog
             this._workContext = workContext;
             this._shoppingCartSettings = shoppingCartSettings;
         }
+
+        #endregion
+
+        #region Methods
 
         /// <summary>
         /// Formats attributes
@@ -250,5 +247,7 @@ namespace Nop.Services.Catalog
             }
             return result.ToString();
         }
+
+        #endregion
     }
 }

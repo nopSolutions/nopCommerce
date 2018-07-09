@@ -19,39 +19,39 @@ namespace Nop.Services.Messages
     {
         #region Fields
 
-        private readonly IRepository<MessageTemplate> _messageTemplateRepository;
-        private readonly IRepository<StoreMapping> _storeMappingRepository;
+        private readonly CatalogSettings _catalogSettings;
+        private readonly ICacheManager _cacheManager;
+        private readonly IEventPublisher _eventPublisher;
         private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
-        private readonly IStoreMappingService _storeMappingService;
         private readonly ILocalizedEntityService _localizedEntityService;
-        private readonly CatalogSettings _catalogSettings;
-        private readonly IEventPublisher _eventPublisher;
-        private readonly ICacheManager _cacheManager;
+        private readonly IRepository<MessageTemplate> _messageTemplateRepository;
+        private readonly IRepository<StoreMapping> _storeMappingRepository;
+        private readonly IStoreMappingService _storeMappingService;
 
         #endregion
 
         #region Ctor
 
-        public MessageTemplateService(ICacheManager cacheManager,
-            IRepository<StoreMapping> storeMappingRepository,
+        public MessageTemplateService(CatalogSettings catalogSettings,
+            ICacheManager cacheManager,
+            IEventPublisher eventPublisher,
             ILanguageService languageService,
             ILocalizationService localizationService,
             ILocalizedEntityService localizedEntityService,
-            IStoreMappingService storeMappingService,
             IRepository<MessageTemplate> messageTemplateRepository,
-            CatalogSettings catalogSettings,
-            IEventPublisher eventPublisher)
+            IRepository<StoreMapping> storeMappingRepository,
+            IStoreMappingService storeMappingService)
         {
+            this._catalogSettings = catalogSettings;
             this._cacheManager = cacheManager;
-            this._storeMappingRepository = storeMappingRepository;
+            this._eventPublisher = eventPublisher;
             this._languageService = languageService;
             this._localizationService = localizationService;
             this._localizedEntityService = localizedEntityService;
-            this._storeMappingService = storeMappingService;
             this._messageTemplateRepository = messageTemplateRepository;
-            this._catalogSettings = catalogSettings;
-            this._eventPublisher = eventPublisher;
+            this._storeMappingRepository = storeMappingRepository;
+            this._storeMappingService = storeMappingService;
         }
 
         #endregion

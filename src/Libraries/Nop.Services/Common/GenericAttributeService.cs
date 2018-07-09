@@ -17,27 +17,21 @@ namespace Nop.Services.Common
     {
         #region Fields
 
-        private readonly IRepository<GenericAttribute> _genericAttributeRepository;
         private readonly ICacheManager _cacheManager;
         private readonly IEventPublisher _eventPublisher;
+        private readonly IRepository<GenericAttribute> _genericAttributeRepository;
 
         #endregion
 
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="cacheManager">Cache manager</param>
-        /// <param name="genericAttributeRepository">Generic attribute repository</param>
-        /// <param name="eventPublisher">Event publisher</param>
         public GenericAttributeService(ICacheManager cacheManager,
-            IRepository<GenericAttribute> genericAttributeRepository,
-            IEventPublisher eventPublisher)
+            IEventPublisher eventPublisher,
+            IRepository<GenericAttribute> genericAttributeRepository)
         {
             this._cacheManager = cacheManager;
-            this._genericAttributeRepository = genericAttributeRepository;
             this._eventPublisher = eventPublisher;
+            this._genericAttributeRepository = genericAttributeRepository;
         }
 
         #endregion

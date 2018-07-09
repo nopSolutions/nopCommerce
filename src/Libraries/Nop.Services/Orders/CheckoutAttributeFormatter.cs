@@ -18,36 +18,46 @@ namespace Nop.Services.Orders
     /// </summary>
     public partial class CheckoutAttributeFormatter : ICheckoutAttributeFormatter
     {
-        private readonly IWorkContext _workContext;
-        private readonly ICheckoutAttributeService _checkoutAttributeService;
-        private readonly ICheckoutAttributeParser _checkoutAttributeParser;
-        private readonly ICurrencyService _currencyService;
-        private readonly ILocalizationService _localizationService;
-        private readonly ITaxService _taxService;
-        private readonly IPriceFormatter _priceFormatter;
-        private readonly IDownloadService _downloadService;
-        private readonly IWebHelper _webHelper;
+        #region Fields
 
-        public CheckoutAttributeFormatter(IWorkContext workContext,
+        private readonly ICheckoutAttributeParser _checkoutAttributeParser;
+        private readonly ICheckoutAttributeService _checkoutAttributeService;
+        private readonly ICurrencyService _currencyService;
+        private readonly IDownloadService _downloadService;
+        private readonly ILocalizationService _localizationService;
+        private readonly IPriceFormatter _priceFormatter;
+        private readonly ITaxService _taxService;
+        private readonly IWebHelper _webHelper;
+        private readonly IWorkContext _workContext;
+
+        #endregion
+
+        #region Ctor
+
+        public CheckoutAttributeFormatter(ICheckoutAttributeParser checkoutAttributeParser,
             ICheckoutAttributeService checkoutAttributeService,
-            ICheckoutAttributeParser checkoutAttributeParser,
             ICurrencyService currencyService,
-            ILocalizationService localizationService,
-            ITaxService taxService,
-            IPriceFormatter priceFormatter,
             IDownloadService downloadService,
-            IWebHelper webHelper)
+            ILocalizationService localizationService,
+            IPriceFormatter priceFormatter,
+            ITaxService taxService,
+            IWebHelper webHelper,
+            IWorkContext workContext)
         {
-            this._workContext = workContext;
-            this._checkoutAttributeService = checkoutAttributeService;
             this._checkoutAttributeParser = checkoutAttributeParser;
+            this._checkoutAttributeService = checkoutAttributeService;
             this._currencyService = currencyService;
-            this._localizationService = localizationService;
-            this._taxService = taxService;
-            this._priceFormatter = priceFormatter;
             this._downloadService = downloadService;
+            this._localizationService = localizationService;
+            this._priceFormatter = priceFormatter;
+            this._taxService = taxService;
             this._webHelper = webHelper;
+            this._workContext = workContext;
         }
+
+        #endregion
+
+        #region Methods
 
         /// <summary>
         /// Formats attributes
@@ -177,5 +187,7 @@ namespace Nop.Services.Orders
 
             return result.ToString();
         }
+
+        #endregion
     }
 }

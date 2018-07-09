@@ -15,27 +15,21 @@ namespace Nop.Services.Stores
     {
         #region Fields
 
-        private readonly IRepository<Store> _storeRepository;
         private readonly IEventPublisher _eventPublisher;
+        private readonly IRepository<Store> _storeRepository;
         private readonly IStaticCacheManager _cacheManager;
 
         #endregion
 
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="cacheManager">Cache manager</param>
-        /// <param name="storeRepository">Store repository</param>
-        /// <param name="eventPublisher">Event publisher</param>
-        public StoreService(IStaticCacheManager cacheManager,
+        public StoreService(IEventPublisher eventPublisher,
             IRepository<Store> storeRepository,
-            IEventPublisher eventPublisher)
+            IStaticCacheManager cacheManager)
         {
-            this._cacheManager = cacheManager;
-            this._storeRepository = storeRepository;
             this._eventPublisher = eventPublisher;
+            this._storeRepository = storeRepository;
+            this._cacheManager = cacheManager;
         }
 
         #endregion

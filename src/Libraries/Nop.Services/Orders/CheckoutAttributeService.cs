@@ -16,35 +16,27 @@ namespace Nop.Services.Orders
     {
         #region Fields
 
+        private readonly ICacheManager _cacheManager;
+        private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<CheckoutAttribute> _checkoutAttributeRepository;
         private readonly IRepository<CheckoutAttributeValue> _checkoutAttributeValueRepository;
         private readonly IStoreMappingService _storeMappingService;
-        private readonly IEventPublisher _eventPublisher;
-        private readonly ICacheManager _cacheManager;
-        
+
         #endregion
 
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="cacheManager">Cache manager</param>
-        /// <param name="checkoutAttributeRepository">Checkout attribute repository</param>
-        /// <param name="checkoutAttributeValueRepository">Checkout attribute value repository</param>
-        /// <param name="storeMappingService">Store mapping service</param>
-        /// <param name="eventPublisher">Event publisher</param>
         public CheckoutAttributeService(ICacheManager cacheManager,
+            IEventPublisher eventPublisher,
             IRepository<CheckoutAttribute> checkoutAttributeRepository,
             IRepository<CheckoutAttributeValue> checkoutAttributeValueRepository,
-            IStoreMappingService storeMappingService,
-            IEventPublisher eventPublisher)
+            IStoreMappingService storeMappingService)
         {
             this._cacheManager = cacheManager;
+            this._eventPublisher = eventPublisher;
             this._checkoutAttributeRepository = checkoutAttributeRepository;
             this._checkoutAttributeValueRepository = checkoutAttributeValueRepository;
             this._storeMappingService = storeMappingService;
-            this._eventPublisher = eventPublisher;
         }
 
         #endregion
@@ -109,7 +101,7 @@ namespace Nop.Services.Orders
         {
             if (checkoutAttributeId == 0)
                 return null;
-            
+
             var key = string.Format(NopOrderDefaults.CheckoutAttributesByIdCacheKey, checkoutAttributeId);
             return _cacheManager.Get(key, () => _checkoutAttributeRepository.GetById(checkoutAttributeId));
         }
@@ -190,7 +182,7 @@ namespace Nop.Services.Orders
                 return checkoutAttributeValues;
             });
         }
-        
+
         /// <summary>
         /// Gets a checkout attribute value
         /// </summary>
@@ -200,7 +192,7 @@ namespace Nop.Services.Orders
         {
             if (checkoutAttributeValueId == 0)
                 return null;
-            
+
             var key = string.Format(NopOrderDefaults.CheckoutAttributeValuesByIdCacheKey, checkoutAttributeValueId);
             return _cacheManager.Get(key, () => _checkoutAttributeValueRepository.GetById(checkoutAttributeValueId));
         }
@@ -240,7 +232,7 @@ namespace Nop.Services.Orders
             //event notification
             _eventPublisher.EntityUpdated(checkoutAttributeValue);
         }
-        
+
         #endregion
 
         #endregion

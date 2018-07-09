@@ -16,24 +16,24 @@ namespace Nop.Services.Directory
     {
         #region Fields
 
-        private readonly IRepository<StateProvince> _stateProvinceRepository;
-        private readonly IEventPublisher _eventPublisher;
         private readonly ICacheManager _cacheManager;
+        private readonly IEventPublisher _eventPublisher;
         private readonly ILocalizationService _localizationService;
+        private readonly IRepository<StateProvince> _stateProvinceRepository;
 
         #endregion
 
         #region Ctor
 
         public StateProvinceService(ICacheManager cacheManager,
-            IRepository<StateProvince> stateProvinceRepository,
             IEventPublisher eventPublisher,
-            ILocalizationService localizationService)
+            ILocalizationService localizationService,
+            IRepository<StateProvince> stateProvinceRepository)
         {
-            _cacheManager = cacheManager;
-            _stateProvinceRepository = stateProvinceRepository;
-            _eventPublisher = eventPublisher;
+            this._cacheManager = cacheManager;
+            this._eventPublisher = eventPublisher;
             this._localizationService = localizationService;
+            this._stateProvinceRepository = stateProvinceRepository;
         }
 
         #endregion

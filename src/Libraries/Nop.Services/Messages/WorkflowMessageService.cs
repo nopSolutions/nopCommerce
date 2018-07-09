@@ -28,54 +28,54 @@ namespace Nop.Services.Messages
     {
         #region Fields
 
-        private readonly IMessageTemplateService _messageTemplateService;
-        private readonly IQueuedEmailService _queuedEmailService;
-        private readonly ILanguageService _languageService;
-        private readonly ILocalizationService _localizationService;
-        private readonly ITokenizer _tokenizer;
-        private readonly IEmailAccountService _emailAccountService;
-        private readonly IMessageTokenProvider _messageTokenProvider;
-        private readonly IStoreService _storeService;
-        private readonly IStoreContext _storeContext;
         private readonly CommonSettings _commonSettings;
         private readonly EmailAccountSettings _emailAccountSettings;
-        private readonly IEventPublisher _eventPublisher;
         private readonly IAffiliateService _affiliateService;
         private readonly ICustomerService _customerService;
+        private readonly IEmailAccountService _emailAccountService;
+        private readonly IEventPublisher _eventPublisher;
+        private readonly ILanguageService _languageService;
+        private readonly ILocalizationService _localizationService;
+        private readonly IMessageTemplateService _messageTemplateService;
+        private readonly IMessageTokenProvider _messageTokenProvider;
+        private readonly IQueuedEmailService _queuedEmailService;
+        private readonly IStoreContext _storeContext;
+        private readonly IStoreService _storeService;
+        private readonly ITokenizer _tokenizer;
 
         #endregion
 
         #region Ctor
 
-        public WorkflowMessageService(IMessageTemplateService messageTemplateService,
-            IQueuedEmailService queuedEmailService,
+        public WorkflowMessageService(CommonSettings commonSettings,
+            EmailAccountSettings emailAccountSettings,
+            IAffiliateService affiliateService,
+            ICustomerService customerService,
+            IEmailAccountService emailAccountService,
+            IEventPublisher eventPublisher,
             ILanguageService languageService,
             ILocalizationService localizationService,
-            ITokenizer tokenizer,
-            IEmailAccountService emailAccountService,
+            IMessageTemplateService messageTemplateService,
             IMessageTokenProvider messageTokenProvider,
-            IStoreService storeService,
+            IQueuedEmailService queuedEmailService,
             IStoreContext storeContext,
-            CommonSettings commonSettings,
-            EmailAccountSettings emailAccountSettings,
-            IEventPublisher eventPublisher,
-            IAffiliateService affiliateService,
-            ICustomerService customerService)
+            IStoreService storeService,
+            ITokenizer tokenizer)
         {
-            this._messageTemplateService = messageTemplateService;
-            this._queuedEmailService = queuedEmailService;
-            this._languageService = languageService;
-            this._localizationService = localizationService;
-            this._tokenizer = tokenizer;
-            this._emailAccountService = emailAccountService;
-            this._messageTokenProvider = messageTokenProvider;
-            this._storeService = storeService;
-            this._storeContext = storeContext;
             this._commonSettings = commonSettings;
             this._emailAccountSettings = emailAccountSettings;
-            this._eventPublisher = eventPublisher;
             this._affiliateService = affiliateService;
             this._customerService = customerService;
+            this._emailAccountService = emailAccountService;
+            this._eventPublisher = eventPublisher;
+            this._languageService = languageService;
+            this._localizationService = localizationService;
+            this._messageTemplateService = messageTemplateService;
+            this._messageTokenProvider = messageTokenProvider;
+            this._queuedEmailService = queuedEmailService;
+            this._storeContext = storeContext;
+            this._storeService = storeService;
+            this._tokenizer = tokenizer;
         }
 
         #endregion

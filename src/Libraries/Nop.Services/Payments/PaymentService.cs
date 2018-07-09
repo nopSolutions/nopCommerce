@@ -24,23 +24,23 @@ namespace Nop.Services.Payments
     {
         #region Fields
 
-        private readonly PaymentSettings _paymentSettings;
         private readonly IPluginFinder _pluginFinder;
         private readonly ISettingService _settingService;
+        private readonly PaymentSettings _paymentSettings;
         private readonly ShoppingCartSettings _shoppingCartSettings;
 
         #endregion
 
         #region Ctor
 
-        public PaymentService(PaymentSettings paymentSettings,
-            IPluginFinder pluginFinder,
+        public PaymentService(IPluginFinder pluginFinder,
             ISettingService settingService,
+            PaymentSettings paymentSettings,
             ShoppingCartSettings shoppingCartSettings)
         {
-            this._paymentSettings = paymentSettings;
             this._pluginFinder = pluginFinder;
             this._settingService = settingService;
+            this._paymentSettings = paymentSettings;
             this._shoppingCartSettings = shoppingCartSettings;
         }
 
@@ -531,9 +531,6 @@ namespace Nop.Services.Payments
     /// </summary>
     public class DictionarySerializer : IXmlSerializable
     {
-        /// <summary>
-        /// Ctor
-        /// </summary>
         public DictionarySerializer()
         {
             Dictionary = new Dictionary<string, object>();

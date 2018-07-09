@@ -21,14 +21,8 @@ namespace Nop.Services.Catalog
 
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="catalogSettings">Catalog settings</param>
-        /// <param name="httpContextAccessor">HTTP context accessor</param>
-        /// <param name="productService">Product service</param>
         public CompareProductsService(CatalogSettings catalogSettings,
-            IHttpContextAccessor httpContextAccessor, 
+            IHttpContextAccessor httpContextAccessor,
             IProductService productService)
         {
             this._catalogSettings = catalogSettings;
@@ -84,7 +78,7 @@ namespace Nop.Services.Catalog
             //add cookie
             _httpContextAccessor.HttpContext.Response.Cookies.Append(NopCatalogDefaults.CompareProductsCookieName, comparedProductIdsCookie, cookieOptions);
         }
-        
+
         #endregion
 
         #region Methods

@@ -15,26 +15,23 @@ namespace Nop.Services.Helpers
     {
         #region Fields
 
-        private readonly NopConfig _nopConfig;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly INopFileProvider _fileProvider;
+        private readonly NopConfig _nopConfig;
+
         private static readonly object _locker = new object();
 
         #endregion
 
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="nopConfig">Config</param>
-        /// <param name="httpContextAccessor">HTTP context accessor</param>
-        /// <param name="fileProvider">File provider</param>
-        public UserAgentHelper(NopConfig nopConfig, IHttpContextAccessor httpContextAccessor, INopFileProvider fileProvider)
+        public UserAgentHelper(IHttpContextAccessor httpContextAccessor,
+            INopFileProvider fileProvider,
+            NopConfig nopConfig)
         {
-            this._nopConfig = nopConfig;
             this._httpContextAccessor = httpContextAccessor;
             this._fileProvider = fileProvider;
+            this._nopConfig = nopConfig;
         }
 
         #endregion
@@ -150,7 +147,7 @@ namespace Nop.Services.Helpers
             var userAgent = _httpContextAccessor.HttpContext.Request.Headers[HeaderNames.UserAgent].ToString();
             return !string.IsNullOrEmpty(userAgent) && userAgent.IndexOf("MSIE 8.0", StringComparison.InvariantCultureIgnoreCase) >= 0;
         }
-        
+
         #endregion
     }
 }

@@ -16,20 +16,25 @@ namespace Nop.Services.Common
     /// </summary>
     public partial class AddressAttributeParser : IAddressAttributeParser
     {
+        #region Fields
+
         private readonly IAddressAttributeService _addressAttributeService;
         private readonly ILocalizationService _localizationService;
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="addressAttributeService">Address attribute service</param>
-        /// <param name="localizationService">Localization service</param>
+        #endregion
+
+        #region Ctor
+
         public AddressAttributeParser(IAddressAttributeService addressAttributeService,
             ILocalizationService localizationService)
         {
             this._addressAttributeService = addressAttributeService;
             this._localizationService = localizationService;
         }
+
+        #endregion
+
+        #region Utilities
 
         /// <summary>
         /// Gets selected address attribute identifiers
@@ -65,6 +70,10 @@ namespace Nop.Services.Common
             }
             return ids;
         }
+
+        #endregion
+
+        #region Methods
 
         /// <summary>
         /// Gets selected address attributes
@@ -343,5 +352,7 @@ namespace Nop.Services.Common
 
             return attributesXml;
         }
+
+        #endregion
     }
 }

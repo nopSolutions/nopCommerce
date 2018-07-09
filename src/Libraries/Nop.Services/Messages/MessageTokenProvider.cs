@@ -51,35 +51,33 @@ namespace Nop.Services.Messages
     {
         #region Fields
 
+        private readonly CatalogSettings _catalogSettings;
+        private readonly CurrencySettings _currencySettings;
+        private readonly IActionContextAccessor _actionContextAccessor;
+        private readonly IAddressAttributeFormatter _addressAttributeFormatter;
+        private readonly ICurrencyService _currencyService;
+        private readonly ICustomerAttributeFormatter _customerAttributeFormatter;
+        private readonly ICustomerService _customerService;
+        private readonly IDateTimeHelper _dateTimeHelper;
+        private readonly IDownloadService _downloadService;
+        private readonly IEventPublisher _eventPublisher;
+        private readonly IGenericAttributeService _genericAttributeService;
         private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly IPriceFormatter _priceFormatter;
-        private readonly ICurrencyService _currencyService;
-        private readonly IWorkContext _workContext;
-        private readonly IDownloadService _downloadService;
         private readonly IOrderService _orderService;
         private readonly IPaymentService _paymentService;
-        private readonly IAddressAttributeFormatter _addressAttributeFormatter;
-        private readonly ICustomerAttributeFormatter _customerAttributeFormatter;
-        private readonly IVendorAttributeFormatter _vendorAttributeFormatter;
-        private readonly IStoreService _storeService;
+        private readonly IPriceFormatter _priceFormatter;
         private readonly IStoreContext _storeContext;
+        private readonly IStoreService _storeService;
         private readonly IUrlHelperFactory _urlHelperFactory;
-        private readonly IActionContextAccessor _actionContextAccessor;
-        private readonly ICustomerService _customerService;
         private readonly IUrlRecordService _urlRecordService;
-        private readonly IGenericAttributeService _genericAttributeService;
-
+        private readonly IVendorAttributeFormatter _vendorAttributeFormatter;
+        private readonly IWorkContext _workContext;
         private readonly MessageTemplatesSettings _templatesSettings;
-        private readonly CatalogSettings _catalogSettings;
-        private readonly TaxSettings _taxSettings;
-        private readonly CurrencySettings _currencySettings;
-        private readonly ShippingSettings _shippingSettings;
         private readonly PaymentSettings _paymentSettings;
-
-        private readonly IEventPublisher _eventPublisher;
+        private readonly ShippingSettings _shippingSettings;
         private readonly StoreInformationSettings _storeInformationSettings;
+        private readonly TaxSettings _taxSettings;
 
         private Dictionary<string, IEnumerable<string>> _allowedTokens;
 
@@ -87,62 +85,61 @@ namespace Nop.Services.Messages
 
         #region Ctor
 
-        public MessageTokenProvider(ILanguageService languageService,
-            ILocalizationService localizationService,
-            IDateTimeHelper dateTimeHelper,
-            IPriceFormatter priceFormatter,
+        public MessageTokenProvider(CatalogSettings catalogSettings,
+            CurrencySettings currencySettings,
+            IActionContextAccessor actionContextAccessor,
+            IAddressAttributeFormatter addressAttributeFormatter,
             ICurrencyService currencyService,
-            IWorkContext workContext,
+            ICustomerAttributeFormatter customerAttributeFormatter,
+            ICustomerService customerService,
+            IDateTimeHelper dateTimeHelper,
             IDownloadService downloadService,
+            IEventPublisher eventPublisher,
+            IGenericAttributeService genericAttributeService,
+            ILanguageService languageService,
+            ILocalizationService localizationService,
             IOrderService orderService,
             IPaymentService paymentService,
-            IStoreService storeService,
+            IPriceFormatter priceFormatter,
             IStoreContext storeContext,
-            IAddressAttributeFormatter addressAttributeFormatter,
-            ICustomerAttributeFormatter customerAttributeFormatter,
-            IVendorAttributeFormatter vendorAttributeFormatter,
+            IStoreService storeService,
             IUrlHelperFactory urlHelperFactory,
-            IActionContextAccessor actionContextAccessor,
-            ICustomerService customerService,
             IUrlRecordService urlRecordService,
-            IGenericAttributeService genericAttributeService,
+            IVendorAttributeFormatter vendorAttributeFormatter,
+            IWorkContext workContext,
             MessageTemplatesSettings templatesSettings,
-            CatalogSettings catalogSettings,
-            TaxSettings taxSettings,
-            CurrencySettings currencySettings,
-            ShippingSettings shippingSettings,
             PaymentSettings paymentSettings,
-            IEventPublisher eventPublisher,
-            StoreInformationSettings storeInformationSettings)
+            ShippingSettings shippingSettings,
+            StoreInformationSettings storeInformationSettings,
+            TaxSettings taxSettings)
         {
+            this._catalogSettings = catalogSettings;
+            this._currencySettings = currencySettings;
+            this._actionContextAccessor = actionContextAccessor;
+            this._addressAttributeFormatter = addressAttributeFormatter;
+            this._currencyService = currencyService;
+            this._customerAttributeFormatter = customerAttributeFormatter;
+            this._customerService = customerService;
+            this._dateTimeHelper = dateTimeHelper;
+            this._downloadService = downloadService;
+            this._eventPublisher = eventPublisher;
+            this._genericAttributeService = genericAttributeService;
             this._languageService = languageService;
             this._localizationService = localizationService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._priceFormatter = priceFormatter;
-            this._currencyService = currencyService;
-            this._workContext = workContext;
-            this._downloadService = downloadService;
             this._orderService = orderService;
             this._paymentService = paymentService;
-            this._addressAttributeFormatter = addressAttributeFormatter;
-            this._customerAttributeFormatter = customerAttributeFormatter;
-            this._vendorAttributeFormatter = vendorAttributeFormatter;
-            this._urlHelperFactory = urlHelperFactory;
-            this._actionContextAccessor = actionContextAccessor;
-            this._customerService = customerService;
-            this._urlRecordService = urlRecordService;
-            this._storeService = storeService;
+            this._priceFormatter = priceFormatter;
             this._storeContext = storeContext;
-            this._genericAttributeService = genericAttributeService;
-
+            this._storeService = storeService;
+            this._urlHelperFactory = urlHelperFactory;
+            this._urlRecordService = urlRecordService;
+            this._vendorAttributeFormatter = vendorAttributeFormatter;
+            this._workContext = workContext;
             this._templatesSettings = templatesSettings;
-            this._catalogSettings = catalogSettings;
-            this._taxSettings = taxSettings;
-            this._currencySettings = currencySettings;
-            this._shippingSettings = shippingSettings;
             this._paymentSettings = paymentSettings;
-            this._eventPublisher = eventPublisher;
+            this._shippingSettings = shippingSettings;
             this._storeInformationSettings = storeInformationSettings;
+            this._taxSettings = taxSettings;
         }
 
         #endregion

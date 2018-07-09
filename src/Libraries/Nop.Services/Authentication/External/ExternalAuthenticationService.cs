@@ -45,25 +45,6 @@ namespace Nop.Services.Authentication.External
 
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="customerSettings">Customer settings</param>
-        /// <param name="externalAuthenticationSettings">External authentication settings</param>
-        /// <param name="authenticationService">Authentication service</param>
-        /// <param name="customerActivityService">Customer activity service</param>
-        /// <param name="customerRegistrationService">Customer registration service</param>
-        /// <param name="customerService">Customer service</param>
-        /// <param name="eventPublisher">Event publisher</param>
-        /// <param name="genericAttributeService">Generic attribute service</param>
-        /// <param name="localizationService">Localization service</param>
-        /// <param name="pluginFinder">Plugin finder</param>
-        /// <param name="externalAuthenticationRecordRepository">External authentication record repository</param>
-        /// <param name="shoppingCartService">Shopping cart service</param>
-        /// <param name="storeContext">Store context</param>
-        /// <param name="workContext">Work context</param>
-        /// <param name="workflowMessageService">Workflow message service</param>
-        /// <param name="localizationSettings">Localization settings</param>
         public ExternalAuthenticationService(CustomerSettings customerSettings,
             ExternalAuthenticationSettings externalAuthenticationSettings,
             IAuthenticationService authenticationService,

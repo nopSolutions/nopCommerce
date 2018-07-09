@@ -12,20 +12,25 @@ namespace Nop.Services.Customers
     /// </summary>
     public partial class CustomerAttributeParser : ICustomerAttributeParser
     {
+        #region Fields
+
         private readonly ICustomerAttributeService _customerAttributeService;
         private readonly ILocalizationService _localizationService;
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="customerAttributeService">Customer attribute service</param>
-        /// <param name="localizationService">Localization service</param>
+        #endregion
+
+        #region Ctor
+
         public CustomerAttributeParser(ICustomerAttributeService customerAttributeService,
             ILocalizationService localizationService)
         {
             this._customerAttributeService = customerAttributeService;
             this._localizationService = localizationService;
         }
+
+        #endregion
+
+        #region Utilities
 
         /// <summary>
         /// Gets selected customer attribute identifiers
@@ -61,6 +66,10 @@ namespace Nop.Services.Customers
             }
             return ids;
         }
+
+        #endregion
+
+        #region Methods
 
         /// <summary>
         /// Gets selected customer attributes
@@ -279,5 +288,7 @@ namespace Nop.Services.Customers
 
             return warnings;
         }
+
+        #endregion
     }
 }

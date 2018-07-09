@@ -14,12 +14,8 @@ namespace Nop.Services.Directory
     [NotMapped]
     public class CurrencyForCaching : Currency, IEntityForCaching
     {
-        /// <summary>
-        /// Ctor
-        /// </summary>
         public CurrencyForCaching()
         {
-
         }
 
         /// <summary>

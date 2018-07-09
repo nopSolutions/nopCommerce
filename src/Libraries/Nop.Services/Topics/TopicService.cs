@@ -22,51 +22,39 @@ namespace Nop.Services.Topics
     {
         #region Fields
 
-        private readonly IRepository<Topic> _topicRepository;
-        private readonly IRepository<StoreMapping> _storeMappingRepository;
+        private readonly CatalogSettings _catalogSettings;
         private readonly IAclService _aclService;
+        private readonly ICacheManager _cacheManager;
+        private readonly IEventPublisher _eventPublisher;
+        private readonly IRepository<AclRecord> _aclRepository;
+        private readonly IRepository<StoreMapping> _storeMappingRepository;
+        private readonly IRepository<Topic> _topicRepository;
         private readonly IStoreMappingService _storeMappingService;
         private readonly IWorkContext _workContext;
-        private readonly IRepository<AclRecord> _aclRepository;
-        private readonly CatalogSettings _catalogSettings;
-        private readonly IEventPublisher _eventPublisher;
-        private readonly ICacheManager _cacheManager;
 
         #endregion
 
         #region Ctor
 
-        /// <summary>
-        /// Topic service
-        /// </summary>
-        /// <param name="topicRepository">Topic repository</param>
-        /// <param name="storeMappingRepository">Store mapping repository</param>
-        /// <param name="aclService">ACL service</param>
-        /// <param name="storeMappingService">Store mapping service</param>
-        /// <param name="workContext">Work context</param>
-        /// <param name="aclRepository">ACL repository</param>
-        /// <param name="catalogSettings">Catalog settings</param>
-        /// <param name="eventPublisher">Event publisher</param>
-        /// <param name="cacheManager">Cache manager</param>
-        public TopicService(IRepository<Topic> topicRepository,
-            IRepository<StoreMapping> storeMappingRepository,
+        public TopicService(CatalogSettings catalogSettings,
             IAclService aclService,
-            IStoreMappingService storeMappingService,
-            IWorkContext workContext,
-            IRepository<AclRecord> aclRepository,
-            CatalogSettings catalogSettings,
+            ICacheManager cacheManager,
             IEventPublisher eventPublisher,
-            ICacheManager cacheManager)
+            IRepository<AclRecord> aclRepository,
+            IRepository<StoreMapping> storeMappingRepository,
+            IRepository<Topic> topicRepository,
+            IStoreMappingService storeMappingService,
+            IWorkContext workContext)
         {
-            this._topicRepository = topicRepository;
-            this._storeMappingRepository = storeMappingRepository;
+            this._catalogSettings = catalogSettings;
             this._aclService = aclService;
+            this._cacheManager = cacheManager;
+            this._eventPublisher = eventPublisher;
+            this._aclRepository = aclRepository;
+            this._storeMappingRepository = storeMappingRepository;
+            this._topicRepository = topicRepository;
             this._storeMappingService = storeMappingService;
             this._workContext = workContext;
-            this._aclRepository = aclRepository;
-            this._catalogSettings = catalogSettings;
-            this._eventPublisher = eventPublisher;
-            this._cacheManager = cacheManager;
         }
 
         #endregion

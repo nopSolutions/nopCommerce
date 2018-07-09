@@ -20,28 +20,23 @@ namespace Nop.Services.Common
     {
         #region Fields
 
+        private readonly CommonSettings _commonSettings;
         private readonly IDataProvider _dataProvider;
         private readonly IDbContext _dbContext;
-        private readonly CommonSettings _commonSettings;
         private readonly INopFileProvider _fileProvider;
 
         #endregion
 
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="dataProvider">Data provider</param>
-        /// <param name="dbContext">Database Context</param>
-        /// <param name="commonSettings">Common settings</param>
-        /// <param name="fileProvider">File provider</param>
-        public MaintenanceService(IDataProvider dataProvider, IDbContext dbContext,
-            CommonSettings commonSettings, INopFileProvider fileProvider)
+        public MaintenanceService(CommonSettings commonSettings,
+            IDataProvider dataProvider,
+            IDbContext dbContext,
+            INopFileProvider fileProvider)
         {
+            this._commonSettings = commonSettings;
             this._dataProvider = dataProvider;
             this._dbContext = dbContext;
-            this._commonSettings = commonSettings;
             this._fileProvider = fileProvider;
         }
 
@@ -67,7 +62,7 @@ namespace Nop.Services.Common
         /// </summary>
         protected virtual void CheckBackupSupported()
         {
-            if(!_dataProvider.BackupSupported)
+            if (!_dataProvider.BackupSupported)
                 throw new DataException("This database does not support backup");
         }
 
@@ -208,7 +203,7 @@ namespace Nop.Services.Common
                 CLOSE cur_reindex
                 DEALLOCATE cur_reindex";
 
-            _dbContext.ExecuteSqlCommand(commandText, true);            
+            _dbContext.ExecuteSqlCommand(commandText, true);
         }
 
         #endregion

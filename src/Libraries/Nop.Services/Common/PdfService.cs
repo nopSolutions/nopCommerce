@@ -38,111 +38,84 @@ namespace Nop.Services.Common
     {
         #region Fields
 
-        private readonly ILocalizationService _localizationService;
-        private readonly ILanguageService _languageService;
-        private readonly IWorkContext _workContext;
-        private readonly IOrderService _orderService;
-        private readonly IPaymentService _paymentService;
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly IPriceFormatter _priceFormatter;
-        private readonly ICurrencyService _currencyService;
-        private readonly IMeasureService _measureService;
-        private readonly IPictureService _pictureService;
-        private readonly IProductService _productService;
-        private readonly IStoreService _storeService;
-        private readonly IStoreContext _storeContext;
-        private readonly ISettingService _settingService;
-        private readonly IAddressAttributeFormatter _addressAttributeFormatter;
+        private readonly AddressSettings _addressSettings;
         private readonly CatalogSettings _catalogSettings;
         private readonly CurrencySettings _currencySettings;
+        private readonly IAddressAttributeFormatter _addressAttributeFormatter;
+        private readonly ICurrencyService _currencyService;
+        private readonly IDateTimeHelper _dateTimeHelper;
+        private readonly ILanguageService _languageService;
+        private readonly ILocalizationService _localizationService;
+        private readonly IMeasureService _measureService;
+        private readonly INopFileProvider _fileProvider;
+        private readonly IOrderService _orderService;
+        private readonly IPaymentService _paymentService;
+        private readonly IPictureService _pictureService;
+        private readonly IPriceFormatter _priceFormatter;
+        private readonly IProductService _productService;
+        private readonly ISettingService _settingService;
+        private readonly IStoreContext _storeContext;
+        private readonly IStoreService _storeService;
+        private readonly IVendorService _vendorService;
+        private readonly IWorkContext _workContext;
         private readonly MeasureSettings _measureSettings;
         private readonly PdfSettings _pdfSettings;
         private readonly TaxSettings _taxSettings;
-        private readonly AddressSettings _addressSettings;
-        private readonly IVendorService _vendorService;
         private readonly VendorSettings _vendorSettings;
-        private readonly INopFileProvider _fileProvider;
 
         #endregion
 
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="localizationService">Localization service</param>
-        /// <param name="languageService">Language service</param>
-        /// <param name="workContext">Work context</param>
-        /// <param name="orderService">Order service</param>
-        /// <param name="paymentService">Payment service</param>
-        /// <param name="dateTimeHelper">Date time helper</param>
-        /// <param name="priceFormatter">Price formatter</param>
-        /// <param name="currencyService">Currency service</param>
-        /// <param name="measureService">Measure service</param>
-        /// <param name="pictureService">Picture service</param>
-        /// <param name="productService">Product service</param>
-        /// <param name="storeService">Store service</param>
-        /// <param name="storeContext">Store context</param>
-        /// <param name="settingService">Setting service</param>
-        /// <param name="addressAttributeFormatter">Address attribute formatter</param>
-        /// <param name="catalogSettings">Catalog settings</param>
-        /// <param name="currencySettings">Currency settings</param>
-        /// <param name="measureSettings">Measure settings</param>
-        /// <param name="pdfSettings">PDF sSettings</param>
-        /// <param name="taxSettings">Tax settings</param>
-        /// <param name="addressSettings">Address settings</param>
-        /// <param name="vendorService">Vendor service</param>
-        /// <param name="vendorSettings">Vendor settings</param>
-        /// <param name="fileProvider">File provider</param>
-        public PdfService(ILocalizationService localizationService,
-            ILanguageService languageService,
-            IWorkContext workContext,
-            IOrderService orderService,
-            IPaymentService paymentService,
-            IDateTimeHelper dateTimeHelper,
-            IPriceFormatter priceFormatter,
-            ICurrencyService currencyService,
-            IMeasureService measureService,
-            IPictureService pictureService,
-            IProductService productService,
-            IStoreService storeService,
-            IStoreContext storeContext,
-            ISettingService settingService,
-            IAddressAttributeFormatter addressAttributeFormatter,
+        public PdfService(AddressSettings addressSettings,
             CatalogSettings catalogSettings,
             CurrencySettings currencySettings,
+            IAddressAttributeFormatter addressAttributeFormatter,
+            ICurrencyService currencyService,
+            IDateTimeHelper dateTimeHelper,
+            ILanguageService languageService,
+            ILocalizationService localizationService,
+            IMeasureService measureService,
+            INopFileProvider fileProvider,
+            IOrderService orderService,
+            IPaymentService paymentService,
+            IPictureService pictureService,
+            IPriceFormatter priceFormatter,
+            IProductService productService,
+            ISettingService settingService,
+            IStoreContext storeContext,
+            IStoreService storeService,
+            IVendorService vendorService,
+            IWorkContext workContext,
             MeasureSettings measureSettings,
             PdfSettings pdfSettings,
             TaxSettings taxSettings,
-            AddressSettings addressSettings,
-            IVendorService vendorService,
-            VendorSettings vendorSettings,
-            INopFileProvider fileProvider)
+            VendorSettings vendorSettings)
         {
-            this._localizationService = localizationService;
+            this._addressSettings = addressSettings;
+            this._catalogSettings = catalogSettings;
+            this._currencySettings = currencySettings;
+            this._addressAttributeFormatter = addressAttributeFormatter;
+            this._currencyService = currencyService;
+            this._dateTimeHelper = dateTimeHelper;
             this._languageService = languageService;
-            this._workContext = workContext;
+            this._localizationService = localizationService;
+            this._measureService = measureService;
+            this._fileProvider = fileProvider;
             this._orderService = orderService;
             this._paymentService = paymentService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._priceFormatter = priceFormatter;
-            this._currencyService = currencyService;
-            this._measureService = measureService;
             this._pictureService = pictureService;
+            this._priceFormatter = priceFormatter;
             this._productService = productService;
-            this._storeService = storeService;
-            this._storeContext = storeContext;
             this._settingService = settingService;
-            this._addressAttributeFormatter = addressAttributeFormatter;
-            this._currencySettings = currencySettings;
-            this._catalogSettings = catalogSettings;
+            this._storeContext = storeContext;
+            this._storeService = storeService;
+            this._vendorService = vendorService;
+            this._workContext = workContext;
             this._measureSettings = measureSettings;
             this._pdfSettings = pdfSettings;
             this._taxSettings = taxSettings;
-            this._addressSettings = addressSettings;
-            this._vendorService = vendorService;
             this._vendorSettings = vendorSettings;
-            this._fileProvider = fileProvider;
         }
 
         #endregion

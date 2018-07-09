@@ -21,10 +21,6 @@ namespace Nop.Services.Messages
 
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="messageTemplatesSettings">Message templates settings</param>
         public Tokenizer(MessageTemplatesSettings messageTemplatesSettings)
         {
             this._messageTemplatesSettings = messageTemplatesSettings;
@@ -96,7 +92,7 @@ namespace Nop.Services.Messages
                     if (htmlEncode && !token.NeverHtmlEncoded)
                         tokenValue = WebUtility.HtmlEncode(tokenValue.ToString());
                 }
-                
+
                 template = Replace(template, $@"%{token.Key}%", tokenValue.ToString());
             }
 
@@ -179,7 +175,7 @@ namespace Nop.Services.Messages
 
             return template;
         }
-        
+
         #endregion
     }
 }

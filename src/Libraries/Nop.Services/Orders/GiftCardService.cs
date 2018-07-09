@@ -17,31 +17,24 @@ namespace Nop.Services.Orders
     {
         #region Fields
 
-        private readonly IRepository<GiftCard> _giftCardRepository;
-        private readonly IRepository<GiftCardUsageHistory> _giftCardUsageHistoryRepository;
         private readonly ICustomerService _customerService;
         private readonly IEventPublisher _eventPublisher;
+        private readonly IRepository<GiftCard> _giftCardRepository;
+        private readonly IRepository<GiftCardUsageHistory> _giftCardUsageHistoryRepository;
 
         #endregion
 
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="giftCardRepository">Gift card context</param>
-        /// <param name="giftCardUsageHistoryRepository">Gift card usage history repository</param>
-        /// <param name="customerService">Customer service</param>
-        /// <param name="eventPublisher">Event publisher</param>
-        public GiftCardService(IRepository<GiftCard> giftCardRepository,
-            IRepository<GiftCardUsageHistory> giftCardUsageHistoryRepository,
-            ICustomerService customerService,
-            IEventPublisher eventPublisher)
+        public GiftCardService(ICustomerService customerService,
+            IEventPublisher eventPublisher,
+            IRepository<GiftCard> giftCardRepository,
+            IRepository<GiftCardUsageHistory> giftCardUsageHistoryRepository)
         {
-            this._giftCardRepository = giftCardRepository;
-            this._giftCardUsageHistoryRepository = giftCardUsageHistoryRepository;
             this._customerService = customerService;
             this._eventPublisher = eventPublisher;
+            this._giftCardRepository = giftCardRepository;
+            this._giftCardUsageHistoryRepository = giftCardUsageHistoryRepository;
         }
 
         #endregion

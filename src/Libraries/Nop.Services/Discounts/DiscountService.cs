@@ -24,67 +24,51 @@ namespace Nop.Services.Discounts
     {
         #region Fields
 
+        private readonly ICategoryService _categoryService;
+        private readonly ICustomerService _customerService;
+        private readonly IEventPublisher _eventPublisher;
+        private readonly ILocalizationService _localizationService;
+        private readonly IPluginFinder _pluginFinder;
+        private readonly IRepository<Category> _categoryRepository;
         private readonly IRepository<Discount> _discountRepository;
         private readonly IRepository<DiscountRequirement> _discountRequirementRepository;
         private readonly IRepository<DiscountUsageHistory> _discountUsageHistoryRepository;
-        private readonly IRepository<Category> _categoryRepository;
         private readonly IRepository<Manufacturer> _manufacturerRepository;
         private readonly IRepository<Product> _productRepository;
         private readonly IStaticCacheManager _cacheManager;
         private readonly IStoreContext _storeContext;
-        private readonly ICustomerService _customerService;
-        private readonly ILocalizationService _localizationService;
-        private readonly ICategoryService _categoryService;
-        private readonly IPluginFinder _pluginFinder;
-        private readonly IEventPublisher _eventPublisher;
 
         #endregion
 
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="cacheManager">Static cache manager</param>
-        /// <param name="discountRepository">Discount repository</param>
-        /// <param name="discountRequirementRepository">Discount requirement repository</param>
-        /// <param name="discountUsageHistoryRepository">Discount usage history repository</param>
-        /// <param name="categoryRepository">Category repository</param>
-        /// <param name="manufacturerRepository">Manufacturer repository</param>
-        /// <param name="productRepository">Product repository</param>
-        /// <param name="storeContext">Store context</param>
-        /// <param name="customerService">Customer service</param>
-        /// <param name="localizationService">Localization service</param>
-        /// <param name="categoryService">Category service</param>
-        /// <param name="pluginFinder">Plugin finder</param>
-        /// <param name="eventPublisher">Event publisher</param>
-        public DiscountService(IStaticCacheManager cacheManager,
+        public DiscountService(ICategoryService categoryService,
+            ICustomerService customerService,
+            IEventPublisher eventPublisher,
+            ILocalizationService localizationService,
+            IPluginFinder pluginFinder,
+            IRepository<Category> categoryRepository,
             IRepository<Discount> discountRepository,
             IRepository<DiscountRequirement> discountRequirementRepository,
             IRepository<DiscountUsageHistory> discountUsageHistoryRepository,
-            IRepository<Category> categoryRepository,
             IRepository<Manufacturer> manufacturerRepository,
             IRepository<Product> productRepository,
-            IStoreContext storeContext,
-            ICustomerService customerService,
-            ILocalizationService localizationService,
-            ICategoryService categoryService,
-            IPluginFinder pluginFinder,
-            IEventPublisher eventPublisher)
+            IStaticCacheManager cacheManager,
+            IStoreContext storeContext)
         {
-            this._cacheManager = cacheManager;
+            this._categoryService = categoryService;
+            this._customerService = customerService;
+            this._eventPublisher = eventPublisher;
+            this._localizationService = localizationService;
+            this._pluginFinder = pluginFinder;
+            this._categoryRepository = categoryRepository;
             this._discountRepository = discountRepository;
             this._discountRequirementRepository = discountRequirementRepository;
             this._discountUsageHistoryRepository = discountUsageHistoryRepository;
-            this._categoryRepository = categoryRepository;
             this._manufacturerRepository = manufacturerRepository;
             this._productRepository = productRepository;
+            this._cacheManager = cacheManager;
             this._storeContext = storeContext;
-            this._customerService = customerService;
-            this._localizationService = localizationService;
-            this._categoryService = categoryService;
-            this._pluginFinder = pluginFinder;
-            this._eventPublisher = eventPublisher;
         }
 
         #endregion

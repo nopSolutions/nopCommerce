@@ -44,111 +44,111 @@ namespace Nop.Services.ExportImport
     {
         #region Fields
 
+        private readonly AddressSettings _addressSettings;
+        private readonly CatalogSettings _catalogSettings;
+        private readonly CustomerSettings _customerSettings;
+        private readonly ForumSettings _forumSettings;
         private readonly ICategoryService _categoryService;
-        private readonly IManufacturerService _manufacturerService;
+        private readonly ICountryService _countryService;
+        private readonly ICurrencyService _currencyService;
+        private readonly ICustomerAttributeFormatter _customerAttributeFormatter;
         private readonly ICustomerService _customerService;
+        private readonly IDateRangeService _dateRangeService;
+        private readonly IDateTimeHelper _dateTimeHelper;
+        private readonly IForumService _forumService;
+        private readonly IGdprService _gdprService;
+        private readonly IGenericAttributeService _genericAttributeService;
+        private readonly ILocalizationService _localizationService;
+        private readonly IManufacturerService _manufacturerService;
+        private readonly IMeasureService _measureService;
+        private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
+        private readonly IOrderService _orderService;
+        private readonly IPictureService _pictureService;
+        private readonly IPriceFormatter _priceFormatter;
         private readonly IProductAttributeService _productAttributeService;
         private readonly IProductTagService _productTagService;
-        private readonly IPictureService _pictureService;
-        private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
-        private readonly IStoreService _storeService;
-        private readonly IWorkContext _workContext;
-        private readonly ProductEditorSettings _productEditorSettings;
-        private readonly IVendorService _vendorService;
         private readonly IProductTemplateService _productTemplateService;
-        private readonly IDateRangeService _dateRangeService;
-        private readonly ITaxCategoryService _taxCategoryService;
-        private readonly IMeasureService _measureService;
-        private readonly CatalogSettings _catalogSettings;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly ICustomerAttributeFormatter _customerAttributeFormatter;
-        private readonly OrderSettings _orderSettings;
         private readonly ISpecificationAttributeService _specificationAttributeService;
-        private readonly IOrderService _orderService;
+        private readonly IStateProvinceService _stateProvinceService;
+        private readonly IStoreService _storeService;
+        private readonly ITaxCategoryService _taxCategoryService;
         private readonly IUrlRecordService _urlRecordService;
-        protected readonly ICountryService _countryService;
-        protected readonly IStateProvinceService _stateProvinceService;
-        protected readonly IPriceFormatter _priceFormatter;
-        protected readonly ForumSettings _forumSettings;
-        protected readonly IForumService _forumService;
-        protected readonly IGdprService _gdprService;
-        protected readonly CustomerSettings _customerSettings;
-        protected readonly ILocalizationService _localizationService;
-        protected readonly IDateTimeHelper _dateTimeHelper;
-        protected readonly AddressSettings _addressSettings;
-        protected readonly ICurrencyService _currencyService;
+        private readonly IVendorService _vendorService;
+        private readonly IWorkContext _workContext;
+        private readonly OrderSettings _orderSettings;
+        private readonly ProductEditorSettings _productEditorSettings;
 
         #endregion
 
         #region Ctor
 
-        public ExportManager(ICategoryService categoryService,
-            IManufacturerService manufacturerService,
-            ICustomerService customerService,
-            IProductAttributeService productAttributeService,
-            IProductTagService productTagService,
-            IPictureService pictureService,
-            INewsLetterSubscriptionService newsLetterSubscriptionService,
-            IStoreService storeService,
-            IWorkContext workContext,
-            ProductEditorSettings productEditorSettings,
-            IVendorService vendorService,
-            IProductTemplateService productTemplateService,
-            IDateRangeService dateRangeService,
-            ITaxCategoryService taxCategoryService,
-            IMeasureService measureService,
+        public ExportManager(AddressSettings addressSettings,
             CatalogSettings catalogSettings,
-            IGenericAttributeService genericAttributeService,
-            ICustomerAttributeFormatter customerAttributeFormatter,
-            OrderSettings orderSettings,
-            ISpecificationAttributeService specificationAttributeService,
-            IOrderService orderService,
-            IUrlRecordService urlRecordService,
-            ICountryService countryService,
-            IStateProvinceService stateProvinceService,
-            IPriceFormatter priceFormatter,
+            CustomerSettings customerSettings,
             ForumSettings forumSettings,
+            ICategoryService categoryService,
+            ICountryService countryService,
+            ICurrencyService currencyService,
+            ICustomerAttributeFormatter customerAttributeFormatter,
+            ICustomerService customerService,
+            IDateRangeService dateRangeService,
+            IDateTimeHelper dateTimeHelper,
             IForumService forumService,
             IGdprService gdprService,
-            CustomerSettings customerSettings,
+            IGenericAttributeService genericAttributeService,
             ILocalizationService localizationService,
-            IDateTimeHelper dateTimeHelper,
-            AddressSettings addressSettings,
-            ICurrencyService currencyService)
+            IManufacturerService manufacturerService,
+            IMeasureService measureService,
+            INewsLetterSubscriptionService newsLetterSubscriptionService,
+            IOrderService orderService,
+            IPictureService pictureService,
+            IPriceFormatter priceFormatter,
+            IProductAttributeService productAttributeService,
+            IProductTagService productTagService,
+            IProductTemplateService productTemplateService,
+            ISpecificationAttributeService specificationAttributeService,
+            IStateProvinceService stateProvinceService,
+            IStoreService storeService,
+            ITaxCategoryService taxCategoryService,
+            IUrlRecordService urlRecordService,
+            IVendorService vendorService,
+            IWorkContext workContext,
+            OrderSettings orderSettings,
+            ProductEditorSettings productEditorSettings)
         {
-            this._categoryService = categoryService;
-            this._manufacturerService = manufacturerService;
-            this._customerService = customerService;
-            this._productAttributeService = productAttributeService;
-            this._productTagService = productTagService;
-            this._pictureService = pictureService;
-            this._newsLetterSubscriptionService = newsLetterSubscriptionService;
-            this._storeService = storeService;
-            this._workContext = workContext;
-            this._productEditorSettings = productEditorSettings;
-            this._vendorService = vendorService;
-            this._productTemplateService = productTemplateService;
-            this._dateRangeService = dateRangeService;
-            this._taxCategoryService = taxCategoryService;
-            this._measureService = measureService;
+            this._addressSettings = addressSettings;
             this._catalogSettings = catalogSettings;
-            this._genericAttributeService = genericAttributeService;
-            this._customerAttributeFormatter = customerAttributeFormatter;
-            this._orderSettings = orderSettings;
-            this._specificationAttributeService = specificationAttributeService;
-            this._orderService = orderService;
-            this._urlRecordService = urlRecordService;
-            this._countryService = countryService;
-            this._stateProvinceService = stateProvinceService;
-            this._priceFormatter = priceFormatter;
+            this._customerSettings = customerSettings;
             this._forumSettings = forumSettings;
+            this._categoryService = categoryService;
+            this._countryService = countryService;
+            this._currencyService = currencyService;
+            this._customerAttributeFormatter = customerAttributeFormatter;
+            this._customerService = customerService;
+            this._dateRangeService = dateRangeService;
+            this._dateTimeHelper = dateTimeHelper;
             this._forumService = forumService;
             this._gdprService = gdprService;
-            this._customerSettings = customerSettings;
+            this._genericAttributeService = genericAttributeService;
             this._localizationService = localizationService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._addressSettings = addressSettings;
-            this._currencyService = currencyService;
+            this._manufacturerService = manufacturerService;
+            this._measureService = measureService;
+            this._newsLetterSubscriptionService = newsLetterSubscriptionService;
+            this._orderService = orderService;
+            this._pictureService = pictureService;
+            this._priceFormatter = priceFormatter;
+            this._productAttributeService = productAttributeService;
+            this._productTagService = productTagService;
+            this._productTemplateService = productTemplateService;
+            this._specificationAttributeService = specificationAttributeService;
+            this._stateProvinceService = stateProvinceService;
+            this._storeService = storeService;
+            this._taxCategoryService = taxCategoryService;
+            this._urlRecordService = urlRecordService;
+            this._vendorService = vendorService;
+            this._workContext = workContext;
+            this._orderSettings = orderSettings;
+            this._productEditorSettings = productEditorSettings;
         }
 
         #endregion

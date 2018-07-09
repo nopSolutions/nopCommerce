@@ -15,20 +15,25 @@ namespace Nop.Services.Messages
     /// </summary>
     public partial class EmailSender : IEmailSender
     {
+        #region Fields
+
         private readonly IDownloadService _downloadService;
         private readonly INopFileProvider _fileProvider;
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="downloadService">Download service</param>
-        /// <param name="fileProvider">File provider</param>
+        #endregion
+
+        #region Ctor
+
         public EmailSender(IDownloadService downloadService,
             INopFileProvider fileProvider)
         {
             this._downloadService = downloadService;
             this._fileProvider = fileProvider;
         }
+
+        #endregion
+
+        #region Methods
 
         /// <summary>
         /// Sends an email
@@ -123,14 +128,14 @@ namespace Nop.Services.Messages
                         fileName += download.Extension;
 
 
-                        var ms = new MemoryStream(download.DownloadBinary);                        
+                        var ms = new MemoryStream(download.DownloadBinary);
                         var attachment = new Attachment(ms, fileName);
                         //string contentType = !string.IsNullOrWhiteSpace(download.ContentType) ? download.ContentType : "application/octet-stream";
                         //var attachment = new Attachment(ms, fileName, contentType);
                         attachment.ContentDisposition.CreationDate = DateTime.UtcNow;
                         attachment.ContentDisposition.ModificationDate = DateTime.UtcNow;
                         attachment.ContentDisposition.ReadDate = DateTime.UtcNow;
-                        message.Attachments.Add(attachment);                        
+                        message.Attachments.Add(attachment);
                     }
                 }
             }
@@ -142,11 +147,13 @@ namespace Nop.Services.Messages
                 smtpClient.Host = emailAccount.Host;
                 smtpClient.Port = emailAccount.Port;
                 smtpClient.EnableSsl = emailAccount.EnableSsl;
-                smtpClient.Credentials = emailAccount.UseDefaultCredentials ? 
+                smtpClient.Credentials = emailAccount.UseDefaultCredentials ?
                     CredentialCache.DefaultNetworkCredentials :
                     new NetworkCredential(emailAccount.Username, emailAccount.Password);
                 smtpClient.Send(message);
             }
         }
+
+        #endregion
     }
 }

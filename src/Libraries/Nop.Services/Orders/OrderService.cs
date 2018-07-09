@@ -19,43 +19,33 @@ namespace Nop.Services.Orders
     {
         #region Fields
 
+        private readonly IEventPublisher _eventPublisher;
+        private readonly IRepository<Customer> _customerRepository;
         private readonly IRepository<Order> _orderRepository;
         private readonly IRepository<OrderItem> _orderItemRepository;
         private readonly IRepository<OrderNote> _orderNoteRepository;
         private readonly IRepository<Product> _productRepository;
         private readonly IRepository<RecurringPayment> _recurringPaymentRepository;
-        private readonly IRepository<Customer> _customerRepository;
-        private readonly IEventPublisher _eventPublisher;
 
         #endregion
 
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="orderRepository">Order repository</param>
-        /// <param name="orderItemRepository">Order item repository</param>
-        /// <param name="orderNoteRepository">Order note repository</param>
-        /// <param name="productRepository">Product repository</param>
-        /// <param name="recurringPaymentRepository">Recurring payment repository</param>
-        /// <param name="customerRepository">Customer repository</param>
-        /// <param name="eventPublisher">Event publisher</param>
-        public OrderService(IRepository<Order> orderRepository,
+        public OrderService(IEventPublisher eventPublisher,
+            IRepository<Customer> customerRepository,
+            IRepository<Order> orderRepository,
             IRepository<OrderItem> orderItemRepository,
             IRepository<OrderNote> orderNoteRepository,
             IRepository<Product> productRepository,
-            IRepository<RecurringPayment> recurringPaymentRepository,
-            IRepository<Customer> customerRepository,
-            IEventPublisher eventPublisher)
+            IRepository<RecurringPayment> recurringPaymentRepository)
         {
+            this._eventPublisher = eventPublisher;
+            this._customerRepository = customerRepository;
             this._orderRepository = orderRepository;
             this._orderItemRepository = orderItemRepository;
             this._orderNoteRepository = orderNoteRepository;
             this._productRepository = productRepository;
             this._recurringPaymentRepository = recurringPaymentRepository;
-            this._customerRepository = customerRepository;
-            this._eventPublisher = eventPublisher;
         }
 
         #endregion
