@@ -49,7 +49,6 @@ namespace Nop.Web.Factories
         private readonly IDownloadService _downloadService;
         private readonly ILocalizationService _localizationService;
         private readonly IManufacturerService _manufacturerService;
-        private readonly IMeasureService _measureService;
         private readonly IPermissionService _permissionService;
         private readonly IPictureService _pictureService;
         private readonly IPriceCalculationService _priceCalculationService;
@@ -88,7 +87,6 @@ namespace Nop.Web.Factories
             IDownloadService downloadService,
             ILocalizationService localizationService,
             IManufacturerService manufacturerService,
-            IMeasureService measureService,
             IPermissionService permissionService,
             IPictureService pictureService,
             IPriceCalculationService priceCalculationService,
@@ -123,7 +121,6 @@ namespace Nop.Web.Factories
             this._downloadService = downloadService;
             this._localizationService = localizationService;
             this._manufacturerService = manufacturerService;
-            this._measureService = measureService;
             this._permissionService = permissionService;
             this._pictureService = pictureService;
             this._priceCalculationService = priceCalculationService;
