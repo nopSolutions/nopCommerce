@@ -34,5 +34,12 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="searchModel">Tax category search model</param>
         /// <returns>Tax category list model</returns>
         TaxCategoryListModel PrepareTaxCategoryListModel(TaxCategorySearchModel searchModel);
+
+        /// <summary>
+        /// Prepare tax configuration model
+        /// </summary>
+        /// <param name="searchModel">Tax configuration model</param>
+        /// <returns>Tax configuration model</returns>
+        TaxConfigurationModel PrepareTaxConfigurationModel(TaxConfigurationModel searchModel);
     }
 }

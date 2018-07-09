@@ -395,7 +395,7 @@ namespace Nop.Services.Discounts
             //we load all discounts, and filter them using "discountType" parameter later (in memory)
             //we do it because we know that this method is invoked several times per HTTP request with distinct "discountType" parameter
             //that's why let's access the database only once
-            var cacheKey = string.Format(DiscountEventConsumer.DISCOUNT_ALL_KEY, 
+            var cacheKey = string.Format(NopDiscountDefaults.DiscountAllCacheKey, 
                 showHidden, couponCode ?? string.Empty, discountName ?? string.Empty);
             var discounts = _cacheManager.Get(cacheKey, () =>
             {
@@ -423,7 +423,7 @@ namespace Nop.Services.Discounts
                 throw new ArgumentNullException(nameof(discount));
 
             var discountId = discount.Id;
-            var cacheKey = string.Format(DiscountEventConsumer.DISCOUNT_CATEGORY_IDS_MODEL_KEY,
+            var cacheKey = string.Format(NopDiscountDefaults.DiscountCategoryIdsModelCacheKey,
                 discountId,
                 string.Join(",", customer.GetCustomerRoleIds()),
                 _storeContext.CurrentStore.Id);
@@ -465,7 +465,7 @@ namespace Nop.Services.Discounts
                 throw new ArgumentNullException(nameof(discount));
 
             var discountId = discount.Id;
-            var cacheKey = string.Format(DiscountEventConsumer.DISCOUNT_MANUFACTURER_IDS_MODEL_KEY,
+            var cacheKey = string.Format(NopDiscountDefaults.DiscountManufacturerIdsModelCacheKey,
                 discountId,
                 string.Join(",", customer.GetCustomerRoleIds()),
                 _storeContext.CurrentStore.Id);
@@ -695,7 +695,7 @@ namespace Nop.Services.Discounts
             }
 
             //discount requirements
-            var key = string.Format(DiscountEventConsumer.DISCOUNT_REQUIREMENT_MODEL_KEY, discount.Id);
+            var key = string.Format(NopDiscountDefaults.DiscountRequirementModelCacheKey, discount.Id);
             var requirementsForCaching = _cacheManager.Get(key, () =>
             {
                 var requirements = GetAllDiscountRequirements(discount.Id, true);

@@ -4,7 +4,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Routing;
 using Nop.Core.Domain.Cms;
 using Nop.Services.Cms;
-using Nop.Web.Areas.Admin.Extensions;
+using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Cms;
 using Nop.Web.Framework.Extensions;
 
@@ -70,7 +70,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = widgets.PaginationByRequestModel(searchModel).Select(widget =>
                 {
                     //fill in model values from the entity
-                    var widgetMethodModel = widget.ToModel();
+                    var widgetMethodModel = widget.ToPluginModel<WidgetModel>();
 
                     //fill in additional values (not existing in the entity)
                     widgetMethodModel.IsActive = widget.IsWidgetActive(_widgetSettings);

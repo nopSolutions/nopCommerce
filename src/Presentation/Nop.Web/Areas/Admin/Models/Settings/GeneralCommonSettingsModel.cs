@@ -5,7 +5,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
     /// <summary>
     /// Represents a general and common settings model
     /// </summary>
-    public partial class GeneralCommonSettingsModel : BaseNopModel
+    public partial class GeneralCommonSettingsModel : BaseNopModel, ISettingsModel
     {
         #region Ctor
 

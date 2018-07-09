@@ -74,9 +74,17 @@ namespace Nop.Web.Framework.TagHelpers.Admin
             var tabContext = new List<NopTabContextItem>();
             context.Items.Add(typeof(NopTabsTagHelper), tabContext);
 
-            //save tab name which should be selected
+            //get tab name which should be selected
+            //first try get tab name from query
+            var tabNameToSelect = ViewContext.HttpContext.Request.Query["tabNameToSelect"];
+
+            //then from attribute
             if (!string.IsNullOrEmpty(TabNameToSelect))
-                context.Items.Add("tabNameToSelect", TabNameToSelect);
+                tabNameToSelect = TabNameToSelect;
+
+            //then save tab name in tab context to access it in tab item
+            if (!string.IsNullOrEmpty(tabNameToSelect))
+                context.Items.Add("tabNameToSelect", tabNameToSelect);
 
             //execute child tag helpers
             await output.GetChildContentAsync();

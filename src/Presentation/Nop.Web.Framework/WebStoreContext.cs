@@ -89,7 +89,7 @@ namespace Nop.Web.Framework
                     var currentCustomer = EngineContext.Current.Resolve<IWorkContext>().CurrentCustomer;
 
                     //try to get store identifier from attributes
-                    var storeId = currentCustomer.GetAttribute<int>(SystemCustomerAttributeNames.AdminAreaStoreScopeConfiguration);
+                    var storeId = currentCustomer.GetAttribute<int>(NopCustomerDefaults.AdminAreaStoreScopeConfigurationAttribute);
 
                     _cachedActiveStoreScopeConfiguration = _storeService.GetStoreById(storeId)?.Id ?? 0;
                 }

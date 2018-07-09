@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Moq;
 using Nop.Core;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
@@ -10,17 +11,16 @@ using Nop.Services.Configuration;
 using Nop.Services.Helpers;
 using Nop.Tests;
 using NUnit.Framework;
-using Rhino.Mocks;
 
 namespace Nop.Services.Tests.Helpers
 {
     [TestFixture]
     public class DateTimeHelperTests : ServiceTest
     {
-        private IWorkContext _workContext;
-        private IStoreContext _storeContext;
-        private IGenericAttributeService _genericAttributeService;
-        private ISettingService _settingService;
+        private Mock<IWorkContext> _workContext;
+        private Mock<IStoreContext> _storeContext;
+        private Mock<IGenericAttributeService> _genericAttributeService;
+        private Mock<ISettingService> _settingService;
         private DateTimeSettings _dateTimeSettings;
         private IDateTimeHelper _dateTimeHelper;
         private Store _store;
@@ -28,14 +28,14 @@ namespace Nop.Services.Tests.Helpers
         [SetUp]
         public new void SetUp()
         {
-            _genericAttributeService = MockRepository.GenerateMock<IGenericAttributeService>();
-            _settingService = MockRepository.GenerateMock<ISettingService>();
+            _genericAttributeService = new Mock<IGenericAttributeService>();
+            _settingService = new Mock<ISettingService>();
 
-            _workContext = MockRepository.GenerateMock<IWorkContext>();
+            _workContext = new Mock<IWorkContext>();
 
             _store = new Store { Id = 1 };
-            _storeContext = MockRepository.GenerateMock<IStoreContext>();
-            _storeContext.Expect(x => x.CurrentStore).Return(_store);
+            _storeContext = new Mock<IStoreContext>();
+            _storeContext.Setup(x => x.CurrentStore).Returns(_store);
 
             _dateTimeSettings = new DateTimeSettings
             {
@@ -43,8 +43,8 @@ namespace Nop.Services.Tests.Helpers
                 DefaultStoreTimeZoneId = ""
             };
 
-            _dateTimeHelper = new DateTimeHelper(_workContext, _genericAttributeService,
-                _settingService, _dateTimeSettings);
+            _dateTimeHelper = new DateTimeHelper(_workContext.Object, _genericAttributeService.Object,
+                _settingService.Object, _dateTimeSettings);
         }
 
         [Test]
@@ -60,7 +60,7 @@ namespace Nop.Services.Tests.Helpers
         {
             var systemTimeZones = _dateTimeHelper.GetSystemTimeZones();
             systemTimeZones.ShouldNotBeNull();
-            (systemTimeZones.Any()).ShouldBeTrue();
+            systemTimeZones.Any().ShouldBeTrue();
         }
 
         [Test]
@@ -71,21 +71,22 @@ namespace Nop.Services.Tests.Helpers
 
             var customer = new Customer
             {
-                Id = 10,
+                Id = 10
             };
 
-            _genericAttributeService.Expect(x => x.GetAttributesForEntity(customer.Id, "Customer"))
-                .Return(new List<GenericAttribute>
+            _genericAttributeService.Setup(x => x.GetAttributesForEntity(customer.Id, "Customer"))
+                .Returns(new List<GenericAttribute>
                             {
                                 new GenericAttribute
                                     {
                                         StoreId = 0,
                                         EntityId = customer.Id,
-                                        Key = SystemCustomerAttributeNames.TimeZoneId,
+                                        Key = NopCustomerDefaults.TimeZoneIdAttribute,
                                         KeyGroup = "Customer",
                                         Value = "Russian Standard Time" //(GMT+03:00) Moscow, St. Petersburg, Volgograd
                                     }
                             });
+
             var timeZone = _dateTimeHelper.GetCustomerTimeZone(customer);
             timeZone.ShouldNotBeNull();
             timeZone.Id.ShouldEqual("Russian Standard Time");
@@ -99,17 +100,17 @@ namespace Nop.Services.Tests.Helpers
 
             var customer = new Customer
             {
-                Id = 10,
+                Id = 10
             };
 
-            _genericAttributeService.Expect(x => x.GetAttributesForEntity(customer.Id, "Customer"))
-                .Return(new List<GenericAttribute>
+            _genericAttributeService.Setup(x => x.GetAttributesForEntity(customer.Id, "Customer"))
+                .Returns(new List<GenericAttribute>
                             {
                                 new GenericAttribute
                                     {
                                         StoreId = 0,
                                         EntityId = customer.Id,
-                                        Key = SystemCustomerAttributeNames.TimeZoneId,
+                                        Key = NopCustomerDefaults.TimeZoneIdAttribute,
                                         KeyGroup = "Customer",
                                         Value = "Russian Standard Time" //(GMT+03:00) Moscow, St. Petersburg, Volgograd
                                     }

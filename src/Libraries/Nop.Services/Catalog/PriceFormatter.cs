@@ -17,11 +17,11 @@ namespace Nop.Services.Catalog
     {
         #region Fields
 
-        private readonly IWorkContext _workContext;
+        private readonly CurrencySettings _currencySettings;
         private readonly ICurrencyService _currencyService;
         private readonly ILocalizationService _localizationService;
+        private readonly IWorkContext _workContext;
         private readonly TaxSettings _taxSettings;
-        private readonly CurrencySettings _currencySettings;
 
         #endregion
 
@@ -30,22 +30,22 @@ namespace Nop.Services.Catalog
         /// <summary>
         /// Ctor
         /// </summary>
-        /// <param name="workContext">Work context</param>
+        /// <param name="currencySettings">Currency settings</param>
         /// <param name="currencyService">Currency service</param>
         /// <param name="localizationService">Localization service</param>
+        /// <param name="workContext">Work context</param>
         /// <param name="taxSettings">Tax settings</param>
-        /// <param name="currencySettings">Currency settings</param>
-        public PriceFormatter(IWorkContext workContext,
+        public PriceFormatter(CurrencySettings currencySettings,
             ICurrencyService currencyService,
             ILocalizationService localizationService,
-            TaxSettings taxSettings,
-            CurrencySettings currencySettings)
+            IWorkContext workContext,
+            TaxSettings taxSettings)
         {
-            this._workContext = workContext;
+            this._currencySettings = currencySettings;
             this._currencyService = currencyService;
             this._localizationService = localizationService;
+            this._workContext = workContext;
             this._taxSettings = taxSettings;
-            this._currencySettings = currencySettings;
         }
 
         #endregion

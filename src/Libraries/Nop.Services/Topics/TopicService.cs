@@ -20,31 +20,6 @@ namespace Nop.Services.Topics
     /// </summary>
     public partial class TopicService : ITopicService
     {
-        #region Constants
-
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : store ID
-        /// {1} : ignore ACL?
-        /// {2} : show hidden?
-        /// </remarks>
-        private const string TOPICS_ALL_KEY = "Nop.topics.all-{0}-{1}-{2}";
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : topic ID
-        /// </remarks>
-        private const string TOPICS_BY_ID_KEY = "Nop.topics.id-{0}";
-        /// <summary>
-        /// Key pattern to clear cache
-        /// </summary>
-        private const string TOPICS_PATTERN_KEY = "Nop.topics.";
-
-        #endregion
-        
         #region Fields
 
         private readonly IRepository<Topic> _topicRepository;
@@ -110,7 +85,7 @@ namespace Nop.Services.Topics
             _topicRepository.Delete(topic);
 
             //cache
-            _cacheManager.RemoveByPattern(TOPICS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopTopicDefaults.TopicsPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityDeleted(topic);
@@ -126,7 +101,7 @@ namespace Nop.Services.Topics
             if (topicId == 0)
                 return null;
 
-            var key = string.Format(TOPICS_BY_ID_KEY, topicId);
+            var key = string.Format(NopTopicDefaults.TopicsByIdCacheKey, topicId);
             return _cacheManager.Get(key, () => _topicRepository.GetById(topicId));
         }
 
@@ -170,7 +145,7 @@ namespace Nop.Services.Topics
         /// <returns>Topics</returns>
         public virtual IList<Topic> GetAllTopics(int storeId, bool ignorAcl = false, bool showHidden = false)
         {
-            var key = string.Format(TOPICS_ALL_KEY, storeId, ignorAcl, showHidden);
+            var key = string.Format(NopTopicDefaults.TopicsAllCacheKey, storeId, ignorAcl, showHidden);
             return _cacheManager.Get(key, () =>
             {
                 var query = _topicRepository.Table;
@@ -223,7 +198,7 @@ namespace Nop.Services.Topics
             _topicRepository.Insert(topic);
 
             //cache
-            _cacheManager.RemoveByPattern(TOPICS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopTopicDefaults.TopicsPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(topic);
@@ -241,7 +216,7 @@ namespace Nop.Services.Topics
             _topicRepository.Update(topic);
 
             //cache
-            _cacheManager.RemoveByPattern(TOPICS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopTopicDefaults.TopicsPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(topic);

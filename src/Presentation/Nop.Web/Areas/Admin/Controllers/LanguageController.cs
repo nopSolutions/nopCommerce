@@ -11,8 +11,8 @@ using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Security;
 using Nop.Services.Stores;
-using Nop.Web.Areas.Admin.Extensions;
 using Nop.Web.Areas.Admin.Factories;
+using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Localization;
 using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
@@ -34,10 +34,10 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly ILanguageModelFactory _languageModelFactory;
         private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
+        private readonly INopFileProvider _fileProvider;
         private readonly IPermissionService _permissionService;
         private readonly IStoreMappingService _storeMappingService;
         private readonly IStoreService _storeService;
-        private readonly INopFileProvider _fileProvider;
 
         #endregion
 
@@ -47,19 +47,19 @@ namespace Nop.Web.Areas.Admin.Controllers
             ILanguageModelFactory languageModelFactory,
             ILanguageService languageService,
             ILocalizationService localizationService,
+            INopFileProvider fileProvider,
             IPermissionService permissionService,
             IStoreMappingService storeMappingService,
-            IStoreService storeService,
-            INopFileProvider fileProvider)
+            IStoreService storeService)
         {
             this._customerActivityService = customerActivityService;
             this._languageModelFactory = languageModelFactory;
             this._languageService = languageService;
             this._localizationService = localizationService;
+            this._fileProvider = fileProvider;
             this._permissionService = permissionService;
             this._storeMappingService = storeMappingService;
             this._storeService = storeService;
-            this._fileProvider = fileProvider;
         }
 
         #endregion
@@ -141,7 +141,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                var language = model.ToEntity();
+                var language = model.ToEntity<Language>();
                 _languageService.InsertLanguage(language);
 
                 //activity log

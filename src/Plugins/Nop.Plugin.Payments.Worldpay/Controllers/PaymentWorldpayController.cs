@@ -140,10 +140,10 @@ namespace Nop.Plugin.Payments.Worldpay.Controllers
                 CustomerDuplicateCheckType = CustomerDuplicateCheckType.Error,
                 EmailReceiptEnabled = !string.IsNullOrEmpty(customer.Email),
                 Email = customer.Email,
-                FirstName = customer.GetAttribute<string>(SystemCustomerAttributeNames.FirstName),
-                LastName = customer.GetAttribute<string>(SystemCustomerAttributeNames.LastName),
-                Company = customer.GetAttribute<string>(SystemCustomerAttributeNames.Company),
-                Phone = customer.GetAttribute<string>(SystemCustomerAttributeNames.Phone),
+                FirstName = customer.GetAttribute<string>(NopCustomerDefaults.FirstNameAttribute),
+                LastName = customer.GetAttribute<string>(NopCustomerDefaults.LastNameAttribute),
+                Company = customer.GetAttribute<string>(NopCustomerDefaults.CompanyAttribute),
+                Phone = customer.GetAttribute<string>(NopCustomerDefaults.PhoneAttribute),
                 BillingAddress = new Address
                 {
                     Line1 = customer.BillingAddress?.Address1,

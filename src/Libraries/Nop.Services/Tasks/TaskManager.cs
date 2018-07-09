@@ -12,16 +12,6 @@ namespace Nop.Services.Tasks
     /// </summary>
     public partial class TaskManager
     {
-        #region Consts
-
-        /// <summary>
-        /// Schedule task path
-        /// </summary>
-        public const string ScheduleTaskPath = "scheduletask/runtask";
-        private const int _notRunTasksInterval = 60 * 30; //30 minutes
-
-        #endregion
-
         #region Fields
 
         private readonly List<TaskThread> _taskThreads = new List<TaskThread>();

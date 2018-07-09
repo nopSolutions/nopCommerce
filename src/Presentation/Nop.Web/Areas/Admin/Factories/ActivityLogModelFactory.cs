@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Nop.Services.Helpers;
 using Nop.Services.Logging;
-using Nop.Web.Areas.Admin.Extensions;
+using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Logging;
 
 namespace Nop.Web.Areas.Admin.Factories
@@ -37,6 +37,23 @@ namespace Nop.Web.Areas.Admin.Factories
         #region Methods
 
         /// <summary>
+        /// Prepare activity log container model
+        /// </summary>
+        /// <param name="activityLogContainerModel">Activity log container model</param>
+        /// <returns>Activity log container model</returns>
+        public virtual ActivityLogContainerModel PrepareActivityLogContainerModel(ActivityLogContainerModel activityLogContainerModel)
+        {
+            if (activityLogContainerModel == null)
+                throw new ArgumentNullException(nameof(activityLogContainerModel));
+
+            //prepare nested models
+            PrepareActivityLogSearchModel(activityLogContainerModel.ListLogs);
+            activityLogContainerModel.ListTypes = PrepareActivityLogTypeModels();
+
+            return activityLogContainerModel;
+        }
+
+        /// <summary>
         /// Prepare activity log type models
         /// </summary>
         /// <returns>List of activity log type models</returns>
@@ -44,7 +61,7 @@ namespace Nop.Web.Areas.Admin.Factories
         {
             //prepare available activity log types
             var availableActivityTypes = _customerActivityService.GetAllActivityTypes();
-            var models = availableActivityTypes.Select(activityType => activityType.ToModel()).ToList();
+            var models = availableActivityTypes.Select(activityType => activityType.ToModel<ActivityLogTypeModel>()).ToList();
 
             return models;
         }
@@ -97,7 +114,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = activityLog.Select(logItem =>
                 {
                     //fill in model values from the entity
-                    var logItemModel = logItem.ToModel();
+                    var logItemModel = logItem.ToModel<ActivityLogModel>();
 
                     //convert dates to the user time
                     logItemModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(logItem.CreatedOnUtc, DateTimeKind.Utc);

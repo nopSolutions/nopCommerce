@@ -4,7 +4,7 @@ using Nop.Core.Domain.Polls;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Polls;
-using Nop.Web.Areas.Admin.Extensions;
+using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Polls;
 using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Factories;
@@ -111,7 +111,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = polls.Select(poll =>
                 {
                     //fill in model values from the entity
-                    var pollModel = poll.ToModel();
+                    var pollModel = poll.ToModel<PollModel>();
 
                     //convert dates to the user time
                     if (poll.StartDateUtc.HasValue)
@@ -142,7 +142,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (poll != null)
             {
                 //fill in model values from the entity
-                model = model ?? poll.ToModel();
+                model = model ?? poll.ToModel<PollModel>();
 
                 model.StartDate = poll.StartDateUtc;
                 model.EndDate = poll.EndDateUtc;

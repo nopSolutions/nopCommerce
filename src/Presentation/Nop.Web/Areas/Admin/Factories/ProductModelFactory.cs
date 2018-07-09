@@ -24,7 +24,7 @@ using Nop.Services.Orders;
 using Nop.Services.Seo;
 using Nop.Services.Shipping;
 using Nop.Services.Stores;
-using Nop.Web.Areas.Admin.Extensions;
+using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Infrastructure.Cache;
 using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Web.Areas.Admin.Models.Orders;
@@ -738,7 +738,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = products.Select(product =>
                 {
                     //fill in model values from the entity
-                    var productModel = product.ToModel();
+                    var productModel = product.ToModel<ProductModel>();
 
                     //little performance optimization: ensure that "FullDescription" is not returned
                     productModel.FullDescription = string.Empty;
@@ -772,7 +772,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (product != null)
             {
                 //fill in model values from the entity
-                model = model ?? product.ToModel();
+                model = model ?? product.ToModel<ProductModel>();
 
                 var parentGroupedProduct = _productService.GetProductById(product.ParentGroupedProductId);
                 if (parentGroupedProduct != null)
@@ -996,7 +996,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new AddRequiredProductListModel
             {
                 //fill in model values from the entity
-                Data = products.Select(product => product.ToModel()),
+                Data = products.Select(product => product.ToModel<ProductModel>()),
                 Total = products.TotalCount
             };
 
@@ -1105,7 +1105,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new AddRelatedProductListModel
             {
                 //fill in model values from the entity
-                Data = products.Select(product => product.ToModel()),
+                Data = products.Select(product => product.ToModel<ProductModel>()),
                 Total = products.TotalCount
             };
 
@@ -1213,7 +1213,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new AddCrossSellProductListModel
             {
                 //fill in model values from the entity
-                Data = products.Select(product => product.ToModel()),
+                Data = products.Select(product => product.ToModel<ProductModel>()),
                 Total = products.TotalCount
             };
 
@@ -1318,7 +1318,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = products.Select(product =>
                 {
                     //fill in model values from the entity
-                    var productModel = product.ToModel();
+                    var productModel = product.ToModel<ProductModel>();
 
                     //fill in additional values (not existing in the entity)
                     var parentGroupedProduct = _productService.GetProductById(product.ParentGroupedProductId);
@@ -1581,92 +1581,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             return model;
         }
-
-        /// <summary>
-        /// Prepare low stock product search model
-        /// </summary>
-        /// <param name="searchModel">Low stock product search model</param>
-        /// <returns>Low stock product search model</returns>
-        public virtual LowStockProductSearchModel PrepareLowStockProductSearchModel(LowStockProductSearchModel searchModel)
-        {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            //prepare "published" filter (0 - all; 1 - published only; 2 - unpublished only)
-            searchModel.AvailablePublishedOptions.Add(new SelectListItem
-            {
-                Value = "0",
-                Text = _localizationService.GetResource("Admin.Catalog.LowStockReport.SearchPublished.All")
-            });
-            searchModel.AvailablePublishedOptions.Add(new SelectListItem
-            {
-                Value = "1",
-                Text = _localizationService.GetResource("Admin.Catalog.LowStockReport.SearchPublished.PublishedOnly")
-            });
-            searchModel.AvailablePublishedOptions.Add(new SelectListItem
-            {
-                Value = "2",
-                Text = _localizationService.GetResource("Admin.Catalog.LowStockReport.SearchPublished.UnpublishedOnly")
-            });
-
-            //prepare page parameters
-            searchModel.SetGridPageSize();
-
-            return searchModel;
-        }
-
-        /// <summary>
-        /// Prepare paged low stock product list model
-        /// </summary>
-        /// <param name="searchModel">Low stock product search model</param>
-        /// <returns>Low stock product list model</returns>
-        public virtual LowStockProductListModel PrepareLowStockProductListModel(LowStockProductSearchModel searchModel)
-        {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            //get parameters to filter comments
-            var publishedOnly = searchModel.SearchPublishedId == 0 ? null : searchModel.SearchPublishedId == 1 ? true : (bool?)false;
-            var vendorId = _workContext.CurrentVendor?.Id ?? 0;
-
-            //get low stock product and product combinations
-            var products = _productService.GetLowStockProducts(vendorId: vendorId, loadPublishedOnly: publishedOnly);
-            var combinations = _productService.GetLowStockProductCombinations(vendorId: vendorId, loadPublishedOnly: publishedOnly);
-
-            //prepare low stock product models
-            var lowStockProductModels = new List<LowStockProductModel>();
-            lowStockProductModels.AddRange(products.Select(product => new LowStockProductModel
-            {
-                Id = product.Id,
-                Name = product.Name,
-                ManageInventoryMethod = product
-                    .ManageInventoryMethod.GetLocalizedEnum(_localizationService, _workContext.WorkingLanguage.Id),
-                StockQuantity = product.GetTotalStockQuantity(),
-                Published = product.Published
-            }));
-
-            lowStockProductModels.AddRange(combinations.Select(combination => new LowStockProductModel
-            {
-                Id = combination.Product.Id,
-                Name = combination.Product.Name,
-                Attributes = _productAttributeFormatter
-                    .FormatAttributes(combination.Product, combination.AttributesXml, _workContext.CurrentCustomer, "<br />", true, true, true, false),
-                ManageInventoryMethod = combination.Product
-                    .ManageInventoryMethod.GetLocalizedEnum(_localizationService, _workContext.WorkingLanguage.Id),
-                StockQuantity = combination.StockQuantity,
-                Published = combination.Product.Published
-            }));
-
-            //prepare list model
-            var model = new LowStockProductListModel
-            {
-                Data = lowStockProductModels.PaginationByRequestModel(searchModel),
-                Total = lowStockProductModels.Count
-            };
-
-            return model;
-        }
-
+        
         /// <summary>
         /// Prepare bulk edit product search model
         /// </summary>
@@ -2239,7 +2154,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new AssociateProductToAttributeValueListModel
             {
                 //fill in model values from the entity
-                Data = products.Select(product => product.ToModel()),
+                Data = products.Select(product => product.ToModel<ProductModel>()),
                 Total = products.TotalCount
             };
 

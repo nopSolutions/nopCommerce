@@ -1,4 +1,5 @@
-﻿using Nop.Core.Domain.Common;
+﻿using System.Collections.Generic;
+using Nop.Core.Domain.Common;
 using Nop.Web.Areas.Admin.Models.Common;
 
 namespace Nop.Web.Areas.Admin.Factories
@@ -51,5 +52,12 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>Address attribute value model</returns>
         AddressAttributeValueModel PrepareAddressAttributeValueModel(AddressAttributeValueModel model,
             AddressAttribute addressAttribute, AddressAttributeValue addressAttributeValue, bool excludeProperties = false);
+
+        /// <summary>
+        /// Prepare custom address attributes
+        /// </summary>
+        /// <param name="models">List of address attribute models</param>
+        /// <param name="address">Address</param>
+        void PrepareCustomAddressAttributes(IList<AddressModel.AddressAttributeModel> models, Address address);
     }
 }

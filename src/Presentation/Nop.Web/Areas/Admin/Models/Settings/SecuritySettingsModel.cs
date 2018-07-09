@@ -6,9 +6,11 @@ namespace Nop.Web.Areas.Admin.Models.Settings
     /// <summary>
     /// Represents a security settings model
     /// </summary>
-    public partial class SecuritySettingsModel : BaseNopModel
+    public partial class SecuritySettingsModel : BaseNopModel, ISettingsModel
     {
         #region Properties
+
+        public int ActiveStoreScopeConfiguration { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.EncryptionKey")]
         public string EncryptionKey { get; set; }

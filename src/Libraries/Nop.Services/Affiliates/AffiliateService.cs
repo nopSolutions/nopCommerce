@@ -15,9 +15,9 @@ namespace Nop.Services.Affiliates
     {
         #region Fields
 
+        private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<Affiliate> _affiliateRepository;
         private readonly IRepository<Order> _orderRepository;
-        private readonly IEventPublisher _eventPublisher;
 
         #endregion
 
@@ -26,22 +26,22 @@ namespace Nop.Services.Affiliates
         /// <summary>
         /// Ctor
         /// </summary>
+        /// <param name="eventPublisher">Event publisher</param>
         /// <param name="affiliateRepository">Affiliate repository</param>
         /// <param name="orderRepository">Order repository</param>
-        /// <param name="eventPublisher">Event publisher</param>
-        public AffiliateService(IRepository<Affiliate> affiliateRepository,
-            IRepository<Order> orderRepository,
-            IEventPublisher eventPublisher)
+        public AffiliateService(IEventPublisher eventPublisher,
+            IRepository<Affiliate> affiliateRepository,
+            IRepository<Order> orderRepository)
         {
+            this._eventPublisher = eventPublisher;
             this._affiliateRepository = affiliateRepository;
             this._orderRepository = orderRepository;
-            this._eventPublisher = eventPublisher;
         }
 
         #endregion
 
         #region Methods
-        
+
         /// <summary>
         /// Gets an affiliate by affiliate identifier
         /// </summary>

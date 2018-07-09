@@ -14,7 +14,8 @@
             {
                 {"pictureUrl", Model.Picture1Url},
                 { "text", Model.Text1},
-                { "link", Model.Link1}
+                { "link", Model.Link1},
+                {"alttext", Model.AltText1 }
             };
 
             @await Html.PartialAsync("~/Plugins/Widgets.NivoSlider/Views/_PublicInfo.SliderLine.cshtml", dataSlide1)
@@ -25,7 +26,8 @@
             {
                 {"pictureUrl", Model.Picture2Url},
                 { "text", Model.Text2},
-                { "link", Model.Link2}
+                { "link", Model.Link2},
+                {"alttext", Model.AltText2 }
             };
 
             @await Html.PartialAsync("~/Plugins/Widgets.NivoSlider/Views/_PublicInfo.SliderLine.cshtml", dataSlide2)
@@ -37,6 +39,7 @@
                 {"pictureUrl", Model.Picture3Url},
                 { "text", Model.Text3},
                 { "link", Model.Link3},
+                {"alttext", Model.AltText3 },
                 { "dataTransition", "slideInLeft"}
             };
 
@@ -48,7 +51,8 @@
             {
                 {"pictureUrl", Model.Picture4Url},
                 { "text", Model.Text4},
-                { "link", Model.Link4}
+                { "link", Model.Link4},
+                {"alttext", Model.AltText4 }
             };
 
             @await Html.PartialAsync("~/Plugins/Widgets.NivoSlider/Views/_PublicInfo.SliderLine.cshtml", dataSlide4)
@@ -59,7 +63,8 @@
             {
                 {"pictureUrl", Model.Picture5Url},
                 { "text", Model.Text5},
-                { "link", Model.Link5}
+                { "link", Model.Link5},
+                {"alttext", Model.AltText5 }
             };
 
             @await Html.PartialAsync("~/Plugins/Widgets.NivoSlider/Views/_PublicInfo.SliderLine.cshtml", dataSlide5)
@@ -67,7 +72,7 @@
     </div>
 </div>
 <script asp-location="Footer">
-    $(window).load(function () {
+    $(window).on('load', function () {
         $('#nivo-slider').nivoSlider();
     });
 </script>

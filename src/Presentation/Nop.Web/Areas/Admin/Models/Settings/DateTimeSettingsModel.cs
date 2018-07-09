@@ -8,7 +8,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
     /// <summary>
     /// Represents a date time settings model
     /// </summary>
-    public partial class DateTimeSettingsModel : BaseNopModel
+    public partial class DateTimeSettingsModel : BaseNopModel, ISettingsModel
     {
         #region Ctor
 
@@ -20,6 +20,8 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         #endregion
 
         #region Properties
+
+        public int ActiveStoreScopeConfiguration { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.AllowCustomersToSetTimeZone")]
         public bool AllowCustomersToSetTimeZone { get; set; }

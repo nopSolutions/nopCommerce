@@ -8,7 +8,7 @@
     var siteMap = new XmlSiteMap();
     siteMap.LoadFrom("~/Areas/Admin/sitemap.config");
 }
-<ul class="sidebar-menu">
+<ul class="sidebar-menu" data-widget="tree">
     @{
         //standard (default) items
         var rootNode = siteMap.RootNode;

@@ -31,9 +31,11 @@ using Nop.Services.Shipping.Tracking;
 using Nop.Services.Stores;
 using Nop.Services.Tax;
 using Nop.Services.Vendors;
-using Nop.Web.Areas.Admin.Extensions;
+using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
+using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Web.Areas.Admin.Models.Common;
 using Nop.Web.Areas.Admin.Models.Orders;
+using Nop.Web.Areas.Admin.Models.Reports;
 using Nop.Web.Framework.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
@@ -49,8 +51,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly CurrencySettings _currencySettings;
         private readonly IActionContextAccessor _actionContextAccessor;
         private readonly IAddressAttributeFormatter _addressAttributeFormatter;
-        private readonly IAddressAttributeParser _addressAttributeParser;
-        private readonly IAddressAttributeService _addressAttributeService;
+        private readonly IAddressAttributeModelFactory _addressAttributeModelFactory;
         private readonly IAffiliateService _affiliateService;
         private readonly IBaseAdminModelFactory _baseAdminModelFactory;
         private readonly ICountryService _countryService;
@@ -93,8 +94,7 @@ namespace Nop.Web.Areas.Admin.Factories
             CurrencySettings currencySettings,
             IActionContextAccessor actionContextAccessor,
             IAddressAttributeFormatter addressAttributeFormatter,
-            IAddressAttributeParser addressAttributeParser,
-            IAddressAttributeService addressAttributeService,
+            IAddressAttributeModelFactory addressAttributeModelFactory,
             IAffiliateService affiliateService,
             IBaseAdminModelFactory baseAdminModelFactory,
             ICountryService countryService,
@@ -133,8 +133,7 @@ namespace Nop.Web.Areas.Admin.Factories
             this._currencySettings = currencySettings;
             this._actionContextAccessor = actionContextAccessor;
             this._addressAttributeFormatter = addressAttributeFormatter;
-            this._addressAttributeParser = addressAttributeParser;
-            this._addressAttributeService = addressAttributeService;
+            this._addressAttributeModelFactory = addressAttributeModelFactory;
             this._affiliateService = affiliateService;
             this._baseAdminModelFactory = baseAdminModelFactory;
             this._countryService = countryService;
@@ -481,7 +480,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(order));
 
             //prepare billing address
-            model.BillingAddress = order.BillingAddress.ToModel();
+            model.BillingAddress = order.BillingAddress.ToModel(model.BillingAddress);
             PrepareAddressModel(model.BillingAddress, order.BillingAddress);
 
             if (order.AllowStoringCreditCardNumber)
@@ -562,7 +561,7 @@ namespace Nop.Web.Areas.Admin.Factories
             model.PickUpInStore = order.PickUpInStore;
             if (!order.PickUpInStore)
             {
-                model.ShippingAddress = order.ShippingAddress.ToModel();
+                model.ShippingAddress = order.ShippingAddress.ToModel(model.ShippingAddress);
                 PrepareAddressModel(model.ShippingAddress, order.ShippingAddress);
                 model.ShippingAddressGoogleMapsUrl = $"https://maps.google.com/maps?f=q&hl=en&ie=UTF8&oe=UTF8&geocode=&q={WebUtility.UrlEncode(order.ShippingAddress.Address1 + " " + order.ShippingAddress.ZipPostalCode + " " + order.ShippingAddress.City + " " + (order.ShippingAddress.Country != null ? order.ShippingAddress.Country.Name : ""))}";
             }
@@ -571,7 +570,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 if (order.PickupAddress == null)
                     return;
 
-                model.PickupAddress = order.PickupAddress.ToModel();
+                model.PickupAddress = order.PickupAddress.ToModel(model.PickupAddress);
                 model.PickupAddressGoogleMapsUrl = $"https://maps.google.com/maps?f=q&hl=en&ie=UTF8&oe=UTF8&geocode=&q={WebUtility.UrlEncode($"{order.PickupAddress.Address1} {order.PickupAddress.ZipPostalCode} {order.PickupAddress.City} {(order.PickupAddress.Country != null ? order.PickupAddress.Country.Name : string.Empty)}")}";
             }
         }
@@ -1154,7 +1153,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new AddProductToOrderListModel
             {
                 //fill in model values from the entity
-                Data = products.Select(product => product.ToModel()),
+                Data = products.Select(product => product.ToModel<ProductModel>()),
                 Total = products.TotalCount
             };
 
@@ -1229,7 +1228,7 @@ namespace Nop.Web.Areas.Admin.Factories
             model.OrderId = order.Id;
 
             //prepare address model
-            model.Address = address.ToModel();
+            model.Address = address.ToModel(model.Address);
             PrepareAddressModel(model.Address, address);
 
             //prepare available countries
@@ -1239,7 +1238,7 @@ namespace Nop.Web.Areas.Admin.Factories
             _baseAdminModelFactory.PrepareStatesAndProvinces(model.Address.AvailableStates, model.Address.CountryId);
 
             //prepare custom address attributes
-            model.Address.PrepareCustomAddressAttributes(address, _addressAttributeService, _addressAttributeParser);
+            _addressAttributeModelFactory.PrepareCustomAddressAttributes(model.Address.CustomAddressAttributes, address);
 
             return model;
         }
@@ -1695,248 +1694,7 @@ namespace Nop.Web.Areas.Admin.Factories
             };
 
             return model;
-        }
-
-        /// <summary>
-        /// Prepare bestseller search model
-        /// </summary>
-        /// <param name="searchModel">Bestseller search model</param>
-        /// <returns>Bestseller search model</returns>
-        public virtual BestsellerSearchModel PrepareBestsellerSearchModel(BestsellerSearchModel searchModel)
-        {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            searchModel.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
-
-            //prepare available stores
-            _baseAdminModelFactory.PrepareStores(searchModel.AvailableStores);
-
-            //prepare available order statuses
-            _baseAdminModelFactory.PrepareOrderStatuses(searchModel.AvailableOrderStatuses);
-
-            //prepare available payment statuses
-            _baseAdminModelFactory.PreparePaymentStatuses(searchModel.AvailablePaymentStatuses);
-
-            //prepare available categories
-            _baseAdminModelFactory.PrepareCategories(searchModel.AvailableCategories);
-
-            //prepare available manufacturers
-            _baseAdminModelFactory.PrepareManufacturers(searchModel.AvailableManufacturers);
-
-            //prepare available billing countries
-            searchModel.AvailableCountries = _countryService.GetAllCountriesForBilling(showHidden: true)
-                .Select(country => new SelectListItem { Text = country.Name, Value = country.Id.ToString() }).ToList();
-            searchModel.AvailableCountries.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
-
-            //prepare available vendors
-            _baseAdminModelFactory.PrepareVendors(searchModel.AvailableVendors);
-
-            //prepare page parameters
-            searchModel.SetGridPageSize();
-
-            return searchModel;
-        }
-
-        /// <summary>
-        /// Prepare paged bestseller list model
-        /// </summary>
-        /// <param name="searchModel">Bestseller search model</param>
-        /// <returns>Bestseller list model</returns>
-        public virtual BestsellerListModel PrepareBestsellerListModel(BestsellerSearchModel searchModel)
-        {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            //get parameters to filter bestsellers
-            var orderStatus = searchModel.OrderStatusId > 0 ? (OrderStatus?)searchModel.OrderStatusId : null;
-            var paymentStatus = searchModel.PaymentStatusId > 0 ? (PaymentStatus?)searchModel.PaymentStatusId : null;
-            if (_workContext.CurrentVendor != null)
-                searchModel.VendorId = _workContext.CurrentVendor.Id;
-            var startDateValue = !searchModel.StartDate.HasValue ? null
-                : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
-            var endDateValue = !searchModel.EndDate.HasValue ? null
-                : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
-
-            //get bestsellers
-            var bestsellers = _orderReportService.BestSellersReport(showHidden: true,
-                createdFromUtc: startDateValue,
-                createdToUtc: endDateValue,
-                os: orderStatus,
-                ps: paymentStatus,
-                billingCountryId: searchModel.BillingCountryId,
-                orderBy: 2,
-                vendorId: searchModel.VendorId,
-                categoryId: searchModel.CategoryId,
-                manufacturerId: searchModel.ManufacturerId,
-                storeId: searchModel.StoreId,
-                pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
-
-            //prepare list model
-            var model = new BestsellerListModel
-            {
-                Data = bestsellers.Select(bestseller =>
-                {
-                    //fill in model values from the entity
-                    var bestsellerModel = new BestsellerModel
-                    {
-                        ProductId = bestseller.ProductId,
-                        TotalQuantity = bestseller.TotalQuantity
-                    };
-
-                    //fill in additional values (not existing in the entity)
-                    bestsellerModel.ProductName = _productService.GetProductById(bestseller.ProductId)?.Name;
-                    bestsellerModel.TotalAmount = _priceFormatter.FormatPrice(bestseller.TotalAmount, true, false);
-
-                    return bestsellerModel;
-                }),
-                Total = bestsellers.TotalCount
-            };
-
-            return model;
-        }
-
-        /// <summary>
-        /// Prepare never sold report search model
-        /// </summary>
-        /// <param name="searchModel">Never sold report search model</param>
-        /// <returns>Never sold report search model</returns>
-        public virtual NeverSoldReportSearchModel PrepareNeverSoldReportSearchModel(NeverSoldReportSearchModel searchModel)
-        {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            searchModel.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
-
-            //prepare available stores
-            _baseAdminModelFactory.PrepareStores(searchModel.AvailableStores);
-
-            //prepare available categories
-            _baseAdminModelFactory.PrepareCategories(searchModel.AvailableCategories);
-
-            //prepare available manufacturers
-            _baseAdminModelFactory.PrepareManufacturers(searchModel.AvailableManufacturers);
-
-            //prepare available vendors
-            _baseAdminModelFactory.PrepareVendors(searchModel.AvailableVendors);
-
-            //prepare page parameters
-            searchModel.SetGridPageSize();
-
-            return searchModel;
-        }
-
-        /// <summary>
-        /// Prepare paged never sold report list model
-        /// </summary>
-        /// <param name="searchModel">Never sold report search model</param>
-        /// <returns>Never sold report list model</returns>
-        public virtual NeverSoldReportListModel PrepareNeverSoldReportListModel(NeverSoldReportSearchModel searchModel)
-        {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            //get parameters to filter neverSoldReports
-            if (_workContext.CurrentVendor != null)
-                searchModel.SearchVendorId = _workContext.CurrentVendor.Id;
-            var startDateValue = !searchModel.StartDate.HasValue ? null
-                : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
-            var endDateValue = !searchModel.EndDate.HasValue ? null
-                : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
-
-            //get report items
-            var items = _orderReportService.ProductsNeverSold(showHidden: true,
-                vendorId: searchModel.SearchVendorId,
-                storeId: searchModel.SearchStoreId,
-                categoryId: searchModel.SearchCategoryId,
-                manufacturerId: searchModel.SearchManufacturerId,
-                createdFromUtc: startDateValue,
-                createdToUtc: endDateValue,
-                pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
-
-            //prepare list model
-            var model = new NeverSoldReportListModel
-            {
-                //fill in model values from the entity
-                Data = items.Select(item => new NeverSoldReportModel
-                {
-                    ProductId = item.Id,
-                    ProductName = item.Name
-                }),
-                Total = items.TotalCount
-            };
-
-            return model;
-        }
-
-        /// <summary>
-        /// Prepare country report search model
-        /// </summary>
-        /// <param name="searchModel">Country report search model</param>
-        /// <returns>Country report search model</returns>
-        public virtual CountryReportSearchModel PrepareCountryReportSearchModel(CountryReportSearchModel searchModel)
-        {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            //prepare available order statuses
-            _baseAdminModelFactory.PrepareOrderStatuses(searchModel.AvailableOrderStatuses);
-
-            //prepare available payment statuses
-            _baseAdminModelFactory.PreparePaymentStatuses(searchModel.AvailablePaymentStatuses);
-
-            //prepare page parameters
-            searchModel.SetGridPageSize();
-
-            return searchModel;
-        }
-
-        /// <summary>
-        /// Prepare paged country report list model
-        /// </summary>
-        /// <param name="searchModel">Country report search model</param>
-        /// <returns>Country report list model</returns>
-        public virtual CountryReportListModel PrepareCountryReportListModel(CountryReportSearchModel searchModel)
-        {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            //get parameters to filter countryReports
-            var orderStatus = searchModel.OrderStatusId > 0 ? (OrderStatus?)searchModel.OrderStatusId : null;
-            var paymentStatus = searchModel.PaymentStatusId > 0 ? (PaymentStatus?)searchModel.PaymentStatusId : null;
-            var startDateValue = !searchModel.StartDate.HasValue ? null
-                : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
-            var endDateValue = !searchModel.EndDate.HasValue ? null
-                : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
-
-            //get items
-            var items = _orderReportService.GetCountryReport(os: orderStatus,
-                ps: paymentStatus,
-                startTimeUtc: startDateValue,
-                endTimeUtc: endDateValue);
-
-            //prepare list model
-            var model = new CountryReportListModel
-            {
-                Data = items.PaginationByRequestModel(searchModel).Select(item =>
-                {
-                    //fill in model values from the entity
-                    var countryReportModel = new CountryReportModel
-                    {
-                        TotalOrders = item.TotalOrders
-                    };
-
-                    //fill in additional values (not existing in the entity)
-                    countryReportModel.SumOrders = _priceFormatter.FormatPrice(item.SumOrders, true, false);
-                    countryReportModel.CountryName = _countryService.GetCountryById(item.CountryId ?? 0)?.Name;
-
-                    return countryReportModel;
-                }),
-                Total = items.Count
-            };
-
-            return model;
-        }
+        }        
 
         /// <summary>
         /// Prepare order average line summary report list model

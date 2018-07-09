@@ -17,7 +17,7 @@ namespace Nop.Data.Mapping.Catalog
         /// <param name="builder">The builder to be used to configure the entity</param>
         public override void Configure(EntityTypeBuilder<ProductSpecificationAttribute> builder)
         {
-            builder.ToTable("Product_SpecificationAttribute_Mapping");
+            builder.ToTable(NopMappingDefaults.ProductSpecificationAttributeTable);
             builder.HasKey(productSpecificationAttribute => productSpecificationAttribute.Id);
 
             builder.Property(productSpecificationAttribute => productSpecificationAttribute.CustomValue).HasMaxLength(4000);

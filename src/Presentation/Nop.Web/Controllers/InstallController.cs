@@ -292,7 +292,7 @@ namespace Nop.Web.Controllers
             {
                 try
                 {
-                    string connectionString;
+                    var connectionString = string.Empty;
                     if (model.DataProvider == DataProviderType.SqlServer)
                     {
                         //SQL Server
@@ -334,20 +334,6 @@ namespace Nop.Web.Controllers
                             //check whether database exists
                             if (!SqlServerDatabaseExists(connectionString))
                                 throw new Exception(_locService.GetResource("DatabaseNotExists"));
-                        }
-                    }
-                    else
-                    {
-                        //SQL CE
-                        var databaseFileName = "Nop.Db.sdf";
-                        var databasePath = @"|DataDirectory|\" + databaseFileName;
-                        connectionString = "Data Source=" + databasePath + ";Persist Security Info=False";
-
-                        //drop database if exists
-                        var databaseFullPath = _fileProvider.MapPath("~/App_Data/") + databaseFileName;
-                        if (_fileProvider.FileExists(databaseFullPath))
-                        {
-                            _fileProvider.DeleteFile(databaseFullPath);
                         }
                     }
 

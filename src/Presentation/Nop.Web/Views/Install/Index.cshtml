@@ -15,21 +15,23 @@
 <head>
     <title>@ILS.GetResource("Title")</title>
     <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
     @if (ILS.GetCurrentLanguage().IsRightToLeft)
     {
         <link href="@Url.Content("~/lib/bootstrap/css/bootstrap.rtl.css")" type="text/css" rel="stylesheet" />
-        <link href="@Url.Content("~/lib/adminLTE/AdminLTE-2.3.0.rtl.css")" type="text/css" rel="stylesheet" />
+        <link href="@Url.Content("~/lib/adminLTE/css/AdminLTE.rtl.css")" type="text/css" rel="stylesheet" />
         <link href="@Url.Content("~/css/install/styles.rtl.css")" type="text/css" rel="stylesheet" />
     }
     else
     {
         <link href="@Url.Content("~/lib/bootstrap/css/bootstrap.min.css")" type="text/css" rel="stylesheet" />
-        <link href="@Url.Content("~/lib/adminLTE/AdminLTE-2.3.0.min.css")" type="text/css" rel="stylesheet" />
+        <link href="@Url.Content("~/lib/adminLTE/css/AdminLTE.min.css")" type="text/css" rel="stylesheet" />
         <link href="@Url.Content("~/css/install/styles.css")" type="text/css" rel="stylesheet" />
     }
-    <script src="@Url.Content("~/lib/jquery-1.10.2.min.js")"></script>
-    <script src="@Url.Content("~/lib/jquery.validate.min.js")"></script>
-    <script src="@Url.Content("~/lib/jquery.validate.unobtrusive.min.js")"></script>
+    <script src="@Url.Content("~/lib/jquery/jquery-1.10.2.min.js")"></script>
+    <script src="@Url.Content("~/lib/jquery-migrate/jquery-migrate-1.2.1.js")"></script>
+    <script src="@Url.Content("~/lib/jquery-validate/jquery.validate-v1.11.1/jquery.validate.min.js")"></script>
+    <script src="@Url.Content("~/lib/jquery-validate/jquery.validate.unobtrusive/jquery.validate.unobtrusive.min.js")"></script>
     <script src="@Url.Content("~/js/public.common.js")"></script>
 </head>
 <body class="skin-blue">

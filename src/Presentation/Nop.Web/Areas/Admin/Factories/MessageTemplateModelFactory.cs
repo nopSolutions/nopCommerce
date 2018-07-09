@@ -4,7 +4,7 @@ using Nop.Core.Domain.Messages;
 using Nop.Services.Localization;
 using Nop.Services.Messages;
 using Nop.Services.Stores;
-using Nop.Web.Areas.Admin.Extensions;
+using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Messages;
 using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Factories;
@@ -92,7 +92,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = messageTemplates.PaginationByRequestModel(searchModel).Select(messageTemplate =>
                 {
                     //fill in model values from the entity
-                    var messageTemplateModel = messageTemplate.ToModel();
+                    var messageTemplateModel = messageTemplate.ToModel<MessageTemplateModel>();
 
                     //fill in additional values (not existing in the entity)
                     var storeNames = stores.Select(store => store.Name);
@@ -128,7 +128,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (messageTemplate != null)
             {
                 //fill in model values from the entity
-                model = model ?? messageTemplate.ToModel();
+                model = model ?? messageTemplate.ToModel<MessageTemplateModel>();
 
                 //define localized model configuration action
                 localizedModelConfiguration = (locale, languageId) =>

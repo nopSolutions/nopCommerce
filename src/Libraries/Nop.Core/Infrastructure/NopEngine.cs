@@ -111,12 +111,12 @@ namespace Nop.Core.Infrastructure
         protected virtual void AddAutoMapper(IServiceCollection services, ITypeFinder typeFinder)
         {
             //find mapper configurations provided by other assemblies
-            var mapperConfigurations = typeFinder.FindClassesOfType<IMapperProfile>();
+            var mapperConfigurations = typeFinder.FindClassesOfType<IOrderedMapperProfile>();
 
             //create and sort instances of mapper configurations
             var instances = mapperConfigurations
                 .Where(mapperConfiguration => PluginManager.FindPlugin(mapperConfiguration)?.Installed ?? true) //ignore not installed plugins
-                .Select(mapperConfiguration => (IMapperProfile)Activator.CreateInstance(mapperConfiguration))
+                .Select(mapperConfiguration => (IOrderedMapperProfile)Activator.CreateInstance(mapperConfiguration))
                 .OrderBy(mapperConfiguration => mapperConfiguration.Order);
 
             //create AutoMapper configuration
@@ -127,9 +127,6 @@ namespace Nop.Core.Infrastructure
                     cfg.AddProfile(instance.GetType());
                 }
             });
-
-            //register AutoMapper
-            services.AddAutoMapper();
 
             //register
             AutoMapperConfiguration.Init(config);
@@ -175,9 +172,9 @@ namespace Nop.Core.Infrastructure
         /// Add and configure services
         /// </summary>
         /// <param name="services">Collection of service descriptors</param>
-        /// <param name="configuration">Configuration root of the application</param>
+        /// <param name="configuration">Configuration of the application</param>
         /// <returns>Service provider</returns>
-        public IServiceProvider ConfigureServices(IServiceCollection services, IConfigurationRoot configuration)
+        public IServiceProvider ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
             //find startup configurations provided by other assemblies
             var typeFinder = new WebAppTypeFinder();
@@ -206,11 +203,7 @@ namespace Nop.Core.Infrastructure
 
             //resolve assemblies here. otherwise, plugins can throw an exception when rendering views
             AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
-
-            //set App_Data path as base data directory (required to create and save SQL Server Compact database file in App_Data folder)
-            var fileProvider = Resolve<INopFileProvider>();
-            AppDomain.CurrentDomain.SetData("DataDirectory", fileProvider.MapPath("~/App_Data/"));
-
+            
             return _serviceProvider;
         }
 

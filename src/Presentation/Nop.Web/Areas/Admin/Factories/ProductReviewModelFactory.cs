@@ -9,6 +9,7 @@ using Nop.Services.Catalog;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Web.Areas.Admin.Models.Catalog;
+using Nop.Web.Framework.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -23,7 +24,8 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ILocalizationService _localizationService;
         private readonly IProductService _productService;
-        private readonly IWorkContext _workContext;
+        private readonly IReviewTypeService _reviewTypeService;
+        private readonly IWorkContext _workContext;        
 
         #endregion
 
@@ -33,12 +35,14 @@ namespace Nop.Web.Areas.Admin.Factories
             IDateTimeHelper dateTimeHelper,
             ILocalizationService localizationService,
             IProductService productService,
+            IReviewTypeService reviewTypeService,
             IWorkContext workContext)
         {
             this._baseAdminModelFactory = baseAdminModelFactory;
             this._dateTimeHelper = dateTimeHelper;
             this._localizationService = localizationService;
             this._productService = productService;
+            this._reviewTypeService = reviewTypeService;
             this._workContext = workContext;
         }
 
@@ -183,12 +187,83 @@ namespace Nop.Web.Areas.Admin.Factories
                     model.ReplyText = productReview.ReplyText;
                     model.IsApproved = productReview.IsApproved;
                 }
+
+                //prepare nested search model
+                PrepareProductReviewReviewTypeMappingSearchModel(model.ProductReviewReviewTypeMappingSearchModel, productReview);
             }
 
             model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
 
             return model;
         }
+
+        /// <summary>
+        /// Prepare product review mapping search model
+        /// </summary>
+        /// <param name="searchModel">Product review mapping search model</param>
+        /// <param name="productReview">Product</param>
+        /// <returns>Product review mapping search model</returns>
+        public virtual ProductReviewReviewTypeMappingSearchModel PrepareProductReviewReviewTypeMappingSearchModel(ProductReviewReviewTypeMappingSearchModel searchModel,
+            ProductReview productReview)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+            if (productReview == null)
+                throw new ArgumentNullException(nameof(productReview));
+
+            searchModel.ProductReviewId = productReview.Id;
+
+            //prepare page parameters
+            searchModel.SetGridPageSize();
+
+            return searchModel;
+        }
+
+        /// <summary>
+        /// Prepare paged product reviews mapping list model
+        /// </summary>
+        /// <param name="searchModel">Product review and review type mapping search model</param>
+        /// <param name="productReview">Product review</param>
+        /// <returns>Product review and review type mapping list model</returns>
+        public virtual ProductReviewReviewTypeMappingListModel PrepareProductReviewReviewTypeMappingListModel(ProductReviewReviewTypeMappingSearchModel searchModel, ProductReview productReview)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+            if (productReview == null)
+                throw new ArgumentNullException(nameof(productReview));
+
+            //get product review and review type mappings
+            var productReviewReviewTypeMappings = _reviewTypeService.GetProductReviewReviewTypeMappingsByProductReviewId(productReview.Id);
+
+            //prepare grid model
+            var model = new ProductReviewReviewTypeMappingListModel
+            {
+                Data = productReviewReviewTypeMappings.PaginationByRequestModel(searchModel).Select(productReviewReviewTypeMapping =>
+                {
+                    //fill in model values from the entity
+                    var productReviewReviewTypeMappingModel = new ProductReviewReviewTypeMappingModel
+                    {
+                        Id = productReviewReviewTypeMapping.Id,
+                        ProductReviewId = productReviewReviewTypeMapping.ProductReviewId,
+                        Rating = productReviewReviewTypeMapping.Rating                        
+                    };
+
+                    //fill in additional values (not existing in the entity)
+                    var reviewType = _reviewTypeService.GetReviewTypeById(productReviewReviewTypeMapping.ReviewTypeId);
+
+                    productReviewReviewTypeMappingModel.Name = reviewType.GetLocalized(entity => entity.Name);
+                    productReviewReviewTypeMappingModel.Description = reviewType.GetLocalized(entity => entity.Description);
+                    productReviewReviewTypeMappingModel.VisibleToAllCustomers = reviewType.VisibleToAllCustomers;
+
+                    return productReviewReviewTypeMappingModel;
+                }),
+                Total = productReviewReviewTypeMappings.Count
+            };
+
+            return model;
+        }        
 
         #endregion
     }

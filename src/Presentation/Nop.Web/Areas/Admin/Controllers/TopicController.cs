@@ -8,8 +8,8 @@ using Nop.Services.Security;
 using Nop.Services.Seo;
 using Nop.Services.Stores;
 using Nop.Services.Topics;
-using Nop.Web.Areas.Admin.Extensions;
 using Nop.Web.Areas.Admin.Factories;
+using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Topics;
 using Nop.Web.Framework.Mvc.Filters;
 
@@ -205,7 +205,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 if (!model.IsPasswordProtected)
                     model.Password = null;
 
-                var topic = model.ToEntity();
+                var topic = model.ToEntity<Topic>();
                 _topicService.InsertTopic(topic);
 
                 //search engine name

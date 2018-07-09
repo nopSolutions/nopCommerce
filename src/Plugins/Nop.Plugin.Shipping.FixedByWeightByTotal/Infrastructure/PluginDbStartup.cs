@@ -1,10 +1,9 @@
 ﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Nop.Core.Data;
 using Nop.Core.Infrastructure;
 using Nop.Plugin.Shipping.FixedByWeightByTotal.Data;
+using Nop.Web.Framework.Infrastructure.Extensions;
 
 namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Infrastructure
 {
@@ -17,15 +16,13 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Infrastructure
         /// Add and configure any of the middleware
         /// </summary>
         /// <param name="services">Collection of service descriptors</param>
-        /// <param name="configuration">Configuration root of the application</param>
-        public void ConfigureServices(IServiceCollection services, IConfigurationRoot configuration)
+        /// <param name="configuration">Configuration of the application</param>
+        public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
             //add object context
             services.AddDbContext<ShippingByWeightByTotalObjectContext>(optionsBuilder =>
             {
-                var dataSettings = DataSettingsManager.LoadSettings();
-                if (dataSettings?.IsValid ?? false)
-                    optionsBuilder.UseLazyLoadingProxies().UseSqlServer(dataSettings.DataConnectionString);
+                optionsBuilder.UseSqlServerWithLazyLoading(services);
             });
         }
 

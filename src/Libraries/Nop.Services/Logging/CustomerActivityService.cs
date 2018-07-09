@@ -17,19 +17,6 @@ namespace Nop.Services.Logging
     /// </summary>
     public class CustomerActivityService : ICustomerActivityService
     {
-        #region Constants
-
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        private const string ACTIVITYTYPE_ALL_KEY = "Nop.activitytype.all";
-        /// <summary>
-        /// Key pattern to clear cache
-        /// </summary>
-        private const string ACTIVITYTYPE_PATTERN_KEY = "Nop.activitytype.";
-
-        #endregion
-
         #region Fields
 
         private readonly IStaticCacheManager _cacheManager;
@@ -113,8 +100,7 @@ namespace Nop.Services.Logging
         protected virtual IList<ActivityLogTypeForCaching> GetAllActivityTypesCached()
         {
             //cache
-            var key = string.Format(ACTIVITYTYPE_ALL_KEY);
-            return _cacheManager.Get(key, () =>
+            return _cacheManager.Get(NopLoggingDefaults.ActivityTypeAllCacheKey, () =>
             {
                 var result = new List<ActivityLogTypeForCaching>();
                 var activityLogTypes = GetAllActivityTypes();
@@ -147,7 +133,7 @@ namespace Nop.Services.Logging
                 throw new ArgumentNullException(nameof(activityLogType));
 
             _activityLogTypeRepository.Insert(activityLogType);
-            _cacheManager.RemoveByPattern(ACTIVITYTYPE_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopLoggingDefaults.ActivityTypePatternCacheKey);
         }
 
         /// <summary>
@@ -160,7 +146,7 @@ namespace Nop.Services.Logging
                 throw new ArgumentNullException(nameof(activityLogType));
 
             _activityLogTypeRepository.Update(activityLogType);
-            _cacheManager.RemoveByPattern(ACTIVITYTYPE_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopLoggingDefaults.ActivityTypePatternCacheKey);
         }
                 
         /// <summary>
@@ -173,7 +159,7 @@ namespace Nop.Services.Logging
                 throw new ArgumentNullException(nameof(activityLogType));
 
             _activityLogTypeRepository.Delete(activityLogType);
-            _cacheManager.RemoveByPattern(ACTIVITYTYPE_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopLoggingDefaults.ActivityTypePatternCacheKey);
         }
 
         /// <summary>
@@ -237,7 +223,7 @@ namespace Nop.Services.Logging
             {
                 ActivityLogTypeId = activityLogType.Id,
                 EntityId = entity?.Id,
-                EntityName = entity?.GetType().BaseType.Name,
+                EntityName = entity?.GetUnproxiedEntityType().Name,
                 CustomerId = customer.Id,
                 Comment = CommonHelper.EnsureMaximumLength(comment ?? string.Empty, 4000),
                 CreatedOnUtc = DateTime.UtcNow,

@@ -8,6 +8,15 @@ namespace Nop.Web.Areas.Admin.Factories
     /// </summary>
     public partial interface IBlogModelFactory
     {
+
+        /// <summary>
+        /// Prepare blog content model
+        /// </summary>
+        /// <param name="blogContentModel">Blog content model</param>
+        /// <param name="filterByBlogPostId">Blog post ID</param>
+        /// <returns>Blog content model</returns>
+        BlogContentModel PrepareBlogContentModel(BlogContentModel blogContentModel, int? filterByBlogPostId);
+
         /// <summary>
         /// Prepare blog post search model
         /// </summary>
@@ -43,8 +52,8 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare paged blog comment list model
         /// </summary>
         /// <param name="searchModel">Blog comment search model</param>
-        /// <param name="blogPost">Blog post; pass null to prepare comment models for all blog posts</param>
+        /// <param name="blogPostId">Blog post ID</param>
         /// <returns>Blog comment list model</returns>
-        BlogCommentListModel PrepareBlogCommentListModel(BlogCommentSearchModel searchModel, BlogPost blogPost);
+        BlogCommentListModel PrepareBlogCommentListModel(BlogCommentSearchModel searchModel, int? blogPostId);
     }
 }

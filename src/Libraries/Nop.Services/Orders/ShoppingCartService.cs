@@ -180,9 +180,9 @@ namespace Nop.Services.Orders
                     .LimitPerStore(storeId)
                     .ToList();
 
-                var checkoutAttributesXml = customer.GetAttribute<string>(SystemCustomerAttributeNames.CheckoutAttributes, _genericAttributeService, storeId);
+                var checkoutAttributesXml = customer.GetAttribute<string>(NopCustomerDefaults.CheckoutAttributes, _genericAttributeService, storeId);
                 checkoutAttributesXml = _checkoutAttributeParser.EnsureOnlyActiveAttributes(checkoutAttributesXml, cart);
-                _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.CheckoutAttributes, checkoutAttributesXml, storeId);
+                _genericAttributeService.SaveAttribute(customer, NopCustomerDefaults.CheckoutAttributes, checkoutAttributesXml, storeId);
             }
 
             //event notification
@@ -1352,8 +1352,8 @@ namespace Nop.Services.Orders
             }
 
             //move selected checkout attributes
-            var checkoutAttributesXml = fromCustomer.GetAttribute<string>(SystemCustomerAttributeNames.CheckoutAttributes, _genericAttributeService, _storeContext.CurrentStore.Id);
-            _genericAttributeService.SaveAttribute(toCustomer, SystemCustomerAttributeNames.CheckoutAttributes, checkoutAttributesXml, _storeContext.CurrentStore.Id);
+            var checkoutAttributesXml = fromCustomer.GetAttribute<string>(NopCustomerDefaults.CheckoutAttributes, _genericAttributeService, _storeContext.CurrentStore.Id);
+            _genericAttributeService.SaveAttribute(toCustomer, NopCustomerDefaults.CheckoutAttributes, checkoutAttributesXml, _storeContext.CurrentStore.Id);
         }
 
         #endregion

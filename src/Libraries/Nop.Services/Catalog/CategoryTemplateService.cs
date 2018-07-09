@@ -14,9 +14,9 @@ namespace Nop.Services.Catalog
     {
         #region Fields
 
-        private readonly IRepository<CategoryTemplate> _categoryTemplateRepository;
         private readonly IEventPublisher _eventPublisher;
-
+        private readonly IRepository<CategoryTemplate> _categoryTemplateRepository;
+        
         #endregion
         
         #region Ctor
@@ -24,13 +24,13 @@ namespace Nop.Services.Catalog
         /// <summary>
         /// Ctor
         /// </summary>
-        /// <param name="categoryTemplateRepository">Category template repository</param>
         /// <param name="eventPublisher">Event publisher</param>
-        public CategoryTemplateService(IRepository<CategoryTemplate> categoryTemplateRepository, 
-            IEventPublisher eventPublisher)
+        /// <param name="categoryTemplateRepository">Category template repository</param>
+        public CategoryTemplateService(IEventPublisher eventPublisher,
+            IRepository<CategoryTemplate> categoryTemplateRepository)
         {
-            this._categoryTemplateRepository = categoryTemplateRepository;
             this._eventPublisher = eventPublisher;
+            this._categoryTemplateRepository = categoryTemplateRepository;
         }
 
         #endregion

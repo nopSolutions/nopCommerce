@@ -11,8 +11,6 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Gdpr;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
-using Nop.Core.Domain.Payments;
-using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Services.Affiliates;
 using Nop.Services.Authentication.External;
@@ -29,7 +27,7 @@ using Nop.Services.Messages;
 using Nop.Services.Orders;
 using Nop.Services.Stores;
 using Nop.Services.Tax;
-using Nop.Web.Areas.Admin.Extensions;
+using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Common;
 using Nop.Web.Areas.Admin.Models.Customers;
 using Nop.Web.Areas.Admin.Models.ShoppingCart;
@@ -51,15 +49,13 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly GdprSettings _gdprSettings;
         private readonly IAclSupportedModelFactory _aclSupportedModelFactory;
         private readonly IAddressAttributeFormatter _addressAttributeFormatter;
-        private readonly IAddressAttributeParser _addressAttributeParser;
-        private readonly IAddressAttributeService _addressAttributeService;
+        private readonly IAddressAttributeModelFactory _addressAttributeModelFactory;
         private readonly IAffiliateService _affiliateService;
         private readonly IBackInStockSubscriptionService _backInStockSubscriptionService;
         private readonly IBaseAdminModelFactory _baseAdminModelFactory;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly ICustomerAttributeParser _customerAttributeParser;
         private readonly ICustomerAttributeService _customerAttributeService;
-        private readonly ICustomerReportService _customerReportService;
         private readonly ICustomerService _customerService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IExternalAuthenticationService _externalAuthenticationService;
@@ -92,15 +88,13 @@ namespace Nop.Web.Areas.Admin.Factories
             GdprSettings gdprSettings,
             IAclSupportedModelFactory aclSupportedModelFactory,
             IAddressAttributeFormatter addressAttributeFormatter,
-            IAddressAttributeParser addressAttributeParser,
-            IAddressAttributeService addressAttributeService,
+            IAddressAttributeModelFactory addressAttributeModelFactory,
             IAffiliateService affiliateService,
             IBackInStockSubscriptionService backInStockSubscriptionService,
             IBaseAdminModelFactory baseAdminModelFactory,
             ICustomerActivityService customerActivityService,
             ICustomerAttributeParser customerAttributeParser,
             ICustomerAttributeService customerAttributeService,
-            ICustomerReportService customerReportService,
             ICustomerService customerService,
             IDateTimeHelper dateTimeHelper,
             IExternalAuthenticationService externalAuthenticationService,
@@ -129,15 +123,13 @@ namespace Nop.Web.Areas.Admin.Factories
             this._gdprSettings = gdprSettings;
             this._aclSupportedModelFactory = aclSupportedModelFactory;
             this._addressAttributeFormatter = addressAttributeFormatter;
-            this._addressAttributeParser = addressAttributeParser;
-            this._addressAttributeService = addressAttributeService;
+            this._addressAttributeModelFactory = addressAttributeModelFactory;
             this._affiliateService = affiliateService;
             this._backInStockSubscriptionService = backInStockSubscriptionService;
             this._baseAdminModelFactory = baseAdminModelFactory;
             this._customerActivityService = customerActivityService;
             this._customerAttributeParser = customerAttributeParser;
             this._customerAttributeService = customerAttributeService;
-            this._customerReportService = customerReportService;
             this._customerService = customerService;
             this._dateTimeHelper = dateTimeHelper;
             this._externalAuthenticationService = externalAuthenticationService;
@@ -254,7 +246,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 if (customer != null)
                 {
                     var selectedCustomerAttributes = customer
-                        .GetAttribute<string>(SystemCustomerAttributeNames.CustomCustomerAttributes, _genericAttributeService);
+                        .GetAttribute<string>(NopCustomerDefaults.CustomCustomerAttributes, _genericAttributeService);
                     switch (attribute.AttributeControlType)
                     {
                         case AttributeControlType.DropdownList:
@@ -351,7 +343,7 @@ namespace Nop.Web.Areas.Admin.Factories
             _baseAdminModelFactory.PrepareStatesAndProvinces(model.AvailableStates, model.CountryId);
 
             //prepare custom address attributes
-            model.PrepareCustomAddressAttributes(address, _addressAttributeService, _addressAttributeParser);
+            _addressAttributeModelFactory.PrepareCustomAddressAttributes(model.CustomAddressAttributes, address);
         }
 
         /// <summary>
@@ -466,44 +458,7 @@ namespace Nop.Web.Areas.Admin.Factories
             searchModel.SetGridPageSize();
 
             return searchModel;
-        }
-
-        /// <summary>
-        /// Prepare best customers report search model
-        /// </summary>
-        /// <param name="searchModel">Best customers report search model</param>
-        /// <returns>Best customers report search model</returns>
-        protected virtual BestCustomersReportSearchModel PrepareBestCustomersReportSearchModel(BestCustomersReportSearchModel searchModel)
-        {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            //prepare available order, payment and shipping statuses
-            _baseAdminModelFactory.PrepareOrderStatuses(searchModel.AvailableOrderStatuses);
-            _baseAdminModelFactory.PreparePaymentStatuses(searchModel.AvailablePaymentStatuses);
-            _baseAdminModelFactory.PrepareShippingStatuses(searchModel.AvailableShippingStatuses);
-
-            //prepare page parameters
-            searchModel.SetGridPageSize();
-
-            return searchModel;
-        }
-
-        /// <summary>
-        /// Prepare registered customers report search model
-        /// </summary>
-        /// <param name="searchModel">Registered customers report search model</param>
-        /// <returns>Registered customers report search model</returns>
-        protected virtual RegisteredCustomersReportSearchModel PrepareRegisteredCustomersReportSearchModel(RegisteredCustomersReportSearchModel searchModel)
-        {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            //prepare page parameters
-            searchModel.SetGridPageSize();
-
-            return searchModel;
-        }
+        }        
 
         /// <summary>
         /// Prepare customer shopping cart search model
@@ -599,7 +554,7 @@ namespace Nop.Web.Areas.Admin.Factories
             searchModel.ZipPostalCodeEnabled = _customerSettings.ZipPostalCodeEnabled;
 
             //search registered customers by default
-            var registeredRole = _customerService.GetCustomerRoleBySystemName(SystemCustomerRoleNames.Registered);
+            var registeredRole = _customerService.GetCustomerRoleBySystemName(NopCustomerDefaults.RegisteredRoleName);
             if (registeredRole != null)
                 searchModel.SelectedCustomerRoleIds.Add(registeredRole.Id);
 
@@ -653,9 +608,9 @@ namespace Nop.Web.Areas.Admin.Factories
                         Email = customer.IsRegistered() ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest"),
                         Username = customer.Username,
                         FullName = customer.GetFullName(),
-                        Company = customer.GetAttribute<string>(SystemCustomerAttributeNames.Company),
-                        Phone = customer.GetAttribute<string>(SystemCustomerAttributeNames.Phone),
-                        ZipPostalCode = customer.GetAttribute<string>(SystemCustomerAttributeNames.ZipPostalCode),
+                        Company = customer.GetAttribute<string>(NopCustomerDefaults.CompanyAttribute),
+                        Phone = customer.GetAttribute<string>(NopCustomerDefaults.PhoneAttribute),
+                        ZipPostalCode = customer.GetAttribute<string>(NopCustomerDefaults.ZipPostalCodeAttribute),
                         Active = customer.Active
                     };
 
@@ -667,7 +622,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     customerModel.CustomerRoleNames = string.Join(", ", customer.CustomerRoles.Select(role => role.Name));
                     if (_customerSettings.AllowCustomersToUploadAvatars)
                     {
-                        var avatarPictureId = customer.GetAttribute<int>(SystemCustomerAttributeNames.AvatarPictureId);
+                        var avatarPictureId = customer.GetAttribute<int>(NopCustomerDefaults.AvatarPictureIdAttribute);
                         customerModel.AvatarUrl = _pictureService.GetPictureUrl(avatarPictureId, _mediaSettings.AvatarPictureSize,
                             _customerSettings.DefaultAvatarEnabled, defaultPictureType: PictureType.Avatar);
                     }
@@ -711,29 +666,29 @@ namespace Nop.Web.Areas.Admin.Factories
                     model.AdminComment = customer.AdminComment;
                     model.IsTaxExempt = customer.IsTaxExempt;
                     model.Active = customer.Active;
-                    model.FirstName = customer.GetAttribute<string>(SystemCustomerAttributeNames.FirstName);
-                    model.LastName = customer.GetAttribute<string>(SystemCustomerAttributeNames.LastName);
-                    model.Gender = customer.GetAttribute<string>(SystemCustomerAttributeNames.Gender);
-                    model.DateOfBirth = customer.GetAttribute<DateTime?>(SystemCustomerAttributeNames.DateOfBirth);
-                    model.Company = customer.GetAttribute<string>(SystemCustomerAttributeNames.Company);
-                    model.StreetAddress = customer.GetAttribute<string>(SystemCustomerAttributeNames.StreetAddress);
-                    model.StreetAddress2 = customer.GetAttribute<string>(SystemCustomerAttributeNames.StreetAddress2);
-                    model.ZipPostalCode = customer.GetAttribute<string>(SystemCustomerAttributeNames.ZipPostalCode);
-                    model.City = customer.GetAttribute<string>(SystemCustomerAttributeNames.City);
-                    model.County = customer.GetAttribute<string>(SystemCustomerAttributeNames.County);
-                    model.CountryId = customer.GetAttribute<int>(SystemCustomerAttributeNames.CountryId);
-                    model.StateProvinceId = customer.GetAttribute<int>(SystemCustomerAttributeNames.StateProvinceId);
-                    model.Phone = customer.GetAttribute<string>(SystemCustomerAttributeNames.Phone);
-                    model.Fax = customer.GetAttribute<string>(SystemCustomerAttributeNames.Fax);
-                    model.TimeZoneId = customer.GetAttribute<string>(SystemCustomerAttributeNames.TimeZoneId);
-                    model.VatNumber = customer.GetAttribute<string>(SystemCustomerAttributeNames.VatNumber);
+                    model.FirstName = customer.GetAttribute<string>(NopCustomerDefaults.FirstNameAttribute);
+                    model.LastName = customer.GetAttribute<string>(NopCustomerDefaults.LastNameAttribute);
+                    model.Gender = customer.GetAttribute<string>(NopCustomerDefaults.GenderAttribute);
+                    model.DateOfBirth = customer.GetAttribute<DateTime?>(NopCustomerDefaults.DateOfBirthAttribute);
+                    model.Company = customer.GetAttribute<string>(NopCustomerDefaults.CompanyAttribute);
+                    model.StreetAddress = customer.GetAttribute<string>(NopCustomerDefaults.StreetAddressAttribute);
+                    model.StreetAddress2 = customer.GetAttribute<string>(NopCustomerDefaults.StreetAddress2Attribute);
+                    model.ZipPostalCode = customer.GetAttribute<string>(NopCustomerDefaults.ZipPostalCodeAttribute);
+                    model.City = customer.GetAttribute<string>(NopCustomerDefaults.CityAttribute);
+                    model.County = customer.GetAttribute<string>(NopCustomerDefaults.CountyAttribute);
+                    model.CountryId = customer.GetAttribute<int>(NopCustomerDefaults.CountryIdAttribute);
+                    model.StateProvinceId = customer.GetAttribute<int>(NopCustomerDefaults.StateProvinceIdAttribute);
+                    model.Phone = customer.GetAttribute<string>(NopCustomerDefaults.PhoneAttribute);
+                    model.Fax = customer.GetAttribute<string>(NopCustomerDefaults.FaxAttribute);
+                    model.TimeZoneId = customer.GetAttribute<string>(NopCustomerDefaults.TimeZoneIdAttribute);
+                    model.VatNumber = customer.GetAttribute<string>(NopCustomerDefaults.VatNumberAttribute);
                     model.VatNumberStatusNote = ((VatNumberStatus)customer
-                        .GetAttribute<int>(SystemCustomerAttributeNames.VatNumberStatusId))
+                        .GetAttribute<int>(NopCustomerDefaults.VatNumberStatusIdAttribute))
                         .GetLocalizedEnum(_localizationService, _workContext);
                     model.CreatedOn = _dateTimeHelper.ConvertToUserTime(customer.CreatedOnUtc, DateTimeKind.Utc);
                     model.LastActivityDate = _dateTimeHelper.ConvertToUserTime(customer.LastActivityDateUtc, DateTimeKind.Utc);
                     model.LastIpAddress = customer.LastIpAddress;
-                    model.LastVisitedPage = customer.GetAttribute<string>(SystemCustomerAttributeNames.LastVisitedPage);
+                    model.LastVisitedPage = customer.GetAttribute<string>(NopCustomerDefaults.LastVisitedPageAttribute);
                     model.SelectedCustomerRoleIds = customer.CustomerCustomerRoleMappings.Select(mapping => mapping.CustomerRoleId).ToList();
                     model.RegisteredInStore = _storeService.GetAllStores()
                         .FirstOrDefault(store => store.Id == customer.RegisteredInStoreId)?.Name ?? string.Empty;
@@ -776,7 +731,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 if (!excludeProperties)
                 {
                     //precheck Registered Role as a default role while creating a new customer through admin
-                    var registeredRole = _customerService.GetCustomerRoleBySystemName(SystemCustomerRoleNames.Registered);
+                    var registeredRole = _customerService.GetCustomerRoleBySystemName(NopCustomerDefaults.RegisteredRoleName);
                     if (registeredRole != null)
                         model.SelectedCustomerRoleIds.Add(registeredRole.Id);
                 }
@@ -910,7 +865,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = addresses.PaginationByRequestModel(searchModel).Select(address =>
                 {
                     //fill in model values from the entity        
-                    var addressModel = address.ToModel();
+                    var addressModel = address.ToModel<AddressModel>();
 
                     //fill in additional values (not existing in the entity)
                     PrepareModelAddressHtml(addressModel, address);
@@ -944,7 +899,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
                 //whether to fill in some of properties
                 if (!excludeProperties)
-                    model.Address = address.ToModel();
+                    model.Address = address.ToModel(model.Address);
             }
 
             model.CustomerId = customer.Id;
@@ -1002,127 +957,7 @@ namespace Nop.Web.Areas.Admin.Factories
             };
 
             return model;
-        }
-
-        /// <summary>
-        /// Prepare customer reports search model
-        /// </summary>
-        /// <param name="searchModel">Customer reports search model</param>
-        /// <returns>Customer reports search model</returns>
-        public virtual CustomerReportsSearchModel PrepareCustomerReportsSearchModel(CustomerReportsSearchModel searchModel)
-        {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            //prepare nested search models
-            PrepareBestCustomersReportSearchModel(searchModel.BestCustomersByOrderTotal);
-            PrepareBestCustomersReportSearchModel(searchModel.BestCustomersByNumberOfOrders);
-            PrepareRegisteredCustomersReportSearchModel(searchModel.RegisteredCustomers);
-
-            return searchModel;
-        }
-
-        /// <summary>
-        /// Prepare paged best customers report list model
-        /// </summary>
-        /// <param name="searchModel">Best customers report search model</param>
-        /// <returns>Best customers report list model</returns>
-        public virtual BestCustomersReportListModel PrepareBestCustomersReportListModel(BestCustomersReportSearchModel searchModel)
-        {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            //get parameters to filter
-            var startDateValue = !searchModel.StartDate.HasValue ? null
-                : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
-            var endDateValue = !searchModel.EndDate.HasValue ? null
-                : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
-            var orderStatus = searchModel.OrderStatusId > 0 ? (OrderStatus?)searchModel.OrderStatusId : null;
-            var paymentStatus = searchModel.PaymentStatusId > 0 ? (PaymentStatus?)searchModel.PaymentStatusId : null;
-            var shippingStatus = searchModel.ShippingStatusId > 0 ? (ShippingStatus?)searchModel.ShippingStatusId : null;
-
-            //get report items
-            var reportItems = _customerReportService.GetBestCustomersReport(createdFromUtc: startDateValue,
-                createdToUtc: endDateValue,
-                os: orderStatus,
-                ps: paymentStatus,
-                ss: shippingStatus,
-                orderBy: searchModel.OrderBy,
-                pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
-
-            //prepare list model
-            var model = new BestCustomersReportListModel
-            {
-                Data = reportItems.Select(item =>
-                {
-                    //fill in model values from the entity
-                    var bestCustomersReportModel = new BestCustomersReportModel
-                    {
-                        CustomerId = item.CustomerId,
-                        OrderTotal = _priceFormatter.FormatPrice(item.OrderTotal, true, false),
-                        OrderCount = item.OrderCount
-                    };
-
-                    //fill in additional values (not existing in the entity)
-                    var customer = _customerService.GetCustomerById(item.CustomerId);
-                    if (customer != null)
-                    {
-                        bestCustomersReportModel.CustomerName = customer.IsRegistered() ? customer.Email :
-                            _localizationService.GetResource("Admin.Customers.Guest");
-                    }
-
-                    return bestCustomersReportModel;
-                }),
-                Total = reportItems.TotalCount
-            };
-
-            return model;
-        }
-
-        /// <summary>
-        /// Prepare paged registered customers report list model
-        /// </summary>
-        /// <param name="searchModel">Registered customers report search model</param>
-        /// <returns>Registered customers report list model</returns>
-        public virtual RegisteredCustomersReportListModel PrepareRegisteredCustomersReportListModel(RegisteredCustomersReportSearchModel searchModel)
-        {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            //get report items
-            var reportItems = new List<RegisteredCustomersReportModel>
-            {
-                new RegisteredCustomersReportModel
-                {
-                    Period = _localizationService.GetResource("Admin.Customers.Reports.RegisteredCustomers.Fields.Period.7days"),
-                    Customers = _customerReportService.GetRegisteredCustomersReport(7)
-                },
-                new RegisteredCustomersReportModel
-                {
-                    Period = _localizationService.GetResource("Admin.Customers.Reports.RegisteredCustomers.Fields.Period.14days"),
-                    Customers = _customerReportService.GetRegisteredCustomersReport(14)
-                },
-                new RegisteredCustomersReportModel
-                {
-                    Period = _localizationService.GetResource("Admin.Customers.Reports.RegisteredCustomers.Fields.Period.month"),
-                    Customers = _customerReportService.GetRegisteredCustomersReport(30)
-                },
-                new RegisteredCustomersReportModel
-                {
-                    Period = _localizationService.GetResource("Admin.Customers.Reports.RegisteredCustomers.Fields.Period.year"),
-                    Customers = _customerReportService.GetRegisteredCustomersReport(365)
-                }
-            };
-
-            //prepare list model
-            var model = new RegisteredCustomersReportListModel
-            {
-                Data = reportItems.PaginationByRequestModel(searchModel),
-                Total = reportItems.Count
-            };
-
-            return model;
-        }
+        }        
 
         /// <summary>
         /// Prepare paged customer shopping cart list model
@@ -1319,7 +1154,7 @@ namespace Nop.Web.Areas.Admin.Factories
                         ? customer.LastIpAddress : _localizationService.GetResource("Admin.Customers.OnlineCustomers.Fields.IPAddress.Disabled");
                     customerModel.Location = _geoLookupService.LookupCountryName(customer.LastIpAddress);
                     customerModel.LastVisitedPage = _customerSettings.StoreLastVisitedPage 
-                        ? customer.GetAttribute<string>(SystemCustomerAttributeNames.LastVisitedPage) 
+                        ? customer.GetAttribute<string>(NopCustomerDefaults.LastVisitedPageAttribute) 
                         : _localizationService.GetResource("Admin.Customers.OnlineCustomers.Fields.LastVisitedPage.Disabled");
 
                     return customerModel;

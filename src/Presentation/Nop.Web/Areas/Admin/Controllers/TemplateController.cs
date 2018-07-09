@@ -5,8 +5,8 @@ using Nop.Core.Domain.Topics;
 using Nop.Services.Catalog;
 using Nop.Services.Security;
 using Nop.Services.Topics;
-using Nop.Web.Areas.Admin.Extensions;
 using Nop.Web.Areas.Admin.Factories;
+using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Templates;
 using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
@@ -19,10 +19,10 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         private readonly ICategoryTemplateService _categoryTemplateService;
         private readonly IManufacturerTemplateService _manufacturerTemplateService;
+        private readonly IPermissionService _permissionService;
         private readonly IProductTemplateService _productTemplateService;
         private readonly ITemplateModelFactory _templateModelFactory;
         private readonly ITopicTemplateService _topicTemplateService;
-        private readonly IPermissionService _permissionService;
 
         #endregion
 
@@ -30,33 +30,35 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public TemplateController(ICategoryTemplateService categoryTemplateService,
             IManufacturerTemplateService manufacturerTemplateService,
+            IPermissionService permissionService,
             IProductTemplateService productTemplateService,
             ITemplateModelFactory templateModelFactory,
-            ITopicTemplateService topicTemplateService,
-            IPermissionService permissionService)
+            ITopicTemplateService topicTemplateService)
         {
             this._categoryTemplateService = categoryTemplateService;
             this._manufacturerTemplateService = manufacturerTemplateService;
+            this._permissionService = permissionService;
             this._productTemplateService = productTemplateService;
             this._templateModelFactory = templateModelFactory;
             this._topicTemplateService = topicTemplateService;
-            this._permissionService = permissionService;
         }
 
         #endregion
 
-        #region Category templates
+        #region Methods
 
-        public virtual IActionResult CategoryTemplates()
+        public virtual IActionResult List()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
 
             //prepare model
-            var model = _templateModelFactory.PrepareCategoryTemplateSearchModel(new CategoryTemplateSearchModel());
+            var model = _templateModelFactory.PrepareTemplatesModel(new TemplatesModel());
 
             return View(model);
         }
+
+        #region Category templates        
 
         [HttpPost]
         public virtual IActionResult CategoryTemplates(CategoryTemplateSearchModel searchModel)
@@ -122,18 +124,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #endregion
 
-        #region Manufacturer templates
-
-        public virtual IActionResult ManufacturerTemplates()
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
-                return AccessDeniedView();
-
-            //prepare model
-            var model = _templateModelFactory.PrepareManufacturerTemplateSearchModel(new ManufacturerTemplateSearchModel());
-
-            return View(model);
-        }
+        #region Manufacturer templates        
 
         [HttpPost]
         public virtual IActionResult ManufacturerTemplates(ManufacturerTemplateSearchModel searchModel)
@@ -200,18 +191,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         #endregion
 
         #region Product templates
-
-        public virtual IActionResult ProductTemplates()
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
-                return AccessDeniedView();
-
-            //prepare model
-            var model = _templateModelFactory.PrepareProductTemplateSearchModel(new ProductTemplateSearchModel());
-
-            return View(model);
-        }
-
+                
         [HttpPost]
         public virtual IActionResult ProductTemplates(ProductTemplateSearchModel searchModel)
         {
@@ -277,18 +257,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         #endregion
 
         #region Topic templates
-
-        public virtual IActionResult TopicTemplates()
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
-                return AccessDeniedView();
-
-            //prepare model
-            var model = _templateModelFactory.PrepareTopicTemplateSearchModel(new TopicTemplateSearchModel());
-
-            return View(model);
-        }
-
+        
         [HttpPost]
         public virtual IActionResult TopicTemplates(TopicTemplateSearchModel searchModel)
         {
@@ -350,6 +319,8 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             return new NullJsonResult();
         }
+
+        #endregion
 
         #endregion
     }

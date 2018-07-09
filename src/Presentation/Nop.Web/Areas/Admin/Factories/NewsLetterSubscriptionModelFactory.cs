@@ -5,7 +5,7 @@ using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Messages;
 using Nop.Services.Stores;
-using Nop.Web.Areas.Admin.Extensions;
+using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Messages;
 
 namespace Nop.Web.Areas.Admin.Factories
@@ -115,7 +115,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = newsletterSubscriptions.Select(subscription =>
                 {
                     //fill in model values from the entity
-                    var subscriptionModel = subscription.ToModel();
+                    var subscriptionModel = subscription.ToModel<NewsletterSubscriptionModel>();
 
                     //convert dates to the user time
                     subscriptionModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(subscription.CreatedOnUtc, DateTimeKind.Utc);

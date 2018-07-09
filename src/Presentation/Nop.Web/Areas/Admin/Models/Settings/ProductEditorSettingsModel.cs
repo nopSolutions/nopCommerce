@@ -6,9 +6,11 @@ namespace Nop.Web.Areas.Admin.Models.Settings
     /// <summary>
     /// Represents a product editor settings model
     /// </summary>
-    public partial class ProductEditorSettingsModel : BaseNopModel
+    public partial class ProductEditorSettingsModel : BaseNopModel, ISettingsModel
     {
         #region Properties
+
+        public int ActiveStoreScopeConfiguration { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.ProductEditor.Id")]
         public bool Id { get; set; }

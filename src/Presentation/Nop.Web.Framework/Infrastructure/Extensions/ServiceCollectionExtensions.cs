@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Razor;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json.Serialization;
@@ -40,9 +39,9 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         /// Add services to the application and configure service provider
         /// </summary>
         /// <param name="services">Collection of service descriptors</param>
-        /// <param name="configuration">Configuration root of the application</param>
+        /// <param name="configuration">Configuration of the application</param>
         /// <returns>Configured service provider</returns>
-        public static IServiceProvider ConfigureApplicationServices(this IServiceCollection services, IConfigurationRoot configuration)
+        public static IServiceProvider ConfigureApplicationServices(this IServiceCollection services, IConfiguration configuration)
         {
             //add NopConfig configuration parameters
             services.ConfigureStartupConfig<NopConfig>(configuration.GetSection("Nop"));
@@ -171,7 +170,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 {
                     var redisConnectionWrapper = EngineContext.Current.Resolve<IRedisConnectionWrapper>();
                     return redisConnectionWrapper.GetDatabase();
-                }, RedisConfiguration.DataProtectionKeysName);
+                }, NopCachingDefaults.RedisDataProtectionKey);
             }
             else
             {
@@ -192,17 +191,17 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             //set default authentication schemes
             var authenticationBuilder = services.AddAuthentication(options =>
             {
-                options.DefaultScheme = NopCookieAuthenticationDefaults.AuthenticationScheme;
-                options.DefaultSignInScheme = NopCookieAuthenticationDefaults.ExternalAuthenticationScheme;
+                options.DefaultScheme = NopAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultSignInScheme = NopAuthenticationDefaults.ExternalAuthenticationScheme;
             });
 
             //add main cookie authentication
-            authenticationBuilder.AddCookie(NopCookieAuthenticationDefaults.AuthenticationScheme, options =>
+            authenticationBuilder.AddCookie(NopAuthenticationDefaults.AuthenticationScheme, options =>
             {
-                options.Cookie.Name = NopCookieAuthenticationDefaults.CookiePrefix + NopCookieAuthenticationDefaults.AuthenticationScheme;
+                options.Cookie.Name = NopAuthenticationDefaults.CookiePrefix + NopAuthenticationDefaults.AuthenticationScheme;
                 options.Cookie.HttpOnly = true;
-                options.LoginPath = NopCookieAuthenticationDefaults.LoginPath;
-                options.AccessDeniedPath = NopCookieAuthenticationDefaults.AccessDeniedPath;
+                options.LoginPath = NopAuthenticationDefaults.LoginPath;
+                options.AccessDeniedPath = NopAuthenticationDefaults.AccessDeniedPath;
 
                 //whether to allow the use of authentication cookies from SSL protected page on the other store pages which are not
                 options.Cookie.SecurePolicy = DataSettingsManager.DatabaseIsInstalled && EngineContext.Current.Resolve<SecuritySettings>().ForceSslForAllPages
@@ -210,12 +209,12 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             });
 
             //add external authentication
-            authenticationBuilder.AddCookie(NopCookieAuthenticationDefaults.ExternalAuthenticationScheme, options =>
+            authenticationBuilder.AddCookie(NopAuthenticationDefaults.ExternalAuthenticationScheme, options =>
             {
-                options.Cookie.Name = NopCookieAuthenticationDefaults.CookiePrefix + NopCookieAuthenticationDefaults.ExternalAuthenticationScheme;
+                options.Cookie.Name = NopAuthenticationDefaults.CookiePrefix + NopAuthenticationDefaults.ExternalAuthenticationScheme;
                 options.Cookie.HttpOnly = true;
-                options.LoginPath = NopCookieAuthenticationDefaults.LoginPath;
-                options.AccessDeniedPath = NopCookieAuthenticationDefaults.AccessDeniedPath;
+                options.LoginPath = NopAuthenticationDefaults.LoginPath;
+                options.AccessDeniedPath = NopAuthenticationDefaults.AccessDeniedPath;
 
                 //whether to allow the use of authentication cookies from SSL protected page on the other store pages which are not
                 options.Cookie.SecurePolicy = DataSettingsManager.DatabaseIsInstalled && EngineContext.Current.Resolve<SecuritySettings>().ForceSslForAllPages
@@ -284,13 +283,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         {
             services.AddDbContext<NopObjectContext>(optionsBuilder =>
             {
-                var dataSettings = DataSettingsManager.LoadSettings();
-                if (!dataSettings?.IsValid ?? true)
-                    return;
-
-                optionsBuilder
-                    .UseLazyLoadingProxies()
-                    .UseSqlServer(dataSettings.DataConnectionString);
+                optionsBuilder.UseSqlServerWithLazyLoading(services);
             });
         }
 
@@ -317,7 +310,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 miniProfilerOptions.ResultsAuthorize = request => 
                     !EngineContext.Current.Resolve<StoreInformationSettings>().DisplayMiniProfilerForAdminOnly ||
                     EngineContext.Current.Resolve<IPermissionService>().Authorize(StandardPermissionProvider.AccessAdminPanel);
-            });
+            }).AddEntityFramework();
         }
     }
 }

@@ -3,7 +3,7 @@ using System.Linq;
 using Nop.Core.Domain.Catalog;
 using Nop.Services.Catalog;
 using Nop.Services.Localization;
-using Nop.Web.Areas.Admin.Extensions;
+using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Factories;
@@ -122,7 +122,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new ProductAttributeListModel
             {
                 //fill in model values from the entity
-                Data = productAttributes.Select(attribute => attribute.ToModel()),
+                Data = productAttributes.Select(attribute => attribute.ToModel<ProductAttributeModel>()),
                 Total = productAttributes.TotalCount
             };
 
@@ -144,7 +144,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (productAttribute != null)
             {
                 //fill in model values from the entity
-                model = model ?? productAttribute.ToModel();
+                model = model ?? productAttribute.ToModel<ProductAttributeModel>();
 
                 //prepare nested search models
                 PreparePredefinedProductAttributeValueSearchModel(model.PredefinedProductAttributeValueSearchModel, productAttribute);

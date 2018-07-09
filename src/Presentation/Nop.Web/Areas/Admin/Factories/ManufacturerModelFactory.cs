@@ -7,7 +7,7 @@ using Nop.Services.Catalog;
 using Nop.Services.Discounts;
 using Nop.Services.Localization;
 using Nop.Services.Seo;
-using Nop.Web.Areas.Admin.Extensions;
+using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Web.Framework.Factories;
 
@@ -125,7 +125,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new ManufacturerListModel
             {
                 //fill in model values from the entity
-                Data = manufacturers.Select(manufacturer => manufacturer.ToModel()),
+                Data = manufacturers.Select(manufacturer => manufacturer.ToModel<ManufacturerModel>()),
                 Total = manufacturers.TotalCount
             };
 
@@ -147,7 +147,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (manufacturer != null)
             {
                 //fill in model values from the entity
-                model = model ?? manufacturer.ToModel();
+                model = model ?? manufacturer.ToModel<ManufacturerModel>();
 
                 //prepare nested search model
                 PrepareManufacturerProductSearchModel(model.ManufacturerProductSearchModel, manufacturer);
@@ -287,7 +287,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new AddProductToManufacturerListModel
             {
                 //fill in model values from the entity
-                Data = products.Select(product => product.ToModel()),
+                Data = products.Select(product => product.ToModel<ProductModel>()),
                 Total = products.TotalCount
             };
 

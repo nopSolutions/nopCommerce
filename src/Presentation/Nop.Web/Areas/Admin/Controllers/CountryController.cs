@@ -13,8 +13,8 @@ using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Security;
 using Nop.Services.Stores;
-using Nop.Web.Areas.Admin.Extensions;
 using Nop.Web.Areas.Admin.Factories;
+using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Directory;
 using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
@@ -171,7 +171,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                var country = model.ToEntity();
+                var country = model.ToEntity<Country>();
                 _countryService.InsertCountry(country);
 
                 //activity log
@@ -382,7 +382,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                var sp = model.ToEntity();
+                var sp = model.ToEntity<StateProvince>();
 
                 _stateProvinceService.InsertStateProvince(sp);
 

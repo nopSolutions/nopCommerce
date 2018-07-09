@@ -24,6 +24,9 @@ namespace Nop.Web.Areas.Admin.Models.Orders
             UsedDiscounts = new List<UsedDiscountModel>();
             OrderShipmentSearchModel = new OrderShipmentSearchModel();
             OrderNoteSearchModel = new OrderNoteSearchModel();
+            BillingAddress = new AddressModel();
+            ShippingAddress = new AddressModel();
+            PickupAddress = new AddressModel();
         }
 
         #endregion

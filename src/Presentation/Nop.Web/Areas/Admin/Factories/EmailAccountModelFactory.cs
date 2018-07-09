@@ -2,7 +2,7 @@
 using System.Linq;
 using Nop.Core.Domain.Messages;
 using Nop.Services.Messages;
-using Nop.Web.Areas.Admin.Extensions;
+using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Messages;
 using Nop.Web.Framework.Extensions;
 
@@ -68,7 +68,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Data = emailAccounts.PaginationByRequestModel(searchModel).Select(emailAccount =>
                 {
                     //fill in model values from the entity
-                    var emailAccountModel = emailAccount.ToModel();
+                    var emailAccountModel = emailAccount.ToModel<EmailAccountModel>();
 
                     //fill in additional values (not existing in the entity)
                     emailAccountModel.IsDefaultEmailAccount = emailAccount.Id == _emailAccountSettings.DefaultEmailAccountId;
@@ -93,7 +93,7 @@ namespace Nop.Web.Areas.Admin.Factories
         {
             //fill in model values from the entity
             if (emailAccount != null)
-                model = model ?? emailAccount.ToModel();
+                model = model ?? emailAccount.ToModel<EmailAccountModel>();
 
             //set default values for the new model
             if (emailAccount == null)

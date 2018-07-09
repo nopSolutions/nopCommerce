@@ -70,7 +70,9 @@ namespace Nop.Services.Installation
             var language = _languageRepository.Table.Single(l => l.Name == "English");
 
             //save resources
-            foreach (var filePath in _fileProvider.EnumerateFiles(_fileProvider.MapPath("~/App_Data/Localization/"), "*.nopres.xml"))
+            var directoryPath = _fileProvider.MapPath(NopInstallationDefaults.LocalizationResourcesPath);
+            var pattern = $"*.{NopInstallationDefaults.LocalizationResourcesFileExtension}";
+            foreach (var filePath in _fileProvider.EnumerateFiles(directoryPath, pattern))
             {
                 var localesXml = _fileProvider.ReadAllText(filePath, Encoding.UTF8);
                 var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
@@ -172,14 +174,14 @@ namespace Nop.Services.Installation
         public virtual void InstallData(string defaultUserEmail,
             string defaultUserPassword, bool installSampleData = true)
         {
-            ExecuteSqlFile(_fileProvider.MapPath("~/App_Data/Install/Fast/create_required_data.sql"));
+            ExecuteSqlFile(_fileProvider.MapPath(NopInstallationDefaults.RequiredDataPath));
             InstallLocaleResources();
             UpdateDefaultCustomer(defaultUserEmail, defaultUserPassword);
             UpdateDefaultStoreUrl();
 
             if (installSampleData)
             {
-                ExecuteSqlFile(_fileProvider.MapPath("~/App_Data/Install/Fast/create_sample_data.sql"));
+                ExecuteSqlFile(_fileProvider.MapPath(NopInstallationDefaults.SampleDataPath));
             }
         }
 

@@ -13,22 +13,6 @@ namespace Nop.Services.Common
     /// </summary>
     public partial class AddressService : IAddressService
     {
-        #region Constants
-
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : address ID
-        /// </remarks>
-        private const string ADDRESSES_BY_ID_KEY = "Nop.address.id-{0}";
-        /// <summary>
-        /// Key pattern to clear cache
-        /// </summary>
-        private const string ADDRESSES_PATTERN_KEY = "Nop.address.";
-
-        #endregion
-
         #region Fields
 
         private readonly IRepository<Address> _addressRepository;
@@ -86,7 +70,7 @@ namespace Nop.Services.Common
             _addressRepository.Delete(address);
 
             //cache
-            _cacheManager.RemoveByPattern(ADDRESSES_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopCommonDefaults.AddressesPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityDeleted(address);
@@ -134,7 +118,7 @@ namespace Nop.Services.Common
             if (addressId == 0)
                 return null;
 
-            var key = string.Format(ADDRESSES_BY_ID_KEY, addressId);
+            var key = string.Format(NopCommonDefaults.AddressesByIdCacheKey, addressId);
             return _cacheManager.Get(key, () => _addressRepository.GetById(addressId));
         }
 
@@ -158,7 +142,7 @@ namespace Nop.Services.Common
             _addressRepository.Insert(address);
 
             //cache
-            _cacheManager.RemoveByPattern(ADDRESSES_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopCommonDefaults.AddressesPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(address);
@@ -182,7 +166,7 @@ namespace Nop.Services.Common
             _addressRepository.Update(address);
 
             //cache
-            _cacheManager.RemoveByPattern(ADDRESSES_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopCommonDefaults.AddressesPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(address);

@@ -50,9 +50,9 @@ namespace Nop.Web.Areas.Admin.Controllers
         #region Fields
 
         private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly INopFileProvider _fileProvider;
         private readonly IPermissionService _permissionService;
         private readonly IWorkContext _workContext;
-        private readonly INopFileProvider _fileProvider;
 
         private Dictionary<string, string> _settings;
         private Dictionary<string, string> _languageResources;
@@ -62,14 +62,14 @@ namespace Nop.Web.Areas.Admin.Controllers
         #region Ctor
 
         public RoxyFilemanController(IHostingEnvironment hostingEnvironment,
+            INopFileProvider fileProvider,
             IPermissionService permissionService,
-            IWorkContext workContext,
-            INopFileProvider fileProvider)
+            IWorkContext workContext)
         {
             this._hostingEnvironment = hostingEnvironment;
+            this._fileProvider = fileProvider;
             this._permissionService = permissionService;
             this._workContext = workContext;
-            this._fileProvider = fileProvider;
         }
 
         #endregion

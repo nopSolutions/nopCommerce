@@ -15,23 +15,6 @@ namespace Nop.Services.Common
     /// </summary>
     public partial class GenericAttributeService : IGenericAttributeService
     {
-        #region Constants
-
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : entity ID
-        /// {1} : key group
-        /// </remarks>
-        private const string GENERICATTRIBUTE_KEY = "Nop.genericattribute.{0}-{1}";
-        /// <summary>
-        /// Key pattern to clear cache
-        /// </summary>
-        private const string GENERICATTRIBUTE_PATTERN_KEY = "Nop.genericattribute.";
-
-        #endregion
-
         #region Fields
 
         private readonly IRepository<GenericAttribute> _genericAttributeRepository;
@@ -73,7 +56,7 @@ namespace Nop.Services.Common
             _genericAttributeRepository.Delete(attribute);
 
             //cache
-            _cacheManager.RemoveByPattern(GENERICATTRIBUTE_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopCommonDefaults.GenericAttributePatternCacheKey);
 
             //event notification
             _eventPublisher.EntityDeleted(attribute);
@@ -91,7 +74,7 @@ namespace Nop.Services.Common
             _genericAttributeRepository.Delete(attributes);
 
             //cache
-            _cacheManager.RemoveByPattern(GENERICATTRIBUTE_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopCommonDefaults.GenericAttributePatternCacheKey);
 
             //event notification
             foreach (var attribute in attributes)
@@ -125,7 +108,7 @@ namespace Nop.Services.Common
             _genericAttributeRepository.Insert(attribute);
             
             //cache
-            _cacheManager.RemoveByPattern(GENERICATTRIBUTE_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopCommonDefaults.GenericAttributePatternCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(attribute);
@@ -143,7 +126,7 @@ namespace Nop.Services.Common
             _genericAttributeRepository.Update(attribute);
 
             //cache
-            _cacheManager.RemoveByPattern(GENERICATTRIBUTE_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(NopCommonDefaults.GenericAttributePatternCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(attribute);
@@ -157,7 +140,7 @@ namespace Nop.Services.Common
         /// <returns>Get attributes</returns>
         public virtual IList<GenericAttribute> GetAttributesForEntity(int entityId, string keyGroup)
         {
-            var key = string.Format(GENERICATTRIBUTE_KEY, entityId, keyGroup);
+            var key = string.Format(NopCommonDefaults.GenericAttributeCacheKey, entityId, keyGroup);
             return _cacheManager.Get(key, () =>
             {
                 var query = from ga in _genericAttributeRepository.Table
@@ -185,7 +168,7 @@ namespace Nop.Services.Common
             if (key == null)
                 throw new ArgumentNullException(nameof(key));
 
-            var keyGroup = entity.GetType().BaseType.Name;
+            var keyGroup = entity.GetUnproxiedEntityType().Name;
 
             var props = GetAttributesForEntity(entity.Id, keyGroup)
                 .Where(x => x.StoreId == storeId)

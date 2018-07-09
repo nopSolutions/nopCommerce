@@ -33,5 +33,10 @@ namespace Nop.Services.Tax
         /// Gets or sets a price
         /// </summary>
         public decimal Price { get; set; }
+
+        /// <summary>
+        /// Gets or sets a current store identifier
+        /// </summary>
+        public int CurrentStoreId { get; set; }
     }
 }

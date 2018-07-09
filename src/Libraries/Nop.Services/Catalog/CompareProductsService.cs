@@ -11,15 +11,6 @@ namespace Nop.Services.Catalog
     /// </summary>
     public partial class CompareProductsService : ICompareProductsService
     {
-        #region Constants
-
-        /// <summary>
-        /// Compare products cookie name
-        /// </summary>
-        private const string COMPARE_PRODUCTS_COOKIE_NAME = ".Nop.CompareProducts";
-
-        #endregion
-
         #region Fields
 
         private readonly CatalogSettings _catalogSettings;
@@ -60,7 +51,7 @@ namespace Nop.Services.Catalog
                 return new List<int>();
 
             //try to get cookie
-            if (!httpContext.Request.Cookies.TryGetValue(COMPARE_PRODUCTS_COOKIE_NAME, out string productIdsCookie) || string.IsNullOrEmpty(productIdsCookie))
+            if (!httpContext.Request.Cookies.TryGetValue(NopCatalogDefaults.CompareProductsCookieName, out string productIdsCookie) || string.IsNullOrEmpty(productIdsCookie))
                 return new List<int>();
 
             //get array of string product identifiers from cookie
@@ -77,7 +68,7 @@ namespace Nop.Services.Catalog
         protected virtual void AddCompareProductsCookie(IEnumerable<int> comparedProductIds)
         {
             //delete current cookie if exists
-            _httpContextAccessor.HttpContext.Response.Cookies.Delete(COMPARE_PRODUCTS_COOKIE_NAME);
+            _httpContextAccessor.HttpContext.Response.Cookies.Delete(NopCatalogDefaults.CompareProductsCookieName);
 
             //create cookie value
             var comparedProductIdsCookie = string.Join(",", comparedProductIds);
@@ -91,7 +82,7 @@ namespace Nop.Services.Catalog
             };
 
             //add cookie
-            _httpContextAccessor.HttpContext.Response.Cookies.Append(COMPARE_PRODUCTS_COOKIE_NAME, comparedProductIdsCookie, cookieOptions);
+            _httpContextAccessor.HttpContext.Response.Cookies.Append(NopCatalogDefaults.CompareProductsCookieName, comparedProductIdsCookie, cookieOptions);
         }
         
         #endregion
@@ -107,7 +98,7 @@ namespace Nop.Services.Catalog
                 return;
 
             //sets an expired cookie
-            _httpContextAccessor.HttpContext.Response.Cookies.Delete(COMPARE_PRODUCTS_COOKIE_NAME);
+            _httpContextAccessor.HttpContext.Response.Cookies.Delete(NopCatalogDefaults.CompareProductsCookieName);
         }
 
         /// <summary>

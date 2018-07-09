@@ -109,7 +109,7 @@ namespace Nop.Web.Factories
             if (_customerSettings.AllowCustomersToUploadAvatars)
             {
                 avatarUrl =_pictureService.GetPictureUrl(
-                 customer.GetAttribute<int>(SystemCustomerAttributeNames.AvatarPictureId),
+                 customer.GetAttribute<int>(NopCustomerDefaults.AvatarPictureIdAttribute),
                  _mediaSettings.AvatarPictureSize,
                  _customerSettings.DefaultAvatarEnabled,
                  defaultPictureType: PictureType.Avatar);
@@ -122,7 +122,7 @@ namespace Nop.Web.Factories
             {
                 locationEnabled = true;
 
-                var countryId = customer.GetAttribute<int>(SystemCustomerAttributeNames.CountryId);
+                var countryId = customer.GetAttribute<int>(NopCustomerDefaults.CountryIdAttribute);
                 var country = _countryService.GetCountryById(countryId);
                 if (country != null)
                 {
@@ -143,7 +143,7 @@ namespace Nop.Web.Factories
             if (_forumSettings.ForumsEnabled && _forumSettings.ShowCustomersPostCount)
             {
                 totalPostsEnabled = true;
-                totalPosts = customer.GetAttribute<int>(SystemCustomerAttributeNames.ForumPostCount);
+                totalPosts = customer.GetAttribute<int>(NopCustomerDefaults.ForumPostCountAttribute);
             }
 
             //registration date
@@ -161,7 +161,7 @@ namespace Nop.Web.Factories
             var dateOfBirth = string.Empty;
             if (_customerSettings.DateOfBirthEnabled)
             {
-                var dob = customer.GetAttribute<DateTime?>(SystemCustomerAttributeNames.DateOfBirth);
+                var dob = customer.GetAttribute<DateTime?>(NopCustomerDefaults.DateOfBirthAttribute);
                 if (dob.HasValue)
                 {
                     dateOfBirthEnabled = true;

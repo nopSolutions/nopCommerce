@@ -15,6 +15,10 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Models
         public bool EnableEcommerce { get; set; }
         public bool EnableEcommerce_OverrideForStore { get; set; }
 
+        [NopResourceDisplayName("Plugins.Widgets.GoogleAnalytics.UseJsToSendEcommerceInfo")]
+        public bool UseJsToSendEcommerceInfo { get; set; }
+        public bool UseJsToSendEcommerceInfo_OverrideForStore { get; set; }
+
         [NopResourceDisplayName("Plugins.Widgets.GoogleAnalytics.TrackingScript")]
         public string TrackingScript { get; set; }
         public bool TrackingScript_OverrideForStore { get; set; }

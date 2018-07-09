@@ -187,8 +187,8 @@ namespace Nop.Web.Framework.Security
 
             return new List<string>
             {
-                fileProvider.MapPath(PluginManager.InstalledPluginsFilePath),
-                fileProvider.MapPath(DataSettingsManager.DataSettingsFilePath)
+                fileProvider.MapPath(NopPluginDefaults.InstalledPluginsFilePath),
+                fileProvider.MapPath(NopDataSettingsDefaults.FilePath)
             };
         }
     }
