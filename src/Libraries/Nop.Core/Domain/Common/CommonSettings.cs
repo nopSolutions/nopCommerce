@@ -8,9 +8,6 @@ namespace Nop.Core.Domain.Common
     /// </summary>
     public class CommonSettings : ISettings
     {
-        /// <summary>
-        /// Ctor
-        /// </summary>
         public CommonSettings()
         {
             SitemapCustomUrls = new List<string>();

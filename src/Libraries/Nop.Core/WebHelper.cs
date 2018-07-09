@@ -23,21 +23,16 @@ namespace Nop.Core
     {
         #region Fields 
 
-        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly HostingConfig _hostingConfig;
+        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly INopFileProvider _fileProvider;
 
         #endregion
 
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="hostingConfig">Hosting config</param>
-        /// <param name="httpContextAccessor">HTTP context accessor</param>
-        /// <param name="fileProvider">File provider</param>
-        public WebHelper(HostingConfig hostingConfig, IHttpContextAccessor httpContextAccessor,
+        public WebHelper(HostingConfig hostingConfig,
+            IHttpContextAccessor httpContextAccessor,
             INopFileProvider fileProvider)
         {
             this._hostingConfig = hostingConfig;

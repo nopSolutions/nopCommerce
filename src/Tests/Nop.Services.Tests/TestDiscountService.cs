@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Caching.Memory;
 using Moq;
@@ -40,7 +41,12 @@ namespace Nop.Services.Tests
             string couponCode = null, string discountName = null,
             bool showHidden = false)
         {
-            return _discountForCaching;
+            
+            return _discountForCaching
+                .Where(x=> !discountType.HasValue || x.DiscountType == discountType.Value)
+                .Where(x => String.IsNullOrEmpty(couponCode) || x.CouponCode == couponCode)
+                //UNDONE other filtering such as discountName, showHidden (not actually required in unit tests)
+                .ToList();
         }
 
         public void AddDiscount(DiscountType discountType)

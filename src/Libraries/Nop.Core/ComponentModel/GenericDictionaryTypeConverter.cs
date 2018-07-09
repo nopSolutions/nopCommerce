@@ -23,9 +23,6 @@ namespace Nop.Core.ComponentModel
         /// </summary>
         protected readonly TypeConverter typeConverterValue;
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
         public GenericDictionaryTypeConverter()
         {
             typeConverterKey = TypeDescriptor.GetConverter(typeof(K));
@@ -61,7 +58,7 @@ namespace Nop.Core.ComponentModel
         /// <returns>Result</returns>
         public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
         {
-            if (!(value is string)) 
+            if (!(value is string))
                 return base.ConvertFrom(context, culture, value);
 
             var input = (string)value;
@@ -71,12 +68,12 @@ namespace Nop.Core.ComponentModel
             Array.ForEach(items, s =>
             {
                 var keyValueStr = string.IsNullOrEmpty(s) ? new string[0] : s.Split(',').Select(x => x.Trim()).ToArray();
-                if (keyValueStr.Length != 2) 
+                if (keyValueStr.Length != 2)
                     return;
 
                 object dictionaryKey = (K)typeConverterKey.ConvertFromInvariantString(keyValueStr[0]);
                 object dictionaryValue = (V)typeConverterValue.ConvertFromInvariantString(keyValueStr[1]);
-                if (dictionaryKey == null || dictionaryValue == null) 
+                if (dictionaryKey == null || dictionaryValue == null)
                     return;
 
                 if (!result.ContainsKey((K)dictionaryKey))
@@ -96,11 +93,11 @@ namespace Nop.Core.ComponentModel
         /// <returns>Result</returns>
         public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
         {
-            if (destinationType != typeof(string)) 
+            if (destinationType != typeof(string))
                 return base.ConvertTo(context, culture, value, destinationType);
 
             var result = string.Empty;
-            if (value == null) 
+            if (value == null)
                 return result;
 
             //we don't use string.Join() because it doesn't support invariant culture

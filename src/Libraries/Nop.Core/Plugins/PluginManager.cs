@@ -25,9 +25,10 @@ namespace Nop.Core.Plugins
     {
         #region Fields
 
+        private static readonly INopFileProvider _fileProvider;
+
         private static readonly ReaderWriterLockSlim Locker = new ReaderWriterLockSlim();
         private static readonly List<string> _baseAppLibraries;
-        private static readonly INopFileProvider _fileProvider;
         private static string _shadowCopyFolder;
         private static string _reserveShadowCopyFolder;
 
@@ -694,7 +695,7 @@ namespace Nop.Core.Plugins
         {
             if (pluginDescriptor == null)
                 throw new ArgumentNullException(nameof(pluginDescriptor));
-            
+
             var pluginDirectory = _fileProvider.GetDirectoryName(pluginDescriptor.OriginalAssemblyFile);
             if (string.IsNullOrEmpty(pluginDirectory))
                 return null;

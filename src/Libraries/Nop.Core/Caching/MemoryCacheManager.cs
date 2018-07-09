@@ -15,13 +15,13 @@ namespace Nop.Core.Caching
     {
         #region Fields
 
+        private readonly IMemoryCache _cache;
+
         /// <summary>
         /// All keys of cache
         /// </summary>
         /// <remarks>Dictionary value indicating whether a key still exists in cache</remarks> 
         protected static readonly ConcurrentDictionary<string, bool> _allKeys;
-
-        private readonly IMemoryCache _cache;
 
         /// <summary>
         /// Cancellation token for clear cache
@@ -32,18 +32,11 @@ namespace Nop.Core.Caching
 
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
         static MemoryCacheManager()
         {
             _allKeys = new ConcurrentDictionary<string, bool>();
         }
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="cache">Cache</param>
         public MemoryCacheManager(IMemoryCache cache)
         {
             _cache = cache;
@@ -140,7 +133,7 @@ namespace Nop.Core.Caching
         #endregion
 
         #region Methods
-        
+
         /// <summary>
         /// Get a cached item. If it's not in the cache yet, then load and cache it
         /// </summary>
