@@ -1304,8 +1304,8 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     var gdprConsentModel = consent.ToModel<GdprConsentModel>();
                     var gdprConsent = _gdprService.GetConsentById(gdprConsentModel.Id);
-                    gdprConsentModel.Message = gdprConsent.GetLocalized(entity => entity.Message);
-                    gdprConsentModel.RequiredMessage = gdprConsent.GetLocalized(entity => entity.RequiredMessage);
+                    gdprConsentModel.Message = _localizationService.GetLocalized(gdprConsent, entity => entity.Message);
+                    gdprConsentModel.RequiredMessage = _localizationService.GetLocalized(gdprConsent, entity => entity.RequiredMessage);
 
                     return gdprConsentModel;
                 }),
@@ -1334,8 +1334,8 @@ namespace Nop.Web.Areas.Admin.Factories
                 //define localized model configuration action
                 localizedModelConfiguration = (locale, languageId) =>
                 {
-                    locale.Message = gdprConsent.GetLocalized(entity => entity.Message, languageId, false, false);
-                    locale.RequiredMessage = gdprConsent.GetLocalized(entity => entity.RequiredMessage, languageId, false, false);
+                    locale.Message = _localizationService.GetLocalized(gdprConsent, entity => entity.Message, languageId, false, false);
+                    locale.RequiredMessage = _localizationService.GetLocalized(gdprConsent, entity => entity.RequiredMessage, languageId, false, false);
                 };
             }
 
