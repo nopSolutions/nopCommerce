@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Caching.Memory;
 using Moq;
@@ -21,10 +20,11 @@ namespace Nop.Services.Tests
 {
     public class TestDiscountService : DiscountService
     {
-        private List<DiscountForCaching> _discountForCaching;
+        private readonly List<DiscountForCaching> _discountForCaching;
 
         public TestDiscountService(ICategoryService categoryService, ICustomerService customerService, IEventPublisher eventPublisher, ILocalizationService localizationService, IPluginFinder pluginFinder, IRepository<Category> categoryRepository, IRepository<Discount> discountRepository, IRepository<DiscountRequirement> discountRequirementRepository, IRepository<DiscountUsageHistory> discountUsageHistoryRepository, IRepository<Manufacturer> manufacturerRepository, IRepository<Product> productRepository, IStaticCacheManager cacheManager, IStoreContext storeContext) : base(categoryService, customerService, eventPublisher, localizationService, pluginFinder, categoryRepository, discountRepository, discountRequirementRepository, discountUsageHistoryRepository, manufacturerRepository, productRepository, cacheManager, storeContext)
         {
+            _discountForCaching = new List<DiscountForCaching>();
         }
 
         public override DiscountValidationResult ValidateDiscount(Discount discount, Customer customer)
@@ -44,7 +44,7 @@ namespace Nop.Services.Tests
             
             return _discountForCaching
                 .Where(x=> !discountType.HasValue || x.DiscountType == discountType.Value)
-                .Where(x => String.IsNullOrEmpty(couponCode) || x.CouponCode == couponCode)
+                .Where(x => string.IsNullOrEmpty(couponCode) || x.CouponCode == couponCode)
                 //UNDONE other filtering such as discountName, showHidden (not actually required in unit tests)
                 .ToList();
         }
