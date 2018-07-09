@@ -14,6 +14,7 @@ namespace Nop.Services.Tests.News
         [SetUp]
         public new void SetUp()
         {
+            _newsService = new NewsService(null, null, null, null, null);
         }
 
         [Test]

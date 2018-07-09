@@ -258,13 +258,14 @@ namespace Nop.Services.Blogs
         /// </summary>
         /// <param name="blogPost">Blog post</param>
         /// <returns>Tags</returns>
-        public virtual IList<string> ParseTags(BlogPost blogPost)
+        public virtual IList<string> ParseTags(BlogPost blogPost) 
         {
             if (blogPost == null)
                 throw new ArgumentNullException(nameof(blogPost));
 
-            var tags = blogPost.Tags.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                .Where(tag => !string.IsNullOrEmpty(tag.Trim())).ToList();
+            var tags = blogPost.Tags.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries)
+                .Select(tag => tag?.Trim())
+                .Where(tag => !string.IsNullOrEmpty(tag)).ToList();
 
             return tags;
         }

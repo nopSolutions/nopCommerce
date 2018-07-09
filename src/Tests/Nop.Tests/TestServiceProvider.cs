@@ -7,6 +7,7 @@ using Microsoft.Extensions.Caching.Memory;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
+using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Orders;
@@ -39,18 +40,14 @@ namespace Nop.Tests
             CurrencyService = new Mock<ICurrencyService>();
             CurrencyService.Setup(x => x.GetCurrencyById(1, true)).Returns(new Currency {Id = 1, RoundingTypeId = 0});
 
-            GenericAttributeService.Setup(p => p.GetAttributesForEntity(1, "Customer"))
-                .Returns(new List<GenericAttribute>
-                {
-                    new GenericAttribute
-                    {
-                        EntityId = 1,
-                        Key = "manufacturer-advanced-mode",
-                        KeyGroup = "Customer",
-                        StoreId = 0,
-                        Value = "true"
-                    }
-                });
+            GenericAttributeService.Setup(p => p.GetAttribute<bool>(It.IsAny<Customer>(), "product-advanced-mode", It.IsAny<int>()))
+                .Returns(true);
+
+            GenericAttributeService.Setup(p => p.GetAttribute<bool>(It.IsAny<Customer>(), "manufacturer-advanced-mode", It.IsAny<int>()))
+                .Returns(true);
+
+            GenericAttributeService.Setup(p => p.GetAttribute<bool>(It.IsAny<Customer>(), "category-advanced-mode", It.IsAny<int>()))
+                .Returns(true);
         }
 
         public Mock<ILocalizationService> LocalizationService { get; }

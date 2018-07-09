@@ -1,5 +1,6 @@
 ﻿using System;
 using Nop.Core.Domain.Blogs;
+using Nop.Core.Domain.Catalog;
 using Nop.Services.Blogs;
 using Nop.Tests;
 using NUnit.Framework;
@@ -10,7 +11,13 @@ namespace Nop.Services.Tests.Blogs
     public class BlogServiceTests
     {
         private IBlogService _blogService;
-        
+
+        [SetUp]
+        public new void SetUp()
+        {
+            _blogService = new BlogService(new CatalogSettings(), null, null, null, null);
+        }
+
         [Test]
         public void Can_parse_tags()
         {

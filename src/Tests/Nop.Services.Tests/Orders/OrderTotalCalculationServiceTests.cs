@@ -883,18 +883,9 @@ namespace Nop.Services.Tests.Orders
             cart.ForEach(sci => sci.Customer = customer);
             cart.ForEach(sci => sci.CustomerId = customer.Id);
             
-            _genericAttributeService.Setup(x => x.GetAttributesForEntity(customer.Id, "Customer"))
-                .Returns(new List<GenericAttribute>
-                            {
-                                new GenericAttribute
-                                    {
-                                        StoreId = _store.Id,
-                                        EntityId = customer.Id,
-                                        Key = NopCustomerDefaults.SelectedPaymentMethodAttribute,
-                                        KeyGroup = "Customer",
-                                        Value = "test1"
-                                    }
-                            });
+            _genericAttributeService.Setup(x => x.GetAttribute<string>(customer, NopCustomerDefaults.SelectedPaymentMethodAttribute, _store.Id))
+                .Returns("test1");
+
             _paymentService.Setup(ps => ps.GetAdditionalHandlingFee(cart, "test1")).Returns(20);
             //_discountService.Setup(ds => ds.GetAllDiscountsForCaching(DiscountType.AssignedToCategories, null, null, false)).Returns(new List<DiscountForCaching>());
             //_discountService.Setup(ds => ds.GetAllDiscountsForCaching(DiscountType.AssignedToManufacturers, null, null, false)).Returns(new List<DiscountForCaching>());
@@ -981,18 +972,9 @@ namespace Nop.Services.Tests.Orders
             cart.ForEach(sci => sci.Customer = customer);
             cart.ForEach(sci => sci.CustomerId = customer.Id);
             
-            _genericAttributeService.Setup(x => x.GetAttributesForEntity(customer.Id, "Customer"))
-                .Returns(new List<GenericAttribute>
-                            {
-                                new GenericAttribute
-                                    {
-                                        StoreId = _store.Id,
-                                        EntityId = customer.Id,
-                                        Key = NopCustomerDefaults.SelectedPaymentMethodAttribute,
-                                        KeyGroup = "Customer",
-                                        Value = "test1"
-                                    }
-                            });
+            _genericAttributeService.Setup(x => x.GetAttribute<string>(customer, NopCustomerDefaults.SelectedPaymentMethodAttribute, _store.Id))
+                .Returns("test1");
+
             _paymentService.Setup(ps => ps.GetAdditionalHandlingFee(cart, "test1")).Returns(20);
 
             //shipping is taxable, payment fee is taxable
@@ -1047,18 +1029,9 @@ namespace Nop.Services.Tests.Orders
             cart.ForEach(sci => sci.Customer = customer);
             cart.ForEach(sci => sci.CustomerId = customer.Id);
 
-            _genericAttributeService.Setup(x => x.GetAttributesForEntity(customer.Id, "Customer"))
-                .Returns(new List<GenericAttribute>
-                            {
-                                new GenericAttribute
-                                    {
-                                        StoreId = _store.Id,
-                                        EntityId = customer.Id,
-                                        Key = NopCustomerDefaults.SelectedPaymentMethodAttribute,
-                                        KeyGroup = "Customer",
-                                        Value = "test1"
-                                    }
-                            });
+            _genericAttributeService.Setup(x => x.GetAttribute<string>(customer, NopCustomerDefaults.SelectedPaymentMethodAttribute, _store.Id))
+                .Returns("test1");
+
             _paymentService.Setup(ps => ps.GetAdditionalHandlingFee(cart, "test1")).Returns(20);
 
             //shipping is taxable, payment fee is taxable
@@ -1209,20 +1182,10 @@ namespace Nop.Services.Tests.Orders
             cart.ForEach(sci => sci.CustomerId = customer.Id);
 
             (_discountService as TestDiscountService)?.AddDiscount(DiscountType.AssignedToOrderTotal);
-            
+           
             _genericAttributeService.Setup(x =>
-                    x.GetAttribute<GenericAttribute>(It.IsAny<Customer>(), It.IsAny<string>(),
-                        It.IsAny<int>()))
-                .Returns(
-                    new GenericAttribute
-                    {
-                        StoreId = _store.Id,
-                        EntityId = customer.Id,
-                        Key = NopCustomerDefaults.SelectedPaymentMethodAttribute,
-                        KeyGroup = "Customer",
-                        Value = "test1"
-                    }
-                );
+                    x.GetAttribute<string>(customer, NopCustomerDefaults.SelectedPaymentMethodAttribute, _store.Id))
+                .Returns("test1");
 
             _paymentService.Setup(ps => ps.GetAdditionalHandlingFee(cart, "test1")).Returns(20);
             
