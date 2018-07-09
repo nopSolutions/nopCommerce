@@ -39,6 +39,7 @@ namespace Nop.Services.Tests.Shipping
         private Mock<IStoreContext> _storeContext;
         private ShoppingCartSettings _shoppingCartSettings;
         private ShippingService _shippingService;
+        private Mock<IPriceCalculationService> _priceCalcService;
 
         [SetUp]
         public new void SetUp()
@@ -68,12 +69,14 @@ namespace Nop.Services.Tests.Shipping
             _localizationService = new Mock<ILocalizationService>();
             _addressService = new Mock<IAddressService>();
             _genericAttributeService = new Mock<IGenericAttributeService>();
+            _priceCalcService = new Mock<IPriceCalculationService>();
 
             _store = new Store { Id = 1 };
             _storeContext = new Mock<IStoreContext>();
             _storeContext.Setup(x => x.CurrentStore).Returns(_store);
 
             _shoppingCartSettings = new ShoppingCartSettings();
+
             _shippingService = new ShippingService(_shippingMethodRepository.Object,
                 _warehouseRepository.Object,
                 _logger,
@@ -82,11 +85,12 @@ namespace Nop.Services.Tests.Shipping
                 _checkoutAttributeParser.Object,
                 _genericAttributeService.Object,
                 _localizationService.Object,
+                _priceCalcService.Object,
                 _addressService.Object,
-                _shippingSettings,
-                pluginFinder,
+                _shippingSettings, 
+                pluginFinder, 
                 _storeContext.Object,
-                _eventPublisher.Object,
+                _eventPublisher.Object, 
                 _shoppingCartSettings,
                 cacheManager);
         }

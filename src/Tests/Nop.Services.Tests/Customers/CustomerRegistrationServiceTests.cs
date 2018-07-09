@@ -176,7 +176,7 @@ namespace Nop.Services.Tests.Customers
             _customerService = new CustomerService(new NopNullCache(), _customerRepo.Object, _customerCustomerRoleMappingRepo.Object, _customerPasswordRepo.Object, _customerRoleRepo.Object,
                 _genericAttributeRepo.Object, _orderRepo.Object, _forumPostRepo.Object, _forumTopicRepo.Object,
                 null, null, null, null, null,
-                _genericAttributeService.Object, null, null, _eventPublisher.Object, _customerSettings, null);
+                _genericAttributeService.Object, null, null, null, _eventPublisher.Object, _customerSettings, null);
 
             _customerRegistrationService = new CustomerRegistrationService(_customerService,
                 _encryptionService, _newsLetterSubscriptionService.Object, _localizationService.Object,

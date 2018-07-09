@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Extensions.Caching.Memory;
 using Moq;
 using Nop.Core;
-using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
@@ -42,6 +43,7 @@ namespace Nop.Services.Tests.Orders
         private Mock<IProductAttributeParser> _productAttributeParser;
         private ShoppingCartSettings _shoppingCartSettings;
         private CatalogSettings _catalogSettings;
+        private CurrencySettings _currencySettings;
         private PriceCalculationService _priceCalcService;
         private Mock<IEventPublisher> _eventPublisher;
         private Mock<ILocalizationService> _localizationService;
@@ -62,6 +64,8 @@ namespace Nop.Services.Tests.Orders
         private AddressSettings _addressSettings;
         private TaxSettings _taxSettings;
         private Mock<IAddressService> _addressService;
+        private Mock<ICurrencyService> _currencyService;
+        private Mock<IShoppingCartService> _shoppingCartService;
         private TaxService _taxService;
         private Mock<IRewardPointService> _rewardPointService;
         private RewardPointsSettings _rewardPointsSettings;
@@ -92,18 +96,21 @@ namespace Nop.Services.Tests.Orders
             _stateProvinceService = new Mock<IStateProvinceService>();
             _rewardPointService = new Mock<IRewardPointService>();
             _addressService = new Mock<IAddressService>();
+            _currencyService = new Mock<ICurrencyService>();
+            _shoppingCartService= new Mock<IShoppingCartService>();
 
             _store = new Store { Id = 1 };
             
             _storeContext.Setup(x => x.CurrentStore).Returns(_store);
 
-            var cacheManager = new NopNullCache();
+            var cacheManager = new TestMemoryCacheManager(new Mock<IMemoryCache>().Object);
 
             _shoppingCartSettings = new ShoppingCartSettings();
             _catalogSettings = new CatalogSettings();
+            _currencySettings = new CurrencySettings();
 
-            _priceCalcService = new PriceCalculationService(_catalogSettings, _categoryService.Object,
-                _discountService.Object, _manufacturerService.Object,
+            _priceCalcService = new PriceCalculationService(_catalogSettings, _currencySettings, _categoryService.Object,
+                _currencyService.Object, _discountService.Object, _manufacturerService.Object,
                 _productAttributeParser.Object, _productService.Object,
                 cacheManager, _storeContext.Object,
                 _workContext.Object, _shoppingCartSettings);
@@ -120,6 +127,7 @@ namespace Nop.Services.Tests.Orders
             _shippingSettings.ActiveShippingRateComputationMethodSystemNames.Add("FixedRateTestShippingRateComputationMethod");
             
             _logger = new NullLogger();
+           
             _shippingService = new ShippingService(_shippingMethodRepository.Object,
                 _warehouseRepository.Object,
                 _logger,
@@ -128,6 +136,7 @@ namespace Nop.Services.Tests.Orders
                 _checkoutAttributeParser.Object,
                 _genericAttributeService.Object,
                 _localizationService.Object,
+                _priceCalcService,
                 _addressService.Object,
                 _shippingSettings,
                 pluginFinder, 
@@ -150,17 +159,18 @@ namespace Nop.Services.Tests.Orders
             };
             
             _addressService.Setup(x => x.GetAddressById(_taxSettings.DefaultTaxAddressId)).Returns(new Address { Id = _taxSettings.DefaultTaxAddressId });
-            _taxService = new TaxService(_addressService.Object, _workContext.Object, _storeContext.Object, _taxSettings,
+            
+            _taxService = new TaxService(_addressService.Object, _genericAttributeService.Object, _workContext.Object, _storeContext.Object, _taxSettings,
                 pluginFinder, _geoLookupService.Object, _countryService.Object, _stateProvinceService.Object, _logger, _webHelper.Object,
                 _customerSettings, _shippingSettings, _addressSettings);
 
             _rewardPointsSettings = new RewardPointsSettings();
 
             _orderTotalCalcService = new OrderTotalCalculationService(_workContext.Object, _storeContext.Object,
-                _priceCalcService, _productService.Object, _productAttributeParser.Object, _taxService, _shippingService, _paymentService.Object,
-                _checkoutAttributeParser.Object, _discountService.Object, _giftCardService.Object, _genericAttributeService.Object,
-                _rewardPointService.Object, _taxSettings, _rewardPointsSettings,
-                _shippingSettings, _shoppingCartSettings, _catalogSettings);
+                _priceCalcService, _taxService, _shippingService, _paymentService.Object, _checkoutAttributeParser.Object,
+                _discountService.Object, _giftCardService.Object, _genericAttributeService.Object,
+                _rewardPointService.Object, _shoppingCartService.Object,
+                _taxSettings, _rewardPointsSettings, _shippingSettings, _shoppingCartSettings, _catalogSettings);
         }
 
         [Test]

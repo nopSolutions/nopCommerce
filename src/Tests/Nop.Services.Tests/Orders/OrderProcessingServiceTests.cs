@@ -148,11 +148,12 @@ namespace Nop.Services.Tests.Orders
             
             var cacheManager = new NopNullCache();
 
+            _currencySettings = new CurrencySettings();
+          
             //price calculation service
-            _priceCalcService = new PriceCalculationService(_catalogSettings, _categoryService.Object,
-                _discountService.Object, _manufacturerService.Object, _productAttributeParser.Object,
-                _productService.Object, cacheManager,
-                _storeContext.Object, _workContext, _shoppingCartSettings);
+            _priceCalcService = new PriceCalculationService(_catalogSettings, _currencySettings, _categoryService.Object,
+                _currencyService.Object, _discountService.Object, _manufacturerService.Object, _productAttributeParser.Object,
+                _productService.Object, cacheManager, _storeContext.Object, _workContext, _shoppingCartSettings);
             
             _eventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
 
@@ -177,6 +178,7 @@ namespace Nop.Services.Tests.Orders
                 _checkoutAttributeParser.Object,
                 _genericAttributeService.Object,
                 _localizationService.Object,
+                _priceCalcService,
                 _addressService.Object,
                 _shippingSettings, 
                 pluginFinder, 
@@ -192,19 +194,19 @@ namespace Nop.Services.Tests.Orders
                 PaymentMethodAdditionalFeeIsTaxable = true,
                 DefaultTaxAddressId = 10
             };
-            
+          
             _addressService.Setup(x => x.GetAddressById(_taxSettings.DefaultTaxAddressId)).Returns(new Address { Id = _taxSettings.DefaultTaxAddressId });
-            _taxService = new TaxService(_addressService.Object, _workContext, _storeContext.Object, _taxSettings,
+            
+            _taxService = new TaxService(_addressService.Object, _genericAttributeService.Object, _workContext, _storeContext.Object, _taxSettings,
                 pluginFinder, _geoLookupService.Object, _countryService.Object, _stateProvinceService.Object, _logger, _webHelper.Object,
                 _customerSettings, _shippingSettings, _addressSettings);
-
            
             _rewardPointsSettings = new RewardPointsSettings();
 
             _orderTotalCalcService = new OrderTotalCalculationService(_workContext, _storeContext.Object,
-                _priceCalcService, _productService.Object, _productAttributeParser.Object, _taxService, _shippingService, _paymentService.Object,
-                _checkoutAttributeParser.Object, _discountService.Object, _giftCardService.Object,
-                _genericAttributeService.Object, _rewardPointService.Object,
+                _priceCalcService, _taxService, _shippingService, _paymentService.Object, _checkoutAttributeParser.Object,
+                _discountService.Object, _giftCardService.Object, _genericAttributeService.Object,
+                _rewardPointService.Object, _shoppingCartService.Object,
                 _taxSettings, _rewardPointsSettings, _shippingSettings, _shoppingCartSettings, _catalogSettings);
 
             _paymentSettings = new PaymentSettings
@@ -219,8 +221,6 @@ namespace Nop.Services.Tests.Orders
             _localizationSettings = new LocalizationSettings();
             
             _eventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
-            
-            _currencySettings = new CurrencySettings();
 
             _orderProcessingService = new OrderProcessingService(_orderService.Object, _webHelper.Object,
                 _localizationService.Object, _languageService.Object,

@@ -1,7 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Moq;
+using Nop.Core.Caching;
+using Nop.Core.Data;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Forums;
+using Nop.Core.Domain.Orders;
+using Nop.Services.Common;
+using Nop.Services.Customers;
+using Nop.Services.Events;
 using Nop.Tests;
 using NUnit.Framework;
 
@@ -159,6 +167,22 @@ namespace Nop.Core.Tests.Domain.Customers
         [Test]
         public void Can_remove_address_assigned_as_billing_address()
         {
+            var _customerRepo = new Mock<IRepository<Customer>>();
+            var _customerCustomerRoleMappingRepo = new Mock<IRepository<CustomerCustomerRoleMapping>>();
+            var _customerPasswordRepo = new Mock<IRepository<CustomerPassword>>();
+            var _genericAttributeRepo = new Mock<IRepository<GenericAttribute>>();
+            var _orderRepo = new Mock<IRepository<Order>>();
+            var _forumPostRepo = new Mock<IRepository<ForumPost>>();
+            var _forumTopicRepo = new Mock<IRepository<ForumTopic>>();
+            var _genericAttributeService = new Mock<IGenericAttributeService>();
+            var _eventPublisher = new Mock<IEventPublisher>();
+            var _customerRoleRepo = new Mock<IRepository<CustomerRole>>();
+
+            var _customerService = new CustomerService(new NopNullCache(), _customerRepo.Object, _customerCustomerRoleMappingRepo.Object, _customerPasswordRepo.Object, _customerRoleRepo.Object,
+                _genericAttributeRepo.Object, _orderRepo.Object, _forumPostRepo.Object, _forumTopicRepo.Object,
+                null, null, null, null, null,
+                _genericAttributeService.Object, null, null, null, _eventPublisher.Object, new CustomerSettings(), null);
+
             var customer = new TestCustomer();
             var address = new Address { Id = 1 };
 

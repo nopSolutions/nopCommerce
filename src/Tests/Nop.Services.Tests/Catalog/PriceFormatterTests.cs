@@ -28,6 +28,7 @@ namespace Nop.Services.Tests.Catalog
         private Mock<IRepository<Currency>> _currencyRepo;
         private Mock<IEventPublisher> _eventPublisher;
         private Mock<IStoreMappingService> _storeMappingService;
+        private Mock<IMeasureService> _measureService;
         private ICurrencyService _currencyService;
         private CurrencySettings _currencySettings;
         private Mock<IWorkContext> _workContext;
@@ -72,6 +73,7 @@ namespace Nop.Services.Tests.Catalog
             _currencyRepo.Setup(x => x.Table).Returns(new List<Currency> { currency1, currency2 }.AsQueryable());
 
             _storeMappingService = new Mock<IStoreMappingService>();
+            _measureService = new Mock<IMeasureService>();
 
             _eventPublisher = new Mock<IEventPublisher>();
             _eventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
@@ -88,7 +90,7 @@ namespace Nop.Services.Tests.Catalog
             _localizationService.Setup(x => x.GetResource("Products.ExclTaxSuffix", 1, false, string.Empty, false)).Returns("{0} excl tax");
             
             _priceFormatter = new PriceFormatter(_currencySettings, _currencyService, _localizationService.Object,
-                _workContext.Object, _taxSettings);
+                _measureService.Object, _workContext.Object, _taxSettings);
 
             var nopEngine = new Mock<NopEngine>();
            

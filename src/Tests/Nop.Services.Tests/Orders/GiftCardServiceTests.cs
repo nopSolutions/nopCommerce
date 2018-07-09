@@ -10,6 +10,12 @@ namespace Nop.Services.Tests.Orders
     {
         private IGiftCardService _giftCardService;
 
+        [SetUp]
+        public new void SetUp()
+        {
+            _giftCardService = new GiftCardService(null, null, null, null);
+        }
+
         [Test]
         public void Can_validate_giftCard()
         {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Extensions.Caching.Memory;
 using Moq;
 using Nop.Core.Caching;
 using Nop.Core.Data;
@@ -78,7 +79,7 @@ namespace Nop.Services.Tests.Directory
 
             _storeMappingService = new Mock<IStoreMappingService>();
 
-            var cacheManager = new NopNullCache();
+            var cacheManager = new TestMemoryCacheManager(new Mock<IMemoryCache>().Object);
 
             _currencySettings = new CurrencySettings
             {

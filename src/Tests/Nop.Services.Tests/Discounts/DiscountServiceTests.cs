@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Extensions.Caching.Memory;
 using Moq;
 using Nop.Core;
 using Nop.Core.Caching;
@@ -9,6 +10,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
 using Nop.Services.Catalog;
+using Nop.Services.Customers;
 using Nop.Services.Discounts;
 using Nop.Services.Events;
 using Nop.Services.Localization;
@@ -29,6 +31,7 @@ namespace Nop.Services.Tests.Discounts
         private Mock<ICategoryService> _categoryService;
         private IDiscountService _discountService;
         private Mock<IStoreContext> _storeContext;
+        private Mock<ICustomerService> _customerService;
         private Mock<IRepository<Category>> _categoryRepo;
         private Mock<IRepository<Manufacturer>> _manufacturerRepo;
         private Mock<IRepository<Product>> _productRepo;
@@ -68,6 +71,7 @@ namespace Nop.Services.Tests.Discounts
             _eventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
 
             _storeContext = new Mock<IStoreContext>();
+            _customerService = new Mock<ICustomerService>();
 
             _categoryRepo = new Mock<IRepository<Category>>();
             _categoryRepo.Setup(x => x.Table).Returns(new List<Category>().AsQueryable());
@@ -76,7 +80,7 @@ namespace Nop.Services.Tests.Discounts
             _productRepo = new Mock<IRepository<Product>>();
             _productRepo.Setup(x => x.Table).Returns(new List<Product>().AsQueryable());
 
-            var cacheManager = new NopNullCache();
+            var cacheManager = new TestMemoryCacheManager(new Mock<IMemoryCache>().Object);
             _discountRequirementRepo = new Mock<IRepository<DiscountRequirement>>();
             _discountRequirementRepo.Setup(x => x.Table).Returns(new List<DiscountRequirement>().AsQueryable());
 
@@ -87,7 +91,7 @@ namespace Nop.Services.Tests.Discounts
 
             _discountService = new DiscountService(cacheManager, _discountRepo.Object, _discountRequirementRepo.Object,
                 _discountUsageHistoryRepo.Object, _categoryRepo.Object, _manufacturerRepo.Object, _productRepo.Object, _storeContext.Object,
-                _localizationService.Object, _categoryService.Object, pluginFinder, _eventPublisher.Object);
+                _customerService.Object, _localizationService.Object, _categoryService.Object, pluginFinder, _eventPublisher.Object);
         }
 
         [Test]
@@ -260,12 +264,20 @@ namespace Nop.Services.Tests.Discounts
 
     public static class DiscountExtensions
     {
+        private static readonly DiscountService _discountService;
+
+        static DiscountExtensions()
+        {
+            _discountService = new DiscountService(null, null, null, null,
+                null,null,null,null,null, null, null, null, null);
+        }
+
         public static decimal GetDiscountAmount(this Discount discount, decimal amount)
         {
             if (discount == null)
                 throw new ArgumentNullException(nameof(discount));
 
-            return _discountService.MapDiscount(discount).GetDiscountAmount(amount);
+            return _discountService.GetDiscountAmount(_discountService.MapDiscount(discount), amount);
         }
     }
 }

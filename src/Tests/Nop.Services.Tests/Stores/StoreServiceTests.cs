@@ -10,6 +10,12 @@ namespace Nop.Services.Tests.Stores
     {
         private IStoreService _storeService;
 
+        [SetUp]
+        public new void SetUp()
+        {
+            _storeService = new StoreService(null, null, null);
+        }
+
         [Test]
         public void Can_parse_host_values()
         {

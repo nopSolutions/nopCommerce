@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Extensions.Caching.Memory;
 using Moq;
 using Nop.Core;
 using Nop.Core.Caching;
@@ -11,6 +12,7 @@ using Nop.Core.Domain.Orders;
 using Nop.Services.Catalog;
 using Nop.Services.Directory;
 using Nop.Services.Events;
+using Nop.Services.Localization;
 using Nop.Services.Media;
 using Nop.Services.Orders;
 using Nop.Services.Stores;
@@ -35,6 +37,7 @@ namespace Nop.Services.Tests.Orders
         private Mock<IPriceFormatter> _priceFormatter;
         private Mock<IDownloadService> _downloadService;
         private Mock<IWebHelper> _webHelper;
+        private Mock<ILocalizationService> _localizationService;
         private ICheckoutAttributeFormatter _checkoutAttributeFormatter;
         private Mock<IProductAttributeParser> _productAttributeParser;
         private Mock<IProductService> _productService;
@@ -132,7 +135,7 @@ namespace Nop.Services.Tests.Orders
             _checkoutAttributeValueRepo.Setup(x => x.GetById(cav2_1.Id)).Returns(cav2_1);
             _checkoutAttributeValueRepo.Setup(x => x.GetById(cav2_2.Id)).Returns(cav2_2);
 
-            var cacheManager = new NopNullCache();
+            var cacheManager = new MemoryCacheManager(new Mock<IMemoryCache>().Object);
 
             _storeMappingService = new Mock<IStoreMappingService>();
 
@@ -147,7 +150,7 @@ namespace Nop.Services.Tests.Orders
 
             _productService = new Mock<IProductService>();
             _productAttributeParser = new Mock<IProductAttributeParser>();
-            _checkoutAttributeParser = new CheckoutAttributeParser(_checkoutAttributeService, _productAttributeParser.Object, _productService.Object);
+            _checkoutAttributeParser = new CheckoutAttributeParser(_checkoutAttributeService);
 
             var workingLanguage = new Language();
             _workContext = new Mock<IWorkContext>();
@@ -157,11 +160,13 @@ namespace Nop.Services.Tests.Orders
             _priceFormatter = new Mock<IPriceFormatter>();
             _downloadService = new Mock<IDownloadService>();
             _webHelper = new Mock<IWebHelper>();
+            _localizationService = new Mock<ILocalizationService>();
 
             _checkoutAttributeFormatter = new CheckoutAttributeFormatter(_workContext.Object,
                 _checkoutAttributeService,
                 _checkoutAttributeParser,
                 _currencyService.Object,
+                _localizationService.Object,
                 _taxService.Object,
                 _priceFormatter.Object,
                 _downloadService.Object,

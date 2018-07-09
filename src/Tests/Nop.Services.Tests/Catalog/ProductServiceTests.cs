@@ -1,5 +1,8 @@
 ﻿using System;
+using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Common;
+using Nop.Core.Domain.Localization;
 using Nop.Services.Catalog;
 using Nop.Tests;
 using NUnit.Framework;
@@ -11,10 +14,13 @@ namespace Nop.Services.Tests.Catalog
     {
         private IProductService _productService;
 
+
         [SetUp]
         public new void SetUp()
         {
-
+            _productService = new ProductService(new CatalogSettings(), new CommonSettings(), null, new NopNullCache(),
+                null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,
+                null, null, null, null, null, new LocalizationSettings());
         }
 
         [Test]

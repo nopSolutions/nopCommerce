@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using Microsoft.Extensions.Caching.Memory;
 using Moq;
 using Nop.Core;
 using Nop.Core.Caching;
+using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
@@ -11,7 +14,11 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Stores;
 using Nop.Core.Infrastructure;
 using Nop.Services.Catalog;
+using Nop.Services.Customers;
 using Nop.Services.Discounts;
+using Nop.Services.Events;
+using Nop.Services.Localization;
+using Nop.Services.Plugins;
 using Nop.Tests;
 using NUnit.Framework;
 
@@ -22,7 +29,7 @@ namespace Nop.Services.Tests.Catalog
     public class PriceCalculationServiceTests : ServiceTest
     {
         private Mock<IStoreContext> _storeContext;
-        private Mock<IDiscountService> _discountService;
+        private IDiscountService _discountService;
         private Mock<ICategoryService> _categoryService;
         private Mock<IManufacturerService> _manufacturerService;
         private Mock<IProductAttributeParser> _productAttributeParser;
@@ -31,43 +38,39 @@ namespace Nop.Services.Tests.Catalog
         private ShoppingCartSettings _shoppingCartSettings;
         private CatalogSettings _catalogSettings;
         private IStaticCacheManager _cacheManager;
-
+        private Mock<IWorkContext> _workContext;
         private Store _store;
+        private TestServiceProvider _serviceProvider;
 
         [SetUp]
         public new void SetUp()
         {
-            var serviceProvider = new TestServiceProvider();
+            _serviceProvider = new TestServiceProvider();
             _store = new Store { Id = 1 };
             _storeContext = new Mock<IStoreContext>();
             _storeContext.Setup(x => x.CurrentStore).Returns(_store);
-
-            _discountService = new Mock<IDiscountService>();
+            
             _categoryService = new Mock<ICategoryService>();
             _manufacturerService = new Mock<IManufacturerService>();
             _productService = new Mock<IProductService>();
-
+            
             _productAttributeParser = new Mock<IProductAttributeParser>();
 
             _shoppingCartSettings = new ShoppingCartSettings();
             _catalogSettings = new CatalogSettings();
 
-            _cacheManager = new NopNullCache();
+            _cacheManager = new MemoryCacheManager(new Mock<IMemoryCache>().Object);
+            _workContext = new Mock<IWorkContext>();
 
-            _priceCalcService = new PriceCalculationService(_catalogSettings,
-                _categoryService.Object,
-                _discountService.Object,
-                _manufacturerService.Object,
-                _productAttributeParser.Object,
-                _productService.Object,
-                _cacheManager,
-                _storeContext.Object,
-                serviceProvider.WorkContext.Object,
-                _shoppingCartSettings);
+            _discountService = TestDiscountService.Init();
+
+            _priceCalcService = new PriceCalculationService(_catalogSettings, new CurrencySettings{ PrimaryStoreCurrencyId = 1 }, _categoryService.Object,
+                _serviceProvider.CurrencyService.Object, _discountService, _manufacturerService.Object, _productAttributeParser.Object,
+                _productService.Object, _cacheManager, _storeContext.Object, _workContext.Object, _shoppingCartSettings);
 
             var nopEngine = new Mock<NopEngine>();
 
-            nopEngine.Setup(x => x.ServiceProvider).Returns(serviceProvider);
+            nopEngine.Setup(x => x.ServiceProvider).Returns(_serviceProvider);
             EngineContext.Replace(nopEngine.Object);
         }
 
@@ -265,10 +268,7 @@ namespace Nop.Services.Tests.Catalog
             product.AddAppliedDiscounts(discount1);
             //set HasDiscountsApplied property
             product.HasDiscountsApplied = true;
-            _discountService.Setup(ds => ds.ValidateDiscount(discount1, customer)).Returns(new DiscountValidationResult {IsValid = true});
-            _discountService.Setup(ds => ds.GetAllDiscountsForCaching(DiscountType.AssignedToCategories, null, null, false)).Returns(new List<DiscountForCaching>());
-            _discountService.Setup(ds => ds.GetAllDiscountsForCaching(DiscountType.AssignedToManufacturers, null, null, false)).Returns(new List<DiscountForCaching>());
-
+           
             _priceCalcService.GetFinalPrice(product, customer).ShouldEqual(9.34M);
         }
 
@@ -296,11 +296,7 @@ namespace Nop.Services.Tests.Catalog
                 Quantity = 2
             };
 
-            _discountService.Setup(ds => ds.GetAllDiscountsForCaching(DiscountType.AssignedToCategories, null, null, false)).Returns(new List<DiscountForCaching>());
-            _discountService.Setup(ds => ds.GetAllDiscountsForCaching(DiscountType.AssignedToManufacturers, null, null, false)).Returns(new List<DiscountForCaching>());
-
             _priceCalcService.GetUnitPrice(sci1).ShouldEqual(12.34);
-
         }
 
         [Test]
@@ -327,11 +323,7 @@ namespace Nop.Services.Tests.Catalog
                 Quantity = 2
             };
 
-            _discountService.Setup(ds => ds.GetAllDiscountsForCaching(DiscountType.AssignedToCategories, null, null, false)).Returns(new List<DiscountForCaching>());
-            _discountService.Setup(ds => ds.GetAllDiscountsForCaching(DiscountType.AssignedToManufacturers, null, null, false)).Returns(new List<DiscountForCaching>());
-
             _priceCalcService.GetSubTotal(sci1).ShouldEqual(24.68);
-
         }
 
         [Test]
@@ -435,9 +427,6 @@ namespace Nop.Services.Tests.Catalog
                 Quantity = quantity
             };
 
-            _discountService.Setup(ds => ds.GetAllDiscountsForCaching(DiscountType.AssignedToCategories, null, null, false)).Returns(new List<DiscountForCaching>());
-            _discountService.Setup(ds => ds.GetAllDiscountsForCaching(DiscountType.AssignedToManufacturers, null, null, false)).Returns(new List<DiscountForCaching>());
-
             return shoppingCartItem;
         }
 
@@ -457,6 +446,62 @@ namespace Nop.Services.Tests.Catalog
                     Id=1,
                     Product = this
                 });
+            }
+        }
+
+        class TestDiscountService: DiscountService
+        {
+            public TestDiscountService(IStaticCacheManager cacheManager, IRepository<Discount> discountRepository,
+                IRepository<DiscountRequirement> discountRequirementRepository,
+                IRepository<DiscountUsageHistory> discountUsageHistoryRepository,
+                IRepository<Category> categoryRepository, IRepository<Manufacturer> manufacturerRepository,
+                IRepository<Product> productRepository, IStoreContext storeContext, ICustomerService customerService,
+                ILocalizationService localizationService, ICategoryService categoryService, IPluginFinder pluginFinder,
+                IEventPublisher eventPublisher) : base(cacheManager, discountRepository, discountRequirementRepository,
+                discountUsageHistoryRepository, categoryRepository, manufacturerRepository, productRepository,
+                storeContext, customerService, localizationService, categoryService, pluginFinder, eventPublisher)
+            {
+            }
+
+            public override DiscountValidationResult ValidateDiscount(Discount discount, Customer customer)
+            {
+                return new DiscountValidationResult { IsValid = true };
+            }
+
+            public override IList<DiscountForCaching> GetAllDiscountsForCaching(DiscountType? discountType = null, string couponCode = null, string discountName = null,
+                bool showHidden = false)
+            {
+                return new List<DiscountForCaching>();
+            }
+
+            public static IDiscountService Init()
+            {
+                var _cacheManager = new TestMemoryCacheManager(new Mock<IMemoryCache>().Object);
+                var _discountRepo = new Mock<IRepository<Discount>>();
+                var _discountRequirementRepo = new Mock<IRepository<DiscountRequirement>>();
+                _discountRequirementRepo.Setup(x => x.Table).Returns(new List<DiscountRequirement>().AsQueryable());
+                var _discountUsageHistoryRepo = new Mock<IRepository<DiscountUsageHistory>>();
+                var _categoryRepo = new Mock<IRepository<Category>>();
+                _categoryRepo.Setup(x => x.Table).Returns(new List<Category>().AsQueryable());
+                var _manufacturerRepo = new Mock<IRepository<Manufacturer>>();
+                _manufacturerRepo.Setup(x => x.Table).Returns(new List<Manufacturer>().AsQueryable());
+                var _productRepo = new Mock<IRepository<Product>>();
+                _productRepo.Setup(x => x.Table).Returns(new List<Product>().AsQueryable());
+                var _customerService = new Mock<ICustomerService>();
+                var _localizationService = new Mock<ILocalizationService>();
+                var _eventPublisher = new Mock<IEventPublisher>();
+                var pluginFinder = new PluginFinder(_eventPublisher.Object);
+                var _categoryService = new Mock<ICategoryService>();
+
+                var _store = new Store { Id = 1 };
+                var _storeContext = new Mock<IStoreContext>();
+                _storeContext.Setup(x => x.CurrentStore).Returns(_store);
+
+                var discountService = new DiscountService(_cacheManager, _discountRepo.Object, _discountRequirementRepo.Object,
+                    _discountUsageHistoryRepo.Object, _categoryRepo.Object, _manufacturerRepo.Object, _productRepo.Object, _storeContext.Object,
+                    _customerService.Object, _localizationService.Object, _categoryService.Object, pluginFinder, _eventPublisher.Object);
+
+                return discountService;
             }
         }
     }

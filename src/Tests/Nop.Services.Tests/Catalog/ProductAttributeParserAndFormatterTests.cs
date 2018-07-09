@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Extensions.Caching.Memory;
 using Moq;
 using Nop.Core;
 using Nop.Core.Caching;
@@ -201,7 +202,7 @@ namespace Nop.Services.Tests.Catalog
             _eventPublisher = new Mock<IEventPublisher>();
             _eventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
 
-            var cacheManager = new NopNullCache();
+            var cacheManager = new TestMemoryCacheManager(new Mock<IMemoryCache>().Object);
 
             _productAttributeService = new ProductAttributeService(cacheManager,
                 _eventPublisher.Object,
