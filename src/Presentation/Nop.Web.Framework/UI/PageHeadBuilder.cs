@@ -1,19 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-using BundlerMinifier;
+﻿using BundlerMinifier;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.TagHelpers.Internal;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.Caching.Memory;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Seo;
 using Nop.Core.Infrastructure;
 using Nop.Services.Seo;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
+
 
 namespace Nop.Web.Framework.UI
 {
@@ -44,6 +47,9 @@ namespace Nop.Web.Framework.UI
         private string _editPageUrl;
         private string _activeAdminMenuSystemName;
 
+        private FileVersionProvider _fileVersionProvider;
+        private IMemoryCache _memoryCache;
+
         //in minutes
         private const int RecheckBundledFilesPeriod = 120;
 
@@ -57,16 +63,19 @@ namespace Nop.Web.Framework.UI
         /// <param name="seoSettings">SEO settings</param>
         /// <param name="hostingEnvironment">Hosting environment</param>
         /// <param name="cacheManager">Cache manager</param>
+        /// <param name="memoryCache">Memory Cache</param>
         /// <param name="fileProvider">File provider</param>
         public PageHeadBuilder(SeoSettings seoSettings,
             IHostingEnvironment hostingEnvironment,
             IStaticCacheManager cacheManager,
+            IMemoryCache memoryCache,
             INopFileProvider fileProvider)
         {
             this._seoSettings = seoSettings;
             this._hostingEnvironment = hostingEnvironment;
             this._cacheManager = cacheManager;
             this._fileProvider = fileProvider;
+            this._memoryCache = memoryCache;
             this._processor = new BundleFileProcessor();
 
             this._titleParts = new List<string>();
@@ -113,6 +122,30 @@ namespace Nop.Web.Framework.UI
             hash = SeoExtensions.GetSeName(hash);
 
             return hash;
+        }
+
+        private void EnsureFileVersionProvider()
+        {
+
+            if (_fileVersionProvider == null)
+            {
+
+                // Get the roots
+                var webRoot = _hostingEnvironment.WebRootPath + Path.DirectorySeparatorChar;
+                var contentRoot = _hostingEnvironment.ContentRootPath + Path.DirectorySeparatorChar;
+                //var versionEquals = includeVersionEquals ? "?v=" : string.Empty;
+
+                _fileVersionProvider = new FileVersionProvider(new NopFileProvider(_hostingEnvironment), _memoryCache, "//");
+
+
+
+                //_fileVersionProvider = new FileVersionProvider(_hostingEnvironment.WebRootFileProvider, null, null);
+
+                //_fileVersionProvider = new FileVersionProvider(
+                //    HostingEnvironment.WebRootFileProvider,
+                //    Cache,
+                //    ViewContext.HttpContext.Request.PathBase);
+            }
         }
 
         #endregion
@@ -634,6 +667,16 @@ namespace Nop.Web.Framework.UI
             }
         }
 
+        private string GetVersionedSrc(string srcValue)
+        {
+            if (true)
+            {
+                srcValue = _fileVersionProvider.AddFileVersionToPath(srcValue);
+            }
+
+            return srcValue;
+        }
+
         /// <summary>
         /// Gets a version number based off of the last write time for the file,
         /// keeps the browser from using an older cached version of the file when it should use a newer one
@@ -642,6 +685,11 @@ namespace Nop.Web.Framework.UI
         /// <param name="includeVersionEquals">Should we include a version identifier?</param>
         public virtual string GetVersion(string url, bool includeVersionEquals = true)
         {
+            EnsureFileVersionProvider();
+
+            var fileNameStuff = url;
+
+
             // Get the roots
             var webRoot = _hostingEnvironment.WebRootPath + Path.DirectorySeparatorChar;
             var contentRoot = _hostingEnvironment.ContentRootPath + Path.DirectorySeparatorChar;
@@ -650,12 +698,14 @@ namespace Nop.Web.Framework.UI
             // Fix the url 
             url = url.Replace("~", "").Replace("/", "\\").TrimStart(Path.DirectorySeparatorChar);
 
+            var fileNameStuff2 = _fileVersionProvider.AddFileVersionToPath(url);
+
             // Try the content root
             var file = Path.Combine(contentRoot, url);
             if (_fileProvider.FileExists(file))
             {
                 return versionEquals + _fileProvider.GetLastWriteTime(file).Ticks;
-            }         
+            }
 
             // Try the web root
             file = Path.Combine(webRoot, url);
