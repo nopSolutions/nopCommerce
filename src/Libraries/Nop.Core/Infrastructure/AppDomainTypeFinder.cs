@@ -16,8 +16,9 @@ namespace Nop.Core.Infrastructure
     {
         #region Fields
 
-        private bool _ignoreReflectionErrors = true;
         protected INopFileProvider _fileProvider;
+
+        private bool _ignoreReflectionErrors = true;
 
         #endregion
 
@@ -41,10 +42,10 @@ namespace Nop.Core.Infrastructure
         {
             foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
-                if (!Matches(assembly.FullName)) 
+                if (!Matches(assembly.FullName))
                     continue;
 
-                if (addedAssemblyNames.Contains(assembly.FullName)) 
+                if (addedAssemblyNames.Contains(assembly.FullName))
                     continue;
 
                 assemblies.Add(assembly);
@@ -62,7 +63,7 @@ namespace Nop.Core.Infrastructure
             foreach (var assemblyName in AssemblyNames)
             {
                 var assembly = Assembly.Load(assemblyName);
-                if (addedAssemblyNames.Contains(assembly.FullName)) 
+                if (addedAssemblyNames.Contains(assembly.FullName))
                     continue;
 
                 assemblies.Add(assembly);
@@ -241,15 +242,15 @@ namespace Nop.Core.Infrastructure
                         }
                     }
 
-                    if (types == null) 
+                    if (types == null)
                         continue;
 
                     foreach (var t in types)
                     {
-                        if (!assignTypeFrom.IsAssignableFrom(t) && (!assignTypeFrom.IsGenericTypeDefinition || !DoesTypeImplementOpenGeneric(t, assignTypeFrom))) 
+                        if (!assignTypeFrom.IsAssignableFrom(t) && (!assignTypeFrom.IsGenericTypeDefinition || !DoesTypeImplementOpenGeneric(t, assignTypeFrom)))
                             continue;
 
-                        if (t.IsInterface) 
+                        if (t.IsInterface)
                             continue;
 
                         if (onlyConcreteClasses)

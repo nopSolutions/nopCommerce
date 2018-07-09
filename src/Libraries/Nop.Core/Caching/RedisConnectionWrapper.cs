@@ -16,19 +16,16 @@ namespace Nop.Core.Caching
         #region Fields
 
         private readonly NopConfig _config;
-        private readonly Lazy<string> _connectionString;
+
         private readonly object _lock = new object();
         private volatile ConnectionMultiplexer _connection;
+        private readonly Lazy<string> _connectionString;
         private volatile RedLockFactory _redisLockFactory;
 
         #endregion
 
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="config">Config</param>
         public RedisConnectionWrapper(NopConfig config)
         {
             this._config = config;
