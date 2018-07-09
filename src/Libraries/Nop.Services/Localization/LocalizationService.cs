@@ -469,7 +469,7 @@ namespace Nop.Services.Localization
         /// <typeparam name="TPropType">Property type</typeparam>
         /// <param name="entity">Entity</param>
         /// <param name="keySelector">Key selector</param>
-        /// <param name="languageId">Language identifier; pass null to use the current working language</param>
+        /// <param name="languageId">Language identifier; pass null to use the current working language; pass 0 to get standard language value</param>
         /// <param name="returnDefaultValue">A value indicating whether to return default value (if localized is not found)</param>
         /// <param name="ensureTwoPublishedLanguages">A value indicating whether to ensure that we have at least two published languages; otherwise, load only default value</param>
         /// <returns>Localized property</returns>
@@ -492,6 +492,9 @@ namespace Nop.Services.Localization
             var localeKeyGroup = entity.GetUnproxiedEntityType().Name;
             var localeKey = propInfo.Name;
 
+            if (!languageId.HasValue)
+                languageId = _workContext.WorkingLanguage.Id;
+
             if (languageId > 0)
             {
                 //ensure that we have at least two published languages
@@ -506,7 +509,7 @@ namespace Nop.Services.Localization
                 if (loadLocalizedValue)
                 {
                     resultStr = _localizedEntityService
-                        .GetLocalizedValue(languageId ?? _workContext.WorkingLanguage.Id, entity.Id, localeKeyGroup, localeKey);
+                        .GetLocalizedValue(languageId.Value, entity.Id, localeKeyGroup, localeKey);
                     if (!string.IsNullOrEmpty(resultStr))
                         result = CommonHelper.To<TPropType>(resultStr);
                 }
