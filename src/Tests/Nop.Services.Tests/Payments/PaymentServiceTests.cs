@@ -39,7 +39,7 @@ namespace Nop.Services.Tests.Payments
             _shoppingCartSettings = new ShoppingCartSettings();
             _settingService = new Mock<ISettingService>();
 
-            _paymentService = new PaymentService(_paymentSettings, pluginFinder, _settingService.Object, _shoppingCartSettings);
+            _paymentService = new PaymentService(pluginFinder, _settingService.Object, _paymentSettings, _shoppingCartSettings);
         }
 
         [Test]

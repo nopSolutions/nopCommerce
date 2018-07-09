@@ -170,22 +170,22 @@ namespace Nop.Services.Tests.Orders
             _customerSettings = new CustomerSettings();
             _addressSettings = new AddressSettings();
 
-            _shippingService = new ShippingService(_shippingMethodRepository.Object,
-                _warehouseRepository.Object,
-                _logger,
-                _productService.Object,
-                _productAttributeParser.Object,
+            _shippingService = new ShippingService(_addressService.Object,
+                cacheManager,
                 _checkoutAttributeParser.Object,
+                _eventPublisher.Object,
                 _genericAttributeService.Object,
                 _localizationService.Object,
+                _logger,
+                pluginFinder,
                 _priceCalcService,
-                _addressService.Object,
-                _shippingSettings, 
-                pluginFinder, 
+                _productAttributeParser.Object,
+                _productService.Object,
+                _shippingMethodRepository.Object,
+                _warehouseRepository.Object,
                 _storeContext.Object,
-                _eventPublisher.Object, 
-                _shoppingCartSettings,
-                cacheManager);
+                _shippingSettings,
+                _shoppingCartSettings);
 
             //tax
             _taxSettings = new TaxSettings
@@ -197,17 +197,40 @@ namespace Nop.Services.Tests.Orders
           
             _addressService.Setup(x => x.GetAddressById(_taxSettings.DefaultTaxAddressId)).Returns(new Address { Id = _taxSettings.DefaultTaxAddressId });
             
-            _taxService = new TaxService(_addressService.Object, _genericAttributeService.Object, _workContext, _storeContext.Object, _taxSettings,
-                pluginFinder, _geoLookupService.Object, _countryService.Object, _stateProvinceService.Object, _logger, _webHelper.Object,
-                _customerSettings, _shippingSettings, _addressSettings);
+            _taxService = new TaxService(_addressSettings,
+                _customerSettings,
+                _addressService.Object,
+                _countryService.Object,
+                _genericAttributeService.Object,
+                _geoLookupService.Object,
+                _logger,
+                pluginFinder,
+                _stateProvinceService.Object,
+                _storeContext.Object,
+                _webHelper.Object,
+                _workContext,
+                _shippingSettings,
+                _taxSettings);
            
             _rewardPointsSettings = new RewardPointsSettings();
 
-            _orderTotalCalcService = new OrderTotalCalculationService(_workContext, _storeContext.Object,
-                _priceCalcService, _taxService, _shippingService, _paymentService.Object, _checkoutAttributeParser.Object,
-                _discountService.Object, _giftCardService.Object, _genericAttributeService.Object,
-                _rewardPointService.Object, _shoppingCartService.Object,
-                _taxSettings, _rewardPointsSettings, _shippingSettings, _shoppingCartSettings, _catalogSettings);
+            _orderTotalCalcService = new OrderTotalCalculationService(_catalogSettings,
+                _checkoutAttributeParser.Object,
+                _discountService.Object,
+                _genericAttributeService.Object,
+                _giftCardService.Object,
+                _paymentService.Object,
+                _priceCalcService,
+                _rewardPointService.Object,
+                _shippingService,
+                _shoppingCartService.Object,
+                _storeContext.Object,
+                _taxService,
+                _workContext,
+                _rewardPointsSettings,
+                _shippingSettings,
+                _shoppingCartSettings,
+                _taxSettings);
 
             _paymentSettings = new PaymentSettings
             {
@@ -222,23 +245,47 @@ namespace Nop.Services.Tests.Orders
             
             _eventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
 
-            _orderProcessingService = new OrderProcessingService(_orderService.Object, _webHelper.Object,
-                _localizationService.Object, _languageService.Object,
-                _productService.Object, _paymentService.Object, _logger,
-                _orderTotalCalcService, _priceCalcService, _priceFormatter.Object,
-                _productAttributeParser.Object, _productAttributeFormatter.Object,
-                _giftCardService.Object, _shoppingCartService.Object, _checkoutAttributeFormatter.Object,
-                _shippingService, _shipmentService.Object, _taxService,
-                _customerService.Object, _discountService.Object,
-                _encryptionService.Object, _workContext, 
-                _workflowMessageService.Object, _vendorService.Object,
-                _customerActivityService.Object, _currencyService.Object, _affiliateService.Object,
-                _eventPublisher.Object,_pdfService.Object, _rewardPointService.Object,
+            _orderProcessingService = new OrderProcessingService(_currencySettings,
+                _affiliateService.Object,
+                _checkoutAttributeFormatter.Object,
+                _countryService.Object,
+                _currencyService.Object,
+                _customerActivityService.Object,
+                _customerService.Object,
+                _customNumberFormatter.Object,
+                _discountService.Object,
+                _encryptionService.Object,
+                _eventPublisher.Object,
                 _genericAttributeService.Object,
-                _countryService.Object, _stateProvinceService.Object,
-                _shippingSettings, _paymentSettings, _rewardPointsSettings,
-                _orderSettings, _taxSettings, _localizationSettings,
-                _currencySettings, _customNumberFormatter.Object);
+                _giftCardService.Object,
+                _languageService.Object,
+                _localizationService.Object,
+                _logger,
+                _orderService.Object,
+                _orderTotalCalcService,
+                _paymentService.Object,
+                _pdfService.Object,
+                _priceCalcService,
+                _priceFormatter.Object,
+                _productAttributeFormatter.Object,
+                _productAttributeParser.Object,
+                _productService.Object,
+                _rewardPointService.Object,
+                _shipmentService.Object,
+                _shippingService,
+                _shoppingCartService.Object,
+                _stateProvinceService.Object,
+                _taxService,
+                _vendorService.Object,
+                _webHelper.Object,
+                _workContext,
+                _workflowMessageService.Object,
+                _localizationSettings,
+                _orderSettings,
+                _paymentSettings,
+                _rewardPointsSettings,
+                _shippingSettings,
+                _taxSettings);
         }
         
         [Test]

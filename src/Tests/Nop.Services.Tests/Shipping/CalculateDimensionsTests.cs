@@ -77,22 +77,22 @@ namespace Nop.Services.Tests.Shipping
 
             _shoppingCartSettings = new ShoppingCartSettings();
 
-            _shippingService = new ShippingService(_shippingMethodRepository.Object,
-                _warehouseRepository.Object,
-                _logger,
-                _productService.Object,
-                _productAttributeParser.Object,
+            _shippingService = new ShippingService(_addressService.Object,
+                cacheManager,
                 _checkoutAttributeParser.Object,
+                _eventPublisher.Object,
                 _genericAttributeService.Object,
                 _localizationService.Object,
+                _logger,
+                pluginFinder,
                 _priceCalcService.Object,
-                _addressService.Object,
-                _shippingSettings, 
-                pluginFinder, 
+                _productAttributeParser.Object,
+                _productService.Object,
+                _shippingMethodRepository.Object,
+                _warehouseRepository.Object,
                 _storeContext.Object,
-                _eventPublisher.Object, 
-                _shoppingCartSettings,
-                cacheManager);
+                _shippingSettings,
+                _shoppingCartSettings);
         }
 
         [Test]

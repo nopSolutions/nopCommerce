@@ -35,8 +35,8 @@ namespace Nop.Services.Tests.Messages
         [Test]
         public void VerifyActiveInsertTriggersSubscribeEvent()
         {
-            var service = new NewsLetterSubscriptionService(_dbContext.Object, _newsLetterSubscriptionRepository.Object,
-                _customerRepository.Object, _eventPublisher.Object, _customerService.Object);
+            var service = new NewsLetterSubscriptionService(_customerService.Object, _dbContext.Object, _eventPublisher.Object,
+                _customerRepository.Object, _newsLetterSubscriptionRepository.Object);
 
             var subscription = new NewsLetterSubscription { Active = true, Email = "test@test.com" };
             service.InsertNewsLetterSubscription(subscription);
@@ -50,8 +50,8 @@ namespace Nop.Services.Tests.Messages
         [Test]
         public void VerifyDeleteTriggersUnsubscribeEvent()
         {
-            var service = new NewsLetterSubscriptionService(_dbContext.Object, _newsLetterSubscriptionRepository.Object,
-                _customerRepository.Object, _eventPublisher.Object, _customerService.Object);
+            var service = new NewsLetterSubscriptionService(_customerService.Object, _dbContext.Object, _eventPublisher.Object,
+                _customerRepository.Object, _newsLetterSubscriptionRepository.Object);
 
             var subscription = new NewsLetterSubscription { Active = true, Email = "test@test.com" };
             service.DeleteNewsLetterSubscription(subscription);
@@ -66,8 +66,8 @@ namespace Nop.Services.Tests.Messages
         [Ignore("Moq can't verify an extension method")]
         public void VerifyInsertEventIsFired()
         {
-            var service = new NewsLetterSubscriptionService(_dbContext.Object, _newsLetterSubscriptionRepository.Object,
-                _customerRepository.Object, _eventPublisher.Object, _customerService.Object);
+            var service = new NewsLetterSubscriptionService(_customerService.Object, _dbContext.Object, _eventPublisher.Object,
+                _customerRepository.Object, _newsLetterSubscriptionRepository.Object);
 
             var subscription = new NewsLetterSubscription {Email = "test@test.com"};
 

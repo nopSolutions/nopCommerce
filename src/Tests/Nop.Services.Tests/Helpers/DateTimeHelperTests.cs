@@ -43,8 +43,8 @@ namespace Nop.Services.Tests.Helpers
                 DefaultStoreTimeZoneId = ""
             };
 
-            _dateTimeHelper = new DateTimeHelper(_workContext.Object, _genericAttributeService.Object,
-                _settingService.Object, _dateTimeSettings);
+            _dateTimeHelper = new DateTimeHelper(_dateTimeSettings, _genericAttributeService.Object, 
+                _settingService.Object, _workContext.Object);
         }
 
         [Test]

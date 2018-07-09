@@ -128,22 +128,22 @@ namespace Nop.Services.Tests.Orders
             
             _logger = new NullLogger();
            
-            _shippingService = new ShippingService(_shippingMethodRepository.Object,
-                _warehouseRepository.Object,
-                _logger,
-                _productService.Object,
-                _productAttributeParser.Object,
+            _shippingService = new ShippingService(_addressService.Object,
+                cacheManager,
                 _checkoutAttributeParser.Object,
+                _eventPublisher.Object,
                 _genericAttributeService.Object,
                 _localizationService.Object,
+                _logger,
+                pluginFinder,
                 _priceCalcService,
-                _addressService.Object,
-                _shippingSettings,
-                pluginFinder, 
+                _productAttributeParser.Object,
+                _productService.Object,
+                _shippingMethodRepository.Object,
+                _warehouseRepository.Object,
                 _storeContext.Object,
-                _eventPublisher.Object, 
-                _shoppingCartSettings,
-                cacheManager);
+                _shippingSettings,
+                _shoppingCartSettings);
 
             _eventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
             
@@ -160,17 +160,40 @@ namespace Nop.Services.Tests.Orders
             
             _addressService.Setup(x => x.GetAddressById(_taxSettings.DefaultTaxAddressId)).Returns(new Address { Id = _taxSettings.DefaultTaxAddressId });
             
-            _taxService = new TaxService(_addressService.Object, _genericAttributeService.Object, _workContext.Object, _storeContext.Object, _taxSettings,
-                pluginFinder, _geoLookupService.Object, _countryService.Object, _stateProvinceService.Object, _logger, _webHelper.Object,
-                _customerSettings, _shippingSettings, _addressSettings);
+            _taxService = new TaxService(_addressSettings,
+                _customerSettings,
+                _addressService.Object,
+                _countryService.Object,
+                _genericAttributeService.Object,
+                _geoLookupService.Object,
+                _logger,
+                pluginFinder,
+                _stateProvinceService.Object,
+                _storeContext.Object,
+                _webHelper.Object,
+                _workContext.Object,
+                _shippingSettings,
+                _taxSettings);
 
             _rewardPointsSettings = new RewardPointsSettings();
 
-            _orderTotalCalcService = new OrderTotalCalculationService(_workContext.Object, _storeContext.Object,
-                _priceCalcService, _taxService, _shippingService, _paymentService.Object, _checkoutAttributeParser.Object,
-                _discountService, _giftCardService.Object, _genericAttributeService.Object,
-                _rewardPointService.Object, _shoppingCartService.Object,
-                _taxSettings, _rewardPointsSettings, _shippingSettings, _shoppingCartSettings, _catalogSettings);
+            _orderTotalCalcService = new OrderTotalCalculationService(_catalogSettings,
+                _checkoutAttributeParser.Object,
+                _discountService,
+                _genericAttributeService.Object,
+                _giftCardService.Object,
+                _paymentService.Object,
+                _priceCalcService,
+                _rewardPointService.Object,
+                _shippingService,
+                _shoppingCartService.Object,
+                _storeContext.Object,
+                _taxService,
+                _workContext.Object,
+                _rewardPointsSettings,
+                _shippingSettings,
+                _shoppingCartSettings,
+                _taxSettings);
         }
 
         [Test]

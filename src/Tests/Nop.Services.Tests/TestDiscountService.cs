@@ -15,7 +15,6 @@ using Nop.Services.Discounts;
 using Nop.Services.Events;
 using Nop.Services.Localization;
 using Nop.Services.Plugins;
-using Nop.Tests;
 
 namespace Nop.Services.Tests
 {
@@ -23,17 +22,8 @@ namespace Nop.Services.Tests
     {
         private List<DiscountForCaching> _discountForCaching;
 
-        public TestDiscountService(IStaticCacheManager cacheManager, IRepository<Discount> discountRepository,
-            IRepository<DiscountRequirement> discountRequirementRepository,
-            IRepository<DiscountUsageHistory> discountUsageHistoryRepository,
-            IRepository<Category> categoryRepository, IRepository<Manufacturer> manufacturerRepository,
-            IRepository<Product> productRepository, IStoreContext storeContext, ICustomerService customerService,
-            ILocalizationService localizationService, ICategoryService categoryService, IPluginFinder pluginFinder,
-            IEventPublisher eventPublisher) : base(cacheManager, discountRepository, discountRequirementRepository,
-            discountUsageHistoryRepository, categoryRepository, manufacturerRepository, productRepository,
-            storeContext, customerService, localizationService, categoryService, pluginFinder, eventPublisher)
+        public TestDiscountService(ICategoryService categoryService, ICustomerService customerService, IEventPublisher eventPublisher, ILocalizationService localizationService, IPluginFinder pluginFinder, IRepository<Category> categoryRepository, IRepository<Discount> discountRepository, IRepository<DiscountRequirement> discountRequirementRepository, IRepository<DiscountUsageHistory> discountUsageHistoryRepository, IRepository<Manufacturer> manufacturerRepository, IRepository<Product> productRepository, IStaticCacheManager cacheManager, IStoreContext storeContext) : base(categoryService, customerService, eventPublisher, localizationService, pluginFinder, categoryRepository, discountRepository, discountRequirementRepository, discountUsageHistoryRepository, manufacturerRepository, productRepository, cacheManager, storeContext)
         {
-            this._discountForCaching = new List<DiscountForCaching>();
         }
 
         public override DiscountValidationResult ValidateDiscount(Discount discount, Customer customer)
@@ -98,12 +88,19 @@ namespace Nop.Services.Tests
             var _storeContext = new Mock<IStoreContext>();
             _storeContext.Setup(x => x.CurrentStore).Returns(_store);
 
-            var discountService = new TestDiscountService(_cacheManager, _discountRepo.Object,
+            var discountService = new TestDiscountService(_categoryService.Object,
+                _customerService.Object,
+                _eventPublisher.Object,
+                _localizationService.Object,
+                pluginFinder,
+                _categoryRepo.Object,
+                _discountRepo.Object,
                 _discountRequirementRepo.Object,
-                _discountUsageHistoryRepo.Object, _categoryRepo.Object, _manufacturerRepo.Object, _productRepo.Object,
-                _storeContext.Object,
-                _customerService.Object, _localizationService.Object, _categoryService.Object, pluginFinder,
-                _eventPublisher.Object);
+                _discountUsageHistoryRepo.Object,
+                _manufacturerRepo.Object,
+                _productRepo.Object,
+                _cacheManager,
+                _storeContext.Object);
 
             return discountService;
         }

@@ -14,25 +14,24 @@ namespace Nop.Services.Tests
 {
     public class TestLocalizationService : LocalizationService
     {
-        public TestLocalizationService(IStaticCacheManager cacheManager, ILanguageService languageService, ILocalizedEntityService localizedEntityService, ILogger logger, IWorkContext workContext, IRepository<LocaleStringResource> lsrRepository, IDataProvider dataProvider, IDbContext dbContext, ISettingService settingService, CommonSettings commonSettings, LocalizationSettings localizationSettings, IEventPublisher eventPublisher) :
-            base(cacheManager, languageService, localizedEntityService, logger, workContext, lsrRepository, dataProvider, dbContext, settingService, commonSettings, localizationSettings, eventPublisher)
+        public TestLocalizationService(CommonSettings commonSettings, IDataProvider dataProvider, IDbContext dbContext, IEventPublisher eventPublisher, ILanguageService languageService, ILocalizedEntityService localizedEntityService, ILogger logger, IRepository<LocaleStringResource> lsrRepository, ISettingService settingService, IStaticCacheManager cacheManager, IWorkContext workContext, LocalizationSettings localizationSettings) : base(commonSettings, dataProvider, dbContext, eventPublisher, languageService, localizedEntityService, logger, lsrRepository, settingService, cacheManager, workContext, localizationSettings)
         {
         }
 
         public static TestLocalizationService Init()
         {
-            return new TestLocalizationService(new  Mock<IStaticCacheManager>().Object,
+            return new TestLocalizationService(new CommonSettings(),
+                new  Mock<IDataProvider>().Object,
+                new  Mock<IDbContext>().Object,
+                new  Mock<IEventPublisher>().Object,
                 new  Mock<ILanguageService>().Object,
                 new  Mock<ILocalizedEntityService>().Object,
                 new  Mock<ILogger>().Object,
-                new  Mock<IWorkContext>().Object,
                 new  Mock<IRepository<LocaleStringResource>>().Object,
-                new  Mock<IDataProvider>().Object,
-                new  Mock<IDbContext>().Object,
                 new  Mock<ISettingService>().Object,
-                new CommonSettings(), 
-                new LocalizationSettings(), 
-                new  Mock<IEventPublisher>().Object);
+                new  Mock<IStaticCacheManager>().Object,
+                new  Mock<IWorkContext>().Object,
+                new LocalizationSettings());
         }
 
         public override string GetResource(string resourceKey)

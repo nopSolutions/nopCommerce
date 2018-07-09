@@ -136,18 +136,39 @@ namespace Nop.Services.Tests.ExportImport
             nopEngine.Setup(x => x.ServiceProvider).Returns(serviceProvider);
 
             EngineContext.Replace(nopEngine.Object);
-
-            _exportManager = new ExportManager(_categoryService.Object, _manufacturerService.Object,
-                _customerService.Object, _productAttributeService.Object, _productTagService.Object,
-                _pictureService.Object, _newsLetterSubscriptionService.Object, _storeService.Object,
-                serviceProvider.WorkContext.Object, _productEditorSettings, _vendorService.Object,
-                _productTemplateService.Object, _dateRangeService.Object, _taxCategoryService.Object,
-                _measureService.Object, _catalogSettings, serviceProvider.GenericAttributeService.Object,
-                _customerAttributeFormatter.Object, _orderSettings, _specificationAttributeService.Object,
-                _orderService.Object, _urlRecordService.Object, _countryService.Object, _stateProvinceService.Object, _priceFormatter.Object,
-                _forumSettings, _forumService.Object, _gdprService.Object, _customerSettings,
-                serviceProvider.LocalizationService.Object, _dateTimeHelper.Object, _addressSettings,
-                _currencyService.Object);
+           
+            _exportManager = new ExportManager(_addressSettings,
+                _catalogSettings,
+                _customerSettings,
+                _forumSettings,
+                _categoryService.Object,
+                _countryService.Object,
+                _currencyService.Object,
+                _customerAttributeFormatter.Object,
+                _customerService.Object,
+                _dateRangeService.Object,
+                _dateTimeHelper.Object,
+                _forumService.Object,
+                _gdprService.Object,
+                serviceProvider.GenericAttributeService.Object,
+                serviceProvider.LocalizationService.Object,
+                _manufacturerService.Object,
+                _measureService.Object,
+                _newsLetterSubscriptionService.Object,
+                _orderService.Object,
+                _pictureService.Object,
+                _priceFormatter.Object,
+                _productAttributeService.Object,
+                _productTagService.Object,
+                _productTemplateService.Object,
+                _specificationAttributeService.Object,
+                _stateProvinceService.Object,
+                _storeService.Object,
+                _taxCategoryService.Object,
+                _urlRecordService.Object,
+                _vendorService.Object,
+                serviceProvider.WorkContext.Object,
+                _orderSettings, _productEditorSettings);
         }
 
         [OneTimeTearDown]

@@ -4,15 +4,27 @@ using Microsoft.Extensions.Caching.Memory;
 using Moq;
 using Nop.Core;
 using Nop.Core.Caching;
+using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Discounts;
+using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Stores;
 using Nop.Core.Infrastructure;
+using Nop.Data;
 using Nop.Services.Catalog;
+using Nop.Services.Directory;
 using Nop.Services.Discounts;
+using Nop.Services.Events;
+using Nop.Services.Localization;
+using Nop.Services.Messages;
+using Nop.Services.Security;
+using Nop.Services.Shipping.Date;
+using Nop.Services.Stores;
 using Nop.Tests;
 using NUnit.Framework;
 
@@ -26,7 +38,7 @@ namespace Nop.Services.Tests.Catalog
         private Mock<ICategoryService> _categoryService;
         private Mock<IManufacturerService> _manufacturerService;
         private Mock<IProductAttributeParser> _productAttributeParser;
-        private Mock<IProductService> _productService;
+        private IProductService _productService;
         private IPriceCalculationService _priceCalcService;
         private ShoppingCartSettings _shoppingCartSettings;
         private CatalogSettings _catalogSettings;
@@ -45,7 +57,7 @@ namespace Nop.Services.Tests.Catalog
             
             _categoryService = new Mock<ICategoryService>();
             _manufacturerService = new Mock<IManufacturerService>();
-            _productService = new Mock<IProductService>();
+            _productService = TestProductService.Init();
             
             _productAttributeParser = new Mock<IProductAttributeParser>();
 
@@ -59,7 +71,7 @@ namespace Nop.Services.Tests.Catalog
 
             _priceCalcService = new PriceCalculationService(_catalogSettings, new CurrencySettings{ PrimaryStoreCurrencyId = 1 }, _categoryService.Object,
                 _serviceProvider.CurrencyService.Object, _discountService, _manufacturerService.Object, _productAttributeParser.Object,
-                _productService.Object, _cacheManager, _storeContext.Object, _workContext.Object, _shoppingCartSettings);
+                _productService, _cacheManager, _storeContext.Object, _workContext.Object, _shoppingCartSettings);
 
             var nopEngine = new Mock<NopEngine>();
 
@@ -428,6 +440,7 @@ namespace Nop.Services.Tests.Catalog
             public TestProduct()
             {
                 _discountProductMappings = new List<DiscountProductMapping>();
+                _tierPrices = new List<TierPrice>();
             }
 
             public void AddAppliedDiscounts(Discount discount)
@@ -439,6 +452,20 @@ namespace Nop.Services.Tests.Catalog
                     Id=1,
                     Product = this
                 });
+            }
+        }
+
+        class TestProductService:ProductService
+        {
+            public TestProductService(CatalogSettings catalogSettings, CommonSettings commonSettings, IAclService aclService, ICacheManager cacheManager, ICurrencyService currencyService, IDataProvider dataProvider, IDateRangeService dateRangeService, IDbContext dbContext, IEventPublisher eventPublisher, ILanguageService languageService, ILocalizationService localizationService, IMeasureService measureService, IProductAttributeParser productAttributeParser, IProductAttributeService productAttributeService, IRepository<AclRecord> aclRepository, IRepository<CrossSellProduct> crossSellProductRepository, IRepository<Product> productRepository, IRepository<ProductPicture> productPictureRepository, IRepository<ProductReview> productReviewRepository, IRepository<ProductWarehouseInventory> productWarehouseInventoryRepository, IRepository<RelatedProduct> relatedProductRepository, IRepository<StockQuantityHistory> stockQuantityHistoryRepository, IRepository<StoreMapping> storeMappingRepository, IRepository<TierPrice> tierPriceRepository, IStoreMappingService storeMappingService, IWorkContext workContext, IWorkflowMessageService workflowMessageService, LocalizationSettings localizationSettings) : base(catalogSettings, commonSettings, aclService, cacheManager, currencyService, dataProvider, dateRangeService, dbContext, eventPublisher, languageService, localizationService, measureService, productAttributeParser, productAttributeService, aclRepository, crossSellProductRepository, productRepository, productPictureRepository, productReviewRepository, productWarehouseInventoryRepository, relatedProductRepository, stockQuantityHistoryRepository, storeMappingRepository, tierPriceRepository, storeMappingService, workContext, workflowMessageService, localizationSettings)
+            {
+            }
+
+            public static TestProductService Init()
+            {
+                return new TestProductService(new CatalogSettings(), new CommonSettings(), null,
+                    null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,
+                    null, null, null, null, null, null, null, null, new LocalizationSettings());
             }
         }
     }

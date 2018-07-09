@@ -178,10 +178,27 @@ namespace Nop.Core.Tests.Domain.Customers
             var _eventPublisher = new Mock<IEventPublisher>();
             var _customerRoleRepo = new Mock<IRepository<CustomerRole>>();
 
-            var _customerService = new CustomerService(new NopNullCache(), _customerRepo.Object, _customerCustomerRoleMappingRepo.Object, _customerPasswordRepo.Object, _customerRoleRepo.Object,
-                _genericAttributeRepo.Object, _orderRepo.Object, _forumPostRepo.Object, _forumTopicRepo.Object,
-                null, null, null, null, null,
-                _genericAttributeService.Object, null, null, null, _eventPublisher.Object, new CustomerSettings(), null);
+            var _customerService = new CustomerService(new CommonSettings(), 
+                new CustomerSettings(), 
+                new NopNullCache(), 
+                null,
+                null,
+                _eventPublisher.Object,
+                _genericAttributeService.Object,
+                null,
+                _customerRepo.Object,
+                _customerCustomerRoleMappingRepo.Object,
+                _customerPasswordRepo.Object,
+                _customerRoleRepo.Object,
+                _forumPostRepo.Object,
+                _forumTopicRepo.Object,
+                _genericAttributeRepo.Object,
+                null,
+                _orderRepo.Object,
+                null,
+                null,
+                null,
+                null);
 
             var customer = new TestCustomer();
             var address = new Address { Id = 1 };

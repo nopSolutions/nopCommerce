@@ -91,9 +91,7 @@ namespace Nop.Services.Tests.Directory
             _eventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
             
             var pluginFinder = new PluginFinder(_eventPublisher.Object);
-            _currencyService = new CurrencyService(cacheManager,
-                _currencyRepository.Object, _storeMappingService.Object, 
-                _currencySettings, pluginFinder, _eventPublisher.Object);
+            _currencyService = new CurrencyService(_currencySettings, _eventPublisher.Object, pluginFinder, _currencyRepository.Object, cacheManager, _storeMappingService.Object);
         }
         
         [Test]

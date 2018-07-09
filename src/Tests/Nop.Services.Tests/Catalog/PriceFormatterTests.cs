@@ -80,8 +80,7 @@ namespace Nop.Services.Tests.Catalog
 
             var pluginFinder = new PluginFinder(_eventPublisher.Object);
 
-            _currencyService = new CurrencyService(cacheManager, _currencyRepo.Object, _storeMappingService.Object,
-                _currencySettings, pluginFinder, null);
+            _currencyService = new CurrencyService(_currencySettings, null, pluginFinder, _currencyRepo.Object, cacheManager, _storeMappingService.Object);
 
             _taxSettings = new TaxSettings();
 

@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Caching.Memory;
 using Nop.Core.Caching;
 
-namespace Nop.Tests
+namespace Nop.Services.Tests
 {
     public class TestMemoryCacheManager : MemoryCacheManager
     {

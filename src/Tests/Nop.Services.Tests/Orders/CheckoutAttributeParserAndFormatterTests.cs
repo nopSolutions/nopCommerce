@@ -139,11 +139,8 @@ namespace Nop.Services.Tests.Orders
             _eventPublisher = new Mock<IEventPublisher>();
             _eventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
 
-            _checkoutAttributeService = new CheckoutAttributeService(cacheManager,
-                _checkoutAttributeRepo.Object,
-                _checkoutAttributeValueRepo.Object,
-                _storeMappingService.Object,
-                _eventPublisher.Object);
+            _checkoutAttributeService = new CheckoutAttributeService(cacheManager, _eventPublisher.Object,
+                _checkoutAttributeRepo.Object, _checkoutAttributeValueRepo.Object, _storeMappingService.Object);
 
             _checkoutAttributeParser = new CheckoutAttributeParser(_checkoutAttributeService);
 
@@ -159,15 +156,9 @@ namespace Nop.Services.Tests.Orders
 
             //_localizationService.Setup(ls=>ls.GetLocalized(It.IsAny<CheckoutAttribute>(), attribute => attribute.Name, It.IsAny<int?>(), true, true)).Returns()
 
-            _checkoutAttributeFormatter = new CheckoutAttributeFormatter(_workContext.Object,
-                _checkoutAttributeService,
-                _checkoutAttributeParser,
-                _currencyService.Object,
-                _localizationService,
-                _taxService.Object,
-                _priceFormatter.Object,
-                _downloadService.Object,
-                _webHelper.Object);
+            _checkoutAttributeFormatter = new CheckoutAttributeFormatter(_checkoutAttributeParser,
+                _checkoutAttributeService, _currencyService.Object, _downloadService.Object, _localizationService,
+                _priceFormatter.Object, _taxService.Object, _webHelper.Object, _workContext.Object);
         }
         
         [Test]

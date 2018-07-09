@@ -70,9 +70,20 @@ namespace Nop.Services.Tests.Tax
             _shippingSettings = new ShippingSettings();
             _addressSettings = new AddressSettings();
 
-            _taxService = new TaxService(_addressService.Object, _genericAttributeService.Object, _workContext, _storeContext.Object, _taxSettings,
-                pluginFinder, _geoLookupService.Object, _countryService.Object, _stateProvinceService.Object, _logger.Object, _webHelper.Object,
-                _customerSettings, _shippingSettings, _addressSettings);
+            _taxService = new TaxService(_addressSettings,
+                _customerSettings,
+                _addressService.Object,
+                _countryService.Object,
+                _genericAttributeService.Object,
+                _geoLookupService.Object,
+                _logger.Object,
+                pluginFinder,
+                _stateProvinceService.Object,
+                _storeContext.Object,
+                _webHelper.Object,
+                _workContext,
+                _shippingSettings,
+                _taxSettings);
         }
 
         [Test]

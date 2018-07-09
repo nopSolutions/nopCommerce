@@ -119,9 +119,10 @@ namespace Nop.Services.Tests.Directory
             _eventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
 
             _measureService = new MeasureService(cacheManager,
+                _eventPublisher.Object,
                 _measureDimensionRepository.Object,
                 _measureWeightRepository.Object,
-                _measureSettings, _eventPublisher.Object);
+                _measureSettings);
         }
 
         [Test]

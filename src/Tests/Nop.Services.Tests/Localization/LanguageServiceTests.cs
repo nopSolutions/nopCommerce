@@ -2,7 +2,6 @@
 using System.Linq;
 using Microsoft.Extensions.Caching.Memory;
 using Moq;
-using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Localization;
 using Nop.Services.Configuration;
@@ -57,8 +56,7 @@ namespace Nop.Services.Tests.Localization
             _eventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
 
             _localizationSettings = new LocalizationSettings();
-            _languageService = new LanguageService(cacheManager, _languageRepo.Object, _storeMappingService.Object,
-                _settingService.Object, _localizationSettings, _eventPublisher.Object);
+            _languageService = new LanguageService(_eventPublisher.Object, _languageRepo.Object,_settingService.Object, cacheManager, _storeMappingService.Object, _localizationSettings);
         }
 
         [Test]

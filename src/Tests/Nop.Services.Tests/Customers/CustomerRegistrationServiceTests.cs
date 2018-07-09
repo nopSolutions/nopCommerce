@@ -173,15 +173,40 @@ namespace Nop.Services.Tests.Customers
             _workflowMessageService = new Mock<IWorkflowMessageService>();
             _customerCustomerRoleMappingRepo = new Mock<IRepository<CustomerCustomerRoleMapping>>();
 
-            _customerService = new CustomerService(new NopNullCache(), _customerRepo.Object, _customerCustomerRoleMappingRepo.Object, _customerPasswordRepo.Object, _customerRoleRepo.Object,
-                _genericAttributeRepo.Object, _orderRepo.Object, _forumPostRepo.Object, _forumTopicRepo.Object,
-                null, null, null, null, null,
-                _genericAttributeService.Object, null, null, null, _eventPublisher.Object, _customerSettings, null);
+            _customerService = new CustomerService(new CommonSettings(), 
+                _customerSettings,
+                new NopNullCache(),
+                null,
+                null,
+                _eventPublisher.Object,
+                _genericAttributeService.Object,
+                null,
+                _customerRepo.Object,
+                _customerCustomerRoleMappingRepo.Object,
+                _customerPasswordRepo.Object,
+                _customerRoleRepo.Object,
+                _forumPostRepo.Object,
+                _forumTopicRepo.Object,
+                _genericAttributeRepo.Object,
+                null,
+                _orderRepo.Object,
+                null,
+                null,
+                null,
+                null);
 
-            _customerRegistrationService = new CustomerRegistrationService(_customerService,
-                _encryptionService, _newsLetterSubscriptionService.Object, _localizationService.Object,
-                _storeService.Object, _rewardPointService.Object, _workContext.Object, _genericAttributeService.Object,
-                _workflowMessageService.Object, _eventPublisher.Object, _rewardPointsSettings, _customerSettings);
+            _customerRegistrationService = new CustomerRegistrationService(_customerSettings,
+                _customerService,
+                _encryptionService,
+                _eventPublisher.Object,
+                _genericAttributeService.Object,
+                _localizationService.Object,
+                _newsLetterSubscriptionService.Object,
+                _rewardPointService.Object,
+                _storeService.Object,
+                _workContext.Object,
+                _workflowMessageService.Object,
+                _rewardPointsSettings);
         }
 
         //[Test]

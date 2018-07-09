@@ -13,7 +13,7 @@ namespace Nop.Services.Tests.Blogs
         private IBlogService _blogService;
 
         [SetUp]
-        public new void SetUp()
+        public void SetUp()
         {
             _blogService = new BlogService(new CatalogSettings(), null, null, null, null);
         }

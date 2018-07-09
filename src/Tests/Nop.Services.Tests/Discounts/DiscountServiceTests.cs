@@ -4,7 +4,6 @@ using System.Linq;
 using Microsoft.Extensions.Caching.Memory;
 using Moq;
 using Nop.Core;
-using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
@@ -89,9 +88,19 @@ namespace Nop.Services.Tests.Discounts
             _localizationService = new Mock<ILocalizationService>();
             _categoryService = new Mock<ICategoryService>();
 
-            _discountService = new DiscountService(cacheManager, _discountRepo.Object, _discountRequirementRepo.Object,
-                _discountUsageHistoryRepo.Object, _categoryRepo.Object, _manufacturerRepo.Object, _productRepo.Object, _storeContext.Object,
-                _customerService.Object, _localizationService.Object, _categoryService.Object, pluginFinder, _eventPublisher.Object);
+            _discountService = new DiscountService(_categoryService.Object,
+                _customerService.Object,
+                _eventPublisher.Object,
+                _localizationService.Object,
+                pluginFinder,
+                _categoryRepo.Object,
+                _discountRepo.Object,
+                _discountRequirementRepo.Object,
+                _discountUsageHistoryRepo.Object,
+                _manufacturerRepo.Object,
+                _productRepo.Object,
+                cacheManager,
+                _storeContext.Object);
         }
 
         [Test]
