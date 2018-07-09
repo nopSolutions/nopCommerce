@@ -33,6 +33,7 @@ using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Topics;
 using Nop.Core.Domain.Vendors;
 using Nop.Core.Infrastructure;
+using Nop.Data.Extensions;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Customers;
@@ -106,7 +107,6 @@ namespace Nop.Services.Installation
         private readonly IRepository<UrlRecord> _urlRecordRepository;
         private readonly IRepository<Vendor> _vendorRepository;
         private readonly IRepository<Warehouse> _warehouseRepository;
-        private readonly IUrlRecordService _urlRecordService;
         private readonly IWebHelper _webHelper;
 
         #endregion
@@ -169,7 +169,6 @@ namespace Nop.Services.Installation
             IRepository<UrlRecord> urlRecordRepository,
             IRepository<Vendor> vendorRepository,
             IRepository<Warehouse> warehouseRepository,
-            IUrlRecordService urlRecordService,
             IWebHelper webHelper)
         {
             this._genericAttributeService = genericAttributeService;
@@ -228,13 +227,45 @@ namespace Nop.Services.Installation
             this._urlRecordRepository = urlRecordRepository;
             this._vendorRepository = vendorRepository;
             this._warehouseRepository = warehouseRepository;
-            this._urlRecordService = urlRecordService;
             this._webHelper = webHelper;
         }
 
         #endregion
 
         #region Utilities
+
+        protected virtual string ValidateSeName<T>(T entity, string name) where T : BaseEntity
+        {
+            //simplified and very fast (no DB calls) version of "ValidateSeName" method of UrlRecordService
+            //we know that there's no same names of entities in sample data
+
+            if (entity == null)
+                throw new ArgumentNullException(nameof(entity));
+
+            var entityName = entity.GetUnproxiedEntityType().Name;
+            var entityId = entity.Id;
+            //validation
+            var okChars = "abcdefghijklmnopqrstuvwxyz1234567890 _-";
+            name = name.Trim().ToLowerInvariant();
+
+            var sb = new StringBuilder();
+            foreach (var c in name.ToCharArray())
+            {
+                var c2 = c.ToString();
+                if (okChars.Contains(c2))
+                {
+                    sb.Append(c2);
+                }
+            }
+            name = sb.ToString();
+            name = name.Replace(" ", "-");
+
+            //max length
+            name = CommonHelper.EnsureMaximumLength(name, NopSeoDefaults.SearchEngineNameLength);
+
+            return name;
+
+        }
 
         protected virtual string GetSamplesPath()
         {
@@ -5893,7 +5924,7 @@ namespace Nop.Services.Installation
                     EntityName = "Topic",
                     LanguageId = 0,
                     IsActive = true,
-                    Slug = _urlRecordService.ValidateSeName(topic, "", !string.IsNullOrEmpty(topic.Title) ? topic.Title : topic.SystemName, true)
+                    Slug = ValidateSeName(topic, !string.IsNullOrEmpty(topic.Title) ? topic.Title : topic.SystemName)
                 });
             }
         }
@@ -7072,7 +7103,7 @@ namespace Nop.Services.Installation
                     EntityName = "Category",
                     LanguageId = 0,
                     IsActive = true,
-                    Slug = _urlRecordService.ValidateSeName(category, "", category.Name, true)
+                    Slug = ValidateSeName(category, category.Name)
                 });
             }
         }
@@ -7145,7 +7176,7 @@ namespace Nop.Services.Installation
                     EntityName = "Manufacturer",
                     LanguageId = 0,
                     IsActive = true,
-                    Slug = _urlRecordService.ValidateSeName(manufacturer, "", manufacturer.Name, true)
+                    Slug = ValidateSeName(manufacturer, manufacturer.Name)
                 });
             }
         }
@@ -10203,7 +10234,7 @@ namespace Nop.Services.Installation
                     EntityName = "Product",
                     LanguageId = 0,
                     IsActive = true,
-                    Slug = _urlRecordService.ValidateSeName(product, "", product.Name, true)
+                    Slug = ValidateSeName(product, product.Name)
                 });
             }
 
@@ -10878,7 +10909,7 @@ namespace Nop.Services.Installation
                     EntityName = "BlogPost",
                     LanguageId = blogPost.LanguageId,
                     IsActive = true,
-                    Slug = _urlRecordService.ValidateSeName(blogPost, "", blogPost.Title, true)
+                    Slug = ValidateSeName(blogPost, blogPost.Title)
                 });
             }
 
@@ -10955,7 +10986,7 @@ namespace Nop.Services.Installation
                     EntityName = "NewsItem",
                     LanguageId = newsItem.LanguageId,
                     IsActive = true,
-                    Slug = _urlRecordService.ValidateSeName(newsItem, "", newsItem.Title, true)
+                    Slug = ValidateSeName(newsItem, newsItem.Title)
                 });
             }
 
@@ -12175,7 +12206,7 @@ namespace Nop.Services.Installation
                     EntityName = "Vendor",
                     LanguageId = 0,
                     IsActive = true,
-                    Slug = _urlRecordService.ValidateSeName(vendor, "", vendor.Name, true)
+                    Slug = ValidateSeName(vendor, vendor.Name)
                 });
             }
         }
@@ -12226,7 +12257,7 @@ namespace Nop.Services.Installation
                 EntityName = "ProductTag",
                 LanguageId = 0,
                 IsActive = true,
-                Slug = _urlRecordService.ValidateSeName(productTag, "", productTag.Name, true)
+                Slug = ValidateSeName(productTag, productTag.Name)
             });
         }
 
