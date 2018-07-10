@@ -31,6 +31,8 @@
                 <i class="fa fa-floppy-o"></i>
                 @T("Admin.Common.SaveContinue")
             </button>
+            <nop-action-confirmation asp-button-id="shipment-save" asp-action="AddShipment" asp-additional-confirm='@T("Admin.Orders.Shipments.Products.Warehouse.QuantityNotEnough")' />
+            <nop-action-confirmation asp-button-id="shipment-save-continue" asp-additional-confirm='@T("Admin.Orders.Shipments.Products.Warehouse.QuantityNotEnough")'/>
             @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.OrderShipmentAddButtons })
         </div>
     </div>
@@ -62,15 +64,15 @@
                     {
                         <script>
                             $(document).ready(function() {
-                                $('#shipment-save').click(function() {
-                                    return validateWarehouseAvailability();
+                                $("#shipment-save-action-confirmation-submit-button").bind("click", function () {
+                                    return validateWarehouseAvailability("save");
                                 });
-                                $('#shipment-save-continue').click(function() {
-                                    return validateWarehouseAvailability();
+                                $("#shipment-save-continue-action-confirmation-submit-button").bind("click", function () {
+                                    return validateWarehouseAvailability("continue");
                                 });
                             });
 
-                            function validateWarehouseAvailability() {
+                            function validateWarehouseAvailability(saveOrContinue) {
                                 @{
                                     var sb = new StringBuilder();
                                     for (var i = 0; i <= itemsFromMultipleWarehouses.Count - 1; i++)
@@ -85,7 +87,12 @@
                                 }
                                 var valid = @(Html.Raw(sb.ToString()));
                                 if (!valid) {
-                                    return confirm('@T("Admin.Orders.Shipments.Products.Warehouse.QuantityNotEnough")');
+                                    if (saveOrContinue === "save") {
+                                        $('#shipment-save-action-confirmation').modal('toggle');
+                                    }
+                                    if (saveOrContinue === "continue") {
+                                        $('#shipment-save-continue-action-confirmation').modal('toggle');
+                                    }
                                 }
                                 return true;
                             }
