@@ -19,10 +19,6 @@ namespace Nop.Services.Security
 
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="securitySettings">Security settings</param>
         public EncryptionService(SecuritySettings securitySettings)
         {
             this._securitySettings = securitySettings;
@@ -32,10 +28,12 @@ namespace Nop.Services.Security
 
         #region Utilities
 
-        private byte[] EncryptTextToMemory(string data, byte[] key, byte[] iv) 
+        private byte[] EncryptTextToMemory(string data, byte[] key, byte[] iv)
         {
-            using (var ms = new MemoryStream()) {
-                using (var cs = new CryptoStream(ms, new TripleDESCryptoServiceProvider().CreateEncryptor(key, iv), CryptoStreamMode.Write)) {
+            using (var ms = new MemoryStream())
+            {
+                using (var cs = new CryptoStream(ms, new TripleDESCryptoServiceProvider().CreateEncryptor(key, iv), CryptoStreamMode.Write))
+                {
                     var toEncrypt = Encoding.Unicode.GetBytes(data);
                     cs.Write(toEncrypt, 0, toEncrypt.Length);
                     cs.FlushFinalBlock();
@@ -45,9 +43,10 @@ namespace Nop.Services.Security
             }
         }
 
-        private string DecryptTextFromMemory(byte[] data, byte[] key, byte[] iv) 
+        private string DecryptTextFromMemory(byte[] data, byte[] key, byte[] iv)
         {
-            using (var ms = new MemoryStream(data)) {
+            using (var ms = new MemoryStream(data))
+            {
                 using (var cs = new CryptoStream(ms, new TripleDESCryptoServiceProvider().CreateDecryptor(key, iv), CryptoStreamMode.Read))
                 {
                     using (var sr = new StreamReader(cs, Encoding.Unicode))
@@ -102,7 +101,7 @@ namespace Nop.Services.Security
         {
             if (string.IsNullOrEmpty(hashAlgorithm))
                 throw new ArgumentNullException(nameof(hashAlgorithm));
-            
+
             var algorithm = (HashAlgorithm)CryptoConfig.CreateFromName(hashAlgorithm);
             if (algorithm == null)
                 throw new ArgumentException("Unrecognized hash name");

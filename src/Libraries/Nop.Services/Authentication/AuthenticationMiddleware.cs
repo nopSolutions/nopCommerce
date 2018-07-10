@@ -19,11 +19,6 @@ namespace Nop.Services.Authentication
 
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="schemes">Schemes</param>
-        /// <param name="next">Next</param>
         public AuthenticationMiddleware(IAuthenticationSchemeProvider schemes, RequestDelegate next)
         {
             Schemes = schemes ?? throw new ArgumentNullException(nameof(schemes));

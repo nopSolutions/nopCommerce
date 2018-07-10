@@ -1,4 +1,5 @@
 using System;
+using Microsoft.AspNetCore.Http;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
 
@@ -54,5 +55,12 @@ namespace Nop.Services.Media
         /// <param name="orderItem">Order item to check</param>
         /// <returns>True if license download is allowed; otherwise, false.</returns>
         bool IsLicenseDownloadAllowed(OrderItem orderItem);
+
+        /// <summary>
+        /// Gets the download binary array
+        /// </summary>
+        /// <param name="file">File</param>
+        /// <returns>Download binary array</returns>
+        byte[] GetDownloadBits(IFormFile file);
     }
 }

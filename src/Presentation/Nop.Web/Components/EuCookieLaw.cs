@@ -10,17 +10,20 @@ namespace Nop.Web.Components
 {
     public class EuCookieLawViewComponent : NopViewComponent
     {
-        private readonly StoreInformationSettings _storeInformationSettings;
-        private readonly IWorkContext _workContext;
+        private readonly IGenericAttributeService _genericAttributeService;
         private readonly IStoreContext _storeContext;
+        private readonly IWorkContext _workContext;
+        private readonly StoreInformationSettings _storeInformationSettings;
 
-        public EuCookieLawViewComponent(StoreInformationSettings storeInformationSettings,
+        public EuCookieLawViewComponent(IGenericAttributeService genericAttributeService,
+            IStoreContext storeContext,
             IWorkContext workContext,
-            IStoreContext storeContext)
+            StoreInformationSettings storeInformationSettings)
         {
-            this._storeInformationSettings = storeInformationSettings;
-            this._workContext = workContext;
+            this._genericAttributeService = genericAttributeService;
             this._storeContext = storeContext;
+            this._workContext = workContext;
+            this._storeInformationSettings = storeInformationSettings;
         }
 
         public IViewComponentResult Invoke()
@@ -33,7 +36,7 @@ namespace Nop.Web.Components
             if (_workContext.CurrentCustomer.IsSearchEngineAccount())
                 return Content("");
 
-            if (_workContext.CurrentCustomer.GetAttribute<bool>(NopCustomerDefaults.EuCookieLawAcceptedAttribute, _storeContext.CurrentStore.Id))
+            if (_genericAttributeService.GetAttribute<bool>(_workContext.CurrentCustomer, NopCustomerDefaults.EuCookieLawAcceptedAttribute, _storeContext.CurrentStore.Id))
                 //already accepted
                 return Content("");
 

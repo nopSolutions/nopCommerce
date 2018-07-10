@@ -11,26 +11,26 @@ namespace Nop.Web.Controllers
 {
     public partial class NewsletterController : BasePublicController
     {
-        private readonly INewsletterModelFactory _newsletterModelFactory;
         private readonly ILocalizationService _localizationService;
-        private readonly IWorkContext _workContext;
+        private readonly INewsletterModelFactory _newsletterModelFactory;
         private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
-        private readonly IWorkflowMessageService _workflowMessageService;
         private readonly IStoreContext _storeContext;
+        private readonly IWorkContext _workContext;
+        private readonly IWorkflowMessageService _workflowMessageService;
 
-        public NewsletterController(INewsletterModelFactory newsletterModelFactory,
-            ILocalizationService localizationService,
-            IWorkContext workContext,
+        public NewsletterController(ILocalizationService localizationService,
+            INewsletterModelFactory newsletterModelFactory,
             INewsLetterSubscriptionService newsLetterSubscriptionService,
-            IWorkflowMessageService workflowMessageService,
-            IStoreContext storeContext)
+            IStoreContext storeContext,
+            IWorkContext workContext,
+            IWorkflowMessageService workflowMessageService)
         {
-            this._newsletterModelFactory = newsletterModelFactory;
             this._localizationService = localizationService;
-            this._workContext = workContext;
+            this._newsletterModelFactory = newsletterModelFactory;
             this._newsLetterSubscriptionService = newsLetterSubscriptionService;
-            this._workflowMessageService = workflowMessageService;
             this._storeContext = storeContext;
+            this._workContext = workContext;
+            this._workflowMessageService = workflowMessageService;
         }
 
         //available even when a store is closed

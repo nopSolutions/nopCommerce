@@ -10,14 +10,17 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder.Components
     public class CheckMoneyOrderViewComponent : NopViewComponent
     {
         private readonly CheckMoneyOrderPaymentSettings _checkMoneyOrderPaymentSettings;
+        private readonly ILocalizationService _localizationService;
         private readonly IStoreContext _storeContext;
         private readonly IWorkContext _workContext;
 
         public CheckMoneyOrderViewComponent(CheckMoneyOrderPaymentSettings checkMoneyOrderPaymentSettings,
+            ILocalizationService localizationService,
             IStoreContext storeContext,
             IWorkContext workContext)
         {
             this._checkMoneyOrderPaymentSettings = checkMoneyOrderPaymentSettings;
+            this._localizationService = localizationService;
             this._storeContext = storeContext;
             this._workContext = workContext;
         }
@@ -26,8 +29,8 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder.Components
         {
             var model = new PaymentInfoModel
             {
-                DescriptionText = _checkMoneyOrderPaymentSettings.GetLocalizedSetting(x => x.DescriptionText,
-                    _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id)
+                DescriptionText = _localizationService.GetLocalizedSetting(_checkMoneyOrderPaymentSettings,
+                    x => x.DescriptionText, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id)
             };
 
             return View("~/Plugins/Payments.CheckMoneyOrder/Views/PaymentInfo.cshtml", model);

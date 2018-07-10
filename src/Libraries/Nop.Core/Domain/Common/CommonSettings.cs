@@ -8,9 +8,6 @@ namespace Nop.Core.Domain.Common
     /// </summary>
     public class CommonSettings : ISettings
     {
-        /// <summary>
-        /// Ctor
-        /// </summary>
         public CommonSettings()
         {
             SitemapCustomUrls = new List<string>();
@@ -116,5 +113,10 @@ namespace Nop.Core.Domain.Common
         /// Gets or sets a value indicating whether "accept terms of service" links should be open in popup window. If disabled, then they'll be open on a new page.
         /// </summary>
         public bool PopupForTermsOfServiceLinks { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether jQuery migrate script logging is active
+        /// </summary>
+        public bool JqueryMigrateScriptLoggingActive { get; set; }
     }
 }

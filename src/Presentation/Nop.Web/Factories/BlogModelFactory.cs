@@ -25,43 +25,51 @@ namespace Nop.Web.Factories
     {
         #region Fields
 
-        private readonly IBlogService _blogService;
-        private readonly IWorkContext _workContext;
-        private readonly IStoreContext _storeContext;
-        private readonly IPictureService _pictureService;
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly IStaticCacheManager _cacheManager;
-
-        private readonly MediaSettings _mediaSettings;
         private readonly BlogSettings _blogSettings;
-        private readonly CustomerSettings _customerSettings;
         private readonly CaptchaSettings _captchaSettings;
+        private readonly CustomerSettings _customerSettings;
+        private readonly IBlogService _blogService;
+        private readonly ICustomerService _customerService;
+        private readonly IDateTimeHelper _dateTimeHelper;
+        private readonly IGenericAttributeService _genericAttributeService;
+        private readonly IPictureService _pictureService;
+        private readonly IStaticCacheManager _cacheManager;
+        private readonly IStoreContext _storeContext;
+        private readonly IUrlRecordService _urlRecordService;
+        private readonly IWorkContext _workContext;
+        private readonly MediaSettings _mediaSettings;
 
         #endregion
 
         #region Ctor
 
-        public BlogModelFactory(IBlogService blogService,
-            IWorkContext workContext,
-            IStoreContext storeContext,
-            IPictureService pictureService,
-            IDateTimeHelper dateTimeHelper,
-            IStaticCacheManager cacheManager,
-            MediaSettings mediaSettings,
-            BlogSettings blogSettings,
+        public BlogModelFactory(BlogSettings blogSettings,
+            CaptchaSettings captchaSettings,
             CustomerSettings customerSettings,
-            CaptchaSettings captchaSettings)
+            IBlogService blogService,
+            ICustomerService customerService,
+            IDateTimeHelper dateTimeHelper,
+            IGenericAttributeService genericAttributeService,
+            IPictureService pictureService,
+            IStaticCacheManager cacheManager,
+            IStoreContext storeContext,
+            IUrlRecordService urlRecordService,
+            IWorkContext workContext,
+            MediaSettings mediaSettings)
         {
-            this._blogService = blogService;
-            this._workContext = workContext;
-            this._storeContext = storeContext;
-            this._pictureService = pictureService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._cacheManager = cacheManager;
-            this._mediaSettings = mediaSettings;
             this._blogSettings = blogSettings;
-            this._customerSettings = customerSettings;
             this._captchaSettings = captchaSettings;
+            this._customerSettings = customerSettings;
+            this._blogService = blogService;
+            this._customerService = customerService;
+            this._dateTimeHelper = dateTimeHelper;
+            this._genericAttributeService = genericAttributeService;
+            this._pictureService = pictureService;
+            this._cacheManager = cacheManager;
+            this._storeContext = storeContext;
+            this._urlRecordService = urlRecordService;
+            this._workContext = workContext;
+            this._mediaSettings = mediaSettings;
         }
 
         #endregion
@@ -82,7 +90,7 @@ namespace Nop.Web.Factories
             {
                 Id = blogComment.Id,
                 CustomerId = blogComment.CustomerId,
-                CustomerName = blogComment.Customer.FormatUserName(),
+                CustomerName = _customerService.FormatUserName(blogComment.Customer),
                 CommentText = blogComment.CommentText,
                 CreatedOn = _dateTimeHelper.ConvertToUserTime(blogComment.CreatedOnUtc, DateTimeKind.Utc),
                 AllowViewingProfiles = _customerSettings.AllowViewingProfiles && blogComment.Customer != null && !blogComment.Customer.IsGuest()
@@ -90,10 +98,8 @@ namespace Nop.Web.Factories
             if (_customerSettings.AllowCustomersToUploadAvatars)
             {
                 model.CustomerAvatarUrl = _pictureService.GetPictureUrl(
-                    blogComment.Customer.GetAttribute<int>(NopCustomerDefaults.AvatarPictureIdAttribute),
-                    _mediaSettings.AvatarPictureSize,
-                    _customerSettings.DefaultAvatarEnabled,
-                    defaultPictureType: PictureType.Avatar);
+                    _genericAttributeService.GetAttribute<int>(blogComment.Customer, NopCustomerDefaults.AvatarPictureIdAttribute),
+                    _mediaSettings.AvatarPictureSize, _customerSettings.DefaultAvatarEnabled, defaultPictureType: PictureType.Avatar);
             }
 
             return model;
@@ -117,13 +123,13 @@ namespace Nop.Web.Factories
             model.MetaTitle = blogPost.MetaTitle;
             model.MetaDescription = blogPost.MetaDescription;
             model.MetaKeywords = blogPost.MetaKeywords;
-            model.SeName = blogPost.GetSeName(blogPost.LanguageId, ensureTwoPublishedLanguages: false);
+            model.SeName = _urlRecordService.GetSeName(blogPost, blogPost.LanguageId, ensureTwoPublishedLanguages: false);
             model.Title = blogPost.Title;
             model.Body = blogPost.Body;
             model.BodyOverview = blogPost.BodyOverview;
             model.AllowComments = blogPost.AllowComments;
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(blogPost.StartDateUtc ?? blogPost.CreatedOnUtc, DateTimeKind.Utc);
-            model.Tags = blogPost.ParseTags().ToList();
+            model.Tags = _blogService.ParseTags(blogPost);
             model.AddNewComment.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnBlogCommentPage;
 
             //number of blog comments
@@ -245,7 +251,8 @@ namespace Nop.Web.Factories
                     var first = blogPost.StartDateUtc ?? blogPost.CreatedOnUtc;
                     while (DateTime.SpecifyKind(first, DateTimeKind.Utc) <= DateTime.UtcNow.AddMonths(1))
                     {
-                        var list = blogPosts.GetPostsByDate(new DateTime(first.Year, first.Month, 1), new DateTime(first.Year, first.Month, 1).AddMonths(1).AddSeconds(-1));
+                        var list = _blogService.GetPostsByDate(blogPosts, new DateTime(first.Year, first.Month, 1),
+                            new DateTime(first.Year, first.Month, 1).AddMonths(1).AddSeconds(-1));
                         if (list.Any())
                         {
                             var date = new DateTime(first.Year, first.Month, 1);

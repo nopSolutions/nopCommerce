@@ -1,19 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.Extensions.Caching.Memory;
 using Moq;
 using Nop.Core;
 using Nop.Core.Caching;
+using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Discounts;
+using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Stores;
 using Nop.Core.Infrastructure;
+using Nop.Data;
 using Nop.Services.Catalog;
+using Nop.Services.Directory;
 using Nop.Services.Discounts;
+using Nop.Services.Events;
+using Nop.Services.Localization;
+using Nop.Services.Messages;
+using Nop.Services.Security;
+using Nop.Services.Shipping.Date;
+using Nop.Services.Stores;
 using Nop.Tests;
 using NUnit.Framework;
-
 
 namespace Nop.Services.Tests.Catalog
 {
@@ -21,52 +34,48 @@ namespace Nop.Services.Tests.Catalog
     public class PriceCalculationServiceTests : ServiceTest
     {
         private Mock<IStoreContext> _storeContext;
-        private Mock<IDiscountService> _discountService;
+        private IDiscountService _discountService;
         private Mock<ICategoryService> _categoryService;
         private Mock<IManufacturerService> _manufacturerService;
         private Mock<IProductAttributeParser> _productAttributeParser;
-        private Mock<IProductService> _productService;
+        private IProductService _productService;
         private IPriceCalculationService _priceCalcService;
         private ShoppingCartSettings _shoppingCartSettings;
         private CatalogSettings _catalogSettings;
         private IStaticCacheManager _cacheManager;
-
+        private Mock<IWorkContext> _workContext;
         private Store _store;
+        private TestServiceProvider _serviceProvider;
 
         [SetUp]
         public new void SetUp()
         {
-            var serviceProvider = new TestServiceProvider();
+            _serviceProvider = new TestServiceProvider();
             _store = new Store { Id = 1 };
             _storeContext = new Mock<IStoreContext>();
             _storeContext.Setup(x => x.CurrentStore).Returns(_store);
-
-            _discountService = new Mock<IDiscountService>();
+            
             _categoryService = new Mock<ICategoryService>();
             _manufacturerService = new Mock<IManufacturerService>();
-            _productService = new Mock<IProductService>();
-
+            _productService = TestProductService.Init();
+            
             _productAttributeParser = new Mock<IProductAttributeParser>();
 
             _shoppingCartSettings = new ShoppingCartSettings();
             _catalogSettings = new CatalogSettings();
 
-            _cacheManager = new NopNullCache();
+            _cacheManager = new MemoryCacheManager(new Mock<IMemoryCache>().Object);
+            _workContext = new Mock<IWorkContext>();
 
-            _priceCalcService = new PriceCalculationService(_catalogSettings,
-                _categoryService.Object,
-                _discountService.Object,
-                _manufacturerService.Object,
-                _productAttributeParser.Object,
-                _productService.Object,
-                _cacheManager,
-                _storeContext.Object,
-                serviceProvider.WorkContext.Object,
-                _shoppingCartSettings);
+            _discountService = TestDiscountService.Init();
+
+            _priceCalcService = new PriceCalculationService(_catalogSettings, new CurrencySettings{ PrimaryStoreCurrencyId = 1 }, _categoryService.Object,
+                _serviceProvider.CurrencyService.Object, _discountService, _manufacturerService.Object, _productAttributeParser.Object,
+                _productService, _cacheManager, _storeContext.Object, _workContext.Object, _shoppingCartSettings);
 
             var nopEngine = new Mock<NopEngine>();
 
-            nopEngine.Setup(x => x.ServiceProvider).Returns(serviceProvider);
+            nopEngine.Setup(x => x.ServiceProvider).Returns(_serviceProvider);
             EngineContext.Replace(nopEngine.Object);
         }
 
@@ -264,10 +273,7 @@ namespace Nop.Services.Tests.Catalog
             product.AddAppliedDiscounts(discount1);
             //set HasDiscountsApplied property
             product.HasDiscountsApplied = true;
-            _discountService.Setup(ds => ds.ValidateDiscount(discount1, customer)).Returns(new DiscountValidationResult {IsValid = true});
-            _discountService.Setup(ds => ds.GetAllDiscountsForCaching(DiscountType.AssignedToCategories, null, null, false)).Returns(new List<DiscountForCaching>());
-            _discountService.Setup(ds => ds.GetAllDiscountsForCaching(DiscountType.AssignedToManufacturers, null, null, false)).Returns(new List<DiscountForCaching>());
-
+           
             _priceCalcService.GetFinalPrice(product, customer).ShouldEqual(9.34M);
         }
 
@@ -295,11 +301,7 @@ namespace Nop.Services.Tests.Catalog
                 Quantity = 2
             };
 
-            _discountService.Setup(ds => ds.GetAllDiscountsForCaching(DiscountType.AssignedToCategories, null, null, false)).Returns(new List<DiscountForCaching>());
-            _discountService.Setup(ds => ds.GetAllDiscountsForCaching(DiscountType.AssignedToManufacturers, null, null, false)).Returns(new List<DiscountForCaching>());
-
             _priceCalcService.GetUnitPrice(sci1).ShouldEqual(12.34);
-
         }
 
         [Test]
@@ -326,11 +328,7 @@ namespace Nop.Services.Tests.Catalog
                 Quantity = 2
             };
 
-            _discountService.Setup(ds => ds.GetAllDiscountsForCaching(DiscountType.AssignedToCategories, null, null, false)).Returns(new List<DiscountForCaching>());
-            _discountService.Setup(ds => ds.GetAllDiscountsForCaching(DiscountType.AssignedToManufacturers, null, null, false)).Returns(new List<DiscountForCaching>());
-
             _priceCalcService.GetSubTotal(sci1).ShouldEqual(24.68);
-
         }
 
         [Test]
@@ -369,6 +367,47 @@ namespace Nop.Services.Tests.Catalog
             resultPrice.ShouldEqual(expectedPrice);
         }
 
+        [TestCase(12.366, 12.37, RoundingType.Rounding001)]
+        [TestCase(12.363, 12.36, RoundingType.Rounding001)]
+        [TestCase(12.000, 12.00, RoundingType.Rounding001)]
+        [TestCase(12.001, 12.00, RoundingType.Rounding001)]
+        [TestCase(12.34, 12.35, RoundingType.Rounding005Up)]
+        [TestCase(12.36, 12.40, RoundingType.Rounding005Up)]
+        [TestCase(12.35, 12.35, RoundingType.Rounding005Up)]
+        [TestCase(12.00, 12.00, RoundingType.Rounding005Up)]
+        [TestCase(12.05, 12.05, RoundingType.Rounding005Up)]
+        [TestCase(12.20, 12.20, RoundingType.Rounding005Up)]
+        [TestCase(12.001, 12.00, RoundingType.Rounding005Up)]
+        [TestCase(12.34, 12.30, RoundingType.Rounding005Down)]
+        [TestCase(12.36, 12.35, RoundingType.Rounding005Down)]
+        [TestCase(12.00, 12.00, RoundingType.Rounding005Down)]
+        [TestCase(12.05, 12.05, RoundingType.Rounding005Down)]
+        [TestCase(12.20, 12.20, RoundingType.Rounding005Down)]
+        [TestCase(12.35, 12.40, RoundingType.Rounding01Up)]
+        [TestCase(12.36, 12.40, RoundingType.Rounding01Up)]
+        [TestCase(12.00, 12.00, RoundingType.Rounding01Up)]
+        [TestCase(12.10, 12.10, RoundingType.Rounding01Up)]
+        [TestCase(12.35, 12.30, RoundingType.Rounding01Down)]
+        [TestCase(12.36, 12.40, RoundingType.Rounding01Down)]
+        [TestCase(12.00, 12.00, RoundingType.Rounding01Down)]
+        [TestCase(12.10, 12.10, RoundingType.Rounding01Down)]
+        [TestCase(12.24, 12.00, RoundingType.Rounding05)]
+        [TestCase(12.49, 12.50, RoundingType.Rounding05)]
+        [TestCase(12.74, 12.50, RoundingType.Rounding05)]
+        [TestCase(12.99, 13.00, RoundingType.Rounding05)]
+        [TestCase(12.00, 12.00, RoundingType.Rounding05)]
+        [TestCase(12.50, 12.50, RoundingType.Rounding05)]
+        [TestCase(12.49, 12.00, RoundingType.Rounding1)]
+        [TestCase(12.50, 13.00, RoundingType.Rounding1)]
+        [TestCase(12.00, 12.00, RoundingType.Rounding1)]
+        [TestCase(12.01, 13.00, RoundingType.Rounding1Up)]
+        [TestCase(12.99, 13.00, RoundingType.Rounding1Up)]
+        [TestCase(12.00, 12.00, RoundingType.Rounding1Up)]
+        public void can_round(decimal valueToRoundig, decimal roundedValue, RoundingType roundingType)
+        {
+            _priceCalcService.Round(valueToRoundig, roundingType).ShouldEqual(roundedValue);
+        }
+
         private ShoppingCartItem CreateTestShopCartItem(decimal productPrice, int quantity = 1)
         {
             //customer
@@ -393,9 +432,6 @@ namespace Nop.Services.Tests.Catalog
                 Quantity = quantity
             };
 
-            _discountService.Setup(ds => ds.GetAllDiscountsForCaching(DiscountType.AssignedToCategories, null, null, false)).Returns(new List<DiscountForCaching>());
-            _discountService.Setup(ds => ds.GetAllDiscountsForCaching(DiscountType.AssignedToManufacturers, null, null, false)).Returns(new List<DiscountForCaching>());
-
             return shoppingCartItem;
         }
 
@@ -404,6 +440,7 @@ namespace Nop.Services.Tests.Catalog
             public TestProduct()
             {
                 _discountProductMappings = new List<DiscountProductMapping>();
+                _tierPrices = new List<TierPrice>();
             }
 
             public void AddAppliedDiscounts(Discount discount)
@@ -415,6 +452,20 @@ namespace Nop.Services.Tests.Catalog
                     Id=1,
                     Product = this
                 });
+            }
+        }
+
+        class TestProductService:ProductService
+        {
+            public TestProductService(CatalogSettings catalogSettings, CommonSettings commonSettings, IAclService aclService, ICacheManager cacheManager, ICurrencyService currencyService, IDataProvider dataProvider, IDateRangeService dateRangeService, IDbContext dbContext, IEventPublisher eventPublisher, ILanguageService languageService, ILocalizationService localizationService, IMeasureService measureService, IProductAttributeParser productAttributeParser, IProductAttributeService productAttributeService, IRepository<AclRecord> aclRepository, IRepository<CrossSellProduct> crossSellProductRepository, IRepository<Product> productRepository, IRepository<ProductPicture> productPictureRepository, IRepository<ProductReview> productReviewRepository, IRepository<ProductWarehouseInventory> productWarehouseInventoryRepository, IRepository<RelatedProduct> relatedProductRepository, IRepository<StockQuantityHistory> stockQuantityHistoryRepository, IRepository<StoreMapping> storeMappingRepository, IRepository<TierPrice> tierPriceRepository, IStoreMappingService storeMappingService, IWorkContext workContext, IWorkflowMessageService workflowMessageService, LocalizationSettings localizationSettings) : base(catalogSettings, commonSettings, aclService, cacheManager, currencyService, dataProvider, dateRangeService, dbContext, eventPublisher, languageService, localizationService, measureService, productAttributeParser, productAttributeService, aclRepository, crossSellProductRepository, productRepository, productPictureRepository, productReviewRepository, productWarehouseInventoryRepository, relatedProductRepository, stockQuantityHistoryRepository, storeMappingRepository, tierPriceRepository, storeMappingService, workContext, workflowMessageService, localizationSettings)
+            {
+            }
+
+            public static TestProductService Init()
+            {
+                return new TestProductService(new CatalogSettings(), new CommonSettings(), null,
+                    null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,
+                    null, null, null, null, null, null, null, null, new LocalizationSettings());
             }
         }
     }

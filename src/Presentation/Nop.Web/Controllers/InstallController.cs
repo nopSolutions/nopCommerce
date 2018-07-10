@@ -26,20 +26,20 @@ namespace Nop.Web.Controllers
         #region Fields
 
         private readonly IInstallationLocalizationService _locService;
-        private readonly NopConfig _config;
         private readonly INopFileProvider _fileProvider;
+        private readonly NopConfig _config;
 
         #endregion
 
         #region Ctor
 
         public InstallController(IInstallationLocalizationService locService, 
-            NopConfig config,
-            INopFileProvider fileProvider)
+            INopFileProvider fileProvider,
+            NopConfig config)
         {
             this._locService = locService;
-            this._config = config;
             this._fileProvider = fileProvider;
+            this._config = config;
         }
         
         #endregion

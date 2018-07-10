@@ -24,44 +24,51 @@ namespace Nop.Web.Factories
     {
         #region Fields
 
-        private readonly INewsService _newsService;
-        private readonly IWorkContext _workContext;
-        private readonly IStoreContext _storeContext;
-        private readonly IPictureService _pictureService;
+        private readonly CaptchaSettings _captchaSettings;
+        private readonly CustomerSettings _customerSettings;
+        private readonly ICustomerService _customerService;
         private readonly IDateTimeHelper _dateTimeHelper;
+        private readonly IGenericAttributeService _genericAttributeService;
+        private readonly INewsService _newsService;
+        private readonly IPictureService _pictureService;
         private readonly IStaticCacheManager _cacheManager;
-
+        private readonly IStoreContext _storeContext;
+        private readonly IUrlRecordService _urlRecordService;
+        private readonly IWorkContext _workContext;
         private readonly MediaSettings _mediaSettings;
         private readonly NewsSettings _newsSettings;
-        private readonly CustomerSettings _customerSettings;
-        private readonly CaptchaSettings _captchaSettings;
 
         #endregion
 
         #region Ctor
 
-        public NewsModelFactory(INewsService newsService,
-            IWorkContext workContext, 
-            IStoreContext storeContext,
-            IPictureService pictureService, 
-            IDateTimeHelper dateTimeHelper,
-            IStaticCacheManager cacheManager,
-            MediaSettings mediaSettings, 
-            NewsSettings newsSettings,
+        public NewsModelFactory(CaptchaSettings captchaSettings,
             CustomerSettings customerSettings,
-            CaptchaSettings captchaSettings)
+            ICustomerService customerService,
+            IDateTimeHelper dateTimeHelper,
+            IGenericAttributeService genericAttributeService,
+            INewsService newsService,
+            IPictureService pictureService,
+            IStaticCacheManager cacheManager,
+            IStoreContext storeContext,
+            IUrlRecordService urlRecordService,
+            IWorkContext workContext,
+            MediaSettings mediaSettings,
+            NewsSettings newsSettings)
         {
-            this._newsService = newsService;
-            this._workContext = workContext;
-            this._storeContext = storeContext;
-            this._pictureService = pictureService;
+            this._captchaSettings = captchaSettings;
+            this._customerSettings = customerSettings;
+            this._customerService = customerService;
             this._dateTimeHelper = dateTimeHelper;
+            this._genericAttributeService = genericAttributeService;
+            this._newsService = newsService;
+            this._pictureService = pictureService;
             this._cacheManager = cacheManager;
-
+            this._storeContext = storeContext;
+            this._urlRecordService = urlRecordService;
+            this._workContext = workContext;
             this._mediaSettings = mediaSettings;
             this._newsSettings = newsSettings;
-            this._customerSettings = customerSettings;
-            this._captchaSettings = captchaSettings;
         }
 
         #endregion
@@ -82,7 +89,7 @@ namespace Nop.Web.Factories
             {
                 Id = newsComment.Id,
                 CustomerId = newsComment.CustomerId,
-                CustomerName = newsComment.Customer.FormatUserName(),
+                CustomerName = _customerService.FormatUserName(newsComment.Customer),
                 CommentTitle = newsComment.CommentTitle,
                 CommentText = newsComment.CommentText,
                 CreatedOn = _dateTimeHelper.ConvertToUserTime(newsComment.CreatedOnUtc, DateTimeKind.Utc),
@@ -91,10 +98,8 @@ namespace Nop.Web.Factories
             if (_customerSettings.AllowCustomersToUploadAvatars)
             {
                 model.CustomerAvatarUrl = _pictureService.GetPictureUrl(
-                    newsComment.Customer.GetAttribute<int>(NopCustomerDefaults.AvatarPictureIdAttribute),
-                    _mediaSettings.AvatarPictureSize,
-                    _customerSettings.DefaultAvatarEnabled,
-                    defaultPictureType: PictureType.Avatar);
+                    _genericAttributeService.GetAttribute<int>(newsComment.Customer, NopCustomerDefaults.AvatarPictureIdAttribute),
+                    _mediaSettings.AvatarPictureSize, _customerSettings.DefaultAvatarEnabled, defaultPictureType: PictureType.Avatar);
             }
 
             return model;
@@ -119,7 +124,7 @@ namespace Nop.Web.Factories
             model.MetaTitle = newsItem.MetaTitle;
             model.MetaDescription = newsItem.MetaDescription;
             model.MetaKeywords = newsItem.MetaKeywords;
-            model.SeName = newsItem.GetSeName(newsItem.LanguageId, ensureTwoPublishedLanguages: false);
+            model.SeName = _urlRecordService.GetSeName(newsItem, newsItem.LanguageId, ensureTwoPublishedLanguages: false);
             model.Title = newsItem.Title;
             model.Short = newsItem.Short;
             model.Full = newsItem.Full;

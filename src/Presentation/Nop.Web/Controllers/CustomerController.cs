@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Net;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
@@ -14,7 +13,6 @@ using Nop.Core.Domain.Gdpr;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Messages;
-using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Tax;
 using Nop.Services.Authentication;
@@ -49,133 +47,135 @@ namespace Nop.Web.Controllers
     {
         #region Fields
 
-        private readonly IAddressModelFactory _addressModelFactory;
-        private readonly ICustomerModelFactory _customerModelFactory;
-        private readonly IAuthenticationService _authenticationService;
-        private readonly DateTimeSettings _dateTimeSettings;
-        private readonly TaxSettings _taxSettings;
-        private readonly ILocalizationService _localizationService;
-        private readonly IWorkContext _workContext;
-        private readonly IStoreContext _storeContext;
-        private readonly ICurrencyService _currencyService;        
-        private readonly ICustomerService _customerService;
-        private readonly IGiftCardService _giftCardService;
-        private readonly IPriceFormatter _priceFormatter;
-        private readonly ICustomerAttributeParser _customerAttributeParser;
-        private readonly ICustomerAttributeService _customerAttributeService;
-        private readonly IExportManager _exportManager;
-        private readonly IGdprService _gdprService;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly ICustomerRegistrationService _customerRegistrationService;
-        private readonly ITaxService _taxService;
-        private readonly CustomerSettings _customerSettings;
         private readonly AddressSettings _addressSettings;
+        private readonly CaptchaSettings _captchaSettings;
+        private readonly CustomerSettings _customerSettings;
+        private readonly DateTimeSettings _dateTimeSettings;
+        private readonly IDownloadService _downloadService;
         private readonly ForumSettings _forumSettings;
-        private readonly IAddressService _addressService;
-        private readonly ICountryService _countryService;
-        private readonly IOrderService _orderService;
-        private readonly IPictureService _pictureService;
-        private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
-        private readonly IShoppingCartService _shoppingCartService;
-        private readonly IExternalAuthenticationService _externalAuthenticationService;
-        private readonly IWebHelper _webHelper;
-        private readonly ICustomerActivityService _customerActivityService;
+        private readonly GdprSettings _gdprSettings;
         private readonly IAddressAttributeParser _addressAttributeParser;
         private readonly IAddressAttributeService _addressAttributeService;
+        private readonly IAddressModelFactory _addressModelFactory;
+        private readonly IAddressService _addressService;
+        private readonly IAuthenticationService _authenticationService;
+        private readonly ICountryService _countryService;
+        private readonly ICurrencyService _currencyService;
+        private readonly ICustomerActivityService _customerActivityService;
+        private readonly ICustomerAttributeParser _customerAttributeParser;
+        private readonly ICustomerAttributeService _customerAttributeService;
+        private readonly ICustomerModelFactory _customerModelFactory;
+        private readonly ICustomerRegistrationService _customerRegistrationService;
+        private readonly ICustomerService _customerService;
         private readonly IEventPublisher _eventPublisher;
-
-        private readonly MediaSettings _mediaSettings;
+        private readonly IExportManager _exportManager;
+        private readonly IExternalAuthenticationService _externalAuthenticationService;
+        private readonly IGdprService _gdprService;
+        private readonly IGenericAttributeService _genericAttributeService;
+        private readonly IGiftCardService _giftCardService;
+        private readonly ILocalizationService _localizationService;
+        private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
+        private readonly IOrderService _orderService;
+        private readonly IPictureService _pictureService;
+        private readonly IPriceFormatter _priceFormatter;
+        private readonly IShoppingCartService _shoppingCartService;
+        private readonly IStoreContext _storeContext;
+        private readonly ITaxService _taxService;
+        private readonly IWebHelper _webHelper;
+        private readonly IWorkContext _workContext;
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly LocalizationSettings _localizationSettings;
-        private readonly CaptchaSettings _captchaSettings;
-        private readonly GdprSettings _gdprSettings;
+        private readonly MediaSettings _mediaSettings;
         private readonly StoreInformationSettings _storeInformationSettings;
+        private readonly TaxSettings _taxSettings;
 
         #endregion
 
         #region Ctor
 
-        public CustomerController(IAddressModelFactory addressModelFactory,
-            ICustomerModelFactory customerModelFactory,
-            IAuthenticationService authenticationService,
-            DateTimeSettings dateTimeSettings,
-            TaxSettings taxSettings,
-            ILocalizationService localizationService,
-            IWorkContext workContext,
-            IStoreContext storeContext,
-            ICurrencyService currencyService,
-            ICustomerService customerService,
-            IGiftCardService giftCardService,
-            IPriceFormatter priceFormatter,
-            ICustomerAttributeParser customerAttributeParser,
-            ICustomerAttributeService customerAttributeService,
-            IExportManager exportManager,
-            IGdprService gdprService,
-            IGenericAttributeService genericAttributeService,
-            ICustomerRegistrationService customerRegistrationService,
-            ITaxService taxService,
+        public CustomerController(AddressSettings addressSettings,
+            CaptchaSettings captchaSettings,
             CustomerSettings customerSettings,
-            AddressSettings addressSettings,
+            DateTimeSettings dateTimeSettings,
+            IDownloadService downloadService,
             ForumSettings forumSettings,
-            IAddressService addressService,
-            ICountryService countryService,
-            IOrderService orderService,
-            IPictureService pictureService,
-            INewsLetterSubscriptionService newsLetterSubscriptionService,
-            IShoppingCartService shoppingCartService,
-            IExternalAuthenticationService externalAuthenticationService,
-            IWebHelper webHelper,
-            ICustomerActivityService customerActivityService,
+            GdprSettings gdprSettings,
             IAddressAttributeParser addressAttributeParser,
             IAddressAttributeService addressAttributeService,
+            IAddressModelFactory addressModelFactory,
+            IAddressService addressService,
+            IAuthenticationService authenticationService,
+            ICountryService countryService,
+            ICurrencyService currencyService,
+            ICustomerActivityService customerActivityService,
+            ICustomerAttributeParser customerAttributeParser,
+            ICustomerAttributeService customerAttributeService,
+            ICustomerModelFactory customerModelFactory,
+            ICustomerRegistrationService customerRegistrationService,
+            ICustomerService customerService,
             IEventPublisher eventPublisher,
-            MediaSettings mediaSettings,
+            IExportManager exportManager,
+            IExternalAuthenticationService externalAuthenticationService,
+            IGdprService gdprService,
+            IGenericAttributeService genericAttributeService,
+            IGiftCardService giftCardService,
+            ILocalizationService localizationService,
+            INewsLetterSubscriptionService newsLetterSubscriptionService,
+            IOrderService orderService,
+            IPictureService pictureService,
+            IPriceFormatter priceFormatter,
+            IShoppingCartService shoppingCartService,
+            IStoreContext storeContext,
+            ITaxService taxService,
+            IWebHelper webHelper,
+            IWorkContext workContext,
             IWorkflowMessageService workflowMessageService,
             LocalizationSettings localizationSettings,
-            CaptchaSettings captchaSettings,
-            GdprSettings gdprSettings,
-            StoreInformationSettings storeInformationSettings)
+            MediaSettings mediaSettings,
+            StoreInformationSettings storeInformationSettings,
+            TaxSettings taxSettings)
         {
-            this._addressModelFactory = addressModelFactory;
-            this._customerModelFactory = customerModelFactory;
-            this._authenticationService = authenticationService;
-            this._dateTimeSettings = dateTimeSettings;
-            this._taxSettings = taxSettings;
-            this._localizationService = localizationService;
-            this._workContext = workContext;
-            this._storeContext = storeContext;
-            this._currencyService = currencyService;
-            this._customerService = customerService;
-            this._giftCardService = giftCardService;
-            this._priceFormatter = priceFormatter;
-            this._customerAttributeParser = customerAttributeParser;
-            this._customerAttributeService = customerAttributeService;
-            this._exportManager = exportManager;
-            this._gdprService = gdprService;
-            this._genericAttributeService = genericAttributeService;
-            this._customerRegistrationService = customerRegistrationService;
-            this._taxService = taxService;
-            this._customerSettings = customerSettings;
             this._addressSettings = addressSettings;
+            this._captchaSettings = captchaSettings;
+            this._customerSettings = customerSettings;
+            this._dateTimeSettings = dateTimeSettings;
+            this._downloadService = downloadService;
             this._forumSettings = forumSettings;
-            this._addressService = addressService;
-            this._countryService = countryService;
-            this._orderService = orderService;
-            this._pictureService = pictureService;
-            this._newsLetterSubscriptionService = newsLetterSubscriptionService;
-            this._shoppingCartService = shoppingCartService;
-            this._externalAuthenticationService = externalAuthenticationService;
-            this._webHelper = webHelper;
-            this._customerActivityService = customerActivityService;
+            this._gdprSettings = gdprSettings;
             this._addressAttributeParser = addressAttributeParser;
             this._addressAttributeService = addressAttributeService;
+            this._addressModelFactory = addressModelFactory;
+            this._addressService = addressService;
+            this._authenticationService = authenticationService;
+            this._countryService = countryService;
+            this._currencyService = currencyService;
+            this._customerActivityService = customerActivityService;
+            this._customerAttributeParser = customerAttributeParser;
+            this._customerAttributeService = customerAttributeService;
+            this._customerModelFactory = customerModelFactory;
+            this._customerRegistrationService = customerRegistrationService;
+            this._customerService = customerService;
             this._eventPublisher = eventPublisher;
-            this._mediaSettings = mediaSettings;
+            this._exportManager = exportManager;
+            this._externalAuthenticationService = externalAuthenticationService;
+            this._gdprService = gdprService;
+            this._genericAttributeService = genericAttributeService;
+            this._giftCardService = giftCardService;
+            this._localizationService = localizationService;
+            this._newsLetterSubscriptionService = newsLetterSubscriptionService;
+            this._orderService = orderService;
+            this._pictureService = pictureService;
+            this._priceFormatter = priceFormatter;
+            this._shoppingCartService = shoppingCartService;
+            this._storeContext = storeContext;
+            this._taxService = taxService;
+            this._webHelper = webHelper;
+            this._workContext = workContext;
             this._workflowMessageService = workflowMessageService;
             this._localizationSettings = localizationSettings;
-            this._captchaSettings = captchaSettings;
-            this._gdprSettings = gdprSettings;
+            this._mediaSettings = mediaSettings;
             this._storeInformationSettings = storeInformationSettings;
+            this._taxSettings = taxSettings;
         }
 
         #endregion
@@ -260,7 +260,7 @@ namespace Nop.Web.Controllers
 
             return attributesXml;
         }
-        
+
         #endregion
 
         #region Methods
@@ -362,8 +362,8 @@ namespace Nop.Web.Controllers
             if (_workContext.OriginalCustomerIfImpersonated != null)
             {
                 //activity log
-                _customerActivityService.InsertActivity(_workContext.OriginalCustomerIfImpersonated, "Impersonation.Finished", 
-                    string.Format(_localizationService.GetResource("ActivityLog.Impersonation.Finished.StoreOwner"), 
+                _customerActivityService.InsertActivity(_workContext.OriginalCustomerIfImpersonated, "Impersonation.Finished",
+                    string.Format(_localizationService.GetResource("ActivityLog.Impersonation.Finished.StoreOwner"),
                         _workContext.CurrentCustomer.Email, _workContext.CurrentCustomer.Id),
                     _workContext.CurrentCustomer);
 
@@ -465,7 +465,7 @@ namespace Nop.Web.Controllers
             if (customer == null)
                 return RedirectToRoute("HomePage");
 
-            if (string.IsNullOrEmpty(customer.GetAttribute<string>(NopCustomerDefaults.PasswordRecoveryTokenAttribute)))
+            if (string.IsNullOrEmpty(_genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.PasswordRecoveryTokenAttribute)))
             {
                 return View(new PasswordRecoveryConfirmModel
                 {
@@ -477,14 +477,14 @@ namespace Nop.Web.Controllers
             var model = _customerModelFactory.PreparePasswordRecoveryConfirmModel();
 
             //validate token
-            if (!customer.IsPasswordRecoveryTokenValid(token))
+            if (!_customerService.IsPasswordRecoveryTokenValid(customer, token))
             {
                 model.DisablePasswordChanging = true;
                 model.Result = _localizationService.GetResource("Account.PasswordRecovery.WrongToken");
             }
 
             //validate token expiration date
-            if (customer.IsPasswordRecoveryLinkExpired(_customerSettings))
+            if (_customerService.IsPasswordRecoveryLinkExpired(customer))
             {
                 model.DisablePasswordChanging = true;
                 model.Result = _localizationService.GetResource("Account.PasswordRecovery.LinkExpired");
@@ -505,7 +505,7 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("HomePage");
 
             //validate token
-            if (!customer.IsPasswordRecoveryTokenValid(token))
+            if (!_customerService.IsPasswordRecoveryTokenValid(customer, token))
             {
                 model.DisablePasswordChanging = true;
                 model.Result = _localizationService.GetResource("Account.PasswordRecovery.WrongToken");
@@ -513,7 +513,7 @@ namespace Nop.Web.Controllers
             }
 
             //validate token expiration date
-            if (customer.IsPasswordRecoveryLinkExpired(_customerSettings))
+            if (_customerService.IsPasswordRecoveryLinkExpired(customer))
             {
                 model.DisablePasswordChanging = true;
                 model.Result = _localizationService.GetResource("Account.PasswordRecovery.LinkExpired");
@@ -756,23 +756,23 @@ namespace Nop.Web.Controllers
                     //insert default address (if possible)
                     var defaultAddress = new Address
                     {
-                        FirstName = customer.GetAttribute<string>(NopCustomerDefaults.FirstNameAttribute),
-                        LastName = customer.GetAttribute<string>(NopCustomerDefaults.LastNameAttribute),
+                        FirstName = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.FirstNameAttribute),
+                        LastName = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.LastNameAttribute),
                         Email = customer.Email,
-                        Company = customer.GetAttribute<string>(NopCustomerDefaults.CompanyAttribute),
-                        CountryId = customer.GetAttribute<int>(NopCustomerDefaults.CountryIdAttribute) > 0
-                            ? (int?)customer.GetAttribute<int>(NopCustomerDefaults.CountryIdAttribute)
+                        Company = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.CompanyAttribute),
+                        CountryId = _genericAttributeService.GetAttribute<int>(customer, NopCustomerDefaults.CountryIdAttribute) > 0
+                            ? (int?)_genericAttributeService.GetAttribute<int>(customer, NopCustomerDefaults.CountryIdAttribute)
                             : null,
-                        StateProvinceId = customer.GetAttribute<int>(NopCustomerDefaults.StateProvinceIdAttribute) > 0
-                            ? (int?)customer.GetAttribute<int>(NopCustomerDefaults.StateProvinceIdAttribute)
+                        StateProvinceId = _genericAttributeService.GetAttribute<int>(customer, NopCustomerDefaults.StateProvinceIdAttribute) > 0
+                            ? (int?)_genericAttributeService.GetAttribute<int>(customer, NopCustomerDefaults.StateProvinceIdAttribute)
                             : null,
-                        County = customer.GetAttribute<string>(NopCustomerDefaults.CountyAttribute),
-                        City = customer.GetAttribute<string>(NopCustomerDefaults.CityAttribute),
-                        Address1 = customer.GetAttribute<string>(NopCustomerDefaults.StreetAddressAttribute),
-                        Address2 = customer.GetAttribute<string>(NopCustomerDefaults.StreetAddress2Attribute),
-                        ZipPostalCode = customer.GetAttribute<string>(NopCustomerDefaults.ZipPostalCodeAttribute),
-                        PhoneNumber = customer.GetAttribute<string>(NopCustomerDefaults.PhoneAttribute),
-                        FaxNumber = customer.GetAttribute<string>(NopCustomerDefaults.FaxAttribute),
+                        County = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.CountyAttribute),
+                        City = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.CityAttribute),
+                        Address1 = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.StreetAddressAttribute),
+                        Address2 = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.StreetAddress2Attribute),
+                        ZipPostalCode = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.ZipPostalCodeAttribute),
+                        PhoneNumber = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.PhoneAttribute),
+                        FaxNumber = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.FaxAttribute),
                         CreatedOnUtc = customer.CreatedOnUtc
                     };
                     if (this._addressService.IsAddressValid(defaultAddress))
@@ -905,7 +905,7 @@ namespace Nop.Web.Controllers
             if (customer == null)
                 return RedirectToRoute("HomePage");
 
-            var cToken = customer.GetAttribute<string>(NopCustomerDefaults.AccountActivationTokenAttribute);
+            var cToken = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.AccountActivationTokenAttribute);
             if (string.IsNullOrEmpty(cToken))
                 return
                     View(new AccountActivationModel
@@ -1007,7 +1007,7 @@ namespace Nop.Web.Controllers
                     //VAT number
                     if (_taxSettings.EuVatEnabled)
                     {
-                        var prevVatNumber = customer.GetAttribute<string>(NopCustomerDefaults.VatNumberAttribute);
+                        var prevVatNumber = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.VatNumberAttribute);
 
                         _genericAttributeService.SaveAttribute(customer, NopCustomerDefaults.VatNumberAttribute,
                             model.VatNumber);
@@ -1188,7 +1188,7 @@ namespace Nop.Web.Controllers
             if (customer == null)
                 return RedirectToRoute("HomePage");
 
-            var cToken = customer.GetAttribute<string>(NopCustomerDefaults.EmailRevalidationTokenAttribute);
+            var cToken = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.EmailRevalidationTokenAttribute);
             if (string.IsNullOrEmpty(cToken))
                 return View(new EmailRevalidationModel
                 {
@@ -1261,7 +1261,7 @@ namespace Nop.Web.Controllers
             var address = customer.Addresses.FirstOrDefault(a => a.Id == addressId);
             if (address != null)
             {
-                customer.RemoveAddress(address);
+                _customerService.RemoveCustomerAddress(customer, address);
                 _customerService.UpdateCustomer(customer);
                 //now delete the address record
                 _addressService.DeleteAddress(address);
@@ -1300,7 +1300,7 @@ namespace Nop.Web.Controllers
             var customer = _workContext.CurrentCustomer;
 
             //custom address attributes
-            var customAttributes = model.Form.ParseCustomAddressAttributes(_addressAttributeParser, _addressAttributeService);
+            var customAttributes = _addressAttributeParser.ParseCustomAddressAttributes(model.Form);
             var customAttributeWarnings = _addressAttributeParser.GetAttributeWarnings(customAttributes);
             foreach (var error in customAttributeWarnings)
             {
@@ -1373,7 +1373,7 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("CustomerAddresses");
 
             //custom address attributes
-            var customAttributes = model.Form.ParseCustomAddressAttributes(_addressAttributeParser, _addressAttributeService);
+            var customAttributes = _addressAttributeParser.ParseCustomAddressAttributes(model.Form);
             var customAttributeWarnings = _addressAttributeParser.GetAttributeWarnings(customAttributes);
             foreach (var error in customAttributeWarnings)
             {
@@ -1443,7 +1443,7 @@ namespace Nop.Web.Controllers
             var model = _customerModelFactory.PrepareChangePasswordModel();
 
             //display the cause of the change password 
-            if (_workContext.CurrentCustomer.PasswordIsExpired())
+            if (_customerService.PasswordIsExpired(_workContext.CurrentCustomer))
                 ModelState.AddModelError(string.Empty, _localizationService.GetResource("Account.ChangePassword.PasswordIsExpired"));
 
             return View(model);
@@ -1513,14 +1513,14 @@ namespace Nop.Web.Controllers
             {
                 try
                 {
-                    var customerAvatar = _pictureService.GetPictureById(customer.GetAttribute<int>(NopCustomerDefaults.AvatarPictureIdAttribute));
+                    var customerAvatar = _pictureService.GetPictureById(_genericAttributeService.GetAttribute<int>(customer, NopCustomerDefaults.AvatarPictureIdAttribute));
                     if (uploadedFile != null && !string.IsNullOrEmpty(uploadedFile.FileName))
                     {
                         var avatarMaxSize = _customerSettings.AvatarMaximumSizeBytes;
                         if (uploadedFile.Length > avatarMaxSize)
                             throw new NopException(string.Format(_localizationService.GetResource("Account.Avatar.MaximumUploadedFileSize"), avatarMaxSize));
 
-                        var customerPictureBinary = uploadedFile.GetPictureBits();
+                        var customerPictureBinary = _downloadService.GetDownloadBits(uploadedFile);
                         if (customerAvatar != null)
                             customerAvatar = _pictureService.UpdatePicture(customerAvatar.Id, customerPictureBinary, uploadedFile.ContentType, null);
                         else
@@ -1534,7 +1534,7 @@ namespace Nop.Web.Controllers
                     _genericAttributeService.SaveAttribute(customer, NopCustomerDefaults.AvatarPictureIdAttribute, customerAvatarId);
 
                     model.AvatarUrl = _pictureService.GetPictureUrl(
-                        customer.GetAttribute<int>(NopCustomerDefaults.AvatarPictureIdAttribute),
+                        _genericAttributeService.GetAttribute<int>(customer, NopCustomerDefaults.AvatarPictureIdAttribute),
                         _mediaSettings.AvatarPictureSize,
                         false);
                     return View(model);
@@ -1563,7 +1563,7 @@ namespace Nop.Web.Controllers
 
             var customer = _workContext.CurrentCustomer;
 
-            var customerAvatar = _pictureService.GetPictureById(customer.GetAttribute<int>(NopCustomerDefaults.AvatarPictureIdAttribute));
+            var customerAvatar = _pictureService.GetPictureById(_genericAttributeService.GetAttribute<int>(customer, NopCustomerDefaults.AvatarPictureIdAttribute));
             if (customerAvatar != null)
                 _pictureService.DeletePicture(customerAvatar);
             _genericAttributeService.SaveAttribute(customer, NopCustomerDefaults.AvatarPictureIdAttribute, 0);
@@ -1601,10 +1601,10 @@ namespace Nop.Web.Controllers
 
             //log
             _gdprService.InsertLog(_workContext.CurrentCustomer, 0, GdprRequestType.ExportData, _localizationService.GetResource("Gdpr.Exported"));
-            
+
             //export
             var bytes = _exportManager.ExportCustomerGdprInfoToXlsx(_workContext.CurrentCustomer, _storeContext.CurrentStore.Id);
-            
+
             return File(bytes, MimeTypes.TextXlsx, "customerdata.xlsx");
         }
 
@@ -1634,7 +1634,7 @@ namespace Nop.Web.Controllers
         //check gift card balance page
         [HttpsRequirement(SslRequirement.Yes)]
         //available even when a store is closed
-        [CheckAccessClosedStore(true)]        
+        [CheckAccessClosedStore(true)]
         public virtual IActionResult CheckGiftCardBalance()
         {
             if (!(_captchaSettings.Enabled && _customerSettings.AllowCustomersToCheckGiftCardBalance))
@@ -1645,7 +1645,7 @@ namespace Nop.Web.Controllers
             var model = _customerModelFactory.PrepareCheckGiftCardBalanceModel();
             return View(model);
         }
-        
+
         [HttpPost, ActionName("CheckGiftCardBalance")]
         [FormValueRequired("checkbalancegiftcard")]
         [ValidateCaptcha]
@@ -1660,9 +1660,9 @@ namespace Nop.Web.Controllers
             if (ModelState.IsValid)
             {
                 var giftCard = _giftCardService.GetAllGiftCards(giftCardCouponCode: model.GiftCardCode).FirstOrDefault();
-                if (giftCard?.IsGiftCardValid() ?? false)
+                if (giftCard != null && _giftCardService.IsGiftCardValid(giftCard))
                 {
-                    var remainingAmount = _currencyService.ConvertFromPrimaryStoreCurrency(giftCard.GetGiftCardRemainingAmount(), _workContext.WorkingCurrency);
+                    var remainingAmount = _currencyService.ConvertFromPrimaryStoreCurrency(_giftCardService.GetGiftCardRemainingAmount(giftCard), _workContext.WorkingCurrency);
                     model.Result = _priceFormatter.FormatPrice(remainingAmount, true, false);
                 }
                 else
@@ -1671,7 +1671,7 @@ namespace Nop.Web.Controllers
                 }
             }
 
-            return View(model); 
+            return View(model);
         }
 
         #endregion

@@ -30,62 +30,63 @@ namespace Nop.Web.Controllers
     {
         #region Fields
 
-        private readonly IVendorModelFactory _vendorModelFactory;
-        private readonly IWorkContext _workContext;
-        private readonly ILocalizationService _localizationService;
+        private readonly CaptchaSettings _captchaSettings;
         private readonly ICustomerService _customerService;
-        private readonly IWorkflowMessageService _workflowMessageService;
-        private readonly IVendorService _vendorService;
-        private readonly IUrlRecordService _urlRecordService;
-        private readonly IPictureService _pictureService;
+        private readonly IDownloadService _downloadService;
         private readonly IGenericAttributeService _genericAttributeService;
+        private readonly ILocalizationService _localizationService;
+        private readonly IPictureService _pictureService;
+        private readonly IUrlRecordService _urlRecordService;
         private readonly IVendorAttributeParser _vendorAttributeParser;
         private readonly IVendorAttributeService _vendorAttributeService;
-
+        private readonly IVendorModelFactory _vendorModelFactory;
+        private readonly IVendorService _vendorService;
+        private readonly IWorkContext _workContext;
+        private readonly IWorkflowMessageService _workflowMessageService;
         private readonly LocalizationSettings _localizationSettings;
         private readonly VendorSettings _vendorSettings;
-        private readonly CaptchaSettings _captchaSettings;
-        
+
         #endregion
-        
+
         #region Ctor
 
-        public VendorController(IVendorModelFactory vendorModelFactory,
-            IWorkContext workContext,
-            ILocalizationService localizationService,
+        public VendorController(CaptchaSettings captchaSettings,
             ICustomerService customerService,
-            IWorkflowMessageService workflowMessageService,
-            IVendorService vendorService,
-            IUrlRecordService urlRecordService,
-            IPictureService pictureService,
+            IDownloadService downloadService,
             IGenericAttributeService genericAttributeService,
+            ILocalizationService localizationService,
+            IPictureService pictureService,
+            IUrlRecordService urlRecordService,
             IVendorAttributeParser vendorAttributeParser,
             IVendorAttributeService vendorAttributeService,
+            IVendorModelFactory vendorModelFactory,
+            IVendorService vendorService,
+            IWorkContext workContext,
+            IWorkflowMessageService workflowMessageService,
             LocalizationSettings localizationSettings,
-            VendorSettings vendorSettings,
-            CaptchaSettings captchaSettings)
+            VendorSettings vendorSettings)
         {
-            this._vendorModelFactory = vendorModelFactory;
-            this._workContext = workContext;
-            this._localizationService = localizationService;
+            this._captchaSettings = captchaSettings;
             this._customerService = customerService;
-            this._workflowMessageService = workflowMessageService;
-            this._vendorService = vendorService;
-            this._urlRecordService = urlRecordService;
-            this._pictureService = pictureService;
+            this._downloadService = downloadService;
             this._genericAttributeService = genericAttributeService;
+            this._localizationService = localizationService;
+            this._pictureService = pictureService;
+            this._urlRecordService = urlRecordService;
             this._vendorAttributeParser = vendorAttributeParser;
             this._vendorAttributeService = vendorAttributeService;
-
+            this._vendorModelFactory = vendorModelFactory;
+            this._vendorService = vendorService;
+            this._workContext = workContext;
+            this._workflowMessageService = workflowMessageService;
             this._localizationSettings = localizationSettings;
             this._vendorSettings = vendorSettings;
-            this._captchaSettings = captchaSettings;
         }
-        
+
         #endregion
-        
+
         #region Utilities
-        
+
         protected virtual void UpdatePictureSeoNames(Vendor vendor)
         {
             var picture = _pictureService.GetPictureById(vendor.PictureId);
@@ -215,7 +216,7 @@ namespace Nop.Web.Controllers
                 try
                 {
                     var contentType = uploadedFile.ContentType;
-                    var vendorPictureBinary = uploadedFile.GetPictureBits();
+                    var vendorPictureBinary = _downloadService.GetDownloadBits(uploadedFile);
                     var picture = _pictureService.InsertPicture(vendorPictureBinary, contentType, null);
 
                     if (picture != null)
@@ -249,7 +250,7 @@ namespace Nop.Web.Controllers
                 };
                 _vendorService.InsertVendor(vendor);
                 //search engine name (the same as vendor name)
-                var seName = vendor.ValidateSeName(vendor.Name, vendor.Name, true);
+                var seName = _urlRecordService.ValidateSeName(vendor, vendor.Name, vendor.Name, true);
                 _urlRecordService.SaveSlug(vendor, seName, 0);
 
                 //associate to the current customer
@@ -302,15 +303,15 @@ namespace Nop.Web.Controllers
 
             if (_workContext.CurrentVendor == null || !_vendorSettings.AllowVendorsToEditInfo)
                 return RedirectToRoute("CustomerInfo");
-            
+
             Picture picture = null;
 
             if (uploadedFile != null && !string.IsNullOrEmpty(uploadedFile.FileName))
             {
                 try
-                 {
+                {
                     var contentType = uploadedFile.ContentType;
-                    var vendorPictureBinary = uploadedFile.GetPictureBits();
+                    var vendorPictureBinary = _downloadService.GetDownloadBits(uploadedFile);
                     picture = _pictureService.InsertPicture(vendorPictureBinary, contentType, null);
                 }
                 catch (Exception)
@@ -325,7 +326,7 @@ namespace Nop.Web.Controllers
             //vendor attributes
             var vendorAttributesXml = ParseVendorAttributes(model.Form);
             _vendorAttributeParser.GetAttributeWarnings(vendorAttributesXml).ToList()
-                .ForEach(warning =>  ModelState.AddModelError(string.Empty, warning));
+                .ForEach(warning => ModelState.AddModelError(string.Empty, warning));
 
             if (ModelState.IsValid)
             {
@@ -389,7 +390,7 @@ namespace Nop.Web.Controllers
 
             return RedirectToAction("Info");
         }
-        
+
         #endregion
     }
 }

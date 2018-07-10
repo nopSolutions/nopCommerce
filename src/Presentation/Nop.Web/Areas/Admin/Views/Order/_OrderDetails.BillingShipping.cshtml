@@ -1,22 +1,182 @@
 @model OrderModel
 
 <div class="panel-group">
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.OrderDetailsShippingTop, additionalData = Model })
-    @if (Model.IsShippable)
-    {
-        if (Model.ShippingAddress != null)
-        {
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    <div class="form-group">
-                        <div class="col-md-3">
-                            <nop-label asp-for="ShippingAddress" />
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.OrderDetailsBillingShippingTop, additionalData = Model })
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="col-md-6">
+                <div class="row">
+                    <table class="table table-hover table-bordered" style="max-width: 500px;">
+                        <tr>
+                            <th colspan="2">
+                                <strong>@T("Admin.Orders.Fields.BillingAddress")</strong>
+                            </th>
+                        </tr>
+                        @if (Model.BillingAddress.FirstNameEnabled || Model.BillingAddress.LastNameEnabled)
+                        {
+                            <tr>
+                                <td>
+                                    @T("Admin.Orders.Address.FullName")
+                                </td>
+                                <td>
+                                    @Model.BillingAddress.FirstName @Model.BillingAddress.LastName
+                                </td>
+                            </tr>
+                        }
+                        @if (Model.BillingAddress.EmailEnabled)
+                        {
+                            <tr>
+                                <td>
+                                    @T("Admin.Orders.Address.Email")
+                                </td>
+                                <td>
+                                    @Model.BillingAddress.Email
+                                </td>
+                            </tr>
+                        }
+                        @if (Model.BillingAddress.PhoneEnabled)
+                        {
+                            <tr>
+                                <td>
+                                    @T("Admin.Orders.Address.Phone")
+                                </td>
+                                <td>
+                                    @Model.BillingAddress.PhoneNumber
+                                </td>
+                            </tr>
+                        }
+                        @if (Model.BillingAddress.FaxEnabled)
+                        {
+                            <tr>
+                                <td>
+                                    @T("Admin.Orders.Address.Fax")
+                                </td>
+                                <td>
+                                    @Model.BillingAddress.FaxNumber
+                                </td>
+                            </tr>
+                        }
+                        @if (Model.BillingAddress.CompanyEnabled)
+                        {
+                            <tr>
+                                <td>
+                                    @T("Admin.Orders.Address.Company")
+                                </td>
+                                <td>
+                                    @Model.BillingAddress.Company
+                                </td>
+                            </tr>
+                        }
+                        @if (Model.BillingAddress.StreetAddressEnabled)
+                        {
+                            <tr>
+                                <td>
+                                    @T("Admin.Orders.Address.Address1")
+                                </td>
+                                <td>
+                                    @Model.BillingAddress.Address1
+                                </td>
+                            </tr>
+                        }
+                        @if (Model.BillingAddress.StreetAddress2Enabled)
+                        {
+                            <tr>
+                                <td>
+                                    @T("Admin.Orders.Address.Address2")
+                                </td>
+                                <td>
+                                    @Model.BillingAddress.Address2
+                                </td>
+                            </tr>
+                        }
+                        @if (Model.BillingAddress.CityEnabled)
+                        {
+                            <tr>
+                                <td>
+                                    @T("Admin.Orders.Address.City")
+                                </td>
+                                <td>
+                                    @Model.BillingAddress.City
+                                </td>
+                            </tr>
+                        }
+                        @if (Model.BillingAddress.CountyEnabled)
+                        {
+                            <tr>
+                                <td>
+                                    @T("Admin.Orders.Address.County")
+                                </td>
+                                <td>
+                                    @Model.BillingAddress.County
+                                </td>
+                            </tr>
+                        }
+                        @if (Model.BillingAddress.StateProvinceEnabled)
+                        {
+                            <tr>
+                                <td>
+                                    @T("Admin.Orders.Address.StateProvince")
+                                </td>
+                                <td>
+                                    @Model.BillingAddress.StateProvinceName
+                                </td>
+                            </tr>
+                        }
+                        @if (Model.BillingAddress.ZipPostalCodeEnabled)
+                        {
+                            <tr>
+                                <td>
+                                    @T("Admin.Orders.Address.ZipPostalCode")
+                                </td>
+                                <td>
+                                    @Model.BillingAddress.ZipPostalCode
+                                </td>
+                            </tr>
+                        }
+                        @if (Model.BillingAddress.CountryEnabled)
+                        {
+                            <tr>
+                                <td>
+                                    @T("Admin.Orders.Address.Country")
+                                </td>
+                                <td>
+                                    @Model.BillingAddress.CountryName
+                                </td>
+                            </tr>
+                        }
+                        @if (!string.IsNullOrEmpty(Model.BillingAddress.FormattedCustomAddressAttributes))
+                        {
+                            <tr>
+                                <td colspan="2">
+                                    @Html.Raw(Model.BillingAddress.FormattedCustomAddressAttributes)
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                </div>
+                <div class="row">
+                    @if (!Model.IsLoggedInAsVendor)
+                    {
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <a asp-action="AddressEdit" asp-route-addressId="@Model.BillingAddress.Id" asp-route-orderId="@Model.Id" class="btn btn-primary">@T("Admin.Common.Edit")</a>
+                            </div>
                         </div>
-                        <div class="col-md-9">
-                            <img alt="google maps" src="@Url.Content("~/css/admin/images/google-maps.gif")" />
-                            <a href="@Html.Raw(Model.ShippingAddressGoogleMapsUrl)" style="margin-bottom: 10px;" target="_blank">@T("Admin.Orders.Fields.ShippingAddress.ViewOnGoogleMaps")</a>
-
-                            <table class="table table-hover table-bordered" style="max-width: 400px;">
+                    }
+                </div>
+            </div>
+            @if (Model.IsShippable)
+            {
+                if (!Model.PickUpInStore && Model.ShippingAddress != null)
+                {
+                    <div class="col-md-6">
+                        <div class="row">
+                            <table class="table table-hover table-bordered" style="max-width: 500px;">
+                                <tr>
+                                    <th colspan="2">
+                                        <strong>@T("Admin.Orders.Fields.ShippingAddress")</strong>
+                                    </th>
+                                </tr>
                                 @if (Model.ShippingAddress.FirstNameEnabled || Model.ShippingAddress.LastNameEnabled)
                                 {
                                     <tr>
@@ -157,34 +317,37 @@
                                         </td>
                                     </tr>
                                 }
+                                <tr>
+                                    <td colspan="2">
+                                        <img alt="google maps" src="@Url.Content("~/css/admin/images/google-maps.gif")" />
+                                        <a href="@Html.Raw(Model.ShippingAddressGoogleMapsUrl)" style="margin-bottom: 10px;" target="_blank">@T("Admin.Orders.Fields.ShippingAddress.ViewOnGoogleMaps")</a>
+                                    </td>
+                                </tr>
                             </table>
                         </div>
+                        <div class="row">
+                            @if (!Model.IsLoggedInAsVendor)
+                            {
+                                <div class="form-group">
+                                    <div class="col-md-12">
+                                        <a asp-action="AddressEdit" asp-route-addressId="@Model.ShippingAddress.Id" asp-route-orderId="@Model.Id" class="btn btn-primary">@T("Admin.Common.Edit")</a>
+                                    </div>
+                                </div>
+                            }
+                        </div>
                     </div>
-                    @if (!Model.IsLoggedInAsVendor)
-                    {
-                        <div class="form-group">
-                            <div class="col-md-9 col-md-offset-3">
-                                <a asp-action="AddressEdit" asp-route-addressId="@Model.ShippingAddress.Id" asp-route-orderId="@Model.Id" class="btn btn-primary">@T("Admin.Common.Edit")</a>
-                            </div>
-                        </div>
-                    }
-                </div>
-            </div>
-        }
+                }
 
-        if (Model.PickupAddress != null)
-        {
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    <div class="form-group">
-                        <div class="col-md-3">
-                            <nop-label asp-for="PickupAddress" />
-                        </div>
-                        <div class="col-md-9">
-                            <img alt="google maps" src="@Url.Content("~/css/admin/images/google-maps.gif")" />
-                            <a href="@Html.Raw(Model.PickupAddressGoogleMapsUrl)" style="margin-bottom: 10px;" target="_blank">@T("Admin.Orders.Fields.PickupAddress.ViewOnGoogleMaps")</a>
-
-                            <table class="table table-hover table-bordered" style="max-width: 400px;">
+                if (Model.PickUpInStore && Model.PickupAddress != null)
+                {
+                    <div class="col-md-6">
+                        <div class="row">
+                            <table class="table table-hover table-bordered" style="max-width: 500px;">
+                                <tr>
+                                    <th colspan="2">
+                                        <strong>@T("Admin.Orders.Fields.PickupAddress")</strong>
+                                    </th>
+                                </tr>
                                 @if (!string.IsNullOrEmpty(Model.PickupAddress.Address1))
                                 {
                                     <tr>
@@ -240,13 +403,27 @@
                                         </td>
                                     </tr>
                                 }
+                                <tr>
+                                    <td colspan="2">
+                                        <img alt="google maps" src="@Url.Content("~/css/admin/images/google-maps.gif")" />
+                                        <a href="@Html.Raw(Model.PickupAddressGoogleMapsUrl)" style="margin-bottom: 10px;" target="_blank">@T("Admin.Orders.Fields.PickupAddress.ViewOnGoogleMaps")</a>
+                                    </td>
+                                </tr>
                             </table>
                         </div>
                     </div>
+                }
+            }
+            else
+            {
+                <div class="col-md-6">
+                    @T("Admin.Orders.ShippingInfo.NotRequired")
                 </div>
-            </div>
-        }
-
+            }
+        </div>
+    </div>
+    @if (Model.IsShippable)
+    {
         <div class="panel panel-default">
             <div class="panel-body">
                 <div class="form-group">
@@ -322,7 +499,6 @@
                 }
             </div>
         </div>
-
         <div class="panel panel-default">
             <div class="panel-heading">
                 @T("Admin.Orders.Shipments")
@@ -448,7 +624,6 @@
                                 serverSorting: true
                             },
                             scrollable: false,
-                            sortable: true,
                             pageable: {
                                 refresh: true,
                                 pageSizes: [@(Model.OrderShipmentSearchModel.ShipmentItemSearchModel.AvailablePageSizes)],
@@ -481,24 +656,15 @@
                     }
                 </script>
             </div>
-
             @if (Model.CanAddNewShipments)
             {
                 <div class="panel-footer">
-                    <button type="submit" id="btnAddNewShipment" name="btnAddNewShipment" onclick="javascript:setLocation('@(Url.Action("AddShipment", "Order", new {orderId = Model.Id}))'); return false;" class="btn btn-primary">
+                    <button type="submit" id="btnAddNewShipment" name="btnAddNewShipment" onclick="javascript:setLocation('@(Url.Action("AddShipment", "Order", new { orderId = Model.Id }))'); return false;" class="btn btn-primary">
                         @T("Admin.Orders.Shipments.AddNew")
                     </button>
                 </div>
             }
         </div>
     }
-    else
-    {
-        <div class="panel panel-default">
-            <div class="panel-body">
-                @T("Admin.Orders.ShippingInfo.NotRequired")
-            </div>
-        </div>
-    }
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.OrderDetailsShippingBottom, additionalData = Model })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.OrderDetailsBillingShippingBottom, additionalData = Model })
 </div>

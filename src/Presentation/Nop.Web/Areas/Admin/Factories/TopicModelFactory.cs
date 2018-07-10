@@ -25,10 +25,12 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IAclSupportedModelFactory _aclSupportedModelFactory;
         private readonly IActionContextAccessor _actionContextAccessor;
         private readonly IBaseAdminModelFactory _baseAdminModelFactory;
+        private readonly ILocalizationService _localizationService;
         private readonly ILocalizedModelFactory _localizedModelFactory;
         private readonly IStoreMappingSupportedModelFactory _storeMappingSupportedModelFactory;
         private readonly ITopicService _topicService;
         private readonly IUrlHelperFactory _urlHelperFactory;
+        private readonly IUrlRecordService _urlRecordService;
         private readonly IWebHelper _webHelper;
 
         #endregion
@@ -38,19 +40,23 @@ namespace Nop.Web.Areas.Admin.Factories
         public TopicModelFactory(IAclSupportedModelFactory aclSupportedModelFactory,
             IActionContextAccessor actionContextAccessor,
             IBaseAdminModelFactory baseAdminModelFactory,
+            ILocalizationService localizationService,
             ILocalizedModelFactory localizedModelFactory,
             IStoreMappingSupportedModelFactory storeMappingSupportedModelFactory,
             ITopicService topicService,
             IUrlHelperFactory urlHelperFactory,
+            IUrlRecordService urlRecordService,
             IWebHelper webHelper)
         {
             this._aclSupportedModelFactory = aclSupportedModelFactory;
             this._actionContextAccessor = actionContextAccessor;
             this._baseAdminModelFactory = baseAdminModelFactory;
+            this._localizationService = localizationService;
             this._localizedModelFactory = localizedModelFactory;
             this._storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
             this._topicService = topicService;
             this._urlHelperFactory = urlHelperFactory;
+            this._urlRecordService = urlRecordService;
             this._webHelper = webHelper;
         }
 
@@ -136,17 +142,17 @@ namespace Nop.Web.Areas.Admin.Factories
                 model = model ?? topic.ToModel<TopicModel>();
 
                 model.Url = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext)
-                    .RouteUrl("Topic", new { SeName = topic.GetSeName() }, _webHelper.CurrentRequestProtocol);
+                    .RouteUrl("Topic", new { SeName = _urlRecordService.GetSeName(topic) }, _webHelper.CurrentRequestProtocol);
 
                 //define localized model configuration action
                 localizedModelConfiguration = (locale, languageId) =>
                 {
-                    locale.Title = topic.GetLocalized(entity => entity.Title, languageId, false, false);
-                    locale.Body = topic.GetLocalized(entity => entity.Body, languageId, false, false);
-                    locale.MetaKeywords = topic.GetLocalized(entity => entity.MetaKeywords, languageId, false, false);
-                    locale.MetaDescription = topic.GetLocalized(entity => entity.MetaDescription, languageId, false, false);
-                    locale.MetaTitle = topic.GetLocalized(entity => entity.MetaTitle, languageId, false, false);
-                    locale.SeName = topic.GetSeName(languageId, false, false);
+                    locale.Title = _localizationService.GetLocalized(topic, entity => entity.Title, languageId, false, false);
+                    locale.Body = _localizationService.GetLocalized(topic, entity => entity.Body, languageId, false, false);
+                    locale.MetaKeywords = _localizationService.GetLocalized(topic, entity => entity.MetaKeywords, languageId, false, false);
+                    locale.MetaDescription = _localizationService.GetLocalized(topic, entity => entity.MetaDescription, languageId, false, false);
+                    locale.MetaTitle = _localizationService.GetLocalized(topic, entity => entity.MetaTitle, languageId, false, false);
+                    locale.SeName = _urlRecordService.GetSeName(topic, languageId, false, false);
                 };
             }
 

@@ -1,17 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace Nop.Services.Customers 
+namespace Nop.Services.Customers
 {
     /// <summary>
     /// Change password result
     /// </summary>
     public class ChangePasswordResult
     {
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        public ChangePasswordResult() 
+        public ChangePasswordResult()
         {
             Errors = new List<string>();
         }
@@ -28,7 +25,7 @@ namespace Nop.Services.Customers
         /// Add error
         /// </summary>
         /// <param name="error">Error</param>
-        public void AddError(string error) 
+        public void AddError(string error)
         {
             this.Errors.Add(error);
         }

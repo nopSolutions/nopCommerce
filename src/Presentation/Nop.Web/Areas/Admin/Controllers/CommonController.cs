@@ -158,7 +158,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.DeleteExportedFiles.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
 
             model.DeleteExportedFiles.NumberOfDeletedFiles = 0;
-           
+
             foreach (var fullPath in _fileProvider.GetFiles(_fileProvider.GetAbsolutePath(EXPORT_IMPORT_PATH)))
             {
                 try
@@ -385,7 +385,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return Json(new { Result = string.Empty });
 
             int.TryParse(entityId, out var parsedEntityId);
-            var validatedSeName = SeoExtensions.ValidateSeName(parsedEntityId, entityName, seName, null, false);
+            var validatedSeName = _urlRecordService.ValidateSeName(parsedEntityId, entityName, seName, null, false);
 
             if (seName.Equals(validatedSeName, StringComparison.InvariantCultureIgnoreCase))
                 return Json(new { Result = string.Empty });

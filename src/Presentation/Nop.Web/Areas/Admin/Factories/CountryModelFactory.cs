@@ -18,6 +18,7 @@ namespace Nop.Web.Areas.Admin.Factories
         #region Fields
 
         private readonly ICountryService _countryService;
+        private readonly ILocalizationService _localizationService;
         private readonly ILocalizedModelFactory _localizedModelFactory;
         private readonly IStoreMappingSupportedModelFactory _storeMappingSupportedModelFactory;
         private readonly IStateProvinceService _stateProvinceService;
@@ -27,11 +28,13 @@ namespace Nop.Web.Areas.Admin.Factories
         #region Ctor
 
         public CountryModelFactory(ICountryService countryService,
+            ILocalizationService localizationService,
             ILocalizedModelFactory localizedModelFactory,
             IStoreMappingSupportedModelFactory storeMappingSupportedModelFactory,
             IStateProvinceService stateProvinceService)
         {
             this._countryService = countryService;
+            this._localizationService = localizationService;
             this._localizedModelFactory = localizedModelFactory;
             this._storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
             this._stateProvinceService = stateProvinceService;
@@ -129,7 +132,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 //define localized model configuration action
                 localizedModelConfiguration = (locale, languageId) =>
                 {
-                    locale.Name = country.GetLocalized(entity => entity.Name, languageId, false, false);
+                    locale.Name = _localizationService.GetLocalized(country, entity => entity.Name, languageId, false, false);
                 };
             }
 
@@ -200,7 +203,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 //define localized model configuration action
                 localizedModelConfiguration = (locale, languageId) =>
                 {
-                    locale.Name = country.GetLocalized(entity => entity.Name, languageId, false, false);
+                    locale.Name = _localizationService.GetLocalized(country, entity => entity.Name, languageId, false, false);
                 };
             }
 

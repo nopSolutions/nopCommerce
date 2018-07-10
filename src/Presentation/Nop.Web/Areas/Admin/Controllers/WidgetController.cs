@@ -80,7 +80,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             var widget = _widgetService.LoadWidgetBySystemName(model.SystemName);
-            if (widget.IsWidgetActive(_widgetSettings))
+            if (_widgetService.IsWidgetActive(widget))
             {
                 if (!model.IsActive)
                 {

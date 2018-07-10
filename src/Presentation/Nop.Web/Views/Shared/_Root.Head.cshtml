@@ -3,7 +3,6 @@
 @using Nop.Core.Domain.Common
 @using Nop.Core.Domain.Seo
 @using Nop.Services.Events
-@using Nop.Services.Localization
 @using Nop.Services.Security
 @using Nop.Web.Framework.Events
 @using Nop.Core
@@ -13,10 +12,19 @@
 @inject IWorkContext workContext
 @inject SeoSettings seoSettings
 @inject StoreInformationSettings storeInformationSettings
+@inject Nop.Services.Localization.ILanguageService languageService
 @{
     Html.AppendScriptParts(ResourceLocation.Footer, "~/js/public.ajaxcart.js");
     Html.AppendScriptParts(ResourceLocation.Footer, "~/js/public.common.js");
-    Html.AppendScriptParts(ResourceLocation.Footer, "~/lib/jquery-migrate/jquery-migrate-3.0.1.js");
+    //when jQuery migrate script logging is active you will see the log in the browser console
+    if (commonSettings.JqueryMigrateScriptLoggingActive)
+    {
+        Html.AppendScriptParts(ResourceLocation.Footer, "~/lib/jquery-migrate/jquery-migrate-3.0.1.js");
+    }
+    else
+    {
+        Html.AppendScriptParts(ResourceLocation.Footer, "~/lib/jquery-migrate/jquery-migrate-3.0.1.min.js");
+    }
     Html.AppendScriptParts(ResourceLocation.Footer, "~/lib/jquery-ui/jquery-ui-1.12.1.custom/jquery-ui.min.js");
     Html.AppendScriptParts(ResourceLocation.Footer, "~/lib/jquery-validate/jquery.validate.unobtrusive-v3.2.10/jquery.validate.unobtrusive.min.js");
     Html.AppendScriptParts(ResourceLocation.Footer, "~/lib/jquery-validate/jquery.validate-v1.17.0/jquery.validate.min.js");
@@ -39,7 +47,7 @@
     eventPublisher.Publish(new PageRenderingEvent(this.Html));
 }
 <!DOCTYPE html>
-<html lang="@workContext.WorkingLanguage.GetTwoLetterIsoLanguageName()" @(this.ShouldUseRtlTheme() ? Html.Raw(" dir=\"rtl\"") : null) @Html.NopPageCssClasses()>
+<html lang="@languageService.GetTwoLetterIsoLanguageName(workContext.WorkingLanguage)" @(this.ShouldUseRtlTheme() ? Html.Raw(" dir=\"rtl\"") : null) @Html.NopPageCssClasses()>
 <head>
     <title>@Html.NopTitle()</title>
     <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />

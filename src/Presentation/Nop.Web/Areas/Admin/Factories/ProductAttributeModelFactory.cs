@@ -17,6 +17,7 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
+        private readonly ILocalizationService _localizationService;
         private readonly ILocalizedModelFactory _localizedModelFactory;
         private readonly IProductAttributeService _productAttributeService;
         private readonly IProductService _productService;
@@ -25,10 +26,12 @@ namespace Nop.Web.Areas.Admin.Factories
 
         #region Ctor
 
-        public ProductAttributeModelFactory(ILocalizedModelFactory localizedModelFactory,
+        public ProductAttributeModelFactory(ILocalizationService localizationService,
+            ILocalizedModelFactory localizedModelFactory,
             IProductAttributeService productAttributeService,
             IProductService productService)
         {
+            this._localizationService = localizationService;
             this._localizedModelFactory = localizedModelFactory;
             this._productAttributeService = productAttributeService;
             this._productService = productService;
@@ -153,8 +156,8 @@ namespace Nop.Web.Areas.Admin.Factories
                 //define localized model configuration action
                 localizedModelConfiguration = (locale, languageId) =>
                 {
-                    locale.Name = productAttribute.GetLocalized(entity => entity.Name, languageId, false, false);
-                    locale.Description = productAttribute.GetLocalized(entity => entity.Description, languageId, false, false);
+                    locale.Name = _localizationService.GetLocalized(productAttribute, entity => entity.Name, languageId, false, false);
+                    locale.Description = _localizationService.GetLocalized(productAttribute, entity => entity.Description, languageId, false, false);
                 };
             }
 
@@ -245,7 +248,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 //define localized model configuration action
                 localizedModelConfiguration = (locale, languageId) =>
                 {
-                    locale.Name = productAttributeValue.GetLocalized(entity => entity.Name, languageId, false, false);
+                    locale.Name = _localizationService.GetLocalized(productAttributeValue, entity => entity.Name, languageId, false, false);
                 };
             }
 

@@ -253,8 +253,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     //fill in additional values (not existing in the entity)
                     var reviewType = _reviewTypeService.GetReviewTypeById(productReviewReviewTypeMapping.ReviewTypeId);
 
-                    productReviewReviewTypeMappingModel.Name = reviewType.GetLocalized(entity => entity.Name);
-                    productReviewReviewTypeMappingModel.Description = reviewType.GetLocalized(entity => entity.Description);
+                    productReviewReviewTypeMappingModel.Name = _localizationService.GetLocalized(reviewType, entity => entity.Name);
+                    productReviewReviewTypeMappingModel.Description = _localizationService.GetLocalized(reviewType, entity => entity.Description);
                     productReviewReviewTypeMappingModel.VisibleToAllCustomers = reviewType.VisibleToAllCustomers;
 
                     return productReviewReviewTypeMappingModel;

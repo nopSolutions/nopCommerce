@@ -24,6 +24,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly CurrencySettings _currencySettings;
         private readonly ICurrencyService _currencyService;
         private readonly IDateTimeHelper _dateTimeHelper;
+        private readonly ILocalizationService _localizationService;
         private readonly ILocalizedModelFactory _localizedModelFactory;
         private readonly IStoreMappingSupportedModelFactory _storeMappingSupportedModelFactory;
         private readonly IWorkContext _workContext;
@@ -35,6 +36,7 @@ namespace Nop.Web.Areas.Admin.Factories
         public CurrencyModelFactory(CurrencySettings currencySettings,
             ICurrencyService currencyService,
             IDateTimeHelper dateTimeHelper,
+            ILocalizationService localizationService,
             ILocalizedModelFactory localizedModelFactory,
             IStoreMappingSupportedModelFactory storeMappingSupportedModelFactory,
             IWorkContext workContext)
@@ -42,6 +44,7 @@ namespace Nop.Web.Areas.Admin.Factories
             this._currencySettings = currencySettings;
             this._currencyService = currencyService;
             this._dateTimeHelper = dateTimeHelper;
+            this._localizationService = localizationService;
             this._localizedModelFactory = localizedModelFactory;
             this._storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
             this._workContext = workContext;
@@ -187,7 +190,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 //define localized model configuration action
                 localizedModelConfiguration = (locale, languageId) =>
                 {
-                    locale.Name = currency.GetLocalized(entity => entity.Name, languageId, false, false);
+                    locale.Name = _localizationService.GetLocalized(currency, entity => entity.Name, languageId, false, false);
                 };
             }
 

@@ -45,25 +45,6 @@ namespace Nop.Services.Authentication.External
 
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="customerSettings">Customer settings</param>
-        /// <param name="externalAuthenticationSettings">External authentication settings</param>
-        /// <param name="authenticationService">Authentication service</param>
-        /// <param name="customerActivityService">Customer activity service</param>
-        /// <param name="customerRegistrationService">Customer registration service</param>
-        /// <param name="customerService">Customer service</param>
-        /// <param name="eventPublisher">Event publisher</param>
-        /// <param name="genericAttributeService">Generic attribute service</param>
-        /// <param name="localizationService">Localization service</param>
-        /// <param name="pluginFinder">Plugin finder</param>
-        /// <param name="externalAuthenticationRecordRepository">External authentication record repository</param>
-        /// <param name="shoppingCartService">Shopping cart service</param>
-        /// <param name="storeContext">Store context</param>
-        /// <param name="workContext">Work context</param>
-        /// <param name="workflowMessageService">Workflow message service</param>
-        /// <param name="localizationSettings">Localization settings</param>
         public ExternalAuthenticationService(CustomerSettings customerSettings,
             ExternalAuthenticationSettings externalAuthenticationSettings,
             IAuthenticationService authenticationService,
@@ -217,7 +198,7 @@ namespace Nop.Services.Authentication.External
             //registration is succeeded but isn't approved by admin
             if (_customerSettings.UserRegistrationType == UserRegistrationType.AdminApproval)
                 return new RedirectToRouteResult("RegisterResult", new { resultId = (int)UserRegistrationType.AdminApproval });
-            
+
             return ErrorAuthentication(new[] { "Error on registration" }, returnUrl);
         }
 
@@ -239,7 +220,7 @@ namespace Nop.Services.Authentication.External
             _eventPublisher.Publish(new CustomerLoggedinEvent(user));
 
             //activity log
-            _customerActivityService.InsertActivity(user, "PublicStore.Login", 
+            _customerActivityService.InsertActivity(user, "PublicStore.Login",
                 _localizationService.GetResource("ActivityLog.PublicStore.Login"), user);
 
             return SuccessfulAuthentication(returnUrl);
@@ -328,12 +309,31 @@ namespace Nop.Services.Authentication.External
             var authenticationMethod = LoadExternalAuthenticationMethodBySystemName(systemName);
 
             return authenticationMethod != null &&
-                authenticationMethod.IsMethodActive(_externalAuthenticationSettings) &&
+                this.IsExternalAuthenticationMethodActive(authenticationMethod) &&
                 authenticationMethod.PluginDescriptor.Installed &&
                 _pluginFinder.AuthenticateStore(authenticationMethod.PluginDescriptor, _storeContext.CurrentStore.Id) &&
                 _pluginFinder.AuthorizedForUser(authenticationMethod.PluginDescriptor, _workContext.CurrentCustomer);
         }
 
+        /// <summary>
+        /// Check whether external authentication method is active
+        /// </summary>
+        /// <param name="method">External authentication method</param>
+        /// <returns>True if method is active; otherwise false</returns>
+        public virtual bool IsExternalAuthenticationMethodActive(IExternalAuthenticationMethod method)
+        {
+            if (method == null)
+                throw new ArgumentNullException(nameof(method));
+
+            if (_externalAuthenticationSettings.ActiveAuthenticationMethodSystemNames == null)
+                return false;
+
+            foreach (var activeMethodSystemName in _externalAuthenticationSettings.ActiveAuthenticationMethodSystemNames)
+                if (method.PluginDescriptor.SystemName.Equals(activeMethodSystemName, StringComparison.InvariantCultureIgnoreCase))
+                    return true;
+
+            return false;
+        }
         #endregion
 
         #region Authentication

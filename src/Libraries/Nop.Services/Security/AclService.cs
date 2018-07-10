@@ -19,35 +19,27 @@ namespace Nop.Services.Security
     {
         #region Fields
 
-        private readonly IRepository<AclRecord> _aclRecordRepository;
-        private readonly IWorkContext _workContext;
-        private readonly IStaticCacheManager _cacheManager;
-        private readonly IEventPublisher _eventPublisher;
         private readonly CatalogSettings _catalogSettings;
+        private readonly IEventPublisher _eventPublisher;
+        private readonly IRepository<AclRecord> _aclRecordRepository;
+        private readonly IStaticCacheManager _cacheManager;
+        private readonly IWorkContext _workContext;
 
         #endregion
 
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="cacheManager">Static cache manager</param>
-        /// <param name="workContext">Work context</param>
-        /// <param name="aclRecordRepository">ACL record repository</param>
-        /// <param name="catalogSettings">Catalog settings</param>
-        /// <param name="eventPublisher">Event publisher</param>
-        public AclService(IStaticCacheManager cacheManager, 
-            IWorkContext workContext,
-            IRepository<AclRecord> aclRecordRepository,
+        public AclService(CatalogSettings catalogSettings,
             IEventPublisher eventPublisher,
-            CatalogSettings catalogSettings)
+            IRepository<AclRecord> aclRecordRepository,
+            IStaticCacheManager cacheManager,
+            IWorkContext workContext)
         {
+            this._catalogSettings = catalogSettings;
+            this._eventPublisher = eventPublisher;
+            this._aclRecordRepository = aclRecordRepository;
             this._cacheManager = cacheManager;
             this._workContext = workContext;
-            this._aclRecordRepository = aclRecordRepository;
-            this._eventPublisher = eventPublisher;
-            this._catalogSettings = catalogSettings;
         }
 
         #endregion
@@ -190,7 +182,7 @@ namespace Nop.Services.Security
             {
                 var query = from ur in _aclRecordRepository.Table
                             where ur.EntityId == entityId &&
-                            ur.EntityName == entityName 
+                            ur.EntityName == entityName
                             select ur.CustomerRoleId;
                 return query.ToArray();
             });

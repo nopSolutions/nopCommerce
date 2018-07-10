@@ -76,7 +76,8 @@
             <button type="button" id="delete-selected" class="btn bg-red">
                 <i class="fa fa-trash-o"></i>
                 @T("Admin.Common.Delete.Selected")
-            </button>             
+            </button>      
+            <nop-action-confirmation asp-button-id="delete-selected" />
             @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductListButtons })
         </div>
     </div>
@@ -337,31 +338,26 @@
                 }
             });
             //delete selected
-            $('#delete-selected').click(function(e) {
-                e.preventDefault();
-
+            $("#delete-selected-action-confirmation-submit-button").bind("click", function () {
                 var postData = {
                     selectedIds: selectedIds
                 };
                 addAntiForgeryToken(postData);
-                
-                if (confirm('@T("Admin.Common.DeleteConfirmation.Selected")')) {
-                    $.ajax({
-                        cache: false,
-                        type: "POST",
-                        url: "@(Url.Action("DeleteSelected", "Product"))",
-                        data: postData,
-                        complete: function(data) {
-                            //reload grid
-                            var grid = $('#products-grid').data('kendoGrid');
-                            grid.dataSource.read();
-                        },
-                        error: function(xhr, ajaxOptions, thrownError) {
-                            alert(thrownError);
-                        },
-                        traditional: true
-                    });
-                }
+                $.ajax({
+                    cache: false,
+                    type: "POST",
+                    url: "@(Url.Action("DeleteSelected", "Product"))",
+                    data: postData,
+                    complete: function (data) {
+                        //reload grid
+                        var grid = $('#products-grid').data('kendoGrid');
+                        grid.dataSource.read();
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        alert(thrownError);
+                    }
+                });
+                $('#delete-selected-action-confirmation').modal('toggle');
                 return false;
             });
 

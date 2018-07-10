@@ -7,13 +7,13 @@ namespace Nop.Web.Components
 {
     public class ForumLastPostViewComponent : NopViewComponent
     {
-        private readonly IForumService _forumService;
         private readonly IForumModelFactory _forumModelFactory;
+        private readonly IForumService _forumService;
 
-        public ForumLastPostViewComponent(IForumService forumService, IForumModelFactory forumModelFactory)
+        public ForumLastPostViewComponent(IForumModelFactory forumModelFactory, IForumService forumService)
         {
-            this._forumService = forumService;
             this._forumModelFactory = forumModelFactory;
+            this._forumService = forumService;
         }
 
         public IViewComponentResult Invoke(int forumPostId, bool showTopic)

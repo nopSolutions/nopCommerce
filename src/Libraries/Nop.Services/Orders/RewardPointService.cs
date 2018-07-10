@@ -29,20 +29,12 @@ namespace Nop.Services.Orders
 
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="dateTimeHelper">Date time helper</param>
-        /// <param name="eventPublisher">Event publisher</param>
-        /// <param name="localizationService">Localization service</param>
-        /// <param name="rewardPointsHistoryRepository">Reward points history repository</param>
-        /// <param name="rewardPointsSettings">Reward points settings</param>
         public RewardPointService(IDateTimeHelper dateTimeHelper,
             IEventPublisher eventPublisher,
             ILocalizationService localizationService,
             IRepository<RewardPointsHistory> rewardPointsHistoryRepository,
             RewardPointsSettings rewardPointsSettings)
-        { 
+        {
             this._dateTimeHelper = dateTimeHelper;
             this._eventPublisher = eventPublisher;
             this._localizationService = localizationService;
@@ -78,7 +70,7 @@ namespace Nop.Services.Orders
             {
                 query = query.Where(historyEntry => historyEntry.CreatedOnUtc < DateTime.UtcNow);
             }
-            
+
             //update points balance
             UpdateRewardPointsBalance(query);
 
@@ -109,7 +101,7 @@ namespace Nop.Services.Orders
                         _dateTimeHelper.ConvertToUserTime(historyEntry.CreatedOnUtc, DateTimeKind.Utc)),
                     CreatedOnUtc = historyEntry.EndDateUtc.Value,
                 });
-                
+
                 historyEntry.ValidPoints = 0;
                 UpdateRewardPointsHistoryEntry(historyEntry);
             }
@@ -136,7 +128,7 @@ namespace Nop.Services.Orders
                 UpdateRewardPointsHistoryEntry(historyEntry);
             }
         }
-        
+
         #endregion
 
         #region Methods

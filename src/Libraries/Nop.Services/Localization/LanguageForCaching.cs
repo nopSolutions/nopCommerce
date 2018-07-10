@@ -14,12 +14,8 @@ namespace Nop.Services.Localization
     [NotMapped]
     public class LanguageForCaching : Language, IEntityForCaching
     {
-        /// <summary>
-        /// Ctor
-        /// </summary>
         public LanguageForCaching()
         {
-
         }
 
         /// <summary>

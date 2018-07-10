@@ -3,8 +3,8 @@ using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Caching;
+using Nop.Core.Domain.Customers;
 using Nop.Core.Infrastructure;
-using Nop.Services.Customers;
 using Nop.Services.Localization;
 using Nop.Services.Seo;
 using Nop.Services.Topics;
@@ -119,7 +119,7 @@ namespace Nop.Web.Extensions
                         links.Append("<li class=\"next-page\">");
                         if (model.UseRouteLinks)
                         {
-                            var link = html.RouteLink(model.NextButtonText, model.RouteActionName, model.RouteValues, new {title = localizationService.GetResource("Pager.NextPageTitle")});
+                            var link = html.RouteLink(model.NextButtonText, model.RouteActionName, model.RouteValues, new { title = localizationService.GetResource("Pager.NextPageTitle") });
                             links.Append(link.ToHtmlString());
                         }
                         else
@@ -237,7 +237,8 @@ namespace Nop.Web.Extensions
                 if (topic == null)
                     return "";
 
-                return topic.GetSeName();
+                var urlRecordService = EngineContext.Current.Resolve<IUrlRecordService>();
+                return urlRecordService.GetSeName(topic);
             });
             return cachedSeName;
         }
@@ -256,7 +257,7 @@ namespace Nop.Web.Extensions
 
             //static cache manager
             var cacheManager = EngineContext.Current.Resolve<IStaticCacheManager>();
-            var cacheKey = string.Format(ModelCacheEventConsumer.TOPIC_TITLE_BY_SYSTEMNAME, 
+            var cacheKey = string.Format(ModelCacheEventConsumer.TOPIC_TITLE_BY_SYSTEMNAME,
                 systemName, workContext.WorkingLanguage.Id, storeContext.CurrentStore.Id,
                 string.Join(",", workContext.CurrentCustomer.GetCustomerRoleIds()));
             var cachedTitle = cacheManager.Get(cacheKey, () =>
@@ -266,7 +267,8 @@ namespace Nop.Web.Extensions
                 if (topic == null)
                     return "";
 
-                return topic.GetLocalized(x => x.Title);
+                var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
+                return localizationService.GetLocalized(topic, x => x.Title);
             });
             return cachedTitle;
         }

@@ -63,7 +63,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         #endregion
 
         #region Utilities
-        
+
         protected virtual void UpdateLocales(Topic topic, TopicModel model)
         {
             foreach (var localized in model.Locales)
@@ -94,7 +94,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     localized.LanguageId);
 
                 //search engine name
-                var seName = topic.ValidateSeName(localized.SeName, localized.Title, false);
+                var seName = _urlRecordService.ValidateSeName(topic, localized.SeName, localized.Title, false);
                 _urlRecordService.SaveSlug(topic, seName, localized.LanguageId);
             }
         }
@@ -209,7 +209,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _topicService.InsertTopic(topic);
 
                 //search engine name
-                model.SeName = topic.ValidateSeName(model.SeName, topic.Title ?? topic.SystemName, true);
+                model.SeName = _urlRecordService.ValidateSeName(topic, model.SeName, topic.Title ?? topic.SystemName, true);
                 _urlRecordService.SaveSlug(topic, model.SeName, 0);
 
                 //ACL (customer roles)
@@ -279,7 +279,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _topicService.UpdateTopic(topic);
 
                 //search engine name
-                model.SeName = topic.ValidateSeName(model.SeName, topic.Title ?? topic.SystemName, true);
+                model.SeName = _urlRecordService.ValidateSeName(topic, model.SeName, topic.Title ?? topic.SystemName, true);
                 _urlRecordService.SaveSlug(topic, model.SeName, 0);
 
                 //ACL (customer roles)

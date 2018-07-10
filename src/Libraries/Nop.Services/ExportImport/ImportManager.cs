@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using Microsoft.AspNetCore.StaticFiles;
+using Microsoft.Extensions.DependencyInjection;
 using Nop.Core;
 using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
@@ -12,6 +14,7 @@ using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
+using Nop.Core.Infrastructure;
 using Nop.Services.Catalog;
 using Nop.Services.Directory;
 using Nop.Services.ExportImport.Help;
@@ -23,13 +26,10 @@ using Nop.Services.Security;
 using Nop.Services.Seo;
 using Nop.Services.Shipping;
 using Nop.Services.Shipping.Date;
+using Nop.Services.Stores;
 using Nop.Services.Tax;
 using Nop.Services.Vendors;
 using OfficeOpenXml;
-using System.Net;
-using Microsoft.Extensions.DependencyInjection;
-using Nop.Services.Stores;
-using Nop.Core.Infrastructure;
 
 namespace Nop.Services.ExportImport
 {
@@ -49,102 +49,102 @@ namespace Nop.Services.ExportImport
 
         #region Fields
 
-        private readonly IServiceScopeFactory _serviceScopeFactory;
-        private readonly IProductService _productService;
-        private readonly IProductAttributeService _productAttributeService;
-        private readonly ICategoryService _categoryService;
-        private readonly IManufacturerService _manufacturerService;
-        private readonly IPictureService _pictureService;
-        private readonly IUrlRecordService _urlRecordService;
-        private readonly IStoreContext _storeContext;
-        private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
-        private readonly ICountryService _countryService;
-        private readonly IStateProvinceService _stateProvinceService;
-        private readonly IEncryptionService _encryptionService;
-        private readonly IDataProvider _dataProvider;
-        private readonly MediaSettings _mediaSettings;
-        private readonly IVendorService _vendorService;
-        private readonly IProductTemplateService _productTemplateService;
-        private readonly IShippingService _shippingService;
-        private readonly IDateRangeService _dateRangeService;
-        private readonly ITaxCategoryService _taxCategoryService;
-        private readonly IMeasureService _measureService;
         private readonly CatalogSettings _catalogSettings;
-        private readonly IProductTagService _productTagService;
-        private readonly IWorkContext _workContext;
-        private readonly ILocalizationService _localizationService;
+        private readonly ICategoryService _categoryService;
+        private readonly ICountryService _countryService;
         private readonly ICustomerActivityService _customerActivityService;
-        private readonly VendorSettings _vendorSettings;
-        private readonly ISpecificationAttributeService _specificationAttributeService;
+        private readonly IDataProvider _dataProvider;
+        private readonly IDateRangeService _dateRangeService;
+        private readonly IEncryptionService _encryptionService;
+        private readonly ILocalizationService _localizationService;
         private readonly ILogger _logger;
-        private readonly IStoreMappingService _storeMappingService;
+        private readonly IManufacturerService _manufacturerService;
+        private readonly IMeasureService _measureService;
+        private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
         private readonly INopFileProvider _fileProvider;
+        private readonly IPictureService _pictureService;
+        private readonly IProductAttributeService _productAttributeService;
+        private readonly IProductService _productService;
+        private readonly IProductTagService _productTagService;
+        private readonly IProductTemplateService _productTemplateService;
+        private readonly IServiceScopeFactory _serviceScopeFactory;
+        private readonly IShippingService _shippingService;
+        private readonly ISpecificationAttributeService _specificationAttributeService;
+        private readonly IStateProvinceService _stateProvinceService;
+        private readonly IStoreContext _storeContext;
+        private readonly IStoreMappingService _storeMappingService;
+        private readonly ITaxCategoryService _taxCategoryService;
+        private readonly IUrlRecordService _urlRecordService;
+        private readonly IVendorService _vendorService;
+        private readonly IWorkContext _workContext;
+        private readonly MediaSettings _mediaSettings;
+        private readonly VendorSettings _vendorSettings;
 
         #endregion
 
         #region Ctor
 
-        public ImportManager(IProductService productService,
+        public ImportManager(CatalogSettings catalogSettings,
             ICategoryService categoryService,
-            IManufacturerService manufacturerService,
-            IPictureService pictureService,
-            IUrlRecordService urlRecordService,
-            IStoreContext storeContext,
-            INewsLetterSubscriptionService newsLetterSubscriptionService,
             ICountryService countryService,
-            IStateProvinceService stateProvinceService,
-            IEncryptionService encryptionService,
-            IDataProvider dataProvider,
-            MediaSettings mediaSettings,
-            IVendorService vendorService,
-            IProductTemplateService productTemplateService,
-            IShippingService shippingService,
-            IDateRangeService dateRangeService,
-            ITaxCategoryService taxCategoryService,
-            IMeasureService measureService,
-            IProductAttributeService productAttributeService,
-            CatalogSettings catalogSettings,
-            IProductTagService productTagService,
-            IWorkContext workContext,
-            ILocalizationService localizationService,
             ICustomerActivityService customerActivityService,
-            VendorSettings vendorSettings,
-            ISpecificationAttributeService specificationAttributeService,
+            IDataProvider dataProvider,
+            IDateRangeService dateRangeService,
+            IEncryptionService encryptionService,
+            ILocalizationService localizationService,
             ILogger logger,
+            IManufacturerService manufacturerService,
+            IMeasureService measureService,
+            INewsLetterSubscriptionService newsLetterSubscriptionService,
+            INopFileProvider fileProvider,
+            IPictureService pictureService,
+            IProductAttributeService productAttributeService,
+            IProductService productService,
+            IProductTagService productTagService,
+            IProductTemplateService productTemplateService,
             IServiceScopeFactory serviceScopeFactory,
+            IShippingService shippingService,
+            ISpecificationAttributeService specificationAttributeService,
+            IStateProvinceService stateProvinceService,
+            IStoreContext storeContext,
             IStoreMappingService storeMappingService,
-            INopFileProvider fileProvider)
+            ITaxCategoryService taxCategoryService,
+            IUrlRecordService urlRecordService,
+            IVendorService vendorService,
+            IWorkContext workContext,
+            MediaSettings mediaSettings,
+            VendorSettings vendorSettings)
         {
-            this._productService = productService;
-            this._categoryService = categoryService;
-            this._manufacturerService = manufacturerService;
-            this._pictureService = pictureService;
-            this._urlRecordService = urlRecordService;
-            this._storeContext = storeContext;
-            this._newsLetterSubscriptionService = newsLetterSubscriptionService;
-            this._countryService = countryService;
-            this._stateProvinceService = stateProvinceService;
-            this._encryptionService = encryptionService;
-            this._dataProvider = dataProvider;
-            this._mediaSettings = mediaSettings;
-            this._vendorService = vendorService;
-            this._productTemplateService = productTemplateService;
-            this._shippingService = shippingService;
-            this._dateRangeService = dateRangeService;
-            this._taxCategoryService = taxCategoryService;
-            this._measureService = measureService;
-            this._productAttributeService = productAttributeService;
             this._catalogSettings = catalogSettings;
-            this._productTagService = productTagService;
-            this._workContext = workContext;
-            this._localizationService = localizationService;
+            this._categoryService = categoryService;
+            this._countryService = countryService;
             this._customerActivityService = customerActivityService;
-            this._vendorSettings = vendorSettings;
-            this._specificationAttributeService = specificationAttributeService;
-            this._logger = logger;
-            this._serviceScopeFactory = serviceScopeFactory;
-            this._storeMappingService = storeMappingService;
+            this._dataProvider = dataProvider;
+            this._dateRangeService = dateRangeService;
+            this._encryptionService = encryptionService;
             this._fileProvider = fileProvider;
+            this._localizationService = localizationService;
+            this._logger = logger;
+            this._manufacturerService = manufacturerService;
+            this._measureService = measureService;
+            this._newsLetterSubscriptionService = newsLetterSubscriptionService;
+            this._pictureService = pictureService;
+            this._productAttributeService = productAttributeService;
+            this._productService = productService;
+            this._productTagService = productTagService;
+            this._productTemplateService = productTemplateService;
+            this._serviceScopeFactory = serviceScopeFactory;
+            this._shippingService = shippingService;
+            this._specificationAttributeService = specificationAttributeService;
+            this._stateProvinceService = stateProvinceService;
+            this._storeContext = storeContext;
+            this._storeMappingService = storeMappingService;
+            this._taxCategoryService = taxCategoryService;
+            this._urlRecordService = urlRecordService;
+            this._vendorService = vendorService;
+            this._workContext = workContext;
+            this._mediaSettings = mediaSettings;
+            this._vendorSettings = vendorSettings;
         }
 
         #endregion
@@ -518,9 +518,7 @@ namespace Nop.Services.ExportImport
                 category.AllowCustomersToSelectPageSize = true;
             }
             else
-            {
-                curentCategoryBreadCrumb = category.GetFormattedBreadCrumb(_categoryService);
-            }
+                curentCategoryBreadCrumb = _categoryService.GetFormattedBreadCrumb(category);
 
             return category;
         }
@@ -532,7 +530,7 @@ namespace Nop.Services.ExportImport
             else
                 _categoryService.UpdateCategory(category);
 
-            var categoryBreadCrumb = category.GetFormattedBreadCrumb(_categoryService);
+            var categoryBreadCrumb = _categoryService.GetFormattedBreadCrumb(category);
             if (!allCategories.ContainsKey(categoryBreadCrumb))
                 allCategories.Add(categoryBreadCrumb, category);
             if (!string.IsNullOrEmpty(curentCategoryBreadCrumb) && allCategories.ContainsKey(curentCategoryBreadCrumb) &&
@@ -541,7 +539,7 @@ namespace Nop.Services.ExportImport
 
             //search engine name
             if (setSeName)
-                _urlRecordService.SaveSlug(category, category.ValidateSeName(seName, category.Name, true), 0);
+                _urlRecordService.SaveSlug(category, _urlRecordService.ValidateSeName(category, seName, category.Name, true), 0);
         }
 
         protected virtual void SetOutLineForProductAttributeRow(object cellValue, ExcelWorksheet worksheet, int endRow)
@@ -1127,7 +1125,7 @@ namespace Nop.Services.ExportImport
                 }
             }
         }
-       
+
         #endregion
 
         #region Methods
@@ -1162,7 +1160,7 @@ namespace Nop.Services.ExportImport
 
             return properties;
         }
-        
+
         /// <summary>
         /// Import products from XLSX file
         /// </summary>
@@ -1175,7 +1173,7 @@ namespace Nop.Services.ExportImport
                 var worksheet = xlPackage.Workbook.Worksheets.FirstOrDefault();
                 if (worksheet == null)
                     throw new NopException("No worksheet found");
-                
+
                 var downloadedFiles = new List<string>();
 
                 var metadata = PrepareImportProductData(worksheet);
@@ -1609,7 +1607,7 @@ namespace Nop.Services.ExportImport
                     {
                         var seName = tempProperty.StringValue;
                         //search engine name
-                        _urlRecordService.SaveSlug(product, product.ValidateSeName(seName, product.Name, true), 0);
+                        _urlRecordService.SaveSlug(product, _urlRecordService.ValidateSeName(product, seName, product.Name, true), 0);
                     }
 
                     tempProperty = metadata.Manager.GetProperty("Categories");
@@ -1695,7 +1693,7 @@ namespace Nop.Services.ExportImport
                         var filter = pruductTagsByIds.Select(pt => pt.Id.ToString()).ToList();
 
                         //product tag mappings
-                        _productTagService.UpdateProductTags(product, productTags.Where(pt=>!filter.Contains(pt)).ToArray());
+                        _productTagService.UpdateProductTags(product, productTags.Where(pt => !filter.Contains(pt)).ToArray());
                     }
 
                     var picture1 = DownloadFile(metadata.Manager.GetProperty("Picture1")?.StringValue, downloadedFiles);
@@ -1725,7 +1723,7 @@ namespace Nop.Services.ExportImport
 
                 foreach (var downloadedFile in downloadedFiles)
                 {
-                    if(!_fileProvider.FileExists(downloadedFile))
+                    if (!_fileProvider.FileExists(downloadedFile))
                         continue;
 
                     try
@@ -1734,7 +1732,7 @@ namespace Nop.Services.ExportImport
                     }
                     catch
                     {
-                       
+
                     }
                 }
 
@@ -1742,7 +1740,7 @@ namespace Nop.Services.ExportImport
                 _customerActivityService.InsertActivity("ImportProducts", string.Format(_localizationService.GetResource("ActivityLog.ImportProducts"), metadata.CountProductsInFile));
             }
         }
-        
+
         /// <summary>
         /// Import newsletter subscribers from TXT file
         /// </summary>
@@ -1995,7 +1993,7 @@ namespace Nop.Services.ExportImport
 
                     //search engine name
                     if (setSeName)
-                        _urlRecordService.SaveSlug(manufacturer, manufacturer.ValidateSeName(seName, manufacturer.Name, true), 0);
+                        _urlRecordService.SaveSlug(manufacturer, _urlRecordService.ValidateSeName(manufacturer, seName, manufacturer.Name, true), 0);
 
                     iRow++;
                 }
@@ -2030,7 +2028,7 @@ namespace Nop.Services.ExportImport
                 //performance optimization, load all categories in one SQL request
                 var allCategories = _categoryService
                     .GetAllCategories(showHidden: true, loadCacheableCopy: false)
-                    .GroupBy(c => c.GetFormattedBreadCrumb(_categoryService))
+                    .GroupBy(c => _categoryService.GetFormattedBreadCrumb(c))
                     .ToDictionary(c => c.Key, c => c.First());
 
                 var saveNextTime = new List<int>();
@@ -2131,7 +2129,7 @@ namespace Nop.Services.ExportImport
         {
             public CategoryKey(Category category, ICategoryService categoryService, IStoreMappingService storeMappingService)
             {
-                Key = category.GetFormattedBreadCrumb(categoryService);
+                Key = categoryService.GetFormattedBreadCrumb(category);
                 StoresIds = category.LimitedToStores ? storeMappingService.GetStoresIdsWithAccess(category).ToList() : new List<int>();
                 Category = category;
             }
@@ -2154,13 +2152,13 @@ namespace Nop.Services.ExportImport
                 if (Category != null && y.Category != null)
                     return Category.Id == y.Category.Id;
 
-                if ((StoresIds.Any() || y.StoresIds.Any()) 
+                if ((StoresIds.Any() || y.StoresIds.Any())
                     && (StoresIds.All(id => !y.StoresIds.Contains(id)) || y.StoresIds.All(id => !StoresIds.Contains(id))))
                     return false;
 
                 return Key.Equals(y.Key);
             }
-            
+
             public override int GetHashCode()
             {
                 if (StoresIds.Any())

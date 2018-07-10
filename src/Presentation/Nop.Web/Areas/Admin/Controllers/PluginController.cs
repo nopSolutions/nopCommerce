@@ -35,13 +35,17 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly ExternalAuthenticationSettings _externalAuthenticationSettings;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly IEventPublisher _eventPublisher;
+        private readonly IExternalAuthenticationService _externalAuthenticationService;
         private readonly ILocalizationService _localizationService;
+        private readonly IPaymentService _paymentService;
         private readonly IPermissionService _permissionService;
         private readonly IPluginFinder _pluginFinder;
         private readonly IPluginModelFactory _pluginModelFactory;
         private readonly ISettingService _settingService;
+        private readonly IShippingService _shippingService;
         private readonly IUploadService _uploadService;
         private readonly IWebHelper _webHelper;
+        private readonly IWidgetService _widgetService;
         private readonly PaymentSettings _paymentSettings;
         private readonly ShippingSettings _shippingSettings;
         private readonly TaxSettings _taxSettings;
@@ -54,13 +58,17 @@ namespace Nop.Web.Areas.Admin.Controllers
         public PluginController(ExternalAuthenticationSettings externalAuthenticationSettings,
             ICustomerActivityService customerActivityService,
             IEventPublisher eventPublisher,
+            IExternalAuthenticationService externalAuthenticationService,
             ILocalizationService localizationService,
+            IPaymentService paymentService,
             IPermissionService permissionService,
             IPluginFinder pluginFinder,
             IPluginModelFactory pluginModelFactory,
             ISettingService settingService,
+            IShippingService shippingService,
             IUploadService uploadService,
             IWebHelper webHelper,
+            IWidgetService widgetService,
             PaymentSettings paymentSettings,
             ShippingSettings shippingSettings,
             TaxSettings taxSettings,
@@ -69,13 +77,17 @@ namespace Nop.Web.Areas.Admin.Controllers
             this._externalAuthenticationSettings = externalAuthenticationSettings;
             this._customerActivityService = customerActivityService;
             this._eventPublisher = eventPublisher;
+            this._externalAuthenticationService = externalAuthenticationService;
             this._localizationService = localizationService;
+            this._paymentService = paymentService;
             this._permissionService = permissionService;
             this._pluginFinder = pluginFinder;
             this._pluginModelFactory = pluginModelFactory;
             this._settingService = settingService;
+            this._shippingService = shippingService;
             this._uploadService = uploadService;
             this._webHelper = webHelper;
+            this._widgetService = widgetService;
             this._paymentSettings = paymentSettings;
             this._shippingSettings = shippingSettings;
             this._taxSettings = taxSettings;
@@ -99,7 +111,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             var model = _pluginModelFactory.PreparePluginsConfigurationModel(new PluginsConfigurationModel());
 
             return View(model);
-        }       
+        }
 
         [HttpPost]
         public virtual IActionResult ListSelect(PluginSearchModel searchModel)
@@ -350,7 +362,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //locales
                 foreach (var localized in model.Locales)
                 {
-                    pluginDescriptor.Instance().SaveLocalizedFriendlyName(_localizationService, localized.LanguageId, localized.FriendlyName);
+                    _localizationService.SaveLocalizedFriendlyName(pluginDescriptor.Instance(), localized.LanguageId, localized.FriendlyName);
                 }
 
                 //enabled/disabled
@@ -360,7 +372,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     switch (pluginInstance)
                     {
                         case IPaymentMethod paymentMethod:
-                            if (paymentMethod.IsPaymentMethodActive(_paymentSettings) && !model.IsEnabled)
+                            if (_paymentService.IsPaymentMethodActive(paymentMethod) && !model.IsEnabled)
                             {
                                 //mark as disabled
                                 _paymentSettings.ActivePaymentMethodSystemNames.Remove(pluginDescriptor.SystemName);
@@ -368,7 +380,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                                 break;
                             }
 
-                            if (!paymentMethod.IsPaymentMethodActive(_paymentSettings) && model.IsEnabled)
+                            if (!_paymentService.IsPaymentMethodActive(paymentMethod) && model.IsEnabled)
                             {
                                 //mark as enabled
                                 _paymentSettings.ActivePaymentMethodSystemNames.Add(pluginDescriptor.SystemName);
@@ -377,7 +389,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                             break;
                         case IShippingRateComputationMethod shippingRateComputationMethod:
-                            if (shippingRateComputationMethod.IsShippingRateComputationMethodActive(_shippingSettings) && !model.IsEnabled)
+                            if (_shippingService.IsShippingRateComputationMethodActive(shippingRateComputationMethod) && !model.IsEnabled)
                             {
                                 //mark as disabled
                                 _shippingSettings.ActiveShippingRateComputationMethodSystemNames.Remove(pluginDescriptor.SystemName);
@@ -385,7 +397,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                                 break;
                             }
 
-                            if (!shippingRateComputationMethod.IsShippingRateComputationMethodActive(_shippingSettings) && model.IsEnabled)
+                            if (!_shippingService.IsShippingRateComputationMethodActive(shippingRateComputationMethod) && model.IsEnabled)
                             {
                                 //mark as enabled
                                 _shippingSettings.ActiveShippingRateComputationMethodSystemNames.Add(pluginDescriptor.SystemName);
@@ -394,7 +406,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                             break;
                         case IPickupPointProvider pickupPointProvider:
-                            if (pickupPointProvider.IsPickupPointProviderActive(_shippingSettings) && !model.IsEnabled)
+                            if (_shippingService.IsPickupPointProviderActive(pickupPointProvider) && !model.IsEnabled)
                             {
                                 //mark as disabled
                                 _shippingSettings.ActivePickupPointProviderSystemNames.Remove(pluginDescriptor.SystemName);
@@ -402,7 +414,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                                 break;
                             }
 
-                            if (!pickupPointProvider.IsPickupPointProviderActive(_shippingSettings) && model.IsEnabled)
+                            if (!_shippingService.IsPickupPointProviderActive(pickupPointProvider) && model.IsEnabled)
                             {
                                 //mark as enabled
                                 _shippingSettings.ActivePickupPointProviderSystemNames.Add(pluginDescriptor.SystemName);
@@ -424,7 +436,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                             _settingService.SaveSetting(_taxSettings);
                             break;
                         case IExternalAuthenticationMethod externalAuthenticationMethod:
-                            if (externalAuthenticationMethod.IsMethodActive(_externalAuthenticationSettings) && !model.IsEnabled)
+                            if (_externalAuthenticationService.IsExternalAuthenticationMethodActive(externalAuthenticationMethod) && !model.IsEnabled)
                             {
                                 //mark as disabled
                                 _externalAuthenticationSettings.ActiveAuthenticationMethodSystemNames.Remove(pluginDescriptor.SystemName);
@@ -432,7 +444,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                                 break;
                             }
 
-                            if (!externalAuthenticationMethod.IsMethodActive(_externalAuthenticationSettings) && model.IsEnabled)
+                            if (!_externalAuthenticationService.IsExternalAuthenticationMethodActive(externalAuthenticationMethod) && model.IsEnabled)
                             {
                                 //mark as enabled
                                 _externalAuthenticationSettings.ActiveAuthenticationMethodSystemNames.Add(pluginDescriptor.SystemName);
@@ -441,7 +453,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                             break;
                         case IWidgetPlugin widgetPlugin:
-                            if (widgetPlugin.IsWidgetActive(_widgetSettings) && !model.IsEnabled)
+                            if (_widgetService.IsWidgetActive(widgetPlugin) && !model.IsEnabled)
                             {
                                 //mark as disabled
                                 _widgetSettings.ActiveWidgetSystemNames.Remove(pluginDescriptor.SystemName);
@@ -449,7 +461,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                                 break;
                             }
 
-                            if (!widgetPlugin.IsWidgetActive(_widgetSettings) && model.IsEnabled)
+                            if (!_widgetService.IsWidgetActive(widgetPlugin) && model.IsEnabled)
                             {
                                 //mark as enabled
                                 _widgetSettings.ActiveWidgetSystemNames.Add(pluginDescriptor.SystemName);
@@ -468,7 +480,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 return View(model);
             }
-            
+
             //prepare model
             model = _pluginModelFactory.PreparePluginModel(model, pluginDescriptor, true);
 

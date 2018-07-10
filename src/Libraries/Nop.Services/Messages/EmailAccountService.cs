@@ -13,20 +13,25 @@ namespace Nop.Services.Messages
     /// </summary>
     public partial class EmailAccountService : IEmailAccountService
     {
-        private readonly IRepository<EmailAccount> _emailAccountRepository;
-        private readonly IEventPublisher _eventPublisher;
+        #region Fields
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="emailAccountRepository">Email account repository</param>
-        /// <param name="eventPublisher">Event publisher</param>
-        public EmailAccountService(IRepository<EmailAccount> emailAccountRepository,
-            IEventPublisher eventPublisher)
+        private readonly IEventPublisher _eventPublisher;
+        private readonly IRepository<EmailAccount> _emailAccountRepository;
+
+        #endregion
+
+        #region Ctor
+
+        public EmailAccountService(IEventPublisher eventPublisher,
+            IRepository<EmailAccount> emailAccountRepository)
         {
-            this._emailAccountRepository = emailAccountRepository;
             this._eventPublisher = eventPublisher;
+            this._emailAccountRepository = emailAccountRepository;
         }
+
+        #endregion
+
+        #region Methods
 
         /// <summary>
         /// Inserts an email account
@@ -137,5 +142,7 @@ namespace Nop.Services.Messages
             var emailAccounts = query.ToList();
             return emailAccounts;
         }
+
+        #endregion
     }
 }

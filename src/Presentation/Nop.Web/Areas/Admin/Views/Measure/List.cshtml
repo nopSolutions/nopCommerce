@@ -8,37 +8,42 @@
 }
 
 <nop-antiforgery-token />
-<div class="content-header clearfix">
-    <h1 class="pull-left">
-        @T("Admin.Configuration.Shipping.Measures")
-    </h1>
-    <div class="pull-right">
-        &nbsp;
-        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.MeasureListButtons })
+<form method="post">
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("Admin.Configuration.Shipping.Measures")
+        </h1>
+        <div class="pull-right">
+            &nbsp;
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.MeasureListButtons })
+        </div>
     </div>
-</div>
 
-<div class="content">
-    <div class="form-horizontal">
-        <div class="panel-group">
+    <div class="content">
+        <div class="form-horizontal">
             <div class="panel-group">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        @T("Admin.Configuration.Shipping.Measures.Dimensions")
+                <div class="panel-group">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            @T("Admin.Configuration.Shipping.Measures.Dimensions")
+                        </div>
+                        <div class="panel-body">
+                            @await Html.PartialAsync("Dimensions", Model)
+                        </div>
                     </div>
-                    <div class="panel-body">
-                        @await Html.PartialAsync("Dimensions", Model)
-                    </div>
-                </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        @T("Admin.Configuration.Shipping.Measures.Weights")
-                    </div>
-                    <div class="panel-body">
-                        @await Html.PartialAsync("Weights", Model)
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            @T("Admin.Configuration.Shipping.Measures.Weights")
+                        </div>
+                        <div class="panel-body">
+                            @await Html.PartialAsync("Weights", Model)
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+</form>
+<nop-action-confirmation asp-button-id="btnMarkAsPrimaryDimension" asp-additional-confirm="Admin.Configuration.Shipping.Measures.AdditionalConfirm" />
+<nop-action-confirmation asp-button-id="btnMarkAsPrimaryWeight" asp-additional-confirm="Admin.Configuration.Shipping.Measures.AdditionalConfirm" />
+

@@ -9,10 +9,7 @@ namespace Nop.Services.Orders
     /// </summary>
     public partial class PlaceOrderResult
     {
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        public PlaceOrderResult() 
+        public PlaceOrderResult()
         {
             this.Errors = new List<string>();
         }
@@ -38,7 +35,7 @@ namespace Nop.Services.Orders
         /// Errors
         /// </summary>
         public IList<string> Errors { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the placed order
         /// </summary>

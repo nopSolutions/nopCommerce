@@ -56,7 +56,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         [HttpPost]
         //do not validate request token (XSRF)
-        [AdminAntiForgery(true)] 
+        [AdminAntiForgery(true)]
         public virtual IActionResult SaveDownloadUrl(string downloadUrl)
         {
             //insert
@@ -66,7 +66,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 UseDownloadUrl = true,
                 DownloadUrl = downloadUrl,
                 IsNew = true
-              };
+            };
             _downloadService.InsertDownload(download);
 
             return Json(new { downloadId = download.Id });
@@ -88,7 +88,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 });
             }
 
-            var fileBinary = httpPostedFile.GetDownloadBits();
+            var fileBinary = _downloadService.GetDownloadBits(httpPostedFile);
 
             var qqFileNameParameter = "qqfilename";
             var fileName = httpPostedFile.FileName;
@@ -119,9 +119,12 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //when returning JSON the mime-type must be set to text/plain
             //otherwise some browsers will pop-up a "Save As" dialog.
-            return Json(new { success = true, 
-                downloadId = download.Id, 
-                downloadUrl = Url.Action("DownloadFile", new { downloadGuid = download.DownloadGuid }) });
+            return Json(new
+            {
+                success = true,
+                downloadId = download.Id,
+                downloadUrl = Url.Action("DownloadFile", new { downloadGuid = download.DownloadGuid })
+            });
         }
 
         #endregion

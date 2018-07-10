@@ -14,35 +14,38 @@ namespace Nop.Web.Controllers
 {
     public partial class BackInStockSubscriptionController : BasePublicController
     {
-		#region Fields
+        #region Fields
 
-        private readonly IProductService _productService;
-        private readonly IWorkContext _workContext;
-        private readonly IStoreContext _storeContext;
-        private readonly ILocalizationService _localizationService;
-        private readonly IBackInStockSubscriptionService _backInStockSubscriptionService;
         private readonly CatalogSettings _catalogSettings;
         private readonly CustomerSettings _customerSettings;
-        
+        private readonly IBackInStockSubscriptionService _backInStockSubscriptionService;
+        private readonly ILocalizationService _localizationService;
+        private readonly IProductService _productService;
+        private readonly IStoreContext _storeContext;
+        private readonly IUrlRecordService _urlRecordService;
+        private readonly IWorkContext _workContext;
+
         #endregion
 
-		#region Ctor
+        #region Ctor
 
-        public BackInStockSubscriptionController(IProductService productService,
-            IWorkContext workContext, 
-            IStoreContext storeContext,
-            ILocalizationService localizationService,
+        public BackInStockSubscriptionController(CatalogSettings catalogSettings,
+            CustomerSettings customerSettings,
             IBackInStockSubscriptionService backInStockSubscriptionService,
-            CatalogSettings catalogSettings,
-            CustomerSettings customerSettings)
+            ILocalizationService localizationService,
+            IProductService productService,
+            IStoreContext storeContext,
+            IUrlRecordService urlRecordService,
+            IWorkContext workContext)
         {
-            this._productService = productService;
-            this._workContext = workContext;
-            this._storeContext = storeContext;
-            this._localizationService = localizationService;
-            this._backInStockSubscriptionService = backInStockSubscriptionService;
             this._catalogSettings = catalogSettings;
             this._customerSettings = customerSettings;
+            this._backInStockSubscriptionService = backInStockSubscriptionService;
+            this._localizationService = localizationService;
+            this._productService = productService;
+            this._storeContext = storeContext;
+            this._urlRecordService = urlRecordService;
+            this._workContext = workContext;
         }
 
         #endregion
@@ -59,8 +62,8 @@ namespace Nop.Web.Controllers
             var model = new BackInStockSubscribeModel
             {
                 ProductId = product.Id,
-                ProductName = product.GetLocalized(x => x.Name),
-                ProductSeName = product.GetSeName(),
+                ProductName = _localizationService.GetLocalized(product, x => x.Name),
+                ProductSeName = _urlRecordService.GetSeName(product),
                 IsCurrentCustomerRegistered = _workContext.CurrentCustomer.IsRegistered(),
                 MaximumBackInStockSubscriptions = _catalogSettings.MaximumBackInStockSubscriptions,
                 CurrentNumberOfBackInStockSubscriptions = _backInStockSubscriptionService
@@ -70,7 +73,7 @@ namespace Nop.Web.Controllers
             if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStock &&
                 product.BackorderMode == BackorderMode.NoBackorders &&
                 product.AllowBackInStockSubscriptions &&
-                product.GetTotalStockQuantity() <= 0)
+                _productService.GetTotalStockQuantity(product) <= 0)
             {
                 //out of stock
                 model.SubscriptionAllowed = true;
@@ -93,7 +96,7 @@ namespace Nop.Web.Controllers
             if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStock &&
                 product.BackorderMode == BackorderMode.NoBackorders &&
                 product.AllowBackInStockSubscriptions &&
-                product.GetTotalStockQuantity() <= 0)
+                _productService.GetTotalStockQuantity(product) <= 0)
             {
                 //out of stock
                 var subscription = _backInStockSubscriptionService
@@ -171,8 +174,8 @@ namespace Nop.Web.Controllers
                     {
                         Id = subscription.Id,
                         ProductId = product.Id,
-                        ProductName = product.GetLocalized(x => x.Name),
-                        SeName = product.GetSeName(),
+                        ProductName = _localizationService.GetLocalized(product, x => x.Name),
+                        SeName = _urlRecordService.GetSeName(product),
                     };
                     model.Subscriptions.Add(subscriptionModel);
                 }

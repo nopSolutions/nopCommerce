@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using Nop.Core;
 using Nop.Core.Domain.Logging;
 using Nop.Core.Html;
 using Nop.Services.Helpers;
@@ -21,7 +20,6 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ILocalizationService _localizationService;
         private readonly ILogger _logger;
-        private readonly IWorkContext _workContext;
 
         #endregion
 
@@ -30,14 +28,12 @@ namespace Nop.Web.Areas.Admin.Factories
         public LogModelFactory(IBaseAdminModelFactory baseAdminModelFactory,
             IDateTimeHelper dateTimeHelper,
             ILocalizationService localizationService,
-            ILogger logger,
-            IWorkContext workContext)
+            ILogger logger)
         {
             this._baseAdminModelFactory = baseAdminModelFactory;
             this._dateTimeHelper = dateTimeHelper;
             this._localizationService = localizationService;
             this._logger = logger;
-            this._workContext = workContext;
         }
 
         #endregion
@@ -111,7 +107,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     //fill in additional values (not existing in the entity)
                     logModel.CustomerEmail = logItem.Customer?.Email;
-                    logModel.LogLevel = logItem.LogLevel.GetLocalizedEnum(_localizationService, _workContext);
+                    logModel.LogLevel = _localizationService.GetLocalizedEnum(logItem.LogLevel);
                     logModel.ShortMessage = HtmlHelper.FormatText(logItem.ShortMessage, false, true, false, false, false, false);
 
                     return logModel;
@@ -137,7 +133,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 model = model ?? new LogModel
                 {
                     Id = log.Id,
-                    LogLevel = log.LogLevel.GetLocalizedEnum(_localizationService, _workContext),
+                    LogLevel = _localizationService.GetLocalizedEnum(log.LogLevel),
                     ShortMessage = HtmlHelper.FormatText(log.ShortMessage, false, true, false, false, false, false),
                     FullMessage = HtmlHelper.FormatText(log.FullMessage, false, true, false, false, false, false),
                     IpAddress = log.IpAddress,

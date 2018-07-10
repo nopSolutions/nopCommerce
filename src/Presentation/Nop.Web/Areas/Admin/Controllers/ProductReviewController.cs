@@ -25,6 +25,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly CatalogSettings _catalogSettings;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly IEventPublisher _eventPublisher;
+        private readonly IGenericAttributeService _genericAttributeService;
         private readonly ILocalizationService _localizationService;
         private readonly IPermissionService _permissionService;
         private readonly IProductReviewModelFactory _productReviewModelFactory;
@@ -39,6 +40,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public ProductReviewController(CatalogSettings catalogSettings,
             ICustomerActivityService customerActivityService,
             IEventPublisher eventPublisher,
+            IGenericAttributeService genericAttributeService,
             ILocalizationService localizationService,
             IPermissionService permissionService,
             IProductReviewModelFactory productReviewModelFactory,
@@ -49,6 +51,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             this._catalogSettings = catalogSettings;
             this._customerActivityService = customerActivityService;
             this._eventPublisher = eventPublisher;
+            this._genericAttributeService = genericAttributeService;
             this._localizationService = localizationService;
             this._permissionService = permissionService;
             this._productReviewModelFactory = productReviewModelFactory;
@@ -143,7 +146,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 if (productReview.IsApproved && !string.IsNullOrEmpty(productReview.ReplyText)
                     && _catalogSettings.NotifyCustomerAboutProductReviewReply && !productReview.CustomerNotifiedOfReply)
                 {
-                    var customerLanguageId = productReview.Customer.GetAttribute<int>(NopCustomerDefaults.LanguageIdAttribute, productReview.StoreId);
+                    var customerLanguageId = _genericAttributeService.GetAttribute<int>(productReview.Customer,
+                        NopCustomerDefaults.LanguageIdAttribute, productReview.StoreId);
                     var queuedEmailIds = _workflowMessageService.SendProductReviewReplyCustomerNotificationMessage(productReview, customerLanguageId);
                     if (queuedEmailIds.Any())
                         productReview.CustomerNotifiedOfReply = true;

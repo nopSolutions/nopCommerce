@@ -47,6 +47,14 @@ namespace Nop.Services.Common
         /// </summary>
         public static string AddressAttributeValuesPatternCacheKey => "Nop.addressattributevalue.";
 
+        /// <summary>
+        /// Gets a name of the custom address attribute control
+        /// </summary>
+        /// <remarks>
+        /// {0} : address attribute id
+        /// </remarks>
+        public static string AddressAttributeControlName => "address_attribute_{0}";
+
         #endregion
 
         #region Addresses

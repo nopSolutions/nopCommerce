@@ -16,26 +16,26 @@ namespace Nop.Web.Factories
     {
 		#region Fields
 
-        private readonly IWidgetService _widgetService;
+        private readonly IStaticCacheManager _cacheManager;
         private readonly IStoreContext _storeContext;
         private readonly IThemeContext _themeContext;
-        private readonly IStaticCacheManager _cacheManager;
+        private readonly IWidgetService _widgetService;
         private readonly IWorkContext _workContext;
 
         #endregion
 
         #region Ctor
 
-        public WidgetModelFactory(IWidgetService widgetService, 
+        public WidgetModelFactory(IStaticCacheManager cacheManager,
             IStoreContext storeContext,
             IThemeContext themeContext,
-            IStaticCacheManager cacheManager,
+            IWidgetService widgetService,
             IWorkContext workContext)
         {
-            this._widgetService = widgetService;
+            this._cacheManager = cacheManager;
             this._storeContext = storeContext;
             this._themeContext = themeContext;
-            this._cacheManager = cacheManager;
+            this._widgetService = widgetService;
             this._workContext = workContext;
         }
 

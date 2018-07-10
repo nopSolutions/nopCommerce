@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Xml;
 using Nop.Core.Domain.Orders;
-using Nop.Services.Catalog;
+using Nop.Core.Infrastructure;
 
 namespace Nop.Services.Orders
 {
@@ -16,26 +16,14 @@ namespace Nop.Services.Orders
         #region Fields
 
         private readonly ICheckoutAttributeService _checkoutAttributeService;
-        private readonly IProductAttributeParser _productAttributeParser;
-        private readonly IProductService _productService;
 
         #endregion
 
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="checkoutAttributeService">Checkout attribute service</param>
-        /// <param name="productAttributeParser">Product attribute parser</param>
-        /// <param name="productService">Product service</param>
-        public CheckoutAttributeParser(ICheckoutAttributeService checkoutAttributeService,
-            IProductAttributeParser productAttributeParser,
-            IProductService productService)
+        public CheckoutAttributeParser(ICheckoutAttributeService checkoutAttributeService)
         {
             this._checkoutAttributeService = checkoutAttributeService;
-            this._productAttributeParser = productAttributeParser;
-            this._productService = productService;
         }
 
         #endregion
@@ -264,7 +252,8 @@ namespace Nop.Services.Orders
             var result = attributesXml;
 
             //removing "shippable" checkout attributes if there's no any shippable products in the cart
-            if (!cart.RequiresShipping(_productService, _productAttributeParser))
+            var shoppingCartService = EngineContext.Current.Resolve<IShoppingCartService>();
+            if (!shoppingCartService.ShoppingCartRequiresShipping(cart))
             {
                 //find attribute IDs to remove
                 var checkoutAttributeIdsToRemove = new List<int>();
@@ -293,7 +282,7 @@ namespace Nop.Services.Orders
                             }
                         }
                     }
-                    foreach(var node in nodesToRemove)
+                    foreach (var node in nodesToRemove)
                     {
                         node.ParentNode.RemoveChild(node);
                     }

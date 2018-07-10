@@ -22,39 +22,30 @@ namespace Nop.Services.Installation
     {
         #region Fields
 
-        private readonly IRepository<Language> _languageRepository;
-        private readonly IRepository<Customer> _customerRepository;
-        private readonly IRepository<Store> _storeRepository;
         private readonly IDbContext _dbContext;
-        private readonly IWebHelper _webHelper;
         private readonly INopFileProvider _fileProvider;
+        private readonly IRepository<Customer> _customerRepository;
+        private readonly IRepository<Language> _languageRepository;
+        private readonly IRepository<Store> _storeRepository;
+        private readonly IWebHelper _webHelper;
 
         #endregion
 
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="languageRepository">Language repository</param>
-        /// <param name="customerRepository">Customer repository</param>
-        /// <param name="storeRepository">Store repository</param>
-        /// <param name="dbContext">DB context</param>
-        /// <param name="webHelper">Web helper</param>
-        /// <param name="fileProvider">File provider</param>
-        public SqlFileInstallationService(IRepository<Language> languageRepository,
+        public SqlFileInstallationService(IDbContext dbContext,
+            INopFileProvider fileProvider,
             IRepository<Customer> customerRepository,
+            IRepository<Language> languageRepository,
             IRepository<Store> storeRepository,
-            IDbContext dbContext,
-            IWebHelper webHelper,
-            INopFileProvider fileProvider)
+            IWebHelper webHelper)
         {
-            this._languageRepository = languageRepository;
-            this._customerRepository = customerRepository;
-            this._storeRepository = storeRepository;
             this._dbContext = dbContext;
-            this._webHelper = webHelper;
             this._fileProvider = fileProvider;
+            this._customerRepository = customerRepository;
+            this._languageRepository = languageRepository;
+            this._storeRepository = storeRepository;
+            this._webHelper = webHelper;
         }
 
         #endregion
@@ -121,7 +112,7 @@ namespace Nop.Services.Installation
         protected virtual void ExecuteSqlFile(string path)
         {
             var statements = new List<string>();
-            
+
             using (var reader = new StreamReader(path))
             {
                 string statement;

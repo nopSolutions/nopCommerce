@@ -43,8 +43,8 @@ namespace Nop.Services.Tests.Helpers
                 DefaultStoreTimeZoneId = ""
             };
 
-            _dateTimeHelper = new DateTimeHelper(_workContext.Object, _genericAttributeService.Object,
-                _settingService.Object, _dateTimeSettings);
+            _dateTimeHelper = new DateTimeHelper(_dateTimeSettings, _genericAttributeService.Object, 
+                _settingService.Object, _workContext.Object);
         }
 
         [Test]
@@ -74,18 +74,8 @@ namespace Nop.Services.Tests.Helpers
                 Id = 10
             };
 
-            _genericAttributeService.Setup(x => x.GetAttributesForEntity(customer.Id, "Customer"))
-                .Returns(new List<GenericAttribute>
-                            {
-                                new GenericAttribute
-                                    {
-                                        StoreId = 0,
-                                        EntityId = customer.Id,
-                                        Key = NopCustomerDefaults.TimeZoneIdAttribute,
-                                        KeyGroup = "Customer",
-                                        Value = "Russian Standard Time" //(GMT+03:00) Moscow, St. Petersburg, Volgograd
-                                    }
-                            });
+            _genericAttributeService.Setup(x => x.GetAttribute<string>(customer, NopCustomerDefaults.TimeZoneIdAttribute, 0))
+                .Returns("Russian Standard Time" /*(GMT+03:00) Moscow, St. Petersburg, Volgograd*/);
 
             var timeZone = _dateTimeHelper.GetCustomerTimeZone(customer);
             timeZone.ShouldNotBeNull();

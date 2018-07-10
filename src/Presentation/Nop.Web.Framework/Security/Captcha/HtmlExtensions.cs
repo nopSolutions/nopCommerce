@@ -30,7 +30,10 @@ namespace Nop.Web.Framework.Security.Captcha
                 //this list got from this site: https://developers.google.com/recaptcha/docs/language, but we use languages only with two letters in the code
                 var supportedLanguageCodes = new List<string> { "af", "am", "ar", "az", "bg", "bn", "ca", "cs", "da", "de", "el", "en", "es", "et", "eu", "fa", "fi", "fil", "fr", "gl", "gu", "hi", "hr", "hu", "hy", "id", "is", "it", "iw", "ja", "ka", "kn", "ko", "lo", "lt", "lv", "ml", "mn", "mr", "ms", "nl", "no", "pl", "pt", "ro", "ru", "si", "sk", "sl", "sr", "sv", "sw", "ta", "te", "th", "tr", "uk", "ur", "vi", "zu" };
 
-                var twoLetterIsoCode = workContext.WorkingLanguage?.GetTwoLetterIsoLanguageName().ToLower() ?? string.Empty;
+                var languageService = EngineContext.Current.Resolve<ILanguageService>();
+                var twoLetterIsoCode = workContext.WorkingLanguage != null
+                    ? languageService.GetTwoLetterIsoLanguageName(workContext.WorkingLanguage).ToLower() 
+                    : string.Empty;
 
                 lang = supportedLanguageCodes.Contains(twoLetterIsoCode) ? twoLetterIsoCode : lang;
             }

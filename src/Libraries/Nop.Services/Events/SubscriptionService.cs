@@ -9,6 +9,8 @@ namespace Nop.Services.Events
     /// </summary>
     public class SubscriptionService : ISubscriptionService
     {
+        #region Methods
+
         /// <summary>
         /// Get subscriptions
         /// </summary>
@@ -18,5 +20,7 @@ namespace Nop.Services.Events
         {
             return EngineContext.Current.ResolveAll<IConsumer<T>>().ToList();
         }
+
+        #endregion
     }
 }

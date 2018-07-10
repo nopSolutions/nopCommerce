@@ -30,17 +30,6 @@ namespace Nop.Services.Catalog
 
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="cacheManager">Cache manager</param>
-        /// <param name="dbContext">Database Context</param>
-        /// <param name="eventPublisher">Event publisher</param>
-        /// <param name="productService">Product service</param>
-        /// <param name="productProductTagMappingRepository">Product - product tag repository</param>
-        /// <param name="productTagRepository">Product tag repository</param>
-        /// <param name="staticCacheManager">Static cache manager</param>
-        /// <param name="urlRecordService">Url record service</param>
         public ProductTagService(ICacheManager cacheManager,
             IDbContext dbContext,
             IEventPublisher eventPublisher,
@@ -61,7 +50,7 @@ namespace Nop.Services.Catalog
         }
 
         #endregion
-        
+
         #region Utilities
 
         /// <summary>
@@ -76,7 +65,7 @@ namespace Nop.Services.Catalog
             {
                 return _dbContext.QueryFromSql<ProductTagWithCount>($"Exec ProductTagCountLoadAll {storeId}")
                     .ToDictionary(item => item.ProductTagId, item => item.ProductCount);
-                
+
             });
         }
 
@@ -125,10 +114,10 @@ namespace Nop.Services.Catalog
             return _cacheManager.Get(key, () =>
             {
                 var query = from pt in _productTagRepository.Table
-                    join ppt in _productProductTagMappingRepository.Table on pt.Id equals ppt.ProductTagId
-                    where ppt.ProductId == productId
-                    orderby pt.Id
-                    select pt;
+                            join ppt in _productProductTagMappingRepository.Table on pt.Id equals ppt.ProductTagId
+                            where ppt.ProductId == productId
+                            orderby pt.Id
+                            select pt;
 
                 var productTags = query.ToList();
                 return productTags;
@@ -162,7 +151,7 @@ namespace Nop.Services.Catalog
             var productTag = query.FirstOrDefault();
             return productTag;
         }
-        
+
         /// <summary>
         /// Inserts a product tag
         /// </summary>
@@ -193,7 +182,7 @@ namespace Nop.Services.Catalog
 
             _productTagRepository.Update(productTag);
 
-            var seName = productTag.ValidateSeName("", productTag.Name, true);
+            var seName = _urlRecordService.ValidateSeName(productTag, "", productTag.Name, true);
             _urlRecordService.SaveSlug(productTag, seName, 0);
 
             //cache
@@ -215,7 +204,7 @@ namespace Nop.Services.Catalog
             var dictionary = GetProductCount(storeId);
             if (dictionary.ContainsKey(productTagId))
                 return dictionary[productTagId];
-            
+
             return 0;
         }
 
@@ -272,14 +261,14 @@ namespace Nop.Services.Catalog
                 {
                     productTag = productTag2;
                 }
-                if (!product.ProductTagExists(productTag.Id))
+                if (!_productService.ProductTagExists(product, productTag.Id))
                 {
                     //product.ProductTags.Add(productTag);
                     product.ProductProductTagMappings.Add(new ProductProductTagMapping { ProductTag = productTag });
                     _productService.UpdateProduct(product);
                 }
 
-                var seName = productTag.ValidateSeName("", productTag.Name, true);
+                var seName = _urlRecordService.ValidateSeName(productTag, "", productTag.Name, true);
                 _urlRecordService.SaveSlug(productTag, seName, 0);
 
             }

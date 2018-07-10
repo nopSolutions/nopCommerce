@@ -20,39 +20,30 @@ namespace Nop.Services.Orders
     {
         #region Fields
 
+        private readonly CatalogSettings _catalogSettings;
+        private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IRepository<Order> _orderRepository;
         private readonly IRepository<OrderItem> _orderItemRepository;
         private readonly IRepository<Product> _productRepository;
         private readonly IRepository<StoreMapping> _storeMappingRepository;
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly CatalogSettings _catalogSettings;
 
         #endregion
 
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="orderRepository">Order repository</param>
-        /// <param name="orderItemRepository">Order item repository</param>
-        /// <param name="productRepository">Product repository</param>
-        /// <param name="storeMappingRepository">Store mapping repository</param>
-        /// <param name="dateTimeHelper">Datetime helper</param>
-        /// <param name="catalogSettings">Catalog settings</param>
-        public OrderReportService(IRepository<Order> orderRepository,
+        public OrderReportService(CatalogSettings catalogSettings,
+            IDateTimeHelper dateTimeHelper,
+            IRepository<Order> orderRepository,
             IRepository<OrderItem> orderItemRepository,
             IRepository<Product> productRepository,
-            IRepository<StoreMapping> storeMappingRepository,
-            IDateTimeHelper dateTimeHelper,
-            CatalogSettings catalogSettings)
+            IRepository<StoreMapping> storeMappingRepository)
         {
+            this._catalogSettings = catalogSettings;
+            this._dateTimeHelper = dateTimeHelper;
             this._orderRepository = orderRepository;
             this._orderItemRepository = orderItemRepository;
             this._productRepository = productRepository;
             this._storeMappingRepository = storeMappingRepository;
-            this._dateTimeHelper = dateTimeHelper;
-            this._catalogSettings = catalogSettings;
         }
 
         #endregion
@@ -100,14 +91,14 @@ namespace Nop.Services.Orders
                 query = query.Where(o => endTimeUtc.Value >= o.CreatedOnUtc);
 
             var report = (from oq in query
-                    group oq by oq.BillingAddress.CountryId
+                          group oq by oq.BillingAddress.CountryId
                     into result
-                    select new
-                    {
-                        CountryId = result.Key,
-                        TotalOrders = result.Count(),
-                        SumOrders = result.Sum(o => o.OrderTotal)
-                    }
+                          select new
+                          {
+                              CountryId = result.Key,
+                              TotalOrders = result.Count(),
+                              SumOrders = result.Sum(o => o.OrderTotal)
+                          }
                 )
                 .OrderByDescending(x => x.SumOrders)
                 .Select(r => new OrderByCountryReportLine
@@ -140,7 +131,7 @@ namespace Nop.Services.Orders
         /// <param name="orderNotes">Search in order notes. Leave empty to load all records.</param>
         /// <returns>Result</returns>
         public virtual OrderAverageReportLine GetOrderAverageReportLine(int storeId = 0,
-            int vendorId = 0, int productId = 0, int billingCountryId = 0, 
+            int vendorId = 0, int productId = 0, int billingCountryId = 0,
             int orderId = 0, string paymentMethodSystemName = null,
             List<int> osIds = null, List<int> psIds = null, List<int> ssIds = null,
             DateTime? startTimeUtc = null, DateTime? endTimeUtc = null,
@@ -184,16 +175,16 @@ namespace Nop.Services.Orders
                 query = query.Where(o => o.OrderNotes.Any(on => on.Note.Contains(orderNotes)));
 
             var item = (from oq in query
-                group oq by 1
+                        group oq by 1
                 into result
-                select new
-                {
-                    OrderCount = result.Count(),
-                    OrderShippingExclTaxSum = result.Sum(o => o.OrderShippingExclTax),
-                    OrderPaymentFeeExclTaxSum = result.Sum(o => o.PaymentMethodAdditionalFeeExclTax),
-                    OrderTaxSum = result.Sum(o => o.OrderTax),
-                    OrderTotalSum = result.Sum(o => o.OrderTotal)
-                }
+                        select new
+                        {
+                            OrderCount = result.Count(),
+                            OrderShippingExclTaxSum = result.Sum(o => o.OrderShippingExclTax),
+                            OrderPaymentFeeExclTaxSum = result.Sum(o => o.PaymentMethodAdditionalFeeExclTax),
+                            OrderTaxSum = result.Sum(o => o.OrderTax),
+                            OrderTotalSum = result.Sum(o => o.OrderTotal)
+                        }
             ).Select(r => new OrderAverageReportLine
             {
                 CountOrders = r.OrderCount,
@@ -235,7 +226,7 @@ namespace Nop.Services.Orders
             var t1 = new DateTime(nowDt.Year, nowDt.Month, nowDt.Day);
             DateTime? startTime1 = _dateTimeHelper.ConvertToUtcTime(t1, timeZone);
             var todayResult = GetOrderAverageReportLine(storeId: storeId,
-                osIds: orderStatuses, 
+                osIds: orderStatuses,
                 startTimeUtc: startTime1);
             item.SumTodayOrders = todayResult.SumOrders;
             item.CountTodayOrders = todayResult.CountOrders;
@@ -302,7 +293,7 @@ namespace Nop.Services.Orders
             OrderStatus? os = null, PaymentStatus? ps = null, ShippingStatus? ss = null,
             int billingCountryId = 0,
             int orderBy = 1,
-            int pageIndex = 0, int pageSize = int.MaxValue, 
+            int pageIndex = 0, int pageSize = int.MaxValue,
             bool showHidden = false)
         {
             int? orderStatusId = null;
@@ -318,29 +309,29 @@ namespace Nop.Services.Orders
                 shippingStatusId = (int)ss.Value;
 
             var query1 = from orderItem in _orderItemRepository.Table
-                join o in _orderRepository.Table on orderItem.OrderId equals o.Id
-                join p in _productRepository.Table on orderItem.ProductId equals p.Id
-                //join pc in _productCategoryRepository.Table on p.Id equals pc.ProductId into p_pc from pc in p_pc.DefaultIfEmpty()
-                //join pm in _productManufacturerRepository.Table on p.Id equals pm.ProductId into p_pm from pm in p_pm.DefaultIfEmpty()
-                where (storeId == 0 || storeId == o.StoreId) &&
-                      (!createdFromUtc.HasValue || createdFromUtc.Value <= o.CreatedOnUtc) &&
-                      (!createdToUtc.HasValue || createdToUtc.Value >= o.CreatedOnUtc) &&
-                      (!orderStatusId.HasValue || orderStatusId == o.OrderStatusId) &&
-                      (!paymentStatusId.HasValue || paymentStatusId == o.PaymentStatusId) &&
-                      (!shippingStatusId.HasValue || shippingStatusId == o.ShippingStatusId) &&
-                      (!o.Deleted) &&
-                      (!p.Deleted) &&
-                      (vendorId == 0 || p.VendorId == vendorId) &&
-                      //(categoryId == 0 || pc.CategoryId == categoryId) &&
-                      //(manufacturerId == 0 || pm.ManufacturerId == manufacturerId) &&
-                      (categoryId == 0 || p.ProductCategories.Count(pc => pc.CategoryId == categoryId) > 0) &&
-                      (manufacturerId == 0 || p.ProductManufacturers.Count(pm => pm.ManufacturerId == manufacturerId) >
-                       0) &&
-                      (billingCountryId == 0 || o.BillingAddress.CountryId == billingCountryId) &&
-                      (showHidden || p.Published)
-                select orderItem;
+                         join o in _orderRepository.Table on orderItem.OrderId equals o.Id
+                         join p in _productRepository.Table on orderItem.ProductId equals p.Id
+                         //join pc in _productCategoryRepository.Table on p.Id equals pc.ProductId into p_pc from pc in p_pc.DefaultIfEmpty()
+                         //join pm in _productManufacturerRepository.Table on p.Id equals pm.ProductId into p_pm from pm in p_pm.DefaultIfEmpty()
+                         where (storeId == 0 || storeId == o.StoreId) &&
+                               (!createdFromUtc.HasValue || createdFromUtc.Value <= o.CreatedOnUtc) &&
+                               (!createdToUtc.HasValue || createdToUtc.Value >= o.CreatedOnUtc) &&
+                               (!orderStatusId.HasValue || orderStatusId == o.OrderStatusId) &&
+                               (!paymentStatusId.HasValue || paymentStatusId == o.PaymentStatusId) &&
+                               (!shippingStatusId.HasValue || shippingStatusId == o.ShippingStatusId) &&
+                               (!o.Deleted) &&
+                               (!p.Deleted) &&
+                               (vendorId == 0 || p.VendorId == vendorId) &&
+                               //(categoryId == 0 || pc.CategoryId == categoryId) &&
+                               //(manufacturerId == 0 || pm.ManufacturerId == manufacturerId) &&
+                               (categoryId == 0 || p.ProductCategories.Count(pc => pc.CategoryId == categoryId) > 0) &&
+                               (manufacturerId == 0 || p.ProductManufacturers.Count(pm => pm.ManufacturerId == manufacturerId) >
+                                0) &&
+                               (billingCountryId == 0 || o.BillingAddress.CountryId == billingCountryId) &&
+                               (showHidden || p.Published)
+                         select orderItem;
 
-            var query2 = 
+            var query2 =
                 //group by products
                 from orderItem in query1
                 group orderItem by orderItem.ProductId into g
@@ -389,8 +380,8 @@ namespace Nop.Services.Orders
 
             //this inner query should retrieve all orders that contains a specified product ID
             var query1 = from orderItem in _orderItemRepository.Table
-                          where orderItem.ProductId == productId
-                          select orderItem.OrderId;
+                         where orderItem.ProductId == productId
+                         select orderItem.OrderId;
 
             var query2 = from orderItem in _orderItemRepository.Table
                          join p in _productRepository.Table on orderItem.ProductId equals p.Id
@@ -416,7 +407,7 @@ namespace Nop.Services.Orders
                 query3 = query3.Take(recordsToReturn);
 
             var report = query3.ToList();
-            
+
             var ids = new List<int>();
             foreach (var reportLine in report)
                 ids.Add(reportLine.ProductId);
@@ -444,24 +435,24 @@ namespace Nop.Services.Orders
         {
             //this inner query should retrieve all purchased product identifiers
             var query_tmp = (from orderItem in _orderItemRepository.Table
-                join o in _orderRepository.Table on orderItem.OrderId equals o.Id
-                where (!createdFromUtc.HasValue || createdFromUtc.Value <= o.CreatedOnUtc) &&
-                      (!createdToUtc.HasValue || createdToUtc.Value >= o.CreatedOnUtc) &&
-                      (!o.Deleted)
-                select orderItem.ProductId).Distinct();
+                             join o in _orderRepository.Table on orderItem.OrderId equals o.Id
+                             where (!createdFromUtc.HasValue || createdFromUtc.Value <= o.CreatedOnUtc) &&
+                                   (!createdToUtc.HasValue || createdToUtc.Value >= o.CreatedOnUtc) &&
+                                   (!o.Deleted)
+                             select orderItem.ProductId).Distinct();
 
-            var simpleProductTypeId = (int) ProductType.SimpleProduct;
+            var simpleProductTypeId = (int)ProductType.SimpleProduct;
 
             var query = from p in _productRepository.Table
-                where (!query_tmp.Contains(p.Id)) &&
-                      //include only simple products
-                      (p.ProductTypeId == simpleProductTypeId) &&
-                      (!p.Deleted) &&
-                      (vendorId == 0 || p.VendorId == vendorId) &&
-                      (categoryId == 0 || p.ProductCategories.Count(pc => pc.CategoryId == categoryId) > 0) &&
-                      (manufacturerId == 0 || p.ProductManufacturers.Count(pm => pm.ManufacturerId == manufacturerId) > 0) &&
-                      (showHidden || p.Published)
-                select p;
+                        where (!query_tmp.Contains(p.Id)) &&
+                              //include only simple products
+                              (p.ProductTypeId == simpleProductTypeId) &&
+                              (!p.Deleted) &&
+                              (vendorId == 0 || p.VendorId == vendorId) &&
+                              (categoryId == 0 || p.ProductCategories.Count(pc => pc.CategoryId == categoryId) > 0) &&
+                              (manufacturerId == 0 || p.ProductManufacturers.Count(pm => pm.ManufacturerId == manufacturerId) > 0) &&
+                              (showHidden || p.Published)
+                        select p;
 
             if (storeId > 0 && !_catalogSettings.IgnoreStoreLimitations)
             {
@@ -551,19 +542,19 @@ namespace Nop.Services.Orders
                 billingCountryId: billingCountryId,
                 orderId: orderId,
                 paymentMethodSystemName: paymentMethodSystemName,
-                osIds: osIds, 
-                psIds: psIds, 
+                osIds: osIds,
+                psIds: psIds,
                 ssIds: ssIds,
                 startTimeUtc: startTimeUtc,
                 endTimeUtc: endTimeUtc,
-                billingPhone:billingPhone,
+                billingPhone: billingPhone,
                 billingEmail: billingEmail,
                 billingLastName: billingLastName,
                 orderNotes: orderNotes);
-            var profit = reportSummary.SumOrders 
+            var profit = reportSummary.SumOrders
                          - reportSummary.SumShippingExclTax
                          - reportSummary.OrderPaymentFeeExclTaxSum
-                         - reportSummary.SumTax 
+                         - reportSummary.SumTax
                          - productCost;
             return profit;
         }

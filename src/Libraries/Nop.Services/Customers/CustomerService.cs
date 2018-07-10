@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Xml;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
@@ -15,9 +16,12 @@ using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Polls;
 using Nop.Core.Domain.Shipping;
+using Nop.Core.Domain.Tax;
+using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Services.Common;
 using Nop.Services.Events;
+using Nop.Services.Localization;
 
 namespace Nop.Services.Customers
 {
@@ -28,99 +32,79 @@ namespace Nop.Services.Customers
     {
         #region Fields
 
+        private readonly CommonSettings _commonSettings;
+        private readonly CustomerSettings _customerSettings;
+        private readonly ICacheManager _cacheManager;
+        private readonly IDataProvider _dataProvider;
+        private readonly IDbContext _dbContext;
+        private readonly IEventPublisher _eventPublisher;
+        private readonly IGenericAttributeService _genericAttributeService;
+        private readonly IRepository<BlogComment> _blogCommentRepository;
         private readonly IRepository<Customer> _customerRepository;
         private readonly IRepository<CustomerCustomerRoleMapping> _customerCustomerRoleMappingRepository;
         private readonly IRepository<CustomerPassword> _customerPasswordRepository;
         private readonly IRepository<CustomerRole> _customerRoleRepository;
-        private readonly IRepository<GenericAttribute> _gaRepository;
-        private readonly IRepository<Order> _orderRepository;
         private readonly IRepository<ForumPost> _forumPostRepository;
         private readonly IRepository<ForumTopic> _forumTopicRepository;
-        private readonly IRepository<BlogComment> _blogCommentRepository;
+        private readonly IRepository<GenericAttribute> _gaRepository;
         private readonly IRepository<NewsComment> _newsCommentRepository;
+        private readonly IRepository<Order> _orderRepository;
         private readonly IRepository<PollVotingRecord> _pollVotingRecordRepository;
         private readonly IRepository<ProductReview> _productReviewRepository;
         private readonly IRepository<ProductReviewHelpfulness> _productReviewHelpfulnessRepository;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly IDataProvider _dataProvider;
-        private readonly IDbContext _dbContext;
-        private readonly ICacheManager _cacheManager;
-        private readonly IEventPublisher _eventPublisher;
-        private readonly CustomerSettings _customerSettings;
-        private readonly CommonSettings _commonSettings;
+        private readonly IStaticCacheManager _staticCacheManager;
 
         #endregion
 
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="cacheManager">Cache manager</param>
-        /// <param name="customerRepository">Customer repository</param>
-        /// <param name="customerCustomerRoleMappingRepository">Customer role mapping repository</param>
-        /// <param name="customerPasswordRepository">Customer password repository</param>
-        /// <param name="customerRoleRepository">Customer role repository</param>
-        /// <param name="gaRepository">Generic attribute repository</param>
-        /// <param name="orderRepository">Order repository</param>
-        /// <param name="forumPostRepository">Forum post repository</param>
-        /// <param name="forumTopicRepository">Forum topic repository</param>
-        /// <param name="blogCommentRepository">Blog comment repository</param>
-        /// <param name="newsCommentRepository">News comment repository</param>
-        /// <param name="pollVotingRecordRepository">Poll voting record repository</param>
-        /// <param name="productReviewRepository">Product review repository</param>
-        /// <param name="productReviewHelpfulnessRepository">Product review helpfulness repository</param>
-        /// <param name="genericAttributeService">Generic attribute service</param>
-        /// <param name="dataProvider">Data provider</param>
-        /// <param name="dbContext">DB context</param>
-        /// <param name="eventPublisher">Event publisher</param>
-        /// <param name="customerSettings">Customer settings</param>
-        /// <param name="commonSettings">Common settings</param>
-        public CustomerService(ICacheManager cacheManager,
+        public CustomerService(CommonSettings commonSettings,
+            CustomerSettings customerSettings,
+            ICacheManager cacheManager,
+            IDataProvider dataProvider,
+            IDbContext dbContext,
+            IEventPublisher eventPublisher,
+            IGenericAttributeService genericAttributeService,
+            IRepository<BlogComment> blogCommentRepository,
             IRepository<Customer> customerRepository,
             IRepository<CustomerCustomerRoleMapping> customerCustomerRoleMappingRepository,
             IRepository<CustomerPassword> customerPasswordRepository,
             IRepository<CustomerRole> customerRoleRepository,
-            IRepository<GenericAttribute> gaRepository,
-            IRepository<Order> orderRepository,
             IRepository<ForumPost> forumPostRepository,
             IRepository<ForumTopic> forumTopicRepository,
-            IRepository<BlogComment> blogCommentRepository,
+            IRepository<GenericAttribute> gaRepository,
             IRepository<NewsComment> newsCommentRepository,
+            IRepository<Order> orderRepository,
             IRepository<PollVotingRecord> pollVotingRecordRepository,
             IRepository<ProductReview> productReviewRepository,
             IRepository<ProductReviewHelpfulness> productReviewHelpfulnessRepository,
-            IGenericAttributeService genericAttributeService,
-            IDataProvider dataProvider,
-            IDbContext dbContext,
-            IEventPublisher eventPublisher, 
-            CustomerSettings customerSettings,
-            CommonSettings commonSettings)
+            IStaticCacheManager staticCacheManager)
         {
+            this._commonSettings = commonSettings;
+            this._customerSettings = customerSettings;
             this._cacheManager = cacheManager;
+            this._dataProvider = dataProvider;
+            this._dbContext = dbContext;
+            this._eventPublisher = eventPublisher;
+            this._genericAttributeService = genericAttributeService;
+            this._blogCommentRepository = blogCommentRepository;
             this._customerRepository = customerRepository;
             this._customerCustomerRoleMappingRepository = customerCustomerRoleMappingRepository;
             this._customerPasswordRepository = customerPasswordRepository;
             this._customerRoleRepository = customerRoleRepository;
-            this._gaRepository = gaRepository;
-            this._orderRepository = orderRepository;
             this._forumPostRepository = forumPostRepository;
             this._forumTopicRepository = forumTopicRepository;
-            this._blogCommentRepository = blogCommentRepository;
+            this._gaRepository = gaRepository;
             this._newsCommentRepository = newsCommentRepository;
+            this._orderRepository = orderRepository;
             this._pollVotingRecordRepository = pollVotingRecordRepository;
             this._productReviewRepository = productReviewRepository;
             this._productReviewHelpfulnessRepository = productReviewHelpfulnessRepository;
-            this._genericAttributeService = genericAttributeService;
-            this._dataProvider = dataProvider;
-            this._dbContext = dbContext;
-            this._eventPublisher = eventPublisher;
-            this._customerSettings = customerSettings;
-            this._commonSettings = commonSettings;
+            this._staticCacheManager = staticCacheManager;
         }
 
         #endregion
-        
+
         #region Methods
 
         #region Customers
@@ -172,7 +156,7 @@ namespace Nop.Services.Customers
             if (customerRoleIds != null && customerRoleIds.Length > 0)
             {
                 query = query.Join(_customerCustomerRoleMappingRepository.Table, x => x.Id, y => y.CustomerId,
-                        (x, y) => new {Customer = x, Mapping = y})
+                        (x, y) => new { Customer = x, Mapping = y })
                     .Where(z => customerRoleIds.Contains(z.Mapping.CustomerRoleId))
                     .Select(z => z.Customer)
                     .Distinct();
@@ -207,7 +191,7 @@ namespace Nop.Services.Customers
             {
                 //both are specified
                 var dateOfBirthStr = monthOfBirth.ToString("00", CultureInfo.InvariantCulture) + "-" + dayOfBirth.ToString("00", CultureInfo.InvariantCulture);
-                
+
                 //z.Attribute.Value.Length - dateOfBirthStr.Length = 5
                 //dateOfBirthStr.Length = 5
                 query = query
@@ -276,7 +260,7 @@ namespace Nop.Services.Customers
             //search by IpAddress
             if (!string.IsNullOrWhiteSpace(ipAddress) && CommonHelper.IsValidIpAddress(ipAddress))
             {
-                    query = query.Where(w => w.LastIpAddress == ipAddress);
+                query = query.Where(w => w.LastIpAddress == ipAddress);
             }
 
             if (loadOnlyWithShoppingCart)
@@ -289,7 +273,7 @@ namespace Nop.Services.Customers
                     query.Where(c => c.ShoppingCartItems.Any(x => x.ShoppingCartTypeId == sctId)) :
                     query.Where(c => c.ShoppingCartItems.Any());
             }
-            
+
             query = query.OrderByDescending(c => c.CreatedOnUtc);
 
             var customers = new PagedList<Customer>(query, pageIndex, pageSize, getOnlyTotalCount);
@@ -312,7 +296,7 @@ namespace Nop.Services.Customers
             query = query.Where(c => !c.Deleted);
             if (customerRoleIds != null && customerRoleIds.Length > 0)
                 query = query.Where(c => c.CustomerCustomerRoleMappings.Select(mapping => mapping.CustomerRoleId).Intersect(customerRoleIds).Any());
-            
+
             query = query.OrderByDescending(c => c.LastActivityDateUtc);
             var customers = new PagedList<Customer>(query, pageIndex, pageSize);
             return customers;
@@ -355,7 +339,7 @@ namespace Nop.Services.Customers
         {
             if (customerId == 0)
                 return null;
-            
+
             return _customerRepository.GetById(customerId);
         }
 
@@ -383,7 +367,7 @@ namespace Nop.Services.Customers
             }
             return sortedCustomers;
         }
-        
+
         /// <summary>
         /// Gets a customer by GUID
         /// </summary>
@@ -455,7 +439,7 @@ namespace Nop.Services.Customers
             var customer = query.FirstOrDefault();
             return customer;
         }
-        
+
         /// <summary>
         /// Insert a guest customer
         /// </summary>
@@ -481,7 +465,7 @@ namespace Nop.Services.Customers
 
             return customer;
         }
-        
+
         /// <summary>
         /// Insert a customer
         /// </summary>
@@ -496,7 +480,7 @@ namespace Nop.Services.Customers
             //event notification
             _eventPublisher.EntityInserted(customer);
         }
-        
+
         /// <summary>
         /// Updates the customer
         /// </summary>
@@ -529,7 +513,7 @@ namespace Nop.Services.Customers
         {
             if (customer == null)
                 throw new ArgumentNullException();
-            
+
             //clear entered coupon codes
             if (clearCouponCodes)
             {
@@ -562,7 +546,7 @@ namespace Nop.Services.Customers
             {
                 _genericAttributeService.SaveAttribute<string>(customer, NopCustomerDefaults.SelectedPaymentMethodAttribute, null, storeId);
             }
-            
+
             UpdateCustomer(customer);
         }
 
@@ -593,7 +577,354 @@ namespace Nop.Services.Customers
             var totalRecordsDeleted = pTotalRecordsDeleted.Value != DBNull.Value ? Convert.ToInt32(pTotalRecordsDeleted.Value) : 0;
             return totalRecordsDeleted;
         }
-        
+
+        /// <summary>
+        /// Gets a default tax display type (if configured)
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <returns>Result</returns>
+        public virtual TaxDisplayType? GetCustomerDefaultTaxDisplayType(Customer customer)
+        {
+            if (customer == null)
+                throw new ArgumentNullException(nameof(customer));
+
+            var roleWithOverriddenTaxType = customer.CustomerRoles.FirstOrDefault(cr => cr.Active && cr.OverrideTaxDisplayType);
+            if (roleWithOverriddenTaxType == null)
+                return null;
+
+            return (TaxDisplayType)roleWithOverriddenTaxType.DefaultTaxDisplayTypeId;
+        }
+
+        /// <summary>
+        /// Remove address
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="address">Address</param>
+        public virtual void RemoveCustomerAddress(Customer customer, Address address)
+        {
+            if (customer == null)
+                throw new ArgumentNullException(nameof(customer));
+
+            if (!customer.Addresses.Contains(address))
+                return;
+
+            if (customer.BillingAddress == address) customer.BillingAddress = null;
+            if (customer.ShippingAddress == address) customer.ShippingAddress = null;
+
+            //customer.Addresses.Remove(address);
+            customer.CustomerAddressMappings
+                .Remove(customer.CustomerAddressMappings.FirstOrDefault(mapping => mapping.AddressId == address.Id));
+        }
+
+        /// <summary>
+        /// Get full name
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <returns>Customer full name</returns>
+        public virtual string GetCustomerFullName(Customer customer)
+        {
+            if (customer == null)
+                throw new ArgumentNullException(nameof(customer));
+
+            var firstName = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.FirstNameAttribute);
+            var lastName = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.LastNameAttribute);
+
+            var fullName = "";
+            if (!string.IsNullOrWhiteSpace(firstName) && !string.IsNullOrWhiteSpace(lastName))
+                fullName = $"{firstName} {lastName}";
+            else
+            {
+                if (!string.IsNullOrWhiteSpace(firstName))
+                    fullName = firstName;
+
+                if (!string.IsNullOrWhiteSpace(lastName))
+                    fullName = lastName;
+            }
+            return fullName;
+        }
+
+        /// <summary>
+        /// Formats the customer name
+        /// </summary>
+        /// <param name="customer">Source</param>
+        /// <param name="stripTooLong">Strip too long customer name</param>
+        /// <param name="maxLength">Maximum customer name length</param>
+        /// <returns>Formatted text</returns>
+        public virtual string FormatUserName(Customer customer, bool stripTooLong = false, int maxLength = 0)
+        {
+            if (customer == null)
+                return string.Empty;
+
+            if (customer.IsGuest())
+                return EngineContext.Current.Resolve<ILocalizationService>().GetResource("Customer.Guest");
+
+            var result = string.Empty;
+            switch (_customerSettings.CustomerNameFormat)
+            {
+                case CustomerNameFormat.ShowEmails:
+                    result = customer.Email;
+                    break;
+                case CustomerNameFormat.ShowUsernames:
+                    result = customer.Username;
+                    break;
+                case CustomerNameFormat.ShowFullNames:
+                    result = this.GetCustomerFullName(customer);
+                    break;
+                case CustomerNameFormat.ShowFirstName:
+                    result = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.FirstNameAttribute);
+                    break;
+                default:
+                    break;
+            }
+
+            if (stripTooLong && maxLength > 0)
+                result = CommonHelper.EnsureMaximumLength(result, maxLength);
+
+            return result;
+        }
+
+        /// <summary>
+        /// Gets coupon codes
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <returns>Coupon codes</returns>
+        public virtual string[] ParseAppliedDiscountCouponCodes(Customer customer)
+        {
+            if (customer == null)
+                throw new ArgumentNullException(nameof(customer));
+
+            var existingCouponCodes = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.DiscountCouponCodeAttribute);
+
+            var couponCodes = new List<string>();
+            if (string.IsNullOrEmpty(existingCouponCodes))
+                return couponCodes.ToArray();
+
+            try
+            {
+                var xmlDoc = new XmlDocument();
+                xmlDoc.LoadXml(existingCouponCodes);
+
+                var nodeList1 = xmlDoc.SelectNodes(@"//DiscountCouponCodes/CouponCode");
+                foreach (XmlNode node1 in nodeList1)
+                {
+                    if (node1.Attributes != null && node1.Attributes["Code"] != null)
+                    {
+                        var code = node1.Attributes["Code"].InnerText.Trim();
+                        couponCodes.Add(code);
+                    }
+                }
+            }
+            catch { }
+
+            return couponCodes.ToArray();
+        }
+
+        /// <summary>
+        /// Adds a coupon code
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="couponCode">Coupon code</param>
+        /// <returns>New coupon codes document</returns>
+        public virtual void ApplyDiscountCouponCode(Customer customer, string couponCode)
+        {
+            if (customer == null)
+                throw new ArgumentNullException(nameof(customer));
+
+            var result = string.Empty;
+            try
+            {
+                var existingCouponCodes = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.DiscountCouponCodeAttribute);
+
+                couponCode = couponCode.Trim().ToLower();
+
+                var xmlDoc = new XmlDocument();
+                if (string.IsNullOrEmpty(existingCouponCodes))
+                {
+                    var element1 = xmlDoc.CreateElement("DiscountCouponCodes");
+                    xmlDoc.AppendChild(element1);
+                }
+                else
+                {
+                    xmlDoc.LoadXml(existingCouponCodes);
+                }
+                var rootElement = (XmlElement)xmlDoc.SelectSingleNode(@"//DiscountCouponCodes");
+
+                XmlElement gcElement = null;
+                //find existing
+                var nodeList1 = xmlDoc.SelectNodes(@"//DiscountCouponCodes/CouponCode");
+                foreach (XmlNode node1 in nodeList1)
+                {
+                    if (node1.Attributes != null && node1.Attributes["Code"] != null)
+                    {
+                        var couponCodeAttribute = node1.Attributes["Code"].InnerText.Trim();
+                        if (couponCodeAttribute.ToLower() == couponCode.ToLower())
+                        {
+                            gcElement = (XmlElement)node1;
+                            break;
+                        }
+                    }
+                }
+
+                //create new one if not found
+                if (gcElement == null)
+                {
+                    gcElement = xmlDoc.CreateElement("CouponCode");
+                    gcElement.SetAttribute("Code", couponCode);
+                    rootElement.AppendChild(gcElement);
+                }
+
+                result = xmlDoc.OuterXml;
+            }
+            catch { }
+
+            //apply new value
+            _genericAttributeService.SaveAttribute(customer, NopCustomerDefaults.DiscountCouponCodeAttribute, result);
+        }
+
+        /// <summary>
+        /// Removes a coupon code
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="couponCode">Coupon code to remove</param>
+        /// <returns>New coupon codes document</returns>
+        public virtual void RemoveDiscountCouponCode(Customer customer, string couponCode)
+        {
+            if (customer == null)
+                throw new ArgumentNullException(nameof(customer));
+
+            //get applied coupon codes
+            var existingCouponCodes = this.ParseAppliedDiscountCouponCodes(customer);
+
+            //clear them
+            _genericAttributeService.SaveAttribute<string>(customer, NopCustomerDefaults.DiscountCouponCodeAttribute, null);
+
+            //save again except removed one
+            foreach (string existingCouponCode in existingCouponCodes)
+                if (!existingCouponCode.Equals(couponCode, StringComparison.InvariantCultureIgnoreCase))
+                    this.ApplyDiscountCouponCode(customer, existingCouponCode);
+        }
+
+        /// <summary>
+        /// Gets coupon codes
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <returns>Coupon codes</returns>
+        public virtual string[] ParseAppliedGiftCardCouponCodes(Customer customer)
+        {
+            if (customer == null)
+                throw new ArgumentNullException(nameof(customer));
+
+            var existingCouponCodes = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.GiftCardCouponCodesAttribute);
+
+            var couponCodes = new List<string>();
+            if (string.IsNullOrEmpty(existingCouponCodes))
+                return couponCodes.ToArray();
+
+            try
+            {
+                var xmlDoc = new XmlDocument();
+                xmlDoc.LoadXml(existingCouponCodes);
+
+                var nodeList1 = xmlDoc.SelectNodes(@"//GiftCardCouponCodes/CouponCode");
+                foreach (XmlNode node1 in nodeList1)
+                {
+                    if (node1.Attributes != null && node1.Attributes["Code"] != null)
+                    {
+                        var code = node1.Attributes["Code"].InnerText.Trim();
+                        couponCodes.Add(code);
+                    }
+                }
+            }
+            catch { }
+
+            return couponCodes.ToArray();
+        }
+
+        /// <summary>
+        /// Adds a coupon code
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="couponCode">Coupon code</param>
+        /// <returns>New coupon codes document</returns>
+        public virtual void ApplyGiftCardCouponCode(Customer customer, string couponCode)
+        {
+            if (customer == null)
+                throw new ArgumentNullException(nameof(customer));
+
+            var result = string.Empty;
+            try
+            {
+                var existingCouponCodes = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.GiftCardCouponCodesAttribute);
+
+                couponCode = couponCode.Trim().ToLower();
+
+                var xmlDoc = new XmlDocument();
+                if (string.IsNullOrEmpty(existingCouponCodes))
+                {
+                    var element1 = xmlDoc.CreateElement("GiftCardCouponCodes");
+                    xmlDoc.AppendChild(element1);
+                }
+                else
+                {
+                    xmlDoc.LoadXml(existingCouponCodes);
+                }
+                var rootElement = (XmlElement)xmlDoc.SelectSingleNode(@"//GiftCardCouponCodes");
+
+                XmlElement gcElement = null;
+                //find existing
+                var nodeList1 = xmlDoc.SelectNodes(@"//GiftCardCouponCodes/CouponCode");
+                foreach (XmlNode node1 in nodeList1)
+                {
+                    if (node1.Attributes != null && node1.Attributes["Code"] != null)
+                    {
+                        var couponCodeAttribute = node1.Attributes["Code"].InnerText.Trim();
+                        if (couponCodeAttribute.ToLower() == couponCode.ToLower())
+                        {
+                            gcElement = (XmlElement)node1;
+                            break;
+                        }
+                    }
+                }
+
+                //create new one if not found
+                if (gcElement == null)
+                {
+                    gcElement = xmlDoc.CreateElement("CouponCode");
+                    gcElement.SetAttribute("Code", couponCode);
+                    rootElement.AppendChild(gcElement);
+                }
+
+                result = xmlDoc.OuterXml;
+            }
+            catch { }
+
+            //apply new value
+            _genericAttributeService.SaveAttribute(customer, NopCustomerDefaults.GiftCardCouponCodesAttribute, result);
+        }
+
+        /// <summary>
+        /// Removes a coupon code
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="couponCode">Coupon code to remove</param>
+        /// <returns>New coupon codes document</returns>
+        public virtual void RemoveGiftCardCouponCode(Customer customer, string couponCode)
+        {
+            if (customer == null)
+                throw new ArgumentNullException(nameof(customer));
+
+            //get applied coupon codes
+            var existingCouponCodes = this.ParseAppliedGiftCardCouponCodes(customer);
+
+            //clear them
+            _genericAttributeService.SaveAttribute<string>(customer, NopCustomerDefaults.GiftCardCouponCodesAttribute, null);
+
+            //save again except removed one
+            foreach (string existingCouponCode in existingCouponCodes)
+                if (!existingCouponCode.Equals(couponCode, StringComparison.InvariantCultureIgnoreCase))
+                    this.ApplyGiftCardCouponCode(customer, existingCouponCode);
+        }
+
         #endregion
 
         #region Customer roles
@@ -671,7 +1002,7 @@ namespace Nop.Services.Customers
                 return customerRoles;
             });
         }
-        
+
         /// <summary>
         /// Inserts a customer role
         /// </summary>
@@ -717,7 +1048,7 @@ namespace Nop.Services.Customers
         /// <param name="passwordFormat">Password format; pass null to load all records</param>
         /// <param name="passwordsToReturn">Number of returning passwords; pass null to load all records</param>
         /// <returns>List of customer passwords</returns>
-        public virtual IList<CustomerPassword> GetCustomerPasswords(int? customerId = null, 
+        public virtual IList<CustomerPassword> GetCustomerPasswords(int? customerId = null,
             PasswordFormat? passwordFormat = null, int? passwordsToReturn = null)
         {
             var query = _customerPasswordRepository.Table;
@@ -779,6 +1110,90 @@ namespace Nop.Services.Customers
 
             //event notification
             _eventPublisher.EntityUpdated(customerPassword);
+        }
+
+        /// <summary>
+        /// Check whether password recovery token is valid
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="token">Token to validate</param>
+        /// <returns>Result</returns>
+        public virtual bool IsPasswordRecoveryTokenValid(Customer customer, string token)
+        {
+            if (customer == null)
+                throw new ArgumentNullException(nameof(customer));
+
+            var cPrt = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.PasswordRecoveryTokenAttribute);
+            if (string.IsNullOrEmpty(cPrt))
+                return false;
+
+            if (!cPrt.Equals(token, StringComparison.InvariantCultureIgnoreCase))
+                return false;
+
+            return true;
+        }
+
+        /// <summary>
+        /// Check whether password recovery link is expired
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <returns>Result</returns>
+        public virtual bool IsPasswordRecoveryLinkExpired(Customer customer)
+        {
+            if (customer == null)
+                throw new ArgumentNullException(nameof(customer));
+
+            if (_customerSettings.PasswordRecoveryLinkDaysValid == 0)
+                return false;
+
+            var geneatedDate = _genericAttributeService.GetAttribute<DateTime?>(customer, NopCustomerDefaults.PasswordRecoveryTokenDateGeneratedAttribute);
+            if (!geneatedDate.HasValue)
+                return false;
+
+            var daysPassed = (DateTime.UtcNow - geneatedDate.Value).TotalDays;
+            if (daysPassed > _customerSettings.PasswordRecoveryLinkDaysValid)
+                return true;
+
+            return false;
+        }
+
+        /// <summary>
+        /// Check whether customer password is expired 
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <returns>True if password is expired; otherwise false</returns>
+        public virtual bool PasswordIsExpired(Customer customer)
+        {
+            if (customer == null)
+                throw new ArgumentNullException(nameof(customer));
+
+            //the guests don't have a password
+            if (customer.IsGuest())
+                return false;
+
+            //password lifetime is disabled for user
+            if (!customer.CustomerRoles.Any(role => role.Active && role.EnablePasswordLifetime))
+                return false;
+
+            //setting disabled for all
+            if (_customerSettings.PasswordLifetime == 0)
+                return false;
+
+            //cache result between HTTP requests
+            var cacheKey = string.Format(NopCustomerServiceDefaults.CustomerPasswordLifetimeCacheKey, customer.Id);
+
+            //get current password usage time
+            var currentLifetime = _staticCacheManager.Get(cacheKey, () =>
+            {
+                var customerPassword = this.GetCurrentPassword(customer.Id);
+                //password is not found, so return max value to force customer to change password
+                if (customerPassword == null)
+                    return int.MaxValue;
+
+                return (DateTime.UtcNow - customerPassword.CreatedOnUtc).Days;
+            });
+
+            return currentLifetime >= _customerSettings.PasswordLifetime;
         }
 
         #endregion

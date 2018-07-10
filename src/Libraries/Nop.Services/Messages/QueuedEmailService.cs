@@ -16,32 +16,34 @@ namespace Nop.Services.Messages
     /// </summary>
     public partial class QueuedEmailService : IQueuedEmailService
     {
-        private readonly IRepository<QueuedEmail> _queuedEmailRepository;
-        private readonly IDbContext _dbContext;
-        private readonly IDataProvider _dataProvider;
-        private readonly CommonSettings _commonSettings;
-        private readonly IEventPublisher _eventPublisher;
+        #region Fields
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="queuedEmailRepository">Queued email repository</param>
-        /// <param name="eventPublisher">Event publisher</param>
-        /// <param name="dbContext">DB context</param>
-        /// <param name="dataProvider">WeData provider</param>
-        /// <param name="commonSettings">Common settings</param>
-        public QueuedEmailService(IRepository<QueuedEmail> queuedEmailRepository,
+        private readonly CommonSettings _commonSettings;
+        private readonly IDataProvider _dataProvider;
+        private readonly IDbContext _dbContext;
+        private readonly IEventPublisher _eventPublisher;
+        private readonly IRepository<QueuedEmail> _queuedEmailRepository;
+
+        #endregion
+
+        #region Ctor
+
+        public QueuedEmailService(CommonSettings commonSettings,
+            IDataProvider dataProvider,
+            IDbContext dbContext,
             IEventPublisher eventPublisher,
-            IDbContext dbContext, 
-            IDataProvider dataProvider, 
-            CommonSettings commonSettings)
+            IRepository<QueuedEmail> queuedEmailRepository)
         {
-            _queuedEmailRepository = queuedEmailRepository;
-            _eventPublisher = eventPublisher;
-            this._dbContext = dbContext;
-            this._dataProvider = dataProvider;
             this._commonSettings = commonSettings;
+            this._dataProvider = dataProvider;
+            this._dbContext = dbContext;
+            this._eventPublisher = eventPublisher;
+            this._queuedEmailRepository = queuedEmailRepository;
         }
+
+        #endregion
+
+        #region Methods
 
         /// <summary>
         /// Inserts a queued email
@@ -160,13 +162,13 @@ namespace Nop.Services.Messages
         /// <param name="pageSize">Page size</param>
         /// <returns>Email item list</returns>
         public virtual IPagedList<QueuedEmail> SearchEmails(string fromEmail,
-            string toEmail, DateTime? createdFromUtc, DateTime? createdToUtc, 
+            string toEmail, DateTime? createdFromUtc, DateTime? createdToUtc,
             bool loadNotSentItemsOnly, bool loadOnlyItemsToBeSent, int maxSendTries,
             bool loadNewest, int pageIndex = 0, int pageSize = int.MaxValue)
         {
             fromEmail = (fromEmail ?? string.Empty).Trim();
             toEmail = (toEmail ?? string.Empty).Trim();
-            
+
             var query = _queuedEmailRepository.Table;
             if (!string.IsNullOrEmpty(fromEmail))
                 query = query.Where(qe => qe.From.Contains(fromEmail));
@@ -208,5 +210,7 @@ namespace Nop.Services.Messages
             //    _queuedEmailRepository.Delete(qe);
 
         }
+
+        #endregion
     }
 }

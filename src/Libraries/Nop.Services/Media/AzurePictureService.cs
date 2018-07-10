@@ -11,8 +11,10 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Media;
 using Nop.Core.Infrastructure;
 using Nop.Data;
+using Nop.Services.Catalog;
 using Nop.Services.Configuration;
 using Nop.Services.Events;
+using Nop.Services.Seo;
 
 namespace Nop.Services.Media
 {
@@ -23,52 +25,42 @@ namespace Nop.Services.Media
     {
         #region Fields
 
-        private static CloudBlobContainer _container;
         private readonly IStaticCacheManager _cacheManager;
         private readonly MediaSettings _mediaSettings;
         private readonly NopConfig _config;
+
+        private static CloudBlobContainer _container;
 
         #endregion
 
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="pictureRepository">Picture repository</param>
-        /// <param name="productPictureRepository">Product picture repository</param>
-        /// <param name="settingService">Setting service</param>
-        /// <param name="webHelper">Web helper</param>
-        /// <param name="dbContext">Database context</param>
-        /// <param name="eventPublisher">Event publisher</param>
-        /// <param name="cacheManager">Cache manager</param>
-        /// <param name="mediaSettings">Media settings</param>
-        /// <param name="config">Config</param>
-        /// <param name="dataProvider">Data provider</param>
-        /// <param name="fileProvider">File provider</param>
-        /// <param name="pictureBinaryRepository">PictureBinary repository</param>
-        public AzurePictureService(IRepository<Picture> pictureRepository,
-            IRepository<ProductPicture> productPictureRepository,
-            ISettingService settingService,
-            IWebHelper webHelper,
+        public AzurePictureService(IDataProvider dataProvider,
             IDbContext dbContext,
             IEventPublisher eventPublisher,
-            IStaticCacheManager cacheManager,
-            MediaSettings mediaSettings,
-            NopConfig config,
-            IDataProvider dataProvider,
             INopFileProvider fileProvider,
-            IRepository<PictureBinary> pictureBinaryRepository)
-            : base(pictureRepository,
-                productPictureRepository,
-                settingService,
-                webHelper,
-                dbContext,
-                eventPublisher,
-                mediaSettings,
-                dataProvider,
-                fileProvider,
-                pictureBinaryRepository)
+            IProductAttributeParser productAttributeParser,
+            IRepository<Picture> pictureRepository,
+            IRepository<PictureBinary> pictureBinaryRepository,
+            IRepository<ProductPicture> productPictureRepository,
+            ISettingService settingService,
+            IStaticCacheManager cacheManager,
+            IUrlRecordService urlRecordService,
+            IWebHelper webHelper,
+            MediaSettings mediaSettings,
+            NopConfig config)
+            : base(dataProvider,
+                  dbContext,
+                  eventPublisher,
+                  fileProvider,
+                  productAttributeParser,
+                  pictureRepository,
+                  pictureBinaryRepository,
+                  productPictureRepository,
+                  settingService,
+                  urlRecordService,
+                  webHelper,
+                  mediaSettings)
         {
             this._cacheManager = cacheManager;
             this._mediaSettings = mediaSettings;

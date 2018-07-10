@@ -16,6 +16,7 @@ namespace Nop.Plugin.DiscountRules.CustomerRoles
 
         private readonly IActionContextAccessor _actionContextAccessor;
         private readonly IDiscountService _discountService;
+        private readonly ILocalizationService _localizationService;
         private readonly ISettingService _settingService;
         private readonly IUrlHelperFactory _urlHelperFactory;
 
@@ -25,11 +26,13 @@ namespace Nop.Plugin.DiscountRules.CustomerRoles
 
         public CustomerRoleDiscountRequirementRule(IActionContextAccessor actionContextAccessor,
             IDiscountService discountService,
+            ILocalizationService localizationService,
             ISettingService settingService,
             IUrlHelperFactory urlHelperFactory)
         {
             this._actionContextAccessor = actionContextAccessor;
             this._discountService = discountService;
+            this._localizationService = localizationService;
             this._settingService = settingService;
             this._urlHelperFactory = urlHelperFactory;
         }
@@ -84,9 +87,9 @@ namespace Nop.Plugin.DiscountRules.CustomerRoles
         public override void Install()
         {
             //locales
-            this.AddOrUpdatePluginLocaleResource("Plugins.DiscountRules.CustomerRoles.Fields.CustomerRole", "Required customer role");
-            this.AddOrUpdatePluginLocaleResource("Plugins.DiscountRules.CustomerRoles.Fields.CustomerRole.Hint", "Discount will be applied if customer is in the selected customer role.");
-            this.AddOrUpdatePluginLocaleResource("Plugins.DiscountRules.CustomerRoles.Fields.CustomerRole.Select", "Select customer role");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.DiscountRules.CustomerRoles.Fields.CustomerRole", "Required customer role");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.DiscountRules.CustomerRoles.Fields.CustomerRole.Hint", "Discount will be applied if customer is in the selected customer role.");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.DiscountRules.CustomerRoles.Fields.CustomerRole.Select", "Select customer role");
 
             base.Install();
         }
@@ -105,9 +108,9 @@ namespace Nop.Plugin.DiscountRules.CustomerRoles
             }
 
             //locales
-            this.DeletePluginLocaleResource("Plugins.DiscountRules.CustomerRoles.Fields.CustomerRole");
-            this.DeletePluginLocaleResource("Plugins.DiscountRules.CustomerRoles.Fields.CustomerRole.Hint");
-            this.DeletePluginLocaleResource("Plugins.DiscountRules.CustomerRoles.Fields.CustomerRole.Select");
+            _localizationService.DeletePluginLocaleResource("Plugins.DiscountRules.CustomerRoles.Fields.CustomerRole");
+            _localizationService.DeletePluginLocaleResource("Plugins.DiscountRules.CustomerRoles.Fields.CustomerRole.Hint");
+            _localizationService.DeletePluginLocaleResource("Plugins.DiscountRules.CustomerRoles.Fields.CustomerRole.Select");
 
             base.Uninstall();
         }

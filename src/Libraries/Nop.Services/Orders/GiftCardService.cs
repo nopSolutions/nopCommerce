@@ -16,31 +16,29 @@ namespace Nop.Services.Orders
     public partial class GiftCardService : IGiftCardService
     {
         #region Fields
-        
+
+        private readonly ICustomerService _customerService;
+        private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<GiftCard> _giftCardRepository;
         private readonly IRepository<GiftCardUsageHistory> _giftCardUsageHistoryRepository;
-        private readonly IEventPublisher _eventPublisher;
 
         #endregion
 
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="giftCardRepository">Gift card context</param>
-        /// <param name="eventPublisher">Event publisher</param>
-        /// <param name="giftCardUsageHistoryRepository">Gift card usage history repository</param>
-        public GiftCardService(IRepository<GiftCard> giftCardRepository, IEventPublisher eventPublisher,
+        public GiftCardService(ICustomerService customerService,
+            IEventPublisher eventPublisher,
+            IRepository<GiftCard> giftCardRepository,
             IRepository<GiftCardUsageHistory> giftCardUsageHistoryRepository)
         {
-            _giftCardRepository = giftCardRepository;
-            _eventPublisher = eventPublisher;
-            _giftCardUsageHistoryRepository = giftCardUsageHistoryRepository;
+            this._customerService = customerService;
+            this._eventPublisher = eventPublisher;
+            this._giftCardRepository = giftCardRepository;
+            this._giftCardUsageHistoryRepository = giftCardUsageHistoryRepository;
         }
 
         #endregion
-        
+
         #region Methods
 
         /// <summary>
@@ -85,7 +83,7 @@ namespace Nop.Services.Orders
         /// <param name="pageSize">Page size</param>
         /// <returns>Gift cards</returns>
         public virtual IPagedList<GiftCard> GetAllGiftCards(int? purchasedWithOrderId = null, int? usedWithOrderId = null,
-            DateTime? createdFromUtc = null, DateTime? createdToUtc = null, 
+            DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
             bool? isGiftCardActivated = null, string giftCardCouponCode = null,
             string recipientName = null,
             int pageIndex = 0, int pageSize = int.MaxValue)
@@ -170,13 +168,13 @@ namespace Nop.Services.Orders
             if (customer == null)
                 return result;
 
-            var couponCodes = customer.ParseAppliedGiftCardCouponCodes();
+            var couponCodes = _customerService.ParseAppliedGiftCardCouponCodes(customer);
             foreach (var couponCode in couponCodes)
             {
                 var giftCards = GetAllGiftCards(isGiftCardActivated: true, giftCardCouponCode: couponCode);
                 foreach (var gc in giftCards)
                 {
-                    if (gc.IsGiftCardValid())
+                    if (this.IsGiftCardValid(gc))
                         result.Add(gc);
                 }
             }
@@ -196,7 +194,7 @@ namespace Nop.Services.Orders
                 result = result.Substring(0, length);
             return result;
         }
-        
+
         /// <summary>
         /// Delete gift card usage history
         /// </summary>
@@ -211,6 +209,46 @@ namespace Nop.Services.Orders
             {
                 UpdateGiftCard(giftCard);
             }
+        }
+
+        /// <summary>
+        /// Gets a gift card remaining amount
+        /// </summary>
+        /// <returns>Gift card remaining amount</returns>
+        public virtual decimal GetGiftCardRemainingAmount(GiftCard giftCard)
+        {
+            if (giftCard == null)
+                throw new ArgumentNullException(nameof(giftCard));
+
+            var result = giftCard.Amount;
+
+            foreach (var gcuh in giftCard.GiftCardUsageHistory)
+                result -= gcuh.UsedValue;
+
+            if (result < decimal.Zero)
+                result = decimal.Zero;
+
+            return result;
+        }
+
+        /// <summary>
+        /// Is gift card valid
+        /// </summary>
+        /// <param name="giftCard">Gift card</param>
+        /// <returns>Result</returns>
+        public virtual bool IsGiftCardValid(GiftCard giftCard)
+        {
+            if (giftCard == null)
+                throw new ArgumentNullException(nameof(giftCard));
+
+            if (!giftCard.IsGiftCardActivated)
+                return false;
+
+            var remainingAmount = this.GetGiftCardRemainingAmount(giftCard);
+            if (remainingAmount > decimal.Zero)
+                return true;
+
+            return false;
         }
 
         #endregion

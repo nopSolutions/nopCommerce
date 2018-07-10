@@ -14,41 +14,43 @@ namespace Nop.Services.Messages
     /// </summary>
     public partial class CampaignService : ICampaignService
     {
-        private readonly IRepository<Campaign> _campaignRepository;
-        private readonly IEmailSender _emailSender;
-        private readonly IMessageTokenProvider _messageTokenProvider;
-        private readonly ITokenizer _tokenizer;
-        private readonly IQueuedEmailService _queuedEmailService;
-        private readonly ICustomerService _customerService;
-        private readonly IStoreContext _storeContext;
-        private readonly IEventPublisher _eventPublisher;
+        #region Fields
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="campaignRepository">Campaign repository</param>
-        /// <param name="emailSender">Email sender</param>
-        /// <param name="messageTokenProvider">Message token provider</param>
-        /// <param name="tokenizer">Tokenizer</param>
-        /// <param name="queuedEmailService">Queued email service</param>
-        /// <param name="customerService">Customer service</param>
-        /// <param name="storeContext">Store context</param>
-        /// <param name="eventPublisher">Event publisher</param>
-        public CampaignService(IRepository<Campaign> campaignRepository,
-            IEmailSender emailSender, IMessageTokenProvider messageTokenProvider,
-            ITokenizer tokenizer, IQueuedEmailService queuedEmailService,
-            ICustomerService customerService, IStoreContext storeContext,
-            IEventPublisher eventPublisher)
+        private readonly ICustomerService _customerService;
+        private readonly IEmailSender _emailSender;
+        private readonly IEventPublisher _eventPublisher;
+        private readonly IMessageTokenProvider _messageTokenProvider;
+        private readonly IQueuedEmailService _queuedEmailService;
+        private readonly IRepository<Campaign> _campaignRepository;
+        private readonly IStoreContext _storeContext;
+        private readonly ITokenizer _tokenizer;
+
+        #endregion
+
+        #region Ctor
+
+        public CampaignService(ICustomerService customerService,
+            IEmailSender emailSender,
+            IEventPublisher eventPublisher,
+            IMessageTokenProvider messageTokenProvider,
+            IQueuedEmailService queuedEmailService,
+            IRepository<Campaign> campaignRepository,
+            IStoreContext storeContext,
+            ITokenizer tokenizer)
         {
-            this._campaignRepository = campaignRepository;
-            this._emailSender = emailSender;
-            this._messageTokenProvider = messageTokenProvider;
-            this._tokenizer = tokenizer;
-            this._queuedEmailService = queuedEmailService;
-            this._storeContext = storeContext;
             this._customerService = customerService;
+            this._emailSender = emailSender;
             this._eventPublisher = eventPublisher;
+            this._messageTokenProvider = messageTokenProvider;
+            this._queuedEmailService = queuedEmailService;
+            this._campaignRepository = campaignRepository;
+            this._storeContext = storeContext;
+            this._tokenizer = tokenizer;
         }
+
+        #endregion
+
+        #region Methods
 
         /// <summary>
         /// Inserts a campaign
@@ -130,7 +132,7 @@ namespace Nop.Services.Messages
 
             return campaigns;
         }
-        
+
         /// <summary>
         /// Sends a campaign to specified emails
         /// </summary>
@@ -202,11 +204,13 @@ namespace Nop.Services.Messages
             var customer = _customerService.GetCustomerByEmail(email);
             if (customer != null)
                 _messageTokenProvider.AddCustomerTokens(tokens, customer);
-            
+
             var subject = _tokenizer.Replace(campaign.Subject, tokens, false);
             var body = _tokenizer.Replace(campaign.Body, tokens, true);
 
             _emailSender.SendEmail(emailAccount, subject, body, emailAccount.Email, emailAccount.DisplayName, email, null);
         }
+
+        #endregion
     }
 }

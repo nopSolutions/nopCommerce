@@ -82,7 +82,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //get message templates
             var messageTemplates = _messageTemplateService.GetAllMessageTemplates(storeId: searchModel.SearchStoreId);
-            
+
             //prepare store names (to avoid loading for each message template)
             var stores = _storeService.GetAllStores().Select(store => new { store.Id, store.Name }).ToList();
 
@@ -101,8 +101,8 @@ namespace Nop.Web.Areas.Admin.Factories
                         _storeMappingSupportedModelFactory.PrepareModelStores(messageTemplateModel, messageTemplate, false);
                         storeNames = stores
                             .Where(store => messageTemplateModel.SelectedStoreIds.Contains(store.Id)).Select(store => store.Name);
-                    }  
-                    
+                    }
+
                     messageTemplateModel.ListOfStores = string.Join(", ", storeNames);
 
                     return messageTemplateModel;
@@ -133,10 +133,10 @@ namespace Nop.Web.Areas.Admin.Factories
                 //define localized model configuration action
                 localizedModelConfiguration = (locale, languageId) =>
                 {
-                    locale.BccEmailAddresses = messageTemplate.GetLocalized(entity => entity.BccEmailAddresses, languageId, false, false);
-                    locale.Subject = messageTemplate.GetLocalized(entity => entity.Subject, languageId, false, false);
-                    locale.Body = messageTemplate.GetLocalized(entity => entity.Body, languageId, false, false);
-                    locale.EmailAccountId = messageTemplate.GetLocalized(entity => entity.EmailAccountId, languageId, false, false);
+                    locale.BccEmailAddresses = _localizationService.GetLocalized(messageTemplate, entity => entity.BccEmailAddresses, languageId, false, false);
+                    locale.Subject = _localizationService.GetLocalized(messageTemplate, entity => entity.Subject, languageId, false, false);
+                    locale.Body = _localizationService.GetLocalized(messageTemplate, entity => entity.Body, languageId, false, false);
+                    locale.EmailAccountId = _localizationService.GetLocalized(messageTemplate, entity => entity.EmailAccountId, languageId, false, false);
 
                     //prepare available email accounts
                     _baseAdminModelFactory.PrepareEmailAccounts(locale.AvailableEmailAccounts,
@@ -147,7 +147,7 @@ namespace Nop.Web.Areas.Admin.Factories
             model.SendImmediately = !model.DelayBeforeSend.HasValue;
             model.HasAttachedDownload = model.AttachedDownloadId > 0;
 
-            var allowedTokens = string.Join(", ", _messageTokenProvider.GetListOfAllowedTokens(messageTemplate.GetTokenGroups()));
+            var allowedTokens = string.Join(", ", _messageTokenProvider.GetListOfAllowedTokens(_messageTokenProvider.GetTokenGroups(messageTemplate)));
             model.AllowedTokens = $"{allowedTokens}{Environment.NewLine}{Environment.NewLine}" +
                 $"{_localizationService.GetResource("Admin.ContentManagement.MessageTemplates.Tokens.ConditionalStatement")}{Environment.NewLine}";
 
@@ -184,8 +184,8 @@ namespace Nop.Web.Areas.Admin.Factories
             model.LanguageId = languageId;
 
             //filter tokens to the current template
-            var subject = messageTemplate.GetLocalized(entity => entity.Subject, languageId);
-            var body = messageTemplate.GetLocalized(entity => entity.Body, languageId);
+            var subject = _localizationService.GetLocalized(messageTemplate, entity => entity.Subject, languageId);
+            var body = _localizationService.GetLocalized(messageTemplate, entity => entity.Body, languageId);
             model.Tokens = _messageTokenProvider.GetListOfAllowedTokens()
                 .Where(token => subject.Contains(token) || body.Contains(token)).ToList();
 

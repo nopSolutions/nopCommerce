@@ -15,7 +15,7 @@ namespace Nop.Core.Tests.Caching
             var cacheManager = new MemoryCacheManager(new MemoryCache(new MemoryCacheOptions()));
             cacheManager.Set("some_key_1", 3, int.MaxValue);
 
-            cacheManager.Get<int>("some_key_1").ShouldEqual(3);
+            cacheManager.Get("some_key_1", () => 0).ShouldEqual(3);
         }
 
         [Test]

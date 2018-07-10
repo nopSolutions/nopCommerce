@@ -122,7 +122,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     localized.LanguageId);
 
                 //search engine name
-                var seName = category.ValidateSeName(localized.SeName, localized.Name, false);
+                var seName = _urlRecordService.ValidateSeName(category, localized.SeName, localized.Name, false);
                 _urlRecordService.SaveSlug(category, seName, localized.LanguageId);
             }
         }
@@ -243,7 +243,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _categoryService.InsertCategory(category);
 
                 //search engine name
-                model.SeName = category.ValidateSeName(model.SeName, category.Name, true);
+                model.SeName = _urlRecordService.ValidateSeName(category, model.SeName, category.Name, true);
                 _urlRecordService.SaveSlug(category, model.SeName, 0);
 
                 //locales
@@ -327,7 +327,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _categoryService.UpdateCategory(category);
 
                 //search engine name
-                model.SeName = category.ValidateSeName(model.SeName, category.Name, true);
+                model.SeName = _urlRecordService.ValidateSeName(category, model.SeName, category.Name, true);
                 _urlRecordService.SaveSlug(category, model.SeName, 0);
 
                 //locales
@@ -577,7 +577,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 foreach (var product in selectedProducts)
                 {
                     //whether product category with such parameters already exists
-                    if (existingProductCategories.FindProductCategory(product.Id, model.CategoryId) != null)
+                    if (_categoryService.FindProductCategory(existingProductCategories, product.Id, model.CategoryId) != null)
                         continue;
 
                     //insert the new product category mapping
@@ -592,7 +592,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             ViewBag.RefreshPage = true;
-            
+
             return View(new AddProductToCategorySearchModel());
         }
 

@@ -34,6 +34,7 @@ namespace Nop.Web.Framework.Mvc.Filters
         {
             #region Fields
 
+            private readonly ICustomerService _customerService;
             private readonly IUrlHelperFactory _urlHelperFactory;
             private readonly IWorkContext _workContext;
 
@@ -41,9 +42,11 @@ namespace Nop.Web.Framework.Mvc.Filters
 
             #region Ctor
 
-            public ValidatePasswordFilter(IUrlHelperFactory urlHelperFactory, 
+            public ValidatePasswordFilter(ICustomerService customerService,
+                IUrlHelperFactory urlHelperFactory,
                 IWorkContext workContext)
             {
+                this._customerService = customerService;
                 this._urlHelperFactory = urlHelperFactory;
                 this._workContext = workContext;
             }
@@ -74,13 +77,13 @@ namespace Nop.Web.Framework.Mvc.Filters
 
                 if (string.IsNullOrEmpty(actionName) || string.IsNullOrEmpty(controllerName))
                     return;
-                
+
                 //don't validate on ChangePassword page
                 if (!(controllerName.Equals("Customer", StringComparison.InvariantCultureIgnoreCase) &&
                     actionName.Equals("ChangePassword", StringComparison.InvariantCultureIgnoreCase)))
                 {
                     //check password expiration
-                    if (_workContext.CurrentCustomer.PasswordIsExpired())
+                    if (_customerService.PasswordIsExpired(_workContext.CurrentCustomer))
                     {
                         //redirect to ChangePassword page if expires
                         var changePasswordUrl = _urlHelperFactory.GetUrlHelper(context).RouteUrl("CustomerChangePassword");

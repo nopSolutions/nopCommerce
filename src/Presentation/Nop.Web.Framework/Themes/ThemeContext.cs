@@ -20,7 +20,7 @@ namespace Nop.Web.Framework.Themes
         private readonly IThemeProvider _themeProvider;
         private readonly IWorkContext _workContext;
         private readonly StoreInformationSettings _storeInformationSettings;
-        
+
         private string _cachedThemeName;
 
         #endregion
@@ -66,7 +66,10 @@ namespace Nop.Web.Framework.Themes
 
                 //whether customers are allowed to select a theme
                 if (_storeInformationSettings.AllowCustomerToSelectTheme && _workContext.CurrentCustomer != null)
-                    themeName = _workContext.CurrentCustomer.GetAttribute<string>(NopCustomerDefaults.WorkingThemeNameAttribute, _genericAttributeService, _storeContext.CurrentStore.Id);
+                {
+                    themeName = _genericAttributeService.GetAttribute<string>(_workContext.CurrentCustomer,
+                        NopCustomerDefaults.WorkingThemeNameAttribute, _storeContext.CurrentStore.Id);
+                }
 
                 //if not, try to get default store theme
                 if (string.IsNullOrEmpty(themeName))
@@ -76,10 +79,10 @@ namespace Nop.Web.Framework.Themes
                 if (!_themeProvider.ThemeExists(themeName))
                 {
                     //if it does not exist, try to get the first one
-                    themeName = _themeProvider.GetThemes().FirstOrDefault()?.SystemName 
+                    themeName = _themeProvider.GetThemes().FirstOrDefault()?.SystemName
                         ?? throw new Exception("No theme could be loaded");
                 }
-                
+
                 //cache theme system name
                 this._cachedThemeName = themeName;
 
@@ -92,7 +95,7 @@ namespace Nop.Web.Framework.Themes
                     return;
 
                 //save selected by customer theme system name
-                _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, 
+                _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer,
                     NopCustomerDefaults.WorkingThemeNameAttribute, value, _storeContext.CurrentStore.Id);
 
                 //clear cache
