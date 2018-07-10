@@ -217,9 +217,9 @@
                                 <nop-override-store-checkbox asp-for="DisplayDefaultMenuItemSettings.DisplayForumsMenuItem_OverrideForStore" asp-input="DisplayDefaultMenuItemSettings.DisplayForumsMenuItem" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
                                 <nop-label asp-for="DisplayDefaultMenuItemSettings.DisplayForumsMenuItem" />
                             </div>
-                            <div class="col-md-9">  
+                            <div class="col-md-9">
                                 <nop-editor asp-for="DisplayDefaultMenuItemSettings.DisplayForumsMenuItem" />
-                                <span asp-validation-for="DisplayDefaultMenuItemSettings.DisplayForumsMenuItem"></span> 
+                                <span asp-validation-for="DisplayDefaultMenuItemSettings.DisplayForumsMenuItem"></span>
                             </div>
                         </div>
                         <div class="form-group">
@@ -234,7 +234,7 @@
                         </div>
                     </div>
                 </div>
-            
+
                 <div class="panel panel-default advanced-setting">
                     <div class="panel-heading">
                         @T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.FooterItems")
@@ -260,7 +260,7 @@
                                 <span asp-validation-for="DisplayDefaultFooterItemSettings.DisplayContactUsFooterItem"></span>
                             </div>
                         </div>
-                        
+
                         <div class="form-group">
                             <div class="col-md-3">
                                 <nop-override-store-checkbox asp-for="DisplayDefaultFooterItemSettings.DisplayProductSearchFooterItem_OverrideForStore" asp-input="DisplayDefaultFooterItemSettings.DisplayProductSearchFooterItem" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
@@ -330,7 +330,7 @@
                                 <nop-editor asp-for="DisplayDefaultFooterItemSettings.DisplayNewProductsFooterItem" />
                                 <span asp-validation-for="DisplayDefaultFooterItemSettings.DisplayNewProductsFooterItem"></span>
                             </div>
-                        </div>                        
+                        </div>
                         <div class="form-group">
                             <div class="col-md-3">
                                 <nop-override-store-checkbox asp-for="DisplayDefaultFooterItemSettings.DisplayCustomerInfoFooterItem_OverrideForStore" asp-input="DisplayDefaultFooterItemSettings.DisplayCustomerInfoFooterItem" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
@@ -370,7 +370,7 @@
                                 <nop-editor asp-for="DisplayDefaultFooterItemSettings.DisplayShoppingCartFooterItem" />
                                 <span asp-validation-for="DisplayDefaultFooterItemSettings.DisplayShoppingCartFooterItem"></span>
                             </div>
-                        </div>                        
+                        </div>
                         <div class="form-group">
                             <div class="col-md-3">
                                 <nop-override-store-checkbox asp-for="DisplayDefaultFooterItemSettings.DisplayWishlistFooterItem_OverrideForStore" asp-input="DisplayDefaultFooterItemSettings.DisplayWishlistFooterItem" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
@@ -393,7 +393,7 @@
                         </div>
                     </div>
                 </div>
-            
+
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         @T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.SocialMedia")
@@ -599,6 +599,46 @@
                         </div>
                         <div class="form-group advanced-setting">
                             <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="SeoSettings.EnableCacheBusting_OverrideForStore" asp-input="SeoSettings.EnableCacheBusting" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="SeoSettings.EnableCacheBusting" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="SeoSettings.EnableCacheBusting" />
+                                <span asp-validation-for="SeoSettings.EnableCacheBusting"></span>
+                            </div>
+                        </div>
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="SeoSettings.EnableCacheBustingForContent_OverrideForStore" asp-input="SeoSettings.EnableCacheBustingForContent" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="SeoSettings.EnableCacheBustingForContent" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="SeoSettings.EnableCacheBustingForContent" />
+                                <span asp-validation-for="SeoSettings.EnableCacheBustingForContent"></span>
+                            </div>
+                        </div>
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="SeoSettings.EnableCacheBustingForJavascript_OverrideForStore" asp-input="SeoSettings.EnableCacheBustingForJavascript" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="SeoSettings.EnableCacheBustingForJavascript" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="SeoSettings.EnableCacheBustingForJavascript" />
+                                <span asp-validation-for="SeoSettings.EnableCacheBustingForJavascript"></span>
+                            </div>
+                        </div>
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="SeoSettings.EnableCacheBustingForCss_OverrideForStore" asp-input="SeoSettings.EnableCacheBustingForCss" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="SeoSettings.EnableCacheBustingForCss" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="SeoSettings.EnableCacheBustingForCss" />
+                                <span asp-validation-for="SeoSettings.EnableCacheBustingForCss"></span>
+                            </div>
+                        </div>
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
                                 <nop-override-store-checkbox asp-for="SeoSettings.WwwRequirement_OverrideForStore" asp-input="SeoSettings.WwwRequirement" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
                                 <nop-label asp-for="SeoSettings.WwwRequirement" />
                             </div>
@@ -695,7 +735,7 @@
                             <div class="col-md-3">
                                 <nop-label asp-for="SecuritySettings.EnableXsrfProtectionForPublicStore" />
                             </div>
-                            <div class="col-md-9"> 
+                            <div class="col-md-9">
                                 <nop-editor asp-for="SecuritySettings.EnableXsrfProtectionForPublicStore" />
                                 <span asp-validation-for="SecuritySettings.EnableXsrfProtectionForPublicStore"></span>
                             </div>
@@ -733,11 +773,11 @@
                         @T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.Captcha")
                     </div>
                     <div class="panel-body">
-                       @T("Admin.Configuration.Settings.GeneralCommon.Captcha.Instructions")
+                        @T("Admin.Configuration.Settings.GeneralCommon.Captcha.Instructions")
                         <div class="form-group">
                             <div class="col-md-3">
                                 <nop-override-store-checkbox asp-for="CaptchaSettings.Enabled_OverrideForStore" asp-input="CaptchaSettings.Enabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="CaptchaSettings.Enabled"/>
+                                <nop-label asp-for="CaptchaSettings.Enabled" />
                             </div>
                             <div class="col-md-9">
                                 <nop-editor asp-for="CaptchaSettings.Enabled" />
@@ -834,7 +874,7 @@
                                     <nop-editor asp-for="CaptchaSettings.ShowOnApplyVendorPage" />
                                     <span asp-validation-for="CaptchaSettings.ShowOnApplyVendorPage"></span>
                                 </div>
-                            </div>                            
+                            </div>
                             <div class="form-group" id="ssReCaptchaPublicKeypnl">
                                 <div class="col-md-3">
                                     <nop-override-store-checkbox asp-for="CaptchaSettings.ReCaptchaPublicKey_OverrideForStore" asp-input="CaptchaSettings.ReCaptchaPublicKey" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />

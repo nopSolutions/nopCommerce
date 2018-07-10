@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using Nop.Core.Configuration;
+﻿using Nop.Core.Configuration;
+using System.Collections.Generic;
 
 namespace Nop.Core.Domain.Seo
 {
@@ -92,5 +92,25 @@ namespace Nop.Core.Domain.Seo
         /// Custom tags in the <![CDATA[<head></head>]]> section
         /// </summary>
         public string CustomHeadTags { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool EnableCacheBustingForJavascript { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool EnableCacheBustingForCss { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool EnableCacheBusting { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool EnableCacheBustingForContent { get; set; }
     }
 }

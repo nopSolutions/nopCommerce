@@ -12,7 +12,6 @@ using Nop.Core.Infrastructure;
 using Nop.Services.Seo;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -111,7 +110,7 @@ namespace Nop.Web.Framework.UI
                 var hashInput = "";
                 foreach (var part in parts)
                 {
-                    hashInput += GetVersion(part, false);
+                    hashInput += GetVersion(part);
                     hashInput += ",";
                 }
 
@@ -124,28 +123,18 @@ namespace Nop.Web.Framework.UI
             return hash;
         }
 
-        private void EnsureFileVersionProvider()
+        protected virtual void EnsureFileVersionProvider(bool isContent)
         {
-
-            if (_fileVersionProvider == null)
-            {
-
-                // Get the roots
-                var webRoot = _hostingEnvironment.WebRootPath + Path.DirectorySeparatorChar;
-                var contentRoot = _hostingEnvironment.ContentRootPath + Path.DirectorySeparatorChar;
-                //var versionEquals = includeVersionEquals ? "?v=" : string.Empty;
-
-                _fileVersionProvider = new FileVersionProvider(new NopFileProvider(_hostingEnvironment), _memoryCache, "//");
-
-
-
-                //_fileVersionProvider = new FileVersionProvider(_hostingEnvironment.WebRootFileProvider, null, null);
-
-                //_fileVersionProvider = new FileVersionProvider(
-                //    HostingEnvironment.WebRootFileProvider,
-                //    Cache,
-                //    ViewContext.HttpContext.Request.PathBase);
-            }
+            if (isContent) // Use ContentRootFileProvider
+                _fileVersionProvider = new FileVersionProvider(
+                    _hostingEnvironment.ContentRootFileProvider,
+                    _memoryCache,
+                    "//");
+            else // Use WebRootFileProvider
+                _fileVersionProvider = new FileVersionProvider(
+                    _hostingEnvironment.WebRootFileProvider,
+                    _memoryCache,
+                    "//");
         }
 
         #endregion
@@ -425,7 +414,7 @@ namespace Nop.Web.Framework.UI
                 foreach (var item in partsToDontBundle)
                 {
                     var src = debugModel ? item.DebugSrc : item.Src;
-                    result.AppendFormat("<script {1}src=\"{0}\"></script>", urlHelper.Content(src) + GetVersion(src), item.IsAsync ? "async " : "");
+                    result.AppendFormat("<script {1}src=\"{0}\"></script>", GetVersion(urlHelper.Content(src)), item.IsAsync ? "async " : "");
                     result.Append(Environment.NewLine);
                 }
                 return result.ToString();
@@ -437,7 +426,7 @@ namespace Nop.Web.Framework.UI
                 foreach (var item in _scriptParts[location].Distinct())
                 {
                     var src = debugModel ? item.DebugSrc : item.Src;
-                    result.AppendFormat("<script {1}src=\"{0}\"></script>", urlHelper.Content(src) + GetVersion(src), item.IsAsync ? "async " : "");
+                    result.AppendFormat("<script {1}src=\"{0}\"></script>", GetVersion(urlHelper.Content(src)), item.IsAsync ? "async " : "");
                     result.Append(Environment.NewLine);
                 }
                 return result.ToString();
@@ -647,7 +636,7 @@ namespace Nop.Web.Framework.UI
                 foreach (var item in partsToDontBundle)
                 {
                     var src = debugModel ? item.DebugSrc : item.Src;
-                    result.AppendFormat("<link href=\"{0}\" rel=\"stylesheet\" type=\"{1}\" />", urlHelper.Content(src) + GetVersion(src), MimeTypes.TextCss);
+                    result.AppendFormat("<link href=\"{0}\" rel=\"stylesheet\" type=\"{1}\" />", GetVersion(urlHelper.Content(src)), MimeTypes.TextCss);
                     result.Append(Environment.NewLine);
                 }
 
@@ -660,21 +649,15 @@ namespace Nop.Web.Framework.UI
                 foreach (var item in _cssParts[location].Distinct())
                 {
                     var src = debugModel ? item.DebugSrc : item.Src;
-                    result.AppendFormat("<link href=\"{0}\" rel=\"stylesheet\" type=\"{1}\" />", urlHelper.Content(src) + GetVersion(src), MimeTypes.TextCss);
+
+                    var srouce = src;
+                    var converttter = urlHelper.Content(src);
+
+                    result.AppendFormat("<link href=\"{0}\" rel=\"stylesheet\" type=\"{1}\" />", GetVersion(urlHelper.Content(src)), MimeTypes.TextCss);
                     result.AppendLine();
                 }
                 return result.ToString();
             }
-        }
-
-        private string GetVersionedSrc(string srcValue)
-        {
-            if (true)
-            {
-                srcValue = _fileVersionProvider.AddFileVersionToPath(srcValue);
-            }
-
-            return srcValue;
         }
 
         /// <summary>
@@ -682,41 +665,24 @@ namespace Nop.Web.Framework.UI
         /// keeps the browser from using an older cached version of the file when it should use a newer one
         /// </summary>
         /// <param name="url">The relative URL of the file to get the version for.</param>
-        /// <param name="includeVersionEquals">Should we include a version identifier?</param>
-        public virtual string GetVersion(string url, bool includeVersionEquals = true)
+        public virtual string GetVersion(string url)
         {
-            EnsureFileVersionProvider();
+            var isContent = _fileProvider.MapPath(url).ToLowerInvariant().Contains("content");
+            EnsureFileVersionProvider(isContent);
 
-            var fileNameStuff = url;
+            if (isContent && !_seoSettings.EnableCacheBustingForContent) return url;
+            if (!isContent && !_seoSettings.EnableCacheBusting) return url;
 
-
-            // Get the roots
-            var webRoot = _hostingEnvironment.WebRootPath + Path.DirectorySeparatorChar;
-            var contentRoot = _hostingEnvironment.ContentRootPath + Path.DirectorySeparatorChar;
-            var versionEquals = includeVersionEquals ? "?v=" : string.Empty;
-
-            // Fix the url 
-            url = url.Replace("~", "").Replace("/", "\\").TrimStart(Path.DirectorySeparatorChar);
-
-            var fileNameStuff2 = _fileVersionProvider.AddFileVersionToPath(url);
-
-            // Try the content root
-            var file = Path.Combine(contentRoot, url);
-            if (_fileProvider.FileExists(file))
+            var isJs = url.ToLowerInvariant().Contains(".js");
+            if (isJs && _seoSettings.EnableCacheBustingForJavascript)
             {
-                return versionEquals + _fileProvider.GetLastWriteTime(file).Ticks;
+                return _fileVersionProvider.AddFileVersionToPath(url);
             }
-
-            // Try the web root
-            file = Path.Combine(webRoot, url);
-            if (_fileProvider.FileExists(file))
+            if (!isJs && _seoSettings.EnableCacheBustingForCss)
             {
-                return versionEquals + _fileProvider.GetLastWriteTime(file).Ticks;
+                return _fileVersionProvider.AddFileVersionToPath(url);
             }
-
-            // If all else fails, return a random number string
-            // the files should exist, so this should never be hit
-            return versionEquals + (new Random()).Next();
+            return url;
         }
 
         /// <summary>

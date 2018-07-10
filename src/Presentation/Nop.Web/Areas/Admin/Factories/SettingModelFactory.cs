@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Domain;
 using Nop.Core.Domain.Blogs;
@@ -35,7 +32,9 @@ using Nop.Web.Areas.Admin.Models.Common;
 using Nop.Web.Areas.Admin.Models.Settings;
 using Nop.Web.Areas.Admin.Models.Stores;
 using Nop.Web.Framework.Extensions;
-using Nop.Web.Framework.Security.Captcha;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -370,6 +369,10 @@ namespace Nop.Web.Areas.Admin.Factories
                 WwwRequirementValues = seoSettings.WwwRequirement.ToSelectList(),
                 EnableJsBundling = seoSettings.EnableJsBundling,
                 EnableCssBundling = seoSettings.EnableCssBundling,
+                EnableCacheBusting = seoSettings.EnableCacheBusting,
+                EnableCacheBustingForContent = seoSettings.EnableCacheBustingForContent,
+                EnableCacheBustingForJavascript = seoSettings.EnableCacheBustingForJavascript,
+                EnableCacheBustingForCss = seoSettings.EnableCacheBustingForCss,
                 TwitterMetaTags = seoSettings.TwitterMetaTags,
                 OpenGraphMetaTags = seoSettings.OpenGraphMetaTags,
                 CustomHeadTags = seoSettings.CustomHeadTags
@@ -390,6 +393,10 @@ namespace Nop.Web.Areas.Admin.Factories
             model.WwwRequirement_OverrideForStore = _settingService.SettingExists(seoSettings, x => x.WwwRequirement, storeId);
             model.EnableJsBundling_OverrideForStore = _settingService.SettingExists(seoSettings, x => x.EnableJsBundling, storeId);
             model.EnableCssBundling_OverrideForStore = _settingService.SettingExists(seoSettings, x => x.EnableCssBundling, storeId);
+            model.EnableCacheBusting_OverrideForStore = _settingService.SettingExists(seoSettings, x => x.EnableCacheBusting, storeId);
+            model.EnableCacheBustingForContent_OverrideForStore = _settingService.SettingExists(seoSettings, x => x.EnableCacheBustingForContent, storeId);
+            model.EnableCacheBustingForJavascript_OverrideForStore = _settingService.SettingExists(seoSettings, x => x.EnableCacheBustingForJavascript, storeId);
+            model.EnableCacheBustingForCss_OverrideForStore = _settingService.SettingExists(seoSettings, x => x.EnableCacheBustingForCss, storeId);
             model.TwitterMetaTags_OverrideForStore = _settingService.SettingExists(seoSettings, x => x.TwitterMetaTags, storeId);
             model.OpenGraphMetaTags_OverrideForStore = _settingService.SettingExists(seoSettings, x => x.OpenGraphMetaTags, storeId);
             model.CustomHeadTags_OverrideForStore = _settingService.SettingExists(seoSettings, x => x.CustomHeadTags, storeId);
@@ -655,7 +662,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //fill in additional values (not existing in the entity)
             model.ActiveStoreScopeConfiguration = storeId;
-            
+
             if (storeId <= 0)
                 return model;
 
@@ -725,7 +732,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //fill in additional values (not existing in the entity)
             model.ActiveStoreScopeConfiguration = storeId;
             model.ForumEditorValues = forumSettings.ForumEditor.ToSelectList();
-            
+
             if (storeId <= 0)
                 return model;
 
@@ -772,7 +779,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //fill in additional values (not existing in the entity)
             model.ActiveStoreScopeConfiguration = storeId;
-            
+
             if (storeId <= 0)
                 return model;
 
@@ -1060,7 +1067,7 @@ namespace Nop.Web.Areas.Admin.Factories
             model.ActiveStoreScopeConfiguration = storeId;
             model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId)?.CurrencyCode;
             model.ActivatePointsImmediately = model.ActivationDelay <= 0;
-            
+
             if (storeId <= 0)
                 return model;
 
@@ -1151,7 +1158,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //fill in additional values (not existing in the entity)
             model.ActiveStoreScopeConfiguration = storeId;
-            
+
             if (storeId <= 0)
                 return model;
 
@@ -1194,7 +1201,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //fill in additional values (not existing in the entity)
             model.ActiveStoreScopeConfiguration = storeId;
             model.PicturesStoredIntoDatabase = _pictureService.StoreInDb;
-            
+
             if (storeId <= 0)
                 return model;
 

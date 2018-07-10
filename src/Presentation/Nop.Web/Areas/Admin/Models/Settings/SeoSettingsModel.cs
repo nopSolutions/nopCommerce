@@ -60,6 +60,22 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public bool EnableCssBundling { get; set; }
         public bool EnableCssBundling_OverrideForStore { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.EnableCacheBusting")]
+        public bool EnableCacheBusting { get; set; }
+        public bool EnableCacheBusting_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.EnableCacheBustingForContent")]
+        public bool EnableCacheBustingForContent { get; set; }
+        public bool EnableCacheBustingForContent_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.EnableCacheBustingForJavascript")]
+        public bool EnableCacheBustingForJavascript { get; set; }
+        public bool EnableCacheBustingForJavascript_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.EnableCacheBustingForCss")]
+        public bool EnableCacheBustingForCss { get; set; }
+        public bool EnableCacheBustingForCss_OverrideForStore { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.TwitterMetaTags")]
         public bool TwitterMetaTags { get; set; }
         public bool TwitterMetaTags_OverrideForStore { get; set; }

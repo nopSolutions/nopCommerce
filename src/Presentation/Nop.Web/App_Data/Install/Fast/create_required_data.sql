@@ -1942,6 +1942,10 @@ INSERT [dbo].[Setting] ([Id], [Name], [Value], [StoreId]) VALUES (514, N'display
 INSERT [dbo].[Setting] ([Id], [Name], [Value], [StoreId]) VALUES (515, N'displaydefaultmenuitemsettings.displayforumsmenuitem', N'False', 0)
 INSERT [dbo].[Setting] ([Id], [Name], [Value], [StoreId]) VALUES (516, N'displaydefaultmenuitemsettings.displaycontactusmenuitem', N'False', 0)
 INSERT [dbo].[Setting] ([Id], [Name], [Value], [StoreId]) VALUES (517, N'securitysettings.pluginstaticfileextensionsblacklist', N'', 0)
+INSERT [dbo].[Setting] ([Id], [Name], [Value], [StoreId]) VALUES (518, N'seosettings.enablecachebustingforjavascript', N'False', 0)
+INSERT [dbo].[Setting] ([Id], [Name], [Value], [StoreId]) VALUES (519, N'seosettings.enablecachebustingforcss', N'False', 0)
+INSERT [dbo].[Setting] ([Id], [Name], [Value], [StoreId]) VALUES (520, N'seosettings.enablecachebusting', N'False', 0)
+INSERT [dbo].[Setting] ([Id], [Name], [Value], [StoreId]) VALUES (521, N'seosettings.enablecachebustingforcontent', N'False', 0)
 SET IDENTITY_INSERT [dbo].[Setting] OFF
 GO
 
