@@ -78,6 +78,7 @@ var AjaxCart = {
     success_process: function (response) {
         if (response.updatetopcartsectionhtml) {
             $(AjaxCart.topcartselector).html(response.updatetopcartsectionhtml);
+			$(AjaxCart.topcartselector).removeClass("hidden");
         }
         if (response.updatetopwishlistsectionhtml) {
             $(AjaxCart.topwishlistselector).html(response.updatetopwishlistsectionhtml);
