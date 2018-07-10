@@ -3,7 +3,6 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Xml;
-using Nop.Core.Extensions;
 
 namespace Nop.Core.Plugins
 {
@@ -38,6 +37,17 @@ namespace Nop.Core.Plugins
         }
 
         /// <summary>
+        /// Get element value
+        /// </summary>
+        /// <param name="node">XML node</param>
+        /// <param name="elName">Element name</param>
+        /// <returns>Value (text)</returns>
+        private static string ElText(XmlNode node, string elName)
+        {
+            return node?.SelectSingleNode(elName)?.InnerText;
+        }
+
+        /// <summary>
         /// Get categories
         /// </summary>
         /// <returns>Result</returns>
@@ -45,9 +55,9 @@ namespace Nop.Core.Plugins
         {
             return GetDocument("getCategories=1").SelectNodes(@"//categories/category").Cast<XmlNode>().Select(node => new OfficialFeedCategory
             {
-                Id = int.Parse(node.ElText(@"id")),
-                ParentCategoryId = int.Parse(node.ElText(@"parentCategoryId")),
-                Name = node.ElText(@"name")
+                Id = int.Parse(ElText(node, @"id")),
+                ParentCategoryId = int.Parse(ElText(node, @"parentCategoryId")),
+                Name = ElText(node, @"name")
             }).ToList();
         }
 
@@ -59,8 +69,8 @@ namespace Nop.Core.Plugins
         {
             return GetDocument("getVersions=1").SelectNodes(@"//versions/version").Cast<XmlNode>().Select(node => new OfficialFeedVersion
             {
-                Id = int.Parse(node.ElText(@"id")),
-                Name = node.ElText(@"name")
+                Id = int.Parse(ElText(node, @"id")),
+                Name = ElText(node, @"name")
             }).ToList();            
         }
 
@@ -85,15 +95,15 @@ namespace Nop.Core.Plugins
 
             var list = xmlDoc.SelectNodes(@"//extensions/extension").Cast<XmlNode>().Select(node => new OfficialFeedPlugin
             {
-                Name = node.ElText(@"name"),
-                Url = node.ElText(@"url"),
-                PictureUrl = node.ElText(@"picture"),
-                Category = node.ElText(@"category"),
-                SupportedVersions = node.ElText(@"versions"),
-                Price = node.ElText(@"price")
+                Name = ElText(node, @"name"),
+                Url = ElText(node, @"url"),
+                PictureUrl = ElText(node, @"picture"),
+                Category = ElText(node, @"category"),
+                SupportedVersions = ElText(node, @"versions"),
+                Price = ElText(node, @"price")
             }).ToList();
 
-            var totalRecords = int.Parse(xmlDoc.SelectNodes(@"//totalRecords")[0].ElText(@"value"));
+            var totalRecords = int.Parse(ElText(xmlDoc.SelectNodes(@"//totalRecords")[0], @"value"));
                         
             return new PagedList<OfficialFeedPlugin>(list, pageIndex, pageSize, totalRecords);
         }

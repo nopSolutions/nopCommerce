@@ -26,18 +26,12 @@ namespace Nop.Services.Localization
 
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="cacheManager">Static cache manager</param>
-        /// <param name="localizedPropertyRepository">Localized property repository</param>
-        /// <param name="localizationSettings">Localization settings</param>
-        public LocalizedEntityService(IStaticCacheManager cacheManager,
-            IRepository<LocalizedProperty> localizedPropertyRepository,
+        public LocalizedEntityService(IRepository<LocalizedProperty> localizedPropertyRepository,
+            IStaticCacheManager cacheManager,
             LocalizationSettings localizationSettings)
         {
-            this._cacheManager = cacheManager;
             this._localizedPropertyRepository = localizedPropertyRepository;
+            this._cacheManager = cacheManager;
             this._localizationSettings = localizationSettings;
         }
 
@@ -289,7 +283,7 @@ namespace Nop.Services.Localization
                 lp.LocaleKey.Equals(localeKey, StringComparison.InvariantCultureIgnoreCase)); //should be culture invariant
 
             var localeValueStr = CommonHelper.To<string>(localeValue);
-            
+
             if (prop != null)
             {
                 if (string.IsNullOrWhiteSpace(localeValueStr))

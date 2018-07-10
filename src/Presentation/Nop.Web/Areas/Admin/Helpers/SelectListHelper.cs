@@ -35,7 +35,7 @@ namespace Nop.Web.Areas.Admin.Helpers
                 var categories = categoryService.GetAllCategories(showHidden: showHidden);
                 return categories.Select(c => new SelectListItem
                 {
-                    Text = c.GetFormattedBreadCrumb(categories),
+                    Text = categoryService.GetFormattedBreadCrumb(c, categories),
                     Value = c.Id.ToString()
                 });
             });

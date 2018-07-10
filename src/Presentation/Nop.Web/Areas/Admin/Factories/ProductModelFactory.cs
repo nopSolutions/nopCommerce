@@ -24,8 +24,8 @@ using Nop.Services.Orders;
 using Nop.Services.Seo;
 using Nop.Services.Shipping;
 using Nop.Services.Stores;
-using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Infrastructure.Cache;
+using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Web.Areas.Admin.Models.Orders;
 using Nop.Web.Framework.Extensions;
@@ -69,6 +69,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IStaticCacheManager _cacheManager;
         private readonly IStoreMappingSupportedModelFactory _storeMappingSupportedModelFactory;
         private readonly IStoreService _storeService;
+        private readonly IUrlRecordService _urlRecordService;
         private readonly IWorkContext _workContext;
         private readonly MeasureSettings _measureSettings;
         private readonly TaxSettings _taxSettings;
@@ -107,6 +108,7 @@ namespace Nop.Web.Areas.Admin.Factories
             IStaticCacheManager cacheManager,
             IStoreMappingSupportedModelFactory storeMappingSupportedModelFactory,
             IStoreService storeService,
+            IUrlRecordService urlRecordService,
             IWorkContext workContext,
             MeasureSettings measureSettings,
             TaxSettings taxSettings,
@@ -142,6 +144,7 @@ namespace Nop.Web.Areas.Admin.Factories
             this._cacheManager = cacheManager;
             this._storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
             this._storeService = storeService;
+            this._urlRecordService = urlRecordService;
             this._workContext = workContext;
             this._taxSettings = taxSettings;
             this._vendorSettings = vendorSettings;
@@ -746,9 +749,9 @@ namespace Nop.Web.Areas.Admin.Factories
                     //fill in additional values (not existing in the entity)
                     var defaultProductPicture = _pictureService.GetPicturesByProductId(product.Id, 1).FirstOrDefault();
                     productModel.PictureThumbnailUrl = _pictureService.GetPictureUrl(defaultProductPicture, 75);
-                    productModel.ProductTypeName = product.ProductType.GetLocalizedEnum(_localizationService, _workContext);
+                    productModel.ProductTypeName = _localizationService.GetLocalizedEnum(product.ProductType);
                     if (product.ProductType == ProductType.SimpleProduct && product.ManageInventoryMethod == ManageInventoryMethod.ManageStock)
-                        productModel.StockQuantityStr = product.GetTotalStockQuantity().ToString();
+                        productModel.StockQuantityStr = _productService.GetTotalStockQuantity(product).ToString();
 
                     return productModel;
                 }),
@@ -816,13 +819,13 @@ namespace Nop.Web.Areas.Admin.Factories
                 //define localized model configuration action
                 localizedModelConfiguration = (locale, languageId) =>
                 {
-                    locale.Name = product.GetLocalized(entity => entity.Name, languageId, false, false);
-                    locale.FullDescription = product.GetLocalized(entity => entity.FullDescription, languageId, false, false);
-                    locale.ShortDescription = product.GetLocalized(entity => entity.ShortDescription, languageId, false, false);
-                    locale.MetaKeywords = product.GetLocalized(entity => entity.MetaKeywords, languageId, false, false);
-                    locale.MetaDescription = product.GetLocalized(entity => entity.MetaDescription, languageId, false, false);
-                    locale.MetaTitle = product.GetLocalized(entity => entity.MetaTitle, languageId, false, false);
-                    locale.SeName = product.GetSeName(languageId, false, false);
+                    locale.Name = _localizationService.GetLocalized(product, entity => entity.Name, languageId, false, false);
+                    locale.FullDescription = _localizationService.GetLocalized(product, entity => entity.FullDescription, languageId, false, false);
+                    locale.ShortDescription = _localizationService.GetLocalized(product, entity => entity.ShortDescription, languageId, false, false);
+                    locale.MetaKeywords = _localizationService.GetLocalized(product, entity => entity.MetaKeywords, languageId, false, false);
+                    locale.MetaDescription = _localizationService.GetLocalized(product, entity => entity.MetaDescription, languageId, false, false);
+                    locale.MetaTitle = _localizationService.GetLocalized(product, entity => entity.MetaTitle, languageId, false, false);
+                    locale.SeName = _urlRecordService.GetSeName(product, languageId, false, false);
                 };
             }
 
@@ -1417,7 +1420,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     };
 
                     //fill in additional values (not existing in the entity)
-                    productSpecificationAttributeModel.AttributeTypeName = attribute.AttributeType.GetLocalizedEnum(_localizationService, _workContext);
+                    productSpecificationAttributeModel.AttributeTypeName = _localizationService.GetLocalizedEnum(attribute.AttributeType);
                     productSpecificationAttributeModel.AttributeId = attribute.SpecificationAttributeOption.SpecificationAttribute.Id;
                     productSpecificationAttributeModel.AttributeName = attribute.SpecificationAttributeOption.SpecificationAttribute.Name;
                     switch (attribute.AttributeType)
@@ -1523,7 +1526,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 //define localized model configuration action
                 localizedModelConfiguration = (locale, languageId) =>
                 {
-                    locale.Name = productTag.GetLocalized(entity => entity.Name, languageId, false, false);
+                    locale.Name = _localizationService.GetLocalized(productTag, entity => entity.Name, languageId, false, false);
                 };
             }
 
@@ -1570,9 +1573,9 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     //fill in additional values (not existing in the entity)
                     orderModel.StoreName = _storeService.GetStoreById(order.StoreId)?.Name ?? "Deleted";
-                    orderModel.OrderStatus = order.OrderStatus.GetLocalizedEnum(_localizationService, _workContext);
-                    orderModel.PaymentStatus = order.PaymentStatus.GetLocalizedEnum(_localizationService, _workContext);
-                    orderModel.ShippingStatus = order.ShippingStatus.GetLocalizedEnum(_localizationService, _workContext);
+                    orderModel.OrderStatus = _localizationService.GetLocalizedEnum(order.OrderStatus);
+                    orderModel.PaymentStatus = _localizationService.GetLocalizedEnum(order.PaymentStatus);
+                    orderModel.ShippingStatus = _localizationService.GetLocalizedEnum(order.ShippingStatus);
 
                     return orderModel;
                 }),
@@ -1581,7 +1584,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             return model;
         }
-        
+
         /// <summary>
         /// Prepare bulk edit product search model
         /// </summary>
@@ -1644,8 +1647,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     };
 
                     //fill in additional values (not existing in the entity)
-                    productModel.ManageInventoryMethod = product.ManageInventoryMethod
-                        .GetLocalizedEnum(_localizationService, _workContext.WorkingLanguage.Id);
+                    productModel.ManageInventoryMethod = _localizationService.GetLocalizedEnum(product.ManageInventoryMethod);
                     if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStock && product.UseMultipleWarehouses)
                     {
                         productModel.ManageInventoryMethod = $"{productModel.ManageInventoryMethod} {_localizationService.GetResource("Admin.Catalog.BulkEdit.Fields.ManageInventoryMethod.MultipleWarehouse")}";
@@ -1845,8 +1847,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     productAttributeMappingModel.ValidationRulesString = PrepareProductAttributeMappingValidationRulesString(attributeMapping);
                     productAttributeMappingModel.ProductAttribute = _productAttributeService
                         .GetProductAttributeById(attributeMapping.ProductAttributeId)?.Name;
-                    productAttributeMappingModel.AttributeControlType = attributeMapping.AttributeControlType
-                        .GetLocalizedEnum(_localizationService, _workContext);
+                    productAttributeMappingModel.AttributeControlType = _localizationService.GetLocalizedEnum(attributeMapping.AttributeControlType);
                     var conditionAttribute = _productAttributeParser
                         .ParseProductAttributeMappings(attributeMapping.ConditionAttributeXml).FirstOrDefault();
                     if (conditionAttribute == null)
@@ -1892,7 +1893,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 };
 
                 model.ProductAttribute = _productAttributeService.GetProductAttributeById(productAttributeMapping.ProductAttributeId).Name;
-                model.AttributeControlType = productAttributeMapping.AttributeControlType.GetLocalizedEnum(_localizationService, _workContext);
+                model.AttributeControlType = _localizationService.GetLocalizedEnum(productAttributeMapping.AttributeControlType);
 
                 if (!excludeProperties)
                 {
@@ -1915,7 +1916,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 //define localized model configuration action
                 localizedModelConfiguration = (locale, languageId) =>
                 {
-                    locale.TextPrompt = productAttributeMapping.GetLocalized(entity => entity.TextPrompt, languageId, false, false);
+                    locale.TextPrompt = _localizationService.GetLocalized(productAttributeMapping, entity => entity.TextPrompt, languageId, false, false);
                 };
 
                 //prepare nested search model
@@ -1982,7 +1983,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     };
 
                     //fill in additional values (not existing in the entity)
-                    productAttributeValueModel.AttributeValueTypeName = value.AttributeValueType.GetLocalizedEnum(_localizationService, _workContext);
+                    productAttributeValueModel.AttributeValueTypeName = _localizationService.GetLocalizedEnum(value.AttributeValueType);
                     productAttributeValueModel.Name = value.ProductAttributeMapping.AttributeControlType != AttributeControlType.ColorSquares
                         ? value.Name : $"{value.Name} - {value.ColorSquaresRgb}";
                     if (value.AttributeValueType == AttributeValueType.Simple)
@@ -2036,7 +2037,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     ProductAttributeMappingId = productAttributeValue.ProductAttributeMappingId,
                     AttributeValueTypeId = productAttributeValue.AttributeValueTypeId,
-                    AttributeValueTypeName = productAttributeValue.AttributeValueType.GetLocalizedEnum(_localizationService, _workContext),
+                    AttributeValueTypeName = _localizationService.GetLocalizedEnum(productAttributeValue.AttributeValueType),
                     AssociatedProductId = productAttributeValue.AssociatedProductId,
                     Name = productAttributeValue.Name,
                     ColorSquaresRgb = productAttributeValue.ColorSquaresRgb,
@@ -2061,7 +2062,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 //define localized model configuration action
                 localizedModelConfiguration = (locale, languageId) =>
                 {
-                    locale.Name = productAttributeValue.GetLocalized(entity => entity.Name, languageId, false, false);
+                    locale.Name = _localizationService.GetLocalized(productAttributeValue, entity => entity.Name, languageId, false, false);
                 };
             }
 

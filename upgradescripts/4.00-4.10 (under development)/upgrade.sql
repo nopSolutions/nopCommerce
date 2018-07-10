@@ -1979,6 +1979,27 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.StoreLastVisitedPage.Hint">
     <Value>When enabled, the last visited page will be stored. When disabled, it can improve performance.</Value>
   </LocaleResource>
+  <LocaleResource Name="Plugins.ExternalAuth.Facebook.Instructions">
+    <Value><![CDATA[<p>To configure authentication with Facebook, please follow these steps:<br/><br/><ol><li>Navigate to the <a href="https://developers.facebook.com/apps" target ="_blank" > Facebook for Developers</a> page and sign in. If you don''t already have a Facebook account, use the <b>Sign up for Facebook</b> link on the login page to create one.</li><li>Tap the <b>+ Add a New App</b> button in the upper right corner to create a new App ID. (If this is your first app with Facebook, the text of the button will be <b>Create a New App</b>.)</li><li>Fill out the form and tap the <b>Create App ID</b>  button.</li><li>The <b>Product Setup</b> page is displayed, letting you select the features for your new app. Select the option <b>Facebook Login</b> and press <b>Set up</b>.</li><li>Click on <b>Settings</b> on the left menu and in section <b>Client OAuth Settings</b> select the field <b>Valid OAuth Redirect URIs</b></li><li>Enter \"YourStoreUrl/signin-facebook\" in that field.</li><li>Click <b>Save Changes</b>.</li><li>Click the <b>Dashboard</b> link in the left navigation.</li><li>Copy your App ID and App secret below.</li></ol><br/><br/></p>]]></Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Common.DeleteConfirmation.Selected">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Currencies.AdditionalConfirm">
+    <Value><![CDATA[<p>WARNING. It is not recommended to do this on live sites because: </p><ol><li>Product prices, order totals, shipping rates, etc are not automatically converted to a new currency</li><li>Currency exhange rates are not automatically updated</li></ol>]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Measures.AdditionalConfirm">
+    <Value><![CDATA[<p>WARNING. It is not recommended to do this on live sites because: </p><ol><li>Other rates have to be updated manually</li><li>You have to ensure that each product has a valid measure (dimension and weights) - they are not adjusted automatically</li></ol>]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.BillingInfo">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.ShippingInfo">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.BillingShippingInfo">
+    <Value>Billing &amp; shipping</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -2283,14 +2304,14 @@ BEGIN
 END
 GO
 
-IF EXISTS (SELECT 1 FROM sys.objects WHERE NAME = 'FK_VendorAttributeValue_VendorAttribute_VendorAttributeId' AND PARENT_OBJECT_ID = object_id('VendorAttributeValue') AND objectproperty(object_id, N'IsForeignKey') = 1)
+IF EXISTS (SELECT 1 FROM sys.objects WHERE NAME = 'VendorAttributeValue_VendorAttribute' AND PARENT_OBJECT_ID = object_id('VendorAttributeValue') AND objectproperty(object_id, N'IsForeignKey') = 1)
 BEGIN
-	ALTER TABLE dbo.VendorAttributeValue DROP CONSTRAINT [FK_VendorAttributeValue_VendorAttribute_VendorAttributeId]
+	ALTER TABLE dbo.VendorAttributeValue DROP CONSTRAINT [VendorAttributeValue_VendorAttribute]
 END
 GO
 
 ALTER TABLE [dbo].[VendorAttributeValue] WITH CHECK 
-	ADD CONSTRAINT [FK_VendorAttributeValue_VendorAttribute_VendorAttributeId] FOREIGN KEY([VendorAttributeId]) REFERENCES [dbo].[VendorAttribute] ([Id]) ON DELETE CASCADE
+	ADD CONSTRAINT [VendorAttributeValue_VendorAttribute] FOREIGN KEY([VendorAttributeId]) REFERENCES [dbo].[VendorAttribute] ([Id]) ON DELETE CASCADE
 GO
 
 --new activity type
@@ -3868,3 +3889,11 @@ BEGIN
 END
 GO
 
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'commonsettings.jquerymigratescriptloggingactive')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'commonsettings.jquerymigratescriptloggingactive', N'False', 0)
+END
+GO

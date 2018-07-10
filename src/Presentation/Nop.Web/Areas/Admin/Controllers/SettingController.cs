@@ -54,6 +54,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly IFulltextService _fulltextService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IGdprService _gdprService;
+        private readonly ILocalizedEntityService _localizedEntityService;
         private readonly ILocalizationService _localizationService;
         private readonly IMaintenanceService _maintenanceService;
         private readonly IOrderService _orderService;
@@ -77,6 +78,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             IFulltextService fulltextService,
             IGenericAttributeService genericAttributeService,
             IGdprService gdprService,
+            ILocalizedEntityService localizedEntityService,
             ILocalizationService localizationService,
             IMaintenanceService maintenanceService,
             IOrderService orderService,
@@ -96,6 +98,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             this._fulltextService = fulltextService;
             this._genericAttributeService = genericAttributeService;
             this._gdprService = gdprService;
+            this._localizedEntityService = localizedEntityService;
             this._localizationService = localizationService;
             this._maintenanceService = maintenanceService;
             this._orderService = orderService;
@@ -107,6 +110,26 @@ namespace Nop.Web.Areas.Admin.Controllers
             this._storeService = storeService;
             this._workContext = workContext;
             this._config = config;
+        }
+
+        #endregion
+
+        #region Utilites
+
+        protected virtual void UpdateGDPRConsentLocales(GdprConsent gdprConsent, GdprConsentModel model)
+        {
+            foreach (var localized in model.Locales)
+            {
+                _localizedEntityService.SaveLocalizedValue(gdprConsent,
+                    x => x.Message,
+                    localized.Message,
+                    localized.LanguageId);
+
+                _localizedEntityService.SaveLocalizedValue(gdprConsent,
+                    x => x.RequiredMessage,
+                    localized.RequiredMessage,
+                    localized.LanguageId);
+            }
         }
 
         #endregion
@@ -971,6 +994,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             return RedirectToAction("CustomerUser");
         }
 
+        #region GDPR
+
         public virtual IActionResult Gdpr()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
@@ -1004,7 +1029,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //activity log
             _customerActivityService.InsertActivity("EditSettings", _localizationService.GetResource("ActivityLog.EditSettings"));
-
+                        
             SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
 
             return RedirectToAction("Gdpr");
@@ -1041,6 +1066,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 var gdprConsent = model.ToEntity<GdprConsent>();
                 _gdprService.InsertConsent(gdprConsent);
+
+                //locales                
+                UpdateGDPRConsentLocales(gdprConsent, model);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Settings.Gdpr.Consent.Added"));
 
@@ -1084,6 +1112,12 @@ namespace Nop.Web.Areas.Admin.Controllers
                 gdprConsent = model.ToEntity(gdprConsent);
                 _gdprService.UpdateConsent(gdprConsent);
 
+                //selected tab
+                SaveSelectedTabName();
+
+                //locales                
+                UpdateGDPRConsentLocales(gdprConsent, model);
+
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Settings.Gdpr.Consent.Updated"));
 
                 return continueEditing ? RedirectToAction("EditGdprConsent", gdprConsent.Id) : RedirectToAction("Gdpr");
@@ -1113,6 +1147,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             return RedirectToAction("Gdpr");
         }
 
+        #endregion
 
         public virtual IActionResult GeneralCommon()
         {

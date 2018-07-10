@@ -37,9 +37,9 @@ namespace Nop.Services.Discounts
         /// <param name="startDateUtc">Discount start date; pass null to load all records</param>
         /// <param name="endDateUtc">Discount end date; pass null to load all records</param>
         /// <returns>Discounts</returns>
-        IList<Discount> GetAllDiscounts(DiscountType? discountType = null, 
-            string couponCode = null, string discountName = null, bool showHidden = false, 
-            DateTime ? startDateUtc = null, DateTime? endDateUtc = null);
+        IList<Discount> GetAllDiscounts(DiscountType? discountType = null,
+            string couponCode = null, string discountName = null, bool showHidden = false,
+            DateTime? startDateUtc = null, DateTime? endDateUtc = null);
 
         /// <summary>
         /// Inserts a discount
@@ -83,7 +83,7 @@ namespace Nop.Services.Discounts
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>List of products</returns>
-        IPagedList<Product> GetProductsWithAppliedDiscount(int? discountId = null, 
+        IPagedList<Product> GetProductsWithAppliedDiscount(int? discountId = null,
             bool showHidden = false, int pageIndex = 0, int pageSize = int.MaxValue);
 
         #endregion
@@ -100,7 +100,7 @@ namespace Nop.Services.Discounts
         /// <returns>Discounts</returns>
         IList<DiscountForCaching> GetAllDiscountsForCaching(DiscountType? discountType = null,
             string couponCode = null, string discountName = null, bool showHidden = false);
-        
+
         /// <summary>
         /// Get category identifiers to which a discount is applied
         /// </summary>
@@ -116,6 +116,39 @@ namespace Nop.Services.Discounts
         /// <param name="customer">Customer</param>
         /// <returns>Manufacturer identifiers</returns>
         IList<int> GetAppliedManufacturerIds(DiscountForCaching discount, Customer customer);
+
+        /// <summary>
+        /// Map a discount to the same class for caching
+        /// </summary>
+        /// <param name="discount">Discount</param>
+        /// <returns>Result</returns>
+        DiscountForCaching MapDiscount(Discount discount);
+
+        /// <summary>
+        /// Gets the discount amount for the specified value
+        /// </summary>
+        /// <param name="discount">Discount</param>
+        /// <param name="amount">Amount</param>
+        /// <returns>The discount amount</returns>
+        decimal GetDiscountAmount(DiscountForCaching discount, decimal amount);
+
+        /// <summary>
+        /// Get preferred discount (with maximum discount value)
+        /// </summary>
+        /// <param name="discounts">A list of discounts to check</param>
+        /// <param name="amount">Amount (initial value)</param>
+        /// <param name="discountAmount">Discount amount</param>
+        /// <returns>Preferred discount</returns>
+        List<DiscountForCaching> GetPreferredDiscount(IList<DiscountForCaching> discounts,
+            decimal amount, out decimal discountAmount);
+
+        /// <summary>
+        /// Check whether a list of discounts already contains a certain discount intance
+        /// </summary>
+        /// <param name="discounts">A list of discounts</param>
+        /// <param name="discount">Discount to check</param>
+        /// <returns>Result</returns>
+        bool ContainsDiscount(IList<DiscountForCaching> discounts, DiscountForCaching discount);
 
         #endregion
 
@@ -197,7 +230,7 @@ namespace Nop.Services.Discounts
         /// <param name="discountUsageHistoryId">Discount usage history record identifier</param>
         /// <returns>Discount usage history</returns>
         DiscountUsageHistory GetDiscountUsageHistoryById(int discountUsageHistoryId);
-        
+
         /// <summary>
         /// Gets all discount usage history records
         /// </summary>
@@ -208,7 +241,7 @@ namespace Nop.Services.Discounts
         /// <param name="pageSize">Page size</param>
         /// <returns>Discount usage history records</returns>
         IPagedList<DiscountUsageHistory> GetAllDiscountUsageHistory(int? discountId = null,
-            int? customerId = null, int? orderId = null, 
+            int? customerId = null, int? orderId = null,
             int pageIndex = 0, int pageSize = int.MaxValue);
 
         /// <summary>
@@ -216,7 +249,7 @@ namespace Nop.Services.Discounts
         /// </summary>
         /// <param name="discountUsageHistory">Discount usage history record</param>
         void InsertDiscountUsageHistory(DiscountUsageHistory discountUsageHistory);
-        
+
         /// <summary>
         /// Update discount usage history record
         /// </summary>

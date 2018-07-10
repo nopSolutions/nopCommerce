@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Extensions.Caching.Memory;
 using Moq;
 using Nop.Core;
-using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
@@ -11,6 +11,7 @@ using Nop.Core.Domain.Orders;
 using Nop.Services.Catalog;
 using Nop.Services.Directory;
 using Nop.Services.Events;
+using Nop.Services.Localization;
 using Nop.Services.Media;
 using Nop.Services.Orders;
 using Nop.Services.Stores;
@@ -35,9 +36,8 @@ namespace Nop.Services.Tests.Orders
         private Mock<IPriceFormatter> _priceFormatter;
         private Mock<IDownloadService> _downloadService;
         private Mock<IWebHelper> _webHelper;
+        private ILocalizationService _localizationService;
         private ICheckoutAttributeFormatter _checkoutAttributeFormatter;
-        private Mock<IProductAttributeParser> _productAttributeParser;
-        private Mock<IProductService> _productService;
 
         private CheckoutAttribute ca1, ca2, ca3;
         private CheckoutAttributeValue cav1_1, cav1_2, cav2_1, cav2_2;
@@ -132,22 +132,17 @@ namespace Nop.Services.Tests.Orders
             _checkoutAttributeValueRepo.Setup(x => x.GetById(cav2_1.Id)).Returns(cav2_1);
             _checkoutAttributeValueRepo.Setup(x => x.GetById(cav2_2.Id)).Returns(cav2_2);
 
-            var cacheManager = new NopNullCache();
+            var cacheManager = new TestMemoryCacheManager(new Mock<IMemoryCache>().Object);
 
             _storeMappingService = new Mock<IStoreMappingService>();
 
             _eventPublisher = new Mock<IEventPublisher>();
             _eventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
 
-            _checkoutAttributeService = new CheckoutAttributeService(cacheManager,
-                _checkoutAttributeRepo.Object,
-                _checkoutAttributeValueRepo.Object,
-                _storeMappingService.Object,
-                _eventPublisher.Object);
+            _checkoutAttributeService = new CheckoutAttributeService(cacheManager, _eventPublisher.Object,
+                _checkoutAttributeRepo.Object, _checkoutAttributeValueRepo.Object, _storeMappingService.Object);
 
-            _productService = new Mock<IProductService>();
-            _productAttributeParser = new Mock<IProductAttributeParser>();
-            _checkoutAttributeParser = new CheckoutAttributeParser(_checkoutAttributeService, _productAttributeParser.Object, _productService.Object);
+            _checkoutAttributeParser = new CheckoutAttributeParser(_checkoutAttributeService);
 
             var workingLanguage = new Language();
             _workContext = new Mock<IWorkContext>();
@@ -157,15 +152,13 @@ namespace Nop.Services.Tests.Orders
             _priceFormatter = new Mock<IPriceFormatter>();
             _downloadService = new Mock<IDownloadService>();
             _webHelper = new Mock<IWebHelper>();
+            _localizationService = TestLocalizationService.Init();
 
-            _checkoutAttributeFormatter = new CheckoutAttributeFormatter(_workContext.Object,
-                _checkoutAttributeService,
-                _checkoutAttributeParser,
-                _currencyService.Object,
-                _taxService.Object,
-                _priceFormatter.Object,
-                _downloadService.Object,
-                _webHelper.Object);
+            //_localizationService.Setup(ls=>ls.GetLocalized(It.IsAny<CheckoutAttribute>(), attribute => attribute.Name, It.IsAny<int?>(), true, true)).Returns()
+
+            _checkoutAttributeFormatter = new CheckoutAttributeFormatter(_checkoutAttributeParser,
+                _checkoutAttributeService, _currencyService.Object, _downloadService.Object, _localizationService,
+                _priceFormatter.Object, _taxService.Object, _webHelper.Object, _workContext.Object);
         }
         
         [Test]

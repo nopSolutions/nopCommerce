@@ -23,12 +23,8 @@ namespace Nop.Services.Directory
 
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="logger">Logger</param>
-        /// <param name="fileProvider">File provider</param>
-        public GeoLookupService(ILogger logger, INopFileProvider fileProvider)
+        public GeoLookupService(ILogger logger,
+            INopFileProvider fileProvider)
         {
             this._logger = logger;
             this._fileProvider = fileProvider;

@@ -17,30 +17,24 @@ namespace Nop.Services.Customers
     {
         #region Fields
 
-        private readonly IRepository<Customer> _customerRepository;
-        private readonly IRepository<Order> _orderRepository;
         private readonly ICustomerService _customerService;
         private readonly IDateTimeHelper _dateTimeHelper;
-        
+        private readonly IRepository<Customer> _customerRepository;
+        private readonly IRepository<Order> _orderRepository;
+
         #endregion
 
         #region Ctor
-        
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="customerRepository">Customer repository</param>
-        /// <param name="orderRepository">Order repository</param>
-        /// <param name="customerService">Customer service</param>
-        /// <param name="dateTimeHelper">Date time helper</param>
-        public CustomerReportService(IRepository<Customer> customerRepository,
-            IRepository<Order> orderRepository, ICustomerService customerService,
-            IDateTimeHelper dateTimeHelper)
+
+        public CustomerReportService(ICustomerService customerService,
+            IDateTimeHelper dateTimeHelper,
+            IRepository<Customer> customerRepository,
+            IRepository<Order> orderRepository)
         {
-            this._customerRepository = customerRepository;
-            this._orderRepository = orderRepository;
             this._customerService = customerService;
             this._dateTimeHelper = dateTimeHelper;
+            this._customerRepository = customerRepository;
+            this._orderRepository = orderRepository;
         }
 
         #endregion
@@ -111,11 +105,11 @@ namespace Nop.Services.Customers
 
             var tmp = new PagedList<dynamic>(query2, pageIndex, pageSize);
             return new PagedList<BestCustomerReportLine>(tmp.Select(x => new BestCustomerReportLine
-                {
-                    CustomerId = x.CustomerId,
-                    OrderTotal = x.OrderTotal,
-                    OrderCount = x.OrderCount
-                }),
+            {
+                CustomerId = x.CustomerId,
+                OrderTotal = x.OrderTotal,
+                OrderCount = x.OrderCount
+            }),
                 tmp.PageIndex, tmp.PageSize, tmp.TotalCount);
         }
 
@@ -136,7 +130,7 @@ namespace Nop.Services.Customers
                         from mapping in c.CustomerCustomerRoleMappings
                         where !c.Deleted &&
                         mapping.CustomerRoleId == registeredCustomerRole.Id &&
-                        c.CreatedOnUtc >= date 
+                        c.CreatedOnUtc >= date
                         //&& c.CreatedOnUtc <= DateTime.UtcNow
                         select c;
             var count = query.Count();

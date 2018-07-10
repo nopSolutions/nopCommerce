@@ -15,31 +15,24 @@ namespace Nop.Services.Common
     {
         #region Fields
 
+        private readonly ICacheManager _cacheManager;
+        private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<AddressAttribute> _addressAttributeRepository;
         private readonly IRepository<AddressAttributeValue> _addressAttributeValueRepository;
-        private readonly IEventPublisher _eventPublisher;
-        private readonly ICacheManager _cacheManager;
-        
+
         #endregion
 
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="cacheManager">Cache manager</param>
-        /// <param name="addressAttributeRepository">Address attribute repository</param>
-        /// <param name="addressAttributeValueRepository">Address attribute value repository</param>
-        /// <param name="eventPublisher">Event publisher</param>
         public AddressAttributeService(ICacheManager cacheManager,
+            IEventPublisher eventPublisher,
             IRepository<AddressAttribute> addressAttributeRepository,
-            IRepository<AddressAttributeValue> addressAttributeValueRepository,
-            IEventPublisher eventPublisher)
+            IRepository<AddressAttributeValue> addressAttributeValueRepository)
         {
             this._cacheManager = cacheManager;
+            this._eventPublisher = eventPublisher;
             this._addressAttributeRepository = addressAttributeRepository;
             this._addressAttributeValueRepository = addressAttributeValueRepository;
-            this._eventPublisher = eventPublisher;
         }
 
         #endregion
@@ -165,7 +158,7 @@ namespace Nop.Services.Common
                 return addressAttributeValues;
             });
         }
-        
+
         /// <summary>
         /// Gets an address attribute value
         /// </summary>
@@ -215,7 +208,7 @@ namespace Nop.Services.Common
             //event notification
             _eventPublisher.EntityUpdated(addressAttributeValue);
         }
-        
+
         #endregion
     }
 }

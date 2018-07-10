@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using Nop.Core.Domain.Payments;
 using Nop.Services.Events;
 using Nop.Services.Localization;
 using Nop.Services.Payments;
@@ -14,7 +13,7 @@ namespace Nop.Plugin.Payments.Square.Services
     /// <summary>
     /// Represents event consumer of the Square payment plugin
     /// </summary>
-    public class EventConsumer : 
+    public class EventConsumer :
         IConsumer<PageRenderingEvent>,
         IConsumer<ModelReceivedEvent<BaseNopModel>>
     {
@@ -23,7 +22,6 @@ namespace Nop.Plugin.Payments.Square.Services
         private readonly ILocalizationService _localizationService;
         private readonly IPaymentService _paymentService;
         private readonly IScheduleTaskService _scheduleTaskService;
-        private readonly PaymentSettings _paymentSettings;
 
         #endregion
 
@@ -31,13 +29,11 @@ namespace Nop.Plugin.Payments.Square.Services
 
         public EventConsumer(ILocalizationService localizationService,
             IPaymentService paymentService,
-            IScheduleTaskService scheduleTaskService,
-            PaymentSettings paymentSettings)
+            IScheduleTaskService scheduleTaskService)
         {
-            this._localizationService = localizationService;     
+            this._localizationService = localizationService;
             this._paymentService = paymentService;
             this._scheduleTaskService = scheduleTaskService;
-            this._paymentSettings = paymentSettings;
         }
 
 
@@ -56,7 +52,7 @@ namespace Nop.Plugin.Payments.Square.Services
 
             //check whether the plugin is installed and is active
             var squarePaymentMethod = _paymentService.LoadPaymentMethodBySystemName(SquarePaymentDefaults.SystemName);
-            if (!(squarePaymentMethod?.PluginDescriptor?.Installed ?? false) || !squarePaymentMethod.IsPaymentMethodActive(_paymentSettings))
+            if (!(squarePaymentMethod?.PluginDescriptor?.Installed ?? false) || !_paymentService.IsPaymentMethodActive(squarePaymentMethod))
                 return;
 
             //add js sсript to one page checkout
@@ -89,7 +85,7 @@ namespace Nop.Plugin.Payments.Square.Services
             var accessTokenRenewalPeriod = scheduleTaskModel.Seconds / 60 / 60 / 24;
             if (accessTokenRenewalPeriod > SquarePaymentDefaults.AccessTokenRenewalPeriodMax)
             {
-                var error = string.Format(_localizationService.GetResource("Plugins.Payments.Square.AccessTokenRenewalPeriod.Error"), 
+                var error = string.Format(_localizationService.GetResource("Plugins.Payments.Square.AccessTokenRenewalPeriod.Error"),
                     SquarePaymentDefaults.AccessTokenRenewalPeriodMax, SquarePaymentDefaults.AccessTokenRenewalPeriodRecommended);
                 eventMessage.ModelState.AddModelError(string.Empty, error);
             }

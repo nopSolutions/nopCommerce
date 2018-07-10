@@ -4,6 +4,7 @@ using Moq;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
+using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Logging;
 using Nop.Services.Logging;
@@ -77,7 +78,7 @@ namespace Nop.Services.Tests.Logging
             _activityLogTypeRepository = new Mock<IRepository<ActivityLogType>>();
             _activityLogTypeRepository.Setup(x => x.Table).Returns(new List<ActivityLogType> { _activityType1, _activityType2 }.AsQueryable());
             _activityLogRepository.Setup(x => x.Table).Returns(new List<ActivityLog> { _activity1, _activity2 }.AsQueryable());
-            _customerActivityService = new CustomerActivityService(_cacheManager, _activityLogRepository.Object, _activityLogTypeRepository.Object, _workContext.Object, null, null, null, _webHelper.Object);
+            _customerActivityService = new CustomerActivityService(new CommonSettings(), null, null, _activityLogRepository.Object, _activityLogTypeRepository.Object, _cacheManager, _webHelper.Object, _workContext.Object);
         }
 
         [Test]

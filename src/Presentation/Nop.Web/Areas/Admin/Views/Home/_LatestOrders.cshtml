@@ -1,12 +1,12 @@
 ﻿@using Nop.Core
-@using Nop.Services.Common
 @using Nop.Services.Stores
+@inject Nop.Services.Common.IGenericAttributeService genericAttributeService
 @inject IWorkContext workContext
 @inject IStoreService storeService
 @{
     const string panelId = "latest-orders-box";
     const string hidePanelAttributeName = "HideLatestOrdersPanel";
-    var hidePanel = workContext.CurrentCustomer.GetAttribute<bool>(hidePanelAttributeName);
+    var hidePanel = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hidePanelAttributeName);
     var gridPageSize = 5;
     var stores = storeService.GetAllStores();
 }

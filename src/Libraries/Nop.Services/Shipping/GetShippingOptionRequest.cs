@@ -14,9 +14,6 @@ namespace Nop.Services.Shipping
     {
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
         public GetShippingOptionRequest()
         {
             this.Items = new List<PackageItem>();

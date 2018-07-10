@@ -101,7 +101,7 @@
                 <h4 class="modal-title" id="sendemail-window-title">@T("Admin.Customers.Customers.SendEmail")</h4>
             </div>
             <form asp-controller="Customer" asp-action="SendEmail" method="post">
-                <input type="hidden" asp-for="Id" />
+                <input type="hidden" asp-for="Id" id="SendEmail_Id"/>
                 <div class="form-horizontal">
                     <div class="modal-body">
                         <div class="form-group">
@@ -175,7 +175,7 @@
                 <h4 class="modal-title" id="sendprivatemessage-window-title">@T("Admin.Customers.Customers.SendPM")</h4>
             </div>
             <form asp-controller="Customer" asp-action="SendPm" method="post">
-                <input type="hidden" asp-for="Id" />
+                <input type="hidden" asp-for="Id" id="SendPm_Id"/>
                 <div class="form-horizontal">
                     <div class="modal-body">
                         <div class="form-group">

@@ -39,5 +39,12 @@ namespace Nop.Services.Cms
         /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
         /// <returns>Widgets</returns>
         IList<IWidgetPlugin> LoadAllWidgets(Customer customer = null, int storeId = 0);
+
+        /// <summary>
+        /// Is widget active
+        /// </summary>
+        /// <param name="widget">Widget</param>
+        /// <returns>Result</returns>
+        bool IsWidgetActive(IWidgetPlugin widget);
     }
 }

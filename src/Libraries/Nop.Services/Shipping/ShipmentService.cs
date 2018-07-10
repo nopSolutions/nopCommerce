@@ -7,6 +7,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Services.Events;
+using Nop.Services.Shipping.Tracking;
 
 namespace Nop.Services.Shipping
 {
@@ -17,31 +18,27 @@ namespace Nop.Services.Shipping
     {
         #region Fields
 
+        private readonly IEventPublisher _eventPublisher;
+        private readonly IRepository<OrderItem> _orderItemRepository;
         private readonly IRepository<Shipment> _shipmentRepository;
         private readonly IRepository<ShipmentItem> _siRepository;
-        private readonly IRepository<OrderItem> _orderItemRepository;
-        private readonly IEventPublisher _eventPublisher;
-        
+        private readonly IShippingService _shippingService;
+
         #endregion
 
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="shipmentRepository">Shipment repository</param>
-        /// <param name="siRepository">Shipment item repository</param>
-        /// <param name="orderItemRepository">Order item repository</param>
-        /// <param name="eventPublisher">Event publisher</param>
-        public ShipmentService(IRepository<Shipment> shipmentRepository,
-            IRepository<ShipmentItem> siRepository,
+        public ShipmentService(IEventPublisher eventPublisher,
             IRepository<OrderItem> orderItemRepository,
-            IEventPublisher eventPublisher)
+            IRepository<Shipment> shipmentRepository,
+            IRepository<ShipmentItem> siRepository,
+            IShippingService shippingService)
         {
+            this._eventPublisher = eventPublisher;
+            this._orderItemRepository = orderItemRepository;
             this._shipmentRepository = shipmentRepository;
             this._siRepository = siRepository;
-            this._orderItemRepository = orderItemRepository;
-            this._eventPublisher = eventPublisher;
+            this._shippingService = shippingService;
         }
 
         #endregion
@@ -110,18 +107,18 @@ namespace Nop.Services.Shipping
             if (vendorId > 0)
             {
                 var queryVendorOrderItems = from orderItem in _orderItemRepository.Table
-                    where orderItem.Product.VendorId == vendorId
-                    select orderItem.Id;
+                                            where orderItem.Product.VendorId == vendorId
+                                            select orderItem.Id;
 
                 query = from s in query
-                    where queryVendorOrderItems.Intersect(s.ShipmentItems.Select(si => si.OrderItemId)).Any()
-                    select s;
+                        where queryVendorOrderItems.Intersect(s.ShipmentItems.Select(si => si.OrderItemId)).Any()
+                        select s;
             }
             if (warehouseId > 0)
             {
                 query = from s in query
-                    where s.ShipmentItems.Any(si => si.WarehouseId == warehouseId)
-                    select s;
+                        where s.ShipmentItems.Any(si => si.WarehouseId == warehouseId)
+                        select s;
             }
             query = query.OrderByDescending(s => s.CreatedOnUtc);
 
@@ -196,7 +193,7 @@ namespace Nop.Services.Shipping
             //event notification
             _eventPublisher.EntityUpdated(shipment);
         }
-        
+
         /// <summary>
         /// Deletes a shipment item
         /// </summary>
@@ -224,7 +221,7 @@ namespace Nop.Services.Shipping
 
             return _siRepository.GetById(shipmentItemId);
         }
-        
+
         /// <summary>
         /// Inserts a shipment item
         /// </summary>
@@ -297,6 +294,33 @@ namespace Nop.Services.Shipping
             //some null validation
             var result = Convert.ToInt32(query.Sum(si => (int?)si.Quantity));
             return result;
+        }
+
+        /// <summary>
+        /// Get the tracker of the shipment
+        /// </summary>
+        /// <param name="shipment">Shipment</param>
+        /// <returns>Shipment tracker</returns>
+        public virtual IShipmentTracker GetShipmentTracker(Shipment shipment)
+        {
+            if (!shipment.Order.PickUpInStore)
+            {
+                var shippingRateComputationMethod = _shippingService.LoadShippingRateComputationMethodBySystemName(shipment.Order.ShippingRateComputationMethodSystemName);
+                if (shippingRateComputationMethod != null &&
+                    shippingRateComputationMethod.PluginDescriptor.Installed)
+                    //shippingRateComputationMethod.IsShippingRateComputationMethodActive(shippingSettings))
+                    return shippingRateComputationMethod.ShipmentTracker;
+            }
+            else
+            {
+                var pickupPointProvider = _shippingService.LoadPickupPointProviderBySystemName(shipment.Order.ShippingRateComputationMethodSystemName);
+                if (pickupPointProvider != null &&
+                    pickupPointProvider.PluginDescriptor.Installed)
+                    //pickupPointProvider.IsPickupPointProviderActive(shippingSettings))
+                    return pickupPointProvider.ShipmentTracker;
+            }
+
+            return null;
         }
 
         #endregion

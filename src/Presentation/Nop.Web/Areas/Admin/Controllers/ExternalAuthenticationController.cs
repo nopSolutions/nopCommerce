@@ -76,7 +76,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             var eam = _externalAuthenticationService.LoadExternalAuthenticationMethodBySystemName(model.SystemName);
-            if (eam.IsMethodActive(_externalAuthenticationSettings))
+            if (_externalAuthenticationService.IsExternalAuthenticationMethodActive(eam))
             {
                 if (!model.IsActive)
                 {

@@ -18,10 +18,6 @@ namespace Nop.Core.Http
 
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="next">Next</param>
         public KeepAliveMiddleware(RequestDelegate next)
         {
             _next = next;
@@ -53,7 +49,7 @@ namespace Nop.Core.Http
             //or call the next middleware in the request pipeline
             await _next(context);
         }
-        
+
         #endregion
     }
 }

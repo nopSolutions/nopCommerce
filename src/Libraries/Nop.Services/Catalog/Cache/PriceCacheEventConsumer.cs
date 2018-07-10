@@ -10,7 +10,7 @@ namespace Nop.Services.Catalog.Cache
     /// <summary>
     /// Price cache event consumer (used for caching of prices)
     /// </summary>
-    public partial class PriceCacheEventConsumer: 
+    public partial class PriceCacheEventConsumer :
         //settings
         IConsumer<EntityUpdatedEvent<Setting>>,
         //categories
@@ -42,16 +42,22 @@ namespace Nop.Services.Catalog.Cache
         IConsumer<EntityUpdatedEvent<Order>>,
         IConsumer<EntityDeletedEvent<Order>>
     {
+        #region Fields
+
         private readonly IStaticCacheManager _cacheManager;
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="cacheManager">Cache manager</param>
+        #endregion
+
+        #region Ctor
+
         public PriceCacheEventConsumer(IStaticCacheManager cacheManager)
         {
             this._cacheManager = cacheManager;
         }
+
+        #endregion
+
+        #region Methods
 
         //settings
         public void HandleEvent(EntityUpdatedEvent<Setting> eventMessage)
@@ -164,5 +170,7 @@ namespace Nop.Services.Catalog.Cache
         {
             _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductPricePatternCacheKey);
         }
+
+        #endregion
     }
 }

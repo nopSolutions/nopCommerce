@@ -18,10 +18,6 @@ namespace Nop.Services.Orders
 
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="orderSettings">Order settings</param>
         public CustomNumberFormatter(OrderSettings orderSettings)
         {
             _orderSettings = orderSettings;

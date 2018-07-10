@@ -4,6 +4,7 @@ using System.Linq;
 using Nop.Core;
 using Nop.Core.Data;
 using Nop.Core.Domain.Vendors;
+using Nop.Core.Html;
 using Nop.Services.Events;
 
 namespace Nop.Services.Vendors
@@ -15,33 +16,27 @@ namespace Nop.Services.Vendors
     {
         #region Fields
 
+        private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<Vendor> _vendorRepository;
         private readonly IRepository<VendorNote> _vendorNoteRepository;
-        private readonly IEventPublisher _eventPublisher;
 
         #endregion
 
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="vendorRepository">Vendor repository</param>
-        /// <param name="vendorNoteRepository">Vendor note repository</param>
-        /// <param name="eventPublisher">Event publisher</param>
-        public VendorService(IRepository<Vendor> vendorRepository,
-            IRepository<VendorNote> vendorNoteRepository,
-            IEventPublisher eventPublisher)
+        public VendorService(IEventPublisher eventPublisher,
+            IRepository<Vendor> vendorRepository,
+            IRepository<VendorNote> vendorNoteRepository)
         {
+            this._eventPublisher = eventPublisher;
             this._vendorRepository = vendorRepository;
             this._vendorNoteRepository = vendorNoteRepository;
-            this._eventPublisher = eventPublisher;
         }
 
         #endregion
 
         #region Methods
-        
+
         /// <summary>
         /// Gets a vendor by vendor identifier
         /// </summary>
@@ -86,7 +81,7 @@ namespace Nop.Services.Vendors
                 query = query.Where(v => v.Name.Contains(name));
             if (!showHidden)
                 query = query.Where(v => v.Active);
-           
+
             query = query.Where(v => !v.Deleted);
             query = query.OrderBy(v => v.DisplayOrder).ThenBy(v => v.Name);
 
@@ -164,6 +159,26 @@ namespace Nop.Services.Vendors
 
             //event notification
             _eventPublisher.EntityDeleted(vendorNote);
+        }
+
+        /// <summary>
+        /// Formats the vendor note text
+        /// </summary>
+        /// <param name="vendorNote">Vendor note</param>
+        /// <returns>Formatted text</returns>
+        public virtual string FormatVendorNoteText(VendorNote vendorNote)
+        {
+            if (vendorNote == null)
+                throw new ArgumentNullException(nameof(vendorNote));
+
+            var text = vendorNote.Note;
+
+            if (string.IsNullOrEmpty(text))
+                return string.Empty;
+
+            text = HtmlHelper.FormatText(text, false, true, false, false, false, false);
+
+            return text;
         }
 
         #endregion

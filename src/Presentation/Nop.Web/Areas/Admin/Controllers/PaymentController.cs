@@ -88,7 +88,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             var pm = _paymentService.LoadPaymentMethodBySystemName(model.SystemName);
-            if (pm.IsPaymentMethodActive(_paymentSettings))
+            if (_paymentService.IsPaymentMethodActive(pm))
             {
                 if (!model.IsActive)
                 {

@@ -9,9 +9,6 @@ namespace Nop.Services.Shipping
     /// </summary>
     public partial class GetShippingOptionResponse
     {
-        /// <summary>
-        /// Ctor
-        /// </summary>
         public GetShippingOptionResponse()
         {
             this.Errors = new List<string>();
@@ -38,9 +35,9 @@ namespace Nop.Services.Shipping
         /// </summary>
         public bool Success
         {
-            get 
-            { 
-                return !Errors.Any(); 
+            get
+            {
+                return !Errors.Any();
             }
         }
 

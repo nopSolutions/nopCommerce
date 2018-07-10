@@ -42,7 +42,7 @@
                         </script>
                     }
 
-                    <table class="table table-hover table-bordered text-center">
+                    <table class="table table-hover table-bordered">
                         <col />
                         <col />
                         @if (Model.HasDownloadableProducts)
@@ -95,10 +95,10 @@
                             @foreach (var item in Model.Items)
                             {
                                 <tr>
-                                <td>
+                                <td class="text-center">
                                     <img src="@item.PictureThumbnailUrl" alt="" title=""/>
                                 </td>
-                                <td style="text-align: left; width: 15%;">
+                                <td style="width: 15%;" class="text-left">
                                     <em><a asp-controller="Product" asp-action="Edit" asp-route-id="@item.ProductId">@item.ProductName</a></em>
                                     @if (!string.IsNullOrEmpty(item.AttributeInfo))
                                     {
@@ -164,7 +164,7 @@
 
                                 @if (Model.HasDownloadableProducts)
                                 {
-                                    <td style="width: 15%;">
+                                    <td style="width: 15%;" class="text-center">
                                         @if (item.IsDownload)
                                         {
                                             <div>
@@ -202,7 +202,7 @@
                                         }
                                     </td>
                                 }
-                                <td style="width: 15%;">
+                                <td style="width: 15%;" class="text-center">
                                     @if (Model.AllowCustomersToSelectTaxDisplayType)
                                     {
                                         <div>@item.UnitPriceInclTax</div>
@@ -245,7 +245,7 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td style="width: 10%;">
+                                <td style="width: 10%;" class="text-center">
                                     <div>@item.Quantity</div>
                                     <div id="pnlEditPvQuantity@(item.Id)">
                                         <div class="form-group">
@@ -255,7 +255,7 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td style="width: 15%;">
+                                <td style="width: 15%;" class="text-center">
                                     @if (Model.AllowCustomersToSelectTaxDisplayType)
                                     {
                                         <div>@item.DiscountInclTax</div>
@@ -298,7 +298,7 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td style="width: 15%;">
+                                <td style="width: 15%;" class="text-center">
                                     @if (Model.AllowCustomersToSelectTaxDisplayType)
                                     {
                                         <div>@item.SubTotalInclTax</div>
@@ -343,7 +343,7 @@
                                 </td>
                                 @if (!Model.IsLoggedInAsVendor)
                                 {
-                                    <td style="width: 15%;">
+                                    <td style="width: 15%;" class="text-center">
                                         <button type="submit" class="btn btn-default" name="btnEditOrderItem@(item.Id)" onclick="toggleOrderItemEdit@(item.Id)(true);return false;" id="btnEditOrderItem@(item.Id)">
                                             <i class="fa fa-pencil"></i>
                                             @T("Admin.Common.Edit")

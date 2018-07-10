@@ -18,35 +18,27 @@ namespace Nop.Services.Stores
     {
         #region Fields
 
-        private readonly IRepository<StoreMapping> _storeMappingRepository;
-        private readonly IStoreContext _storeContext;
-        private readonly IStaticCacheManager _cacheManager;
-        private readonly IEventPublisher _eventPublisher;
         private readonly CatalogSettings _catalogSettings;
+        private readonly IEventPublisher _eventPublisher;
+        private readonly IRepository<StoreMapping> _storeMappingRepository;
+        private readonly IStaticCacheManager _cacheManager;
+        private readonly IStoreContext _storeContext;
 
         #endregion
 
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="cacheManager">Static cache manager</param>
-        /// <param name="storeContext">Store context</param>
-        /// <param name="storeMappingRepository">Store mapping repository</param>
-        /// <param name="catalogSettings">Catalog settings</param>
-        /// <param name="eventPublisher">Event publisher</param>
-        public StoreMappingService(IStaticCacheManager cacheManager, 
-            IStoreContext storeContext,
+        public StoreMappingService(CatalogSettings catalogSettings,
+            IEventPublisher eventPublisher,
             IRepository<StoreMapping> storeMappingRepository,
-            CatalogSettings catalogSettings,
-            IEventPublisher eventPublisher)
+            IStaticCacheManager cacheManager,
+            IStoreContext storeContext)
         {
-            this._cacheManager = cacheManager;
-            this._storeContext = storeContext;
-            this._storeMappingRepository = storeMappingRepository;
             this._catalogSettings = catalogSettings;
             this._eventPublisher = eventPublisher;
+            this._storeMappingRepository = storeMappingRepository;
+            this._cacheManager = cacheManager;
+            this._storeContext = storeContext;
         }
 
         #endregion
@@ -105,7 +97,7 @@ namespace Nop.Services.Stores
             var storeMappings = query.ToList();
             return storeMappings;
         }
-        
+
         /// <summary>
         /// Inserts a store mapping record
         /// </summary>
@@ -150,7 +142,7 @@ namespace Nop.Services.Stores
 
             InsertStoreMapping(storeMapping);
         }
-        
+
         /// <summary>
         /// Find store identifiers with granted access (mapped to the entity)
         /// </summary>

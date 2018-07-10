@@ -56,6 +56,14 @@ namespace Nop.Services.News
         /// <param name="news">News item</param>
         void UpdateNews(NewsItem news);
 
+        /// <summary>
+        /// Get a value indicating whether a news item is available now (availability dates)
+        /// </summary>
+        /// <param name="newsItem">News item</param>
+        /// <param name="dateTime">Datetime to check; pass null to use current date</param>
+        /// <returns>Result</returns>
+        bool IsNewsAvailable(NewsItem newsItem, DateTime? dateTime = null);
+
         #endregion
 
         #region News comments

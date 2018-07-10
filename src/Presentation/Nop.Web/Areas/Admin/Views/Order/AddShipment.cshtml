@@ -108,7 +108,7 @@
                         @T("Admin.Orders.Shipments.Products")
                     </div>
                     <div class="panel-body">
-                        <table class="table table-hover table-bordered text-center">
+                        <table class="table table-hover table-bordered">
                             <thead>
                                 <tr>
                                     <th>
@@ -141,7 +141,7 @@
                                 @foreach (var item in Model.Items)
                                 {
                                     <tr>
-                                        <td style="width: 25%;text-align: left">
+                                        <td style="width: 25%;" class="text-left">
                                             <em><a asp-controller="Product" asp-action="Edit" asp-route-id="@item.ProductId">@item.ProductName</a></em>
                                             @if (!string.IsNullOrEmpty(item.AttributeInfo))
                                             {
@@ -157,10 +157,10 @@
                                                 </p>
                                             }
                                         </td>
-                                        <td style="width: 10%;">
+                                        <td style="width: 10%;" class="text-center">
                                             @item.Sku
                                         </td>
-                                        <td style="width: 15%;">
+                                        <td style="width: 15%;" class="text-center">
                                             @if (item.AllowToChooseWarehouse)
                                             {
                                                 if (item.AvailableWarehouses.Count > 0)
@@ -188,19 +188,19 @@
                                                 }
                                             }
                                         </td>
-                                        <td style="width: 10%;">
+                                        <td style="width: 10%;" class="text-center">
                                             @item.ItemWeight
                                         </td>
-                                        <td style="width: 10%;">
+                                        <td style="width: 10%;" class="text-center">
                                             @item.ItemDimensions
                                         </td>
-                                        <td style="width: 10%;">
+                                        <td style="width: 10%;" class="text-center">
                                             @item.QuantityOrdered
                                         </td>
-                                        <td style="width: 10%;">
+                                        <td style="width: 10%;" class="text-center">
                                             @item.QuantityInAllShipments
                                         </td>
-                                        <td style="width: 10%;">
+                                        <td style="width: 10%;" class="text-center">
                                             <input name="qtyToAdd@(item.OrderItemId)" type="text" value="@item.QuantityToAdd" id="qtyToAdd@(item.OrderItemId)" class="form-control input-sm" />
                                         </td>
                                     </tr>

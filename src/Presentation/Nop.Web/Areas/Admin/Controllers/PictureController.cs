@@ -10,20 +10,32 @@ namespace Nop.Web.Areas.Admin.Controllers
 {
     public partial class PictureController : BaseAdminController
     {
+        #region Fields
+
+        private readonly IDownloadService _downloadService;
         private readonly INopFileProvider _fileProvider;
         private readonly IPictureService _pictureService;
-        
 
-        public PictureController(INopFileProvider fileProvider,
+        #endregion
+
+        #region Ctor
+
+        public PictureController(IDownloadService downloadService,
+            INopFileProvider fileProvider,
             IPictureService pictureService)
         {
+            this._downloadService = downloadService;
             this._fileProvider = fileProvider;
             this._pictureService = pictureService;
         }
 
+        #endregion
+
+        #region Methods
+
         [HttpPost]
         //do not validate request token (XSRF)
-        [AdminAntiForgery(true)] 
+        [AdminAntiForgery(true)]
         public virtual IActionResult AsyncUpload()
         {
             //if (!_permissionService.Authorize(StandardPermissionProvider.UploadPictures))
@@ -40,7 +52,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 });
             }
 
-            var fileBinary = httpPostedFile.GetDownloadBits();
+            var fileBinary = _downloadService.GetDownloadBits(httpPostedFile);
 
             const string qqFileNameParameter = "qqfilename";
             var fileName = httpPostedFile.FileName;
@@ -94,5 +106,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //otherwise some browsers will pop-up a "Save As" dialog.
             return Json(new { success = true, pictureId = picture.Id, imageUrl = _pictureService.GetPictureUrl(picture, 100) });
         }
+
+        #endregion
     }
 }

@@ -134,7 +134,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             var srcm = _shippingService.LoadShippingRateComputationMethodBySystemName(model.SystemName);
-            if (srcm.IsShippingRateComputationMethodActive(_shippingSettings))
+            if (_shippingService.IsShippingRateComputationMethodActive(srcm))
             {
                 if (!model.IsActive)
                 {
@@ -201,7 +201,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             var pickupPointProvider = _shippingService.LoadPickupPointProviderBySystemName(model.SystemName);
-            if (pickupPointProvider.IsPickupPointProviderActive(_shippingSettings))
+            if (_shippingService.IsPickupPointProviderActive(pickupPointProvider))
             {
                 if (!model.IsActive)
                 {
@@ -337,7 +337,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //prepare model
             model = _shippingModelFactory.PrepareShippingMethodModel(model, shippingMethod, true);
-            
+
             //if we got this far, something failed, redisplay form
             return View(model);
         }
@@ -785,6 +785,10 @@ namespace Nop.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        //we ignore this filter for increase RequestFormLimits
+        [AdminAntiForgery(true)]
+        //we use 2048 value because in some cases default value (1024) is too small for this action
+        [RequestFormLimits(ValueCountLimit = 2048)]
         [HttpPost, ActionName("Restrictions")]
         public virtual IActionResult RestrictionSave(ShippingMethodRestrictionModel model)
         {

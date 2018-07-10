@@ -33,7 +33,6 @@ namespace Nop.Plugin.Payments.Worldpay.Controllers
         private readonly ILocalizationService _localizationService;
         private readonly IPermissionService _permissionService;
         private readonly ISettingService _settingService;
-        private readonly IWorkContext _workContext;
         private readonly WorldpayPaymentManager _worldpayPaymentManager;
         private readonly WorldpayPaymentSettings _worldpayPaymentSettings;
 
@@ -46,7 +45,6 @@ namespace Nop.Plugin.Payments.Worldpay.Controllers
             ILocalizationService localizationService,
             IPermissionService permissionService,
             ISettingService settingService,
-            IWorkContext workContext,
             WorldpayPaymentManager worldpayPaymentManager,
             WorldpayPaymentSettings worldpayPaymentSettings)
         {
@@ -55,7 +53,6 @@ namespace Nop.Plugin.Payments.Worldpay.Controllers
             this._localizationService = localizationService;
             this._permissionService = permissionService;
             this._settingService = settingService;
-            this._workContext = workContext;
             this._worldpayPaymentManager = worldpayPaymentManager;
             this._worldpayPaymentSettings = worldpayPaymentSettings;
         }
@@ -140,10 +137,10 @@ namespace Nop.Plugin.Payments.Worldpay.Controllers
                 CustomerDuplicateCheckType = CustomerDuplicateCheckType.Error,
                 EmailReceiptEnabled = !string.IsNullOrEmpty(customer.Email),
                 Email = customer.Email,
-                FirstName = customer.GetAttribute<string>(NopCustomerDefaults.FirstNameAttribute),
-                LastName = customer.GetAttribute<string>(NopCustomerDefaults.LastNameAttribute),
-                Company = customer.GetAttribute<string>(NopCustomerDefaults.CompanyAttribute),
-                Phone = customer.GetAttribute<string>(NopCustomerDefaults.PhoneAttribute),
+                FirstName = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.FirstNameAttribute),
+                LastName = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.LastNameAttribute),
+                Company = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.CompanyAttribute),
+                Phone = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.PhoneAttribute),
                 BillingAddress = new Address
                 {
                     Line1 = customer.BillingAddress?.Address1,
@@ -157,7 +154,7 @@ namespace Nop.Plugin.Payments.Worldpay.Controllers
             };
 
             //check whether customer is already stored in the Vault and try to store, if it is not so
-            var vaultCustomer = _worldpayPaymentManager.GetCustomer(customer.GetAttribute<string>(WorldpayPaymentDefaults.CustomerIdAttribute))
+            var vaultCustomer = _worldpayPaymentManager.GetCustomer(_genericAttributeService.GetAttribute<string>(customer, WorldpayPaymentDefaults.CustomerIdAttribute))
                 ?? _worldpayPaymentManager.CreateCustomer(createCustomerRequest);
 
             if (vaultCustomer == null)
@@ -165,7 +162,7 @@ namespace Nop.Plugin.Payments.Worldpay.Controllers
 
             //save Vault customer identifier as a generic attribute
             _genericAttributeService.SaveAttribute(customer, WorldpayPaymentDefaults.CustomerIdAttribute, vaultCustomer.CustomerId);
-            
+
             //selected tab
             SaveSelectedTabName();
 
@@ -183,9 +180,9 @@ namespace Nop.Plugin.Payments.Worldpay.Controllers
             var customer = _customerService.GetCustomerById(customerId);
             if (customer == null)
                 throw new ArgumentException("No customer found with the specified id", nameof(customerId));
-            
+
             //try to get stored credit cards of the Vault customer
-            var storedCards = _worldpayPaymentManager.GetCustomer(customer.GetAttribute<string>(WorldpayPaymentDefaults.CustomerIdAttribute))?
+            var storedCards = _worldpayPaymentManager.GetCustomer(_genericAttributeService.GetAttribute<string>(customer, WorldpayPaymentDefaults.CustomerIdAttribute))?
                 .PaymentMethods?.Where(method => method?.Card != null).ToList() ?? new List<PaymentMethod>();
 
             //prepare grid model
@@ -195,7 +192,7 @@ namespace Nop.Plugin.Payments.Worldpay.Controllers
                 {
                     Id = card.PaymentId,
                     CardId = card.PaymentId,
-                    CardType = card.Card.CreditCardType.HasValue ? card.Card.CreditCardType.Value.GetLocalizedEnum(_localizationService, _workContext) : null,
+                    CardType = card.Card.CreditCardType.HasValue ? _localizationService.GetLocalizedEnum(card.Card.CreditCardType.Value) : null,
                     ExpirationDate = card.Card.ExpirationDate,
                     MaskedNumber = card.Card.MaskedNumber
                 }),
@@ -220,7 +217,7 @@ namespace Nop.Plugin.Payments.Worldpay.Controllers
             //try to delere selected card from the Vault
             var deleted = _worldpayPaymentManager.Deletecard(new DeleteCardRequest
             {
-                CustomerId = customer.GetAttribute<string>(WorldpayPaymentDefaults.CustomerIdAttribute),
+                CustomerId = _genericAttributeService.GetAttribute<string>(customer, WorldpayPaymentDefaults.CustomerIdAttribute),
                 PaymentId = id
             });
             if (!deleted)

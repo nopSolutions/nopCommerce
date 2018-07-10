@@ -19,6 +19,7 @@ namespace Nop.Plugin.Payments.Worldpay.Components
     {
         #region Fields
 
+        private readonly IGenericAttributeService _genericAttributeService;
         private readonly ILocalizationService _localizationService;
         private readonly IWorkContext _workContext;
         private readonly WorldpayPaymentManager _worldpayPaymentManager;
@@ -27,10 +28,12 @@ namespace Nop.Plugin.Payments.Worldpay.Components
 
         #region Ctor
 
-        public PaymentWorldpayViewComponent(ILocalizationService localizationService,
+        public PaymentWorldpayViewComponent(IGenericAttributeService genericAttributeService,
+            ILocalizationService localizationService,
             IWorkContext workContext,
             WorldpayPaymentManager worldpayPaymentManager)
         {
+            this._genericAttributeService = genericAttributeService;
             this._localizationService = localizationService;
             this._workContext = workContext;
             this._worldpayPaymentManager = worldpayPaymentManager;
@@ -61,7 +64,7 @@ namespace Nop.Plugin.Payments.Worldpay.Components
             model.CardTypes = Enum.GetValues(typeof(CreditCardType)).OfType<CreditCardType>().Select(cardType => new SelectListItem
             {
                 Value = JsonConvert.SerializeObject(cardType, new StringEnumConverter()),
-                Text = cardType.GetLocalizedEnum(_localizationService, _workContext)
+                Text = _localizationService.GetLocalizedEnum(cardType)
             }).ToList();
 
             //whether current customer is guest
@@ -69,7 +72,7 @@ namespace Nop.Plugin.Payments.Worldpay.Components
             if (!model.IsGuest)
             {
                 //whether customer already has stored cards
-                var customer = _worldpayPaymentManager.GetCustomer(_workContext.CurrentCustomer.GetAttribute<string>(WorldpayPaymentDefaults.CustomerIdAttribute));
+                var customer = _worldpayPaymentManager.GetCustomer(_genericAttributeService.GetAttribute<string>(_workContext.CurrentCustomer, WorldpayPaymentDefaults.CustomerIdAttribute));
                 if (customer?.PaymentMethods != null)
                 {
                     model.StoredCards = customer.PaymentMethods.Where(method => method?.Card != null)

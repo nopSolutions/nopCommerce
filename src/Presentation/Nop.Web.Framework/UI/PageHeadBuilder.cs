@@ -32,6 +32,7 @@ namespace Nop.Web.Framework.UI
         private readonly IHostingEnvironment _hostingEnvironment;
         private readonly IStaticCacheManager _cacheManager;
         private readonly INopFileProvider _fileProvider;
+        private readonly IUrlRecordService _urlRecordService;
         private BundleFileProcessor _processor;
 
         private readonly List<string> _titleParts;
@@ -68,13 +69,15 @@ namespace Nop.Web.Framework.UI
             IHostingEnvironment hostingEnvironment,
             IStaticCacheManager cacheManager,
             IMemoryCache memoryCache,
-            INopFileProvider fileProvider)
+            INopFileProvider fileProvider
+            IUrlRecordService urlRecordService)
         {
             this._seoSettings = seoSettings;
             this._hostingEnvironment = hostingEnvironment;
             this._cacheManager = cacheManager;
             this._fileProvider = fileProvider;
             this._memoryCache = memoryCache;
+            this._urlRecordService = urlRecordService;
             this._processor = new BundleFileProcessor();
 
             this._titleParts = new List<string>();
@@ -93,7 +96,7 @@ namespace Nop.Web.Framework.UI
         #region Utilities
 
         /// <summary>
-        /// Get bundled file name based on last write time of files
+        /// Get bundled file name
         /// </summary>
         /// <param name="parts">Parts to bundle</param>
         /// <returns>File name</returns>
@@ -118,7 +121,7 @@ namespace Nop.Web.Framework.UI
                 hash = WebEncoders.Base64UrlEncode(input);
             }
             //ensure only valid chars
-            hash = SeoExtensions.GetSeName(hash);
+            hash = _urlRecordService.GetSeName(hash, _seoSettings.ConvertNonWesternChars, _seoSettings.AllowUnicodeCharsInUrls);
 
             return hash;
         }
@@ -394,7 +397,7 @@ namespace Nop.Web.Framework.UI
                         //we periodically re-check already bundles file
                         //so if we have minification enabled, it could take up to several minutes to see changes in updated resource files (or just reset the cache or restart the site)
                         var cacheKey = $"Nop.minification.shouldrebuild.js-{outputFileName}";
-                        var shouldRebuild = _cacheManager.Get(cacheKey, RecheckBundledFilesPeriod, () => true);
+                        var shouldRebuild = _cacheManager.Get(cacheKey, () => true, RecheckBundledFilesPeriod);
                         if (shouldRebuild)
                         {
                             //store json file to see a generated config file (for debugging purposes)
@@ -615,7 +618,7 @@ namespace Nop.Web.Framework.UI
                         //we periodically re-check already bundles file
                         //so if we have minification enabled, it could take up to several minutes to see changes in updated resource files (or just reset the cache or restart the site)
                         var cacheKey = $"Nop.minification.shouldrebuild.css-{outputFileName}";
-                        var shouldRebuild = _cacheManager.Get<bool>(cacheKey, RecheckBundledFilesPeriod, () => true);
+                        var shouldRebuild = _cacheManager.Get(cacheKey, () => true, RecheckBundledFilesPeriod);
                         if (shouldRebuild)
                         {
                             //store json file to see a generated config file (for debugging purposes)

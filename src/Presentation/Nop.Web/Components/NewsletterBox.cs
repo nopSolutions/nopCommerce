@@ -7,15 +7,13 @@ namespace Nop.Web.Components
 {
     public class NewsletterBoxViewComponent : NopViewComponent
     {
+        private readonly CustomerSettings _customerSettings;
         private readonly INewsletterModelFactory _newsletterModelFactory;
 
-        private readonly CustomerSettings _customerSettings;
-
-        public NewsletterBoxViewComponent(INewsletterModelFactory newsletterModelFactory,
-            CustomerSettings customerSettings)
+        public NewsletterBoxViewComponent(CustomerSettings customerSettings, INewsletterModelFactory newsletterModelFactory)
         {
-            this._newsletterModelFactory = newsletterModelFactory;
             this._customerSettings = customerSettings;
+            this._newsletterModelFactory = newsletterModelFactory;
         }
 
         public IViewComponentResult Invoke()

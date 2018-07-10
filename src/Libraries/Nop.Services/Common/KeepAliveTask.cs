@@ -18,10 +18,6 @@ namespace Nop.Services.Common
 
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="webHelper">Web helper</param>
         public KeepAliveTask(IWebHelper webHelper)
         {
             this._webHelper = webHelper;

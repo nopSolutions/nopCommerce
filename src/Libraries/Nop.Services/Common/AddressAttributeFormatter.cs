@@ -12,25 +12,32 @@ namespace Nop.Services.Common
     /// </summary>
     public partial class AddressAttributeFormatter : IAddressAttributeFormatter
     {
-        private readonly IWorkContext _workContext;
-        private readonly IAddressAttributeService _addressAttributeService;
-        private readonly IAddressAttributeParser _addressAttributeParser;
+        #region Fields
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="workContext">Work context</param>
-        /// <param name="addressAttributeService">Address attribute service</param>
-        /// <param name="addressAttributeParser">Address attribute parser</param>
-        public AddressAttributeFormatter(IWorkContext workContext,
-            IAddressAttributeService addressAttributeService,
-            IAddressAttributeParser addressAttributeParser)
+        private readonly IAddressAttributeParser _addressAttributeParser;
+        private readonly IAddressAttributeService _addressAttributeService;
+        private readonly ILocalizationService _localizationService;
+        private readonly IWorkContext _workContext;
+
+        #endregion
+
+        #region Ctor
+
+        public AddressAttributeFormatter(IAddressAttributeParser addressAttributeParser,
+            IAddressAttributeService addressAttributeService,            
+            ILocalizationService localizationService,
+            IWorkContext workContext)
         {
-            this._workContext = workContext;
-            this._addressAttributeService = addressAttributeService;
             this._addressAttributeParser = addressAttributeParser;
+            this._addressAttributeService = addressAttributeService;
+            this._localizationService = localizationService;
+            this._workContext = workContext;
         }
-        
+
+        #endregion
+
+        #region Methods
+
         /// <summary>
         /// Formats attributes
         /// </summary>
@@ -39,7 +46,7 @@ namespace Nop.Services.Common
         /// <param name="htmlEncode">A value indicating whether to encode (HTML) values</param>
         /// <returns>Attributes</returns>
         public virtual string FormatAttributes(string attributesXml,
-            string separator = "<br />", 
+            string separator = "<br />",
             bool htmlEncode = true)
         {
             var result = new StringBuilder();
@@ -59,7 +66,7 @@ namespace Nop.Services.Common
                         if (attribute.AttributeControlType == AttributeControlType.MultilineTextbox)
                         {
                             //multiline textbox
-                            var attributeName = attribute.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id);
+                            var attributeName = _localizationService.GetLocalized(attribute, a => a.Name, _workContext.WorkingLanguage.Id);
                             //encode (if required)
                             if (htmlEncode)
                                 attributeName = WebUtility.HtmlEncode(attributeName);
@@ -74,7 +81,7 @@ namespace Nop.Services.Common
                         else
                         {
                             //other attributes (textbox, datepicker)
-                            formattedAttribute = $"{attribute.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id)}: {valueStr}";
+                            formattedAttribute = $"{_localizationService.GetLocalized(attribute, a => a.Name, _workContext.WorkingLanguage.Id)}: {valueStr}";
                             //encode (if required)
                             if (htmlEncode)
                                 formattedAttribute = WebUtility.HtmlEncode(formattedAttribute);
@@ -87,7 +94,7 @@ namespace Nop.Services.Common
                             var attributeValue = _addressAttributeService.GetAddressAttributeValueById(attributeValueId);
                             if (attributeValue != null)
                             {
-                                formattedAttribute = $"{attribute.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id)}: {attributeValue.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id)}";
+                                formattedAttribute = $"{_localizationService.GetLocalized(attribute, a => a.Name, _workContext.WorkingLanguage.Id)}: {_localizationService.GetLocalized(attributeValue, a => a.Name, _workContext.WorkingLanguage.Id)}";
                             }
                             //encode (if required)
                             if (htmlEncode)
@@ -106,5 +113,7 @@ namespace Nop.Services.Common
 
             return result.ToString();
         }
+
+        #endregion
     }
 }

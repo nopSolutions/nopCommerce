@@ -41,6 +41,13 @@ namespace Nop.Services.Authentication.External
         /// <returns>True if authentication is available; otherwise false</returns>
         bool ExternalAuthenticationMethodIsAvailable(string systemName);
 
+        /// <summary>
+        /// Check whether external authentication method is active
+        /// </summary>
+        /// <param name="method">External authentication method</param>
+        /// <returns>True if method is active; otherwise false</returns>
+        bool IsExternalAuthenticationMethodActive(IExternalAuthenticationMethod method);
+
         #endregion
 
         #region Authentication

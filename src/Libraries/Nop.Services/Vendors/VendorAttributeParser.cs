@@ -21,11 +21,6 @@ namespace Nop.Services.Vendors
 
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="localizationService">Localization service</param>
-        /// <param name="vendorAttributeService">Vendor attribute service</param>
         public VendorAttributeParser(ILocalizationService localizationService,
             IVendorAttributeService vendorAttributeService)
         {
@@ -284,7 +279,7 @@ namespace Nop.Services.Vendors
                     //if not found
                     if (!found)
                     {
-                        var notFoundWarning = string.Format(_localizationService.GetResource("ShoppingCart.SelectAttribute"), a2.GetLocalized(a => a.Name));
+                        var notFoundWarning = string.Format(_localizationService.GetResource("ShoppingCart.SelectAttribute"), _localizationService.GetLocalized(a2, a => a.Name));
 
                         warnings.Add(notFoundWarning);
                     }

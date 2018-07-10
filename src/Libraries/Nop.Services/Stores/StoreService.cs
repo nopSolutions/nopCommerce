@@ -15,27 +15,21 @@ namespace Nop.Services.Stores
     {
         #region Fields
 
-        private readonly IRepository<Store> _storeRepository;
         private readonly IEventPublisher _eventPublisher;
+        private readonly IRepository<Store> _storeRepository;
         private readonly IStaticCacheManager _cacheManager;
 
         #endregion
 
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="cacheManager">Cache manager</param>
-        /// <param name="storeRepository">Store repository</param>
-        /// <param name="eventPublisher">Event publisher</param>
-        public StoreService(IStaticCacheManager cacheManager,
+        public StoreService(IEventPublisher eventPublisher,
             IRepository<Store> storeRepository,
-            IEventPublisher eventPublisher)
+            IStaticCacheManager cacheManager)
         {
-            this._cacheManager = cacheManager;
-            this._storeRepository = storeRepository;
             this._eventPublisher = eventPublisher;
+            this._storeRepository = storeRepository;
+            this._cacheManager = cacheManager;
         }
 
         #endregion
@@ -76,8 +70,8 @@ namespace Nop.Services.Stores
             Func<IList<Store>> loadStoresFunc = () =>
             {
                 var query = from s in _storeRepository.Table
-                    orderby s.DisplayOrder, s.Id
-                    select s;
+                            orderby s.DisplayOrder, s.Id
+                            select s;
                 return query.ToList();
             };
 
@@ -126,7 +120,7 @@ namespace Nop.Services.Stores
             }
 
             return loadStoreFunc();
-        } 
+        }
 
         /// <summary>
         /// Inserts a store
@@ -136,9 +130,9 @@ namespace Nop.Services.Stores
         {
             if (store == null)
                 throw new ArgumentNullException(nameof(store));
-            
+
             if (store is IEntityForCaching)
-                throw  new ArgumentException("Cacheable entities are not supported by Entity Framework");
+                throw new ArgumentException("Cacheable entities are not supported by Entity Framework");
 
             _storeRepository.Insert(store);
 
@@ -166,6 +160,50 @@ namespace Nop.Services.Stores
 
             //event notification
             _eventPublisher.EntityUpdated(store);
+        }
+
+        /// <summary>
+        /// Parse comma-separated Hosts
+        /// </summary>
+        /// <param name="store">Store</param>
+        /// <returns>Comma-separated hosts</returns>
+        public virtual string[] ParseHostValues(Store store)
+        {
+            if (store == null)
+                throw new ArgumentNullException(nameof(store));
+
+            var parsedValues = new List<string>();
+            if (string.IsNullOrEmpty(store.Hosts))
+                return parsedValues.ToArray();
+
+            var hosts = store.Hosts.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+            foreach (var host in hosts)
+            {
+                var tmp = host.Trim();
+                if (!string.IsNullOrEmpty(tmp))
+                    parsedValues.Add(tmp);
+            }
+
+            return parsedValues.ToArray();
+        }
+
+        /// <summary>
+        /// Indicates whether a store contains a specified host
+        /// </summary>
+        /// <param name="store">Store</param>
+        /// <param name="host">Host</param>
+        /// <returns>true - contains, false - no</returns>
+        public virtual bool ContainsHostValue(Store store, string host)
+        {
+            if (store == null)
+                throw new ArgumentNullException(nameof(store));
+
+            if (string.IsNullOrEmpty(host))
+                return false;
+
+            var contains = this.ParseHostValues(store).Any(x => x.Equals(host, StringComparison.InvariantCultureIgnoreCase));
+
+            return contains;
         }
 
         #endregion

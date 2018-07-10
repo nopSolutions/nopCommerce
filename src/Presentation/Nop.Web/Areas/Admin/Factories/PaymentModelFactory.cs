@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
-using Nop.Core.Domain.Payments;
 using Nop.Core.Plugins;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
@@ -25,8 +24,6 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly ILocalizationService _localizationService;
         private readonly IPaymentService _paymentService;
         private readonly IWebHelper _webHelper;
-        private readonly IWorkContext _workContext;
-        private readonly PaymentSettings _paymentSettings;
 
         #endregion
 
@@ -35,16 +32,12 @@ namespace Nop.Web.Areas.Admin.Factories
         public PaymentModelFactory(ICountryService countryService,
             ILocalizationService localizationService,
             IPaymentService paymentService,
-            IWebHelper webHelper,
-            IWorkContext workContext,
-            PaymentSettings paymentSettings)
+            IWebHelper webHelper)
         {
             this._countryService = countryService;
             this._localizationService = localizationService;
             this._paymentService = paymentService;
             this._webHelper = webHelper;
-            this._workContext = workContext;
-            this._paymentSettings = paymentSettings;
         }
 
         #endregion
@@ -106,10 +99,10 @@ namespace Nop.Web.Areas.Admin.Factories
                     var paymentMethodModel = method.ToPluginModel<PaymentMethodModel>();
 
                     //fill in additional values (not existing in the entity)
-                    paymentMethodModel.IsActive = method.IsPaymentMethodActive(_paymentSettings);
+                    paymentMethodModel.IsActive = _paymentService.IsPaymentMethodActive(method);
                     paymentMethodModel.ConfigurationUrl = method.GetConfigurationPageUrl();
-                    paymentMethodModel.LogoUrl = method.PluginDescriptor.GetLogoUrl(_webHelper);
-                    paymentMethodModel.RecurringPaymentType = method.RecurringPaymentType.GetLocalizedEnum(_localizationService, _workContext);
+                    paymentMethodModel.LogoUrl = PluginManager.GetLogoUrl(method.PluginDescriptor);
+                    paymentMethodModel.RecurringPaymentType = _localizationService.GetLocalizedEnum(method.RecurringPaymentType);
 
                     return paymentMethodModel;
                 }),

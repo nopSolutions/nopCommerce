@@ -102,7 +102,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             //prepare model
-            var model = _blogModelFactory.PrepareBlogContentModel(new BlogContentModel(), filterByBlogPostId);            
+            var model = _blogModelFactory.PrepareBlogContentModel(new BlogContentModel(), filterByBlogPostId);
 
             return View(model);
         }
@@ -149,7 +149,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     string.Format(_localizationService.GetResource("ActivityLog.AddNewBlogPost"), blogPost.Id), blogPost);
 
                 //search engine name
-                var seName = blogPost.ValidateSeName(model.SeName, model.Title, true);
+                var seName = _urlRecordService.ValidateSeName(blogPost, model.SeName, model.Title, true);
                 _urlRecordService.SaveSlug(blogPost, seName, blogPost.LanguageId);
 
                 //Stores
@@ -212,7 +212,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     string.Format(_localizationService.GetResource("ActivityLog.EditBlogPost"), blogPost.Id), blogPost);
 
                 //search engine name
-                var seName = blogPost.ValidateSeName(model.SeName, model.Title, true);
+                var seName = _urlRecordService.ValidateSeName(blogPost, model.SeName, model.Title, true);
                 _urlRecordService.SaveSlug(blogPost, seName, blogPost.LanguageId);
 
                 //Stores
@@ -282,7 +282,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult Comments(BlogCommentSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageBlog))
-                return AccessDeniedKendoGridJson();           
+                return AccessDeniedKendoGridJson();
 
             //prepare model
             var model = _blogModelFactory.PrepareBlogCommentListModel(searchModel, searchModel.BlogPostId);

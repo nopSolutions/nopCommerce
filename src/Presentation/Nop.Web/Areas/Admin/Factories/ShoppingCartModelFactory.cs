@@ -135,7 +135,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     shoppingCartModel.CustomerEmail = customer.IsRegistered()
                         ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
                     shoppingCartModel.TotalItems = customer.ShoppingCartItems
-                        .Where(item => item.ShoppingCartType == searchModel.ShoppingCartType).ToList().GetTotalProducts();
+                        .Where(item => item.ShoppingCartType == searchModel.ShoppingCartType).Sum(item => item.Quantity);
 
                     return shoppingCartModel;
                 }),

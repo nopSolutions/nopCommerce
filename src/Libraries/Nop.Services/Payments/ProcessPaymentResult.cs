@@ -9,12 +9,7 @@ namespace Nop.Services.Payments
     /// </summary>
     public partial class ProcessPaymentResult
     {
-        private PaymentStatus _newPaymentStatus = PaymentStatus.Pending;
-
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        public ProcessPaymentResult() 
+        public ProcessPaymentResult()
         {
             this.Errors = new List<string>();
         }
@@ -40,7 +35,7 @@ namespace Nop.Services.Payments
         /// Errors
         /// </summary>
         public IList<string> Errors { get; set; }
-        
+
         /// <summary>
         /// Gets or sets an AVS result
         /// </summary>
@@ -80,7 +75,7 @@ namespace Nop.Services.Payments
         /// Gets or sets the subscription transaction identifier
         /// </summary>
         public string SubscriptionTransactionId { get; set; }
-        
+
         /// <summary>
         /// Gets or sets a value indicating whether storing of credit card number, CVV2 is allowed
         /// </summary>
@@ -94,16 +89,6 @@ namespace Nop.Services.Payments
         /// <summary>
         /// Gets or sets a payment status after processing
         /// </summary>
-        public PaymentStatus NewPaymentStatus
-        {
-            get
-            {
-                return _newPaymentStatus;
-            }
-            set
-            {
-                _newPaymentStatus = value;
-            }
-        }
+        public PaymentStatus NewPaymentStatus { get; set; } = PaymentStatus.Pending;
     }
 }

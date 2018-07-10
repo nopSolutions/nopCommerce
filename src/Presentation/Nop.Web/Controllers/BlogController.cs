@@ -31,60 +31,61 @@ namespace Nop.Web.Controllers
     {
         #region Fields
 
-        private readonly IBlogService _blogService;
-        private readonly IWorkContext _workContext;
-        private readonly IStoreContext _storeContext;
-        private readonly ILocalizationService _localizationService;
-        private readonly IWorkflowMessageService _workflowMessageService;
-        private readonly IWebHelper _webHelper;
-        private readonly ICustomerActivityService _customerActivityService;
-        private readonly IStoreMappingService _storeMappingService;
-        private readonly IPermissionService _permissionService;
-        private readonly IBlogModelFactory _blogModelFactory;
-        private readonly IEventPublisher _eventPublisher;
-
         private readonly BlogSettings _blogSettings;
-        private readonly LocalizationSettings _localizationSettings;
         private readonly CaptchaSettings _captchaSettings;
-        
+        private readonly IBlogModelFactory _blogModelFactory;
+        private readonly IBlogService _blogService;
+        private readonly ICustomerActivityService _customerActivityService;
+        private readonly IEventPublisher _eventPublisher;
+        private readonly ILocalizationService _localizationService;
+        private readonly IPermissionService _permissionService;
+        private readonly IStoreContext _storeContext;
+        private readonly IStoreMappingService _storeMappingService;
+        private readonly IUrlRecordService _urlRecordService;
+        private readonly IWebHelper _webHelper;
+        private readonly IWorkContext _workContext;
+        private readonly IWorkflowMessageService _workflowMessageService;
+        private readonly LocalizationSettings _localizationSettings;
+
         #endregion
-        
+
         #region Ctor
 
-        public BlogController(IBlogService blogService,
-            IWorkContext workContext,
-            IStoreContext storeContext,
-            ILocalizationService localizationService,
-            IWorkflowMessageService workflowMessageService,
-            IWebHelper webHelper,
-            ICustomerActivityService customerActivityService,
-            IStoreMappingService storeMappingService,
-            IPermissionService permissionService,
+        public BlogController(BlogSettings blogSettings,
+            CaptchaSettings captchaSettings,
             IBlogModelFactory blogModelFactory,
+            IBlogService blogService,
+            ICustomerActivityService customerActivityService,
             IEventPublisher eventPublisher,
-            BlogSettings blogSettings,
-            LocalizationSettings localizationSettings,
-            CaptchaSettings captchaSettings)
+            ILocalizationService localizationService,
+            IPermissionService permissionService,
+            IStoreContext storeContext,
+            IStoreMappingService storeMappingService,
+            IUrlRecordService urlRecordService,
+            IWebHelper webHelper,
+            IWorkContext workContext,
+            IWorkflowMessageService workflowMessageService,
+            LocalizationSettings localizationSettings)
         {
-            this._blogService = blogService;
-            this._workContext = workContext;
-            this._storeContext = storeContext;
-            this._localizationService = localizationService;
-            this._workflowMessageService = workflowMessageService;
-            this._webHelper = webHelper;
-            this._customerActivityService = customerActivityService;
-            this._storeMappingService = storeMappingService;
-            this._permissionService = permissionService;
-            this._blogModelFactory = blogModelFactory;
-            this._eventPublisher = eventPublisher;
-
             this._blogSettings = blogSettings;
-            this._localizationSettings = localizationSettings;
             this._captchaSettings = captchaSettings;
+            this._blogModelFactory = blogModelFactory;
+            this._blogService = blogService;
+            this._customerActivityService = customerActivityService;
+            this._eventPublisher = eventPublisher;
+            this._localizationService = localizationService;
+            this._permissionService = permissionService;
+            this._storeContext = storeContext;
+            this._storeMappingService = storeMappingService;
+            this._urlRecordService = urlRecordService;
+            this._webHelper = webHelper;
+            this._workContext = workContext;
+            this._workflowMessageService = workflowMessageService;
+            this._localizationSettings = localizationSettings;
         }
-        
+
         #endregion
-        
+
         #region Methods
 
         public virtual IActionResult List(BlogPagingFilteringModel command)
@@ -117,7 +118,7 @@ namespace Nop.Web.Controllers
         public virtual IActionResult ListRss(int languageId)
         {
             var feed = new RssFeed(
-                $"{_storeContext.CurrentStore.GetLocalized(x => x.Name)}: Blog",
+                $"{_localizationService.GetLocalized(_storeContext.CurrentStore, x => x.Name)}: Blog",
                 "Blog",
                 new Uri(_webHelper.GetStoreLocation()),
                 DateTime.UtcNow);
@@ -129,7 +130,7 @@ namespace Nop.Web.Controllers
             var blogPosts = _blogService.GetAllBlogPosts(_storeContext.CurrentStore.Id, languageId);
             foreach (var blogPost in blogPosts)
             {
-                var blogPostUrl = Url.RouteUrl("BlogPost", new { SeName = blogPost.GetSeName(blogPost.LanguageId, ensureTwoPublishedLanguages: false) }, _webHelper.CurrentRequestProtocol);
+                var blogPostUrl = Url.RouteUrl("BlogPost", new { SeName = _urlRecordService.GetSeName(blogPost, blogPost.LanguageId, ensureTwoPublishedLanguages: false) }, _webHelper.CurrentRequestProtocol);
                 items.Add(new RssItem(blogPost.Title, blogPost.Body, new Uri(blogPostUrl),
                     $"urn:store:{_storeContext.CurrentStore.Id}:blog:post:{blogPost.Id}", blogPost.CreatedOnUtc));
             }
@@ -145,16 +146,16 @@ namespace Nop.Web.Controllers
             var blogPost = _blogService.GetBlogPostById(blogPostId);
             if (blogPost == null)
                 return RedirectToRoute("HomePage");
-            
+
             var hasAdminAccess = _permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && _permissionService.Authorize(StandardPermissionProvider.ManageBlog);
             //access to Blog preview
-            if (!blogPost.IsAvailable() && !hasAdminAccess)
+            if (!_blogService.BlogPostIsAvailable(blogPost) && !hasAdminAccess)
                 return RedirectToRoute("HomePage");
 
             //Store mapping
             if (!_storeMappingService.Authorize(blogPost))
                 return InvokeHttp404();
-            
+
             //display "edit" (manage) link
             if (hasAdminAccess)
                 DisplayEditLink(Url.Action("Edit", "Blog", new { id = blogPost.Id, area = AreaNames.Admin }));
@@ -220,14 +221,14 @@ namespace Nop.Web.Controllers
                 TempData["nop.blog.addcomment.result"] = comment.IsApproved
                     ? _localizationService.GetResource("Blog.Comments.SuccessfullyAdded")
                     : _localizationService.GetResource("Blog.Comments.SeeAfterApproving");
-                return RedirectToRoute("BlogPost", new { SeName = blogPost.GetSeName(blogPost.LanguageId, ensureTwoPublishedLanguages: false) });
+                return RedirectToRoute("BlogPost", new { SeName = _urlRecordService.GetSeName(blogPost, blogPost.LanguageId, ensureTwoPublishedLanguages: false) });
             }
 
             //If we got this far, something failed, redisplay form
             _blogModelFactory.PrepareBlogPostModel(model, blogPost, true);
             return View(model);
         }
-        
+
         #endregion
     }
 }

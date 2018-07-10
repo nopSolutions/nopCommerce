@@ -220,7 +220,7 @@
                         @T("Admin.Orders.Shipments.Products")
                     </div>
                     <div class="panel-body">
-                        <table class="table table-hover table-bordered text-center">
+                        <table class="table table-hover table-bordered">
                             <thead>
                                 <tr>
                                     <th>
@@ -247,7 +247,7 @@
                                 @foreach (var item in Model.Items)
                                 {
                                 <tr>
-                                    <td style="width: 40%; text-align: left;">
+                                    <td style="width: 40%;" class="text-left">
                                         <div>
                                             <em><a asp-controller="Product" asp-action="Edit" asp-route-id="@item.ProductId">@item.ProductName</a></em>
                                             @if (!string.IsNullOrEmpty(item.AttributeInfo))
@@ -264,23 +264,23 @@
                                                 }
                                         </div>
                                     </td>
-                                    <td style="width: 15%;">
+                                    <td style="width: 15%;" class="text-center">
                                         <div>
                                             @item.Sku
                                         </div>
                                     </td>
-                                    <td style="width: 15%;">
+                                    <td style="width: 15%;" class="text-center">
                                         <div>
                                             @item.ShippedFromWarehouse
                                         </div>
                                     </td>
-                                    <td style="width: 10%;">
+                                    <td style="width: 10%;" class="text-center">
                                         @item.ItemWeight
                                     </td>
-                                    <td style="width: 10%;">
+                                    <td style="width: 10%;" class="text-center">
                                         @item.ItemDimensions
                                     </td>
-                                    <td style="width: 10%;">
+                                    <td style="width: 10%;" class="text-center">
                                         @item.QuantityInThisShipment
                                     </td>
                                 </tr>

@@ -30,16 +30,22 @@ namespace Nop.Services.Discounts.Cache
         IConsumer<EntityUpdatedEvent<Manufacturer>>,
         IConsumer<EntityDeletedEvent<Manufacturer>>
     {
+        #region Fields
+
         private readonly IStaticCacheManager _cacheManager;
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="cacheManager">Cache manager</param>
+        #endregion
+
+        #region Ctor
+
         public DiscountEventConsumer(IStaticCacheManager cacheManager)
         {
             this._cacheManager = cacheManager;
         }
+
+        #endregion
+
+        #region Methods
 
         //discounts
         public void HandleEvent(EntityInsertedEvent<Discount> eventMessage)
@@ -114,5 +120,7 @@ namespace Nop.Services.Discounts.Cache
         {
             _cacheManager.RemoveByPattern(NopDiscountDefaults.DiscountManufacturerIdsPatternCacheKey);
         }
+
+        #endregion
     }
 }

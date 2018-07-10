@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
@@ -31,7 +30,6 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly ILocalizedModelFactory _localizedModelFactory;
         private readonly IMeasureService _measureService;
         private readonly IStoreMappingSupportedModelFactory _storeMappingSupportedModelFactory;
-        private readonly IWorkContext _workContext;
         private readonly MeasureSettings _measureSettings;
 
         #endregion
@@ -47,7 +45,6 @@ namespace Nop.Web.Areas.Admin.Factories
             ILocalizedModelFactory localizedModelFactory,
             IMeasureService measureService,
             IStoreMappingSupportedModelFactory storeMappingSupportedModelFactory,
-            IWorkContext workContext,
             MeasureSettings measureSettings)
         {
             this._currencySettings = currencySettings;
@@ -59,7 +56,6 @@ namespace Nop.Web.Areas.Admin.Factories
             this._localizedModelFactory = localizedModelFactory;
             this._measureService = measureService;
             this._storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
-            this._workContext = workContext;
             this._measureSettings = measureSettings;
         }
 
@@ -175,7 +171,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     var attributeModel = attribute.ToModel<CheckoutAttributeModel>();
 
                     //fill in additional values (not existing in the entity)
-                    attributeModel.AttributeControlTypeName = attribute.AttributeControlType.GetLocalizedEnum(_localizationService, _workContext);
+                    attributeModel.AttributeControlTypeName = _localizationService.GetLocalizedEnum(attribute.AttributeControlType);
 
                     return attributeModel;
                 }),
@@ -208,8 +204,8 @@ namespace Nop.Web.Areas.Admin.Factories
                 //define localized model configuration action
                 localizedModelConfiguration = (locale, languageId) =>
                 {
-                    locale.Name = checkoutAttribute.GetLocalized(entity => entity.Name, languageId, false, false);
-                    locale.TextPrompt = checkoutAttribute.GetLocalized(entity => entity.TextPrompt, languageId, false, false);
+                    locale.Name = _localizationService.GetLocalized(checkoutAttribute, entity => entity.Name, languageId, false, false);
+                    locale.TextPrompt = _localizationService.GetLocalized(checkoutAttribute, entity => entity.TextPrompt, languageId, false, false);
                 };
 
                 //whether to fill in some of properties
@@ -298,7 +294,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 //define localized model configuration action
                 localizedModelConfiguration = (locale, languageId) =>
                 {
-                    locale.Name = checkoutAttributeValue.GetLocalized(entity => entity.Name, languageId, false, false);
+                    locale.Name = _localizationService.GetLocalized(checkoutAttributeValue, entity => entity.Name, languageId, false, false);
                 };
             }
 

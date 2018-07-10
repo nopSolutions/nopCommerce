@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Services.Common;
@@ -24,7 +23,6 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IAddressAttributeService _addressAttributeService;
         private readonly ILocalizationService _localizationService;
         private readonly ILocalizedModelFactory _localizedModelFactory;
-        private readonly IWorkContext _workContext;
 
         #endregion
 
@@ -33,14 +31,12 @@ namespace Nop.Web.Areas.Admin.Factories
         public AddressAttributeModelFactory(IAddressAttributeParser addressAttributeParser,
             IAddressAttributeService addressAttributeService,
             ILocalizationService localizationService,
-            ILocalizedModelFactory localizedModelFactory,
-            IWorkContext workContext)
+            ILocalizedModelFactory localizedModelFactory)
         {
             this._addressAttributeParser = addressAttributeParser;
             this._addressAttributeService = addressAttributeService;
             this._localizationService = localizationService;
             this._localizedModelFactory = localizedModelFactory;
-            this._workContext = workContext;
         }
 
         #endregion
@@ -111,7 +107,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     var attributeModel = attribute.ToModel<AddressAttributeModel>();
 
                     //fill in additional values (not existing in the entity)
-                    attributeModel.AttributeControlTypeName = attribute.AttributeControlType.GetLocalizedEnum(_localizationService, _workContext);
+                    attributeModel.AttributeControlTypeName = _localizationService.GetLocalizedEnum(attribute.AttributeControlType);
 
                     return attributeModel;
                 }),
@@ -144,7 +140,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 //define localized model configuration action
                 localizedModelConfiguration = (locale, languageId) =>
                 {
-                    locale.Name = addressAttribute.GetLocalized(entity => entity.Name, languageId, false, false);
+                    locale.Name = _localizationService.GetLocalized(addressAttribute, entity => entity.Name, languageId, false, false);
                 };
             }
 
@@ -208,7 +204,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 //define localized model configuration action
                 localizedModelConfiguration = (locale, languageId) =>
                 {
-                    locale.Name = addressAttributeValue.GetLocalized(entity => entity.Name, languageId, false, false);
+                    locale.Name = _localizationService.GetLocalized(addressAttributeValue, entity => entity.Name, languageId, false, false);
                 };
             }
 
@@ -230,7 +226,7 @@ namespace Nop.Web.Areas.Admin.Factories
         {
             if (models == null)
                 throw new ArgumentNullException(nameof(models));
-            
+
             var attributes = _addressAttributeService.GetAllAddressAttributes();
             foreach (var attribute in attributes)
             {

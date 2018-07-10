@@ -12,13 +12,10 @@ namespace Nop.Services.Tests.Configuration
 {
     public class ConfigFileSettingService : SettingService
     {
-        public ConfigFileSettingService(IStaticCacheManager cacheManager, 
-            IEventPublisher eventPublisher,
-            IRepository<Setting> settingRepository):
-            base (cacheManager, eventPublisher, settingRepository)
+        public ConfigFileSettingService(IEventPublisher eventPublisher, IRepository<Setting> settingRepository, IStaticCacheManager cacheManager) : base(eventPublisher, settingRepository, cacheManager)
         {
-            
         }
+
         public override Setting GetSettingById(int settingId)
         {
             throw new InvalidOperationException("Get setting by id is not supported");

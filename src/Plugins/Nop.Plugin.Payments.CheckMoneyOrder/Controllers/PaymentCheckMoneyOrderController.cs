@@ -60,7 +60,8 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder.Controllers
             //locales
             AddLocales(_languageService, model.Locales, (locale, languageId) =>
             {
-                locale.DescriptionText = checkMoneyOrderPaymentSettings.GetLocalizedSetting(x => x.DescriptionText, languageId, 0, false, false);
+                locale.DescriptionText = _localizationService
+                    .GetLocalizedSetting(checkMoneyOrderPaymentSettings, x => x.DescriptionText, languageId, 0, false, false);
             });
             model.AdditionalFee = checkMoneyOrderPaymentSettings.AdditionalFee;
             model.AdditionalFeePercentage = checkMoneyOrderPaymentSettings.AdditionalFeePercentage;
@@ -105,14 +106,15 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder.Controllers
             _settingService.SaveSettingOverridablePerStore(checkMoneyOrderPaymentSettings, x => x.AdditionalFee, model.AdditionalFee_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(checkMoneyOrderPaymentSettings, x => x.AdditionalFeePercentage, model.AdditionalFeePercentage_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(checkMoneyOrderPaymentSettings, x => x.ShippableProductRequired, model.ShippableProductRequired_OverrideForStore, storeScope, false);
-           
+
             //now clear settings cache
             _settingService.ClearCache();
 
             //localization. no multi-store support for localization yet.
             foreach (var localized in model.Locales)
             {
-                checkMoneyOrderPaymentSettings.SaveLocalizedSetting(x => x.DescriptionText, localized.LanguageId, localized.DescriptionText);
+                _localizationService.SaveLocalizedSetting(checkMoneyOrderPaymentSettings,
+                    x => x.DescriptionText, localized.LanguageId, localized.DescriptionText);
             }
 
             SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));

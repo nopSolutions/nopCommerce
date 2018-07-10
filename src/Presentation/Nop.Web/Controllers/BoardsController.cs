@@ -23,37 +23,37 @@ namespace Nop.Web.Controllers
     {
         #region Fields
 
+        private readonly ForumSettings _forumSettings;
+        private readonly IForumModelFactory _forumModelFactory;
         private readonly IForumService _forumService;
         private readonly ILocalizationService _localizationService;
+        private readonly IStoreContext _storeContext;
         private readonly IWebHelper _webHelper;
         private readonly IWorkContext _workContext;
-        private readonly IStoreContext _storeContext;
-        private readonly IForumModelFactory _forumModelFactory;
-        private readonly ForumSettings _forumSettings;
-        
+
         #endregion
-        
+
         #region Ctor
 
-        public BoardsController(IForumService forumService,
-            ILocalizationService localizationService,
-            IWebHelper webHelper,
-            IWorkContext workContext,
-            IStoreContext storeContext,
+        public BoardsController(ForumSettings forumSettings,
             IForumModelFactory forumModelFactory,
-            ForumSettings forumSettings)
+            IForumService forumService,
+            ILocalizationService localizationService,
+            IStoreContext storeContext,
+            IWebHelper webHelper,
+            IWorkContext workContext)
         {
+            this._forumSettings = forumSettings;
+            this._forumModelFactory = forumModelFactory;
             this._forumService = forumService;
             this._localizationService = localizationService;
+            this._storeContext = storeContext;
             this._webHelper = webHelper;
             this._workContext = workContext;
-            this._storeContext = storeContext;
-            this._forumModelFactory = forumModelFactory;
-            this._forumSettings = forumSettings;
         }
-        
+
         #endregion
-        
+
         #region Methods
 
         public virtual IActionResult Index()
@@ -66,7 +66,7 @@ namespace Nop.Web.Controllers
             var model = _forumModelFactory.PrepareBoardsIndexModel();
             return View(model);
         }
-        
+
         public virtual IActionResult ActiveDiscussions(int forumId = 0, int pageNumber = 1)
         {
             if (!_forumSettings.ForumsEnabled)
@@ -97,7 +97,7 @@ namespace Nop.Web.Controllers
             var feedDescription = _localizationService.GetResource("Forum.ActiveDiscussionsFeedDescription");
 
             var feed = new RssFeed(
-                string.Format(feedTitle, _storeContext.CurrentStore.GetLocalized(x => x.Name)),
+                string.Format(feedTitle, _localizationService.GetLocalized(_storeContext.CurrentStore, x => x.Name)),
                 feedDescription,
                 new Uri(url),
                 DateTime.UtcNow);
@@ -109,7 +109,7 @@ namespace Nop.Web.Controllers
 
             foreach (var topic in topics)
             {
-                var topicUrl = Url.RouteUrl("TopicSlug", new { id = topic.Id, slug = topic.GetSeName() }, _webHelper.CurrentRequestProtocol);
+                var topicUrl = Url.RouteUrl("TopicSlug", new { id = topic.Id, slug = _forumService.GetTopicSeName(topic) }, _webHelper.CurrentRequestProtocol);
                 var content = $"{repliesText}: {topic.NumReplies.ToString()}, {viewsText}: {topic.Views.ToString()}";
 
                 items.Add(new RssItem(topic.Subject, content, new Uri(topicUrl),
@@ -132,7 +132,7 @@ namespace Nop.Web.Controllers
             {
                 return RedirectToRoute("Boards");
             }
-            
+
             var model = _forumModelFactory.PrepareForumGroupModel(forumGroup);
             return View(model);
         }
@@ -151,7 +151,7 @@ namespace Nop.Web.Controllers
             var model = _forumModelFactory.PrepareForumPageModel(forum, pageNumber);
             return View(model);
         }
-        
+
         public virtual IActionResult ForumRss(int id)
         {
             if (!_forumSettings.ForumsEnabled)
@@ -179,7 +179,7 @@ namespace Nop.Web.Controllers
                 var feedDescription = _localizationService.GetResource("Forum.ForumFeedDescription");
 
                 var feed = new RssFeed(
-                    string.Format(feedTitle, _storeContext.CurrentStore.GetLocalized(x => x.Name), forum.Name),
+                    string.Format(feedTitle, _localizationService.GetLocalized(_storeContext.CurrentStore, x => x.Name), forum.Name),
                     feedDescription,
                     new Uri(url),
                     DateTime.UtcNow);
@@ -191,7 +191,7 @@ namespace Nop.Web.Controllers
 
                 foreach (var topic in topics)
                 {
-                    var topicUrl = Url.RouteUrl("TopicSlug", new { id = topic.Id, slug = topic.GetSeName() }, _webHelper.CurrentRequestProtocol);
+                    var topicUrl = Url.RouteUrl("TopicSlug", new { id = topic.Id, slug = _forumService.GetTopicSeName(topic) }, _webHelper.CurrentRequestProtocol);
                     var content = $"{repliesText}: {topic.NumReplies}, {viewsText}: {topic.Views}";
 
                     items.Add(new RssItem(topic.Subject, content, new Uri(topicUrl), $"urn:store:{_storeContext.CurrentStore.Id}:forum:topic:{topic.Id}", topic.LastPostTime ?? topic.UpdatedOnUtc));
@@ -265,12 +265,12 @@ namespace Nop.Web.Controllers
             var model = _forumModelFactory.PrepareForumTopicPageModel(forumTopic, pageNumber);
             //if no posts loaded, redirect to the first page
             if (!model.ForumPostModels.Any() && pageNumber > 1)
-                return RedirectToRoute("TopicSlug", new {id = forumTopic.Id, slug = forumTopic.GetSeName()});
-            
+                return RedirectToRoute("TopicSlug", new { id = forumTopic.Id, slug = _forumService.GetTopicSeName(forumTopic) });
+
             //update view count
             forumTopic.Views += 1;
             _forumService.UpdateTopic(forumTopic);
-            
+
             return View(model);
         }
 
@@ -359,7 +359,7 @@ namespace Nop.Web.Controllers
                 _forumService.MoveTopic(forumTopic.Id, newForumId);
             }
 
-            return RedirectToRoute("TopicSlug", new { id = forumTopic.Id, slug = forumTopic.GetSeName() });
+            return RedirectToRoute("TopicSlug", new { id = forumTopic.Id, slug = _forumService.GetTopicSeName(forumTopic) });
         }
 
         [HttpPost]
@@ -389,7 +389,7 @@ namespace Nop.Web.Controllers
                 {
                     return Json(new
                     {
-                        redirect = Url.RouteUrl("ForumSlug", new { id = forum.Id, slug = forum.GetSeName() }),
+                        redirect = Url.RouteUrl("ForumSlug", new { id = forum.Id, slug = _forumService.GetForumSeName(forum) }),
                     });
                 }
             }
@@ -522,7 +522,7 @@ namespace Nop.Web.Controllers
                         }
                     }
 
-                    return RedirectToRoute("TopicSlug", new { id = forumTopic.Id, slug = forumTopic.GetSeName() });
+                    return RedirectToRoute("TopicSlug", new { id = forumTopic.Id, slug = _forumService.GetTopicSeName(forumTopic) });
                 }
                 catch (Exception ex)
                 {
@@ -620,7 +620,7 @@ namespace Nop.Web.Controllers
                     _forumService.UpdateTopic(forumTopic);
 
                     //forum post                
-                    var firstPost = forumTopic.GetFirstPost(_forumService);
+                    var firstPost = _forumService.GetFirstPost(forumTopic);
                     if (firstPost != null)
                     {
                         firstPost.Text = text;
@@ -672,7 +672,7 @@ namespace Nop.Web.Controllers
                     }
 
                     // redirect to the topic page with the topic slug
-                    return RedirectToRoute("TopicSlug", new { id = forumTopic.Id, slug = forumTopic.GetSeName() });
+                    return RedirectToRoute("TopicSlug", new { id = forumTopic.Id, slug = _forumService.GetTopicSeName(forumTopic) });
                 }
                 catch (Exception ex)
                 {
@@ -708,7 +708,7 @@ namespace Nop.Web.Controllers
 
                 var forumTopic = forumPost.ForumTopic;
                 var forumId = forumTopic.Forum.Id;
-                var forumSlug = forumTopic.Forum.GetSeName();
+                var forumSlug = _forumService.GetForumSeName(forumTopic.Forum);
 
                 _forumService.DeletePost(forumPost);
 
@@ -723,7 +723,7 @@ namespace Nop.Web.Controllers
                 }
                 return Json(new
                 {
-                    redirect = Url.RouteUrl("TopicSlug", new { id = forumTopic.Id, slug = forumTopic.GetSeName() }),
+                    redirect = Url.RouteUrl("TopicSlug", new { id = forumTopic.Id, slug = _forumService.GetTopicSeName(forumTopic) }),
                 });
             }
 
@@ -832,11 +832,11 @@ namespace Nop.Web.Controllers
                     var url = string.Empty;
                     if (pageIndex > 1)
                     {
-                        url = Url.RouteUrl("TopicSlugPaged", new { id = forumPost.TopicId, slug = forumPost.ForumTopic.GetSeName(), pageNumber = pageIndex });
+                        url = Url.RouteUrl("TopicSlugPaged", new { id = forumPost.TopicId, slug = _forumService.GetTopicSeName(forumPost.ForumTopic), pageNumber = pageIndex });
                     }
                     else
                     {
-                        url = Url.RouteUrl("TopicSlug", new { id = forumPost.TopicId, slug = forumPost.ForumTopic.GetSeName() });
+                        url = Url.RouteUrl("TopicSlug", new { id = forumPost.TopicId, slug = _forumService.GetTopicSeName(forumPost.ForumTopic) });
                     }
                     return Redirect($"{url}#{forumPost.Id}");
                 }
@@ -955,11 +955,11 @@ namespace Nop.Web.Controllers
                     var url = string.Empty;
                     if (pageIndex > 1)
                     {
-                        url = Url.RouteUrl("TopicSlugPaged", new { id = forumPost.TopicId, slug = forumPost.ForumTopic.GetSeName(), pageNumber = pageIndex });
+                        url = Url.RouteUrl("TopicSlugPaged", new { id = forumPost.TopicId, slug = _forumService.GetTopicSeName(forumPost.ForumTopic), pageNumber = pageIndex });
                     }
                     else
                     {
-                        url = Url.RouteUrl("TopicSlug", new { id = forumPost.TopicId, slug = forumPost.ForumTopic.GetSeName() });
+                        url = Url.RouteUrl("TopicSlug", new { id = forumPost.TopicId, slug = _forumService.GetTopicSeName(forumPost.ForumTopic) });
                     }
                     return Redirect($"{url}#{forumPost.Id}");
                 }
@@ -981,11 +981,11 @@ namespace Nop.Web.Controllers
             {
                 return RedirectToRoute("HomePage");
             }
-            
-            var model = _forumModelFactory.PrepareSearchModel(searchterms,adv, forumId, within, limitDays, page);
+
+            var model = _forumModelFactory.PrepareSearchModel(searchterms, adv, forumId, within, limitDays, page);
             return View(model);
         }
-        
+
         public virtual IActionResult CustomerForumSubscriptions(int? pageNumber)
         {
             if (!_forumSettings.AllowCustomersToManageSubscriptions)
@@ -1033,27 +1033,27 @@ namespace Nop.Web.Controllers
 
             if (!_workContext.CurrentCustomer.IsRegistered())
                 return Json(new
-                    {
-                        Error = _localizationService.GetResource("Forum.Votes.Login"),
-                        VoteCount = forumPost.VoteCount
-                    });
+                {
+                    Error = _localizationService.GetResource("Forum.Votes.Login"),
+                    VoteCount = forumPost.VoteCount
+                });
 
             if (_workContext.CurrentCustomer.Id == forumPost.CustomerId)
                 return Json(new
-                    {
-                        Error = _localizationService.GetResource("Forum.Votes.OwnPost"),
-                        VoteCount = forumPost.VoteCount
-                    });
+                {
+                    Error = _localizationService.GetResource("Forum.Votes.OwnPost"),
+                    VoteCount = forumPost.VoteCount
+                });
 
             var forumPostVote = _forumService.GetPostVote(postId, _workContext.CurrentCustomer);
             if (forumPostVote != null)
             {
                 if ((forumPostVote.IsUp && isUp) || (!forumPostVote.IsUp && !isUp))
                     return Json(new
-                        {
-                            Error = _localizationService.GetResource("Forum.Votes.AlreadyVoted"),
-                            VoteCount = forumPost.VoteCount
-                        });
+                    {
+                        Error = _localizationService.GetResource("Forum.Votes.AlreadyVoted"),
+                        VoteCount = forumPost.VoteCount
+                    });
 
                 _forumService.DeletePostVote(forumPostVote);
                 return Json(new { VoteCount = forumPost.VoteCount });

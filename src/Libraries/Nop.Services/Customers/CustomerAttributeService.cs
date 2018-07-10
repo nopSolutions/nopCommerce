@@ -15,31 +15,24 @@ namespace Nop.Services.Customers
     {
         #region Fields
 
+        private readonly ICacheManager _cacheManager;
+        private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<CustomerAttribute> _customerAttributeRepository;
         private readonly IRepository<CustomerAttributeValue> _customerAttributeValueRepository;
-        private readonly IEventPublisher _eventPublisher;
-        private readonly ICacheManager _cacheManager;
-        
+
         #endregion
 
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="cacheManager">Cache manager</param>
-        /// <param name="customerAttributeRepository">Customer attribute repository</param>
-        /// <param name="customerAttributeValueRepository">Customer attribute value repository</param>
-        /// <param name="eventPublisher">Event publisher</param>
         public CustomerAttributeService(ICacheManager cacheManager,
+            IEventPublisher eventPublisher,
             IRepository<CustomerAttribute> customerAttributeRepository,
-            IRepository<CustomerAttributeValue> customerAttributeValueRepository,
-            IEventPublisher eventPublisher)
+            IRepository<CustomerAttributeValue> customerAttributeValueRepository)
         {
             this._cacheManager = cacheManager;
+            this._eventPublisher = eventPublisher;
             this._customerAttributeRepository = customerAttributeRepository;
             this._customerAttributeValueRepository = customerAttributeValueRepository;
-            this._eventPublisher = eventPublisher;
         }
 
         #endregion
@@ -165,7 +158,7 @@ namespace Nop.Services.Customers
                 return customerAttributeValues;
             });
         }
-        
+
         /// <summary>
         /// Gets a customer attribute value
         /// </summary>
@@ -215,7 +208,7 @@ namespace Nop.Services.Customers
             //event notification
             _eventPublisher.EntityUpdated(customerAttributeValue);
         }
-        
+
         #endregion
     }
 }

@@ -10,9 +10,6 @@ namespace Nop.Services.Orders
     /// </summary>
     public class UpdateOrderParameters
     {
-        /// <summary>
-        /// Update order parameters
-        /// </summary>
         public UpdateOrderParameters()
         {
             Warnings = new List<string>();

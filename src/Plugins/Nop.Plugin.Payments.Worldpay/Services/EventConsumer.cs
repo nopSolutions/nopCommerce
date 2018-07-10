@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core.Domain.Customers;
-using Nop.Core.Domain.Payments;
 using Nop.Plugin.Payments.Worldpay.Models.Customer;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -19,16 +18,16 @@ namespace Nop.Plugin.Payments.Worldpay.Services
     /// <summary>
     /// Represents event consumer of the Worldpay payment plugin
     /// </summary>
-    public class EventConsumer : 
-        IConsumer<PageRenderingEvent>, 
+    public class EventConsumer :
+        IConsumer<PageRenderingEvent>,
         IConsumer<AdminTabStripCreated>
     {
         #region Fields
 
         private readonly ICustomerService _customerService;
+        private readonly IGenericAttributeService _genericAttributeService;
         private readonly ILocalizationService _localizationService;
         private readonly IPaymentService _paymentService;
-        private readonly PaymentSettings _paymentSettings;
         private readonly WorldpayPaymentManager _worldpayPaymentManager;
 
         #endregion
@@ -36,15 +35,15 @@ namespace Nop.Plugin.Payments.Worldpay.Services
         #region Ctor
 
         public EventConsumer(ICustomerService customerService,
+            IGenericAttributeService genericAttributeService,
             ILocalizationService localizationService,
             IPaymentService paymentService,
-            PaymentSettings paymentSettings,
             WorldpayPaymentManager worldpayPaymentManager)
         {
             this._customerService = customerService;
+            this._genericAttributeService = genericAttributeService;
             this._localizationService = localizationService;
             this._paymentService = paymentService;
-            this._paymentSettings = paymentSettings;
             this._worldpayPaymentManager = worldpayPaymentManager;
         }
 
@@ -63,7 +62,7 @@ namespace Nop.Plugin.Payments.Worldpay.Services
 
             //check whether the payment plugin is installed and is active
             var worldpayPaymentMethod = _paymentService.LoadPaymentMethodBySystemName(WorldpayPaymentDefaults.SystemName);
-            if (!(worldpayPaymentMethod?.PluginDescriptor?.Installed ?? false) || !worldpayPaymentMethod.IsPaymentMethodActive(_paymentSettings))
+            if (!(worldpayPaymentMethod?.PluginDescriptor?.Installed ?? false) || !_paymentService.IsPaymentMethodActive(worldpayPaymentMethod))
                 return;
 
             //add js sсript to one page checkout
@@ -81,13 +80,13 @@ namespace Nop.Plugin.Payments.Worldpay.Services
                 return;
 
             //we need customer details page
-            var tabsElementId = "customer-edit"; 
+            var tabsElementId = "customer-edit";
             if (!eventMessage.TabStripName.Equals(tabsElementId))
                 return;
 
             //check whether the payment plugin is installed and is active
             var worldpayPaymentMethod = _paymentService.LoadPaymentMethodBySystemName(WorldpayPaymentDefaults.SystemName);
-            if (!(worldpayPaymentMethod?.PluginDescriptor?.Installed ?? false) || !worldpayPaymentMethod.IsPaymentMethodActive(_paymentSettings))
+            if (!(worldpayPaymentMethod?.PluginDescriptor?.Installed ?? false) || !_paymentService.IsPaymentMethodActive(worldpayPaymentMethod))
                 return;
 
             //get the view model
@@ -100,7 +99,7 @@ namespace Nop.Plugin.Payments.Worldpay.Services
                 return;
 
             //try to get stored in Vault customer
-            var vaultCustomer = _worldpayPaymentManager.GetCustomer(customer.GetAttribute<string>(WorldpayPaymentDefaults.CustomerIdAttribute));
+            var vaultCustomer = _worldpayPaymentManager.GetCustomer(_genericAttributeService.GetAttribute<string>(customer, WorldpayPaymentDefaults.CustomerIdAttribute));
 
             //prepare model
             var model = new WorldpayCustomerModel

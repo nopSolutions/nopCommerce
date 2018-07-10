@@ -31,7 +31,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Components
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ILogger _logger;
         private readonly IOrderService _orderService;
-        private readonly IProductAttributeParser _productAttributeParser;
+        private readonly IProductService _productService;
         private readonly ISettingService _settingService;
         private readonly IStoreContext _storeContext;
         private readonly IWorkContext _workContext;
@@ -47,7 +47,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Components
             IGenericAttributeService genericAttributeService,
             ILogger logger,
             IOrderService orderService,
-            IProductAttributeParser productAttributeParser,
+            IProductService productService,
             ISettingService settingService,
             IStoreContext storeContext,
             IWorkContext workContext)
@@ -59,7 +59,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Components
             this._genericAttributeService = genericAttributeService;
             this._logger = logger;
             this._orderService = orderService;
-            this._productAttributeParser = productAttributeParser;
+            this._productService = productService;
             this._settingService = settingService;
             this._storeContext = storeContext;
             this._workContext = workContext;
@@ -81,11 +81,11 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Components
 
         private Order GetLastOrder()
         {
-            var order = _orderService.SearchOrders(storeId: _storeContext.CurrentStore.Id, 
+            var order = _orderService.SearchOrders(storeId: _storeContext.CurrentStore.Id,
                 customerId: _workContext.CurrentCustomer.Id, pageSize: 1).FirstOrDefault();
             return order;
         }
-        
+
         private string GetEcommerceScript(Order order)
         {
             var analyticsTrackingScript = _googleAnalyticsSettings.TrackingScript + "\n";
@@ -104,7 +104,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Components
             //ecommerce info
             var googleAnalyticsSettings = _settingService.LoadSetting<GoogleAnalyticsSettings>(_storeContext.CurrentStore.Id);
             //ensure that ecommerce tracking code is renderred only once (avoid duplicated data in Google Analytics)
-            if (order != null && !order.GetAttribute<bool>(ORDER_ALREADY_PROCESSED_ATTRIBUTE_NAME))
+            if (order != null && !_genericAttributeService.GetAttribute<bool>(order, ORDER_ALREADY_PROCESSED_ATTRIBUTE_NAME))
             {
                 var usCulture = new CultureInfo("en-US");
 
@@ -144,7 +144,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Components
                     'price': '{UNITPRICE}'
                     }
                     ";
-                    var sku = item.Product.FormatSku(item.AttributesXml, _productAttributeParser);
+                    var sku = _productService.FormatSku(item.Product, item.AttributesXml);
                     if (String.IsNullOrEmpty(sku))
                         sku = item.Product.Id.ToString();
                     analyticsEcommerceDetailScript = analyticsEcommerceDetailScript.Replace("{PRODUCTSKU}", FixIllegalJavaScriptChars(sku));

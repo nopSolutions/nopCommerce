@@ -1,9 +1,8 @@
 using System;
 using System.Linq;
 using Nop.Core;
-using Nop.Core.Domain.Cms;
-using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Logging;
+using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Events;
 using Nop.Plugin.Widgets.GoogleAnalytics.Api;
@@ -20,33 +19,30 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
     {
         private readonly ICategoryService _categoryService;
         private readonly ILogger _logger;
-        private readonly IProductAttributeParser _productAttributeParser;
+        private readonly IProductService _productService;
         private readonly ISettingService _settingService;
         private readonly IStoreContext _storeContext;
         private readonly IStoreService _storeService;
         private readonly IWebHelper _webHelper;
         private readonly IWidgetService _widgetService;
-        private readonly WidgetSettings _widgetSettings;
 
         public EventConsumer(ICategoryService categoryService,
             ILogger logger,
-            IProductAttributeParser productAttributeParser,
+            IProductService productService,
             ISettingService settingService,
             IStoreContext storeContext,
             IStoreService storeService,
             IWebHelper webHelper,
-            IWidgetService widgetService,
-            WidgetSettings widgetSetting)
+            IWidgetService widgetService)
         {
             this._logger = logger;
             this._categoryService = categoryService;
-            this._productAttributeParser = productAttributeParser;
+            this._productService = productService;
             this._settingService = settingService;
             this._storeContext = storeContext;
             this._storeService = storeService;
             this._webHelper = webHelper;
             this._widgetService = widgetService;
-            this._widgetSettings = widgetSetting;
         }
 
         private string FixIllegalJavaScriptChars(string text)
@@ -62,7 +58,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
         private bool IsPluginEnabled()
         {
             var plugin = _widgetService.LoadWidgetBySystemName("Widgets.GoogleAnalytics") as GoogleAnalyticsPlugin;
-            return plugin != null && plugin.IsWidgetActive(_widgetSettings) && plugin.PluginDescriptor.Installed;
+            return plugin != null && _widgetService.IsWidgetActive(plugin) && plugin.PluginDescriptor.Installed;
         }
 
         private void ProcessOrderEvent(Order order, bool add)
@@ -110,7 +106,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
                     if (!add)
                         qty = -qty;
 
-                    var sku = item.Product.FormatSku(item.AttributesXml, _productAttributeParser);
+                    var sku = _productService.FormatSku(item.Product, item.AttributesXml);
                     if (String.IsNullOrEmpty(sku))
                         sku = item.Product.Id.ToString();
                     var product = new TransactionItem(FixIllegalJavaScriptChars(orderId), 

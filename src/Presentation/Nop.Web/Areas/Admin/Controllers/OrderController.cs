@@ -1057,7 +1057,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //add a note
                 order.OrderNotes.Add(new OrderNote
                 {
-                    Note = $"Order status has been edited. New status: {order.OrderStatus.GetLocalizedEnum(_localizationService, _workContext)}",
+                    Note = $"Order status has been edited. New status: {_localizationService.GetLocalizedEnum(order.OrderStatus)}",
                     DisplayToCustomer = false,
                     CreatedOnUtc = DateTime.UtcNow
                 });
@@ -1879,7 +1879,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //gift cards
             attributesXml = AddGiftCards(form, product, attributesXml, out var recipientName, out var recipientEmail, out var senderName, out var senderEmail, out var giftCardMessage);
-            
+
             //rental product
             DateTime? rentalStartDate = null;
             DateTime? rentalEndDate = null;
@@ -2043,7 +2043,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ?? throw new ArgumentException("No address found with the specified id");
 
             //custom address attributes
-            var customAttributes = model.Form.ParseCustomAddressAttributes(_addressAttributeParser, _addressAttributeService);
+            var customAttributes = _addressAttributeParser.ParseCustomAddressAttributes(model.Form);
             var customAttributeWarnings = _addressAttributeParser.GetAttributeWarnings(customAttributes);
             foreach (var error in customAttributeWarnings)
             {
@@ -2068,7 +2068,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 return RedirectToAction("AddressEdit", new { addressId = model.Address.Id, orderId = model.OrderId });
             }
-            
+
             //prepare model
             model = _orderModelFactory.PrepareOrderAddressModel(model, order, address);
 
@@ -2203,7 +2203,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     continue;
 
                 //ensure that this product can be shipped (have at least one item to ship)
-                var maxQtyToAdd = orderItem.GetTotalNumberOfItemsCanBeAddedToShipment();
+                var maxQtyToAdd = _orderService.GetTotalNumberOfItemsCanBeAddedToShipment(orderItem);
                 if (maxQtyToAdd <= 0)
                     continue;
 
@@ -2834,7 +2834,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             var model = _orderModelFactory.PrepareBestsellerBriefListModel(searchModel);
 
             return Json(model);
-        }        
+        }
 
         [HttpPost]
         public virtual IActionResult OrderAverageReportList(DataSourceRequest command)
@@ -2866,7 +2866,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             var model = _orderModelFactory.PrepareOrderIncompleteReportListModel();
 
             return Json(model);
-        }        
+        }
 
         public virtual IActionResult LoadOrderStatistics(string period)
         {

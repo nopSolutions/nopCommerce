@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Shipping;
+using Nop.Services.Shipping.Tracking;
 
 namespace Nop.Services.Shipping
 {
@@ -42,7 +43,7 @@ namespace Nop.Services.Shipping
             bool loadNotShipped = false,
             DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
             int pageIndex = 0, int pageSize = int.MaxValue);
-        
+
         /// <summary>
         /// Get shipment by identifiers
         /// </summary>
@@ -104,5 +105,12 @@ namespace Nop.Services.Shipping
         /// <returns>Quantity</returns>
         int GetQuantityInShipments(Product product, int warehouseId,
             bool ignoreShipped, bool ignoreDelivered);
+
+        /// <summary>
+        /// Get the tracker of the shipment
+        /// </summary>
+        /// <param name="shipment">Shipment</param>
+        /// <returns>Shipment tracker</returns>
+        IShipmentTracker GetShipmentTracker(Shipment shipment);
     }
 }

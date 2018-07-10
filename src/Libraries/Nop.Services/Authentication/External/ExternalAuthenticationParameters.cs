@@ -9,9 +9,6 @@ namespace Nop.Services.Authentication.External
     [Serializable]
     public partial class ExternalAuthenticationParameters
     {
-        /// <summary>
-        /// Ctor
-        /// </summary>
         public ExternalAuthenticationParameters()
         {
             Claims = new List<ExternalAuthenticationClaim>();

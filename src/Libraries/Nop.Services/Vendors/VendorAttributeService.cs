@@ -24,13 +24,6 @@ namespace Nop.Services.Vendors
 
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="cacheManager">Cache manager</param>
-        /// <param name="eventPublisher">Event publisher</param>
-        /// <param name="vendorAttributeRepository">Vendor attribute repository</param>
-        /// <param name="vendorAttributeValueRepository">Vendor attribute value repository</param>
         public VendorAttributeService(ICacheManager cacheManager,
             IEventPublisher eventPublisher,
             IRepository<VendorAttribute> vendorAttributeRepository,
@@ -150,7 +143,7 @@ namespace Nop.Services.Vendors
                     .ToList();
             });
         }
-        
+
         /// <summary>
         /// Gets a vendor attribute value
         /// </summary>

@@ -15,7 +15,7 @@ namespace Nop.Services.Catalog
     public partial class SpecificationAttributeService : ISpecificationAttributeService
     {
         #region Fields
-        
+
         private readonly ICacheManager _cacheManager;
         private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<ProductSpecificationAttribute> _productSpecificationAttributeRepository;
@@ -26,14 +26,6 @@ namespace Nop.Services.Catalog
 
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="cacheManager">Cache manager</param>
-        /// <param name="eventPublisher">Event publisher</param>
-        /// <param name="productSpecificationAttributeRepository">Product specification attribute repository</param>
-        /// <param name="specificationAttributeRepository">Specification attribute repository</param>
-        /// <param name="specificationAttributeOptionRepository">Specification attribute option repository</param>
         public SpecificationAttributeService(ICacheManager cacheManager,
             IEventPublisher eventPublisher,
             IRepository<ProductSpecificationAttribute> productSpecificationAttributeRepository,
@@ -290,9 +282,9 @@ namespace Nop.Services.Catalog
         {
             var allowFilteringCacheStr = allowFiltering.HasValue ? allowFiltering.ToString() : "null";
             var showOnProductPageCacheStr = showOnProductPage.HasValue ? showOnProductPage.ToString() : "null";
-            var key = string.Format(NopCatalogDefaults.ProductSpecificationAttributeAllByProductIdCacheKey, 
+            var key = string.Format(NopCatalogDefaults.ProductSpecificationAttributeAllByProductIdCacheKey,
                 productId, specificationAttributeOptionId, allowFilteringCacheStr, showOnProductPageCacheStr);
-            
+
             return _cacheManager.Get(key, () =>
             {
                 var query = _productSpecificationAttributeRepository.Table;
@@ -320,7 +312,7 @@ namespace Nop.Services.Catalog
         {
             if (productSpecificationAttributeId == 0)
                 return null;
-            
+
             return _productSpecificationAttributeRepository.GetById(productSpecificationAttributeId);
         }
 

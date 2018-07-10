@@ -48,8 +48,7 @@
         <div class="form-horizontal">
             <nop-tabs id="order-edit">
                 <nop-tab asp-name="tab-info" asp-title="@T("Admin.Orders.Info")" asp-default="true">@await Html.PartialAsync("_OrderDetails.Info", Model)</nop-tab>
-                <nop-tab asp-name="tab-billing-info" asp-title="@T("Admin.Orders.BillingInfo")">@await Html.PartialAsync("_OrderDetails.Billing", Model)</nop-tab>
-                <nop-tab asp-name="tab-shipping-info" asp-title="@T("Admin.Orders.ShippingInfo")">@await Html.PartialAsync("_OrderDetails.Shipping", Model)</nop-tab>
+                <nop-tab asp-name="tab-billing-shipping-info" asp-title="@T("Admin.Orders.BillingShippingInfo")">@await Html.PartialAsync("_OrderDetails.BillingShipping", Model)</nop-tab>
                 <nop-tab asp-name="tab-products" asp-title="@T("Admin.Orders.Products")">@await Html.PartialAsync("_OrderDetails.Products", Model)</nop-tab>
                 @if (!Model.IsLoggedInAsVendor)
                 {

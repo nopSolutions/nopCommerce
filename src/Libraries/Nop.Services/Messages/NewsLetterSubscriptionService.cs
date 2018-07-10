@@ -18,35 +18,27 @@ namespace Nop.Services.Messages
     {
         #region Fields
 
-        private readonly IEventPublisher _eventPublisher;
-        private readonly IDbContext _context;
-        private readonly IRepository<NewsLetterSubscription> _subscriptionRepository;
-        private readonly IRepository<Customer> _customerRepository;
         private readonly ICustomerService _customerService;
+        private readonly IDbContext _context;
+        private readonly IEventPublisher _eventPublisher;
+        private readonly IRepository<Customer> _customerRepository;
+        private readonly IRepository<NewsLetterSubscription> _subscriptionRepository;
 
         #endregion
 
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="context">DB context</param>
-        /// <param name="subscriptionRepository">Subscription repository</param>
-        /// <param name="customerRepository">Customer repository</param>
-        /// <param name="eventPublisher">Event publisher</param>
-        /// <param name="customerService">Customer service</param>
-        public NewsLetterSubscriptionService(IDbContext context,
-            IRepository<NewsLetterSubscription> subscriptionRepository,
-            IRepository<Customer> customerRepository,
+        public NewsLetterSubscriptionService(ICustomerService customerService,
+            IDbContext context,
             IEventPublisher eventPublisher,
-            ICustomerService customerService)
+            IRepository<Customer> customerRepository,
+            IRepository<NewsLetterSubscription> subscriptionRepository)
         {
-            this._context = context;
-            this._subscriptionRepository = subscriptionRepository;
-            this._customerRepository = customerRepository;
-            this._eventPublisher = eventPublisher;
             this._customerService = customerService;
+            this._context = context;
+            this._eventPublisher = eventPublisher;
+            this._customerRepository = customerRepository;
+            this._subscriptionRepository = subscriptionRepository;
         }
 
         #endregion
@@ -134,8 +126,8 @@ namespace Nop.Services.Messages
                 //If the previous entry was false, but this one is true, publish a subscribe.
                 PublishSubscriptionEvent(newsLetterSubscription, true, publishSubscriptionEvents);
             }
-            
-            if ((originalSubscription.Active && newsLetterSubscription.Active) && 
+
+            if ((originalSubscription.Active && newsLetterSubscription.Active) &&
                 (originalSubscription.Email != newsLetterSubscription.Email))
             {
                 //If the two emails are different publish an unsubscribe.
@@ -207,7 +199,7 @@ namespace Nop.Services.Messages
         /// <returns>NewsLetter subscription</returns>
         public virtual NewsLetterSubscription GetNewsLetterSubscriptionByEmailAndStoreId(string email, int storeId)
         {
-            if (!CommonHelper.IsValidEmail(email)) 
+            if (!CommonHelper.IsValidEmail(email))
                 return null;
 
             email = email.Trim();
@@ -278,7 +270,7 @@ namespace Nop.Services.Messages
                     query = query.Where(nls => nls.Active == isActive.Value);
                 query = query.Where(nls => !_customerRepository.Table.Any(c => c.Email == nls.Email));
                 query = query.OrderBy(nls => nls.Email);
-                    
+
                 var subscriptions = new PagedList<NewsLetterSubscription>(query, pageIndex, pageSize);
                 return subscriptions;
             }
@@ -306,7 +298,7 @@ namespace Nop.Services.Messages
                     query = query.Where(x => x.NewsletterSubscribers.Active == isActive.Value);
                 query = query.OrderBy(x => x.NewsletterSubscribers.Email);
 
-                var subscriptions = new PagedList<NewsLetterSubscription>(query.Select(x=>x.NewsletterSubscribers), pageIndex, pageSize);
+                var subscriptions = new PagedList<NewsLetterSubscription>(query.Select(x => x.NewsletterSubscribers), pageIndex, pageSize);
                 return subscriptions;
             }
         }

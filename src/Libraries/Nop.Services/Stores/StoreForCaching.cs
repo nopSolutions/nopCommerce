@@ -14,12 +14,8 @@ namespace Nop.Services.Stores
     [NotMapped]
     public class StoreForCaching : Store, IEntityForCaching
     {
-        /// <summary>
-        /// Ctor
-        /// </summary>
         public StoreForCaching()
         {
-            
         }
 
         /// <summary>

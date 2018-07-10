@@ -47,24 +47,6 @@ namespace Nop.Services.Gdpr
 
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="addressService">Address service</param>
-        /// <param name="backInStockSubscriptionService">Back in stock subscription service</param>
-        /// <param name="blogService">Blog service</param>
-        /// <param name="customerService">Customer service</param>
-        /// <param name="externalAuthenticationService">External authentication service</param>
-        /// <param name="eventPublisher">Event publisher</param>
-        /// <param name="forumService">Forum service</param>
-        /// <param name="genericAttributeService">Generic attribute service</param>
-        /// <param name="newsService">News service</param>
-        /// <param name="newsLetterSubscriptionService">NewsLetter subscription service</param>
-        /// <param name="productService">Product service</param>
-        /// <param name="gdprConsentRepository">GDPR consent repository</param>
-        /// <param name="gdprLogRepository">GDPR log repository</param>
-        /// <param name="shoppingCartService">Shopping cart service</param>
-        /// <param name="storeService">Store service</param>
         public GdprService(IAddressService addressService,
             IBackInStockSubscriptionService backInStockSubscriptionService,
             IBlogService blogService,
@@ -360,7 +342,7 @@ namespace Nop.Services.Gdpr
             //external authentication record
             foreach (var ear in customer.ExternalAuthenticationRecords)
                 _externalAuthenticationService.DeleteExternalAuthenticationRecord(ear);
-            
+
             //forum subscriptions
             var forumSubscriptions = _forumService.GetAllSubscriptions(customerId: customer.Id);
             foreach (var forumSubscription in forumSubscriptions)
@@ -369,7 +351,7 @@ namespace Nop.Services.Gdpr
             //shopping cart items
             foreach (var sci in customer.ShoppingCartItems)
                 _shoppingCartService.DeleteShoppingCartItem(sci);
-             
+
             //private messages (sent)
             foreach (var pm in _forumService.GetAllPrivateMessages(storeId: 0, fromCustomerId: customer.Id, toCustomerId: 0,
                 isRead: null, isDeletedByAuthor: null, isDeletedByRecipient: null, keywords: null))
@@ -391,7 +373,7 @@ namespace Nop.Services.Gdpr
             //addresses
             foreach (var address in customer.Addresses)
             {
-                customer.RemoveAddress(address);
+                _customerService.RemoveCustomerAddress(customer, address);
                 _customerService.UpdateCustomer(customer);
                 //now delete the address record
                 _addressService.DeleteAddress(address);

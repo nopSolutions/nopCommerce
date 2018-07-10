@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Extensions.Caching.Memory;
 using Moq;
 using Nop.Core.Caching;
 using Nop.Core.Data;
@@ -78,7 +79,7 @@ namespace Nop.Services.Tests.Directory
 
             _storeMappingService = new Mock<IStoreMappingService>();
 
-            var cacheManager = new NopNullCache();
+            var cacheManager = new TestMemoryCacheManager(new Mock<IMemoryCache>().Object);
 
             _currencySettings = new CurrencySettings
             {
@@ -90,9 +91,7 @@ namespace Nop.Services.Tests.Directory
             _eventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
             
             var pluginFinder = new PluginFinder(_eventPublisher.Object);
-            _currencyService = new CurrencyService(cacheManager,
-                _currencyRepository.Object, _storeMappingService.Object, 
-                _currencySettings, pluginFinder, _eventPublisher.Object);
+            _currencyService = new CurrencyService(_currencySettings, _eventPublisher.Object, pluginFinder, _currencyRepository.Object, cacheManager, _storeMappingService.Object);
         }
         
         [Test]

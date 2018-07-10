@@ -5,9 +5,9 @@ using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Stores;
-using Nop.Services.Customers;
 using Nop.Services.Events;
 
 namespace Nop.Services.Catalog
@@ -34,19 +34,6 @@ namespace Nop.Services.Catalog
 
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="catalogSettings">Catalog settings</param>
-        /// <param name="cacheManager">Cache manager</param>
-        /// <param name="eventPublisher">Event publisher</param>
-        /// <param name="aclRepository">ACL record repository</param>
-        /// <param name="manufacturerRepository">Category repository</param>
-        /// <param name="productRepository">Product repository</param>
-        /// <param name="productManufacturerRepository">ProductCategory repository</param>
-        /// <param name="storeMappingRepository">Store mapping repository</param>
-        /// <param name="storeContext">Store context</param>
-        /// <param name="workContext">Work context</param>
         public ManufacturerService(CatalogSettings catalogSettings,
             ICacheManager cacheManager,
             IEventPublisher eventPublisher,
@@ -82,7 +69,7 @@ namespace Nop.Services.Catalog
         {
             if (manufacturer == null)
                 throw new ArgumentNullException(nameof(manufacturer));
-            
+
             manufacturer.Deleted = true;
             UpdateManufacturer(manufacturer);
 
@@ -102,7 +89,7 @@ namespace Nop.Services.Catalog
         public virtual IPagedList<Manufacturer> GetAllManufacturers(string manufacturerName = "",
             int storeId = 0,
             int pageIndex = 0,
-            int pageSize = int.MaxValue, 
+            int pageSize = int.MaxValue,
             bool showHidden = false)
         {
             var query = _manufacturerRepository.Table;
@@ -152,7 +139,7 @@ namespace Nop.Services.Catalog
         {
             if (manufacturerId == 0)
                 return null;
-            
+
             var key = string.Format(NopCatalogDefaults.ManufacturersByIdCacheKey, manufacturerId);
             return _cacheManager.Get(key, () => _manufacturerRepository.GetById(manufacturerId));
         }
@@ -332,7 +319,7 @@ namespace Nop.Services.Catalog
                 return productManufacturers;
             });
         }
-        
+
         /// <summary>
         /// Gets a product manufacturer mapping 
         /// </summary>
@@ -395,7 +382,7 @@ namespace Nop.Services.Catalog
             var query = _productManufacturerRepository.Table;
 
             return query.Where(p => productIds.Contains(p.ProductId))
-                .Select(p => new {p.ProductId, p.ManufacturerId}).ToList()
+                .Select(p => new { p.ProductId, p.ManufacturerId }).ToList()
                 .GroupBy(a => a.ProductId)
                 .ToDictionary(items => items.Key, items => items.Select(a => a.ManufacturerId).ToArray());
         }
@@ -427,6 +414,21 @@ namespace Nop.Services.Catalog
             return queryFilter.ToArray();
         }
 
+        /// <summary>
+        /// Returns a ProductManufacturer that has the specified values
+        /// </summary>
+        /// <param name="source">Source</param>
+        /// <param name="productId">Product identifier</param>
+        /// <param name="manufacturerId">Manufacturer identifier</param>
+        /// <returns>A ProductManufacturer that has the specified values; otherwise null</returns>
+        public virtual ProductManufacturer FindProductManufacturer(IList<ProductManufacturer> source, int productId, int manufacturerId)
+        {
+            foreach (var productManufacturer in source)
+                if (productManufacturer.ProductId == productId && productManufacturer.ManufacturerId == manufacturerId)
+                    return productManufacturer;
+
+            return null;
+        }
         #endregion
     }
 }

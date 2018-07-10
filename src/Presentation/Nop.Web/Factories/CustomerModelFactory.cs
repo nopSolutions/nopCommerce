@@ -37,111 +37,113 @@ namespace Nop.Web.Factories
     {
         #region Fields
 
-        private readonly IAddressModelFactory _addressModelFactory;
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly DateTimeSettings _dateTimeSettings;
-        private readonly TaxSettings _taxSettings;
-        private readonly ILocalizationService _localizationService;
-        private readonly IWorkContext _workContext;
-        private readonly IStoreContext _storeContext;
-        private readonly IStoreMappingService _storeMappingService;
-        private readonly ICustomerAttributeParser _customerAttributeParser;
-        private readonly ICustomerAttributeService _customerAttributeService;
-        private readonly IGdprService _gdprService;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly RewardPointsSettings _rewardPointsSettings;
+        private readonly AddressSettings _addressSettings;
+        private readonly CaptchaSettings _captchaSettings;
+        private readonly CatalogSettings _catalogSettings;
         private readonly CommonSettings _commonSettings;
         private readonly CustomerSettings _customerSettings;
-        private readonly AddressSettings _addressSettings;
+        private readonly DateTimeSettings _dateTimeSettings;
+        private readonly ExternalAuthenticationSettings _externalAuthenticationSettings;
         private readonly ForumSettings _forumSettings;
-        private readonly OrderSettings _orderSettings;
+        private readonly GdprSettings _gdprSettings;
+        private readonly IAddressModelFactory _addressModelFactory;
         private readonly ICountryService _countryService;
-        private readonly IStateProvinceService _stateProvinceService;
+        private readonly ICustomerAttributeParser _customerAttributeParser;
+        private readonly ICustomerAttributeService _customerAttributeService;
+        private readonly IDateTimeHelper _dateTimeHelper;
+        private readonly IDownloadService _downloadService;
+        private readonly IExternalAuthenticationService _externalAuthenticationService;
+        private readonly IGdprService _gdprService;
+        private readonly IGenericAttributeService _genericAttributeService;
+        private readonly ILocalizationService _localizationService;
+        private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
         private readonly IOrderService _orderService;
         private readonly IPictureService _pictureService;
-        private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
-        private readonly IExternalAuthenticationService _externalAuthenticationService;
-        private readonly IDownloadService _downloadService;
         private readonly IReturnRequestService _returnRequestService;
-
-        private readonly GdprSettings _gdprSettings;
+        private readonly IStateProvinceService _stateProvinceService;
+        private readonly IStoreContext _storeContext;
+        private readonly IStoreMappingService _storeMappingService;
+        private readonly IUrlRecordService _urlRecordService;
+        private readonly IWorkContext _workContext;
         private readonly MediaSettings _mediaSettings;
-        private readonly CaptchaSettings _captchaSettings;
+        private readonly OrderSettings _orderSettings;
+        private readonly RewardPointsSettings _rewardPointsSettings;
         private readonly SecuritySettings _securitySettings;
-        private readonly ExternalAuthenticationSettings _externalAuthenticationSettings;
-        private readonly CatalogSettings _catalogSettings;
+        private readonly TaxSettings _taxSettings;
         private readonly VendorSettings _vendorSettings;
 
         #endregion
 
         #region Ctor
 
-        public CustomerModelFactory(IAddressModelFactory addressModelFactory, 
-            IDateTimeHelper dateTimeHelper,
-            DateTimeSettings dateTimeSettings, 
-            TaxSettings taxSettings,
-            ILocalizationService localizationService,
-            IWorkContext workContext,
-            IStoreContext storeContext,
-            IStoreMappingService storeMappingService,
-            ICustomerAttributeParser customerAttributeParser,
-            ICustomerAttributeService customerAttributeService,
-            IGdprService gdprService,
-            IGenericAttributeService genericAttributeService,
-            RewardPointsSettings rewardPointsSettings,
+        public CustomerModelFactory(AddressSettings addressSettings,
+            CaptchaSettings captchaSettings,
+            CatalogSettings catalogSettings,
             CommonSettings commonSettings,
             CustomerSettings customerSettings,
-            AddressSettings addressSettings, 
-            ForumSettings forumSettings,
-            OrderSettings orderSettings,
-            ICountryService countryService,
-            IStateProvinceService stateProvinceService,
-            IOrderService orderService,
-            IPictureService pictureService, 
-            INewsLetterSubscriptionService newsLetterSubscriptionService,
-            IExternalAuthenticationService externalAuthenticationService,
-            IDownloadService downloadService,
-            IReturnRequestService returnRequestService,
-            GdprSettings gdprSettings,
-            MediaSettings mediaSettings,
-            CaptchaSettings captchaSettings,
-            SecuritySettings securitySettings,
+            DateTimeSettings dateTimeSettings,
             ExternalAuthenticationSettings externalAuthenticationSettings,
-            CatalogSettings catalogSettings, 
+            ForumSettings forumSettings,
+            GdprSettings gdprSettings,
+            IAddressModelFactory addressModelFactory,
+            ICountryService countryService,
+            ICustomerAttributeParser customerAttributeParser,
+            ICustomerAttributeService customerAttributeService,
+            IDateTimeHelper dateTimeHelper,
+            IDownloadService downloadService,
+            IExternalAuthenticationService externalAuthenticationService,
+            IGdprService gdprService,
+            IGenericAttributeService genericAttributeService,
+            ILocalizationService localizationService,
+            INewsLetterSubscriptionService newsLetterSubscriptionService,
+            IOrderService orderService,
+            IPictureService pictureService,
+            IReturnRequestService returnRequestService,
+            IStateProvinceService stateProvinceService,
+            IStoreContext storeContext,
+            IStoreMappingService storeMappingService,
+            IUrlRecordService urlRecordService,
+            IWorkContext workContext,
+            MediaSettings mediaSettings,
+            OrderSettings orderSettings,
+            RewardPointsSettings rewardPointsSettings,
+            SecuritySettings securitySettings,
+            TaxSettings taxSettings,
             VendorSettings vendorSettings)
         {
-            this._addressModelFactory = addressModelFactory;
-            this._dateTimeHelper = dateTimeHelper;
-            this._dateTimeSettings = dateTimeSettings;
-            this._taxSettings = taxSettings;
-            this._localizationService = localizationService;
-            this._workContext = workContext;
-            this._storeContext = storeContext;
-            this._storeMappingService = storeMappingService;
-            this._customerAttributeParser = customerAttributeParser;
-            this._customerAttributeService = customerAttributeService;
-            this._gdprService = gdprService;
-            this._genericAttributeService = genericAttributeService;
-            this._rewardPointsSettings = rewardPointsSettings;
+            this._addressSettings = addressSettings;
+            this._captchaSettings = captchaSettings;
+            this._catalogSettings = catalogSettings;
             this._commonSettings = commonSettings;
             this._customerSettings = customerSettings;
-            this._addressSettings = addressSettings;
+            this._dateTimeSettings = dateTimeSettings;
+            this._externalAuthenticationSettings = externalAuthenticationSettings;
             this._forumSettings = forumSettings;
-            this._orderSettings = orderSettings;
+            this._gdprSettings = gdprSettings;
+            this._addressModelFactory = addressModelFactory;
             this._countryService = countryService;
-            this._stateProvinceService = stateProvinceService;
+            this._customerAttributeParser = customerAttributeParser;
+            this._customerAttributeService = customerAttributeService;
+            this._dateTimeHelper = dateTimeHelper;
+            this._downloadService = downloadService;
+            this._externalAuthenticationService = externalAuthenticationService;
+            this._gdprService = gdprService;
+            this._genericAttributeService = genericAttributeService;
+            this._localizationService = localizationService;
+            this._newsLetterSubscriptionService = newsLetterSubscriptionService;
             this._orderService = orderService;
             this._pictureService = pictureService;
-            this._newsLetterSubscriptionService = newsLetterSubscriptionService;
-            this._externalAuthenticationService = externalAuthenticationService;
-            this._downloadService = downloadService;
             this._returnRequestService = returnRequestService;
-            this._gdprSettings = gdprSettings;
+            this._stateProvinceService = stateProvinceService;
+            this._storeContext = storeContext;
+            this._storeMappingService = storeMappingService;
+            this._urlRecordService = urlRecordService;
+            this._workContext = workContext;
             this._mediaSettings = mediaSettings;
-            this._captchaSettings = captchaSettings;
+            this._orderSettings = orderSettings;
+            this._rewardPointsSettings = rewardPointsSettings;
             this._securitySettings = securitySettings;
-            this._externalAuthenticationSettings = externalAuthenticationSettings;
-            this._catalogSettings = catalogSettings;
+            this._taxSettings = taxSettings;
             this._vendorSettings = vendorSettings;
         }
 
@@ -152,14 +154,15 @@ namespace Nop.Web.Factories
         protected virtual GdprConsentModel PrepareGdprConsentModel(GdprConsent consent, bool accepted)
         {
             if (consent == null)
-                throw  new ArgumentNullException(nameof(consent));
+                throw new ArgumentNullException(nameof(consent));
 
+            var requiredMessage = _localizationService.GetLocalized(consent, x => x.RequiredMessage);
             return new GdprConsentModel
             {
                 Id = consent.Id,
-                Message = consent.Message,
+                Message = _localizationService.GetLocalized(consent, x => x.Message),
                 IsRequired = consent.IsRequired,
-                RequiredMessage = !String.IsNullOrEmpty(consent.RequiredMessage) ? consent.RequiredMessage : $"'{consent.Message}' is required",
+                RequiredMessage = !string.IsNullOrEmpty(requiredMessage) ? requiredMessage : $"'{consent.Message}' is required",
                 Accepted = accepted
             };
         }
@@ -186,7 +189,7 @@ namespace Nop.Web.Factories
                 var attributeModel = new CustomerAttributeModel
                 {
                     Id = attribute.Id,
-                    Name = attribute.GetLocalized(x => x.Name),
+                    Name = _localizationService.GetLocalized(attribute, x => x.Name),
                     IsRequired = attribute.IsRequired,
                     AttributeControlType = attribute.AttributeControlType,
                 };
@@ -200,7 +203,7 @@ namespace Nop.Web.Factories
                         var valueModel = new CustomerAttributeValueModel
                         {
                             Id = attributeValue.Id,
-                            Name = attributeValue.GetLocalized(x => x.Name),
+                            Name = _localizationService.GetLocalized(attributeValue, x => x.Name),
                             IsPreSelected = attributeValue.IsPreSelected
                         };
                         attributeModel.Values.Add(valueModel);
@@ -209,8 +212,8 @@ namespace Nop.Web.Factories
 
                 //set already selected attributes
                 var selectedAttributesXml = !string.IsNullOrEmpty(overrideAttributesXml) ?
-                    overrideAttributesXml : 
-                    customer.GetAttribute<string>(NopCustomerDefaults.CustomCustomerAttributes, _genericAttributeService);
+                    overrideAttributesXml :
+                    _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.CustomCustomerAttributes);
                 switch (attribute.AttributeControlType)
                 {
                     case AttributeControlType.DropdownList:
@@ -272,7 +275,7 @@ namespace Nop.Web.Factories
         /// <param name="excludeProperties">Whether to exclude populating of model properties from the entity</param>
         /// <param name="overrideCustomCustomerAttributesXml">Overridden customer attributes in XML format; pass null to use CustomCustomerAttributes of customer</param>
         /// <returns>Customer info model</returns>
-        public virtual CustomerInfoModel PrepareCustomerInfoModel(CustomerInfoModel model, Customer customer, 
+        public virtual CustomerInfoModel PrepareCustomerInfoModel(CustomerInfoModel model, Customer customer,
             bool excludeProperties, string overrideCustomCustomerAttributesXml = "")
         {
             if (model == null)
@@ -287,33 +290,33 @@ namespace Nop.Web.Factories
 
             if (!excludeProperties)
             {
-                model.VatNumber = customer.GetAttribute<string>(NopCustomerDefaults.VatNumberAttribute);
-                model.FirstName = customer.GetAttribute<string>(NopCustomerDefaults.FirstNameAttribute);
-                model.LastName = customer.GetAttribute<string>(NopCustomerDefaults.LastNameAttribute);
-                model.Gender = customer.GetAttribute<string>(NopCustomerDefaults.GenderAttribute);
-                var dateOfBirth = customer.GetAttribute<DateTime?>(NopCustomerDefaults.DateOfBirthAttribute);
+                model.VatNumber = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.VatNumberAttribute);
+                model.FirstName = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.FirstNameAttribute);
+                model.LastName = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.LastNameAttribute);
+                model.Gender = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.GenderAttribute);
+                var dateOfBirth = _genericAttributeService.GetAttribute<DateTime?>(customer, NopCustomerDefaults.DateOfBirthAttribute);
                 if (dateOfBirth.HasValue)
                 {
                     model.DateOfBirthDay = dateOfBirth.Value.Day;
                     model.DateOfBirthMonth = dateOfBirth.Value.Month;
                     model.DateOfBirthYear = dateOfBirth.Value.Year;
                 }
-                model.Company = customer.GetAttribute<string>(NopCustomerDefaults.CompanyAttribute);
-                model.StreetAddress = customer.GetAttribute<string>(NopCustomerDefaults.StreetAddressAttribute);
-                model.StreetAddress2 = customer.GetAttribute<string>(NopCustomerDefaults.StreetAddress2Attribute);
-                model.ZipPostalCode = customer.GetAttribute<string>(NopCustomerDefaults.ZipPostalCodeAttribute);
-                model.City = customer.GetAttribute<string>(NopCustomerDefaults.CityAttribute);
-                model.County = customer.GetAttribute<string>(NopCustomerDefaults.CountyAttribute);
-                model.CountryId = customer.GetAttribute<int>(NopCustomerDefaults.CountryIdAttribute);
-                model.StateProvinceId = customer.GetAttribute<int>(NopCustomerDefaults.StateProvinceIdAttribute);
-                model.Phone = customer.GetAttribute<string>(NopCustomerDefaults.PhoneAttribute);
-                model.Fax = customer.GetAttribute<string>(NopCustomerDefaults.FaxAttribute);
+                model.Company = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.CompanyAttribute);
+                model.StreetAddress = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.StreetAddressAttribute);
+                model.StreetAddress2 = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.StreetAddress2Attribute);
+                model.ZipPostalCode = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.ZipPostalCodeAttribute);
+                model.City = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.CityAttribute);
+                model.County = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.CountyAttribute);
+                model.CountryId = _genericAttributeService.GetAttribute<int>(customer, NopCustomerDefaults.CountryIdAttribute);
+                model.StateProvinceId = _genericAttributeService.GetAttribute<int>(customer, NopCustomerDefaults.StateProvinceIdAttribute);
+                model.Phone = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.PhoneAttribute);
+                model.Fax = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.FaxAttribute);
 
                 //newsletter
                 var newsletter = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreId(customer.Email, _storeContext.CurrentStore.Id);
                 model.Newsletter = newsletter != null && newsletter.Active;
 
-                model.Signature = customer.GetAttribute<string>(NopCustomerDefaults.SignatureAttribute);
+                model.Signature = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.SignatureAttribute);
 
                 model.Email = customer.Email;
                 model.Username = customer.Username;
@@ -326,7 +329,7 @@ namespace Nop.Web.Factories
 
             if (_customerSettings.UserRegistrationType == UserRegistrationType.EmailValidation)
                 model.EmailToRevalidate = customer.EmailToRevalidate;
-            
+
             //countries and states
             if (_customerSettings.CountryEnabled)
             {
@@ -335,7 +338,7 @@ namespace Nop.Web.Factories
                 {
                     model.AvailableCountries.Add(new SelectListItem
                     {
-                        Text = c.GetLocalized(x => x.Name),
+                        Text = _localizationService.GetLocalized(c, x => x.Name),
                         Value = c.Id.ToString(),
                         Selected = c.Id == model.CountryId
                     });
@@ -351,7 +354,7 @@ namespace Nop.Web.Factories
 
                         foreach (var s in states)
                         {
-                            model.AvailableStates.Add(new SelectListItem { Text = s.GetLocalized(x => x.Name), Value = s.Id.ToString(), Selected = (s.Id == model.StateProvinceId) });
+                            model.AvailableStates.Add(new SelectListItem { Text = _localizationService.GetLocalized(s, x => x.Name), Value = s.Id.ToString(), Selected = (s.Id == model.StateProvinceId) });
                         }
                     }
                     else
@@ -369,8 +372,8 @@ namespace Nop.Web.Factories
             }
 
             model.DisplayVatNumber = _taxSettings.EuVatEnabled;
-            model.VatNumberStatusNote = ((VatNumberStatus)customer.GetAttribute<int>(NopCustomerDefaults.VatNumberStatusIdAttribute))
-                .GetLocalizedEnum(_localizationService, _workContext);
+            model.VatNumberStatusNote = _localizationService.GetLocalizedEnum((VatNumberStatus)_genericAttributeService
+                .GetAttribute<int>(customer, NopCustomerDefaults.VatNumberStatusIdAttribute));
             model.GenderEnabled = _customerSettings.GenderEnabled;
             model.DateOfBirthEnabled = _customerSettings.DateOfBirthEnabled;
             model.DateOfBirthRequired = _customerSettings.DateOfBirthRequired;
@@ -407,7 +410,7 @@ namespace Nop.Web.Factories
             foreach (var record in customer.ExternalAuthenticationRecords)
             {
                 var authMethod = _externalAuthenticationService.LoadExternalAuthenticationMethodBySystemName(record.ProviderSystemName);
-                if (authMethod == null || !authMethod.IsMethodActive(_externalAuthenticationSettings))
+                if (authMethod == null || !_externalAuthenticationService.IsExternalAuthenticationMethodActive(authMethod))
                     continue;
 
                 model.AssociatedExternalAuthRecords.Add(new CustomerInfoModel.AssociatedExternalAuthModel
@@ -416,7 +419,7 @@ namespace Nop.Web.Factories
                     Email = record.Email,
                     ExternalIdentifier = !string.IsNullOrEmpty(record.ExternalDisplayIdentifier)
                         ? record.ExternalDisplayIdentifier : record.ExternalIdentifier,
-                    AuthMethodName = authMethod.GetLocalizedFriendlyName(_localizationService, _workContext.WorkingLanguage.Id)
+                    AuthMethodName = _localizationService.GetLocalizedFriendlyName(authMethod, _workContext.WorkingLanguage.Id)
                 });
             }
 
@@ -447,7 +450,7 @@ namespace Nop.Web.Factories
         /// <param name="overrideCustomCustomerAttributesXml">Overridden customer attributes in XML format; pass null to use CustomCustomerAttributes of customer</param>
         /// <param name="setDefaultValues">Whether to populate model properties by default values</param>
         /// <returns>Customer register model</returns>
-        public virtual RegisterModel PrepareRegisterModel(RegisterModel model, bool excludeProperties, 
+        public virtual RegisterModel PrepareRegisterModel(RegisterModel model, bool excludeProperties,
             string overrideCustomCustomerAttributesXml = "", bool setDefaultValues = false)
         {
             if (model == null)
@@ -505,7 +508,7 @@ namespace Nop.Web.Factories
                 {
                     model.AvailableCountries.Add(new SelectListItem
                     {
-                        Text = c.GetLocalized(x => x.Name),
+                        Text = _localizationService.GetLocalized(c, x => x.Name),
                         Value = c.Id.ToString(),
                         Selected = c.Id == model.CountryId
                     });
@@ -521,7 +524,7 @@ namespace Nop.Web.Factories
 
                         foreach (var s in states)
                         {
-                            model.AvailableStates.Add(new SelectListItem { Text = s.GetLocalized(x => x.Name), Value = s.Id.ToString(), Selected = (s.Id == model.StateProvinceId) });
+                            model.AvailableStates.Add(new SelectListItem { Text = _localizationService.GetLocalized(s, x => x.Name), Value = s.Id.ToString(), Selected = (s.Id == model.StateProvinceId) });
                         }
                     }
                     else
@@ -530,14 +533,14 @@ namespace Nop.Web.Factories
 
                         model.AvailableStates.Add(new SelectListItem
                         {
-                            Text = _localizationService.GetResource(anyCountrySelected ? "Address.OtherNonUS" : "Address.SelectState"), 
+                            Text = _localizationService.GetResource(anyCountrySelected ? "Address.OtherNonUS" : "Address.SelectState"),
                             Value = "0"
                         });
                     }
 
                 }
             }
-            
+
             //custom customer attributes
             var customAttributes = PrepareCustomCustomerAttributes(_workContext.CurrentCustomer, overrideCustomCustomerAttributesXml); foreach (var attribute in customAttributes)
                 model.CustomerAttributes.Add(attribute);
@@ -819,8 +822,8 @@ namespace Nop.Web.Factories
                     OrderId = item.OrderId,
                     CustomOrderNumber = item.Order.CustomOrderNumber,
                     CreatedOn = _dateTimeHelper.ConvertToUserTime(item.Order.CreatedOnUtc, DateTimeKind.Utc),
-                    ProductName = item.Product.GetLocalized(x => x.Name),
-                    ProductSeName = item.Product.GetSeName(),
+                    ProductName = _localizationService.GetLocalized(item.Product, x => x.Name),
+                    ProductSeName = _urlRecordService.GetSeName(item.Product),
                     ProductAttributes = item.AttributeDescription,
                     ProductId = item.ProductId
                 };
@@ -842,7 +845,7 @@ namespace Nop.Web.Factories
         /// <param name="orderItem">Order item</param>
         /// <param name="product">Product</param>
         /// <returns>User agreement model</returns>
-        public virtual UserAgreementModel PrepareUserAgreementModel(OrderItem orderItem,Product product)
+        public virtual UserAgreementModel PrepareUserAgreementModel(OrderItem orderItem, Product product)
         {
             if (orderItem == null)
                 throw new ArgumentNullException(nameof(orderItem));
@@ -880,7 +883,7 @@ namespace Nop.Web.Factories
                 throw new ArgumentNullException(nameof(model));
 
             model.AvatarUrl = _pictureService.GetPictureUrl(
-                _workContext.CurrentCustomer.GetAttribute<int>(NopCustomerDefaults.AvatarPictureIdAttribute),
+                _genericAttributeService.GetAttribute<int>(_workContext.CurrentCustomer, NopCustomerDefaults.AvatarPictureIdAttribute),
                 _mediaSettings.AvatarPictureSize,
                 false);
 

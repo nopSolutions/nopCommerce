@@ -36,6 +36,7 @@ namespace Nop.Services.Tests.Tax
         private CustomerSettings _customerSettings;
         private ShippingSettings _shippingSettings;
         private AddressSettings _addressSettings;
+        private Mock<IGenericAttributeService> _genericAttributeService;
 
         [SetUp]
         public new void SetUp()
@@ -63,14 +64,26 @@ namespace Nop.Services.Tests.Tax
             _stateProvinceService = new Mock<IStateProvinceService>();
             _logger = new Mock<ILogger>();
             _webHelper = new Mock<IWebHelper>();
+            _genericAttributeService = new Mock<IGenericAttributeService>();
 
             _customerSettings = new CustomerSettings();
             _shippingSettings = new ShippingSettings();
             _addressSettings = new AddressSettings();
 
-            _taxService = new TaxService(_addressService.Object, _workContext, _storeContext.Object, _taxSettings,
-                pluginFinder, _geoLookupService.Object, _countryService.Object, _stateProvinceService.Object, _logger.Object, _webHelper.Object,
-                _customerSettings, _shippingSettings, _addressSettings);
+            _taxService = new TaxService(_addressSettings,
+                _customerSettings,
+                _addressService.Object,
+                _countryService.Object,
+                _genericAttributeService.Object,
+                _geoLookupService.Object,
+                _logger.Object,
+                pluginFinder,
+                _stateProvinceService.Object,
+                _storeContext.Object,
+                _webHelper.Object,
+                _workContext,
+                _shippingSettings,
+                _taxSettings);
         }
 
         [Test]

@@ -22,7 +22,7 @@ namespace Nop.Core.Domain.Catalog
         private ICollection<ProductProductTagMapping> _productProductTagMappings;
         private ICollection<ProductAttributeMapping> _productAttributeMappings;
         private ICollection<ProductAttributeCombination> _productAttributeCombinations;
-        private ICollection<TierPrice> _tierPrices;
+        protected ICollection<TierPrice> _tierPrices;
         protected ICollection<DiscountProductMapping> _discountProductMappings;
         private ICollection<ProductWarehouseInventory> _productWarehouseInventory;
 

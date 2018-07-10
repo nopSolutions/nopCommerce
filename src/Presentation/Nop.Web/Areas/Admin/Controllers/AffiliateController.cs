@@ -96,9 +96,9 @@ namespace Nop.Web.Areas.Admin.Controllers
                 var affiliate = model.ToEntity<Affiliate>();
 
                 //validate friendly URL name
-                var friendlyUrlName = affiliate.ValidateFriendlyUrlName(model.FriendlyUrlName);
+                var friendlyUrlName = _affiliateService.ValidateFriendlyUrlName(affiliate, model.FriendlyUrlName);
                 affiliate.FriendlyUrlName = friendlyUrlName;
-                
+
                 affiliate.Address = model.Address.ToEntity<Address>();
                 affiliate.Address.CreatedOnUtc = DateTime.UtcNow;
 
@@ -152,15 +152,15 @@ namespace Nop.Web.Areas.Admin.Controllers
             var affiliate = _affiliateService.GetAffiliateById(model.Id);
             if (affiliate == null || affiliate.Deleted)
                 return RedirectToAction("List");
-            
+
             if (ModelState.IsValid)
             {
                 affiliate = model.ToEntity(affiliate);
 
                 //validate friendly URL name
-                var friendlyUrlName = affiliate.ValidateFriendlyUrlName(model.FriendlyUrlName);
+                var friendlyUrlName = _affiliateService.ValidateFriendlyUrlName(affiliate, model.FriendlyUrlName);
                 affiliate.FriendlyUrlName = friendlyUrlName;
-                
+
                 affiliate.Address = model.Address.ToEntity(affiliate.Address);
 
                 //some validation
