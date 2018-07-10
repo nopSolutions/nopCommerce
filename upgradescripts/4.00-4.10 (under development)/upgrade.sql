@@ -2000,6 +2000,12 @@ set @resources='
   <LocaleResource Name="Admin.Orders.BillingShippingInfo">
     <Value>Billing &amp; shipping</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.ShowCustomersLocation">
+    <Value>Show customer''s location</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.ShowCustomersLocation.Hint">
+    <Value>A value indicating whether customer''s location is shown.</Value>
+  </LocaleResource>  
 </Language>
 '
 
