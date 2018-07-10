@@ -649,10 +649,6 @@ namespace Nop.Web.Framework.UI
                 foreach (var item in _cssParts[location].Distinct())
                 {
                     var src = debugModel ? item.DebugSrc : item.Src;
-
-                    var srouce = src;
-                    var converttter = urlHelper.Content(src);
-
                     result.AppendFormat("<link href=\"{0}\" rel=\"stylesheet\" type=\"{1}\" />", GetVersion(urlHelper.Content(src)), MimeTypes.TextCss);
                     result.AppendLine();
                 }
