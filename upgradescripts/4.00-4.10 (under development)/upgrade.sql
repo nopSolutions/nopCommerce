@@ -186,7 +186,7 @@ set @resources='
     <Value></Value>
   </LocaleResource>  
   <LocaleResource Name="Admin.Customers.Customers.ShoppingCartAndWishlist">
-    <Value>Shopping cart and wishlist</Value>
+    <Value>Current shopping cart and wishlist</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.CurrentWishlist">
     <Value></Value>
