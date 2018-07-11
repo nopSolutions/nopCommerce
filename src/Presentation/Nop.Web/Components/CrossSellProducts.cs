@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
-using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Orders;
 using Nop.Services.Catalog;
 using Nop.Services.Orders;

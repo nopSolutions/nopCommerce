@@ -7,7 +7,6 @@ using Nop.Core.Domain.Topics;
 using Nop.Services.Localization;
 using Nop.Services.Security;
 using Nop.Services.Seo;
-using Nop.Services.Stores;
 using Nop.Services.Topics;
 using Nop.Web.Infrastructure.Cache;
 using Nop.Web.Models.Topics;

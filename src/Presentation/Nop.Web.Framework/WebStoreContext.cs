@@ -32,6 +32,7 @@ namespace Nop.Web.Framework
         /// <summary>
         /// Ctor
         /// </summary>
+        /// <param name="genericAttributeService">Generic attribute service</param>
         /// <param name="httpContextAccessor">HTTP context accessor</param>
         /// <param name="storeService">Store service</param>
         public WebStoreContext(IGenericAttributeService genericAttributeService,

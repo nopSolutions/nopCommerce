@@ -31,7 +31,7 @@ namespace Nop.Web.Framework.Mvc.Filters
         #region Nested filter
 
         /// <summary>
-        /// Represents a filter that checks and and applied discount coupon code to customer
+        /// Represents a filter that checks and applied discount coupon code to customer
         /// </summary>
         private class CheckDiscountCouponFilter : IActionFilter
         {

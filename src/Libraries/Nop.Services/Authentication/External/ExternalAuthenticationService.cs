@@ -166,7 +166,7 @@ namespace Nop.Services.Authentication.External
             //allow to save other customer values by consuming this event
             _eventPublisher.Publish(new CustomerAutoRegisteredByExternalMethodEvent(_workContext.CurrentCustomer, parameters));
 
-            //raise vustomer registered event
+            //raise customer registered event
             _eventPublisher.Publish(new CustomerRegisteredEvent(_workContext.CurrentCustomer));
 
             //store owner notifications

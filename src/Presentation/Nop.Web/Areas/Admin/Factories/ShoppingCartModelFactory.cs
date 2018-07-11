@@ -6,7 +6,6 @@ using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
-using Nop.Services.Orders;
 using Nop.Services.Stores;
 using Nop.Services.Tax;
 using Nop.Web.Areas.Admin.Models.ShoppingCart;

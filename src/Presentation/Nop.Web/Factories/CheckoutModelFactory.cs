@@ -38,8 +38,6 @@ namespace Nop.Web.Factories
         private readonly IOrderTotalCalculationService _orderTotalCalculationService;
         private readonly IPaymentService _paymentService;
         private readonly IPriceFormatter _priceFormatter;
-        private readonly IProductAttributeParser _productAttributeParser;
-        private readonly IProductService _productService;
         private readonly IRewardPointService _rewardPointService;
         private readonly IShippingService _shippingService;
         private readonly IShoppingCartService _shoppingCartService;
@@ -47,7 +45,6 @@ namespace Nop.Web.Factories
         private readonly IStoreContext _storeContext;
         private readonly IStoreMappingService _storeMappingService;
         private readonly ITaxService _taxService;
-        private readonly IWebHelper _webHelper;
         private readonly IWorkContext _workContext;
         private readonly OrderSettings _orderSettings;
         private readonly PaymentSettings _paymentSettings;
@@ -69,8 +66,6 @@ namespace Nop.Web.Factories
             IOrderTotalCalculationService orderTotalCalculationService,
             IPaymentService paymentService,
             IPriceFormatter priceFormatter,
-            IProductAttributeParser productAttributeParser,
-            IProductService productService,
             IRewardPointService rewardPointService,
             IShippingService shippingService,
             IShoppingCartService shoppingCartService,
@@ -78,7 +73,6 @@ namespace Nop.Web.Factories
             IStoreContext storeContext,
             IStoreMappingService storeMappingService,
             ITaxService taxService,
-            IWebHelper webHelper,
             IWorkContext workContext,
             OrderSettings orderSettings,
             PaymentSettings paymentSettings,
@@ -96,8 +90,6 @@ namespace Nop.Web.Factories
             this._orderTotalCalculationService = orderTotalCalculationService;
             this._paymentService = paymentService;
             this._priceFormatter = priceFormatter;
-            this._productAttributeParser = productAttributeParser;
-            this._productService = productService;
             this._rewardPointService = rewardPointService;
             this._shippingService = shippingService;
             this._shoppingCartService = shoppingCartService;
@@ -105,7 +97,6 @@ namespace Nop.Web.Factories
             this._storeContext = storeContext;
             this._storeMappingService = storeMappingService;
             this._taxService = taxService;
-            this._webHelper = webHelper;
             this._workContext = workContext;
             this._orderSettings = orderSettings;
             this._paymentSettings = paymentSettings;

@@ -183,7 +183,7 @@ namespace Nop.Services.Shipping
         /// Gets shopping cart weight
         /// </summary>
         /// <param name="request">Request</param>
-        /// <param name="includeCheckoutAttributes">A value indicating whether we should calculate weights of selected checkotu attributes</param>
+        /// <param name="includeCheckoutAttributes">A value indicating whether we should calculate weights of selected checkout attributes</param>
         /// <param name="ignoreFreeShippedItems">Whether to ignore the weight of the products marked as "Free shipping"</param>
         /// <returns>Total weight</returns>
         decimal GetTotalWeight(GetShippingOptionRequest request, bool includeCheckoutAttributes = true, bool ignoreFreeShippedItems = false);

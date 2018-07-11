@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Nop.Core;
 using Nop.Core.Plugins;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
@@ -23,7 +22,6 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly ICountryService _countryService;
         private readonly ILocalizationService _localizationService;
         private readonly IPaymentService _paymentService;
-        private readonly IWebHelper _webHelper;
 
         #endregion
 
@@ -31,13 +29,11 @@ namespace Nop.Web.Areas.Admin.Factories
 
         public PaymentModelFactory(ICountryService countryService,
             ILocalizationService localizationService,
-            IPaymentService paymentService,
-            IWebHelper webHelper)
+            IPaymentService paymentService)
         {
             this._countryService = countryService;
             this._localizationService = localizationService;
             this._paymentService = paymentService;
-            this._webHelper = webHelper;
         }
 
         #endregion

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -31,7 +30,7 @@ namespace Nop.Web.Framework.UI
         private readonly IStaticCacheManager _cacheManager;
         private readonly INopFileProvider _fileProvider;
         private readonly IUrlRecordService _urlRecordService;
-        private BundleFileProcessor _processor;
+        private readonly BundleFileProcessor _processor;
 
         private readonly List<string> _titleParts;
         private readonly List<string> _metaDescriptionParts;
@@ -59,6 +58,7 @@ namespace Nop.Web.Framework.UI
         /// <param name="hostingEnvironment">Hosting environment</param>
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="fileProvider">File provider</param>
+        /// <param name="urlRecordService">Url record service</param>
         public PageHeadBuilder(SeoSettings seoSettings,
             IHostingEnvironment hostingEnvironment,
             IStaticCacheManager cacheManager,

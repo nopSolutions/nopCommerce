@@ -8,7 +8,6 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Forums;
 using Nop.Services.Forums;
 using Nop.Services.Localization;
-using Nop.Services.Seo;
 using Nop.Web.Factories;
 using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.Filters;

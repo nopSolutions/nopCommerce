@@ -214,7 +214,7 @@ namespace Nop.Plugin.Payments.Worldpay.Controllers
             if (customer == null)
                 throw new ArgumentException("No customer found with the specified id", nameof(customerId));
 
-            //try to delere selected card from the Vault
+            //try to delete selected card from the Vault
             var deleted = _worldpayPaymentManager.Deletecard(new DeleteCardRequest
             {
                 CustomerId = _genericAttributeService.GetAttribute<string>(customer, WorldpayPaymentDefaults.CustomerIdAttribute),

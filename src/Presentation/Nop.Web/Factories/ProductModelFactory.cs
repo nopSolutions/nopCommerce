@@ -1253,7 +1253,7 @@ namespace Nop.Web.Factories
                 var shareCode = _catalogSettings.PageShareCode;
                 if (_webHelper.IsCurrentConnectionSecured())
                 {
-                    //need to change the addthis link to be https linked when the page is, so that the page doesnt ask about mixed mode when viewed in https...
+                    //need to change the add this link to be https linked when the page is, so that the page doesn't ask about mixed mode when viewed in https...
                     shareCode = shareCode.Replace("http://", "https://");
                 }
                 model.PageShareCode = shareCode;
@@ -1339,7 +1339,7 @@ namespace Nop.Web.Factories
             }
 
             //manufacturers
-            //do not prepare this model for the associated products. anywway it's not used
+            //do not prepare this model for the associated products. anyway it's not used
             if (!isAssociatedProduct)
             {
                 model.ProductManufacturers = PrepareProductManufacturerModels(product);
