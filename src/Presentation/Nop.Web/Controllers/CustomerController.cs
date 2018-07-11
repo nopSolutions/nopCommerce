@@ -55,7 +55,6 @@ namespace Nop.Web.Controllers
         private readonly ForumSettings _forumSettings;
         private readonly GdprSettings _gdprSettings;
         private readonly IAddressAttributeParser _addressAttributeParser;
-        private readonly IAddressAttributeService _addressAttributeService;
         private readonly IAddressModelFactory _addressModelFactory;
         private readonly IAddressService _addressService;
         private readonly IAuthenticationService _authenticationService;
@@ -101,7 +100,6 @@ namespace Nop.Web.Controllers
             ForumSettings forumSettings,
             GdprSettings gdprSettings,
             IAddressAttributeParser addressAttributeParser,
-            IAddressAttributeService addressAttributeService,
             IAddressModelFactory addressModelFactory,
             IAddressService addressService,
             IAuthenticationService authenticationService,
@@ -143,7 +141,6 @@ namespace Nop.Web.Controllers
             this._forumSettings = forumSettings;
             this._gdprSettings = gdprSettings;
             this._addressAttributeParser = addressAttributeParser;
-            this._addressAttributeService = addressAttributeService;
             this._addressModelFactory = addressModelFactory;
             this._addressService = addressService;
             this._authenticationService = authenticationService;

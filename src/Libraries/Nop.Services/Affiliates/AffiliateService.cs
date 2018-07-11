@@ -208,7 +208,6 @@ namespace Nop.Services.Affiliates
         /// Generate affiliate URL
         /// </summary>
         /// <param name="affiliate">Affiliate</param>
-        /// <param name="webHelper">Web helper</param>
         /// <returns>Generated affiliate URL</returns>
         public virtual string GenerateUrl(Affiliate affiliate)
         {

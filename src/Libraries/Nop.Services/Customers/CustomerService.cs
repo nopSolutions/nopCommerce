@@ -7,14 +7,9 @@ using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Data.Extensions;
-using Nop.Core.Domain.Blogs;
-using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
-using Nop.Core.Domain.Forums;
-using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
-using Nop.Core.Domain.Polls;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Infrastructure;
@@ -32,74 +27,47 @@ namespace Nop.Services.Customers
     {
         #region Fields
 
-        private readonly CommonSettings _commonSettings;
         private readonly CustomerSettings _customerSettings;
         private readonly ICacheManager _cacheManager;
         private readonly IDataProvider _dataProvider;
         private readonly IDbContext _dbContext;
         private readonly IEventPublisher _eventPublisher;
         private readonly IGenericAttributeService _genericAttributeService;
-        private readonly IRepository<BlogComment> _blogCommentRepository;
         private readonly IRepository<Customer> _customerRepository;
         private readonly IRepository<CustomerCustomerRoleMapping> _customerCustomerRoleMappingRepository;
         private readonly IRepository<CustomerPassword> _customerPasswordRepository;
         private readonly IRepository<CustomerRole> _customerRoleRepository;
-        private readonly IRepository<ForumPost> _forumPostRepository;
-        private readonly IRepository<ForumTopic> _forumTopicRepository;
         private readonly IRepository<GenericAttribute> _gaRepository;
-        private readonly IRepository<NewsComment> _newsCommentRepository;
-        private readonly IRepository<Order> _orderRepository;
-        private readonly IRepository<PollVotingRecord> _pollVotingRecordRepository;
-        private readonly IRepository<ProductReview> _productReviewRepository;
-        private readonly IRepository<ProductReviewHelpfulness> _productReviewHelpfulnessRepository;
         private readonly IStaticCacheManager _staticCacheManager;
 
         #endregion
 
         #region Ctor
 
-        public CustomerService(CommonSettings commonSettings,
-            CustomerSettings customerSettings,
+        public CustomerService(CustomerSettings customerSettings,
             ICacheManager cacheManager,
             IDataProvider dataProvider,
             IDbContext dbContext,
             IEventPublisher eventPublisher,
             IGenericAttributeService genericAttributeService,
-            IRepository<BlogComment> blogCommentRepository,
             IRepository<Customer> customerRepository,
             IRepository<CustomerCustomerRoleMapping> customerCustomerRoleMappingRepository,
             IRepository<CustomerPassword> customerPasswordRepository,
             IRepository<CustomerRole> customerRoleRepository,
-            IRepository<ForumPost> forumPostRepository,
-            IRepository<ForumTopic> forumTopicRepository,
             IRepository<GenericAttribute> gaRepository,
-            IRepository<NewsComment> newsCommentRepository,
-            IRepository<Order> orderRepository,
-            IRepository<PollVotingRecord> pollVotingRecordRepository,
-            IRepository<ProductReview> productReviewRepository,
-            IRepository<ProductReviewHelpfulness> productReviewHelpfulnessRepository,
             IStaticCacheManager staticCacheManager)
         {
-            this._commonSettings = commonSettings;
             this._customerSettings = customerSettings;
             this._cacheManager = cacheManager;
             this._dataProvider = dataProvider;
             this._dbContext = dbContext;
             this._eventPublisher = eventPublisher;
             this._genericAttributeService = genericAttributeService;
-            this._blogCommentRepository = blogCommentRepository;
             this._customerRepository = customerRepository;
             this._customerCustomerRoleMappingRepository = customerCustomerRoleMappingRepository;
             this._customerPasswordRepository = customerPasswordRepository;
             this._customerRoleRepository = customerRoleRepository;
-            this._forumPostRepository = forumPostRepository;
-            this._forumTopicRepository = forumTopicRepository;
             this._gaRepository = gaRepository;
-            this._newsCommentRepository = newsCommentRepository;
-            this._orderRepository = orderRepository;
-            this._pollVotingRecordRepository = pollVotingRecordRepository;
-            this._productReviewRepository = productReviewRepository;
-            this._productReviewHelpfulnessRepository = productReviewHelpfulnessRepository;
             this._staticCacheManager = staticCacheManager;
         }
 

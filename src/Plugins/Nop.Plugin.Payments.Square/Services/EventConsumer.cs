@@ -36,7 +36,6 @@ namespace Nop.Plugin.Payments.Square.Services
             this._scheduleTaskService = scheduleTaskService;
         }
 
-
         #endregion
 
         #region Methods
@@ -55,7 +54,7 @@ namespace Nop.Plugin.Payments.Square.Services
             if (!(squarePaymentMethod?.PluginDescriptor?.Installed ?? false) || !_paymentService.IsPaymentMethodActive(squarePaymentMethod))
                 return;
 
-            //add js sсript to one page checkout
+            //add js script to one page checkout
             if (eventMessage.GetRouteNames().Any(r => r.Equals("CheckoutOnePage")))
             {
                 eventMessage.Helper.AddScriptParts(ResourceLocation.Footer, SquarePaymentDefaults.PaymentFormScriptPath, excludeFromBundle: true);

@@ -18,7 +18,6 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
         private readonly ILocalizationService _localizationService;
         private readonly IWebHelper _webHelper;
         private readonly ISettingService _settingService;
-        private readonly GoogleAnalyticsSettings _googleAnalyticsSettings;
 
         #endregion
 
@@ -26,13 +25,11 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
 
         public GoogleAnalyticsPlugin(ILocalizationService localizationService,
             IWebHelper webHelper,
-            ISettingService settingService,
-            GoogleAnalyticsSettings googleAnalyticsSettings)
+            ISettingService settingService)
         {
             this._localizationService = localizationService;
             this._webHelper = webHelper;
             this._settingService = settingService;
-            this._googleAnalyticsSettings = googleAnalyticsSettings;
         }
 
         #endregion

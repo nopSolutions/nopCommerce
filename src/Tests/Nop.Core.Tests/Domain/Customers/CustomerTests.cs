@@ -5,8 +5,6 @@ using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
-using Nop.Core.Domain.Forums;
-using Nop.Core.Domain.Orders;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Events;
@@ -171,33 +169,21 @@ namespace Nop.Core.Tests.Domain.Customers
             var _customerCustomerRoleMappingRepo = new Mock<IRepository<CustomerCustomerRoleMapping>>();
             var _customerPasswordRepo = new Mock<IRepository<CustomerPassword>>();
             var _genericAttributeRepo = new Mock<IRepository<GenericAttribute>>();
-            var _orderRepo = new Mock<IRepository<Order>>();
-            var _forumPostRepo = new Mock<IRepository<ForumPost>>();
-            var _forumTopicRepo = new Mock<IRepository<ForumTopic>>();
             var _genericAttributeService = new Mock<IGenericAttributeService>();
             var _eventPublisher = new Mock<IEventPublisher>();
             var _customerRoleRepo = new Mock<IRepository<CustomerRole>>();
 
-            var _customerService = new CustomerService(new CommonSettings(), 
-                new CustomerSettings(), 
+            var _customerService = new CustomerService(new CustomerSettings(), 
                 new NopNullCache(), 
                 null,
                 null,
                 _eventPublisher.Object,
                 _genericAttributeService.Object,
-                null,
                 _customerRepo.Object,
                 _customerCustomerRoleMappingRepo.Object,
                 _customerPasswordRepo.Object,
                 _customerRoleRepo.Object,
-                _forumPostRepo.Object,
-                _forumTopicRepo.Object,
                 _genericAttributeRepo.Object,
-                null,
-                _orderRepo.Object,
-                null,
-                null,
-                null,
                 null);
 
             var customer = new TestCustomer();

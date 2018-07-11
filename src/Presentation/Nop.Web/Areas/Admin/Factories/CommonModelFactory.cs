@@ -66,7 +66,6 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly AdminAreaSettings _adminAreaSettings;
         private readonly CatalogSettings _catalogSettings;
         private readonly CurrencySettings _currencySettings;
-        private readonly ExternalAuthenticationSettings _externalAuthenticationSettings;
         private readonly IActionContextAccessor _actionContextAccessor;
         private readonly ICurrencyService _currencyService;
         private readonly ICustomerService _customerService;
@@ -102,7 +101,6 @@ namespace Nop.Web.Areas.Admin.Factories
         public CommonModelFactory(AdminAreaSettings adminAreaSettings,
             CatalogSettings catalogSettings,
             CurrencySettings currencySettings,
-            ExternalAuthenticationSettings externalAuthenticationSettings,
             IActionContextAccessor actionContextAccessor,
             ICurrencyService currencyService,
             ICustomerService customerService,
@@ -134,7 +132,6 @@ namespace Nop.Web.Areas.Admin.Factories
             this._adminAreaSettings = adminAreaSettings;
             this._catalogSettings = catalogSettings;
             this._currencySettings = currencySettings;
-            this._externalAuthenticationSettings = externalAuthenticationSettings;
             this._actionContextAccessor = actionContextAccessor;
             this._currencyService = currencyService;
             this._customerService = customerService;

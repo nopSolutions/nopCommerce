@@ -10,7 +10,6 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Http.Extensions;
-using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
@@ -37,7 +36,6 @@ namespace Nop.Web.Controllers
         private readonly AddressSettings _addressSettings;
         private readonly CustomerSettings _customerSettings;
         private readonly IAddressAttributeParser _addressAttributeParser;
-        private readonly IAddressAttributeService _addressAttributeService;
         private readonly IAddressService _addressService;
         private readonly ICheckoutModelFactory _checkoutModelFactory;
         private readonly ICountryService _countryService;
@@ -49,8 +47,6 @@ namespace Nop.Web.Controllers
         private readonly IOrderService _orderService;
         private readonly IPaymentService _paymentService;
         private readonly IPluginFinder _pluginFinder;
-        private readonly IProductAttributeParser _productAttributeParser;
-        private readonly IProductService _productService;
         private readonly IShippingService _shippingService;
         private readonly IShoppingCartService _shoppingCartService;
         private readonly IStateProvinceService _stateProvinceService;
@@ -69,7 +65,6 @@ namespace Nop.Web.Controllers
         public CheckoutController(AddressSettings addressSettings,
             CustomerSettings customerSettings,
             IAddressAttributeParser addressAttributeParser,
-            IAddressAttributeService addressAttributeService,
             IAddressService addressService,
             ICheckoutModelFactory checkoutModelFactory,
             ICountryService countryService,
@@ -81,8 +76,6 @@ namespace Nop.Web.Controllers
             IOrderService orderService,
             IPaymentService paymentService,
             IPluginFinder pluginFinder,
-            IProductAttributeParser productAttributeParser,
-            IProductService productService,
             IShippingService shippingService,
             IShoppingCartService shoppingCartService,
             IStateProvinceService stateProvinceService,
@@ -97,7 +90,6 @@ namespace Nop.Web.Controllers
             this._addressSettings = addressSettings;
             this._customerSettings = customerSettings;
             this._addressAttributeParser = addressAttributeParser;
-            this._addressAttributeService = addressAttributeService;
             this._addressService = addressService;
             this._checkoutModelFactory = checkoutModelFactory;
             this._countryService = countryService;
@@ -109,8 +101,6 @@ namespace Nop.Web.Controllers
             this._orderService = orderService;
             this._paymentService = paymentService;
             this._pluginFinder = pluginFinder;
-            this._productAttributeParser = productAttributeParser;
-            this._productService = productService;
             this._shippingService = shippingService;
             this._shoppingCartService = shoppingCartService;
             this._stateProvinceService = stateProvinceService;

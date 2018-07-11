@@ -37,7 +37,6 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
         private readonly IStoreContext _storeContext;
         private readonly ILogger _logger;
         private readonly IWebHelper _webHelper;
-        private readonly PayPalStandardPaymentSettings _payPalStandardPaymentSettings;
         private readonly ShoppingCartSettings _shoppingCartSettings;
 
         #endregion
@@ -55,7 +54,6 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
             IStoreContext storeContext,
             ILogger logger,
             IWebHelper webHelper,
-            PayPalStandardPaymentSettings payPalStandardPaymentSettings,
             ShoppingCartSettings shoppingCartSettings)
         {
             this._workContext = workContext;
@@ -69,7 +67,6 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
             this._storeContext = storeContext;
             this._logger = logger;
             this._webHelper = webHelper;
-            this._payPalStandardPaymentSettings = payPalStandardPaymentSettings;
             this._shoppingCartSettings = shoppingCartSettings;
         }
 

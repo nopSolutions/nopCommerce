@@ -1546,7 +1546,7 @@ namespace Nop.Services.ExportImport
                         }
                     }
 
-                    //set some default default values if not specified
+                    //set some default values if not specified
                     if (isNew && metadata.Properties.All(p => p.PropertyName != "ProductType"))
                         product.ProductType = ProductType.SimpleProduct;
                     if (isNew && metadata.Properties.All(p => p.PropertyName != "VisibleIndividually"))

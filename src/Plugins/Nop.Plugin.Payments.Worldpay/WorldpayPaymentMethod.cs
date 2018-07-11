@@ -334,7 +334,7 @@ namespace Nop.Plugin.Payments.Worldpay
                 }
             }) ?? throw new NopException("An error occurred while processing. Error details in the log");
 
-            //sucessfully captured
+            //successfully captured
             return new CapturePaymentResult
             {
                 NewPaymentStatus = PaymentStatus.Paid,
@@ -368,7 +368,7 @@ namespace Nop.Plugin.Payments.Worldpay
                 OrderId = CommonHelper.EnsureMaximumLength(Guid.NewGuid().ToString(), 25)
             }) ?? throw new NopException("An error occurred while processing. Error details in the log");
 
-            //sucessfully refunded
+            //successfully refunded
             return new RefundPaymentResult
             {
                 NewPaymentStatus = refundPaymentRequest.IsPartialRefund ? PaymentStatus.PartiallyRefunded : PaymentStatus.Refunded
@@ -393,7 +393,7 @@ namespace Nop.Plugin.Payments.Worldpay
                 VoidType = VoidType.MerchantGenerated
             }) ?? throw new NopException("An error occurred while processing. Error details in the log");
 
-            //sucessfully voided
+            //successfully voided
             return new VoidPaymentResult
             {
                 NewPaymentStatus = PaymentStatus.Voided

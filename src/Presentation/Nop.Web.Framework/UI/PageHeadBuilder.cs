@@ -1,4 +1,9 @@
-﻿using BundlerMinifier;
+using BundlerMinifier;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -10,12 +15,6 @@ using Nop.Core.Caching;
 using Nop.Core.Domain.Seo;
 using Nop.Core.Infrastructure;
 using Nop.Services.Seo;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-
 
 namespace Nop.Web.Framework.UI
 {
@@ -33,7 +32,7 @@ namespace Nop.Web.Framework.UI
         private readonly IStaticCacheManager _cacheManager;
         private readonly INopFileProvider _fileProvider;
         private readonly IUrlRecordService _urlRecordService;
-        private BundleFileProcessor _processor;
+        private readonly BundleFileProcessor _processor;
 
         private readonly List<string> _titleParts;
         private readonly List<string> _metaDescriptionParts;
@@ -65,6 +64,7 @@ namespace Nop.Web.Framework.UI
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="memoryCache">Memory Cache</param>
         /// <param name="fileProvider">File provider</param>
+        /// <param name="urlRecordService">Url record service</param>
         public PageHeadBuilder(SeoSettings seoSettings,
             IHostingEnvironment hostingEnvironment,
             IStaticCacheManager cacheManager,

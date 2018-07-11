@@ -44,11 +44,9 @@ namespace Nop.Web.Factories
         private readonly IOrderTotalCalculationService _orderTotalCalculationService;
         private readonly IPaymentService _paymentService;
         private readonly IPriceFormatter _priceFormatter;
-        private readonly IProductAttributeParser _productAttributeParser;
         private readonly IProductService _productService;
         private readonly IRewardPointService _rewardPointService;
         private readonly IShipmentService _shipmentService;
-        private readonly IShippingService _shippingService;
         private readonly IStoreContext _storeContext;
         private readonly IUrlRecordService _urlRecordService;
         private readonly IVendorService _vendorService;
@@ -77,11 +75,9 @@ namespace Nop.Web.Factories
             IOrderTotalCalculationService orderTotalCalculationService,
             IPaymentService paymentService,
             IPriceFormatter priceFormatter,
-            IProductAttributeParser productAttributeParser,
             IProductService productService,
             IRewardPointService rewardPointService,
             IShipmentService shipmentService,
-            IShippingService shippingService,
             IStoreContext storeContext,
             IUrlRecordService urlRecordService,
             IVendorService vendorService,
@@ -106,11 +102,9 @@ namespace Nop.Web.Factories
             this._orderTotalCalculationService = orderTotalCalculationService;
             this._paymentService = paymentService;
             this._priceFormatter = priceFormatter;
-            this._productAttributeParser = productAttributeParser;
             this._productService = productService;
             this._rewardPointService = rewardPointService;
             this._shipmentService = shipmentService;
-            this._shippingService = shippingService;
             this._storeContext = storeContext;
             this._urlRecordService = urlRecordService;
             this._vendorService = vendorService;

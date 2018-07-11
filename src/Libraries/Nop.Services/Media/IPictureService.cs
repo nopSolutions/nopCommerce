@@ -166,7 +166,7 @@ namespace Nop.Services.Media
         /// Get product picture (for shopping cart and order details pages)
         /// </summary>
         /// <param name="product">Product</param>
-        /// <param name="attributesXml">Atributes (in XML format)</param>
+        /// <param name="attributesXml">Attributes (in XML format)</param>
         /// <returns>Picture</returns>
         Picture GetProductPicture(Product product, string attributesXml);
     }

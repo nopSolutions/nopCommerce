@@ -15,7 +15,6 @@ using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Stores;
 using Nop.Core.Infrastructure;
 using Nop.Data;
-using Nop.Services.Directory;
 using Nop.Services.Events;
 using Nop.Services.Localization;
 using Nop.Services.Messages;
@@ -36,14 +35,12 @@ namespace Nop.Services.Catalog
         private readonly CommonSettings _commonSettings;
         private readonly IAclService _aclService;
         private readonly ICacheManager _cacheManager;
-        private readonly ICurrencyService _currencyService;
         private readonly IDataProvider _dataProvider;
         private readonly IDateRangeService _dateRangeService;
         private readonly IDbContext _dbContext;
         private readonly IEventPublisher _eventPublisher;
         private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
-        private readonly IMeasureService _measureService;
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly IProductAttributeService _productAttributeService;
         private readonly IRepository<AclRecord> _aclRepository;
@@ -58,7 +55,6 @@ namespace Nop.Services.Catalog
         private readonly IRepository<TierPrice> _tierPriceRepository;
         private readonly IStoreMappingService _storeMappingService;
         private readonly IWorkContext _workContext;
-        private readonly IWorkflowMessageService _workflowMessageService;
         private readonly LocalizationSettings _localizationSettings;
 
         #endregion
@@ -69,14 +65,12 @@ namespace Nop.Services.Catalog
             CommonSettings commonSettings,
             IAclService aclService,
             ICacheManager cacheManager,
-            ICurrencyService currencyService,
             IDataProvider dataProvider,
             IDateRangeService dateRangeService,
             IDbContext dbContext,
             IEventPublisher eventPublisher,
             ILanguageService languageService,
             ILocalizationService localizationService,
-            IMeasureService measureService,
             IProductAttributeParser productAttributeParser,
             IProductAttributeService productAttributeService,
             IRepository<AclRecord> aclRepository,
@@ -91,21 +85,18 @@ namespace Nop.Services.Catalog
             IRepository<TierPrice> tierPriceRepository,
             IStoreMappingService storeMappingService,
             IWorkContext workContext,
-            IWorkflowMessageService workflowMessageService,
             LocalizationSettings localizationSettings)
         {
             this._catalogSettings = catalogSettings;
             this._commonSettings = commonSettings;
             this._aclService = aclService;
             this._cacheManager = cacheManager;
-            this._currencyService = currencyService;
             this._dataProvider = dataProvider;
             this._dateRangeService = dateRangeService;
             this._dbContext = dbContext;
             this._eventPublisher = eventPublisher;
             this._languageService = languageService;
             this._localizationService = localizationService;
-            this._measureService = measureService;
             this._productAttributeParser = productAttributeParser;
             this._productAttributeService = productAttributeService;
             this._aclRepository = aclRepository;
@@ -120,7 +111,6 @@ namespace Nop.Services.Catalog
             this._tierPriceRepository = tierPriceRepository;
             this._storeMappingService = storeMappingService;
             this._workContext = workContext;
-            this._workflowMessageService = workflowMessageService;
             this._localizationSettings = localizationSettings;
         }
 

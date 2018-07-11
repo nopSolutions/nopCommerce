@@ -716,7 +716,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 var address = _addressService.GetAddressById(warehouse.AddressId) ??
-                    new Core.Domain.Common.Address
+                    new Address
                     {
                         CreatedOnUtc = DateTime.UtcNow
                     };
