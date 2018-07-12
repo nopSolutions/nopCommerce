@@ -118,5 +118,21 @@ namespace Nop.Core.Domain.Common
         /// Gets or sets a value indicating whether jQuery migrate script logging is active
         /// </summary>
         public bool JqueryMigrateScriptLoggingActive { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether we should support previous nopCommerce versions (it can slightly improve performance)
+        /// </summary>
+        public bool SupportPreviousNopcommerceVersions { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to compress response (gzip by default). 
+        /// You may want to disable it, for example, If you have an active IIS Dynamic Compression Module configured at the server level
+        /// </summary>
+        public bool UseResponseCompression { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value of "Cache-Control" header value for static content
+        /// </summary>
+        public string StaticFilesCacheControl { get; set; }
     }
 }
