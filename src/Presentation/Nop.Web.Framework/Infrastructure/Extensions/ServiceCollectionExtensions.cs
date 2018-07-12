@@ -220,7 +220,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 options.Cookie.SecurePolicy = DataSettingsManager.DatabaseIsInstalled && EngineContext.Current.Resolve<SecuritySettings>().ForceSslForAllPages
                     ? CookieSecurePolicy.SameAsRequest : CookieSecurePolicy.None;
             });
-            
+
             //register and configure external authentication plugins now
             var typeFinder = new WebAppTypeFinder();
             var externalAuthConfigurations = typeFinder.FindClassesOfType<IExternalAuthenticationRegistrar>();
@@ -241,6 +241,25 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         {
             //add basic MVC feature
             var mvcBuilder = services.AddMvc();
+
+            var nopConfig = services.BuildServiceProvider().GetRequiredService<NopConfig>();
+            if (nopConfig.UseSessionStateTempDataProvider)
+            {
+                //use session-based temp data provider
+                mvcBuilder.AddSessionStateTempDataProvider();
+            }
+            else
+            {
+                //use cookie-based temp data provider
+                mvcBuilder.AddCookieTempDataProvider(options =>
+                {
+                    options.Cookie.Name = NopAuthenticationDefaults.CookiePrefix + "TempData";
+
+                    //whether to allow the use of cookies from SSL protected page on the other store pages which are not
+                    options.Cookie.SecurePolicy = DataSettingsManager.DatabaseIsInstalled && EngineContext.Current.Resolve<SecuritySettings>().ForceSslForAllPages
+                        ? CookieSecurePolicy.SameAsRequest : CookieSecurePolicy.None;
+                });
+            }
 
             //MVC now serializes JSON with camel case names by default, use this code to avoid it
             mvcBuilder.AddJsonOptions(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver());
@@ -300,11 +319,11 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 (miniProfilerOptions.Storage as MemoryCacheStorage).CacheDuration = TimeSpan.FromMinutes(60);
 
                 //whether MiniProfiler should be displayed
-                miniProfilerOptions.ShouldProfile = request => 
+                miniProfilerOptions.ShouldProfile = request =>
                     EngineContext.Current.Resolve<StoreInformationSettings>().DisplayMiniProfilerInPublicStore;
-                
+
                 //determine who can access the MiniProfiler results
-                miniProfilerOptions.ResultsAuthorize = request => 
+                miniProfilerOptions.ResultsAuthorize = request =>
                     !EngineContext.Current.Resolve<StoreInformationSettings>().DisplayMiniProfilerForAdminOnly ||
                     EngineContext.Current.Resolve<IPermissionService>().Authorize(StandardPermissionProvider.AccessAdminPanel);
             }).AddEntityFramework();

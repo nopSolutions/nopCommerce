@@ -104,5 +104,11 @@ namespace Nop.Core.Configuration
         /// Gets or sets a value indicating whether to use backwards compatibility with SQL Server 2008 and SQL Server 2008R2
         /// </summary>
         public bool UseRowNumberForPaging { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to store TempData in the session state.
+        /// By default the cookie-based TempData provider is used to store TempData in cookies.
+        /// </summary>
+        public bool UseSessionStateTempDataProvider { get; set; }
     }
 }
