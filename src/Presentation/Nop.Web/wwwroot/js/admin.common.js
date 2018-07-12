@@ -122,6 +122,10 @@ function saveUserPreferences(url, name, value) {
 
 function warningValidation(validationUrl, warningElementName, passedParameters) {
     addAntiForgeryToken(passedParameters);
+    var element = $('[data-valmsg-for="' + warningElementName + '"]');
+    element.removeClass("warning");
+    element.html('');
+
     $.ajax({
         cache: false,
         url: validationUrl,
@@ -129,14 +133,9 @@ function warningValidation(validationUrl, warningElementName, passedParameters) 
         dataType: "json",
         data: passedParameters,
         success: function (data) {
-            var element = $('[data-valmsg-for="' + warningElementName + '"]');
             if (data.Result) {
                 element.addClass("warning");
                 element.html(data.Result);
-            }
-            else {
-                element.removeClass("warning");
-                element.html('');
             }
         }
     });
