@@ -31,8 +31,8 @@
                 <i class="fa fa-floppy-o"></i>
                 @T("Admin.Common.SaveContinue")
             </button>
-            <nop-action-confirmation asp-button-id="shipment-save" asp-additional-confirm='@T("Admin.Orders.Shipments.Products.Warehouse.QuantityNotEnough")' />
-            <nop-action-confirmation asp-button-id="shipment-save-continue" asp-additional-confirm='@T("Admin.Orders.Shipments.Products.Warehouse.QuantityNotEnough")'/>
+            <nop-action-confirmation asp-button-id="shipment-save" asp-additional-confirm="Admin.Orders.Shipments.Products.Warehouse.QuantityNotEnough" />
+            <nop-action-confirmation asp-button-id="shipment-save-continue" asp-additional-confirm="Admin.Orders.Shipments.Products.Warehouse.QuantityNotEnough"/>
             @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.OrderShipmentAddButtons })
         </div>
     </div>
