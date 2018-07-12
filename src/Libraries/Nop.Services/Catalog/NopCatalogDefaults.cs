@@ -195,16 +195,6 @@ namespace Nop.Services.Catalog
         public static string ProductManufacturerIdsPatternCacheKey => "Nop.totals.product.manufacturerids";
 
         /// <summary>
-        /// Gets a name of cookie to store products to compare
-        /// </summary>
-        public static string CompareProductsCookieName => ".Nop.CompareProducts";
-
-        /// <summary>
-        /// Gets a name of cookie to store recently viewed products
-        /// </summary>
-        public static string RecentlyViewedProductsCookieName => ".Nop.RecentlyViewedProducts";
-
-        /// <summary>
         /// Gets a template of product name on copying
         /// </summary>
         /// <remarks>

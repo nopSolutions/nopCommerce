@@ -14,6 +14,7 @@ using Nop.Core.Configuration;
 using Nop.Core.Data;
 using Nop.Core.Domain;
 using Nop.Core.Domain.Security;
+using Nop.Core.Http;
 using Nop.Core.Infrastructure;
 using Nop.Core.Plugins;
 using Nop.Data;
@@ -114,7 +115,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             //override cookie name
             services.AddAntiforgery(options =>
             {
-                options.Cookie.Name = ".Nop.Antiforgery";
+                options.Cookie.Name = $"{NopCookieDefaults.Prefix}{NopCookieDefaults.AntiforgeryCookie}";
 
                 //whether to allow the use of anti-forgery cookies from SSL protected page on the other store pages which are not
                 options.Cookie.SecurePolicy = DataSettingsManager.DatabaseIsInstalled && EngineContext.Current.Resolve<SecuritySettings>().ForceSslForAllPages
@@ -130,7 +131,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         {
             services.AddSession(options =>
             {
-                options.Cookie.Name = ".Nop.Session";
+                options.Cookie.Name = $"{NopCookieDefaults.Prefix}{NopCookieDefaults.SessionCookie}";
                 options.Cookie.HttpOnly = true;
 
                 //whether to allow the use of session values from SSL protected page on the other store pages which are not
@@ -198,7 +199,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             //add main cookie authentication
             authenticationBuilder.AddCookie(NopAuthenticationDefaults.AuthenticationScheme, options =>
             {
-                options.Cookie.Name = NopAuthenticationDefaults.CookiePrefix + NopAuthenticationDefaults.AuthenticationScheme;
+                options.Cookie.Name = $"{NopCookieDefaults.Prefix}{NopCookieDefaults.AuthenticationCookie}";
                 options.Cookie.HttpOnly = true;
                 options.LoginPath = NopAuthenticationDefaults.LoginPath;
                 options.AccessDeniedPath = NopAuthenticationDefaults.AccessDeniedPath;
@@ -211,7 +212,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             //add external authentication
             authenticationBuilder.AddCookie(NopAuthenticationDefaults.ExternalAuthenticationScheme, options =>
             {
-                options.Cookie.Name = NopAuthenticationDefaults.CookiePrefix + NopAuthenticationDefaults.ExternalAuthenticationScheme;
+                options.Cookie.Name = $"{NopCookieDefaults.Prefix}{NopCookieDefaults.ExternalAuthenticationCookie}";
                 options.Cookie.HttpOnly = true;
                 options.LoginPath = NopAuthenticationDefaults.LoginPath;
                 options.AccessDeniedPath = NopAuthenticationDefaults.AccessDeniedPath;
@@ -253,7 +254,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 //use cookie-based temp data provider
                 mvcBuilder.AddCookieTempDataProvider(options =>
                 {
-                    options.Cookie.Name = NopAuthenticationDefaults.CookiePrefix + "TempData";
+                    options.Cookie.Name = $"{NopCookieDefaults.Prefix}{NopCookieDefaults.TempDataCookie}";
 
                     //whether to allow the use of cookies from SSL protected page on the other store pages which are not
                     options.Cookie.SecurePolicy = DataSettingsManager.DatabaseIsInstalled && EngineContext.Current.Resolve<SecuritySettings>().ForceSslForAllPages

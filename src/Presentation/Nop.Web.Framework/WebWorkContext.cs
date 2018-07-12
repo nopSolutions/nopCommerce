@@ -8,6 +8,7 @@ using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
+using Nop.Core.Http;
 using Nop.Services.Authentication;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -26,20 +27,14 @@ namespace Nop.Web.Framework
     /// </summary>
     public partial class WebWorkContext : IWorkContext
     {
-        #region Const
-
-        private const string CUSTOMER_COOKIE_NAME = ".Nop.Customer";
-
-        #endregion
-
         #region Fields
 
-        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly CurrencySettings _currencySettings;
         private readonly IAuthenticationService _authenticationService;
         private readonly ICurrencyService _currencyService;
         private readonly ICustomerService _customerService;
         private readonly IGenericAttributeService _genericAttributeService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ILanguageService _languageService;
         private readonly IStoreContext _storeContext;
         private readonly IStoreMappingService _storeMappingService;
@@ -59,28 +54,12 @@ namespace Nop.Web.Framework
 
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="httpContextAccessor">HTTP context accessor</param>
-        /// <param name="currencySettings">Currency settings</param>
-        /// <param name="authenticationService">Authentication service</param>
-        /// <param name="currencyService">Currency service</param>
-        /// <param name="customerService">Customer service</param>
-        /// <param name="genericAttributeService">Generic attribute service</param>
-        /// <param name="languageService">Language service</param>
-        /// <param name="storeContext">Store context</param>
-        /// <param name="storeMappingService">Store mapping service</param>
-        /// <param name="userAgentHelper">User gent helper</param>
-        /// <param name="vendorService">Vendor service</param>
-        /// <param name="localizationSettings">Localization settings</param>
-        /// <param name="taxSettings">Tax settings</param>
-        public WebWorkContext(IHttpContextAccessor httpContextAccessor,
-            CurrencySettings currencySettings,
+        public WebWorkContext(CurrencySettings currencySettings,
             IAuthenticationService authenticationService,
             ICurrencyService currencyService,
             ICustomerService customerService,
             IGenericAttributeService genericAttributeService,
+            IHttpContextAccessor httpContextAccessor,
             ILanguageService languageService,
             IStoreContext storeContext,
             IStoreMappingService storeMappingService,
@@ -89,12 +68,12 @@ namespace Nop.Web.Framework
             LocalizationSettings localizationSettings,
             TaxSettings taxSettings)
         {
-            this._httpContextAccessor = httpContextAccessor;
             this._currencySettings = currencySettings;
             this._authenticationService = authenticationService;
             this._currencyService = currencyService;
             this._customerService = customerService;
             this._genericAttributeService = genericAttributeService;
+            this._httpContextAccessor = httpContextAccessor;
             this._languageService = languageService;
             this._storeContext = storeContext;
             this._storeMappingService = storeMappingService;
@@ -114,7 +93,8 @@ namespace Nop.Web.Framework
         /// <returns>String value of cookie</returns>
         protected virtual string GetCustomerCookie()
         {
-            return _httpContextAccessor.HttpContext?.Request?.Cookies[CUSTOMER_COOKIE_NAME];
+            var cookieName = $"{NopCookieDefaults.Prefix}{NopCookieDefaults.CustomerCookie}";
+            return _httpContextAccessor.HttpContext?.Request?.Cookies[cookieName];
         }
 
         /// <summary>
@@ -127,7 +107,8 @@ namespace Nop.Web.Framework
                 return;
 
             //delete current cookie value
-            _httpContextAccessor.HttpContext.Response.Cookies.Delete(CUSTOMER_COOKIE_NAME);
+            var cookieName = $"{NopCookieDefaults.Prefix}{NopCookieDefaults.CustomerCookie}";
+            _httpContextAccessor.HttpContext.Response.Cookies.Delete(cookieName);
 
             //get date of cookie expiration
             var cookieExpires = 24 * 365; //TODO make configurable
@@ -138,12 +119,12 @@ namespace Nop.Web.Framework
                 cookieExpiresDate = DateTime.Now.AddMonths(-1);
 
             //set new cookie value
-            var options = new Microsoft.AspNetCore.Http.CookieOptions
+            var options = new CookieOptions
             {
                 HttpOnly = true,
                 Expires = cookieExpiresDate
             };
-            _httpContextAccessor.HttpContext.Response.Cookies.Append(CUSTOMER_COOKIE_NAME, customerGuid.ToString(), options);
+            _httpContextAccessor.HttpContext.Response.Cookies.Append(cookieName, customerGuid.ToString(), options);
         }
 
         /// <summary>
