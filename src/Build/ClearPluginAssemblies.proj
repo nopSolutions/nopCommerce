@@ -18,7 +18,7 @@
     <!-- When .NET Core builds a project, it copies all referenced libraries to the output folder.
     For plugins it creates too many unnecessary files that just take up space.
     At the moment you can't disable this behavior. That's why we have to manually delete all unnecessary libraries from plugin output directories. -->  
-    <Exec Command='cd $(MSBuildProjectDirectory); dotnet "ClearPluginAssemblies.dll" "OutputPath=$(OutputPath)|PluginPath=$(PluginPath)|SaveLocalesFolders=$(SaveLocalesFolders)"' />
+    <Exec Command='dotnet "$(MSBuildProjectDirectory)\ClearPluginAssemblies.dll" "OutputPath=$(OutputPath)|PluginPath=$(PluginPath)|SaveLocalesFolders=$(SaveLocalesFolders)"' />
   </Target> 
       
 </Project>
