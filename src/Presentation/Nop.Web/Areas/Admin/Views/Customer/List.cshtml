@@ -299,7 +299,7 @@
                     field: "AvatarUrl",
                     title: "@T("Admin.Customers.Customers.Fields.Avatar")",
                     width: @(_mediaSettings.AvatarPictureSize),
-                    template: "<img src='#=AvatarUrl#' class='avatar-img' alt='@T("Admin.Customers.Customers.Fields.Avatar")'/>"
+                    template: "# if(AvatarUrl) {# <img src='#=AvatarUrl#' class='avatar-img' alt='@T("Admin.Customers.Customers.Fields.Avatar")'/> #} #"
                 },</text>
                 }
                 @if (Model.UsernamesEnabled)
