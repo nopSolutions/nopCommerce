@@ -259,6 +259,10 @@ namespace Nop.Services.Installation
             }
             name = sb.ToString();
             name = name.Replace(" ", "-");
+            while (name.Contains("--"))
+                name = name.Replace("--", "-");
+            while (name.Contains("__"))
+                name = name.Replace("__", "_");
 
             //max length
             name = CommonHelper.EnsureMaximumLength(name, NopSeoDefaults.SearchEngineNameLength);
