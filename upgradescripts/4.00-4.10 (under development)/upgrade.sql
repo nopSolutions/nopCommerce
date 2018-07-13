@@ -186,7 +186,7 @@ set @resources='
     <Value></Value>
   </LocaleResource>  
   <LocaleResource Name="Admin.Customers.Customers.ShoppingCartAndWishlist">
-    <Value>Shopping cart and wishlist</Value>
+    <Value>Current shopping cart and wishlist</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.CurrentWishlist">
     <Value></Value>
@@ -2003,6 +2003,12 @@ set @resources='
   <LocaleResource Name="Admin.Orders.BillingShippingInfo">
     <Value>Billing &amp; shipping</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.ShowCustomersLocation">
+    <Value>Show customer''s location</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.ShowCustomersLocation.Hint">
+    <Value>A value indicating whether customer''s location is shown.</Value>
+  </LocaleResource>  
 </Language>
 '
 
@@ -2307,14 +2313,14 @@ BEGIN
 END
 GO
 
-IF EXISTS (SELECT 1 FROM sys.objects WHERE NAME = 'VendorAttributeValue_VendorAttribute' AND PARENT_OBJECT_ID = object_id('VendorAttributeValue') AND objectproperty(object_id, N'IsForeignKey') = 1)
+IF EXISTS (SELECT 1 FROM sys.objects WHERE NAME = 'FK_VendorAttributeValue_VendorAttribute_VendorAttributeId' AND PARENT_OBJECT_ID = object_id('VendorAttributeValue') AND objectproperty(object_id, N'IsForeignKey') = 1)
 BEGIN
-	ALTER TABLE dbo.VendorAttributeValue DROP CONSTRAINT [VendorAttributeValue_VendorAttribute]
+	ALTER TABLE dbo.VendorAttributeValue DROP CONSTRAINT [FK_VendorAttributeValue_VendorAttribute_VendorAttributeId]
 END
 GO
 
 ALTER TABLE [dbo].[VendorAttributeValue] WITH CHECK 
-	ADD CONSTRAINT [VendorAttributeValue_VendorAttribute] FOREIGN KEY([VendorAttributeId]) REFERENCES [dbo].[VendorAttribute] ([Id]) ON DELETE CASCADE
+	ADD CONSTRAINT [FK_VendorAttributeValue_VendorAttribute_VendorAttributeId] FOREIGN KEY([VendorAttributeId]) REFERENCES [dbo].[VendorAttribute] ([Id]) ON DELETE CASCADE
 GO
 
 --new activity type
@@ -3892,11 +3898,34 @@ BEGIN
 END
 GO
 
-
 --new setting
 IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'commonsettings.jquerymigratescriptloggingactive')
 BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId])
 	VALUES (N'commonsettings.jquerymigratescriptloggingactive', N'False', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'commonsettings.supportpreviousnopcommerceversions')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'commonsettings.supportpreviousnopcommerceversions', N'true', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'commonsettings.useresponsecompression')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'commonsettings.useresponsecompression', N'false', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'commonsettings.staticfilescachecontrol')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'commonsettings.staticfilescachecontrol', N'public,max-age=604800', 0)
 END
 GO

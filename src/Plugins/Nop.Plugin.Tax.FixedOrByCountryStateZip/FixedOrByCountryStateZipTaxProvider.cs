@@ -25,7 +25,6 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip
         private readonly ILocalizationService _localizationService;
         private readonly ISettingService _settingService;
         private readonly IStaticCacheManager _cacheManager;
-        private readonly IStoreContext _storeContext;
         private readonly ITaxCategoryService _taxCategoryService;
         private readonly IWebHelper _webHelper;
 
@@ -39,7 +38,6 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip
             ILocalizationService localizationService,
             ISettingService settingService,
             IStaticCacheManager cacheManager,
-            IStoreContext storeContext,
             ITaxCategoryService taxCategoryService,
             IWebHelper webHelper)
         {
@@ -49,7 +47,6 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip
             this._localizationService = localizationService;
             this._settingService = settingService;
             this._cacheManager = cacheManager;
-            this._storeContext = storeContext;
             this._taxCategoryService = taxCategoryService;
             this._webHelper = webHelper;
         }

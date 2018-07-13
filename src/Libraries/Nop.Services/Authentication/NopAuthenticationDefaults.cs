@@ -18,11 +18,6 @@ namespace Nop.Services.Authentication
         public static string ExternalAuthenticationScheme => "ExternalAuthentication";
 
         /// <summary>
-        /// The prefix used to provide a default cookie name
-        /// </summary>
-        public static string CookiePrefix => ".Nop.";
-
-        /// <summary>
         /// The issuer that should be used for any claims that are created
         /// </summary>
         public static string ClaimsIssuer => "nopCommerce";

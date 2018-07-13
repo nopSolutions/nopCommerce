@@ -2,7 +2,6 @@
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
-using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Localization;
 using Nop.Data;
 using Nop.Services.Configuration;
@@ -14,14 +13,13 @@ namespace Nop.Services.Tests
 {
     public class TestLocalizationService : LocalizationService
     {
-        public TestLocalizationService(CommonSettings commonSettings, IDataProvider dataProvider, IDbContext dbContext, IEventPublisher eventPublisher, ILanguageService languageService, ILocalizedEntityService localizedEntityService, ILogger logger, IRepository<LocaleStringResource> lsrRepository, ISettingService settingService, IStaticCacheManager cacheManager, IWorkContext workContext, LocalizationSettings localizationSettings) : base(commonSettings, dataProvider, dbContext, eventPublisher, languageService, localizedEntityService, logger, lsrRepository, settingService, cacheManager, workContext, localizationSettings)
+        public TestLocalizationService(IDataProvider dataProvider, IDbContext dbContext, IEventPublisher eventPublisher, ILanguageService languageService, ILocalizedEntityService localizedEntityService, ILogger logger, IRepository<LocaleStringResource> lsrRepository, ISettingService settingService, IStaticCacheManager cacheManager, IWorkContext workContext, LocalizationSettings localizationSettings) : base(dataProvider, dbContext, eventPublisher, languageService, localizedEntityService, logger, lsrRepository, settingService, cacheManager, workContext, localizationSettings)
         {
         }
 
         public static TestLocalizationService Init()
         {
-            return new TestLocalizationService(new CommonSettings(),
-                new  Mock<IDataProvider>().Object,
+            return new TestLocalizationService(new  Mock<IDataProvider>().Object,
                 new  Mock<IDbContext>().Object,
                 new  Mock<IEventPublisher>().Object,
                 new  Mock<ILanguageService>().Object,

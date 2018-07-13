@@ -71,7 +71,6 @@ namespace Nop.Web.Factories
         private readonly IPriceCalculationService _priceCalculationService;
         private readonly IPriceFormatter _priceFormatter;
         private readonly IProductAttributeFormatter _productAttributeFormatter;
-        private readonly IProductAttributeParser _productAttributeParser;
         private readonly IProductService _productService;
         private readonly IShippingService _shippingService;
         private readonly IShoppingCartService _shoppingCartService;
@@ -121,7 +120,6 @@ namespace Nop.Web.Factories
             IPriceCalculationService priceCalculationService,
             IPriceFormatter priceFormatter,
             IProductAttributeFormatter productAttributeFormatter,
-            IProductAttributeParser productAttributeParser,
             IProductService productService,
             IShippingService shippingService,
             IShoppingCartService shoppingCartService,
@@ -167,7 +165,6 @@ namespace Nop.Web.Factories
             this._priceCalculationService = priceCalculationService;
             this._priceFormatter = priceFormatter;
             this._productAttributeFormatter = productAttributeFormatter;
-            this._productAttributeParser = productAttributeParser;
             this._productService = productService;
             this._shippingService = shippingService;
             this._shoppingCartService = shoppingCartService;

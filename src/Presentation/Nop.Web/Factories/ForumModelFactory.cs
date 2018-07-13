@@ -189,7 +189,7 @@ namespace Nop.Web.Factories
         /// <summary>
         /// Prepare the forum group model
         /// </summary>
-        /// <param name="forum">Forum group</param>
+        /// <param name="forumGroup">Forum group</param>
         /// <returns>Forum group model</returns>
         public virtual ForumGroupModel PrepareForumGroupModel(ForumGroup forumGroup)
         {

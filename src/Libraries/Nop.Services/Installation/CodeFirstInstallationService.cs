@@ -259,6 +259,10 @@ namespace Nop.Services.Installation
             }
             name = sb.ToString();
             name = name.Replace(" ", "-");
+            while (name.Contains("--"))
+                name = name.Replace("--", "-");
+            while (name.Contains("__"))
+                name = name.Replace("__", "_");
 
             //max length
             name = CommonHelper.EnsureMaximumLength(name, NopSeoDefaults.SearchEngineNameLength);
@@ -5961,7 +5965,10 @@ namespace Nop.Services.Installation
                 XuaCompatibleValue = "IE=edge",
                 BbcodeEditorOpenLinksInNewWindow = false,
                 PopupForTermsOfServiceLinks = true,
-                JqueryMigrateScriptLoggingActive = false
+                JqueryMigrateScriptLoggingActive = false,
+                SupportPreviousNopcommerceVersions = true,
+                UseResponseCompression = false,
+                StaticFilesCacheControl = "public,max-age=604800"
             });
 
             settingService.SaveSetting(new SeoSettings

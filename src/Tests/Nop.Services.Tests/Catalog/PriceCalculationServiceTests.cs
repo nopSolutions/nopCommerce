@@ -17,11 +17,9 @@ using Nop.Core.Domain.Stores;
 using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Services.Catalog;
-using Nop.Services.Directory;
 using Nop.Services.Discounts;
 using Nop.Services.Events;
 using Nop.Services.Localization;
-using Nop.Services.Messages;
 using Nop.Services.Security;
 using Nop.Services.Shipping.Date;
 using Nop.Services.Stores;
@@ -455,9 +453,27 @@ namespace Nop.Services.Tests.Catalog
             }
         }
 
-        class TestProductService:ProductService
+        class TestProductService : ProductService
         {
-            public TestProductService(CatalogSettings catalogSettings, CommonSettings commonSettings, IAclService aclService, ICacheManager cacheManager, ICurrencyService currencyService, IDataProvider dataProvider, IDateRangeService dateRangeService, IDbContext dbContext, IEventPublisher eventPublisher, ILanguageService languageService, ILocalizationService localizationService, IMeasureService measureService, IProductAttributeParser productAttributeParser, IProductAttributeService productAttributeService, IRepository<AclRecord> aclRepository, IRepository<CrossSellProduct> crossSellProductRepository, IRepository<Product> productRepository, IRepository<ProductPicture> productPictureRepository, IRepository<ProductReview> productReviewRepository, IRepository<ProductWarehouseInventory> productWarehouseInventoryRepository, IRepository<RelatedProduct> relatedProductRepository, IRepository<StockQuantityHistory> stockQuantityHistoryRepository, IRepository<StoreMapping> storeMappingRepository, IRepository<TierPrice> tierPriceRepository, IStoreMappingService storeMappingService, IWorkContext workContext, IWorkflowMessageService workflowMessageService, LocalizationSettings localizationSettings) : base(catalogSettings, commonSettings, aclService, cacheManager, currencyService, dataProvider, dateRangeService, dbContext, eventPublisher, languageService, localizationService, measureService, productAttributeParser, productAttributeService, aclRepository, crossSellProductRepository, productRepository, productPictureRepository, productReviewRepository, productWarehouseInventoryRepository, relatedProductRepository, stockQuantityHistoryRepository, storeMappingRepository, tierPriceRepository, storeMappingService, workContext, workflowMessageService, localizationSettings)
+            private TestProductService(CatalogSettings catalogSettings, CommonSettings commonSettings,
+                IAclService aclService, ICacheManager cacheManager, IDataProvider dataProvider,
+                IDateRangeService dateRangeService, IDbContext dbContext, IEventPublisher eventPublisher,
+                ILanguageService languageService, ILocalizationService localizationService,
+                IProductAttributeParser productAttributeParser, IProductAttributeService productAttributeService,
+                IRepository<AclRecord> aclRepository, IRepository<CrossSellProduct> crossSellProductRepository,
+                IRepository<Product> productRepository, IRepository<ProductPicture> productPictureRepository,
+                IRepository<ProductReview> productReviewRepository,
+                IRepository<ProductWarehouseInventory> productWarehouseInventoryRepository,
+                IRepository<RelatedProduct> relatedProductRepository,
+                IRepository<StockQuantityHistory> stockQuantityHistoryRepository,
+                IRepository<StoreMapping> storeMappingRepository, IRepository<TierPrice> tierPriceRepository,
+                IStoreMappingService storeMappingService, IWorkContext workContext,
+                LocalizationSettings localizationSettings) : base(catalogSettings, commonSettings, aclService,
+                cacheManager, dataProvider, dateRangeService, dbContext, eventPublisher, languageService,
+                localizationService, productAttributeParser, productAttributeService, aclRepository,
+                crossSellProductRepository, productRepository, productPictureRepository, productReviewRepository,
+                productWarehouseInventoryRepository, relatedProductRepository, stockQuantityHistoryRepository,
+                storeMappingRepository, tierPriceRepository, storeMappingService, workContext, localizationSettings)
             {
             }
 
@@ -465,7 +481,7 @@ namespace Nop.Services.Tests.Catalog
             {
                 return new TestProductService(new CatalogSettings(), new CommonSettings(), null,
                     null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,
-                    null, null, null, null, null, null, null, null, new LocalizationSettings());
+                    null, null, null, null, null, new LocalizationSettings());
             }
         }
     }

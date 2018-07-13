@@ -617,7 +617,7 @@ namespace Nop.Services.Catalog
         /// <param name="customerId">Customer identifier (who wrote a review); 0 to load all records</param>
         /// <param name="approved">A value indicating whether to content is approved; null to load all records</param> 
         /// <param name="fromUtc">Item creation from; null to load all records</param>
-        /// <param name="toUtc">Item item creation to; null to load all records</param>
+        /// <param name="toUtc">Item creation to; null to load all records</param>
         /// <param name="message">Search title or review text; null to load all records</param>
         /// <param name="storeId">The store identifier; pass 0 to load all records</param>
         /// <param name="productId">The product identifier; pass 0 to load all records</param>

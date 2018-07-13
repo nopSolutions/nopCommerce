@@ -6118,10 +6118,10 @@
     <Value>A value indicating whether to show customers join date.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.ShowCustomersLocation">
-    <Value>Show customers' location</Value>
+    <Value>Show customer's location</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.ShowCustomersLocation.Hint">
-    <Value>A value indicating whether customers' location is shown.</Value>
+    <Value>A value indicating whether customer's location is shown.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.StateProvinceEnabled">
     <Value>'State/province' enabled</Value>
@@ -10270,7 +10270,7 @@
     <Value>You're not allowed to delete administrators. Only administrators can do it.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.ShoppingCartAndWishlist">
-    <Value>Current shopping cart</Value>
+    <Value>Current shopping cart and wishlist</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.Deleted">
     <Value>The customer has been deleted successfully.</Value>

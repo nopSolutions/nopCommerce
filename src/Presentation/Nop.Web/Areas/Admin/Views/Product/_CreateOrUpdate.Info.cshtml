@@ -462,7 +462,7 @@
         if ('@Model.Sku') {
             warningValidation('@Url.Action("SkuReservedWarning")', '@Html.NameFor(model => model.Sku)', { productId: @Model.Id, sku: '@Model.Sku' });
         }
-        $('#@Html.IdFor(model => model.Sku)').on('input propertychange paste', function () {
+        $('#@Html.IdFor(model => model.Sku)').on('input propertychange paste focusout', function () {
             warningValidation('@Url.Action("SkuReservedWarning")', '@Html.NameFor(model => model.Sku)', { productId: @Model.Id, sku: $(this).val() });
         });
     });

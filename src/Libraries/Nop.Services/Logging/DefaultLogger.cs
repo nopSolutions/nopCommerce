@@ -19,7 +19,6 @@ namespace Nop.Services.Logging
         #region Fields
 
         private readonly CommonSettings _commonSettings;
-        private readonly IDataProvider _dataProvider;
         private readonly IDbContext _dbContext;
         private readonly IRepository<Log> _logRepository;
         private readonly IWebHelper _webHelper;
@@ -29,13 +28,11 @@ namespace Nop.Services.Logging
         #region Ctor
 
         public DefaultLogger(CommonSettings commonSettings,
-            IDataProvider dataProvider,
             IDbContext dbContext,
             IRepository<Log> logRepository,
             IWebHelper webHelper)
         {
             this._commonSettings = commonSettings;
-            this._dataProvider = dataProvider;
             this._dbContext = dbContext;
             this._logRepository = logRepository;
             this._webHelper = webHelper;

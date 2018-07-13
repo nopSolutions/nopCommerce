@@ -91,7 +91,7 @@ namespace Nop.Services.Discounts
         #region Discounts (caching)
 
         /// <summary>
-        /// Gets all discounts (cachable models)
+        /// Gets all discounts (cacheable models)
         /// </summary>
         /// <param name="discountType">Discount type; pass null to load all records</param>
         /// <param name="couponCode">Coupon code to find (exact match); pass null or empty to load all records</param>
@@ -143,7 +143,7 @@ namespace Nop.Services.Discounts
             decimal amount, out decimal discountAmount);
 
         /// <summary>
-        /// Check whether a list of discounts already contains a certain discount intance
+        /// Check whether a list of discounts already contains a certain discount instance
         /// </summary>
         /// <param name="discounts">A list of discounts</param>
         /// <param name="discount">Discount to check</param>

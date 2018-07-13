@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Nop.Core;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Plugins;
@@ -33,7 +32,6 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly ILocalizationService _localizationService;
         private readonly ILocalizedModelFactory _localizedModelFactory;
         private readonly IShippingService _shippingService;
-        private readonly IWebHelper _webHelper;
 
         #endregion
 
@@ -45,8 +43,7 @@ namespace Nop.Web.Areas.Admin.Factories
             IDateRangeService dateRangeService,
             ILocalizationService localizationService,
             ILocalizedModelFactory localizedModelFactory,
-            IShippingService shippingService,
-            IWebHelper webHelper)
+            IShippingService shippingService)
         {
             this._addressService = addressService;
             this._baseAdminModelFactory = baseAdminModelFactory;
@@ -55,7 +52,6 @@ namespace Nop.Web.Areas.Admin.Factories
             this._localizationService = localizationService;
             this._localizedModelFactory = localizedModelFactory;
             this._shippingService = shippingService;
-            this._webHelper = webHelper;
         }
 
         #endregion

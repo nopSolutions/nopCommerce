@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -56,9 +55,8 @@ namespace ClearPluginAssemblies
 
         private static void Main(string[] args)
         {
-            var paths = string.Empty;
             var outputPath = string.Empty;
-            var basePluginPath = string.Empty;
+            var pluginPaths = string.Empty;
             var saveLocalesFolders = true;
 
             var settings = args.FirstOrDefault(a => a.Contains("|")) ?? string.Empty;
@@ -74,14 +72,11 @@ namespace ClearPluginAssemblies
 
                 switch (name)
                 {
-                    case "Paths":
-                        paths = value;
-                        break;
                     case "OutputPath":
                         outputPath = value;
                         break;
                     case "PluginPath":
-                        basePluginPath = value;
+                        pluginPaths = value;
                         break;
                     case "SaveLocalesFolders":
                         bool.TryParse(value, out saveLocalesFolders);
@@ -95,17 +90,12 @@ namespace ClearPluginAssemblies
             var di = new DirectoryInfo(outputPath);
             var fileNames = di.GetFiles("*.dll", SearchOption.AllDirectories).Select(fi => fi.Name.Replace(fi.Extension, "")).ToList();
            
-            if (string.IsNullOrEmpty(paths) || !fileNames.Any())
+            if (string.IsNullOrEmpty(pluginPaths) || !fileNames.Any())
             {
                 return;
             }
-            
-            if (!string.IsNullOrEmpty(basePluginPath))
-            {
-                paths = basePluginPath;
-            }
 
-            Clear(paths, fileNames, saveLocalesFolders);
+            Clear(pluginPaths, fileNames, saveLocalesFolders);
         }
     }
 }

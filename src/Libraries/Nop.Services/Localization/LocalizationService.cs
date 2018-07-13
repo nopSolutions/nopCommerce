@@ -11,7 +11,6 @@ using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Configuration;
 using Nop.Core.Data;
-using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Security;
 using Nop.Core.Plugins;
@@ -30,7 +29,6 @@ namespace Nop.Services.Localization
     {
         #region Fields
 
-        private readonly CommonSettings _commonSettings;
         private readonly IDataProvider _dataProvider;
         private readonly IDbContext _dbContext;
         private readonly IEventPublisher _eventPublisher;
@@ -47,8 +45,7 @@ namespace Nop.Services.Localization
 
         #region Ctor
 
-        public LocalizationService(CommonSettings commonSettings,
-            IDataProvider dataProvider,
+        public LocalizationService(IDataProvider dataProvider,
             IDbContext dbContext,
             IEventPublisher eventPublisher,
             ILanguageService languageService,
@@ -60,7 +57,6 @@ namespace Nop.Services.Localization
             IWorkContext workContext,
             LocalizationSettings localizationSettings)
         {
-            this._commonSettings = commonSettings;
             this._dataProvider = dataProvider;
             this._dbContext = dbContext;
             this._eventPublisher = eventPublisher;
@@ -421,7 +417,7 @@ namespace Nop.Services.Localization
             if (string.IsNullOrEmpty(xml))
                 return;
 
-            //SQL 2005 insists that your XML schema incoding be in UTF-16.
+            //SQL 2005 insists that your XML schema encoding be in UTF-16.
             //Otherwise, you'll get "XML parsing: line 1, character XXX, unable to switch the encoding"
             //so let's remove XML declaration
             var inDoc = new XmlDocument();

@@ -27,7 +27,6 @@ using Nop.Services.Messages;
 using Nop.Services.Orders;
 using Nop.Services.Security;
 using Nop.Services.Seo;
-using Nop.Services.Shipping.Date;
 using Nop.Services.Tax;
 using Nop.Web.Factories;
 using Nop.Web.Framework.Controllers;
@@ -52,13 +51,11 @@ namespace Nop.Web.Controllers
         private readonly ICurrencyService _currencyService;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly ICustomerService _customerService;
-        private readonly IDateRangeService _dateRangeService;
         private readonly IDiscountService _discountService;
         private readonly IDownloadService _downloadService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IGiftCardService _giftCardService;
         private readonly ILocalizationService _localizationService;
-        private readonly IMeasureService _measureService;
         private readonly INopFileProvider _fileProvider;
         private readonly IPermissionService _permissionService;
         private readonly IPictureService _pictureService;
@@ -91,13 +88,11 @@ namespace Nop.Web.Controllers
             ICurrencyService currencyService,
             ICustomerActivityService customerActivityService,
             ICustomerService customerService,
-            IDateRangeService dateRangeService,
             IDiscountService discountService,
             IDownloadService downloadService,
             IGenericAttributeService genericAttributeService,
             IGiftCardService giftCardService,
             ILocalizationService localizationService,
-            IMeasureService measureService,
             INopFileProvider fileProvider,
             IPermissionService permissionService,
             IPictureService pictureService,
@@ -126,13 +121,11 @@ namespace Nop.Web.Controllers
             this._currencyService = currencyService;
             this._customerActivityService = customerActivityService;
             this._customerService = customerService;
-            this._dateRangeService = dateRangeService;
             this._discountService = discountService;
             this._downloadService = downloadService;
             this._genericAttributeService = genericAttributeService;
             this._giftCardService = giftCardService;
             this._localizationService = localizationService;
-            this._measureService = measureService;
             this._fileProvider = fileProvider;
             this._permissionService = permissionService;
             this._pictureService = pictureService;
@@ -314,7 +307,7 @@ namespace Nop.Web.Controllers
             var ctrlEndDate = form[endControlId];
             try
             {
-                //currenly we support only this format (as in the \Views\Product\_RentalInfo.cshtml file)
+                //currently we support only this format (as in the \Views\Product\_RentalInfo.cshtml file)
                 const string datePickerFormat = "MM/dd/yyyy";
                 startDate = DateTime.ParseExact(ctrlStartDate, datePickerFormat, CultureInfo.InvariantCulture);
                 endDate = DateTime.ParseExact(ctrlEndDate, datePickerFormat, CultureInfo.InvariantCulture);

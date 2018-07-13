@@ -134,7 +134,7 @@ namespace Nop.Services.Vendors
         }
 
         /// <summary>
-        /// Gets a vendor note note
+        /// Gets a vendor note
         /// </summary>
         /// <param name="vendorNoteId">The vendor note identifier</param>
         /// <returns>Vendor note</returns>

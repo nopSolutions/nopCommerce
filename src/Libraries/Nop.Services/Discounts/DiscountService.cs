@@ -365,7 +365,7 @@ namespace Nop.Services.Discounts
         #region Discounts (caching)
 
         /// <summary>
-        /// Gets all discounts (cachable models)
+        /// Gets all discounts (cacheable models)
         /// </summary>
         /// <param name="discountType">Discount type; pass null to load all records</param>
         /// <param name="couponCode">Coupon code to find (exact match); pass null or empty to load all records</param>
@@ -376,7 +376,7 @@ namespace Nop.Services.Discounts
             string couponCode = null, string discountName = null, bool showHidden = false)
         {
             //we cache discounts between requests. Otherwise, they will be loaded for almost each HTTP request
-            //we have to use the following workaround with cachable model (DiscountForCaching) because
+            //we have to use the following workaround with cacheable model (DiscountForCaching) because
             //Entity Framework doesn't support 2-level caching
 
             //we load all discounts, and filter them using "discountType" parameter later (in memory)
@@ -390,7 +390,7 @@ namespace Nop.Services.Discounts
                     .Select(discount => this.MapDiscount(discount)).ToList();
             });
 
-            //we know that this method is usually inkoved multiple times
+            //we know that this method is usually invoked multiple times
             //that's why we filter discounts by type on the application layer
             if (discountType.HasValue)
                 discounts = discounts.Where(discount => discount.DiscountType == discountType.Value).ToList();
@@ -577,7 +577,7 @@ namespace Nop.Services.Discounts
         }
 
         /// <summary>
-        /// Check whether a list of discounts already contains a certain discount intance
+        /// Check whether a list of discounts already contains a certain discount instance
         /// </summary>
         /// <param name="discounts">A list of discounts</param>
         /// <param name="discount">Discount to check</param>

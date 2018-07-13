@@ -459,7 +459,7 @@ namespace Nop.Services.Configuration
         }
 
         /// <summary>
-        /// Save settings object (per store). If the setting is not overridden per storem then it'll be delete
+        /// Save settings object (per store). If the setting is not overridden per store then it'll be delete
         /// </summary>
         /// <typeparam name="T">Entity type</typeparam>
         /// <typeparam name="TPropType">Property type</typeparam>

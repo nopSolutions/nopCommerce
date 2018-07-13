@@ -88,7 +88,7 @@ namespace Nop.Services.Media
         /// <param name="originalSize">The original picture size</param>
         /// <param name="targetSize">The target picture size (longest side)</param>
         /// <param name="resizeType">Resize type</param>
-        /// <param name="ensureSizePositive">A value indicatingh whether we should ensure that size values are positive</param>
+        /// <param name="ensureSizePositive">A value indicating whether we should ensure that size values are positive</param>
         /// <returns></returns>
         protected virtual Size CalculateDimensions(Size originalSize, int targetSize,
             ResizeType resizeType = ResizeType.LongestSide, bool ensureSizePositive = true)
@@ -875,7 +875,7 @@ namespace Nop.Services.Media
         /// Get product picture (for shopping cart and order details pages)
         /// </summary>
         /// <param name="product">Product</param>
-        /// <param name="attributesXml">Atributes (in XML format)</param>
+        /// <param name="attributesXml">Attributes (in XML format)</param>
         /// <returns>Picture</returns>
         public virtual Picture GetProductPicture(Product product, string attributesXml)
         {

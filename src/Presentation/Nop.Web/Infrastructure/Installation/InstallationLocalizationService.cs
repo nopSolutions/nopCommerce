@@ -4,7 +4,9 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Net.Http.Headers;
 using Nop.Core;
+using Nop.Core.Http;
 using Nop.Core.Infrastructure;
 
 namespace Nop.Web.Infrastructure.Installation
@@ -18,15 +20,8 @@ namespace Nop.Web.Infrastructure.Installation
 
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly INopFileProvider _fileProvider;
-
-        #endregion
-
-        #region Constants
-
-        /// <summary>
-        /// Cookie name to language for the installation page
-        /// </summary>
-        private const string LANGUAGE_COOKIE_NAME = ".Nop.Installation.Lang";
+        
+        private IList<InstallationLanguage> _availableLanguages;
 
         #endregion
 
@@ -40,16 +35,7 @@ namespace Nop.Web.Infrastructure.Installation
         }
 
         #endregion
-
-        #region Utilities
-
-        /// <summary>
-        /// Available languages
-        /// </summary>
-        private IList<InstallationLanguage> _availableLanguages;
-
-        #endregion
-
+        
         #region Methods
 
         /// <summary>
@@ -62,12 +48,12 @@ namespace Nop.Web.Infrastructure.Installation
             var language = GetCurrentLanguage();
             if (language == null)
                 return resourceName;
+
             var resourceValue = language.Resources
                 .Where(r => r.Name.Equals(resourceName, StringComparison.InvariantCultureIgnoreCase))
-                .Select(r => r.Value)
-                .FirstOrDefault();
+                .Select(r => r.Value).FirstOrDefault();
+
             if (string.IsNullOrEmpty(resourceValue))
-                //return name
                 return resourceName;
 
             return resourceValue;
@@ -82,7 +68,8 @@ namespace Nop.Web.Infrastructure.Installation
             var httpContext = _httpContextAccessor.HttpContext;
 
             //try to get cookie
-            httpContext.Request.Cookies.TryGetValue(LANGUAGE_COOKIE_NAME, out string cookieLanguageCode);
+            var cookieName = $"{NopCookieDefaults.Prefix}{NopCookieDefaults.InstallationLanguageCookie}";
+            httpContext.Request.Cookies.TryGetValue(cookieName, out string cookieLanguageCode);
 
             //ensure it's available (it could be delete since the previous installation)
             var availableLanguages = GetAvailableLanguages();
@@ -93,7 +80,7 @@ namespace Nop.Web.Infrastructure.Installation
                 return language;
 
             //let's find by current browser culture
-            if (httpContext.Request.Headers.TryGetValue("Accept-Language", out var userLanguages))
+            if (httpContext.Request.Headers.TryGetValue(HeaderNames.AcceptLanguage, out var userLanguages))
             {
                 var userLanguage = userLanguages.FirstOrDefault()?.Split(',')[0] ?? string.Empty;
                 if (!string.IsNullOrEmpty(userLanguage))
@@ -113,6 +100,7 @@ namespace Nop.Web.Infrastructure.Installation
 
             //return any available language
             language = availableLanguages.FirstOrDefault();
+
             return language;
         }
 
@@ -128,8 +116,9 @@ namespace Nop.Web.Infrastructure.Installation
                 Expires = DateTime.Now.AddHours(24),
                 HttpOnly = true
             };
-            httpContext.Response.Cookies.Delete(LANGUAGE_COOKIE_NAME);
-            httpContext.Response.Cookies.Append(LANGUAGE_COOKIE_NAME, languageCode, cookieOptions);
+            var cookieName = $"{NopCookieDefaults.Prefix}{NopCookieDefaults.InstallationLanguageCookie}";
+            httpContext.Response.Cookies.Delete(cookieName);
+            httpContext.Response.Cookies.Append(cookieName, languageCode, cookieOptions);
         }
 
         /// <summary>

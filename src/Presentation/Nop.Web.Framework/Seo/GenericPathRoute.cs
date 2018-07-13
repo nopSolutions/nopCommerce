@@ -31,7 +31,7 @@ namespace Nop.Web.Framework.Seo
         /// </summary>
         /// <param name="target">Target</param>
         /// <param name="routeName">Route name</param>
-        /// <param name="routeTemplate">Route remplate</param>
+        /// <param name="routeTemplate">Route template</param>
         /// <param name="defaults">Defaults</param>
         /// <param name="constraints">Constraints</param>
         /// <param name="dataTokens">Data tokens</param>

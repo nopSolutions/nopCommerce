@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Orders;
 
@@ -27,7 +24,7 @@ namespace Nop.Services.Orders
                 checkoutAttribute.AttributeControlType == AttributeControlType.FileUpload)
                 return false;
 
-            //other attribute controle types support values
+            //other attribute control types support values
             return true;
         }
 
@@ -48,7 +45,7 @@ namespace Nop.Services.Orders
                 checkoutAttribute.AttributeControlType == AttributeControlType.FileUpload)
                 return false;
 
-            //other attribute controle types support it
+            //other attribute control types support it
             return true;
         }
     }

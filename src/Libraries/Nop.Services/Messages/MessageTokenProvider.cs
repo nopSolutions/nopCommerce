@@ -75,7 +75,6 @@ namespace Nop.Services.Messages
         private readonly IWorkContext _workContext;
         private readonly MessageTemplatesSettings _templatesSettings;
         private readonly PaymentSettings _paymentSettings;
-        private readonly ShippingSettings _shippingSettings;
         private readonly StoreInformationSettings _storeInformationSettings;
         private readonly TaxSettings _taxSettings;
 
@@ -109,7 +108,6 @@ namespace Nop.Services.Messages
             IWorkContext workContext,
             MessageTemplatesSettings templatesSettings,
             PaymentSettings paymentSettings,
-            ShippingSettings shippingSettings,
             StoreInformationSettings storeInformationSettings,
             TaxSettings taxSettings)
         {
@@ -137,7 +135,6 @@ namespace Nop.Services.Messages
             this._workContext = workContext;
             this._templatesSettings = templatesSettings;
             this._paymentSettings = paymentSettings;
-            this._shippingSettings = shippingSettings;
             this._storeInformationSettings = storeInformationSettings;
             this._taxSettings = taxSettings;
         }

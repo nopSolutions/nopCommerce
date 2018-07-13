@@ -1,5 +1,4 @@
-﻿
-namespace Nop.Services.Common
+﻿namespace Nop.Services.Common
 {
     /// <summary>
     /// Represents default values related to common services

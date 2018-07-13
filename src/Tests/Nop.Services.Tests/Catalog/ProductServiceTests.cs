@@ -14,13 +14,12 @@ namespace Nop.Services.Tests.Catalog
     {
         private IProductService _productService;
 
-
         [SetUp]
         public new void SetUp()
         {
             _productService = new ProductService(new CatalogSettings(), new CommonSettings(), null, new NopNullCache(),
                 null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,
-                null, null, null, null, null, new LocalizationSettings());
+                null, null, new LocalizationSettings());
         }
 
         [Test]

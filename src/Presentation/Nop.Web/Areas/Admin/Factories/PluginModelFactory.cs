@@ -37,7 +37,6 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IPluginFinder _pluginFinder;
         private readonly IShippingService _shippingService;
         private readonly IStoreMappingSupportedModelFactory _storeMappingSupportedModelFactory;
-        private readonly IWebHelper _webHelper;
         private readonly IWidgetService _widgetService;
         private readonly TaxSettings _taxSettings;
 
@@ -55,7 +54,6 @@ namespace Nop.Web.Areas.Admin.Factories
             IPluginFinder pluginFinder,
             IShippingService shippingService,
             IStoreMappingSupportedModelFactory storeMappingSupportedModelFactory,
-            IWebHelper webHelper,
             IWidgetService widgetService,
             TaxSettings taxSettings)
         {
@@ -69,7 +67,6 @@ namespace Nop.Web.Areas.Admin.Factories
             this._pluginFinder = pluginFinder;
             this._shippingService = shippingService;
             this._storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
-            this._webHelper = webHelper;
             this._widgetService = widgetService;
             this._taxSettings = taxSettings;
         }

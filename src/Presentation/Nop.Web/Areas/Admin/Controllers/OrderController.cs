@@ -27,7 +27,6 @@ using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Orders;
 using Nop.Web.Areas.Admin.Models.Reports;
-using Nop.Web.Extensions;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
@@ -40,7 +39,6 @@ namespace Nop.Web.Areas.Admin.Controllers
         #region Fields
 
         private readonly IAddressAttributeParser _addressAttributeParser;
-        private readonly IAddressAttributeService _addressAttributeService;
         private readonly IAddressService _addressService;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly IDateTimeHelper _dateTimeHelper;
@@ -72,7 +70,6 @@ namespace Nop.Web.Areas.Admin.Controllers
         #region Ctor
 
         public OrderController(IAddressAttributeParser addressAttributeParser,
-            IAddressAttributeService addressAttributeService,
             IAddressService addressService,
             ICustomerActivityService customerActivityService,
             IDateTimeHelper dateTimeHelper,
@@ -100,7 +97,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             OrderSettings orderSettings)
         {
             this._addressAttributeParser = addressAttributeParser;
-            this._addressAttributeService = addressAttributeService;
             this._addressService = addressService;
             this._customerActivityService = customerActivityService;
             this._dateTimeHelper = dateTimeHelper;
