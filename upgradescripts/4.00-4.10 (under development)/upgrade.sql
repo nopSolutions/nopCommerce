@@ -1139,6 +1139,9 @@ set @resources='
   <LocaleResource Name="Admin.Customers.Customers.Gdpr.Export">
     <Value>Export data</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.GdprConsents">
+    <Value>GDPR Consents</Value>
+  </LocaleResource>
   <LocaleResource Name="Enums.Nop.Core.Domain.Catalog.AttributeControlType.ImageSquares">
     <Value>Image squares</Value>
   </LocaleResource>

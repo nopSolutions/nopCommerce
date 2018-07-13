@@ -474,6 +474,9 @@
   <LocaleResource Name="Account.Gdpr.Export.Hint">
     <Value>You can use the button below to download all the data we store and use for a better experience in our store.</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.GdprConsents">
+    <Value>GDPR Consents</Value>
+  </LocaleResource>
   <LocaleResource Name="Account.ImpersonatedAs">
     <Value>Impersonated as {0}</Value>
   </LocaleResource>
