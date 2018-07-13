@@ -10267,7 +10267,7 @@
     <Value>You're not allowed to delete administrators. Only administrators can do it.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.ShoppingCartAndWishlist">
-    <Value>Current shopping cart</Value>
+    <Value>Current shopping cart and wishlist</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.Deleted">
     <Value>The customer has been deleted successfully.</Value>

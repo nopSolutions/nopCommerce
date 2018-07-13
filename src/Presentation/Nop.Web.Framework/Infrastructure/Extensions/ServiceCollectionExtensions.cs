@@ -3,6 +3,7 @@ using System.Linq;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.Configuration;
@@ -242,6 +243,9 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         {
             //add basic MVC feature
             var mvcBuilder = services.AddMvc();
+
+            //sets the default value of settings on MvcOptions to match the behavior of asp.net core mvc 2.1
+            mvcBuilder.SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             var nopConfig = services.BuildServiceProvider().GetRequiredService<NopConfig>();
             if (nopConfig.UseSessionStateTempDataProvider)

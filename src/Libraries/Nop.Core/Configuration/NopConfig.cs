@@ -12,16 +12,6 @@ namespace Nop.Core.Configuration
         public bool DisplayFullErrorStack { get; set; }
 
         /// <summary>
-        /// Gets or sets a value of "Cache-Control" header value for static content
-        /// </summary>
-        public string StaticFilesCacheControl { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether we compress response
-        /// </summary>
-        public bool UseResponseCompression { get; set; }
-
-        /// <summary>
         /// Gets or sets connection string for Azure BLOB storage
         /// </summary>
         public string AzureBlobStorageConnectionString { get; set; }
@@ -55,11 +45,6 @@ namespace Nop.Core.Configuration
         /// Gets or sets path to database with crawler only user agent strings
         /// </summary>
         public string CrawlerOnlyUserAgentStringsPath { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether we should support previous nopCommerce versions (it can slightly improve performance)
-        /// </summary>
-        public bool SupportPreviousNopcommerceVersions { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether a store owner can install sample data during installation

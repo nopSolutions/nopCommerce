@@ -5965,7 +5965,10 @@ namespace Nop.Services.Installation
                 XuaCompatibleValue = "IE=edge",
                 BbcodeEditorOpenLinksInNewWindow = false,
                 PopupForTermsOfServiceLinks = true,
-                JqueryMigrateScriptLoggingActive = false
+                JqueryMigrateScriptLoggingActive = false,
+                SupportPreviousNopcommerceVersions = true,
+                UseResponseCompression = false,
+                StaticFilesCacheControl = "public,max-age=604800"
             });
 
             settingService.SaveSetting(new SeoSettings
