@@ -2006,6 +2006,12 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.ShowCustomersLocation.Hint">
     <Value>A value indicating whether customer''s location is shown.</Value>
   </LocaleResource>  
+  <LocaleResource Name="Enums.Nop.Core.Domain.Orders.ShoppingCartType.ShoppingCart">
+    <Value>Shopping Cart</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Orders.ShoppingCartType.Wishlist">
+    <Value>Wishlist</Value>
+  </LocaleResource>  
 </Language>
 '
 
