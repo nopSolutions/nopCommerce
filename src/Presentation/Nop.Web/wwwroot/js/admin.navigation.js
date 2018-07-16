@@ -3,7 +3,7 @@
 Admin.Navigation = (function () {
     var buildMap = function () {
         var map = {};
-        
+
         var linkElements = $("a.menu-item-link");
 
         linkElements.each(function () {
@@ -50,9 +50,20 @@ Admin.Navigation = (function () {
     };
 
     var map;
-   
+
     var init = function () {
         map = buildMap();
+        $.ajax({
+            cache: false,
+            url: '/admin/plugin/SearchList',
+            type: 'get',
+            async:false,
+            success: function (res) { result = res;}
+        });
+
+        for (i = 0; i < result.length; i++) {
+            map[result[i].link] = result[i];
+        }
     };
     var events = {};
     return {
@@ -71,7 +82,7 @@ Admin.Navigation = (function () {
             }
             window.location.href = url;
         },
-        
+
         initOnce: function () {
             if (!map)
                 init();
