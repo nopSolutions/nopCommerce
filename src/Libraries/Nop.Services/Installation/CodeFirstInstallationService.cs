@@ -5925,7 +5925,7 @@ namespace Nop.Services.Installation
                 _urlRecordRepository.Insert(new UrlRecord
                 {
                     EntityId = topic.Id,
-                    EntityName = "Topic",
+                    EntityName = typeof(Topic).Name,
                     LanguageId = 0,
                     IsActive = true,
                     Slug = ValidateSeName(topic, !string.IsNullOrEmpty(topic.Title) ? topic.Title : topic.SystemName)
@@ -7107,7 +7107,7 @@ namespace Nop.Services.Installation
                 _urlRecordRepository.Insert(new UrlRecord
                 {
                     EntityId = category.Id,
-                    EntityName = "Category",
+                    EntityName = typeof(Category).Name,
                     LanguageId = 0,
                     IsActive = true,
                     Slug = ValidateSeName(category, category.Name)
@@ -7180,7 +7180,7 @@ namespace Nop.Services.Installation
                 _urlRecordRepository.Insert(new UrlRecord
                 {
                     EntityId = manufacturer.Id,
-                    EntityName = "Manufacturer",
+                    EntityName = typeof(Manufacturer).Name,
                     LanguageId = 0,
                     IsActive = true,
                     Slug = ValidateSeName(manufacturer, manufacturer.Name)
@@ -10238,7 +10238,7 @@ namespace Nop.Services.Installation
                 _urlRecordRepository.Insert(new UrlRecord
                 {
                     EntityId = product.Id,
-                    EntityName = "Product",
+                    EntityName = typeof(Product).Name,
                     LanguageId = 0,
                     IsActive = true,
                     Slug = ValidateSeName(product, product.Name)
@@ -10913,7 +10913,7 @@ namespace Nop.Services.Installation
                 _urlRecordRepository.Insert(new UrlRecord
                 {
                     EntityId = blogPost.Id,
-                    EntityName = "BlogPost",
+                    EntityName = typeof(BlogPost).Name,
                     LanguageId = blogPost.LanguageId,
                     IsActive = true,
                     Slug = ValidateSeName(blogPost, blogPost.Title)
@@ -10990,7 +10990,7 @@ namespace Nop.Services.Installation
                 _urlRecordRepository.Insert(new UrlRecord
                 {
                     EntityId = newsItem.Id,
-                    EntityName = "NewsItem",
+                    EntityName = typeof(NewsItem).Name,
                     LanguageId = newsItem.LanguageId,
                     IsActive = true,
                     Slug = ValidateSeName(newsItem, newsItem.Title)
@@ -12210,7 +12210,7 @@ namespace Nop.Services.Installation
                 _urlRecordRepository.Insert(new UrlRecord
                 {
                     EntityId = vendor.Id,
-                    EntityName = "Vendor",
+                    EntityName = typeof(Vendor).Name,
                     LanguageId = 0,
                     IsActive = true,
                     Slug = ValidateSeName(vendor, vendor.Name)
@@ -12261,7 +12261,7 @@ namespace Nop.Services.Installation
             _urlRecordRepository.Insert(new UrlRecord()
             {
                 EntityId = productTag.Id,
-                EntityName = "ProductTag",
+                EntityName = typeof(ProductTag).Name,
                 LanguageId = 0,
                 IsActive = true,
                 Slug = ValidateSeName(productTag, productTag.Name)

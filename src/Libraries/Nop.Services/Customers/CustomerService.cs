@@ -39,6 +39,7 @@ namespace Nop.Services.Customers
         private readonly IRepository<CustomerRole> _customerRoleRepository;
         private readonly IRepository<GenericAttribute> _gaRepository;
         private readonly IStaticCacheManager _staticCacheManager;
+        private readonly string _entityName;
 
         #endregion
 
@@ -69,6 +70,7 @@ namespace Nop.Services.Customers
             this._customerRoleRepository = customerRoleRepository;
             this._gaRepository = gaRepository;
             this._staticCacheManager = staticCacheManager;
+            this._entityName = typeof(Customer).Name;
         }
 
         #endregion
@@ -138,7 +140,7 @@ namespace Nop.Services.Customers
             {
                 query = query
                     .Join(_gaRepository.Table, x => x.Id, y => y.EntityId, (x, y) => new { Customer = x, Attribute = y })
-                    .Where((z => z.Attribute.KeyGroup == "Customer" &&
+                    .Where((z => z.Attribute.KeyGroup == _entityName &&
                         z.Attribute.Key == NopCustomerDefaults.FirstNameAttribute &&
                         z.Attribute.Value.Contains(firstName)))
                     .Select(z => z.Customer);
@@ -147,7 +149,7 @@ namespace Nop.Services.Customers
             {
                 query = query
                     .Join(_gaRepository.Table, x => x.Id, y => y.EntityId, (x, y) => new { Customer = x, Attribute = y })
-                    .Where((z => z.Attribute.KeyGroup == "Customer" &&
+                    .Where((z => z.Attribute.KeyGroup == _entityName &&
                         z.Attribute.Key == NopCustomerDefaults.LastNameAttribute &&
                         z.Attribute.Value.Contains(lastName)))
                     .Select(z => z.Customer);
@@ -164,7 +166,7 @@ namespace Nop.Services.Customers
                 //dateOfBirthStr.Length = 5
                 query = query
                     .Join(_gaRepository.Table, x => x.Id, y => y.EntityId, (x, y) => new { Customer = x, Attribute = y })
-                    .Where((z => z.Attribute.KeyGroup == "Customer" &&
+                    .Where((z => z.Attribute.KeyGroup == _entityName &&
                         z.Attribute.Key == NopCustomerDefaults.DateOfBirthAttribute &&
                         z.Attribute.Value.Substring(5, 5) == dateOfBirthStr))
                     .Select(z => z.Customer);
@@ -178,7 +180,7 @@ namespace Nop.Services.Customers
                 //dateOfBirthStr.Length = 2
                 query = query
                     .Join(_gaRepository.Table, x => x.Id, y => y.EntityId, (x, y) => new { Customer = x, Attribute = y })
-                    .Where((z => z.Attribute.KeyGroup == "Customer" &&
+                    .Where((z => z.Attribute.KeyGroup == _entityName &&
                         z.Attribute.Key == NopCustomerDefaults.DateOfBirthAttribute &&
                         z.Attribute.Value.Substring(8, 2) == dateOfBirthStr))
                     .Select(z => z.Customer);
@@ -189,7 +191,7 @@ namespace Nop.Services.Customers
                 var dateOfBirthStr = "-" + monthOfBirth.ToString("00", CultureInfo.InvariantCulture) + "-";
                 query = query
                     .Join(_gaRepository.Table, x => x.Id, y => y.EntityId, (x, y) => new { Customer = x, Attribute = y })
-                    .Where((z => z.Attribute.KeyGroup == "Customer" &&
+                    .Where((z => z.Attribute.KeyGroup == _entityName &&
                         z.Attribute.Key == NopCustomerDefaults.DateOfBirthAttribute &&
                         z.Attribute.Value.Contains(dateOfBirthStr)))
                     .Select(z => z.Customer);
@@ -199,7 +201,7 @@ namespace Nop.Services.Customers
             {
                 query = query
                     .Join(_gaRepository.Table, x => x.Id, y => y.EntityId, (x, y) => new { Customer = x, Attribute = y })
-                    .Where((z => z.Attribute.KeyGroup == "Customer" &&
+                    .Where((z => z.Attribute.KeyGroup == _entityName &&
                         z.Attribute.Key == NopCustomerDefaults.CompanyAttribute &&
                         z.Attribute.Value.Contains(company)))
                     .Select(z => z.Customer);
@@ -209,7 +211,7 @@ namespace Nop.Services.Customers
             {
                 query = query
                     .Join(_gaRepository.Table, x => x.Id, y => y.EntityId, (x, y) => new { Customer = x, Attribute = y })
-                    .Where((z => z.Attribute.KeyGroup == "Customer" &&
+                    .Where((z => z.Attribute.KeyGroup == _entityName &&
                         z.Attribute.Key == NopCustomerDefaults.PhoneAttribute &&
                         z.Attribute.Value.Contains(phone)))
                     .Select(z => z.Customer);
@@ -219,7 +221,7 @@ namespace Nop.Services.Customers
             {
                 query = query
                     .Join(_gaRepository.Table, x => x.Id, y => y.EntityId, (x, y) => new { Customer = x, Attribute = y })
-                    .Where((z => z.Attribute.KeyGroup == "Customer" &&
+                    .Where((z => z.Attribute.KeyGroup == _entityName &&
                         z.Attribute.Key == NopCustomerDefaults.ZipPostalCodeAttribute &&
                         z.Attribute.Value.Contains(zipPostalCode)))
                     .Select(z => z.Customer);
