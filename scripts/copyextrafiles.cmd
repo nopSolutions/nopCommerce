@@ -1,0 +1,3 @@
+@echo off
+echo Deploying files...
+xcopy %DEPLOYMENT_SOURCE%/configs/itsat.Settings.txt %DEPLOYMENT_TARGET%/test.txt /Y

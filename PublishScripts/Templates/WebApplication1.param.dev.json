@@ -1,0 +1,29 @@
+{
+  "siteName": {
+    "value": "xshopxshop"
+  },
+  "hostingPlanName": {
+    "value": "Default1"
+  },
+  "siteLocation": {
+    "value": "West Europe"
+  },
+  "sku": {
+    "value": "Standard"
+  },
+  "workerSize": {
+    "value": "1"
+  },
+  "siteMode": {
+    "value": "Limited"
+  },
+  "computeMode": {
+    "value": "0"
+  },
+  "subscriptionId": {
+    "value": "b9b5dd45-feb0-44ce-b6c1-dd4a69afc167"
+  },
+  "resourceGroup": {
+    "value": "Default-Web-WestEurope"
+  }
+}
