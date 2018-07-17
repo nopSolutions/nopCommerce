@@ -1,0 +1,2 @@
+DataProvider: sqlserver
+DataConnectionString: Data Source=xshop.database.windows.net;Initial Catalog=cubexshop;User ID=jacob;Password=85Jo1628;MultipleActiveResultSets=True
