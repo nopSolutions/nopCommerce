@@ -411,23 +411,27 @@
             @if (Model.GdprConsents.Count > 0)
             {
                 <div class="fieldset">
+                    <div class="title">
+                        <strong>@T("Account.GdprConsents")</strong>
+                    </div>
                     <div class="form-fields">
                         @foreach (var consent in Model.GdprConsents)
                         {
                             if (consent.IsRequired)
                             {
                                 <script asp-location="Footer">
+
                                     $(document).ready(function() {
                                         $('#register-button').on('click', function() {
                                             if ($('#consent@(consent.Id)').is(':checked')) {
-                                                    //do some stuff
-                                                    return true;
-                                                } else {
-                                                    //just show validation errors, don't post
-                                               alert('@Html.Raw(JavaScriptEncoder.Default.Encode(consent.RequiredMessage))');
-                                                    return false;
-                                                }
-                                            });
+                                                //do some stuff
+                                                return true;
+                                            } else {
+                                                //just show validation errors, don't post
+                                                alert('@Html.Raw(JavaScriptEncoder.Default.Encode(consent.RequiredMessage))');
+                                                return false;
+                                            }
+                                        });
                                     });
                                 </script>
                             }
