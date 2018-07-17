@@ -42,6 +42,7 @@ namespace Nop.Services.Catalog
         private readonly IStoreContext _storeContext;
         private readonly IStoreMappingService _storeMappingService;
         private readonly IWorkContext _workContext;
+        private readonly string _entityName;
 
         #endregion
 
@@ -82,6 +83,7 @@ namespace Nop.Services.Catalog
             this._storeContext = storeContext;
             this._storeMappingService = storeMappingService;
             this._workContext = workContext;
+            this._entityName = typeof(Category).Name;
         }
 
         #endregion
@@ -208,7 +210,7 @@ namespace Nop.Services.Catalog
                     var allowedCustomerRolesIds = _workContext.CurrentCustomer.GetCustomerRoleIds();
                     query = from c in query
                             join acl in _aclRepository.Table
-                                on new { c1 = c.Id, c2 = "Category" } equals new { c1 = acl.EntityId, c2 = acl.EntityName } into c_acl
+                                on new { c1 = c.Id, c2 = _entityName } equals new { c1 = acl.EntityId, c2 = acl.EntityName } into c_acl
                             from acl in c_acl.DefaultIfEmpty()
                             where !c.SubjectToAcl || allowedCustomerRolesIds.Contains(acl.CustomerRoleId)
                             select c;
@@ -218,7 +220,7 @@ namespace Nop.Services.Catalog
                     //Store mapping
                     query = from c in query
                             join sm in _storeMappingRepository.Table
-                                on new { c1 = c.Id, c2 = "Category" } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into c_sm
+                                on new { c1 = c.Id, c2 = _entityName } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into c_sm
                             from sm in c_sm.DefaultIfEmpty()
                             where !c.LimitedToStores || storeId == sm.StoreId
                             select c;
@@ -263,7 +265,7 @@ namespace Nop.Services.Catalog
                         var allowedCustomerRolesIds = _workContext.CurrentCustomer.GetCustomerRoleIds();
                         query = from c in query
                                 join acl in _aclRepository.Table
-                                on new { c1 = c.Id, c2 = "Category" } equals new { c1 = acl.EntityId, c2 = acl.EntityName } into c_acl
+                                on new { c1 = c.Id, c2 = _entityName } equals new { c1 = acl.EntityId, c2 = acl.EntityName } into c_acl
                                 from acl in c_acl.DefaultIfEmpty()
                                 where !c.SubjectToAcl || allowedCustomerRolesIds.Contains(acl.CustomerRoleId)
                                 select c;
@@ -274,7 +276,7 @@ namespace Nop.Services.Catalog
                         var currentStoreId = _storeContext.CurrentStore.Id;
                         query = from c in query
                                 join sm in _storeMappingRepository.Table
-                                on new { c1 = c.Id, c2 = "Category" } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into c_sm
+                                on new { c1 = c.Id, c2 = _entityName } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into c_sm
                                 from sm in c_sm.DefaultIfEmpty()
                                 where !c.LimitedToStores || currentStoreId == sm.StoreId
                                 select c;
@@ -468,7 +470,7 @@ namespace Nop.Services.Catalog
                         query = from pc in query
                                 join c in _categoryRepository.Table on pc.CategoryId equals c.Id
                                 join acl in _aclRepository.Table
-                                on new { c1 = c.Id, c2 = "Category" } equals new { c1 = acl.EntityId, c2 = acl.EntityName } into c_acl
+                                on new { c1 = c.Id, c2 = _entityName } equals new { c1 = acl.EntityId, c2 = acl.EntityName } into c_acl
                                 from acl in c_acl.DefaultIfEmpty()
                                 where !c.SubjectToAcl || allowedCustomerRolesIds.Contains(acl.CustomerRoleId)
                                 select pc;
@@ -480,7 +482,7 @@ namespace Nop.Services.Catalog
                         query = from pc in query
                                 join c in _categoryRepository.Table on pc.CategoryId equals c.Id
                                 join sm in _storeMappingRepository.Table
-                                on new { c1 = c.Id, c2 = "Category" } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into c_sm
+                                on new { c1 = c.Id, c2 = _entityName } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into c_sm
                                 from sm in c_sm.DefaultIfEmpty()
                                 where !c.LimitedToStores || currentStoreId == sm.StoreId
                                 select pc;

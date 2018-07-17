@@ -26,6 +26,7 @@ namespace Nop.Services.Directory
         private readonly IRepository<Country> _countryRepository;
         private readonly IRepository<StoreMapping> _storeMappingRepository;
         private readonly IStoreContext _storeContext;
+        private readonly string _entityName;
 
         #endregion
 
@@ -46,6 +47,7 @@ namespace Nop.Services.Directory
             this._countryRepository = countryRepository;
             this._storeMappingRepository = storeMappingRepository;
             this._storeContext = storeContext;
+            this._entityName = typeof(Country).Name;
         }
 
         #endregion
@@ -91,7 +93,7 @@ namespace Nop.Services.Directory
                     var currentStoreId = _storeContext.CurrentStore.Id;
                     query = from c in query
                             join sc in _storeMappingRepository.Table
-                            on new { c1 = c.Id, c2 = "Country" } equals new { c1 = sc.EntityId, c2 = sc.EntityName } into c_sc
+                            on new { c1 = c.Id, c2 = _entityName } equals new { c1 = sc.EntityId, c2 = sc.EntityName } into c_sc
                             from sc in c_sc.DefaultIfEmpty()
                             where !c.LimitedToStores || currentStoreId == sc.StoreId
                             select c;

@@ -22,6 +22,7 @@ namespace Nop.Services.Blogs
         private readonly IRepository<BlogComment> _blogCommentRepository;
         private readonly IRepository<BlogPost> _blogPostRepository;
         private readonly IRepository<StoreMapping> _storeMappingRepository;
+        private readonly string _entityName;
 
         #endregion
 
@@ -38,6 +39,7 @@ namespace Nop.Services.Blogs
             this._blogCommentRepository = blogCommentRepository;
             this._blogPostRepository = blogPostRepository;
             this._storeMappingRepository = storeMappingRepository;
+            this._entityName = typeof(BlogPost).Name;
         }
 
         #endregion
@@ -118,7 +120,7 @@ namespace Nop.Services.Blogs
                 //Store mapping
                 query = from bp in query
                         join sm in _storeMappingRepository.Table
-                        on new { c1 = bp.Id, c2 = "BlogPost" } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into bp_sm
+                        on new { c1 = bp.Id, c2 = _entityName } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into bp_sm
                         from sm in bp_sm.DefaultIfEmpty()
                         where !bp.LimitedToStores || storeId == sm.StoreId
                         select bp;

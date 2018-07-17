@@ -28,6 +28,7 @@ namespace Nop.Services.Messages
         private readonly IRepository<MessageTemplate> _messageTemplateRepository;
         private readonly IRepository<StoreMapping> _storeMappingRepository;
         private readonly IStoreMappingService _storeMappingService;
+        private readonly string _entityName;
 
         #endregion
 
@@ -52,6 +53,7 @@ namespace Nop.Services.Messages
             this._messageTemplateRepository = messageTemplateRepository;
             this._storeMappingRepository = storeMappingRepository;
             this._storeMappingService = storeMappingService;
+            this._entityName = typeof(MessageTemplate).Name;
         }
 
         #endregion
@@ -167,7 +169,7 @@ namespace Nop.Services.Messages
                 {
                     query = from t in query
                             join sm in _storeMappingRepository.Table
-                            on new { c1 = t.Id, c2 = "MessageTemplate" } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into tSm
+                            on new { c1 = t.Id, c2 = _entityName } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into tSm
                             from sm in tSm.DefaultIfEmpty()
                             where !t.LimitedToStores || storeId == sm.StoreId
                             select t;
