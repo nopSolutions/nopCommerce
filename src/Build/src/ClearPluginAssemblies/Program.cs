@@ -88,7 +88,9 @@ namespace ClearPluginAssemblies
                 return;
 
             var di = new DirectoryInfo(outputPath);
-            var fileNames = di.GetFiles("*.dll", SearchOption.AllDirectories).Select(fi => fi.Name.Replace(fi.Extension, "")).ToList();
+            var fileNames = di.GetFiles("*.dll", SearchOption.AllDirectories)
+                .Where(fi => !fi.FullName.Contains(@"\Plugins\"))
+                .Select(fi => fi.Name.Replace(fi.Extension, "")).ToList();
            
             if (string.IsNullOrEmpty(pluginPaths) || !fileNames.Any())
             {
