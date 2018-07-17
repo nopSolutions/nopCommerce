@@ -40,7 +40,7 @@ Admin.Search = (function () {
 
             enumerate(function (item) {
 
-                var rate = 0;
+                var rate = item.rate || 0;
                 var missKeyword = false;
 
                 if (substrRegex.test(item.title)) {
@@ -61,7 +61,6 @@ Admin.Search = (function () {
                     matches.push(item);
                 }
             });
-
 
             matches.sort(byRateAndTitle);
             cb(matches);
