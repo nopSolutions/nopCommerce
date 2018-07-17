@@ -1614,7 +1614,8 @@ namespace Nop.Web.Factories
                     {
                         SpecificationAttributeId = psa.SpecificationAttributeOption.SpecificationAttributeId,
                         SpecificationAttributeName = _localizationService.GetLocalized(psa.SpecificationAttributeOption.SpecificationAttribute, x => x.Name),
-                        ColorSquaresRgb = psa.SpecificationAttributeOption.ColorSquaresRgb
+                        ColorSquaresRgb = psa.SpecificationAttributeOption.ColorSquaresRgb,
+                        AttributeTypeId = psa.AttributeTypeId
                     };
 
                     switch (psa.AttributeType)
