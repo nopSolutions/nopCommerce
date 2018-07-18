@@ -2006,7 +2006,10 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.ShowCustomersLocation.Hint">
     <Value>A value indicating whether customer''s location is shown.</Value>
   </LocaleResource>  
-</Language>
+  <LocaleResource Name="Account.UserAgreement">
+    <Value>User agreement</Value>
+  </LocaleResource>
+ </Language>
 '
 
 CREATE TABLE #LocaleStringResourceTmp

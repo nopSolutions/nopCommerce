@@ -161,11 +161,11 @@
                 </div>
             }
             @if (Model.StreetAddressEnabled ||
-                   Model.StreetAddress2Enabled ||
-                   Model.ZipPostalCodeEnabled ||
-                   Model.CityEnabled ||
-                   Model.CountyEnabled ||
-                   Model.CountryEnabled)
+              Model.StreetAddress2Enabled ||
+              Model.ZipPostalCodeEnabled ||
+              Model.CityEnabled ||
+              Model.CountyEnabled ||
+              Model.CountryEnabled)
             {
                 <div class="fieldset">
                     <div class="title">
@@ -364,31 +364,36 @@
                 </div>
             </div>
 
-            @if (Model.AcceptPrivacyPolicyEnabled)
+            @if (Model.AcceptPrivacyPolicyEnabled || Model.GdprConsents.Count > 0)
             {
                 <div class="fieldset">
+                    <div class="title">
+                        <strong>@T("Account.UserAgreement")</strong>
+                    </div>
                     <div class="form-fields">
-                        <script asp-location="Footer">
-                            $(document).ready(function() {
-                                $('#register-button').on('click', function() {
-                                    if ($('#accept-consent').is(':checked')) {
-                                        //do some stuff
-                                        return true;
-                                    } else {
-                                        //just show validation errors, don't post
-                                        alert('@Html.Raw(JavaScriptEncoder.Default.Encode(T("Account.Fields.AcceptPrivacyPolicy.Required").Text))');
-                                        return false;
-                                    }
+                        @if (Model.AcceptPrivacyPolicyEnabled)
+                        {
+                            <script asp-location="Footer">
+                                $(document).ready(function() {
+                                    $('#register-button').on('click', function() {
+                                        if ($('#accept-consent').is(':checked')) {
+                                            //do some stuff
+                                            return true;
+                                        } else {
+                                            //just show validation errors, don't post
+                                            alert('@Html.Raw(JavaScriptEncoder.Default.Encode(T("Account.Fields.AcceptPrivacyPolicy.Required").Text))');
+                                            return false;
+                                        }
+                                    });
                                 });
-                            });
-                        </script>
-                        <div class="inputs accept-consent">
-                            <input id="accept-consent" type="checkbox" name="accept-consent" />
-                            <label for="accept-consent">@T("Account.Fields.AcceptPrivacyPolicy")</label>
-                            @if (Model.AcceptPrivacyPolicyPopup)
-                            {
-                                <span class="read" id="read-privacyinfo">@T("Account.Fields.AcceptPrivacyPolicy.Read")</span>
-                                <script asp-location="Footer">
+                            </script>
+                            <div class="inputs accept-consent">
+                                <input id="accept-consent" type="checkbox" name="accept-consent" />
+                                <label for="accept-consent">@T("Account.Fields.AcceptPrivacyPolicy")</label>
+                                @if (Model.AcceptPrivacyPolicyPopup)
+                                {
+                                    <span class="read" id="read-privacyinfo">@T("Account.Fields.AcceptPrivacyPolicy.Read")</span>
+                                    <script asp-location="Footer">
                                     $(document).ready(function() {
                                         $('#read-privacyinfo').on('click',
                                             function(e) {
@@ -397,26 +402,22 @@
                                                     '@T("Account.Fields.AcceptPrivacyPolicy")');
                                             });
                                     });
-                                </script>
-                            }
-                            else
-                            {
-                                <a class="read" id="read-privacyinfo" href="@Url.RouteUrl("Topic", new {SeName = Html.GetTopicSeName("privacyinfo") })">@T("Account.Fields.AcceptPrivacyPolicy.Read")</a>
-                            }
-                        </div>
-                    </div>
-                </div>
-            }
+                                    </script>
+                                }
+                                else
+                                {
+                                    <a class="read" id="read-privacyinfo" href="@Url.RouteUrl("Topic", new {SeName = Html.GetTopicSeName("privacyinfo") })">@T("Account.Fields.AcceptPrivacyPolicy.Read")</a>
+                                }
+                            </div>
+                        }
 
-            @if (Model.GdprConsents.Count > 0)
-            {
-                <div class="fieldset">
-                    <div class="form-fields">
-                        @foreach (var consent in Model.GdprConsents)
+                        @if (Model.GdprConsents.Count > 0)
                         {
-                            if (consent.IsRequired)
+                            foreach (var consent in Model.GdprConsents)
                             {
-                                <script asp-location="Footer">
+                                if (consent.IsRequired)
+                                {
+                                    <script asp-location="Footer">
                                     $(document).ready(function() {
                                         $('#register-button').on('click', function() {
                                             if ($('#consent@(consent.Id)').is(':checked')) {
@@ -429,12 +430,14 @@
                                                 }
                                             });
                                     });
-                                </script>
+                                    </script>
+                                }
+                                <div class="inputs accept-consent">
+                                    <input id="consent@(consent.Id)" type="checkbox" name="consent@(consent.Id)" checked="@consent.Accepted" />
+                                    <label for="consent@(consent.Id)">@consent.Message</label>
+                                </div>
                             }
-                            <div class="inputs accept-consent">
-                                <input id="consent@(consent.Id)" type="checkbox" name="consent@(consent.Id)" checked="@consent.Accepted" />
-                                <label for="consent@(consent.Id)">@consent.Message</label>
-                            </div>
+
                         }
                     </div>
                 </div>

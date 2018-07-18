@@ -666,6 +666,9 @@
   <LocaleResource Name="Account.ShoppingCart">
     <Value>Shopping Cart</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.UserAgreement">
+    <Value>User agreement</Value>
+  </LocaleResource>
   <LocaleResource Name="Account.VendorInfo">
     <Value>Vendor info</Value>
   </LocaleResource>
