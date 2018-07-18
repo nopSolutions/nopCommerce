@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Net;
 using System.Threading;
+using Microsoft.Extensions.DependencyInjection;
 using Nop.Core;
 using Nop.Core.Domain.Tasks;
 using Nop.Core.Infrastructure;
@@ -66,8 +67,14 @@ namespace Nop.Services.Tasks
                 }
                 catch (Exception ex)
                 {
-                    var logger = EngineContext.Current.Resolve<ILogger>();
-                    logger.Error(ex.Message, ex);
+                    var _serviceScopeFactory = EngineContext.Current.Resolve<IServiceScopeFactory>();
+
+                    using (var scope = _serviceScopeFactory.CreateScope())
+                    {
+                        // Resolve
+                        var logger = scope.ServiceProvider.GetRequiredService<ILogger>();
+                        logger.Error(ex.Message, ex);
+                    }
                 }
             }
             IsRunning = false;
