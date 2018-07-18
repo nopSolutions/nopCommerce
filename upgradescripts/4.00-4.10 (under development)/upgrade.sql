@@ -2009,7 +2009,13 @@ set @resources='
   <LocaleResource Name="Account.UserAgreement">
     <Value>User agreement</Value>
   </LocaleResource>
- </Language>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Orders.ShoppingCartType.ShoppingCart">
+    <Value>Shopping Cart</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Orders.ShoppingCartType.Wishlist">
+    <Value>Wishlist</Value>
+  </LocaleResource>  
+</Language>
 '
 
 CREATE TABLE #LocaleStringResourceTmp

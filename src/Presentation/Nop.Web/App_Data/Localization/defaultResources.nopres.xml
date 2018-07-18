@@ -15132,6 +15132,12 @@
   <LocaleResource Name="Enums.Nop.Core.Domain.Orders.ReturnRequestStatus.ReturnAuthorized">
     <Value>Return authorized</Value>
   </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Orders.ShoppingCartType.ShoppingCart">
+    <Value>Shopping cart</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Orders.ShoppingCartType.Wishlist">
+    <Value>Wishlist</Value>
+  </LocaleResource>
   <LocaleResource Name="Enums.Nop.Core.Domain.Payments.PaymentStatus.Authorized">
     <Value>Authorized</Value>
   </LocaleResource>

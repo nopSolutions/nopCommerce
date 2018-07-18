@@ -125,6 +125,31 @@ namespace Nop.Web.Areas.Admin.Controllers
             return Json(model);
         }
 
+        public virtual IActionResult SearchList()
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
+                return Json(new System.Collections.Generic.List<string>());
+
+            //prepare model
+            var model = _pluginModelFactory.PreparePluginListModel(
+                new PluginSearchModel { PageSize = int.MaxValue });
+
+            //negative rate is set to move plugins to the end of list
+            var filtredPlugins = model.Data
+                .Where(m => !string.IsNullOrEmpty(m.ConfigurationUrl))
+                .Select(m => new
+                {
+                    title = m.FriendlyName,
+                    link = m.ConfigurationUrl,
+                    parent = "Plugins",
+                    grandParent = "",
+                    rate = -50
+                })
+                .ToList();
+
+            return Json(filtredPlugins);
+        }
+
         [HttpPost]
         public virtual IActionResult UploadPluginsAndThemes(IFormFile archivefile)
         {
