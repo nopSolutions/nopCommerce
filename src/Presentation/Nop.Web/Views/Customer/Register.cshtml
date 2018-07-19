@@ -323,14 +323,11 @@
                         <strong>@T("Account.Preferences")</strong>
                     </div>
                     <div class="form-fields">
-                        @if (Model.AllowCustomersToSetTimeZone)
-                        {
-                            <div class="inputs">
-                                <label asp-for="TimeZoneId" asp-postfix=":"></label>
-                                <select asp-for="TimeZoneId" asp-items="Model.AvailableTimeZones"></select>
-                                <span asp-validation-for="TimeZoneId"></span>
-                            </div>
-                        }
+                        <div class="inputs">
+                            <label asp-for="TimeZoneId" asp-postfix=":"></label>
+                            <select asp-for="TimeZoneId" asp-items="Model.AvailableTimeZones"></select>
+                            <span asp-validation-for="TimeZoneId"></span>
+                        </div>
                     </div>
                 </div>
             }
