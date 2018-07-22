@@ -837,20 +837,23 @@ namespace Nop.Web.Factories
                 sb.Append("User-agent: *");
                 sb.Append(newLine);
                 //sitemaps
-                if (_localizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
+                if (_commonSettings.SitemapEnabled)
                 {
-                    //URLs are localizable. Append SEO code
-                    foreach (var language in _languageService.GetAllLanguages(storeId: _storeContext.CurrentStore.Id))
+                    if (_localizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
                     {
-                        sb.AppendFormat("Sitemap: {0}{1}/sitemap.xml", _webHelper.GetStoreLocation(), language.UniqueSeoCode);
+                        //URLs are localizable. Append SEO code
+                        foreach (var language in _languageService.GetAllLanguages(storeId: _storeContext.CurrentStore.Id))
+                        {
+                            sb.AppendFormat("Sitemap: {0}{1}/sitemap.xml", _webHelper.GetStoreLocation(), language.UniqueSeoCode);
+                            sb.Append(newLine);
+                        }
+                    }
+                    else
+                    {
+                        //localizable paths (without SEO code)
+                        sb.AppendFormat("Sitemap: {0}sitemap.xml", _webHelper.GetStoreLocation());
                         sb.Append(newLine);
                     }
-                }
-                else
-                {
-                    //localizable paths (without SEO code)
-                    sb.AppendFormat("Sitemap: {0}sitemap.xml", _webHelper.GetStoreLocation());
-                    sb.Append(newLine);
                 }
                 //host
                 sb.AppendFormat("Host: {0}", _webHelper.GetStoreLocation());
