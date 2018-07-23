@@ -1535,6 +1535,8 @@ namespace Nop.Services.Seo
         {
             var result = string.Empty;
 
+            languageId = languageId ?? _workContext.WorkingLanguage.Id;
+
             if (languageId > 0)
             {
                 //ensure that we have at least two published languages
@@ -1547,12 +1549,12 @@ namespace Nop.Services.Seo
 
                 //localized value
                 if (loadLocalizedValue)
-                    result = this.GetActiveSlug(entityId, entityName, languageId ?? _workContext.WorkingLanguage.Id);
+                    result = GetActiveSlug(entityId, entityName, languageId.Value);
             }
 
             //set default value if required
             if (string.IsNullOrEmpty(result) && returnDefaultValue)
-                result = this.GetActiveSlug(entityId, entityName, 0);
+                result = GetActiveSlug(entityId, entityName, 0);
 
             return result;
         }
