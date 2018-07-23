@@ -122,9 +122,14 @@ function saveUserPreferences(url, name, value) {
 
 function warningValidation(validationUrl, warningElementName, passedParameters) {
     addAntiForgeryToken(passedParameters);
-    var element = $('[data-valmsg-for="' + warningElementName + '"]');
-    element.removeClass("warning");
-    element.html('');
+    var element = $('[name="' + warningElementName + '"]');
+
+    var messageElement = element.siblings('.field-validation-custom');
+    if (messageElement.length == 0) {
+        messageElement = $(document.createElement("span"));
+        messageElement.addClass('field-validation-custom');
+        element.after(messageElement);
+    }
 
     $.ajax({
         cache: false,
@@ -134,9 +139,16 @@ function warningValidation(validationUrl, warningElementName, passedParameters) 
         data: passedParameters,
         success: function (data) {
             if (data.Result) {
-                element.addClass("warning");
-                element.html(data.Result);
+                messageElement.addClass("warning");
+                messageElement.html(data.Result);
+            } else {
+                messageElement.removeClass("warning");
+                messageElement.html('');
             }
+        },
+        error: function () {
+            messageElement.removeClass("warning");
+            messageElement.html('');
         }
     });
 };
