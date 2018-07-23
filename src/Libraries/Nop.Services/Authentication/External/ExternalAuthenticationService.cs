@@ -281,10 +281,7 @@ namespace Nop.Services.Authentication.External
         public virtual IExternalAuthenticationMethod LoadExternalAuthenticationMethodBySystemName(string systemName)
         {
             var descriptor = _pluginFinder.GetPluginDescriptorBySystemName<IExternalAuthenticationMethod>(systemName);
-            if (descriptor != null)
-                return descriptor.Instance<IExternalAuthenticationMethod>();
-
-            return null;
+            return descriptor?.Instance<IExternalAuthenticationMethod>();
         }
 
         /// <summary>
@@ -383,7 +380,7 @@ namespace Nop.Services.Authentication.External
                 ExternalIdentifier = parameters.ExternalIdentifier,
                 ExternalDisplayIdentifier = parameters.ExternalDisplayIdentifier,
                 OAuthAccessToken = parameters.AccessToken,
-                ProviderSystemName = parameters.ProviderSystemName,
+                ProviderSystemName = parameters.ProviderSystemName
             };
 
             _externalAuthenticationRecordRepository.Insert(externalAuthenticationRecord);

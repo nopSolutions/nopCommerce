@@ -128,6 +128,7 @@ namespace Nop.Services.Localization
                 if (!dictionary.ContainsKey(resourceName))
                     dictionary.Add(resourceName, new KeyValuePair<int, string>(locale.Id, locale.ResourceValue));
             }
+
             return dictionary;
         }
 
@@ -309,7 +310,7 @@ namespace Nop.Services.Localization
             if (_workContext.WorkingLanguage != null)
                 return GetResource(resourceKey, _workContext.WorkingLanguage.Id);
 
-            return "";
+            return string.Empty;
         }
 
         /// <summary>
@@ -353,21 +354,23 @@ namespace Nop.Services.Localization
                 if (lsr != null)
                     result = lsr;
             }
-            if (string.IsNullOrEmpty(result))
-            {
-                if (logIfNotFound)
-                    _logger.Warning($"Resource string ({resourceKey}) is not found. Language ID = {languageId}");
 
-                if (!string.IsNullOrEmpty(defaultValue))
-                {
-                    result = defaultValue;
-                }
-                else
-                {
-                    if (!returnEmptyIfNotFound)
-                        result = resourceKey;
-                }
+            if (!string.IsNullOrEmpty(result)) 
+                return result;
+
+            if (logIfNotFound)
+                _logger.Warning($"Resource string ({resourceKey}) is not found. Language ID = {languageId}");
+
+            if (!string.IsNullOrEmpty(defaultValue))
+            {
+                result = defaultValue;
             }
+            else
+            {
+                if (!returnEmptyIfNotFound)
+                    result = resourceKey;
+            }
+
             return result;
         }
 
@@ -453,7 +456,6 @@ namespace Nop.Services.Localization
             _dbContext.ExecuteSqlCommand("EXEC [LanguagePackImport] @LanguageId, @XmlPackage, @UpdateExistingResources",
                 false, 600, pLanguageId, pXmlPackage, pUpdateExistingResources);
 
-
             //clear cache
             _cacheManager.RemoveByPattern(NopLocalizationDefaults.LocaleStringResourcesPatternCacheKey);
         }
@@ -512,11 +514,10 @@ namespace Nop.Services.Localization
             }
 
             //set default value if required
-            if (string.IsNullOrEmpty(resultStr) && returnDefaultValue)
-            {
-                var localizer = keySelector.Compile();
-                result = localizer(entity);
-            }
+            if (!string.IsNullOrEmpty(resultStr) || !returnDefaultValue) 
+                return result;
+            var localizer = keySelector.Compile();
+            result = localizer(entity);
 
             return result;
         }
@@ -543,7 +544,7 @@ namespace Nop.Services.Localization
             if (setting == null)
                 return null;
 
-            return this.GetLocalized(setting, x => x.Value, languageId, returnDefaultValue, ensureTwoPublishedLanguages);
+            return GetLocalized(setting, x => x.Value, languageId, returnDefaultValue, ensureTwoPublishedLanguages);
         }
 
         /// <summary>
@@ -561,7 +562,7 @@ namespace Nop.Services.Localization
             var key = _settingService.GetSettingKey(settings, keySelector);
 
             //we do not support localized settings per store (overridden store settings)
-            var setting = _settingService.GetSetting(key, storeId: 0, loadSharedValueIfNotFound: false);
+            var setting = _settingService.GetSetting(key);
             if (setting == null)
                 return;
 
@@ -582,7 +583,7 @@ namespace Nop.Services.Localization
 
             //localized value
             var resourceName = $"{NopLocalizationDefaults.EnumLocaleStringResourcesPrefix}{typeof(TEnum)}.{enumValue}";
-            var result = this.GetResource(resourceName, languageId ?? _workContext.WorkingLanguage.Id, false, "", true);
+            var result = GetResource(resourceName, languageId ?? _workContext.WorkingLanguage.Id, false, string.Empty, true);
 
             //set default value if required
             if (string.IsNullOrEmpty(result))
@@ -605,7 +606,7 @@ namespace Nop.Services.Localization
 
             //localized value
             var resourceName = $"{NopLocalizationDefaults.PermissionLocaleStringResourcesPrefix}{permissionRecord.SystemName}";
-            var result = this.GetResource(resourceName, languageId ?? _workContext.WorkingLanguage.Id, false, "", true);
+            var result = GetResource(resourceName, languageId ?? _workContext.WorkingLanguage.Id, false, string.Empty, true);
 
             //set default value if required
             if (string.IsNullOrEmpty(result))
@@ -628,7 +629,7 @@ namespace Nop.Services.Localization
 
             foreach (var lang in _languageService.GetAllLanguages(true))
             {
-                var lsr = this.GetLocaleStringResourceByName(resourceName, lang.Id, false);
+                var lsr = GetLocaleStringResourceByName(resourceName, lang.Id, false);
                 if (lsr == null)
                 {
                     lsr = new LocaleStringResource
@@ -637,12 +638,12 @@ namespace Nop.Services.Localization
                         ResourceName = resourceName,
                         ResourceValue = resourceValue
                     };
-                    this.InsertLocaleStringResource(lsr);
+                    InsertLocaleStringResource(lsr);
                 }
                 else
                 {
                     lsr.ResourceValue = resourceValue;
-                    this.UpdateLocaleStringResource(lsr);
+                    UpdateLocaleStringResource(lsr);
                 }
             }
         }
@@ -659,9 +660,9 @@ namespace Nop.Services.Localization
             var resourceName = $"{NopLocalizationDefaults.PermissionLocaleStringResourcesPrefix}{permissionRecord.SystemName}";
             foreach (var lang in _languageService.GetAllLanguages(true))
             {
-                var lsr = this.GetLocaleStringResourceByName(resourceName, lang.Id, false);
+                var lsr = GetLocaleStringResourceByName(resourceName, lang.Id, false);
                 if (lsr != null)
-                    this.DeleteLocaleStringResource(lsr);
+                    DeleteLocaleStringResource(lsr);
             }
         }
 
@@ -678,7 +679,7 @@ namespace Nop.Services.Localization
                 if (!string.IsNullOrEmpty(languageCulture) && !languageCulture.Equals(lang.LanguageCulture))
                     continue;
 
-                var lsr = this.GetLocaleStringResourceByName(resourceName, lang.Id, false);
+                var lsr = GetLocaleStringResourceByName(resourceName, lang.Id, false);
                 if (lsr == null)
                 {
                     lsr = new LocaleStringResource
@@ -687,12 +688,12 @@ namespace Nop.Services.Localization
                         ResourceName = resourceName,
                         ResourceValue = resourceValue
                     };
-                    this.InsertLocaleStringResource(lsr);
+                    InsertLocaleStringResource(lsr);
                 }
                 else
                 {
                     lsr.ResourceValue = resourceValue;
-                    this.UpdateLocaleStringResource(lsr);
+                    UpdateLocaleStringResource(lsr);
                 }
             }
         }
@@ -705,9 +706,9 @@ namespace Nop.Services.Localization
         {
             foreach (var lang in _languageService.GetAllLanguages(true))
             {
-                var lsr = this.GetLocaleStringResourceByName(resourceName, lang.Id, false);
+                var lsr = GetLocaleStringResourceByName(resourceName, lang.Id, false);
                 if (lsr != null)
-                    this.DeleteLocaleStringResource(lsr);
+                    DeleteLocaleStringResource(lsr);
             }
         }
 
@@ -731,7 +732,7 @@ namespace Nop.Services.Localization
             var systemName = plugin.PluginDescriptor.SystemName;
             //localized value
             var resourceName = $"{NopLocalizationDefaults.PluginNameLocaleStringResourcesPrefix}{systemName}";
-            var result = this.GetResource(resourceName, languageId, false, "", true);
+            var result = GetResource(resourceName, languageId, false, string.Empty, true);
 
             //set default value if required
             if (string.IsNullOrEmpty(result) && returnDefaultValue)
@@ -751,7 +752,7 @@ namespace Nop.Services.Localization
             where TPlugin : IPlugin
         {
             if (languageId == 0)
-                throw new ArgumentOutOfRangeException("languageId", "Language ID should not be 0");
+                throw new ArgumentOutOfRangeException(nameof(languageId), "Language ID should not be 0");
 
             if (plugin == null)
                 throw new ArgumentNullException(nameof(plugin));
@@ -762,20 +763,20 @@ namespace Nop.Services.Localization
             var systemName = plugin.PluginDescriptor.SystemName;
             //localized value
             var resourceName = $"{NopLocalizationDefaults.PluginNameLocaleStringResourcesPrefix}{systemName}";
-            var resource = this.GetLocaleStringResourceByName(resourceName, languageId, false);
+            var resource = GetLocaleStringResourceByName(resourceName, languageId, false);
 
             if (resource != null)
             {
                 if (string.IsNullOrWhiteSpace(localizedFriendlyName))
                 {
                     //delete
-                    this.DeleteLocaleStringResource(resource);
+                    DeleteLocaleStringResource(resource);
                 }
                 else
                 {
                     //update
                     resource.ResourceValue = localizedFriendlyName;
-                    this.UpdateLocaleStringResource(resource);
+                    UpdateLocaleStringResource(resource);
                 }
             }
             else
@@ -788,9 +789,9 @@ namespace Nop.Services.Localization
                 {
                     LanguageId = languageId,
                     ResourceName = resourceName,
-                    ResourceValue = localizedFriendlyName,
+                    ResourceValue = localizedFriendlyName
                 };
-                this.InsertLocaleStringResource(resource);
+                InsertLocaleStringResource(resource);
             }
         }
 

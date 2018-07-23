@@ -118,11 +118,13 @@ namespace Nop.Services.Topics
                 //filter by store
                 topics = topics.Where(x => _storeMappingService.Authorize(x, storeId)).ToList();
             }
+
             if (!showHidden)
             {
                 //ACL (access control list)
                 topics = topics.Where(x => _aclService.Authorize(x)).ToList();
             }
+
             return topics.FirstOrDefault();
         }
 
@@ -158,6 +160,7 @@ namespace Nop.Services.Topics
                                 where !c.SubjectToAcl || allowedCustomerRolesIds.Contains(acl.CustomerRoleId)
                                 select c;
                     }
+
                     if (!_catalogSettings.IgnoreStoreLimitations && storeId > 0)
                     {
                         //Store mapping

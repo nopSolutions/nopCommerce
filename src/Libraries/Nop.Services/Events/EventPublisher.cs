@@ -7,7 +7,7 @@ using Nop.Services.Logging;
 namespace Nop.Services.Events
 {
     /// <summary>
-    /// Evnt publisher
+    /// Event publisher
     /// </summary>
     public class EventPublisher : IEventPublisher
     {
@@ -29,7 +29,7 @@ namespace Nop.Services.Events
         #region Utilities
 
         /// <summary>
-        /// Publish to cunsumer
+        /// Publish to consumer
         /// </summary>
         /// <typeparam name="T">Type</typeparam>
         /// <param name="x">Event consumer</param>

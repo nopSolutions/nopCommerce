@@ -31,6 +31,20 @@ namespace Nop.Services.Helpers
             Initialize(userAgentStringsPath, crawlerOnlyUserAgentStringsPath);
         }
 
+        private static bool IsBrowscapItemIsCrawler(XElement browscapItem)
+        {
+            var el = browscapItem.Elements("item").FirstOrDefault(e => e.Attribute("name")?.Value == "Crawler");
+
+            return el != null && el.Attribute("value")?.Value.ToLower() == "true";
+        }
+
+        private static string ToRegexp(string str)
+        {
+            var sb = new StringBuilder(Regex.Escape(str));
+            sb.Replace("&amp;", "&").Replace("\\?", ".").Replace("\\*", ".*?");
+            return $"^{sb}$";
+        }
+
         private void Initialize(string userAgentStringsPath, string crawlerOnlyUserAgentStringsPath)
         {
             List<XElement> crawlerItems = null;
@@ -86,24 +100,11 @@ namespace Nop.Services.Helpers
 
                     root.Add(crawler);
                 }
+
                 root.Save(sw);
             }
         }
-
-        private static bool IsBrowscapItemIsCrawler(XElement browscapItem)
-        {
-            var el = browscapItem.Elements("item").FirstOrDefault(e => e.Attribute("name")?.Value == "Crawler");
-
-            return el != null && el.Attribute("value")?.Value.ToLower() == "true";
-        }
-
-        private static string ToRegexp(string str)
-        {
-            var sb = new StringBuilder(Regex.Escape(str));
-            sb.Replace("&amp;", "&").Replace("\\?", ".").Replace("\\*", ".*?");
-            return $"^{sb}$";
-        }
-
+        
         /// <summary>
         /// Determines whether a user agent is a crawler
         /// </summary>

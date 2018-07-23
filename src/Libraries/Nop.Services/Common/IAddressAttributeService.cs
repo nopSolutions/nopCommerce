@@ -60,13 +60,13 @@ namespace Nop.Services.Common
         AddressAttributeValue GetAddressAttributeValueById(int addressAttributeValueId);
 
         /// <summary>
-        /// Inserts a ddress attribute value
+        /// Inserts a address attribute value
         /// </summary>
         /// <param name="addressAttributeValue">Address attribute value</param>
         void InsertAddressAttributeValue(AddressAttributeValue addressAttributeValue);
 
         /// <summary>
-        /// Updates the ddress attribute value
+        /// Updates the address attribute value
         /// </summary>
         /// <param name="addressAttributeValue">Address attribute value</param>
         void UpdateAddressAttributeValue(AddressAttributeValue addressAttributeValue);

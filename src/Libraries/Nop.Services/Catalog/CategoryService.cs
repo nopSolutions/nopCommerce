@@ -126,10 +126,7 @@ namespace Nop.Services.Catalog
         /// <returns>Categories</returns>
         public virtual IList<Category> GetAllCategories(int storeId = 0, bool showHidden = false, bool loadCacheableCopy = true)
         {
-            Func<IList<Category>> loadCategoriesFunc = () =>
-            {
-                return GetAllCategories("", storeId: storeId, showHidden: showHidden);
-            };
+            IList<Category> LoadCategoriesFunc() => GetAllCategories(string.Empty, storeId, showHidden: showHidden);
 
             IList<Category> categories;
             if (loadCacheableCopy)
@@ -142,14 +139,14 @@ namespace Nop.Services.Catalog
                 categories = _staticCacheManager.Get(key, () =>
                 {
                     var result = new List<Category>();
-                    foreach (var category in loadCategoriesFunc())
+                    foreach (var category in LoadCategoriesFunc())
                         result.Add(new CategoryForCaching(category));
                     return result;
                 });
             }
             else
             {
-                categories = loadCategoriesFunc();
+                categories = LoadCategoriesFunc();
             }
 
             return categories;
@@ -187,7 +184,7 @@ namespace Nop.Services.Catalog
                 var categories = _dbContext.EntityFromSql<Category>("CategoryLoadAllPaged",
                     showHiddenParameter, nameParameter, storeIdParameter, customerRoleIdsParameter,
                     pageIndexParameter, pageSizeParameter, totalRecordsParameter).ToList();
-                var totalRecords = (totalRecordsParameter.Value != DBNull.Value) ? Convert.ToInt32(totalRecordsParameter.Value) : 0;
+                var totalRecords = totalRecordsParameter.Value != DBNull.Value ? Convert.ToInt32(totalRecordsParameter.Value) : 0;
 
                 //paging
                 return new PagedList<Category>(categories, pageIndex, pageSize, totalRecords);
@@ -215,6 +212,7 @@ namespace Nop.Services.Catalog
                             where !c.SubjectToAcl || allowedCustomerRolesIds.Contains(acl.CustomerRoleId)
                             select c;
                 }
+
                 if (storeId > 0 && !_catalogSettings.IgnoreStoreLimitations)
                 {
                     //Store mapping
@@ -270,6 +268,7 @@ namespace Nop.Services.Catalog
                                 where !c.SubjectToAcl || allowedCustomerRolesIds.Contains(acl.CustomerRoleId)
                                 select c;
                     }
+
                     if (!_catalogSettings.IgnoreStoreLimitations)
                     {
                         //Store mapping
@@ -342,6 +341,7 @@ namespace Nop.Services.Catalog
                     categoriesIds.Add(category.Id);
                     categoriesIds.AddRange(GetChildCategoryIds(category.Id, storeId, showHidden));
                 }
+
                 return categoriesIds;
             });
         }
@@ -404,6 +404,7 @@ namespace Nop.Services.Catalog
                     category.ParentCategoryId = 0;
                     break;
                 }
+
                 parentCategory = GetCategoryById(parentCategory.ParentCategoryId);
             }
 
@@ -475,6 +476,7 @@ namespace Nop.Services.Catalog
                                 where !c.SubjectToAcl || allowedCustomerRolesIds.Contains(acl.CustomerRoleId)
                                 select pc;
                     }
+
                     if (!_catalogSettings.IgnoreStoreLimitations)
                     {
                         //Store mapping
@@ -547,6 +549,7 @@ namespace Nop.Services.Catalog
                     //no filtering
                     result.AddRange(allProductCategories);
                 }
+
                 return result;
             });
         }
@@ -617,12 +620,12 @@ namespace Nop.Services.Catalog
             queryFilter = queryFilter.Except(filter).ToArray();
 
             //if some names not found
-            if (queryFilter.Any())
-            {
-                //filtering by IDs
-                filter = query.Select(c => c.Id.ToString()).Where(c => queryFilter.Contains(c)).ToList();
-                queryFilter = queryFilter.Except(filter).ToArray();
-            }
+            if (!queryFilter.Any())
+                return queryFilter.ToArray();
+
+            //filtering by IDs
+            filter = query.Select(c => c.Id.ToString()).Where(c => queryFilter.Contains(c)).ToList();
+            queryFilter = queryFilter.Except(filter).ToArray();
 
             return queryFilter.ToArray();
         }
@@ -679,13 +682,15 @@ namespace Nop.Services.Catalog
                 result.Add(cat);
                 result.AddRange(SortCategoriesForTree(source, cat.Id, true));
             }
-            if (!ignoreCategoriesWithoutExistingParent && result.Count != source.Count)
-            {
-                //find categories without parent in provided category source and insert them into result
-                foreach (var cat in source)
-                    if (result.FirstOrDefault(x => x.Id == cat.Id) == null)
-                        result.Add(cat);
-            }
+
+            if (ignoreCategoriesWithoutExistingParent || result.Count == source.Count)
+                return result;
+
+            //find categories without parent in provided category source and insert them into result
+            foreach (var cat in source)
+                if (result.FirstOrDefault(x => x.Id == cat.Id) == null)
+                    result.Add(cat);
+
             return result;
         }
 
@@ -758,8 +763,9 @@ namespace Nop.Services.Catalog
                 alreadyProcessedCategoryIds.Add(category.Id);
 
                 category = allCategories != null ? allCategories.FirstOrDefault(c => c.Id == c.ParentCategoryId)
-                    : this.GetCategoryById(category.ParentCategoryId);
+                    : GetCategoryById(category.ParentCategoryId);
             }
+
             result.Reverse();
             return result;
         }

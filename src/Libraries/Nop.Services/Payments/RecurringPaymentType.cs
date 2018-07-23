@@ -9,10 +9,12 @@ namespace Nop.Services.Payments
         /// Not supported
         /// </summary>
         NotSupported = 0,
+
         /// <summary>
         /// Manual
         /// </summary>
         Manual = 10,
+
         /// <summary>
         /// Automatic (payment is processed on payment gateway site)
         /// </summary>

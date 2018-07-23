@@ -120,7 +120,7 @@ namespace Nop.Services.Catalog
                             else if (attribute.AttributeControlType == AttributeControlType.FileUpload)
                             {
                                 //file upload
-                                Guid.TryParse(value, out Guid downloadGuid);
+                                Guid.TryParse(value, out var downloadGuid);
                                 var download = _downloadService.GetDownloadByGuid(downloadGuid);
                                 if (download != null)
                                 {
@@ -153,12 +153,12 @@ namespace Nop.Services.Catalog
                                     formattedAttribute = WebUtility.HtmlEncode(formattedAttribute);
                             }
 
-                            if (!string.IsNullOrEmpty(formattedAttribute))
-                            {
-                                if (result.Length > 0)
-                                    result.Append(separator);
-                                result.Append(formattedAttribute);
-                            }
+                            if (string.IsNullOrEmpty(formattedAttribute)) 
+                                continue;
+
+                            if (result.Length > 0)
+                                result.Append(separator);
+                            result.Append(formattedAttribute);
                         }
                     }
                     //product attribute values
@@ -181,7 +181,7 @@ namespace Nop.Services.Catalog
                                 else
                                 {
                                     var attributeValuePriceAdjustment = _priceCalculationService.GetProductAttributeValuePriceAdjustment(attributeValue, customer);
-                                    var priceAdjustmentBase = _taxService.GetProductPrice(product, attributeValuePriceAdjustment, customer, out decimal _);
+                                    var priceAdjustmentBase = _taxService.GetProductPrice(product, attributeValuePriceAdjustment, customer, out var _);
                                     var priceAdjustment = _currencyService.ConvertFromPrimaryStoreCurrency(priceAdjustmentBase, _workContext.WorkingCurrency);
                                     if (priceAdjustmentBase > decimal.Zero)
                                         formattedAttribute += $" [+{_priceFormatter.FormatPrice(priceAdjustment, false, false)}]";
@@ -202,49 +202,51 @@ namespace Nop.Services.Catalog
                             if (htmlEncode)
                                 formattedAttribute = WebUtility.HtmlEncode(formattedAttribute);
 
-                            if (!string.IsNullOrEmpty(formattedAttribute))
-                            {
-                                if (result.Length > 0)
-                                    result.Append(separator);
-                                result.Append(formattedAttribute);
-                            }
+                            if (string.IsNullOrEmpty(formattedAttribute)) 
+                                continue;
+
+                            if (result.Length > 0)
+                                result.Append(separator);
+                            result.Append(formattedAttribute);
                         }
                     }
                 }
             }
 
             //gift cards
-            if (renderGiftCardAttributes)
+            if (!renderGiftCardAttributes) 
+                return result.ToString();
+
+            if (!product.IsGiftCard) 
+                return result.ToString();
+
+            _productAttributeParser.GetGiftCardAttribute(attributesXml, out var giftCardRecipientName, out var giftCardRecipientEmail, out var giftCardSenderName, out var giftCardSenderEmail, out var _);
+
+            //sender
+            var giftCardFrom = product.GiftCardType == GiftCardType.Virtual ?
+                string.Format(_localizationService.GetResource("GiftCardAttribute.From.Virtual"), giftCardSenderName, giftCardSenderEmail) :
+                string.Format(_localizationService.GetResource("GiftCardAttribute.From.Physical"), giftCardSenderName);
+            //recipient
+            var giftCardFor = product.GiftCardType == GiftCardType.Virtual ?
+                string.Format(_localizationService.GetResource("GiftCardAttribute.For.Virtual"), giftCardRecipientName, giftCardRecipientEmail) :
+                string.Format(_localizationService.GetResource("GiftCardAttribute.For.Physical"), giftCardRecipientName);
+
+            //encode (if required)
+            if (htmlEncode)
             {
-                if (product.IsGiftCard)
-                {
-                    _productAttributeParser.GetGiftCardAttribute(attributesXml, out string giftCardRecipientName, out string giftCardRecipientEmail, out string giftCardSenderName, out string giftCardSenderEmail, out string _);
-
-                    //sender
-                    var giftCardFrom = product.GiftCardType == GiftCardType.Virtual ?
-                        string.Format(_localizationService.GetResource("GiftCardAttribute.From.Virtual"), giftCardSenderName, giftCardSenderEmail) :
-                        string.Format(_localizationService.GetResource("GiftCardAttribute.From.Physical"), giftCardSenderName);
-                    //recipient
-                    var giftCardFor = product.GiftCardType == GiftCardType.Virtual ?
-                        string.Format(_localizationService.GetResource("GiftCardAttribute.For.Virtual"), giftCardRecipientName, giftCardRecipientEmail) :
-                        string.Format(_localizationService.GetResource("GiftCardAttribute.For.Physical"), giftCardRecipientName);
-
-                    //encode (if required)
-                    if (htmlEncode)
-                    {
-                        giftCardFrom = WebUtility.HtmlEncode(giftCardFrom);
-                        giftCardFor = WebUtility.HtmlEncode(giftCardFor);
-                    }
-
-                    if (!string.IsNullOrEmpty(result.ToString()))
-                    {
-                        result.Append(separator);
-                    }
-                    result.Append(giftCardFrom);
-                    result.Append(separator);
-                    result.Append(giftCardFor);
-                }
+                giftCardFrom = WebUtility.HtmlEncode(giftCardFrom);
+                giftCardFor = WebUtility.HtmlEncode(giftCardFor);
             }
+
+            if (!string.IsNullOrEmpty(result.ToString()))
+            {
+                result.Append(separator);
+            }
+
+            result.Append(giftCardFrom);
+            result.Append(separator);
+            result.Append(giftCardFor);
+
             return result.ToString();
         }
 

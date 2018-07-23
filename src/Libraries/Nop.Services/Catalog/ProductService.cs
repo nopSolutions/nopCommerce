@@ -543,7 +543,7 @@ namespace Nop.Services.Catalog
             bool showHidden = false,
             bool? overridePublished = null)
         {
-            return SearchProducts(out IList<int> _, false,
+            return SearchProducts(out var _, false,
                 pageIndex, pageSize, categoryIds, manufacturerId,
                 storeId, vendorId, warehouseId,
                 productType, visibleIndividuallyOnly, markedAsNewOnly, featuredProducts,
@@ -1087,7 +1087,7 @@ namespace Nop.Services.Catalog
                     .ToList()
                     .ForEach(qtyStr =>
                     {
-                        if (int.TryParse(qtyStr.Trim(), out int qty))
+                        if (int.TryParse(qtyStr.Trim(), out var qty))
                         {
                             result.Add(qty);
                         }
@@ -1176,7 +1176,7 @@ namespace Nop.Services.Catalog
                 case RentalPricePeriod.Months:
                     {
                         //Source: http://stackoverflow.com/questions/4638993/difference-in-months-between-two-dates
-                        var totalMonthsToRent = ((endDate.Year - startDate.Year) * 12) + endDate.Month - startDate.Month;
+                        var totalMonthsToRent = (endDate.Year - startDate.Year) * 12 + endDate.Month - startDate.Month;
                         if (startDate.AddMonths(totalMonthsToRent) < endDate)
                         {
                             //several days added (not full month)
@@ -1237,7 +1237,7 @@ namespace Nop.Services.Catalog
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
-            this.GetSkuMpnGtin(product, attributesXml, out string sku, out string _, out string _);
+            this.GetSkuMpnGtin(product, attributesXml, out var sku, out var _, out var _);
 
             return sku;
         }
@@ -1253,7 +1253,7 @@ namespace Nop.Services.Catalog
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
-            this.GetSkuMpnGtin(product, attributesXml, out string _, out string manufacturerPartNumber, out string _);
+            this.GetSkuMpnGtin(product, attributesXml, out var _, out var manufacturerPartNumber, out var _);
 
             return manufacturerPartNumber;
         }
@@ -1269,7 +1269,7 @@ namespace Nop.Services.Catalog
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
-            this.GetSkuMpnGtin(product, attributesXml, out string _, out string _, out string gtin);
+            this.GetSkuMpnGtin(product, attributesXml, out var _, out var _, out var gtin);
 
             return gtin;
         }

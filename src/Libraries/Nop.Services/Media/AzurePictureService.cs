@@ -24,12 +24,12 @@ namespace Nop.Services.Media
     public partial class AzurePictureService : PictureService
     {
         #region Fields
+        
+        private static CloudBlobContainer _container;
 
         private readonly IStaticCacheManager _cacheManager;
         private readonly MediaSettings _mediaSettings;
         private readonly NopConfig _config;
-
-        private static CloudBlobContainer _container;
 
         #endregion
 
@@ -203,7 +203,10 @@ namespace Nop.Services.Media
                     return await blockBlob.ExistsAsync();
                 });
             }
-            catch { return false; }
+            catch
+            {
+                return false;
+            }
         }
 
         /// <summary>

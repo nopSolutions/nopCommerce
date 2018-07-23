@@ -152,6 +152,5 @@ namespace Nop.Services.Catalog
         IPagedList<Product> GetProductsBySpecificationAttributeId(int specificationAttributeId, int pageIndex, int pageSize);
 
         #endregion
-
     }
 }

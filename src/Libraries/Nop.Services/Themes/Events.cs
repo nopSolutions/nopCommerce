@@ -25,7 +25,7 @@ namespace Nop.Services.Themes
         /// <summary>
         /// Uploaded themes
         /// </summary>
-        public IList<ThemeDescriptor> UploadedThemes { get; private set; }
+        public IList<ThemeDescriptor> UploadedThemes { get; }
 
         #endregion
     }

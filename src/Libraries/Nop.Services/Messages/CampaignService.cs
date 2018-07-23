@@ -108,7 +108,6 @@ namespace Nop.Services.Messages
                 return null;
 
             return _campaignRepository.GetById(campaignId);
-
         }
 
         /// <summary>
@@ -118,7 +117,6 @@ namespace Nop.Services.Messages
         /// <returns>Campaigns</returns>
         public virtual IList<Campaign> GetAllCampaigns(int storeId = 0)
         {
-
             var query = _campaignRepository.Table;
 
             if (storeId > 0)
@@ -182,6 +180,7 @@ namespace Nop.Services.Messages
                 _queuedEmailService.InsertQueuedEmail(email);
                 totalEmailsSent++;
             }
+
             return totalEmailsSent;
         }
 

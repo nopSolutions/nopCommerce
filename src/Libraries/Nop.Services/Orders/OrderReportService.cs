@@ -100,8 +100,7 @@ namespace Nop.Services.Orders
                               CountryId = result.Key,
                               TotalOrders = result.Count(),
                               SumOrders = result.Sum(o => o.OrderTotal)
-                          }
-                )
+                          })
                 .OrderByDescending(x => x.SumOrders)
                 .Select(r => new OrderByCountryReportLine
                 {
@@ -146,13 +145,9 @@ namespace Nop.Services.Orders
             if (orderId > 0)
                 query = query.Where(o => o.Id == orderId);
             if (vendorId > 0)
-            {
                 query = query.Where(o => o.OrderItems.Any(orderItem => orderItem.Product.VendorId == vendorId));
-            }
             if (productId > 0)
-            {
                 query = query.Where(o => o.OrderItems.Any(orderItem => orderItem.ProductId == productId));
-            }
             if (billingCountryId > 0)
                 query = query.Where(o => o.BillingAddress != null && o.BillingAddress.CountryId == billingCountryId);
             if (!string.IsNullOrEmpty(paymentMethodSystemName))
@@ -177,17 +172,16 @@ namespace Nop.Services.Orders
                 query = query.Where(o => o.OrderNotes.Any(on => on.Note.Contains(orderNotes)));
 
             var item = (from oq in query
-                        group oq by 1
+                group oq by 1
                 into result
-                        select new
-                        {
-                            OrderCount = result.Count(),
-                            OrderShippingExclTaxSum = result.Sum(o => o.OrderShippingExclTax),
-                            OrderPaymentFeeExclTaxSum = result.Sum(o => o.PaymentMethodAdditionalFeeExclTax),
-                            OrderTaxSum = result.Sum(o => o.OrderTax),
-                            OrderTotalSum = result.Sum(o => o.OrderTotal)
-                        }
-            ).Select(r => new OrderAverageReportLine
+                select new
+                {
+                    OrderCount = result.Count(),
+                    OrderShippingExclTaxSum = result.Sum(o => o.OrderShippingExclTax),
+                    OrderPaymentFeeExclTaxSum = result.Sum(o => o.PaymentMethodAdditionalFeeExclTax),
+                    OrderTaxSum = result.Sum(o => o.OrderTax),
+                    OrderTotalSum = result.Sum(o => o.OrderTotal)
+                }).Select(r => new OrderAverageReportLine
             {
                 CountOrders = r.OrderCount,
                 SumShippingExclTax = r.OrderShippingExclTaxSum,
@@ -202,7 +196,7 @@ namespace Nop.Services.Orders
                 SumShippingExclTax = decimal.Zero,
                 OrderPaymentFeeExclTaxSum = decimal.Zero,
                 SumTax = decimal.Zero,
-                SumOrders = decimal.Zero,
+                SumOrders = decimal.Zero
             };
             return item;
         }
@@ -219,7 +213,7 @@ namespace Nop.Services.Orders
             {
                 OrderStatus = os
             };
-            var orderStatuses = new List<int>() { (int)os };
+            var orderStatuses = new List<int> { (int)os };
 
             var nowDt = _dateTimeHelper.ConvertToUserTime(DateTime.Now);
             var timeZone = _dateTimeHelper.CurrentTimeZone;
@@ -227,7 +221,7 @@ namespace Nop.Services.Orders
             //today
             var t1 = new DateTime(nowDt.Year, nowDt.Month, nowDt.Day);
             DateTime? startTime1 = _dateTimeHelper.ConvertToUtcTime(t1, timeZone);
-            var todayResult = GetOrderAverageReportLine(storeId: storeId,
+            var todayResult = GetOrderAverageReportLine(storeId,
                 osIds: orderStatuses,
                 startTimeUtc: startTime1);
             item.SumTodayOrders = todayResult.SumOrders;
@@ -238,7 +232,7 @@ namespace Nop.Services.Orders
             var today = new DateTime(nowDt.Year, nowDt.Month, nowDt.Day);
             var t2 = today.AddDays(-(today.DayOfWeek - fdow));
             DateTime? startTime2 = _dateTimeHelper.ConvertToUtcTime(t2, timeZone);
-            var weekResult = GetOrderAverageReportLine(storeId: storeId,
+            var weekResult = GetOrderAverageReportLine(storeId,
                 osIds: orderStatuses,
                 startTimeUtc: startTime2);
             item.SumThisWeekOrders = weekResult.SumOrders;
@@ -247,7 +241,7 @@ namespace Nop.Services.Orders
             //month
             var t3 = new DateTime(nowDt.Year, nowDt.Month, 1);
             DateTime? startTime3 = _dateTimeHelper.ConvertToUtcTime(t3, timeZone);
-            var monthResult = GetOrderAverageReportLine(storeId: storeId,
+            var monthResult = GetOrderAverageReportLine(storeId,
                 osIds: orderStatuses,
                 startTimeUtc: startTime3);
             item.SumThisMonthOrders = monthResult.SumOrders;
@@ -256,14 +250,14 @@ namespace Nop.Services.Orders
             //year
             var t4 = new DateTime(nowDt.Year, 1, 1);
             DateTime? startTime4 = _dateTimeHelper.ConvertToUtcTime(t4, timeZone);
-            var yearResult = GetOrderAverageReportLine(storeId: storeId,
+            var yearResult = GetOrderAverageReportLine(storeId,
                 osIds: orderStatuses,
                 startTimeUtc: startTime4);
             item.SumThisYearOrders = yearResult.SumOrders;
             item.CountThisYearOrders = yearResult.CountOrders;
 
             //all time
-            var allTimeResult = GetOrderAverageReportLine(storeId: storeId, osIds: orderStatuses);
+            var allTimeResult = GetOrderAverageReportLine(storeId, osIds: orderStatuses);
             item.SumAllTimeOrders = allTimeResult.SumOrders;
             item.CountAllTimeOrders = allTimeResult.CountOrders;
 
@@ -321,8 +315,8 @@ namespace Nop.Services.Orders
                                (!orderStatusId.HasValue || orderStatusId == o.OrderStatusId) &&
                                (!paymentStatusId.HasValue || paymentStatusId == o.PaymentStatusId) &&
                                (!shippingStatusId.HasValue || shippingStatusId == o.ShippingStatusId) &&
-                               (!o.Deleted) &&
-                               (!p.Deleted) &&
+                               !o.Deleted &&
+                               !p.Deleted &&
                                (vendorId == 0 || p.VendorId == vendorId) &&
                                //(categoryId == 0 || pc.CategoryId == categoryId) &&
                                //(manufacturerId == 0 || pm.ManufacturerId == manufacturerId) &&
@@ -341,21 +335,16 @@ namespace Nop.Services.Orders
                 {
                     ProductId = g.Key,
                     TotalAmount = g.Sum(x => x.PriceExclTax),
-                    TotalQuantity = g.Sum(x => x.Quantity),
-                }
-                ;
+                    TotalQuantity = g.Sum(x => x.Quantity)
+                };
 
             switch (orderBy)
             {
                 case 1:
-                    {
-                        query2 = query2.OrderByDescending(x => x.TotalQuantity);
-                    }
+                    query2 = query2.OrderByDescending(x => x.TotalQuantity);
                     break;
                 case 2:
-                    {
-                        query2 = query2.OrderByDescending(x => x.TotalAmount);
-                    }
+                    query2 = query2.OrderByDescending(x => x.TotalAmount);
                     break;
                 default:
                     throw new ArgumentException("Wrong orderBy parameter", "orderBy");
@@ -387,12 +376,12 @@ namespace Nop.Services.Orders
 
             var query2 = from orderItem in _orderItemRepository.Table
                          join p in _productRepository.Table on orderItem.ProductId equals p.Id
-                         where (query1.Contains(orderItem.OrderId)) &&
-                         (p.Id != productId) &&
+                         where query1.Contains(orderItem.OrderId) &&
+                         p.Id != productId &&
                          (showHidden || p.Published) &&
-                         (!orderItem.Order.Deleted) &&
+                         !orderItem.Order.Deleted &&
                          (storeId == 0 || orderItem.Order.StoreId == storeId) &&
-                         (!p.Deleted) &&
+                         !p.Deleted &&
                          (!visibleIndividuallyOnly || p.VisibleIndividually)
                          select new { orderItem, p };
 
@@ -401,7 +390,7 @@ namespace Nop.Services.Orders
                          select new
                          {
                              ProductId = g.Key,
-                             ProductsPurchased = g.Sum(x => x.orderItem.Quantity),
+                             ProductsPurchased = g.Sum(x => x.orderItem.Quantity)
                          };
             query3 = query3.OrderByDescending(x => x.ProductsPurchased);
 
@@ -440,16 +429,16 @@ namespace Nop.Services.Orders
                              join o in _orderRepository.Table on orderItem.OrderId equals o.Id
                              where (!createdFromUtc.HasValue || createdFromUtc.Value <= o.CreatedOnUtc) &&
                                    (!createdToUtc.HasValue || createdToUtc.Value >= o.CreatedOnUtc) &&
-                                   (!o.Deleted)
+                                   !o.Deleted
                              select orderItem.ProductId).Distinct();
 
             var simpleProductTypeId = (int)ProductType.SimpleProduct;
 
             var query = from p in _productRepository.Table
-                        where (!query_tmp.Contains(p.Id)) &&
+                        where !query_tmp.Contains(p.Id) &&
                               //include only simple products
-                              (p.ProductTypeId == simpleProductTypeId) &&
-                              (!p.Deleted) &&
+                              p.ProductTypeId == simpleProductTypeId &&
+                              !p.Deleted &&
                               (vendorId == 0 || p.VendorId == vendorId) &&
                               (categoryId == 0 || p.ProductCategories.Count(pc => pc.CategoryId == categoryId) > 0) &&
                               (manufacturerId == 0 || p.ProductManufacturers.Count(pm => pm.ManufacturerId == manufacturerId) > 0) &&
@@ -497,15 +486,10 @@ namespace Nop.Services.Orders
             DateTime? startTimeUtc = null, DateTime? endTimeUtc = null,
             string billingPhone = null, string billingEmail = null, string billingLastName = "", string orderNotes = null)
         {
-            //we cannot use string.IsNullOrEmpty() in SQL Compact
             var dontSearchPhone = string.IsNullOrEmpty(billingPhone);
-            //we cannot use string.IsNullOrEmpty() in SQL Compact
             var dontSearchEmail = string.IsNullOrEmpty(billingEmail);
-            //we cannot use string.IsNullOrEmpty() in SQL Compact
             var dontSearchLastName = string.IsNullOrEmpty(billingLastName);
-            //we cannot use string.IsNullOrEmpty() in SQL Compact
             var dontSearchOrderNotes = string.IsNullOrEmpty(orderNotes);
-            //we cannot use string.IsNullOrEmpty() in SQL Compact
             var dontSearchPaymentMethods = string.IsNullOrEmpty(paymentMethodSystemName);
 
             var orders = _orderRepository.Table;
@@ -524,7 +508,7 @@ namespace Nop.Services.Orders
                               (dontSearchPaymentMethods || paymentMethodSystemName == o.PaymentMethodSystemName) &&
                               (!startTimeUtc.HasValue || startTimeUtc.Value <= o.CreatedOnUtc) &&
                               (!endTimeUtc.HasValue || endTimeUtc.Value >= o.CreatedOnUtc) &&
-                              (!o.Deleted) &&
+                              !o.Deleted &&
                               (vendorId == 0 || orderItem.Product.VendorId == vendorId) &&
                               (productId == 0 || orderItem.ProductId == productId) &&
                               //we do not ignore deleted products when calculating order reports
@@ -538,21 +522,22 @@ namespace Nop.Services.Orders
             var productCost = Convert.ToDecimal(query.Sum(orderItem => (decimal?)orderItem.OriginalProductCost * orderItem.Quantity));
 
             var reportSummary = GetOrderAverageReportLine(
-                storeId: storeId,
-                vendorId: vendorId,
-                productId: productId,
-                billingCountryId: billingCountryId,
-                orderId: orderId,
-                paymentMethodSystemName: paymentMethodSystemName,
-                osIds: osIds,
-                psIds: psIds,
-                ssIds: ssIds,
-                startTimeUtc: startTimeUtc,
-                endTimeUtc: endTimeUtc,
-                billingPhone: billingPhone,
-                billingEmail: billingEmail,
-                billingLastName: billingLastName,
-                orderNotes: orderNotes);
+                storeId,
+                vendorId,
+                productId,
+                billingCountryId,
+                orderId,
+                paymentMethodSystemName,
+                osIds,
+                psIds,
+                ssIds,
+                startTimeUtc,
+                endTimeUtc,
+                billingPhone,
+                billingEmail,
+                billingLastName,
+                orderNotes);
+
             var profit = reportSummary.SumOrders
                          - reportSummary.SumShippingExclTax
                          - reportSummary.OrderPaymentFeeExclTaxSum

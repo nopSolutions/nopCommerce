@@ -19,15 +19,15 @@ namespace Nop.Services.Seo
     {
         #region Fields
 
+        private static readonly object _lock = new object();
+        private static Dictionary<string, string> _seoCharacterTable;
+
         private readonly ILanguageService _languageService;
         private readonly IRepository<UrlRecord> _urlRecordRepository;
         private readonly IStaticCacheManager _cacheManager;
         private readonly IWorkContext _workContext;
         private readonly LocalizationSettings _localizationSettings;
         private readonly SeoSettings _seoSettings;
-
-        private static Dictionary<string, string> _seoCharacterTable;
-        private static readonly object s_lock = new object();
 
         #endregion
 
@@ -94,6 +94,7 @@ namespace Nop.Services.Seo
                     var urlRecordForCaching = Map(ur);
                     list.Add(urlRecordForCaching);
                 }
+
                 return list;
             });
         }
@@ -109,7 +110,7 @@ namespace Nop.Services.Seo
         /// </summary>
         protected virtual void InitializeSeoCharacterTable()
         {
-            lock (s_lock)
+            lock (_lock)
             {
                 _seoCharacterTable = new Dictionary<string, string>
                 {
@@ -173,7 +174,7 @@ namespace Nop.Services.Seo
                     { ToUnichar("00C3"), "A" }, // LATIN CAPITAL LETTER A WITH TILDE
                     { ToUnichar("00C4"), "A" }, // LATIN CAPITAL LETTER A WITH DIAERESIS
                     { ToUnichar("00C5"), "A" }, // LATIN CAPITAL LETTER A WITH RING ABOVE
-                    { ToUnichar("00C6"), "AE" },    // LATIN CAPITAL LETTER AE -- no decomposition
+                    { ToUnichar("00C6"), "AE" }, // LATIN CAPITAL LETTER AE -- no decomposition
                     { ToUnichar("00C7"), "C" }, // LATIN CAPITAL LETTER C WITH CEDILLA
                     { ToUnichar("00C8"), "E" }, // LATIN CAPITAL LETTER E WITH GRAVE
                     { ToUnichar("00C9"), "E" }, // LATIN CAPITAL LETTER E WITH ACUTE
@@ -183,7 +184,7 @@ namespace Nop.Services.Seo
                     { ToUnichar("00CD"), "I" }, // LATIN CAPITAL LETTER I WITH ACUTE
                     { ToUnichar("00CE"), "I" }, // LATIN CAPITAL LETTER I WITH CIRCUMFLEX
                     { ToUnichar("00CF"), "I" }, // LATIN CAPITAL LETTER I WITH DIAERESIS
-                    { ToUnichar("00D0"), "D" }, // LATIN CAPITAL LETTER ETH -- no decomposition  	// Eth [D for Vietnamese]
+                    { ToUnichar("00D0"), "D" }, // LATIN CAPITAL LETTER ETH -- no decomposition // Eth [D for Vietnamese]
                     { ToUnichar("00D1"), "N" }, // LATIN CAPITAL LETTER N WITH TILDE
                     { ToUnichar("00D2"), "O" }, // LATIN CAPITAL LETTER O WITH GRAVE
                     { ToUnichar("00D3"), "O" }, // LATIN CAPITAL LETTER O WITH ACUTE
@@ -196,7 +197,7 @@ namespace Nop.Services.Seo
                     { ToUnichar("00DB"), "U" }, // LATIN CAPITAL LETTER U WITH CIRCUMFLEX
                     { ToUnichar("00DC"), "U" }, // LATIN CAPITAL LETTER U WITH DIAERESIS
                     { ToUnichar("00DD"), "Y" }, // LATIN CAPITAL LETTER Y WITH ACUTE
-                    { ToUnichar("00DE"), "Th" },    // LATIN CAPITAL LETTER THORN -- no decomposition; // Thorn - Could be nothing other than thorn
+                    { ToUnichar("00DE"), "Th" }, // LATIN CAPITAL LETTER THORN -- no decomposition; // Thorn - Could be nothing other than thorn
                     { ToUnichar("00DF"), "s" }, // LATIN SMALL LETTER SHARP S -- no decomposition
                     { ToUnichar("00E0"), "a" }, // LATIN SMALL LETTER A WITH GRAVE
                     { ToUnichar("00E1"), "a" }, // LATIN SMALL LETTER A WITH ACUTE
@@ -419,7 +420,7 @@ namespace Nop.Services.Seo
                     { ToUnichar("01BB"), "2" }, // LATIN LETTER TWO WITH STROKE -- no decomposition
                     { ToUnichar("01BC"), "5" }, // LATIN CAPITAL LETTER TONE FIVE -- no decomposition
                     { ToUnichar("01BD"), "5" }, // LATIN SMALL LETTER TONE FIVE -- no decomposition
-                                                //_seoCharacterTable.Add(ToUnichar("01BE"), "´");	// LATIN LETTER INVERTED GLOTTAL STOP WITH STROKE -- no decomposition
+                                                //_seoCharacterTable.Add(ToUnichar("01BE"), "´"); // LATIN LETTER INVERTED GLOTTAL STOP WITH STROKE -- no decomposition
                     { ToUnichar("01BF"), "w" }, // LATIN LETTER WYNN -- no decomposition
                     { ToUnichar("01C0"), "!" }, // LATIN LETTER DENTAL CLICK -- no decomposition
                     { ToUnichar("01C1"), "!" }, // LATIN LETTER LATERAL CLICK -- no decomposition
@@ -612,7 +613,7 @@ namespace Nop.Services.Seo
                     { ToUnichar("0295"), "'" }, // LATIN LETTER PHARYNGEAL VOICED FRICATIVE -- no decomposition
                     { ToUnichar("0296"), "'" }, // LATIN LETTER INVERTED GLOTTAL STOP -- no decomposition
                     { ToUnichar("0297"), "C" }, // LATIN LETTER STRETCHED C -- no decomposition
-                                                //_seoCharacterTable.Add(ToUnichar("0298"), "O˜");	// LATIN LETTER BILABIAL CLICK -- no decomposition
+                    //_seoCharacterTable.Add(ToUnichar("0298"), "O˜"); // LATIN LETTER BILABIAL CLICK -- no decomposition
                     { ToUnichar("0299"), "B" }, // LATIN LETTER SMALL CAPITAL B -- no decomposition
                     { ToUnichar("029A"), "e" }, // LATIN SMALL LETTER CLOSED OPEN E -- no decomposition
                     { ToUnichar("029B"), "G" }, // LATIN LETTER SMALL CAPITAL G WITH HOOK -- no decomposition
@@ -628,7 +629,7 @@ namespace Nop.Services.Seo
                     { ToUnichar("02A5"), "dz" },    // LATIN SMALL LETTER DZ DIGRAPH WITH CURL -- no decomposition
                     { ToUnichar("02A6"), "ts" },    // LATIN SMALL LETTER TS DIGRAPH -- no decomposition
                     { ToUnichar("02A7"), "ts" },    // LATIN SMALL LETTER TESH DIGRAPH -- no decomposition
-                    { ToUnichar("02A8"), "" }, // LATIN SMALL LETTER TC DIGRAPH WITH CURL -- no decomposition
+                    { ToUnichar("02A8"), string.Empty }, // LATIN SMALL LETTER TC DIGRAPH WITH CURL -- no decomposition
                     { ToUnichar("02A9"), "fn" },    // LATIN SMALL LETTER FENG DIGRAPH -- no decomposition
                     { ToUnichar("02AA"), "ls" },    // LATIN SMALL LETTER LS DIGRAPH -- no decomposition
                     { ToUnichar("02AB"), "lz" },    // LATIN SMALL LETTER LZ DIGRAPH -- no decomposition
@@ -1093,9 +1094,9 @@ namespace Nop.Services.Seo
                     { ToUnichar("0427"), "CH" },  // RUSSIAN CAPITAL LETTER Ч
                     { ToUnichar("0428"), "SH" },  // RUSSIAN CAPITAL LETTER Ш
                     { ToUnichar("0429"), "SHH" },  // RUSSIAN CAPITAL LETTER Щ
-                    { ToUnichar("042A"), "" },  // RUSSIAN CAPITAL LETTER Ъ
+                    { ToUnichar("042A"), string.Empty },  // RUSSIAN CAPITAL LETTER Ъ
                     { ToUnichar("042B"), "Y" },  // RUSSIAN CAPITAL LETTER Ы
-                    { ToUnichar("042C"), "" },  // RUSSIAN CAPITAL LETTER Ь
+                    { ToUnichar("042C"), string.Empty },  // RUSSIAN CAPITAL LETTER Ь
                     { ToUnichar("042D"), "E" },  // RUSSIAN CAPITAL LETTER Э
                     { ToUnichar("042E"), "YU" },  // RUSSIAN CAPITAL LETTER Ю
                     { ToUnichar("042F"), "YA" },  // RUSSIAN CAPITAL LETTER Я
@@ -1126,9 +1127,9 @@ namespace Nop.Services.Seo
                     { ToUnichar("0447"), "ch" },  // RUSSIAN SMALL LETTER ч
                     { ToUnichar("0448"), "sh" },  // RUSSIAN SMALL LETTER ш
                     { ToUnichar("0449"), "shh" },  // RUSSIAN SMALL LETTER щ
-                    { ToUnichar("044A"), "" },  // RUSSIAN SMALL LETTER ъ
+                    { ToUnichar("044A"), string.Empty },  // RUSSIAN SMALL LETTER ъ
                     { ToUnichar("044B"), "y" },  // RUSSIAN SMALL LETTER ы
-                    { ToUnichar("044C"), "" },  // RUSSIAN SMALL LETTER ь
+                    { ToUnichar("044C"), string.Empty },  // RUSSIAN SMALL LETTER ь
                     { ToUnichar("044D"), "e" },  // RUSSIAN SMALL LETTER э
                     { ToUnichar("044E"), "yu" },  // RUSSIAN SMALL LETTER ю
                     { ToUnichar("044F"), "ya" },  // RUSSIAN SMALL LETTER я
@@ -1174,10 +1175,15 @@ namespace Nop.Services.Seo
         public class UrlRecordForCaching
         {
             public int Id { get; set; }
+
             public int EntityId { get; set; }
+
             public string EntityName { get; set; }
+
             public string Slug { get; set; }
+
             public bool IsActive { get; set; }
+
             public int LanguageId { get; set; }
         }
 
@@ -1368,10 +1374,9 @@ namespace Nop.Services.Seo
                                       ur.IsActive
                                 orderby ur.Id descending
                                 select ur.Slug;
-                    var slug = query.FirstOrDefault();
                     //little hack here. nulls aren't cacheable so set it to ""
-                    if (slug == null)
-                        slug = "";
+                    var slug = query.FirstOrDefault() ?? string.Empty;
+                    
                     return slug;
                 });
             }
@@ -1389,10 +1394,9 @@ namespace Nop.Services.Seo
                                       ur.IsActive
                                 orderby ur.Id descending
                                 select ur.Slug;
-                    var slug = query.FirstOrDefault();
                     //little hack here. nulls aren't cacheable so set it to ""
-                    if (slug == null)
-                        slug = "";
+                    var slug = query.FirstOrDefault() ?? string.Empty;
+                    
                     return slug;
                 });
             }
@@ -1444,7 +1448,7 @@ namespace Nop.Services.Seo
                         EntityName = entityName,
                         Slug = slug,
                         LanguageId = languageId,
-                        IsActive = true,
+                        IsActive = true
                     };
                     InsertUrlRecord(urlRecord);
                 }
@@ -1488,7 +1492,7 @@ namespace Nop.Services.Seo
                     EntityName = entityName,
                     Slug = slug,
                     LanguageId = languageId,
-                    IsActive = true,
+                    IsActive = true
                 };
                 InsertUrlRecord(urlRecord);
 
@@ -1533,6 +1537,7 @@ namespace Nop.Services.Seo
         public virtual string GetSeName(int entityId, string entityName, int? languageId = null,
             bool returnDefaultValue = true, bool ensureTwoPublishedLanguages = true)
         {
+            languageId = languageId ?? _workContext.WorkingLanguage.Id;
             var result = string.Empty;
 
             if (languageId > 0)
@@ -1547,12 +1552,12 @@ namespace Nop.Services.Seo
 
                 //localized value
                 if (loadLocalizedValue)
-                    result = this.GetActiveSlug(entityId, entityName, languageId ?? _workContext.WorkingLanguage.Id);
+                    result = GetActiveSlug(entityId, entityName, languageId.Value);
             }
 
             //set default value if required
             if (string.IsNullOrEmpty(result) && returnDefaultValue)
-                result = this.GetActiveSlug(entityId, entityName, 0);
+                result = GetActiveSlug(entityId, entityName, 0);
 
             return result;
         }
@@ -1581,7 +1586,7 @@ namespace Nop.Services.Seo
                 var c2 = c.ToString();
                 if (convertNonWesternChars)
                 {
-                    if (_seoCharacterTable.ContainsKey(c2))
+                    if (_seoCharacterTable?.ContainsKey(c2) ?? false)
                         c2 = _seoCharacterTable[c2];
                 }
 
@@ -1595,6 +1600,7 @@ namespace Nop.Services.Seo
                     sb.Append(c2);
                 }
             }
+
             var name2 = sb.ToString();
             name2 = name2.Replace(" ", "-");
             while (name2.Contains("--"))
@@ -1637,7 +1643,7 @@ namespace Nop.Services.Seo
                 seName = name;
 
             //validation
-            seName = this.GetSeName(seName, _seoSettings.ConvertNonWesternChars, _seoSettings.AllowUnicodeCharsInUrls);
+            seName = GetSeName(seName, _seoSettings.ConvertNonWesternChars, _seoSettings.AllowUnicodeCharsInUrls);
 
             //max length
             seName = CommonHelper.EnsureMaximumLength(seName, NopSeoDefaults.SearchEngineNameLength);
@@ -1662,7 +1668,7 @@ namespace Nop.Services.Seo
             while (true)
             {
                 //check whether such slug already exists (and that is not the current entity)
-                var urlRecord = this.GetBySlug(tempSeName);
+                var urlRecord = GetBySlug(tempSeName);
                 var reserved1 = urlRecord != null && !(urlRecord.EntityId == entityId && urlRecord.EntityName.Equals(entityName, StringComparison.InvariantCultureIgnoreCase));
                 //and it's not in the list of reserved slugs
                 var reserved2 = _seoSettings.ReservedUrlRecordSlugs.Contains(tempSeName, StringComparer.InvariantCultureIgnoreCase);
@@ -1674,6 +1680,7 @@ namespace Nop.Services.Seo
                 tempSeName = $"{seName}-{i}";
                 i++;
             }
+
             seName = tempSeName;
 
             return seName;

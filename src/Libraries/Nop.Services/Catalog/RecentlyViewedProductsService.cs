@@ -57,14 +57,14 @@ namespace Nop.Services.Catalog
 
             //try to get cookie
             var cookieName = $"{NopCookieDefaults.Prefix}{NopCookieDefaults.RecentlyViewedProductsCookie}";
-            if (!httpContext.Request.Cookies.TryGetValue(cookieName, out string productIdsCookie) || string.IsNullOrEmpty(productIdsCookie))
+            if (!httpContext.Request.Cookies.TryGetValue(cookieName, out var productIdsCookie) || string.IsNullOrEmpty(productIdsCookie))
                 return new List<int>();
 
             //get array of string product identifiers from cookie
             var productIds = productIdsCookie.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
 
             //return list of int product identifiers
-            return productIds.Select(productId => int.Parse(productId)).Distinct().Take(number).ToList();
+            return productIds.Select(int.Parse).Distinct().Take(number).ToList();
         }
 
         /// <summary>
@@ -117,7 +117,7 @@ namespace Nop.Services.Catalog
         /// <param name="productId">Product identifier</param>
         public virtual void AddProductToRecentlyViewedList(int productId)
         {
-            if (_httpContextAccessor.HttpContext == null || _httpContextAccessor.HttpContext.Response == null)
+            if (_httpContextAccessor.HttpContext?.Response == null)
                 return;
 
             //whether recently viewed products is enabled

@@ -1,5 +1,4 @@
-﻿
-namespace Nop.Services.Localization
+﻿namespace Nop.Services.Localization
 {
     /// <summary>
     /// Represents default values related to localization services

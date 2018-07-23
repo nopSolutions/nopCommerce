@@ -9,10 +9,12 @@
         /// Not specified
         /// </summary>
         NotSpecified = 1,
+
         /// <summary>
         /// Product attribute
         /// </summary>
         ProductAttribute = 10,
+
         /// <summary>
         /// Specification attribute
         /// </summary>

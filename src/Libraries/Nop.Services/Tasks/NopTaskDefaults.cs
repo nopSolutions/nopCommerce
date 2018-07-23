@@ -1,5 +1,4 @@
-﻿
-namespace Nop.Services.Tasks
+﻿namespace Nop.Services.Tasks
 {
     /// <summary>
     /// Represents default values related to task services

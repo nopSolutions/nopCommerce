@@ -1,5 +1,4 @@
-﻿
-namespace Nop.Services.Installation
+﻿namespace Nop.Services.Installation
 {
     /// <summary>
     /// Represents default values related to installation services

@@ -4,8 +4,6 @@ using Nop.Core;
 using Nop.Core.Data;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
-using Nop.Services.Catalog;
-using Nop.Services.Directory;
 using Nop.Services.Events;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
@@ -99,7 +97,7 @@ namespace Nop.Services.Orders
                     Points = -historyEntry.ValidPoints.Value,
                     Message = string.Format(_localizationService.GetResource("RewardPoints.Expired"),
                         _dateTimeHelper.ConvertToUserTime(historyEntry.CreatedOnUtc, DateTimeKind.Utc)),
-                    CreatedOnUtc = historyEntry.EndDateUtc.Value,
+                    CreatedOnUtc = historyEntry.EndDateUtc.Value
                 });
 
                 historyEntry.ValidPoints = 0;
@@ -222,20 +220,20 @@ namespace Nop.Services.Orders
             InsertRewardPointsHistoryEntry(newHistoryEntry);
 
             //reduce valid points of previous entries
-            if (points < 0)
-            {
-                var withValidPoints = GetRewardPointsQuery(customer.Id, storeId)
-                    .Where(historyEntry => historyEntry.ValidPoints > 0)
-                    .OrderBy(historyEntry => historyEntry.CreatedOnUtc).ThenBy(historyEntry => historyEntry.Id).ToList();
-                foreach (var historyEntry in withValidPoints)
-                {
-                    points += historyEntry.ValidPoints.Value;
-                    historyEntry.ValidPoints = Math.Max(points, 0);
-                    UpdateRewardPointsHistoryEntry(historyEntry);
+            if (points >= 0) 
+                return newHistoryEntry.Id;
 
-                    if (points >= 0)
-                        break;
-                }
+            var withValidPoints = GetRewardPointsQuery(customer.Id, storeId)
+                .Where(historyEntry => historyEntry.ValidPoints > 0)
+                .OrderBy(historyEntry => historyEntry.CreatedOnUtc).ThenBy(historyEntry => historyEntry.Id).ToList();
+            foreach (var historyEntry in withValidPoints)
+            {
+                points += historyEntry.ValidPoints.Value;
+                historyEntry.ValidPoints = Math.Max(points, 0);
+                UpdateRewardPointsHistoryEntry(historyEntry);
+
+                if (points >= 0)
+                    break;
             }
 
             return newHistoryEntry.Id;

@@ -106,7 +106,6 @@ namespace Nop.Services.Directory
                             select md;
                 var measureDimensions = query.ToList();
                 return measureDimensions;
-
             });
         }
 
@@ -167,8 +166,10 @@ namespace Nop.Services.Directory
                 result = ConvertToPrimaryMeasureDimension(result, sourceMeasureDimension);
                 result = ConvertFromPrimaryMeasureDimension(result, targetMeasureDimension);
             }
+
             if (round)
                 result = Math.Round(result, 2);
+
             return result;
         }
 
@@ -186,13 +187,14 @@ namespace Nop.Services.Directory
 
             var result = value;
             var baseDimensionIn = GetMeasureDimensionById(_measureSettings.BaseDimensionId);
-            if (result != decimal.Zero && sourceMeasureDimension.Id != baseDimensionIn.Id)
-            {
-                var exchangeRatio = sourceMeasureDimension.Ratio;
-                if (exchangeRatio == decimal.Zero)
-                    throw new NopException($"Exchange ratio not set for dimension [{sourceMeasureDimension.Name}]");
-                result = result / exchangeRatio;
-            }
+            if (result == decimal.Zero || sourceMeasureDimension.Id == baseDimensionIn.Id) 
+                return result;
+
+            var exchangeRatio = sourceMeasureDimension.Ratio;
+            if (exchangeRatio == decimal.Zero)
+                throw new NopException($"Exchange ratio not set for dimension [{sourceMeasureDimension.Name}]");
+            result = result / exchangeRatio;
+
             return result;
         }
 
@@ -210,13 +212,14 @@ namespace Nop.Services.Directory
 
             var result = value;
             var baseDimensionIn = GetMeasureDimensionById(_measureSettings.BaseDimensionId);
-            if (result != decimal.Zero && targetMeasureDimension.Id != baseDimensionIn.Id)
-            {
-                var exchangeRatio = targetMeasureDimension.Ratio;
-                if (exchangeRatio == decimal.Zero)
-                    throw new NopException($"Exchange ratio not set for dimension [{targetMeasureDimension.Name}]");
-                result = result * exchangeRatio;
-            }
+            if (result == decimal.Zero || targetMeasureDimension.Id == baseDimensionIn.Id) 
+                return result;
+
+            var exchangeRatio = targetMeasureDimension.Ratio;
+            if (exchangeRatio == decimal.Zero)
+                throw new NopException($"Exchange ratio not set for dimension [{targetMeasureDimension.Name}]");
+            result = result * exchangeRatio;
+
             return result;
         }
 
@@ -345,8 +348,10 @@ namespace Nop.Services.Directory
                 result = ConvertToPrimaryMeasureWeight(result, sourceMeasureWeight);
                 result = ConvertFromPrimaryMeasureWeight(result, targetMeasureWeight);
             }
+
             if (round)
                 result = Math.Round(result, 2);
+
             return result;
         }
 
@@ -363,13 +368,14 @@ namespace Nop.Services.Directory
 
             var result = value;
             var baseWeightIn = GetMeasureWeightById(_measureSettings.BaseWeightId);
-            if (result != decimal.Zero && sourceMeasureWeight.Id != baseWeightIn.Id)
-            {
-                var exchangeRatio = sourceMeasureWeight.Ratio;
-                if (exchangeRatio == decimal.Zero)
-                    throw new NopException($"Exchange ratio not set for weight [{sourceMeasureWeight.Name}]");
-                result = result / exchangeRatio;
-            }
+            if (result == decimal.Zero || sourceMeasureWeight.Id == baseWeightIn.Id)
+                return result;
+
+            var exchangeRatio = sourceMeasureWeight.Ratio;
+            if (exchangeRatio == decimal.Zero)
+                throw new NopException($"Exchange ratio not set for weight [{sourceMeasureWeight.Name}]");
+            result = result / exchangeRatio;
+
             return result;
         }
 
@@ -387,13 +393,14 @@ namespace Nop.Services.Directory
 
             var result = value;
             var baseWeightIn = GetMeasureWeightById(_measureSettings.BaseWeightId);
-            if (result != decimal.Zero && targetMeasureWeight.Id != baseWeightIn.Id)
-            {
-                var exchangeRatio = targetMeasureWeight.Ratio;
-                if (exchangeRatio == decimal.Zero)
-                    throw new NopException($"Exchange ratio not set for weight [{targetMeasureWeight.Name}]");
-                result = result * exchangeRatio;
-            }
+            if (result == decimal.Zero || targetMeasureWeight.Id == baseWeightIn.Id) 
+                return result;
+
+            var exchangeRatio = targetMeasureWeight.Ratio;
+            if (exchangeRatio == decimal.Zero)
+                throw new NopException($"Exchange ratio not set for weight [{targetMeasureWeight.Name}]");
+            result = result * exchangeRatio;
+
             return result;
         }
 

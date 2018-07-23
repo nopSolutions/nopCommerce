@@ -210,7 +210,7 @@ namespace Nop.Services.Security
                 {
                     Name = permission.Name,
                     SystemName = permission.SystemName,
-                    Category = permission.Category,
+                    Category = permission.Category
                 };
 
                 foreach (var defaultPermission in defaultPermissions)
@@ -259,13 +259,13 @@ namespace Nop.Services.Security
             foreach (var permission in permissions)
             {
                 var permission1 = GetPermissionRecordBySystemName(permission.SystemName);
-                if (permission1 != null)
-                {
-                    DeletePermissionRecord(permission1);
+                if (permission1 == null) 
+                    continue;
 
-                    //delete permission locales
-                    _localizationService.DeleteLocalizedPermissionName(permission1);
-                }
+                DeletePermissionRecord(permission1);
+
+                //delete permission locales
+                _localizationService.DeleteLocalizedPermissionName(permission1);
             }
         }
 

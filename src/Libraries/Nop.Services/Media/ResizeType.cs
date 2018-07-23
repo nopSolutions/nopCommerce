@@ -9,10 +9,12 @@ namespace Nop.Services.Media
         /// Longest side
         /// </summary>
         LongestSide,
+
         /// <summary>
         /// Width
         /// </summary>
         Width,
+
         /// <summary>
         /// Height
         /// </summary>

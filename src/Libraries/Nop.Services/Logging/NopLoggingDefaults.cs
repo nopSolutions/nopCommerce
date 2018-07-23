@@ -1,5 +1,4 @@
-﻿
-namespace Nop.Services.Logging
+﻿namespace Nop.Services.Logging
 {
     /// <summary>
     /// Represents default values related to logging services

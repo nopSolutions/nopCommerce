@@ -37,14 +37,14 @@ namespace Nop.Services.Plugins
         /// </summary>
         protected virtual void EnsurePluginsAreLoaded()
         {
-            if (!_arePluginsLoaded)
-            {
-                var foundPlugins = PluginManager.ReferencedPlugins.ToList();
-                foundPlugins.Sort();
-                _plugins = foundPlugins.ToList();
+            if (_arePluginsLoaded) 
+                return;
 
-                _arePluginsLoaded = true;
-            }
+            var foundPlugins = PluginManager.ReferencedPlugins.ToList();
+            foundPlugins.Sort();
+            _plugins = foundPlugins.ToList();
+
+            _arePluginsLoaded = true;
         }
 
         /// <summary>
@@ -61,7 +61,7 @@ namespace Nop.Services.Plugins
             switch (loadMode)
             {
                 case LoadPluginsMode.All:
-                    //no filering
+                    //no filtering
                     return true;
                 case LoadPluginsMode.InstalledOnly:
                     return pluginDescriptor.Installed;

@@ -1,5 +1,4 @@
-﻿
-namespace Nop.Services.Orders
+﻿namespace Nop.Services.Orders
 {
     /// <summary>
     /// Represents default values related to orders services

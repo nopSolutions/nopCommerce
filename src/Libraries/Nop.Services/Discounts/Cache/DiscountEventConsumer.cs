@@ -47,7 +47,8 @@ namespace Nop.Services.Discounts.Cache
 
         #region Methods
 
-        //discounts
+        #region Discounts
+
         public void HandleEvent(EntityInsertedEvent<Discount> eventMessage)
         {
             _cacheManager.RemoveByPattern(NopDiscountDefaults.DiscountAllPatternCacheKey);
@@ -55,6 +56,7 @@ namespace Nop.Services.Discounts.Cache
             _cacheManager.RemoveByPattern(NopDiscountDefaults.DiscountCategoryIdsPatternCacheKey);
             _cacheManager.RemoveByPattern(NopDiscountDefaults.DiscountManufacturerIdsPatternCacheKey);
         }
+
         public void HandleEvent(EntityUpdatedEvent<Discount> eventMessage)
         {
             _cacheManager.RemoveByPattern(NopDiscountDefaults.DiscountAllPatternCacheKey);
@@ -62,6 +64,7 @@ namespace Nop.Services.Discounts.Cache
             _cacheManager.RemoveByPattern(NopDiscountDefaults.DiscountCategoryIdsPatternCacheKey);
             _cacheManager.RemoveByPattern(NopDiscountDefaults.DiscountManufacturerIdsPatternCacheKey);
         }
+
         public void HandleEvent(EntityDeletedEvent<Discount> eventMessage)
         {
             _cacheManager.RemoveByPattern(NopDiscountDefaults.DiscountAllPatternCacheKey);
@@ -70,56 +73,74 @@ namespace Nop.Services.Discounts.Cache
             _cacheManager.RemoveByPattern(NopDiscountDefaults.DiscountManufacturerIdsPatternCacheKey);
         }
 
-        //discount requirements
+        #endregion
+
+        #region Discount requirements
+
         public void HandleEvent(EntityInsertedEvent<DiscountRequirement> eventMessage)
         {
             _cacheManager.RemoveByPattern(NopDiscountDefaults.DiscountRequirementPatternCacheKey);
         }
+
         public void HandleEvent(EntityUpdatedEvent<DiscountRequirement> eventMessage)
         {
             _cacheManager.RemoveByPattern(NopDiscountDefaults.DiscountRequirementPatternCacheKey);
         }
+
         public void HandleEvent(EntityDeletedEvent<DiscountRequirement> eventMessage)
         {
             _cacheManager.RemoveByPattern(NopDiscountDefaults.DiscountRequirementPatternCacheKey);
         }
 
+        #endregion
 
-        //settings
+        #region Settings
+
         public void HandleEvent(EntityUpdatedEvent<Setting> eventMessage)
         {
             _cacheManager.RemoveByPattern(NopDiscountDefaults.DiscountCategoryIdsPatternCacheKey);
             _cacheManager.RemoveByPattern(NopDiscountDefaults.DiscountManufacturerIdsPatternCacheKey);
         }
 
-        //categories
+        #endregion
+
+        #region Categories
+
         public void HandleEvent(EntityInsertedEvent<Category> eventMessage)
         {
             _cacheManager.RemoveByPattern(NopDiscountDefaults.DiscountCategoryIdsPatternCacheKey);
         }
+
         public void HandleEvent(EntityUpdatedEvent<Category> eventMessage)
         {
             _cacheManager.RemoveByPattern(NopDiscountDefaults.DiscountCategoryIdsPatternCacheKey);
         }
+
         public void HandleEvent(EntityDeletedEvent<Category> eventMessage)
         {
             _cacheManager.RemoveByPattern(NopDiscountDefaults.DiscountCategoryIdsPatternCacheKey);
         }
 
+        #endregion
 
-        //manufacturers
+        #region Manufacturers
+
         public void HandleEvent(EntityInsertedEvent<Manufacturer> eventMessage)
         {
             _cacheManager.RemoveByPattern(NopDiscountDefaults.DiscountManufacturerIdsPatternCacheKey);
         }
+
         public void HandleEvent(EntityUpdatedEvent<Manufacturer> eventMessage)
         {
             _cacheManager.RemoveByPattern(NopDiscountDefaults.DiscountManufacturerIdsPatternCacheKey);
         }
+
         public void HandleEvent(EntityDeletedEvent<Manufacturer> eventMessage)
         {
             _cacheManager.RemoveByPattern(NopDiscountDefaults.DiscountManufacturerIdsPatternCacheKey);
         }
+
+        #endregion
 
         #endregion
     }

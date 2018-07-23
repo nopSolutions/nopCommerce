@@ -117,6 +117,7 @@ namespace Nop.Services.Directory
                         .ThenBy(c => _localizationService.GetLocalized(c, x => x.Name, languageId))
                         .ToList();
                 }
+
                 return stateProvinces;
             });
         }

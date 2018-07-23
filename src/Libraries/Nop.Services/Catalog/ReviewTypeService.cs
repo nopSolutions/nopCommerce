@@ -56,7 +56,7 @@ namespace Nop.Services.Catalog
         }
 
         /// <summary>
-        /// Gets a revie type 
+        /// Gets a review type 
         /// </summary>
         /// <param name="reviewTypeId">Review type identifier</param>
         /// <returns>Review type</returns>
@@ -119,7 +119,7 @@ namespace Nop.Services.Catalog
 
         #endregion
 
-        #region Product review review type mapping
+        #region Product review type mapping
 
         /// <summary>
         /// Gets product review and review type mappings by product review identifier

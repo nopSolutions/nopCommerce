@@ -94,7 +94,7 @@ namespace Nop.Services.Directory
             if (response?.Country != null)
                 return response.Country.IsoCode;
 
-            return "";
+            return string.Empty;
         }
 
         /// <summary>
@@ -108,7 +108,7 @@ namespace Nop.Services.Directory
             if (response?.Country != null)
                 return response.Country.Name;
 
-            return "";
+            return string.Empty;
         }
 
         #endregion

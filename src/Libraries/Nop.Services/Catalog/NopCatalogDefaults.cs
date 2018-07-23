@@ -1,5 +1,4 @@
-﻿
-namespace Nop.Services.Catalog
+﻿namespace Nop.Services.Catalog
 {
     /// <summary>
     /// Represents default values related to catalog services

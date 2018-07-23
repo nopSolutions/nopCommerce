@@ -1,5 +1,4 @@
-﻿
-namespace Nop.Services.Configuration
+﻿namespace Nop.Services.Configuration
 {
     /// <summary>
     /// Represents default values related to configuration services

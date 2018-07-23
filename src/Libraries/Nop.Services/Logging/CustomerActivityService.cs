@@ -4,7 +4,6 @@ using System.Linq;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
-using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Logging;
 using Nop.Data;
@@ -19,8 +18,6 @@ namespace Nop.Services.Logging
     {
         #region Fields
 
-        private readonly CommonSettings _commonSettings;
-        private readonly IDataProvider _dataProvider;
         private readonly IDbContext _dbContext;
         private readonly IRepository<ActivityLog> _activityLogRepository;
         private readonly IRepository<ActivityLogType> _activityLogTypeRepository;
@@ -32,17 +29,13 @@ namespace Nop.Services.Logging
 
         #region Ctor
 
-        public CustomerActivityService(CommonSettings commonSettings,
-            IDataProvider dataProvider,
-            IDbContext dbContext,
+        public CustomerActivityService(IDbContext dbContext,
             IRepository<ActivityLog> activityLogRepository,
             IRepository<ActivityLogType> activityLogTypeRepository,
             IStaticCacheManager cacheManager,
             IWebHelper webHelper,
             IWorkContext workContext)
         {
-            this._commonSettings = commonSettings;
-            this._dataProvider = dataProvider;
             this._dbContext = dbContext;
             this._activityLogRepository = activityLogRepository;
             this._activityLogTypeRepository = activityLogTypeRepository;
@@ -65,14 +58,17 @@ namespace Nop.Services.Logging
             /// Identifier
             /// </summary>
             public int Id { get; set; }
+
             /// <summary>
             /// System keyword
             /// </summary>
             public string SystemKeyword { get; set; }
+
             /// <summary>
             /// Name
             /// </summary>
             public string Name { get; set; }
+
             /// <summary>
             /// Enabled
             /// </summary>
@@ -105,6 +101,7 @@ namespace Nop.Services.Logging
                     };
                     result.Add(altForCaching);
                 }
+
                 return result;
             });
         }

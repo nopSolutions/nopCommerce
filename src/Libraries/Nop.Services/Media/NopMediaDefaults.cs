@@ -1,5 +1,4 @@
-﻿
-namespace Nop.Services.Media
+﻿namespace Nop.Services.Media
 {
     /// <summary>
     /// Represents default values related to media services

@@ -52,9 +52,11 @@ namespace Nop.Services.Catalog
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
+            
+            var tierPrices = source.ToList();
 
             //get group of tier prices with the same quantity
-            var tierPricesWithDuplicates = source.GroupBy(tierPrice => tierPrice.Quantity).Where(group => group.Count() > 1);
+            var tierPricesWithDuplicates = tierPrices.GroupBy(tierPrice => tierPrice.Quantity).Where(group => group.Count() > 1);
 
             //get tier prices with higher prices 
             var duplicatedPrices = tierPricesWithDuplicates.SelectMany(group =>
@@ -68,7 +70,7 @@ namespace Nop.Services.Catalog
             });
 
             //return tier prices without duplicates
-            return source.Where(tierPrice => !duplicatedPrices.Any(duplicatedPrice => duplicatedPrice.Id == tierPrice.Id));
+            return tierPrices.Where(tierPrice => duplicatedPrices.All(duplicatedPrice => duplicatedPrice.Id != tierPrice.Id));
         }
 
         /// <summary>

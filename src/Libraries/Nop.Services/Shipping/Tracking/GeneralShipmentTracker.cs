@@ -78,9 +78,7 @@ namespace Nop.Services.Shipping.Tracking
         public virtual string GetUrl(string trackingNumber)
         {
             var tracker = GetTrackerByTrackingNumber(trackingNumber);
-            if (tracker != null)
-                return tracker.GetUrl(trackingNumber);
-            return null;
+            return tracker?.GetUrl(trackingNumber);
         }
 
         /// <summary>

@@ -163,6 +163,7 @@ namespace Nop.Services.Catalog
                 if (sao != null)
                     sortedSpecificationAttributeOptions.Add(sao);
             }
+
             return sortedSpecificationAttributeOptions;
         }
 

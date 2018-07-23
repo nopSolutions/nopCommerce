@@ -1,5 +1,4 @@
-﻿
-namespace Nop.Services.Seo
+﻿namespace Nop.Services.Seo
 {
     /// <summary>
     /// Represents default values related to SEO services
