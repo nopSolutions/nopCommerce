@@ -2750,6 +2750,11 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
 
+            if (string.IsNullOrEmpty(message))
+            {
+                return Json(new { Result = false, Error = _localizationService.GetResource("Admin.Orders.OrderNotes.Fields.Note.Validation") });
+            }
+
             //try to get an order with the specified id
             var order = _orderService.GetOrderById(orderId);
             if (order == null)

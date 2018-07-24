@@ -2015,6 +2015,9 @@ set @resources='
   <LocaleResource Name="Enums.Nop.Core.Domain.Orders.ShoppingCartType.Wishlist">
     <Value>Wishlist</Value>
   </LocaleResource>  
+  <LocaleResource Name="Admin.Orders.OrderNotes.Fields.Note.Validation">
+    <Value>Order note can not be empty.</Value>
+  </LocaleResource>  
 </Language>
 '
 
