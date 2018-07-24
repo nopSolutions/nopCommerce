@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using FluentValidation.Attributes;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Nop.Web.Areas.Admin.Validators.Topics;
 using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Mvc.ModelBinding;
 
@@ -8,6 +10,7 @@ namespace Nop.Web.Areas.Admin.Models.Topics
     /// <summary>
     /// Represents a topic model
     /// </summary>
+    [Validator(typeof(TopicValidator))]
     public partial class TopicModel : BaseNopEntityModel, IAclSupportedModel, ILocalizedModel<TopicLocalizedModel>, IStoreMappingSupportedModel
     {
         #region Ctor
