@@ -757,7 +757,7 @@ namespace Nop.Services.Catalog
 
                 alreadyProcessedCategoryIds.Add(category.Id);
 
-                category = allCategories != null ? allCategories.FirstOrDefault(c => c.Id == c.ParentCategoryId)
+                category = allCategories != null ? allCategories.FirstOrDefault(c => c.Id == category.ParentCategoryId)
                     : this.GetCategoryById(category.ParentCategoryId);
             }
             result.Reverse();
