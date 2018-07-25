@@ -1,4 +1,5 @@
 @model OrderModel
+@using System.Text.Encodings.Web
 
 <div class="panel-group">
     @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.OrderDetailsNotesTop, additionalData = Model })
@@ -188,18 +189,25 @@
             };
             addAntiForgeryToken(postData);
 
-            $.ajax({
+             $.ajax({
                 cache:false,
                 type: "POST",
                 url: "@(Url.Action("OrderNoteAdd", "Order"))",
                 data: postData,
-                success: function (data) {
-                    var grid = $("#ordernotes-grid").data('kendoGrid');
-                    grid.dataSource.read();
+                 success: function (data) {
+                     if (data.Error) {
+                         alert(data.Error);
+                     }
+
+                     if (data.Result) { 
+                        var grid = $("#ordernotes-grid").data('kendoGrid');
+                        grid.dataSource.read();
+                     }
+
                     $('#addOrderNote').attr('disabled', false);
                 },
-                error:function (xhr, ajaxOptions, thrownError){
-                    alert('Failed to add order note.');
+                 error: function (xhr, ajaxOptions, thrownError) {
+                    alert('Failed to add order note.');                    
                     $('#addOrderNote').attr('disabled', false);
                 }
             });

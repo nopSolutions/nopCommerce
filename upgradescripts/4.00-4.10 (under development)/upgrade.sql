@@ -2018,6 +2018,9 @@ set @resources='
   <LocaleResource Name="Admin.SEO.SeName.MaxLengthValidation">
     <Value>Max length of search name is {0} chars</Value>
   </LocaleResource>   
+  <LocaleResource Name="Admin.Orders.OrderNotes.Fields.Note.Validation">
+    <Value>Order note can not be empty.</Value>
+  </LocaleResource>  
 </Language>
 '
 
